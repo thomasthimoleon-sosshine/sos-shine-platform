@@ -1,62 +1,87 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+
 export default function Home() {
+  const [showContent, setShowContent] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowContent(true);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <main className="min-h-screen bg-gradient-to-b from-violet-100 via-white to-amber-50 text-zinc-800">
-      
+    <main className="min-h-screen bg-[#0A0A0A] text-[#F5F5F5] relative overflow-hidden">
+
       {/* HEADER */}
-      <header className="w-full py-6 px-8 flex justify-between items-center">
-        <h1 className="text-2xl font-bold tracking-wide">SOS Shine</h1>
-        <button className="px-6 py-2 rounded-full bg-violet-600 text-white hover:bg-violet-700 transition">
-          Se connecter
-        </button>
+      <header className="absolute top-0 left-0 w-full flex justify-between items-center px-8 py-6 z-50">
+        <div className="text-xl font-light tracking-widest text-[#D4AF37]">
+          SOS Shine
+        </div>
+
+        <div className="flex gap-4">
+          <Link href="/login">
+            <button className="px-5 py-2 text-sm border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black transition-all duration-300 rounded-full">
+              Se connecter
+            </button>
+          </Link>
+
+          <Link href="/signup">
+            <button className="px-5 py-2 text-sm bg-[#D4AF37] text-black hover:opacity-80 transition-all duration-300 rounded-full">
+              Rejoindre
+            </button>
+          </Link>
+        </div>
       </header>
 
-      {/* HERO */}
-      <section className="flex flex-col items-center justify-center text-center px-6 py-20">
-        <h2 className="text-4xl md:text-5xl font-bold max-w-3xl leading-tight">
-          Un sanctuaire digital pour transformer vos douleurs en lumière.
-        </h2>
+      {/* CONTENU CENTRAL */}
+      <div className="flex flex-col items-center justify-center min-h-screen text-center px-6">
 
-        <p className="mt-6 max-w-2xl text-lg text-zinc-600">
-          SOS Shine est une plateforme immersive dédiée à l’apaisement,
-          au mouvement et à la clarté intérieure.
-        </p>
+        {!showContent && (
+          <div className="animate-fade flex flex-col items-center">
+            <Image
+              src="/logo.png"
+              alt="SOS Shine"
+              width={260}
+              height={260}
+              className="animate-pulse-slow"
+            />
+          </div>
+        )}
 
-        <button className="mt-8 px-8 py-4 rounded-full bg-amber-500 text-white font-semibold hover:bg-amber-600 transition">
-          Entrer dans le sanctuaire
-        </button>
-      </section>
+        {showContent && (
+          <div className="max-w-3xl space-y-10 animate-fade-in">
 
-      {/* RAYONS */}
-      <section className="grid md:grid-cols-3 gap-8 px-8 pb-20 max-w-6xl mx-auto">
-        
-        <div className="p-8 rounded-2xl bg-white shadow-md hover:shadow-lg transition">
-          <h3 className="text-xl font-semibold mb-4">Apaiser</h3>
-          <p className="text-zinc-600">
-            Calmer l’émotion, accueillir la douleur, respirer.
-          </p>
-        </div>
+            <h1 className="text-4xl md:text-6xl font-light leading-tight">
+              Ce n’est pas une plateforme.
+              <br />
+              C’est un sanctuaire.
+            </h1>
 
-        <div className="p-8 rounded-2xl bg-white shadow-md hover:shadow-lg transition">
-          <h3 className="text-xl font-semibold mb-4">Mouvement</h3>
-          <p className="text-zinc-600">
-            Transformer l’énergie bloquée en action consciente.
-          </p>
-        </div>
+            <p className="text-xl text-[#BDBDBD] leading-relaxed">
+              Un espace pour transformer la douleur en lumière.
+              <br />
+              Pour accueillir. Apaiser. Élever.
+            </p>
 
-        <div className="p-8 rounded-2xl bg-white shadow-md hover:shadow-lg transition">
-          <h3 className="text-xl font-semibold mb-4">Clarté</h3>
-          <p className="text-zinc-600">
-            Comprendre, intégrer et évoluer vers sa lumière.
-          </p>
-        </div>
+            <p className="text-lg text-[#D4AF37] uppercase tracking-widest">
+              Apaiser · Mouvement · Clarté
+            </p>
 
-      </section>
+            <Link href="/signup">
+              <button className="mt-8 px-10 py-4 border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black transition-all duration-500 rounded-full tracking-wide">
+                Entrer dans le sanctuaire
+              </button>
+            </Link>
 
-      {/* FOOTER */}
-      <footer className="text-center py-8 text-sm text-zinc-500">
-        © {new Date().getFullYear()} SOS Shine — Tous droits réservés
-      </footer>
+          </div>
+        )}
 
+      </div>
     </main>
   );
 }

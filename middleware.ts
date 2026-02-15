@@ -4,20 +4,28 @@ import { NextResponse, type NextRequest } from 'next/server'
 const publicRoutes = ['/', '/login', '/signup', '/auth/callback']
 
 export async function middleware(request: NextRequest) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+  // If Supabase is not configured, allow all requests through
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return NextResponse.next()
+  }
+
   let supabaseResponse = NextResponse.next({
     request,
   })
 
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseAnonKey,
     {
       cookies: {
         getAll() {
           return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
+          cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           )
           supabaseResponse = NextResponse.next({
@@ -31,40 +39,47 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  // IMPORTANT: Do not run code between createServerClient and
-  // supabase.auth.getUser(). A simple mistake could make it very hard to debug
-  // issues with users being randomly logged out.
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+    const { pathname } = request.nextUrl
 
-  const { pathname } = request.nextUrl
+    // Allow public routes and API routes
+    if (
+      publicRoutes.includes(pathname) ||
+      pathname.startsWith('/api/') ||
+      pathname.startsWith('/_next/')
+    ) {
+      return supabaseResponse
+    }
 
-  // Allow public routes and API routes
-  if (
-    publicRoutes.includes(pathname) ||
-    pathname.startsWith('/api/') ||
-    pathname.startsWith('/_next/')
-  ) {
+    // Not authenticated → redirect to login
+    if (!user) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/login'
+      return NextResponse.redirect(url)
+    }
+
+    // Authenticated user on login/signup → redirect to dashboard
+    if (user && (pathname === '/login' || pathname === '/signup')) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/dashboard'
+      return NextResponse.redirect(url)
+    }
+
     return supabaseResponse
-  }
-
-  // Not authenticated → redirect to login
-  if (!user) {
+  } catch {
+    // If auth check fails, allow public routes, redirect others to login
+    const { pathname } = request.nextUrl
+    if (publicRoutes.includes(pathname) || pathname.startsWith('/api/')) {
+      return NextResponse.next()
+    }
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)
   }
-
-  // Authenticated user on login/signup → redirect to dashboard
-  if (user && (pathname === '/login' || pathname === '/signup')) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/dashboard'
-    return NextResponse.redirect(url)
-  }
-
-  return supabaseResponse
 }
 
 export const config = {

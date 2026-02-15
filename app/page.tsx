@@ -1,87 +1,105 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 
 export default function Home() {
-  const [showContent, setShowContent] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowContent(true);
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, []);
-
   return (
-    <main className="min-h-screen bg-[#0A0A0A] text-[#F5F5F5] relative overflow-hidden">
+    <main className="bg-[#0A0A0A] text-[#F5F5F5] min-h-screen px-6 md:px-20 py-32">
 
-      {/* HEADER */}
-      <header className="absolute top-0 left-0 w-full flex justify-between items-center px-8 py-6 z-50">
-        <div className="text-xl font-light tracking-widest text-[#D4AF37]">
-          SOS Shine
-        </div>
+      <div className="max-w-3xl mx-auto space-y-24">
 
-        <div className="flex gap-4">
-          <Link href="/login">
-            <button className="px-5 py-2 text-sm border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black transition-all duration-300 rounded-full">
-              Se connecter
-            </button>
-          </Link>
+        {/* INTRO */}
+        <section className="space-y-10">
+          <p className="text-lg leading-relaxed text-[#BDBDBD]">
+            Ce texte n’est pas une publicité.
+          </p>
+
+          <h1 className="text-4xl md:text-6xl font-light leading-tight">
+            C’est une lettre pour ceux qui tiennent encore debout
+            sans savoir pourquoi.
+          </h1>
+
+          <p className="text-xl text-[#BDBDBD] leading-relaxed">
+            Il y a des matins où le réveil sonne,
+            et votre première pensée n’est pas “quelle belle journée”.
+            <br /><br />
+            C’est un poids.
+          </p>
+        </section>
+
+        {/* NON */}
+        <section className="space-y-10">
+          <h2 className="text-5xl md:text-7xl text-[#D4AF37] font-light">
+            Non.
+          </h2>
+
+          <p className="text-xl leading-relaxed text-[#BDBDBD]">
+            Ce n’est pas vrai que vous êtes faible.
+            Ce n’est pas vrai que vous êtes cassé.
+            Ce n’est pas vrai que vous êtes trop.
+          </p>
+        </section>
+
+        {/* BESOINS */}
+        <section className="space-y-12">
+          <h3 className="text-3xl text-[#D4AF37] font-light">
+            Vous avez simplement besoin de trois choses :
+          </h3>
+
+          <div className="space-y-10 text-lg text-[#BDBDBD] leading-relaxed">
+            <p>
+              1 — Un geste doux pour votre corps.
+            </p>
+
+            <p>
+              2 — Un espace sûr pour vos émotions.
+            </p>
+
+            <p>
+              3 — Un premier pas concret vers demain.
+            </p>
+          </div>
+        </section>
+
+        {/* SANCTUAIRE */}
+        <section className="space-y-10">
+          <h3 className="text-4xl font-light">
+            Ce que vous cherchez n’est pas un programme.
+          </h3>
+
+          <p className="text-xl text-[#BDBDBD] leading-relaxed">
+            Pas un coach.
+            <br />
+            Pas une méthode miracle.
+          </p>
+
+          <p className="text-3xl text-[#D4AF37] font-light">
+            Un sanctuaire.
+          </p>
+        </section>
+
+        {/* CTA FINAL */}
+        <section className="pt-20 border-t border-[#222] space-y-10">
+          <p className="text-xl text-[#BDBDBD] leading-relaxed">
+            Si ce texte vous a parlé,
+            alors vous êtes déjà au bon endroit.
+          </p>
 
           <Link href="/signup">
-            <button className="px-5 py-2 text-sm bg-[#D4AF37] text-black hover:opacity-80 transition-all duration-300 rounded-full">
-              Rejoindre
+            <button className="px-10 py-4 border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black transition-all duration-500 rounded-full tracking-wide">
+              Entrer dans le sanctuaire
             </button>
           </Link>
-        </div>
-      </header>
 
-      {/* CONTENU CENTRAL */}
-      <div className="flex flex-col items-center justify-center min-h-screen text-center px-6">
-
-        {!showContent && (
-          <div className="animate-fade flex flex-col items-center">
-            <Image
-              src="/logo.png"
-              alt="SOS Shine"
-              width={260}
-              height={260}
-              className="animate-pulse-slow"
-            />
-          </div>
-        )}
-
-        {showContent && (
-          <div className="max-w-3xl space-y-10 animate-fade-in">
-
-            <h1 className="text-4xl md:text-6xl font-light leading-tight">
-              Ce n’est pas une plateforme.
-              <br />
-              C’est un sanctuaire.
-            </h1>
-
-            <p className="text-xl text-[#BDBDBD] leading-relaxed">
-              Un espace pour transformer la douleur en lumière.
-              <br />
-              Pour accueillir. Apaiser. Élever.
-            </p>
-
-            <p className="text-lg text-[#D4AF37] uppercase tracking-widest">
-              Apaiser · Mouvement · Clarté
-            </p>
-
-            <Link href="/signup">
-              <button className="mt-8 px-10 py-4 border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black transition-all duration-500 rounded-full tracking-wide">
-                Entrer dans le sanctuaire
-              </button>
+          <div className="pt-6">
+            <Link href="/login" className="text-sm text-[#777] hover:text-[#D4AF37] transition">
+              Déjà membre ? Se connecter
             </Link>
-
           </div>
-        )}
+        </section>
 
       </div>
+
     </main>
   );
 }

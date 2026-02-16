@@ -19,25 +19,29 @@ export default function SignupPage() {
     setError(null)
     setLoading(true)
 
-    const supabase = createClient()
+    try {
+      const supabase = createClient()
 
-    const { error: signUpError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { prenom },
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      },
-    })
+      const { error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { prenom },
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
+      })
 
-    setLoading(false)
+      if (signUpError) {
+        setError(signUpError.message)
+        setLoading(false)
+        return
+      }
 
-    if (signUpError) {
-      setError(signUpError.message)
-      return
+      setSuccess(true)
+    } catch {
+      setError('Impossible de créer le compte. Vérifiez votre connexion internet.')
+      setLoading(false)
     }
-
-    setSuccess(true)
   }
 
   async function handleGoogleSignIn() {

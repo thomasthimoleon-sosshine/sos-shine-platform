@@ -17,21 +17,25 @@ export default function LoginPage() {
     setError(null)
     setLoading(true)
 
-    const supabase = createClient()
+    try {
+      const supabase = createClient()
 
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
 
-    setLoading(false)
+      if (signInError) {
+        setError(signInError.message)
+        setLoading(false)
+        return
+      }
 
-    if (signInError) {
-      setError(signInError.message)
-      return
+      router.push('/dashboard')
+    } catch {
+      setError('Impossible de se connecter. Vérifiez votre connexion internet.')
+      setLoading(false)
     }
-
-    router.push('/dashboard')
   }
 
   async function handleGoogleSignIn() {

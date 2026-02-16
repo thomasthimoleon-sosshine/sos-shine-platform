@@ -237,7 +237,7 @@ export default function SignupPage() {
 
         {/* Trial info */}
         <p className="text-center text-xs text-[var(--text-muted)] mt-4 italic">
-          7 jours gratuits — Puis 29€/mois — Sans engagement
+          7 jours gratuits — Puis 29,90€/mois — Sans engagement
         </p>
       </div>
     </main>

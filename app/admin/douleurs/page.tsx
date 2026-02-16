@@ -84,6 +84,7 @@ export default function AdminDouleursPage() {
       audio_meditation_url: form.audio_meditation_url.trim() || null,
       pdf_url: form.pdf_url.trim() || null,
       exercise_content: form.exercise_content.trim() || null,
+      image_url: null,
       is_active: true,
       is_published: false,
     })

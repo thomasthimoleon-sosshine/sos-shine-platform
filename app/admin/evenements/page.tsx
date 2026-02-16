@@ -125,6 +125,8 @@ export default function AdminEvenements() {
       description: form.description.trim() || null,
       event_type: form.event_type,
       location_name: form.location_name.trim() || null,
+      latitude: null as number | null,
+      longitude: null as number | null,
       event_date: new Date(form.event_date).toISOString(),
       price: Number(form.price) || 0,
       max_participants: form.max_participants ? Number(form.max_participants) : null,

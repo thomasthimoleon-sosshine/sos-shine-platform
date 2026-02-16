@@ -1,101 +1,273 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
+import { createClient } from '@/lib/supabase/client'
+import FileUpload from '@/components/FileUpload'
+
+interface FieldDef {
+  label: string
+  key: string
+  type: 'text' | 'color' | 'textarea' | 'upload'
+  accept?: string
+  folder?: string
+  hint?: string
+  default: string
+}
+
+interface SectionDef {
+  title: string
+  icon: string
+  fields: FieldDef[]
+}
+
+const sections: SectionDef[] = [
+  {
+    title: 'Apparence',
+    icon: '🎨',
+    fields: [
+      { label: 'Couleur principale (or)', key: 'color_primary', type: 'color', default: '#D4A843' },
+      { label: 'Couleur secondaire', key: 'color_secondary', type: 'color', default: '#A29BFE' },
+      { label: 'Couleur de fond', key: 'color_bg', type: 'color', default: '#0A0A0A' },
+      { label: 'Logo du site', key: 'logo_url', type: 'upload', accept: 'image/*', folder: 'site', hint: 'PNG ou SVG recommande, 512x512px', default: '' },
+      { label: 'Image de fond hero', key: 'hero_bg_url', type: 'upload', accept: 'image/*', folder: 'site', hint: 'Image plein ecran, 1920x1080px', default: '' },
+    ],
+  },
+  {
+    title: 'Textes de la landing page',
+    icon: '✏️',
+    fields: [
+      { label: 'Titre principal', key: 'hero_title', type: 'textarea', default: "L'encyclopedie des schemas emotionnels et des experiences de vie." },
+      { label: 'Sous-titre', key: 'hero_subtitle', type: 'textarea', default: 'Un espace ouvert 24h/24, 7j/7, pour comprendre, apaiser et ne plus jamais etre seul.' },
+      { label: 'Video d\'introduction', key: 'intro_video_url', type: 'upload', accept: 'video/*', folder: 'site', hint: 'MP4 recommande', default: '' },
+      { label: 'Texte du principe SOS Shine (titre)', key: 'principe_title', type: 'textarea', default: "On ne change pas votre identite. On eteint la douleur pour liberer votre potentiel." },
+      { label: 'Texte du principe SOS Shine (description)', key: 'principe_desc', type: 'textarea', default: "Chaque douleur — abandon, trahison, burn-out, deuil, peur — possede sa propre page dans notre encyclopedie, avec un protocole en 4 etapes concu pour vous accompagner de A a Z." },
+      { label: 'Texte CTA final', key: 'cta_title', type: 'textarea', default: "Comprenez. Apaisez. Ne soyez plus jamais seul." },
+    ],
+  },
+  {
+    title: 'Temoignages',
+    icon: '💬',
+    fields: [
+      { label: 'Temoignage 1 (texte | prenom | ville)', key: 'testimonial_1', type: 'textarea', default: "Je ne savais meme pas que j'avais le droit de ne pas aller bien. SOS Shine m'a donne un espace ou ma douleur avait le droit d'exister.|Marie, 34 ans|Lyon" },
+      { label: 'Temoignage 2 (texte | prenom | ville)', key: 'testimonial_2', type: 'textarea', default: "La premiere fois que quelqu'un m'a dit je suis passe par la, tiens bon — c'etait dans le Feu de Camp. J'ai pleure. Des larmes de soulagement.|Karim, 41 ans|Bordeaux" },
+      { label: 'Temoignage 3 (texte | prenom | ville)', key: 'testimonial_3', type: 'textarea', default: "J'ai fait ma premiere Shine Walk un samedi matin. En rentrant, j'ai senti quelque chose que j'avais oublie : je n'etais plus seule.|Sophie, 28 ans|Bruxelles" },
+      { label: 'Temoignage 4 (texte | prenom | ville)', key: 'testimonial_4', type: 'textarea', default: "Grace aux 4 etapes, j'ai compris ma douleur au lieu de la fuir. Aujourd'hui, je suis Eclaireur et j'aide les autres.|Antoine, 37 ans|Geneve" },
+    ],
+  },
+  {
+    title: 'Tarification',
+    icon: '💰',
+    fields: [
+      { label: 'Prix Essentiel (EUR/mois)', key: 'price_essential', type: 'text', default: '29.90' },
+      { label: 'Prix Premium (EUR/mois)', key: 'price_premium', type: 'text', default: '99.90' },
+      { label: 'Jours d\'essai gratuit', key: 'trial_days', type: 'text', default: '7' },
+      { label: 'Features Essentiel (une par ligne)', key: 'features_essential', type: 'textarea', default: "Encyclopedie complete des douleurs\n4 etapes par douleur (video, soin, meditation, exercices)\nChat dedie par douleur + Chat general\nMur communautaire\nSoins collectifs & evenements\nEssai gratuit 7 jours" },
+      { label: 'Features Premium (une par ligne)', key: 'features_premium', type: 'textarea', default: "Tout l'Essentiel inclus\nPermanences experts 24/7\nAccompagnement prioritaire\nSupport direct Julia, William & Thomas" },
+    ],
+  },
+  {
+    title: 'Notifications email',
+    icon: '📧',
+    fields: [
+      { label: 'Email expediteur', key: 'email_from', type: 'text', default: 'contact@sosshine.fr' },
+      { label: 'Nom expediteur', key: 'email_from_name', type: 'text', default: 'SOS Shine' },
+    ],
+  },
+]
 
 export default function ParametresPage() {
+  const [values, setValues] = useState<Record<string, string>>({})
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  function handleSave() {
-    setSaved(true)
-    setTimeout(() => setSaved(false), 3000)
+  const loadSettings = useCallback(async () => {
+    const supabase = createClient()
+    const { data, error: fetchError } = await supabase
+      .from('site_settings')
+      .select('key, value')
+
+    if (fetchError) {
+      setError(fetchError.message)
+      setLoading(false)
+      return
+    }
+
+    const map: Record<string, string> = {}
+    // Set defaults first
+    sections.forEach((s) => s.fields.forEach((f) => { map[f.key] = f.default }))
+    // Override with DB values
+    if (data) {
+      data.forEach((row: { key: string; value: string }) => { map[row.key] = row.value })
+    }
+    setValues(map)
+    setLoading(false)
+  }, [])
+
+  useEffect(() => { loadSettings() }, [loadSettings])
+
+  function updateValue(key: string, value: string) {
+    setValues((prev) => ({ ...prev, [key]: value }))
+    setSaved(false)
   }
 
-  const sections = [
-    {
-      title: 'Apparence',
-      icon: '🎨',
-      fields: [
-        { label: 'Couleur principale (or)', key: 'color_primary', type: 'color', default: '#D4A843' },
-        { label: 'Couleur secondaire', key: 'color_secondary', type: 'color', default: '#A29BFE' },
-        { label: 'Couleur de fond', key: 'color_bg', type: 'color', default: '#0A0A0A' },
-        { label: 'URL du logo', key: 'logo_url', type: 'text', default: '' },
-        { label: 'URL image de fond hero', key: 'hero_bg_url', type: 'text', default: '' },
-      ],
-    },
-    {
-      title: 'Textes de la landing page',
-      icon: '✏️',
-      fields: [
-        { label: 'Titre principal', key: 'hero_title', type: 'text', default: "L'encyclopédie des schémas émotionnels et des expériences de vie." },
-        { label: 'Sous-titre', key: 'hero_subtitle', type: 'text', default: 'Un espace ouvert 24h/24, 7j/7, pour comprendre, apaiser et ne plus jamais être seul.' },
-        { label: 'URL vidéo d\'introduction', key: 'intro_video_url', type: 'text', default: '' },
-      ],
-    },
-    {
-      title: 'Tarification',
-      icon: '💰',
-      fields: [
-        { label: 'Prix Essentiel (€/mois)', key: 'price_essential', type: 'text', default: '29.90' },
-        { label: 'Prix Premium (€/mois)', key: 'price_premium', type: 'text', default: '99.90' },
-        { label: 'Jours d\'essai gratuit', key: 'trial_days', type: 'text', default: '7' },
-      ],
-    },
-    {
-      title: 'Notifications email',
-      icon: '📧',
-      fields: [
-        { label: 'Email expéditeur', key: 'email_from', type: 'text', default: 'contact@sosshine.fr' },
-        { label: 'Nom expéditeur', key: 'email_from_name', type: 'text', default: 'SOS Shine' },
-      ],
-    },
-  ]
+  async function handleSave() {
+    setSaving(true)
+    setError(null)
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+
+    // Upsert all settings
+    const upserts = Object.entries(values).map(([key, value]) => ({
+      key,
+      value,
+      updated_by: user?.id || null,
+      updated_at: new Date().toISOString(),
+    }))
+
+    // Use upsert on the key column
+    for (const item of upserts) {
+      // Check if exists
+      const { data: existing } = await supabase
+        .from('site_settings')
+        .select('id')
+        .eq('key', item.key)
+        .single()
+
+      if (existing) {
+        const { error: updateErr } = await supabase
+          .from('site_settings')
+          .update({ value: item.value, updated_by: item.updated_by, updated_at: item.updated_at })
+          .eq('key', item.key)
+        if (updateErr) {
+          setError(`Erreur sauvegarde ${item.key}: ${updateErr.message}`)
+          setSaving(false)
+          return
+        }
+      } else {
+        const { error: insertErr } = await supabase
+          .from('site_settings')
+          .insert(item)
+        if (insertErr) {
+          setError(`Erreur sauvegarde ${item.key}: ${insertErr.message}`)
+          setSaving(false)
+          return
+        }
+      }
+    }
+
+    setSaving(false)
+    setSaved(true)
+    setTimeout(() => setSaved(false), 4000)
+  }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center py-20">
+        <div className="w-8 h-8 border-2 border-[#A29BFE] border-t-transparent rounded-full animate-spin" />
+      </div>
+    )
+  }
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-display text-3xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-            Paramètres
+            Parametres
           </h1>
           <p className="mt-1" style={{ color: 'var(--text-secondary)' }}>
             Personnalisez l&apos;apparence, les textes et la configuration de la plateforme.
           </p>
         </div>
-        {saved && (
-          <span className="text-sm font-medium" style={{ color: '#55EFC4' }}>Sauvegardé !</span>
-        )}
+        <div className="flex items-center gap-3">
+          {saved && (
+            <span className="text-sm font-medium" style={{ color: '#55EFC4' }}>Sauvegarde !</span>
+          )}
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="px-6 py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer disabled:opacity-50"
+            style={{ background: '#A29BFE', color: '#fff' }}
+          >
+            {saving ? 'Sauvegarde...' : 'Sauvegarder'}
+          </button>
+        </div>
       </div>
 
-      <div className="rounded-xl p-5" style={{ background: 'rgba(162,155,254,0.06)', border: '1px solid rgba(162,155,254,0.15)' }}>
-        <p className="text-sm" style={{ color: '#A29BFE' }}>
-          Les modifications seront connectées à la base de données Supabase (table site_settings) une fois les tables créées.
-          Pour l&apos;instant, les valeurs par défaut sont affichées.
-        </p>
-      </div>
+      {error && (
+        <div className="rounded-xl px-4 py-3 text-sm" style={{ background: 'rgba(255,107,107,0.1)', border: '1px solid rgba(255,107,107,0.25)', color: '#FF6B6B' }}>
+          {error}
+        </div>
+      )}
 
       {sections.map((section) => (
         <div key={section.title} className="rounded-xl p-6" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
           <h2 className="font-semibold text-lg mb-5 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
             <span>{section.icon}</span> {section.title}
           </h2>
-          <div className="space-y-4">
+          <div className="space-y-5">
             {section.fields.map((field) => (
-              <div key={field.key} className="flex flex-col sm:flex-row sm:items-center gap-2">
-                <label className="text-sm sm:w-48 flex-shrink-0" style={{ color: 'var(--text-secondary)' }}>
-                  {field.label}
-                </label>
-                {field.type === 'color' ? (
-                  <div className="flex items-center gap-2 flex-1">
-                    <input type="color" defaultValue={field.default}
-                      className="w-10 h-10 rounded-lg cursor-pointer border-0" style={{ background: 'transparent' }} />
-                    <input type="text" defaultValue={field.default}
-                      className="flex-1 rounded-lg px-3 py-2 text-sm outline-none"
-                      style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }} />
+              <div key={field.key}>
+                {field.type === 'upload' ? (
+                  <FileUpload
+                    label={field.label}
+                    accept={field.accept || '*'}
+                    folder={field.folder || 'site'}
+                    currentUrl={values[field.key] || null}
+                    hint={field.hint}
+                    onUploaded={(url) => updateValue(field.key, url)}
+                    onRemoved={() => updateValue(field.key, '')}
+                  />
+                ) : field.type === 'color' ? (
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                    <label className="text-sm sm:w-48 flex-shrink-0" style={{ color: 'var(--text-secondary)' }}>
+                      {field.label}
+                    </label>
+                    <div className="flex items-center gap-2 flex-1">
+                      <input
+                        type="color"
+                        value={values[field.key] || field.default}
+                        onChange={(e) => updateValue(field.key, e.target.value)}
+                        className="w-10 h-10 rounded-lg cursor-pointer border-0"
+                        style={{ background: 'transparent' }}
+                      />
+                      <input
+                        type="text"
+                        value={values[field.key] || ''}
+                        onChange={(e) => updateValue(field.key, e.target.value)}
+                        className="flex-1 rounded-lg px-3 py-2 text-sm outline-none"
+                        style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                      />
+                    </div>
+                  </div>
+                ) : field.type === 'textarea' ? (
+                  <div>
+                    <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
+                      {field.label}
+                    </label>
+                    <textarea
+                      value={values[field.key] || ''}
+                      onChange={(e) => updateValue(field.key, e.target.value)}
+                      rows={3}
+                      className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-y"
+                      style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                    />
                   </div>
                 ) : (
-                  <input type="text" defaultValue={field.default}
-                    className="flex-1 rounded-lg px-3 py-2 text-sm outline-none"
-                    style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }} />
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                    <label className="text-sm sm:w-48 flex-shrink-0" style={{ color: 'var(--text-secondary)' }}>
+                      {field.label}
+                    </label>
+                    <input
+                      type="text"
+                      value={values[field.key] || ''}
+                      onChange={(e) => updateValue(field.key, e.target.value)}
+                      className="flex-1 rounded-lg px-3 py-2 text-sm outline-none"
+                      style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                    />
+                  </div>
                 )}
               </div>
             ))}
@@ -103,11 +275,17 @@ export default function ParametresPage() {
         </div>
       ))}
 
-      <button onClick={handleSave}
-        className="px-6 py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer"
-        style={{ background: '#A29BFE', color: '#fff' }}>
-        Sauvegarder les paramètres
-      </button>
+      {/* Bottom save button */}
+      <div className="flex justify-end">
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          className="px-6 py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer disabled:opacity-50"
+          style={{ background: '#A29BFE', color: '#fff' }}
+        >
+          {saving ? 'Sauvegarde...' : 'Sauvegarder les parametres'}
+        </button>
+      </div>
     </div>
   )
 }

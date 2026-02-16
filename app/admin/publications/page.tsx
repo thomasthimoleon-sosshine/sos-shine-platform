@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import FileUpload from '@/components/FileUpload'
 import type { Post } from '@/types/database'
 
 const POST_TYPE_CONFIG: Record<Post['post_type'], { label: string; color: string; icon: string }> = {
@@ -124,7 +125,7 @@ export default function AdminPublications() {
         </button>
       </div>
 
-      {/* Inline Create Form */}
+      {/* Form */}
       {showForm && (
         <form
           onSubmit={handleCreate}
@@ -135,7 +136,6 @@ export default function AdminPublications() {
             Nouvelle publication
           </h2>
 
-          {/* Title */}
           <div>
             <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
               Titre
@@ -147,15 +147,10 @@ export default function AdminPublications() {
               onChange={(e) => setForm({ ...form, title: e.target.value })}
               placeholder="Titre de la publication..."
               className="w-full rounded-lg px-4 py-2.5 text-sm outline-none transition-colors"
-              style={{
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid var(--dark-border)',
-                color: 'var(--text-primary)',
-              }}
+              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
             />
           </div>
 
-          {/* Content */}
           <div>
             <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
               Contenu
@@ -167,16 +162,11 @@ export default function AdminPublications() {
               onChange={(e) => setForm({ ...form, content: e.target.value })}
               placeholder="Contenu de la publication..."
               className="w-full rounded-lg px-4 py-2.5 text-sm outline-none resize-y transition-colors"
-              style={{
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid var(--dark-border)',
-                color: 'var(--text-primary)',
-              }}
+              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
             />
           </div>
 
           <div className="grid sm:grid-cols-2 gap-5">
-            {/* Post Type */}
             <div>
               <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
                 Type de publication
@@ -185,11 +175,7 @@ export default function AdminPublications() {
                 value={form.post_type}
                 onChange={(e) => setForm({ ...form, post_type: e.target.value as Post['post_type'] })}
                 className="w-full rounded-lg px-4 py-2.5 text-sm outline-none transition-colors"
-                style={{
-                  background: 'rgba(255,255,255,0.03)',
-                  border: '1px solid var(--dark-border)',
-                  color: 'var(--text-primary)',
-                }}
+                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
               >
                 {POST_TYPES.map((t) => (
                   <option key={t} value={t} style={{ background: '#111', color: '#E8E0D4' }}>
@@ -199,36 +185,23 @@ export default function AdminPublications() {
               </select>
             </div>
 
-            {/* Image URL */}
-            <div>
-              <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
-                Image URL <span style={{ color: 'var(--text-muted)' }}>(optionnel)</span>
-              </label>
-              <input
-                type="url"
-                value={form.image_url}
-                onChange={(e) => setForm({ ...form, image_url: e.target.value })}
-                placeholder="https://..."
-                className="w-full rounded-lg px-4 py-2.5 text-sm outline-none transition-colors"
-                style={{
-                  background: 'rgba(255,255,255,0.03)',
-                  border: '1px solid var(--dark-border)',
-                  color: 'var(--text-primary)',
-                }}
-              />
-            </div>
+            <FileUpload
+              label="Image (optionnel)"
+              accept="image/*"
+              folder="posts"
+              currentUrl={form.image_url || null}
+              hint="JPG, PNG ou WebP"
+              onUploaded={(url) => setForm({ ...form, image_url: url })}
+              onRemoved={() => setForm({ ...form, image_url: '' })}
+            />
           </div>
 
-          {/* Submit */}
           <div className="flex justify-end">
             <button
               type="submit"
               disabled={saving}
               className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0"
-              style={{
-                background: 'linear-gradient(135deg, #A29BFE, #7C6FEF)',
-                color: '#fff',
-              }}
+              style={{ background: 'linear-gradient(135deg, #A29BFE, #7C6FEF)', color: '#fff' }}
             >
               {saving ? 'Enregistrement...' : 'Enregistrer la publication'}
             </button>
@@ -244,9 +217,7 @@ export default function AdminPublications() {
       ) : posts.length === 0 ? (
         <div className="text-center py-16 rounded-xl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
           <p className="text-4xl mb-3">📢</p>
-          <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>
-            Aucune publication
-          </p>
+          <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>Aucune publication</p>
           <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
             Cliquez sur &quot;Nouvelle publication&quot; pour commencer.
           </p>
@@ -256,65 +227,46 @@ export default function AdminPublications() {
           {posts.map((post) => {
             const config = POST_TYPE_CONFIG[post.post_type]
             return (
-              <div
-                key={post.id}
-                className="rounded-xl p-5 transition-all duration-200"
-                style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
-              >
+              <div key={post.id} className="rounded-xl p-5 transition-all duration-200"
+                style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
                 <div className="flex flex-col sm:flex-row sm:items-start gap-4">
-                  {/* Left: Post info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2 mb-2">
-                      {/* Type Badge */}
-                      <span
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium"
-                        style={{ background: `${config.color}15`, color: config.color }}
-                      >
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium"
+                        style={{ background: `${config.color}15`, color: config.color }}>
                         <span className="text-[10px]">{config.icon}</span>
                         {config.label}
                       </span>
-
-                      {/* Published Status */}
-                      <span
-                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium"
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium"
                         style={{
                           background: post.is_published ? 'rgba(85,239,196,0.1)' : 'rgba(255,107,85,0.1)',
                           color: post.is_published ? '#55EFC4' : '#FF6B55',
-                        }}
-                      >
-                        <span
-                          className="w-1.5 h-1.5 rounded-full"
-                          style={{ background: post.is_published ? '#55EFC4' : '#FF6B55' }}
-                        />
+                        }}>
+                        <span className="w-1.5 h-1.5 rounded-full" style={{ background: post.is_published ? '#55EFC4' : '#FF6B55' }} />
                         {post.is_published ? 'Publie' : 'Brouillon'}
                       </span>
                     </div>
 
-                    {/* Title */}
-                    <h3
-                      className="font-semibold text-sm truncate"
-                      style={{ color: 'var(--text-primary)' }}
-                    >
-                      {post.title}
-                    </h3>
+                    <div className="flex items-start gap-3">
+                      {post.image_url && (
+                        <img src={post.image_url} alt="" className="w-16 h-16 object-cover rounded-lg flex-shrink-0" />
+                      )}
+                      <div className="min-w-0">
+                        <h3 className="font-semibold text-sm truncate" style={{ color: 'var(--text-primary)' }}>
+                          {post.title}
+                        </h3>
+                        <p className="text-xs mt-1 line-clamp-2" style={{ color: 'var(--text-muted)' }}>
+                          {post.content}
+                        </p>
+                      </div>
+                    </div>
 
-                    {/* Content preview */}
-                    <p
-                      className="text-xs mt-1 line-clamp-2"
-                      style={{ color: 'var(--text-muted)' }}
-                    >
-                      {post.content}
-                    </p>
-
-                    {/* Date */}
                     <p className="text-[11px] mt-2" style={{ color: 'var(--text-muted)' }}>
                       {formatDate(post.created_at)}
                     </p>
                   </div>
 
-                  {/* Right: Actions */}
                   <div className="flex items-center gap-2 shrink-0">
-                    {/* Toggle publish/unpublish */}
                     <button
                       onClick={() => togglePublish(post)}
                       disabled={togglingId === post.id}
@@ -323,26 +275,14 @@ export default function AdminPublications() {
                         background: post.is_published ? 'rgba(255,107,85,0.1)' : 'rgba(85,239,196,0.1)',
                         color: post.is_published ? '#FF6B55' : '#55EFC4',
                         border: `1px solid ${post.is_published ? 'rgba(255,107,85,0.2)' : 'rgba(85,239,196,0.2)'}`,
-                      }}
-                    >
-                      {togglingId === post.id
-                        ? '...'
-                        : post.is_published
-                          ? 'Depublier'
-                          : 'Publier'}
+                      }}>
+                      {togglingId === post.id ? '...' : post.is_published ? 'Depublier' : 'Publier'}
                     </button>
-
-                    {/* Delete */}
                     <button
                       onClick={() => handleDelete(post.id)}
                       disabled={deletingId === post.id}
                       className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 disabled:opacity-50"
-                      style={{
-                        background: 'rgba(255,75,75,0.08)',
-                        color: '#FF4B4B',
-                        border: '1px solid rgba(255,75,75,0.15)',
-                      }}
-                    >
+                      style={{ background: 'rgba(255,75,75,0.08)', color: '#FF4B4B', border: '1px solid rgba(255,75,75,0.15)' }}>
                       {deletingId === post.id ? '...' : 'Supprimer'}
                     </button>
                   </div>
@@ -353,7 +293,6 @@ export default function AdminPublications() {
         </div>
       )}
 
-      {/* Post count */}
       {!loading && posts.length > 0 && (
         <p className="text-xs text-center" style={{ color: 'var(--text-muted)' }}>
           {posts.length} publication{posts.length > 1 ? 's' : ''} au total

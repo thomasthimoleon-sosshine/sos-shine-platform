@@ -130,21 +130,35 @@ export type SiteSetting = {
   updated_at: string
 }
 
-// ── Database (Supabase generic) ──
+// ── Helper: auto-generated columns are optional on Insert ──
+type OptionalId<T> = Omit<T, Extract<'id' | 'created_at' | 'updated_at', keyof T>> &
+  Partial<Pick<T, Extract<'id' | 'created_at' | 'updated_at', keyof T>>>
+
+// ── Supabase table helper ──
+type Table<Row, Insert = OptionalId<Row>, Update = Partial<Row>> = {
+  Row: Row
+  Insert: Insert
+  Update: Update
+  Relationships: []
+}
+
+// ── Database (Supabase schema) ──
 export type Database = {
   public: {
     Tables: {
-      profiles: { Row: Profile }
-      subscriptions: { Row: Subscription }
-      douleurs: { Row: Douleur }
-      messages: { Row: Message }
-      posts: { Row: Post }
-      events: { Row: Event }
-      event_registrations: { Row: EventRegistration }
-      content_views: { Row: ContentView }
-      notifications: { Row: Notification }
-      site_settings: { Row: SiteSetting }
+      profiles: Table<Profile>
+      subscriptions: Table<Subscription>
+      douleurs: Table<Douleur>
+      messages: Table<Message>
+      posts: Table<Post>
+      events: Table<Event>
+      event_registrations: Table<EventRegistration>
+      content_views: Table<ContentView>
+      notifications: Table<Notification>
+      site_settings: Table<SiteSetting>
     }
+    Views: Record<string, never>
+    Functions: Record<string, never>
   }
 }
 

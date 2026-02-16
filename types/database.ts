@@ -73,6 +73,7 @@ export type Database = {
         Row: Profile
         Insert: Omit<Profile, 'created_at'> & { created_at?: string }
         Update: Partial<Omit<Profile, 'id'>>
+        Relationships: []
       }
       subscriptions: {
         Row: Subscription
@@ -82,6 +83,7 @@ export type Database = {
           updated_at?: string
         }
         Update: Partial<Omit<Subscription, 'id'>>
+        Relationships: []
       }
       douleurs: {
         Row: Douleur
@@ -91,6 +93,7 @@ export type Database = {
           updated_at?: string
         }
         Update: Partial<Omit<Douleur, 'id'>>
+        Relationships: []
       }
       messages: {
         Row: Message
@@ -99,6 +102,7 @@ export type Database = {
           created_at?: string
         }
         Update: Partial<Omit<Message, 'id'>>
+        Relationships: []
       }
       events: {
         Row: Event
@@ -107,6 +111,7 @@ export type Database = {
           created_at?: string
         }
         Update: Partial<Omit<Event, 'id'>>
+        Relationships: []
       }
       event_registrations: {
         Row: EventRegistration
@@ -115,8 +120,13 @@ export type Database = {
           created_at?: string
         }
         Update: Partial<Omit<EventRegistration, 'id'>>
+        Relationships: []
       }
     }
+    Views: Record<string, never>
+    Functions: Record<string, never>
+    Enums: Record<string, never>
+    CompositeTypes: Record<string, never>
   }
 }
 

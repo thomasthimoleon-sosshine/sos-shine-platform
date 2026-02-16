@@ -130,6 +130,24 @@ export type SiteSetting = {
   updated_at: string
 }
 
+// ── Database (Supabase generic) ──
+export type Database = {
+  public: {
+    Tables: {
+      profiles: { Row: Profile }
+      subscriptions: { Row: Subscription }
+      douleurs: { Row: Douleur }
+      messages: { Row: Message }
+      posts: { Row: Post }
+      events: { Row: Event }
+      event_registrations: { Row: EventRegistration }
+      content_views: { Row: ContentView }
+      notifications: { Row: Notification }
+      site_settings: { Row: SiteSetting }
+    }
+  }
+}
+
 // ── Helper types ──
 export type MessageWithProfile = Message & {
   profiles: Pick<Profile, 'prenom' | 'role' | 'avatar_url'>

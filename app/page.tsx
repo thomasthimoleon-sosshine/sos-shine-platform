@@ -438,7 +438,7 @@ export default function Home() {
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
             <span className="font-display text-xl text-[#D4A843] font-medium">SOS Shine</span>
-            <span className="text-[var(--text-muted)] text-xs">© 2025</span>
+            <span className="text-[var(--text-muted)] text-xs">© 2026</span>
           </div>
           <div className="flex items-center gap-6 text-xs text-[var(--text-muted)]">
             <Link href="/mentions-legales" className="gold-underline hover:text-[#D4A843] transition-colors">Mentions légales</Link>

@@ -104,7 +104,7 @@ export default function EncyclopediePage() {
             }}
             className="w-8 h-8 rounded-lg text-xs font-semibold flex items-center justify-center transition-all cursor-pointer"
             style={{
-              background: activeLetters.has(letter) ? 'rgba(212,168,67,0.1)' : 'transparent',
+              background: activeLetters.has(letter) ? 'rgba(212,175,55,0.1)' : 'transparent',
               color: activeLetters.has(letter) ? 'var(--gold)' : 'var(--text-muted)',
               opacity: activeLetters.has(letter) ? 1 : 0.3,
             }}
@@ -169,7 +169,7 @@ export default function EncyclopediePage() {
                             <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                           </svg>
                         ) : (
-                          <span className="text-xs px-2 py-1 rounded-lg flex-shrink-0" style={{ background: 'rgba(212,168,67,0.1)', color: 'var(--gold)' }}>
+                          <span className="text-xs px-2 py-1 rounded-lg flex-shrink-0" style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}>
                             Bientôt
                           </span>
                         )}
@@ -184,7 +184,7 @@ export default function EncyclopediePage() {
       )}
 
       {/* Info */}
-      <div className="rounded-xl p-5 text-center" style={{ background: 'rgba(212,168,67,0.04)', border: '1px solid rgba(212,168,67,0.1)' }}>
+      <div className="rounded-xl p-5 text-center" style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.1)' }}>
         <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
           Vous ne trouvez pas votre douleur ? Nous ajoutons régulièrement de nouvelles pages.
         </p>

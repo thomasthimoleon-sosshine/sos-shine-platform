@@ -5,15 +5,15 @@
 ═══════════════════════════════════════ */
 
 :root {
-  --gold: #D4A843;
-  --gold-light: #F5DEB3;
-  --gold-deep: #A88532;
-  --dark: #0A0A0A;
-  --dark-card: #111111;
-  --dark-border: #1A1A1A;
-  --text-primary: #E8E0D4;
-  --text-secondary: #9A9080;
-  --text-muted: #5A5347;
+  --gold: #D4AF37;
+  --gold-light: #E8CC6E;
+  --gold-deep: #B8960F;
+  --dark: #1E0F17;
+  --dark-card: #2A1A22;
+  --dark-border: #3D2832;
+  --text-primary: #F0E6EA;
+  --text-secondary: #B89AA8;
+  --text-muted: #7A5A68;
 }
 
 @theme inline {

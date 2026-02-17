@@ -6,9 +6,9 @@ import FileUpload from '@/components/FileUpload'
 import type { Post } from '@/types/database'
 
 const POST_TYPE_CONFIG: Record<Post['post_type'], { label: string; color: string; icon: string }> = {
-  announcement: { label: 'Annonce', color: '#D4A843', icon: '📢' },
+  announcement: { label: 'Annonce', color: '#D4AF37', icon: '📢' },
   douleur_published: { label: 'Douleur publiee', color: '#55EFC4', icon: '📘' },
-  event_published: { label: 'Evenement publie', color: '#A29BFE', icon: '📅' },
+  event_published: { label: 'Evenement publie', color: '#74C0FC', icon: '📅' },
   general: { label: 'General', color: '#9A9080', icon: '💬' },
 }
 
@@ -116,9 +116,9 @@ export default function AdminPublications() {
           onClick={() => setShowForm(!showForm)}
           className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5 self-start"
           style={{
-            background: showForm ? 'rgba(162,155,254,0.1)' : 'linear-gradient(135deg, #A29BFE, #7C6FEF)',
-            color: showForm ? '#A29BFE' : '#fff',
-            border: showForm ? '1px solid rgba(162,155,254,0.3)' : 'none',
+            background: showForm ? 'rgba(116,192,252,0.1)' : 'linear-gradient(135deg, #74C0FC, #4DA3E8)',
+            color: showForm ? '#74C0FC' : '#fff',
+            border: showForm ? '1px solid rgba(116,192,252,0.3)' : 'none',
           }}
         >
           {showForm ? 'Annuler' : '+ Nouvelle publication'}
@@ -132,7 +132,7 @@ export default function AdminPublications() {
           className="rounded-xl p-6 space-y-5"
           style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
         >
-          <h2 className="font-semibold text-lg" style={{ color: '#A29BFE' }}>
+          <h2 className="font-semibold text-lg" style={{ color: '#74C0FC' }}>
             Nouvelle publication
           </h2>
 
@@ -201,7 +201,7 @@ export default function AdminPublications() {
               type="submit"
               disabled={saving}
               className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0"
-              style={{ background: 'linear-gradient(135deg, #A29BFE, #7C6FEF)', color: '#fff' }}
+              style={{ background: 'linear-gradient(135deg, #74C0FC, #4DA3E8)', color: '#fff' }}
             >
               {saving ? 'Enregistrement...' : 'Enregistrer la publication'}
             </button>
@@ -212,7 +212,7 @@ export default function AdminPublications() {
       {/* Posts List */}
       {loading ? (
         <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-2 border-[#A29BFE] border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-[#74C0FC] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : posts.length === 0 ? (
         <div className="text-center py-16 rounded-xl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>

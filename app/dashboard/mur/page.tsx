@@ -30,9 +30,9 @@ export default function MurPage() {
 
   function getTypeLabel(type: string) {
     const map: Record<string, { label: string; color: string; icon: string }> = {
-      announcement: { label: 'Annonce', color: '#D4A843', icon: '📢' },
+      announcement: { label: 'Annonce', color: '#D4AF37', icon: '📢' },
       douleur_published: { label: 'Nouvelle douleur', color: '#55EFC4', icon: '📘' },
-      event_published: { label: 'Nouvel événement', color: '#A29BFE', icon: '📅' },
+      event_published: { label: 'Nouvel événement', color: '#74C0FC', icon: '📅' },
       general: { label: 'Publication', color: 'var(--text-secondary)', icon: '💬' },
     }
     return map[type] || map.general
@@ -57,7 +57,7 @@ export default function MurPage() {
         </div>
       ) : posts.length === 0 ? (
         <div className="text-center py-16">
-          <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-5 text-3xl" style={{ background: 'rgba(212,168,67,0.08)' }}>
+          <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-5 text-3xl" style={{ background: 'rgba(212,175,55,0.08)' }}>
             📋
           </div>
           <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
@@ -111,7 +111,7 @@ export default function MurPage() {
                 {/* Author */}
                 <div className="flex items-center gap-2.5 mb-4">
                   <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
-                    style={{ background: 'rgba(212,168,67,0.12)', color: 'var(--gold)' }}>
+                    style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
                     {post.profiles?.prenom?.charAt(0).toUpperCase() || 'S'}
                   </div>
                   <div>
@@ -119,7 +119,7 @@ export default function MurPage() {
                       {post.profiles?.prenom || 'SOS Shine'}
                     </span>
                     {post.profiles?.role === 'founder' && (
-                      <span className="text-xs ml-2 px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,168,67,0.15)', color: 'var(--gold)' }}>
+                      <span className="text-xs ml-2 px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>
                         Fondateur
                       </span>
                     )}

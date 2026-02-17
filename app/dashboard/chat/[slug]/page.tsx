@@ -148,7 +148,7 @@ export default function ChatDouleurPage() {
               <div key={msg.id} className="flex gap-3">
                 <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-semibold"
                   style={{
-                    background: msg.user_id === userId ? 'rgba(212,168,67,0.15)' : 'rgba(255,255,255,0.05)',
+                    background: msg.user_id === userId ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.05)',
                     color: msg.user_id === userId ? 'var(--gold)' : 'var(--text-secondary)',
                   }}>
                   {msg.profiles?.prenom?.charAt(0).toUpperCase() || '?'}
@@ -159,7 +159,7 @@ export default function ChatDouleurPage() {
                       {msg.profiles?.prenom || 'Membre'}
                     </span>
                     {msg.profiles?.role === 'founder' && (
-                      <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,168,67,0.15)', color: 'var(--gold)' }}>Fondateur</span>
+                      <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>Fondateur</span>
                     )}
                     <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{formatTime(msg.created_at)}</span>
                   </div>

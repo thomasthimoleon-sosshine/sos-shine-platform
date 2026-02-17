@@ -183,51 +183,64 @@ export default function ParametresPage() {
   async function handleSave() {
     setSaving(true)
     setError(null)
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    try {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      const now = new Date().toISOString()
+      const userId = user?.id || null
 
-    // Upsert all settings
-    const upserts = Object.entries(values).map(([key, value]) => ({
-      key,
-      value,
-      updated_by: user?.id || null,
-      updated_at: new Date().toISOString(),
-    }))
+      // Build upsert payload
+      const rows = Object.entries(values).map(([key, value]) => ({
+        key,
+        value,
+        updated_by: userId,
+        updated_at: now,
+      }))
 
-    // Use upsert on the key column
-    for (const item of upserts) {
-      // Check if exists
-      const { data: existing } = await supabase
+      // Single upsert call (requires unique constraint on "key" column)
+      const { error: upsertErr } = await supabase
         .from('site_settings')
-        .select('id')
-        .eq('key', item.key)
-        .single()
+        .upsert(rows, { onConflict: 'key' })
 
-      if (existing) {
-        const { error: updateErr } = await supabase
-          .from('site_settings')
-          .update({ value: item.value, updated_by: item.updated_by, updated_at: item.updated_at })
-          .eq('key', item.key)
-        if (updateErr) {
-          setError(`Erreur sauvegarde ${item.key}: ${updateErr.message}`)
-          setSaving(false)
-          return
-        }
-      } else {
-        const { error: insertErr } = await supabase
-          .from('site_settings')
-          .insert(item)
-        if (insertErr) {
-          setError(`Erreur sauvegarde ${item.key}: ${insertErr.message}`)
-          setSaving(false)
-          return
+      if (upsertErr) {
+        // Fallback: save one by one if upsert fails (e.g. no unique constraint)
+        for (const item of rows) {
+          const { data: existing } = await supabase
+            .from('site_settings')
+            .select('id')
+            .eq('key', item.key)
+            .maybeSingle()
+
+          if (existing) {
+            const { error: updateErr } = await supabase
+              .from('site_settings')
+              .update({ value: item.value, updated_by: item.updated_by, updated_at: item.updated_at })
+              .eq('key', item.key)
+            if (updateErr) {
+              setError(`Erreur sauvegarde ${item.key}: ${updateErr.message}`)
+              setSaving(false)
+              return
+            }
+          } else {
+            const { error: insertErr } = await supabase
+              .from('site_settings')
+              .insert(item)
+            if (insertErr) {
+              setError(`Erreur sauvegarde ${item.key}: ${insertErr.message}`)
+              setSaving(false)
+              return
+            }
+          }
         }
       }
-    }
 
-    setSaving(false)
-    setSaved(true)
-    setTimeout(() => setSaved(false), 4000)
+      setSaving(false)
+      setSaved(true)
+      setTimeout(() => setSaved(false), 4000)
+    } catch (err) {
+      setError(`Erreur inattendue: ${err instanceof Error ? err.message : 'Veuillez reessayer'}`)
+      setSaving(false)
+    }
   }
 
   if (loading) {

@@ -135,10 +135,10 @@ export default function Home() {
   }
 
   const steps = [
-    { num: "01", title: s("step1_title") || "Comprendre", desc: s("step1_desc") || "Vid\u00e9o de coaching immersive.", color: "#55EFC4", icon: "\uD83C\uDFAC" },
-    { num: "02", title: s("step2_title") || "Lib\u00e9ration \u00c9nerg\u00e9tique", desc: s("step2_desc") || "Soin \u00e9nerg\u00e9tique.", color: "#A29BFE", icon: "\u2728" },
-    { num: "03", title: s("step3_title") || "Int\u00e9gration & M\u00e9ditation", desc: s("step3_desc") || "M\u00e9ditation guid\u00e9e.", color: "#E17055", icon: "\uD83E\uDDD8" },
-    { num: "04", title: s("step4_title") || "Action & Reprogrammation", desc: s("step4_desc") || "Exercices pratiques.", color: "#D4A843", icon: "\u26A1" },
+    { num: "01", title: s("step1_title"), desc: s("step1_desc"), color: "#55EFC4", icon: "\uD83C\uDFAC" },
+    { num: "02", title: s("step2_title"), desc: s("step2_desc"), color: "#A29BFE", icon: "\u2728" },
+    { num: "03", title: s("step3_title"), desc: s("step3_desc"), color: "#E17055", icon: "\uD83E\uDDD8" },
+    { num: "04", title: s("step4_title"), desc: s("step4_desc"), color: "#D4A843", icon: "\u26A1" },
   ];
 
   const encyclopediaItems = s("encyclo_items") ? s("encyclo_items").split("\n").filter(Boolean) : ["Abandon", "Anxi\u00e9t\u00e9", "Burn-out", "D\u00e9pendance affective", "Deuil", "Manque de confiance", "Peur", "Rejet", "Rupture", "Solitude", "Trahison", "Et plus..."];
@@ -211,7 +211,7 @@ export default function Home() {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
                       </svg>
                     </div>
-                    <p className="text-sm text-[var(--text-secondary)]">D\u00e9couvrir SOS Shine en 2 minutes</p>
+                    <p className="text-sm text-[var(--text-secondary)]">{"D\u00e9couvrir SOS Shine en 2 minutes"}</p>
                   </div>
                 </div>
               )}
@@ -222,12 +222,12 @@ export default function Home() {
             <div className="flex flex-wrap gap-4">
               <Link href="/dashboard/encyclopedie">
                 <button className="px-8 py-4 rounded-full text-base font-medium tracking-wide transition-all duration-300 cursor-pointer" style={{ background: 'transparent', border: '1px solid rgba(212,168,67,0.4)', color: '#D4A843' }}>
-                  {s("hero_btn_encyclopedie") || "D\u00e9couvrir l\u2019encyclop\u00e9die"}
+                  {s("hero_btn_encyclopedie")}
                 </button>
               </Link>
               <Link href="/signup">
                 <button className="cta-glow px-8 py-4 bg-[#D4A843] text-[#0A0A0A] rounded-full text-base font-medium tracking-wide hover:bg-[#E0B84D] transition-all duration-300 cursor-pointer">
-                  {s("hero_btn_signup") || "Acc\u00e8s illimit\u00e9"} — {trialDays} jours d&apos;essai
+                  {s("hero_btn_signup")} {" \u2014 "}{trialDays}{" jours d\u2019essai"}
                 </button>
               </Link>
             </div>
@@ -235,7 +235,7 @@ export default function Home() {
         </div>
 
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
-          <span className="text-xs tracking-[0.2em] text-[var(--text-muted)]">D\u00c9COUVRIR</span>
+          <span className="text-xs tracking-[0.2em] text-[var(--text-muted)]">{"D\u00c9COUVRIR"}</span>
           <span className="block w-px h-8 bg-gradient-to-b from-[var(--text-muted)] to-transparent animate-pulse" />
         </div>
       </section>
@@ -243,7 +243,7 @@ export default function Home() {
       {/* LE PRINCIPE */}
       <section className="px-6 md:px-20 py-28 border-t border-[var(--dark-border)]">
         <div className="max-w-3xl mx-auto text-center">
-          <Reveal><GoldDivider /><p className="text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-8">{s("principe_label") || "Le principe SOS Shine"}</p></Reveal>
+          <Reveal><GoldDivider /><p className="text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-8">{s("principe_label")}</p></Reveal>
           <Reveal delay={0.1}>
             <h2 className="font-display text-3xl md:text-5xl font-light leading-tight mb-8">
               {s("principe_title").split("\n").map((line, i) => (
@@ -269,8 +269,8 @@ export default function Home() {
         <div className="max-w-5xl mx-auto">
           <Reveal>
             <GoldDivider />
-            <p className="text-center text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-4">{s("steps_label") || "Le parcours SOS Shine"}</p>
-            <h2 className="font-display text-3xl md:text-4xl font-light text-center mb-16">{s("steps_title") || "4 \u00e9tapes pour chaque douleur"}</h2>
+            <p className="text-center text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-4">{s("steps_label")}</p>
+            <h2 className="font-display text-3xl md:text-4xl font-light text-center mb-16">{s("steps_title")}</h2>
           </Reveal>
           <div className="grid md:grid-cols-2 gap-6">
             {steps.map((step, i) => (
@@ -280,7 +280,7 @@ export default function Home() {
                   <div className="flex items-center gap-4 mb-4">
                     <span className="text-3xl">{step.icon}</span>
                     <div>
-                      <span className="font-display text-sm font-light block" style={{ color: step.color, opacity: 0.6 }}>\u00c9tape {step.num}</span>
+                      <span className="font-display text-sm font-light block" style={{ color: step.color, opacity: 0.6 }}>{"\u00c9tape "}{step.num}</span>
                       <h3 className="font-display text-xl font-medium" style={{ color: step.color }}>{step.title}</h3>
                     </div>
                   </div>
@@ -297,14 +297,14 @@ export default function Home() {
         <div className="max-w-4xl mx-auto">
           <Reveal>
             <GoldDivider />
-            <p className="text-center text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-4">L&apos;encyclop\u00e9die</p>
+            <p className="text-center text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-4">{"L\u2019encyclop\u00e9die"}</p>
             <h2 className="font-display text-3xl md:text-4xl font-light text-center mb-6">
-              {s("encyclo_title") || <>Chaque douleur a sa <span className="text-[#D4A843]">page d\u00e9di\u00e9e</span></>}
+              {s("encyclo_title")}
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
             <p className="text-center text-lg text-[var(--text-secondary)] font-light leading-relaxed mb-12 max-w-2xl mx-auto">
-              {s("encyclo_desc") || "Abandon, trahison, burn-out, deuil, d\u00e9pendance affective, peur, solitude, rejet... Class\u00e9es de A \u00e0 Z, accessibles en un clic."}
+              {s("encyclo_desc")}
             </p>
           </Reveal>
           <Reveal delay={0.2}>
@@ -329,12 +329,12 @@ export default function Home() {
         <div className="max-w-3xl mx-auto">
           <Reveal>
             <h2 className="font-display text-3xl md:text-5xl font-light leading-tight text-center mb-6">
-              {s("community_title") || <>Vous n&apos;\u00eates plus jamais seul<br /><span className="text-[#D4A843]">\u00e0 3h du matin.</span></>}
+              {s("community_title")}
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
             <p className="text-center text-lg text-[var(--text-secondary)] font-light leading-relaxed mb-16 max-w-xl mx-auto">
-              {s("community_desc") || "Chat d\u00e9di\u00e9 par douleur, chat g\u00e9n\u00e9ral, mur communautaire, soins collectifs et \u00e9v\u00e9nements \u2014 une vraie famille."}
+              {s("community_desc")}
             </p>
           </Reveal>
           <div className="space-y-5">
@@ -355,7 +355,7 @@ export default function Home() {
         <div className="max-w-4xl mx-auto">
           <Reveal>
             <GoldDivider />
-            <p className="text-center text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-16">{s("testimonials_label") || "Ils ont travers\u00e9 la temp\u00eate"}</p>
+            <p className="text-center text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-16">{s("testimonials_label")}</p>
           </Reveal>
           <div className="grid md:grid-cols-2 gap-8">
             {testimonials.filter(t => t.quote).map((t, i) => (
@@ -363,7 +363,7 @@ export default function Home() {
                 <div className="p-6 md:p-8 rounded-xl h-full flex flex-col justify-between"
                   style={{ background: "var(--dark-card)", border: "1px solid var(--dark-border)" }}>
                   <p className="font-display text-lg italic text-[var(--text-primary)] leading-relaxed font-light mb-6">
-                    &laquo; {t.quote} &raquo;
+                    {"\u00ab"} {t.quote} {"\u00bb"}
                   </p>
                   <div>
                     <p className="text-sm text-[#D4A843] font-medium">{t.name}</p>
@@ -383,7 +383,7 @@ export default function Home() {
             <GoldDivider />
             <h2 className="font-display text-3xl md:text-4xl font-light text-center mt-6 mb-4">Choisissez votre accompagnement</h2>
             <p className="text-center text-[var(--text-secondary)] font-light mb-16">
-              {trialDays} jours d&apos;essai gratuit — Sans engagement — Annulable \u00e0 tout instant
+              {trialDays}{" jours d\u2019essai gratuit \u2014 Sans engagement \u2014 Annulable \u00e0 tout instant"}
             </p>
           </Reveal>
 
@@ -393,20 +393,20 @@ export default function Home() {
               <div className="p-8 md:p-10 rounded-2xl h-full flex flex-col" style={{ background: "rgba(212,168,67,0.04)", border: "1px solid rgba(212,168,67,0.12)" }}>
                 <p className="text-sm tracking-[0.2em] text-[var(--text-muted)] uppercase mb-4">Essentiel</p>
                 <div className="flex items-baseline gap-1 mb-6">
-                  <span className="font-display text-5xl font-light text-[#D4A843]">{priceEssential}\u20ac</span>
+                  <span className="font-display text-5xl font-light text-[#D4A843]">{priceEssential}{"\u20ac"}</span>
                   <span className="text-[var(--text-muted)] text-sm">/mois</span>
                 </div>
                 <div className="space-y-3 flex-1 mb-8">
                   {essentialFeatures.map((f) => (
                     <div key={f} className="flex items-start gap-3">
-                      <span className="text-[#D4A843] mt-0.5 text-sm">\u25c6</span>
+                      <span className="text-[#D4A843] mt-0.5 text-sm">{"\u25c6"}</span>
                       <span className="text-[var(--text-secondary)] text-[15px] font-light">{f}</span>
                     </div>
                   ))}
                 </div>
                 <Link href="/signup">
                   <button className="cta-glow w-full px-8 py-4 bg-[#D4A843] text-[#0A0A0A] rounded-full text-base font-medium hover:bg-[#E0B84D] transition-all duration-300 cursor-pointer">
-                    Commencer — {trialDays} jours gratuits
+                    {"Commencer \u2014 "}{trialDays}{" jours gratuits"}
                   </button>
                 </Link>
               </div>
@@ -416,24 +416,24 @@ export default function Home() {
             <Reveal delay={0.2}>
               <div className="p-8 md:p-10 rounded-2xl h-full flex flex-col relative overflow-hidden" style={{ background: "rgba(162,155,254,0.04)", border: "1px solid rgba(162,155,254,0.15)" }}>
                 <div className="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-medium" style={{ background: 'rgba(162,155,254,0.15)', color: '#A29BFE' }}>
-                  Recommand\u00e9
+                  {"Recommand\u00e9"}
                 </div>
                 <p className="text-sm tracking-[0.2em] text-[var(--text-muted)] uppercase mb-4">Premium</p>
                 <div className="flex items-baseline gap-1 mb-6">
-                  <span className="font-display text-5xl font-light text-[#A29BFE]">{pricePremium}\u20ac</span>
+                  <span className="font-display text-5xl font-light text-[#A29BFE]">{pricePremium}{"\u20ac"}</span>
                   <span className="text-[var(--text-muted)] text-sm">/mois</span>
                 </div>
                 <div className="space-y-3 flex-1 mb-8">
                   {premiumFeatures.map((f) => (
                     <div key={f} className="flex items-start gap-3">
-                      <span className="text-[#A29BFE] mt-0.5 text-sm">\u25c6</span>
+                      <span className="text-[#A29BFE] mt-0.5 text-sm">{"\u25c6"}</span>
                       <span className="text-[var(--text-secondary)] text-[15px] font-light">{f}</span>
                     </div>
                   ))}
                 </div>
                 <Link href="/signup">
                   <button className="w-full px-8 py-4 rounded-full text-base font-medium transition-all duration-300 cursor-pointer" style={{ background: '#A29BFE', color: '#0A0A0A' }}>
-                    Commencer — {trialDays} jours gratuits
+                    {"Commencer \u2014 "}{trialDays}{" jours gratuits"}
                   </button>
                 </Link>
               </div>
@@ -442,7 +442,7 @@ export default function Home() {
 
           <Reveal delay={0.3}>
             <p className="text-center text-xs text-[var(--text-muted)] mt-6 font-light italic">
-              {s("pricing_footer") || "Parce que si on doit vous retenir par un contrat, c\u2019est qu\u2019on n\u2019a pas fait notre travail."}
+              {s("pricing_footer")}
             </p>
           </Reveal>
         </div>
@@ -470,19 +470,19 @@ export default function Home() {
           <Reveal delay={0.2}>
             <Link href="/signup">
               <button className="cta-glow px-12 py-5 bg-[#D4A843] text-[#0A0A0A] rounded-full text-lg font-medium tracking-wide hover:bg-[#E0B84D] transition-all duration-300 cursor-pointer">
-                {s("cta_button") || "Rejoindre SOS Shine"}
+                {s("cta_button")}
               </button>
             </Link>
           </Reveal>
           <Reveal delay={0.3}>
             <p className="text-xs text-[var(--text-muted)] mt-6 tracking-wide">
-              {trialDays} jours gratuits — Puis {priceEssential}\u20ac/mois — Sans engagement
+              {trialDays}{" jours gratuits \u2014 Puis "}{priceEssential}{"\u20ac/mois \u2014 Sans engagement"}
             </p>
           </Reveal>
           <Reveal delay={0.35}>
             <div className="mt-8">
               <Link href="/login" className="gold-underline text-sm text-[var(--text-muted)] hover:text-[#D4A843] transition-colors duration-300">
-                D\u00e9j\u00e0 membre ? Se connecter
+                {"D\u00e9j\u00e0 membre ? Se connecter"}
               </Link>
             </div>
           </Reveal>
@@ -496,13 +496,13 @@ export default function Home() {
             {s("logo_url") ? (
               <img src={s("logo_url")} alt="SOS Shine" className="w-8 h-8 rounded-lg object-cover" />
             ) : null}
-            <span className="font-display text-xl text-[#D4A843] font-medium">{s("footer_name") || "SOS Shine"}</span>
-            <span className="text-[var(--text-muted)] text-xs">\u00a9 2026</span>
+            <span className="font-display text-xl text-[#D4A843] font-medium">{s("footer_name")}</span>
+            <span className="text-[var(--text-muted)] text-xs">{"\u00a9 2026"}</span>
           </div>
           <div className="flex items-center gap-6 text-xs text-[var(--text-muted)]">
-            <Link href={s("footer_link_mentions") || "/mentions-legales"} className="gold-underline hover:text-[#D4A843] transition-colors">Mentions l\u00e9gales</Link>
+            <Link href={s("footer_link_mentions") || "/mentions-legales"} className="gold-underline hover:text-[#D4A843] transition-colors">{"Mentions l\u00e9gales"}</Link>
             <Link href={s("footer_link_cgv") || "/cgv"} className="gold-underline hover:text-[#D4A843] transition-colors">CGV</Link>
-            <Link href={s("footer_link_privacy") || "/confidentialite"} className="gold-underline hover:text-[#D4A843] transition-colors">Confidentialit\u00e9</Link>
+            <Link href={s("footer_link_privacy") || "/confidentialite"} className="gold-underline hover:text-[#D4A843] transition-colors">{"Confidentialit\u00e9"}</Link>
             <Link href={s("footer_link_contact") || "/contact"} className="gold-underline hover:text-[#D4A843] transition-colors">Contact</Link>
           </div>
         </div>

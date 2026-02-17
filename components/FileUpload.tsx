@@ -118,7 +118,7 @@ export default function FileUpload({
       {/* Upload area */}
       <div
         onClick={() => !uploading && inputRef.current?.click()}
-        className="relative rounded-lg p-4 text-center transition-all duration-200 cursor-pointer hover:border-[rgba(162,155,254,0.4)]"
+        className="relative rounded-lg p-4 text-center transition-all duration-200 cursor-pointer hover:border-[rgba(116,192,252,0.4)]"
         style={{
           background: 'rgba(255,255,255,0.02)',
           border: '1px dashed var(--dark-border)',
@@ -135,8 +135,8 @@ export default function FileUpload({
 
         {uploading ? (
           <div className="flex items-center justify-center gap-2">
-            <div className="w-4 h-4 border-2 border-[#A29BFE] border-t-transparent rounded-full animate-spin" />
-            <span className="text-xs" style={{ color: '#A29BFE' }}>{progress}</span>
+            <div className="w-4 h-4 border-2 border-[#74C0FC] border-t-transparent rounded-full animate-spin" />
+            <span className="text-xs" style={{ color: '#74C0FC' }}>{progress}</span>
           </div>
         ) : (
           <div>

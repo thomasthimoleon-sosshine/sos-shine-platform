@@ -96,7 +96,7 @@ export default function ProfilPage() {
       <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
         <div className="flex items-start gap-5">
           <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-display font-semibold flex-shrink-0"
-            style={{ background: 'rgba(212,168,67,0.12)', color: 'var(--gold)' }}>
+            style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
             {profile?.prenom?.charAt(0).toUpperCase() || 'M'}
           </div>
           <div className="flex-1 min-w-0">
@@ -125,7 +125,7 @@ export default function ProfilPage() {
                 <div className="flex items-center gap-3">
                   <h2 className="font-display text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>{profile?.prenom}</h2>
                   {profile?.role === 'founder' && (
-                    <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(212,168,67,0.15)', color: 'var(--gold)' }}>Fondateur</span>
+                    <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>Fondateur</span>
                   )}
                   {saved && <span className="text-xs" style={{ color: '#55EFC4' }}>Sauvegardé !</span>}
                 </div>
@@ -166,7 +166,7 @@ export default function ProfilPage() {
             )}
           </div>
         ) : (
-          <div className="rounded-xl p-5 text-center" style={{ background: 'rgba(212,168,67,0.05)', border: '1px solid rgba(212,168,67,0.12)' }}>
+          <div className="rounded-xl p-5 text-center" style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.12)' }}>
             <p className="text-sm mb-1" style={{ color: 'var(--text-primary)' }}>Essai gratuit de 7 jours</p>
             <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>Essentiel : 29,90€/mois · Premium : 99,90€/mois</p>
             <span className="text-xs font-medium" style={{ color: 'var(--gold)' }}>Le paiement Stripe sera bientôt activé</span>

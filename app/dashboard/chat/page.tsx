@@ -79,7 +79,7 @@ export default function ChatGeneralPage() {
       <div className="mb-4 flex items-center gap-2 overflow-x-auto pb-2">
         <span className="text-xs flex-shrink-0" style={{ color: 'var(--text-muted)' }}>Salons :</span>
         <Link href="/dashboard/chat" className="px-3 py-1.5 rounded-lg text-xs font-medium flex-shrink-0"
-          style={{ background: 'rgba(212,168,67,0.15)', color: 'var(--gold)' }}>
+          style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>
           Général
         </Link>
         <Link href="/dashboard/encyclopedie" className="px-3 py-1.5 rounded-lg text-xs flex-shrink-0 transition-colors"
@@ -98,7 +98,7 @@ export default function ChatGeneralPage() {
             </div>
           ) : messages.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center py-16 text-center">
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 text-2xl" style={{ background: 'rgba(212,168,67,0.1)' }}>
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 text-2xl" style={{ background: 'rgba(212,175,55,0.1)' }}>
                 💬
               </div>
               <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
@@ -113,7 +113,7 @@ export default function ChatGeneralPage() {
               <div key={msg.id} className="flex gap-3">
                 <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-semibold"
                   style={{
-                    background: msg.user_id === userId ? 'rgba(212,168,67,0.15)' : 'rgba(255,255,255,0.05)',
+                    background: msg.user_id === userId ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.05)',
                     color: msg.user_id === userId ? 'var(--gold)' : 'var(--text-secondary)',
                   }}>
                   {msg.profiles?.prenom?.charAt(0).toUpperCase() || '?'}
@@ -124,7 +124,7 @@ export default function ChatGeneralPage() {
                       {msg.profiles?.prenom || 'Membre'}
                     </span>
                     {msg.profiles?.role === 'founder' && (
-                      <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,168,67,0.15)', color: 'var(--gold)' }}>Fondateur</span>
+                      <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>Fondateur</span>
                     )}
                     <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{formatTime(msg.created_at)}</span>
                   </div>

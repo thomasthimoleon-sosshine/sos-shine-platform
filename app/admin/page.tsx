@@ -42,9 +42,9 @@ export default function AdminDashboard() {
   }, [])
 
   const cards = [
-    { label: 'Membres total', value: stats.totalMembers, color: '#D4A843', icon: '👥' },
+    { label: 'Membres total', value: stats.totalMembers, color: '#D4AF37', icon: '👥' },
     { label: 'Nouveaux ce mois', value: stats.newThisMonth, color: '#55EFC4', icon: '📈' },
-    { label: 'Douleurs publiées', value: stats.totalDouleurs, color: '#A29BFE', icon: '📘' },
+    { label: 'Douleurs publiées', value: stats.totalDouleurs, color: '#74C0FC', icon: '📘' },
     { label: 'Événements', value: stats.totalEvents, color: '#E17055', icon: '📅' },
     { label: 'Messages chat', value: stats.totalMessages, color: '#FF6B35', icon: '💬' },
   ]
@@ -62,7 +62,7 @@ export default function AdminDashboard() {
 
       {loading ? (
         <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-2 border-[#A29BFE] border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-[#74C0FC] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : (
         <>
@@ -87,9 +87,9 @@ export default function AdminDashboard() {
             <h2 className="font-semibold text-lg mb-4" style={{ color: 'var(--text-primary)' }}>Actions rapides</h2>
             <div className="grid sm:grid-cols-3 gap-4">
               {[
-                { href: '/admin/douleurs', label: 'Créer une douleur', desc: 'Ajouter une nouvelle page à l\'encyclopédie', icon: '📘', color: '#A29BFE' },
+                { href: '/admin/douleurs', label: 'Créer une douleur', desc: 'Ajouter une nouvelle page à l\'encyclopédie', icon: '📘', color: '#74C0FC' },
                 { href: '/admin/evenements', label: 'Créer un événement', desc: 'Planifier un soin collectif ou une Shine Walk', icon: '📅', color: '#55EFC4' },
-                { href: '/admin/publications', label: 'Publier sur le mur', desc: 'Annoncer une nouvelle à la communauté', icon: '📢', color: '#D4A843' },
+                { href: '/admin/publications', label: 'Publier sur le mur', desc: 'Annoncer une nouvelle à la communauté', icon: '📢', color: '#D4AF37' },
               ].map((action) => (
                 <a key={action.href} href={action.href}
                   className="rounded-xl p-5 transition-all duration-200 hover:-translate-y-0.5 block"
@@ -109,7 +109,7 @@ export default function AdminDashboard() {
               Les données Stripe seront disponibles une fois l&apos;intégration paiement activée.
             </p>
             <div className="grid sm:grid-cols-3 gap-4">
-              <div className="rounded-lg p-4" style={{ background: 'rgba(212,168,67,0.05)' }}>
+              <div className="rounded-lg p-4" style={{ background: 'rgba(212,175,55,0.05)' }}>
                 <p className="text-xs mb-1" style={{ color: 'var(--text-muted)' }}>CA ce mois</p>
                 <p className="font-display text-2xl font-semibold" style={{ color: 'var(--gold)' }}>—</p>
               </div>

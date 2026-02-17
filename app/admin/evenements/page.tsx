@@ -13,10 +13,10 @@ const EVENT_TYPE_LABELS: Record<Event['event_type'], string> = {
 }
 
 const EVENT_TYPE_COLORS: Record<Event['event_type'], string> = {
-  soin_collectif: '#A29BFE',
+  soin_collectif: '#74C0FC',
   atelier: '#55EFC4',
   live: '#E17055',
-  rencontre: '#D4A843',
+  rencontre: '#D4AF37',
   shine_walk: '#FF6B35',
 }
 
@@ -219,7 +219,7 @@ export default function AdminEvenements() {
             onClick={openCreateForm}
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5"
             style={{
-              background: 'linear-gradient(135deg, #A29BFE, #7C6FEF)',
+              background: 'linear-gradient(135deg, #74C0FC, #4DA3E8)',
               color: '#fff',
             }}
           >
@@ -245,7 +245,7 @@ export default function AdminEvenements() {
           className="rounded-xl p-6 space-y-5"
           style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
         >
-          <h2 className="font-semibold text-lg" style={{ color: '#A29BFE' }}>
+          <h2 className="font-semibold text-lg" style={{ color: '#74C0FC' }}>
             {editingId ? 'Modifier l\u2019événement' : 'Nouvel événement'}
           </h2>
 
@@ -367,7 +367,7 @@ export default function AdminEvenements() {
               disabled={saving}
               className="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5 disabled:opacity-50"
               style={{
-                background: 'linear-gradient(135deg, #A29BFE, #7C6FEF)',
+                background: 'linear-gradient(135deg, #74C0FC, #4DA3E8)',
                 color: '#fff',
               }}
             >
@@ -387,7 +387,7 @@ export default function AdminEvenements() {
       {/* Events list */}
       {loading ? (
         <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-2 border-[#A29BFE] border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-[#74C0FC] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : events.length === 0 ? (
         <div
@@ -506,9 +506,9 @@ export default function AdminEvenements() {
                       title="Modifier"
                       className="p-2 rounded-lg text-xs transition-colors"
                       style={{
-                        background: 'rgba(162,155,254,0.1)',
-                        color: '#A29BFE',
-                        border: '1px solid rgba(162,155,254,0.2)',
+                        background: 'rgba(116,192,252,0.1)',
+                        color: '#74C0FC',
+                        border: '1px solid rgba(116,192,252,0.2)',
                       }}
                     >
                       Modifier

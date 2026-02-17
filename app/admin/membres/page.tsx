@@ -5,15 +5,15 @@ import { createClient } from '@/lib/supabase/client'
 import type { Profile } from '@/types/database'
 
 const roleBadgeStyles: Record<Profile['role'], { bg: string; color: string; label: string }> = {
-  founder:       { bg: 'rgba(212,168,67,0.12)',  color: '#D4A843', label: 'Fondatrice' },
-  admin_content: { bg: 'rgba(162,155,254,0.12)', color: '#A29BFE', label: 'Admin Contenu' },
+  founder:       { bg: 'rgba(212,175,55,0.12)',  color: '#D4AF37', label: 'Fondatrice' },
+  admin_content: { bg: 'rgba(116,192,252,0.12)', color: '#74C0FC', label: 'Admin Contenu' },
   admin_support: { bg: 'rgba(116,185,255,0.12)', color: '#74B9FF', label: 'Admin Support' },
   member:        { bg: 'rgba(154,144,128,0.12)', color: '#9A9080', label: 'Membre' },
 }
 
 function getPlanBadge(plan: Profile['plan']) {
-  if (plan === 'premium')   return { bg: 'rgba(162,155,254,0.12)', color: '#A29BFE', label: 'Premium' }
-  if (plan === 'essential') return { bg: 'rgba(212,168,67,0.12)',  color: '#D4A843', label: 'Essentiel' }
+  if (plan === 'premium')   return { bg: 'rgba(116,192,252,0.12)', color: '#74C0FC', label: 'Premium' }
+  if (plan === 'essential') return { bg: 'rgba(212,175,55,0.12)',  color: '#D4AF37', label: 'Essentiel' }
   return { bg: 'rgba(90,83,71,0.12)', color: '#5A5347', label: 'Aucun' }
 }
 
@@ -100,7 +100,7 @@ export default function AdminMembres() {
       {/* Content */}
       {loading ? (
         <div className="flex justify-center py-16">
-          <div className="w-8 h-8 border-2 border-[#A29BFE] border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-[#74C0FC] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : filtered.length === 0 ? (
         <div

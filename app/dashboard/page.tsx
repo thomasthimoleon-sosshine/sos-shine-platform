@@ -36,7 +36,7 @@ export default function DashboardHome() {
     {
       href: '/dashboard/encyclopedie', title: 'Encyclopédie',
       description: 'Explorez toutes les douleurs classées de A à Z. Chacune avec son protocole en 4 étapes.',
-      icon: '📘', color: '#D4A843', bgColor: 'rgba(212,168,67,0.08)',
+      icon: '📘', color: '#D4AF37', bgColor: 'rgba(212,175,55,0.08)',
     },
     {
       href: '/dashboard/chat', title: 'Chat Général',
@@ -46,7 +46,7 @@ export default function DashboardHome() {
     {
       href: '/dashboard/mur', title: 'Mur Communautaire',
       description: 'Annonces, nouvelles douleurs, événements et publications.',
-      icon: '📋', color: '#A29BFE', bgColor: 'rgba(162,155,254,0.08)',
+      icon: '📋', color: '#74C0FC', bgColor: 'rgba(116,192,252,0.08)',
     },
     {
       href: '/dashboard/evenements', title: 'Événements',
@@ -57,9 +57,9 @@ export default function DashboardHome() {
 
   const steps = [
     { num: '01', title: 'Comprendre', desc: 'Vidéo de coaching immersive', color: '#55EFC4' },
-    { num: '02', title: 'Libération', desc: 'Soin énergétique', color: '#A29BFE' },
+    { num: '02', title: 'Libération', desc: 'Soin énergétique', color: '#74C0FC' },
     { num: '03', title: 'Méditation', desc: 'Intégration & reconnexion', color: '#E17055' },
-    { num: '04', title: 'Action', desc: 'Exercices & reprogrammation', color: '#D4A843' },
+    { num: '04', title: 'Action', desc: 'Exercices & reprogrammation', color: '#D4AF37' },
   ]
 
   return (
@@ -76,7 +76,7 @@ export default function DashboardHome() {
 
       {/* Quote */}
       <div className="rounded-2xl p-6 sm:p-8 relative overflow-hidden"
-        style={{ background: 'linear-gradient(135deg, rgba(212,168,67,0.06), rgba(212,168,67,0.02))', border: '1px solid rgba(212,168,67,0.12)' }}>
+        style={{ background: 'linear-gradient(135deg, rgba(212,175,55,0.06), rgba(212,175,55,0.02))', border: '1px solid rgba(212,175,55,0.12)' }}>
         <p className="font-display text-xl sm:text-2xl italic leading-relaxed" style={{ color: 'var(--text-primary)' }}>
           &ldquo;On ne change pas votre identité. On éteint la douleur pour libérer votre potentiel.&rdquo;
         </p>

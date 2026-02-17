@@ -43,7 +43,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--dark)' }}>
-        <div className="w-8 h-8 border-2 border-[#A29BFE] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[#74C0FC] border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -56,8 +56,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="flex items-center gap-4">
           <Link href="/admin" className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-semibold"
-              style={{ background: 'linear-gradient(135deg, #A29BFE, #7C6FEF)', color: '#fff' }}>A</div>
-            <span className="font-display text-lg font-semibold" style={{ color: '#A29BFE' }}>Back-office</span>
+              style={{ background: 'linear-gradient(135deg, #74C0FC, #4DA3E8)', color: '#fff' }}>A</div>
+            <span className="font-display text-lg font-semibold" style={{ color: '#74C0FC' }}>Back-office</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-1 ml-6">
@@ -67,8 +67,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <Link key={item.href} href={item.href}
                   className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm transition-all"
                   style={{
-                    background: isActive ? 'rgba(162,155,254,0.1)' : 'transparent',
-                    color: isActive ? '#A29BFE' : 'var(--text-secondary)',
+                    background: isActive ? 'rgba(116,192,252,0.1)' : 'transparent',
+                    color: isActive ? '#74C0FC' : 'var(--text-secondary)',
                   }}>
                   <span className="text-xs">{item.icon}</span>
                   {item.label}
@@ -84,7 +84,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             Retour au site
           </Link>
           <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
-            style={{ background: 'rgba(162,155,254,0.15)', color: '#A29BFE' }}>
+            style={{ background: 'rgba(116,192,252,0.15)', color: '#74C0FC' }}>
             {profile?.prenom?.charAt(0).toUpperCase() || 'A'}
           </div>
         </div>
@@ -98,8 +98,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <Link key={item.href} href={item.href}
               className="flex items-center gap-1 px-3 py-2 rounded-lg text-xs whitespace-nowrap"
               style={{
-                background: isActive ? 'rgba(162,155,254,0.1)' : 'transparent',
-                color: isActive ? '#A29BFE' : 'var(--text-secondary)',
+                background: isActive ? 'rgba(116,192,252,0.1)' : 'transparent',
+                color: isActive ? '#74C0FC' : 'var(--text-secondary)',
               }}>
               <span>{item.icon}</span>
               {item.label}

@@ -25,9 +25,9 @@ const sections: SectionDef[] = [
     title: 'Apparence',
     icon: '🎨',
     fields: [
-      { label: 'Couleur principale (or)', key: 'color_primary', type: 'color', default: '#D4A843' },
-      { label: 'Couleur secondaire', key: 'color_secondary', type: 'color', default: '#A29BFE' },
-      { label: 'Couleur de fond', key: 'color_bg', type: 'color', default: '#0A0A0A' },
+      { label: 'Couleur principale (or)', key: 'color_primary', type: 'color', default: '#D4AF37' },
+      { label: 'Couleur secondaire', key: 'color_secondary', type: 'color', default: '#74C0FC' },
+      { label: 'Couleur de fond', key: 'color_bg', type: 'color', default: '#1E0F17' },
       { label: 'Logo du site', key: 'logo_url', type: 'upload', accept: 'image/*', folder: 'site', hint: 'PNG ou SVG recommande, 512x512px', default: '' },
       { label: 'Image de fond hero', key: 'hero_bg_url', type: 'upload', accept: 'image/*', folder: 'site', hint: 'Image plein ecran, 1920x1080px', default: '' },
     ],
@@ -246,7 +246,7 @@ export default function ParametresPage() {
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <div className="w-8 h-8 border-2 border-[#A29BFE] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[#74C0FC] border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -270,7 +270,7 @@ export default function ParametresPage() {
             onClick={handleSave}
             disabled={saving}
             className="px-6 py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer disabled:opacity-50"
-            style={{ background: '#A29BFE', color: '#fff' }}
+            style={{ background: '#74C0FC', color: '#fff' }}
           >
             {saving ? 'Sauvegarde...' : 'Sauvegarder'}
           </button>
@@ -362,7 +362,7 @@ export default function ParametresPage() {
           onClick={handleSave}
           disabled={saving}
           className="px-6 py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer disabled:opacity-50"
-          style={{ background: '#A29BFE', color: '#fff' }}
+          style={{ background: '#74C0FC', color: '#fff' }}
         >
           {saving ? 'Sauvegarde...' : 'Sauvegarder les parametres'}
         </button>

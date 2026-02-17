@@ -210,7 +210,7 @@ export default function AdminDouleursPage() {
               setError(null)
             }}
             className="px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 hover:opacity-90"
-            style={{ background: '#A29BFE', color: '#fff' }}
+            style={{ background: '#74C0FC', color: '#fff' }}
           >
             Creer une douleur
           </button>
@@ -226,7 +226,7 @@ export default function AdminDouleursPage() {
       {/* Form */}
       {showForm && (
         <form onSubmit={handleSave} className="rounded-xl p-6 space-y-5" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-          <h2 className="font-semibold text-lg" style={{ color: '#A29BFE' }}>
+          <h2 className="font-semibold text-lg" style={{ color: '#74C0FC' }}>
             {editingId ? 'Modifier la douleur' : 'Nouvelle douleur'}
           </h2>
 
@@ -273,8 +273,8 @@ export default function AdminDouleursPage() {
             />
           </div>
 
-          <div className="rounded-lg p-4" style={{ background: 'rgba(162,155,254,0.04)', border: '1px solid rgba(162,155,254,0.1)' }}>
-            <h3 className="text-sm font-semibold mb-4" style={{ color: '#A29BFE' }}>Etape 2 — Liberation Energetique (Audio)</h3>
+          <div className="rounded-lg p-4" style={{ background: 'rgba(116,192,252,0.04)', border: '1px solid rgba(116,192,252,0.1)' }}>
+            <h3 className="text-sm font-semibold mb-4" style={{ color: '#74C0FC' }}>Etape 2 — Liberation Energetique (Audio)</h3>
             <FileUpload
               label="Audio soin energetique"
               accept="audio/*"
@@ -299,8 +299,8 @@ export default function AdminDouleursPage() {
             />
           </div>
 
-          <div className="rounded-lg p-4" style={{ background: 'rgba(212,168,67,0.04)', border: '1px solid rgba(212,168,67,0.1)' }}>
-            <h3 className="text-sm font-semibold mb-4" style={{ color: '#D4A843' }}>Etape 4 — Action & Reprogrammation</h3>
+          <div className="rounded-lg p-4" style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.1)' }}>
+            <h3 className="text-sm font-semibold mb-4" style={{ color: '#D4AF37' }}>Etape 4 — Action & Reprogrammation</h3>
             <FileUpload
               label="PDF exercices"
               accept="application/pdf"
@@ -320,7 +320,7 @@ export default function AdminDouleursPage() {
           <div className="flex items-center gap-3 pt-2">
             <button type="submit" disabled={saving || !form.title.trim()}
               className="px-6 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 disabled:opacity-40"
-              style={{ background: '#A29BFE', color: '#fff' }}>
+              style={{ background: '#74C0FC', color: '#fff' }}>
               {saving ? 'Enregistrement...' : editingId ? 'Mettre a jour' : 'Enregistrer'}
             </button>
             <button type="button" onClick={cancelForm}
@@ -335,7 +335,7 @@ export default function AdminDouleursPage() {
       {/* List */}
       {loading ? (
         <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-2 border-[#A29BFE] border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-[#74C0FC] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : douleurs.length === 0 ? (
         <div className="rounded-xl p-12 text-center" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
@@ -369,9 +369,9 @@ export default function AdminDouleursPage() {
                   <div className="flex flex-wrap gap-2">
                     {[
                       { ok: !!d.video_url, label: 'Video', color: '#55EFC4' },
-                      { ok: !!d.audio_energy_url, label: 'Audio energie', color: '#A29BFE' },
+                      { ok: !!d.audio_energy_url, label: 'Audio energie', color: '#74C0FC' },
                       { ok: !!d.audio_meditation_url, label: 'Audio meditation', color: '#E17055' },
-                      { ok: !!d.pdf_url, label: 'PDF', color: '#D4A843' },
+                      { ok: !!d.pdf_url, label: 'PDF', color: '#D4AF37' },
                     ].map((item) => (
                       <span key={item.label} className="text-[10px] px-2 py-0.5 rounded-full" style={{
                         background: item.ok ? `${item.color}15` : 'rgba(90,83,71,0.2)',
@@ -390,7 +390,7 @@ export default function AdminDouleursPage() {
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <button onClick={() => openEditForm(d)}
                     className="px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 hover:opacity-80"
-                    style={{ background: 'rgba(162,155,254,0.1)', color: '#A29BFE', border: '1px solid rgba(162,155,254,0.2)' }}>
+                    style={{ background: 'rgba(116,192,252,0.1)', color: '#74C0FC', border: '1px solid rgba(116,192,252,0.2)' }}>
                     Modifier
                   </button>
                   <button onClick={() => togglePublish(d)}

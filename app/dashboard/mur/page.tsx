@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import type { PostWithAuthor } from '@/types/database'
 
@@ -109,13 +110,17 @@ export default function MurPage() {
                 </div>
 
                 {/* Author */}
-                <div className="flex items-center gap-2.5 mb-4">
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
-                    style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
-                    {post.profiles?.prenom?.charAt(0).toUpperCase() || 'S'}
-                  </div>
+                <Link href={`/dashboard/membre/${post.author_id}`} className="flex items-center gap-2.5 mb-4 hover:opacity-80 transition-opacity">
+                  {post.profiles?.avatar_url ? (
+                    <img src={post.profiles.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
+                      style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                      {post.profiles?.prenom?.charAt(0).toUpperCase() || 'S'}
+                    </div>
+                  )}
                   <div>
-                    <span className="text-sm font-semibold" style={{ color: post.profiles?.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)' }}>
+                    <span className="text-sm font-semibold hover:underline" style={{ color: post.profiles?.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)' }}>
                       {post.profiles?.prenom || 'SOS Shine'}
                     </span>
                     {post.profiles?.role === 'founder' && (
@@ -124,7 +129,7 @@ export default function MurPage() {
                       </span>
                     )}
                   </div>
-                </div>
+                </Link>
 
                 {/* Content */}
                 <h3 className="font-semibold text-lg mb-2" style={{ color: 'var(--text-primary)' }}>{post.title}</h3>

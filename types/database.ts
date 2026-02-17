@@ -125,6 +125,16 @@ export type Notification = {
   created_at: string
 }
 
+// ── Private Messages (messagerie privée) ──
+export type PrivateMessage = {
+  id: string
+  sender_id: string
+  receiver_id: string
+  content: string
+  is_read: boolean
+  created_at: string
+}
+
 // ── Site Settings (admin customization) ──
 export type SiteSetting = {
   id: string
@@ -159,6 +169,7 @@ export type Database = {
       event_registrations: Table<EventRegistration>
       content_views: Table<ContentView>
       notifications: Table<Notification>
+      private_messages: Table<PrivateMessage>
       site_settings: Table<SiteSetting>
     }
     Views: Record<string, never>
@@ -177,4 +188,14 @@ export type PostWithAuthor = Post & {
 
 export type EventWithRegistrations = Event & {
   event_registrations: { count: number }[]
+}
+
+export type PrivateMessageWithProfile = PrivateMessage & {
+  profiles: Pick<Profile, 'prenom' | 'pseudo' | 'role' | 'avatar_url'>
+}
+
+export type ConversationPreview = {
+  partner: Pick<Profile, 'id' | 'prenom' | 'pseudo' | 'avatar_url' | 'role'>
+  lastMessage: PrivateMessage
+  unreadCount: number
 }

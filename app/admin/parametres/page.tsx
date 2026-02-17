@@ -33,21 +33,69 @@ const sections: SectionDef[] = [
     ],
   },
   {
-    title: 'Textes de la landing page',
+    title: 'Textes de la landing page — Hero',
     icon: '✏️',
     fields: [
       { label: 'Titre principal', key: 'hero_title', type: 'textarea', default: "L'encyclopedie des schemas emotionnels et des experiences de vie." },
       { label: 'Sous-titre', key: 'hero_subtitle', type: 'textarea', default: 'Un espace ouvert 24h/24, 7j/7, pour comprendre, apaiser et ne plus jamais etre seul.' },
       { label: 'Video d\'introduction', key: 'intro_video_url', type: 'upload', accept: 'video/*', folder: 'site', hint: 'MP4 recommande', default: '' },
-      { label: 'Texte du principe SOS Shine (titre)', key: 'principe_title', type: 'textarea', default: "On ne change pas votre identite. On eteint la douleur pour liberer votre potentiel." },
-      { label: 'Texte du principe SOS Shine (description)', key: 'principe_desc', type: 'textarea', default: "Chaque douleur — abandon, trahison, burn-out, deuil, peur — possede sa propre page dans notre encyclopedie, avec un protocole en 4 etapes concu pour vous accompagner de A a Z." },
-      { label: 'Texte CTA final', key: 'cta_title', type: 'textarea', default: "Comprenez. Apaisez. Ne soyez plus jamais seul." },
+      { label: 'Texte bouton encyclopedie', key: 'hero_btn_encyclopedie', type: 'text', default: "Decouvrir l'encyclopedie" },
+      { label: 'Texte bouton inscription', key: 'hero_btn_signup', type: 'text', default: "Acces illimite" },
+    ],
+  },
+  {
+    title: 'Section — Le principe SOS Shine',
+    icon: '💡',
+    fields: [
+      { label: 'Sous-titre de section', key: 'principe_label', type: 'text', default: 'Le principe SOS Shine' },
+      { label: 'Titre', key: 'principe_title', type: 'textarea', default: "On ne change pas votre identite. On eteint la douleur pour liberer votre potentiel." },
+      { label: 'Description', key: 'principe_desc', type: 'textarea', default: "Chaque douleur — abandon, trahison, burn-out, deuil, peur — possede sa propre page dans notre encyclopedie, avec un protocole en 4 etapes concu pour vous accompagner de A a Z." },
+    ],
+  },
+  {
+    title: 'Section — Les 4 etapes',
+    icon: '🔢',
+    fields: [
+      { label: 'Sous-titre de section', key: 'steps_label', type: 'text', default: 'Le parcours SOS Shine' },
+      { label: 'Titre de section', key: 'steps_title', type: 'text', default: '4 etapes pour chaque douleur' },
+      { label: 'Etape 1 — Titre', key: 'step1_title', type: 'text', default: 'Comprendre' },
+      { label: 'Etape 1 — Description', key: 'step1_desc', type: 'textarea', default: "Video de coaching immersive. Analyse emotionnelle. Explication de votre probleme. Apaisement mental. Une approche humaine et directe." },
+      { label: 'Etape 2 — Titre', key: 'step2_title', type: 'text', default: 'Liberation Energetique' },
+      { label: 'Etape 2 — Description', key: 'step2_desc', type: 'textarea', default: "Soin energetique. Activation emotionnelle. Decharge des tensions. Nettoyage des empreintes qui vous bloquent." },
+      { label: 'Etape 3 — Titre', key: 'step3_title', type: 'text', default: 'Integration & Meditation' },
+      { label: 'Etape 3 — Description', key: 'step3_desc', type: 'textarea', default: "Meditation guidee. Stabilisation interieure. Reconnexion a soi. Nouvelle frequence emotionnelle." },
+      { label: 'Etape 4 — Titre', key: 'step4_title', type: 'text', default: 'Action & Reprogrammation' },
+      { label: 'Etape 4 — Description', key: 'step4_desc', type: 'textarea', default: "Exercices pratiques. Carnets de bord. PDF. Habitudes positives. Plan d'action concret." },
+    ],
+  },
+  {
+    title: 'Section — Encyclopedie (apercu)',
+    icon: '📘',
+    fields: [
+      { label: 'Titre de section', key: 'encyclo_title', type: 'text', default: 'Chaque douleur a sa page dediee' },
+      { label: 'Description', key: 'encyclo_desc', type: 'textarea', default: "Abandon, trahison, burn-out, deuil, dependance affective, peur, solitude, rejet... Classees de A a Z, accessibles en un clic." },
+      { label: 'Douleurs affichees (une par ligne)', key: 'encyclo_items', type: 'textarea', default: "Abandon\nAnxiete\nBurn-out\nDependance affective\nDeuil\nManque de confiance\nPeur\nRejet\nRupture\nSolitude\nTrahison\nEt plus..." },
+    ],
+  },
+  {
+    title: 'Section — Communaute',
+    icon: '🤝',
+    fields: [
+      { label: 'Titre de section', key: 'community_title', type: 'textarea', default: "Vous n'etes plus jamais seul a 3h du matin." },
+      { label: 'Description', key: 'community_desc', type: 'textarea', default: "Chat dedie par douleur, chat general, mur communautaire, soins collectifs et evenements — une vraie famille." },
+      { label: 'Bloc 1 — Titre', key: 'community_block1_title', type: 'text', default: 'Le Feu de Camp' },
+      { label: 'Bloc 1 — Description', key: 'community_block1_desc', type: 'textarea', default: "Chaque douleur a son propre chat. Echangez avec ceux qui comprennent vraiment. Un espace d'entraide cible et bienveillant." },
+      { label: 'Bloc 2 — Titre', key: 'community_block2_title', type: 'text', default: 'Le Mur Communautaire' },
+      { label: 'Bloc 2 — Description', key: 'community_block2_desc', type: 'textarea', default: "Publications, annonces, partages. Restez informe de chaque nouvelle douleur, chaque evenement, chaque avancee collective." },
+      { label: 'Bloc 3 — Titre', key: 'community_block3_title', type: 'text', default: 'Les Rencontres Reelles' },
+      { label: 'Bloc 3 — Description', key: 'community_block3_desc', type: 'textarea', default: "Soins collectifs, ateliers, lives, Shine Walks — le digital prepare, le physique transforme." },
     ],
   },
   {
     title: 'Temoignages',
     icon: '💬',
     fields: [
+      { label: 'Sous-titre de section', key: 'testimonials_label', type: 'text', default: 'Ils ont traverse la tempete' },
       { label: 'Temoignage 1 (texte | prenom | ville)', key: 'testimonial_1', type: 'textarea', default: "Je ne savais meme pas que j'avais le droit de ne pas aller bien. SOS Shine m'a donne un espace ou ma douleur avait le droit d'exister.|Marie, 34 ans|Lyon" },
       { label: 'Temoignage 2 (texte | prenom | ville)', key: 'testimonial_2', type: 'textarea', default: "La premiere fois que quelqu'un m'a dit je suis passe par la, tiens bon — c'etait dans le Feu de Camp. J'ai pleure. Des larmes de soulagement.|Karim, 41 ans|Bordeaux" },
       { label: 'Temoignage 3 (texte | prenom | ville)', key: 'testimonial_3', type: 'textarea', default: "J'ai fait ma premiere Shine Walk un samedi matin. En rentrant, j'ai senti quelque chose que j'avais oublie : je n'etais plus seule.|Sophie, 28 ans|Bruxelles" },
@@ -63,6 +111,26 @@ const sections: SectionDef[] = [
       { label: 'Jours d\'essai gratuit', key: 'trial_days', type: 'text', default: '7' },
       { label: 'Features Essentiel (une par ligne)', key: 'features_essential', type: 'textarea', default: "Encyclopedie complete des douleurs\n4 etapes par douleur (video, soin, meditation, exercices)\nChat dedie par douleur + Chat general\nMur communautaire\nSoins collectifs & evenements\nEssai gratuit 7 jours" },
       { label: 'Features Premium (une par ligne)', key: 'features_premium', type: 'textarea', default: "Tout l'Essentiel inclus\nPermanences experts 24/7\nAccompagnement prioritaire\nSupport direct Julia, William & Thomas" },
+      { label: 'Texte sous les offres (italique)', key: 'pricing_footer', type: 'text', default: "Parce que si on doit vous retenir par un contrat, c'est qu'on n'a pas fait notre travail." },
+    ],
+  },
+  {
+    title: 'Section — CTA final',
+    icon: '🎯',
+    fields: [
+      { label: 'Titre CTA final', key: 'cta_title', type: 'textarea', default: "Comprenez. Apaisez. Ne soyez plus jamais seul." },
+      { label: 'Texte du bouton', key: 'cta_button', type: 'text', default: 'Rejoindre SOS Shine' },
+    ],
+  },
+  {
+    title: 'Footer',
+    icon: '🔗',
+    fields: [
+      { label: 'Nom du site (footer)', key: 'footer_name', type: 'text', default: 'SOS Shine' },
+      { label: 'Lien Mentions legales', key: 'footer_link_mentions', type: 'text', default: '/mentions-legales' },
+      { label: 'Lien CGV', key: 'footer_link_cgv', type: 'text', default: '/cgv' },
+      { label: 'Lien Confidentialite', key: 'footer_link_privacy', type: 'text', default: '/confidentialite' },
+      { label: 'Lien Contact', key: 'footer_link_contact', type: 'text', default: '/contact' },
     ],
   },
   {
@@ -115,51 +183,64 @@ export default function ParametresPage() {
   async function handleSave() {
     setSaving(true)
     setError(null)
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    try {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      const now = new Date().toISOString()
+      const userId = user?.id || null
 
-    // Upsert all settings
-    const upserts = Object.entries(values).map(([key, value]) => ({
-      key,
-      value,
-      updated_by: user?.id || null,
-      updated_at: new Date().toISOString(),
-    }))
+      // Build upsert payload
+      const rows = Object.entries(values).map(([key, value]) => ({
+        key,
+        value,
+        updated_by: userId,
+        updated_at: now,
+      }))
 
-    // Use upsert on the key column
-    for (const item of upserts) {
-      // Check if exists
-      const { data: existing } = await supabase
+      // Single upsert call (requires unique constraint on "key" column)
+      const { error: upsertErr } = await supabase
         .from('site_settings')
-        .select('id')
-        .eq('key', item.key)
-        .single()
+        .upsert(rows, { onConflict: 'key' })
 
-      if (existing) {
-        const { error: updateErr } = await supabase
-          .from('site_settings')
-          .update({ value: item.value, updated_by: item.updated_by, updated_at: item.updated_at })
-          .eq('key', item.key)
-        if (updateErr) {
-          setError(`Erreur sauvegarde ${item.key}: ${updateErr.message}`)
-          setSaving(false)
-          return
-        }
-      } else {
-        const { error: insertErr } = await supabase
-          .from('site_settings')
-          .insert(item)
-        if (insertErr) {
-          setError(`Erreur sauvegarde ${item.key}: ${insertErr.message}`)
-          setSaving(false)
-          return
+      if (upsertErr) {
+        // Fallback: save one by one if upsert fails (e.g. no unique constraint)
+        for (const item of rows) {
+          const { data: existing } = await supabase
+            .from('site_settings')
+            .select('id')
+            .eq('key', item.key)
+            .maybeSingle()
+
+          if (existing) {
+            const { error: updateErr } = await supabase
+              .from('site_settings')
+              .update({ value: item.value, updated_by: item.updated_by, updated_at: item.updated_at })
+              .eq('key', item.key)
+            if (updateErr) {
+              setError(`Erreur sauvegarde ${item.key}: ${updateErr.message}`)
+              setSaving(false)
+              return
+            }
+          } else {
+            const { error: insertErr } = await supabase
+              .from('site_settings')
+              .insert(item)
+            if (insertErr) {
+              setError(`Erreur sauvegarde ${item.key}: ${insertErr.message}`)
+              setSaving(false)
+              return
+            }
+          }
         }
       }
-    }
 
-    setSaving(false)
-    setSaved(true)
-    setTimeout(() => setSaved(false), 4000)
+      setSaving(false)
+      setSaved(true)
+      setTimeout(() => setSaved(false), 4000)
+    } catch (err) {
+      setError(`Erreur inattendue: ${err instanceof Error ? err.message : 'Veuillez reessayer'}`)
+      setSaving(false)
+    }
   }
 
   if (loading) {

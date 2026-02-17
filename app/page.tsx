@@ -49,18 +49,50 @@ function GoldDivider() {
 const DEFAULTS: Record<string, string> = {
   hero_title: "L\u2019encyclop\u00e9die des sch\u00e9mas\n\u00e9motionnels et des\nexp\u00e9riences de vie.",
   hero_subtitle: "Un espace ouvert 24h/24, 7j/7, pour comprendre, apaiser et ne plus jamais \u00eatre seul.",
+  hero_btn_encyclopedie: "D\u00e9couvrir l\u2019encyclop\u00e9die",
+  hero_btn_signup: "Acc\u00e8s illimit\u00e9",
+  principe_label: "Le principe SOS Shine",
   principe_title: "On ne change pas votre identit\u00e9.\nOn \u00e9teint la douleur\npour lib\u00e9rer votre potentiel.",
   principe_desc: "Chaque douleur \u2014 abandon, trahison, burn-out, deuil, peur \u2014 poss\u00e8de sa propre page dans notre encyclop\u00e9die, avec un protocole en 4 \u00e9tapes con\u00e7u pour vous accompagner de A \u00e0 Z.",
+  steps_label: "Le parcours SOS Shine",
+  steps_title: "4 \u00e9tapes pour chaque douleur",
+  step1_title: "Comprendre",
+  step1_desc: "Vid\u00e9o de coaching immersive. Analyse \u00e9motionnelle. Explication de votre probl\u00e8me. Apaisement mental. Une approche humaine et directe.",
+  step2_title: "Lib\u00e9ration \u00c9nerg\u00e9tique",
+  step2_desc: "Soin \u00e9nerg\u00e9tique. Activation \u00e9motionnelle. D\u00e9charge des tensions. Nettoyage des empreintes qui vous bloquent.",
+  step3_title: "Int\u00e9gration & M\u00e9ditation",
+  step3_desc: "M\u00e9ditation guid\u00e9e. Stabilisation int\u00e9rieure. Reconnexion \u00e0 soi. Nouvelle fr\u00e9quence \u00e9motionnelle.",
+  step4_title: "Action & Reprogrammation",
+  step4_desc: "Exercices pratiques. Carnets de bord. PDF. Habitudes positives. Plan d\u2019action concret.",
+  encyclo_title: "Chaque douleur a sa page d\u00e9di\u00e9e",
+  encyclo_desc: "Abandon, trahison, burn-out, deuil, d\u00e9pendance affective, peur, solitude, rejet... Class\u00e9es de A \u00e0 Z, accessibles en un clic.",
+  encyclo_items: "Abandon\nAnxi\u00e9t\u00e9\nBurn-out\nD\u00e9pendance affective\nDeuil\nManque de confiance\nPeur\nRejet\nRupture\nSolitude\nTrahison\nEt plus...",
+  community_title: "Vous n\u2019\u00eates plus jamais seul \u00e0 3h du matin.",
+  community_desc: "Chat d\u00e9di\u00e9 par douleur, chat g\u00e9n\u00e9ral, mur communautaire, soins collectifs et \u00e9v\u00e9nements \u2014 une vraie famille.",
+  community_block1_title: "Le Feu de Camp",
+  community_block1_desc: "Chaque douleur a son propre chat. \u00c9changez avec ceux qui comprennent vraiment. Un espace d\u2019entraide cibl\u00e9 et bienveillant.",
+  community_block2_title: "Le Mur Communautaire",
+  community_block2_desc: "Publications, annonces, partages. Restez inform\u00e9 de chaque nouvelle douleur, chaque \u00e9v\u00e9nement, chaque avanc\u00e9e collective.",
+  community_block3_title: "Les Rencontres R\u00e9elles",
+  community_block3_desc: "Soins collectifs, ateliers, lives, Shine Walks \u2014 le digital pr\u00e9pare, le physique transforme.",
+  testimonials_label: "Ils ont travers\u00e9 la temp\u00eate",
   cta_title: "Comprenez. Apaisez.\nNe soyez plus jamais seul.",
+  cta_button: "Rejoindre SOS Shine",
   price_essential: "29,90",
   price_premium: "99,90",
   trial_days: "7",
   features_essential: "Encyclop\u00e9die compl\u00e8te des douleurs\n4 \u00e9tapes par douleur (vid\u00e9o, soin, m\u00e9ditation, exercices)\nChat d\u00e9di\u00e9 par douleur + Chat g\u00e9n\u00e9ral\nMur communautaire\nSoins collectifs & \u00e9v\u00e9nements\nEssai gratuit 7 jours",
   features_premium: "Tout l\u2019Essentiel inclus\nPermanences experts 24/7\nAccompagnement prioritaire\nSupport direct Julia, William & Thomas",
+  pricing_footer: "Parce que si on doit vous retenir par un contrat, c\u2019est qu\u2019on n\u2019a pas fait notre travail.",
   testimonial_1: "Je ne savais m\u00eame pas que j\u2019avais le droit de ne pas aller bien. SOS Shine m\u2019a donn\u00e9 un espace o\u00f9 ma douleur avait le droit d\u2019exister.|Marie, 34 ans|Lyon",
   testimonial_2: "La premi\u00e8re fois que quelqu\u2019un m\u2019a dit \u00ab je suis pass\u00e9 par l\u00e0, tiens bon \u00bb \u2014 c\u2019\u00e9tait dans le Feu de Camp. J\u2019ai pleur\u00e9. Des larmes de soulagement.|Karim, 41 ans|Bordeaux",
   testimonial_3: "J\u2019ai fait ma premi\u00e8re Shine Walk un samedi matin. En rentrant, j\u2019ai senti quelque chose que j\u2019avais oubli\u00e9 : je n\u2019\u00e9tais plus seule.|Sophie, 28 ans|Bruxelles",
   testimonial_4: "Gr\u00e2ce aux 4 \u00e9tapes, j\u2019ai compris ma douleur au lieu de la fuir. Aujourd\u2019hui, je suis \u00c9claireur et j\u2019aide les autres.|Antoine, 37 ans|Gen\u00e8ve",
+  footer_name: "SOS Shine",
+  footer_link_mentions: "/mentions-legales",
+  footer_link_cgv: "/cgv",
+  footer_link_privacy: "/confidentialite",
+  footer_link_contact: "/contact",
   logo_url: "",
   intro_video_url: "",
 }
@@ -103,10 +135,18 @@ export default function Home() {
   }
 
   const steps = [
-    { num: "01", title: "Comprendre", desc: "Vid\u00e9o de coaching immersive. Analyse \u00e9motionnelle. Explication de votre probl\u00e8me. Apaisement mental. Une approche humaine et directe.", color: "#55EFC4", icon: "\uD83C\uDFAC" },
-    { num: "02", title: "Lib\u00e9ration \u00c9nerg\u00e9tique", desc: "Soin \u00e9nerg\u00e9tique. Activation \u00e9motionnelle. D\u00e9charge des tensions. Nettoyage des empreintes qui vous bloquent.", color: "#A29BFE", icon: "\u2728" },
-    { num: "03", title: "Int\u00e9gration & M\u00e9ditation", desc: "M\u00e9ditation guid\u00e9e. Stabilisation int\u00e9rieure. Reconnexion \u00e0 soi. Nouvelle fr\u00e9quence \u00e9motionnelle.", color: "#E17055", icon: "\uD83E\uDDD8" },
-    { num: "04", title: "Action & Reprogrammation", desc: "Exercices pratiques. Carnets de bord. PDF. Habitudes positives. Plan d\u2019action concret.", color: "#D4A843", icon: "\u26A1" },
+    { num: "01", title: s("step1_title"), desc: s("step1_desc"), color: "#55EFC4", icon: "\uD83C\uDFAC" },
+    { num: "02", title: s("step2_title"), desc: s("step2_desc"), color: "#A29BFE", icon: "\u2728" },
+    { num: "03", title: s("step3_title"), desc: s("step3_desc"), color: "#E17055", icon: "\uD83E\uDDD8" },
+    { num: "04", title: s("step4_title"), desc: s("step4_desc"), color: "#D4A843", icon: "\u26A1" },
+  ];
+
+  const encyclopediaItems = s("encyclo_items") ? s("encyclo_items").split("\n").filter(Boolean) : ["Abandon", "Anxi\u00e9t\u00e9", "Burn-out", "D\u00e9pendance affective", "Deuil", "Manque de confiance", "Peur", "Rejet", "Rupture", "Solitude", "Trahison", "Et plus..."];
+
+  const communityBlocks = [
+    { title: s("community_block1_title"), desc: s("community_block1_desc") },
+    { title: s("community_block2_title"), desc: s("community_block2_desc") },
+    { title: s("community_block3_title"), desc: s("community_block3_desc") },
   ];
 
   const testimonials = [1, 2, 3, 4].map((i) => parseTestimonial(`testimonial_${i}`));
@@ -171,7 +211,7 @@ export default function Home() {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
                       </svg>
                     </div>
-                    <p className="text-sm text-[var(--text-secondary)]">D\u00e9couvrir SOS Shine en 2 minutes</p>
+                    <p className="text-sm text-[var(--text-secondary)]">{"D\u00e9couvrir SOS Shine en 2 minutes"}</p>
                   </div>
                 </div>
               )}
@@ -182,12 +222,12 @@ export default function Home() {
             <div className="flex flex-wrap gap-4">
               <Link href="/dashboard/encyclopedie">
                 <button className="px-8 py-4 rounded-full text-base font-medium tracking-wide transition-all duration-300 cursor-pointer" style={{ background: 'transparent', border: '1px solid rgba(212,168,67,0.4)', color: '#D4A843' }}>
-                  D\u00e9couvrir l&apos;encyclop\u00e9die
+                  {s("hero_btn_encyclopedie")}
                 </button>
               </Link>
               <Link href="/signup">
                 <button className="cta-glow px-8 py-4 bg-[#D4A843] text-[#0A0A0A] rounded-full text-base font-medium tracking-wide hover:bg-[#E0B84D] transition-all duration-300 cursor-pointer">
-                  Acc\u00e8s illimit\u00e9 — {trialDays} jours d&apos;essai
+                  {s("hero_btn_signup")} {" \u2014 "}{trialDays}{" jours d\u2019essai"}
                 </button>
               </Link>
             </div>
@@ -195,7 +235,7 @@ export default function Home() {
         </div>
 
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
-          <span className="text-xs tracking-[0.2em] text-[var(--text-muted)]">D\u00c9COUVRIR</span>
+          <span className="text-xs tracking-[0.2em] text-[var(--text-muted)]">{"D\u00c9COUVRIR"}</span>
           <span className="block w-px h-8 bg-gradient-to-b from-[var(--text-muted)] to-transparent animate-pulse" />
         </div>
       </section>
@@ -203,7 +243,7 @@ export default function Home() {
       {/* LE PRINCIPE */}
       <section className="px-6 md:px-20 py-28 border-t border-[var(--dark-border)]">
         <div className="max-w-3xl mx-auto text-center">
-          <Reveal><GoldDivider /><p className="text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-8">Le principe SOS Shine</p></Reveal>
+          <Reveal><GoldDivider /><p className="text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-8">{s("principe_label")}</p></Reveal>
           <Reveal delay={0.1}>
             <h2 className="font-display text-3xl md:text-5xl font-light leading-tight mb-8">
               {s("principe_title").split("\n").map((line, i) => (
@@ -229,8 +269,8 @@ export default function Home() {
         <div className="max-w-5xl mx-auto">
           <Reveal>
             <GoldDivider />
-            <p className="text-center text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-4">Le parcours SOS Shine</p>
-            <h2 className="font-display text-3xl md:text-4xl font-light text-center mb-16">4 \u00e9tapes pour chaque douleur</h2>
+            <p className="text-center text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-4">{s("steps_label")}</p>
+            <h2 className="font-display text-3xl md:text-4xl font-light text-center mb-16">{s("steps_title")}</h2>
           </Reveal>
           <div className="grid md:grid-cols-2 gap-6">
             {steps.map((step, i) => (
@@ -240,7 +280,7 @@ export default function Home() {
                   <div className="flex items-center gap-4 mb-4">
                     <span className="text-3xl">{step.icon}</span>
                     <div>
-                      <span className="font-display text-sm font-light block" style={{ color: step.color, opacity: 0.6 }}>\u00c9tape {step.num}</span>
+                      <span className="font-display text-sm font-light block" style={{ color: step.color, opacity: 0.6 }}>{"\u00c9tape "}{step.num}</span>
                       <h3 className="font-display text-xl font-medium" style={{ color: step.color }}>{step.title}</h3>
                     </div>
                   </div>
@@ -257,24 +297,24 @@ export default function Home() {
         <div className="max-w-4xl mx-auto">
           <Reveal>
             <GoldDivider />
-            <p className="text-center text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-4">L&apos;encyclop\u00e9die</p>
+            <p className="text-center text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-4">{"L\u2019encyclop\u00e9die"}</p>
             <h2 className="font-display text-3xl md:text-4xl font-light text-center mb-6">
-              Chaque douleur a sa <span className="text-[#D4A843]">page d\u00e9di\u00e9e</span>
+              {s("encyclo_title")}
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
             <p className="text-center text-lg text-[var(--text-secondary)] font-light leading-relaxed mb-12 max-w-2xl mx-auto">
-              Abandon, trahison, burn-out, deuil, d\u00e9pendance affective, peur, solitude, rejet... Class\u00e9es de A \u00e0 Z, accessibles en un clic.
+              {s("encyclo_desc")}
             </p>
           </Reveal>
           <Reveal delay={0.2}>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-              {["Abandon", "Anxi\u00e9t\u00e9", "Burn-out", "D\u00e9pendance affective", "Deuil", "Manque de confiance", "Peur", "Rejet", "Rupture", "Solitude", "Trahison", "Et plus..."].map((d, i) => (
+              {encyclopediaItems.map((d, i) => (
                 <div key={d} className="px-4 py-3 rounded-xl text-center text-sm transition-all duration-200 cursor-default"
                   style={{
-                    background: i === 11 ? 'rgba(212,168,67,0.08)' : 'var(--dark-card)',
-                    border: i === 11 ? '1px solid rgba(212,168,67,0.2)' : '1px solid var(--dark-border)',
-                    color: i === 11 ? '#D4A843' : 'var(--text-secondary)',
+                    background: i === encyclopediaItems.length - 1 ? 'rgba(212,168,67,0.08)' : 'var(--dark-card)',
+                    border: i === encyclopediaItems.length - 1 ? '1px solid rgba(212,168,67,0.2)' : '1px solid var(--dark-border)',
+                    color: i === encyclopediaItems.length - 1 ? '#D4A843' : 'var(--text-secondary)',
                   }}>
                   {d}
                 </div>
@@ -289,20 +329,16 @@ export default function Home() {
         <div className="max-w-3xl mx-auto">
           <Reveal>
             <h2 className="font-display text-3xl md:text-5xl font-light leading-tight text-center mb-6">
-              Vous n&apos;\u00eates plus jamais seul<br /><span className="text-[#D4A843]">\u00e0 3h du matin.</span>
+              {s("community_title")}
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
             <p className="text-center text-lg text-[var(--text-secondary)] font-light leading-relaxed mb-16 max-w-xl mx-auto">
-              Chat d\u00e9di\u00e9 par douleur, chat g\u00e9n\u00e9ral, mur communautaire, soins collectifs et \u00e9v\u00e9nements — une vraie famille.
+              {s("community_desc")}
             </p>
           </Reveal>
           <div className="space-y-5">
-            {[
-              { title: "Le Feu de Camp", desc: "Chaque douleur a son propre chat. \u00c9changez avec ceux qui comprennent vraiment. Un espace d\u2019entraide cibl\u00e9 et bienveillant." },
-              { title: "Le Mur Communautaire", desc: "Publications, annonces, partages. Restez inform\u00e9 de chaque nouvelle douleur, chaque \u00e9v\u00e9nement, chaque avanc\u00e9e collective." },
-              { title: "Les Rencontres R\u00e9elles", desc: "Soins collectifs, ateliers, lives, Shine Walks — le digital pr\u00e9pare, le physique transforme." },
-            ].map((item, i) => (
+            {communityBlocks.filter(b => b.title).map((item, i) => (
               <Reveal key={item.title} delay={i * 0.1}>
                 <div className="p-6 md:p-8 rounded-xl" style={{ background: "rgba(212,168,67,0.03)", border: "1px solid rgba(212,168,67,0.08)" }}>
                   <h3 className="font-display text-xl text-[#D4A843] font-medium mb-3">{item.title}</h3>
@@ -319,7 +355,7 @@ export default function Home() {
         <div className="max-w-4xl mx-auto">
           <Reveal>
             <GoldDivider />
-            <p className="text-center text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-16">Ils ont travers\u00e9 la temp\u00eate</p>
+            <p className="text-center text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-16">{s("testimonials_label")}</p>
           </Reveal>
           <div className="grid md:grid-cols-2 gap-8">
             {testimonials.filter(t => t.quote).map((t, i) => (
@@ -327,7 +363,7 @@ export default function Home() {
                 <div className="p-6 md:p-8 rounded-xl h-full flex flex-col justify-between"
                   style={{ background: "var(--dark-card)", border: "1px solid var(--dark-border)" }}>
                   <p className="font-display text-lg italic text-[var(--text-primary)] leading-relaxed font-light mb-6">
-                    &laquo; {t.quote} &raquo;
+                    {"\u00ab"} {t.quote} {"\u00bb"}
                   </p>
                   <div>
                     <p className="text-sm text-[#D4A843] font-medium">{t.name}</p>
@@ -347,7 +383,7 @@ export default function Home() {
             <GoldDivider />
             <h2 className="font-display text-3xl md:text-4xl font-light text-center mt-6 mb-4">Choisissez votre accompagnement</h2>
             <p className="text-center text-[var(--text-secondary)] font-light mb-16">
-              {trialDays} jours d&apos;essai gratuit — Sans engagement — Annulable \u00e0 tout instant
+              {trialDays}{" jours d\u2019essai gratuit \u2014 Sans engagement \u2014 Annulable \u00e0 tout instant"}
             </p>
           </Reveal>
 
@@ -357,20 +393,20 @@ export default function Home() {
               <div className="p-8 md:p-10 rounded-2xl h-full flex flex-col" style={{ background: "rgba(212,168,67,0.04)", border: "1px solid rgba(212,168,67,0.12)" }}>
                 <p className="text-sm tracking-[0.2em] text-[var(--text-muted)] uppercase mb-4">Essentiel</p>
                 <div className="flex items-baseline gap-1 mb-6">
-                  <span className="font-display text-5xl font-light text-[#D4A843]">{priceEssential}\u20ac</span>
+                  <span className="font-display text-5xl font-light text-[#D4A843]">{priceEssential}{"\u20ac"}</span>
                   <span className="text-[var(--text-muted)] text-sm">/mois</span>
                 </div>
                 <div className="space-y-3 flex-1 mb-8">
                   {essentialFeatures.map((f) => (
                     <div key={f} className="flex items-start gap-3">
-                      <span className="text-[#D4A843] mt-0.5 text-sm">\u25c6</span>
+                      <span className="text-[#D4A843] mt-0.5 text-sm">{"\u25c6"}</span>
                       <span className="text-[var(--text-secondary)] text-[15px] font-light">{f}</span>
                     </div>
                   ))}
                 </div>
                 <Link href="/signup">
                   <button className="cta-glow w-full px-8 py-4 bg-[#D4A843] text-[#0A0A0A] rounded-full text-base font-medium hover:bg-[#E0B84D] transition-all duration-300 cursor-pointer">
-                    Commencer — {trialDays} jours gratuits
+                    {"Commencer \u2014 "}{trialDays}{" jours gratuits"}
                   </button>
                 </Link>
               </div>
@@ -380,24 +416,24 @@ export default function Home() {
             <Reveal delay={0.2}>
               <div className="p-8 md:p-10 rounded-2xl h-full flex flex-col relative overflow-hidden" style={{ background: "rgba(162,155,254,0.04)", border: "1px solid rgba(162,155,254,0.15)" }}>
                 <div className="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-medium" style={{ background: 'rgba(162,155,254,0.15)', color: '#A29BFE' }}>
-                  Recommand\u00e9
+                  {"Recommand\u00e9"}
                 </div>
                 <p className="text-sm tracking-[0.2em] text-[var(--text-muted)] uppercase mb-4">Premium</p>
                 <div className="flex items-baseline gap-1 mb-6">
-                  <span className="font-display text-5xl font-light text-[#A29BFE]">{pricePremium}\u20ac</span>
+                  <span className="font-display text-5xl font-light text-[#A29BFE]">{pricePremium}{"\u20ac"}</span>
                   <span className="text-[var(--text-muted)] text-sm">/mois</span>
                 </div>
                 <div className="space-y-3 flex-1 mb-8">
                   {premiumFeatures.map((f) => (
                     <div key={f} className="flex items-start gap-3">
-                      <span className="text-[#A29BFE] mt-0.5 text-sm">\u25c6</span>
+                      <span className="text-[#A29BFE] mt-0.5 text-sm">{"\u25c6"}</span>
                       <span className="text-[var(--text-secondary)] text-[15px] font-light">{f}</span>
                     </div>
                   ))}
                 </div>
                 <Link href="/signup">
                   <button className="w-full px-8 py-4 rounded-full text-base font-medium transition-all duration-300 cursor-pointer" style={{ background: '#A29BFE', color: '#0A0A0A' }}>
-                    Commencer — {trialDays} jours gratuits
+                    {"Commencer \u2014 "}{trialDays}{" jours gratuits"}
                   </button>
                 </Link>
               </div>
@@ -406,7 +442,7 @@ export default function Home() {
 
           <Reveal delay={0.3}>
             <p className="text-center text-xs text-[var(--text-muted)] mt-6 font-light italic">
-              Parce que si on doit vous retenir par un contrat, c&apos;est qu&apos;on n&apos;a pas fait notre travail.
+              {s("pricing_footer")}
             </p>
           </Reveal>
         </div>
@@ -434,19 +470,19 @@ export default function Home() {
           <Reveal delay={0.2}>
             <Link href="/signup">
               <button className="cta-glow px-12 py-5 bg-[#D4A843] text-[#0A0A0A] rounded-full text-lg font-medium tracking-wide hover:bg-[#E0B84D] transition-all duration-300 cursor-pointer">
-                Rejoindre SOS Shine
+                {s("cta_button")}
               </button>
             </Link>
           </Reveal>
           <Reveal delay={0.3}>
             <p className="text-xs text-[var(--text-muted)] mt-6 tracking-wide">
-              {trialDays} jours gratuits — Puis {priceEssential}\u20ac/mois — Sans engagement
+              {trialDays}{" jours gratuits \u2014 Puis "}{priceEssential}{"\u20ac/mois \u2014 Sans engagement"}
             </p>
           </Reveal>
           <Reveal delay={0.35}>
             <div className="mt-8">
               <Link href="/login" className="gold-underline text-sm text-[var(--text-muted)] hover:text-[#D4A843] transition-colors duration-300">
-                D\u00e9j\u00e0 membre ? Se connecter
+                {"D\u00e9j\u00e0 membre ? Se connecter"}
               </Link>
             </div>
           </Reveal>
@@ -460,14 +496,14 @@ export default function Home() {
             {s("logo_url") ? (
               <img src={s("logo_url")} alt="SOS Shine" className="w-8 h-8 rounded-lg object-cover" />
             ) : null}
-            <span className="font-display text-xl text-[#D4A843] font-medium">SOS Shine</span>
-            <span className="text-[var(--text-muted)] text-xs">\u00a9 2026</span>
+            <span className="font-display text-xl text-[#D4A843] font-medium">{s("footer_name")}</span>
+            <span className="text-[var(--text-muted)] text-xs">{"\u00a9 2026"}</span>
           </div>
           <div className="flex items-center gap-6 text-xs text-[var(--text-muted)]">
-            <Link href="/mentions-legales" className="gold-underline hover:text-[#D4A843] transition-colors">Mentions l\u00e9gales</Link>
-            <Link href="/cgv" className="gold-underline hover:text-[#D4A843] transition-colors">CGV</Link>
-            <Link href="/confidentialite" className="gold-underline hover:text-[#D4A843] transition-colors">Confidentialit\u00e9</Link>
-            <Link href="/contact" className="gold-underline hover:text-[#D4A843] transition-colors">Contact</Link>
+            <Link href={s("footer_link_mentions") || "/mentions-legales"} className="gold-underline hover:text-[#D4A843] transition-colors">{"Mentions l\u00e9gales"}</Link>
+            <Link href={s("footer_link_cgv") || "/cgv"} className="gold-underline hover:text-[#D4A843] transition-colors">CGV</Link>
+            <Link href={s("footer_link_privacy") || "/confidentialite"} className="gold-underline hover:text-[#D4A843] transition-colors">{"Confidentialit\u00e9"}</Link>
+            <Link href={s("footer_link_contact") || "/contact"} className="gold-underline hover:text-[#D4A843] transition-colors">Contact</Link>
           </div>
         </div>
       </footer>

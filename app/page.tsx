@@ -49,18 +49,50 @@ function GoldDivider() {
 const DEFAULTS: Record<string, string> = {
   hero_title: "L\u2019encyclop\u00e9die des sch\u00e9mas\n\u00e9motionnels et des\nexp\u00e9riences de vie.",
   hero_subtitle: "Un espace ouvert 24h/24, 7j/7, pour comprendre, apaiser et ne plus jamais \u00eatre seul.",
+  hero_btn_encyclopedie: "D\u00e9couvrir l\u2019encyclop\u00e9die",
+  hero_btn_signup: "Acc\u00e8s illimit\u00e9",
+  principe_label: "Le principe SOS Shine",
   principe_title: "On ne change pas votre identit\u00e9.\nOn \u00e9teint la douleur\npour lib\u00e9rer votre potentiel.",
   principe_desc: "Chaque douleur \u2014 abandon, trahison, burn-out, deuil, peur \u2014 poss\u00e8de sa propre page dans notre encyclop\u00e9die, avec un protocole en 4 \u00e9tapes con\u00e7u pour vous accompagner de A \u00e0 Z.",
+  steps_label: "Le parcours SOS Shine",
+  steps_title: "4 \u00e9tapes pour chaque douleur",
+  step1_title: "Comprendre",
+  step1_desc: "Vid\u00e9o de coaching immersive. Analyse \u00e9motionnelle. Explication de votre probl\u00e8me. Apaisement mental. Une approche humaine et directe.",
+  step2_title: "Lib\u00e9ration \u00c9nerg\u00e9tique",
+  step2_desc: "Soin \u00e9nerg\u00e9tique. Activation \u00e9motionnelle. D\u00e9charge des tensions. Nettoyage des empreintes qui vous bloquent.",
+  step3_title: "Int\u00e9gration & M\u00e9ditation",
+  step3_desc: "M\u00e9ditation guid\u00e9e. Stabilisation int\u00e9rieure. Reconnexion \u00e0 soi. Nouvelle fr\u00e9quence \u00e9motionnelle.",
+  step4_title: "Action & Reprogrammation",
+  step4_desc: "Exercices pratiques. Carnets de bord. PDF. Habitudes positives. Plan d\u2019action concret.",
+  encyclo_title: "Chaque douleur a sa page d\u00e9di\u00e9e",
+  encyclo_desc: "Abandon, trahison, burn-out, deuil, d\u00e9pendance affective, peur, solitude, rejet... Class\u00e9es de A \u00e0 Z, accessibles en un clic.",
+  encyclo_items: "Abandon\nAnxi\u00e9t\u00e9\nBurn-out\nD\u00e9pendance affective\nDeuil\nManque de confiance\nPeur\nRejet\nRupture\nSolitude\nTrahison\nEt plus...",
+  community_title: "Vous n\u2019\u00eates plus jamais seul \u00e0 3h du matin.",
+  community_desc: "Chat d\u00e9di\u00e9 par douleur, chat g\u00e9n\u00e9ral, mur communautaire, soins collectifs et \u00e9v\u00e9nements \u2014 une vraie famille.",
+  community_block1_title: "Le Feu de Camp",
+  community_block1_desc: "Chaque douleur a son propre chat. \u00c9changez avec ceux qui comprennent vraiment. Un espace d\u2019entraide cibl\u00e9 et bienveillant.",
+  community_block2_title: "Le Mur Communautaire",
+  community_block2_desc: "Publications, annonces, partages. Restez inform\u00e9 de chaque nouvelle douleur, chaque \u00e9v\u00e9nement, chaque avanc\u00e9e collective.",
+  community_block3_title: "Les Rencontres R\u00e9elles",
+  community_block3_desc: "Soins collectifs, ateliers, lives, Shine Walks \u2014 le digital pr\u00e9pare, le physique transforme.",
+  testimonials_label: "Ils ont travers\u00e9 la temp\u00eate",
   cta_title: "Comprenez. Apaisez.\nNe soyez plus jamais seul.",
+  cta_button: "Rejoindre SOS Shine",
   price_essential: "29,90",
   price_premium: "99,90",
   trial_days: "7",
   features_essential: "Encyclop\u00e9die compl\u00e8te des douleurs\n4 \u00e9tapes par douleur (vid\u00e9o, soin, m\u00e9ditation, exercices)\nChat d\u00e9di\u00e9 par douleur + Chat g\u00e9n\u00e9ral\nMur communautaire\nSoins collectifs & \u00e9v\u00e9nements\nEssai gratuit 7 jours",
   features_premium: "Tout l\u2019Essentiel inclus\nPermanences experts 24/7\nAccompagnement prioritaire\nSupport direct Julia, William & Thomas",
+  pricing_footer: "Parce que si on doit vous retenir par un contrat, c\u2019est qu\u2019on n\u2019a pas fait notre travail.",
   testimonial_1: "Je ne savais m\u00eame pas que j\u2019avais le droit de ne pas aller bien. SOS Shine m\u2019a donn\u00e9 un espace o\u00f9 ma douleur avait le droit d\u2019exister.|Marie, 34 ans|Lyon",
   testimonial_2: "La premi\u00e8re fois que quelqu\u2019un m\u2019a dit \u00ab je suis pass\u00e9 par l\u00e0, tiens bon \u00bb \u2014 c\u2019\u00e9tait dans le Feu de Camp. J\u2019ai pleur\u00e9. Des larmes de soulagement.|Karim, 41 ans|Bordeaux",
   testimonial_3: "J\u2019ai fait ma premi\u00e8re Shine Walk un samedi matin. En rentrant, j\u2019ai senti quelque chose que j\u2019avais oubli\u00e9 : je n\u2019\u00e9tais plus seule.|Sophie, 28 ans|Bruxelles",
   testimonial_4: "Gr\u00e2ce aux 4 \u00e9tapes, j\u2019ai compris ma douleur au lieu de la fuir. Aujourd\u2019hui, je suis \u00c9claireur et j\u2019aide les autres.|Antoine, 37 ans|Gen\u00e8ve",
+  footer_name: "SOS Shine",
+  footer_link_mentions: "/mentions-legales",
+  footer_link_cgv: "/cgv",
+  footer_link_privacy: "/confidentialite",
+  footer_link_contact: "/contact",
   logo_url: "",
   intro_video_url: "",
 }
@@ -103,10 +135,18 @@ export default function Home() {
   }
 
   const steps = [
-    { num: "01", title: "Comprendre", desc: "Vid\u00e9o de coaching immersive. Analyse \u00e9motionnelle. Explication de votre probl\u00e8me. Apaisement mental. Une approche humaine et directe.", color: "#55EFC4", icon: "\uD83C\uDFAC" },
-    { num: "02", title: "Lib\u00e9ration \u00c9nerg\u00e9tique", desc: "Soin \u00e9nerg\u00e9tique. Activation \u00e9motionnelle. D\u00e9charge des tensions. Nettoyage des empreintes qui vous bloquent.", color: "#A29BFE", icon: "\u2728" },
-    { num: "03", title: "Int\u00e9gration & M\u00e9ditation", desc: "M\u00e9ditation guid\u00e9e. Stabilisation int\u00e9rieure. Reconnexion \u00e0 soi. Nouvelle fr\u00e9quence \u00e9motionnelle.", color: "#E17055", icon: "\uD83E\uDDD8" },
-    { num: "04", title: "Action & Reprogrammation", desc: "Exercices pratiques. Carnets de bord. PDF. Habitudes positives. Plan d\u2019action concret.", color: "#D4A843", icon: "\u26A1" },
+    { num: "01", title: s("step1_title") || "Comprendre", desc: s("step1_desc") || "Vid\u00e9o de coaching immersive.", color: "#55EFC4", icon: "\uD83C\uDFAC" },
+    { num: "02", title: s("step2_title") || "Lib\u00e9ration \u00c9nerg\u00e9tique", desc: s("step2_desc") || "Soin \u00e9nerg\u00e9tique.", color: "#A29BFE", icon: "\u2728" },
+    { num: "03", title: s("step3_title") || "Int\u00e9gration & M\u00e9ditation", desc: s("step3_desc") || "M\u00e9ditation guid\u00e9e.", color: "#E17055", icon: "\uD83E\uDDD8" },
+    { num: "04", title: s("step4_title") || "Action & Reprogrammation", desc: s("step4_desc") || "Exercices pratiques.", color: "#D4A843", icon: "\u26A1" },
+  ];
+
+  const encyclopediaItems = s("encyclo_items") ? s("encyclo_items").split("\n").filter(Boolean) : ["Abandon", "Anxi\u00e9t\u00e9", "Burn-out", "D\u00e9pendance affective", "Deuil", "Manque de confiance", "Peur", "Rejet", "Rupture", "Solitude", "Trahison", "Et plus..."];
+
+  const communityBlocks = [
+    { title: s("community_block1_title"), desc: s("community_block1_desc") },
+    { title: s("community_block2_title"), desc: s("community_block2_desc") },
+    { title: s("community_block3_title"), desc: s("community_block3_desc") },
   ];
 
   const testimonials = [1, 2, 3, 4].map((i) => parseTestimonial(`testimonial_${i}`));
@@ -182,12 +222,12 @@ export default function Home() {
             <div className="flex flex-wrap gap-4">
               <Link href="/dashboard/encyclopedie">
                 <button className="px-8 py-4 rounded-full text-base font-medium tracking-wide transition-all duration-300 cursor-pointer" style={{ background: 'transparent', border: '1px solid rgba(212,168,67,0.4)', color: '#D4A843' }}>
-                  D\u00e9couvrir l&apos;encyclop\u00e9die
+                  {s("hero_btn_encyclopedie") || "D\u00e9couvrir l\u2019encyclop\u00e9die"}
                 </button>
               </Link>
               <Link href="/signup">
                 <button className="cta-glow px-8 py-4 bg-[#D4A843] text-[#0A0A0A] rounded-full text-base font-medium tracking-wide hover:bg-[#E0B84D] transition-all duration-300 cursor-pointer">
-                  Acc\u00e8s illimit\u00e9 — {trialDays} jours d&apos;essai
+                  {s("hero_btn_signup") || "Acc\u00e8s illimit\u00e9"} — {trialDays} jours d&apos;essai
                 </button>
               </Link>
             </div>
@@ -203,7 +243,7 @@ export default function Home() {
       {/* LE PRINCIPE */}
       <section className="px-6 md:px-20 py-28 border-t border-[var(--dark-border)]">
         <div className="max-w-3xl mx-auto text-center">
-          <Reveal><GoldDivider /><p className="text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-8">Le principe SOS Shine</p></Reveal>
+          <Reveal><GoldDivider /><p className="text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-8">{s("principe_label") || "Le principe SOS Shine"}</p></Reveal>
           <Reveal delay={0.1}>
             <h2 className="font-display text-3xl md:text-5xl font-light leading-tight mb-8">
               {s("principe_title").split("\n").map((line, i) => (
@@ -229,8 +269,8 @@ export default function Home() {
         <div className="max-w-5xl mx-auto">
           <Reveal>
             <GoldDivider />
-            <p className="text-center text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-4">Le parcours SOS Shine</p>
-            <h2 className="font-display text-3xl md:text-4xl font-light text-center mb-16">4 \u00e9tapes pour chaque douleur</h2>
+            <p className="text-center text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-4">{s("steps_label") || "Le parcours SOS Shine"}</p>
+            <h2 className="font-display text-3xl md:text-4xl font-light text-center mb-16">{s("steps_title") || "4 \u00e9tapes pour chaque douleur"}</h2>
           </Reveal>
           <div className="grid md:grid-cols-2 gap-6">
             {steps.map((step, i) => (
@@ -259,22 +299,22 @@ export default function Home() {
             <GoldDivider />
             <p className="text-center text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-4">L&apos;encyclop\u00e9die</p>
             <h2 className="font-display text-3xl md:text-4xl font-light text-center mb-6">
-              Chaque douleur a sa <span className="text-[#D4A843]">page d\u00e9di\u00e9e</span>
+              {s("encyclo_title") || <>Chaque douleur a sa <span className="text-[#D4A843]">page d\u00e9di\u00e9e</span></>}
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
             <p className="text-center text-lg text-[var(--text-secondary)] font-light leading-relaxed mb-12 max-w-2xl mx-auto">
-              Abandon, trahison, burn-out, deuil, d\u00e9pendance affective, peur, solitude, rejet... Class\u00e9es de A \u00e0 Z, accessibles en un clic.
+              {s("encyclo_desc") || "Abandon, trahison, burn-out, deuil, d\u00e9pendance affective, peur, solitude, rejet... Class\u00e9es de A \u00e0 Z, accessibles en un clic."}
             </p>
           </Reveal>
           <Reveal delay={0.2}>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-              {["Abandon", "Anxi\u00e9t\u00e9", "Burn-out", "D\u00e9pendance affective", "Deuil", "Manque de confiance", "Peur", "Rejet", "Rupture", "Solitude", "Trahison", "Et plus..."].map((d, i) => (
+              {encyclopediaItems.map((d, i) => (
                 <div key={d} className="px-4 py-3 rounded-xl text-center text-sm transition-all duration-200 cursor-default"
                   style={{
-                    background: i === 11 ? 'rgba(212,168,67,0.08)' : 'var(--dark-card)',
-                    border: i === 11 ? '1px solid rgba(212,168,67,0.2)' : '1px solid var(--dark-border)',
-                    color: i === 11 ? '#D4A843' : 'var(--text-secondary)',
+                    background: i === encyclopediaItems.length - 1 ? 'rgba(212,168,67,0.08)' : 'var(--dark-card)',
+                    border: i === encyclopediaItems.length - 1 ? '1px solid rgba(212,168,67,0.2)' : '1px solid var(--dark-border)',
+                    color: i === encyclopediaItems.length - 1 ? '#D4A843' : 'var(--text-secondary)',
                   }}>
                   {d}
                 </div>
@@ -289,20 +329,16 @@ export default function Home() {
         <div className="max-w-3xl mx-auto">
           <Reveal>
             <h2 className="font-display text-3xl md:text-5xl font-light leading-tight text-center mb-6">
-              Vous n&apos;\u00eates plus jamais seul<br /><span className="text-[#D4A843]">\u00e0 3h du matin.</span>
+              {s("community_title") || <>Vous n&apos;\u00eates plus jamais seul<br /><span className="text-[#D4A843]">\u00e0 3h du matin.</span></>}
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
             <p className="text-center text-lg text-[var(--text-secondary)] font-light leading-relaxed mb-16 max-w-xl mx-auto">
-              Chat d\u00e9di\u00e9 par douleur, chat g\u00e9n\u00e9ral, mur communautaire, soins collectifs et \u00e9v\u00e9nements — une vraie famille.
+              {s("community_desc") || "Chat d\u00e9di\u00e9 par douleur, chat g\u00e9n\u00e9ral, mur communautaire, soins collectifs et \u00e9v\u00e9nements \u2014 une vraie famille."}
             </p>
           </Reveal>
           <div className="space-y-5">
-            {[
-              { title: "Le Feu de Camp", desc: "Chaque douleur a son propre chat. \u00c9changez avec ceux qui comprennent vraiment. Un espace d\u2019entraide cibl\u00e9 et bienveillant." },
-              { title: "Le Mur Communautaire", desc: "Publications, annonces, partages. Restez inform\u00e9 de chaque nouvelle douleur, chaque \u00e9v\u00e9nement, chaque avanc\u00e9e collective." },
-              { title: "Les Rencontres R\u00e9elles", desc: "Soins collectifs, ateliers, lives, Shine Walks — le digital pr\u00e9pare, le physique transforme." },
-            ].map((item, i) => (
+            {communityBlocks.filter(b => b.title).map((item, i) => (
               <Reveal key={item.title} delay={i * 0.1}>
                 <div className="p-6 md:p-8 rounded-xl" style={{ background: "rgba(212,168,67,0.03)", border: "1px solid rgba(212,168,67,0.08)" }}>
                   <h3 className="font-display text-xl text-[#D4A843] font-medium mb-3">{item.title}</h3>
@@ -319,7 +355,7 @@ export default function Home() {
         <div className="max-w-4xl mx-auto">
           <Reveal>
             <GoldDivider />
-            <p className="text-center text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-16">Ils ont travers\u00e9 la temp\u00eate</p>
+            <p className="text-center text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-16">{s("testimonials_label") || "Ils ont travers\u00e9 la temp\u00eate"}</p>
           </Reveal>
           <div className="grid md:grid-cols-2 gap-8">
             {testimonials.filter(t => t.quote).map((t, i) => (
@@ -406,7 +442,7 @@ export default function Home() {
 
           <Reveal delay={0.3}>
             <p className="text-center text-xs text-[var(--text-muted)] mt-6 font-light italic">
-              Parce que si on doit vous retenir par un contrat, c&apos;est qu&apos;on n&apos;a pas fait notre travail.
+              {s("pricing_footer") || "Parce que si on doit vous retenir par un contrat, c\u2019est qu\u2019on n\u2019a pas fait notre travail."}
             </p>
           </Reveal>
         </div>
@@ -434,7 +470,7 @@ export default function Home() {
           <Reveal delay={0.2}>
             <Link href="/signup">
               <button className="cta-glow px-12 py-5 bg-[#D4A843] text-[#0A0A0A] rounded-full text-lg font-medium tracking-wide hover:bg-[#E0B84D] transition-all duration-300 cursor-pointer">
-                Rejoindre SOS Shine
+                {s("cta_button") || "Rejoindre SOS Shine"}
               </button>
             </Link>
           </Reveal>
@@ -460,14 +496,14 @@ export default function Home() {
             {s("logo_url") ? (
               <img src={s("logo_url")} alt="SOS Shine" className="w-8 h-8 rounded-lg object-cover" />
             ) : null}
-            <span className="font-display text-xl text-[#D4A843] font-medium">SOS Shine</span>
+            <span className="font-display text-xl text-[#D4A843] font-medium">{s("footer_name") || "SOS Shine"}</span>
             <span className="text-[var(--text-muted)] text-xs">\u00a9 2026</span>
           </div>
           <div className="flex items-center gap-6 text-xs text-[var(--text-muted)]">
-            <Link href="/mentions-legales" className="gold-underline hover:text-[#D4A843] transition-colors">Mentions l\u00e9gales</Link>
-            <Link href="/cgv" className="gold-underline hover:text-[#D4A843] transition-colors">CGV</Link>
-            <Link href="/confidentialite" className="gold-underline hover:text-[#D4A843] transition-colors">Confidentialit\u00e9</Link>
-            <Link href="/contact" className="gold-underline hover:text-[#D4A843] transition-colors">Contact</Link>
+            <Link href={s("footer_link_mentions") || "/mentions-legales"} className="gold-underline hover:text-[#D4A843] transition-colors">Mentions l\u00e9gales</Link>
+            <Link href={s("footer_link_cgv") || "/cgv"} className="gold-underline hover:text-[#D4A843] transition-colors">CGV</Link>
+            <Link href={s("footer_link_privacy") || "/confidentialite"} className="gold-underline hover:text-[#D4A843] transition-colors">Confidentialit\u00e9</Link>
+            <Link href={s("footer_link_contact") || "/contact"} className="gold-underline hover:text-[#D4A843] transition-colors">Contact</Link>
           </div>
         </div>
       </footer>

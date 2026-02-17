@@ -92,6 +92,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           avatar_url: null,
           plan: null,
           created_at: user.created_at,
+          pseudo: null,
+          bio: null,
+          video_url: null,
         })
       }
       setLoading(false)

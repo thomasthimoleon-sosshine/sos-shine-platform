@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { uploadFile } from '@/lib/supabase/storage'
 import type { Profile, Subscription } from '@/types/database'
 
 export default function ProfilPage() {
@@ -11,9 +12,17 @@ export default function ProfilPage() {
   const [subscription, setSubscription] = useState<Subscription | null>(null)
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState(false)
-  const [prenom, setPrenom] = useState('')
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [uploadingAvatar, setUploadingAvatar] = useState(false)
+  const [uploadingVideo, setUploadingVideo] = useState(false)
+  const avatarRef = useRef<HTMLInputElement>(null)
+  const videoRef = useRef<HTMLInputElement>(null)
+
+  // Editable fields
+  const [prenom, setPrenom] = useState('')
+  const [pseudo, setPseudo] = useState('')
+  const [bio, setBio] = useState('')
 
   useEffect(() => {
     async function loadData() {
@@ -23,12 +32,16 @@ export default function ProfilPage() {
 
       const { data: profileData } = await supabase.from('profiles').select('*').eq('id', user.id).single()
       if (profileData) {
-        setProfile(profileData as Profile)
-        setPrenom((profileData as Profile).prenom)
+        const p = profileData as Profile
+        setProfile(p)
+        setPrenom(p.prenom)
+        setPseudo(p.pseudo || '')
+        setBio(p.bio || '')
       } else {
         const fallback: Profile = {
           id: user.id, prenom: user.user_metadata?.prenom || 'Membre',
-          email: user.email || '', role: 'member', avatar_url: null, plan: null, created_at: user.created_at,
+          pseudo: null, email: user.email || '', role: 'member',
+          avatar_url: null, bio: null, video_url: null, plan: null, created_at: user.created_at,
         }
         setProfile(fallback)
         setPrenom(fallback.prenom)
@@ -46,14 +59,60 @@ export default function ProfilPage() {
     if (!profile || !prenom.trim() || saving) return
     setSaving(true)
     const supabase = createClient()
-    const { error } = await supabase.from('profiles').update({ prenom: prenom.trim() }).eq('id', profile.id)
+    const { error } = await supabase.from('profiles').update({
+      prenom: prenom.trim(),
+      pseudo: pseudo.trim() || null,
+      bio: bio.trim() || null,
+    }).eq('id', profile.id)
     if (!error) {
-      setProfile({ ...profile, prenom: prenom.trim() })
+      setProfile({ ...profile, prenom: prenom.trim(), pseudo: pseudo.trim() || null, bio: bio.trim() || null })
       setEditing(false)
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
     }
     setSaving(false)
+  }
+
+  async function handleAvatarUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file || !profile) return
+    setUploadingAvatar(true)
+    try {
+      const url = await uploadFile(file, 'avatars')
+      const supabase = createClient()
+      await supabase.from('profiles').update({ avatar_url: url }).eq('id', profile.id)
+      setProfile({ ...profile, avatar_url: url })
+    } catch { /* silently fail */ }
+    setUploadingAvatar(false)
+    if (avatarRef.current) avatarRef.current.value = ''
+  }
+
+  async function handleRemoveAvatar() {
+    if (!profile) return
+    const supabase = createClient()
+    await supabase.from('profiles').update({ avatar_url: null }).eq('id', profile.id)
+    setProfile({ ...profile, avatar_url: null })
+  }
+
+  async function handleVideoUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file || !profile) return
+    setUploadingVideo(true)
+    try {
+      const url = await uploadFile(file, 'avatars')
+      const supabase = createClient()
+      await supabase.from('profiles').update({ video_url: url }).eq('id', profile.id)
+      setProfile({ ...profile, video_url: url })
+    } catch { /* silently fail */ }
+    setUploadingVideo(false)
+    if (videoRef.current) videoRef.current.value = ''
+  }
+
+  async function handleRemoveVideo() {
+    if (!profile) return
+    const supabase = createClient()
+    await supabase.from('profiles').update({ video_url: null }).eq('id', profile.id)
+    setProfile({ ...profile, video_url: null })
   }
 
   async function handleSignOut() {
@@ -77,6 +136,8 @@ export default function ProfilPage() {
     return map[status] || { label: status, color: 'var(--text-muted)' }
   }
 
+  const inputStyle = { background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }
+
   if (loading) {
     return (
       <div className="flex justify-center py-20">
@@ -92,52 +153,133 @@ export default function ProfilPage() {
         <p className="mt-2" style={{ color: 'var(--text-secondary)' }}>Gérez vos informations et votre abonnement.</p>
       </div>
 
-      {/* Profile card */}
+      {/* Photo de profil */}
       <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-        <div className="flex items-start gap-5">
-          <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-display font-semibold flex-shrink-0"
-            style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
-            {profile?.prenom?.charAt(0).toUpperCase() || 'M'}
-          </div>
-          <div className="flex-1 min-w-0">
-            {editing ? (
-              <div className="space-y-3">
-                <div>
-                  <label className="text-xs font-medium block mb-1" style={{ color: 'var(--text-muted)' }}>Prénom</label>
-                  <input type="text" value={prenom} onChange={(e) => setPrenom(e.target.value)}
-                    className="w-full rounded-xl px-4 py-2.5 text-sm outline-none"
-                    style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }} />
-                </div>
-                <div className="flex gap-2">
-                  <button onClick={handleSave} disabled={saving || !prenom.trim()}
-                    className="px-4 py-2 rounded-xl text-sm font-semibold transition-all cursor-pointer disabled:opacity-50"
-                    style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
-                    {saving ? 'Sauvegarde...' : 'Sauvegarder'}
-                  </button>
-                  <button onClick={() => { setEditing(false); setPrenom(profile?.prenom || '') }}
-                    className="px-4 py-2 rounded-xl text-sm cursor-pointer" style={{ color: 'var(--text-secondary)' }}>
-                    Annuler
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div>
-                <div className="flex items-center gap-3">
-                  <h2 className="font-display text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>{profile?.prenom}</h2>
-                  {profile?.role === 'founder' && (
-                    <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>Fondateur</span>
-                  )}
-                  {saved && <span className="text-xs" style={{ color: '#55EFC4' }}>Sauvegardé !</span>}
-                </div>
-                <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>{profile?.email}</p>
-                <p className="text-xs mt-2" style={{ color: 'var(--text-muted)' }}>Membre depuis {formatDate(profile?.created_at || '')}</p>
-                <button onClick={() => setEditing(true)} className="mt-3 text-xs font-medium cursor-pointer" style={{ color: 'var(--gold)' }}>
-                  Modifier le profil
-                </button>
-              </div>
+        <h3 className="font-semibold text-base mb-4" style={{ color: 'var(--text-primary)' }}>Photo de profil</h3>
+        <div className="flex items-center gap-5">
+          {profile?.avatar_url ? (
+            <img src={profile.avatar_url} alt="Avatar" className="w-20 h-20 rounded-2xl object-cover flex-shrink-0" />
+          ) : (
+            <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-3xl font-display font-semibold flex-shrink-0"
+              style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+              {profile?.prenom?.charAt(0).toUpperCase() || 'M'}
+            </div>
+          )}
+          <div className="space-y-2">
+            <input ref={avatarRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
+            <button onClick={() => avatarRef.current?.click()} disabled={uploadingAvatar}
+              className="block px-4 py-2 rounded-xl text-sm font-medium transition-all cursor-pointer disabled:opacity-50"
+              style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
+              {uploadingAvatar ? 'Envoi...' : profile?.avatar_url ? 'Changer la photo' : 'Ajouter une photo'}
+            </button>
+            {profile?.avatar_url && (
+              <button onClick={handleRemoveAvatar} className="block text-xs cursor-pointer" style={{ color: '#FF6B6B' }}>
+                Supprimer la photo
+              </button>
             )}
+            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>JPG, PNG. Max 10 Mo.</p>
           </div>
         </div>
+      </div>
+
+      {/* Informations */}
+      <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <div className="flex items-center justify-between mb-5">
+          <h3 className="font-semibold text-base" style={{ color: 'var(--text-primary)' }}>Informations</h3>
+          {!editing && (
+            <button onClick={() => setEditing(true)} className="text-xs font-medium cursor-pointer" style={{ color: 'var(--gold)' }}>
+              Modifier
+            </button>
+          )}
+          {saved && <span className="text-xs" style={{ color: '#55EFC4' }}>Sauvegardé !</span>}
+        </div>
+
+        {editing ? (
+          <div className="space-y-4">
+            <div>
+              <label className="text-xs font-medium block mb-1.5" style={{ color: 'var(--text-muted)' }}>Prénom</label>
+              <input type="text" value={prenom} onChange={(e) => setPrenom(e.target.value)}
+                className="w-full rounded-xl px-4 py-2.5 text-sm outline-none" style={inputStyle} />
+            </div>
+            <div>
+              <label className="text-xs font-medium block mb-1.5" style={{ color: 'var(--text-muted)' }}>
+                Pseudo <span className="font-normal">(affiché dans les chats à la place du prénom)</span>
+              </label>
+              <input type="text" value={pseudo} onChange={(e) => setPseudo(e.target.value)}
+                placeholder="Laissez vide pour utiliser votre prénom"
+                className="w-full rounded-xl px-4 py-2.5 text-sm outline-none" style={inputStyle} />
+            </div>
+            <div>
+              <label className="text-xs font-medium block mb-1.5" style={{ color: 'var(--text-muted)' }}>
+                Bio <span className="font-normal">(facultatif, visible par la communauté)</span>
+              </label>
+              <textarea value={bio} onChange={(e) => setBio(e.target.value)} rows={3}
+                placeholder="Parlez un peu de vous..."
+                className="w-full rounded-xl px-4 py-2.5 text-sm outline-none resize-y" style={inputStyle} maxLength={500} />
+              <p className="text-xs mt-1 text-right" style={{ color: 'var(--text-muted)' }}>{bio.length}/500</p>
+            </div>
+            <div className="flex gap-2">
+              <button onClick={handleSave} disabled={saving || !prenom.trim()}
+                className="px-4 py-2 rounded-xl text-sm font-semibold transition-all cursor-pointer disabled:opacity-50"
+                style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
+                {saving ? 'Sauvegarde...' : 'Sauvegarder'}
+              </button>
+              <button onClick={() => { setEditing(false); setPrenom(profile?.prenom || ''); setPseudo(profile?.pseudo || ''); setBio(profile?.bio || '') }}
+                className="px-4 py-2 rounded-xl text-sm cursor-pointer" style={{ color: 'var(--text-secondary)' }}>
+                Annuler
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <h2 className="font-display text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+                {profile?.prenom}
+              </h2>
+              {profile?.pseudo && (
+                <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>({profile.pseudo})</span>
+              )}
+              {profile?.role === 'founder' && (
+                <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>Fondateur</span>
+              )}
+            </div>
+            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{profile?.email}</p>
+            {profile?.bio && (
+              <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{profile.bio}</p>
+            )}
+            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Membre depuis {formatDate(profile?.created_at || '')}</p>
+          </div>
+        )}
+      </div>
+
+      {/* Vidéo de présentation */}
+      <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <h3 className="font-semibold text-base mb-4" style={{ color: 'var(--text-primary)' }}>Vidéo de présentation</h3>
+        <p className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>Facultatif — présentez-vous à la communauté en vidéo.</p>
+        {profile?.video_url ? (
+          <div className="space-y-3">
+            <video src={profile.video_url} controls className="w-full max-h-64 rounded-xl bg-black" />
+            <div className="flex items-center gap-3">
+              <input ref={videoRef} type="file" accept="video/*" className="hidden" onChange={handleVideoUpload} />
+              <button onClick={() => videoRef.current?.click()} disabled={uploadingVideo}
+                className="text-xs font-medium cursor-pointer disabled:opacity-50" style={{ color: 'var(--gold)' }}>
+                {uploadingVideo ? 'Envoi...' : 'Changer la vidéo'}
+              </button>
+              <button onClick={handleRemoveVideo} className="text-xs cursor-pointer" style={{ color: '#FF6B6B' }}>
+                Supprimer
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div>
+            <input ref={videoRef} type="file" accept="video/*" className="hidden" onChange={handleVideoUpload} />
+            <button onClick={() => videoRef.current?.click()} disabled={uploadingVideo}
+              className="px-4 py-2.5 rounded-xl text-sm font-medium cursor-pointer disabled:opacity-50"
+              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-secondary)' }}>
+              {uploadingVideo ? 'Envoi en cours...' : 'Ajouter une vidéo de présentation'}
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Subscription */}

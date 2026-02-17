@@ -58,7 +58,7 @@ function GoldDivider() {
 const DEFAULTS: Record<string, string> = {
   color_primary: "#D4AF37",
   color_secondary: "#74C0FC",
-  color_bg: "#1E0F17",
+  color_bg: "#362038",
   hero_title: "L\u2019encyclop\u00e9die des sch\u00e9mas\n\u00e9motionnels et des\nexp\u00e9riences de vie.",
   hero_subtitle: "Un espace ouvert 24h/24, 7j/7, pour comprendre, apaiser et ne plus jamais \u00eatre seul.",
   hero_btn_encyclopedie: "D\u00e9couvrir l\u2019encyclop\u00e9die",

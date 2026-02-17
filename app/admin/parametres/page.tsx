@@ -27,7 +27,7 @@ const sections: SectionDef[] = [
     fields: [
       { label: 'Couleur principale (or)', key: 'color_primary', type: 'color', default: '#D4AF37' },
       { label: 'Couleur secondaire', key: 'color_secondary', type: 'color', default: '#74C0FC' },
-      { label: 'Couleur de fond', key: 'color_bg', type: 'color', default: '#1E0F17' },
+      { label: 'Couleur de fond', key: 'color_bg', type: 'color', default: '#362038' },
       { label: 'Logo du site', key: 'logo_url', type: 'upload', accept: 'image/*', folder: 'site', hint: 'PNG ou SVG recommande, 512x512px', default: '' },
       { label: 'Image de fond hero', key: 'hero_bg_url', type: 'upload', accept: 'image/*', folder: 'site', hint: 'Image plein ecran, 1920x1080px', default: '' },
     ],

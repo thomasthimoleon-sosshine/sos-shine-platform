@@ -16,6 +16,7 @@ export default function ProfilPage() {
   const [saved, setSaved] = useState(false)
   const [uploadingAvatar, setUploadingAvatar] = useState(false)
   const [uploadingVideo, setUploadingVideo] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
   const avatarRef = useRef<HTMLInputElement>(null)
   const videoRef = useRef<HTMLInputElement>(null)
 
@@ -77,12 +78,16 @@ export default function ProfilPage() {
     const file = e.target.files?.[0]
     if (!file || !profile) return
     setUploadingAvatar(true)
+    setUploadError(null)
     try {
       const url = await uploadFile(file, 'avatars')
       const supabase = createClient()
-      await supabase.from('profiles').update({ avatar_url: url }).eq('id', profile.id)
+      const { error } = await supabase.from('profiles').update({ avatar_url: url }).eq('id', profile.id)
+      if (error) throw new Error(error.message)
       setProfile({ ...profile, avatar_url: url })
-    } catch { /* silently fail */ }
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : "Erreur lors de l'envoi de la photo")
+    }
     setUploadingAvatar(false)
     if (avatarRef.current) avatarRef.current.value = ''
   }
@@ -98,12 +103,16 @@ export default function ProfilPage() {
     const file = e.target.files?.[0]
     if (!file || !profile) return
     setUploadingVideo(true)
+    setUploadError(null)
     try {
-      const url = await uploadFile(file, 'avatars')
+      const url = await uploadFile(file, 'videos')
       const supabase = createClient()
-      await supabase.from('profiles').update({ video_url: url }).eq('id', profile.id)
+      const { error } = await supabase.from('profiles').update({ video_url: url }).eq('id', profile.id)
+      if (error) throw new Error(error.message)
       setProfile({ ...profile, video_url: url })
-    } catch { /* silently fail */ }
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : "Erreur lors de l'envoi de la vidéo")
+    }
     setUploadingVideo(false)
     if (videoRef.current) videoRef.current.value = ''
   }
@@ -180,6 +189,11 @@ export default function ProfilPage() {
             <p className="text-xs" style={{ color: 'var(--text-muted)' }}>JPG, PNG. Max 10 Mo.</p>
           </div>
         </div>
+        {uploadError && (
+          <p className="mt-3 text-xs px-3 py-2 rounded-lg" style={{ background: 'rgba(255,107,107,0.1)', color: '#FF6B6B' }}>
+            {uploadError}
+          </p>
+        )}
       </div>
 
       {/* Informations */}

@@ -8,6 +8,15 @@ import { createClient } from "@/lib/supabase/client";
    SOS SHINE — Landing Page Dynamique
 ───────────────────────────────────────────── */
 
+function hexToRgb(hex: string): string {
+  const h = hex.replace("#", "");
+  const r = parseInt(h.substring(0, 2), 16);
+  const g = parseInt(h.substring(2, 4), 16);
+  const b = parseInt(h.substring(4, 6), 16);
+  if (isNaN(r) || isNaN(g) || isNaN(b)) return "212,168,67";
+  return `${r},${g},${b}`;
+}
+
 function useReveal(threshold: number = 0.15) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -38,15 +47,18 @@ function Reveal({ children, delay = 0, className = "" }: { children: ReactNode; 
 function GoldDivider() {
   return (
     <div className="flex items-center justify-center gap-4 py-2">
-      <span className="block w-12 h-px bg-gradient-to-r from-transparent to-[#D4A843]" />
-      <span className="block w-1.5 h-1.5 rotate-45 bg-[#D4A843]" />
-      <span className="block w-12 h-px bg-gradient-to-l from-transparent to-[#D4A843]" />
+      <span className="block w-12 h-px" style={{ background: `linear-gradient(to right, transparent, var(--gold))` }} />
+      <span className="block w-1.5 h-1.5 rotate-45" style={{ background: 'var(--gold)' }} />
+      <span className="block w-12 h-px" style={{ background: `linear-gradient(to left, transparent, var(--gold))` }} />
     </div>
   );
 }
 
 // Default values (used when no settings in DB)
 const DEFAULTS: Record<string, string> = {
+  color_primary: "#D4A843",
+  color_secondary: "#A29BFE",
+  color_bg: "#0A0A0A",
   hero_title: "L\u2019encyclop\u00e9die des sch\u00e9mas\n\u00e9motionnels et des\nexp\u00e9riences de vie.",
   hero_subtitle: "Un espace ouvert 24h/24, 7j/7, pour comprendre, apaiser et ne plus jamais \u00eatre seul.",
   hero_btn_encyclopedie: "D\u00e9couvrir l\u2019encyclop\u00e9die",
@@ -134,11 +146,35 @@ export default function Home() {
     return { quote: parts[0] || "", name: parts[1] || "", city: parts[2] || "" };
   }
 
+  // Dynamic colors from admin settings
+  const gold = s("color_primary") || "#D4A843";
+  const accent = s("color_secondary") || "#A29BFE";
+  const bg = s("color_bg") || "#0A0A0A";
+  const goldRgb = hexToRgb(gold);
+  const accentRgb = hexToRgb(accent);
+
+  // Derive a lighter version of gold for gradient
+  const goldDeep = (() => {
+    const h = gold.replace("#", "");
+    const r = Math.max(0, parseInt(h.substring(0, 2), 16) - 44);
+    const g = Math.max(0, parseInt(h.substring(2, 4), 16) - 35);
+    const b = Math.max(0, parseInt(h.substring(4, 6), 16) - 17);
+    return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+  })();
+
+  const goldHover = (() => {
+    const h = gold.replace("#", "");
+    const r = Math.min(255, parseInt(h.substring(0, 2), 16) + 12);
+    const g = Math.min(255, parseInt(h.substring(2, 4), 16) + 16);
+    const b = Math.min(255, parseInt(h.substring(4, 6), 16) + 10);
+    return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+  })();
+
   const steps = [
     { num: "01", title: s("step1_title"), desc: s("step1_desc"), color: "#55EFC4", icon: "\uD83C\uDFAC" },
-    { num: "02", title: s("step2_title"), desc: s("step2_desc"), color: "#A29BFE", icon: "\u2728" },
+    { num: "02", title: s("step2_title"), desc: s("step2_desc"), color: accent, icon: "\u2728" },
     { num: "03", title: s("step3_title"), desc: s("step3_desc"), color: "#E17055", icon: "\uD83E\uDDD8" },
-    { num: "04", title: s("step4_title"), desc: s("step4_desc"), color: "#D4A843", icon: "\u26A1" },
+    { num: "04", title: s("step4_title"), desc: s("step4_desc"), color: gold, icon: "\u26A1" },
   ];
 
   const encyclopediaItems = s("encyclo_items") ? s("encyclo_items").split("\n").filter(Boolean) : ["Abandon", "Anxi\u00e9t\u00e9", "Burn-out", "D\u00e9pendance affective", "Deuil", "Manque de confiance", "Peur", "Rejet", "Rupture", "Solitude", "Trahison", "Et plus..."];
@@ -156,13 +192,23 @@ export default function Home() {
   const pricePremium = s("price_premium").replace(".", ",");
   const trialDays = s("trial_days");
 
+  // CSS custom properties set from admin colors
+  const cssVars = {
+    "--gold": gold,
+    "--gold-deep": goldDeep,
+    "--gold-light": goldHover,
+    "--accent": accent,
+    "--bg": bg,
+    "--dark": bg,
+  } as React.CSSProperties;
+
   return (
-    <main className="grain relative z-0 overflow-hidden">
+    <main className="grain relative z-0 overflow-hidden" style={cssVars}>
 
       {/* HERO */}
       <section className="relative min-h-screen flex items-center">
         <div className="absolute inset-0 pointer-events-none" style={{ transform: `translateY(${scrollY * 0.15}px)` }}>
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full bg-[#D4A843] opacity-[0.03] blur-[150px]" />
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full opacity-[0.03] blur-[150px]" style={{ background: gold }} />
         </div>
 
         <div className="relative z-10 px-6 md:px-20 py-24 max-w-5xl mx-auto w-full">
@@ -172,9 +218,9 @@ export default function Home() {
               {s("logo_url") ? (
                 <img src={s("logo_url")} alt="SOS Shine" className="w-12 h-12 rounded-xl object-cover" />
               ) : (
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center font-display text-xl font-semibold" style={{ background: 'linear-gradient(135deg, #D4A843, #A88532)', color: '#0A0A0A' }}>S</div>
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center font-display text-xl font-semibold" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: bg }}>S</div>
               )}
-              <span className="font-display text-2xl font-medium text-[#D4A843]">SOS Shine</span>
+              <span className="font-display text-2xl font-medium" style={{ color: gold }}>SOS Shine</span>
             </div>
           </Reveal>
 
@@ -184,7 +230,7 @@ export default function Home() {
                 <span key={i}>
                   {i > 0 && <br />}
                   {line.includes("exp\u00e9riences") || line.includes("douleur") || line.includes("potentiel") ? (
-                    <em className="text-[#D4A843] font-light">{line}</em>
+                    <em className="font-light" style={{ color: gold }}>{line}</em>
                   ) : line}
                 </span>
               ))}
@@ -204,10 +250,10 @@ export default function Home() {
                 <video src={s("intro_video_url")} controls className="w-full aspect-video" poster="" />
               ) : (
                 <div className="relative aspect-video flex items-center justify-center cursor-pointer group">
-                  <div className="absolute inset-0 bg-gradient-to-br from-[rgba(212,168,67,0.08)] to-transparent" />
+                  <div className="absolute inset-0" style={{ background: `linear-gradient(to bottom right, rgba(${goldRgb},0.08), transparent)` }} />
                   <div className="relative z-10 text-center">
-                    <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 transition-transform group-hover:scale-110" style={{ background: 'rgba(212,168,67,0.15)', border: '2px solid rgba(212,168,67,0.3)' }}>
-                      <svg className="w-8 h-8 ml-1" fill="none" viewBox="0 0 24 24" stroke="#D4A843" strokeWidth={1.5}>
+                    <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 transition-transform group-hover:scale-110" style={{ background: `rgba(${goldRgb},0.15)`, border: `2px solid rgba(${goldRgb},0.3)` }}>
+                      <svg className="w-8 h-8 ml-1" fill="none" viewBox="0 0 24 24" stroke={gold} strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
                       </svg>
                     </div>
@@ -221,13 +267,13 @@ export default function Home() {
           <Reveal delay={0.4}>
             <div className="flex flex-wrap gap-4">
               <Link href="/dashboard/encyclopedie">
-                <button className="px-8 py-4 rounded-full text-base font-medium tracking-wide transition-all duration-300 cursor-pointer" style={{ background: 'transparent', border: '1px solid rgba(212,168,67,0.4)', color: '#D4A843' }}>
+                <button className="px-8 py-4 rounded-full text-base font-medium tracking-wide transition-all duration-300 cursor-pointer" style={{ background: 'transparent', border: `1px solid rgba(${goldRgb},0.4)`, color: gold }}>
                   {s("hero_btn_encyclopedie")}
                 </button>
               </Link>
               <Link href="/signup">
-                <button className="cta-glow px-8 py-4 bg-[#D4A843] text-[#0A0A0A] rounded-full text-base font-medium tracking-wide hover:bg-[#E0B84D] transition-all duration-300 cursor-pointer">
-                  {s("hero_btn_signup")} {" \u2014 "}{trialDays}{" jours d\u2019essai"}
+                <button className="cta-glow px-8 py-4 rounded-full text-base font-medium tracking-wide transition-all duration-300 cursor-pointer" style={{ background: gold, color: bg }}>
+                  {s("hero_btn_signup")}{" \u2014 "}{trialDays}{" jours d\u2019essai"}
                 </button>
               </Link>
             </div>
@@ -250,7 +296,7 @@ export default function Home() {
                 <span key={i}>
                   {i > 0 && <br />}
                   {line.includes("douleur") || line.includes("potentiel") ? (
-                    <span className="text-[#D4A843]">{line}</span>
+                    <span style={{ color: gold }}>{line}</span>
                   ) : line}
                 </span>
               ))}
@@ -312,9 +358,9 @@ export default function Home() {
               {encyclopediaItems.map((d, i) => (
                 <div key={d} className="px-4 py-3 rounded-xl text-center text-sm transition-all duration-200 cursor-default"
                   style={{
-                    background: i === encyclopediaItems.length - 1 ? 'rgba(212,168,67,0.08)' : 'var(--dark-card)',
-                    border: i === encyclopediaItems.length - 1 ? '1px solid rgba(212,168,67,0.2)' : '1px solid var(--dark-border)',
-                    color: i === encyclopediaItems.length - 1 ? '#D4A843' : 'var(--text-secondary)',
+                    background: i === encyclopediaItems.length - 1 ? `rgba(${goldRgb},0.08)` : 'var(--dark-card)',
+                    border: i === encyclopediaItems.length - 1 ? `1px solid rgba(${goldRgb},0.2)` : '1px solid var(--dark-border)',
+                    color: i === encyclopediaItems.length - 1 ? gold : 'var(--text-secondary)',
                   }}>
                   {d}
                 </div>
@@ -340,8 +386,8 @@ export default function Home() {
           <div className="space-y-5">
             {communityBlocks.filter(b => b.title).map((item, i) => (
               <Reveal key={item.title} delay={i * 0.1}>
-                <div className="p-6 md:p-8 rounded-xl" style={{ background: "rgba(212,168,67,0.03)", border: "1px solid rgba(212,168,67,0.08)" }}>
-                  <h3 className="font-display text-xl text-[#D4A843] font-medium mb-3">{item.title}</h3>
+                <div className="p-6 md:p-8 rounded-xl" style={{ background: `rgba(${goldRgb},0.03)`, border: `1px solid rgba(${goldRgb},0.08)` }}>
+                  <h3 className="font-display text-xl font-medium mb-3" style={{ color: gold }}>{item.title}</h3>
                   <p className="text-[var(--text-secondary)] leading-relaxed text-[15px] font-light">{item.desc}</p>
                 </div>
               </Reveal>
@@ -366,7 +412,7 @@ export default function Home() {
                     {"\u00ab"} {t.quote} {"\u00bb"}
                   </p>
                   <div>
-                    <p className="text-sm text-[#D4A843] font-medium">{t.name}</p>
+                    <p className="text-sm font-medium" style={{ color: gold }}>{t.name}</p>
                     <p className="text-xs text-[var(--text-muted)]">{t.city}</p>
                   </div>
                 </div>
@@ -383,29 +429,29 @@ export default function Home() {
             <GoldDivider />
             <h2 className="font-display text-3xl md:text-4xl font-light text-center mt-6 mb-4">Choisissez votre accompagnement</h2>
             <p className="text-center text-[var(--text-secondary)] font-light mb-16">
-              {trialDays}{" jours d\u2019essai gratuit \u2014 Sans engagement \u2014 Annulable \u00e0 tout instant"}
+              {"Sans engagement \u2014 Annulable \u00e0 tout instant"}
             </p>
           </Reveal>
 
           <div className="grid md:grid-cols-2 gap-6">
             {/* Essentiel */}
             <Reveal delay={0.1}>
-              <div className="p-8 md:p-10 rounded-2xl h-full flex flex-col" style={{ background: "rgba(212,168,67,0.04)", border: "1px solid rgba(212,168,67,0.12)" }}>
+              <div className="p-8 md:p-10 rounded-2xl h-full flex flex-col" style={{ background: `rgba(${goldRgb},0.04)`, border: `1px solid rgba(${goldRgb},0.12)` }}>
                 <p className="text-sm tracking-[0.2em] text-[var(--text-muted)] uppercase mb-4">Essentiel</p>
                 <div className="flex items-baseline gap-1 mb-6">
-                  <span className="font-display text-5xl font-light text-[#D4A843]">{priceEssential}{"\u20ac"}</span>
+                  <span className="font-display text-5xl font-light" style={{ color: gold }}>{priceEssential}{"\u20ac"}</span>
                   <span className="text-[var(--text-muted)] text-sm">/mois</span>
                 </div>
                 <div className="space-y-3 flex-1 mb-8">
                   {essentialFeatures.map((f) => (
                     <div key={f} className="flex items-start gap-3">
-                      <span className="text-[#D4A843] mt-0.5 text-sm">{"\u25c6"}</span>
+                      <span className="mt-0.5 text-sm" style={{ color: gold }}>{"\u25c6"}</span>
                       <span className="text-[var(--text-secondary)] text-[15px] font-light">{f}</span>
                     </div>
                   ))}
                 </div>
                 <Link href="/signup">
-                  <button className="cta-glow w-full px-8 py-4 bg-[#D4A843] text-[#0A0A0A] rounded-full text-base font-medium hover:bg-[#E0B84D] transition-all duration-300 cursor-pointer">
+                  <button className="cta-glow w-full px-8 py-4 rounded-full text-base font-medium transition-all duration-300 cursor-pointer" style={{ background: gold, color: bg }}>
                     {"Commencer \u2014 "}{trialDays}{" jours gratuits"}
                   </button>
                 </Link>
@@ -414,26 +460,26 @@ export default function Home() {
 
             {/* Premium */}
             <Reveal delay={0.2}>
-              <div className="p-8 md:p-10 rounded-2xl h-full flex flex-col relative overflow-hidden" style={{ background: "rgba(162,155,254,0.04)", border: "1px solid rgba(162,155,254,0.15)" }}>
-                <div className="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-medium" style={{ background: 'rgba(162,155,254,0.15)', color: '#A29BFE' }}>
+              <div className="p-8 md:p-10 rounded-2xl h-full flex flex-col relative overflow-hidden" style={{ background: `rgba(${accentRgb},0.04)`, border: `1px solid rgba(${accentRgb},0.15)` }}>
+                <div className="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-medium" style={{ background: `rgba(${accentRgb},0.15)`, color: accent }}>
                   {"Recommand\u00e9"}
                 </div>
                 <p className="text-sm tracking-[0.2em] text-[var(--text-muted)] uppercase mb-4">Premium</p>
                 <div className="flex items-baseline gap-1 mb-6">
-                  <span className="font-display text-5xl font-light text-[#A29BFE]">{pricePremium}{"\u20ac"}</span>
+                  <span className="font-display text-5xl font-light" style={{ color: accent }}>{pricePremium}{"\u20ac"}</span>
                   <span className="text-[var(--text-muted)] text-sm">/mois</span>
                 </div>
                 <div className="space-y-3 flex-1 mb-8">
                   {premiumFeatures.map((f) => (
                     <div key={f} className="flex items-start gap-3">
-                      <span className="text-[#A29BFE] mt-0.5 text-sm">{"\u25c6"}</span>
+                      <span className="mt-0.5 text-sm" style={{ color: accent }}>{"\u25c6"}</span>
                       <span className="text-[var(--text-secondary)] text-[15px] font-light">{f}</span>
                     </div>
                   ))}
                 </div>
                 <Link href="/signup">
-                  <button className="w-full px-8 py-4 rounded-full text-base font-medium transition-all duration-300 cursor-pointer" style={{ background: '#A29BFE', color: '#0A0A0A' }}>
-                    {"Commencer \u2014 "}{trialDays}{" jours gratuits"}
+                  <button className="w-full px-8 py-4 rounded-full text-base font-medium transition-all duration-300 cursor-pointer" style={{ background: accent, color: bg }}>
+                    {"Commencer maintenant"}
                   </button>
                 </Link>
               </div>
@@ -451,7 +497,7 @@ export default function Home() {
       {/* CTA FINAL */}
       <section className="px-6 md:px-20 py-32 border-t border-[var(--dark-border)] relative">
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full bg-[#D4A843] opacity-[0.03] blur-[120px]" />
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full opacity-[0.03] blur-[120px]" style={{ background: gold }} />
         </div>
         <div className="relative z-10 max-w-3xl mx-auto text-center">
           <Reveal><GoldDivider /></Reveal>
@@ -461,7 +507,7 @@ export default function Home() {
                 <span key={i}>
                   {i > 0 && <br />}
                   {line.includes("seul") || line.includes("jamais") ? (
-                    <em className="text-[#D4A843] font-light">{line}</em>
+                    <em className="font-light" style={{ color: gold }}>{line}</em>
                   ) : line}
                 </span>
               ))}
@@ -469,19 +515,19 @@ export default function Home() {
           </Reveal>
           <Reveal delay={0.2}>
             <Link href="/signup">
-              <button className="cta-glow px-12 py-5 bg-[#D4A843] text-[#0A0A0A] rounded-full text-lg font-medium tracking-wide hover:bg-[#E0B84D] transition-all duration-300 cursor-pointer">
+              <button className="cta-glow px-12 py-5 rounded-full text-lg font-medium tracking-wide transition-all duration-300 cursor-pointer" style={{ background: gold, color: bg }}>
                 {s("cta_button")}
               </button>
             </Link>
           </Reveal>
           <Reveal delay={0.3}>
             <p className="text-xs text-[var(--text-muted)] mt-6 tracking-wide">
-              {trialDays}{" jours gratuits \u2014 Puis "}{priceEssential}{"\u20ac/mois \u2014 Sans engagement"}
+              {trialDays}{" jours gratuits (Essentiel) \u2014 Puis "}{priceEssential}{"\u20ac/mois \u2014 Sans engagement"}
             </p>
           </Reveal>
           <Reveal delay={0.35}>
             <div className="mt-8">
-              <Link href="/login" className="gold-underline text-sm text-[var(--text-muted)] hover:text-[#D4A843] transition-colors duration-300">
+              <Link href="/login" className="gold-underline text-sm text-[var(--text-muted)] transition-colors duration-300" style={{ ["--gold" as string]: gold }}>
                 {"D\u00e9j\u00e0 membre ? Se connecter"}
               </Link>
             </div>
@@ -496,14 +542,14 @@ export default function Home() {
             {s("logo_url") ? (
               <img src={s("logo_url")} alt="SOS Shine" className="w-8 h-8 rounded-lg object-cover" />
             ) : null}
-            <span className="font-display text-xl text-[#D4A843] font-medium">{s("footer_name")}</span>
+            <span className="font-display text-xl font-medium" style={{ color: gold }}>{s("footer_name")}</span>
             <span className="text-[var(--text-muted)] text-xs">{"\u00a9 2026"}</span>
           </div>
           <div className="flex items-center gap-6 text-xs text-[var(--text-muted)]">
-            <Link href={s("footer_link_mentions") || "/mentions-legales"} className="gold-underline hover:text-[#D4A843] transition-colors">{"Mentions l\u00e9gales"}</Link>
-            <Link href={s("footer_link_cgv") || "/cgv"} className="gold-underline hover:text-[#D4A843] transition-colors">CGV</Link>
-            <Link href={s("footer_link_privacy") || "/confidentialite"} className="gold-underline hover:text-[#D4A843] transition-colors">{"Confidentialit\u00e9"}</Link>
-            <Link href={s("footer_link_contact") || "/contact"} className="gold-underline hover:text-[#D4A843] transition-colors">Contact</Link>
+            <Link href={s("footer_link_mentions") || "/mentions-legales"} className="gold-underline transition-colors">{"Mentions l\u00e9gales"}</Link>
+            <Link href={s("footer_link_cgv") || "/cgv"} className="gold-underline transition-colors">CGV</Link>
+            <Link href={s("footer_link_privacy") || "/confidentialite"} className="gold-underline transition-colors">{"Confidentialit\u00e9"}</Link>
+            <Link href={s("footer_link_contact") || "/contact"} className="gold-underline transition-colors">Contact</Link>
           </div>
         </div>
       </footer>

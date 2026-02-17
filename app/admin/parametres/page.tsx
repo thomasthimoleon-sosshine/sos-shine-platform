@@ -26,8 +26,14 @@ const sections: SectionDef[] = [
     icon: '🎨',
     fields: [
       { label: 'Couleur principale (or)', key: 'color_primary', type: 'color', default: '#D4AF37' },
-      { label: 'Couleur secondaire', key: 'color_secondary', type: 'color', default: '#74C0FC' },
-      { label: 'Couleur de fond', key: 'color_bg', type: 'color', default: '#1E0F17' },
+      { label: 'Couleur secondaire (bleu)', key: 'color_secondary', type: 'color', default: '#74C0FC' },
+      { label: 'Couleur de fond', key: 'color_bg', type: 'color', default: '#362038' },
+      { label: 'Couleur des cartes', key: 'color_card', type: 'color', default: '#442B40' },
+      { label: 'Couleur des bordures', key: 'color_border', type: 'color', default: '#5E3E52' },
+      { label: 'Couleur du texte principal', key: 'color_text', type: 'color', default: '#F5EDF0' },
+      { label: 'Couleur du texte secondaire', key: 'color_text_secondary', type: 'color', default: '#C8A8B8' },
+      { label: 'Couleur du texte discret', key: 'color_text_muted', type: 'color', default: '#8E6E7E' },
+      { label: 'Couleur des boutons', key: 'color_button', type: 'color', default: '#D4AF37' },
       { label: 'Logo du site', key: 'logo_url', type: 'upload', accept: 'image/*', folder: 'site', hint: 'PNG ou SVG recommande, 512x512px', default: '' },
       { label: 'Image de fond hero', key: 'hero_bg_url', type: 'upload', accept: 'image/*', folder: 'site', hint: 'Image plein ecran, 1920x1080px', default: '' },
     ],
@@ -175,9 +181,26 @@ export default function ParametresPage() {
 
   useEffect(() => { loadSettings() }, [loadSettings])
 
+  // Map of color keys to CSS custom properties for live preview
+  const colorToCssVar: Record<string, string> = {
+    color_primary: '--gold',
+    color_secondary: '--accent',
+    color_bg: '--dark',
+    color_card: '--dark-card',
+    color_border: '--dark-border',
+    color_text: '--text-primary',
+    color_text_secondary: '--text-secondary',
+    color_text_muted: '--text-muted',
+    color_button: '--button-bg',
+  }
+
   function updateValue(key: string, value: string) {
     setValues((prev) => ({ ...prev, [key]: value }))
     setSaved(false)
+    // Live preview: apply CSS var immediately
+    if (colorToCssVar[key] && value) {
+      document.documentElement.style.setProperty(colorToCssVar[key], value)
+    }
   }
 
   async function handleSave() {
@@ -288,6 +311,35 @@ export default function ParametresPage() {
           <h2 className="font-semibold text-lg mb-5 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
             <span>{section.icon}</span> {section.title}
           </h2>
+
+          {/* Live preview for Apparence section */}
+          {section.title === 'Apparence' && (
+            <div className="mb-6 rounded-xl p-5 space-y-3" style={{
+              background: values.color_bg || '#362038',
+              border: `1px solid ${values.color_border || '#5E3E52'}`,
+            }}>
+              <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: values.color_text_muted || '#8E6E7E' }}>Preview en temps reel</p>
+              <div className="rounded-lg p-4" style={{
+                background: values.color_card || '#442B40',
+                border: `1px solid ${values.color_border || '#5E3E52'}`,
+              }}>
+                <h3 className="font-display text-lg font-semibold mb-1" style={{ color: values.color_primary || '#D4AF37' }}>Titre principal</h3>
+                <p className="text-sm mb-1" style={{ color: values.color_text || '#F5EDF0' }}>Texte principal sur une carte</p>
+                <p className="text-xs mb-3" style={{ color: values.color_text_secondary || '#C8A8B8' }}>Texte secondaire plus discret</p>
+                <div className="flex items-center gap-2">
+                  <span className="inline-block px-3 py-1.5 rounded-lg text-xs font-semibold" style={{
+                    background: values.color_button || values.color_primary || '#D4AF37',
+                    color: values.color_bg || '#362038',
+                  }}>Bouton principal</span>
+                  <span className="inline-block px-3 py-1.5 rounded-lg text-xs font-semibold" style={{
+                    background: values.color_secondary || '#74C0FC',
+                    color: '#fff',
+                  }}>Bouton secondaire</span>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="space-y-5">
             {section.fields.map((field) => (
               <div key={field.key}>

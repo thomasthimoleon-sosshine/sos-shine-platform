@@ -8,12 +8,13 @@
   --gold: #D4AF37;
   --gold-light: #E8CC6E;
   --gold-deep: #B8960F;
-  --dark: #1E0F17;
-  --dark-card: #2A1A22;
-  --dark-border: #3D2832;
-  --text-primary: #F0E6EA;
-  --text-secondary: #B89AA8;
-  --text-muted: #7A5A68;
+  --dark: #362038;
+  --dark-card: #442B40;
+  --dark-border: #5E3E52;
+  --text-primary: #F5EDF0;
+  --text-secondary: #C8A8B8;
+  --text-muted: #8E6E7E;
+  --button-bg: #D4AF37;
 }
 
 @theme inline {

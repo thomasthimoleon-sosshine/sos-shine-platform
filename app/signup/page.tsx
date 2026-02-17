@@ -188,7 +188,7 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={loading}
-              className="cta-glow w-full py-3.5 bg-[var(--gold)] text-[var(--dark)] rounded-full font-medium tracking-wide hover:bg-[#E0B84D] transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+              className="cta-glow w-full py-3.5 bg-[var(--button-bg)] text-[var(--dark)] rounded-full font-medium tracking-wide hover:brightness-110 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm"
             >
               {loading ? 'Création en cours...' : 'Créer mon compte'}
             </button>

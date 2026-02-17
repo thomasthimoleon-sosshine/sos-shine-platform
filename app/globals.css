@@ -14,6 +14,7 @@
   --text-primary: #F5EDF0;
   --text-secondary: #C8A8B8;
   --text-muted: #8E6E7E;
+  --button-bg: #D4AF37;
 }
 
 @theme inline {

@@ -59,6 +59,12 @@ const DEFAULTS: Record<string, string> = {
   color_primary: "#D4AF37",
   color_secondary: "#74C0FC",
   color_bg: "#362038",
+  color_card: "#442B40",
+  color_border: "#5E3E52",
+  color_text: "#F5EDF0",
+  color_text_secondary: "#C8A8B8",
+  color_text_muted: "#8E6E7E",
+  color_button: "#D4AF37",
   hero_title: "L\u2019encyclop\u00e9die des sch\u00e9mas\n\u00e9motionnels et des\nexp\u00e9riences de vie.",
   hero_subtitle: "Un espace ouvert 24h/24, 7j/7, pour comprendre, apaiser et ne plus jamais \u00eatre seul.",
   hero_btn_encyclopedie: "D\u00e9couvrir l\u2019encyclop\u00e9die",
@@ -149,7 +155,8 @@ export default function Home() {
   // Dynamic colors from admin settings
   const gold = s("color_primary") || "#D4AF37";
   const accent = s("color_secondary") || "#74C0FC";
-  const bg = s("color_bg") || "#1E0F17";
+  const bg = s("color_bg") || "#362038";
+  const buttonBg = s("color_button") || gold;
   const goldRgb = hexToRgb(gold);
   const accentRgb = hexToRgb(accent);
 
@@ -200,6 +207,7 @@ export default function Home() {
     "--accent": accent,
     "--bg": bg,
     "--dark": bg,
+    "--button-bg": buttonBg,
   } as React.CSSProperties;
 
   return (
@@ -272,7 +280,7 @@ export default function Home() {
                 </button>
               </Link>
               <Link href="/signup">
-                <button className="cta-glow px-8 py-4 rounded-full text-base font-medium tracking-wide transition-all duration-300 cursor-pointer" style={{ background: gold, color: bg }}>
+                <button className="cta-glow px-8 py-4 rounded-full text-base font-medium tracking-wide transition-all duration-300 cursor-pointer" style={{ background: buttonBg, color: bg }}>
                   {s("hero_btn_signup")}{" \u2014 "}{trialDays}{" jours d\u2019essai"}
                 </button>
               </Link>
@@ -451,7 +459,7 @@ export default function Home() {
                   ))}
                 </div>
                 <Link href="/signup">
-                  <button className="cta-glow w-full px-8 py-4 rounded-full text-base font-medium transition-all duration-300 cursor-pointer" style={{ background: gold, color: bg }}>
+                  <button className="cta-glow w-full px-8 py-4 rounded-full text-base font-medium transition-all duration-300 cursor-pointer" style={{ background: buttonBg, color: bg }}>
                     {"Commencer \u2014 "}{trialDays}{" jours gratuits"}
                   </button>
                 </Link>
@@ -515,7 +523,7 @@ export default function Home() {
           </Reveal>
           <Reveal delay={0.2}>
             <Link href="/signup">
-              <button className="cta-glow px-12 py-5 rounded-full text-lg font-medium tracking-wide transition-all duration-300 cursor-pointer" style={{ background: gold, color: bg }}>
+              <button className="cta-glow px-12 py-5 rounded-full text-lg font-medium tracking-wide transition-all duration-300 cursor-pointer" style={{ background: buttonBg, color: bg }}>
                 {s("cta_button")}
               </button>
             </Link>

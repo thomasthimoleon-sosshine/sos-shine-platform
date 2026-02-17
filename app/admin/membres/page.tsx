@@ -4,8 +4,15 @@ import { useEffect, useState, useMemo } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { Profile } from '@/types/database'
 
+const ROLES: { value: Profile['role']; label: string }[] = [
+  { value: 'founder', label: 'Fondateur' },
+  { value: 'admin_content', label: 'Admin Contenu' },
+  { value: 'admin_support', label: 'Admin Support' },
+  { value: 'member', label: 'Membre' },
+]
+
 const roleBadgeStyles: Record<Profile['role'], { bg: string; color: string; label: string }> = {
-  founder:       { bg: 'rgba(212,175,55,0.12)',  color: '#D4AF37', label: 'Fondatrice' },
+  founder:       { bg: 'rgba(212,175,55,0.12)',  color: '#D4AF37', label: 'Fondateur' },
   admin_content: { bg: 'rgba(116,192,252,0.12)', color: '#74C0FC', label: 'Admin Contenu' },
   admin_support: { bg: 'rgba(116,185,255,0.12)', color: '#74B9FF', label: 'Admin Support' },
   member:        { bg: 'rgba(154,144,128,0.12)', color: '#9A9080', label: 'Membre' },
@@ -29,6 +36,8 @@ export default function AdminMembres() {
   const [profiles, setProfiles] = useState<Profile[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
+  const [editingRole, setEditingRole] = useState<string | null>(null)
+  const [savingRole, setSavingRole] = useState<string | null>(null)
 
   useEffect(() => {
     async function load() {
@@ -43,6 +52,17 @@ export default function AdminMembres() {
     }
     load()
   }, [])
+
+  async function handleRoleChange(memberId: string, newRole: Profile['role']) {
+    setSavingRole(memberId)
+    const supabase = createClient()
+    const { error } = await supabase.from('profiles').update({ role: newRole }).eq('id', memberId)
+    if (!error) {
+      setProfiles((prev) => prev.map((p) => p.id === memberId ? { ...p, role: newRole } : p))
+    }
+    setSavingRole(null)
+    setEditingRole(null)
+  }
 
   const filtered = useMemo(() => {
     if (!search.trim()) return profiles
@@ -143,6 +163,7 @@ export default function AdminMembres() {
                 {filtered.map((member, i) => {
                   const role = roleBadgeStyles[member.role]
                   const plan = getPlanBadge(member.plan)
+                  const isEditingThis = editingRole === member.id
                   return (
                     <tr
                       key={member.id}
@@ -154,15 +175,19 @@ export default function AdminMembres() {
                       {/* Name + avatar */}
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-3">
-                          <div
-                            className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold shrink-0"
-                            style={{
-                              background: `${role.color}18`,
-                              color: role.color,
-                            }}
-                          >
-                            {member.prenom?.charAt(0).toUpperCase() || '?'}
-                          </div>
+                          {member.avatar_url ? (
+                            <img src={member.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover shrink-0" />
+                          ) : (
+                            <div
+                              className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold shrink-0"
+                              style={{
+                                background: `${role.color}18`,
+                                color: role.color,
+                              }}
+                            >
+                              {member.prenom?.charAt(0).toUpperCase() || '?'}
+                            </div>
+                          )}
                           <span style={{ color: 'var(--text-primary)' }}>
                             {member.prenom || '—'}
                           </span>
@@ -172,14 +197,35 @@ export default function AdminMembres() {
                       <td className="px-5 py-3.5" style={{ color: 'var(--text-secondary)' }}>
                         {member.email}
                       </td>
-                      {/* Role badge */}
+                      {/* Role badge — clickable to edit */}
                       <td className="px-5 py-3.5">
-                        <span
-                          className="inline-block px-2.5 py-1 rounded-full text-xs font-medium"
-                          style={{ background: role.bg, color: role.color }}
-                        >
-                          {role.label}
-                        </span>
+                        {isEditingThis ? (
+                          <div className="flex items-center gap-1.5">
+                            <select
+                              defaultValue={member.role}
+                              onChange={(e) => handleRoleChange(member.id, e.target.value as Profile['role'])}
+                              disabled={savingRole === member.id}
+                              className="rounded-lg px-2 py-1 text-xs outline-none cursor-pointer"
+                              style={{ background: 'var(--dark)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                            >
+                              {ROLES.map((r) => (
+                                <option key={r.value} value={r.value}>{r.label}</option>
+                              ))}
+                            </select>
+                            <button onClick={() => setEditingRole(null)} className="text-xs cursor-pointer" style={{ color: 'var(--text-muted)' }}>
+                              Annuler
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => setEditingRole(member.id)}
+                            className="inline-block px-2.5 py-1 rounded-full text-xs font-medium cursor-pointer transition-opacity hover:opacity-80"
+                            style={{ background: role.bg, color: role.color }}
+                            title="Cliquer pour changer le rôle"
+                          >
+                            {role.label}
+                          </button>
+                        )}
                       </td>
                       {/* Plan badge */}
                       <td className="px-5 py-3.5">
@@ -206,6 +252,7 @@ export default function AdminMembres() {
             {filtered.map((member) => {
               const role = roleBadgeStyles[member.role]
               const plan = getPlanBadge(member.plan)
+              const isEditingThis = editingRole === member.id
               return (
                 <div
                   key={member.id}
@@ -213,15 +260,19 @@ export default function AdminMembres() {
                   style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
                 >
                   <div className="flex items-center gap-3 mb-3">
-                    <div
-                      className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-semibold shrink-0"
-                      style={{
-                        background: `${role.color}18`,
-                        color: role.color,
-                      }}
-                    >
-                      {member.prenom?.charAt(0).toUpperCase() || '?'}
-                    </div>
+                    {member.avatar_url ? (
+                      <img src={member.avatar_url} alt="" className="w-9 h-9 rounded-full object-cover shrink-0" />
+                    ) : (
+                      <div
+                        className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-semibold shrink-0"
+                        style={{
+                          background: `${role.color}18`,
+                          color: role.color,
+                        }}
+                      >
+                        {member.prenom?.charAt(0).toUpperCase() || '?'}
+                      </div>
+                    )}
                     <div className="min-w-0">
                       <p className="font-medium text-sm truncate" style={{ color: 'var(--text-primary)' }}>
                         {member.prenom || '—'}
@@ -232,12 +283,32 @@ export default function AdminMembres() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span
-                      className="inline-block px-2.5 py-1 rounded-full text-xs font-medium"
-                      style={{ background: role.bg, color: role.color }}
-                    >
-                      {role.label}
-                    </span>
+                    {isEditingThis ? (
+                      <div className="flex items-center gap-1.5">
+                        <select
+                          defaultValue={member.role}
+                          onChange={(e) => handleRoleChange(member.id, e.target.value as Profile['role'])}
+                          disabled={savingRole === member.id}
+                          className="rounded-lg px-2 py-1 text-xs outline-none cursor-pointer"
+                          style={{ background: 'var(--dark)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                        >
+                          {ROLES.map((r) => (
+                            <option key={r.value} value={r.value}>{r.label}</option>
+                          ))}
+                        </select>
+                        <button onClick={() => setEditingRole(null)} className="text-xs cursor-pointer" style={{ color: 'var(--text-muted)' }}>
+                          Annuler
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setEditingRole(member.id)}
+                        className="inline-block px-2.5 py-1 rounded-full text-xs font-medium cursor-pointer transition-opacity hover:opacity-80"
+                        style={{ background: role.bg, color: role.color }}
+                      >
+                        {role.label}
+                      </button>
+                    )}
                     <span
                       className="inline-block px-2.5 py-1 rounded-full text-xs font-medium"
                       style={{ background: plan.bg, color: plan.color }}

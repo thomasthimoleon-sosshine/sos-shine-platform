@@ -2,9 +2,12 @@
 export type Profile = {
   id: string
   prenom: string
+  pseudo: string | null
   email: string
   role: 'member' | 'founder' | 'admin_content' | 'admin_support'
   avatar_url: string | null
+  bio: string | null
+  video_url: string | null
   plan: 'essential' | 'premium' | null
   created_at: string
 }
@@ -53,6 +56,7 @@ export type Message = {
   content: string
   is_general: boolean
   is_deleted: boolean
+  is_anonymous: boolean
   created_at: string
 }
 
@@ -164,7 +168,7 @@ export type Database = {
 
 // ── Helper types ──
 export type MessageWithProfile = Message & {
-  profiles: Pick<Profile, 'prenom' | 'role' | 'avatar_url'>
+  profiles: Pick<Profile, 'prenom' | 'pseudo' | 'role' | 'avatar_url'>
 }
 
 export type PostWithAuthor = Post & {

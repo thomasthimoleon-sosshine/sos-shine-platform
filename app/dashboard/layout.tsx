@@ -35,6 +35,16 @@ const navItems = [
     ),
   },
   {
+    href: '/dashboard/messages',
+    label: 'Messages',
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+      </svg>
+    ),
+    hasBadge: true,
+  },
+  {
     href: '/dashboard/mur',
     label: 'Mur',
     icon: (
@@ -70,6 +80,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [loading, setLoading] = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
+  const [unreadMessages, setUnreadMessages] = useState(0)
 
   useEffect(() => {
     const supabase = createClient()
@@ -97,9 +108,32 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           video_url: null,
         })
       }
+
+      // Compter les messages privés non lus
+      const { count } = await supabase
+        .from('private_messages')
+        .select('*', { count: 'exact', head: true })
+        .eq('receiver_id', user.id)
+        .eq('is_read', false)
+      setUnreadMessages(count || 0)
+
       setLoading(false)
     }
     loadUser()
+
+    // Rafraîchir le compteur toutes les 30 secondes
+    const interval = setInterval(async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+      const { count } = await supabase
+        .from('private_messages')
+        .select('*', { count: 'exact', head: true })
+        .eq('receiver_id', user.id)
+        .eq('is_read', false)
+      setUnreadMessages(count || 0)
+    }, 30000)
+
+    return () => clearInterval(interval)
   }, [router])
 
   async function handleSignOut() {
@@ -153,6 +187,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 }}>
                 {item.icon}
                 {item.label}
+                {'hasBadge' in item && item.hasBadge && unreadMessages > 0 && (
+                  <span className="ml-auto w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold"
+                    style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
+                    {unreadMessages > 9 ? '9+' : unreadMessages}
+                  </span>
+                )}
               </Link>
             )
           })}

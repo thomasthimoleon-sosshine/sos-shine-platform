@@ -157,28 +157,42 @@ export default function ChatDouleurPage() {
           ) : (
             messages.map((msg) => {
               const isAnon = msg.is_anonymous && msg.user_id !== userId
+              const canClickProfile = !isAnon && msg.user_id !== userId
+              const avatarContent = !isAnon && msg.profiles?.avatar_url ? (
+                <img src={msg.profiles.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
+              ) : (
+                <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-semibold"
+                  style={{
+                    background: isAnon ? 'rgba(142,110,126,0.15)' : msg.user_id === userId ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.05)',
+                    color: isAnon ? 'var(--text-muted)' : msg.user_id === userId ? 'var(--gold)' : 'var(--text-secondary)',
+                  }}>
+                  {getDisplayInitial(msg)}
+                </div>
+              )
               return (
                 <div key={msg.id} className="flex gap-3">
                   {/* Avatar */}
-                  {!isAnon && msg.profiles?.avatar_url ? (
-                    <img src={msg.profiles.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
-                  ) : (
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-semibold"
-                      style={{
-                        background: isAnon ? 'rgba(142,110,126,0.15)' : msg.user_id === userId ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.05)',
-                        color: isAnon ? 'var(--text-muted)' : msg.user_id === userId ? 'var(--gold)' : 'var(--text-secondary)',
-                      }}>
-                      {getDisplayInitial(msg)}
-                    </div>
-                  )}
+                  {canClickProfile ? (
+                    <Link href={`/dashboard/membre/${msg.user_id}`} className="flex-shrink-0 hover:opacity-80 transition-opacity">
+                      {avatarContent}
+                    </Link>
+                  ) : avatarContent}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline gap-2 mb-0.5">
-                      <span className="text-sm font-semibold" style={{
-                        color: isAnon ? 'var(--text-muted)' : msg.profiles?.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)',
-                        fontStyle: isAnon ? 'italic' : 'normal',
-                      }}>
-                        {getDisplayName(msg)}
-                      </span>
+                      {canClickProfile ? (
+                        <Link href={`/dashboard/membre/${msg.user_id}`} className="text-sm font-semibold hover:underline" style={{
+                          color: msg.profiles?.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)',
+                        }}>
+                          {getDisplayName(msg)}
+                        </Link>
+                      ) : (
+                        <span className="text-sm font-semibold" style={{
+                          color: isAnon ? 'var(--text-muted)' : msg.profiles?.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)',
+                          fontStyle: isAnon ? 'italic' : 'normal',
+                        }}>
+                          {getDisplayName(msg)}
+                        </span>
+                      )}
                       {!isAnon && msg.profiles?.role === 'founder' && (
                         <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>Fondateur</span>
                       )}

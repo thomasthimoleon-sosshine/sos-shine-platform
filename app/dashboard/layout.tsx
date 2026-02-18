@@ -81,12 +81,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
   const [unreadMessages, setUnreadMessages] = useState(0)
+  const [logoUrl, setLogoUrl] = useState<string | null>(null)
 
   useEffect(() => {
     const supabase = createClient()
     async function loadUser() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { router.push('/login'); return }
+
+      // Charger le logo
+      const { data: logoData } = await supabase.from('site_settings').select('value').eq('key', 'logo_url').maybeSingle()
+      if (logoData?.value) setLogoUrl(logoData.value)
 
       const { data: profileData } = await supabase.from('profiles').select('*').eq('id', user.id).single()
 
@@ -164,8 +169,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* Logo */}
         <div className="p-6 flex items-center gap-3" style={{ borderBottom: '1px solid var(--dark-border)' }}>
           <Link href="/dashboard" className="flex items-center gap-3" onClick={() => setSidebarOpen(false)}>
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center font-display text-lg font-semibold"
-              style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: 'var(--dark)' }}>S</div>
+            {logoUrl ? (
+              <img src={logoUrl} alt="SOS Shine" className="w-10 h-10 rounded-xl object-cover" />
+            ) : (
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center font-display text-lg font-semibold"
+                style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: 'var(--dark)' }}>S</div>
+            )}
             <div>
               <h1 className="font-display text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>SOS Shine</h1>
               <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Votre espace</p>
@@ -250,7 +259,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
             </svg>
           </button>
-          <span className="font-display text-lg font-semibold" style={{ color: 'var(--gold)' }}>SOS Shine</span>
+          {logoUrl ? (
+            <img src={logoUrl} alt="SOS Shine" className="h-8 rounded-lg object-cover" />
+          ) : (
+            <span className="font-display text-lg font-semibold" style={{ color: 'var(--gold)' }}>SOS Shine</span>
+          )}
           <div className="w-10" />
         </header>
         <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">{children}</main>

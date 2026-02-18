@@ -15,6 +15,7 @@ export default function AppelPage() {
   const [userName, setUserName] = useState('')
   const [userRole, setUserRole] = useState('member')
   const [roomValid, setRoomValid] = useState(false)
+  const [callType, setCallType] = useState<'audio' | 'video'>('video')
   const endedRef = useRef(false)
 
   useEffect(() => {
@@ -45,7 +46,8 @@ export default function AppelPage() {
 
       if (!room) { setError('Appel introuvable'); setLoading(false); return }
 
-      const r = room as { created_by: string; target_user_id: string | null; status: string; room_type: string }
+      const r = room as { created_by: string; target_user_id: string | null; status: string; room_type: string; call_type: 'audio' | 'video' }
+      setCallType(r.call_type || 'video')
 
       // Vérifier que l'utilisateur participe à cet appel (1-to-1)
       if (r.room_type === 'one_to_one' && r.created_by !== user.id && r.target_user_id !== user.id) {
@@ -124,6 +126,7 @@ export default function AppelPage() {
         userId={userId}
         userName={userName}
         userRole={userRole}
+        callType={callType}
         onLeave={handleLeave}
       />
     </div>

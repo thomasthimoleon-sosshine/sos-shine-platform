@@ -19,6 +19,8 @@ CREATE TABLE IF NOT EXISTS signaling_rooms (
   created_by      UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   room_type       TEXT NOT NULL DEFAULT 'one_to_one'
                     CHECK (room_type IN ('one_to_one', 'group')),
+  call_type       TEXT NOT NULL DEFAULT 'video'
+                    CHECK (call_type IN ('audio', 'video')),
   -- Pour les appels 1-to-1 : destinataire de l'appel
   target_user_id  UUID REFERENCES profiles(id) ON DELETE SET NULL,
   status          TEXT NOT NULL DEFAULT 'waiting'
@@ -65,6 +67,8 @@ CREATE TABLE IF NOT EXISTS group_events (
   host_id          UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   title            TEXT NOT NULL CHECK (char_length(title) <= 200),
   description      TEXT DEFAULT NULL,
+  event_type       TEXT NOT NULL DEFAULT 'video'
+                     CHECK (event_type IN ('audio', 'video')),
   start_time       TIMESTAMPTZ NOT NULL,
   status           TEXT NOT NULL DEFAULT 'scheduled'
                      CHECK (status IN ('scheduled', 'live', 'ended', 'canceled')),

@@ -17,7 +17,7 @@ export default function VisioPage() {
   const [userId, setUserId] = useState<string | null>(null)
   const [userName, setUserName] = useState('')
   const [userRole, setUserRole] = useState<string>('member')
-  const [activeRoom, setActiveRoom] = useState<{ roomId: string } | null>(null)
+  const [activeRoom, setActiveRoom] = useState<{ roomId: string; callType: 'audio' | 'video' } | null>(null)
 
   useEffect(() => {
     async function init() {
@@ -51,6 +51,7 @@ export default function VisioPage() {
 
   async function joinRoom(event: GroupEventWithHost) {
     const supabase = createClient()
+    const callType = event.event_type || 'video'
 
     // Si la salle n'existe pas encore, la créer (quand l'hôte lance)
     let roomId = event.room_id
@@ -58,6 +59,7 @@ export default function VisioPage() {
       const { data: room } = await supabase.from('signaling_rooms').insert({
         created_by: userId!,
         room_type: 'group',
+        call_type: callType,
         status: 'active',
       }).select('id').single()
 
@@ -73,7 +75,7 @@ export default function VisioPage() {
       await supabase.from('group_events').update({ status: 'live' }).eq('id', event.id)
     }
 
-    setActiveRoom({ roomId })
+    setActiveRoom({ roomId, callType })
   }
 
   const leaveRoom = useCallback(async () => {
@@ -99,6 +101,7 @@ export default function VisioPage() {
           userId={userId}
           userName={userName}
           userRole={userRole}
+          callType={activeRoom.callType}
           onLeave={leaveRoom}
         />
       </div>
@@ -113,10 +116,10 @@ export default function VisioPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-display text-3xl sm:text-4xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-            Visio de groupe
+            Conférences de groupe
           </h1>
           <p className="mt-2" style={{ color: 'var(--text-secondary)' }}>
-            Rejoignez les sessions de groupe en direct ou planifiées.
+            Rejoignez les sessions audio ou vidéo en direct ou planifiées.
           </p>
         </div>
         {canCreate && (
@@ -160,6 +163,9 @@ export default function VisioPage() {
                     <div className="flex items-center gap-2 mb-2">
                       <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: s.bg, color: s.color }}>
                         {s.label}
+                      </span>
+                      <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.04)', color: 'var(--text-muted)' }}>
+                        {event.event_type === 'audio' ? 'Audio' : 'Vidéo'}
                       </span>
                       {isHost && (
                         <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>

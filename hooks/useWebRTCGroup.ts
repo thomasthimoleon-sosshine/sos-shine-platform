@@ -3,10 +3,26 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
-// ── STUN servers pour le NAT traversal ──
+// ── STUN + TURN servers pour le NAT traversal ──
 const ICE_SERVERS: RTCIceServer[] = [
   { urls: 'stun:stun.l.google.com:19302' },
   { urls: 'stun:stun1.l.google.com:19302' },
+  // TURN relay gratuit Metered — assure la connectivité derrière NAT symétrique / firewalls
+  {
+    urls: 'turn:a.relay.metered.ca:80',
+    username: 'e8dd65e092c0bd94e6b82469',
+    credential: '1jHWbndMX/s8pScP',
+  },
+  {
+    urls: 'turn:a.relay.metered.ca:443',
+    username: 'e8dd65e092c0bd94e6b82469',
+    credential: '1jHWbndMX/s8pScP',
+  },
+  {
+    urls: 'turn:a.relay.metered.ca:443?transport=tcp',
+    username: 'e8dd65e092c0bd94e6b82469',
+    credential: '1jHWbndMX/s8pScP',
+  },
 ]
 
 // ── Types ──
@@ -61,6 +77,7 @@ export interface UseWebRTCGroupOptions {
   userId: string
   userName: string
   userRole: string
+  callType?: 'audio' | 'video'
 }
 
 export interface UseWebRTCGroupReturn {
@@ -346,28 +363,43 @@ export function useWebRTCGroup(options: UseWebRTCGroupOptions | null): UseWebRTC
     const supabase = createClient()
     let mounted = true
 
+    const isAudioOnly = options.callType === 'audio'
+
     async function init() {
-      // 1. Capturer le flux local
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          audio: true,
-          video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: 'user' },
-        })
-        if (!mounted) { stream.getTracks().forEach(t => t.stop()); return }
-        localStreamRef.current = stream
-        setLocalStream(stream)
-      } catch (err) {
-        console.error('[WebRTC] getUserMedia failed:', err)
-        // Tenter audio seul si caméra refusée
+      // 1. Capturer le flux local (audio seul ou audio+vidéo)
+      if (isAudioOnly) {
         try {
-          const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-          if (!mounted) { audioStream.getTracks().forEach(t => t.stop()); return }
-          localStreamRef.current = audioStream
-          setLocalStream(audioStream)
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+          if (!mounted) { stream.getTracks().forEach(t => t.stop()); return }
+          localStreamRef.current = stream
+          setLocalStream(stream)
           setIsVideoEnabled(false)
         } catch {
-          console.error('[WebRTC] No media available')
+          console.error('[WebRTC] No audio available')
           return
+        }
+      } else {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            audio: true,
+            video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: 'user' },
+          })
+          if (!mounted) { stream.getTracks().forEach(t => t.stop()); return }
+          localStreamRef.current = stream
+          setLocalStream(stream)
+        } catch (err) {
+          console.error('[WebRTC] getUserMedia failed:', err)
+          // Tenter audio seul si caméra refusée
+          try {
+            const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+            if (!mounted) { audioStream.getTracks().forEach(t => t.stop()); return }
+            localStreamRef.current = audioStream
+            setLocalStream(audioStream)
+            setIsVideoEnabled(false)
+          } catch {
+            console.error('[WebRTC] No media available')
+            return
+          }
         }
       }
 

@@ -13,6 +13,7 @@ interface ConferenceRoomProps {
   userId: string
   userName: string
   userRole: string
+  callType?: 'audio' | 'video'
   onLeave: () => void
 }
 
@@ -94,11 +95,12 @@ function VideoTile({
 
 // ── Composant principal ──
 
-export default function ConferenceRoom({ roomId, userId, userName, userRole, onLeave }: ConferenceRoomProps) {
+export default function ConferenceRoom({ roomId, userId, userName, userRole, callType = 'video', onLeave }: ConferenceRoomProps) {
   const [showWhiteboard, setShowWhiteboard] = useState(false)
   const [showModeration, setShowModeration] = useState(false)
 
-  const rtcOptions: UseWebRTCGroupOptions = { roomId, userId, userName, userRole }
+  const isAudioOnly = callType === 'audio'
+  const rtcOptions: UseWebRTCGroupOptions = { roomId, userId, userName, userRole, callType }
   const {
     localStream,
     peers,
@@ -136,6 +138,43 @@ export default function ConferenceRoom({ roomId, userId, userName, userRole, onL
         {showWhiteboard ? (
           <div className="w-full h-full">
             <Whiteboard roomId={roomId} userId={userId} userName={userName} />
+          </div>
+        ) : isAudioOnly ? (
+          /* ── Mode appel audio : avatars centrés ── */
+          <div className="w-full h-full flex flex-col items-center justify-center gap-6 p-4">
+            <div className="flex items-center justify-center gap-4 flex-wrap">
+              {/* Avatar local */}
+              <div className="flex flex-col items-center gap-2">
+                <div className={`w-20 h-20 rounded-full flex items-center justify-center text-2xl font-display font-semibold ${isAudioEnabled ? 'ring-2 ring-green-400 ring-offset-2 ring-offset-[#0a0a0a]' : ''}`}
+                  style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>
+                  {userName.charAt(0).toUpperCase()}
+                </div>
+                <span className="text-xs font-medium" style={{ color: 'var(--text-primary)' }}>Vous</span>
+                {!isAudioEnabled && (
+                  <span className="text-[10px] text-red-400">Micro coupé</span>
+                )}
+              </div>
+
+              {/* Avatars distants */}
+              {peers.map((peer) => (
+                <div key={peer.peerId} className="flex flex-col items-center gap-2">
+                  <div className={`w-20 h-20 rounded-full flex items-center justify-center text-2xl font-display font-semibold ${peer.audioEnabled ? 'ring-2 ring-green-400 ring-offset-2 ring-offset-[#0a0a0a]' : ''}`}
+                    style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>
+                    {peer.peerName.charAt(0).toUpperCase()}
+                  </div>
+                  <span className="text-xs font-medium" style={{ color: 'var(--text-primary)' }}>{peer.peerName}</span>
+                  {!peer.audioEnabled && (
+                    <span className="text-[10px] text-red-400">Micro coupé</span>
+                  )}
+                </div>
+              ))}
+            </div>
+            <div className="flex items-center gap-2 mt-4">
+              <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+              <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                Appel audio en cours
+              </span>
+            </div>
           </div>
         ) : (
           <div className={`grid ${gridCols} gap-2 p-2 h-full auto-rows-fr`}>
@@ -237,35 +276,39 @@ export default function ConferenceRoom({ roomId, userId, userName, userRole, onL
           )}
         </button>
 
-        {/* Caméra */}
-        <button onClick={toggleVideo}
-          className="w-12 h-12 rounded-full flex items-center justify-center cursor-pointer transition-all"
-          style={{
-            background: isVideoEnabled ? 'rgba(255,255,255,0.08)' : 'rgba(239,68,68,0.2)',
-            color: isVideoEnabled ? 'var(--text-primary)' : '#ef4444',
-          }}>
-          {isVideoEnabled ? (
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
-            </svg>
-          ) : (
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9M3.75 3.75l16.5 16.5" />
-            </svg>
-          )}
-        </button>
+        {/* Caméra (masqué en mode audio) */}
+        {!isAudioOnly && (
+          <button onClick={toggleVideo}
+            className="w-12 h-12 rounded-full flex items-center justify-center cursor-pointer transition-all"
+            style={{
+              background: isVideoEnabled ? 'rgba(255,255,255,0.08)' : 'rgba(239,68,68,0.2)',
+              color: isVideoEnabled ? 'var(--text-primary)' : '#ef4444',
+            }}>
+            {isVideoEnabled ? (
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
+              </svg>
+            ) : (
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9M3.75 3.75l16.5 16.5" />
+              </svg>
+            )}
+          </button>
+        )}
 
-        {/* Partage d'écran */}
-        <button onClick={toggleScreenShare}
-          className="w-12 h-12 rounded-full flex items-center justify-center cursor-pointer transition-all"
-          style={{
-            background: isScreenSharing ? 'rgba(34,197,94,0.2)' : 'rgba(255,255,255,0.08)',
-            color: isScreenSharing ? '#22c55e' : 'var(--text-primary)',
-          }}>
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25A2.25 2.25 0 015.25 3h13.5A2.25 2.25 0 0121 5.25z" />
-          </svg>
-        </button>
+        {/* Partage d'écran (masqué en mode audio) */}
+        {!isAudioOnly && (
+          <button onClick={toggleScreenShare}
+            className="w-12 h-12 rounded-full flex items-center justify-center cursor-pointer transition-all"
+            style={{
+              background: isScreenSharing ? 'rgba(34,197,94,0.2)' : 'rgba(255,255,255,0.08)',
+              color: isScreenSharing ? '#22c55e' : 'var(--text-primary)',
+            }}>
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25A2.25 2.25 0 015.25 3h13.5A2.25 2.25 0 0121 5.25z" />
+            </svg>
+          </button>
+        )}
 
         {/* Tableau blanc */}
         <button onClick={() => setShowWhiteboard(!showWhiteboard)}
@@ -310,7 +353,7 @@ export default function ConferenceRoom({ roomId, userId, userName, userRole, onL
       {/* Compteur de participants */}
       <div className="text-center py-1">
         <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>
-          {1 + peers.length} participant{peers.length > 0 ? 's' : ''} &middot; WebRTC E2EE
+          {1 + peers.length} participant{peers.length > 0 ? 's' : ''} &middot; {isAudioOnly ? 'Audio' : 'Vidéo'} &middot; WebRTC E2EE
         </span>
       </div>
     </div>

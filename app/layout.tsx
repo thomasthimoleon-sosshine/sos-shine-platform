@@ -20,6 +20,18 @@ export const metadata: Metadata = {
   title: "SOS Shine — Votre sanctuaire",
   description:
     "Plateforme communautaire premium pour traverser les épreuves de la vie. Accompagnement corps, émotion, action.",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "SOS Shine",
+  },
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/api/apple-icon",
+  },
+  other: {
+    "mobile-web-app-capable": "yes",
+  },
 };
 
 export default function RootLayout({

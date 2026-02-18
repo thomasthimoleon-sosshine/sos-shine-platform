@@ -244,6 +244,37 @@ const sections: SectionDef[] = [
     ],
   },
   {
+    title: 'Page — Mentions légales', icon: '⚖️',
+    fields: [
+      { label: 'Titre de la page', key: 'mentions_title', type: 'text', default: 'Mentions légales' },
+      { label: 'Contenu (HTML autorisé)', key: 'mentions_content', type: 'textarea', default: '' },
+    ],
+  },
+  {
+    title: 'Page — CGV', icon: '📋',
+    fields: [
+      { label: 'Titre de la page', key: 'cgv_title', type: 'text', default: 'Conditions Générales de Vente' },
+      { label: 'Contenu (HTML autorisé)', key: 'cgv_content', type: 'textarea', default: '' },
+    ],
+  },
+  {
+    title: 'Page — Confidentialité', icon: '🔒',
+    fields: [
+      { label: 'Titre de la page', key: 'privacy_title', type: 'text', default: 'Politique de confidentialité' },
+      { label: 'Contenu (HTML autorisé)', key: 'privacy_content', type: 'textarea', default: '' },
+    ],
+  },
+  {
+    title: 'Page — Contact', icon: '📬',
+    fields: [
+      { label: 'Titre de la page', key: 'contact_title', type: 'text', default: 'Contact' },
+      { label: 'Email de contact', key: 'contact_email', type: 'text', default: 'contact@sosshine.fr' },
+      { label: 'Téléphone', key: 'contact_phone', type: 'text', default: '' },
+      { label: 'Adresse', key: 'contact_address', type: 'textarea', default: '' },
+      { label: 'Texte complémentaire (HTML autorisé)', key: 'contact_content', type: 'textarea', default: '' },
+    ],
+  },
+  {
     title: 'Notifications email', icon: '📧',
     fields: [
       { label: 'Email expéditeur', key: 'email_from', type: 'text', default: 'contact@sosshine.fr' },

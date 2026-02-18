@@ -8,6 +8,19 @@ import type { Profile, PrivateMessage } from '@/types/database'
 import AudioPlayer from '@/components/AudioPlayer'
 import VoiceRecorder from '@/components/VoiceRecorder'
 
+async function initiateCall(callerId: string, receiverId: string): Promise<string | null> {
+  const supabase = createClient()
+  const jitsiRoomId = `sosshine-1v1-${crypto.randomUUID().slice(0, 12)}`
+  const { data, error } = await supabase.from('active_calls').insert({
+    caller_id: callerId,
+    receiver_id: receiverId,
+    status: 'ringing',
+    jitsi_room_id: jitsiRoomId,
+  }).select('id').single()
+  if (error || !data) return null
+  return (data as { id: string }).id
+}
+
 export default function ConversationPage() {
   const { id: partnerId } = useParams<{ id: string }>()
   const router = useRouter()
@@ -16,6 +29,7 @@ export default function ConversationPage() {
   const [newMessage, setNewMessage] = useState('')
   const [loading, setLoading] = useState(true)
   const [sending, setSending] = useState(false)
+  const [calling, setCalling] = useState(false)
   const [userId, setUserId] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null)
@@ -129,6 +143,14 @@ export default function ConversationPage() {
     return null
   }
 
+  const startVideoCall = useCallback(async () => {
+    if (!userId || calling) return
+    setCalling(true)
+    const callId = await initiateCall(userId, partnerId)
+    if (callId) router.push(`/dashboard/appel?id=${callId}`)
+    setCalling(false)
+  }, [userId, partnerId, calling, router])
+
   const partnerName = partner?.pseudo || partner?.prenom || 'Membre'
 
   return (
@@ -160,6 +182,18 @@ export default function ConversationPage() {
               <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Cliquez pour voir le profil</p>
             </div>
           </Link>
+        )}
+
+        {/* Bouton appel vidéo */}
+        {partner && userId && (
+          <button onClick={startVideoCall} disabled={calling}
+            className="p-2.5 rounded-xl flex-shrink-0 transition-all cursor-pointer disabled:opacity-40"
+            style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}
+            title="Appel vidéo">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
+            </svg>
+          </button>
         )}
       </div>
 

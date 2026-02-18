@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
@@ -12,6 +12,7 @@ export default function MembreProfilPage() {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
+  const [calling, setCalling] = useState(false)
 
   useEffect(() => {
     async function load() {
@@ -67,6 +68,23 @@ export default function MembreProfilPage() {
     )
   }
 
+  const startVideoCall = useCallback(async () => {
+    if (!currentUserId || calling) return
+    setCalling(true)
+    const supabase = createClient()
+    const jitsiRoomId = `sosshine-1v1-${crypto.randomUUID().slice(0, 12)}`
+    const { data, error } = await supabase.from('active_calls').insert({
+      caller_id: currentUserId,
+      receiver_id: id,
+      status: 'ringing',
+      jitsi_room_id: jitsiRoomId,
+    }).select('id').single()
+    if (!error && data) {
+      router.push(`/dashboard/appel?id=${(data as { id: string }).id}`)
+    }
+    setCalling(false)
+  }, [currentUserId, id, calling, router])
+
   const roleInfo = getRoleLabel(profile.role)
   const displayName = profile.pseudo || profile.prenom
 
@@ -107,16 +125,26 @@ export default function MembreProfilPage() {
           Membre depuis {formatDate(profile.created_at)}
         </p>
 
-        {/* Message button */}
+        {/* Action buttons */}
         {currentUserId && currentUserId !== id && (
-          <Link href={`/dashboard/messages/${id}`}
-            className="inline-flex items-center gap-2 mt-6 px-6 py-3 rounded-xl text-sm font-semibold transition-all"
-            style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-            </svg>
-            Envoyer un message
-          </Link>
+          <div className="flex items-center justify-center gap-3 mt-6">
+            <Link href={`/dashboard/messages/${id}`}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold transition-all"
+              style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+              </svg>
+              Message
+            </Link>
+            <button onClick={startVideoCall} disabled={calling}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer disabled:opacity-40"
+              style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
+              </svg>
+              {calling ? 'Appel...' : 'Appel vidéo'}
+            </button>
+          </div>
         )}
       </div>
 

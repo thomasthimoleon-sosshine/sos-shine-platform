@@ -139,6 +139,29 @@ export type PrivateMessage = {
   created_at: string
 }
 
+// ── Active Calls (appels vidéo 1-to-1) ──
+export type ActiveCall = {
+  id: string
+  caller_id: string
+  receiver_id: string
+  status: 'ringing' | 'accepted' | 'rejected' | 'ended'
+  jitsi_room_id: string
+  created_at: string
+}
+
+// ── Group Events (visio de groupe) ──
+export type GroupEvent = {
+  id: string
+  host_id: string
+  title: string
+  description: string | null
+  start_time: string
+  status: 'scheduled' | 'live' | 'ended' | 'canceled'
+  jitsi_room_id: string
+  max_participants: number | null
+  created_at: string
+}
+
 // ── Site Settings (admin customization) ──
 export type SiteSetting = {
   id: string
@@ -149,7 +172,7 @@ export type SiteSetting = {
 }
 
 // ── Helper: columns with DB defaults are optional on Insert ──
-type DefaultColumns = 'id' | 'created_at' | 'updated_at' | 'audio_url' | 'message_type'
+type DefaultColumns = 'id' | 'created_at' | 'updated_at' | 'audio_url' | 'message_type' | 'status'
 type OptionalId<T> = Omit<T, Extract<DefaultColumns, keyof T>> &
   Partial<Pick<T, Extract<DefaultColumns, keyof T>>>
 
@@ -175,6 +198,8 @@ export type Database = {
       content_views: Table<ContentView>
       notifications: Table<Notification>
       private_messages: Table<PrivateMessage>
+      active_calls: Table<ActiveCall>
+      group_events: Table<GroupEvent>
       site_settings: Table<SiteSetting>
     }
     Views: Record<string, never>

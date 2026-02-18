@@ -145,6 +145,7 @@ export type SignalingRoom = {
   room_code: string
   created_by: string
   room_type: 'one_to_one' | 'group'
+  call_type: 'audio' | 'video'
   target_user_id: string | null
   status: 'waiting' | 'active' | 'ended' | 'rejected'
   created_at: string
@@ -156,6 +157,7 @@ export type GroupEvent = {
   host_id: string
   title: string
   description: string | null
+  event_type: 'audio' | 'video'
   start_time: string
   status: 'scheduled' | 'live' | 'ended' | 'canceled'
   room_id: string | null
@@ -173,7 +175,7 @@ export type SiteSetting = {
 }
 
 // ── Helper: columns with DB defaults are optional on Insert ──
-type DefaultColumns = 'id' | 'created_at' | 'updated_at' | 'audio_url' | 'message_type' | 'status' | 'room_code' | 'target_user_id' | 'room_id'
+type DefaultColumns = 'id' | 'created_at' | 'updated_at' | 'audio_url' | 'message_type' | 'status' | 'room_code' | 'call_type' | 'event_type' | 'target_user_id' | 'room_id'
 type OptionalId<T> = Omit<T, Extract<DefaultColumns, keyof T>> &
   Partial<Pick<T, Extract<DefaultColumns, keyof T>>>
 

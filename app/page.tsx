@@ -113,6 +113,18 @@ const DEFAULTS: Record<string, string> = {
   footer_link_contact: "/contact",
   logo_url: "",
   intro_video_url: "",
+  // Style settings
+  hero_title_font: "Cormorant Garamond", hero_title_size: "2xl", hero_title_align: "left", hero_title_color: "",
+  hero_text_font: "DM Sans", hero_text_align: "left", hero_section_image: "",
+  principe_title_font: "Cormorant Garamond", principe_title_size: "xl", principe_title_align: "center", principe_title_color: "",
+  principe_text_font: "DM Sans", principe_text_align: "center", principe_section_image: "", principe_section_video: "",
+  steps_title_font: "Cormorant Garamond", steps_title_size: "lg", steps_title_align: "center", steps_text_font: "DM Sans",
+  encyclo_title_font: "Cormorant Garamond", encyclo_title_size: "lg", encyclo_title_align: "center", encyclo_text_align: "center", encyclo_section_image: "",
+  community_title_font: "Cormorant Garamond", community_title_size: "xl", community_title_align: "center", community_text_align: "center", community_section_image: "",
+  testimonials_title_font: "DM Sans", testimonials_title_align: "center",
+  pricing_section_title: "Choisissez votre accompagnement", pricing_section_subtitle: "Sans engagement \u2014 Annulable \u00e0 tout instant",
+  pricing_title_font: "Cormorant Garamond", pricing_title_size: "lg", pricing_title_align: "center",
+  cta_title_font: "Cormorant Garamond", cta_title_size: "xl", cta_title_align: "center", cta_section_image: "",
 }
 
 export default function Home() {
@@ -177,6 +189,33 @@ export default function Home() {
     return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
   })();
 
+  // ── Style helpers ──
+  const fontMap: Record<string, string> = {
+    "Cormorant Garamond": "'Cormorant Garamond', serif",
+    "DM Sans": "'DM Sans', sans-serif",
+    "Georgia": "Georgia, serif",
+    "Arial": "Arial, sans-serif",
+    "Times New Roman": "'Times New Roman', serif",
+  };
+  const sizeMap: Record<string, string> = {
+    sm: "clamp(1.5rem, 3vw, 1.875rem)", md: "clamp(1.875rem, 4vw, 2.25rem)",
+    lg: "clamp(2.25rem, 5vw, 3rem)", xl: "clamp(2.5rem, 6vw, 3.75rem)", "2xl": "clamp(3rem, 7vw, 4.5rem)",
+  };
+  function tStyle(prefix: string): React.CSSProperties {
+    return {
+      fontFamily: fontMap[s(`${prefix}_title_font`)] || undefined,
+      fontSize: sizeMap[s(`${prefix}_title_size`)] || undefined,
+      textAlign: (s(`${prefix}_title_align`) as "left" | "center" | "right") || undefined,
+      color: s(`${prefix}_title_color`) || undefined,
+    };
+  }
+  function pStyle(prefix: string): React.CSSProperties {
+    return {
+      fontFamily: fontMap[s(`${prefix}_text_font`)] || undefined,
+      textAlign: (s(`${prefix}_text_align`) as "left" | "center" | "right") || undefined,
+    };
+  }
+
   const steps = [
     { num: "01", title: s("step1_title"), desc: s("step1_desc"), color: "#55EFC4", icon: "\uD83C\uDFAC" },
     { num: "02", title: s("step2_title"), desc: s("step2_desc"), color: accent, icon: "\u2728" },
@@ -233,7 +272,7 @@ export default function Home() {
           </Reveal>
 
           <Reveal delay={0.1}>
-            <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-light leading-[1.1] mb-6">
+            <h1 className="font-display font-light leading-[1.1] mb-6" style={tStyle("hero")}>
               {s("hero_title").split("\n").map((line, i) => (
                 <span key={i}>
                   {i > 0 && <br />}
@@ -246,7 +285,7 @@ export default function Home() {
           </Reveal>
 
           <Reveal delay={0.2}>
-            <p className="text-xl md:text-2xl text-[var(--text-secondary)] leading-relaxed max-w-2xl font-light mb-8">
+            <p className="text-xl md:text-2xl text-[var(--text-secondary)] leading-relaxed max-w-2xl font-light mb-8" style={pStyle("hero")}>
               {s("hero_subtitle")}
             </p>
           </Reveal>
@@ -288,6 +327,12 @@ export default function Home() {
           </Reveal>
         </div>
 
+        {s("hero_section_image") && (
+          <Reveal delay={0.5}><div className="relative z-10 px-6 md:px-20 max-w-5xl mx-auto w-full mt-4">
+            <img src={s("hero_section_image")} alt="" className="w-full rounded-2xl object-cover max-h-96" style={{ border: '1px solid var(--dark-border)' }} />
+          </div></Reveal>
+        )}
+
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
           <span className="text-xs tracking-[0.2em] text-[var(--text-muted)]">{"D\u00c9COUVRIR"}</span>
           <span className="block w-px h-8 bg-gradient-to-b from-[var(--text-muted)] to-transparent animate-pulse" />
@@ -298,8 +343,10 @@ export default function Home() {
       <section className="px-6 md:px-20 py-28 border-t border-[var(--dark-border)]">
         <div className="max-w-3xl mx-auto text-center">
           <Reveal><GoldDivider /><p className="text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-8">{s("principe_label")}</p></Reveal>
+          {s("principe_section_image") && <Reveal delay={0.05}><img src={s("principe_section_image")} alt="" className="w-full rounded-2xl object-cover max-h-72 mb-8" style={{ border: '1px solid var(--dark-border)' }} /></Reveal>}
+          {s("principe_section_video") && <Reveal delay={0.05}><video src={s("principe_section_video")} controls className="w-full rounded-2xl max-h-72 mb-8 bg-black" /></Reveal>}
           <Reveal delay={0.1}>
-            <h2 className="font-display text-3xl md:text-5xl font-light leading-tight mb-8">
+            <h2 className="font-display font-light leading-tight mb-8" style={tStyle("principe")}>
               {s("principe_title").split("\n").map((line, i) => (
                 <span key={i}>
                   {i > 0 && <br />}
@@ -311,7 +358,7 @@ export default function Home() {
             </h2>
           </Reveal>
           <Reveal delay={0.2}>
-            <p className="text-lg text-[var(--text-secondary)] leading-relaxed font-light max-w-xl mx-auto">
+            <p className="text-lg text-[var(--text-secondary)] leading-relaxed font-light max-w-xl mx-auto" style={pStyle("principe")}>
               {s("principe_desc")}
             </p>
           </Reveal>
@@ -324,7 +371,7 @@ export default function Home() {
           <Reveal>
             <GoldDivider />
             <p className="text-center text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-4">{s("steps_label")}</p>
-            <h2 className="font-display text-3xl md:text-4xl font-light text-center mb-16">{s("steps_title")}</h2>
+            <h2 className="font-display font-light mb-16" style={tStyle("steps")}>{s("steps_title")}</h2>
           </Reveal>
           <div className="grid md:grid-cols-2 gap-6">
             {steps.map((step, i) => (
@@ -352,12 +399,12 @@ export default function Home() {
           <Reveal>
             <GoldDivider />
             <p className="text-center text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-4">{"L\u2019encyclop\u00e9die"}</p>
-            <h2 className="font-display text-3xl md:text-4xl font-light text-center mb-6">
+            <h2 className="font-display font-light mb-6" style={tStyle("encyclo")}>
               {s("encyclo_title")}
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
-            <p className="text-center text-lg text-[var(--text-secondary)] font-light leading-relaxed mb-12 max-w-2xl mx-auto">
+            <p className="text-lg text-[var(--text-secondary)] font-light leading-relaxed mb-12 max-w-2xl mx-auto" style={{ textAlign: (s("encyclo_text_align") as "left" | "center" | "right") || "center" }}>
               {s("encyclo_desc")}
             </p>
           </Reveal>
@@ -381,13 +428,14 @@ export default function Home() {
       {/* COMMUNAUTE */}
       <section className="px-6 md:px-20 py-28 border-t border-[var(--dark-border)]">
         <div className="max-w-3xl mx-auto">
+          {s("community_section_image") && <Reveal><img src={s("community_section_image")} alt="" className="w-full rounded-2xl object-cover max-h-72 mb-8" style={{ border: '1px solid var(--dark-border)' }} /></Reveal>}
           <Reveal>
-            <h2 className="font-display text-3xl md:text-5xl font-light leading-tight text-center mb-6">
+            <h2 className="font-display font-light leading-tight mb-6" style={tStyle("community")}>
               {s("community_title")}
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
-            <p className="text-center text-lg text-[var(--text-secondary)] font-light leading-relaxed mb-16 max-w-xl mx-auto">
+            <p className="text-lg text-[var(--text-secondary)] font-light leading-relaxed mb-16 max-w-xl mx-auto" style={{ textAlign: (s("community_text_align") as "left" | "center" | "right") || "center" }}>
               {s("community_desc")}
             </p>
           </Reveal>
@@ -435,9 +483,9 @@ export default function Home() {
         <div className="max-w-4xl mx-auto">
           <Reveal>
             <GoldDivider />
-            <h2 className="font-display text-3xl md:text-4xl font-light text-center mt-6 mb-4">Choisissez votre accompagnement</h2>
-            <p className="text-center text-[var(--text-secondary)] font-light mb-16">
-              {"Sans engagement \u2014 Annulable \u00e0 tout instant"}
+            <h2 className="font-display font-light mt-6 mb-4" style={tStyle("pricing")}>{s("pricing_section_title")}</h2>
+            <p className="text-[var(--text-secondary)] font-light mb-16" style={{ textAlign: (s("pricing_title_align") as "left" | "center" | "right") || "center" }}>
+              {s("pricing_section_subtitle")}
             </p>
           </Reveal>
 
@@ -509,8 +557,9 @@ export default function Home() {
         </div>
         <div className="relative z-10 max-w-3xl mx-auto text-center">
           <Reveal><GoldDivider /></Reveal>
+          {s("cta_section_image") && <Reveal delay={0.05}><img src={s("cta_section_image")} alt="" className="w-48 h-48 rounded-2xl object-cover mx-auto mt-8 mb-4" /></Reveal>}
           <Reveal delay={0.1}>
-            <p className="font-display text-3xl md:text-5xl font-light leading-tight mt-12 mb-8">
+            <p className="font-display font-light leading-tight mt-12 mb-8" style={tStyle("cta")}>
               {s("cta_title").split("\n").map((line, i) => (
                 <span key={i}>
                   {i > 0 && <br />}

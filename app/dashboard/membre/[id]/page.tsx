@@ -49,15 +49,14 @@ export default function MembreProfilPage() {
     if (!currentUserId || calling) return
     setCalling(true)
     const supabase = createClient()
-    const jitsiRoomId = `sosshine-1v1-${crypto.randomUUID().slice(0, 12)}`
-    const { data, error } = await supabase.from('active_calls').insert({
-      caller_id: currentUserId,
-      receiver_id: id,
-      status: 'ringing',
-      jitsi_room_id: jitsiRoomId,
+    const { data, error } = await supabase.from('signaling_rooms').insert({
+      created_by: currentUserId,
+      room_type: 'one_to_one',
+      target_user_id: id,
+      status: 'waiting',
     }).select('id').single()
     if (!error && data) {
-      router.push(`/dashboard/appel?id=${(data as { id: string }).id}`)
+      router.push(`/dashboard/appel?room=${(data as { id: string }).id}`)
     }
     setCalling(false)
   }, [currentUserId, id, calling, router])

@@ -158,7 +158,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const handleAcceptCall = useCallback(async () => {
     if (!incomingCall) return
     const call = await acceptCall(incomingCall.id)
-    if (call) router.push(`/dashboard/appel?id=${call.id}`)
+    if (call) router.push(`/dashboard/appel?room=${call.id}`)
   }, [incomingCall, acceptCall, router])
 
   const handleRejectCall = useCallback(async () => {

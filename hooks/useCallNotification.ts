@@ -2,9 +2,9 @@
 
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import type { ActiveCall } from '@/types/database'
+import type { SignalingRoom } from '@/types/database'
 
-export type IncomingCall = ActiveCall & {
+export type IncomingCall = SignalingRoom & {
   callerName: string
   callerAvatar: string | null
 }
@@ -18,7 +18,6 @@ export function useCallNotification(userId: string | null) {
 
     const supabase = createClient()
 
-    // Écouter les insertions en temps réel sur active_calls
     const channel = supabase
       .channel('incoming-calls')
       .on(
@@ -26,24 +25,24 @@ export function useCallNotification(userId: string | null) {
         {
           event: 'INSERT',
           schema: 'public',
-          table: 'active_calls',
-          filter: `receiver_id=eq.${userId}`,
+          table: 'signaling_rooms',
+          filter: `target_user_id=eq.${userId}`,
         },
         async (payload) => {
-          const call = payload.new as ActiveCall
-          if (call.status !== 'ringing') return
+          const room = payload.new as SignalingRoom
+          if (room.status !== 'waiting' || room.room_type !== 'one_to_one') return
 
           // Charger le profil de l'appelant
           const { data: profile } = await supabase
             .from('profiles')
             .select('prenom, pseudo, avatar_url')
-            .eq('id', call.caller_id)
+            .eq('id', room.created_by)
             .single()
 
           const p = profile as { prenom: string; pseudo: string | null; avatar_url: string | null } | null
 
           setIncomingCall({
-            ...call,
+            ...room,
             callerName: p?.pseudo || p?.prenom || 'Membre',
             callerAvatar: p?.avatar_url || null,
           })
@@ -54,14 +53,13 @@ export function useCallNotification(userId: string | null) {
         {
           event: 'UPDATE',
           schema: 'public',
-          table: 'active_calls',
-          filter: `receiver_id=eq.${userId}`,
+          table: 'signaling_rooms',
+          filter: `target_user_id=eq.${userId}`,
         },
         (payload) => {
-          const call = payload.new as ActiveCall
-          // Si l'appel est annulé/terminé côté appelant, on ferme la modale
-          if (call.status === 'ended' || call.status === 'rejected') {
-            setIncomingCall((prev) => (prev?.id === call.id ? null : prev))
+          const room = payload.new as SignalingRoom
+          if (room.status === 'ended' || room.status === 'rejected') {
+            setIncomingCall(prev => prev?.id === room.id ? null : prev)
           }
         }
       )
@@ -74,23 +72,23 @@ export function useCallNotification(userId: string | null) {
     }
   }, [userId])
 
-  const acceptCall = useCallback(async (callId: string) => {
+  const acceptCall = useCallback(async (roomId: string) => {
     const supabase = createClient()
     await supabase
-      .from('active_calls')
-      .update({ status: 'accepted' })
-      .eq('id', callId)
+      .from('signaling_rooms')
+      .update({ status: 'active' })
+      .eq('id', roomId)
     const call = incomingCall
     setIncomingCall(null)
     return call
   }, [incomingCall])
 
-  const rejectCall = useCallback(async (callId: string) => {
+  const rejectCall = useCallback(async (roomId: string) => {
     const supabase = createClient()
     await supabase
-      .from('active_calls')
+      .from('signaling_rooms')
       .update({ status: 'rejected' })
-      .eq('id', callId)
+      .eq('id', roomId)
     setIncomingCall(null)
   }, [])
 

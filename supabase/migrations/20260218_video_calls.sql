@@ -1,54 +1,76 @@
--- ══════════════════════════════════════════════════════
--- Visioconférence : active_calls + group_events
--- ══════════════════════════════════════════════════════
+-- ══════════════════════════════════════════════════════════
+-- V2 : WebRTC natif — Signaling via Supabase Realtime
+-- Remplace l'ancien système Jitsi (active_calls + jitsi_room_id)
+-- ══════════════════════════════════════════════════════════
 
--- ── Table : active_calls (appels 1-to-1) ──
-CREATE TABLE IF NOT EXISTS active_calls (
-  id             UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  caller_id      UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
-  receiver_id    UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
-  status         TEXT NOT NULL DEFAULT 'ringing'
-                   CHECK (status IN ('ringing', 'accepted', 'rejected', 'ended')),
-  jitsi_room_id  TEXT NOT NULL,
-  created_at     TIMESTAMPTZ DEFAULT now()
+-- ── Nettoyage ──
+DROP TABLE IF EXISTS active_calls CASCADE;
+
+-- ══════════════════════════════════════════════════════════
+-- Table : signaling_rooms
+-- Représente une salle de visio (1-to-1 ou groupe).
+-- Le signaling SDP/ICE transite par Supabase Realtime Broadcast
+-- sur le canal "room:<room_id>".
+-- ══════════════════════════════════════════════════════════
+CREATE TABLE IF NOT EXISTS signaling_rooms (
+  id              UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  room_code       TEXT NOT NULL UNIQUE
+                    DEFAULT ('room-' || substr(gen_random_uuid()::text, 1, 12)),
+  created_by      UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  room_type       TEXT NOT NULL DEFAULT 'one_to_one'
+                    CHECK (room_type IN ('one_to_one', 'group')),
+  -- Pour les appels 1-to-1 : destinataire de l'appel
+  target_user_id  UUID REFERENCES profiles(id) ON DELETE SET NULL,
+  status          TEXT NOT NULL DEFAULT 'waiting'
+                    CHECK (status IN ('waiting', 'active', 'ended', 'rejected')),
+  created_at      TIMESTAMPTZ DEFAULT now()
 );
 
-CREATE INDEX idx_calls_caller   ON active_calls(caller_id, created_at DESC);
-CREATE INDEX idx_calls_receiver ON active_calls(receiver_id, created_at DESC);
-CREATE INDEX idx_calls_status   ON active_calls(status) WHERE status IN ('ringing', 'accepted');
+CREATE INDEX idx_sr_created_by ON signaling_rooms(created_by);
+CREATE INDEX idx_sr_target     ON signaling_rooms(target_user_id)
+  WHERE target_user_id IS NOT NULL;
+CREATE INDEX idx_sr_status     ON signaling_rooms(status)
+  WHERE status IN ('waiting', 'active');
 
 -- RLS
-ALTER TABLE active_calls ENABLE ROW LEVEL SECURITY;
+ALTER TABLE signaling_rooms ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users can read their own calls"
-ON active_calls FOR SELECT TO authenticated
-USING (auth.uid() = caller_id OR auth.uid() = receiver_id);
+CREATE POLICY "Users can view rooms they participate in"
+ON signaling_rooms FOR SELECT TO authenticated
+USING (
+  auth.uid() = created_by
+  OR auth.uid() = target_user_id
+  OR room_type = 'group'
+);
 
-CREATE POLICY "Users can initiate calls"
-ON active_calls FOR INSERT TO authenticated
-WITH CHECK (auth.uid() = caller_id);
+CREATE POLICY "Users can create rooms"
+ON signaling_rooms FOR INSERT TO authenticated
+WITH CHECK (auth.uid() = created_by);
 
-CREATE POLICY "Participants can update call status"
-ON active_calls FOR UPDATE TO authenticated
-USING (auth.uid() = caller_id OR auth.uid() = receiver_id)
-WITH CHECK (auth.uid() = caller_id OR auth.uid() = receiver_id);
+CREATE POLICY "Participants can update rooms"
+ON signaling_rooms FOR UPDATE TO authenticated
+USING (auth.uid() = created_by OR auth.uid() = target_user_id)
+WITH CHECK (auth.uid() = created_by OR auth.uid() = target_user_id);
 
-CREATE POLICY "Caller can delete call"
-ON active_calls FOR DELETE TO authenticated
-USING (auth.uid() = caller_id);
+CREATE POLICY "Creator can delete rooms"
+ON signaling_rooms FOR DELETE TO authenticated
+USING (auth.uid() = created_by);
 
--- ── Table : group_events (visio de groupe / webinaires) ──
+-- ══════════════════════════════════════════════════════════
+-- Table : group_events (visio de groupe / webinaires)
+-- Mise à jour : remplace jitsi_room_id par room_id FK
+-- ══════════════════════════════════════════════════════════
 CREATE TABLE IF NOT EXISTS group_events (
-  id             UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  host_id        UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
-  title          TEXT NOT NULL CHECK (char_length(title) <= 200),
-  description    TEXT DEFAULT NULL,
-  start_time     TIMESTAMPTZ NOT NULL,
-  status         TEXT NOT NULL DEFAULT 'scheduled'
-                   CHECK (status IN ('scheduled', 'live', 'ended', 'canceled')),
-  jitsi_room_id  TEXT NOT NULL,
+  id               UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  host_id          UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  title            TEXT NOT NULL CHECK (char_length(title) <= 200),
+  description      TEXT DEFAULT NULL,
+  start_time       TIMESTAMPTZ NOT NULL,
+  status           TEXT NOT NULL DEFAULT 'scheduled'
+                     CHECK (status IN ('scheduled', 'live', 'ended', 'canceled')),
+  room_id          UUID REFERENCES signaling_rooms(id) ON DELETE SET NULL,
   max_participants INTEGER DEFAULT NULL,
-  created_at     TIMESTAMPTZ DEFAULT now()
+  created_at       TIMESTAMPTZ DEFAULT now()
 );
 
 CREATE INDEX idx_group_events_host   ON group_events(host_id);
@@ -74,7 +96,8 @@ CREATE POLICY "Hosts can delete their events"
 ON group_events FOR DELETE TO authenticated
 USING (auth.uid() = host_id);
 
--- ══════════════════════════════════════════════════════
--- Activer Supabase Realtime sur active_calls
--- ══════════════════════════════════════════════════════
-ALTER PUBLICATION supabase_realtime ADD TABLE active_calls;
+-- ══════════════════════════════════════════════════════════
+-- Realtime : activer sur signaling_rooms pour les notifications
+-- d'appels entrants (INSERT/UPDATE détectés côté client)
+-- ══════════════════════════════════════════════════════════
+ALTER PUBLICATION supabase_realtime ADD TABLE signaling_rooms;

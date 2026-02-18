@@ -3,73 +3,86 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import JitsiVideoRoom from '@/components/JitsiVideoRoom'
+import ConferenceRoom from '@/components/ConferenceRoom'
 
 export default function AppelPage() {
   const searchParams = useSearchParams()
   const router = useRouter()
-  const callId = searchParams.get('id')
-  const [roomName, setRoomName] = useState<string | null>(null)
-  const [userName, setUserName] = useState('')
+  const roomId = searchParams.get('room')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [userId, setUserId] = useState<string | null>(null)
+  const [userName, setUserName] = useState('')
+  const [userRole, setUserRole] = useState('member')
+  const [roomValid, setRoomValid] = useState(false)
   const endedRef = useRef(false)
 
   useEffect(() => {
     async function init() {
-      if (!callId) { setError('Aucun appel spécifié'); setLoading(false); return }
+      if (!roomId) { setError('Aucun appel spécifié'); setLoading(false); return }
 
       const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { router.push('/login'); return }
 
-      // Charger le profil utilisateur
-      const { data: profile } = await supabase.from('profiles').select('prenom, pseudo').eq('id', user.id).single()
-      const p = profile as { prenom: string; pseudo: string | null } | null
+      // Charger le profil
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('prenom, pseudo, role')
+        .eq('id', user.id)
+        .single()
+      const p = profile as { prenom: string; pseudo: string | null; role: string } | null
+      setUserId(user.id)
       setUserName(p?.pseudo || p?.prenom || 'Membre')
+      setUserRole(p?.role || 'member')
 
-      // Charger l'appel
-      const { data: call } = await supabase
-        .from('active_calls')
+      // Vérifier la salle
+      const { data: room } = await supabase
+        .from('signaling_rooms')
         .select('*')
-        .eq('id', callId)
+        .eq('id', roomId)
         .single()
 
-      if (!call) { setError("Appel introuvable"); setLoading(false); return }
+      if (!room) { setError('Appel introuvable'); setLoading(false); return }
 
-      const c = call as { caller_id: string; receiver_id: string; status: string; jitsi_room_id: string }
+      const r = room as { created_by: string; target_user_id: string | null; status: string; room_type: string }
 
-      // Vérifier que l'utilisateur participe à cet appel
-      if (c.caller_id !== user.id && c.receiver_id !== user.id) {
+      // Vérifier que l'utilisateur participe à cet appel (1-to-1)
+      if (r.room_type === 'one_to_one' && r.created_by !== user.id && r.target_user_id !== user.id) {
         setError("Vous ne participez pas à cet appel")
         setLoading(false)
         return
       }
 
-      if (c.status === 'ended' || c.status === 'rejected') {
+      if (r.status === 'ended' || r.status === 'rejected') {
         setError("Cet appel est terminé")
         setLoading(false)
         return
       }
 
-      setRoomName(c.jitsi_room_id)
+      // Passer la salle en active
+      if (r.status === 'waiting') {
+        await supabase.from('signaling_rooms').update({ status: 'active' }).eq('id', roomId)
+      }
+
+      setRoomValid(true)
       setLoading(false)
     }
     init()
-  }, [callId, router])
+  }, [roomId, router])
 
-  const handleCallEnd = useCallback(async () => {
-    if (endedRef.current || !callId) return
+  const handleLeave = useCallback(async () => {
+    if (endedRef.current || !roomId) return
     endedRef.current = true
 
     const supabase = createClient()
     await supabase
-      .from('active_calls')
+      .from('signaling_rooms')
       .update({ status: 'ended' })
-      .eq('id', callId)
+      .eq('id', roomId)
 
     router.push('/dashboard/messages')
-  }, [callId, router])
+  }, [roomId, router])
 
   if (loading) {
     return (
@@ -102,23 +115,17 @@ export default function AppelPage() {
     )
   }
 
-  if (!roomName) return null
+  if (!roomValid || !roomId || !userId) return null
 
   return (
-    <div className="h-[calc(100vh-8rem)] flex flex-col">
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="font-display text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
-          Appel vidéo en cours
-        </h1>
-        <button onClick={handleCallEnd}
-          className="px-4 py-2 rounded-xl text-sm font-medium cursor-pointer transition-all hover:opacity-80"
-          style={{ background: 'rgba(239,68,68,0.15)', color: '#ef4444' }}>
-          Raccrocher
-        </button>
-      </div>
-      <div className="flex-1 min-h-0">
-        <JitsiVideoRoom roomName={roomName} userName={userName} onCallEnd={handleCallEnd} />
-      </div>
+    <div className="h-[calc(100vh-8rem)]">
+      <ConferenceRoom
+        roomId={roomId}
+        userId={userId}
+        userName={userName}
+        userRole={userRole}
+        onLeave={handleLeave}
+      />
     </div>
   )
 }

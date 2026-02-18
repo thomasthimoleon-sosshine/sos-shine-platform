@@ -1,6 +1,30 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import "./globals.css";
 import ThemeProvider from "@/components/ThemeProvider";
+
+const cormorant = localFont({
+  variable: "--font-cormorant",
+  src: [
+    { path: "../public/fonts/cormorant-garamond-latin-300-normal.woff2", weight: "300", style: "normal" },
+    { path: "../public/fonts/cormorant-garamond-latin-300-italic.woff2", weight: "300", style: "italic" },
+    { path: "../public/fonts/cormorant-garamond-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "../public/fonts/cormorant-garamond-latin-400-italic.woff2", weight: "400", style: "italic" },
+    { path: "../public/fonts/cormorant-garamond-latin-500-normal.woff2", weight: "500", style: "normal" },
+    { path: "../public/fonts/cormorant-garamond-latin-500-italic.woff2", weight: "500", style: "italic" },
+    { path: "../public/fonts/cormorant-garamond-latin-600-normal.woff2", weight: "600", style: "normal" },
+    { path: "../public/fonts/cormorant-garamond-latin-600-italic.woff2", weight: "600", style: "italic" },
+  ],
+});
+
+const dmSans = localFont({
+  variable: "--font-dm-sans",
+  src: [
+    { path: "../public/fonts/dm-sans-latin-300-normal.woff2", weight: "300", style: "normal" },
+    { path: "../public/fonts/dm-sans-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "../public/fonts/dm-sans-latin-500-normal.woff2", weight: "500", style: "normal" },
+  ],
+});
 
 export const metadata: Metadata = {
   title: "SOS Shine — Votre sanctuaire",
@@ -27,19 +51,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=DM+Sans:wght@300;400;500&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body className="antialiased">
+      <body
+        className={`${cormorant.variable} ${dmSans.variable} antialiased`}
+      >
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>

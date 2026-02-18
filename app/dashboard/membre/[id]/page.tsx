@@ -45,6 +45,23 @@ export default function MembreProfilPage() {
     return map[role] || map.member
   }
 
+  const startVideoCall = useCallback(async () => {
+    if (!currentUserId || calling) return
+    setCalling(true)
+    const supabase = createClient()
+    const jitsiRoomId = `sosshine-1v1-${crypto.randomUUID().slice(0, 12)}`
+    const { data, error } = await supabase.from('active_calls').insert({
+      caller_id: currentUserId,
+      receiver_id: id,
+      status: 'ringing',
+      jitsi_room_id: jitsiRoomId,
+    }).select('id').single()
+    if (!error && data) {
+      router.push(`/dashboard/appel?id=${(data as { id: string }).id}`)
+    }
+    setCalling(false)
+  }, [currentUserId, id, calling, router])
+
   if (loading) {
     return (
       <div className="flex justify-center py-20">
@@ -67,23 +84,6 @@ export default function MembreProfilPage() {
       </div>
     )
   }
-
-  const startVideoCall = useCallback(async () => {
-    if (!currentUserId || calling) return
-    setCalling(true)
-    const supabase = createClient()
-    const jitsiRoomId = `sosshine-1v1-${crypto.randomUUID().slice(0, 12)}`
-    const { data, error } = await supabase.from('active_calls').insert({
-      caller_id: currentUserId,
-      receiver_id: id,
-      status: 'ringing',
-      jitsi_room_id: jitsiRoomId,
-    }).select('id').single()
-    if (!error && data) {
-      router.push(`/dashboard/appel?id=${(data as { id: string }).id}`)
-    }
-    setCalling(false)
-  }, [currentUserId, id, calling, router])
 
   const roleInfo = getRoleLabel(profile.role)
   const displayName = profile.pseudo || profile.prenom

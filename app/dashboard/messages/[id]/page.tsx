@@ -1,10 +1,12 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import type { Profile, PrivateMessage } from '@/types/database'
+import AudioPlayer from '@/components/AudioPlayer'
+import VoiceRecorder from '@/components/VoiceRecorder'
 
 export default function ConversationPage() {
   const { id: partnerId } = useParams<{ id: string }>()
@@ -81,12 +83,27 @@ export default function ConversationPage() {
       sender_id: userId,
       receiver_id: partnerId,
       content: newMessage.trim(),
+      message_type: 'text',
       is_read: false,
     })
     setNewMessage('')
     await loadMessages(userId)
     setSending(false)
   }
+
+  const sendVoice = useCallback(async (audioUrl: string) => {
+    if (!userId) return
+    const supabase = createClient()
+    await supabase.from('private_messages').insert({
+      sender_id: userId,
+      receiver_id: partnerId,
+      content: null,
+      audio_url: audioUrl,
+      message_type: 'audio',
+      is_read: false,
+    })
+    await loadMessages(userId)
+  }, [userId, partnerId])
 
   function formatTime(d: string) {
     return new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
@@ -187,9 +204,13 @@ export default function ConversationPage() {
                         background: isMine ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.04)',
                         border: isMine ? 'none' : '1px solid var(--dark-border)',
                       }}>
-                      <p className="text-sm leading-relaxed break-words" style={{ color: 'var(--text-primary)' }}>
-                        {msg.content}
-                      </p>
+                      {msg.message_type === 'audio' && msg.audio_url ? (
+                        <AudioPlayer src={msg.audio_url} accentColor={isMine ? 'var(--gold)' : 'var(--text-secondary)'} />
+                      ) : (
+                        <p className="text-sm leading-relaxed break-words" style={{ color: 'var(--text-primary)' }}>
+                          {msg.content}
+                        </p>
+                      )}
                       <div className={`flex items-center gap-1.5 mt-1 ${isMine ? 'justify-end' : ''}`}>
                         <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>
                           {new Date(msg.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
@@ -211,20 +232,24 @@ export default function ConversationPage() {
         </div>
 
         {/* Input */}
-        <form onSubmit={sendMessage} className="p-4" style={{ borderTop: '1px solid var(--dark-border)' }}>
-          <div className="flex items-center gap-2 rounded-xl px-4 py-2"
+        <div className="p-4" style={{ borderTop: '1px solid var(--dark-border)' }}>
+          <form onSubmit={sendMessage} className="flex items-center gap-2 rounded-xl px-4 py-2"
             style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
             <input type="text" value={newMessage} onChange={(e) => setNewMessage(e.target.value)}
               placeholder={`Écrire à ${partnerName}...`}
               className="flex-1 bg-transparent text-sm outline-none" style={{ color: 'var(--text-primary)' }} maxLength={2000} />
-            <button type="submit" disabled={!newMessage.trim() || sending}
-              className="p-2 rounded-lg transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed" style={{ color: 'var(--gold)' }}>
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-              </svg>
-            </button>
-          </div>
-        </form>
+            {newMessage.trim() ? (
+              <button type="submit" disabled={sending}
+                className="p-2 rounded-lg transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed" style={{ color: 'var(--gold)' }}>
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                </svg>
+              </button>
+            ) : userId ? (
+              <VoiceRecorder userId={userId} onSend={sendVoice} disabled={sending} />
+            ) : null}
+          </form>
+        </div>
       </div>
     </div>
   )

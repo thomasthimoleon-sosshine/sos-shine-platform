@@ -130,7 +130,8 @@ export default function MessagesPage() {
           {conversations.map((convo, i) => {
             const name = convo.partner.pseudo || convo.partner.prenom
             const isOwnMessage = convo.lastMessage.sender_id === userId
-            const preview = isOwnMessage ? `Vous : ${convo.lastMessage.content}` : convo.lastMessage.content
+            const msgText = convo.lastMessage.message_type === 'audio' ? '🎤 Message vocal' : (convo.lastMessage.content || '')
+            const preview = isOwnMessage ? `Vous : ${msgText}` : msgText
             return (
               <Link key={convo.partner.id} href={`/dashboard/messages/${convo.partner.id}`}
                 className="flex items-center gap-4 px-5 py-4 transition-all"

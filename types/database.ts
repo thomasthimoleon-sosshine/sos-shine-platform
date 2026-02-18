@@ -54,6 +54,8 @@ export type Message = {
   user_id: string
   douleur_id: string | null
   content: string
+  audio_url: string | null
+  message_type: 'text' | 'audio'
   is_general: boolean
   is_deleted: boolean
   is_anonymous: boolean
@@ -130,7 +132,9 @@ export type PrivateMessage = {
   id: string
   sender_id: string
   receiver_id: string
-  content: string
+  content: string | null
+  audio_url: string | null
+  message_type: 'text' | 'audio'
   is_read: boolean
   created_at: string
 }
@@ -144,9 +148,10 @@ export type SiteSetting = {
   updated_at: string
 }
 
-// ── Helper: auto-generated columns are optional on Insert ──
-type OptionalId<T> = Omit<T, Extract<'id' | 'created_at' | 'updated_at', keyof T>> &
-  Partial<Pick<T, Extract<'id' | 'created_at' | 'updated_at', keyof T>>>
+// ── Helper: columns with DB defaults are optional on Insert ──
+type DefaultColumns = 'id' | 'created_at' | 'updated_at' | 'audio_url' | 'message_type'
+type OptionalId<T> = Omit<T, Extract<DefaultColumns, keyof T>> &
+  Partial<Pick<T, Extract<DefaultColumns, keyof T>>>
 
 // ── Supabase table helper ──
 type Table<Row, Insert = OptionalId<Row>, Update = Partial<Row>> = {

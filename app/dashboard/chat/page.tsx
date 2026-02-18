@@ -1,9 +1,11 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import type { MessageWithProfile } from '@/types/database'
+import AudioPlayer from '@/components/AudioPlayer'
+import VoiceRecorder from '@/components/VoiceRecorder'
 
 export default function ChatGeneralPage() {
   const [messages, setMessages] = useState<MessageWithProfile[]>([])
@@ -54,12 +56,21 @@ export default function ChatGeneralPage() {
     setSending(true)
     const supabase = createClient()
     await supabase.from('messages').insert({
-      user_id: userId, content: newMessage.trim(), is_general: true, douleur_id: null, is_deleted: false, is_anonymous: isAnonymous,
+      user_id: userId, content: newMessage.trim(), is_general: true, douleur_id: null, is_deleted: false, is_anonymous: isAnonymous, message_type: 'text',
     })
     setNewMessage('')
     await loadMessages()
     setSending(false)
   }
+
+  const sendVoice = useCallback(async (audioUrl: string) => {
+    if (!userId) return
+    const supabase = createClient()
+    await supabase.from('messages').insert({
+      user_id: userId, content: '', audio_url: audioUrl, message_type: 'audio', is_general: true, douleur_id: null, is_deleted: false, is_anonymous: isAnonymous,
+    })
+    await loadMessages()
+  }, [userId, isAnonymous])
 
   function formatTime(d: string) {
     return new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
@@ -166,7 +177,11 @@ export default function ChatGeneralPage() {
                       )}
                       <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{formatTime(msg.created_at)}</span>
                     </div>
-                    <p className="text-sm leading-relaxed break-words" style={{ color: 'var(--text-secondary)' }}>{msg.content}</p>
+                    {msg.message_type === 'audio' && msg.audio_url ? (
+                      <AudioPlayer src={msg.audio_url} />
+                    ) : (
+                      <p className="text-sm leading-relaxed break-words" style={{ color: 'var(--text-secondary)' }}>{msg.content}</p>
+                    )}
                   </div>
                 </div>
               )
@@ -176,7 +191,7 @@ export default function ChatGeneralPage() {
         </div>
 
         {/* Input */}
-        <form onSubmit={sendMessage} className="p-4" style={{ borderTop: '1px solid var(--dark-border)' }}>
+        <div className="p-4" style={{ borderTop: '1px solid var(--dark-border)' }}>
           {/* Anonymous toggle */}
           <div className="flex items-center gap-2 mb-2">
             <button type="button" onClick={() => setIsAnonymous(!isAnonymous)}
@@ -196,19 +211,23 @@ export default function ChatGeneralPage() {
               {isAnonymous ? 'Mode anonyme activé' : 'Anonyme'}
             </button>
           </div>
-          <div className="flex items-center gap-2 rounded-xl px-4 py-2"
+          <form onSubmit={sendMessage} className="flex items-center gap-2 rounded-xl px-4 py-2"
             style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
             <input type="text" value={newMessage} onChange={(e) => setNewMessage(e.target.value)}
               placeholder={isAnonymous ? 'Message anonyme...' : `Message en tant que ${userPrenom}...`}
               className="flex-1 bg-transparent text-sm outline-none" style={{ color: 'var(--text-primary)' }} maxLength={500} />
-            <button type="submit" disabled={!newMessage.trim() || sending}
-              className="p-2 rounded-lg transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed" style={{ color: 'var(--gold)' }}>
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-              </svg>
-            </button>
-          </div>
-        </form>
+            {newMessage.trim() ? (
+              <button type="submit" disabled={sending}
+                className="p-2 rounded-lg transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed" style={{ color: 'var(--gold)' }}>
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                </svg>
+              </button>
+            ) : userId ? (
+              <VoiceRecorder userId={userId} onSend={sendVoice} disabled={sending} />
+            ) : null}
+          </form>
+        </div>
       </div>
     </div>
   )

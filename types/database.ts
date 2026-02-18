@@ -139,13 +139,14 @@ export type PrivateMessage = {
   created_at: string
 }
 
-// ── Active Calls (appels vidéo 1-to-1) ──
-export type ActiveCall = {
+// ── Signaling Rooms (WebRTC natif — visio 1-to-1 et groupe) ──
+export type SignalingRoom = {
   id: string
-  caller_id: string
-  receiver_id: string
-  status: 'ringing' | 'accepted' | 'rejected' | 'ended'
-  jitsi_room_id: string
+  room_code: string
+  created_by: string
+  room_type: 'one_to_one' | 'group'
+  target_user_id: string | null
+  status: 'waiting' | 'active' | 'ended' | 'rejected'
   created_at: string
 }
 
@@ -157,7 +158,7 @@ export type GroupEvent = {
   description: string | null
   start_time: string
   status: 'scheduled' | 'live' | 'ended' | 'canceled'
-  jitsi_room_id: string
+  room_id: string | null
   max_participants: number | null
   created_at: string
 }
@@ -172,7 +173,7 @@ export type SiteSetting = {
 }
 
 // ── Helper: columns with DB defaults are optional on Insert ──
-type DefaultColumns = 'id' | 'created_at' | 'updated_at' | 'audio_url' | 'message_type' | 'status'
+type DefaultColumns = 'id' | 'created_at' | 'updated_at' | 'audio_url' | 'message_type' | 'status' | 'room_code' | 'target_user_id' | 'room_id'
 type OptionalId<T> = Omit<T, Extract<DefaultColumns, keyof T>> &
   Partial<Pick<T, Extract<DefaultColumns, keyof T>>>
 
@@ -198,7 +199,7 @@ export type Database = {
       content_views: Table<ContentView>
       notifications: Table<Notification>
       private_messages: Table<PrivateMessage>
-      active_calls: Table<ActiveCall>
+      signaling_rooms: Table<SignalingRoom>
       group_events: Table<GroupEvent>
       site_settings: Table<SiteSetting>
     }

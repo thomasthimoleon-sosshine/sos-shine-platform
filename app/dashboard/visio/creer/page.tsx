@@ -38,16 +38,13 @@ export default function CreerVisioPage() {
     setSaving(true)
     const supabase = createClient()
 
-    // Générer un ID de salle unique
-    const jitsiRoomId = `sosshine-${crypto.randomUUID().slice(0, 12)}`
-
+    // La salle signaling_rooms sera créée quand l'hôte lancera la session
     await supabase.from('group_events').insert({
       host_id: userId,
       title: title.trim(),
       description: description.trim() || null,
       start_time: new Date(startTime).toISOString(),
       status: 'scheduled',
-      jitsi_room_id: jitsiRoomId,
       max_participants: maxParticipants ? parseInt(maxParticipants) : null,
     })
 

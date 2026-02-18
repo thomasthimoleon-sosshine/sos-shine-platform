@@ -10,12 +10,11 @@ import VoiceRecorder from '@/components/VoiceRecorder'
 
 async function initiateCall(callerId: string, receiverId: string): Promise<string | null> {
   const supabase = createClient()
-  const jitsiRoomId = `sosshine-1v1-${crypto.randomUUID().slice(0, 12)}`
-  const { data, error } = await supabase.from('active_calls').insert({
-    caller_id: callerId,
-    receiver_id: receiverId,
-    status: 'ringing',
-    jitsi_room_id: jitsiRoomId,
+  const { data, error } = await supabase.from('signaling_rooms').insert({
+    created_by: callerId,
+    room_type: 'one_to_one',
+    target_user_id: receiverId,
+    status: 'waiting',
   }).select('id').single()
   if (error || !data) return null
   return (data as { id: string }).id
@@ -147,7 +146,7 @@ export default function ConversationPage() {
     if (!userId || calling) return
     setCalling(true)
     const callId = await initiateCall(userId, partnerId)
-    if (callId) router.push(`/dashboard/appel?id=${callId}`)
+    if (callId) router.push(`/dashboard/appel?room=${callId}`)
     setCalling(false)
   }, [userId, partnerId, calling, router])
 

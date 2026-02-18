@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import JitsiVideoRoom from '@/components/JitsiVideoRoom'
+import ConferenceRoom from '@/components/ConferenceRoom'
 import type { GroupEvent, Profile } from '@/types/database'
 
 type GroupEventWithHost = GroupEvent & {
@@ -17,7 +17,7 @@ export default function VisioPage() {
   const [userId, setUserId] = useState<string | null>(null)
   const [userName, setUserName] = useState('')
   const [userRole, setUserRole] = useState<string>('member')
-  const [activeRoom, setActiveRoom] = useState<{ roomName: string; isModerator: boolean } | null>(null)
+  const [activeRoom, setActiveRoom] = useState<{ roomId: string } | null>(null)
 
   useEffect(() => {
     async function init() {
@@ -49,16 +49,31 @@ export default function VisioPage() {
     setLoading(false)
   }
 
-  function joinRoom(event: GroupEventWithHost) {
-    setActiveRoom({
-      roomName: event.jitsi_room_id,
-      isModerator: event.host_id === userId,
-    })
-    // Si l'hôte lance, passer le statut en "live"
-    if (event.host_id === userId && event.status === 'scheduled') {
-      const supabase = createClient()
-      supabase.from('group_events').update({ status: 'live' }).eq('id', event.id).then()
+  async function joinRoom(event: GroupEventWithHost) {
+    const supabase = createClient()
+
+    // Si la salle n'existe pas encore, la créer (quand l'hôte lance)
+    let roomId = event.room_id
+    if (!roomId && event.host_id === userId) {
+      const { data: room } = await supabase.from('signaling_rooms').insert({
+        created_by: userId!,
+        room_type: 'group',
+        status: 'active',
+      }).select('id').single()
+
+      if (room) {
+        roomId = (room as { id: string }).id
+        await supabase.from('group_events').update({ room_id: roomId, status: 'live' }).eq('id', event.id)
+      }
     }
+
+    if (!roomId) return
+
+    if (event.host_id === userId && event.status === 'scheduled') {
+      await supabase.from('group_events').update({ status: 'live' }).eq('id', event.id)
+    }
+
+    setActiveRoom({ roomId })
   }
 
   const leaveRoom = useCallback(async () => {
@@ -76,22 +91,16 @@ export default function VisioPage() {
   }
 
   // Vue active : on est dans une salle
-  if (activeRoom) {
+  if (activeRoom && userId) {
     return (
-      <div className="h-[calc(100vh-8rem)] flex flex-col">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="font-display text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
-            Session de groupe
-          </h1>
-          <button onClick={leaveRoom}
-            className="px-4 py-2 rounded-xl text-sm font-medium cursor-pointer transition-all hover:opacity-80"
-            style={{ background: 'rgba(239,68,68,0.15)', color: '#ef4444' }}>
-            Quitter la session
-          </button>
-        </div>
-        <div className="flex-1 min-h-0">
-          <JitsiVideoRoom roomName={activeRoom.roomName} userName={userName} isModerator={activeRoom.isModerator} onCallEnd={leaveRoom} />
-        </div>
+      <div className="h-[calc(100vh-8rem)]">
+        <ConferenceRoom
+          roomId={activeRoom.roomId}
+          userId={userId}
+          userName={userName}
+          userRole={userRole}
+          onLeave={leaveRoom}
+        />
       </div>
     )
   }

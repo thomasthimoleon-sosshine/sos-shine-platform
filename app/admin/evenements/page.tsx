@@ -190,7 +190,7 @@ export default function AdminEvenements() {
         .eq('id', editingId)
 
       if (updateError) {
-        setError('Erreur lors de la mise à jour.')
+        setError(`Erreur lors de la mise à jour : ${updateError.message}`)
         setSaving(false)
         return
       }
@@ -200,7 +200,7 @@ export default function AdminEvenements() {
         .insert({ ...payload, created_by: userId, is_active: true })
 
       if (insertError) {
-        setError('Erreur lors de la création.')
+        setError(`Erreur lors de la création : ${insertError.message}`)
         setSaving(false)
         return
       }

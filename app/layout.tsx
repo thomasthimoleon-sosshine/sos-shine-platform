@@ -52,8 +52,9 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body
-        className={`${cormorant.variable} ${dmSans.variable} antialiased`}
+        className={`${cormorant.variable} ${dmSans.variable} antialiased grain`}
       >
+        <div className="ambient-glow" />
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>

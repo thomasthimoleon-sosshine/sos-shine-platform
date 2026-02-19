@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState, ReactNode, useCallback } from "react";
 import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
+import { CTAButton } from "@/components/ui/CTAButton";
 
 /* ─────────────────────────────────────────────
    SOS SHINE — Landing Page Dynamique
@@ -123,13 +124,16 @@ const DEFAULTS: Record<string, string> = {
   community_block3_title: "Les Rencontres R\u00e9elles",
   community_block3_desc: "Soins collectifs, ateliers, lives, Shine Walks \u2014 le digital pr\u00e9pare, le physique transforme.",
   testimonials_label: "Ils ont travers\u00e9 la temp\u00eate",
-  cta_title: "Comprenez. Apaisez.\nNe soyez plus jamais seul.",
+  cta_title: "Rejoignez-nous.\nNe soyez plus jamais seul(e) face \u00e0 vos temp\u00eates.",
+  cta_description: "Que vous cherchiez une r\u00e9ponse \u00e0 une douleur ancienne, un soutien pour traverser une crise, ou simplement un espace o\u00f9 \u00eatre compris(e) \u2014 SOS Shine est l\u00e0, 24h/24, 7j/7. Vous n\u2019avez pas \u00e0 tout porter seul(e). On est l\u00e0 pour comprendre, accompagner et avancer ensemble.",
   cta_button: "Rejoindre SOS Shine",
   price_essential: "29,90",
   price_premium: "99,90",
   trial_days: "7",
   features_essential: "Encyclop\u00e9die compl\u00e8te des douleurs\n4 \u00e9tapes par douleur (vid\u00e9o, soin, m\u00e9ditation, exercices)\nChat d\u00e9di\u00e9 par douleur + Chat g\u00e9n\u00e9ral\nMur communautaire\nSoins collectifs & \u00e9v\u00e9nements\nEssai gratuit 7 jours",
   features_premium: "Tout l\u2019Essentiel inclus\nPermanences experts 24/7\nAccompagnement prioritaire\nSupport direct Julia, William & Thomas",
+  pricing_btn_essential: "Commencer \u2014 7 jours gratuits",
+  pricing_btn_premium: "Commencer maintenant",
   pricing_footer: "Parce que si on doit vous retenir par un contrat, c\u2019est qu\u2019on n\u2019a pas fait notre travail.",
   testimonial_1: "Je ne savais m\u00eame pas que j\u2019avais le droit de ne pas aller bien. SOS Shine m\u2019a donn\u00e9 un espace o\u00f9 ma douleur avait le droit d\u2019exister.|Marie, 34 ans|Lyon",
   testimonial_2: "La premi\u00e8re fois que quelqu\u2019un m\u2019a dit \u00ab je suis pass\u00e9 par l\u00e0, tiens bon \u00bb \u2014 c\u2019\u00e9tait dans le Feu de Camp. J\u2019ai pleur\u00e9. Des larmes de soulagement.|Karim, 41 ans|Bordeaux",
@@ -246,10 +250,9 @@ export default function Home() {
   }
 
   const steps = [
-    { num: "01", title: s("step1_title"), desc: s("step1_desc"), color: "#55EFC4", icon: "\uD83C\uDFAC" },
-    { num: "02", title: s("step2_title"), desc: s("step2_desc"), color: accent, icon: "\u2728" },
-    { num: "03", title: s("step3_title"), desc: s("step3_desc"), color: "#E17055", icon: "\uD83E\uDDD8" },
-    { num: "04", title: s("step4_title"), desc: s("step4_desc"), color: gold, icon: "\u26A1" },
+    { num: "01", title: s("step1_title"), desc: s("step1_desc"), color: "#55EFC4" },
+    { num: "02", title: s("step2_title"), desc: s("step2_desc"), color: accent },
+    { num: "03", title: s("step3_title"), desc: s("step3_desc"), color: "#E17055" },
   ];
 
   const encyclopediaItems = s("encyclo_items") ? s("encyclo_items").split("\n").filter(Boolean) : ["Abandon", "Anxi\u00e9t\u00e9", "Burn-out", "D\u00e9pendance affective", "Deuil", "Manque de confiance", "Peur", "Rejet", "Rupture", "Solitude", "Trahison", "Et plus..."];
@@ -346,14 +349,14 @@ export default function Home() {
           <Reveal delay={0.4}>
             <div className="flex flex-wrap gap-4">
               <Link href="/dashboard/encyclopedie">
-                <button className="px-8 py-4 rounded-full text-base font-medium tracking-wide transition-all duration-300 cursor-pointer" style={{ background: 'transparent', border: `1px solid rgba(${goldRgb},0.4)`, color: gold }}>
+                <CTAButton variant="outline" style={{ border: `1px solid rgba(${goldRgb},0.4)`, color: gold }}>
                   {s("hero_btn_encyclopedie")}
-                </button>
+                </CTAButton>
               </Link>
               <Link href="/signup">
-                <button className="cta-glow px-8 py-4 rounded-full text-base font-medium tracking-wide transition-all duration-300 cursor-pointer" style={{ background: buttonBg, color: bg }}>
+                <CTAButton style={{ background: buttonBg, color: bg }}>
                   {s("hero_btn_signup")}{" \u2014 "}{trialDays}{" jours d\u2019essai"}
-                </button>
+                </CTAButton>
               </Link>
             </div>
           </Reveal>
@@ -366,7 +369,6 @@ export default function Home() {
         )}
 
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
-          <span className="text-xs tracking-[0.2em] text-[var(--text-muted)]">{"D\u00c9COUVRIR"}</span>
           <span className="block w-px h-8 bg-gradient-to-b from-[var(--text-muted)] to-transparent animate-pulse" />
         </div>
       </section>
@@ -405,17 +407,14 @@ export default function Home() {
             <p className="text-center text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-4">{s("steps_label")}</p>
             <h2 className="font-display font-light mb-16" style={tStyle("steps")}>{s("steps_title")}</h2>
           </Reveal>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-3 gap-6">
             {steps.map((step, i) => (
               <Reveal key={step.num} delay={i * 0.1}>
                 <div className="glass glass-hover relative p-8 h-full"
                   style={{ borderColor: `${step.color}20` }}>
-                  <div className="flex items-center gap-4 mb-4">
-                    <span className="text-3xl">{step.icon}</span>
-                    <div>
-                      <span className="font-display text-sm font-light block" style={{ color: step.color, opacity: 0.6 }}>{"\u00c9tape "}{step.num}</span>
-                      <h3 className="font-display text-xl font-medium" style={{ color: step.color }}>{step.title}</h3>
-                    </div>
+                  <div className="mb-4">
+                    <span className="font-display text-sm font-light block" style={{ color: step.color, opacity: 0.6 }}>{"\u00c9tape "}{step.num}</span>
+                    <h3 className="font-display text-xl font-medium" style={{ color: step.color }}>{step.title}</h3>
                   </div>
                   <p className="text-[var(--text-secondary)] leading-relaxed text-[15px] font-light">{step.desc}</p>
                 </div>
@@ -537,9 +536,9 @@ export default function Home() {
                   ))}
                 </div>
                 <Link href="/signup">
-                  <button className="cta-glow w-full px-8 py-4 rounded-full text-base font-medium transition-all duration-300 cursor-pointer" style={{ background: buttonBg, color: bg }}>
-                    {"Commencer \u2014 "}{trialDays}{" jours gratuits"}
-                  </button>
+                  <CTAButton fullWidth style={{ background: buttonBg, color: bg }}>
+                    {s("pricing_btn_essential")}
+                  </CTAButton>
                 </Link>
               </div>
             </Reveal>
@@ -564,9 +563,9 @@ export default function Home() {
                   ))}
                 </div>
                 <Link href="/signup">
-                  <button className="w-full px-8 py-4 rounded-full text-base font-medium transition-all duration-300 cursor-pointer" style={{ background: accent, color: bg }}>
-                    {"Commencer maintenant"}
-                  </button>
+                  <CTAButton variant="accent" fullWidth style={{ background: accent, color: bg }}>
+                    {s("pricing_btn_premium")}
+                  </CTAButton>
                 </Link>
               </div>
             </Reveal>
@@ -580,7 +579,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA FINAL */}
+      {/* CTA FINAL — Section 1 : Titre sombre */}
       <section className="px-6 md:px-20 py-32 border-t border-[var(--dark-border)] relative">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full opacity-[0.03] blur-[120px]" style={{ background: gold }} />
@@ -593,28 +592,41 @@ export default function Home() {
               {s("cta_title").split("\n").map((line, i) => (
                 <span key={i}>
                   {i > 0 && <br />}
-                  {line.includes("seul") || line.includes("jamais") ? (
+                  {line.includes("seul") || line.includes("jamais") || line.includes("temp\u00eates") ? (
                     <em className="font-light" style={{ color: gold }}>{line}</em>
                   ) : line}
                 </span>
               ))}
             </p>
           </Reveal>
-          <Reveal delay={0.2}>
-            <Link href="/signup">
-              <button className="cta-glow px-12 py-5 rounded-full text-lg font-medium tracking-wide transition-all duration-300 cursor-pointer" style={{ background: buttonBg, color: bg }}>
-                {s("cta_button")}
-              </button>
-            </Link>
+        </div>
+      </section>
+
+      {/* CTA FINAL — Section 2 : Description fond blanc */}
+      <section className="px-6 md:px-20 py-24" style={{ background: '#ffffff' }}>
+        <div className="max-w-3xl mx-auto text-center">
+          <Reveal>
+            <p className="text-lg md:text-xl leading-relaxed font-light" style={{ color: '#1a1a1a', fontFamily: "'DM Sans', sans-serif" }}>
+              {s("cta_description")}
+            </p>
           </Reveal>
-          <Reveal delay={0.3}>
-            <p className="text-xs text-[var(--text-muted)] mt-6 tracking-wide">
+          <Reveal delay={0.15}>
+            <div className="mt-10">
+              <Link href="/signup">
+                <CTAButton size="lg" style={{ background: buttonBg, color: '#ffffff' }}>
+                  {s("cta_button")}
+                </CTAButton>
+              </Link>
+            </div>
+          </Reveal>
+          <Reveal delay={0.25}>
+            <p className="text-xs mt-6 tracking-wide" style={{ color: '#6b7280' }}>
               {trialDays}{" jours gratuits (Essentiel) \u2014 Puis "}{priceEssential}{"\u20ac/mois \u2014 Sans engagement"}
             </p>
           </Reveal>
-          <Reveal delay={0.35}>
+          <Reveal delay={0.3}>
             <div className="mt-8">
-              <Link href="/login" className="gold-underline text-sm text-[var(--text-muted)] transition-colors duration-300" style={{ ["--gold" as string]: gold }}>
+              <Link href="/login" className="text-sm transition-colors duration-300 underline underline-offset-4" style={{ color: '#6b7280' }}>
                 {"D\u00e9j\u00e0 membre ? Se connecter"}
               </Link>
             </div>

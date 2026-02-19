@@ -113,32 +113,8 @@ export default function MurPage() {
             Le mur est prêt
           </h3>
           <p className="text-sm max-w-sm mx-auto" style={{ color: 'var(--text-secondary)' }}>
-            Les publications de l&apos;équipe SOS Shine apparaîtront ici. Vous serez notifié par email à chaque nouvelle publication.
+            Les publications de l&apos;équipe SOS Shine apparaîtront ici. Annonces, nouvelles douleurs et événements seront publiés depuis l&apos;espace admin.
           </p>
-
-          {/* Preview cards */}
-          <div className="mt-12 space-y-4 text-left">
-            {[
-              { type: 'announcement', title: 'Bienvenue sur SOS Shine !', content: 'Nous sommes ravis de vous accueillir dans cette communauté. Explorez l\'encyclopédie des douleurs, participez aux chats et rejoignez nos événements. Vous n\'êtes plus seul.', date: new Date().toISOString() },
-              { type: 'douleur_published', title: 'Nouvelle douleur disponible : Abandon', content: 'La page "Abandon" est maintenant disponible dans l\'encyclopédie avec son protocole complet en 4 étapes. Vidéo, soin énergétique, méditation et exercices pratiques vous attendent.', date: new Date(Date.now() - 86400000).toISOString() },
-              { type: 'event_published', title: 'Shine Walk — Paris, 15 mars', content: 'Rejoignez-nous au Jardin du Luxembourg pour une marche méditative suivie d\'un cercle de parole. Places limitées à 20 personnes.', date: new Date(Date.now() - 172800000).toISOString() },
-            ].map((preview, i) => {
-              const typeInfo = getTypeLabel(preview.type)
-              return (
-                <div key={i} className="rounded-2xl p-6" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', opacity: 0.6 }}>
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-sm">{typeInfo.icon}</span>
-                    <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ background: `${typeInfo.color}15`, color: typeInfo.color }}>
-                      {typeInfo.label}
-                    </span>
-                    <span className="text-xs" style={{ color: 'var(--text-muted)' }}>Aperçu</span>
-                  </div>
-                  <h3 className="font-semibold text-base mb-2" style={{ color: 'var(--text-primary)' }}>{preview.title}</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{preview.content}</p>
-                </div>
-              )
-            })}
-          </div>
         </div>
       ) : (
         <div className="space-y-4">

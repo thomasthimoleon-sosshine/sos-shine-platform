@@ -222,8 +222,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 {item.icon}
                 {item.label}
                 {'hasBadge' in item && item.hasBadge && unreadMessages > 0 && (
-                  <span className="ml-auto w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold"
-                    style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
+                  <span className="ml-auto w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold animate-pulse"
+                    style={{ background: '#EF4444', color: '#fff' }}>
                     {unreadMessages > 9 ? '9+' : unreadMessages}
                   </span>
                 )}

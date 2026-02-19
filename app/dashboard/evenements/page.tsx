@@ -4,21 +4,52 @@ import { useEffect, useState, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { Event, EventRegistration } from '@/types/database'
 
-/* ─── World Map Component with Diamond markers ─── */
-function WorldMap({ events, selectedEvent, onSelect }: {
+/* ─── Continent polygon data [lng, lat] ─── */
+const CONTINENTS: [number, number][][] = [
+  // Europe
+  [[-10,35],[-9,38],[-9,43],[-5,48],[0,49],[3,47],[5,48],[7,48],[10,45],[13,46],[15,47],[18,48],[24,48],[25,50],[30,50],[32,47],[30,45],[28,41],[26,38],[22,35],[15,37],[10,37],[5,36],[0,36],[-5,36],[-10,35]],
+  // Africa
+  [[-17,15],[-17,21],[-13,28],[-5,36],[0,36],[10,37],[15,37],[22,35],[26,38],[30,31],[33,30],[35,32],[37,20],[42,12],[51,11],[50,2],[42,-2],[40,-10],[35,-20],[33,-27],[28,-34],[22,-34],[18,-32],[15,-27],[12,-20],[12,-5],[8,4],[5,5],[2,6],[-5,10],[-8,5],[-15,11],[-17,15]],
+  // Asia
+  [[26,38],[28,41],[30,45],[32,47],[30,50],[40,55],[50,55],[60,55],[70,55],[80,55],[90,50],[100,50],[110,50],[120,53],[130,50],[135,55],[140,55],[145,50],[150,48],[140,40],[130,35],[125,33],[120,30],[118,25],[110,20],[105,15],[100,14],[98,10],[100,5],[104,1],[110,0],[115,2],[120,5],[127,-8],[130,-5],[140,-5],[145,-8],[140,-10],[130,-8],[120,-8],[115,0],[110,-2],[105,0],[100,2],[98,8],[95,15],[90,22],[85,25],[80,28],[73,28],[70,30],[65,28],[60,25],[55,25],[50,28],[44,20],[42,12],[37,20],[35,32],[33,30],[30,31],[26,38]],
+  // North America
+  [[-170,65],[-165,62],[-150,60],[-140,60],[-130,55],[-125,50],[-120,45],[-118,35],[-115,32],[-110,30],[-105,25],[-100,25],[-97,19],[-92,15],[-88,14],[-83,10],[-80,8],[-77,8],[-75,10],[-80,15],[-82,22],[-81,25],[-80,30],[-76,35],[-75,40],[-70,42],[-67,44],[-65,47],[-60,47],[-55,50],[-58,52],[-65,55],[-70,58],[-75,62],[-80,63],[-85,65],[-95,70],[-110,70],[-130,72],[-145,70],[-155,70],[-165,68],[-170,65]],
+  // South America
+  [[-80,8],[-77,8],[-75,10],[-73,11],[-70,12],[-62,11],[-60,8],[-55,5],[-52,3],[-50,0],[-50,-3],[-45,-5],[-40,-3],[-38,-5],[-35,-10],[-37,-15],[-40,-20],[-42,-23],[-45,-24],[-48,-28],[-50,-30],[-52,-33],[-55,-35],[-58,-38],[-65,-40],[-68,-48],[-68,-55],[-72,-52],[-75,-46],[-73,-40],[-72,-35],[-70,-30],[-68,-25],[-70,-18],[-75,-15],[-78,-5],[-80,0],[-80,8]],
+  // Australia
+  [[114,-22],[117,-20],[121,-18],[129,-15],[135,-13],[137,-15],[140,-18],[143,-15],[145,-17],[150,-22],[152,-25],[153,-28],[152,-32],[148,-35],[145,-38],[140,-38],[137,-35],[135,-33],[130,-32],[128,-30],[125,-32],[118,-33],[115,-34],[114,-30],[114,-26],[114,-22]],
+  // Greenland
+  [[-55,60],[-50,62],[-45,65],[-42,68],[-20,77],[-18,80],[-22,82],[-30,83],[-40,83],[-50,82],[-55,80],[-58,78],[-60,75],[-57,70],[-50,65],[-55,60]],
+  // UK+Ireland
+  [[-10,50],[-6,52],[-5,55],[-3,58],[0,59],[2,56],[1,53],[0,51],[-5,50],[-10,50]],
+  // Japan
+  [[130,31],[131,33],[134,35],[137,37],[140,40],[141,42],[145,45],[143,42],[142,39],[140,36],[137,34],[134,33],[130,31]],
+  // Indonesia
+  [[95,5],[98,3],[104,1],[106,-2],[108,-5],[106,-8],[112,-8],[115,-8],[120,-8],[125,-8],[127,-5],[130,-3],[135,-5],[140,-5],[141,-8],[138,-8],[135,-7],[130,-5],[125,-10],[120,-10],[115,-10],[110,-8],[106,-6],[105,-3],[100,0],[95,5]],
+]
+
+/* ─── 3D Globe Component ─── */
+function WorldGlobe({ events, selectedEvent, onSelect }: {
   events: { id: string; title: string; latitude: number | null; longitude: number | null; location_name: string | null }[]
   selectedEvent: string | null
   onSelect: (id: string) => void
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-  const animFrameRef = useRef<number>(0)
-  const timeRef = useRef(0)
+  const animRef = useRef<number>(0)
+  const rotRef = useRef(0)
+  const dragRef = useRef({ active: false, startX: 0, startRot: 0 })
+  const rotOffsetRef = useRef(0)
 
-  function project(lat: number, lng: number, w: number, h: number): [number, number] {
-    const x = ((lng + 180) / 360) * w
-    const y = ((90 - lat) / 180) * h
-    return [x, y]
+  // 3D sphere projection
+  function project3D(lat: number, lng: number, rotY: number, cx: number, cy: number, R: number): [number, number, number] | null {
+    const phi = (90 - lat) * Math.PI / 180
+    const theta = (lng + rotY) * Math.PI / 180
+    const x3d = R * Math.sin(phi) * Math.cos(theta)
+    const y3d = R * Math.cos(phi)
+    const z3d = R * Math.sin(phi) * Math.sin(theta)
+    if (z3d < 0) return null // behind globe
+    return [cx + x3d, cy - y3d, z3d]
   }
 
   useEffect(() => {
@@ -39,151 +70,218 @@ function WorldMap({ events, selectedEvent, onSelect }: {
 
     const w = rect.width
     const h = rect.height
+    const cx = w / 2
+    const cy = h / 2
+    const R = Math.min(w, h) * 0.38
+    let time = 0
 
     function draw() {
       if (!ctx) return
-      timeRef.current += 0.02
-      const t = timeRef.current
+      time += 0.016
+      rotRef.current += 0.08
+      const rotY = rotRef.current + rotOffsetRef.current
 
       ctx.clearRect(0, 0, w, h)
 
-      // Dots grid
-      ctx.fillStyle = 'rgba(212,175,55,0.06)'
-      for (let lat = -60; lat <= 70; lat += 10) {
-        for (let lng = -170; lng <= 180; lng += 10) {
-          const [x, y] = project(lat, lng, w, h)
-          ctx.beginPath()
-          ctx.arc(x, y, 1, 0, Math.PI * 2)
-          ctx.fill()
+      // Globe background sphere
+      const sphereGrad = ctx.createRadialGradient(cx - R * 0.3, cy - R * 0.3, R * 0.1, cx, cy, R)
+      sphereGrad.addColorStop(0, 'rgba(212,175,55,0.06)')
+      sphereGrad.addColorStop(0.7, 'rgba(212,175,55,0.02)')
+      sphereGrad.addColorStop(1, 'rgba(212,175,55,0)')
+      ctx.fillStyle = sphereGrad
+      ctx.beginPath()
+      ctx.arc(cx, cy, R, 0, Math.PI * 2)
+      ctx.fill()
+
+      // Globe outline
+      ctx.strokeStyle = 'rgba(212,175,55,0.15)'
+      ctx.lineWidth = 1
+      ctx.beginPath()
+      ctx.arc(cx, cy, R, 0, Math.PI * 2)
+      ctx.stroke()
+
+      // Latitude lines
+      ctx.strokeStyle = 'rgba(212,175,55,0.04)'
+      ctx.lineWidth = 0.5
+      for (let lat = -60; lat <= 60; lat += 30) {
+        ctx.beginPath()
+        let started = false
+        for (let lng = -180; lng <= 180; lng += 3) {
+          const p = project3D(lat, lng, rotY, cx, cy, R)
+          if (p) {
+            if (!started) { ctx.moveTo(p[0], p[1]); started = true }
+            else ctx.lineTo(p[0], p[1])
+          } else { started = false }
         }
+        ctx.stroke()
       }
 
-      // Continent outlines
-      ctx.fillStyle = 'rgba(212,175,55,0.12)'
-      const continentPoints = [
-        ...[[-10,36],[0,43],[3,43],[7,44],[10,45],[13,46],[15,47],[18,48],[20,48],[25,50],[30,50],[30,45],[25,38],[20,35],[10,37],[5,48],[0,49],[-5,48],[-9,43]],
-        ...[[-17,15],[-15,12],[-10,5],[5,4],[10,2],[15,5],[20,5],[30,5],[35,10],[40,12],[42,2],[40,-5],[35,-15],[30,-25],[25,-34],[20,-34],[15,-30],[12,-25],[10,-15],[5,-5],[0,5],[-5,10]],
-        ...[[30,35],[35,33],[40,30],[45,25],[50,25],[55,25],[60,25],[65,30],[70,30],[80,28],[90,25],[95,20],[100,15],[105,10],[110,20],[115,25],[120,30],[125,35],[130,35],[135,35],[140,40],[145,45],[150,50],[140,55],[130,55],[120,50],[110,50],[100,45],[90,45],[80,40],[70,40],[60,40],[50,40],[40,40]],
-        ...[[-80,10],[-75,20],[-70,25],[-75,30],[-80,35],[-85,40],[-90,45],[-95,50],[-100,55],[-110,60],[-120,60],[-130,55],[-125,50],[-120,45],[-115,35],[-110,30],[-105,25],[-100,20],[-95,18],[-90,15],[-85,10],[-80,10]],
-        ...[[-80,0],[-75,-5],[-70,-15],[-65,-20],[-60,-25],[-55,-30],[-50,-25],[-45,-20],[-40,-15],[-35,-10],[-40,-3],[-50,0],[-55,5],[-60,5],[-65,5],[-70,5],[-75,5],[-77,8]],
-        ...[[115,-15],[120,-15],[130,-15],[135,-20],[140,-25],[145,-30],[150,-35],[150,-30],[145,-20],[140,-15],[135,-12],[130,-12],[125,-15],[120,-20],[115,-25],[115,-20]],
-      ]
-      continentPoints.forEach(([lng, lat]) => {
-        const [x, y] = project(lat, lng, w, h)
+      // Longitude lines
+      for (let lng = -180; lng < 180; lng += 30) {
         ctx.beginPath()
-        ctx.arc(x, y, 1.5, 0, Math.PI * 2)
-        ctx.fill()
-      })
+        let started = false
+        for (let lat = -90; lat <= 90; lat += 3) {
+          const p = project3D(lat, lng, rotY, cx, cy, R)
+          if (p) {
+            if (!started) { ctx.moveTo(p[0], p[1]); started = true }
+            else ctx.lineTo(p[0], p[1])
+          } else { started = false }
+        }
+        ctx.stroke()
+      }
 
-      // Connection lines
-      const eventPositions = events
-        .filter(e => e.latitude && e.longitude)
-        .map(e => ({ ...e, pos: project(e.latitude!, e.longitude!, w, h) }))
-
-      ctx.strokeStyle = 'rgba(212,175,55,0.08)'
-      ctx.lineWidth = 0.5
-      for (let i = 0; i < eventPositions.length; i++) {
-        for (let j = i + 1; j < eventPositions.length; j++) {
-          ctx.beginPath()
-          ctx.moveTo(eventPositions[i].pos[0], eventPositions[i].pos[1])
-          ctx.lineTo(eventPositions[j].pos[0], eventPositions[j].pos[1])
+      // Draw continents as filled polygons
+      CONTINENTS.forEach(continent => {
+        // First pass: fill
+        ctx.beginPath()
+        let started = false
+        const visiblePoints: [number, number][] = []
+        continent.forEach(([lng, lat]) => {
+          const p = project3D(lat, lng, rotY, cx, cy, R)
+          if (p) {
+            visiblePoints.push([p[0], p[1]])
+            if (!started) { ctx.moveTo(p[0], p[1]); started = true }
+            else ctx.lineTo(p[0], p[1])
+          }
+        })
+        if (visiblePoints.length > 2) {
+          ctx.closePath()
+          ctx.fillStyle = 'rgba(212,175,55,0.12)'
+          ctx.fill()
+          ctx.strokeStyle = 'rgba(212,175,55,0.25)'
+          ctx.lineWidth = 0.8
           ctx.stroke()
         }
-      }
+      })
 
-      // Diamond markers
-      eventPositions.forEach((event, idx) => {
-        const [x, y] = event.pos
+      // Draw events as shining diamonds
+      const eventScreenPos: { id: string; x: number; y: number; location_name: string | null }[] = []
+
+      events.forEach((event, idx) => {
+        if (!event.latitude || !event.longitude) return
+        const p = project3D(event.latitude, event.longitude, rotY, cx, cy, R)
+        if (!p) return
+
+        const [x, y, z] = p
         const isSelected = event.id === selectedEvent
-        const pulse = Math.sin(t * 2 + idx * 1.5) * 0.5 + 0.5
-        const size = isSelected ? 10 : 7
+        const pulse = Math.sin(time * 2.5 + idx * 1.5) * 0.5 + 0.5
+        const depthFade = 0.4 + (z / R) * 0.6
+        const size = (isSelected ? 11 : 8) * depthFade
 
-        const glowSize = size + 8 + pulse * 6
-        const gradient = ctx.createRadialGradient(x, y, 0, x, y, glowSize)
-        gradient.addColorStop(0, `rgba(212,175,55,${isSelected ? 0.4 : 0.2 + pulse * 0.15})`)
-        gradient.addColorStop(1, 'rgba(212,175,55,0)')
-        ctx.fillStyle = gradient
+        eventScreenPos.push({ id: event.id, x, y, location_name: event.location_name })
+
+        // Glow
+        const glowR = size + 10 + pulse * 8
+        const glow = ctx.createRadialGradient(x, y, 0, x, y, glowR)
+        glow.addColorStop(0, `rgba(212,175,55,${(isSelected ? 0.5 : 0.3) * depthFade})`)
+        glow.addColorStop(1, 'rgba(212,175,55,0)')
+        ctx.fillStyle = glow
         ctx.beginPath()
-        ctx.arc(x, y, glowSize, 0, Math.PI * 2)
+        ctx.arc(x, y, glowR, 0, Math.PI * 2)
         ctx.fill()
 
+        // Diamond
         ctx.save()
         ctx.translate(x, y)
         ctx.rotate(Math.PI / 4)
-        const s = size + (isSelected ? Math.sin(t * 3) * 2 : 0)
+        const s = size + (isSelected ? Math.sin(time * 3) * 2 : 0)
 
-        ctx.fillStyle = isSelected ? '#D4AF37' : `rgba(212,175,55,${0.7 + pulse * 0.3})`
+        ctx.fillStyle = isSelected ? '#D4AF37' : `rgba(212,175,55,${(0.7 + pulse * 0.3) * depthFade})`
         ctx.fillRect(-s / 2, -s / 2, s, s)
 
-        ctx.strokeStyle = `rgba(255,255,255,${0.3 + pulse * 0.4})`
+        ctx.strokeStyle = `rgba(255,255,255,${(0.4 + pulse * 0.4) * depthFade})`
         ctx.lineWidth = 1
         ctx.strokeRect(-s / 2, -s / 2, s, s)
 
-        ctx.fillStyle = `rgba(255,255,255,${0.3 + pulse * 0.5})`
-        ctx.fillRect(-s / 6, -s / 6, s / 3, s / 3)
+        // Inner shine
+        ctx.fillStyle = `rgba(255,255,255,${(0.3 + pulse * 0.5) * depthFade})`
+        ctx.fillRect(-s / 5, -s / 5, s / 2.5, s / 2.5)
 
         ctx.restore()
 
+        // Label
         if (isSelected && event.location_name) {
-          ctx.font = '11px "DM Sans", sans-serif'
-          ctx.fillStyle = '#D4AF37'
+          ctx.font = 'bold 12px "DM Sans", sans-serif'
           ctx.textAlign = 'center'
+          ctx.fillStyle = 'rgba(0,0,0,0.5)'
+          ctx.fillText(event.location_name, x + 1, y - size - 9)
+          ctx.fillStyle = '#D4AF37'
           ctx.fillText(event.location_name, x, y - size - 10)
         }
       })
 
-      // Floating sparkles
-      for (let i = 0; i < 12; i++) {
-        const sparkleX = (Math.sin(t * 0.3 + i * 2.1) * 0.5 + 0.5) * w
-        const sparkleY = (Math.cos(t * 0.25 + i * 1.7) * 0.5 + 0.5) * h
-        const sparkleAlpha = (Math.sin(t * 1.5 + i * 0.8) * 0.5 + 0.5) * 0.15
-        ctx.fillStyle = `rgba(212,175,55,${sparkleAlpha})`
-        ctx.save()
-        ctx.translate(sparkleX, sparkleY)
-        ctx.rotate(Math.PI / 4)
-        ctx.fillRect(-1.5, -1.5, 3, 3)
-        ctx.restore()
-      }
+      // Atmosphere edge glow
+      const atmoGrad = ctx.createRadialGradient(cx, cy, R * 0.95, cx, cy, R * 1.15)
+      atmoGrad.addColorStop(0, 'rgba(212,175,55,0.05)')
+      atmoGrad.addColorStop(0.5, 'rgba(212,175,55,0.02)')
+      atmoGrad.addColorStop(1, 'rgba(212,175,55,0)')
+      ctx.fillStyle = atmoGrad
+      ctx.beginPath()
+      ctx.arc(cx, cy, R * 1.15, 0, Math.PI * 2)
+      ctx.fill()
 
-      animFrameRef.current = requestAnimationFrame(draw)
+      animRef.current = requestAnimationFrame(draw)
     }
 
     draw()
-    return () => cancelAnimationFrame(animFrameRef.current)
+    return () => cancelAnimationFrame(animRef.current)
   }, [events, selectedEvent])
+
+  // Mouse/touch drag for rotation
+  function onPointerDown(e: React.PointerEvent<HTMLCanvasElement>) {
+    dragRef.current = { active: true, startX: e.clientX, startRot: rotRef.current + rotOffsetRef.current }
+    ;(e.target as HTMLCanvasElement).setPointerCapture(e.pointerId)
+  }
+  function onPointerMove(e: React.PointerEvent<HTMLCanvasElement>) {
+    if (!dragRef.current.active) return
+    const dx = e.clientX - dragRef.current.startX
+    rotOffsetRef.current = dragRef.current.startRot - rotRef.current + dx * 0.3
+  }
+  function onPointerUp() { dragRef.current.active = false }
 
   function handleClick(e: React.MouseEvent<HTMLCanvasElement>) {
     const canvas = canvasRef.current
-    if (!canvas) return
+    const container = containerRef.current
+    if (!canvas || !container) return
 
     const rect = canvas.getBoundingClientRect()
     const clickX = e.clientX - rect.left
     const clickY = e.clientY - rect.top
     const w = rect.width
     const h = rect.height
+    const cx = w / 2
+    const cy = h / 2
+    const R = Math.min(w, h) * 0.38
+    const rotY = rotRef.current + rotOffsetRef.current
 
     let closest: string | null = null
-    let minDist = 25
+    let minDist = 30
 
     events.forEach(event => {
       if (!event.latitude || !event.longitude) return
-      const [x, y] = project(event.latitude, event.longitude, w, h)
-      const dist = Math.sqrt((clickX - x) ** 2 + (clickY - y) ** 2)
-      if (dist < minDist) {
-        minDist = dist
-        closest = event.id
-      }
+      const p = project3D(event.latitude, event.longitude, rotY, cx, cy, R)
+      if (!p) return
+      const dist = Math.sqrt((clickX - p[0]) ** 2 + (clickY - p[1]) ** 2)
+      if (dist < minDist) { minDist = dist; closest = event.id }
     })
 
     if (closest) onSelect(closest)
   }
 
   return (
-    <div ref={containerRef} className="relative w-full rounded-2xl overflow-hidden" style={{ height: 280, background: 'rgba(212,175,55,0.02)', border: '1px solid rgba(212,175,55,0.1)' }}>
-      <canvas ref={canvasRef} className="w-full h-full cursor-pointer" onClick={handleClick} />
+    <div ref={containerRef} className="relative w-full rounded-2xl overflow-hidden" style={{ height: 380, background: 'radial-gradient(ellipse at center, rgba(212,175,55,0.03) 0%, transparent 70%)', border: '1px solid rgba(212,175,55,0.1)' }}>
+      <canvas
+        ref={canvasRef}
+        className="w-full h-full cursor-grab active:cursor-grabbing"
+        onClick={handleClick}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
+      />
       <div className="absolute bottom-3 left-3 flex items-center gap-2">
         <span className="w-2 h-2 rotate-45 inline-block" style={{ background: '#D4AF37' }} />
-        <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>Cliquez sur un diamant pour voir l&apos;événement</span>
+        <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>Glissez pour tourner le globe &middot; Cliquez sur un diamant</span>
       </div>
     </div>
   )
@@ -319,7 +417,7 @@ export default function EvenementsPage() {
 
       {/* World Map — only if events with coordinates exist */}
       {!loading && mapEvents.length > 0 && (
-        <WorldMap events={mapEvents} selectedEvent={selectedEvent} onSelect={scrollToEvent} />
+        <WorldGlobe events={mapEvents} selectedEvent={selectedEvent} onSelect={scrollToEvent} />
       )}
 
       {/* Info banner */}

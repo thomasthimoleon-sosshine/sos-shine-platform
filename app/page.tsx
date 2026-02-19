@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState, ReactNode, useCallback } from "react";
+import { useEffect, useState, ReactNode, useCallback } from "react";
+import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 
 /* ─────────────────────────────────────────────
@@ -17,30 +18,17 @@ function hexToRgb(hex: string): string {
   return `${r},${g},${b}`;
 }
 
-function useReveal(threshold: number = 0.15) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.unobserve(el); } },
-      { threshold }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [threshold]);
-  return { ref, visible };
-}
-
 function Reveal({ children, delay = 0, className = "" }: { children: ReactNode; delay?: number; className?: string }) {
-  const { ref, visible } = useReveal();
   return (
-    <div ref={ref} className={className} style={{
-      opacity: visible ? 1 : 0,
-      transform: visible ? "translateY(0)" : "translateY(30px)",
-      transition: `opacity 0.9s cubic-bezier(0.25,0.46,0.45,0.94) ${delay}s, transform 0.9s cubic-bezier(0.25,0.46,0.45,0.94) ${delay}s`,
-    }}>{children}</div>
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.7, delay, ease: [0.25, 0.46, 0.45, 0.94] as unknown as [number, number, number, number] }}
+      className={className}
+    >
+      {children}
+    </motion.div>
   );
 }
 
@@ -336,7 +324,7 @@ export default function Home() {
 
           {/* Video */}
           <Reveal delay={0.3}>
-            <div className="rounded-2xl overflow-hidden mb-10 max-w-3xl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+            <div className="glass overflow-hidden mb-10 max-w-3xl">
               {s("intro_video_url") ? (
                 <video src={s("intro_video_url")} controls className="w-full aspect-video" poster="" />
               ) : (
@@ -420,8 +408,8 @@ export default function Home() {
           <div className="grid md:grid-cols-2 gap-6">
             {steps.map((step, i) => (
               <Reveal key={step.num} delay={i * 0.1}>
-                <div className="relative p-8 rounded-2xl h-full transition-all duration-500 hover:-translate-y-1"
-                  style={{ background: `${step.color}08`, border: `1px solid ${step.color}20` }}>
+                <div className="glass glass-hover relative p-8 h-full"
+                  style={{ borderColor: `${step.color}20` }}>
                   <div className="flex items-center gap-4 mb-4">
                     <span className="text-3xl">{step.icon}</span>
                     <div>
@@ -455,10 +443,9 @@ export default function Home() {
           <Reveal delay={0.2}>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
               {encyclopediaItems.map((d, i) => (
-                <div key={d} className="px-4 py-3 rounded-xl text-center text-sm transition-all duration-200 cursor-default"
+                <div key={d} className="glass glass-hover px-4 py-3 text-center text-sm cursor-default"
                   style={{
-                    background: i === encyclopediaItems.length - 1 ? `rgba(${goldRgb},0.08)` : 'var(--dark-card)',
-                    border: i === encyclopediaItems.length - 1 ? `1px solid rgba(${goldRgb},0.2)` : '1px solid var(--dark-border)',
+                    borderColor: i === encyclopediaItems.length - 1 ? `rgba(${goldRgb},0.2)` : undefined,
                     color: i === encyclopediaItems.length - 1 ? gold : 'var(--text-secondary)',
                   }}>
                   {d}
@@ -486,7 +473,7 @@ export default function Home() {
           <div className="space-y-5">
             {communityBlocks.filter(b => b.title).map((item, i) => (
               <Reveal key={item.title} delay={i * 0.1}>
-                <div className="p-6 md:p-8 rounded-xl" style={{ background: `rgba(${goldRgb},0.03)`, border: `1px solid rgba(${goldRgb},0.08)` }}>
+                <div className="glass glass-hover p-6 md:p-8" style={{ borderColor: `rgba(${goldRgb},0.1)` }}>
                   <h3 className="font-display text-xl font-medium mb-3" style={{ color: gold }}>{item.title}</h3>
                   <p className="text-[var(--text-secondary)] leading-relaxed text-[15px] font-light">{item.desc}</p>
                 </div>
@@ -506,8 +493,7 @@ export default function Home() {
           <div className="grid md:grid-cols-2 gap-8">
             {testimonials.filter(t => t.quote).map((t, i) => (
               <Reveal key={i} delay={i * 0.1}>
-                <div className="p-6 md:p-8 rounded-xl h-full flex flex-col justify-between"
-                  style={{ background: "var(--dark-card)", border: "1px solid var(--dark-border)" }}>
+                <div className="glass glass-hover p-6 md:p-8 h-full flex flex-col justify-between">
                   <p className="font-display text-lg italic text-[var(--text-primary)] leading-relaxed font-light mb-6">
                     {"\u00ab"} {t.quote} {"\u00bb"}
                   </p>
@@ -536,7 +522,7 @@ export default function Home() {
           <div className="grid md:grid-cols-2 gap-6">
             {/* Essentiel */}
             <Reveal delay={0.1}>
-              <div className="p-8 md:p-10 rounded-2xl h-full flex flex-col" style={{ background: `rgba(${goldRgb},0.04)`, border: `1px solid rgba(${goldRgb},0.12)` }}>
+              <div className="glass glass-hover p-8 md:p-10 h-full flex flex-col" style={{ borderColor: `rgba(${goldRgb},0.12)` }}>
                 <p className="text-sm tracking-[0.2em] text-[var(--text-muted)] uppercase mb-4">Essentiel</p>
                 <div className="flex items-baseline gap-1 mb-6">
                   <span className="font-display text-5xl font-light" style={{ color: gold }}>{priceEssential}{"\u20ac"}</span>
@@ -560,7 +546,7 @@ export default function Home() {
 
             {/* Premium */}
             <Reveal delay={0.2}>
-              <div className="p-8 md:p-10 rounded-2xl h-full flex flex-col relative overflow-hidden" style={{ background: `rgba(${accentRgb},0.04)`, border: `1px solid rgba(${accentRgb},0.15)` }}>
+              <div className="glass glass-hover p-8 md:p-10 h-full flex flex-col relative overflow-hidden" style={{ borderColor: `rgba(${accentRgb},0.15)` }}>
                 <div className="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-medium" style={{ background: `rgba(${accentRgb},0.15)`, color: accent }}>
                   {"Recommand\u00e9"}
                 </div>

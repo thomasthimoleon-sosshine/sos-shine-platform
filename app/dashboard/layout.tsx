@@ -175,9 +175,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--dark)' }}>
-        <div className="text-center">
-          <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p style={{ color: 'var(--text-secondary)' }}>Chargement de votre espace...</p>
+        <div className="text-center space-y-4">
+          <div className="w-10 h-10 rounded-2xl mx-auto flex items-center justify-center"
+            style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))' }}>
+            <div className="w-5 h-5 border-2 border-[var(--dark)] border-t-transparent rounded-full animate-spin" />
+          </div>
+          <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Chargement...</p>
         </div>
       </div>
     )
@@ -185,45 +188,76 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="min-h-screen flex" style={{ background: 'var(--dark)' }}>
-      {sidebarOpen && <div className="fixed inset-0 bg-black/60 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />}
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 lg:hidden"
+          style={{ background: 'rgba(0, 0, 0, 0.6)', backdropFilter: 'blur(4px)' }}
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
 
-      {/* Sidebar */}
-      <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-72 flex flex-col transition-transform duration-300 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
-        style={{ background: 'var(--dark-card)', borderRight: '1px solid var(--dark-border)' }}>
-
+      {/* ── Sidebar ── */}
+      <aside
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-[17rem] flex flex-col transition-transform duration-300 ease-out lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        style={{
+          background: 'rgba(9, 9, 11, 0.85)',
+          backdropFilter: 'blur(24px) saturate(1.3)',
+          WebkitBackdropFilter: 'blur(24px) saturate(1.3)',
+          borderRight: '1px solid var(--dark-border)',
+        }}
+      >
         {/* Logo */}
-        <div className="p-6 flex items-center gap-3" style={{ borderBottom: '1px solid var(--dark-border)' }}>
-          <Link href="/dashboard" className="flex items-center gap-3" onClick={() => setSidebarOpen(false)}>
+        <div className="px-5 py-5 flex items-center gap-3" style={{ borderBottom: '1px solid var(--dark-border)' }}>
+          <Link href="/dashboard" className="flex items-center gap-3 group" onClick={() => setSidebarOpen(false)}>
             {logoUrl ? (
-              <img src={logoUrl} alt="SOS Shine" className="w-10 h-10 rounded-xl object-cover" />
+              <img src={logoUrl} alt="SOS Shine" className="w-9 h-9 rounded-xl object-cover ring-1 ring-white/10" />
             ) : (
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center font-display text-lg font-semibold"
-                style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: 'var(--dark)' }}>S</div>
+              <div
+                className="w-9 h-9 rounded-xl flex items-center justify-center font-display text-base font-semibold"
+                style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#09090b' }}
+              >
+                S
+              </div>
             )}
             <div>
-              <h1 className="font-display text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>SOS Shine</h1>
-              <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Votre espace</p>
+              <h1 className="font-display text-base font-semibold tracking-tight" style={{ color: 'var(--text-primary)' }}>
+                SOS Shine
+              </h1>
+              <p className="text-[11px] leading-none" style={{ color: 'var(--text-muted)' }}>Votre espace</p>
             </div>
           </Link>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+        <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
           {navItems.map((item) => {
             const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href))
             return (
-              <Link key={item.href} href={item.href} onClick={() => setSidebarOpen(false)}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${isActive ? 'shadow-lg' : 'hover:translate-x-1'}`}
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setSidebarOpen(false)}
+                className="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium relative group"
                 style={{
-                  background: isActive ? 'rgba(212,175,55,0.1)' : 'transparent',
+                  background: isActive ? 'rgba(212, 175, 55, 0.08)' : 'transparent',
                   color: isActive ? 'var(--gold)' : 'var(--text-secondary)',
-                  borderLeft: isActive ? '3px solid var(--gold)' : '3px solid transparent',
-                }}>
-                {item.icon}
+                }}
+              >
+                {/* Active indicator bar */}
+                {isActive && (
+                  <span
+                    className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-full"
+                    style={{ background: 'var(--gold)' }}
+                  />
+                )}
+                <span className="opacity-70 group-hover:opacity-100 transition-opacity">{item.icon}</span>
                 {item.label}
                 {'hasBadge' in item && item.hasBadge && unreadMessages > 0 && (
-                  <span className="ml-auto w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold animate-pulse"
-                    style={{ background: '#EF4444', color: '#fff' }}>
+                  <span
+                    className="ml-auto min-w-[18px] h-[18px] rounded-full flex items-center justify-center text-[10px] font-bold animate-pulse"
+                    style={{ background: '#EF4444', color: '#fff' }}
+                  >
                     {unreadMessages > 9 ? '9+' : unreadMessages}
                   </span>
                 )}
@@ -234,39 +268,52 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {/* Admin link */}
           {isAdmin && (
             <>
-              <div className="pt-4 pb-2 px-4">
-                <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Administration</span>
+              <div className="pt-5 pb-1.5 px-3">
+                <span className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>
+                  Administration
+                </span>
               </div>
-              <Link href="/admin" onClick={() => setSidebarOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 hover:translate-x-1"
-                style={{ color: '#74C0FC' }}>
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
+              <Link
+                href="/admin"
+                onClick={() => setSidebarOpen(false)}
+                className="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium group"
+                style={{ color: '#74C0FC' }}
+              >
+                <span className="opacity-70 group-hover:opacity-100 transition-opacity">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </span>
                 Back-office
               </Link>
             </>
           )}
         </nav>
 
-        {/* User section */}
-        <div className="p-4" style={{ borderTop: '1px solid var(--dark-border)' }}>
-          <div className="flex items-center gap-3 mb-3 px-2">
-            <div className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold"
-              style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>
+        {/* ── User section ── */}
+        <div className="px-3 py-4" style={{ borderTop: '1px solid var(--dark-border)' }}>
+          <div className="flex items-center gap-3 px-3 py-2 rounded-xl mb-2" style={{ background: 'rgba(255, 255, 255, 0.02)' }}>
+            <div
+              className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 ring-1 ring-white/10"
+              style={{ background: 'rgba(212, 175, 55, 0.12)', color: 'var(--gold)' }}
+            >
               {profile?.prenom?.charAt(0).toUpperCase() || 'M'}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate" style={{ color: 'var(--text-primary)' }}>{profile?.prenom || 'Membre'}</p>
-              <p className="text-xs truncate" style={{ color: 'var(--text-muted)' }}>{profile?.email}</p>
+              <p className="text-[13px] font-medium truncate" style={{ color: 'var(--text-primary)' }}>
+                {profile?.prenom || 'Membre'}
+              </p>
+              <p className="text-[11px] truncate" style={{ color: 'var(--text-muted)' }}>
+                {profile?.email}
+              </p>
             </div>
           </div>
-          <button onClick={handleSignOut}
-            className="w-full flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm transition-all duration-200 cursor-pointer"
-            style={{ color: 'var(--text-muted)', background: 'transparent' }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.color = 'var(--text-secondary)' }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)' }}>
+          <button
+            onClick={handleSignOut}
+            className="nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-[13px] cursor-pointer"
+            style={{ color: 'var(--text-muted)' }}
+          >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
             </svg>
@@ -275,23 +322,41 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
       </aside>
 
-      {/* Main */}
+      {/* ── Main content area ── */}
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="lg:hidden flex items-center justify-between px-4 py-3 sticky top-0 z-30"
-          style={{ background: 'var(--dark-card)', borderBottom: '1px solid var(--dark-border)' }}>
-          <button onClick={() => setSidebarOpen(true)} className="p-2 rounded-lg cursor-pointer" style={{ color: 'var(--text-secondary)' }}>
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        {/* Mobile topbar */}
+        <header
+          className="lg:hidden flex items-center justify-between px-4 py-3 sticky top-0 z-30"
+          style={{
+            background: 'rgba(9, 9, 11, 0.85)',
+            backdropFilter: 'blur(20px) saturate(1.2)',
+            WebkitBackdropFilter: 'blur(20px) saturate(1.2)',
+            borderBottom: '1px solid var(--dark-border)',
+          }}
+        >
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="p-2 rounded-xl cursor-pointer transition-colors"
+            style={{ color: 'var(--text-secondary)' }}
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
             </svg>
           </button>
           {logoUrl ? (
-            <img src={logoUrl} alt="SOS Shine" className="h-8 rounded-lg object-cover" />
+            <img src={logoUrl} alt="SOS Shine" className="h-7 rounded-lg object-cover ring-1 ring-white/10" />
           ) : (
-            <span className="font-display text-lg font-semibold" style={{ color: 'var(--gold)' }}>SOS Shine</span>
+            <span className="font-display text-base font-semibold tracking-tight" style={{ color: 'var(--gold)' }}>
+              SOS Shine
+            </span>
           )}
-          <div className="w-10" />
+          <div className="w-9" />
         </header>
+
+        {/* Page content */}
         <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">{children}</main>
+
+        {/* Incoming call modal (logique intacte) */}
         {incomingCall && (
           <IncomingCallModal call={incomingCall} onAccept={handleAcceptCall} onReject={handleRejectCall} />
         )}

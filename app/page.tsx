@@ -54,6 +54,47 @@ function GoldDivider() {
   );
 }
 
+/* ─── Sparkling Diamonds Overlay ─── */
+const DIAMONDS = [
+  { top: '3%', left: '8%', duration: '7s', delay: '0s', size: 5 },
+  { top: '7%', left: '85%', duration: '9s', delay: '1.2s', size: 4 },
+  { top: '12%', left: '45%', duration: '6s', delay: '2.8s', size: 3 },
+  { top: '18%', left: '92%', duration: '8s', delay: '0.5s', size: 5 },
+  { top: '22%', left: '15%', duration: '10s', delay: '3.5s', size: 4 },
+  { top: '28%', left: '72%', duration: '7s', delay: '1.8s', size: 3 },
+  { top: '33%', left: '5%', duration: '9s', delay: '4.2s', size: 5 },
+  { top: '38%', left: '55%', duration: '6s', delay: '0.8s', size: 4 },
+  { top: '42%', left: '88%', duration: '8s', delay: '2.5s', size: 3 },
+  { top: '48%', left: '28%', duration: '7s', delay: '1.5s', size: 5 },
+  { top: '52%', left: '68%', duration: '10s', delay: '3.8s', size: 4 },
+  { top: '56%', left: '10%', duration: '6s', delay: '0.3s', size: 3 },
+  { top: '62%', left: '78%', duration: '9s', delay: '2.1s', size: 5 },
+  { top: '67%', left: '38%', duration: '7s', delay: '4.5s', size: 4 },
+  { top: '72%', left: '95%', duration: '8s', delay: '1.1s', size: 3 },
+  { top: '76%', left: '22%', duration: '6s', delay: '3.2s', size: 5 },
+  { top: '82%', left: '62%', duration: '10s', delay: '0.7s', size: 4 },
+  { top: '87%', left: '3%', duration: '7s', delay: '2.9s', size: 3 },
+  { top: '91%', left: '82%', duration: '9s', delay: '1.6s', size: 5 },
+  { top: '96%', left: '48%', duration: '6s', delay: '4.0s', size: 4 },
+];
+
+function SparklingDiamonds() {
+  return (
+    <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 1 }}>
+      {DIAMONDS.map((d, i) => (
+        <div key={i} className="diamond-sparkle" style={{
+          top: d.top,
+          left: d.left,
+          width: d.size + 'px',
+          height: d.size + 'px',
+          ['--duration' as string]: d.duration,
+          ['--delay' as string]: d.delay,
+        }} />
+      ))}
+    </div>
+  );
+}
+
 // Default values (used when no settings in DB)
 const DEFAULTS: Record<string, string> = {
   color_primary: "#D4AF37",
@@ -251,6 +292,9 @@ export default function Home() {
 
   return (
     <main className="grain relative z-0 overflow-hidden" style={cssVars}>
+
+      {/* Sparkling Diamonds */}
+      <SparklingDiamonds />
 
       {/* HERO */}
       <section className="relative min-h-screen flex items-center">

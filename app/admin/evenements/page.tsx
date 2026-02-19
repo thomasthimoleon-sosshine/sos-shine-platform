@@ -25,6 +25,8 @@ const EMPTY_FORM = {
   description: '',
   event_type: 'soin_collectif' as Event['event_type'],
   location_name: '',
+  latitude: '',
+  longitude: '',
   event_date: '',
   price: 0,
   max_participants: '',
@@ -95,6 +97,8 @@ export default function AdminEvenements() {
       description: event.description || '',
       event_type: event.event_type,
       location_name: event.location_name || '',
+      latitude: event.latitude != null ? String(event.latitude) : '',
+      longitude: event.longitude != null ? String(event.longitude) : '',
       event_date: event.event_date ? event.event_date.slice(0, 16) : '',
       price: event.price,
       max_participants: event.max_participants != null ? String(event.max_participants) : '',
@@ -125,8 +129,8 @@ export default function AdminEvenements() {
       description: form.description.trim() || null,
       event_type: form.event_type,
       location_name: form.location_name.trim() || null,
-      latitude: null as number | null,
-      longitude: null as number | null,
+      latitude: form.latitude ? Number(form.latitude) : null,
+      longitude: form.longitude ? Number(form.longitude) : null,
       event_date: new Date(form.event_date).toISOString(),
       price: Number(form.price) || 0,
       max_participants: form.max_participants ? Number(form.max_participants) : null,
@@ -305,6 +309,32 @@ export default function AdminEvenements() {
                 type="datetime-local"
                 value={form.event_date}
                 onChange={(e) => setForm({ ...form, event_date: e.target.value })}
+                style={inputStyle}
+              />
+            </div>
+          </div>
+
+          {/* Row 2b: latitude + longitude (for map) */}
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label style={labelStyle}>Latitude <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>(pour la carte)</span></label>
+              <input
+                type="number"
+                step="any"
+                value={form.latitude}
+                onChange={(e) => setForm({ ...form, latitude: e.target.value })}
+                placeholder="Ex: 48.8566"
+                style={inputStyle}
+              />
+            </div>
+            <div>
+              <label style={labelStyle}>Longitude <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>(pour la carte)</span></label>
+              <input
+                type="number"
+                step="any"
+                value={form.longitude}
+                onChange={(e) => setForm({ ...form, longitude: e.target.value })}
+                placeholder="Ex: 2.3522"
                 style={inputStyle}
               />
             </div>

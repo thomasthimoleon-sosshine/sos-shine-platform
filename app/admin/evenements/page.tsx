@@ -57,6 +57,32 @@ export default function AdminEvenements() {
   const [togglingId, setTogglingId] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
+  const [geocoding, setGeocoding] = useState(false)
+  const [geocodeResult, setGeocodeResult] = useState<string | null>(null)
+
+  async function geocodeCity(city: string) {
+    if (!city || city.trim().length < 2) return
+    setGeocoding(true)
+    setGeocodeResult(null)
+    try {
+      const res = await fetch(`/api/geocode?city=${encodeURIComponent(city.trim())}`)
+      const data = await res.json()
+      if (res.ok && data.latitude != null && data.longitude != null) {
+        setForm(prev => ({
+          ...prev,
+          latitude: String(data.latitude),
+          longitude: String(data.longitude),
+        }))
+        setGeocodeResult(data.display_name)
+      } else {
+        setGeocodeResult(data.error || 'Ville introuvable')
+      }
+    } catch {
+      setGeocodeResult('Erreur de connexion')
+    } finally {
+      setGeocoding(false)
+    }
+  }
 
   const loadEvents = useCallback(async () => {
     const supabase = createClient()
@@ -88,6 +114,7 @@ export default function AdminEvenements() {
     setForm(EMPTY_FORM)
     setShowForm(true)
     setError(null)
+    setGeocodeResult(null)
   }
 
   function openEditForm(event: Event) {
@@ -114,6 +141,7 @@ export default function AdminEvenements() {
     setEditingId(null)
     setForm(EMPTY_FORM)
     setError(null)
+    setGeocodeResult(null)
   }
 
   async function handleSave() {
@@ -122,6 +150,23 @@ export default function AdminEvenements() {
 
     setSaving(true)
     setError(null)
+
+    // Auto-géocodage si ville renseignée mais pas de coordonnées
+    let lat = form.latitude ? Number(form.latitude) : null
+    let lng = form.longitude ? Number(form.longitude) : null
+    if (form.location_name.trim() && (!lat || !lng)) {
+      try {
+        const geoRes = await fetch(`/api/geocode?city=${encodeURIComponent(form.location_name.trim())}`)
+        const geoData = await geoRes.json()
+        if (geoRes.ok && geoData.latitude != null && geoData.longitude != null) {
+          lat = geoData.latitude
+          lng = geoData.longitude
+        }
+      } catch {
+        // On continue sans coordonnées si le géocodage échoue
+      }
+    }
+
     const supabase = createClient()
 
     const payload = {
@@ -129,8 +174,8 @@ export default function AdminEvenements() {
       description: form.description.trim() || null,
       event_type: form.event_type,
       location_name: form.location_name.trim() || null,
-      latitude: form.latitude ? Number(form.latitude) : null,
-      longitude: form.longitude ? Number(form.longitude) : null,
+      latitude: lat,
+      longitude: lng,
       event_date: new Date(form.event_date).toISOString(),
       price: Number(form.price) || 0,
       max_participants: form.max_participants ? Number(form.max_participants) : null,
@@ -291,53 +336,67 @@ export default function AdminEvenements() {
             />
           </div>
 
-          {/* Row 2: location + date */}
-          <div className="grid sm:grid-cols-2 gap-4">
-            <div>
-              <label style={labelStyle}>Lieu</label>
+          {/* Row 2: date */}
+          <div>
+            <label style={labelStyle}>Date et heure *</label>
+            <input
+              type="datetime-local"
+              value={form.event_date}
+              onChange={(e) => setForm({ ...form, event_date: e.target.value })}
+              style={inputStyle}
+            />
+          </div>
+
+          {/* Row 2b: Ville pour géocodage automatique */}
+          <div>
+            <label style={labelStyle}>
+              Ville <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>(pour positionner sur le globe)</span>
+            </label>
+            <div className="flex gap-2">
               <input
                 type="text"
                 value={form.location_name}
                 onChange={(e) => setForm({ ...form, location_name: e.target.value })}
-                placeholder="Ex: Paris 11e / En ligne"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    geocodeCity(form.location_name)
+                  }
+                }}
+                placeholder="Ex: Paris, Lyon, Bali, New York..."
                 style={inputStyle}
               />
+              <button
+                type="button"
+                onClick={() => geocodeCity(form.location_name)}
+                disabled={geocoding || !form.location_name.trim()}
+                className="px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-200 whitespace-nowrap disabled:opacity-40"
+                style={{
+                  background: geocoding ? 'rgba(116,192,252,0.15)' : 'rgba(116,192,252,0.2)',
+                  color: '#74C0FC',
+                  border: '1px solid rgba(116,192,252,0.3)',
+                }}
+              >
+                {geocoding ? 'Recherche...' : 'Localiser'}
+              </button>
             </div>
-            <div>
-              <label style={labelStyle}>Date et heure *</label>
-              <input
-                type="datetime-local"
-                value={form.event_date}
-                onChange={(e) => setForm({ ...form, event_date: e.target.value })}
-                style={inputStyle}
-              />
-            </div>
-          </div>
-
-          {/* Row 2b: latitude + longitude (for map) */}
-          <div className="grid sm:grid-cols-2 gap-4">
-            <div>
-              <label style={labelStyle}>Latitude <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>(pour la carte)</span></label>
-              <input
-                type="number"
-                step="any"
-                value={form.latitude}
-                onChange={(e) => setForm({ ...form, latitude: e.target.value })}
-                placeholder="Ex: 48.8566"
-                style={inputStyle}
-              />
-            </div>
-            <div>
-              <label style={labelStyle}>Longitude <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>(pour la carte)</span></label>
-              <input
-                type="number"
-                step="any"
-                value={form.longitude}
-                onChange={(e) => setForm({ ...form, longitude: e.target.value })}
-                placeholder="Ex: 2.3522"
-                style={inputStyle}
-              />
-            </div>
+            {geocodeResult && (
+              <p
+                className="mt-1.5 text-xs"
+                style={{
+                  color: form.latitude && form.longitude ? '#55EFC4' : '#E17055',
+                }}
+              >
+                {form.latitude && form.longitude
+                  ? `Coordonnées trouvées (${Number(form.latitude).toFixed(4)}, ${Number(form.longitude).toFixed(4)})`
+                  : geocodeResult}
+              </p>
+            )}
+            {form.latitude && form.longitude && !geocodeResult && (
+              <p className="mt-1.5 text-xs" style={{ color: 'var(--text-muted)' }}>
+                Coordonnées actuelles : {Number(form.latitude).toFixed(4)}, {Number(form.longitude).toFixed(4)}
+              </p>
+            )}
           </div>
 
           {/* Row 3: price + max_participants */}

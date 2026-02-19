@@ -174,6 +174,20 @@ export type SiteSetting = {
   updated_at: string
 }
 
+// ── Landing Sections (CMS landing page) ──
+export type LandingSection = {
+  id: string
+  section_key: string
+  label: string
+  position: number
+  is_visible: boolean
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  content: Record<string, any>
+  styles: Record<string, string>
+  updated_by: string | null
+  updated_at: string
+}
+
 // ── Helper: columns with DB defaults are optional on Insert ──
 type DefaultColumns = 'id' | 'created_at' | 'updated_at' | 'audio_url' | 'message_type' | 'status' | 'room_code' | 'call_type' | 'event_type' | 'target_user_id' | 'room_id'
 type OptionalId<T> = Omit<T, Extract<DefaultColumns, keyof T>> &
@@ -204,6 +218,7 @@ export type Database = {
       signaling_rooms: Table<SignalingRoom>
       group_events: Table<GroupEvent>
       site_settings: Table<SiteSetting>
+      landing_sections: Table<LandingSection>
     }
     Views: Record<string, never>
     Functions: Record<string, never>

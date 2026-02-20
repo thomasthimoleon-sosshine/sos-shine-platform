@@ -86,7 +86,7 @@ export default function PublicEncyclopediePage() {
       <div className="max-w-5xl mx-auto px-6 md:px-8 py-12 space-y-8">
         {/* Header */}
         <div>
-          <h1 className="font-display text-3xl sm:text-4xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+          <h1 className="font-display text-3xl sm:text-4xl font-semibold">
             Encyclopédie des douleurs
           </h1>
           <p className="mt-2" style={{ color: 'var(--text-secondary)' }}>
@@ -228,7 +228,7 @@ export default function PublicEncyclopediePage() {
 
         {/* CTA Banner */}
         <div className="rounded-2xl p-8 text-center" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.15)' }}>
-          <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+          <h3 className="font-display text-xl font-semibold mb-2">
             Accédez à tous les protocoles
           </h3>
           <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>

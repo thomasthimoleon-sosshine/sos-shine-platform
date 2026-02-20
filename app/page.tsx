@@ -181,6 +181,8 @@ export default function Home() {
 
   // ── Style helpers ──
   const fontMap: Record<string, string> = {
+    "Cinzel": "'Cinzel', serif",
+    "Montserrat": "'Montserrat', sans-serif",
     "Cormorant Garamond": "'Cormorant Garamond', serif",
     "DM Sans": "'DM Sans', sans-serif",
     "Georgia": "Georgia, serif",
@@ -376,7 +378,7 @@ export default function Home() {
                     style={{ borderColor: `${step.color}20` }}>
                     <div className="mb-4">
                       <span className="font-display text-sm font-light block" style={{ color: step.color, opacity: 0.6 }}>{"\u00c9tape "}{step.num}</span>
-                      <h3 className="font-display text-xl font-medium" style={{ color: step.color }}>{step.title}</h3>
+                      <h3 className="font-display text-xl font-medium">{step.title}</h3>
                     </div>
                     <p className="text-[var(--text-secondary)] leading-relaxed text-[15px] font-light">{step.description}</p>
                   </div>
@@ -439,7 +441,7 @@ export default function Home() {
               {(comm.blocks || []).filter((b: { title: string; description: string }) => b.title).map((item: { title: string; description: string }, i: number) => (
                 <Reveal key={item.title} delay={i * 0.1}>
                   <div className="glass glass-hover p-6 md:p-8" style={{ borderColor: `rgba(${goldRgb},0.1)` }}>
-                    <h3 className="font-display text-xl font-medium mb-3" style={{ color: gold }}>{item.title}</h3>
+                    <h3 className="font-display text-xl font-medium mb-3">{item.title}</h3>
                     <p className="text-[var(--text-secondary)] leading-relaxed text-[15px] font-light">{item.description}</p>
                   </div>
                 </Reveal>

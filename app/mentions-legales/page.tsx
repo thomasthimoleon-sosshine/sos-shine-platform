@@ -40,7 +40,7 @@ export default function MentionsLegalesPage() {
           <Link href="/"><img src={settings.logo_url} alt="SOS Shine" className="h-10 mb-6 rounded-lg object-cover" /></Link>
         )}
 
-        <h1 className="font-display text-3xl md:text-4xl font-semibold mb-8" style={{ color: 'var(--text-primary)' }}>
+        <h1 className="font-display text-3xl md:text-4xl font-semibold mb-8">
           {title}
         </h1>
 

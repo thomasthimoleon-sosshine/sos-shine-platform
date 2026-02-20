@@ -112,9 +112,9 @@ export default function RejoindrePage() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
               </svg>
             </div>
-            <h1 className="font-display text-3xl sm:text-4xl font-light leading-tight mb-4" style={{ color: 'var(--text-primary)' }}>
+            <h1 className="font-display text-3xl sm:text-4xl font-light leading-tight mb-4">
               Tout ce qui vous attend<br />
-              <span style={{ color: 'var(--gold)' }}>à l&apos;intérieur</span>
+              à l&apos;intérieur
             </h1>
             <p className="text-lg leading-relaxed max-w-xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
               Un espace complet pour comprendre, apaiser et transformer vos douleurs émotionnelles. Accessible 24h/24, 7j/7.
@@ -131,7 +131,7 @@ export default function RejoindrePage() {
                   style={{ background: `${feature.color}12`, color: feature.color }}>
                   {feature.icon}
                 </div>
-                <h3 className="font-semibold text-[15px] mb-1.5" style={{ color: 'var(--text-primary)' }}>
+                <h3 className="font-semibold text-[15px] mb-1.5">
                   {feature.title}
                 </h3>
                 <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>

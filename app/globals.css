@@ -1,19 +1,23 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Montserrat:wght@300;400;500&display=swap');
 
 /* ═══════════════════════════════════════════════════════════════
-   SOS SHINE — Design System v2 (Abyssal Premium)
+   SOS SHINE — Design System v3 (Abyssal Premium — Cinzel / Montserrat)
    Standard : Linear / Framer / LeClub10
 ═══════════════════════════════════════════════════════════════ */
 
 /* ── 1. Design Tokens ── */
 :root {
-  /* Accents — Gold (inchangé, identité de marque) */
+  /* Accents — Gold (identité de marque) */
   --gold: #D4AF37;
   --gold-light: #E8CC6E;
   --gold-deep: #B8960F;
 
-  /* Fond abyssal — Zinc 950 */
-  --dark: #09090b;
+  /* Dégradé or premium (titres) */
+  --gold-gradient: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+
+  /* Fond abyssal */
+  --dark: #050505;
   --dark-card: rgba(255, 255, 255, 0.03);
   --dark-card-hover: rgba(255, 255, 255, 0.055);
   --dark-border: rgba(255, 255, 255, 0.06);
@@ -23,9 +27,10 @@
   --surface-elevated: rgba(255, 255, 255, 0.06);
 
   /* Textes */
-  --text-primary: #fafafa;
+  --text-primary: #e0e0e0;
   --text-secondary: #a1a1aa;
   --text-muted: #52525b;
+  --text-bold: #c5a059;
 
   /* Utilitaires */
   --button-bg: #D4AF37;
@@ -41,8 +46,8 @@
 @theme inline {
   --color-background: var(--dark);
   --color-foreground: var(--text-primary);
-  --font-sans: var(--font-dm-sans);
-  --font-display: var(--font-cormorant);
+  --font-sans: 'Montserrat', var(--font-dm-sans), system-ui, sans-serif;
+  --font-display: 'Cinzel', var(--font-cormorant), serif;
 }
 
 /* ── 3. Base Resets ── */
@@ -51,15 +56,32 @@ html {
 }
 
 body {
-  background: var(--dark);
-  color: var(--text-primary);
-  font-family: var(--font-dm-sans), 'DM Sans', system-ui, sans-serif;
+  background: #050505;
+  color: #e0e0e0;
+  font-family: 'Montserrat', var(--font-dm-sans), 'DM Sans', system-ui, sans-serif;
+  font-weight: 300;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Textes en gras → or cuivré */
+strong, b {
+  color: #c5a059;
+}
+
+/* Police d'affichage (titres) */
 .font-display {
-  font-family: var(--font-cormorant), 'Cormorant Garamond', serif;
+  font-family: 'Cinzel', var(--font-cormorant), 'Cormorant Garamond', serif;
+}
+
+/* Dégradé or sur TOUS les titres (important pour surcharger les inline styles) */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Cinzel', var(--font-cormorant), 'Cormorant Garamond', serif !important;
+  background: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  color: transparent !important;
 }
 
 ::selection {

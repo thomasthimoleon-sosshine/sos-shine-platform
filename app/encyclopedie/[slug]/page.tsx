@@ -102,7 +102,7 @@ export default function PublicDouleurDetailPage() {
           </Link>
         </header>
         <div className="max-w-3xl mx-auto text-center py-20 px-6">
-          <h2 className="font-display text-2xl font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
+          <h2 className="font-display text-2xl font-semibold mb-4">
             Douleur non trouvée
           </h2>
           <p className="mb-6" style={{ color: 'var(--text-secondary)' }}>
@@ -166,7 +166,7 @@ export default function PublicDouleurDetailPage() {
 
         {/* Header */}
         <div>
-          <h1 className="font-display text-3xl sm:text-4xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+          <h1 className="font-display text-3xl sm:text-4xl font-semibold">
             {douleur.title}
           </h1>
           <p className="mt-2 text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
@@ -206,7 +206,7 @@ export default function PublicDouleurDetailPage() {
               <span className="text-xs font-medium block" style={{ color: currentStep.color, opacity: 0.7 }}>
                 Étape {currentStep.num}/4
               </span>
-              <h2 className="font-display text-xl font-semibold" style={{ color: currentStep.color }}>
+              <h2 className="font-display text-xl font-semibold">
                 {currentStep.title}
               </h2>
               <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{currentStep.subtitle}</p>
@@ -410,7 +410,7 @@ export default function PublicDouleurDetailPage() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
             </svg>
           </div>
-          <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+          <h3 className="font-display text-xl font-semibold mb-2">
             Débloquez le protocole complet
           </h3>
           <p className="text-sm mb-5 max-w-md mx-auto" style={{ color: 'var(--text-secondary)' }}>
@@ -438,7 +438,7 @@ export default function PublicDouleurDetailPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
               </svg>
             </div>
-            <h3 className="font-display text-2xl font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>
+            <h3 className="font-display text-2xl font-semibold mb-3">
               Contenu réservé
             </h3>
             <p className="text-sm mb-6 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>

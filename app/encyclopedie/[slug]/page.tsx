@@ -1,16 +1,17 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import type { Douleur } from '@/types/database'
 
-// Lien de paiement Stripe (29,90€/mois)
-const SIGNUP_URL = 'https://buy.stripe.com/4gM28j89S7t9c3n2Ke5ZC0c'
+// Page récapitulative avant paiement
+const SIGNUP_URL = '/rejoindre'
 
 export default function PublicDouleurDetailPage() {
   const params = useParams()
+  const router = useRouter()
   const slug = params.slug as string
   const [douleur, setDouleur] = useState<Douleur | null>(null)
   const [loading, setLoading] = useState(true)
@@ -79,7 +80,7 @@ export default function PublicDouleurDetailPage() {
   }
 
   function goToSignup() {
-    window.open(SIGNUP_URL, '_blank', 'noopener,noreferrer')
+    router.push(SIGNUP_URL)
   }
 
   if (loading) {
@@ -139,15 +140,13 @@ export default function PublicDouleurDetailPage() {
           </div>
           <span className="font-display text-lg font-medium" style={{ color: 'var(--gold)' }}>SOS Shine</span>
         </Link>
-        <a
+        <Link
           href={SIGNUP_URL}
-          target="_blank"
-          rel="noopener noreferrer"
           className="px-5 py-2.5 rounded-full text-sm font-medium transition-all"
           style={{ background: 'var(--gold)', color: 'var(--dark)' }}
         >
           Rejoindre
-        </a>
+        </Link>
       </header>
 
       <div className="max-w-4xl mx-auto px-6 md:px-8 py-12 space-y-8">
@@ -417,15 +416,13 @@ export default function PublicDouleurDetailPage() {
           <p className="text-sm mb-5 max-w-md mx-auto" style={{ color: 'var(--text-secondary)' }}>
             Accédez à la vidéo, aux soins énergétiques, aux méditations et aux exercices pour &quot;{douleur.title}&quot;.
           </p>
-          <a
+          <Link
             href={SIGNUP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
             className="inline-block px-8 py-3 rounded-full text-sm font-medium transition-all hover:opacity-90"
             style={{ background: 'var(--gold)', color: 'var(--dark)' }}
           >
             Rejoindre SOS Shine — 29,90&euro;/mois
-          </a>
+          </Link>
           <p className="text-xs mt-3" style={{ color: 'var(--text-muted)' }}>
             Accès illimité à toute l&apos;encyclopédie et la communauté
           </p>

@@ -52,6 +52,10 @@
 /* ── 3. Base Resets ── */
 html {
   scroll-behavior: smooth;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 body {
@@ -61,6 +65,49 @@ body {
   font-weight: 300;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-touch-callout: none;
+}
+
+/* ── 15. Security & Protection ── */
+@media print {
+  body {
+    display: none !important;
+  }
+}
+
+.watermark-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.watermark {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.03;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 100px,
+    var(--gold) 100px,
+    var(--gold) 101px
+  );
+  display: flex;
+  flex-wrap: wrap;
+  gap: 100px;
+  padding: 50px;
+  justify-content: space-around;
+  align-content: space-around;
+}
+
+.watermark::after {
+  content: 'SOS SHINE';
+  position: absolute;
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 5px;
+  transform: rotate(-45deg);
 }
 
 /* Textes en gras → or cuivré */

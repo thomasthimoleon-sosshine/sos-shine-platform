@@ -64,7 +64,8 @@ export default function PublicEncyclopediePage() {
   const activeLetters = new Set(letters)
 
   return (
-    <main className="min-h-screen" style={{ background: 'var(--dark)' }}>
+    <main className="min-h-screen watermark-container" style={{ background: 'var(--dark)' }}>
+      <div className="watermark" />
       {/* Header bar */}
       <header className="px-6 md:px-20 py-5 flex items-center justify-between" style={{ borderBottom: '1px solid var(--dark-border)' }}>
         <Link href="/" className="flex items-center gap-3 group">

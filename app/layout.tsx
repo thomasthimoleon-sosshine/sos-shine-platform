@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import ThemeProvider from "@/components/ThemeProvider";
+import SecurityProvider from "@/components/SecurityProvider";
 
 const cormorant = localFont({
   variable: "--font-cormorant",

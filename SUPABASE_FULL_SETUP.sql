@@ -107,22 +107,29 @@ CREATE TABLE IF NOT EXISTS public.landing_sections (
 
 -- Profiles
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Public profiles are viewable by everyone" ON public.profiles;
 CREATE POLICY "Public profiles are viewable by everyone" ON public.profiles FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Users can update own profile" ON public.profiles;
 CREATE POLICY "Users can update own profile" ON public.profiles FOR UPDATE USING (auth.uid() = id);
 
 -- Douleurs
 ALTER TABLE public.douleurs ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Published douleurs are viewable by everyone" ON public.douleurs;
 CREATE POLICY "Published douleurs are viewable by everyone" ON public.douleurs FOR SELECT USING (is_published = true);
 
 -- Subscriptions
 ALTER TABLE public.subscriptions ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Users can view own subscription" ON public.subscriptions;
 CREATE POLICY "Users can view own subscription" ON public.subscriptions FOR SELECT USING (auth.uid() = user_id);
 
 -- Messages
 ALTER TABLE public.messages ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Messages are viewable by members" ON public.messages;
 CREATE POLICY "Messages are viewable by members" ON public.messages FOR SELECT USING (auth.uid() IS NOT NULL);
+DROP POLICY IF EXISTS "Users can insert messages" ON public.messages;
 CREATE POLICY "Users can insert messages" ON public.messages FOR INSERT WITH CHECK (auth.uid() = user_id);
 
 -- Landing Sections
 ALTER TABLE public.landing_sections ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Landing sections are viewable by everyone" ON public.landing_sections;
 CREATE POLICY "Landing sections are viewable by everyone" ON public.landing_sections FOR SELECT USING (true);

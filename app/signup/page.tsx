@@ -23,6 +23,8 @@ const DEFAULTS: Record<string, string> = {
 }
 
 const fontMap: Record<string, string> = {
+  'Cinzel': "'Cinzel', serif",
+  'Montserrat': "'Montserrat', sans-serif",
   'Cormorant Garamond': "'Cormorant Garamond', serif",
   'DM Sans': "'DM Sans', sans-serif",
   'Georgia': 'Georgia, serif',

@@ -49,7 +49,7 @@ export default function DashboardHome() {
     {
       href: '/dashboard/encyclopedie',
       title: 'Encyclopédie',
-      description: 'Toutes les douleurs classées de A à Z, chacune avec son protocole en 4 étapes.',
+      description: 'Toutes les expériences de vie classées de A à Z, chacune avec son protocole en 4 étapes.',
       icon: (
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
@@ -139,7 +139,7 @@ export default function DashboardHome() {
           style={{ background: 'radial-gradient(circle, rgba(212, 175, 55, 0.08), transparent 70%)' }}
         />
         <p className="font-display text-xl sm:text-2xl italic leading-relaxed relative" style={{ color: 'var(--text-primary)' }}>
-          &ldquo;On ne change pas votre identité. On éteint la douleur pour libérer votre potentiel.&rdquo;
+          &ldquo;On ne change pas votre identité. On apaise le challenge émotionnel pour libérer votre potentiel.&rdquo;
         </p>
         <p className="mt-4 text-[13px] font-medium relative" style={{ color: 'var(--gold)' }}>
           — L&apos;équipe SOS Shine

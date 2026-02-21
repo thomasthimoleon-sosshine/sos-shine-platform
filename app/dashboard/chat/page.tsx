@@ -97,7 +97,7 @@ export default function ChatGeneralPage() {
         </p>
       </div>
 
-      {/* Quick links to douleur chats */}
+      {/* Quick links to challenge chats */}
       <div className="mb-4 flex items-center gap-2 overflow-x-auto pb-2">
         <span className="text-xs flex-shrink-0" style={{ color: 'var(--text-muted)' }}>Salons :</span>
         <Link href="/dashboard/chat" className="px-3 py-1.5 rounded-lg text-xs font-medium flex-shrink-0"
@@ -106,7 +106,7 @@ export default function ChatGeneralPage() {
         </Link>
         <Link href="/dashboard/encyclopedie" className="px-3 py-1.5 rounded-lg text-xs flex-shrink-0 transition-colors"
           style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-secondary)' }}>
-          Voir les chats par douleur
+          Voir les chats par challenge
         </Link>
       </div>
 

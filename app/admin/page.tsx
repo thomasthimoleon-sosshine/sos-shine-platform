@@ -44,7 +44,7 @@ export default function AdminDashboard() {
   const cards = [
     { label: 'Membres total', value: stats.totalMembers, color: '#D4AF37', icon: '👥' },
     { label: 'Nouveaux ce mois', value: stats.newThisMonth, color: '#55EFC4', icon: '📈' },
-    { label: 'Douleurs publiées', value: stats.totalDouleurs, color: '#74C0FC', icon: '📘' },
+    { label: 'Challenges publiés', value: stats.totalDouleurs, color: '#74C0FC', icon: '📘' },
     { label: 'Événements', value: stats.totalEvents, color: '#E17055', icon: '📅' },
     { label: 'Messages chat', value: stats.totalMessages, color: '#FF6B35', icon: '💬' },
   ]
@@ -87,7 +87,7 @@ export default function AdminDashboard() {
             <h2 className="font-semibold text-lg mb-4" style={{ color: 'var(--text-primary)' }}>Actions rapides</h2>
             <div className="grid sm:grid-cols-3 gap-4">
               {[
-                { href: '/admin/douleurs', label: 'Créer une douleur', desc: 'Ajouter une nouvelle page à l\'encyclopédie', icon: '📘', color: '#74C0FC' },
+                { href: '/admin/douleurs', label: 'Créer un challenge émotionnel', desc: 'Ajouter une nouvelle page à l\'encyclopédie', icon: '📘', color: '#74C0FC' },
                 { href: '/admin/evenements', label: 'Créer un événement', desc: 'Planifier un soin collectif ou une Shine Walk', icon: '📅', color: '#55EFC4' },
                 { href: '/admin/publications', label: 'Publier sur le mur', desc: 'Annoncer une nouvelle à la communauté', icon: '📢', color: '#D4AF37' },
               ].map((action) => (

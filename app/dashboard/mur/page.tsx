@@ -41,7 +41,7 @@ export default function MurPage() {
   function getTypeLabel(type: string) {
     const map: Record<string, { label: string; color: string; icon: string }> = {
       announcement: { label: 'Annonce', color: '#D4AF37', icon: '📢' },
-      douleur_published: { label: 'Nouvelle douleur', color: '#55EFC4', icon: '📘' },
+      douleur_published: { label: 'Nouveau challenge', color: '#55EFC4', icon: '📘' },
       event_published: { label: 'Nouvel événement', color: '#74C0FC', icon: '📅' },
       general: { label: 'Publication', color: 'var(--text-secondary)', icon: '💬' },
     }
@@ -95,7 +95,7 @@ export default function MurPage() {
           Mur Communautaire
         </h1>
         <p className="mt-2" style={{ color: 'var(--text-secondary)' }}>
-          Annonces, nouvelles douleurs, événements et publications de la communauté SOS Shine.
+          Annonces, nouveaux challenges émotionnels, événements et publications de la communauté SOS Shine.
         </p>
       </div>
 
@@ -113,7 +113,7 @@ export default function MurPage() {
             Le mur est prêt
           </h3>
           <p className="text-sm max-w-sm mx-auto" style={{ color: 'var(--text-secondary)' }}>
-            Les publications de l&apos;équipe SOS Shine apparaîtront ici. Annonces, nouvelles douleurs et événements seront publiés depuis l&apos;espace admin.
+            Les publications de l&apos;équipe SOS Shine apparaîtront ici. Annonces, nouveaux challenges et événements seront publiés depuis l&apos;espace admin.
           </p>
         </div>
       ) : (

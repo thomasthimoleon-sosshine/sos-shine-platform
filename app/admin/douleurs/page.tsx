@@ -159,7 +159,7 @@ export default function AdminDouleursPage() {
   }
 
   async function handleDelete(id: string) {
-    if (!confirm('Supprimer cette douleur ? Cette action est irreversible.')) return
+    if (!confirm('Supprimer ce challenge émotionnel ? Cette action est irréversible.')) return
 
     const { error } = await supabase.from('douleurs').delete().eq('id', id)
 
@@ -195,10 +195,10 @@ export default function AdminDouleursPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-display text-3xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-            Douleurs
+            Challenges émotionnels
           </h1>
           <p className="mt-1" style={{ color: 'var(--text-secondary)' }}>
-            Gerez les douleurs de l&apos;encyclopedie SOS Shine.
+            Gérez les challenges émotionnels de l&apos;encyclopédie SOS Shine.
           </p>
         </div>
         {!showForm && (
@@ -212,7 +212,7 @@ export default function AdminDouleursPage() {
             className="px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 hover:opacity-90"
             style={{ background: '#74C0FC', color: '#fff' }}
           >
-            Creer une douleur
+            Créer un challenge
           </button>
         )}
       </div>
@@ -227,7 +227,7 @@ export default function AdminDouleursPage() {
       {showForm && (
         <form onSubmit={handleSave} className="rounded-xl p-6 space-y-5" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
           <h2 className="font-semibold text-lg" style={{ color: '#74C0FC' }}>
-            {editingId ? 'Modifier la douleur' : 'Nouvelle douleur'}
+            {editingId ? 'Modifier le challenge' : 'Nouveau challenge émotionnel'}
           </h2>
 
           {/* Title + Slug */}
@@ -245,7 +245,7 @@ export default function AdminDouleursPage() {
           {/* Description */}
           <div>
             <label htmlFor="description" style={labelStyle}>Description</label>
-            <textarea id="description" name="description" rows={3} value={form.description} onChange={handleChange} placeholder="Breve description de cette douleur..." style={{ ...inputStyle, resize: 'vertical' as const }} />
+            <textarea id="description" name="description" rows={3} value={form.description} onChange={handleChange} placeholder="Brève description de ce challenge émotionnel..." style={{ ...inputStyle, resize: 'vertical' as const }} />
           </div>
 
           {/* Image de couverture */}
@@ -254,7 +254,7 @@ export default function AdminDouleursPage() {
             accept="image/*"
             folder="douleurs"
             currentUrl={form.image_url || null}
-            hint="Image representant cette douleur (optionnel)"
+            hint="Image représentant ce challenge émotionnel (optionnel)"
             onUploaded={(url) => setForm((prev) => ({ ...prev, image_url: url }))}
             onRemoved={() => setForm((prev) => ({ ...prev, image_url: '' }))}
           />
@@ -339,7 +339,7 @@ export default function AdminDouleursPage() {
         </div>
       ) : douleurs.length === 0 ? (
         <div className="rounded-xl p-12 text-center" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-          <p style={{ color: 'var(--text-muted)' }}>Aucune douleur creee pour le moment.</p>
+          <p style={{ color: 'var(--text-muted)' }}>Aucun challenge émotionnel créé pour le moment.</p>
         </div>
       ) : (
         <div className="space-y-3">

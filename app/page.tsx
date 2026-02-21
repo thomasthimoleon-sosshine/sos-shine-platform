@@ -118,10 +118,10 @@ function SparklingDiamonds() {
 }
 
 const features = [
-  "Encyclopédie complète des douleurs (A-Z)",
+  "Encyclopédie complète des expériences de vie (A-Z)",
   "Vidéos de coaching immersif",
   "Soins énergétiques & méditations",
-  "Chat dédié par douleur",
+  "Chat dédié par challenge émotionnel",
   "Communauté & mur de partage",
   "Soins collectifs & événements",
 ];
@@ -254,7 +254,7 @@ export default function PreLaunchPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            L&apos;encyclop&eacute;die compl&egrave;te des douleurs &eacute;motionnelles.
+            L&apos;encyclop&eacute;die compl&egrave;te des challenges &eacute;motionnels.
             <br />
             Un espace pour comprendre, apaiser et ne plus jamais &ecirc;tre seul.
           </motion.p>

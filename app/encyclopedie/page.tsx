@@ -88,10 +88,10 @@ export default function PublicEncyclopediePage() {
         {/* Header */}
         <div>
           <h1 className="font-display text-3xl sm:text-4xl font-semibold">
-            Encyclopédie des douleurs
+            Encyclopédie des expériences de vie
           </h1>
           <p className="mt-2" style={{ color: 'var(--text-secondary)' }}>
-            Chaque douleur a sa page dédiée avec un protocole en 4 étapes : vidéo, soin énergétique, méditation et exercices pratiques.
+            Chaque challenge émotionnel a sa page dédiée avec un protocole en 4 étapes : vidéo, soin énergétique, méditation et exercices pratiques.
           </p>
         </div>
 
@@ -104,7 +104,7 @@ export default function PublicEncyclopediePage() {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Rechercher une douleur..."
+            placeholder="Rechercher un challenge émotionnel..."
             className="w-full pl-12 pr-4 py-3.5 rounded-xl text-sm outline-none transition-all"
             style={{
               background: 'var(--dark-card)',
@@ -144,10 +144,10 @@ export default function PublicEncyclopediePage() {
         ) : filtered.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
-              Aucune douleur trouvée pour &quot;{search}&quot;
+              Aucun challenge émotionnel trouvé pour &quot;{search}&quot;
             </p>
             <p className="text-sm mt-2" style={{ color: 'var(--text-muted)' }}>
-              De nouvelles douleurs sont ajoutées régulièrement.
+              De nouveaux challenges émotionnels sont ajoutés régulièrement.
             </p>
           </div>
         ) : (
@@ -233,7 +233,7 @@ export default function PublicEncyclopediePage() {
             Accédez à tous les protocoles
           </h3>
           <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>
-            Vidéos de coaching, soins énergétiques, méditations guidées et exercices pratiques pour chaque douleur.
+            Vidéos de coaching, soins énergétiques, méditations guidées et exercices pratiques pour chaque challenge émotionnel.
           </p>
           <Link
             href={STRIPE_URL}
@@ -250,7 +250,7 @@ export default function PublicEncyclopediePage() {
         {/* Info */}
         <div className="rounded-xl p-5 text-center" style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.1)' }}>
           <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-            Vous ne trouvez pas votre douleur ? Nous ajoutons régulièrement de nouvelles pages.
+            Vous ne trouvez pas votre challenge émotionnel ? Nous ajoutons régulièrement de nouvelles pages.
           </p>
           <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
             Contactez-nous à <span style={{ color: 'var(--gold)' }}>contact@sosshine.fr</span>

@@ -66,10 +66,10 @@ export default function EncyclopediePage() {
       {/* Header */}
       <div>
         <h1 className="font-display text-3xl sm:text-4xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-          Encyclopédie des douleurs
+          Encyclopédie des expériences de vie
         </h1>
         <p className="mt-2" style={{ color: 'var(--text-secondary)' }}>
-          Chaque douleur a sa page dédiée. Trouvez la vôtre, accédez à votre protocole en 4 étapes.
+          Chaque challenge émotionnel a sa page dédiée. Trouvez le vôtre, accédez à votre protocole en 4 étapes.
         </p>
       </div>
 
@@ -82,7 +82,7 @@ export default function EncyclopediePage() {
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Rechercher une douleur..."
+          placeholder="Rechercher un challenge émotionnel..."
           className="w-full pl-12 pr-4 py-3.5 rounded-xl text-sm outline-none transition-all"
           style={{
             background: 'var(--dark-card)',
@@ -122,10 +122,10 @@ export default function EncyclopediePage() {
       ) : filtered.length === 0 ? (
         <div className="text-center py-16">
           <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
-            Aucune douleur trouvée pour &quot;{search}&quot;
+            Aucun challenge émotionnel trouvé pour &quot;{search}&quot;
           </p>
           <p className="text-sm mt-2" style={{ color: 'var(--text-muted)' }}>
-            De nouvelles douleurs sont ajoutées régulièrement.
+            De nouveaux challenges émotionnels sont ajoutés régulièrement.
           </p>
         </div>
       ) : (
@@ -186,7 +186,7 @@ export default function EncyclopediePage() {
       {/* Info */}
       <div className="rounded-xl p-5 text-center" style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.1)' }}>
         <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-          Vous ne trouvez pas votre douleur ? Nous ajoutons régulièrement de nouvelles pages.
+          Vous ne trouvez pas votre challenge émotionnel ? Nous ajoutons régulièrement de nouvelles pages.
         </p>
         <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
           Contactez-nous à <span style={{ color: 'var(--gold)' }}>contact@sosshine.fr</span>

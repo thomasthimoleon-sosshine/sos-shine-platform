@@ -84,8 +84,8 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     is_visible: true,
     content: {
       label: 'Le principe SOS Shine',
-      title: "On ne change pas votre identit\u00e9.\nOn \u00e9teint la douleur\npour lib\u00e9rer votre potentiel.",
-      description: "Chaque douleur \u2014 abandon, trahison, burn-out, deuil, peur \u2014 poss\u00e8de sa propre page dans notre encyclop\u00e9die, avec un protocole en 4 \u00e9tapes con\u00e7u pour vous accompagner de A \u00e0 Z.",
+      title: "On ne change pas votre identit\u00e9.\nOn apaise le challenge \u00e9motionnel\npour lib\u00e9rer votre potentiel.",
+      description: "Chaque exp\u00e9rience de vie \u2014 abandon, trahison, burn-out, deuil, peur \u2014 poss\u00e8de sa propre page dans notre encyclop\u00e9die, avec un protocole en 4 \u00e9tapes con\u00e7u pour vous accompagner de A \u00e0 Z.",
       image_url: '',
       video_url: '',
     },
@@ -105,7 +105,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     is_visible: true,
     content: {
       label: 'Le parcours SOS Shine',
-      title: '3 \u00e9tapes pour chaque douleur',
+      title: '3 \u00e9tapes pour chaque challenge \u00e9motionnel',
       items: [
         { num: '01', title: 'Comprendre', description: "Vid\u00e9o de coaching immersive. Analyse \u00e9motionnelle. Explication de votre probl\u00e8me. Apaisement mental. Une approche humaine et directe.", color: '#55EFC4' },
         { num: '02', title: 'Lib\u00e9ration \u00c9nerg\u00e9tique', description: "Soin \u00e9nerg\u00e9tique. Activation \u00e9motionnelle. D\u00e9charge des tensions. Nettoyage des empreintes qui vous bloquent.", color: '#74C0FC' },
@@ -126,7 +126,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     is_visible: true,
     content: {
       label: "L\u2019encyclop\u00e9die",
-      title: "Chaque douleur a sa page d\u00e9di\u00e9e",
+      title: "Chaque challenge \u00e9motionnel a sa page d\u00e9di\u00e9e",
       description: "Abandon, trahison, burn-out, deuil, d\u00e9pendance affective, peur, solitude, rejet... Class\u00e9es de A \u00e0 Z, accessibles en un clic.",
       image_url: '',
       items: ['Abandon', 'Anxi\u00e9t\u00e9', 'Burn-out', 'D\u00e9pendance affective', 'Deuil', 'Manque de confiance', 'Peur', 'Rejet', 'Rupture', 'Solitude', 'Trahison', 'Et plus...'],
@@ -145,11 +145,11 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     is_visible: true,
     content: {
       title: "Vous n\u2019\u00eates plus jamais seul \u00e0 3h du matin.",
-      description: "Chat d\u00e9di\u00e9 par douleur, chat g\u00e9n\u00e9ral, mur communautaire, soins collectifs et \u00e9v\u00e9nements \u2014 une vraie famille.",
+      description: "Chat d\u00e9di\u00e9 par challenge \u00e9motionnel, chat g\u00e9n\u00e9ral, mur communautaire, soins collectifs et \u00e9v\u00e9nements \u2014 une vraie famille.",
       image_url: '',
       blocks: [
-        { title: 'Le Feu de Camp', description: "Chaque douleur a son propre chat. \u00c9changez avec ceux qui comprennent vraiment. Un espace d\u2019entraide cibl\u00e9 et bienveillant." },
-        { title: 'Le Mur Communautaire', description: "Publications, annonces, partages. Restez inform\u00e9 de chaque nouvelle douleur, chaque \u00e9v\u00e9nement, chaque avanc\u00e9e collective." },
+        { title: 'Le Feu de Camp', description: "Chaque challenge \u00e9motionnel a son propre chat. \u00c9changez avec ceux qui comprennent vraiment. Un espace d\u2019entraide cibl\u00e9 et bienveillant." },
+        { title: 'Le Mur Communautaire', description: "Publications, annonces, partages. Restez inform\u00e9 de chaque nouvelle exp\u00e9rience de vie, chaque \u00e9v\u00e9nement, chaque avanc\u00e9e collective." },
         { title: 'Les Rencontres R\u00e9elles', description: "Soins collectifs, ateliers, lives, Shine Walks \u2014 le digital pr\u00e9pare, le physique transforme." },
       ],
     },
@@ -168,10 +168,10 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     content: {
       label: "Ils ont travers\u00e9 la temp\u00eate",
       items: [
-        { quote: "Je ne savais m\u00eame pas que j\u2019avais le droit de ne pas aller bien. SOS Shine m\u2019a donn\u00e9 un espace o\u00f9 ma douleur avait le droit d\u2019exister.", name: 'Marie, 34 ans', city: 'Lyon' },
+        { quote: "Je ne savais m\u00eame pas que j\u2019avais le droit de ne pas aller bien. SOS Shine m\u2019a donn\u00e9 un espace o\u00f9 mon v\u00e9cu avait le droit d\u2019exister.", name: 'Marie, 34 ans', city: 'Lyon' },
         { quote: "La premi\u00e8re fois que quelqu\u2019un m\u2019a dit \u00ab je suis pass\u00e9 par l\u00e0, tiens bon \u00bb \u2014 c\u2019\u00e9tait dans le Feu de Camp. J\u2019ai pleur\u00e9. Des larmes de soulagement.", name: 'Karim, 41 ans', city: 'Bordeaux' },
         { quote: "J\u2019ai fait ma premi\u00e8re Shine Walk un samedi matin. En rentrant, j\u2019ai senti quelque chose que j\u2019avais oubli\u00e9 : je n\u2019\u00e9tais plus seule.", name: 'Sophie, 28 ans', city: 'Bruxelles' },
-        { quote: "Gr\u00e2ce aux 4 \u00e9tapes, j\u2019ai compris ma douleur au lieu de la fuir. Aujourd\u2019hui, je suis \u00c9claireur et j\u2019aide les autres.", name: 'Antoine, 37 ans', city: 'Gen\u00e8ve' },
+        { quote: "Gr\u00e2ce aux 4 \u00e9tapes, j\u2019ai compris mon challenge \u00e9motionnel au lieu de le fuir. Aujourd\u2019hui, je suis \u00c9claireur et j\u2019aide les autres.", name: 'Antoine, 37 ans', city: 'Gen\u00e8ve' },
       ],
     },
     styles: {
@@ -198,9 +198,9 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
           highlight: false,
           badge: '',
           features: [
-            "Encyclopédie complète des douleurs",
-            "3 étapes par douleur (vidéo, soin, méditation)",
-            "Chat dédié par douleur + Chat général",
+            "Encyclopédie complète des expériences de vie",
+            "3 étapes par challenge émotionnel (vidéo, soin, méditation)",
+            "Chat dédié par challenge émotionnel + Chat général",
             "Mur communautaire",
             "Soins collectifs & événements",
             "Essai gratuit 7 jours",
@@ -250,7 +250,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     position: 8,
     is_visible: true,
     content: {
-      description: "Que vous cherchiez une réponse à une douleur ancienne, un soutien pour traverser une crise, ou simplement un espace où être compris(e) — SOS Shine est là, 24h/24, 7j/7. Vous n’avez pas à tout porter seul(e). On est là pour comprendre, accompagner et avancer ensemble.",
+      description: "Que vous cherchiez un challenge émotionnel ancien, une crise, ou simplement un espace où être compris(e) — SOS Shine est là, 24h/24, 7j/7. Vous n’avez pas à tout porter seul(e). On est là pour comprendre, accompagner et avancer ensemble.",
       button_label: 'Rejoindre SOS Shine',
       button_href: '/rejoindre',
       login_text: "Déjà membre ? Se connecter",

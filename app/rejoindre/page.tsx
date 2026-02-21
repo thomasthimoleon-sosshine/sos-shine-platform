@@ -14,7 +14,7 @@ const features = [
       </svg>
     ),
     title: 'Encyclopédie complète',
-    description: 'Accès à toutes les douleurs de A à Z, avec un protocole en 4 étapes pour chacune.',
+    description: 'Accès à toutes les expériences de vie de A à Z, avec un protocole en 4 étapes pour chacune.',
     color: '#D4AF37',
   },
   {
@@ -24,7 +24,7 @@ const features = [
       </svg>
     ),
     title: 'Vidéos de coaching',
-    description: 'Analyse émotionnelle et coaching immersif pour comprendre votre douleur en profondeur.',
+    description: 'Analyse émotionnelle et coaching immersif pour comprendre votre challenge émotionnel en profondeur.',
     color: '#55EFC4',
   },
   {
@@ -54,7 +54,7 @@ const features = [
       </svg>
     ),
     title: 'Communauté & Chat',
-    description: 'Chat dédié par douleur, chat général et mur communautaire. Vous n\'êtes plus jamais seul.',
+    description: 'Chat dédié par challenge émotionnel, chat général et mur communautaire. Vous n\'êtes plus jamais seul.',
     color: '#A29BFE',
   },
   {
@@ -117,7 +117,7 @@ export default function RejoindrePage() {
               à l&apos;intérieur
             </h1>
             <p className="text-lg leading-relaxed max-w-xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
-              Un espace complet pour comprendre, apaiser et transformer vos douleurs émotionnelles. Accessible 24h/24, 7j/7.
+              Un espace complet pour comprendre, apaiser et transformer vos challenges émotionnels. Accessible 24h/24, 7j/7.
             </p>
           </div>
         </Reveal>
@@ -159,12 +159,12 @@ export default function RejoindrePage() {
             {/* Included list */}
             <div className="space-y-3 text-left max-w-sm mx-auto mb-8">
               {[
-                'Encyclopédie complète des douleurs (A-Z)',
+                'Encyclopédie complète des expériences de vie (A-Z)',
                 'Vidéos de coaching immersif',
                 'Soins énergétiques audio',
                 'Méditations guidées',
                 'Exercices & PDF téléchargeables',
-                'Chat dédié par douleur',
+                'Chat dédié par challenge émotionnel',
                 'Chat général & mur communautaire',
                 'Soins collectifs & événements',
               ].map((item) => (

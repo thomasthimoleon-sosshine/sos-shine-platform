@@ -7,7 +7,7 @@ import type { Post } from '@/types/database'
 
 const POST_TYPE_CONFIG: Record<Post['post_type'], { label: string; color: string; icon: string }> = {
   announcement: { label: 'Annonce', color: '#D4AF37', icon: '📢' },
-  douleur_published: { label: 'Douleur publiee', color: '#55EFC4', icon: '📘' },
+  douleur_published: { label: 'Challenge publié', color: '#55EFC4', icon: '📘' },
   event_published: { label: 'Evenement publie', color: '#74C0FC', icon: '📅' },
   general: { label: 'General', color: '#9A9080', icon: '💬' },
 }

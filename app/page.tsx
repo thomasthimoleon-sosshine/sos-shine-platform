@@ -238,6 +238,20 @@ export default function Home() {
       {/* Sparkling Diamonds */}
       <SparklingDiamonds />
 
+      {/* Header Buttons */}
+      <div className="fixed top-6 right-6 z-50 flex items-center gap-4">
+        <Link href="/login">
+          <button className="px-6 py-2 rounded-full text-sm font-medium transition-all hover:bg-white/10" style={{ color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)' }}>
+            Se connecter
+          </button>
+        </Link>
+        <Link href="/rejoindre">
+          <button className="px-6 py-2 rounded-full text-sm font-medium transition-all hover:scale-105 active:scale-95" style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
+            Devenir membre
+          </button>
+        </Link>
+      </div>
+
       {/* HERO */}
       {vis('hero') && (
         <section className="relative min-h-screen flex items-center">

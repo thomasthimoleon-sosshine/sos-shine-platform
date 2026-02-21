@@ -64,7 +64,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       video_url: '',
       image_url: '',
       buttons: [
-        { label: "Découvrir l'encyclopédie", href: '/encyclopedie', variant: 'outline' },
+        { label: "Découvrir", href: '/encyclopedie', variant: 'outline' },
         { label: "Accès illimité", href: '/rejoindre', variant: 'primary' },
       ],
     },

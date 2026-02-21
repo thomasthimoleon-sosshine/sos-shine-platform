@@ -36,7 +36,11 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser()
 
   const publicRoutes = ['/', '/login', '/signup', '/rejoindre', '/encyclopedie', '/contact', '/cgv', '/confidentialite', '/mentions-legales']
-  const isPublicRoute = publicRoutes.some(route => request.nextUrl.pathname === route || request.nextUrl.pathname.startsWith('/encyclopedie/'))
+  const isPublicRoute = publicRoutes.some(route => {
+    const isExact = request.nextUrl.pathname === route;
+    const isSubRoute = request.nextUrl.pathname.startsWith('/encyclopedie'); // Removed trailing slash to catch /encyclopedie as well
+    return isExact || isSubRoute;
+  })
 
   if (!user && !isPublicRoute) {
     return NextResponse.redirect(new URL('/login', request.url))

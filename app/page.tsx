@@ -377,7 +377,7 @@ export default function Home() {
             <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full opacity-[0.04] blur-[150px]" style={{ background: gold }} />
           </div>
 
-          <div className="relative z-10 px-6 md:px-20 py-24 max-w-6xl mx-auto w-full">
+          <div className="relative z-10 px-6 md:px-20 py-24 max-w-6xl mx-auto w-full text-center">
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -422,7 +422,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
             >
-              <p className="text-xl md:text-2xl text-[var(--text-secondary)] leading-relaxed max-w-2xl font-light mb-10" style={{
+              <p className="text-xl md:text-2xl text-[var(--text-secondary)] leading-relaxed max-w-2xl mx-auto font-light mb-10" style={{
                 fontFamily: fontMap[heroSty.text_font] || undefined,
                 textAlign: (heroSty.text_align as "left" | "center" | "right") || undefined,
               }}>
@@ -432,7 +432,7 @@ export default function Home() {
 
             {hero.video_url && (
               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}>
-                <div className="glass overflow-hidden mb-10 max-w-3xl">
+                <div className="glass overflow-hidden mb-10 max-w-3xl mx-auto">
                   <video src={hero.video_url} controls className="w-full aspect-video" />
                 </div>
               </motion.div>
@@ -440,7 +440,7 @@ export default function Home() {
 
             {!hero.video_url && (
               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}>
-                <div className="glass overflow-hidden mb-10 max-w-3xl">
+                <div className="glass overflow-hidden mb-10 max-w-3xl mx-auto">
                   <div className="relative aspect-video flex items-center justify-center cursor-pointer group">
                     <div className="absolute inset-0" style={{ background: `linear-gradient(to bottom right, rgba(${goldRgb},0.08), transparent)` }} />
                     <div className="relative z-10 text-center">
@@ -462,7 +462,7 @@ export default function Home() {
             )}
 
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}>
-              <div className="flex flex-wrap gap-5">
+              <div className="flex flex-wrap gap-5 justify-center">
                 {(hero.buttons || []).map((btn: { label: string; href: string; variant: string }, i: number) => (
                   <Link key={i} href={btn.href === '/signup' || btn.href === '/login' ? '/rejoindre' : btn.href}>
                     {btn.variant === 'primary' ? (

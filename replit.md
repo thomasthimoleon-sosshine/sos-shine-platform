@@ -69,7 +69,17 @@ types/            # TypeScript type definitions
 - Magnetic hover effect on CTA buttons with pulse ring
 - prefers-reduced-motion support for accessibility
 
+## Pre-Launch Mode (Active)
+- Homepage now shows pre-launch waitlist page with countdown to March 22, 2026 midnight (Paris time)
+- Early bird pricing: 19.90€/month (lifetime) for waitlist members, vs 29.90€/month standard
+- Waitlist stored in PostgreSQL `waitlist` table (email, name, created_at, source)
+- API endpoint: `/api/waitlist` (GET for count, POST to register)
+- Original landing page backed up at `app/page-launch.tsx` for post-launch swap
+
 ## Recent Changes (Feb 2026)
+- Added pre-launch waitlist page with countdown, early bird pricing, and premium animations
+- Waitlist API using built-in PostgreSQL database (pg package)
+- Middleware updated to allow API routes without authentication
 - Redesigned landing page with LeClub10-inspired premium animations
 - Fixed middleware to gracefully handle missing Supabase env vars
 - Changed heading CSS from gradient-clip to solid gold color (fixes framer motion opacity conflicts)

@@ -200,7 +200,7 @@ export default function PreLaunchPage() {
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
         >
           <Link href="/" className="inline-block">
-            <img src="/images/logo.jpeg" alt="SOS Shine" className="h-12 sm:h-14 w-auto" />
+            <img src="/images/logo.png" alt="SOS Shine" className="h-16 sm:h-20 w-auto" />
           </Link>
         </motion.div>
 

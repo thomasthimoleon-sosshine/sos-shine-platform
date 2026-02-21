@@ -199,16 +199,8 @@ export default function PreLaunchPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
         >
-          <Link href="/" className="flex items-center gap-3">
-            <div
-              className="w-11 h-11 rounded-xl flex items-center justify-center font-display text-lg font-semibold"
-              style={{ background: "linear-gradient(135deg, #D4AF37, #B8960F)", color: "#050505" }}
-            >
-              S
-            </div>
-            <span className="font-display text-xl tracking-wider" style={{ color: "#D4AF37" }}>
-              SOS Shine
-            </span>
+          <Link href="/" className="inline-block">
+            <img src="/images/logo.jpeg" alt="SOS Shine" className="h-12 sm:h-14 w-auto" />
           </Link>
         </motion.div>
 

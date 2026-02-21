@@ -342,9 +342,9 @@ export default function Home() {
       {/* ═══ FIXED HEADER ═══ */}
       {headerVisible && (
           <header
-            className={`fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-4 header-animate ${headerScrolled ? 'header-scrolled' : ''}`}
+            className={`fixed top-0 left-0 right-0 z-50 py-4 header-animate ${headerScrolled ? 'header-scrolled' : ''}`}
           >
-            <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="flex items-center justify-center">
               <Link href="/" className="flex items-center gap-3">
                 {logoUrl ? (
                   <img src={logoUrl} alt="SOS Shine" className="w-10 h-10 rounded-xl object-cover" />
@@ -353,19 +353,6 @@ export default function Home() {
                 )}
                 <span className="font-display text-xl tracking-wider" style={{ color: gold }}>{globalContent.site_name || 'SOS Shine'}</span>
               </Link>
-
-              <div className="flex items-center gap-4">
-                <Link href="/login">
-                  <button className="px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 hover:bg-white/5" style={{ color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                    Se connecter
-                  </button>
-                </Link>
-                <Link href="/rejoindre">
-                  <button className="magnetic-btn px-6 py-2.5 rounded-full text-sm font-semibold" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
-                    Devenir membre
-                  </button>
-                </Link>
-              </div>
             </div>
           </header>
         )}

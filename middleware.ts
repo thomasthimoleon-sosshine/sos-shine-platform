@@ -42,7 +42,7 @@ export async function middleware(request: NextRequest) {
   const publicRoutes = ['/', '/login', '/signup', '/rejoindre', '/encyclopedie', '/contact', '/cgv', '/confidentialite', '/mentions-legales']
   const isPublicRoute = publicRoutes.some(route => {
     const isExact = request.nextUrl.pathname === route;
-    const isSubRoute = request.nextUrl.pathname.startsWith('/encyclopedie'); // Removed trailing slash to catch /encyclopedie as well
+    const isSubRoute = request.nextUrl.pathname.startsWith('/encyclopedie') || request.nextUrl.pathname.startsWith('/auth/');
     return isExact || isSubRoute;
   })
 

@@ -263,7 +263,7 @@ export default function Home() {
                 {(hero.title || '').split("\n").map((line: string, i: number) => (
                   <span key={i}>
                     {i > 0 && <br />}
-                    {line.includes("exp\u00e9riences") || line.includes("douleur") || line.includes("potentiel") ? (
+                    {line.includes("expériences") || line.includes("douleur") || line.includes("potentiel") ? (
                       <em className="font-light" style={{ color: gold }}>{line}</em>
                     ) : line}
                   </span>
@@ -294,7 +294,7 @@ export default function Home() {
                           <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
                         </svg>
                       </div>
-                      <p className="text-sm text-[var(--text-secondary)]">{"D\u00e9couvrir SOS Shine en 2 minutes"}</p>
+                      <p className="text-sm text-[var(--text-secondary)]">{"Découvrir SOS Shine en 2 minutes"}</p>
                     </div>
                   </div>
                 )}
@@ -304,14 +304,14 @@ export default function Home() {
             <Reveal delay={0.4}>
               <div className="flex flex-wrap gap-4">
                 {(hero.buttons || []).map((btn: { label: string; href: string; variant: string }, i: number) => (
-                  <Link key={i} href={btn.href}>
+                  <Link key={i} href={btn.href === '/signup' || btn.href === '/login' ? '/rejoindre' : btn.href}>
                     <CTAButton
                       variant={btn.variant === 'outline' ? 'outline' : 'primary'}
                       style={btn.variant === 'outline'
                         ? { border: `1px solid rgba(${goldRgb},0.4)`, color: gold }
                         : { background: buttonBg, color: bg }}
                     >
-                      {btn.label}{btn.variant === 'primary' ? ` \u2014 ${trialDays} jours d\u2019essai` : ''}
+                      {btn.label}{btn.variant === 'primary' ? ` — ${trialDays} jours d’essai` : ''}
                     </CTAButton>
                   </Link>
                 ))}
@@ -377,7 +377,7 @@ export default function Home() {
                   <div className="glass glass-hover relative p-8 h-full"
                     style={{ borderColor: `${step.color}20` }}>
                     <div className="mb-4">
-                      <span className="font-display text-sm font-light block" style={{ color: step.color, opacity: 0.6 }}>{"\u00c9tape "}{step.num}</span>
+                      <span className="font-display text-sm font-light block" style={{ color: step.color, opacity: 0.6 }}>{"Étape "}{step.num}</span>
                       <h3 className="font-display text-xl font-medium">{step.title}</h3>
                     </div>
                     <p className="text-[var(--text-secondary)] leading-relaxed text-[15px] font-light">{step.description}</p>
@@ -395,7 +395,7 @@ export default function Home() {
           <div className="max-w-4xl mx-auto">
             <Reveal>
               <GoldDivider />
-              <p className="text-center text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-4">{encyclo.label || "L\u2019encyclop\u00e9die"}</p>
+              <p className="text-center text-sm tracking-[0.3em] text-[var(--text-muted)] uppercase mt-6 mb-4">{encyclo.label || "L’encyclopédie"}</p>
               <h2 className="font-display font-light mb-6" style={tStyle("encyclopedie")}>
                 {encyclo.title || ''}
               </h2>
@@ -463,8 +463,8 @@ export default function Home() {
               {(temos.items || []).filter((t: { quote: string; name: string; city: string }) => t.quote).map((t: { quote: string; name: string; city: string }, i: number) => (
                 <Reveal key={i} delay={i * 0.1}>
                   <div className="glass glass-hover p-6 md:p-8 h-full flex flex-col justify-between">
-                    <p className="font-display text-lg italic text-[var(--text-primary)] leading-relaxed font-light mb-6">
-                      {"\u00ab"} {t.quote} {"\u00bb"}
+                    <p className="font-display text-lg italic text-[var(--text-primary)] font-light mb-6">
+                      {"«"} {t.quote} {"»"}
                     </p>
                     <div>
                       <p className="text-sm font-medium" style={{ color: gold }}>{t.name}</p>
@@ -502,18 +502,18 @@ export default function Home() {
                     )}
                     <p className="text-sm tracking-[0.2em] text-[var(--text-muted)] uppercase mb-4">{plan.name}</p>
                     <div className="flex items-baseline gap-1 mb-6">
-                      <span className="font-display text-5xl font-light" style={{ color: plan.highlight ? accent : gold }}>{plan.price}{"\u20ac"}</span>
+                      <span className="font-display text-5xl font-light" style={{ color: plan.highlight ? accent : gold }}>{plan.price}{"€"}</span>
                       <span className="text-[var(--text-muted)] text-sm">{plan.period}</span>
                     </div>
                     <div className="space-y-3 flex-1 mb-8">
                       {(plan.features || []).map((f: string) => (
                         <div key={f} className="flex items-start gap-3">
-                          <span className="mt-0.5 text-sm" style={{ color: plan.highlight ? accent : gold }}>{"\u25c6"}</span>
+                          <span className="mt-0.5 text-sm" style={{ color: plan.highlight ? accent : gold }}>{"◆"}</span>
                           <span className="text-[var(--text-secondary)] text-[15px] font-light">{f}</span>
                         </div>
                       ))}
                     </div>
-                    <Link href={plan.button_href || '/signup'}>
+                    <Link href="/rejoindre">
                       <CTAButton
                         variant={plan.highlight ? 'accent' : 'primary'}
                         fullWidth
@@ -536,7 +536,7 @@ export default function Home() {
         </section>
       )}
 
-      {/* CTA FINAL — Section 1 : Titre sombre */}
+      {/* CTA FINAL */}
       {vis('cta_dark') && (
         <section className="px-6 md:px-20 py-32 border-t border-[var(--dark-border)] relative">
           <div className="absolute inset-0 pointer-events-none">
@@ -547,47 +547,35 @@ export default function Home() {
             {ctaDark.image_url && <Reveal delay={0.05}><img src={ctaDark.image_url} alt="" className="w-48 h-48 rounded-2xl object-cover mx-auto mt-8 mb-4" /></Reveal>}
             <Reveal delay={0.1}>
               <p className="font-display font-light leading-tight mt-12 mb-8" style={tStyle("cta_dark")}>
-                {(ctaDark.title || '').split("\n").map((line: string, i: number) => (
-                  <span key={i}>
-                    {i > 0 && <br />}
-                    {line.includes("seul") || line.includes("jamais") || line.includes("temp\u00eates") ? (
-                      <em className="font-light" style={{ color: gold }}>{line}</em>
-                    ) : line}
-                  </span>
-                ))}
+                {ctaDark.title || ''}
               </p>
             </Reveal>
           </div>
         </section>
       )}
 
-      {/* CTA FINAL — Section 2 : Description fond blanc */}
       {vis('cta_light') && (
-        <section className="px-6 md:px-20 py-24" style={{ background: sty('cta_light').bg || '#ffffff' }}>
-          <div className="max-w-3xl mx-auto text-center">
+        <section className="px-6 md:px-20 py-32 bg-white relative overflow-hidden" style={{ background: sty('cta_light').bg || '#ffffff' }}>
+          <div className="max-w-3xl mx-auto text-center relative z-10">
             <Reveal>
-              <p className="text-lg md:text-xl leading-relaxed font-light" style={{ color: sty('cta_light').text_color || '#1a1a1a', fontFamily: "'DM Sans', sans-serif" }}>
+              <p className="text-xl md:text-2xl font-light leading-relaxed mb-12" style={{ color: sty('cta_light').text_color || '#1a1a1a' }}>
                 {ctaLight.description || ''}
               </p>
             </Reveal>
-            <Reveal delay={0.15}>
-              <div className="mt-10">
-                <Link href={ctaLight.button_href || '/signup'}>
-                  <CTAButton size="lg" style={{ background: buttonBg, color: '#ffffff' }}>
-                    {ctaLight.button_label || ''}
-                  </CTAButton>
-                </Link>
-              </div>
-            </Reveal>
-            <Reveal delay={0.25}>
-              <p className="text-xs mt-6 tracking-wide" style={{ color: sty('cta_light').muted_color || '#6b7280' }}>
-                {trialDays}{" jours gratuits (Essentiel) \u2014 Puis "}{(pricing.plans || [])[0]?.price || '29,90'}{"\u20ac/mois \u2014 Sans engagement"}
-              </p>
-            </Reveal>
-            <Reveal delay={0.3}>
+            <Reveal delay={0.1}>
+              <Link href="/rejoindre">
+                <CTAButton
+                  variant="primary"
+                  size="lg"
+                  className="mt-8"
+                  style={{ background: buttonBg, color: bg }}
+                >
+                  {ctaLight.button_label || 'Rejoindre SOS Shine'}
+                </CTAButton>
+              </Link>
               <div className="mt-8">
                 <Link href="/login" className="text-sm transition-colors duration-300 underline underline-offset-4" style={{ color: sty('cta_light').muted_color || '#6b7280' }}>
-                  {ctaLight.login_text || "D\u00e9j\u00e0 membre ? Se connecter"}
+                  {ctaLight.login_text || 'Déjà membre ? Se connecter'}
                 </Link>
               </div>
             </Reveal>
@@ -597,23 +585,32 @@ export default function Home() {
 
       {/* FOOTER */}
       {vis('footer') && (
-        <footer className="px-6 md:px-20 py-12 border-t border-[var(--dark-border)]">
-          <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+        <footer className="px-6 md:px-20 py-12 border-t border-[var(--dark-border)] bg-black/20">
+          <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
             <div className="flex items-center gap-3">
               {logoUrl ? (
                 <img src={logoUrl} alt="SOS Shine" className="w-8 h-8 rounded-lg object-cover" />
-              ) : null}
-              <span className="font-display text-xl font-medium" style={{ color: gold }}>{foot.name || 'SOS Shine'}</span>
-              <span className="text-[var(--text-muted)] text-xs">{"\u00a9 "}{foot.copyright_year || '2026'}</span>
+              ) : (
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center font-display text-sm font-semibold" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: bg }}>S</div>
+              )}
+              <span className="font-display text-lg tracking-wider" style={{ color: gold }}>{foot.name || 'SOS Shine'}</span>
             </div>
-            <div className="flex items-center gap-6 text-xs text-[var(--text-muted)]">
+
+            <div className="flex flex-wrap justify-center gap-x-8 gap-y-4">
               {(foot.links || []).map((link: { label: string; href: string }) => (
-                <Link key={link.href} href={link.href} className="gold-underline transition-colors">{link.label}</Link>
+                <Link key={link.label} href={link.href} className="text-xs tracking-widest uppercase text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors">
+                  {link.label}
+                </Link>
               ))}
             </div>
+
+            <p className="text-[10px] tracking-widest uppercase text-[var(--text-muted)]">
+              © {foot.copyright_year || '2026'} {foot.name || 'SOS Shine'}
+            </p>
           </div>
         </footer>
       )}
+
     </main>
   );
 }

@@ -9,8 +9,8 @@ SOS Shine is a premium community platform built with Next.js 16 for emotional su
 - **Styling**: Tailwind CSS v4 with PostCSS
 - **Backend**: Supabase (auth, database, storage)
 - **Payments**: Stripe
-- **UI**: Framer Motion, Excalidraw (whiteboard), custom glassmorphism design
-- **Fonts**: Cinzel (display), Montserrat/DM Sans (body)
+- **UI**: Framer Motion, Excalidraw (whiteboard), custom glassmorphism design, LeClub10-inspired premium animations
+- **Fonts**: Cormorant Garamond (display), DM Sans (body)
 
 ## Project Structure
 ```
@@ -54,6 +54,26 @@ types/            # TypeScript type definitions
 - Dev server runs on port 5000 with `npm run dev`
 - Node.js 22 is required (Next.js 16 compatibility)
 - `allowedDevOrigins` configured for Replit proxy
+
+## Landing Page Design (LeClub10-inspired)
+- Word-by-word hero title reveal with blur-to-sharp animation
+- Infinite scrolling ticker bands with emotional topics
+- GlowingCard component with mouse-follow radial glow (RAF-throttled)
+- ScrollProgress bar at top of page
+- FloatingOrbs ambient background effect
+- Sparkling diamond particles overlay
+- Fixed glassmorphism header that hides/shows on scroll direction
+- Luxury letter-spacing uppercase labels
+- Animated pricing cards with feature stagger reveal
+- Text shimmer gradient animation for highlighted words
+- Magnetic hover effect on CTA buttons with pulse ring
+- prefers-reduced-motion support for accessibility
+
+## Recent Changes (Feb 2026)
+- Redesigned landing page with LeClub10-inspired premium animations
+- Fixed middleware to gracefully handle missing Supabase env vars
+- Changed heading CSS from gradient-clip to solid gold color (fixes framer motion opacity conflicts)
+- Added prefers-reduced-motion support
 
 ## Deployment
 - Build: `npm run build`

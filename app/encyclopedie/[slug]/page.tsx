@@ -432,34 +432,46 @@ export default function PublicDouleurDetailPage() {
       {/* Modal - Redirect to signup */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}>
-          <div className="max-w-md w-full rounded-2xl p-8 text-center" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-            <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" style={{ background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.2)' }}>
-              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-              </svg>
+          <div className="max-w-md w-full rounded-2xl p-8 text-center relative overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+            <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ background: 'radial-gradient(circle at center, var(--gold), transparent)' }} />
+            
+            <div className="relative z-10">
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" style={{ background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                </svg>
+              </div>
+              
+              <h3 className="font-display text-2xl font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>
+                Accès réservé
+              </h3>
+              
+              <p className="text-sm mb-8 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                Pour accéder aux protocoles de libération (vidéos, soins, méditations et PDF), vous devez faire partie du sanctuaire SOS Shine.
+              </p>
+
+              <div className="space-y-3">
+                <button
+                  onClick={goToSignup}
+                  className="block w-full py-3.5 rounded-full font-medium transition-all hover:scale-[1.02] active:scale-[0.98]"
+                  style={{ background: 'var(--gold)', color: 'var(--dark)' }}
+                >
+                  Découvrir les avantages
+                </button>
+                
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="block w-full py-3.5 rounded-full text-sm font-medium transition-colors"
+                  style={{ border: '1px solid var(--dark-border)', color: 'var(--text-secondary)' }}
+                >
+                  Continuer l&apos;exploration
+                </button>
+              </div>
+
+              <p className="text-[11px] mt-6" style={{ color: 'var(--text-muted)' }}>
+                Déjà membre ? <Link href="/login" className="gold-underline" style={{ color: 'var(--gold)' }}>Se connecter</Link>
+              </p>
             </div>
-            <h3 className="font-display text-2xl font-semibold mb-3">
-              Contenu réservé
-            </h3>
-            <p className="text-sm mb-6 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-              Ce contenu est réservé aux membres SOS Shine. Rejoignez la communauté pour accéder à tous les protocoles de guérison.
-            </p>
-            <button
-              onClick={goToSignup}
-              className="w-full py-3.5 rounded-full text-sm font-medium transition-all hover:opacity-90 cursor-pointer mb-3"
-              style={{ background: 'var(--gold)', color: 'var(--dark)' }}
-            >
-              Rejoindre SOS Shine — 29,90&euro;/mois
-            </button>
-            <button
-              onClick={() => setShowModal(false)}
-              className="text-sm cursor-pointer transition-colors"
-              style={{ color: 'var(--text-muted)' }}
-              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
-              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
-            >
-              Continuer à explorer
-            </button>
           </div>
         </div>
       )}

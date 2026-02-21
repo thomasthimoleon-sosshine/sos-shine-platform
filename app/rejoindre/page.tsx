@@ -176,15 +176,26 @@ export default function RejoindrePage() {
             </div>
 
             {/* CTA */}
-            <a
-              href={STRIPE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="cta-glow inline-block w-full max-w-sm py-4 rounded-full font-medium tracking-wide transition-all text-sm"
-              style={{ background: 'var(--gold)', color: 'var(--dark)' }}
-            >
-              Passer au paiement sécurisé
-            </a>
+            <div className="space-y-4">
+              <a
+                href={STRIPE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="cta-glow inline-block w-full max-w-sm py-4 rounded-full font-medium tracking-wide transition-all text-sm"
+                style={{ background: 'var(--gold)', color: 'var(--dark)' }}
+              >
+                Passer au paiement sécurisé (29,90€/mois)
+              </a>
+              
+              <div className="flex items-center justify-center gap-6">
+                <Link href="/login" className="text-xs gold-underline" style={{ color: 'var(--text-secondary)' }}>
+                  Déjà membre ? Se connecter
+                </Link>
+                <Link href="/encyclopedie" className="text-xs gold-underline" style={{ color: 'var(--text-secondary)' }}>
+                  Continuer l'exploration
+                </Link>
+              </div>
+            </div>
 
             <div className="flex items-center justify-center gap-4 mt-5">
               <div className="flex items-center gap-1.5">

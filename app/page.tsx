@@ -1,10 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState, useRef, ReactNode, useCallback } from "react";
-import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion";
+import { useEffect, useState, useRef, ReactNode, useCallback, useMemo } from "react";
+import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
-import { CTAButton } from "@/components/ui/CTAButton";
 import { LANDING_DEFAULTS, buildSectionMap } from "@/lib/landing-defaults";
 import type { LandingSectionDefault, SectionContent, SectionStyles } from "@/lib/landing-defaults";
 
@@ -141,34 +140,21 @@ function ScrollProgress() {
 function FloatingOrbs() {
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
-      <div className="orb" style={{ width: 600, height: 600, top: "10%", left: "-10%", background: "rgba(212, 175, 55, 0.015)" }} />
-      <div className="orb" style={{ width: 500, height: 500, top: "60%", right: "-15%", background: "rgba(212, 175, 55, 0.01)", animationDelay: "5s" }} />
-      <div className="orb" style={{ width: 400, height: 400, top: "40%", left: "30%", background: "rgba(116, 192, 252, 0.008)", animationDelay: "10s" }} />
+      <div className="orb" style={{ width: 500, height: 500, top: "10%", left: "-10%", background: "rgba(212, 175, 55, 0.012)" }} />
+      <div className="orb" style={{ width: 400, height: 400, top: "60%", right: "-15%", background: "rgba(212, 175, 55, 0.008)", animationDelay: "5s" }} />
     </div>
   );
 }
 
 const DIAMONDS = [
-  { top: '3%', left: '8%', duration: '7s', delay: '0s', size: 5 },
-  { top: '7%', left: '85%', duration: '9s', delay: '1.2s', size: 4 },
-  { top: '12%', left: '45%', duration: '6s', delay: '2.8s', size: 3 },
-  { top: '18%', left: '92%', duration: '8s', delay: '0.5s', size: 5 },
-  { top: '22%', left: '15%', duration: '10s', delay: '3.5s', size: 4 },
-  { top: '28%', left: '72%', duration: '7s', delay: '1.8s', size: 3 },
-  { top: '33%', left: '5%', duration: '9s', delay: '4.2s', size: 5 },
-  { top: '38%', left: '55%', duration: '6s', delay: '0.8s', size: 4 },
-  { top: '42%', left: '88%', duration: '8s', delay: '2.5s', size: 3 },
-  { top: '48%', left: '28%', duration: '7s', delay: '1.5s', size: 5 },
-  { top: '52%', left: '68%', duration: '10s', delay: '3.8s', size: 4 },
-  { top: '56%', left: '10%', duration: '6s', delay: '0.3s', size: 3 },
-  { top: '62%', left: '78%', duration: '9s', delay: '2.1s', size: 5 },
-  { top: '67%', left: '38%', duration: '7s', delay: '4.5s', size: 4 },
-  { top: '72%', left: '95%', duration: '8s', delay: '1.1s', size: 3 },
-  { top: '76%', left: '22%', duration: '6s', delay: '3.2s', size: 5 },
-  { top: '82%', left: '62%', duration: '10s', delay: '0.7s', size: 4 },
-  { top: '87%', left: '3%', duration: '7s', delay: '2.9s', size: 3 },
-  { top: '91%', left: '82%', duration: '9s', delay: '1.6s', size: 5 },
-  { top: '96%', left: '48%', duration: '6s', delay: '4.0s', size: 4 },
+  { top: '5%', left: '10%', duration: '8s', delay: '0s', size: 4 },
+  { top: '15%', left: '85%', duration: '10s', delay: '1.5s', size: 3 },
+  { top: '35%', left: '50%', duration: '7s', delay: '3s', size: 4 },
+  { top: '50%', left: '20%', duration: '9s', delay: '0.8s', size: 3 },
+  { top: '65%', left: '75%', duration: '8s', delay: '2.2s', size: 4 },
+  { top: '80%', left: '40%', duration: '10s', delay: '4s', size: 3 },
+  { top: '25%', left: '65%', duration: '9s', delay: '1s', size: 3 },
+  { top: '90%', left: '90%', duration: '7s', delay: '3.5s', size: 4 },
 ];
 
 function SparklingDiamonds() {
@@ -204,8 +190,8 @@ function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: strin
 }
 
 export default function Home() {
-  const [scrollY, setScrollY] = useState(0);
   const [headerVisible, setHeaderVisible] = useState(true);
+  const [headerScrolled, setHeaderScrolled] = useState(false);
   const lastScrollYRef = useRef(0);
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
@@ -248,11 +234,17 @@ export default function Home() {
 
   useEffect(() => {
     loadSections();
+    let ticking = false;
     const onScroll = () => {
-      const y = window.scrollY;
-      setHeaderVisible(y < 100 || y < lastScrollYRef.current);
-      lastScrollYRef.current = y;
-      setScrollY(y);
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        setHeaderVisible(y < 100 || y < lastScrollYRef.current);
+        setHeaderScrolled(y > 50);
+        lastScrollYRef.current = y;
+        ticking = false;
+      });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -348,15 +340,9 @@ export default function Home() {
       <FloatingOrbs />
 
       {/* ═══ FIXED HEADER ═══ */}
-      <AnimatePresence>
-        {headerVisible && (
-          <motion.header
-            initial={{ y: -80, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -80, opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-4"
-            style={{ background: scrollY > 50 ? "rgba(5, 5, 5, 0.85)" : "transparent", backdropFilter: scrollY > 50 ? "blur(20px) saturate(1.3)" : "none", borderBottom: scrollY > 50 ? "1px solid rgba(255,255,255,0.04)" : "none", transition: "background 0.4s, backdrop-filter 0.4s, border-bottom 0.4s" }}
+      {headerVisible && (
+          <header
+            className={`fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-4 header-animate ${headerScrolled ? 'header-scrolled' : ''}`}
           >
             <div className="max-w-7xl mx-auto flex items-center justify-between">
               <Link href="/" className="flex items-center gap-3">
@@ -381,16 +367,14 @@ export default function Home() {
                 </Link>
               </div>
             </div>
-          </motion.header>
+          </header>
         )}
-      </AnimatePresence>
 
       {/* ═══ HERO — Word by word reveal ═══ */}
       {vis('hero') && (
         <motion.section ref={heroRef} className="relative min-h-screen flex items-center pt-24" style={{ opacity: heroOpacity, scale: heroScale }}>
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] rounded-full opacity-[0.04] blur-[200px]" style={{ background: gold, transform: `translateY(${scrollY * 0.1}px)` }} />
-            <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] rounded-full opacity-[0.02] blur-[150px]" style={{ background: accent, transform: `translateY(${scrollY * -0.05}px)` }} />
+            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full opacity-[0.04] blur-[150px]" style={{ background: gold }} />
           </div>
 
           <div className="relative z-10 px-6 md:px-20 py-24 max-w-6xl mx-auto w-full">

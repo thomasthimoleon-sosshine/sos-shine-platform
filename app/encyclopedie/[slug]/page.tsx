@@ -451,17 +451,17 @@ export default function PublicDouleurDetailPage() {
               </p>
 
               <div className="space-y-3">
-                <button
-                  onClick={goToSignup}
-                  className="block w-full py-3.5 rounded-full font-medium transition-all hover:scale-[1.02] active:scale-[0.98]"
+                <Link
+                  href="/rejoindre"
+                  className="block w-full py-3.5 rounded-full font-medium transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center"
                   style={{ background: 'var(--gold)', color: 'var(--dark)' }}
                 >
                   Découvrir les avantages
-                </button>
+                </Link>
                 
                 <button
                   onClick={() => setShowModal(false)}
-                  className="block w-full py-3.5 rounded-full text-sm font-medium transition-colors"
+                  className="block w-full py-3.5 rounded-full text-sm font-medium transition-colors w-full"
                   style={{ border: '1px solid var(--dark-border)', color: 'var(--text-secondary)' }}
                 >
                   Continuer l&apos;exploration

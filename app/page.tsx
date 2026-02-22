@@ -406,7 +406,7 @@ export default function Home() {
           >
             <div className="flex items-center justify-center">
               <Link href="/" className="flex items-center gap-3">
-                <img src={logoUrl || '/images/logo-shine-transparent.png'} alt="SOS Shine" className="h-20 md:h-24 w-auto object-contain" />
+                <img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-20 md:h-24 w-auto object-contain" />
               </Link>
             </div>
           </header>
@@ -1008,7 +1008,7 @@ export default function Home() {
           <div className="max-w-6xl mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-center gap-10">
               <div className="flex items-center gap-3">
-                <img src={logoUrl || '/images/logo-shine-transparent.png'} alt="SOS Shine" className="h-16 w-auto object-contain" />
+                <img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-16 w-auto object-contain" />
               </div>
 
               <div className="flex flex-wrap justify-center gap-x-8 gap-y-4">

@@ -79,7 +79,7 @@ export default function RootLayout({
       >
         <div className="page-loader" aria-hidden="true">
           <img
-            src="/images/logo-shine-transparent.png"
+            src="/images/logo-shine.png"
             alt="SOS Shine"
             className="loader-logo"
           />

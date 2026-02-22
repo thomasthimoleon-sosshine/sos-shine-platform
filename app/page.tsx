@@ -762,6 +762,49 @@ export default function Home() {
         </section>
       )}
 
+      {/* ═══ FONDATEURS ═══ */}
+      <section className="px-6 md:px-20 py-32 relative">
+        <div className="max-w-5xl mx-auto">
+          <RevealOnScroll>
+            <p className="luxury-title text-center text-sm tracking-[0.4em] text-[var(--text-muted)] mb-4">Les Fondateurs</p>
+          </RevealOnScroll>
+          <RevealOnScroll delay={0.1}>
+            <h2 className="font-display font-light text-center text-3xl md:text-5xl mb-6" style={{ color: 'var(--gold)' }}>
+              <WordByWordReveal text="L'équipe derrière SOS Shine" />
+            </h2>
+          </RevealOnScroll>
+          <RevealOnScroll delay={0.15}>
+            <p className="text-center text-[var(--text-muted)] max-w-2xl mx-auto mb-16 text-lg leading-relaxed">
+              Trois passionnés unis par une vision commune : créer un espace où chacun peut traverser ses épreuves avec dignité et bienveillance.
+            </p>
+          </RevealOnScroll>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            {[
+              { name: 'Julia', image: '/images/julia.jpeg', role: 'Co-fondatrice' },
+              { name: 'Wiliam', image: '/images/wiliam.png', role: 'Co-fondateur' },
+              { name: 'Thomas', image: '/images/thomas.jpeg', role: 'Co-fondateur' },
+            ].map((founder, i) => (
+              <RevealOnScroll key={founder.name} delay={0.2 + i * 0.15}>
+                <div className="flex flex-col items-center group">
+                  <div className="relative mb-6">
+                    <div className="w-44 h-44 md:w-52 md:h-52 rounded-full overflow-hidden border-2 border-[var(--gold)]/30 group-hover:border-[var(--gold)] transition-all duration-500 relative">
+                      <img
+                        src={founder.image}
+                        alt={founder.name}
+                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                      />
+                    </div>
+                    <div className="absolute -inset-1 rounded-full bg-[var(--gold)]/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+                  </div>
+                  <h3 className="font-display text-2xl text-[var(--gold)] mb-1">{founder.name}</h3>
+                  <p className="text-sm tracking-[0.2em] uppercase text-[var(--text-muted)]">{founder.role}</p>
+                </div>
+              </RevealOnScroll>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ═══ OFFRES / PRICING ═══ */}
       {vis('pricing') && (
         <section className="px-6 md:px-20 py-32 relative">

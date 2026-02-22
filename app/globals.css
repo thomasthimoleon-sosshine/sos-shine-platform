@@ -41,6 +41,55 @@
   --glow-gold-hover: 0 0 60px rgba(212, 175, 55, 0.2), 0 0 120px rgba(212, 175, 55, 0.06);
 }
 
+/* ── Light Theme ── */
+[data-theme="light"] {
+  --dark: #FAFAF9;
+  --dark-card: rgba(0, 0, 0, 0.03);
+  --dark-card-hover: rgba(0, 0, 0, 0.06);
+  --dark-border: rgba(0, 0, 0, 0.08);
+  --dark-border-hover: rgba(0, 0, 0, 0.14);
+  --surface-elevated: rgba(0, 0, 0, 0.04);
+  --text-primary: #1a1a1a;
+  --text-secondary: #52525b;
+  --text-muted: #a1a1aa;
+  --text-bold: #9a7b2f;
+  --glow-gold: 0 0 40px rgba(212, 175, 55, 0.08), 0 0 80px rgba(212, 175, 55, 0.03);
+  --glow-gold-hover: 0 0 60px rgba(212, 175, 55, 0.15), 0 0 120px rgba(212, 175, 55, 0.05);
+}
+
+[data-theme="light"] body {
+  background: #FAFAF9;
+  color: #1a1a1a;
+}
+
+[data-theme="light"] .glass-dense {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+[data-theme="light"] .grain::after {
+  opacity: 0.008;
+}
+
+[data-theme="light"] .ambient-glow {
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 20%, rgba(212, 175, 55, 0.04), transparent),
+    radial-gradient(ellipse 50% 50% at 80% 80%, rgba(212, 175, 55, 0.03), transparent);
+}
+
+[data-theme="light"] .page-loader {
+  background: #FAFAF9;
+}
+
+[data-theme="light"] h1, [data-theme="light"] h2, [data-theme="light"] h3,
+[data-theme="light"] h4, [data-theme="light"] h5, [data-theme="light"] h6 {
+  color: #B8960F !important;
+  -webkit-text-fill-color: #B8960F !important;
+}
+
+[data-theme="light"] strong, [data-theme="light"] b {
+  color: #9a7b2f;
+}
+
 /* ── 2. Tailwind v4 Theme ── */
 @theme inline {
   --color-background: var(--dark);

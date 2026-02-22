@@ -1,7 +1,7 @@
 # SOS Shine Platform
 
 ## Overview
-SOS Shine is a premium community platform built with Next.js 16 for emotional support and life experiences. It features a dark, luxury design with gold accents, Supabase backend, and Stripe payments.
+SOS Shine is a premium community platform built with Next.js 16 for emotional support and life experiences. It features a dark/light luxury design with gold accents, Supabase backend, Stripe payments, and multi-language support (FR/EN/ES).
 
 ## Tech Stack
 - **Framework**: Next.js 16.1.6 (Turbopack) with React 19
@@ -11,15 +11,26 @@ SOS Shine is a premium community platform built with Next.js 16 for emotional su
 - **Payments**: Stripe
 - **UI**: Framer Motion, Excalidraw (whiteboard), custom glassmorphism design, LeClub10-inspired premium animations
 - **Fonts**: Cormorant Garamond (display), DM Sans (body)
+- **i18n**: Custom translation system with FR/EN/ES support
 
 ## Project Structure
 ```
 app/              # Next.js App Router pages
   admin/          # Admin panel
   dashboard/      # User dashboard
+    encyclopedie/ # Encyclopedia pages
+    favoris/      # Favorites page
+    objectifs/    # Personal goals page
+    journal/      # Private journal page
+    chat/         # Chat pages
+    messages/     # Private messages
+    mur/          # Community wall
+    evenements/   # Events
+    visio/        # Video conferences
+    profil/       # User profile
   login/          # Login page
   signup/         # Signup page
-  encyclopedie/   # Encyclopedia page
+  encyclopedie/   # Public encyclopedia
   rejoindre/      # Join page
   contact/        # Contact page
   cgv/            # Terms of service
@@ -27,16 +38,24 @@ app/              # Next.js App Router pages
   mentions-legales/ # Legal mentions
 components/       # React components
   ui/             # UI components (CTAButton)
+  FavoriteButton.tsx  # Heart/bookmark toggle for encyclopedia
+  LanguageSelector.tsx # FR/EN/ES language picker dropdown
+  NotificationBell.tsx # Bell icon with notification panel
+  ShineChatbot.tsx    # Shine chatbot with FAQ responses
+  ThemeProvider.tsx    # CSS variable management from Supabase
+  ThemeToggle.tsx      # Dark/light mode toggle (sun/moon)
   AudioPlayer.tsx
   ConferenceRoom.tsx
   FileUpload.tsx
-  ThemeProvider.tsx
   VoiceRecorder.tsx
   Whiteboard.tsx
 hooks/            # Custom React hooks
   useCallNotification.ts
   useWebRTCGroup.ts
 lib/              # Utility libraries
+  i18n/           # Internationalization system
+    translations.ts  # FR/EN/ES translation dictionaries
+    useTranslation.ts # React hook for translations
   supabase/       # Supabase client/server helpers
   cn.ts           # className utility
   landing-defaults.ts
@@ -55,35 +74,96 @@ types/            # TypeScript type definitions
 - Node.js 22 is required (Next.js 16 compatibility)
 - `allowedDevOrigins` configured for Replit proxy
 
-## Landing Page Design (LeClub10-inspired)
+## Features
+
+### Dark/Light Mode
+- Toggle button (sun/moon icon) in header and dashboard sidebar
+- Light theme preserves gold accents with warm, premium feel
+- Persisted in localStorage key `sos-shine-theme`
+- CSS variables overridden via `[data-theme="light"]` selector
+
+### Real-time Notifications
+- Bell icon in dashboard with unread badge count
+- Slide-out notification panel with glassmorphism styling
+- Supabase realtime subscription for instant updates
+- 30-second polling as fallback
+- Supports types: new_douleur, new_event, new_post, new_soin
+
+### Personal Goals (Objectifs)
+- Users set personal wellness goals with title, description, target date
+- Track active vs completed goals with stats bar
+- Stored in localStorage key `sos-shine-goals`
+- Full CRUD: create, mark complete, reactivate, delete
+
+### Private Journal
+- Write private thoughts with mood tracking (5 moods)
+- Entries grouped by month, searchable by mood
+- Character count and delete functionality
+- Stored in localStorage key `sos-shine-journal`
+- Privacy notice displayed
+
+### Favorites/Bookmarks
+- Heart button on encyclopedia articles (list and detail pages)
+- Dedicated "Mes Favoris" page in dashboard
+- Custom event `favorites-changed` for cross-component sync
+- Stored in localStorage key `sos-shine-favorites`
+
+### Multi-language Support (FR/EN/ES)
+- Flag-based language selector dropdown in header and dashboard
+- 100+ translation keys covering all UI strings
+- Custom `useTranslation()` hook with parameter interpolation
+- Persisted in localStorage key `sos-shine-locale`
+- Custom event `locale-changed` for cross-component sync
+- Default locale: French
+- "douleur" never appears - uses "emotional challenge" (EN) / "desafío emocional" (ES)
+
+### Shine Chatbot
+- Named "Shine" with custom avatar image
+- FAQ-based responses about pricing, features, confidentiality
+- Floating button with online indicator
+
+### Landing Page Design (LeClub10-inspired)
 - Word-by-word hero title reveal with blur-to-sharp animation
 - Infinite scrolling ticker bands with emotional topics
 - GlowingCard component with mouse-follow radial glow (RAF-throttled)
 - ScrollProgress bar at top of page
 - FloatingOrbs ambient background effect
-- Sparkling diamond particles overlay
 - Fixed glassmorphism header that hides/shows on scroll direction
-- Luxury letter-spacing uppercase labels
 - Animated pricing cards with feature stagger reveal
 - Text shimmer gradient animation for highlighted words
 - Magnetic hover effect on CTA buttons with pulse ring
 - prefers-reduced-motion support for accessibility
 
+### Admin CMS
+- All landing page sections fully editable from back-office
+- Auto-merge logic for new section defaults
+- Site settings (colors, logo) applied via ThemeProvider
+
+## Content Sanitization Rule
+- The word "douleur" must NEVER appear in visible UI
+- Automatically replaced via `sanitizeContent()` function:
+  - "douleur" → "challenge émotionnel" / "expérience de vie" / "schéma émotionnel"
+  - Applied to all CMS content from Supabase
+  - Translations use equivalent terms in EN/ES
+
 ## Pre-Launch Mode (Active)
-- Homepage now shows pre-launch waitlist page with countdown to March 22, 2026 midnight (Paris time)
+- Homepage shows pre-launch waitlist page with countdown to March 22, 2026 midnight (Paris time)
 - Early bird pricing: 19.90€/month (lifetime) for waitlist members, vs 29.90€/month standard
 - Waitlist stored in PostgreSQL `waitlist` table (email, name, created_at, source)
 - API endpoint: `/api/waitlist` (GET for count, POST to register)
 - Original landing page backed up at `app/page-launch.tsx` for post-launch swap
 
 ## Recent Changes (Feb 2026)
-- Added pre-launch waitlist page with countdown, early bird pricing, and premium animations
-- Waitlist API using built-in PostgreSQL database (pg package)
-- Middleware updated to allow API routes without authentication
+- Added dark/light mode toggle with persistent theme switching
+- Added real-time notification system with bell icon and slide-out panel
+- Added personal wellness goals page (Objectifs)
+- Added private journal/diary page with mood tracking
+- Added favorites/bookmarks system for encyclopedia articles
+- Added multi-language support (FR/EN/ES) with language selector
+- All UI strings translated across 3 languages
+- Added Shine chatbot with custom avatar
+- Made all landing page sections CMS-driven from admin
 - Redesigned landing page with LeClub10-inspired premium animations
-- Fixed middleware to gracefully handle missing Supabase env vars
-- Changed heading CSS from gradient-clip to solid gold color (fixes framer motion opacity conflicts)
-- Added prefers-reduced-motion support
 
 ## Deployment
 - Build: `npm run build`

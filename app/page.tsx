@@ -6,6 +6,8 @@ import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import { LANDING_DEFAULTS, buildSectionMap } from "@/lib/landing-defaults";
 import type { LandingSectionDefault, SectionContent, SectionStyles } from "@/lib/landing-defaults";
+import ThemeToggle from "@/components/ThemeToggle";
+import LanguageSelector from "@/components/LanguageSelector";
 
 function matchCase(original: string, replacement: string): string {
   if (original === original.toUpperCase()) return replacement.toUpperCase();
@@ -404,10 +406,14 @@ export default function Home() {
           <header
             className={`fixed top-0 left-0 right-0 z-50 py-4 header-animate ${headerScrolled ? 'header-scrolled' : ''}`}
           >
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-center relative">
               <Link href="/" className="flex items-center gap-3">
                 <img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-20 md:h-24 w-auto object-contain" />
               </Link>
+              <div className="absolute right-6 flex items-center gap-2">
+                <LanguageSelector />
+                <ThemeToggle />
+              </div>
             </div>
           </header>
         )}

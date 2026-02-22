@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import type { Douleur } from '@/types/database'
+import FavoriteButton from '@/components/FavoriteButton'
 
 export default function DouleurDetailPage() {
   const params = useParams()
@@ -125,9 +126,12 @@ export default function DouleurDetailPage() {
 
       {/* Header */}
       <div>
-        <h1 className="font-display text-3xl sm:text-4xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-          {douleur.title}
-        </h1>
+        <div className="flex items-center gap-3">
+          <h1 className="font-display text-3xl sm:text-4xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+            {douleur.title}
+          </h1>
+          <FavoriteButton slug={douleur.slug} />
+        </div>
         <p className="mt-2 text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
           {douleur.description}
         </p>

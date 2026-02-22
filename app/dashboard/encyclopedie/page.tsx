@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import type { Douleur } from '@/types/database'
+import FavoriteButton from '@/components/FavoriteButton'
 
 const defaultDouleurs: Pick<Douleur, 'title' | 'slug' | 'description' | 'image_url'>[] = [
   { title: 'Abus', slug: 'abus', description: 'Identifiez les mécanismes de l\'abus, reconstruisez vos limites et retrouvez votre pouvoir personnel.', image_url: null },
@@ -159,9 +160,12 @@ export default function EncyclopediePage() {
                           </p>
                         </div>
                         {hasId ? (
-                          <svg className="w-5 h-5 flex-shrink-0 mt-1 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--text-muted)' }}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                          </svg>
+                          <div className="flex items-center gap-1.5 flex-shrink-0">
+                            <FavoriteButton slug={slug} size="sm" />
+                            <svg className="w-5 h-5 mt-1 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--text-muted)' }}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                            </svg>
+                          </div>
                         ) : (
                           <span className="text-xs px-2 py-1 rounded-lg flex-shrink-0" style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}>
                             Bientôt

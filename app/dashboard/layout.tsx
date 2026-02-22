@@ -7,11 +7,15 @@ import { createClient } from '@/lib/supabase/client'
 import type { Profile } from '@/types/database'
 import { useCallNotification } from '@/hooks/useCallNotification'
 import IncomingCallModal from '@/components/IncomingCallModal'
+import ThemeToggle from '@/components/ThemeToggle'
+import NotificationBell from '@/components/NotificationBell'
+import LanguageSelector from '@/components/LanguageSelector'
+import { useTranslation } from '@/lib/i18n/useTranslation'
 
-const navItems = [
+const navItemDefs = [
   {
     href: '/dashboard',
-    label: 'Accueil',
+    labelKey: 'nav.home',
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955a1.126 1.126 0 011.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
@@ -20,7 +24,7 @@ const navItems = [
   },
   {
     href: '/dashboard/encyclopedie',
-    label: 'Encyclopédie',
+    labelKey: 'nav.encyclopedia',
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
@@ -28,8 +32,17 @@ const navItems = [
     ),
   },
   {
+    href: '/dashboard/favoris',
+    labelKey: 'nav.favorites',
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+      </svg>
+    ),
+  },
+  {
     href: '/dashboard/chat',
-    label: 'Chat Général',
+    labelKey: 'nav.chat',
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
@@ -38,7 +51,7 @@ const navItems = [
   },
   {
     href: '/dashboard/messages',
-    label: 'Messages',
+    labelKey: 'nav.messages',
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
@@ -48,7 +61,7 @@ const navItems = [
   },
   {
     href: '/dashboard/mur',
-    label: 'Mur',
+    labelKey: 'nav.wall',
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z" />
@@ -57,7 +70,7 @@ const navItems = [
   },
   {
     href: '/dashboard/evenements',
-    label: 'Événements',
+    labelKey: 'nav.events',
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
@@ -66,7 +79,7 @@ const navItems = [
   },
   {
     href: '/dashboard/visio',
-    label: 'Conférences',
+    labelKey: 'nav.conferences',
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
@@ -74,8 +87,26 @@ const navItems = [
     ),
   },
   {
+    href: '/dashboard/objectifs',
+    labelKey: 'nav.goals',
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+      </svg>
+    ),
+  },
+  {
+    href: '/dashboard/journal',
+    labelKey: 'nav.journal',
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+      </svg>
+    ),
+  },
+  {
     href: '/dashboard/profil',
-    label: 'Mon Profil',
+    labelKey: 'nav.profile',
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
@@ -87,6 +118,7 @@ const navItems = [
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const pathname = usePathname()
+  const { t } = useTranslation()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -180,7 +212,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))' }}>
             <div className="w-5 h-5 border-2 border-[var(--dark)] border-t-transparent rounded-full animate-spin" />
           </div>
-          <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Chargement...</p>
+          <p className="text-sm" style={{ color: 'var(--text-muted)' }}>{t('common.loading')}</p>
         </div>
       </div>
     )
@@ -224,14 +256,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <h1 className="font-display text-base font-semibold tracking-tight" style={{ color: 'var(--text-primary)' }}>
                 SOS Shine
               </h1>
-              <p className="text-[11px] leading-none" style={{ color: 'var(--text-muted)' }}>Votre espace</p>
+              <p className="text-[11px] leading-none" style={{ color: 'var(--text-muted)' }}>{t('nav.your_space')}</p>
             </div>
           </Link>
         </div>
 
         {/* Navigation */}
         <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-          {navItems.map((item) => {
+          {navItemDefs.map((item) => {
             const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href))
             return (
               <Link
@@ -244,7 +276,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   color: isActive ? 'var(--gold)' : 'var(--text-secondary)',
                 }}
               >
-                {/* Active indicator bar */}
                 {isActive && (
                   <span
                     className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-full"
@@ -252,7 +283,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   />
                 )}
                 <span className="opacity-70 group-hover:opacity-100 transition-opacity">{item.icon}</span>
-                {item.label}
+                {t(item.labelKey)}
                 {'hasBadge' in item && item.hasBadge && unreadMessages > 0 && (
                   <span
                     className="ml-auto min-w-[18px] h-[18px] rounded-full flex items-center justify-center text-[10px] font-bold animate-pulse"
@@ -270,7 +301,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <>
               <div className="pt-5 pb-1.5 px-3">
                 <span className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>
-                  Administration
+                  {t('nav.administration')}
                 </span>
               </div>
               <Link
@@ -285,7 +316,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                 </span>
-                Back-office
+                {t('nav.admin')}
               </Link>
             </>
           )}
@@ -309,6 +340,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </p>
             </div>
           </div>
+          <div className="flex items-center gap-2 px-3 py-1 mb-1">
+            <NotificationBell />
+            <LanguageSelector />
+            <ThemeToggle />
+          </div>
           <button
             onClick={handleSignOut}
             className="nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-[13px] cursor-pointer"
@@ -317,7 +353,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
             </svg>
-            Se déconnecter
+            {t('nav.signout')}
           </button>
         </div>
       </aside>
@@ -350,7 +386,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               SOS Shine
             </span>
           )}
-          <div className="w-9" />
+          <div className="flex items-center gap-2">
+            <NotificationBell />
+            <LanguageSelector />
+            <ThemeToggle />
+          </div>
         </header>
 
         {/* Page content */}

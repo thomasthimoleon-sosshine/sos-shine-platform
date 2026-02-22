@@ -60,6 +60,12 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
     applyTheme()
   }, [applyTheme])
 
-  // Render children immediately (CSS defaults from globals.css apply until DB loads)
+  useEffect(() => {
+    const saved = localStorage.getItem('sos-shine-theme') as 'dark' | 'light' | null
+    if (saved) {
+      document.documentElement.setAttribute('data-theme', saved)
+    }
+  }, [])
+
   return <>{children}</>
 }

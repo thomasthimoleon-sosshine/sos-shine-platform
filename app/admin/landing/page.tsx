@@ -153,6 +153,31 @@ export default function LandingAdminPage() {
       }
     } else {
       const rows = data as LandingSectionRow[]
+      const existingKeys = new Set(rows.map((r) => r.section_key))
+      const missingDefaults = LANDING_DEFAULTS.filter((d) => !existingKeys.has(d.section_key))
+      if (missingDefaults.length > 0) {
+        const { data: { user } } = await supabase.auth.getUser()
+        const now = new Date().toISOString()
+        const newRows = missingDefaults.map((d) => ({
+          section_key: d.section_key,
+          label: d.label,
+          position: d.position,
+          is_visible: d.is_visible,
+          content: d.content,
+          styles: d.styles,
+          updated_by: user?.id || null,
+          updated_at: now,
+        }))
+        await supabase.from('landing_sections').insert(newRows)
+        const { data: refreshed } = await supabase.from('landing_sections').select('*').order('position', { ascending: true })
+        if (refreshed) {
+          const allRows = refreshed as LandingSectionRow[]
+          setSections(allRows)
+          if (allRows.length > 0) setOpenPanels({ [allRows[0].section_key]: true })
+          setLoading(false)
+          return
+        }
+      }
       setSections(rows)
       if (rows.length > 0) setOpenPanels({ [rows[0].section_key]: true })
     }
@@ -468,6 +493,54 @@ export default function LandingAdminPage() {
           </>
         )
 
+      /* ────────────── histoire ────────────── */
+      case 'histoire':
+        return (
+          <>
+            <TextField label="Label de section" value={c.label || ''} onChange={(v) => updateContent(key, 'label', v)} />
+            <TextAreaField label="Titre" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
+            <TextAreaField label="Paragraphe 1" value={c.paragraph1 || ''} rows={4} onChange={(v) => updateContent(key, 'paragraph1', v)} />
+            <TextAreaField label="Paragraphe 2" value={c.paragraph2 || ''} rows={4} onChange={(v) => updateContent(key, 'paragraph2', v)} />
+            <TextAreaField label="Citation" value={c.quote || ''} onChange={(v) => updateContent(key, 'quote', v)} />
+            <TextField label="Lien du livre (Amazon)" value={c.book_url || ''} onChange={(v) => updateContent(key, 'book_url', v)} />
+            <FileUpload label="Image couverture du livre" accept="image/*" folder="site"
+              currentUrl={c.book_image || null} hint="Image de la couverture"
+              onUploaded={(url) => updateContent(key, 'book_image', url)}
+              onRemoved={() => updateContent(key, 'book_image', '')} />
+            <TextField label="Libelle du bouton" value={c.button_label || ''} onChange={(v) => updateContent(key, 'button_label', v)} />
+          </>
+        )
+
+      /* ────────────── fondateurs ────────────── */
+      case 'fondateurs':
+        return (
+          <>
+            <TextField label="Label de section" value={c.label || ''} onChange={(v) => updateContent(key, 'label', v)} />
+            <TextAreaField label="Titre" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
+            <TextAreaField label="Description" value={c.description || ''} onChange={(v) => updateContent(key, 'description', v)} />
+            <Separator label="Membres de l'equipe" />
+            {(c.members || []).map((member: { name: string; role: string; image: string }, i: number) => (
+              <div key={i} className="rounded-lg p-4 space-y-3" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Membre {i + 1}</p>
+                  <button type="button" onClick={() => removeArrayItem(key, 'members', i)}
+                    className="text-xs px-2 py-1 rounded cursor-pointer" style={{ color: '#FF6B6B' }}>Supprimer</button>
+                </div>
+                <TextField label="Prenom" value={member.name || ''} onChange={(v) => updateArrayItem(key, 'members', i, 'name', v)} />
+                <TextField label="Role" value={member.role || ''} onChange={(v) => updateArrayItem(key, 'members', i, 'role', v)} />
+                <FileUpload label="Photo" accept="image/*" folder="team"
+                  currentUrl={member.image || null} hint="Photo de profil"
+                  onUploaded={(url) => updateArrayItem(key, 'members', i, 'image', url)}
+                  onRemoved={() => updateArrayItem(key, 'members', i, 'image', '')} />
+              </div>
+            ))}
+            <button type="button" onClick={() => addArrayItem(key, 'members', { name: '', role: '', image: '' })}
+              className="text-sm px-4 py-2 rounded-lg cursor-pointer" style={{ color: '#74C0FC', border: '1px dashed #74C0FC' }}>
+              + Ajouter un membre
+            </button>
+          </>
+        )
+
       /* ────────────── pricing ────────────── */
       case 'pricing':
         return (
@@ -645,6 +718,26 @@ export default function LandingAdminPage() {
             <Separator label="Style" />
             <SelectField label="Police" value={st.title_font || ''} options={fontOpts} onChange={(v) => updateStyle(key, 'title_font', v)} />
             <SelectField label="Alignement" value={st.title_align || ''} options={alignOpts} onChange={(v) => updateStyle(key, 'title_align', v)} />
+          </>
+        )
+
+      case 'histoire':
+        return (
+          <>
+            <Separator label="Style" />
+            <SelectField label="Police du titre" value={st.title_font || ''} options={fontOpts} onChange={(v) => updateStyle(key, 'title_font', v)} />
+            <SelectField label="Taille du titre" value={st.title_size || ''} options={sizeOpts} onChange={(v) => updateStyle(key, 'title_size', v)} />
+            <SelectField label="Alignement du titre" value={st.title_align || ''} options={alignOpts} onChange={(v) => updateStyle(key, 'title_align', v)} />
+          </>
+        )
+
+      case 'fondateurs':
+        return (
+          <>
+            <Separator label="Style" />
+            <SelectField label="Police du titre" value={st.title_font || ''} options={fontOpts} onChange={(v) => updateStyle(key, 'title_font', v)} />
+            <SelectField label="Taille du titre" value={st.title_size || ''} options={sizeOpts} onChange={(v) => updateStyle(key, 'title_size', v)} />
+            <SelectField label="Alignement du titre" value={st.title_align || ''} options={alignOpts} onChange={(v) => updateStyle(key, 'title_align', v)} />
           </>
         )
 

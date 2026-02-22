@@ -765,99 +765,112 @@ export default function Home() {
       )}
 
       {/* ═══ L'HISTOIRE / LE LIVRE ═══ */}
-      <section className="px-6 md:px-20 py-32 relative">
-        <div className="max-w-5xl mx-auto">
-          <RevealOnScroll>
-            <p className="luxury-title text-center text-sm tracking-[0.4em] text-[var(--text-muted)] mb-4">L'Histoire</p>
-          </RevealOnScroll>
-          <RevealOnScroll delay={0.1}>
-            <h2 className="font-display font-light text-center text-3xl md:text-5xl mb-6" style={{ color: 'var(--gold)' }}>
-              <WordByWordReveal text="Né d'un livre, devenu une communauté" />
-            </h2>
-          </RevealOnScroll>
-          <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16 mt-12">
-            <RevealOnScroll delay={0.15}>
-              <div className="flex-shrink-0 group">
-                <a href="https://www.amazon.fr/SOS-Shine-Briller-Comme-Diamant/dp/2959566807" target="_blank" rel="noopener noreferrer" className="block relative">
-                  <div className="w-56 md:w-64 rounded-lg overflow-hidden border border-[var(--gold)]/20 group-hover:border-[var(--gold)]/60 transition-all duration-500 shadow-lg group-hover:shadow-[0_0_30px_rgba(212,175,55,0.2)]">
-                    <img
-                      src="/images/book-cover.jpeg"
-                      alt="SOS Shine — Briller Comme un Diamant par Julia Laureau"
-                      className="w-full aspect-[3/4] object-cover"
-                    />
+      {vis('histoire') && (() => {
+        const hist = sec('histoire');
+        return (
+          <section className="px-6 md:px-20 py-32 relative">
+            <div className="max-w-5xl mx-auto">
+              <RevealOnScroll>
+                <p className="luxury-title text-center text-sm tracking-[0.4em] text-[var(--text-muted)] mb-4">{hist.label || "L'Histoire"}</p>
+              </RevealOnScroll>
+              <RevealOnScroll delay={0.1}>
+                <h2 className="font-display font-light text-center text-3xl md:text-5xl mb-6" style={{ color: 'var(--gold)' }}>
+                  <WordByWordReveal text={hist.title || ''} />
+                </h2>
+              </RevealOnScroll>
+              <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16 mt-12">
+                <RevealOnScroll delay={0.15}>
+                  <div className="flex-shrink-0 group">
+                    <a href={hist.book_url || '#'} target="_blank" rel="noopener noreferrer" className="block relative">
+                      <div className="w-56 md:w-64 rounded-lg overflow-hidden border border-[var(--gold)]/20 group-hover:border-[var(--gold)]/60 transition-all duration-500 shadow-lg group-hover:shadow-[0_0_30px_rgba(212,175,55,0.2)]">
+                        <img
+                          src={hist.book_image || '/images/book-cover.jpeg'}
+                          alt="SOS Shine — Briller Comme un Diamant"
+                          className="w-full aspect-[3/4] object-cover"
+                        />
+                      </div>
+                      <div className="absolute -inset-2 rounded-xl bg-[var(--gold)]/5 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+                    </a>
                   </div>
-                  <div className="absolute -inset-2 rounded-xl bg-[var(--gold)]/5 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
-                </a>
+                </RevealOnScroll>
+                <RevealOnScroll delay={0.25}>
+                  <div className="flex-1 text-center md:text-left">
+                    <p className="text-lg md:text-xl text-[var(--text-body)] leading-relaxed mb-6">
+                      {hist.paragraph1 || ''}
+                    </p>
+                    <p className="text-lg md:text-xl text-[var(--text-body)] leading-relaxed mb-6">
+                      {hist.paragraph2 || ''}
+                    </p>
+                    {hist.quote && (
+                      <p className="text-base text-[var(--text-muted)] leading-relaxed mb-8 italic">
+                        &ldquo;{hist.quote}&rdquo;
+                      </p>
+                    )}
+                    <a
+                      href={hist.book_url || '#'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-6 py-3 border border-[var(--gold)]/40 rounded-full text-[var(--gold)] text-sm tracking-[0.15em] uppercase hover:bg-[var(--gold)]/10 hover:border-[var(--gold)] transition-all duration-300"
+                    >
+                      {hist.button_label || 'Découvrir le livre'}
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                    </a>
+                  </div>
+                </RevealOnScroll>
               </div>
-            </RevealOnScroll>
-            <RevealOnScroll delay={0.25}>
-              <div className="flex-1 text-center md:text-left">
-                <p className="text-lg md:text-xl text-[var(--text-body)] leading-relaxed mb-6">
-                  Tout a commencé avec un livre. <span className="text-[var(--gold)]">Julia Laureau</span>, thérapeute holistique, a créé <em className="text-[var(--gold)]">"SOS Shine — Briller Comme un Diamant"</em> — bien plus qu'un ouvrage de développement personnel, une véritable bible de transformation qui combine coaching vidéo, méditations guidées et séances énergétiques.
-                </p>
-                <p className="text-lg md:text-xl text-[var(--text-body)] leading-relaxed mb-6">
-                  Ce programme interactif a déjà aidé des dizaines de personnes à se libérer de leurs blocages et à accéder à leur véritable potentiel. Face à cet élan, la plateforme SOS Shine est née — la continuité naturelle du livre, transformée en une communauté vivante d'accompagnement et de reconstruction.
-                </p>
-                <p className="text-base text-[var(--text-muted)] leading-relaxed mb-8 italic">
-                  "Vous avez en vous le pouvoir de tout changer, de tout transmuter, et d'évoluer vers une nouvelle version de vous-même."
-                </p>
-                <a
-                  href="https://www.amazon.fr/SOS-Shine-Briller-Comme-Diamant/dp/2959566807"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 border border-[var(--gold)]/40 rounded-full text-[var(--gold)] text-sm tracking-[0.15em] uppercase hover:bg-[var(--gold)]/10 hover:border-[var(--gold)] transition-all duration-300"
-                >
-                  Découvrir le livre
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                </a>
-              </div>
-            </RevealOnScroll>
-          </div>
-        </div>
-      </section>
+            </div>
+          </section>
+        );
+      })()}
 
       {/* ═══ FONDATEURS ═══ */}
-      <section className="px-6 md:px-20 py-32 relative">
-        <div className="max-w-5xl mx-auto">
-          <RevealOnScroll>
-            <p className="luxury-title text-center text-sm tracking-[0.4em] text-[var(--text-muted)] mb-4">Les Fondateurs</p>
-          </RevealOnScroll>
-          <RevealOnScroll delay={0.1}>
-            <h2 className="font-display font-light text-center text-3xl md:text-5xl mb-6" style={{ color: 'var(--gold)' }}>
-              <WordByWordReveal text="L'équipe derrière SOS Shine" />
-            </h2>
-          </RevealOnScroll>
-          <RevealOnScroll delay={0.15}>
-            <p className="text-center text-[var(--text-muted)] max-w-2xl mx-auto mb-16 text-lg leading-relaxed">
-              Trois passionnés unis par une vision commune : créer un espace où chacun peut traverser ses épreuves avec dignité et bienveillance.
-            </p>
-          </RevealOnScroll>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            {[
-              { name: 'Julia', image: '/images/julia.jpeg', role: 'Fondatrice' },
-              { name: 'Wiliam', image: '/images/wiliam.png', role: 'Co-fondateur' },
-              { name: 'Thomas', image: '/images/thomas.jpeg', role: 'Co-fondateur' },
-            ].map((founder, i) => (
-              <RevealOnScroll key={founder.name} delay={0.2 + i * 0.15}>
-                <div className="flex flex-col items-center group">
-                  <div className="relative mb-6">
-                    <div className="w-44 h-44 md:w-52 md:h-52 rounded-full overflow-hidden border-2 border-[var(--gold)]/30 group-hover:border-[var(--gold)] transition-all duration-500 relative">
-                      <img
-                        src={founder.image}
-                        alt={founder.name}
-                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                      />
-                    </div>
-                    <div className="absolute -inset-1 rounded-full bg-[var(--gold)]/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
-                  </div>
-                  <h3 className="font-display text-2xl text-[var(--gold)] mb-1">{founder.name}</h3>
-                  <p className="text-sm tracking-[0.2em] uppercase text-[var(--text-muted)]">{founder.role}</p>
-                </div>
+      {vis('fondateurs') && (() => {
+        const fond = sec('fondateurs');
+        const members = fond.members || [];
+        return (
+          <section className="px-6 md:px-20 py-32 relative">
+            <div className="max-w-5xl mx-auto">
+              <RevealOnScroll>
+                <p className="luxury-title text-center text-sm tracking-[0.4em] text-[var(--text-muted)] mb-4">{fond.label || 'Les Fondateurs'}</p>
               </RevealOnScroll>
-            ))}
-          </div>
-        </div>
-      </section>
+              <RevealOnScroll delay={0.1}>
+                <h2 className="font-display font-light text-center text-3xl md:text-5xl mb-6" style={{ color: 'var(--gold)' }}>
+                  <WordByWordReveal text={fond.title || ''} />
+                </h2>
+              </RevealOnScroll>
+              {fond.description && (
+                <RevealOnScroll delay={0.15}>
+                  <p className="text-center text-[var(--text-muted)] max-w-2xl mx-auto mb-16 text-lg leading-relaxed">
+                    {fond.description}
+                  </p>
+                </RevealOnScroll>
+              )}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                {members.map((founder: { name: string; image: string; role: string }, i: number) => (
+                  <RevealOnScroll key={founder.name || i} delay={0.2 + i * 0.15}>
+                    <div className="flex flex-col items-center group">
+                      <div className="relative mb-6">
+                        <div className="w-44 h-44 md:w-52 md:h-52 rounded-full overflow-hidden border-2 border-[var(--gold)]/30 group-hover:border-[var(--gold)] transition-all duration-500 relative">
+                          {founder.image && (
+                            <img
+                              src={founder.image}
+                              alt={founder.name}
+                              className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                            />
+                          )}
+                        </div>
+                        <div className="absolute -inset-1 rounded-full bg-[var(--gold)]/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+                      </div>
+                      <h3 className="font-display text-2xl text-[var(--gold)] mb-1">{founder.name}</h3>
+                      <p className="text-sm tracking-[0.2em] uppercase text-[var(--text-muted)]">{founder.role}</p>
+                    </div>
+                  </RevealOnScroll>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      })()}
 
       {/* ═══ OFFRES / PRICING ═══ */}
       {vis('pricing') && (

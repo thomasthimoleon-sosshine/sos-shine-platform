@@ -180,9 +180,51 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     },
   },
   {
+    section_key: 'histoire',
+    label: "L'Histoire / Le Livre",
+    position: 6,
+    is_visible: true,
+    content: {
+      label: "L'Histoire",
+      title: "Né d'un livre, devenu une communauté",
+      paragraph1: "Tout a commencé avec un livre. Julia Laureau, thérapeute holistique, a créé \"SOS Shine — Briller Comme un Diamant\" — bien plus qu'un ouvrage de développement personnel, une véritable bible de transformation qui combine coaching vidéo, méditations guidées et séances énergétiques.",
+      paragraph2: "Ce programme interactif a déjà aidé des dizaines de personnes à se libérer de leurs blocages et à accéder à leur véritable potentiel. Face à cet élan, la plateforme SOS Shine est née — la continuité naturelle du livre, transformée en une communauté vivante d'accompagnement et de reconstruction.",
+      quote: "Vous avez en vous le pouvoir de tout changer, de tout transmuter, et d'évoluer vers une nouvelle version de vous-même.",
+      book_url: "https://www.amazon.fr/SOS-Shine-Briller-Comme-Diamant/dp/2959566807",
+      book_image: "/images/book-cover.jpeg",
+      button_label: "Découvrir le livre",
+    },
+    styles: {
+      title_font: 'Cormorant Garamond',
+      title_size: 'lg',
+      title_align: 'center',
+    },
+  },
+  {
+    section_key: 'fondateurs',
+    label: 'Les Fondateurs',
+    position: 7,
+    is_visible: true,
+    content: {
+      label: 'Les Fondateurs',
+      title: "L'équipe derrière SOS Shine",
+      description: "Trois passionnés unis par une vision commune : créer un espace où chacun peut traverser ses épreuves avec dignité et bienveillance.",
+      members: [
+        { name: 'Julia', role: 'Fondatrice', image: '/images/julia.jpeg' },
+        { name: 'Wiliam', role: 'Co-fondateur', image: '/images/wiliam.png' },
+        { name: 'Thomas', role: 'Co-fondateur', image: '/images/thomas.jpeg' },
+      ],
+    },
+    styles: {
+      title_font: 'Cormorant Garamond',
+      title_size: 'lg',
+      title_align: 'center',
+    },
+  },
+  {
     section_key: 'pricing',
     label: 'Tarification',
-    position: 6,
+    position: 8,
     is_visible: true,
     content: {
       title: "Choisissez votre accompagnement",
@@ -232,7 +274,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'cta_dark',
     label: 'CTA (fond sombre)',
-    position: 7,
+    position: 9,
     is_visible: true,
     content: {
       title: "Rejoignez-nous.\nNe soyez plus jamais seul(e) face \u00e0 vos temp\u00eates.",
@@ -247,7 +289,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'cta_light',
     label: 'CTA (fond clair)',
-    position: 8,
+    position: 10,
     is_visible: true,
     content: {
       description: "Que vous cherchiez un challenge émotionnel ancien, une crise, ou simplement un espace où être compris(e) — SOS Shine est là, 24h/24, 7j/7. Vous n’avez pas à tout porter seul(e). On est là pour comprendre, accompagner et avancer ensemble.",
@@ -264,7 +306,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'footer',
     label: 'Pied de page',
-    position: 9,
+    position: 11,
     is_visible: true,
     content: {
       name: 'SOS Shine',

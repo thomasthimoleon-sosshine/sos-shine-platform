@@ -780,7 +780,7 @@ export default function Home() {
           </RevealOnScroll>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {[
-              { name: 'Julia', image: '/images/julia.jpeg', role: 'Co-fondatrice' },
+              { name: 'Julia', image: '/images/julia.jpeg', role: 'Fondatrice' },
               { name: 'Wiliam', image: '/images/wiliam.png', role: 'Co-fondateur' },
               { name: 'Thomas', image: '/images/thomas.jpeg', role: 'Co-fondateur' },
             ].map((founder, i) => (

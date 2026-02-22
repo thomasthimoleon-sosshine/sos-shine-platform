@@ -369,8 +369,8 @@ export default function Home() {
   } as React.CSSProperties;
 
   const tickerItems = [
-    "Abandon", "Burn-out", "Deuil", "Trahison", "Anxiete", "Rejet",
-    "Solitude", "Rupture", "Dependance affective", "Peur", "Confiance en soi",
+    "Abus", "Amour propre", "Burn-out", "Confiance en soi",
+    "Dépendance affective", "Deuil", "Rupture",
   ];
 
   return (

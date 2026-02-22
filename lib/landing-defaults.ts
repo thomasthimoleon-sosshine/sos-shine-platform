@@ -127,9 +127,9 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     content: {
       label: "L\u2019encyclop\u00e9die",
       title: "Chaque challenge \u00e9motionnel a sa page d\u00e9di\u00e9e",
-      description: "Abandon, trahison, burn-out, deuil, d\u00e9pendance affective, peur, solitude, rejet... Class\u00e9es de A \u00e0 Z, accessibles en un clic.",
+      description: "Abus, amour propre, burn-out, confiance en soi, dépendance affective, deuil, rupture... Classées de A à Z, accessibles en un clic.",
       image_url: '',
-      items: ['Abandon', 'Anxi\u00e9t\u00e9', 'Burn-out', 'D\u00e9pendance affective', 'Deuil', 'Manque de confiance', 'Peur', 'Rejet', 'Rupture', 'Solitude', 'Trahison', 'Et plus...'],
+      items: ['Abus', 'Amour propre', 'Burn-out', 'Confiance en soi', 'Dépendance affective', 'Deuil', 'Rupture'],
     },
     styles: {
       title_font: 'Cormorant Garamond',

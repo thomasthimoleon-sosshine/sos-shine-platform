@@ -6,19 +6,13 @@ import { createClient } from '@/lib/supabase/client'
 import type { Douleur } from '@/types/database'
 
 const defaultDouleurs: Pick<Douleur, 'title' | 'slug' | 'description' | 'image_url'>[] = [
-  { title: 'Abandon', slug: 'abandon', description: 'Traversez la peur de l\'abandon et reconstruisez un lien sécurisant avec vous-même.', image_url: null },
-  { title: 'Anxiété', slug: 'anxiete', description: 'Protocoles d\'urgence et outils quotidiens pour calmer l\'anxiété et retrouver votre ancrage.', image_url: null },
+  { title: 'Abus', slug: 'abus', description: 'Identifiez les mécanismes de l\'abus, reconstruisez vos limites et retrouvez votre pouvoir personnel.', image_url: null },
+  { title: 'Amour propre', slug: 'amour-propre', description: 'Reconnectez-vous à votre valeur intérieure et cultivez un amour de soi authentique et durable.', image_url: null },
   { title: 'Burn-out', slug: 'burn-out', description: 'Récupérez votre énergie vitale étape par étape. Corps, mental, reconstruction.', image_url: null },
+  { title: 'Confiance en soi', slug: 'confiance-en-soi', description: 'Rebâtissez une confiance solide en vous, pas à pas.', image_url: null },
   { title: 'Dépendance affective', slug: 'dependance-affective', description: 'Comprenez les mécanismes et libérez-vous du besoin de l\'autre pour exister.', image_url: null },
   { title: 'Deuil', slug: 'deuil', description: 'Accompagnement doux pour traverser la perte d\'un être cher.', image_url: null },
-  { title: 'Humiliation', slug: 'humiliation', description: 'Retrouvez votre dignité et votre estime après une expérience d\'humiliation.', image_url: null },
-  { title: 'Injustice', slug: 'injustice', description: 'Transformez la colère en puissance et apprenez à lâcher ce qui vous ronge.', image_url: null },
-  { title: 'Manque de confiance', slug: 'manque-de-confiance', description: 'Rebâtissez une confiance solide en vous, pas à pas.', image_url: null },
-  { title: 'Peur', slug: 'peur', description: 'Identifiez, comprenez et désamorcez vos peurs profondes.', image_url: null },
-  { title: 'Rejet', slug: 'rejet', description: 'Guérissez la blessure du rejet et reconstruisez votre sentiment d\'appartenance.', image_url: null },
-  { title: 'Rupture amoureuse', slug: 'rupture-amoureuse', description: 'Traversez la tempête d\'une séparation avec des outils concrets.', image_url: null },
-  { title: 'Solitude', slug: 'solitude', description: 'Transformez la solitude subie en solitude choisie et retrouvez le lien.', image_url: null },
-  { title: 'Trahison', slug: 'trahison', description: 'Reconstruisez la confiance après une trahison. Protocoles émotionnels et ancrage.', image_url: null },
+  { title: 'Rupture', slug: 'rupture', description: 'Traversez la tempête d\'une séparation avec des outils concrets.', image_url: null },
 ]
 
 export default function EncyclopediePage() {

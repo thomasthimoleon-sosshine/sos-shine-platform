@@ -186,15 +186,34 @@ function FloatingOrbs() {
 }
 
 const DIAMONDS = [
-  { top: '5%', left: '10%', duration: '8s', delay: '0s', size: 4 },
-  { top: '15%', left: '85%', duration: '10s', delay: '1.5s', size: 3 },
-  { top: '35%', left: '50%', duration: '7s', delay: '3s', size: 4 },
-  { top: '50%', left: '20%', duration: '9s', delay: '0.8s', size: 3 },
-  { top: '65%', left: '75%', duration: '8s', delay: '2.2s', size: 4 },
-  { top: '80%', left: '40%', duration: '10s', delay: '4s', size: 3 },
-  { top: '25%', left: '65%', duration: '9s', delay: '1s', size: 3 },
-  { top: '90%', left: '90%', duration: '7s', delay: '3.5s', size: 4 },
+  { top: '5%', left: '10%', duration: '8s', delay: '0s', size: 14 },
+  { top: '15%', left: '85%', duration: '10s', delay: '1.5s', size: 10 },
+  { top: '35%', left: '50%', duration: '7s', delay: '3s', size: 12 },
+  { top: '50%', left: '20%', duration: '9s', delay: '0.8s', size: 10 },
+  { top: '65%', left: '75%', duration: '8s', delay: '2.2s', size: 14 },
+  { top: '80%', left: '40%', duration: '10s', delay: '4s', size: 10 },
+  { top: '25%', left: '65%', duration: '9s', delay: '1s', size: 12 },
+  { top: '90%', left: '90%', duration: '7s', delay: '3.5s', size: 10 },
+  { top: '45%', left: '5%', duration: '11s', delay: '2s', size: 8 },
+  { top: '70%', left: '60%', duration: '9s', delay: '5s', size: 12 },
 ];
+
+function DiamondSvg({ size, className, style }: { size: number; className?: string; style?: React.CSSProperties }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
+      <defs>
+        <linearGradient id={`dg-${size}`} x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FFFBE6" />
+          <stop offset="30%" stopColor="#D4AF37" />
+          <stop offset="60%" stopColor="#F5E6A3" />
+          <stop offset="100%" stopColor="#D4AF37" />
+        </linearGradient>
+      </defs>
+      <polygon points="12,1 15,9 23,9 17,14.5 19,23 12,18 5,23 7,14.5 1,9 9,9" fill={`url(#dg-${size})`} opacity="0.85" />
+      <polygon points="12,4 14,9 19,9 15,12.5 16.5,18 12,15 7.5,18 9,12.5 5,9 10,9" fill="white" opacity="0.25" />
+    </svg>
+  );
+}
 
 function SparklingDiamonds() {
   return (
@@ -205,7 +224,9 @@ function SparklingDiamonds() {
           width: d.size + 'px', height: d.size + 'px',
           ['--duration' as string]: d.duration,
           ['--delay' as string]: d.delay,
-        }} />
+        }}>
+          <DiamondSvg size={d.size} />
+        </div>
       ))}
     </div>
   );

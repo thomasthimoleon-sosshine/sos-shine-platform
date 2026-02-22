@@ -202,15 +202,14 @@ function DiamondSvg({ size, className, style }: { size: number; className?: stri
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
       <defs>
-        <linearGradient id={`dg-${size}`} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#FFFBE6" />
-          <stop offset="30%" stopColor="#D4AF37" />
-          <stop offset="60%" stopColor="#F5E6A3" />
-          <stop offset="100%" stopColor="#D4AF37" />
-        </linearGradient>
+        <radialGradient id={`glow-${size}`} cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#F5E6A3" stopOpacity="1" />
+          <stop offset="40%" stopColor="#D4AF37" stopOpacity="0.6" />
+          <stop offset="100%" stopColor="#D4AF37" stopOpacity="0" />
+        </radialGradient>
       </defs>
-      <polygon points="12,1 15,9 23,9 17,14.5 19,23 12,18 5,23 7,14.5 1,9 9,9" fill={`url(#dg-${size})`} opacity="0.85" />
-      <polygon points="12,4 14,9 19,9 15,12.5 16.5,18 12,15 7.5,18 9,12.5 5,9 10,9" fill="white" opacity="0.25" />
+      <circle cx="12" cy="12" r="10" fill={`url(#glow-${size})`} />
+      <circle cx="12" cy="12" r="2" fill="#FFFBE6" opacity="0.9" />
     </svg>
   );
 }
@@ -407,7 +406,7 @@ export default function Home() {
           >
             <div className="flex items-center justify-center">
               <Link href="/" className="flex items-center gap-3">
-                <img src={logoUrl || '/images/logo.png'} alt="SOS Shine" className="h-10 w-auto object-contain" />
+                <img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-20 md:h-24 w-auto object-contain" />
               </Link>
             </div>
           </header>
@@ -1009,7 +1008,7 @@ export default function Home() {
           <div className="max-w-6xl mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-center gap-10">
               <div className="flex items-center gap-3">
-                <img src={logoUrl || '/images/logo.png'} alt="SOS Shine" className="h-8 w-auto object-contain" />
+                <img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-16 w-auto object-contain" />
               </div>
 
               <div className="flex flex-wrap justify-center gap-x-8 gap-y-4">

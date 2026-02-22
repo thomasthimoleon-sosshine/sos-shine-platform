@@ -28,9 +28,31 @@ const dmSans = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "SOS Shine — Votre sanctuaire",
+  title: "SOS Shine — Votre communauté bienveillante",
   description:
-    "Plateforme communautaire premium pour traverser les épreuves de la vie. Accompagnement corps, émotion, action.",
+    "SOS Shine, votre communauté bienveillante. Plateforme premium d'accompagnement pour traverser les épreuves de la vie. Corps, émotion, action.",
+  openGraph: {
+    title: "SOS Shine — Votre communauté bienveillante",
+    description:
+      "SOS Shine, votre communauté bienveillante. Plateforme premium d'accompagnement pour traverser les épreuves de la vie.",
+    images: [
+      {
+        url: "/images/og-logo.png",
+        width: 1024,
+        height: 1024,
+        alt: "SOS Shine",
+      },
+    ],
+    type: "website",
+    siteName: "SOS Shine",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "SOS Shine — Votre communauté bienveillante",
+    description:
+      "SOS Shine, votre communauté bienveillante. Plateforme premium d'accompagnement pour traverser les épreuves de la vie.",
+    images: ["/images/og-logo.png"],
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",

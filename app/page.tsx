@@ -218,7 +218,7 @@ export default function Home() {
         for (const d of LANDING_DEFAULTS) {
           const row = dbMap[d.section_key];
           merged[d.section_key] = row
-            ? { content: row.content, styles: row.styles, is_visible: row.is_visible }
+            ? { content: d.content, styles: row.styles, is_visible: row.is_visible }
             : { content: d.content, styles: d.styles, is_visible: d.is_visible };
         }
         for (const row of rows) {

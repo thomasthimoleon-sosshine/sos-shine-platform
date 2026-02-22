@@ -29,10 +29,11 @@ export default function PublicDouleurDetailPage() {
         .single()
 
       if (data) {
-        setDouleur(data as Douleur)
-        document.title = `${data.title} — Encyclopédie SOS Shine`
+        const d = data as Douleur
+        setDouleur(d)
+        document.title = `${d.title} — Encyclopédie SOS Shine`
         const metaDesc = document.querySelector('meta[name="description"]')
-        if (metaDesc) metaDesc.setAttribute('content', `Protocole en 4 étapes pour surmonter ${data.title.toLowerCase()} : vidéos, soins énergétiques et méditations guidées. Rejoins la communauté SOS Shine.`)
+        if (metaDesc) metaDesc.setAttribute('content', `Protocole en 4 étapes pour surmonter ${d.title.toLowerCase()} : vidéos, soins énergétiques et méditations guidées. Rejoins la communauté SOS Shine.`)
       }
       setLoading(false)
     }

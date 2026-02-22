@@ -762,6 +762,59 @@ export default function Home() {
         </section>
       )}
 
+      {/* ═══ L'HISTOIRE / LE LIVRE ═══ */}
+      <section className="px-6 md:px-20 py-32 relative">
+        <div className="max-w-5xl mx-auto">
+          <RevealOnScroll>
+            <p className="luxury-title text-center text-sm tracking-[0.4em] text-[var(--text-muted)] mb-4">L'Histoire</p>
+          </RevealOnScroll>
+          <RevealOnScroll delay={0.1}>
+            <h2 className="font-display font-light text-center text-3xl md:text-5xl mb-6" style={{ color: 'var(--gold)' }}>
+              <WordByWordReveal text="Né d'un livre, devenu une communauté" />
+            </h2>
+          </RevealOnScroll>
+          <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16 mt-12">
+            <RevealOnScroll delay={0.15}>
+              <div className="flex-shrink-0 group">
+                <a href="https://www.amazon.fr/SOS-Shine-Briller-Comme-Diamant/dp/2959566807" target="_blank" rel="noopener noreferrer" className="block relative">
+                  <div className="w-56 md:w-64 rounded-lg overflow-hidden border border-[var(--gold)]/20 group-hover:border-[var(--gold)]/60 transition-all duration-500 shadow-lg group-hover:shadow-[0_0_30px_rgba(212,175,55,0.15)]">
+                    <img
+                      src="/images/julia.jpeg"
+                      alt="SOS Shine — Briller Comme un Diamant par Julia"
+                      className="w-full aspect-[3/4] object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-5">
+                      <p className="font-display text-lg text-[var(--gold)] leading-tight italic">"SOS Shine —<br/>Briller Comme un Diamant"</p>
+                      <p className="text-xs text-white/60 mt-2">Par Julia</p>
+                    </div>
+                  </div>
+                  <div className="absolute -inset-2 rounded-xl bg-[var(--gold)]/5 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+                </a>
+              </div>
+            </RevealOnScroll>
+            <RevealOnScroll delay={0.25}>
+              <div className="flex-1 text-center md:text-left">
+                <p className="text-lg md:text-xl text-[var(--text-body)] leading-relaxed mb-6">
+                  Tout a commencé avec un livre. <span className="text-[var(--gold)]">Julia</span> a écrit <em className="text-[var(--gold)]">"SOS Shine — Briller Comme un Diamant"</em> pour partager son parcours et offrir des clés concrètes à ceux qui traversent des épreuves de vie.
+                </p>
+                <p className="text-lg md:text-xl text-[var(--text-body)] leading-relaxed mb-8">
+                  Face à l'écho immense qu'il a rencontré, la plateforme SOS Shine est née — la continuité logique du livre, transformée en un espace vivant d'accompagnement, de partage et de reconstruction.
+                </p>
+                <a
+                  href="https://www.amazon.fr/SOS-Shine-Briller-Comme-Diamant/dp/2959566807"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-3 border border-[var(--gold)]/40 rounded-full text-[var(--gold)] text-sm tracking-[0.15em] uppercase hover:bg-[var(--gold)]/10 hover:border-[var(--gold)] transition-all duration-300"
+                >
+                  Découvrir le livre
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                </a>
+              </div>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+
       {/* ═══ FONDATEURS ═══ */}
       <section className="px-6 md:px-20 py-32 relative">
         <div className="max-w-5xl mx-auto">

@@ -777,16 +777,12 @@ export default function Home() {
             <RevealOnScroll delay={0.15}>
               <div className="flex-shrink-0 group">
                 <a href="https://www.amazon.fr/SOS-Shine-Briller-Comme-Diamant/dp/2959566807" target="_blank" rel="noopener noreferrer" className="block relative">
-                  <div className="w-56 md:w-64 rounded-lg overflow-hidden border border-[var(--gold)]/20 group-hover:border-[var(--gold)]/60 transition-all duration-500 shadow-lg group-hover:shadow-[0_0_30px_rgba(212,175,55,0.15)]">
+                  <div className="w-56 md:w-64 rounded-lg overflow-hidden border border-[var(--gold)]/20 group-hover:border-[var(--gold)]/60 transition-all duration-500 shadow-lg group-hover:shadow-[0_0_30px_rgba(212,175,55,0.2)]">
                     <img
-                      src="/images/julia.jpeg"
-                      alt="SOS Shine — Briller Comme un Diamant par Julia"
+                      src="/images/book-cover.jpeg"
+                      alt="SOS Shine — Briller Comme un Diamant par Julia Laureau"
                       className="w-full aspect-[3/4] object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-5">
-                      <p className="font-display text-lg text-[var(--gold)] leading-tight italic">"SOS Shine —<br/>Briller Comme un Diamant"</p>
-                      <p className="text-xs text-white/60 mt-2">Par Julia</p>
-                    </div>
                   </div>
                   <div className="absolute -inset-2 rounded-xl bg-[var(--gold)]/5 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
                 </a>
@@ -795,10 +791,13 @@ export default function Home() {
             <RevealOnScroll delay={0.25}>
               <div className="flex-1 text-center md:text-left">
                 <p className="text-lg md:text-xl text-[var(--text-body)] leading-relaxed mb-6">
-                  Tout a commencé avec un livre. <span className="text-[var(--gold)]">Julia</span> a écrit <em className="text-[var(--gold)]">"SOS Shine — Briller Comme un Diamant"</em> pour partager son parcours et offrir des clés concrètes à ceux qui traversent des épreuves de vie.
+                  Tout a commencé avec un livre. <span className="text-[var(--gold)]">Julia Laureau</span>, thérapeute holistique, a créé <em className="text-[var(--gold)]">"SOS Shine — Briller Comme un Diamant"</em> — bien plus qu'un ouvrage de développement personnel, une véritable bible de transformation qui combine coaching vidéo, méditations guidées et séances énergétiques.
                 </p>
-                <p className="text-lg md:text-xl text-[var(--text-body)] leading-relaxed mb-8">
-                  Face à l'écho immense qu'il a rencontré, la plateforme SOS Shine est née — la continuité logique du livre, transformée en un espace vivant d'accompagnement, de partage et de reconstruction.
+                <p className="text-lg md:text-xl text-[var(--text-body)] leading-relaxed mb-6">
+                  Ce programme interactif a déjà aidé des dizaines de personnes à se libérer de leurs blocages et à accéder à leur véritable potentiel. Face à cet élan, la plateforme SOS Shine est née — la continuité naturelle du livre, transformée en une communauté vivante d'accompagnement et de reconstruction.
+                </p>
+                <p className="text-base text-[var(--text-muted)] leading-relaxed mb-8 italic">
+                  "Vous avez en vous le pouvoir de tout changer, de tout transmuter, et d'évoluer vers une nouvelle version de vous-même."
                 </p>
                 <a
                   href="https://www.amazon.fr/SOS-Shine-Briller-Comme-Diamant/dp/2959566807"

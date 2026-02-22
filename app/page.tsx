@@ -7,31 +7,33 @@ import { createClient } from "@/lib/supabase/client";
 import { LANDING_DEFAULTS, buildSectionMap } from "@/lib/landing-defaults";
 import type { LandingSectionDefault, SectionContent, SectionStyles } from "@/lib/landing-defaults";
 
+function matchCase(original: string, replacement: string): string {
+  if (original === original.toUpperCase()) return replacement.toUpperCase();
+  if (original[0] === original[0].toUpperCase()) return replacement[0].toUpperCase() + replacement.slice(1);
+  return replacement;
+}
+
 function sanitizeContent(content: SectionContent): SectionContent {
-  const replacements: [RegExp, string][] = [
-    [/Encyclopédie complète des douleurs/gi, 'Encyclopédie complète des expériences de vie'],
-    [/3 étapes par douleur/gi, '3 étapes par challenge émotionnel'],
-    [/Chat dédié par douleur/gi, 'Chat dédié par challenge émotionnel'],
-    [/chaque douleur/gi, 'chaque challenge émotionnel'],
-    [/Chaque douleur/gi, 'Chaque challenge émotionnel'],
-    [/une douleur ancienne/gi, 'un challenge émotionnel ancien'],
-    [/la douleur/gi, 'le challenge émotionnel'],
-    [/nouvelle douleur/gi, 'nouvelle expérience de vie'],
-    [/des douleurs/gi, 'des expériences de vie'],
-    [/les douleurs/gi, 'les expériences de vie'],
-    [/vos douleurs/gi, 'vos expériences de vie'],
-    [/douleurs/gi, 'expériences de vie'],
-    [/douleur/gi, 'challenge émotionnel'],
-  ];
+  function sanitizeStr(str: string): string {
+    let r = str;
+    r = r.replace(/Encyclopédie complète des douleurs/gi, (m) => {
+      const isUpper = m[0] === m[0].toUpperCase();
+      return isUpper ? 'Encyclopédie complète des expériences de vie' : 'encyclopédie complète des expériences de vie';
+    });
+    r = r.replace(/(\d+)\s+étapes?\s+par\s+douleur/gi, '$1 étapes par challenge émotionnel');
+    r = r.replace(/Chat dédié par douleur/gi, (m) => matchCase(m[0], 'C') === 'C' ? 'Chat dédié par challenge émotionnel' : 'chat dédié par challenge émotionnel');
+    r = r.replace(/une\s+douleur\s+ancienne/gi, (m) => matchCase(m[0], 'u') + 'n challenge émotionnel ancien');
+    r = r.replace(/(chaque)\s+douleur/gi, (_m, p1: string) => p1 + ' challenge émotionnel');
+    r = r.replace(/(la)\s+douleur/gi, (_m, p1: string) => matchCase(p1, 'le') + ' challenge émotionnel');
+    r = r.replace(/(nouvelle)\s+douleur/gi, (_m, p1: string) => p1 + ' expérience de vie');
+    r = r.replace(/(des|les|vos)\s+douleurs/gi, (_m, p1: string) => p1 + ' expériences de vie');
+    r = r.replace(/douleurs/gi, (m) => matchCase(m[0], 'e') === 'E' ? 'Expériences de vie' : 'expériences de vie');
+    r = r.replace(/douleur/gi, (m) => m[0] === m[0].toUpperCase() ? 'Challenge émotionnel' : 'challenge émotionnel');
+    return r;
+  }
 
   function sanitizeValue(val: unknown): unknown {
-    if (typeof val === 'string') {
-      let result = val;
-      for (const [pattern, replacement] of replacements) {
-        result = result.replace(pattern, replacement);
-      }
-      return result;
-    }
+    if (typeof val === 'string') return sanitizeStr(val);
     if (Array.isArray(val)) return val.map(sanitizeValue);
     if (val && typeof val === 'object') {
       const out: Record<string, unknown> = {};

@@ -82,10 +82,10 @@ export default function DouleurDetailPage() {
     return (
       <div className="max-w-3xl mx-auto text-center py-20">
         <h2 className="font-display text-2xl font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
-          Douleur non trouvée
+          Challenge émotionnel non trouvé
         </h2>
         <p className="mb-6" style={{ color: 'var(--text-secondary)' }}>
-          Cette douleur n&apos;est pas encore disponible ou n&apos;existe pas.
+          Ce challenge émotionnel n&apos;est pas encore disponible ou n&apos;existe pas.
         </p>
         <Link href="/dashboard/encyclopedie" className="text-sm font-medium" style={{ color: 'var(--gold)' }}>
           Retour à l&apos;encyclopédie

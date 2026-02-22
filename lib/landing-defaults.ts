@@ -190,27 +190,12 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       footer: "Parce que si on doit vous retenir par un contrat, c\u2019est qu\u2019on n\u2019a pas fait notre travail.",
       plans: [
         {
-          name: 'Découverte',
-          price: '9,90',
-          period: '/mois',
-          button_label: 'Essayer — 7 jours gratuits',
-          button_href: '/rejoindre',
-          highlight: false,
-          badge: '',
-          features: [
-            '1 challenge émotionnel au choix par mois',
-            'Accès à la communauté',
-            'Chat général',
-            'Mur communautaire',
-          ],
-        },
-        {
           name: 'Essentiel',
           price: '29,90',
           period: '/mois',
           button_label: 'Commencer — 7 jours gratuits',
           button_href: '/rejoindre',
-          highlight: false,
+          highlight: true,
           badge: '',
           features: [
             'Encyclopédie complète des expériences de vie',
@@ -219,22 +204,6 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
             'Mur communautaire',
             'Soins collectifs & événements',
             'Essai gratuit 7 jours',
-          ],
-        },
-        {
-          name: 'Intermédiaire',
-          price: '59,90',
-          period: '/mois',
-          button_label: "S'abonner",
-          button_href: '/rejoindre',
-          highlight: true,
-          badge: 'Recommandé',
-          features: [
-            "Tout l'Essentiel inclus",
-            '1 session/mois avec un expert',
-            'Accès à tous les événements',
-            'Chat dédié + communauté',
-            'Accompagnement personnalisé',
           ],
         },
         {

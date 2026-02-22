@@ -373,7 +373,7 @@ export default function Home() {
 
             <h1 className="font-display font-light leading-[1.08] mb-8" style={{ ...tStyle("hero"), perspective: "1000px" }}>
               {(hero.title || '').split("\n").map((line: string, i: number) => {
-                const isHighlight = line.includes("expériences") || line.includes("douleur") || line.includes("potentiel") || line.includes("émotionnels");
+                const isHighlight = line.includes("expériences") || line.includes("schémas") || line.includes("potentiel") || line.includes("émotionnels");
                 const lineWords = line.split(/\s+/);
                 const baseDelay = i * 0.2 + 0.15;
                 return (
@@ -499,7 +499,7 @@ export default function Home() {
                 {(principe.title || '').split("\n").map((line: string, i: number) => (
                   <span key={i} className="block">
                     {i > 0 && <span className="block h-1" />}
-                    {line.includes("douleur") || line.includes("potentiel") ? (
+                    {line.includes("schémas") || line.includes("challenge") || line.includes("potentiel") ? (
                       <span className="text-shimmer">{line}</span>
                     ) : line}
                   </span>

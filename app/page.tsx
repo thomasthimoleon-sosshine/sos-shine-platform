@@ -502,14 +502,6 @@ export default function Home() {
             </motion.div>
           </div>
 
-          <motion.div
-            className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3"
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <span className="text-xs tracking-[0.3em] uppercase text-[var(--text-muted)]">Scroll</span>
-            <span className="block w-px h-10 bg-gradient-to-b from-[var(--text-muted)] to-transparent" />
-          </motion.div>
         </motion.section>
       )}
 

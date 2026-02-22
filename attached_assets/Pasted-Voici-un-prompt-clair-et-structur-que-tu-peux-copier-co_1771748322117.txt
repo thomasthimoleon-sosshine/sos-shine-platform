@@ -1,0 +1,241 @@
+Voici un **prompt clair et structuré** que tu peux copier-coller directement dans Replit (ou envoyer à ton développeur). Il couvre toutes les tâches prioritaires, avec des instructions techniques précises et des exemples de code intégrés.
+
+---
+
+### **📝 Prompt pour Replit (à copier-coller)**
+**Objet** : Mise à jour de la plateforme SOS Shine – Améliorations UX, Communauté, Monétisation et Technique
+
+**Contexte** :
+Je suis le fondateur de [SOS Shine](https://sos-shine-platform.vercel.app/), une plateforme communautaire pour traverser les challenges émotionnels. Voici une liste **priorisée** d’améliorations à implémenter. Utilise les technologies existantes (Next.js, Supabase, Vercel) et fournis-moi le code prêt à déployer pour chaque tâche.
+
+---
+
+### **🔧 Tâches à réaliser (par ordre de priorité)**
+
+---
+
+#### **1️⃣ UX/UI & Navigation**
+**Objectif** : Simplifier la navigation et optimiser l’affichage mobile.
+
+**Actions requises** :
+1. **Supprimer la redondance** :
+   - Sur la page d’accueil, garder **une seule occurrence** de la liste des challenges émotionnels (section "L’encyclopédie").
+   - Supprimer la liste dupliquée en haut de page.
+
+2. **Ajouter un moteur de recherche interne** :
+   - Intégrer une barre de recherche en haut de la page d’accueil.
+   - Filtrer dynamiquement les challenges et le contenu de l’encyclopédie **sans rechargement de page**.
+   - Exemple de code :
+     ```html
+     <input type="text" id="search-bar" placeholder="Rechercher un challenge (ex: burn-out)...">
+     <script>
+       document.getElementById('search-bar').addEventListener('input', function() {
+         const query = this.value.toLowerCase();
+         document.querySelectorAll('.challenge-item').forEach(item => {
+           const text = item.textContent.toLowerCase();
+           item.style.display = text.includes(query) ? 'block' : 'none';
+         });
+       });
+     </script>
+     ```
+
+3. **Optimiser le bouton "Rejoignez-nous"** :
+   - Le rendre **fixe en bas à droite** (mobile/desktop) avec un style contrasté.
+   - CSS suggéré :
+     ```css
+     .cta-button {
+       position: fixed;
+       bottom: 20px;
+       right: 20px;
+       background-color: #FF6B6B;
+       color: white;
+       padding: 12px 24px;
+       border-radius: 50px;
+       z-index: 1000;
+       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+     }
+     ```
+
+4. **Vérifier l’affichage mobile** :
+   - Corriger les overflows horizontaux.
+   - Augmenter la taille des boutons (min. 48px de hauteur).
+
+---
+
+#### **2️⃣ Fonctionnalités Communauté**
+**Objectif** : Booster l’engagement avec des outils interactifs.
+
+**Actions requises** :
+1. **Système de parrainage** :
+   - **Backend (Supabase)** :
+     - Ajouter un champ `parrain_id` à la table `users`.
+     - Créer une table `referrals` pour tracker les parrainages :
+       ```sql
+       CREATE TABLE referrals (
+         id SERIAL PRIMARY KEY,
+         user_id UUID REFERENCES users(id),
+         referred_user_id UUID REFERENCES users(id),
+         created_at TIMESTAMP DEFAULT NOW()
+       );
+       ```
+   - **Frontend** :
+     - Générer un lien de parrainage unique pour chaque utilisateur (ex: `?ref=USER_ID`).
+     - Offrir un **soin collectif gratuit** après 3 parrainages validés.
+     - Exemple de route API (Vercel) :
+       ```javascript
+       // API: /api/generate-referral-link
+       export default async function handler(req, res) {
+         const { userId } = req.query;
+         const referralLink = `https://sos-shine-platform.vercel.app/?ref=${userId}`;
+         res.status(200).json({ link: referralLink });
+       }
+       ```
+
+2. **Quiz interactifs** :
+   - Ajouter un quiz de 3 questions sur chaque page de challenge (ex: `/burn-out`).
+   - Exemple pour le burn-out :
+     ```html
+     <div class="quiz">
+       <h3>Évalue ton niveau de burn-out</h3>
+       <form id="burnout-quiz">
+         <p>1. À quelle fréquence te sens-tu épuisé(e) ?</p>
+         <label><input type="radio" name="q1" value="1"> Rarement</label>
+         <label><input type="radio" name="q1" value="2"> Parfois</label>
+         <label><input type="radio" name="q1" value="3"> Souvent</label>
+       </form>
+       <button onclick="calculateScore()">Voir mon résultat</button>
+       <div id="quiz-result"></div>
+     </div>
+     <script>
+       function calculateScore() {
+         const score = Array.from(document.querySelectorAll('input[type="radio"]:checked')).reduce((sum, input) => sum + parseInt(input.value), 0);
+         const resultElement = document.getElementById('quiz-result');
+         if (score >= 6) {
+           resultElement.innerHTML = "<p>Ton score suggère un risque élevé de burn-out. <a href='/protocole-burn-out'>Commence le protocole</a>.</p>";
+         } else {
+           resultElement.innerHTML = "<p>Ton score est modéré. Explore nos ressources pour prévenir l'épuisement.</p>";
+         }
+       }
+     </script>
+     ```
+
+3. **Badges de gamification** :
+   - **Backend** :
+     - Créer une table `badges` :
+       ```sql
+       CREATE TABLE badges (
+         id SERIAL PRIMARY KEY,
+         name VARCHAR(255),
+         description TEXT,
+         criteria TEXT  -- Ex: "5 méditations complétées"
+       );
+       ```
+     - Créer une table `user_badges` pour lier les utilisateurs et leurs badges.
+   - **Frontend** :
+     - Afficher les badges dans le profil utilisateur (icônes + descriptions).
+
+---
+
+#### **3️⃣ Monétisation**
+**Objectif** : Ajouter des offres tarifaires flexibles.
+
+**Actions requises** :
+1. **Palier intermédiaire (59,90€/mois)** :
+   - Modifier la page `/pricing` pour ajouter une carte "Intermédiaire" :
+     ```html
+     <div class="pricing-cards">
+       <!-- Carte Essentiel (existante) -->
+       <div class="pricing-card recommended">
+         <h3>Intermédiaire</h3>
+         <p class="price">59,90€<span>/mois</span></p>
+         <ul>
+           <li>Encyclopédie complète</li>
+           <li>1 session/mois avec un expert</li>
+           <li>Accès à tous les événements</li>
+           <li>Chat dédié + communauté</li>
+         </ul>
+         <button class="subscribe-button">S’abonner</button>
+       </div>
+       <!-- Carte Premium (existante) -->
+     </div>
+     ```
+   - **CSS pour la carte recommandée** :
+     ```css
+     .pricing-card.recommended {
+       border: 2px solid #FF6B6B;
+       transform: scale(1.05);
+     }
+     ```
+
+2. **Option "Découverte" (9,90€/mois)** :
+   - Ajouter une carte avec accès limité à 1 challenge/mois + communauté.
+
+---
+
+#### **4️⃣ SEO & Marketing**
+**Objectif** : Améliorer la visibilité organique.
+
+**Actions requises** :
+1. **Optimiser les métadonnées** :
+   - Pour chaque page de challenge (ex: `/burn-out`), ajouter :
+     ```html
+     <meta name="description" content="Protocole en 4 étapes pour surmonter un burn-out : vidéos, soins énergétiques et méditations guidées. Rejoins la communauté SOS Shine.">
+     <meta name="keywords" content="burn-out, épuisement professionnel, méditation anti-stress, soin énergétique, communauté bienveillante">
+     ```
+
+2. **Créer un blog** :
+   - Ajouter un dossier `/blog` avec des articles en Markdown (ex: `prevenir-burn-out.md`).
+   - Utiliser Next.js pour générer des pages statiques :
+     ```javascript
+     // pages/blog/[slug].js
+     export async function getStaticPaths() {
+       const posts = await getPosts(); // Récupère les articles depuis Supabase
+       return { paths: posts.map(post => ({ params: { slug: post.slug } })), fallback: false };
+     }
+     ```
+
+---
+
+#### **5️⃣ Technique & Sécurité**
+**Objectif** : Garantir la stabilité et la sécurité des données.
+
+**Actions requises** :
+1. **Sauvegardes Supabase** :
+   - Configurer des **sauvegardes automatiques quotidiennes** via le [dashboard Supabase](https://supabase.com/dashboard/project/[ton-projet]/database/backups).
+   - Exporter les données vers un bucket S3 ou Google Drive.
+
+2. **Tests A/B pour la page de tarification** :
+   - Utiliser [Vercel Analytics](https://vercel.com/analytics) ou [Google Optimize](https://optimize.google.com/) pour tester 2 versions de la page (ex: bouton rouge vs vert).
+
+3. **Chiffrement des chats** :
+   - Utiliser [CryptoJS](https://cryptojs.gitbook.io/docs/) pour chiffrer les messages côté client avant envoi à Supabase :
+     ```javascript
+     const secretKey = "TA_CLE_SECRETE";
+     const encryptedMessage = CryptoJS.AES.encrypt(message, secretKey).toString();
+     // Envoyer encryptedMessage à Supabase
+     ```
+
+---
+
+### **📅 Livrables attendus**
+Pour chaque tâche, fournis :
+1. Le **code complet** (frontend + backend).
+2. Les **instructions de déploiement** (ex: commandes pour Vercel, modifications Supabase).
+3. Un **test rapide** pour vérifier que tout fonctionne (ex: "Va sur /burn-out et vérifie que le quiz s’affiche").
+
+---
+### **❓ Questions pour toi (Replit)** :
+- As-tu besoin d’accès à mon projet Supabase/Vercel pour implémenter ces changements ?
+- Préfères-tu que je te fournisse des **maquettes Figma** pour les parties design (ex: bouton CTA, cartes de tarification) ?
+
+---
+**Note** : Priorise les tâches dans l’ordre donné. Si tu as des questions ou des blocages, fais-moi signe ! 🚀
+
+---
+
+### **Pourquoi ce prompt fonctionne** :
+- **Clarté** : Chaque tâche est décrite avec des actions concrètes et du code exemple.
+- **Priorisation** : L’ordre est logique (UX d’abord, puis fonctionnalités, puis monétisation).
+- **Prêt à l’emploi** : Replit peut copier-coller les extraits de code et les adapter.
+
+Tu peux ajouter des **captures d’écran** ou un **lien Figma** si tu veux guider visuellement le design !

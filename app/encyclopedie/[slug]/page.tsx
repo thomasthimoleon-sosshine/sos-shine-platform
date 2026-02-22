@@ -30,6 +30,9 @@ export default function PublicDouleurDetailPage() {
 
       if (data) {
         setDouleur(data as Douleur)
+        document.title = `${data.title} — Encyclopédie SOS Shine`
+        const metaDesc = document.querySelector('meta[name="description"]')
+        if (metaDesc) metaDesc.setAttribute('content', `Protocole en 4 étapes pour surmonter ${data.title.toLowerCase()} : vidéos, soins énergétiques et méditations guidées. Rejoins la communauté SOS Shine.`)
       }
       setLoading(false)
     }
@@ -103,10 +106,10 @@ export default function PublicDouleurDetailPage() {
         </header>
         <div className="max-w-3xl mx-auto text-center py-20 px-6">
           <h2 className="font-display text-2xl font-semibold mb-4">
-            Douleur non trouvée
+            Challenge émotionnel non trouvé
           </h2>
           <p className="mb-6" style={{ color: 'var(--text-secondary)' }}>
-            Cette douleur n&apos;est pas encore disponible ou n&apos;existe pas.
+            Ce challenge émotionnel n&apos;est pas encore disponible ou n&apos;existe pas.
           </p>
           <Link href="/encyclopedie" className="text-sm font-medium" style={{ color: 'var(--gold)' }}>
             Retour à l&apos;encyclopédie

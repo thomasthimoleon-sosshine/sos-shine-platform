@@ -192,6 +192,8 @@ function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: strin
 export default function Home() {
   const [headerVisible, setHeaderVisible] = useState(true);
   const [headerScrolled, setHeaderScrolled] = useState(false);
+  const [showFloatingCta, setShowFloatingCta] = useState(false);
+  const [encyclopediaSearch, setEncyclopediaSearch] = useState('');
   const lastScrollYRef = useRef(0);
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
@@ -242,6 +244,7 @@ export default function Home() {
         const y = window.scrollY;
         setHeaderVisible(y < 100 || y < lastScrollYRef.current);
         setHeaderScrolled(y > 50);
+        setShowFloatingCta(y > 400);
         lastScrollYRef.current = y;
         ticking = false;
       });
@@ -334,7 +337,7 @@ export default function Home() {
   ];
 
   return (
-    <main className="grain relative z-0 overflow-hidden" style={cssVars}>
+    <main className="grain relative z-0 overflow-hidden overflow-x-hidden" style={cssVars}>
       <ScrollProgress />
       <SparklingDiamonds />
       <FloatingOrbs />
@@ -448,11 +451,11 @@ export default function Home() {
                 {(hero.buttons || []).map((btn: { label: string; href: string; variant: string }, i: number) => (
                   <Link key={i} href={btn.href === '/signup' || btn.href === '/login' ? '/rejoindre' : btn.href}>
                     {btn.variant === 'primary' ? (
-                      <button className="magnetic-btn pulse-ring px-8 py-4 rounded-full text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                      <button className="magnetic-btn pulse-ring px-8 py-4 rounded-full text-base font-semibold tracking-wide min-h-[48px]" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
                         {btn.label} — {trialDays} jours d&apos;essai
                       </button>
                     ) : (
-                      <button className="magnetic-btn px-8 py-4 rounded-full text-base font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.3)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
+                      <button className="magnetic-btn px-8 py-4 rounded-full text-base font-medium tracking-wide min-h-[48px]" style={{ border: `1px solid rgba(${goldRgb},0.3)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
                         {btn.label}
                       </button>
                     )}
@@ -578,8 +581,26 @@ export default function Home() {
               </p>
             </RevealOnScroll>
 
+            <RevealOnScroll delay={0.25}>
+              <div className="max-w-md mx-auto mb-12">
+                <input
+                  type="text"
+                  value={encyclopediaSearch}
+                  onChange={(e) => setEncyclopediaSearch(e.target.value)}
+                  placeholder="Rechercher un challenge (ex: burn-out)..."
+                  className="w-full px-5 py-3 rounded-full text-sm font-light min-h-[48px]"
+                  style={{
+                    background: 'rgba(255,255,255,0.04)',
+                    border: `1px solid rgba(${goldRgb}, 0.25)`,
+                    color: 'var(--text-primary)',
+                    outline: 'none',
+                  }}
+                />
+              </div>
+            </RevealOnScroll>
+
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-              {(encyclo.items || []).map((d: string, i: number) => (
+              {(encyclo.items || []).filter((d: string) => !encyclopediaSearch || d.toLowerCase().includes(encyclopediaSearch.toLowerCase())).map((d: string, i: number) => (
                 <RevealOnScroll key={d} delay={i * 0.05} direction="scale">
                   <GlowingCard className="px-5 py-4 text-center cursor-pointer group">
                     <span className="text-sm font-light transition-colors duration-300 group-hover:text-[var(--gold)]" style={{
@@ -595,7 +616,7 @@ export default function Home() {
             <RevealOnScroll delay={0.3}>
               <div className="text-center mt-12">
                 <Link href="/encyclopedie">
-                  <button className="magnetic-btn px-8 py-3.5 rounded-full text-sm font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.25)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
+                  <button className="magnetic-btn px-8 py-3.5 rounded-full text-sm font-medium tracking-wide min-h-[48px]" style={{ border: `1px solid rgba(${goldRgb},0.25)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
                     Explorer l&apos;encyclopedie
                   </button>
                 </Link>
@@ -707,9 +728,9 @@ export default function Home() {
               <p className="text-[var(--text-secondary)] font-light text-center mb-20">{pricing.subtitle || ''}</p>
             </RevealOnScroll>
 
-            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
               {(pricing.plans || []).map((plan: { name: string; price: string; period: string; button_label: string; button_href: string; highlight: boolean; badge: string; features: string[] }, idx: number) => (
-                <RevealOnScroll key={plan.name} delay={(idx + 1) * 0.15} direction={idx === 0 ? "left" : "right"}>
+                <RevealOnScroll key={plan.name} delay={(idx + 1) * 0.15} direction={(["left", "up", "scale", "right"] as const)[idx % 4]}>
                   <GlowingCard className={`p-8 md:p-10 h-full flex flex-col relative ${plan.highlight ? 'ring-1' : ''}`} glowColor={plan.highlight ? `rgba(${accentRgb},0.15)` : `rgba(${goldRgb},0.15)`} style={plan.highlight ? { '--tw-ring-color': `rgba(${accentRgb},0.15)` } as React.CSSProperties : undefined}>
                     {plan.badge && (
                       <motion.div
@@ -750,7 +771,7 @@ export default function Home() {
                     </div>
 
                     <Link href="/rejoindre">
-                      <button className={`magnetic-btn w-full py-4 rounded-full text-base font-semibold tracking-wide ${plan.highlight ? 'pulse-ring' : ''}`} style={{
+                      <button className={`magnetic-btn w-full py-4 rounded-full text-base font-semibold tracking-wide min-h-[48px] ${plan.highlight ? 'pulse-ring' : ''}`} style={{
                         background: plan.highlight ? `linear-gradient(135deg, ${accent}, rgba(${accentRgb},0.7))` : `linear-gradient(135deg, ${gold}, ${goldDeep})`,
                         color: '#050505'
                       }}>
@@ -788,7 +809,7 @@ export default function Home() {
             </RevealOnScroll>
             <RevealOnScroll delay={0.3}>
               <Link href="/rejoindre">
-                <button className="magnetic-btn pulse-ring px-10 py-5 rounded-full text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                <button className="magnetic-btn pulse-ring px-10 py-5 rounded-full text-lg font-semibold tracking-wide min-h-[48px]" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
                   Rejoindre SOS Shine
                 </button>
               </Link>
@@ -808,7 +829,7 @@ export default function Home() {
             </RevealOnScroll>
             <RevealOnScroll delay={0.15}>
               <Link href="/rejoindre">
-                <button className="magnetic-btn px-10 py-5 rounded-full text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                <button className="magnetic-btn px-10 py-5 rounded-full text-lg font-semibold tracking-wide min-h-[48px]" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
                   {ctaLight.button_label || 'Rejoindre SOS Shine'}
                 </button>
               </Link>
@@ -846,6 +867,27 @@ export default function Home() {
           </div>
         </footer>
       )}
+
+      <motion.div
+        className="fixed z-50"
+        style={{ bottom: 20, right: 20 }}
+        initial={{ opacity: 0, scale: 0.8, y: 20 }}
+        animate={showFloatingCta ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.8, y: 20 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <Link href="/rejoindre">
+          <button
+            className="pulse-ring rounded-full font-semibold tracking-wide shadow-lg min-h-[48px] px-5 py-3 text-sm md:px-7 md:py-3.5 md:text-base"
+            style={{
+              background: 'linear-gradient(135deg, #D4AF37, #B8960F)',
+              color: '#050505',
+              boxShadow: '0 8px 30px rgba(212, 175, 55, 0.3)',
+            }}
+          >
+            Rejoignez-nous
+          </button>
+        </Link>
+      </motion.div>
     </main>
   );
 }

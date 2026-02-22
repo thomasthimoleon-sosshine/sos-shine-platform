@@ -1,216 +1,98 @@
 "use client";
 
+import { useEffect, useState, useRef, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { useEffect, useState, useRef, ReactNode, useCallback, useMemo } from "react";
-import { motion, useScroll, useTransform, useInView } from "framer-motion";
-import { createClient } from "@/lib/supabase/client";
-import { LANDING_DEFAULTS, buildSectionMap } from "@/lib/landing-defaults";
-import type { LandingSectionDefault, SectionContent, SectionStyles } from "@/lib/landing-defaults";
 
-function matchCase(original: string, replacement: string): string {
-  if (original === original.toUpperCase()) return replacement.toUpperCase();
-  if (original[0] === original[0].toUpperCase()) return replacement[0].toUpperCase() + replacement.slice(1);
-  return replacement;
-}
+const LAUNCH_DATE = new Date("2026-03-22T00:00:00+02:00");
 
-function sanitizeContent(content: SectionContent): SectionContent {
-  function sanitizeStr(str: string): string {
-    let r = str;
-    r = r.replace(/Encyclopédie complète des douleurs/gi, (m) => {
-      const isUpper = m[0] === m[0].toUpperCase();
-      return isUpper ? 'Encyclopédie complète des expériences de vie' : 'encyclopédie complète des expériences de vie';
-    });
-    r = r.replace(/(\d+)\s+étapes?\s+par\s+douleur/gi, '$1 étapes par challenge émotionnel');
-    r = r.replace(/Chat dédié par douleur/gi, (m) => matchCase(m[0], 'C') === 'C' ? 'Chat dédié par challenge émotionnel' : 'chat dédié par challenge émotionnel');
-    r = r.replace(/une\s+douleur\s+ancienne/gi, (m) => matchCase(m[0], 'u') + 'n challenge émotionnel ancien');
-    r = r.replace(/(chaque)\s+douleur/gi, (_m, p1: string) => p1 + ' challenge émotionnel');
-    r = r.replace(/(la)\s+douleur/gi, (_m, p1: string) => matchCase(p1, 'le') + ' challenge émotionnel');
-    r = r.replace(/(nouvelle)\s+douleur/gi, (_m, p1: string) => p1 + ' expérience de vie');
-    r = r.replace(/(des|les|vos)\s+douleurs/gi, (_m, p1: string) => p1 + ' expériences de vie');
-    r = r.replace(/douleurs/gi, (m) => matchCase(m[0], 'e') === 'E' ? 'Expériences de vie' : 'expériences de vie');
-    r = r.replace(/douleur/gi, (m) => m[0] === m[0].toUpperCase() ? 'Challenge émotionnel' : 'challenge émotionnel');
-    return r;
-  }
+const DIAMONDS = [
+  { top: "8%", left: "12%", duration: "9s", delay: "0s", size: 3 },
+  { top: "18%", left: "88%", duration: "11s", delay: "1.5s", size: 4 },
+  { top: "40%", left: "5%", duration: "8s", delay: "2.8s", size: 3 },
+  { top: "55%", left: "92%", duration: "10s", delay: "0.6s", size: 4 },
+  { top: "72%", left: "15%", duration: "9s", delay: "3.5s", size: 3 },
+  { top: "85%", left: "78%", duration: "7s", delay: "1.2s", size: 4 },
+];
 
-  function sanitizeValue(val: unknown): unknown {
-    if (typeof val === 'string') return sanitizeStr(val);
-    if (Array.isArray(val)) return val.map(sanitizeValue);
-    if (val && typeof val === 'object') {
-      const out: Record<string, unknown> = {};
-      for (const [k, v] of Object.entries(val)) out[k] = sanitizeValue(v);
-      return out;
-    }
-    return val;
-  }
-
-  return sanitizeValue(content) as SectionContent;
-}
-
-function hexToRgb(hex: string): string {
-  const h = hex.replace("#", "");
-  const r = parseInt(h.substring(0, 2), 16);
-  const g = parseInt(h.substring(2, 4), 16);
-  const b = parseInt(h.substring(4, 6), 16);
-  if (isNaN(r) || isNaN(g) || isNaN(b)) return "212,168,67";
-  return `${r},${g},${b}`;
-}
-
-function RevealOnScroll({ children, delay = 0, className = "", direction = "up" }: { children: ReactNode; delay?: number; className?: string; direction?: "up" | "left" | "right" | "scale" }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.1 });
-
-  const variants = {
-    up: { hidden: { opacity: 0, y: 80 }, visible: { opacity: 1, y: 0 } },
-    left: { hidden: { opacity: 0, x: -60 }, visible: { opacity: 1, x: 0 } },
-    right: { hidden: { opacity: 0, x: 60 }, visible: { opacity: 1, x: 0 } },
-    scale: { hidden: { opacity: 0, scale: 0.9 }, visible: { opacity: 1, scale: 1 } },
+function getTimeLeft() {
+  const now = new Date();
+  const diff = LAUNCH_DATE.getTime() - now.getTime();
+  if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0, launched: true };
+  return {
+    days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+    hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+    minutes: Math.floor((diff / (1000 * 60)) % 60),
+    seconds: Math.floor((diff / 1000) % 60),
+    launched: false,
   };
-
-  return (
-    <motion.div
-      ref={ref}
-      initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
-      variants={variants[direction]}
-      transition={{ duration: 0.9, delay, ease: [0.16, 1, 0.3, 1] }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
 }
 
-function WordByWordReveal({ text, className = "", style = {} }: { text: string; className?: string; style?: React.CSSProperties }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.1 });
-  const words = text.split(/\s+/);
-
+function CountdownUnit({ value, label }: { value: number; label: string }) {
   return (
-    <span ref={ref} className={className} style={style}>
-      {words.map((word, i) => (
-        <motion.span
-          key={i}
-          className="inline-block mr-[0.3em]"
-          initial={{ opacity: 0, y: 40, rotateX: -15, filter: "blur(8px)" }}
-          animate={isInView ? { opacity: 1, y: 0, rotateX: 0, filter: "blur(0px)" } : {}}
-          transition={{
-            duration: 0.7,
-            delay: i * 0.08,
-            ease: [0.16, 1, 0.3, 1],
-          }}
-        >
-          {word}
-        </motion.span>
-      ))}
-    </span>
-  );
-}
-
-function InfiniteTickerBand({ items, speed = 30 }: { items: string[]; speed?: number }) {
-  const doubled = [...items, ...items];
-  return (
-    <div className="overflow-hidden py-6 border-y border-[var(--dark-border)]" style={{ background: "rgba(212, 175, 55, 0.02)" }}>
-      <div className="ticker-track" style={{ animationDuration: `${speed}s` }}>
-        {doubled.map((item, i) => (
-          <span key={i} className="flex items-center gap-6 px-6 whitespace-nowrap">
-            <span className="text-sm md:text-base tracking-[0.15em] uppercase font-light" style={{ color: "var(--text-secondary)" }}>
-              {item}
-            </span>
-            <span className="block w-1.5 h-1.5 rotate-45" style={{ background: "var(--gold)", opacity: 0.4 }} />
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function GlowingCard({ children, className = "", glowColor = "rgba(212, 175, 55, 0.15)", style }: { children: ReactNode; className?: string; glowColor?: string; style?: React.CSSProperties }) {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const glowRef = useRef<HTMLDivElement>(null);
-  const [isHovered, setIsHovered] = useState(false);
-  const rafRef = useRef<number>(0);
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!cardRef.current || !glowRef.current) return;
-    cancelAnimationFrame(rafRef.current);
-    rafRef.current = requestAnimationFrame(() => {
-      if (!cardRef.current || !glowRef.current) return;
-      const rect = cardRef.current.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      glowRef.current.style.left = `${x - 150}px`;
-      glowRef.current.style.top = `${y - 150}px`;
-    });
-  };
-
-  return (
-    <div
-      ref={cardRef}
-      className={`glow-card relative ${className}`}
-      style={style}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+    <div className="flex flex-col items-center">
       <div
-        ref={glowRef}
-        className="absolute pointer-events-none transition-opacity duration-500"
+        className="relative w-[72px] h-[88px] sm:w-[90px] sm:h-[108px] flex items-center justify-center rounded-2xl overflow-hidden"
         style={{
-          width: 300,
-          height: 300,
-          borderRadius: "50%",
-          background: `radial-gradient(circle, ${glowColor}, transparent 70%)`,
-          opacity: isHovered ? 0.6 : 0,
-          zIndex: 0,
+          background: "rgba(255,255,255,0.03)",
+          border: "1px solid rgba(212,175,55,0.12)",
+          boxShadow: "0 0 40px rgba(212,175,55,0.04), inset 0 1px 0 rgba(255,255,255,0.04)",
         }}
-      />
-      <div className="relative z-10">{children}</div>
+      >
+        <AnimatePresence mode="popLayout">
+          <motion.span
+            key={value}
+            initial={{ y: -20, opacity: 0, filter: "blur(4px)" }}
+            animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+            exit={{ y: 20, opacity: 0, filter: "blur(4px)" }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="font-display text-4xl sm:text-5xl font-light tabular-nums"
+            style={{ color: "#D4AF37" }}
+          >
+            {String(value).padStart(2, "0")}
+          </motion.span>
+        </AnimatePresence>
+      </div>
+      <span
+        className="mt-3 text-[10px] sm:text-xs tracking-[0.3em] uppercase font-light"
+        style={{ color: "var(--text-muted)" }}
+      >
+        {label}
+      </span>
     </div>
   );
-}
-
-function ScrollProgress() {
-  const { scrollYProgress } = useScroll();
-  const width = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
-
-  return <motion.div className="scroll-progress" style={{ width }} />;
 }
 
 function FloatingOrbs() {
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
-      <div className="orb" style={{ width: 500, height: 500, top: "10%", left: "-10%", background: "rgba(212, 175, 55, 0.012)" }} />
-      <div className="orb" style={{ width: 400, height: 400, top: "60%", right: "-15%", background: "rgba(212, 175, 55, 0.008)", animationDelay: "5s" }} />
+      <div
+        className="orb"
+        style={{ width: 600, height: 600, top: "5%", left: "-15%", background: "rgba(212,175,55,0.015)" }}
+      />
+      <div
+        className="orb"
+        style={{
+          width: 500,
+          height: 500,
+          bottom: "10%",
+          right: "-20%",
+          background: "rgba(212,175,55,0.01)",
+          animationDelay: "7s",
+        }}
+      />
+      <div
+        className="orb"
+        style={{
+          width: 300,
+          height: 300,
+          top: "50%",
+          left: "40%",
+          background: "rgba(212,175,55,0.008)",
+          animationDelay: "12s",
+        }}
+      />
     </div>
-  );
-}
-
-const DIAMONDS = [
-  { top: '5%', left: '10%', duration: '8s', delay: '0s', size: 14 },
-  { top: '15%', left: '85%', duration: '10s', delay: '1.5s', size: 10 },
-  { top: '35%', left: '50%', duration: '7s', delay: '3s', size: 12 },
-  { top: '50%', left: '20%', duration: '9s', delay: '0.8s', size: 10 },
-  { top: '65%', left: '75%', duration: '8s', delay: '2.2s', size: 14 },
-  { top: '80%', left: '40%', duration: '10s', delay: '4s', size: 10 },
-  { top: '25%', left: '65%', duration: '9s', delay: '1s', size: 12 },
-  { top: '90%', left: '90%', duration: '7s', delay: '3.5s', size: 10 },
-  { top: '45%', left: '5%', duration: '11s', delay: '2s', size: 8 },
-  { top: '70%', left: '60%', duration: '9s', delay: '5s', size: 12 },
-];
-
-function DiamondSvg({ size, className, style }: { size: number; className?: string; style?: React.CSSProperties }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
-      <defs>
-        <radialGradient id={`glow-${size}`} cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#F5E6A3" stopOpacity="1" />
-          <stop offset="40%" stopColor="#D4AF37" stopOpacity="0.6" />
-          <stop offset="100%" stopColor="#D4AF37" stopOpacity="0" />
-        </radialGradient>
-      </defs>
-      <circle cx="12" cy="12" r="10" fill={`url(#glow-${size})`} />
-      <circle cx="12" cy="12" r="2" fill="#FFFBE6" opacity="0.9" />
-    </svg>
   );
 }
 
@@ -218,815 +100,469 @@ function SparklingDiamonds() {
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 1 }}>
       {DIAMONDS.map((d, i) => (
-        <div key={i} className="diamond-sparkle" style={{
-          top: d.top, left: d.left,
-          width: d.size + 'px', height: d.size + 'px',
-          ['--duration' as string]: d.duration,
-          ['--delay' as string]: d.delay,
-        }}>
-          <DiamondSvg size={d.size} />
-        </div>
+        <div
+          key={i}
+          className="diamond-sparkle"
+          style={{
+            top: d.top,
+            left: d.left,
+            width: d.size + "px",
+            height: d.size + "px",
+            ["--duration" as string]: d.duration,
+            ["--delay" as string]: d.delay,
+          }}
+        />
       ))}
     </div>
   );
 }
 
-function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: string }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
+const features = [
+  "Encyclopédie complète des expériences de vie (A-Z)",
+  "Vidéos de coaching immersif",
+  "Soins énergétiques & méditations",
+  "Chat dédié par challenge émotionnel",
+  "Communauté & mur de partage",
+  "Soins collectifs & événements",
+];
 
-  return (
-    <motion.span
-      ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className="inline-block"
-    >
-      {value}{suffix}
-    </motion.span>
-  );
-}
+export default function PreLaunchPage() {
+  const [time, setTime] = useState(getTimeLeft);
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "already" | "error">("idle");
+  const [waitlistCount, setWaitlistCount] = useState(0);
+  const formRef = useRef<HTMLFormElement>(null);
 
-export default function Home() {
-  const [headerVisible, setHeaderVisible] = useState(true);
-  const [headerScrolled, setHeaderScrolled] = useState(false);
-  const [encyclopediaSearch, setEncyclopediaSearch] = useState('');
-  const lastScrollYRef = useRef(0);
-  const heroRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll();
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.15], [1, 0.95]);
-
-  const [sections, setSections] = useState<Record<string, { content: SectionContent; styles: SectionStyles; is_visible: boolean }>>(() => {
-    const map: Record<string, { content: SectionContent; styles: SectionStyles; is_visible: boolean }> = {};
-    for (const d of LANDING_DEFAULTS) {
-      map[d.section_key] = { content: d.content, styles: d.styles, is_visible: d.is_visible };
-    }
-    return map;
-  });
-
-  const loadSections = useCallback(async () => {
-    try {
-      const supabase = createClient();
-      const { data } = await supabase.from("landing_sections").select("*").order("position");
-      if (data && data.length > 0) {
-        const rows = data as unknown as LandingSectionDefault[];
-        const dbMap = buildSectionMap(rows);
-        const merged: Record<string, { content: SectionContent; styles: SectionStyles; is_visible: boolean }> = {};
-        for (const d of LANDING_DEFAULTS) {
-          const row = dbMap[d.section_key];
-          merged[d.section_key] = row
-            ? { content: sanitizeContent(row.content), styles: row.styles, is_visible: row.is_visible }
-            : { content: d.content, styles: d.styles, is_visible: d.is_visible };
-        }
-        for (const row of rows) {
-          if (!merged[row.section_key]) {
-            merged[row.section_key] = { content: sanitizeContent(row.content), styles: row.styles, is_visible: row.is_visible };
-          }
-        }
-        setSections(merged);
-      }
-    } catch {
-      // defaults already set
-    }
+  useEffect(() => {
+    const interval = setInterval(() => setTime(getTimeLeft()), 1000);
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
-    loadSections();
-    let ticking = false;
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        const y = window.scrollY;
-        setHeaderVisible(y < 100 || y < lastScrollYRef.current);
-        setHeaderScrolled(y > 50);
-        lastScrollYRef.current = y;
-        ticking = false;
-      });
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [loadSections]);
+    fetch("/api/waitlist")
+      .then((r) => r.json())
+      .then((d) => setWaitlistCount(d.count || 0))
+      .catch(() => {});
+  }, []);
 
-  function sec(key: string): SectionContent { return sections[key]?.content || {}; }
-  function sty(key: string): SectionStyles { return sections[key]?.styles || {}; }
-  function vis(key: string): boolean { return sections[key]?.is_visible !== false; }
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!email || status === "loading") return;
 
-  const g = sty('_global');
-  const gold = g.color_primary || '#D4AF37';
-  const accent = g.color_secondary || '#74C0FC';
-  const bg = g.color_bg || '#362038';
-  const buttonBg = g.color_button || gold;
-  const goldRgb = hexToRgb(gold);
-  const accentRgb = hexToRgb(accent);
+      setStatus("loading");
+      try {
+        const res = await fetch("/api/waitlist", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, name }),
+        });
+        const data = await res.json();
 
-  const goldDeep = (() => {
-    const h = gold.replace("#", "");
-    const r = Math.max(0, parseInt(h.substring(0, 2), 16) - 44);
-    const gv = Math.max(0, parseInt(h.substring(2, 4), 16) - 35);
-    const b = Math.max(0, parseInt(h.substring(4, 6), 16) - 17);
-    return `#${r.toString(16).padStart(2, "0")}${gv.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
-  })();
-
-  const goldHover = (() => {
-    const h = gold.replace("#", "");
-    const r = Math.min(255, parseInt(h.substring(0, 2), 16) + 12);
-    const gv = Math.min(255, parseInt(h.substring(2, 4), 16) + 16);
-    const b = Math.min(255, parseInt(h.substring(4, 6), 16) + 10);
-    return `#${r.toString(16).padStart(2, "0")}${gv.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
-  })();
-
-  const fontMap: Record<string, string> = {
-    "Cinzel": "'Cinzel', serif",
-    "Montserrat": "'Montserrat', sans-serif",
-    "Cormorant Garamond": "'Cormorant Garamond', serif",
-    "DM Sans": "'DM Sans', sans-serif",
-    "Georgia": "Georgia, serif",
-    "Arial": "Arial, sans-serif",
-    "Times New Roman": "'Times New Roman', serif",
-  };
-  const sizeMap: Record<string, string> = {
-    sm: "clamp(1.5rem, 3vw, 1.875rem)", md: "clamp(1.875rem, 4vw, 2.25rem)",
-    lg: "clamp(2.25rem, 5vw, 3rem)", xl: "clamp(2.5rem, 6vw, 3.75rem)", "2xl": "clamp(3rem, 7vw, 4.5rem)",
-  };
-
-  function tStyle(sectionKey: string): React.CSSProperties {
-    const st = sty(sectionKey);
-    return {
-      fontFamily: fontMap[st.title_font] || undefined,
-      fontSize: sizeMap[st.title_size] || undefined,
-      textAlign: (st.title_align as "left" | "center" | "right") || undefined,
-      color: st.title_color || undefined,
-    };
-  }
-
-  const globalContent = sec('_global');
-  const hero = sec('hero');
-  const heroSty = sty('hero');
-  const principe = sec('principe');
-  const stepsData = sec('steps');
-  const encyclo = sec('encyclopedie');
-  const comm = sec('communaute');
-  const temos = sec('temoignages');
-  const pricing = sec('pricing');
-  const ctaDark = sec('cta_dark');
-  const ctaLight = sec('cta_light');
-  const foot = sec('footer');
-
-  const trialDays = globalContent.trial_days || 7;
-  const logoUrl = globalContent.logo_url || '';
-
-  const cssVars = {
-    "--gold": gold,
-    "--gold-deep": goldDeep,
-    "--gold-light": goldHover,
-    "--accent": accent,
-    "--bg": bg,
-    "--dark": bg,
-    "--button-bg": buttonBg,
-  } as React.CSSProperties;
-
-  const tickerItems = [
-    "Abus", "Amour propre", "Burn-out", "Confiance en soi",
-    "Dépendance affective", "Deuil", "Rupture",
-  ];
+        if (data.message === "already_registered") {
+          setStatus("already");
+        } else if (res.ok) {
+          setStatus("success");
+          setWaitlistCount((c) => c + 1);
+        } else {
+          setStatus("error");
+        }
+      } catch {
+        setStatus("error");
+      }
+    },
+    [email, name, status]
+  );
 
   return (
-    <main className="grain relative z-0 overflow-hidden" style={cssVars}>
-      <ScrollProgress />
-      <SparklingDiamonds />
+    <main className="grain relative z-0 min-h-screen overflow-hidden">
       <FloatingOrbs />
+      <SparklingDiamonds />
 
-      {/* ═══ FIXED HEADER ═══ */}
-      {headerVisible && (
-          <header
-            className={`fixed top-0 left-0 right-0 z-50 py-4 header-animate ${headerScrolled ? 'header-scrolled' : ''}`}
+      <div className="absolute inset-0 pointer-events-none">
+        <div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[800px] rounded-full opacity-[0.03] blur-[200px]"
+          style={{ background: "#D4AF37" }}
+        />
+        <div
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] rounded-full opacity-[0.02] blur-[150px]"
+          style={{ background: "#D4AF37" }}
+        />
+      </div>
+
+      <div className="relative z-10 flex flex-col items-center min-h-screen px-6">
+        {/* Logo */}
+        <motion.div
+          className="pt-10 sm:pt-16 mb-12 sm:mb-16"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <Link href="/" className="inline-block">
+            <img src="/images/logo.png" alt="SOS Shine" className="h-16 sm:h-20 w-auto" />
+          </Link>
+        </motion.div>
+
+        {/* Pre-launch badge */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-8"
+        >
+          <span
+            className="inline-block px-5 py-2 rounded-full text-[11px] tracking-[0.3em] uppercase font-medium"
+            style={{
+              background: "rgba(212,175,55,0.08)",
+              color: "#D4AF37",
+              border: "1px solid rgba(212,175,55,0.15)",
+            }}
           >
-            <div className="flex items-center justify-center">
-              <Link href="/" className="flex items-center gap-3">
-                <img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-20 md:h-24 w-auto object-contain" />
-              </Link>
-            </div>
-          </header>
-        )}
+            Lancement exclusif
+          </span>
+        </motion.div>
 
-      {/* ═══ HERO — Word by word reveal ═══ */}
-      {vis('hero') && (
-        <motion.section ref={heroRef} className="relative min-h-screen flex items-center pt-24" style={{ opacity: heroOpacity, scale: heroScale }}>
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full opacity-[0.04] blur-[150px]" style={{ background: gold }} />
+        {/* Hero Title */}
+        <div className="text-center max-w-3xl mb-10">
+          <div className="font-display font-light leading-[1.1] mb-6" style={{ perspective: "1000px", fontSize: "clamp(2.5rem, 6vw, 4rem)", color: "#D4AF37" }}>
+            {["Quelque chose", "de", "puissant", "arrive."].map((word, i) => (
+              <motion.span
+                key={i}
+                className={`inline-block mr-[0.35em] ${i === 2 ? "text-shimmer" : ""}`}
+                initial={{ opacity: 0, y: 50, filter: "blur(10px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                transition={{ duration: 0.7, delay: 0.3 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+              >
+                {word}
+              </motion.span>
+            ))}
           </div>
 
-          <div className="relative z-10 px-6 md:px-20 py-24 max-w-6xl mx-auto w-full text-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="mb-8"
-            >
-              <span className="inline-block px-4 py-1.5 rounded-full text-xs tracking-[0.25em] uppercase font-medium" style={{ background: `rgba(${goldRgb}, 0.08)`, color: gold, border: `1px solid rgba(${goldRgb}, 0.15)` }}>
-                Espace de soutien premium
+          <motion.p
+            className="text-lg sm:text-xl font-light leading-relaxed max-w-xl mx-auto"
+            style={{ color: "var(--text-secondary)" }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          >
+            L&apos;encyclop&eacute;die compl&egrave;te des challenges &eacute;motionnels.
+            <br />
+            Un espace pour comprendre, apaiser et ne plus jamais &ecirc;tre seul.
+          </motion.p>
+        </div>
+
+        {/* Countdown */}
+        <motion.div
+          className="mb-14"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <p
+            className="text-center text-[11px] tracking-[0.35em] uppercase mb-6 font-light"
+            style={{ color: "var(--text-muted)" }}
+          >
+            Ouverture le 22 mars 2026 &agrave; minuit
+          </p>
+
+          {!time.launched ? (
+            <div className="flex items-center gap-3 sm:gap-5">
+              <CountdownUnit value={time.days} label="Jours" />
+              <span className="font-display text-2xl sm:text-3xl font-light mt-[-24px]" style={{ color: "rgba(212,175,55,0.25)" }}>:</span>
+              <CountdownUnit value={time.hours} label="Heures" />
+              <span className="font-display text-2xl sm:text-3xl font-light mt-[-24px]" style={{ color: "rgba(212,175,55,0.25)" }}>:</span>
+              <CountdownUnit value={time.minutes} label="Minutes" />
+              <span className="font-display text-2xl sm:text-3xl font-light mt-[-24px]" style={{ color: "rgba(212,175,55,0.25)" }}>:</span>
+              <CountdownUnit value={time.seconds} label="Secondes" />
+            </div>
+          ) : (
+            <div className="text-center">
+              <span className="font-display text-3xl font-light text-shimmer">
+                Les portes sont ouvertes
               </span>
-            </motion.div>
-
-            <h1 className="font-display font-light leading-[1.08] mb-8" style={{ ...tStyle("hero"), perspective: "1000px" }}>
-              {(hero.title || '').split("\n").map((line: string, i: number) => {
-                const isHighlight = line.includes("expériences") || line.includes("schémas") || line.includes("potentiel") || line.includes("émotionnels");
-                const lineWords = line.split(/\s+/);
-                const baseDelay = i * 0.2 + 0.15;
-                return (
-                  <span key={i} className="block">
-                    {i > 0 && <span className="block h-2" />}
-                    {lineWords.map((word, wi) => (
-                      <motion.span
-                        key={wi}
-                        className={`inline-block mr-[0.3em] ${isHighlight ? 'text-shimmer' : ''}`}
-                        initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
-                        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                        transition={{
-                          duration: 0.7,
-                          delay: baseDelay + wi * 0.08,
-                          ease: [0.16, 1, 0.3, 1],
-                        }}
-                      >
-                        {word}
-                      </motion.span>
-                    ))}
-                  </span>
-                );
-              })}
-            </h1>
-
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <p className="text-xl md:text-2xl text-[var(--text-secondary)] leading-relaxed max-w-2xl mx-auto font-light mb-10" style={{
-                fontFamily: fontMap[heroSty.text_font] || undefined,
-                textAlign: (heroSty.text_align as "left" | "center" | "right") || undefined,
-              }}>
-                {hero.subtitle || ''}
-              </p>
-            </motion.div>
-
-            {hero.video_url && (
-              <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}>
-                <div className="glass overflow-hidden mb-10 max-w-3xl mx-auto">
-                  <video src={hero.video_url} controls className="w-full aspect-video" />
-                </div>
-              </motion.div>
-            )}
-
-            {!hero.video_url && (
-              <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}>
-                <div className="glass overflow-hidden mb-10 max-w-3xl mx-auto">
-                  <div className="relative aspect-video flex items-center justify-center cursor-pointer group">
-                    <div className="absolute inset-0" style={{ background: `linear-gradient(to bottom right, rgba(${goldRgb},0.08), transparent)` }} />
-                    <div className="relative z-10 text-center">
-                      <motion.div
-                        className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4"
-                        style={{ background: `rgba(${goldRgb},0.15)`, border: `2px solid rgba(${goldRgb},0.3)` }}
-                        whileHover={{ scale: 1.15 }}
-                        transition={{ type: "spring", stiffness: 300 }}
-                      >
-                        <svg className="w-8 h-8 ml-1" fill="none" viewBox="0 0 24 24" stroke={gold} strokeWidth={1.5}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
-                        </svg>
-                      </motion.div>
-                      <p className="text-sm text-[var(--text-secondary)]">Decouvrir SOS Shine en 2 minutes</p>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}>
-              <div className="flex flex-wrap gap-5 justify-center">
-                {(hero.buttons || []).map((btn: { label: string; href: string; variant: string }, i: number) => (
-                  <Link key={i} href={btn.href === '/signup' || btn.href === '/login' ? '/rejoindre' : btn.href}>
-                    {btn.variant === 'primary' ? (
-                      <button className="magnetic-btn pulse-ring px-8 py-4 rounded-full text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
-                        {btn.label} — {trialDays} jours d&apos;essai
-                      </button>
-                    ) : (
-                      <button className="magnetic-btn px-8 py-4 rounded-full text-base font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.3)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
-                        {btn.label}
-                      </button>
-                    )}
-                  </Link>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-
-        </motion.section>
-      )}
-
-      {/* ═══ TICKER BAND ═══ */}
-      <InfiniteTickerBand items={tickerItems} speed={35} />
-
-      {/* ═══ LE PRINCIPE ═══ */}
-      {vis('principe') && (
-        <section className="px-6 md:px-20 py-32 relative">
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-1/2 left-1/4 w-[500px] h-[500px] rounded-full opacity-[0.02] blur-[120px]" style={{ background: gold }} />
-          </div>
-
-          <div className="max-w-4xl mx-auto text-center relative z-10">
-            <RevealOnScroll>
-              <p className="luxury-title text-sm tracking-[0.4em] text-[var(--text-muted)] mb-10">{principe.label || ''}</p>
-            </RevealOnScroll>
-
-            {principe.image_url && (
-              <RevealOnScroll delay={0.1} direction="scale">
-                <img src={principe.image_url} alt="" className="w-full rounded-2xl object-cover max-h-72 mb-10" style={{ border: '1px solid var(--dark-border)' }} />
-              </RevealOnScroll>
-            )}
-
-            <RevealOnScroll delay={0.15}>
-              <h2 className="font-display font-light leading-[1.15] mb-10" style={tStyle("principe")}>
-                {(principe.title || '').split("\n").map((line: string, i: number) => (
-                  <span key={i} className="block">
-                    {i > 0 && <span className="block h-1" />}
-                    {line.includes("schémas") || line.includes("challenge") || line.includes("potentiel") ? (
-                      <span className="text-shimmer">{line}</span>
-                    ) : line}
-                  </span>
-                ))}
-              </h2>
-            </RevealOnScroll>
-
-            <RevealOnScroll delay={0.25}>
-              <p className="text-lg md:text-xl text-[var(--text-secondary)] leading-relaxed font-light max-w-2xl mx-auto">
-                {principe.description || ''}
-              </p>
-            </RevealOnScroll>
-
-            <RevealOnScroll delay={0.35}>
-              <div className="mt-10 flex items-center justify-center gap-4">
-                <span className="block w-20 h-px" style={{ background: `linear-gradient(to right, transparent, rgba(${goldRgb}, 0.3))` }} />
-                <span className="block w-2 h-2 rotate-45" style={{ background: gold, opacity: 0.5 }} />
-                <span className="block w-20 h-px" style={{ background: `linear-gradient(to left, transparent, rgba(${goldRgb}, 0.3))` }} />
-              </div>
-            </RevealOnScroll>
-          </div>
-        </section>
-      )}
-
-      {/* ═══ LES ETAPES — Glowing Cards ═══ */}
-      {vis('steps') && (
-        <section className="px-6 md:px-20 py-32 relative">
-          <div className="max-w-6xl mx-auto">
-            <RevealOnScroll>
-              <p className="luxury-title text-center text-sm tracking-[0.4em] text-[var(--text-muted)] mb-4">{stepsData.label || ''}</p>
-            </RevealOnScroll>
-            <RevealOnScroll delay={0.1}>
-              <h2 className="font-display font-light text-center mb-20" style={tStyle("steps")}>
-                <WordByWordReveal text={stepsData.title || ''} />
-              </h2>
-            </RevealOnScroll>
-
-            <div className="grid md:grid-cols-3 gap-8">
-              {(stepsData.items || []).map((step: { num: string; title: string; description: string; color: string }, i: number) => (
-                <RevealOnScroll key={step.num} delay={i * 0.15} direction={i === 0 ? "left" : i === 2 ? "right" : "up"}>
-                  <GlowingCard className="p-8 md:p-10 h-full" glowColor={`${step.color}25`}>
-                    <div className="mb-6">
-                      <span className="font-display text-6xl font-extralight block mb-2" style={{ color: step.color, opacity: 0.15 }}>{step.num}</span>
-                      <span className="luxury-title text-xs tracking-[0.3em] block mb-3" style={{ color: step.color, opacity: 0.6 }}>Etape {step.num}</span>
-                      <h3 className="font-display text-2xl font-medium">{step.title}</h3>
-                    </div>
-                    <p className="text-[var(--text-secondary)] leading-relaxed text-[15px] font-light">{step.description}</p>
-                    <div className="mt-6 h-px w-full" style={{ background: `linear-gradient(to right, ${step.color}30, transparent)` }} />
-                  </GlowingCard>
-                </RevealOnScroll>
-              ))}
             </div>
-          </div>
-        </section>
-      )}
+          )}
+        </motion.div>
 
-      {/* ═══ L'ENCYCLOPEDIE ═══ */}
-      {vis('encyclopedie') && (
-        <section className="px-6 md:px-20 py-32 relative">
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full opacity-[0.02] blur-[150px]" style={{ background: gold }} />
-          </div>
+        {/* Pricing comparison */}
+        <motion.div
+          className="w-full max-w-2xl mb-10"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <div
+            className="glass p-8 sm:p-10 text-center relative overflow-hidden"
+            style={{ borderColor: "rgba(212,175,55,0.12)" }}
+          >
+            <div
+              className="absolute top-0 left-0 right-0 h-px"
+              style={{ background: "linear-gradient(90deg, transparent, rgba(212,175,55,0.3), transparent)" }}
+            />
 
-          <div className="max-w-5xl mx-auto relative z-10">
-            <RevealOnScroll>
-              <p className="luxury-title text-center text-sm tracking-[0.4em] text-[var(--text-muted)] mb-4">{encyclo.label || "L'encyclopedie"}</p>
-            </RevealOnScroll>
-            <RevealOnScroll delay={0.1}>
-              <h2 className="font-display font-light text-center mb-6" style={tStyle("encyclopedie")}>
-                <WordByWordReveal text={encyclo.title || ''} />
-              </h2>
-            </RevealOnScroll>
-            <RevealOnScroll delay={0.2}>
-              <p className="text-lg text-[var(--text-secondary)] font-light leading-relaxed mb-16 max-w-2xl mx-auto text-center">
-                {encyclo.description || ''}
+            <p
+              className="text-[11px] tracking-[0.35em] uppercase mb-2 font-medium"
+              style={{ color: "var(--text-muted)" }}
+            >
+              Avantage liste d&apos;attente
+            </p>
+
+            <p className="text-sm mb-6 font-light" style={{ color: "var(--text-secondary)" }}>
+              Rejoignez maintenant et b&eacute;n&eacute;ficiez d&apos;un tarif pr&eacute;f&eacute;rentiel &agrave; vie.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10 mb-8">
+              {/* Early bird price */}
+              <div className="text-center">
+                <div className="flex items-baseline justify-center gap-1.5">
+                  <span className="font-display text-5xl sm:text-6xl font-light" style={{ color: "#D4AF37" }}>
+                    19,90&euro;
+                  </span>
+                  <span className="text-sm" style={{ color: "var(--text-muted)" }}>
+                    /mois
+                  </span>
+                </div>
+                <span
+                  className="inline-block mt-2 px-3 py-1 rounded-full text-[10px] tracking-[0.2em] uppercase font-medium"
+                  style={{ background: "rgba(212,175,55,0.1)", color: "#D4AF37", border: "1px solid rgba(212,175,55,0.15)" }}
+                >
+                  Tarif fondateur &mdash; &agrave; vie
+                </span>
+              </div>
+
+              {/* Separator */}
+              <div className="hidden sm:flex flex-col items-center gap-2">
+                <span className="block w-px h-12" style={{ background: "rgba(255,255,255,0.06)" }} />
+                <span className="text-[10px] tracking-wider uppercase" style={{ color: "var(--text-muted)" }}>
+                  au lieu de
+                </span>
+                <span className="block w-px h-12" style={{ background: "rgba(255,255,255,0.06)" }} />
+              </div>
+              <div className="sm:hidden">
+                <span className="text-[10px] tracking-wider uppercase" style={{ color: "var(--text-muted)" }}>
+                  au lieu de
+                </span>
+              </div>
+
+              {/* Standard price */}
+              <div className="text-center opacity-50">
+                <div className="flex items-baseline justify-center gap-1.5 relative">
+                  <span
+                    className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-px rotate-[-8deg]"
+                    style={{ background: "rgba(255,100,100,0.5)" }}
+                  />
+                  <span className="font-display text-4xl sm:text-5xl font-light" style={{ color: "var(--text-secondary)" }}>
+                    29,90&euro;
+                  </span>
+                  <span className="text-sm" style={{ color: "var(--text-muted)" }}>
+                    /mois
+                  </span>
+                </div>
+                <p className="mt-2 text-[10px] tracking-wider uppercase" style={{ color: "var(--text-muted)" }}>
+                  Tarif standard apr&egrave;s lancement
+                </p>
+              </div>
+            </div>
+
+            <p className="text-sm font-light mb-1" style={{ color: "var(--text-secondary)" }}>
+              Sans engagement &mdash; Annulable &agrave; tout instant
+            </p>
+            <p className="text-xs font-light" style={{ color: "var(--text-muted)" }}>
+              10&euro; d&apos;&eacute;conomie/mois, pour toujours.
+            </p>
+          </div>
+        </motion.div>
+
+        {/* Waitlist Form */}
+        <motion.div
+          className="w-full max-w-lg mb-10"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 1.4, ease: [0.16, 1, 0.3, 1] }}
+        >
+          {status === "success" ? (
+            <motion.div
+              className="glass p-8 text-center"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              style={{ borderColor: "rgba(212,175,55,0.15)" }}
+            >
+              <div
+                className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5"
+                style={{ background: "rgba(212,175,55,0.1)", border: "1px solid rgba(212,175,55,0.2)" }}
+              >
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="#D4AF37" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+              </div>
+              <div className="font-display text-2xl font-light mb-3" style={{ color: "#D4AF37" }}>Bienvenue parmi les fondateurs</div>
+              <p className="text-sm font-light leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                Votre place est r&eacute;serv&eacute;e. Vous recevrez un email le jour de l&apos;ouverture avec votre acc&egrave;s
+                prioritaire au tarif de <strong>19,90&euro;/mois &agrave; vie</strong>.
               </p>
-            </RevealOnScroll>
-
-            <RevealOnScroll delay={0.25}>
-              <div className="max-w-md mx-auto mb-12">
+            </motion.div>
+          ) : (
+            <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <input
                   type="text"
-                  value={encyclopediaSearch}
-                  onChange={(e) => setEncyclopediaSearch(e.target.value)}
-                  placeholder="Rechercher un challenge (ex: burn-out)..."
-                  className="w-full px-5 py-3 rounded-full text-sm font-light"
+                  placeholder="Votre pr&eacute;nom (optionnel)"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="flex-1 px-5 py-4 rounded-xl text-sm font-light outline-none transition-all duration-300 placeholder:text-[var(--text-muted)]"
                   style={{
-                    background: 'rgba(255,255,255,0.04)',
-                    border: `1px solid rgba(${goldRgb}, 0.25)`,
-                    color: 'var(--text-primary)',
-                    outline: 'none',
+                    background: "rgba(255,255,255,0.04)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    color: "var(--text-primary)",
                   }}
+                  onFocus={(e) => (e.target.style.borderColor = "rgba(212,175,55,0.3)")}
+                  onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.08)")}
+                />
+                <input
+                  type="email"
+                  required
+                  placeholder="Votre email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="flex-[1.5] px-5 py-4 rounded-xl text-sm font-light outline-none transition-all duration-300 placeholder:text-[var(--text-muted)]"
+                  style={{
+                    background: "rgba(255,255,255,0.04)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    color: "var(--text-primary)",
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = "rgba(212,175,55,0.3)")}
+                  onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.08)")}
                 />
               </div>
-            </RevealOnScroll>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-              {(encyclo.items || []).filter((d: string) => !encyclopediaSearch || d.toLowerCase().includes(encyclopediaSearch.toLowerCase())).map((d: string, i: number) => (
-                <RevealOnScroll key={d} delay={i * 0.05} direction="scale">
-                  <GlowingCard className="px-5 py-4 text-center cursor-pointer group">
-                    <span className="text-sm font-light transition-colors duration-300 group-hover:text-[var(--gold)]" style={{
-                      color: i === (encyclo.items || []).length - 1 ? gold : 'var(--text-secondary)',
-                    }}>
-                      {d}
-                    </span>
-                  </GlowingCard>
-                </RevealOnScroll>
-              ))}
-            </div>
+              <button
+                type="submit"
+                disabled={status === "loading"}
+                className="magnetic-btn pulse-ring w-full py-4 rounded-full text-sm font-semibold tracking-wide transition-all disabled:opacity-50"
+                style={{ background: "linear-gradient(135deg, #D4AF37, #B8960F)", color: "#050505" }}
+              >
+                {status === "loading" ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="w-4 h-4 border-2 border-[#050505] border-t-transparent rounded-full animate-spin" />
+                    Inscription...
+                  </span>
+                ) : (
+                  "Rejoindre la liste d\u2019attente \u2014 19,90\u20AC/mois \u00E0 vie"
+                )}
+              </button>
 
-            <RevealOnScroll delay={0.3}>
-              <div className="text-center mt-12">
-                <Link href="/encyclopedie">
-                  <button className="magnetic-btn px-8 py-3.5 rounded-full text-sm font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.25)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
-                    Explorer l&apos;encyclopedie
-                  </button>
-                </Link>
-              </div>
-            </RevealOnScroll>
-          </div>
-        </section>
-      )}
-
-      {/* ═══ TICKER BAND 2 ═══ */}
-      <InfiniteTickerBand items={["Soutien 24/7", "Communaute bienveillante", "Protocoles exclusifs", "Soins collectifs", "Chat dedie", "Evenements live", "Meditation guidee", "Coaching immersif"]} speed={40} />
-
-      {/* ═══ COMMUNAUTE ═══ */}
-      {vis('communaute') && (
-        <section className="px-6 md:px-20 py-32 relative">
-          <div className="max-w-5xl mx-auto">
-            <RevealOnScroll>
-              <h2 className="font-display font-light leading-[1.1] text-center mb-6" style={tStyle("communaute")}>
-                <WordByWordReveal text={comm.title || ''} />
-              </h2>
-            </RevealOnScroll>
-            <RevealOnScroll delay={0.15}>
-              <p className="text-lg md:text-xl text-[var(--text-secondary)] font-light leading-relaxed mb-20 max-w-2xl mx-auto text-center">
-                {comm.description || ''}
-              </p>
-            </RevealOnScroll>
-
-            <div className="space-y-6">
-              {(comm.blocks || []).filter((b: { title: string; description: string }) => b.title).map((item: { title: string; description: string }, i: number) => (
-                <RevealOnScroll key={item.title} delay={i * 0.12} direction={i % 2 === 0 ? "left" : "right"}>
-                  <GlowingCard className="p-8 md:p-10">
-                    <div className="flex items-start gap-6">
-                      <div className="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: `rgba(${goldRgb}, 0.08)`, border: `1px solid rgba(${goldRgb}, 0.12)` }}>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={gold} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                          {i === 0 && <><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><circle cx="9" cy="10" r="1" fill={gold}/><circle cx="15" cy="10" r="1" fill={gold}/></>}
-                          {i === 1 && <><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 8h8M8 12h6M8 16h4"/></>}
-                          {i === 2 && <><path d="M17 21v-2a4 4 0 0 0-4-4H5" /><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>}
-                        </svg>
-                      </div>
-                      <div>
-                        <h3 className="font-display text-xl font-medium mb-3">{item.title}</h3>
-                        <p className="text-[var(--text-secondary)] leading-relaxed text-[15px] font-light">{item.description}</p>
-                      </div>
-                    </div>
-                  </GlowingCard>
-                </RevealOnScroll>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ═══ TEMOIGNAGES ═══ */}
-      {vis('temoignages') && (
-        <section className="px-6 md:px-20 py-32 relative">
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute bottom-0 left-1/3 w-[700px] h-[500px] rounded-full opacity-[0.02] blur-[150px]" style={{ background: gold }} />
-          </div>
-
-          <div className="max-w-5xl mx-auto relative z-10">
-            <RevealOnScroll>
-              <p className="luxury-title text-center text-sm tracking-[0.4em] text-[var(--text-muted)] mb-20">
-                <WordByWordReveal text={temos.label || ''} />
-              </p>
-            </RevealOnScroll>
-
-            <div className="grid md:grid-cols-2 gap-8">
-              {(temos.items || []).filter((t: { quote: string; name: string; city: string }) => t.quote).map((t: { quote: string; name: string; city: string }, i: number) => (
-                <RevealOnScroll key={i} delay={i * 0.12} direction={i % 2 === 0 ? "left" : "right"}>
-                  <GlowingCard className="p-8 md:p-10 h-full flex flex-col justify-between">
-                    <div>
-                      <div className="flex gap-1 mb-6">
-                        {[1,2,3,4,5].map(s => (
-                          <span key={s} className="text-sm" style={{ color: gold }}>★</span>
-                        ))}
-                      </div>
-                      <p className="font-display text-lg italic text-[var(--text-primary)] font-light leading-relaxed mb-8">
-                        &laquo; {t.quote} &raquo;
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-3 pt-4" style={{ borderTop: `1px solid rgba(${goldRgb}, 0.08)` }}>
-                      <div className="w-10 h-10 rounded-full flex items-center justify-center font-display text-sm" style={{ background: `linear-gradient(135deg, rgba(${goldRgb},0.15), rgba(${goldRgb},0.05))`, color: gold }}>
-                        {t.name.charAt(0)}
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium" style={{ color: gold }}>{t.name}</p>
-                        <p className="text-xs text-[var(--text-muted)]">{t.city}</p>
-                      </div>
-                    </div>
-                  </GlowingCard>
-                </RevealOnScroll>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ═══ L'HISTOIRE / LE LIVRE ═══ */}
-      {vis('histoire') && (() => {
-        const hist = sec('histoire');
-        return (
-          <section className="px-6 md:px-20 py-32 relative">
-            <div className="max-w-5xl mx-auto">
-              <RevealOnScroll>
-                <p className="luxury-title text-center text-sm tracking-[0.4em] text-[var(--text-muted)] mb-4">{hist.label || "L'Histoire"}</p>
-              </RevealOnScroll>
-              <RevealOnScroll delay={0.1}>
-                <h2 className="font-display font-light text-center text-3xl md:text-5xl mb-6" style={{ color: 'var(--gold)' }}>
-                  <WordByWordReveal text={hist.title || ''} />
-                </h2>
-              </RevealOnScroll>
-              <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16 mt-12">
-                <RevealOnScroll delay={0.15}>
-                  <div className="flex-shrink-0 group">
-                    <a href={hist.book_url || '#'} target="_blank" rel="noopener noreferrer" className="block relative">
-                      <div className="w-56 md:w-64 rounded-lg overflow-hidden border border-[var(--gold)]/20 group-hover:border-[var(--gold)]/60 transition-all duration-500 shadow-lg group-hover:shadow-[0_0_30px_rgba(212,175,55,0.2)]">
-                        <img
-                          src={hist.book_image || '/images/book-cover.jpeg'}
-                          alt="SOS Shine — Briller Comme un Diamant"
-                          className="w-full aspect-[3/4] object-cover"
-                        />
-                      </div>
-                      <div className="absolute -inset-2 rounded-xl bg-[var(--gold)]/5 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
-                    </a>
-                  </div>
-                </RevealOnScroll>
-                <RevealOnScroll delay={0.25}>
-                  <div className="flex-1 text-center md:text-left">
-                    <p className="text-lg md:text-xl text-[var(--text-body)] leading-relaxed mb-6">
-                      {hist.paragraph1 || ''}
-                    </p>
-                    <p className="text-lg md:text-xl text-[var(--text-body)] leading-relaxed mb-6">
-                      {hist.paragraph2 || ''}
-                    </p>
-                    {hist.quote && (
-                      <p className="text-base text-[var(--text-muted)] leading-relaxed mb-8 italic">
-                        &ldquo;{hist.quote}&rdquo;
-                      </p>
-                    )}
-                    <a
-                      href={hist.book_url || '#'}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-6 py-3 border border-[var(--gold)]/40 rounded-full text-[var(--gold)] text-sm tracking-[0.15em] uppercase hover:bg-[var(--gold)]/10 hover:border-[var(--gold)] transition-all duration-300"
-                    >
-                      {hist.button_label || 'Découvrir le livre'}
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                    </a>
-                  </div>
-                </RevealOnScroll>
-              </div>
-            </div>
-          </section>
-        );
-      })()}
-
-      {/* ═══ FONDATEURS ═══ */}
-      {vis('fondateurs') && (() => {
-        const fond = sec('fondateurs');
-        const members = fond.members || [];
-        return (
-          <section className="px-6 md:px-20 py-32 relative">
-            <div className="max-w-5xl mx-auto">
-              <RevealOnScroll>
-                <p className="luxury-title text-center text-sm tracking-[0.4em] text-[var(--text-muted)] mb-4">{fond.label || 'Les Fondateurs'}</p>
-              </RevealOnScroll>
-              <RevealOnScroll delay={0.1}>
-                <h2 className="font-display font-light text-center text-3xl md:text-5xl mb-6" style={{ color: 'var(--gold)' }}>
-                  <WordByWordReveal text={fond.title || ''} />
-                </h2>
-              </RevealOnScroll>
-              {fond.description && (
-                <RevealOnScroll delay={0.15}>
-                  <p className="text-center text-[var(--text-muted)] max-w-2xl mx-auto mb-16 text-lg leading-relaxed">
-                    {fond.description}
-                  </p>
-                </RevealOnScroll>
+              {status === "already" && (
+                <motion.p
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-center text-sm font-light"
+                  style={{ color: "#D4AF37" }}
+                >
+                  Vous &ecirc;tes d&eacute;j&agrave; inscrit(e). Nous vous contacterons le 22 mars.
+                </motion.p>
               )}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-                {members.map((founder: { name: string; image: string; role: string }, i: number) => (
-                  <RevealOnScroll key={founder.name || i} delay={0.2 + i * 0.15}>
-                    <div className="flex flex-col items-center group">
-                      <div className="relative mb-6">
-                        <div className="w-44 h-44 md:w-52 md:h-52 rounded-full overflow-hidden border-2 border-[var(--gold)]/30 group-hover:border-[var(--gold)] transition-all duration-500 relative">
-                          {founder.image && (
-                            <img
-                              src={founder.image}
-                              alt={founder.name}
-                              className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                            />
-                          )}
-                        </div>
-                        <div className="absolute -inset-1 rounded-full bg-[var(--gold)]/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
-                      </div>
-                      <h3 className="font-display text-2xl text-[var(--gold)] mb-1">{founder.name}</h3>
-                      <p className="text-sm tracking-[0.2em] uppercase text-[var(--text-muted)]">{founder.role}</p>
-                    </div>
-                  </RevealOnScroll>
-                ))}
-              </div>
-            </div>
-          </section>
-        );
-      })()}
 
-      {/* ═══ OFFRES / PRICING ═══ */}
-      {vis('pricing') && (
-        <section className="px-6 md:px-20 py-32 relative">
-          <div className="max-w-5xl mx-auto">
-            <RevealOnScroll>
-              <p className="luxury-title text-center text-sm tracking-[0.4em] text-[var(--text-muted)] mb-4">Tarification</p>
-            </RevealOnScroll>
-            <RevealOnScroll delay={0.1}>
-              <h2 className="font-display font-light text-center mb-4" style={tStyle("pricing")}>
-                <WordByWordReveal text={pricing.title || ''} />
-              </h2>
-            </RevealOnScroll>
-            <RevealOnScroll delay={0.2}>
-              <p className="text-[var(--text-secondary)] font-light text-center mb-20">{pricing.subtitle || ''}</p>
-            </RevealOnScroll>
+              {status === "error" && (
+                <motion.p
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-center text-sm font-light"
+                  style={{ color: "#ef4444" }}
+                >
+                  Une erreur est survenue. Veuillez r&eacute;essayer.
+                </motion.p>
+              )}
+            </form>
+          )}
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-              {(pricing.plans || []).map((plan: { name: string; price: string; period: string; button_label: string; button_href: string; highlight: boolean; badge: string; features: string[] }, idx: number) => (
-                <RevealOnScroll key={plan.name} delay={(idx + 1) * 0.15} direction={(["left", "up", "scale", "right"] as const)[idx % 4]}>
-                  <GlowingCard className={`p-8 md:p-10 h-full flex flex-col relative ${plan.highlight ? 'ring-1' : ''}`} glowColor={plan.highlight ? `rgba(${accentRgb},0.15)` : `rgba(${goldRgb},0.15)`} style={plan.highlight ? { '--tw-ring-color': `rgba(${accentRgb},0.15)` } as React.CSSProperties : undefined}>
-                    {plan.badge && (
-                      <motion.div
-                        className="absolute -top-3 left-1/2 -translate-x-1/2 px-5 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase"
-                        style={{ background: `linear-gradient(135deg, ${accent}, rgba(${accentRgb},0.7))`, color: '#050505' }}
-                        initial={{ y: -10, opacity: 0 }}
-                        whileInView={{ y: 0, opacity: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.5 }}
-                      >
-                        {plan.badge}
-                      </motion.div>
-                    )}
+          {/* Social proof */}
+          {waitlistCount > 0 && (
+            <motion.p
+              className="text-center mt-4 text-xs font-light"
+              style={{ color: "var(--text-muted)" }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+            >
+              <span style={{ color: "#D4AF37" }}>{waitlistCount}</span> personne{waitlistCount > 1 ? "s" : ""} sur la
+              liste d&apos;attente
+            </motion.p>
+          )}
+        </motion.div>
 
-                    <p className="luxury-title text-sm tracking-[0.25em] text-[var(--text-muted)] mb-6">{plan.name}</p>
+        {/* Features teaser */}
+        <motion.div
+          className="w-full max-w-2xl mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 1.6, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <p
+            className="text-center text-[11px] tracking-[0.35em] uppercase mb-6 font-light"
+            style={{ color: "var(--text-muted)" }}
+          >
+            Ce qui vous attend
+          </p>
 
-                    <div className="flex items-baseline gap-1 mb-8">
-                      <span className="font-display text-6xl font-extralight" style={{ color: plan.highlight ? accent : gold }}>
-                        <AnimatedCounter value={plan.price} suffix="€" />
-                      </span>
-                      <span className="text-[var(--text-muted)] text-sm">{plan.period}</span>
-                    </div>
-
-                    <div className="space-y-4 flex-1 mb-10">
-                      {(plan.features || []).map((f: string, fi: number) => (
-                        <motion.div
-                          key={f}
-                          className="flex items-start gap-3"
-                          initial={{ opacity: 0, x: -10 }}
-                          whileInView={{ opacity: 1, x: 0 }}
-                          viewport={{ once: true }}
-                          transition={{ delay: 0.3 + fi * 0.05 }}
-                        >
-                          <span className="mt-0.5 text-sm" style={{ color: plan.highlight ? accent : gold }}>◆</span>
-                          <span className="text-[var(--text-secondary)] text-[15px] font-light">{f}</span>
-                        </motion.div>
-                      ))}
-                    </div>
-
-                    <Link href="/rejoindre">
-                      <button className={`magnetic-btn w-full py-4 rounded-full text-base font-semibold tracking-wide ${plan.highlight ? 'pulse-ring' : ''}`} style={{
-                        background: plan.highlight ? `linear-gradient(135deg, ${accent}, rgba(${accentRgb},0.7))` : `linear-gradient(135deg, ${gold}, ${goldDeep})`,
-                        color: '#050505'
-                      }}>
-                        {plan.button_label}
-                      </button>
-                    </Link>
-                  </GlowingCard>
-                </RevealOnScroll>
-              ))}
-            </div>
-
-            <RevealOnScroll delay={0.4}>
-              <p className="text-center text-xs text-[var(--text-muted)] mt-8 font-light italic">{pricing.footer || ''}</p>
-            </RevealOnScroll>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {features.map((feature, i) => (
+              <motion.div
+                key={feature}
+                className="glass p-4 text-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 1.7 + i * 0.07, ease: [0.16, 1, 0.3, 1] }}
+                style={{ borderColor: "rgba(212,175,55,0.06)" }}
+              >
+                <span className="block w-1.5 h-1.5 rotate-45 mx-auto mb-3" style={{ background: "#D4AF37", opacity: 0.5 }} />
+                <span className="text-xs font-light leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                  {feature}
+                </span>
+              </motion.div>
+            ))}
           </div>
-        </section>
-      )}
+        </motion.div>
 
-      {/* ═══ CTA FINAL DARK ═══ */}
-      {vis('cta_dark') && (
-        <section className="px-6 md:px-20 py-40 relative overflow-hidden">
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] rounded-full opacity-[0.04] blur-[150px]" style={{ background: gold }} />
-          </div>
-          <div className="relative z-10 max-w-4xl mx-auto text-center">
-            {ctaDark.image_url && (
-              <RevealOnScroll direction="scale">
-                <img src={ctaDark.image_url} alt="" className="w-48 h-48 rounded-2xl object-cover mx-auto mb-8" />
-              </RevealOnScroll>
-            )}
-            <RevealOnScroll>
-              <h2 className="font-display font-light leading-[1.12] mb-12" style={tStyle("cta_dark")}>
-                <WordByWordReveal text={ctaDark.title || ''} />
-              </h2>
-            </RevealOnScroll>
-            <RevealOnScroll delay={0.3}>
-              <Link href="/rejoindre">
-                <button className="magnetic-btn pulse-ring px-10 py-5 rounded-full text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
-                  Rejoindre SOS Shine
-                </button>
+        {/* Footer links */}
+        <motion.div
+          className="pb-10 text-center space-y-3"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.7, delay: 2.1 }}
+        >
+          <Link
+            href="/login"
+            className="text-xs gold-underline transition-colors"
+            style={{ color: "var(--text-muted)" }}
+          >
+            D&eacute;j&agrave; membre ? Se connecter
+          </Link>
+
+          <div className="flex items-center justify-center gap-6 mt-3">
+            {[
+              { label: "Mentions l\u00E9gales", href: "/mentions-legales" },
+              { label: "CGV", href: "/cgv" },
+              { label: "Confidentialit\u00E9", href: "/confidentialite" },
+              { label: "Contact", href: "/contact" },
+            ].map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-[10px] tracking-wider uppercase transition-colors"
+                style={{ color: "var(--text-muted)" }}
+              >
+                {link.label}
               </Link>
-            </RevealOnScroll>
+            ))}
           </div>
-        </section>
-      )}
 
-      {/* ═══ CTA LIGHT ═══ */}
-      {vis('cta_light') && (
-        <section className="px-6 md:px-20 py-32 relative overflow-hidden" style={{ background: sty('cta_light').bg || '#ffffff' }}>
-          <div className="max-w-3xl mx-auto text-center relative z-10">
-            <RevealOnScroll>
-              <p className="text-xl md:text-2xl font-light leading-relaxed mb-12" style={{ color: sty('cta_light').text_color || '#1a1a1a' }}>
-                {ctaLight.description || ''}
-              </p>
-            </RevealOnScroll>
-            <RevealOnScroll delay={0.15}>
-              <Link href="/rejoindre">
-                <button className="magnetic-btn px-10 py-5 rounded-full text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
-                  {ctaLight.button_label || 'Rejoindre SOS Shine'}
-                </button>
-              </Link>
-              <div className="mt-8">
-                <Link href="/login" className="text-sm transition-colors duration-300 underline underline-offset-4" style={{ color: sty('cta_light').muted_color || '#6b7280' }}>
-                  {ctaLight.login_text || 'Deja membre ? Se connecter'}
-                </Link>
-              </div>
-            </RevealOnScroll>
-          </div>
-        </section>
-      )}
-
-      {/* ═══ FOOTER ═══ */}
-      {vis('footer') && (
-        <footer className="px-6 md:px-20 py-16 border-t border-[var(--dark-border)] relative" style={{ background: "rgba(0,0,0,0.3)" }}>
-          <div className="max-w-6xl mx-auto">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-10">
-              <div className="flex items-center gap-3">
-                <img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-16 w-auto object-contain" />
-              </div>
-
-              <div className="flex flex-wrap justify-center gap-x-8 gap-y-4">
-                {(foot.links || []).map((link: { label: string; href: string }) => (
-                  <Link key={link.label} href={link.href} className="text-xs tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors duration-300 gold-underline">
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-
-              <p className="text-[10px] tracking-[0.2em] uppercase text-[var(--text-muted)]">
-                &copy; {foot.copyright_year || '2026'} {foot.name || 'SOS Shine'}
-              </p>
-            </div>
-          </div>
-        </footer>
-      )}
-
+          <p className="text-[10px] mt-4" style={{ color: "var(--text-muted)", opacity: 0.5 }}>
+            &copy; 2026 SOS Shine. Tous droits r&eacute;serv&eacute;s.
+          </p>
+        </motion.div>
+      </div>
     </main>
   );
 }

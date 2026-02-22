@@ -7,6 +7,43 @@ import { createClient } from "@/lib/supabase/client";
 import { LANDING_DEFAULTS, buildSectionMap } from "@/lib/landing-defaults";
 import type { LandingSectionDefault, SectionContent, SectionStyles } from "@/lib/landing-defaults";
 
+function sanitizeContent(content: SectionContent): SectionContent {
+  const replacements: [RegExp, string][] = [
+    [/Encyclopédie complète des douleurs/gi, 'Encyclopédie complète des expériences de vie'],
+    [/3 étapes par douleur/gi, '3 étapes par challenge émotionnel'],
+    [/Chat dédié par douleur/gi, 'Chat dédié par challenge émotionnel'],
+    [/chaque douleur/gi, 'chaque challenge émotionnel'],
+    [/Chaque douleur/gi, 'Chaque challenge émotionnel'],
+    [/une douleur ancienne/gi, 'un challenge émotionnel ancien'],
+    [/la douleur/gi, 'le challenge émotionnel'],
+    [/nouvelle douleur/gi, 'nouvelle expérience de vie'],
+    [/des douleurs/gi, 'des expériences de vie'],
+    [/les douleurs/gi, 'les expériences de vie'],
+    [/vos douleurs/gi, 'vos expériences de vie'],
+    [/douleurs/gi, 'expériences de vie'],
+    [/douleur/gi, 'challenge émotionnel'],
+  ];
+
+  function sanitizeValue(val: unknown): unknown {
+    if (typeof val === 'string') {
+      let result = val;
+      for (const [pattern, replacement] of replacements) {
+        result = result.replace(pattern, replacement);
+      }
+      return result;
+    }
+    if (Array.isArray(val)) return val.map(sanitizeValue);
+    if (val && typeof val === 'object') {
+      const out: Record<string, unknown> = {};
+      for (const [k, v] of Object.entries(val)) out[k] = sanitizeValue(v);
+      return out;
+    }
+    return val;
+  }
+
+  return sanitizeValue(content) as SectionContent;
+}
+
 function hexToRgb(hex: string): string {
   const h = hex.replace("#", "");
   const r = parseInt(h.substring(0, 2), 16);
@@ -218,12 +255,12 @@ export default function Home() {
         for (const d of LANDING_DEFAULTS) {
           const row = dbMap[d.section_key];
           merged[d.section_key] = row
-            ? { content: d.content, styles: row.styles, is_visible: row.is_visible }
+            ? { content: sanitizeContent(row.content), styles: row.styles, is_visible: row.is_visible }
             : { content: d.content, styles: d.styles, is_visible: d.is_visible };
         }
         for (const row of rows) {
           if (!merged[row.section_key]) {
-            merged[row.section_key] = { content: row.content, styles: row.styles, is_visible: row.is_visible };
+            merged[row.section_key] = { content: sanitizeContent(row.content), styles: row.styles, is_visible: row.is_visible };
           }
         }
         setSections(merged);

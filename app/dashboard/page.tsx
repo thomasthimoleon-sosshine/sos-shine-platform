@@ -96,6 +96,7 @@ export default function DashboardHome() {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [greeting, setGreeting] = useState('')
   const [quote, setQuote] = useState<Quote | null>(null)
+  const [siteSettings, setSiteSettings] = useState<Record<string, string>>({})
 
   useEffect(() => {
     setQuote(getRandomQuote())
@@ -119,7 +120,18 @@ export default function DashboardHome() {
         })
       }
     }
+    async function loadSettings() {
+      try {
+        const { data } = await supabase.from('site_settings').select('key, value')
+        if (data) {
+          const map: Record<string, string> = {}
+          data.forEach((row: { key: string; value: string }) => { map[row.key] = row.value })
+          setSiteSettings(map)
+        }
+      } catch {}
+    }
     loadProfile()
+    loadSettings()
   }, [])
 
   const quickAccess = [
@@ -174,10 +186,10 @@ export default function DashboardHome() {
   ]
 
   const steps = [
-    { num: '01', title: t('steps.understand'), desc: t('steps.understand_desc'), accent: '#55EFC4' },
-    { num: '02', title: t('steps.release'), desc: t('steps.release_desc'), accent: '#74C0FC' },
-    { num: '03', title: t('steps.meditation'), desc: t('steps.meditation_desc'), accent: '#E17055' },
-    { num: '04', title: t('steps.action'), desc: t('steps.action_desc'), accent: '#D4AF37' },
+    { num: '01', title: siteSettings.step1_title || t('steps.understand'), desc: siteSettings.step1_desc || t('steps.understand_desc'), accent: '#55EFC4' },
+    { num: '02', title: siteSettings.step2_title || t('steps.release'), desc: siteSettings.step2_desc || t('steps.release_desc'), accent: '#74C0FC' },
+    { num: '03', title: siteSettings.step3_title || t('steps.meditation'), desc: siteSettings.step3_desc || t('steps.meditation_desc'), accent: '#E17055' },
+    { num: '04', title: siteSettings.step4_title || t('steps.action'), desc: siteSettings.step4_desc || t('steps.action_desc'), accent: '#D4AF37' },
   ]
 
   return (
@@ -278,7 +290,7 @@ export default function DashboardHome() {
       {/* ── 4 Étapes — Bento row ── */}
       <div>
         <h2 className="text-[11px] font-semibold uppercase tracking-widest mb-4" style={{ color: 'var(--text-muted)' }}>
-          {t('dashboard.protocol')}
+          {siteSettings.steps_label || t('dashboard.protocol')}
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {steps.map((s, i) => (

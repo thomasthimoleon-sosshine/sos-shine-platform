@@ -72,11 +72,30 @@ export default function AdminPublications() {
 
   async function togglePublish(post: Post) {
     setTogglingId(post.id)
+    const willPublish = !post.is_published
     const supabase = createClient()
     await supabase
       .from('posts')
-      .update({ is_published: !post.is_published })
+      .update({ is_published: willPublish })
       .eq('id', post.id)
+
+    if (willPublish) {
+      try {
+        await fetch('/api/notify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'new_post',
+            title: 'Nouvelle publication',
+            body: post.title,
+            link: '/dashboard/mur',
+          }),
+        })
+      } catch {
+        // notification sending failed silently
+      }
+    }
+
     await loadPosts()
     setTogglingId(null)
   }

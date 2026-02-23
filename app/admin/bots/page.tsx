@@ -67,6 +67,27 @@ export default function AdminBotsPage() {
     }
   }
 
+  async function schedulePosts() {
+    setLoading(true)
+    setStatus('Planification des publications...')
+    try {
+      const res = await fetch('/api/bots/schedule', { method: 'POST' })
+      const data = await res.json()
+      if (data.success) {
+        setStatus(`${data.totalPosts} publications planifiées jusqu'au 22 mars !`)
+        addLog(`Planification: ${data.totalPosts} posts sur ${data.weeks} semaines`)
+        for (const s of data.summary) {
+          addLog(`  ${s.bot}: ${s.posts} publications`)
+        }
+      } else {
+        setStatus(`Erreur: ${data.error}`)
+      }
+    } catch (err) {
+      setStatus(`Erreur: ${err}`)
+    }
+    setLoading(false)
+  }
+
   function startAutoMode() {
     if (autoRunning) return
     setAutoRunning(true)
@@ -127,6 +148,21 @@ export default function AdminBotsPage() {
           style={{ background: 'var(--gold)', color: '#000', opacity: loading ? 0.5 : 1 }}
         >
           {loading ? 'Création...' : 'Créer les profils dans Supabase'}
+        </button>
+      </div>
+
+      <div className="glass p-6 rounded-xl space-y-4">
+        <h2 className="font-display text-lg font-medium">Planification du mur communautaire</h2>
+        <p className="text-sm text-[var(--text-secondary)]">
+          Planifie automatiquement 10 publications par bot par semaine jusqu'au 22 mars 2026. Les publications apparaîtront progressivement sur le mur à leurs dates prévues.
+        </p>
+        <button
+          onClick={schedulePosts}
+          disabled={loading}
+          className="px-6 py-2.5 rounded-lg text-sm font-medium"
+          style={{ background: 'rgba(212, 175, 55, 0.15)', border: '1px solid rgba(212, 175, 55, 0.3)', color: 'var(--gold)', opacity: loading ? 0.5 : 1 }}
+        >
+          {loading ? 'Planification...' : 'Planifier les publications jusqu\'au 22 mars'}
         </button>
       </div>
 

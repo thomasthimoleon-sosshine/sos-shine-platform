@@ -142,9 +142,10 @@ export default function AdminDouleursPage() {
   }
 
   async function togglePublish(d: Douleur) {
+    const willPublish = !d.is_published
     const { error } = await supabase
       .from('douleurs')
-      .update({ is_published: !d.is_published })
+      .update({ is_published: willPublish })
       .eq('id', d.id)
 
     if (error) {
@@ -152,9 +153,26 @@ export default function AdminDouleursPage() {
     } else {
       setDouleurs((prev) =>
         prev.map((item) =>
-          item.id === d.id ? { ...item, is_published: !item.is_published } : item
+          item.id === d.id ? { ...item, is_published: willPublish } : item
         )
       )
+
+      if (willPublish) {
+        try {
+          await fetch('/api/notify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              type: 'new_douleur',
+              title: 'Nouveau protocole disponible',
+              body: d.title,
+              link: `/dashboard/encyclopedie/${d.slug}`,
+            }),
+          })
+        } catch {
+          // notification sending failed silently
+        }
+      }
     }
   }
 

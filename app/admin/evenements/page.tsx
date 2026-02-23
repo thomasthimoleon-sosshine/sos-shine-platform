@@ -204,6 +204,21 @@ export default function AdminEvenements() {
         setSaving(false)
         return
       }
+
+      try {
+        await fetch('/api/notify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'new_event',
+            title: 'Nouvel événement',
+            body: payload.title,
+            link: '/dashboard/evenements',
+          }),
+        })
+      } catch {
+        // notification sending failed silently
+      }
     }
 
     await loadEvents()

@@ -27,6 +27,7 @@ export default function MurPage() {
         .from('posts')
         .select('*, profiles(prenom, role, avatar_url)')
         .eq('is_published', true)
+        .lte('created_at', new Date().toISOString())
         .order('created_at', { ascending: false })
         .limit(50)
 

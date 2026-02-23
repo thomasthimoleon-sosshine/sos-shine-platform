@@ -180,6 +180,33 @@
   color: inherit;
 }
 
+[data-theme="light"] aside .nav-item {
+  color: #4a4a4a;
+}
+[data-theme="light"] aside .nav-item:hover {
+  background: rgba(212, 175, 55, 0.06);
+}
+
+[data-theme="light"] [style*="rgba(255,255,255,0.03)"],
+[data-theme="light"] [style*="rgba(255,255,255,0.04)"],
+[data-theme="light"] [style*="rgba(255,255,255,0.05)"] {
+  background: rgba(0, 0, 0, 0.03) !important;
+}
+
+[data-theme="light"] button[style*="background: 'transparent'"],
+[data-theme="light"] button.cta-glow {
+  color: var(--dark);
+}
+
+[data-theme="light"] .prose {
+  color: #3a3a3a;
+}
+[data-theme="light"] .prose h1,
+[data-theme="light"] .prose h2,
+[data-theme="light"] .prose h3 {
+  color: #B8960F !important;
+}
+
 /* ── 2. Tailwind v4 Theme ── */
 @theme inline {
   --color-background: var(--dark);

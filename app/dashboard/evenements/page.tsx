@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { Event, EventRegistration } from '@/types/database'
+import { useTranslation } from '@/lib/i18n/useTranslation'
 
 /* ─── Continent polygon data [lng, lat] ─── */
 const CONTINENTS: [number, number][][] = [
@@ -29,10 +30,11 @@ const CONTINENTS: [number, number][][] = [
 ]
 
 /* ─── 3D Globe Component ─── */
-function WorldGlobe({ events, selectedEvent, onSelect }: {
+function WorldGlobe({ events, selectedEvent, onSelect, dragLabel }: {
   events: { id: string; title: string; latitude: number | null; longitude: number | null; location_name: string | null }[]
   selectedEvent: string | null
   onSelect: (id: string) => void
+  dragLabel: string
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -281,13 +283,14 @@ function WorldGlobe({ events, selectedEvent, onSelect }: {
       />
       <div className="absolute bottom-3 left-3 flex items-center gap-2">
         <span className="w-2 h-2 rotate-45 inline-block" style={{ background: '#D4AF37' }} />
-        <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>Glissez pour tourner le globe &middot; Cliquez sur un diamant</span>
+        <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{dragLabel}</span>
       </div>
     </div>
   )
 }
 
 export default function EvenementsPage() {
+  const { t } = useTranslation()
   const [events, setEvents] = useState<Event[]>([])
   const [registrations, setRegistrations] = useState<EventRegistration[]>([])
   const [loading, setLoading] = useState(true)
@@ -381,9 +384,9 @@ export default function EvenementsPage() {
   function daysUntil(dateString: string) {
     const diff = new Date(dateString).getTime() - Date.now()
     const days = Math.ceil(diff / (1000 * 60 * 60 * 24))
-    if (days === 0) return "Aujourd'hui"
-    if (days === 1) return 'Demain'
-    return `Dans ${days} jours`
+    if (days === 0) return t('dashboard.today')
+    if (days === 1) return t('dashboard.tomorrow')
+    return t('dashboard.in_days', { n: days })
   }
 
   function getEventTypeInfo(type: string) {
@@ -408,16 +411,16 @@ export default function EvenementsPage() {
       {/* Header */}
       <div>
         <h1 className="font-display text-3xl sm:text-4xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-          Événements
+          {t('dashboard.events_title')}
         </h1>
         <p className="mt-2" style={{ color: 'var(--text-secondary)' }}>
-          Shine Walks, cercles de parole, ateliers... Retrouvez-vous dans la vraie vie.
+          {t('dashboard.events_subtitle_detail')}
         </p>
       </div>
 
       {/* World Map — only if events with coordinates exist */}
       {!loading && mapEvents.length > 0 && (
-        <WorldGlobe events={mapEvents} selectedEvent={selectedEvent} onSelect={scrollToEvent} />
+        <WorldGlobe events={mapEvents} selectedEvent={selectedEvent} onSelect={scrollToEvent} dragLabel={t('dashboard.drag_globe')} />
       )}
 
       {/* Info banner */}
@@ -439,10 +442,10 @@ export default function EvenementsPage() {
         </div>
         <div>
           <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
-            Les rencontres réelles
+            {t('dashboard.real_meetings')}
           </p>
           <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
-            Nos événements sont gratuits ou à prix libre. L&apos;important, c&apos;est d&apos;être ensemble.
+            {t('dashboard.events_free_desc')}
           </p>
         </div>
       </div>
@@ -458,10 +461,10 @@ export default function EvenementsPage() {
             📅
           </div>
           <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
-            Les événements arrivent
+            {t('dashboard.events_empty_title')}
           </h3>
           <p className="text-sm max-w-sm mx-auto" style={{ color: 'var(--text-secondary)' }}>
-            Les prochains événements SOS Shine (Shine Walks, cercles de parole, ateliers...) apparaîtront ici. Restez connecté !
+            {t('dashboard.events_empty_desc')}
           </p>
         </div>
       ) : (
@@ -541,11 +544,11 @@ export default function EvenementsPage() {
                     <div className="flex items-center justify-between mt-4">
                       <div className="flex items-center gap-4">
                         <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                          {event.price === 0 ? 'Gratuit' : `${event.price}€`}
+                          {event.price === 0 ? t('dashboard.free') : `${event.price}€`}
                         </span>
                         {event.max_participants && (
                           <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                            {event.max_participants} places max
+                            {t('dashboard.max_places', { n: event.max_participants })}
                           </span>
                         )}
                       </div>
@@ -555,7 +558,7 @@ export default function EvenementsPage() {
                           className="text-xs px-4 py-2 rounded-xl font-medium"
                           style={{ background: 'rgba(85, 239, 196, 0.1)', color: '#55EFC4' }}
                         >
-                          Inscrit(e) ✓
+                          {t('dashboard.registered_check')}
                         </span>
                       ) : (
                         <button
@@ -564,7 +567,7 @@ export default function EvenementsPage() {
                           className="text-xs px-4 py-2 rounded-xl font-semibold transition-all duration-200 cursor-pointer disabled:opacity-50"
                           style={{ background: 'var(--gold)', color: 'var(--dark)' }}
                         >
-                          {registering === event.id ? 'Inscription...' : "S'inscrire"}
+                          {registering === event.id ? t('common.loading') : t('dashboard.register')}
                         </button>
                       )}
                     </div>

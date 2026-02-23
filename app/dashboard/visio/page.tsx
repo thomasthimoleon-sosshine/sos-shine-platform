@@ -5,12 +5,14 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import ConferenceRoom from '@/components/ConferenceRoom'
 import type { GroupEvent, Profile } from '@/types/database'
+import { useTranslation } from '@/lib/i18n/useTranslation'
 
 type GroupEventWithHost = GroupEvent & {
   profiles: Pick<Profile, 'prenom' | 'pseudo' | 'avatar_url' | 'role'>
 }
 
 export default function VisioPage() {
+  const { t } = useTranslation()
   const router = useRouter()
   const [events, setEvents] = useState<GroupEventWithHost[]>([])
   const [loading, setLoading] = useState(true)
@@ -53,7 +55,6 @@ export default function VisioPage() {
     const supabase = createClient()
     const callType = event.event_type || 'video'
 
-    // Si la salle n'existe pas encore, la créer (quand l'hôte lance)
     let roomId = event.room_id
     if (!roomId && event.host_id === userId) {
       const { data: room } = await supabase.from('signaling_rooms').insert({
@@ -88,8 +89,8 @@ export default function VisioPage() {
   }
 
   function getStatusLabel(status: string) {
-    if (status === 'live') return { label: 'En direct', color: '#22c55e', bg: 'rgba(34,197,94,0.12)' }
-    return { label: 'Planifié', color: 'var(--gold)', bg: 'rgba(212,175,55,0.12)' }
+    if (status === 'live') return { label: t('dashboard.live'), color: '#22c55e', bg: 'rgba(34,197,94,0.12)' }
+    return { label: t('dashboard.scheduled'), color: 'var(--gold)', bg: 'rgba(212,175,55,0.12)' }
   }
 
   // Vue active : on est dans une salle
@@ -116,17 +117,17 @@ export default function VisioPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-display text-3xl sm:text-4xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-            Conférences de groupe
+            {t('dashboard.conferences_title')}
           </h1>
           <p className="mt-2" style={{ color: 'var(--text-secondary)' }}>
-            Rejoignez les sessions audio ou vidéo en direct ou planifiées.
+            {t('dashboard.conferences_subtitle')}
           </p>
         </div>
         {canCreate && (
           <button onClick={() => router.push('/dashboard/visio/creer')}
             className="px-5 py-2.5 rounded-xl text-sm font-semibold cursor-pointer transition-all hover:opacity-90"
             style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
-            Créer une session
+            {t('dashboard.create_session')}
           </button>
         )}
       </div>
@@ -143,10 +144,10 @@ export default function VisioPage() {
             </svg>
           </div>
           <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
-            Aucune session prévue
+            {t('dashboard.no_sessions')}
           </h3>
           <p className="text-sm max-w-sm mx-auto" style={{ color: 'var(--text-secondary)' }}>
-            Les sessions de visio de groupe apparaîtront ici une fois planifiées.
+            {t('dashboard.no_sessions_desc')}
           </p>
         </div>
       ) : (
@@ -165,11 +166,11 @@ export default function VisioPage() {
                         {s.label}
                       </span>
                       <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.04)', color: 'var(--text-muted)' }}>
-                        {event.event_type === 'audio' ? 'Audio' : 'Vidéo'}
+                        {event.event_type === 'audio' ? t('dashboard.audio') : t('dashboard.video')}
                       </span>
                       {isHost && (
                         <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
-                          Vous êtes l&apos;hôte
+                          {t('dashboard.you_are_host')}
                         </span>
                       )}
                     </div>
@@ -181,8 +182,8 @@ export default function VisioPage() {
                     )}
                     <div className="flex items-center gap-3 text-xs" style={{ color: 'var(--text-muted)' }}>
                       <span>{formatDate(event.start_time)}</span>
-                      <span>Hôte : {hostName}</span>
-                      {event.max_participants && <span>Max {event.max_participants} participants</span>}
+                      <span>{t('dashboard.host', { name: hostName })}</span>
+                      {event.max_participants && <span>{t('dashboard.max_participants', { n: event.max_participants })}</span>}
                     </div>
                   </div>
 
@@ -192,7 +193,7 @@ export default function VisioPage() {
                       background: event.status === 'live' ? 'rgba(34,197,94,0.15)' : 'rgba(212,175,55,0.15)',
                       color: event.status === 'live' ? '#22c55e' : 'var(--gold)',
                     }}>
-                    {event.status === 'live' ? 'Rejoindre' : isHost ? 'Lancer' : 'Rejoindre'}
+                    {event.status === 'live' ? t('dashboard.join') : isHost ? t('dashboard.launch') : t('dashboard.join')}
                   </button>
                 </div>
               </div>

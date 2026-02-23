@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import type { Profile, PrivateMessage } from '@/types/database'
+import { useTranslation } from '@/lib/i18n/useTranslation'
 
 type Conversation = {
   partner: Profile
@@ -13,6 +14,7 @@ type Conversation = {
 }
 
 export default function MessagesPage() {
+  const { t } = useTranslation()
   const router = useRouter()
   const [conversations, setConversations] = useState<Conversation[]>([])
   const [loading, setLoading] = useState(true)
@@ -25,7 +27,6 @@ export default function MessagesPage() {
       if (!user) { router.push('/login'); return }
       setUserId(user.id)
 
-      // Charger tous les messages privés de l'utilisateur
       const { data: messages } = await supabase
         .from('private_messages')
         .select('*')
@@ -34,7 +35,6 @@ export default function MessagesPage() {
 
       if (!messages || messages.length === 0) { setLoading(false); return }
 
-      // Grouper par partenaire de conversation
       const partnerMap = new Map<string, { messages: PrivateMessage[]; unread: number }>()
 
       for (const msg of messages as PrivateMessage[]) {
@@ -49,7 +49,6 @@ export default function MessagesPage() {
         }
       }
 
-      // Charger les profils des partenaires
       const partnerIds = Array.from(partnerMap.keys())
       const { data: profiles } = await supabase
         .from('profiles')
@@ -63,7 +62,6 @@ export default function MessagesPage() {
         profileMap.set(p.id, p)
       }
 
-      // Construire la liste de conversations triées par dernier message
       const convos: Conversation[] = []
       for (const [partnerId, entry] of partnerMap) {
         const partner = profileMap.get(partnerId)
@@ -76,7 +74,6 @@ export default function MessagesPage() {
         }
       }
 
-      // Tri par date du dernier message (plus récent en premier)
       convos.sort((a, b) => new Date(b.lastMessage.created_at).getTime() - new Date(a.lastMessage.created_at).getTime())
       setConversations(convos)
       setLoading(false)
@@ -91,7 +88,7 @@ export default function MessagesPage() {
     const days = Math.floor(diff / (1000 * 60 * 60 * 24))
 
     if (days === 0) return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
-    if (days === 1) return 'Hier'
+    if (days === 1) return t('dashboard.yesterday')
     if (days < 7) return date.toLocaleDateString('fr-FR', { weekday: 'short' })
     return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })
   }
@@ -100,10 +97,10 @@ export default function MessagesPage() {
     <div className="max-w-3xl mx-auto space-y-6">
       <div>
         <h1 className="font-display text-3xl sm:text-4xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-          Messages
+          {t('dashboard.messages_title')}
         </h1>
         <p className="mt-2" style={{ color: 'var(--text-secondary)' }}>
-          Vos conversations privées avec les membres de la communauté.
+          {t('dashboard.messages_subtitle')}
         </p>
       </div>
 
@@ -119,10 +116,10 @@ export default function MessagesPage() {
             </svg>
           </div>
           <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
-            Aucune conversation
+            {t('dashboard.no_conversations')}
           </h3>
           <p className="text-sm max-w-sm mx-auto" style={{ color: 'var(--text-secondary)' }}>
-            Cliquez sur le profil d&apos;un membre dans le chat ou le mur pour lui envoyer un message privé.
+            {t('dashboard.no_conversations_desc')}
           </p>
         </div>
       ) : (
@@ -130,8 +127,8 @@ export default function MessagesPage() {
           {conversations.map((convo, i) => {
             const name = convo.partner.pseudo || convo.partner.prenom
             const isOwnMessage = convo.lastMessage.sender_id === userId
-            const msgText = convo.lastMessage.message_type === 'audio' ? '🎤 Message vocal' : (convo.lastMessage.content || '')
-            const preview = isOwnMessage ? `Vous : ${msgText}` : msgText
+            const msgText = convo.lastMessage.message_type === 'audio' ? `🎤 ${t('dashboard.voice_message')}` : (convo.lastMessage.content || '')
+            const preview = isOwnMessage ? `${t('dashboard.you')} : ${msgText}` : msgText
             return (
               <Link key={convo.partner.id} href={`/dashboard/messages/${convo.partner.id}`}
                 className="flex items-center gap-4 px-5 py-4 transition-all"

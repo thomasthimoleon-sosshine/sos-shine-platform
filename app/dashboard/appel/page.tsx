@@ -4,8 +4,10 @@ import { useEffect, useState, useCallback, useRef } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import ConferenceRoom from '@/components/ConferenceRoom'
+import { useTranslation } from '@/lib/i18n/useTranslation'
 
 export default function AppelPage() {
+  const { t } = useTranslation()
   const searchParams = useSearchParams()
   const router = useRouter()
   const roomId = searchParams.get('room')
@@ -20,13 +22,12 @@ export default function AppelPage() {
 
   useEffect(() => {
     async function init() {
-      if (!roomId) { setError('Aucun appel spécifié'); setLoading(false); return }
+      if (!roomId) { setError(t('dashboard.no_call_specified')); setLoading(false); return }
 
       const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { router.push('/login'); return }
 
-      // Charger le profil
       const { data: profile } = await supabase
         .from('profiles')
         .select('prenom, pseudo, role')
@@ -37,32 +38,29 @@ export default function AppelPage() {
       setUserName(p?.pseudo || p?.prenom || 'Membre')
       setUserRole(p?.role || 'member')
 
-      // Vérifier la salle
       const { data: room } = await supabase
         .from('signaling_rooms')
         .select('*')
         .eq('id', roomId)
         .single()
 
-      if (!room) { setError('Appel introuvable'); setLoading(false); return }
+      if (!room) { setError(t('dashboard.call_not_found')); setLoading(false); return }
 
       const r = room as { created_by: string; target_user_id: string | null; status: string; room_type: string; call_type: 'audio' | 'video' }
       setCallType(r.call_type || 'video')
 
-      // Vérifier que l'utilisateur participe à cet appel (1-to-1)
       if (r.room_type === 'one_to_one' && r.created_by !== user.id && r.target_user_id !== user.id) {
-        setError("Vous ne participez pas à cet appel")
+        setError(t('dashboard.not_in_call'))
         setLoading(false)
         return
       }
 
       if (r.status === 'ended' || r.status === 'rejected') {
-        setError("Cet appel est terminé")
+        setError(t('dashboard.call_ended'))
         setLoading(false)
         return
       }
 
-      // Passer la salle en active
       if (r.status === 'waiting') {
         await supabase.from('signaling_rooms').update({ status: 'active' }).eq('id', roomId)
       }
@@ -71,7 +69,7 @@ export default function AppelPage() {
       setLoading(false)
     }
     init()
-  }, [roomId, router])
+  }, [roomId, router, t])
 
   const handleLeave = useCallback(async () => {
     if (endedRef.current || !roomId) return
@@ -91,7 +89,7 @@ export default function AppelPage() {
       <div className="flex items-center justify-center h-[calc(100vh-8rem)]">
         <div className="text-center">
           <div className="w-10 h-10 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Connexion à l&apos;appel...</p>
+          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{t('dashboard.connecting_call')}</p>
         </div>
       </div>
     )
@@ -110,7 +108,7 @@ export default function AppelPage() {
           <button onClick={() => router.push('/dashboard/messages')}
             className="mt-4 px-6 py-2.5 rounded-xl text-sm font-medium cursor-pointer"
             style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
-            Retour aux messages
+            {t('dashboard.back_to_messages')}
           </button>
         </div>
       </div>

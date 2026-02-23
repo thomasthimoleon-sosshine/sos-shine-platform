@@ -110,12 +110,15 @@ types/            # TypeScript type definitions
 
 ### Multi-language Support (FR/EN/ES)
 - Flag-based language selector dropdown in header and dashboard
-- 100+ translation keys covering all UI strings
+- 400+ translation keys covering all UI strings across all pages
 - Custom `useTranslation()` hook with parameter interpolation
+- Integrated into 17 pages: landing, signature test, login, signup, contact, rejoindre, dashboard (home, chat, messages, mur, events, visio, profil, encyclopedia, goals, journal, favorites, appel)
+- Legal pages (CGV, confidentialité, mentions légales) and admin panel excluded (legal/internal)
 - Persisted in localStorage key `sos-shine-locale`
 - Custom event `locale-changed` for cross-component sync
 - Default locale: French
 - "douleur" never appears - uses "emotional challenge" (EN) / "desafío emocional" (ES)
+- Translation key groups: auth.*, contact.*, join.*, dashboard.*, nav.*, common.*, landing.*, ticker.*, signature.*, steps.*, quick.*, quote.*
 
 ### Signature Émotionnelle (Psychometric Test)
 - Interactive 15-question personality test at `/signature-emotionnelle`

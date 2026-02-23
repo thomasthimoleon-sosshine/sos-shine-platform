@@ -5,8 +5,10 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { uploadFile } from '@/lib/supabase/storage'
 import type { Profile, Subscription } from '@/types/database'
+import { useTranslation } from '@/lib/i18n/useTranslation'
 
 export default function ProfilPage() {
+  const { t } = useTranslation()
   const router = useRouter()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [subscription, setSubscription] = useState<Subscription | null>(null)
@@ -136,11 +138,11 @@ export default function ProfilPage() {
 
   function getStatusLabel(status: string) {
     const map: Record<string, { label: string; color: string }> = {
-      trialing: { label: 'Essai gratuit', color: '#55EFC4' },
-      active: { label: 'Actif', color: '#55EFC4' },
-      inactive: { label: 'Inactif', color: 'var(--text-muted)' },
-      canceled: { label: 'Annulé', color: '#FF6B6B' },
-      past_due: { label: 'Paiement en retard', color: '#FF6B6B' },
+      trialing: { label: t('dashboard.trial_status'), color: '#55EFC4' },
+      active: { label: t('dashboard.active_status'), color: '#55EFC4' },
+      inactive: { label: t('dashboard.inactive_status'), color: 'var(--text-muted)' },
+      canceled: { label: t('dashboard.canceled_status'), color: '#FF6B6B' },
+      past_due: { label: t('dashboard.past_due_status'), color: '#FF6B6B' },
     }
     return map[status] || { label: status, color: 'var(--text-muted)' }
   }
@@ -158,13 +160,13 @@ export default function ProfilPage() {
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <div>
-        <h1 className="font-display text-3xl sm:text-4xl font-semibold" style={{ color: 'var(--text-primary)' }}>Mon Profil</h1>
-        <p className="mt-2" style={{ color: 'var(--text-secondary)' }}>Gérez vos informations et votre abonnement.</p>
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold" style={{ color: 'var(--text-primary)' }}>{t('dashboard.profile_title')}</h1>
+        <p className="mt-2" style={{ color: 'var(--text-secondary)' }}>{t('dashboard.profile_subtitle')}</p>
       </div>
 
       {/* Photo de profil */}
       <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-        <h3 className="font-semibold text-base mb-4" style={{ color: 'var(--text-primary)' }}>Photo de profil</h3>
+        <h3 className="font-semibold text-base mb-4" style={{ color: 'var(--text-primary)' }}>{t('dashboard.profile_photo')}</h3>
         <div className="flex items-center gap-5">
           {profile?.avatar_url ? (
             <img src={profile.avatar_url} alt="Avatar" className="w-20 h-20 rounded-2xl object-cover flex-shrink-0" />
@@ -179,14 +181,14 @@ export default function ProfilPage() {
             <button onClick={() => avatarRef.current?.click()} disabled={uploadingAvatar}
               className="block px-4 py-2 rounded-xl text-sm font-medium transition-all cursor-pointer disabled:opacity-50"
               style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
-              {uploadingAvatar ? 'Envoi...' : profile?.avatar_url ? 'Changer la photo' : 'Ajouter une photo'}
+              {uploadingAvatar ? t('dashboard.sending') : profile?.avatar_url ? t('dashboard.change_photo') : t('dashboard.add_photo')}
             </button>
             {profile?.avatar_url && (
               <button onClick={handleRemoveAvatar} className="block text-xs cursor-pointer" style={{ color: '#FF6B6B' }}>
-                Supprimer la photo
+                {t('dashboard.remove_photo')}
               </button>
             )}
-            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>JPG, PNG. Max 10 Mo.</p>
+            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{t('dashboard.photo_hint')}</p>
           </div>
         </div>
         {uploadError && (
@@ -199,36 +201,36 @@ export default function ProfilPage() {
       {/* Informations */}
       <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
         <div className="flex items-center justify-between mb-5">
-          <h3 className="font-semibold text-base" style={{ color: 'var(--text-primary)' }}>Informations</h3>
+          <h3 className="font-semibold text-base" style={{ color: 'var(--text-primary)' }}>{t('dashboard.information')}</h3>
           {!editing && (
             <button onClick={() => setEditing(true)} className="text-xs font-medium cursor-pointer" style={{ color: 'var(--gold)' }}>
-              Modifier
+              {t('common.edit')}
             </button>
           )}
-          {saved && <span className="text-xs" style={{ color: '#55EFC4' }}>Sauvegardé !</span>}
+          {saved && <span className="text-xs" style={{ color: '#55EFC4' }}>{t('dashboard.saved')}</span>}
         </div>
 
         {editing ? (
           <div className="space-y-4">
             <div>
-              <label className="text-xs font-medium block mb-1.5" style={{ color: 'var(--text-muted)' }}>Prénom</label>
+              <label className="text-xs font-medium block mb-1.5" style={{ color: 'var(--text-muted)' }}>{t('dashboard.firstname')}</label>
               <input type="text" value={prenom} onChange={(e) => setPrenom(e.target.value)}
                 className="w-full rounded-xl px-4 py-2.5 text-sm outline-none" style={inputStyle} />
             </div>
             <div>
               <label className="text-xs font-medium block mb-1.5" style={{ color: 'var(--text-muted)' }}>
-                Pseudo <span className="font-normal">(affiché dans les chats à la place du prénom)</span>
+                {t('dashboard.pseudo')} <span className="font-normal">({t('dashboard.pseudo_desc')})</span>
               </label>
               <input type="text" value={pseudo} onChange={(e) => setPseudo(e.target.value)}
-                placeholder="Laissez vide pour utiliser votre prénom"
+                placeholder={t('dashboard.pseudo_placeholder')}
                 className="w-full rounded-xl px-4 py-2.5 text-sm outline-none" style={inputStyle} />
             </div>
             <div>
               <label className="text-xs font-medium block mb-1.5" style={{ color: 'var(--text-muted)' }}>
-                Bio <span className="font-normal">(facultatif, visible par la communauté)</span>
+                {t('dashboard.bio')} <span className="font-normal">({t('dashboard.bio_desc')})</span>
               </label>
               <textarea value={bio} onChange={(e) => setBio(e.target.value)} rows={3}
-                placeholder="Parlez un peu de vous..."
+                placeholder={t('dashboard.bio_placeholder')}
                 className="w-full rounded-xl px-4 py-2.5 text-sm outline-none resize-y" style={inputStyle} maxLength={500} />
               <p className="text-xs mt-1 text-right" style={{ color: 'var(--text-muted)' }}>{bio.length}/500</p>
             </div>
@@ -236,11 +238,11 @@ export default function ProfilPage() {
               <button onClick={handleSave} disabled={saving || !prenom.trim()}
                 className="px-4 py-2 rounded-xl text-sm font-semibold transition-all cursor-pointer disabled:opacity-50"
                 style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
-                {saving ? 'Sauvegarde...' : 'Sauvegarder'}
+                {saving ? t('dashboard.saving') : t('common.save')}
               </button>
               <button onClick={() => { setEditing(false); setPrenom(profile?.prenom || ''); setPseudo(profile?.pseudo || ''); setBio(profile?.bio || '') }}
                 className="px-4 py-2 rounded-xl text-sm cursor-pointer" style={{ color: 'var(--text-secondary)' }}>
-                Annuler
+                {t('common.cancel')}
               </button>
             </div>
           </div>
@@ -254,22 +256,22 @@ export default function ProfilPage() {
                 <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>({profile.pseudo})</span>
               )}
               {profile?.role === 'founder' && (
-                <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>Fondateur</span>
+                <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>{t('dashboard.founder')}</span>
               )}
             </div>
             <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{profile?.email}</p>
             {profile?.bio && (
               <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{profile.bio}</p>
             )}
-            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Membre depuis {formatDate(profile?.created_at || '')}</p>
+            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{t('dashboard.member_since', { date: formatDate(profile?.created_at || '') })}</p>
           </div>
         )}
       </div>
 
       {/* Vidéo de présentation */}
       <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-        <h3 className="font-semibold text-base mb-4" style={{ color: 'var(--text-primary)' }}>Vidéo de présentation</h3>
-        <p className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>Facultatif — présentez-vous à la communauté en vidéo.</p>
+        <h3 className="font-semibold text-base mb-4" style={{ color: 'var(--text-primary)' }}>{t('dashboard.presentation_video')}</h3>
+        <p className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>{t('dashboard.presentation_video_desc')}</p>
         {profile?.video_url ? (
           <div className="space-y-3">
             <video src={profile.video_url} controls className="w-full max-h-64 rounded-xl bg-black" />
@@ -277,10 +279,10 @@ export default function ProfilPage() {
               <input ref={videoRef} type="file" accept="video/*" className="hidden" onChange={handleVideoUpload} />
               <button onClick={() => videoRef.current?.click()} disabled={uploadingVideo}
                 className="text-xs font-medium cursor-pointer disabled:opacity-50" style={{ color: 'var(--gold)' }}>
-                {uploadingVideo ? 'Envoi...' : 'Changer la vidéo'}
+                {uploadingVideo ? t('dashboard.sending') : t('dashboard.change_video')}
               </button>
               <button onClick={handleRemoveVideo} className="text-xs cursor-pointer" style={{ color: '#FF6B6B' }}>
-                Supprimer
+                {t('dashboard.remove_video')}
               </button>
             </div>
           </div>
@@ -290,7 +292,7 @@ export default function ProfilPage() {
             <button onClick={() => videoRef.current?.click()} disabled={uploadingVideo}
               className="px-4 py-2.5 rounded-xl text-sm font-medium cursor-pointer disabled:opacity-50"
               style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-secondary)' }}>
-              {uploadingVideo ? 'Envoi en cours...' : 'Ajouter une vidéo de présentation'}
+              {uploadingVideo ? t('dashboard.sending_video') : t('dashboard.add_video')}
             </button>
           </div>
         )}
@@ -298,34 +300,34 @@ export default function ProfilPage() {
 
       {/* Subscription */}
       <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-        <h3 className="font-semibold text-base mb-4" style={{ color: 'var(--text-primary)' }}>Abonnement</h3>
+        <h3 className="font-semibold text-base mb-4" style={{ color: 'var(--text-primary)' }}>{t('dashboard.subscription')}</h3>
         {subscription ? (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>Statut</span>
+              <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{t('dashboard.status')}</span>
               <span className="text-sm font-medium px-3 py-1 rounded-full"
                 style={{ background: `${getStatusLabel(subscription.status).color}15`, color: getStatusLabel(subscription.status).color }}>
                 {getStatusLabel(subscription.status).label}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>Plan</span>
+              <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{t('dashboard.plan_label')}</span>
               <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
                 {subscription.plan === 'premium' ? 'Premium — 99,90€/mois' : 'Essentiel — 29,90€/mois'}
               </span>
             </div>
             {subscription.current_period_end && (
               <div className="flex items-center justify-between">
-                <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>Prochain renouvellement</span>
+                <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{t('dashboard.next_renewal')}</span>
                 <span className="text-sm" style={{ color: 'var(--text-primary)' }}>{formatDate(subscription.current_period_end)}</span>
               </div>
             )}
           </div>
         ) : (
           <div className="rounded-xl p-5 text-center" style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.12)' }}>
-            <p className="text-sm mb-1" style={{ color: 'var(--text-primary)' }}>Essai gratuit de 7 jours</p>
+            <p className="text-sm mb-1" style={{ color: 'var(--text-primary)' }}>{t('dashboard.free_trial')}</p>
             <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>Essentiel : 29,90€/mois · Premium : 99,90€/mois</p>
-            <span className="text-xs font-medium" style={{ color: 'var(--gold)' }}>Le paiement Stripe sera bientôt activé</span>
+            <span className="text-xs font-medium" style={{ color: 'var(--gold)' }}>{t('dashboard.stripe_coming')}</span>
           </div>
         )}
       </div>
@@ -338,7 +340,7 @@ export default function ProfilPage() {
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
           </svg>
-          Se déconnecter
+          {t('dashboard.sign_out')}
         </button>
       </div>
     </div>

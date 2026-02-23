@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import type { Douleur } from '@/types/database'
 import FavoriteButton from '@/components/FavoriteButton'
+import { useTranslation } from '@/lib/i18n/useTranslation'
 
 const defaultDouleurs: Pick<Douleur, 'title' | 'slug' | 'description' | 'image_url'>[] = [
   { title: 'Abus', slug: 'abus', description: 'Identifiez les mécanismes de l\'abus, reconstruisez vos limites et retrouvez votre pouvoir personnel.', image_url: null },
@@ -17,6 +18,7 @@ const defaultDouleurs: Pick<Douleur, 'title' | 'slug' | 'description' | 'image_u
 ]
 
 export default function EncyclopediePage() {
+  const { t } = useTranslation()
   const [douleurs, setDouleurs] = useState<Douleur[]>([])
   const [search, setSearch] = useState('')
   const [loading, setLoading] = useState(true)
@@ -61,10 +63,10 @@ export default function EncyclopediePage() {
       {/* Header */}
       <div>
         <h1 className="font-display text-3xl sm:text-4xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-          Encyclopédie des expériences de vie
+          {t('dashboard.encyclopedia_title')}
         </h1>
         <p className="mt-2" style={{ color: 'var(--text-secondary)' }}>
-          Chaque challenge émotionnel a sa page dédiée. Trouvez le vôtre, accédez à votre protocole en 4 étapes.
+          {t('dashboard.encyclopedia_subtitle')}
         </p>
       </div>
 
@@ -77,7 +79,7 @@ export default function EncyclopediePage() {
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Rechercher un challenge émotionnel..."
+          placeholder={t('dashboard.search_challenge')}
           className="w-full pl-12 pr-4 py-3.5 rounded-xl text-sm outline-none transition-all"
           style={{
             background: 'var(--dark-card)',
@@ -117,10 +119,10 @@ export default function EncyclopediePage() {
       ) : filtered.length === 0 ? (
         <div className="text-center py-16">
           <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
-            Aucun challenge émotionnel trouvé pour &quot;{search}&quot;
+            {t('dashboard.no_challenge_found', { search })}
           </p>
           <p className="text-sm mt-2" style={{ color: 'var(--text-muted)' }}>
-            De nouveaux challenges émotionnels sont ajoutés régulièrement.
+            {t('dashboard.new_challenges_coming')}
           </p>
         </div>
       ) : (
@@ -168,7 +170,7 @@ export default function EncyclopediePage() {
                           </div>
                         ) : (
                           <span className="text-xs px-2 py-1 rounded-lg flex-shrink-0" style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}>
-                            Bientôt
+                            {t('dashboard.coming_soon')}
                           </span>
                         )}
                       </div>
@@ -184,10 +186,10 @@ export default function EncyclopediePage() {
       {/* Info */}
       <div className="rounded-xl p-5 text-center" style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.1)' }}>
         <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-          Vous ne trouvez pas votre challenge émotionnel ? Nous ajoutons régulièrement de nouvelles pages.
+          {t('dashboard.not_found_info')}
         </p>
         <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
-          Contactez-nous à <span style={{ color: 'var(--gold)' }}>contact@sosshine.fr</span>
+          {t('dashboard.contact_us')} <span style={{ color: 'var(--gold)' }}>contact@sosshine.fr</span>
         </p>
       </div>
     </div>

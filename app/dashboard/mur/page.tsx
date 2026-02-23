@@ -4,8 +4,10 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import type { PostWithAuthor } from '@/types/database'
+import { useTranslation } from '@/lib/i18n/useTranslation'
 
 export default function MurPage() {
+  const { t } = useTranslation()
   const [posts, setPosts] = useState<PostWithAuthor[]>([])
   const [loading, setLoading] = useState(true)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
@@ -40,10 +42,10 @@ export default function MurPage() {
 
   function getTypeLabel(type: string) {
     const map: Record<string, { label: string; color: string; icon: string }> = {
-      announcement: { label: 'Annonce', color: '#D4AF37', icon: '📢' },
-      douleur_published: { label: 'Nouveau challenge', color: '#55EFC4', icon: '📘' },
-      event_published: { label: 'Nouvel événement', color: '#74C0FC', icon: '📅' },
-      general: { label: 'Publication', color: 'var(--text-secondary)', icon: '💬' },
+      announcement: { label: t('dashboard.announcement'), color: '#D4AF37', icon: '📢' },
+      douleur_published: { label: t('dashboard.new_challenge'), color: '#55EFC4', icon: '📘' },
+      event_published: { label: t('dashboard.new_event'), color: '#74C0FC', icon: '📅' },
+      general: { label: t('dashboard.publication'), color: 'var(--text-secondary)', icon: '💬' },
     }
     return map[type] || map.general
   }
@@ -73,7 +75,7 @@ export default function MurPage() {
   }
 
   async function deletePost(postId: string) {
-    if (!confirm('Supprimer cette publication ?')) return
+    if (!confirm(t('dashboard.delete_post_confirm'))) return
     const supabase = createClient()
     const { error } = await supabase
       .from('posts')
@@ -92,10 +94,10 @@ export default function MurPage() {
       {/* Header */}
       <div>
         <h1 className="font-display text-3xl sm:text-4xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-          Mur Communautaire
+          {t('dashboard.wall_title')}
         </h1>
         <p className="mt-2" style={{ color: 'var(--text-secondary)' }}>
-          Annonces, nouveaux challenges émotionnels, événements et publications de la communauté SOS Shine.
+          {t('dashboard.wall_subtitle')}
         </p>
       </div>
 
@@ -110,10 +112,10 @@ export default function MurPage() {
             📋
           </div>
           <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
-            Le mur est prêt
+            {t('dashboard.wall_empty_title')}
           </h3>
           <p className="text-sm max-w-sm mx-auto" style={{ color: 'var(--text-secondary)' }}>
-            Les publications de l&apos;équipe SOS Shine apparaîtront ici. Annonces, nouveaux challenges et événements seront publiés depuis l&apos;espace admin.
+            {t('dashboard.wall_empty_desc')}
           </p>
         </div>
       ) : (
@@ -157,7 +159,7 @@ export default function MurPage() {
                               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125" />
                               </svg>
-                              Modifier
+                              {t('common.edit')}
                             </button>
                             <button onClick={() => deletePost(post.id)}
                               className="w-full text-left px-4 py-2 text-sm flex items-center gap-2 transition-colors cursor-pointer"
@@ -167,7 +169,7 @@ export default function MurPage() {
                               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                               </svg>
-                              Supprimer
+                              {t('common.delete')}
                             </button>
                           </div>
                         )}
@@ -192,7 +194,7 @@ export default function MurPage() {
                     </span>
                     {post.profiles?.role === 'founder' && (
                       <span className="text-xs ml-2 px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>
-                        Fondateur
+                        {t('dashboard.founder')}
                       </span>
                     )}
                   </div>
@@ -219,12 +221,12 @@ export default function MurPage() {
                       <button onClick={() => setEditingPost(null)}
                         className="px-4 py-2 rounded-xl text-xs font-medium cursor-pointer transition-colors"
                         style={{ color: 'var(--text-muted)', border: '1px solid var(--dark-border)' }}>
-                        Annuler
+                        {t('common.cancel')}
                       </button>
                       <button onClick={() => saveEdit(post.id)} disabled={saving}
                         className="px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-colors disabled:opacity-50"
                         style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
-                        {saving ? 'Enregistrement...' : 'Enregistrer'}
+                        {saving ? t('dashboard.saving') : t('common.save')}
                       </button>
                     </div>
                   </div>

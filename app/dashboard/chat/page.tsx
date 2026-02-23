@@ -6,8 +6,10 @@ import { createClient } from '@/lib/supabase/client'
 import type { MessageWithProfile } from '@/types/database'
 import AudioPlayer from '@/components/AudioPlayer'
 import VoiceRecorder from '@/components/VoiceRecorder'
+import { useTranslation } from '@/lib/i18n/useTranslation'
 
 export default function ChatGeneralPage() {
+  const { t } = useTranslation()
   const [messages, setMessages] = useState<MessageWithProfile[]>([])
   const [newMessage, setNewMessage] = useState('')
   const [loading, setLoading] = useState(true)
@@ -77,7 +79,7 @@ export default function ChatGeneralPage() {
   }
 
   function getDisplayName(msg: MessageWithProfile): string {
-    if (msg.is_anonymous && msg.user_id !== userId) return 'Anonyme'
+    if (msg.is_anonymous && msg.user_id !== userId) return t('dashboard.anonymous')
     return msg.profiles?.pseudo || msg.profiles?.prenom || 'Membre'
   }
 
@@ -90,23 +92,23 @@ export default function ChatGeneralPage() {
     <div className="max-w-4xl mx-auto h-[calc(100vh-8rem)] flex flex-col">
       <div className="mb-4">
         <h1 className="font-display text-2xl sm:text-3xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-          Chat Général
+          {t('dashboard.chat_title')}
         </h1>
         <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
-          Espace libre d&apos;échange pour toute la communauté SOS Shine.
+          {t('dashboard.chat_general_subtitle')}
         </p>
       </div>
 
       {/* Quick links to challenge chats */}
       <div className="mb-4 flex items-center gap-2 overflow-x-auto pb-2">
-        <span className="text-xs flex-shrink-0" style={{ color: 'var(--text-muted)' }}>Salons :</span>
+        <span className="text-xs flex-shrink-0" style={{ color: 'var(--text-muted)' }}>{t('dashboard.channels')}</span>
         <Link href="/dashboard/chat" className="px-3 py-1.5 rounded-lg text-xs font-medium flex-shrink-0"
           style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>
-          Général
+          {t('dashboard.general')}
         </Link>
         <Link href="/dashboard/encyclopedie" className="px-3 py-1.5 rounded-lg text-xs flex-shrink-0 transition-colors"
           style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-secondary)' }}>
-          Voir les chats par challenge
+          {t('dashboard.view_challenge_chats')}
         </Link>
       </div>
 
@@ -124,10 +126,10 @@ export default function ChatGeneralPage() {
                 💬
               </div>
               <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
-                Le chat attend vos mots
+                {t('dashboard.chat_empty_title')}
               </h3>
               <p className="text-sm max-w-xs" style={{ color: 'var(--text-secondary)' }}>
-                Soyez le premier à partager. Votre voix compte.
+                {t('dashboard.chat_empty_desc')}
               </p>
             </div>
           ) : (
@@ -170,10 +172,10 @@ export default function ChatGeneralPage() {
                         </span>
                       )}
                       {!isAnon && msg.profiles?.role === 'founder' && (
-                        <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>Fondateur</span>
+                        <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>{t('dashboard.founder')}</span>
                       )}
                       {msg.is_anonymous && msg.user_id === userId && (
-                        <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(142,110,126,0.15)', color: 'var(--text-muted)' }}>Anonyme</span>
+                        <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(142,110,126,0.15)', color: 'var(--text-muted)' }}>{t('dashboard.anonymous')}</span>
                       )}
                       <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{formatTime(msg.created_at)}</span>
                     </div>
@@ -208,13 +210,13 @@ export default function ChatGeneralPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178zM15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 )}
               </svg>
-              {isAnonymous ? 'Mode anonyme activé' : 'Anonyme'}
+              {isAnonymous ? t('dashboard.anonymous_mode_active') : t('dashboard.anonymous')}
             </button>
           </div>
           <form onSubmit={sendMessage} className="flex items-center gap-2 rounded-xl px-4 py-2"
             style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
             <input type="text" value={newMessage} onChange={(e) => setNewMessage(e.target.value)}
-              placeholder={isAnonymous ? 'Message anonyme...' : `Message en tant que ${userPrenom}...`}
+              placeholder={isAnonymous ? t('dashboard.anonymous_message') : t('dashboard.message_as', { name: userPrenom })}
               className="flex-1 bg-transparent text-sm outline-none" style={{ color: 'var(--text-primary)' }} maxLength={500} />
             {newMessage.trim() ? (
               <button type="submit" disabled={sending}

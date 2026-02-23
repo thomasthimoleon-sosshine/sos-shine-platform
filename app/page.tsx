@@ -522,6 +522,33 @@ export default function Home() {
       {/* ═══ TICKER BAND ═══ */}
       <InfiniteTickerBand items={tickerItems} speed={35} />
 
+      {/* ═══ SIGNATURE EMOTIONNELLE CTA ═══ */}
+      <section className="px-6 md:px-20 py-20 relative cv-auto">
+        <RevealOnScroll>
+          <div className="max-w-3xl mx-auto text-center">
+            <Link href="/signature-emotionnelle">
+              <div className="glow-card p-8 md:p-12 cursor-pointer group">
+                <p className="luxury-title text-xs tracking-[0.4em] text-[var(--text-muted)] mb-4">Test exclusif</p>
+                <h3 className="font-display text-2xl md:text-4xl font-light mb-4" style={{ color: gold }}>
+                  Découvrez votre{' '}
+                  <span className="text-shimmer">Signature Émotionnelle</span>
+                </h3>
+                <p className="text-[var(--text-secondary)] font-light mb-6 text-[15px]">
+                  15 questions pour révéler votre architecture émotionnelle profonde.
+                  Un diagnostic premium et hyper-personnalisé.
+                </p>
+                <span className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold tracking-wide group-hover:scale-105 transition-transform" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                  Faire le test gratuit
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </span>
+              </div>
+            </Link>
+          </div>
+        </RevealOnScroll>
+      </section>
+
       {/* ═══ LE PRINCIPE ═══ */}
       {vis('principe') && (
         <section className="px-6 md:px-20 py-32 relative cv-auto">

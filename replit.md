@@ -117,6 +117,16 @@ types/            # TypeScript type definitions
 - Default locale: French
 - "douleur" never appears - uses "emotional challenge" (EN) / "desafío emocional" (ES)
 
+### Signature Émotionnelle (Psychometric Test)
+- Interactive 15-question personality test at `/signature-emotionnelle`
+- 10 emotional profiles with weighted scoring system
+- 4-phase UX: intro (name input) → quiz (progress bar) → loading animation → results
+- Premium result report with 4 sections: L'Essence, Votre Lumière, La Zone d'Ombre, Votre Protocole
+- Personalized with {firstName} injection throughout
+- CTA card on landing page (after ticker band) linking to the test
+- Data: `lib/signature-test.ts` (questions, profiles, scoring)
+- Page: `app/signature-emotionnelle/page.tsx`
+
 ### Shine Chatbot
 - Named "Shine" with custom avatar image
 - FAQ-based responses about pricing, features, confidentiality

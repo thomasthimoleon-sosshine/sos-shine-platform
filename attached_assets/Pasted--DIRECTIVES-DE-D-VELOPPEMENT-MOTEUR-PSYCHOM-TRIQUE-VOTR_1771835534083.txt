@@ -1,0 +1,85 @@
+*** DIRECTIVES DE DÉVELOPPEMENT : MOTEUR PSYCHOMÉTRIQUE "VOTRE SIGNATURE ÉMOTIONNELLE" ***
+
+CONTEXTE :
+Mise à jour majeure du test de personnalité pour l'application SOS Shine. Le test s'intitule désormais "Votre Signature Émotionnelle". L'objectif est de générer un diagnostic premium, profond et hyper-personnalisé. 
+Le système de scoring pondéré sur 15 questions reste identique à la version précédente. 
+
+MISE À JOUR DE L'INTERFACE DE RÉSULTAT (UI/UX) :
+L'écran final ne doit plus afficher un simple paragraphe, mais un rapport structuré visuellement en 4 sections distinctes pour faciliter la lecture :
+1. L'Essence (Le constat)
+2. Votre Lumière (Les forces de l'utilisateur)
+3. La Zone d'Ombre (Le mécanisme de sabotage)
+4. Votre Protocole (Le plan d'action SOS Shine)
+
+--- BASE DE DONNÉES DU COPYWRITING DYNAMIQUE (LES 10 RÉSULTATS) ---
+// Injecter la variable {firstName} dans le texte.
+
+[P1: L'Analyste]
+Titre : Votre Signature Émotionnelle : L'Architecture Mentale (L'Analyste)
+- L'Essence : Face à la tempête, {firstName}, votre intelligence est votre premier bouclier. Votre système nerveux privilégie la compréhension : face à l'incertitude ou à la douleur, vous avez un besoin viscéral d'analyser, de décortiquer et de trouver du sens.
+- Votre Lumière : Cette architecture fait de vous une personne dotée d'une résilience intellectuelle hors norme. Vous êtes capable de lire entre les lignes et de structurer le chaos. On vient souvent chercher vos conseils pour votre clarté d'esprit et votre objectivité.
+- La Zone d'Ombre : Cependant, {firstName}, ce super-pouvoir a un coût énergétique massif. Lorsque la charge émotionnelle devient trop forte, votre machinerie analytique s'emballe. Vous refaites les conversations en boucle et essayez de "penser" vos émotions au lieu de les ressentir, ce qui crée un épuisement profond.
+- Votre Protocole : Votre enjeu actuel n'est pas de comprendre davantage, mais d'apprendre à faire redescendre la pression vers votre corps. Sur SOS Shine, nous allons cibler les pratiques d'ancrage somatique (cohérence cardiaque, scans corporels) pour mettre votre cerveau sur pause, en toute sécurité.
+
+[P2: L'Électron Libre]
+Titre : Votre Signature Émotionnelle : L'Architecture en Mouvement (L'Électron Libre)
+- L'Essence : Votre énergie vitale est tournée vers l'action, {firstName}. Quand l'inconfort s'installe, votre instinct de survie vous pousse vers le mouvement, les projets ou l'extérieur. L'immobilité vous est insupportable lorsque vous êtes sous tension.
+- Votre Lumière : C'est une force motrice impressionnante. Vous possédez une résilience active qui vous empêche de stagner ou de sombrer dans la complaisance. Vous êtes souvent le moteur de vos groupes, capable de rebondir à une vitesse fascinante.
+- La Zone d'Ombre : Le revers de cette médaille, {firstName}, c'est la fuite en avant. En saturant votre emploi du temps ou votre esprit pour ne pas ressentir le vide, vous risquez le burn-out émotionnel. Vous courez pour ne pas entendre ce qui fait mal.
+- Votre Protocole : Votre véritable défi aujourd'hui n'est pas d'avancer plus vite, mais de vous autoriser de micro-pauses sans angoisser. Votre programme SOS Shine va se concentrer sur l'apprivoisement du silence et la micro-exposition émotionnelle pour apprendre à votre corps que s'arrêter n'est pas dangereux.
+
+[P3: Le Pilier]
+Titre : Votre Signature Émotionnelle : L'Architecture Symbiotique (Le Pilier)
+- L'Essence : Vous possédez un cœur doté d'une antenne ultra-sensible, {firstName}. Face à l'incertitude, votre réflexe naturel est de chercher l'ancrage dans le soin à l'autre. Vous ressentez les variations d'humeur et cherchez instinctivement à harmoniser votre environnement.
+- Votre Lumière : Cette immense empathie fait de vous un repère incontournable. Vous savez créer des espaces de sécurité pour les autres et votre capacité de dévouement est d'une rare noblesse. Vous êtes le ciment de vos relations.
+- La Zone d'Ombre : Mais dans la tempête, cette hyper-vigilance tournée vers l'extérieur vous fait oublier vos propres limites. Vous avez tendance à endosser le rôle du "sauveur" pour vous assurer qu'on ne vous abandonnera pas, au point de vous vider de votre propre énergie.
+- Votre Protocole : L'objectif pour vous, {firstName}, est d'apprendre à devenir votre propre point de gravité. Vos exercices SOS Shine cibleront la restauration de vos frontières personnelles et la réappropriation de votre propre valeur, indépendamment de ce que vous faites pour les autres.
+
+[P4: La Citadelle]
+Titre : Votre Signature Émotionnelle : L'Architecture Citadelle (La Forteresse)
+- L'Essence : Votre sanctuaire intérieur est extrêmement bien gardé, {firstName}. Face à la blessure, la trahison ou la déception, votre réflexe est l'autonomie absolue : vous relevez les ponts-levis et prenez de la distance.
+- Votre Lumière : Cette souveraineté vous dote d'une grande solidité apparente. Vous êtes capable de traverser des tempêtes redoutables en totale indépendance. Vous ne vous effondrez pas publiquement et savez protéger votre noyau dur.
+- La Zone d'Ombre : Cependant, à force de couper les vannes émotionnelles pour garantir votre sécurité, votre armure s'épaissit. Ce repli stratégique peut se transformer en isolement profond. La forteresse vous protège des ennemis, mais elle empêche aussi la chaleur d'entrer.
+- Votre Protocole : Votre chemin, {firstName}, ne consiste pas à détruire vos murs d'un coup, mais à apprendre à en ouvrir la porte. Vos exercices SOS Shine se focaliseront sur l'autorisation de la vulnérabilité en milieu sécurisé, pour réapprendre à faire confiance.
+
+[P5: Le Gardien du Cadre]
+Titre : Votre Signature Émotionnelle : L'Architecture du Contrôle (Le Gardien)
+- L'Essence : Pour vous, {firstName}, la sécurité réside dans la structure. Face au chaos émotionnel, relationnel ou professionnel, votre premier réflexe est de rétablir des règles, de l'ordre, et des processus clairs. 
+- Votre Lumière : Cette exigence fait de vous une personne d'une immense fiabilité. Vous êtes le gardien du temple, celui ou celle qui maintient le cap quand tout vacille. Votre sens de la responsabilité et de l'organisation force le respect de votre entourage.
+- La Zone d'Ombre : Le prix à payer est une tension nerveuse constante. L'imprévu, l'échec ou le désordre (le vôtre ou celui des autres) vous sont intolérables. Ce besoin de tout maîtriser peut vous rendre rigide et vous empêcher de vivre la spontanéité des relations.
+- Votre Protocole : Le travail sur SOS Shine ne consistera pas à vous faire perdre le contrôle, mais à vous enseigner la souplesse. Vos protocoles cibleront le relâchement de la pression de perfection, pour découvrir qu'on peut parfois plier sans se briser.
+
+[P6: Le Caméléon]
+Titre : Votre Signature Émotionnelle : L'Architecture Adaptative (Le Caméléon)
+- L'Essence : Votre mécanisme de survie est d'une fluidité fascinante, {firstName}. Face à l'inconnu ou au risque de conflit, vous avez développé la capacité d'adapter instantanément vos besoins, votre humeur et vos envies à ceux qui vous entourent.
+- Votre Lumière : Vous possédez une intelligence sociale et une agilité émotionnelle hors norme. Vous savez naviguer dans n'importe quel environnement en mettant les gens à l'aise. Vous êtes le maître de la synchronisation relationnelle.
+- La Zone d'Ombre : À force de fusionner avec les attentes des autres pour éviter le rejet, le risque est de perdre la trace de votre propre identité. Vous finissez par ne plus savoir ce que vous voulez vraiment, et cette sur-adaptation génère un épuisement silencieux.
+- Votre Protocole : Votre parcours de guérison, {firstName}, consistera à réapprendre à dire "je". Vos exercices SOS Shine travailleront sur l'affirmation de soi, la tolérance à la déception de l'autre, et la reconnexion avec vos désirs authentiques.
+
+[P7: La Vigie]
+Titre : Votre Signature Émotionnelle : L'Architecture d'Anticipation (La Vigie)
+- L'Essence : Votre esprit fonctionne comme un radar de pointe, {firstName}. Pour garantir votre sécurité émotionnelle, votre système nerveux scanne en permanence l'horizon pour anticiper le pire, afin de ne jamais être pris(e) au dépourvu.
+- Votre Lumière : Cette perspicacité fait de vous un stratège naturel. Vous avez toujours un temps d'avance et vos plans de secours sont infaillibles. Votre entourage bénéficie souvent de votre capacité à éviter les écueils invisibles pour la plupart des gens.
+- La Zone d'Ombre : Cette hyper-vigilance vous maintient dans un état d'alerte épuisant. En cherchant à contrôler le futur, vous vous coupez de la joie du présent. Vous traversez souvent les catastrophes émotionnellement avant même qu'elles n'arrivent dans le monde réel.
+- Votre Protocole : L'enjeu de votre accompagnement sur SOS Shine sera de désarmer ce système d'alarme interne. Nous utiliserons des techniques de régulation du système nerveux central pour vous ramener dans l'ici et maintenant, là où vous êtes déjà en sécurité.
+
+[P8: L'Idéaliste]
+Titre : Votre Signature Émotionnelle : L'Architecture des Profondeurs (L'Idéaliste)
+- L'Essence : Vous évoluez dans un monde en très haute définition, {firstName}. Vous ne tolérez pas la superficialité. Votre quête est celle du sens, de l'authenticité absolue et de l'intensité, que ce soit dans vos relations ou vos projets.
+- Votre Lumière : Votre profondeur d'âme et votre capacité d'émerveillement sont magnifiques. Vous avez accès à un registre émotionnel et créatif d'une grande richesse, et vous êtes capable d'aimer et de vous engager avec une ferveur rare.
+- La Zone d'Ombre : Cette exigence d'absolu vous rend extrêmement vulnérable face aux déceptions du réel. Quand la vie ou les autres ne sont pas à la hauteur de vos idéaux, vous risquez de sombrer dans la mélancolie et de vous isoler dans un sentiment d'incompréhension.
+- Votre Protocole : Sur SOS Shine, {firstName}, nous allons vous aider à ancrer cette intensité. Votre programme se concentrera sur l'acceptation de l'imperfection (le Kintsugi) et la transmutation de vos émotions fortes en force motrice, sans vous laisser submerger.
+
+[P9: Le Diplomate]
+Titre : Votre Signature Émotionnelle : L'Architecture de l'Harmonie (Le Diplomate)
+- L'Essence : Votre priorité absolue est le maintien de la paix, {firstName}. Face à l'adversité ou aux tensions, vous avez appris à arrondir les angles et à neutraliser rapidement toute escalade agressive.
+- Votre Lumière : Vous êtes un médiateur né. Votre tolérance et votre douceur font de vous un espace de repos pour les autres. Vous savez désamorcer les bombes émotionnelles avec un tact exceptionnel, créant des ponts là où d'autres construisent des murs.
+- La Zone d'Ombre : En fuyant le conflit à tout prix, vous taisez souvent vos propres frustrations et limites. La colère non exprimée s'accumule à l'intérieur sous forme de ressentiment ou d'anxiété. En voulant protéger la relation, vous vous sacrifiez.
+- Votre Protocole : Votre défi majeur, {firstName}, sera d'apprendre que le conflit sain n'est pas une menace. SOS Shine vous guidera à travers des exercices de communication assertive pour vous apprendre à prendre votre juste place, même si cela doit faire des vagues.
+
+[P10: Le Catalyseur]
+Titre : Votre Signature Émotionnelle : L'Architecture de l'Intensité (Le Catalyseur)
+- L'Essence : Vous fonctionnez sur des cycles énergétiques puissants, {firstName}. Face à l'apathie ou à la douleur, votre réflexe est de chercher une décharge forte (changement radical, passion, nouveau défi) pour relancer la machine.
+- Votre Lumière : Votre capacité à renaître de vos cendres est fascinante. Vous êtes une force de transformation pure, capable de bouleverser les statu quo et de générer une énergie colossale pour surmonter les obstacles les plus massifs.
+- La Zone d'Ombre : Les montagnes russes épuisent votre système à long terme. Le tiède, la routine et le calme plat peuvent vous angoisser, vous poussant parfois à provoquer des micro-crises inconscientes juste pour vous sentir vivant(e) et ressentir l'adrénaline.
+- Votre Protocole : Votre objectif n'est pas d'éteindre votre feu, {firstName}, mais d'apprendre à tolérer la paix. Vos exercices sur SOS Shine viseront à stabiliser vos pics d'énergie et à trouver de la satisfaction dans la constance, sans avoir l'impression de vous éteindre.

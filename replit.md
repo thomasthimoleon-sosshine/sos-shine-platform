@@ -152,6 +152,17 @@ types/            # TypeScript type definitions
 - Auto-merge logic for new section defaults
 - Site settings (colors, logo) applied via ThemeProvider
 
+### Bot Members (Fictional Users)
+- 5 fictional profiles: Cécilia, Loïc, Sandra, Zoé, Nicolas
+- Avatar images in `public/avatars/`
+- Bot profiles defined in `lib/bots/profiles.ts`
+- Message pool in `lib/bots/messages.ts` (10 chat messages + 2-3 wall posts per bot)
+- API endpoints: `/api/bots/seed` (create profiles), `/api/bots/post` (single post), `/api/bots/auto` (batch auto-post)
+- Auth: Session-based (admin/founder role) or BOT_SECRET bearer token for server-to-server
+- Admin page at `/admin/bots` for manual/auto bot control
+- `is_bot` flag on profiles for identification
+- Auto mode: posts 1-3 chat messages + occasional wall post every 5-15 minutes
+
 ## Content Sanitization Rule
 - The word "douleur" must NEVER appear in visible UI
 - Automatically replaced via `sanitizeContent()` function:
@@ -177,6 +188,8 @@ types/            # TypeScript type definitions
 - Added Shine chatbot with custom avatar
 - Made all landing page sections CMS-driven from admin
 - Redesigned landing page with LeClub10-inspired premium animations
+- Added bot/fictional member system with 5 profiles, message pool, and auto-posting
+- Added admin bot management page at /admin/bots
 
 ## Deployment
 - Build: `npm run build`

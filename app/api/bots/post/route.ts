@@ -2,11 +2,11 @@ import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { BOT_PROFILES } from '@/lib/bots/profiles'
 import { getRandomMessage, getRandomPost } from '@/lib/bots/messages'
+import { verifyAdminSession } from '@/lib/bots/auth'
 
 export async function POST(req: Request) {
-  const authHeader = req.headers.get('authorization')
-  const secret = process.env.BOT_SECRET
-  if (!secret || authHeader !== `Bearer ${secret}`) {
+  const isAuthed = await verifyAdminSession(req)
+  if (!isAuthed) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

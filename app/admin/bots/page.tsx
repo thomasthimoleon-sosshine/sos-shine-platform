@@ -19,10 +19,7 @@ export default function AdminBotsPage() {
     setLoading(true)
     setStatus('Création des profils...')
     try {
-      const res = await fetch('/api/bots/seed', {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${getBotSecret()}` },
-      })
+      const res = await fetch('/api/bots/seed', { method: 'POST' })
       const data = await res.json()
       if (data.success) {
         setStatus('Profils créés avec succès !')
@@ -41,10 +38,7 @@ export default function AdminBotsPage() {
     try {
       const res = await fetch('/api/bots/post', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${getBotSecret()}`,
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action }),
       })
       const data = await res.json()
@@ -61,10 +55,7 @@ export default function AdminBotsPage() {
 
   async function triggerAuto() {
     try {
-      const res = await fetch('/api/bots/auto', {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${getBotSecret()}` },
-      })
+      const res = await fetch('/api/bots/auto', { method: 'POST' })
       const data = await res.json()
       if (data.success) {
         for (const r of data.results) {
@@ -83,9 +74,8 @@ export default function AdminBotsPage() {
     triggerAuto()
 
     const id = setInterval(() => {
-      const delay = (Math.random() * 10 + 5) * 60 * 1000
-      setTimeout(triggerAuto, delay)
-    }, 15 * 60 * 1000)
+      triggerAuto()
+    }, (Math.random() * 10 + 5) * 60 * 1000)
 
     setIntervalId(id)
   }
@@ -99,34 +89,20 @@ export default function AdminBotsPage() {
     addLog('Mode automatique arrêté')
   }
 
-  function getBotSecret(): string {
-    return (document.getElementById('bot-secret') as HTMLInputElement)?.value || ''
-  }
-
   return (
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-display font-semibold mb-2">Gestion des Bots</h1>
         <p className="text-[var(--text-secondary)] text-sm">
-          Gérez les membres fictifs qui animent la plateforme.
+          Gérez les membres fictifs qui animent la plateforme. L'authentification se fait automatiquement via votre session admin.
         </p>
       </div>
 
-      <div className="glass p-6 rounded-xl space-y-4">
-        <h2 className="font-display text-lg font-medium">Configuration</h2>
-        <div>
-          <label className="block text-sm text-[var(--text-secondary)] mb-1">BOT_SECRET</label>
-          <input
-            id="bot-secret"
-            type="password"
-            placeholder="Entrez le BOT_SECRET..."
-            className="w-full px-4 py-2.5 rounded-lg text-sm"
-            style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
-          />
-          <p className="text-xs text-[var(--text-muted)] mt-1">Clé secrète pour authentifier les requêtes bot.</p>
+      {status && (
+        <div className="glass p-4 rounded-xl">
+          <p className="text-sm" style={{ color: status.includes('Erreur') ? '#ff6b6b' : '#55EFC4' }}>{status}</p>
         </div>
-        {status && <p className="text-sm" style={{ color: status.includes('Erreur') ? '#ff6b6b' : '#55EFC4' }}>{status}</p>}
-      </div>
+      )}
 
       <div className="glass p-6 rounded-xl space-y-4">
         <h2 className="font-display text-lg font-medium">Membres fictifs</h2>
@@ -179,7 +155,7 @@ export default function AdminBotsPage() {
       <div className="glass p-6 rounded-xl space-y-4">
         <h2 className="font-display text-lg font-medium">Mode automatique</h2>
         <p className="text-sm text-[var(--text-secondary)]">
-          Active l'envoi automatique de messages toutes les 5 à 15 minutes. 1-3 messages chat + parfois une publication mur.
+          Active l'envoi automatique de messages toutes les 5 à 15 minutes tant que cette page reste ouverte. 1-3 messages chat + parfois une publication mur.
         </p>
         <div className="flex gap-3">
           {!autoRunning ? (

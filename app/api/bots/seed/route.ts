@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { BOT_PROFILES } from '@/lib/bots/profiles'
+import { verifyAdminSession } from '@/lib/bots/auth'
 
 export async function POST(req: Request) {
-  const authHeader = req.headers.get('authorization')
-  const secret = process.env.BOT_SECRET
-  if (!secret || authHeader !== `Bearer ${secret}`) {
+  const isAuthed = await verifyAdminSession(req)
+  if (!isAuthed) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
@@ -13,11 +13,25 @@ export async function POST(req: Request) {
     const admin = createAdminClient()
     const results: { prenom: string; status: string; id?: string }[] = []
 
+    const { data: existingUsers } = await admin.auth.admin.listUsers()
+    const emailToUser = new Map(existingUsers?.users?.map(u => [u.email, u]) || [])
+
     for (const bot of BOT_PROFILES) {
-      const { data: existingUsers } = await admin.auth.admin.listUsers()
-      const existing = existingUsers?.users?.find(u => u.email === bot.email)
+      const existing = emailToUser.get(bot.email)
 
       if (existing) {
+        await admin.from('profiles').upsert({
+          id: existing.id,
+          prenom: bot.prenom,
+          email: bot.email,
+          role: 'member',
+          avatar_url: bot.avatar_url,
+          bio: bot.bio,
+          plan: bot.plan,
+          is_bot: true,
+          pseudo: null,
+          video_url: null,
+        })
         results.push({ prenom: bot.prenom, status: 'already_exists', id: existing.id })
         continue
       }
@@ -43,6 +57,7 @@ export async function POST(req: Request) {
         avatar_url: bot.avatar_url,
         bio: bot.bio,
         plan: bot.plan,
+        is_bot: true,
         pseudo: null,
         video_url: null,
       })

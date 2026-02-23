@@ -9,6 +9,7 @@ export type Profile = {
   bio: string | null
   video_url: string | null
   plan: 'essential' | 'premium' | null
+  is_bot: boolean
   created_at: string
 }
 

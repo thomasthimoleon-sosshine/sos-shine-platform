@@ -177,7 +177,28 @@ types/            # TypeScript type definitions
 - API endpoint: `/api/waitlist` (GET for count, POST to register)
 - Original landing page backed up at `app/page-launch.tsx` for post-launch swap
 
+### CRM & Email Campaigns
+- Full CRM system at `/admin/crm` with dashboard, contacts, and campaigns
+- Contact management: aggregates from signature_leads, profiles, waitlist
+- Campaign editor: rich text + HTML mode, variable insertion ({firstName}, {email}), segment selection
+- Email sending via Resend API with batch processing
+- Open tracking via 1x1 pixel endpoint (`/api/crm/track/open`)
+- Click tracking via link wrapping + redirect (`/api/crm/track/click`)
+- Campaign stats: sent count, open count/rate, click count/rate
+- Admin auth verification on all CRM API endpoints
+- Supabase tables required: `crm_contacts`, `crm_campaigns`, `crm_campaign_events`
+- Library files: `lib/crm/resend.ts`, `lib/crm/supabase-admin.ts`, `lib/crm/auth.ts`
+
+### Signature Test Email Capture
+- Email required before seeing test results
+- Leads saved to Supabase `signature_leads` table via `/api/signature-lead`
+- Personalized email screen with {firstName}
+- Translations in FR/EN/ES
+
 ## Recent Changes (Feb 2026)
+- Added CRM email campaign system with contact management, campaign editor, tracking
+- Added email capture on Signature Émotionnelle test results
+- Removed call/visio features between members (kept event Zoom links)
 - Added dark/light mode toggle with persistent theme switching
 - Added real-time notification system with bell icon and slide-out panel
 - Added personal wellness goals page (Objectifs)

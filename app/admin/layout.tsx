@@ -15,6 +15,7 @@ const adminNav = [
   { href: '/admin/membres', label: 'Membres', icon: '👥' },
   { href: '/admin/parametres', label: 'Paramètres', icon: '⚙️' },
   { href: '/admin/bots', label: 'Bots', icon: '🤖' },
+  { href: '/admin/crm', label: 'CRM', icon: '📧' },
 ]
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -64,7 +65,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
           <nav className="hidden md:flex items-center gap-1 ml-6">
             {adminNav.map((item) => {
-              const isActive = pathname === item.href
+              const isActive = item.href === '/admin' ? pathname === '/admin' : pathname.startsWith(item.href)
               return (
                 <Link key={item.href} href={item.href}
                   className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm transition-all"
@@ -95,7 +96,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Mobile nav */}
       <div className="md:hidden flex overflow-x-auto gap-1 px-4 py-2" style={{ borderBottom: '1px solid var(--dark-border)' }}>
         {adminNav.map((item) => {
-          const isActive = pathname === item.href
+          const isActive = item.href === '/admin' ? pathname === '/admin' : pathname.startsWith(item.href)
           return (
             <Link key={item.href} href={item.href}
               className="flex items-center gap-1 px-3 py-2 rounded-lg text-xs whitespace-nowrap"

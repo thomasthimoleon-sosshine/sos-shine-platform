@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import type { Profile } from '@/types/database'
 import { useTranslation } from '@/lib/i18n/useTranslation'
+import { getRandomQuote, type Quote } from '@/lib/quotes'
 
 const ease = [0.25, 0.46, 0.45, 0.94] as const
 
@@ -91,11 +92,13 @@ function ParcoursWidget() {
 }
 
 export default function DashboardHome() {
-  const { t } = useTranslation()
+  const { t, locale } = useTranslation()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [greeting, setGreeting] = useState('')
+  const [quote, setQuote] = useState<Quote | null>(null)
 
   useEffect(() => {
+    setQuote(getRandomQuote())
     const hour = new Date().getHours()
     if (hour < 12) setGreeting('dashboard.morning')
     else if (hour < 18) setGreeting('dashboard.afternoon')
@@ -213,10 +216,10 @@ export default function DashboardHome() {
           style={{ background: 'radial-gradient(circle, rgba(212, 175, 55, 0.08), transparent 70%)' }}
         />
         <p className="font-display text-xl sm:text-2xl italic leading-relaxed relative" style={{ color: 'var(--text-primary)' }}>
-          &ldquo;{t('quote.text')}&rdquo;
+          &ldquo;{quote ? quote.text[locale as keyof typeof quote.text] || quote.text.fr : t('quote.text')}&rdquo;
         </p>
         <p className="mt-4 text-[13px] font-medium relative" style={{ color: 'var(--gold)' }}>
-          — {t('quote.author')}
+          — {quote ? quote.author[locale as keyof typeof quote.author] || quote.author.fr : t('quote.author')}
         </p>
       </motion.div>
 

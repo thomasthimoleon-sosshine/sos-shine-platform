@@ -186,7 +186,13 @@ types/            # TypeScript type definitions
 - Click tracking via link wrapping + redirect (`/api/crm/track/click`)
 - Campaign stats: sent count, open count/rate, click count/rate
 - Admin auth verification on all CRM API endpoints
-- Supabase tables required: `crm_contacts`, `crm_campaigns`, `crm_campaign_events`
+- **Campaign scheduling**: `scheduled_at` field, datetime picker in editor, cron at `/api/cron/campaigns`
+- **Email sequences**: Automated drip campaigns triggered by signup, signature test, or waitlist
+  - Sequences API: `/api/crm/sequences` (CRUD), `/api/crm/sequences/enroll` (auto-enrollment)
+  - Cron processing: `/api/cron/sequences` (sends due steps, advances enrollments)
+  - Triggers: signup (auth callback), signature_test (lead capture), waitlist (registration)
+  - Admin pages: `/admin/crm/sequences` (list), `/admin/crm/sequences/new` (editor with timeline)
+- Supabase tables required: `crm_contacts`, `crm_campaigns`, `crm_campaign_events`, `crm_sequences`, `crm_sequence_steps`, `crm_sequence_enrollments`
 - Library files: `lib/crm/resend.ts`, `lib/crm/supabase-admin.ts`, `lib/crm/auth.ts`
 
 ### Signature Test Email Capture
@@ -196,6 +202,8 @@ types/            # TypeScript type definitions
 - Translations in FR/EN/ES
 
 ## Recent Changes (Feb 2026)
+- Added campaign scheduling with date/time picker and automatic cron sending
+- Added email sequences (drip campaigns) with trigger-based auto-enrollment
 - Added CRM email campaign system with contact management, campaign editor, tracking
 - Added email capture on Signature Émotionnelle test results
 - Removed call/visio features between members (kept event Zoom links)

@@ -29,6 +29,24 @@ export async function POST(request: Request) {
         'INSERT INTO waitlist (email, name) VALUES ($1, $2)',
         [email.toLowerCase().trim(), name?.trim() || null]
       )
+
+      try {
+        const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
+          || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : null)
+          || ''
+        if (siteUrl) {
+          await fetch(`${siteUrl}/api/crm/sequences/enroll`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              trigger_type: 'waitlist',
+              email: email.toLowerCase().trim(),
+              first_name: name?.trim() || null,
+            }),
+          })
+        }
+      } catch {}
+
       return NextResponse.json({ message: 'success' }, { status: 201 })
     } catch (err: unknown) {
       const pgErr = err as { code?: string }

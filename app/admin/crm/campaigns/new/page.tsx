@@ -9,6 +9,7 @@ export default function NewCampaignPage() {
   const [subject, setSubject] = useState('')
   const [htmlContent, setHtmlContent] = useState('')
   const [segment, setSegment] = useState('all')
+  const [scheduledAt, setScheduledAt] = useState('')
   const [saving, setSaving] = useState(false)
   const [preview, setPreview] = useState(false)
   const [useRichEditor, setUseRichEditor] = useState(true)
@@ -45,6 +46,7 @@ export default function NewCampaignPage() {
           subject: subject.trim(),
           html_content: content,
           segment,
+          scheduled_at: scheduledAt ? new Date(scheduledAt).toISOString() : null,
         }),
       })
       const data = await res.json()
@@ -54,7 +56,9 @@ export default function NewCampaignPage() {
         return
       }
 
-      if (sendNow && data.campaign?.id) {
+      if (scheduledAt) {
+        alert(`Campagne planifiée pour le ${new Date(scheduledAt).toLocaleString('fr-FR')}`)
+      } else if (sendNow && data.campaign?.id) {
         if (confirm('Envoyer cette campagne immédiatement ?')) {
           const sendRes = await fetch('/api/crm/send', {
             method: 'POST',
@@ -147,6 +151,39 @@ export default function NewCampaignPage() {
               ))}
             </select>
           </div>
+        </div>
+
+        <div>
+          <label className="block text-xs uppercase tracking-wider text-[var(--text-muted)] mb-2">
+            Planification (optionnel)
+          </label>
+          <div className="flex items-center gap-4">
+            <input
+              type="datetime-local"
+              value={scheduledAt}
+              onChange={(e) => setScheduledAt(e.target.value)}
+              className="px-4 py-3 rounded-xl text-sm outline-none flex-1"
+              style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+            />
+            {scheduledAt && (
+              <button
+                onClick={() => setScheduledAt('')}
+                className="text-xs text-red-400 hover:text-red-300 transition-colors"
+              >
+                Annuler la planification
+              </button>
+            )}
+          </div>
+          {scheduledAt && (
+            <p className="text-xs mt-1" style={{ color: '#4A90D9' }}>
+              L'email sera envoyé automatiquement le {new Date(scheduledAt).toLocaleString('fr-FR')}
+            </p>
+          )}
+          {!scheduledAt && (
+            <p className="text-xs text-[var(--text-muted)] mt-1">
+              Laissez vide pour envoyer manuellement ou immédiatement
+            </p>
+          )}
         </div>
 
         <div>
@@ -257,21 +294,23 @@ export default function NewCampaignPage() {
           {preview ? '✕ Fermer l\'aperçu' : '👁 Aperçu'}
         </button>
         <div className="flex gap-3">
+          {!scheduledAt && (
+            <button
+              onClick={() => handleSave(false)}
+              disabled={saving}
+              className="px-6 py-2.5 rounded-full text-sm font-medium transition-all disabled:opacity-50"
+              style={{ background: 'var(--dark-card)', color: 'var(--text-primary)', border: '1px solid var(--dark-border)' }}
+            >
+              {saving ? 'Sauvegarde...' : 'Sauvegarder en brouillon'}
+            </button>
+          )}
           <button
-            onClick={() => handleSave(false)}
-            disabled={saving}
-            className="px-6 py-2.5 rounded-full text-sm font-medium transition-all disabled:opacity-50"
-            style={{ background: 'var(--dark-card)', color: 'var(--text-primary)', border: '1px solid var(--dark-border)' }}
-          >
-            {saving ? 'Sauvegarde...' : '💾 Sauvegarder en brouillon'}
-          </button>
-          <button
-            onClick={() => handleSave(true)}
+            onClick={() => handleSave(!scheduledAt)}
             disabled={saving}
             className="px-6 py-2.5 rounded-full text-sm font-semibold transition-all disabled:opacity-50"
             style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}
           >
-            {saving ? 'Envoi...' : '🚀 Sauvegarder & Envoyer'}
+            {saving ? 'Sauvegarde...' : scheduledAt ? 'Planifier l\'envoi' : 'Sauvegarder & Envoyer'}
           </button>
         </div>
       </div>

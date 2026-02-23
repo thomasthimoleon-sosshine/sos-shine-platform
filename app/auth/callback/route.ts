@@ -11,6 +11,32 @@ export async function GET(request: Request) {
     const { error } = await supabase.auth.exchangeCodeForSession(code)
 
     if (!error) {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        const isNewUser = user.created_at && (Date.now() - new Date(user.created_at).getTime() < 60000)
+        if (isNewUser) {
+          try {
+            const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
+              || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : null)
+              || ''
+            if (siteUrl) {
+              const firstName = user.user_metadata?.full_name?.split(' ')[0]
+                || user.user_metadata?.name?.split(' ')[0]
+                || null
+              await fetch(`${siteUrl}/api/crm/sequences/enroll`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  trigger_type: 'signup',
+                  email: user.email,
+                  first_name: firstName,
+                }),
+              })
+            }
+          } catch {}
+        }
+      }
+
       const forwardedHost = request.headers.get('x-forwarded-host')
       const isLocalEnv = process.env.NODE_ENV === 'development'
 

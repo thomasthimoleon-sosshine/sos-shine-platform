@@ -108,10 +108,10 @@ export default function CRMDashboardPage() {
             ))}
           </div>
 
-          <div className="flex gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <Link
               href="/admin/crm/contacts"
-              className="flex-1 p-6 rounded-xl text-center transition-all hover:scale-[1.02]"
+              className="p-6 rounded-xl text-center transition-all hover:scale-[1.02]"
               style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
             >
               <div className="text-3xl mb-2">👥</div>
@@ -120,12 +120,21 @@ export default function CRMDashboardPage() {
             </Link>
             <Link
               href="/admin/crm/campaigns"
-              className="flex-1 p-6 rounded-xl text-center transition-all hover:scale-[1.02]"
+              className="p-6 rounded-xl text-center transition-all hover:scale-[1.02]"
               style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
             >
               <div className="text-3xl mb-2">📧</div>
               <div className="font-display text-lg" style={{ color: 'var(--gold)' }}>Campagnes</div>
-              <div className="text-xs text-[var(--text-muted)] mt-1">Créer et gérer vos campagnes</div>
+              <div className="text-xs text-[var(--text-muted)] mt-1">Créer et planifier vos campagnes</div>
+            </Link>
+            <Link
+              href="/admin/crm/sequences"
+              className="p-6 rounded-xl text-center transition-all hover:scale-[1.02]"
+              style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+            >
+              <div className="text-3xl mb-2">🔄</div>
+              <div className="font-display text-lg" style={{ color: 'var(--gold)' }}>Séquences</div>
+              <div className="text-xs text-[var(--text-muted)] mt-1">Emails automatiques par déclencheur</div>
             </Link>
           </div>
 
@@ -151,11 +160,11 @@ export default function CRMDashboardPage() {
                         <span
                           className="px-3 py-1 rounded-full text-xs font-medium"
                           style={{
-                            background: camp.status === 'sent' ? 'rgba(80,200,120,0.15)' : 'rgba(212,175,55,0.15)',
-                            color: camp.status === 'sent' ? '#50C878' : 'var(--gold)',
+                            background: camp.status === 'sent' ? 'rgba(80,200,120,0.15)' : camp.status === 'scheduled' ? 'rgba(74,144,217,0.15)' : 'rgba(212,175,55,0.15)',
+                            color: camp.status === 'sent' ? '#50C878' : camp.status === 'scheduled' ? '#4A90D9' : 'var(--gold)',
                           }}
                         >
-                          {camp.status === 'sent' ? 'Envoyée' : 'Brouillon'}
+                          {camp.status === 'sent' ? 'Envoyée' : camp.status === 'scheduled' ? 'Planifiée' : 'Brouillon'}
                         </span>
                         {camp.status === 'sent' && (
                           <div className="text-xs text-[var(--text-muted)]">

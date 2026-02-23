@@ -37,6 +37,23 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
     }
 
+    try {
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
+        || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : null)
+        || ''
+      if (siteUrl) {
+        await fetch(`${siteUrl}/api/crm/sequences/enroll`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            trigger_type: 'signature_test',
+            email: email.toLowerCase().trim(),
+            first_name: firstName?.trim() || null,
+          }),
+        })
+      }
+    } catch {}
+
     return NextResponse.json({ message: 'success' }, { status: 201 })
   } catch {
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })

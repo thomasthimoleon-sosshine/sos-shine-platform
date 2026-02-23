@@ -15,6 +15,7 @@ interface Campaign {
   click_count: number
   created_at: string
   sent_at: string | null
+  scheduled_at: string | null
 }
 
 export default function CRMCampaignsPage() {
@@ -124,11 +125,11 @@ export default function CRMCampaignsPage() {
                       <span
                         className="px-3 py-0.5 rounded-full text-xs font-medium"
                         style={{
-                          background: camp.status === 'sent' ? 'rgba(80,200,120,0.15)' : 'rgba(212,175,55,0.15)',
-                          color: camp.status === 'sent' ? '#50C878' : 'var(--gold)',
+                          background: camp.status === 'sent' ? 'rgba(80,200,120,0.15)' : camp.status === 'scheduled' ? 'rgba(74,144,217,0.15)' : 'rgba(212,175,55,0.15)',
+                          color: camp.status === 'sent' ? '#50C878' : camp.status === 'scheduled' ? '#4A90D9' : 'var(--gold)',
                         }}
                       >
-                        {camp.status === 'sent' ? '✓ Envoyée' : '✎ Brouillon'}
+                        {camp.status === 'sent' ? '✓ Envoyée' : camp.status === 'scheduled' ? '⏰ Planifiée' : '✎ Brouillon'}
                       </span>
                     </div>
                     <p className="text-sm text-[var(--text-muted)]">Objet : {camp.subject}</p>
@@ -136,20 +137,23 @@ export default function CRMCampaignsPage() {
                       Segment : {camp.segment === 'all' ? 'Tous les contacts' : camp.segment}
                       {' · '}
                       Créée le {new Date(camp.created_at).toLocaleDateString('fr-FR')}
+                      {camp.scheduled_at && camp.status === 'scheduled' && ` · Planifiée le ${new Date(camp.scheduled_at).toLocaleString('fr-FR')}`}
                       {camp.sent_at && ` · Envoyée le ${new Date(camp.sent_at).toLocaleDateString('fr-FR')}`}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
-                    {camp.status === 'draft' && (
+                    {(camp.status === 'draft' || camp.status === 'scheduled') && (
                       <>
-                        <button
-                          onClick={() => handleSend(camp.id)}
-                          disabled={sending === camp.id}
-                          className="px-4 py-2 rounded-full text-xs font-semibold transition-all disabled:opacity-50"
-                          style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}
-                        >
-                          {sending === camp.id ? '⏳ Envoi...' : '🚀 Envoyer'}
-                        </button>
+                        {camp.status === 'draft' && (
+                          <button
+                            onClick={() => handleSend(camp.id)}
+                            disabled={sending === camp.id}
+                            className="px-4 py-2 rounded-full text-xs font-semibold transition-all disabled:opacity-50"
+                            style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}
+                          >
+                            {sending === camp.id ? '⏳ Envoi...' : '🚀 Envoyer'}
+                          </button>
+                        )}
                         <button
                           onClick={() => handleDelete(camp.id)}
                           className="px-3 py-2 rounded-full text-xs text-red-400 hover:bg-red-400/10 transition-all"

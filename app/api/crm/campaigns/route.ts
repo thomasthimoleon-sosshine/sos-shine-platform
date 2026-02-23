@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     if (!supabase) return NextResponse.json({ error: 'Config missing' }, { status: 500 })
 
     const body = await request.json()
-    const { name, subject, html_content, segment } = body
+    const { name, subject, html_content, segment, scheduled_at } = body
 
     if (!name || !subject || !html_content) {
       return NextResponse.json({ error: 'Champs requis manquants' }, { status: 400 })
@@ -41,7 +41,8 @@ export async function POST(request: Request) {
         subject,
         html_content,
         segment: segment || 'all',
-        status: 'draft',
+        status: scheduled_at ? 'scheduled' : 'draft',
+        scheduled_at: scheduled_at || null,
         sent_count: 0,
         open_count: 0,
         click_count: 0,

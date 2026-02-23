@@ -2,16 +2,18 @@ import { createClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 import { createServerClient } from '@supabase/ssr'
 
-export async function verifyAdminAccess(): Promise<boolean> {
+function getAdminSupabase() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!url || !key || !url.startsWith('http')) return null
+  return createClient(url, key)
+}
+
+async function getUserFromCookies() {
   try {
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL
     const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-
-    if (!url || !anonKey || !url.startsWith('http')) {
-      console.error('CRM auth: missing or invalid Supabase config')
-      return false
-    }
+    if (!url || !anonKey || !url.startsWith('http')) return null
 
     const cookieStore = await cookies()
     const allCookies = cookieStore.getAll()
@@ -25,36 +27,36 @@ export async function verifyAdminAccess(): Promise<boolean> {
       },
     })
 
-    const { data: { user }, error: userError } = await supabase.auth.getUser()
-    if (userError || !user) {
-      console.error('CRM auth: no user found', userError?.message)
-      return false
+    const { data: { user } } = await supabase.auth.getUser()
+    return user
+  } catch {
+    return null
+  }
+}
+
+async function checkRole(userId: string): Promise<boolean> {
+  const adminClient = getAdminSupabase()
+  if (!adminClient) return false
+
+  const { data: profile } = await adminClient
+    .from('profiles')
+    .select('role')
+    .eq('id', userId)
+    .single()
+
+  return profile?.role === 'founder' || profile?.role === 'admin_content' || profile?.role === 'admin_support'
+}
+
+export async function verifyAdminAccess(): Promise<boolean> {
+  try {
+    const user = await getUserFromCookies()
+    if (user) {
+      return await checkRole(user.id)
     }
 
-    if (!serviceKey) {
-      console.error('CRM auth: missing service role key')
-      return false
-    }
-
-    const adminClient = createClient(url, serviceKey)
-    const { data: profile, error: profileError } = await adminClient
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
-
-    if (profileError) {
-      console.error('CRM auth: profile fetch error', profileError.message)
-      return false
-    }
-
-    const allowed = profile?.role === 'founder' || profile?.role === 'admin_content' || profile?.role === 'admin_support'
-    if (!allowed) {
-      console.error('CRM auth: role not allowed:', profile?.role)
-    }
-    return allowed
+    return false
   } catch (err) {
-    console.error('CRM auth: unexpected error', err)
+    console.error('CRM auth error:', err)
     return false
   }
 }

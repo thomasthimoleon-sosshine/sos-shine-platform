@@ -115,7 +115,7 @@ export default function DashboardHome() {
         setProfile({
           id: user.id, prenom: user.user_metadata?.prenom || 'Membre',
           email: user.email || '', role: 'member', avatar_url: null, plan: null, created_at: user.created_at,
-          pseudo: null, bio: null, video_url: null,
+          pseudo: null, bio: null, video_url: null, is_bot: false,
         })
       }
     }

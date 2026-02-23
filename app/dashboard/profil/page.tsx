@@ -44,7 +44,7 @@ export default function ProfilPage() {
         const fallback: Profile = {
           id: user.id, prenom: user.user_metadata?.prenom || 'Membre',
           pseudo: null, email: user.email || '', role: 'member',
-          avatar_url: null, bio: null, video_url: null, plan: null, created_at: user.created_at,
+          avatar_url: null, bio: null, video_url: null, plan: null, created_at: user.created_at, is_bot: false,
         }
         setProfile(fallback)
         setPrenom(fallback.prenom)

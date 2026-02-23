@@ -541,6 +541,44 @@ export default function EvenementsPage() {
                       </p>
                     )}
 
+                    {registered && event.live_url && (
+                      <a
+                        href={event.live_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 mt-4 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5 w-fit"
+                        style={{
+                          background: 'linear-gradient(135deg, #2D8CFF, #0B5CFF)',
+                          color: '#fff',
+                          boxShadow: '0 4px 15px rgba(45, 140, 255, 0.25)',
+                        }}
+                      >
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2v-2.5l4 3V6.5l-4 3V5a2 2 0 00-2-2H4zm0 2h12v10H4V5z"/>
+                        </svg>
+                        {t('dashboard.join_zoom')}
+                      </a>
+                    )}
+
+                    {registered && event.replay_url && !event.live_url && (
+                      <a
+                        href={event.replay_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 mt-4 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:-translate-y-0.5 w-fit"
+                        style={{
+                          background: 'rgba(212, 175, 55, 0.1)',
+                          color: 'var(--gold)',
+                          border: '1px solid rgba(212, 175, 55, 0.25)',
+                        }}
+                      >
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+                        </svg>
+                        {t('dashboard.watch_replay')}
+                      </a>
+                    )}
+
                     <div className="flex items-center justify-between mt-4">
                       <div className="flex items-center gap-4">
                         <span className="text-xs" style={{ color: 'var(--text-muted)' }}>

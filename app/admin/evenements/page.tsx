@@ -443,17 +443,21 @@ export default function AdminEvenements() {
           {/* Row 4: live_url + replay_url */}
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
-              <label style={labelStyle}>URL du live</label>
+              <label style={labelStyle}>
+                Lien Zoom / visio <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>(visible par les inscrits)</span>
+              </label>
               <input
                 type="url"
                 value={form.live_url}
                 onChange={(e) => setForm({ ...form, live_url: e.target.value })}
-                placeholder="https://..."
+                placeholder="https://zoom.us/j/123456789..."
                 style={inputStyle}
               />
             </div>
             <div>
-              <label style={labelStyle}>URL du replay</label>
+              <label style={labelStyle}>
+                Lien du replay <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>(après l'événement)</span>
+              </label>
               <input
                 type="url"
                 value={form.replay_url}

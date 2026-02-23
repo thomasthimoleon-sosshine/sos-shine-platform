@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState, useRef, ReactNode, useCallback, useMemo } from "react";
+import { useEffect, useState, useRef, ReactNode, useCallback, useMemo, memo } from "react";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import { LANDING_DEFAULTS, buildSectionMap } from "@/lib/landing-defaults";
@@ -57,24 +57,24 @@ function hexToRgb(hex: string): string {
   return `${r},${g},${b}`;
 }
 
+const REVEAL_VARIANTS = {
+  up: { hidden: { opacity: 0, y: 50 }, visible: { opacity: 1, y: 0 } },
+  left: { hidden: { opacity: 0, x: -40 }, visible: { opacity: 1, x: 0 } },
+  right: { hidden: { opacity: 0, x: 40 }, visible: { opacity: 1, x: 0 } },
+  scale: { hidden: { opacity: 0, scale: 0.95 }, visible: { opacity: 1, scale: 1 } },
+};
+
 function RevealOnScroll({ children, delay = 0, className = "", direction = "up" }: { children: ReactNode; delay?: number; className?: string; direction?: "up" | "left" | "right" | "scale" }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.1 });
-
-  const variants = {
-    up: { hidden: { opacity: 0, y: 80 }, visible: { opacity: 1, y: 0 } },
-    left: { hidden: { opacity: 0, x: -60 }, visible: { opacity: 1, x: 0 } },
-    right: { hidden: { opacity: 0, x: 60 }, visible: { opacity: 1, x: 0 } },
-    scale: { hidden: { opacity: 0, scale: 0.9 }, visible: { opacity: 1, scale: 1 } },
-  };
 
   return (
     <motion.div
       ref={ref}
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
-      variants={variants[direction]}
-      transition={{ duration: 0.9, delay, ease: [0.16, 1, 0.3, 1] }}
+      variants={REVEAL_VARIANTS[direction]}
+      transition={{ duration: 0.6, delay, ease: [0.16, 1, 0.3, 1] }}
       className={className}
     >
       {children}
@@ -93,11 +93,11 @@ function WordByWordReveal({ text, className = "", style = {} }: { text: string; 
         <motion.span
           key={i}
           className="inline-block mr-[0.3em]"
-          initial={{ opacity: 0, y: 40, rotateX: -15, filter: "blur(8px)" }}
-          animate={isInView ? { opacity: 1, y: 0, rotateX: 0, filter: "blur(0px)" } : {}}
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{
-            duration: 0.7,
-            delay: i * 0.08,
+            duration: 0.5,
+            delay: i * 0.06,
             ease: [0.16, 1, 0.3, 1],
           }}
         >
@@ -188,33 +188,21 @@ function FloatingOrbs() {
 }
 
 const DIAMONDS = [
-  { top: '5%', left: '10%', duration: '8s', delay: '0s', size: 14 },
-  { top: '15%', left: '85%', duration: '10s', delay: '1.5s', size: 10 },
-  { top: '35%', left: '50%', duration: '7s', delay: '3s', size: 12 },
-  { top: '50%', left: '20%', duration: '9s', delay: '0.8s', size: 10 },
-  { top: '65%', left: '75%', duration: '8s', delay: '2.2s', size: 14 },
-  { top: '80%', left: '40%', duration: '10s', delay: '4s', size: 10 },
-  { top: '25%', left: '65%', duration: '9s', delay: '1s', size: 12 },
-  { top: '90%', left: '90%', duration: '7s', delay: '3.5s', size: 10 },
-  { top: '45%', left: '5%', duration: '11s', delay: '2s', size: 8 },
-  { top: '70%', left: '60%', duration: '9s', delay: '5s', size: 12 },
+  { top: '10%', left: '15%', duration: '9s', delay: '0s', size: 10 },
+  { top: '25%', left: '80%', duration: '11s', delay: '2s', size: 8 },
+  { top: '55%', left: '45%', duration: '10s', delay: '1s', size: 10 },
+  { top: '75%', left: '70%', duration: '8s', delay: '3s', size: 8 },
+  { top: '85%', left: '25%', duration: '12s', delay: '4s', size: 10 },
 ];
 
-function DiamondSvg({ size, className, style }: { size: number; className?: string; style?: React.CSSProperties }) {
+const DiamondSvg = memo(function DiamondSvg({ size }: { size: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} style={style}>
-      <defs>
-        <radialGradient id={`glow-${size}`} cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#F5E6A3" stopOpacity="1" />
-          <stop offset="40%" stopColor="#D4AF37" stopOpacity="0.6" />
-          <stop offset="100%" stopColor="#D4AF37" stopOpacity="0" />
-        </radialGradient>
-      </defs>
-      <circle cx="12" cy="12" r="10" fill={`url(#glow-${size})`} />
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="4" fill="#D4AF37" opacity="0.4" />
       <circle cx="12" cy="12" r="2" fill="#FFFBE6" opacity="0.9" />
     </svg>
   );
-}
+});
 
 function SparklingDiamonds() {
   return (
@@ -422,7 +410,7 @@ export default function Home() {
       {vis('hero') && (
         <motion.section ref={heroRef} className="relative min-h-screen flex items-center pt-24" style={{ opacity: heroOpacity, scale: heroScale }}>
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full opacity-[0.04] blur-[150px]" style={{ background: gold }} />
+            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full opacity-[0.03] blur-[80px]" style={{ background: gold }} />
           </div>
 
           <div className="relative z-10 px-6 md:px-20 py-24 max-w-6xl mx-auto w-full text-center">
@@ -449,11 +437,11 @@ export default function Home() {
                       <motion.span
                         key={wi}
                         className={`inline-block mr-[0.3em] ${isHighlight ? 'text-shimmer' : ''}`}
-                        initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
-                        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                        initial={{ opacity: 0, y: 25 }}
+                        animate={{ opacity: 1, y: 0 }}
                         transition={{
-                          duration: 0.7,
-                          delay: baseDelay + wi * 0.08,
+                          duration: 0.5,
+                          delay: baseDelay + wi * 0.06,
                           ease: [0.16, 1, 0.3, 1],
                         }}
                       >
@@ -536,9 +524,9 @@ export default function Home() {
 
       {/* ═══ LE PRINCIPE ═══ */}
       {vis('principe') && (
-        <section className="px-6 md:px-20 py-32 relative">
+        <section className="px-6 md:px-20 py-32 relative cv-auto">
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-1/2 left-1/4 w-[500px] h-[500px] rounded-full opacity-[0.02] blur-[120px]" style={{ background: gold }} />
+            <div className="absolute top-1/2 left-1/4 w-[400px] h-[400px] rounded-full opacity-[0.02] blur-[60px]" style={{ background: gold }} />
           </div>
 
           <div className="max-w-4xl mx-auto text-center relative z-10">
@@ -584,7 +572,7 @@ export default function Home() {
 
       {/* ═══ LES ETAPES — Glowing Cards ═══ */}
       {vis('steps') && (
-        <section className="px-6 md:px-20 py-32 relative">
+        <section className="px-6 md:px-20 py-32 relative cv-auto">
           <div className="max-w-6xl mx-auto">
             <RevealOnScroll>
               <p className="luxury-title text-center text-sm tracking-[0.4em] text-[var(--text-muted)] mb-4">{stepsData.label || ''}</p>
@@ -616,9 +604,9 @@ export default function Home() {
 
       {/* ═══ L'ENCYCLOPEDIE ═══ */}
       {vis('encyclopedie') && (
-        <section className="px-6 md:px-20 py-32 relative">
+        <section className="px-6 md:px-20 py-32 relative cv-auto">
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full opacity-[0.02] blur-[150px]" style={{ background: gold }} />
+            <div className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full opacity-[0.02] blur-[60px]" style={{ background: gold }} />
           </div>
 
           <div className="max-w-5xl mx-auto relative z-10">
@@ -686,7 +674,7 @@ export default function Home() {
 
       {/* ═══ COMMUNAUTE ═══ */}
       {vis('communaute') && (
-        <section className="px-6 md:px-20 py-32 relative">
+        <section className="px-6 md:px-20 py-32 relative cv-auto">
           <div className="max-w-5xl mx-auto">
             <RevealOnScroll>
               <h2 className="font-display font-light leading-[1.1] text-center mb-6" style={tStyle("communaute")}>
@@ -726,9 +714,9 @@ export default function Home() {
 
       {/* ═══ TEMOIGNAGES ═══ */}
       {vis('temoignages') && (
-        <section className="px-6 md:px-20 py-32 relative">
+        <section className="px-6 md:px-20 py-32 relative cv-auto">
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute bottom-0 left-1/3 w-[700px] h-[500px] rounded-full opacity-[0.02] blur-[150px]" style={{ background: gold }} />
+            <div className="absolute bottom-0 left-1/3 w-[400px] h-[400px] rounded-full opacity-[0.02] blur-[60px]" style={{ background: gold }} />
           </div>
 
           <div className="max-w-5xl mx-auto relative z-10">
@@ -773,7 +761,7 @@ export default function Home() {
       {vis('histoire') && (() => {
         const hist = sec('histoire');
         return (
-          <section className="px-6 md:px-20 py-32 relative">
+          <section className="px-6 md:px-20 py-32 relative cv-auto">
             <div className="max-w-5xl mx-auto">
               <RevealOnScroll>
                 <p className="luxury-title text-center text-sm tracking-[0.4em] text-[var(--text-muted)] mb-4">{hist.label || "L'Histoire"}</p>
@@ -833,7 +821,7 @@ export default function Home() {
         const fond = sec('fondateurs');
         const members = fond.members || [];
         return (
-          <section className="px-6 md:px-20 py-32 relative">
+          <section className="px-6 md:px-20 py-32 relative cv-auto">
             <div className="max-w-5xl mx-auto">
               <RevealOnScroll>
                 <p className="luxury-title text-center text-sm tracking-[0.4em] text-[var(--text-muted)] mb-4">{fond.label || 'Les Fondateurs'}</p>
@@ -879,7 +867,7 @@ export default function Home() {
 
       {/* ═══ OFFRES / PRICING ═══ */}
       {vis('pricing') && (
-        <section className="px-6 md:px-20 py-32 relative">
+        <section className="px-6 md:px-20 py-32 relative cv-auto">
           <div className="max-w-5xl mx-auto">
             <RevealOnScroll>
               <p className="luxury-title text-center text-sm tracking-[0.4em] text-[var(--text-muted)] mb-4">Tarification</p>
@@ -957,9 +945,9 @@ export default function Home() {
 
       {/* ═══ CTA FINAL DARK ═══ */}
       {vis('cta_dark') && (
-        <section className="px-6 md:px-20 py-40 relative overflow-hidden">
+        <section className="px-6 md:px-20 py-40 relative overflow-hidden cv-auto">
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] rounded-full opacity-[0.04] blur-[150px]" style={{ background: gold }} />
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[400px] rounded-full opacity-[0.03] blur-[60px]" style={{ background: gold }} />
           </div>
           <div className="relative z-10 max-w-4xl mx-auto text-center">
             {ctaDark.image_url && (
@@ -985,7 +973,7 @@ export default function Home() {
 
       {/* ═══ CTA LIGHT ═══ */}
       {vis('cta_light') && (
-        <section className="px-6 md:px-20 py-32 relative overflow-hidden" style={{ background: sty('cta_light').bg || '#ffffff' }}>
+        <section className="px-6 md:px-20 py-32 relative overflow-hidden cv-auto" style={{ background: sty('cta_light').bg || '#ffffff' }}>
           <div className="max-w-3xl mx-auto text-center relative z-10">
             <RevealOnScroll>
               <p className="text-xl md:text-2xl font-light leading-relaxed mb-12" style={{ color: sty('cta_light').text_color || '#1a1a1a' }}>

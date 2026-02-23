@@ -8,6 +8,7 @@ channel = "stable-25_05"
 [userenv]
 
 [userenv.shared]
+BOT_SECRET = "af079ce1243059f9158bd891b3ebee6044429a1fde29fb005f4100d3fe63120a"
 
 [userenv.development]
 NEXT_PUBLIC_SITE_URL = "https://e712b9eb-6476-4f3e-b0d4-cd8762835063-00-2si6nus1uo4vi.spock.replit.dev"

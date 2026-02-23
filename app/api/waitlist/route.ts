@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import pg from 'pg'
 
 let pool: pg.Pool | null = null
@@ -29,6 +30,19 @@ export async function POST(request: Request) {
         'INSERT INTO waitlist (email, name) VALUES ($1, $2)',
         [email.toLowerCase().trim(), name?.trim() || null]
       )
+
+      try {
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+        const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+        if (supabaseUrl && supabaseKey) {
+          const sb = createSupabaseClient(supabaseUrl, supabaseKey)
+          await sb.from('crm_contacts').upsert({
+            email: email.toLowerCase().trim(),
+            first_name: name?.trim() || null,
+            source: 'waitlist',
+          }, { onConflict: 'email', ignoreDuplicates: true })
+        }
+      } catch {}
 
       try {
         const siteUrl = process.env.NEXT_PUBLIC_SITE_URL

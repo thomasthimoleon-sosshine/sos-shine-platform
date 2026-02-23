@@ -38,6 +38,14 @@ export async function POST(request: Request) {
     }
 
     try {
+      await supabase.from('crm_contacts').upsert({
+        email: email.toLowerCase().trim(),
+        first_name: firstName?.trim() || null,
+        source: 'signature_test',
+      }, { onConflict: 'email', ignoreDuplicates: true })
+    } catch {}
+
+    try {
       const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
         || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : null)
         || ''

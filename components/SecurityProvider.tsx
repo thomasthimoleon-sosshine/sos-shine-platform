@@ -1,10 +1,33 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
 
 export default function SecurityProvider({ children }: { children: React.ReactNode }) {
+  const [isFounder, setIsFounder] = useState(false)
+
   useEffect(() => {
-    // 1. BLOCAGE DES INTERACTIONS
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) {
+        supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', data.user.id)
+          .single()
+          .then(({ data: profile }) => {
+            if (profile?.role === 'founder') {
+              setIsFounder(true)
+              document.documentElement.classList.add('founder-mode')
+            }
+          })
+      }
+    })
+  }, [])
+
+  useEffect(() => {
+    if (isFounder) return
+
     const handleContextMenu = (e: MouseEvent) => e.preventDefault()
     const handleKeyDown = (e: KeyboardEvent) => {
       if (
@@ -18,7 +41,6 @@ export default function SecurityProvider({ children }: { children: React.ReactNo
     document.addEventListener('contextmenu', handleContextMenu)
     document.addEventListener('keydown', handleKeyDown)
 
-    // 2. EFFET ÉCRAN NOIR (ANTI-CAPTURE / VISIBILITY)
     const overlay = document.createElement('div')
     overlay.id = 'security-overlay'
     overlay.style.position = 'fixed'
@@ -43,12 +65,10 @@ export default function SecurityProvider({ children }: { children: React.ReactNo
       if (document.visibilityState === 'hidden') {
         overlay.style.display = 'flex'
       } else {
-        // Optionnel: On peut laisser l'écran noir un court instant au retour
         overlay.style.display = 'none'
       }
     }
 
-    // Détection de perte de focus (plus efficace pour certaines captures)
     const handleBlur = () => {
       overlay.style.display = 'flex'
     }
@@ -70,7 +90,7 @@ export default function SecurityProvider({ children }: { children: React.ReactNo
         document.body.removeChild(overlay)
       }
     }
-  }, [])
+  }, [isFounder])
 
   return <>{children}</>
 }

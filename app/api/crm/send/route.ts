@@ -29,7 +29,6 @@ export async function POST(request: Request) {
     let contactsQuery = supabase
       .from('crm_contacts')
       .select('id, email, first_name')
-      .eq('opted_out', false)
 
     if (campaign.segment && campaign.segment !== 'all') {
       contactsQuery = contactsQuery.eq('source', campaign.segment)

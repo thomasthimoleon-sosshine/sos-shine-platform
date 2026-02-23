@@ -48,7 +48,11 @@ export default function CRMContactsPage() {
         body: JSON.stringify({ action: 'sync' }),
       })
       const data = await res.json()
-      alert(`Synchronisation terminée : ${data.synced} contacts synchronisés`)
+      if (data.error) {
+        alert(`Erreur : ${data.error}`)
+      } else {
+        alert(`Synchronisation terminée : ${data.synced || 0} contacts synchronisés`)
+      }
       loadContacts()
     } catch (e) {
       alert('Erreur lors de la synchronisation')

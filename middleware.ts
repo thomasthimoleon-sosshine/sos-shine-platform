@@ -1,7 +1,32 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { match } from '@formatjs/intl-localematcher'
+import Negotiator from 'negotiator'
+
+const locales = ['fr', 'en', 'es']
+const defaultLocale = 'fr'
+
+function getLocale(request: NextRequest): string {
+  const headers = { 'accept-language': request.headers.get('accept-language') || '' }
+  const languages = new Negotiator({ headers }).languages()
+  return match(languages, locales, defaultLocale)
+}
 
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl
+  const pathnameIsMissingLocale = locales.every(
+    (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
+  )
+
+  if (pathnameIsMissingLocale) {
+    const locale = getLocale(request)
+    if (locale !== defaultLocale) {
+      return NextResponse.redirect(
+        new URL(`/${locale}${pathname}`, request.url)
+      )
+    }
+  }
+  
   let response = NextResponse.next({
     request: {
       headers: request.headers,

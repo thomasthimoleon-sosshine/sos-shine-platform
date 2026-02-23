@@ -46,7 +46,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     'goals.completed': 'Terminés',
     'goals.empty': 'Aucun objectif défini',
     'goals.empty_desc': 'Commencez par définir un premier objectif de bien-être.',
-    'goals.goal_title': 'Titre de l\'objectif',
+    'goals.goal_title': "Titre de l'objectif",
     'goals.description': 'Description (optionnel)',
     'goals.target_date': 'Date cible',
     'goals.create': 'Créer',
@@ -122,7 +122,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     'quick.wall_desc': 'Annonces, publications et partages.',
     'quick.events_desc': 'Soins collectifs, ateliers, lives et Shine Walks à venir.',
 
-    'quote.text': 'On ne change pas votre identité. On apaise le challenge émotionnel pour libérer votre potentiel.',
+    'quote.text': "On ne change pas votre identité. On apaise le challenge émotionnel pour libérer votre potentiel.",
     'quote.author': "L'équipe SOS Shine",
   },
 
@@ -138,13 +138,13 @@ export const translations: Record<Locale, Record<string, string>> = {
     'nav.goals': 'Goals',
     'nav.journal': 'Journal',
     'nav.profile': 'My Profile',
-    'nav.admin': 'Back-office',
+    'nav.admin': 'Admin',
     'nav.signout': 'Sign Out',
     'nav.your_space': 'Your space',
     'nav.administration': 'Administration',
 
     'dashboard.welcome': 'Welcome,',
-    'dashboard.explore': 'What would you like to explore today?',
+    'dashboard.explore': 'What will you explore today?',
     'dashboard.quick_access': 'Quick Access',
     'dashboard.protocol': 'The 4-Step Protocol',
     'dashboard.my_journey': 'My Journey',
@@ -156,7 +156,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     'dashboard.evening': 'Good evening',
 
     'encyclopedia.title': 'Encyclopedia of Life Experiences',
-    'encyclopedia.subtitle': 'Each emotional challenge has its own dedicated page. Find yours and access your 4-step protocol.',
+    'encyclopedia.subtitle': 'Every emotional challenge has a dedicated page. Find yours and begin your 4-step protocol.',
     'encyclopedia.search': 'Search for an emotional challenge...',
     'encyclopedia.not_found': 'No emotional challenge found for',
     'encyclopedia.coming_soon': 'Coming soon',
@@ -194,7 +194,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     'journal.delete_confirm': 'Delete this entry?',
 
     'favorites.title': 'My Favorites',
-    'favorites.subtitle': 'Life experiences you saved to easily revisit.',
+    'favorites.subtitle': "Life experiences you've saved for easy access.",
     'favorites.empty': 'No favorites yet',
     'favorites.empty_desc': "Click the heart on an article in the encyclopedia to save it here.",
     'favorites.explore': 'Explore the encyclopedia',
@@ -244,8 +244,8 @@ export const translations: Record<Locale, Record<string, string>> = {
 
     'quick.encyclopedia_desc': 'All life experiences from A to Z, each with its 4-step protocol.',
     'quick.chat_desc': 'Chat freely with the community.',
-    'quick.wall_desc': 'Announcements, publications, and shares.',
-    'quick.events_desc': 'Collective sessions, workshops, lives, and Shine Walks.',
+    'quick.wall_desc': 'Announcements, posts, and shares.',
+    'quick.events_desc': 'Group healings, workshops, live streams, and Shine Walks.',
 
     'quote.text': "We don't change your identity. We soothe the emotional challenge to unlock your potential.",
     'quote.author': 'The SOS Shine Team',
@@ -263,7 +263,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     'nav.goals': 'Objetivos',
     'nav.journal': 'Diario',
     'nav.profile': 'Mi Perfil',
-    'nav.admin': 'Administración',
+    'nav.admin': 'Admin',
     'nav.signout': 'Cerrar sesión',
     'nav.your_space': 'Tu espacio',
     'nav.administration': 'Administración',
@@ -272,7 +272,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     'dashboard.explore': '¿Qué deseas explorar hoy?',
     'dashboard.quick_access': 'Acceso rápido',
     'dashboard.protocol': 'El protocolo en 4 pasos',
-    'dashboard.my_journey': 'Mi camino',
+    'dashboard.my_journey': 'Mi Progreso',
     'dashboard.goals_active': 'objetivos activos',
     'dashboard.journal_entries': 'entradas este mes',
     'dashboard.help': '¿Necesitas ayuda?',
@@ -281,7 +281,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     'dashboard.evening': 'Buenas noches',
 
     'encyclopedia.title': 'Enciclopedia de experiencias de vida',
-    'encyclopedia.subtitle': 'Cada desafío emocional tiene su propia página. Encuentra el tuyo y accede a tu protocolo de 4 pasos.',
+    'encyclopedia.subtitle': 'Cada desafío emocional tiene su propia página. Encuentra la tuya y accede a tu guía de 4 pasos.',
     'encyclopedia.search': 'Buscar un desafío emocional...',
     'encyclopedia.not_found': 'No se encontró ningún desafío emocional para',
     'encyclopedia.coming_soon': 'Próximamente',
@@ -319,7 +319,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     'journal.delete_confirm': '¿Eliminar esta entrada?',
 
     'favorites.title': 'Mis Favoritos',
-    'favorites.subtitle': 'Las experiencias de vida que guardaste para volver fácilmente.',
+    'favorites.subtitle': 'Las experiencias de vida que has guardado para consultarlas fácilmente.',
     'favorites.empty': 'Sin favoritos por el momento',
     'favorites.empty_desc': 'Haz clic en el corazón de un artículo en la enciclopedia para guardarlo aquí.',
     'favorites.explore': 'Explorar la enciclopedia',
@@ -367,10 +367,10 @@ export const translations: Record<Locale, Record<string, string>> = {
     'steps.action': 'Acción',
     'steps.action_desc': 'Ejercicios y reprogramación',
 
-    'quick.encyclopedia_desc': 'Todas las experiencias de vida de la A a la Z, cada una con su protocolo de 4 pasos.',
+    'quick.encyclopedia_desc': 'Todas las experiencias de vida, de la A a la Z, cada una con su guía de 4 pasos.',
     'quick.chat_desc': 'Chatea libremente con la comunidad.',
-    'quick.wall_desc': 'Anuncios, publicaciones y compartidos.',
-    'quick.events_desc': 'Sesiones colectivas, talleres, lives y Shine Walks.',
+    'quick.wall_desc': 'Anuncios, publicaciones y contenido compartido.',
+    'quick.events_desc': 'Sanaciones grupales, talleres, directos y Shine Walks.',
 
     'quote.text': 'No cambiamos tu identidad. Calmamos el desafío emocional para liberar tu potencial.',
     'quote.author': 'El equipo SOS Shine',

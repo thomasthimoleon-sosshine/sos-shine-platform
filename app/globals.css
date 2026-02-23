@@ -52,7 +52,7 @@
   --text-primary: #1a1a1a;
   --text-secondary: #52525b;
   --text-muted: #a1a1aa;
-  --text-bold: #9a7b2f;
+  --text-bold: #3f3f46;
   --glow-gold: 0 0 40px rgba(212, 175, 55, 0.08), 0 0 80px rgba(212, 175, 55, 0.03);
   --glow-gold-hover: 0 0 60px rgba(212, 175, 55, 0.15), 0 0 120px rgba(212, 175, 55, 0.05);
 }
@@ -82,20 +82,20 @@
 
 [data-theme="light"] h1, [data-theme="light"] h2, [data-theme="light"] h3,
 [data-theme="light"] h4, [data-theme="light"] h5, [data-theme="light"] h6 {
-  color: #B8960F !important;
-  -webkit-text-fill-color: #B8960F !important;
+  color: var(--text-primary) !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
 }
 
 [data-theme="light"] strong, [data-theme="light"] b {
-  color: #9a7b2f;
+  color: var(--text-bold);
 }
 
 /* ── 2. Tailwind v4 Theme ── */
 @theme inline {
   --color-background: var(--dark);
   --color-foreground: var(--text-primary);
-  --font-sans: var(--font-dm-sans), 'DM Sans', system-ui, sans-serif;
-  --font-display: var(--font-cormorant), 'Cormorant Garamond', serif;
+  --font-sans: var(--font-dm-sans), \'DM Sans\', system-ui, sans-serif;
+  --font-display: var(--font-cormorant), \'Cormorant Garamond\', serif;
 }
 
 /* ── 3. Base Resets ── */
@@ -110,7 +110,7 @@ html {
 body {
   background: #050505;
   color: #e0e0e0;
-  font-family: var(--font-dm-sans), 'DM Sans', system-ui, sans-serif;
+  font-family: var(--font-dm-sans), \'DM Sans\', system-ui, sans-serif;
   font-weight: 300;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -151,7 +151,7 @@ body {
 }
 
 .watermark::after {
-  content: 'SOS SHINE';
+  content: \'SOS SHINE\';
   position: absolute;
   font-size: 14px;
   font-weight: bold;
@@ -164,14 +164,14 @@ strong, b {
   color: #c5a059;
 }
 
-/* Police d'affichage (titres) */
+/* Police d\'affichage (titres) */
 .font-display {
-  font-family: var(--font-cormorant), 'Cormorant Garamond', serif;
+  font-family: var(--font-cormorant), \'Cormorant Garamond\', serif;
 }
 
 /* Dégradé or sur TOUS les titres (important pour surcharger les inline styles) */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-cormorant), 'Cormorant Garamond', serif !important;
+  font-family: var(--font-cormorant), \'Cormorant Garamond\', serif !important;
   color: #D4AF37 !important;
   -webkit-text-fill-color: #D4AF37 !important;
 }
@@ -242,10 +242,10 @@ h3 .text-shimmer {
 
 /* ── 7. Grain Overlay (subtilité premium — lightweight) ── */
 .grain::after {
-  content: '';
+  content: \'\';
   position: fixed;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.012'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'1\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\' opacity=\'0.012\'/%3E%3C/svg%3E");
   pointer-events: none;
   z-index: 1;
 }
@@ -406,9 +406,9 @@ h3 .text-shimmer {
 .skeleton {
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0.03) 0%,
-    rgba(255, 255, 255, 0.06) 40%,
-    rgba(255, 255, 255, 0.03) 80%
+    rgba(255, 255, 255, 0.03) 0%,\
+    rgba(255, 255, 255, 0.06) 40%,\
+    rgba(255, 255, 255, 0.03) 80%\
   );
   background-size: 200% 100%;
   animation: shimmer 1.8s ease-in-out infinite;
@@ -486,7 +486,7 @@ h3 .text-shimmer {
 }
 
 .glow-card::before {
-  content: '';
+  content: \'\';
   position: absolute;
   inset: -1px;
   border-radius: inherit;
@@ -609,7 +609,7 @@ h3 .text-shimmer {
 }
 
 .magnetic-btn::after {
-  content: '';
+  content: \'\';
   position: absolute;
   inset: 0;
   background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);

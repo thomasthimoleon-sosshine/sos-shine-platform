@@ -3,10 +3,12 @@
 import Link from 'next/link'
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { useTranslation } from '@/lib/i18n/useTranslation'
 
 const KEYS = ['contact_title', 'contact_email', 'contact_phone', 'contact_address', 'contact_content', 'logo_url']
 
 export default function ContactPage() {
+  const { t } = useTranslation()
   const [settings, setSettings] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(true)
 
@@ -36,7 +38,7 @@ export default function ContactPage() {
       <div className="max-w-3xl mx-auto">
         <Link href="/" className="inline-flex items-center gap-2 text-sm mb-8 transition-colors" style={{ color: 'var(--text-muted)' }}>
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
-          Retour à l&apos;accueil
+          {t('contact.back')}
         </Link>
 
         {settings.logo_url && (
@@ -70,7 +72,7 @@ export default function ContactPage() {
                 </svg>
               </div>
               <div>
-                <p className="text-xs font-medium uppercase tracking-wider mb-1" style={{ color: 'var(--text-muted)' }}>Téléphone</p>
+                <p className="text-xs font-medium uppercase tracking-wider mb-1" style={{ color: 'var(--text-muted)' }}>{t('contact.phone')}</p>
                 <a href={`tel:${phone}`} className="text-sm hover:underline" style={{ color: 'var(--gold)' }}>{phone}</a>
               </div>
             </div>
@@ -86,7 +88,7 @@ export default function ContactPage() {
                 </svg>
               </div>
               <div>
-                <p className="text-xs font-medium uppercase tracking-wider mb-1" style={{ color: 'var(--text-muted)' }}>Adresse</p>
+                <p className="text-xs font-medium uppercase tracking-wider mb-1" style={{ color: 'var(--text-muted)' }}>{t('contact.address')}</p>
                 <p className="text-sm whitespace-pre-line" style={{ color: 'var(--text-secondary)' }}>{address}</p>
               </div>
             </div>

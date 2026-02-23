@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
+import { useTranslation } from '@/lib/i18n/useTranslation'
 
 const DEFAULTS: Record<string, string> = {
   signup_title: 'Créer mon compte',
@@ -36,6 +37,7 @@ const sizeMap: Record<string, string> = {
 }
 
 export default function SignupPage() {
+  const { t } = useTranslation()
   const [prenom, setPrenom] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -84,7 +86,7 @@ export default function SignupPage() {
 
       setSuccess(true)
     } catch {
-      setError('Impossible de créer le compte. Vérifiez votre connexion internet.')
+      setError(t('auth.signup_error'))
       setLoading(false)
     }
   }
@@ -151,9 +153,9 @@ export default function SignupPage() {
           </div>
 
           <p className="text-[11px] text-[var(--text-muted)] mt-6">
-            Vous n&apos;avez rien reçu ?{' '}
+            {t('auth.email_not_received')}{' '}
             <button onClick={() => setSuccess(false)} className="gold-underline font-medium" style={{ color: 'var(--gold)' }}>
-              Réessayer
+              {t('auth.retry')}
             </button>
           </p>
         </motion.div>
@@ -204,9 +206,9 @@ export default function SignupPage() {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label htmlFor="prenom" className="block text-[13px] text-[var(--text-secondary)] mb-2 font-medium">Prénom</label>
+              <label htmlFor="prenom" className="block text-[13px] text-[var(--text-secondary)] mb-2 font-medium">{t('auth.firstname_label')}</label>
               <input id="prenom" type="text" value={prenom} onChange={(e) => setPrenom(e.target.value)} required
-                placeholder="Votre prénom"
+                placeholder={t('auth.firstname_placeholder')}
                 className="w-full px-4 py-3 rounded-xl text-sm transition-colors"
                 style={inputStyle} onFocus={focusIn} onBlur={focusOut} />
             </div>
@@ -218,9 +220,9 @@ export default function SignupPage() {
                 style={inputStyle} onFocus={focusIn} onBlur={focusOut} />
             </div>
             <div>
-              <label htmlFor="password" className="block text-[13px] text-[var(--text-secondary)] mb-2 font-medium">Mot de passe</label>
+              <label htmlFor="password" className="block text-[13px] text-[var(--text-secondary)] mb-2 font-medium">{t('auth.password_label')}</label>
               <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required
-                minLength={6} placeholder="Minimum 6 caractères"
+                minLength={6} placeholder={t('auth.min_chars')}
                 className="w-full px-4 py-3 rounded-xl text-sm transition-colors"
                 style={inputStyle} onFocus={focusIn} onBlur={focusOut} />
             </div>
@@ -232,13 +234,13 @@ export default function SignupPage() {
             <button type="submit" disabled={loading}
               className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm"
               style={{ background: 'var(--button-bg)', color: 'var(--dark)' }}>
-              {loading ? 'Création en cours...' : s('signup_button_text')}
+              {loading ? t('auth.creating') : s('signup_button_text')}
             </button>
           </form>
 
           <div className="flex items-center gap-4 my-6">
             <span className="flex-1 h-px" style={{ background: 'var(--dark-border)' }} />
-            <span className="text-[11px] text-[var(--text-muted)]">ou</span>
+            <span className="text-[11px] text-[var(--text-muted)]">{t('auth.or')}</span>
             <span className="flex-1 h-px" style={{ background: 'var(--dark-border)' }} />
           </div>
 
@@ -254,7 +256,7 @@ export default function SignupPage() {
               <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
             </svg>
-            Continuer avec Google
+            {t('auth.google')}
           </button>
         </div>
 

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
+import { useTranslation } from '@/lib/i18n/useTranslation'
 
 const DEFAULTS: Record<string, string> = {
   login_title: 'Se connecter',
@@ -35,6 +36,7 @@ const sizeMap: Record<string, string> = {
 
 export default function LoginPage() {
   const router = useRouter()
+  const { t } = useTranslation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -67,7 +69,7 @@ export default function LoginPage() {
       if (signInError) { setError(signInError.message); setLoading(false); return }
       router.push('/dashboard')
     } catch {
-      setError('Impossible de se connecter. Vérifiez votre connexion internet.')
+      setError(t('auth.connection_error'))
       setLoading(false)
     }
   }
@@ -132,9 +134,9 @@ export default function LoginPage() {
               />
             </div>
             <div>
-              <label htmlFor="password" className="block text-[13px] text-[var(--text-secondary)] mb-2 font-medium">Mot de passe</label>
+              <label htmlFor="password" className="block text-[13px] text-[var(--text-secondary)] mb-2 font-medium">{t('auth.password_label')}</label>
               <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required
-                placeholder="Votre mot de passe"
+                placeholder={t('auth.password_placeholder')}
                 className="w-full px-4 py-3 rounded-xl text-sm transition-colors"
                 style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)', outline: 'none' }}
                 onFocus={(e) => e.currentTarget.style.borderColor = 'rgba(212,175,55,0.4)'}
@@ -149,13 +151,13 @@ export default function LoginPage() {
             <button type="submit" disabled={loading}
               className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm"
               style={{ background: 'var(--button-bg)', color: 'var(--dark)' }}>
-              {loading ? 'Connexion...' : s('login_button_text')}
+              {loading ? t('auth.connecting') : s('login_button_text')}
             </button>
           </form>
 
           <div className="flex items-center gap-4 my-6">
             <span className="flex-1 h-px" style={{ background: 'var(--dark-border)' }} />
-            <span className="text-[11px] text-[var(--text-muted)]">ou</span>
+            <span className="text-[11px] text-[var(--text-muted)]">{t('auth.or')}</span>
             <span className="flex-1 h-px" style={{ background: 'var(--dark-border)' }} />
           </div>
 
@@ -171,7 +173,7 @@ export default function LoginPage() {
               <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
             </svg>
-            Continuer avec Google
+            {t('auth.google')}
           </button>
         </div>
 

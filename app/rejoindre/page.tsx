@@ -2,72 +2,10 @@
 
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import { useTranslation } from '@/lib/i18n/useTranslation'
 
 // Lien de paiement Stripe (29,90€/mois)
 const STRIPE_URL = 'https://buy.stripe.com/4gM28j89S7t9c3n2Ke5ZC0c'
-
-const features = [
-  {
-    icon: (
-      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-      </svg>
-    ),
-    title: 'Encyclopédie complète',
-    description: 'Accès à toutes les expériences de vie de A à Z, avec un protocole en 4 étapes pour chacune.',
-    color: '#D4AF37',
-  },
-  {
-    icon: (
-      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
-      </svg>
-    ),
-    title: 'Vidéos de coaching',
-    description: 'Analyse émotionnelle et coaching immersif pour comprendre votre challenge émotionnel en profondeur.',
-    color: '#55EFC4',
-  },
-  {
-    icon: (
-      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
-      </svg>
-    ),
-    title: 'Soins énergétiques',
-    description: 'Séances audio de libération énergétique pour décharger les tensions et les blocages.',
-    color: '#74C0FC',
-  },
-  {
-    icon: (
-      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
-      </svg>
-    ),
-    title: 'Méditations guidées',
-    description: 'Stabilisation intérieure, reconnexion à soi et nouvelle fréquence émotionnelle.',
-    color: '#E17055',
-  },
-  {
-    icon: (
-      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
-      </svg>
-    ),
-    title: 'Communauté & Chat',
-    description: 'Chat dédié par challenge émotionnel, chat général et mur communautaire. Vous n\'êtes plus jamais seul.',
-    color: '#A29BFE',
-  },
-  {
-    icon: (
-      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
-      </svg>
-    ),
-    title: 'Événements & soins collectifs',
-    description: 'Ateliers en groupe, conférences en visio et soins collectifs réguliers.',
-    color: '#FD79A8',
-  },
-]
 
 function Reveal({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
   return (
@@ -83,6 +21,71 @@ function Reveal({ children, delay = 0, className = '' }: { children: React.React
 }
 
 export default function RejoindrePage() {
+  const { t } = useTranslation()
+
+  const features = [
+    {
+      icon: (
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+        </svg>
+      ),
+      title: t('join.feature_encyclopedia'),
+      description: t('join.feature_encyclopedia_desc'),
+      color: '#D4AF37',
+    },
+    {
+      icon: (
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+        </svg>
+      ),
+      title: t('join.feature_coaching'),
+      description: t('join.feature_coaching_desc'),
+      color: '#55EFC4',
+    },
+    {
+      icon: (
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+        </svg>
+      ),
+      title: t('join.feature_energy'),
+      description: t('join.feature_energy_desc'),
+      color: '#74C0FC',
+    },
+    {
+      icon: (
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
+        </svg>
+      ),
+      title: t('join.feature_meditation'),
+      description: t('join.feature_meditation_desc'),
+      color: '#E17055',
+    },
+    {
+      icon: (
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
+        </svg>
+      ),
+      title: t('join.feature_community'),
+      description: t('join.feature_community_desc'),
+      color: '#A29BFE',
+    },
+    {
+      icon: (
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+        </svg>
+      ),
+      title: t('join.feature_events'),
+      description: t('join.feature_events_desc'),
+      color: '#FD79A8',
+    },
+  ]
+
   return (
     <main className="min-h-screen" style={{ background: 'var(--dark)' }}>
       {/* Header */}
@@ -98,7 +101,7 @@ export default function RejoindrePage() {
           onMouseEnter={(e) => e.currentTarget.style.color = 'var(--gold)'}
           onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
         >
-          Voir l&apos;encyclopédie
+          {t('join.see_encyclopedia')}
         </Link>
       </header>
 
@@ -113,11 +116,11 @@ export default function RejoindrePage() {
               </svg>
             </div>
             <h1 className="font-display text-3xl sm:text-4xl font-light leading-tight mb-4">
-              Tout ce qui vous attend<br />
-              à l&apos;intérieur
+              {t('join.title')}<br />
+              {t('join.title_br')}
             </h1>
             <p className="text-lg leading-relaxed max-w-xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
-              Un espace complet pour comprendre, apaiser et transformer vos challenges émotionnels. Accessible 24h/24, 7j/7.
+              {t('join.subtitle')}
             </p>
           </div>
         </Reveal>
@@ -146,31 +149,22 @@ export default function RejoindrePage() {
         <Reveal delay={0.5}>
           <div className="glass p-8 sm:p-10 text-center" style={{ borderColor: 'rgba(212,175,55,0.15)' }}>
             <p className="text-xs tracking-[0.25em] uppercase mb-4" style={{ color: 'var(--text-muted)' }}>
-              Accès complet
+              {t('join.full_access')}
             </p>
             <div className="flex items-baseline justify-center gap-1.5 mb-2">
               <span className="font-display text-5xl font-light" style={{ color: 'var(--gold)' }}>29,90&euro;</span>
-              <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
+              <span className="text-sm" style={{ color: 'var(--text-muted)' }}>{t('join.per_month')}</span>
             </div>
             <p className="text-sm mb-8" style={{ color: 'var(--text-secondary)' }}>
-              Sans engagement &mdash; Annulable à tout instant
+              {t('join.no_commitment')}
             </p>
 
             {/* Included list */}
             <div className="space-y-3 text-left max-w-sm mx-auto mb-8">
-              {[
-                'Encyclopédie complète des expériences de vie (A-Z)',
-                'Vidéos de coaching immersif',
-                'Soins énergétiques audio',
-                'Méditations guidées',
-                'Exercices & PDF téléchargeables',
-                'Chat dédié par challenge émotionnel',
-                'Chat général & mur communautaire',
-                'Soins collectifs & événements',
-              ].map((item) => (
-                <div key={item} className="flex items-start gap-3">
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+                <div key={n} className="flex items-start gap-3">
                   <span className="mt-0.5 text-sm flex-shrink-0" style={{ color: 'var(--gold)' }}>&#9670;</span>
-                  <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{item}</span>
+                  <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{t(`join.included_${n}`)}</span>
                 </div>
               ))}
             </div>
@@ -184,15 +178,15 @@ export default function RejoindrePage() {
                 className="cta-glow inline-block w-full max-w-sm py-4 rounded-full font-medium tracking-wide transition-all text-sm"
                 style={{ background: 'var(--gold)', color: 'var(--dark)' }}
               >
-                Passer au paiement sécurisé (29,90€/mois)
+                {t('join.pay_cta')}
               </a>
               
               <div className="flex items-center justify-center gap-6">
                 <Link href="/login" className="text-xs gold-underline" style={{ color: 'var(--text-secondary)' }}>
-                  Déjà membre ? Se connecter
+                  {t('join.already_member')}
                 </Link>
                 <Link href="/encyclopedie" className="text-xs gold-underline" style={{ color: 'var(--text-secondary)' }}>
-                  Continuer l'exploration
+                  {t('join.continue_explore')}
                 </Link>
               </div>
             </div>
@@ -202,7 +196,7 @@ export default function RejoindrePage() {
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--text-muted)' }}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                 </svg>
-                <span className="text-xs" style={{ color: 'var(--text-muted)' }}>Paiement sécurisé via Stripe</span>
+                <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{t('join.secure_payment')}</span>
               </div>
             </div>
           </div>
@@ -211,7 +205,7 @@ export default function RejoindrePage() {
         {/* Quote */}
         <Reveal delay={0.6}>
           <p className="text-center text-sm italic mt-10 max-w-md mx-auto leading-relaxed" style={{ color: 'var(--text-muted)' }}>
-            &laquo; Parce que si on doit vous retenir par un contrat, c&apos;est qu&apos;on n&apos;a pas fait notre travail. &raquo;
+            &laquo; {t('join.quote')} &raquo;
           </p>
         </Reveal>
 
@@ -222,7 +216,7 @@ export default function RejoindrePage() {
               onMouseEnter={(e) => e.currentTarget.style.color = 'var(--gold)'}
               onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
             >
-              &larr; Retour à l&apos;encyclopédie
+              &larr; {t('join.back_encyclopedia')}
             </Link>
           </div>
         </Reveal>

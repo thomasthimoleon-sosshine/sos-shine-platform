@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
@@ -12,7 +12,6 @@ export default function MembreProfilPage() {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
-  const [calling, setCalling] = useState(false)
 
   useEffect(() => {
     async function load() {
@@ -44,23 +43,6 @@ export default function MembreProfilPage() {
     }
     return map[role] || map.member
   }
-
-  const startCall = useCallback(async (callType: 'audio' | 'video') => {
-    if (!currentUserId || calling) return
-    setCalling(true)
-    const supabase = createClient()
-    const { data, error } = await supabase.from('signaling_rooms').insert({
-      created_by: currentUserId,
-      room_type: 'one_to_one',
-      call_type: callType,
-      target_user_id: id,
-      status: 'waiting',
-    }).select('id').single()
-    if (!error && data) {
-      router.push(`/dashboard/appel?room=${(data as { id: string }).id}`)
-    }
-    setCalling(false)
-  }, [currentUserId, id, calling, router])
 
   if (loading) {
     return (
@@ -136,22 +118,6 @@ export default function MembreProfilPage() {
               </svg>
               Message
             </Link>
-            <button onClick={() => startCall('audio')} disabled={calling}
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer disabled:opacity-40"
-              style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
-              </svg>
-              {calling ? 'Appel...' : 'Appel'}
-            </button>
-            <button onClick={() => startCall('video')} disabled={calling}
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer disabled:opacity-40"
-              style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
-              </svg>
-              {calling ? 'Appel...' : 'Vidéo'}
-            </button>
           </div>
         )}
       </div>

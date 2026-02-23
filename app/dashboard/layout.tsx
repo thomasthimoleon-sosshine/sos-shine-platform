@@ -1,12 +1,10 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import type { Profile } from '@/types/database'
-import { useCallNotification } from '@/hooks/useCallNotification'
-import IncomingCallModal from '@/components/IncomingCallModal'
 import ThemeToggle from '@/components/ThemeToggle'
 import NotificationBell from '@/components/NotificationBell'
 import LanguageSelector from '@/components/LanguageSelector'
@@ -78,15 +76,6 @@ const navItemDefs = [
     ),
   },
   {
-    href: '/dashboard/visio',
-    labelKey: 'nav.conferences',
-    icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
-      </svg>
-    ),
-  },
-  {
     href: '/dashboard/objectifs',
     labelKey: 'nav.goals',
     icon: (
@@ -126,7 +115,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [unreadMessages, setUnreadMessages] = useState(0)
   const [logoUrl, setLogoUrl] = useState<string | null>(null)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
-  const { incomingCall, acceptCall, rejectCall } = useCallNotification(currentUserId)
+
 
   useEffect(() => {
     const supabase = createClient()
@@ -157,6 +146,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           pseudo: null,
           bio: null,
           video_url: null,
+          is_bot: false,
         })
       }
 
@@ -186,17 +176,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
     return () => clearInterval(interval)
   }, [router])
-
-  const handleAcceptCall = useCallback(async () => {
-    if (!incomingCall) return
-    const call = await acceptCall(incomingCall.id)
-    if (call) router.push(`/dashboard/appel?room=${call.id}`)
-  }, [incomingCall, acceptCall, router])
-
-  const handleRejectCall = useCallback(async () => {
-    if (!incomingCall) return
-    await rejectCall(incomingCall.id)
-  }, [incomingCall, rejectCall])
 
   async function handleSignOut() {
     const supabase = createClient()
@@ -390,10 +369,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* Page content */}
         <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">{children}</main>
 
-        {/* Incoming call modal (logique intacte) */}
-        {incomingCall && (
-          <IncomingCallModal call={incomingCall} onAccept={handleAcceptCall} onReject={handleRejectCall} />
-        )}
       </div>
     </div>
   )

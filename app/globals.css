@@ -546,9 +546,9 @@ h1 .text-shimmer, h2 .text-shimmer, h3 .text-shimmer, .text-shimmer {
 .skeleton {
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0.03) 0%,\
-    rgba(255, 255, 255, 0.06) 40%,\
-    rgba(255, 255, 255, 0.03) 80%\
+    rgba(255, 255, 255, 0.03) 0%,
+    rgba(255, 255, 255, 0.06) 40%,
+    rgba(255, 255, 255, 0.03) 80%
   );
   background-size: 200% 100%;
   animation: shimmer 1.8s ease-in-out infinite;

@@ -253,7 +253,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
           price: '99,90',
           period: '/mois',
           button_label: 'Commencer maintenant',
-          button_href: '/rejoindre',
+          button_href: 'https://buy.stripe.com/28EeV5gGoeVBffz70u5ZC0d',
           highlight: false,
           badge: 'VIP',
           features: [

@@ -4,8 +4,8 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 
-// Lien de paiement Stripe (29,90€/mois)
-const STRIPE_URL = 'https://buy.stripe.com/4gM28j89S7t9c3n2Ke5ZC0c'
+const STRIPE_ESSENTIEL = 'https://buy.stripe.com/4gM28j89S7t9c3n2Ke5ZC0c'
+const STRIPE_PREMIUM = 'https://buy.stripe.com/28EeV5gGoeVBffz70u5ZC0d'
 
 function Reveal({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
   return (
@@ -145,59 +145,99 @@ export default function RejoindrePage() {
           ))}
         </div>
 
-        {/* Pricing card */}
-        <Reveal delay={0.5}>
-          <div className="glass p-8 sm:p-10 text-center" style={{ borderColor: 'rgba(212,175,55,0.15)' }}>
-            <p className="text-xs tracking-[0.25em] uppercase mb-4" style={{ color: 'var(--text-muted)' }}>
-              {t('join.full_access')}
-            </p>
-            <div className="flex items-baseline justify-center gap-1.5 mb-2">
-              <span className="font-display text-5xl font-light" style={{ color: 'var(--gold)' }}>29,90&euro;</span>
-              <span className="text-sm" style={{ color: 'var(--text-muted)' }}>{t('join.per_month')}</span>
-            </div>
-            <p className="text-sm mb-8" style={{ color: 'var(--text-secondary)' }}>
-              {t('join.no_commitment')}
-            </p>
+        {/* Pricing cards — 2 plans */}
+        <div className="grid sm:grid-cols-2 gap-6 mb-6">
+          {/* Essentiel */}
+          <Reveal delay={0.5}>
+            <div className="glass p-8 text-center h-full flex flex-col" style={{ borderColor: 'rgba(212,175,55,0.15)' }}>
+              <p className="text-xs tracking-[0.25em] uppercase mb-4" style={{ color: 'var(--text-muted)' }}>
+                Essentiel
+              </p>
+              <div className="flex items-baseline justify-center gap-1.5 mb-2">
+                <span className="font-display text-4xl font-light" style={{ color: 'var(--gold)' }}>29,90&euro;</span>
+                <span className="text-sm" style={{ color: 'var(--text-muted)' }}>{t('join.per_month')}</span>
+              </div>
+              <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
+                {t('join.no_commitment')}
+              </p>
 
-            {/* Included list */}
-            <div className="space-y-3 text-left max-w-sm mx-auto mb-8">
-              {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
-                <div key={n} className="flex items-start gap-3">
-                  <span className="mt-0.5 text-sm flex-shrink-0" style={{ color: 'var(--gold)' }}>&#9670;</span>
-                  <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{t(`join.included_${n}`)}</span>
-                </div>
-              ))}
-            </div>
+              <div className="space-y-3 text-left mb-8 flex-1">
+                {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+                  <div key={n} className="flex items-start gap-3">
+                    <span className="mt-0.5 text-sm flex-shrink-0" style={{ color: 'var(--gold)' }}>&#9670;</span>
+                    <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{t(`join.included_${n}`)}</span>
+                  </div>
+                ))}
+              </div>
 
-            {/* CTA */}
-            <div className="space-y-4">
               <a
-                href={STRIPE_URL}
+                href={STRIPE_ESSENTIEL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="cta-glow inline-block w-full max-w-sm py-4 rounded-full font-medium tracking-wide transition-all text-sm"
+                className="cta-glow inline-block w-full py-4 rounded-full font-medium tracking-wide transition-all text-sm"
                 style={{ background: 'var(--gold)', color: 'var(--dark)' }}
               >
                 {t('join.pay_cta')}
               </a>
-              
-              <div className="flex items-center justify-center gap-6">
-                <Link href="/login" className="text-xs gold-underline" style={{ color: 'var(--text-secondary)' }}>
-                  {t('join.already_member')}
-                </Link>
-                <Link href="/encyclopedie" className="text-xs gold-underline" style={{ color: 'var(--text-secondary)' }}>
-                  {t('join.continue_explore')}
-                </Link>
-              </div>
             </div>
+          </Reveal>
 
-            <div className="flex items-center justify-center gap-4 mt-5">
-              <div className="flex items-center gap-1.5">
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--text-muted)' }}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-                </svg>
-                <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{t('join.secure_payment')}</span>
+          {/* Premium */}
+          <Reveal delay={0.6}>
+            <div className="glass p-8 text-center h-full flex flex-col relative overflow-hidden" style={{ borderColor: 'rgba(212,175,55,0.3)', boxShadow: '0 0 40px rgba(212,175,55,0.08)' }}>
+              <div className="absolute top-4 right-4 text-[10px] tracking-[0.2em] uppercase px-3 py-1 rounded-full font-semibold"
+                style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: 'var(--dark)' }}>
+                VIP
               </div>
+              <p className="text-xs tracking-[0.25em] uppercase mb-4" style={{ color: 'var(--gold)' }}>
+                Premium
+              </p>
+              <div className="flex items-baseline justify-center gap-1.5 mb-2">
+                <span className="font-display text-4xl font-light" style={{ color: 'var(--gold)' }}>99,90&euro;</span>
+                <span className="text-sm" style={{ color: 'var(--text-muted)' }}>{t('join.per_month')}</span>
+              </div>
+              <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
+                {t('join.no_commitment')}
+              </p>
+
+              <div className="space-y-3 text-left mb-8 flex-1">
+                {[1, 2, 3, 4].map((n) => (
+                  <div key={n} className="flex items-start gap-3">
+                    <span className="mt-0.5 text-sm flex-shrink-0" style={{ color: 'var(--gold)' }}>&#9670;</span>
+                    <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{t(`join.premium_${n}`)}</span>
+                  </div>
+                ))}
+              </div>
+
+              <a
+                href={STRIPE_PREMIUM}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="cta-glow inline-block w-full py-4 rounded-full font-medium tracking-wide transition-all text-sm"
+                style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: 'var(--dark)' }}
+              >
+                {t('join.premium_cta')}
+              </a>
+            </div>
+          </Reveal>
+        </div>
+
+        {/* Links & secure badge */}
+        <Reveal delay={0.65}>
+          <div className="text-center space-y-4">
+            <div className="flex items-center justify-center gap-6">
+              <Link href="/login" className="text-xs gold-underline" style={{ color: 'var(--text-secondary)' }}>
+                {t('join.already_member')}
+              </Link>
+              <Link href="/encyclopedie" className="text-xs gold-underline" style={{ color: 'var(--text-secondary)' }}>
+                {t('join.continue_explore')}
+              </Link>
+            </div>
+            <div className="flex items-center justify-center gap-1.5">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--text-muted)' }}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+              </svg>
+              <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{t('join.secure_payment')}</span>
             </div>
           </div>
         </Reveal>

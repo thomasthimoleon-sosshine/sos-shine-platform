@@ -4,22 +4,24 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { QUESTIONS, PROFILES, calculateResult, type ProfileKey } from "@/lib/signature-test";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 
 type Phase = "intro" | "quiz" | "loading" | "result";
 
 function ProgressBar({ current, total }: { current: number; total: number }) {
+  const { t } = useTranslation();
   const pct = (current / total) * 100;
   return (
     <div className="w-full max-w-xl mx-auto mb-8">
       <div className="flex justify-between items-center mb-2">
         <span className="text-xs tracking-[0.2em] uppercase text-[var(--text-muted)]">
-          Question {current} / {total}
+          {t('signature.question_of')} {current} / {total}
         </span>
         <span className="text-xs font-medium" style={{ color: "var(--gold)" }}>
           {Math.round(pct)}%
         </span>
       </div>
-      <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+      <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "var(--dark-border)" }}>
         <motion.div
           className="h-full rounded-full"
           style={{ background: "linear-gradient(90deg, var(--gold), var(--gold-light))" }}
@@ -33,6 +35,7 @@ function ProgressBar({ current, total }: { current: number; total: number }) {
 }
 
 function IntroScreen({ onStart }: { onStart: (name: string) => void }) {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -55,7 +58,7 @@ function IntroScreen({ onStart }: { onStart: (name: string) => void }) {
         className="mb-6"
       >
         <span className="inline-block px-5 py-2 rounded-full text-xs tracking-[0.25em] uppercase font-medium" style={{ background: "rgba(212,175,55,0.08)", color: "var(--gold)", border: "1px solid rgba(212,175,55,0.15)" }}>
-          Test exclusif
+          {t('signature.badge')}
         </span>
       </motion.div>
 
@@ -66,8 +69,8 @@ function IntroScreen({ onStart }: { onStart: (name: string) => void }) {
         className="font-display text-4xl md:text-6xl font-light mb-6"
         style={{ color: "var(--gold)" }}
       >
-        Votre Signature{" "}
-        <span className="text-shimmer">Emotionnelle</span>
+        {t('signature.title')}{" "}
+        <span className="text-shimmer">{t('signature.title_highlight')}</span>
       </motion.h1>
 
       <motion.p
@@ -76,8 +79,7 @@ function IntroScreen({ onStart }: { onStart: (name: string) => void }) {
         transition={{ duration: 0.6, delay: 0.35 }}
         className="text-lg md:text-xl text-[var(--text-secondary)] font-light max-w-2xl mb-4 leading-relaxed"
       >
-        Découvrez votre architecture émotionnelle profonde en 15 questions.
-        Un diagnostic premium et hyper-personnalisé de vos mécanismes intérieurs.
+        {t('signature.intro')}
       </motion.p>
 
       <motion.p
@@ -86,7 +88,7 @@ function IntroScreen({ onStart }: { onStart: (name: string) => void }) {
         transition={{ duration: 0.6, delay: 0.45 }}
         className="text-sm text-[var(--text-muted)] mb-10 max-w-lg"
       >
-        Temps estimé : 3 minutes. Répondez instinctivement, sans réfléchir trop longtemps.
+        {t('signature.time')}
       </motion.p>
 
       <motion.div
@@ -96,7 +98,7 @@ function IntroScreen({ onStart }: { onStart: (name: string) => void }) {
         className="w-full max-w-sm"
       >
         <label className="block text-sm tracking-[0.15em] uppercase text-[var(--text-muted)] mb-3 text-left">
-          Votre prénom
+          {t('signature.name_label')}
         </label>
         <input
           ref={inputRef}
@@ -104,11 +106,11 @@ function IntroScreen({ onStart }: { onStart: (name: string) => void }) {
           value={name}
           onChange={(e) => setName(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter" && name.trim()) onStart(name.trim()); }}
-          placeholder="Entrez votre prénom..."
+          placeholder={t('signature.name_placeholder')}
           className="w-full px-5 py-4 rounded-xl text-base font-light outline-none transition-all duration-300 focus:ring-1"
           style={{
-            background: "rgba(255,255,255,0.04)",
-            border: "1px solid rgba(255,255,255,0.08)",
+            background: "var(--dark-card)",
+            border: "1px solid var(--dark-border)",
             color: "var(--text-primary)",
           }}
         />
@@ -117,11 +119,11 @@ function IntroScreen({ onStart }: { onStart: (name: string) => void }) {
           disabled={!name.trim()}
           className="magnetic-btn w-full mt-5 py-4 rounded-full text-base font-semibold tracking-wide transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed"
           style={{
-            background: name.trim() ? "linear-gradient(135deg, var(--gold), var(--gold-deep))" : "rgba(255,255,255,0.05)",
+            background: name.trim() ? "linear-gradient(135deg, var(--gold), var(--gold-deep))" : "var(--dark-card)",
             color: name.trim() ? "#050505" : "var(--text-muted)",
           }}
         >
-          Commencer le test
+          {t('signature.start')}
         </button>
       </motion.div>
 
@@ -132,7 +134,7 @@ function IntroScreen({ onStart }: { onStart: (name: string) => void }) {
         className="mt-10"
       >
         <Link href="/" className="text-xs tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors gold-underline">
-          Retour à l&apos;accueil
+          {t('signature.back_home')}
         </Link>
       </motion.div>
     </motion.div>
@@ -140,6 +142,7 @@ function IntroScreen({ onStart }: { onStart: (name: string) => void }) {
 }
 
 function QuizScreen({ onComplete }: { onComplete: (answers: Record<number, number>) => void }) {
+  const { t } = useTranslation();
   const [currentQ, setCurrentQ] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
@@ -220,21 +223,21 @@ function QuizScreen({ onComplete }: { onComplete: (answers: Record<number, numbe
                       ? "rgba(212,175,55,0.12)"
                       : isPrevAnswer
                       ? "rgba(212,175,55,0.06)"
-                      : "rgba(255,255,255,0.03)",
+                      : "var(--dark-card)",
                     border: isSelected
                       ? "1px solid rgba(212,175,55,0.4)"
                       : isPrevAnswer
                       ? "1px solid rgba(212,175,55,0.15)"
-                      : "1px solid rgba(255,255,255,0.06)",
+                      : "1px solid var(--dark-border)",
                   }}
                 >
                   <div className="flex items-start gap-4">
                     <span
                       className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium mt-0.5 transition-all duration-300"
                       style={{
-                        background: isSelected ? "var(--gold)" : "rgba(255,255,255,0.06)",
+                        background: isSelected ? "var(--gold)" : "var(--dark-card)",
                         color: isSelected ? "#050505" : "var(--text-muted)",
-                        border: isSelected ? "none" : "1px solid rgba(255,255,255,0.08)",
+                        border: isSelected ? "none" : "1px solid var(--dark-border)",
                       }}
                     >
                       {isSelected ? (
@@ -266,7 +269,7 @@ function QuizScreen({ onComplete }: { onComplete: (answers: Record<number, numbe
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="15 18 9 12 15 6" />
           </svg>
-          Question précédente
+          {t('signature.previous')}
         </motion.button>
       )}
     </motion.div>
@@ -274,6 +277,7 @@ function QuizScreen({ onComplete }: { onComplete: (answers: Record<number, numbe
 }
 
 function LoadingScreen() {
+  const { t } = useTranslation();
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -298,11 +302,11 @@ function LoadingScreen() {
         className="font-display text-2xl font-light mb-3"
         style={{ color: "var(--gold)" }}
       >
-        Analyse en cours...
+        {t('signature.loading')}
       </motion.h2>
 
       <motion.div className="space-y-3 mt-6 max-w-xs mx-auto">
-        {["Décodage de vos schémas émotionnels", "Identification de votre architecture", "Génération de votre diagnostic"].map((text, i) => (
+        {[t('signature.loading_1'), t('signature.loading_2'), t('signature.loading_3')].map((text, i) => (
           <motion.div
             key={i}
             initial={{ opacity: 0, x: -20 }}
@@ -330,14 +334,15 @@ function LoadingScreen() {
 }
 
 function ResultScreen({ profileKey, firstName }: { profileKey: ProfileKey; firstName: string }) {
+  const { t } = useTranslation();
   const profile = PROFILES[profileKey];
   const inject = (text: string) => text.replace(/\{firstName\}/g, firstName);
 
   const sections = [
-    { label: "L'Essence", icon: "◆", text: inject(profile.essence) },
-    { label: "Votre Lumière", icon: "✦", text: inject(profile.lumiere) },
-    { label: "La Zone d'Ombre", icon: "◇", text: inject(profile.ombre) },
-    { label: "Votre Protocole", icon: "▸", text: inject(profile.protocole) },
+    { label: t('signature.section_essence'), icon: "◆", text: inject(profile.essence) },
+    { label: t('signature.section_light'), icon: "✦", text: inject(profile.lumiere) },
+    { label: t('signature.section_shadow'), icon: "◇", text: inject(profile.ombre) },
+    { label: t('signature.section_protocol'), icon: "▸", text: inject(profile.protocole) },
   ];
 
   return (
@@ -354,7 +359,7 @@ function ResultScreen({ profileKey, firstName }: { profileKey: ProfileKey; first
           className="text-center mb-12"
         >
           <span className="inline-block px-5 py-2 rounded-full text-xs tracking-[0.25em] uppercase font-medium mb-6" style={{ background: "rgba(212,175,55,0.08)", color: "var(--gold)", border: "1px solid rgba(212,175,55,0.15)" }}>
-            Votre diagnostic
+            {t('signature.result_badge')}
           </span>
 
           <motion.div
@@ -420,7 +425,7 @@ function ResultScreen({ profileKey, firstName }: { profileKey: ProfileKey; first
               className="magnetic-btn pulse-ring px-10 py-5 rounded-full text-base font-semibold tracking-wide"
               style={{ background: "linear-gradient(135deg, var(--gold), var(--gold-deep))", color: "#050505" }}
             >
-              Rejoindre SOS Shine
+              {t('signature.join_cta')}
             </button>
           </Link>
 
@@ -429,10 +434,10 @@ function ResultScreen({ profileKey, firstName }: { profileKey: ProfileKey; first
               onClick={() => window.location.reload()}
               className="text-sm tracking-[0.1em] uppercase text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors gold-underline"
             >
-              Refaire le test
+              {t('signature.retake')}
             </button>
             <Link href="/" className="text-sm tracking-[0.1em] uppercase text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors gold-underline">
-              Retour à l&apos;accueil
+              {t('signature.back_home')}
             </Link>
           </div>
         </motion.div>
@@ -463,7 +468,7 @@ export default function SignatureEmotionnellePage() {
   }, []);
 
   return (
-    <main className="relative z-0 min-h-screen" style={{ background: "var(--bg, #0a0a0a)" }}>
+    <main className="relative z-0 min-h-screen" style={{ background: "var(--dark)" }}>
       <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }}>
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full opacity-[0.03] blur-[60px]" style={{ background: "var(--gold)" }} />
       </div>

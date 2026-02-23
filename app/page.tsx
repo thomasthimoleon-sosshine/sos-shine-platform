@@ -8,6 +8,7 @@ import { LANDING_DEFAULTS, buildSectionMap } from "@/lib/landing-defaults";
 import type { LandingSectionDefault, SectionContent, SectionStyles } from "@/lib/landing-defaults";
 import ThemeToggle from "@/components/ThemeToggle";
 import LanguageSelector from "@/components/LanguageSelector";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 
 function matchCase(original: string, replacement: string): string {
   if (original === original.toUpperCase()) return replacement.toUpperCase();
@@ -239,6 +240,7 @@ function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: strin
 }
 
 export default function Home() {
+  const { t } = useTranslation();
   const [headerVisible, setHeaderVisible] = useState(true);
   const [headerScrolled, setHeaderScrolled] = useState(false);
   const [encyclopediaSearch, setEncyclopediaSearch] = useState('');
@@ -378,10 +380,7 @@ export default function Home() {
     "--button-bg": buttonBg,
   } as React.CSSProperties;
 
-  const tickerItems = [
-    "Abus", "Amour propre", "Burn-out", "Confiance en soi",
-    "Dépendance affective", "Deuil", "Rupture",
-  ];
+  const tickerItems = [t('ticker.abuse'), t('ticker.self_love'), t('ticker.burnout'), t('ticker.confidence'), t('ticker.dependency'), t('ticker.grief'), t('ticker.breakup')];
 
   return (
     <main className="grain relative z-0 overflow-hidden" style={cssVars}>
@@ -421,7 +420,7 @@ export default function Home() {
               className="mb-8"
             >
               <span className="inline-block px-4 py-1.5 rounded-full text-xs tracking-[0.25em] uppercase font-medium" style={{ background: `rgba(${goldRgb}, 0.08)`, color: gold, border: `1px solid rgba(${goldRgb}, 0.15)` }}>
-                Espace de soutien premium
+                {t('landing.premium_badge')}
               </span>
             </motion.div>
 
@@ -490,7 +489,7 @@ export default function Home() {
                           <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
                         </svg>
                       </motion.div>
-                      <p className="text-sm text-[var(--text-secondary)]">Decouvrir SOS Shine en 2 minutes</p>
+                      <p className="text-sm text-[var(--text-secondary)]">{t('landing.discover_video')}</p>
                     </div>
                   </div>
                 </div>
@@ -503,7 +502,7 @@ export default function Home() {
                   <Link key={i} href={btn.href === '/signup' || btn.href === '/login' ? '/rejoindre' : btn.href}>
                     {btn.variant === 'primary' ? (
                       <button className="magnetic-btn pulse-ring px-8 py-4 rounded-full text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
-                        {btn.label} — {trialDays} jours d&apos;essai
+                        {btn.label} — {trialDays} {t('landing.trial_days')}
                       </button>
                     ) : (
                       <button className="magnetic-btn px-8 py-4 rounded-full text-base font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.3)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
@@ -528,17 +527,16 @@ export default function Home() {
           <div className="max-w-3xl mx-auto text-center">
             <Link href="/signature-emotionnelle">
               <div className="glow-card p-8 md:p-12 cursor-pointer group">
-                <p className="luxury-title text-xs tracking-[0.4em] text-[var(--text-muted)] mb-4">Test exclusif</p>
+                <p className="luxury-title text-xs tracking-[0.4em] text-[var(--text-muted)] mb-4">{t('signature.cta_label')}</p>
                 <h3 className="font-display text-2xl md:text-4xl font-light mb-4" style={{ color: gold }}>
-                  Découvrez votre{' '}
-                  <span className="text-shimmer">Signature Émotionnelle</span>
+                  {t('signature.cta_title')}{' '}
+                  <span className="text-shimmer">{t('signature.cta_title_highlight')}</span>
                 </h3>
                 <p className="text-[var(--text-secondary)] font-light mb-6 text-[15px]">
-                  15 questions pour révéler votre architecture émotionnelle profonde.
-                  Un diagnostic premium et hyper-personnalisé.
+                  {t('signature.cta_desc')}
                 </p>
                 <span className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold tracking-wide group-hover:scale-105 transition-transform" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
-                  Faire le test gratuit
+                  {t('signature.cta_button')}
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M5 12h14M12 5l7 7-7 7" />
                   </svg>
@@ -616,7 +614,7 @@ export default function Home() {
                   <GlowingCard className="p-8 md:p-10 h-full" glowColor={`${step.color}25`}>
                     <div className="mb-6">
                       <span className="font-display text-6xl font-extralight block mb-2" style={{ color: step.color, opacity: 0.15 }}>{step.num}</span>
-                      <span className="luxury-title text-xs tracking-[0.3em] block mb-3" style={{ color: step.color, opacity: 0.6 }}>Etape {step.num}</span>
+                      <span className="luxury-title text-xs tracking-[0.3em] block mb-3" style={{ color: step.color, opacity: 0.6 }}>{t('landing.step')} {step.num}</span>
                       <h3 className="font-display text-2xl font-medium">{step.title}</h3>
                     </div>
                     <p className="text-[var(--text-secondary)] leading-relaxed text-[15px] font-light">{step.description}</p>
@@ -657,7 +655,7 @@ export default function Home() {
                   type="text"
                   value={encyclopediaSearch}
                   onChange={(e) => setEncyclopediaSearch(e.target.value)}
-                  placeholder="Rechercher un challenge (ex: burn-out)..."
+                  placeholder={t('landing.search_challenge')}
                   className="w-full px-5 py-3 rounded-full text-sm font-light"
                   style={{
                     background: 'rgba(255,255,255,0.04)',
@@ -687,7 +685,7 @@ export default function Home() {
               <div className="text-center mt-12">
                 <Link href="/encyclopedie">
                   <button className="magnetic-btn px-8 py-3.5 rounded-full text-sm font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.25)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
-                    Explorer l&apos;encyclopedie
+                    {t('landing.explore_encyclopedia')}
                   </button>
                 </Link>
               </div>
@@ -697,7 +695,7 @@ export default function Home() {
       )}
 
       {/* ═══ TICKER BAND 2 ═══ */}
-      <InfiniteTickerBand items={["Soutien 24/7", "Communaute bienveillante", "Protocoles exclusifs", "Soins collectifs", "Chat dedie", "Evenements live", "Meditation guidee", "Coaching immersif"]} speed={40} />
+      <InfiniteTickerBand items={[t('ticker.support'), t('ticker.community'), t('ticker.protocols'), t('ticker.collective'), t('ticker.dedicated_chat'), t('ticker.live_events'), t('ticker.meditation'), t('ticker.coaching')]} speed={40} />
 
       {/* ═══ COMMUNAUTE ═══ */}
       {vis('communaute') && (
@@ -897,7 +895,7 @@ export default function Home() {
         <section className="px-6 md:px-20 py-32 relative cv-auto">
           <div className="max-w-5xl mx-auto">
             <RevealOnScroll>
-              <p className="luxury-title text-center text-sm tracking-[0.4em] text-[var(--text-muted)] mb-4">Tarification</p>
+              <p className="luxury-title text-center text-sm tracking-[0.4em] text-[var(--text-muted)] mb-4">{t('landing.pricing_label')}</p>
             </RevealOnScroll>
             <RevealOnScroll delay={0.1}>
               <h2 className="font-display font-light text-center mb-4" style={tStyle("pricing")}>
@@ -990,7 +988,7 @@ export default function Home() {
             <RevealOnScroll delay={0.3}>
               <Link href="/rejoindre">
                 <button className="magnetic-btn pulse-ring px-10 py-5 rounded-full text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
-                  Rejoindre SOS Shine
+                  {t('landing.join_cta')}
                 </button>
               </Link>
             </RevealOnScroll>
@@ -1010,12 +1008,12 @@ export default function Home() {
             <RevealOnScroll delay={0.15}>
               <Link href="/rejoindre">
                 <button className="magnetic-btn px-10 py-5 rounded-full text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
-                  {ctaLight.button_label || 'Rejoindre SOS Shine'}
+                  {ctaLight.button_label || t('landing.join_cta')}
                 </button>
               </Link>
               <div className="mt-8">
                 <Link href="/login" className="text-sm transition-colors duration-300 underline underline-offset-4" style={{ color: sty('cta_light').muted_color || '#6b7280' }}>
-                  {ctaLight.login_text || 'Deja membre ? Se connecter'}
+                  {ctaLight.login_text || t('landing.already_member')}
                 </Link>
               </div>
             </RevealOnScroll>

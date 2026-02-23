@@ -6,7 +6,7 @@ import Link from "next/link";
 import { QUESTIONS, PROFILES, calculateResult, type ProfileKey } from "@/lib/signature-test";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 
-type Phase = "intro" | "quiz" | "loading" | "result";
+type Phase = "intro" | "quiz" | "loading" | "email" | "result";
 
 function ProgressBar({ current, total }: { current: number; total: number }) {
   const { t } = useTranslation();
@@ -333,6 +333,123 @@ function LoadingScreen() {
   );
 }
 
+function EmailScreen({ onSubmit, firstName }: { onSubmit: (email: string) => void; firstName: string }) {
+  const { t } = useTranslation();
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const [saving, setSaving] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  const handleSubmit = async () => {
+    const trimmed = email.trim().toLowerCase();
+    if (!trimmed || !trimmed.includes("@") || !trimmed.includes(".")) {
+      setError(t("signature.email_error"));
+      return;
+    }
+    setSaving(true);
+    setError("");
+    onSubmit(trimmed);
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0, y: -30 }}
+      transition={{ duration: 0.6 }}
+      className="flex flex-col items-center justify-center min-h-[80vh] px-6 text-center"
+    >
+      <motion.div
+        initial={{ scale: 0.5, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.6, type: "spring" }}
+        className="w-20 h-20 rounded-full mx-auto mb-8 flex items-center justify-center"
+        style={{ background: "rgba(212,175,55,0.1)", border: "2px solid rgba(212,175,55,0.25)" }}
+      >
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+          <polyline points="22,6 12,13 2,6" />
+        </svg>
+      </motion.div>
+
+      <motion.h2
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.15 }}
+        className="font-display text-3xl md:text-4xl font-light mb-4"
+        style={{ color: "var(--gold)" }}
+      >
+        {t("signature.email_title")}
+      </motion.h2>
+
+      <motion.p
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.25 }}
+        className="text-lg text-[var(--text-secondary)] font-light max-w-lg mb-10 leading-relaxed"
+      >
+        {t("signature.email_subtitle").replace("{firstName}", firstName)}
+      </motion.p>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.35 }}
+        className="w-full max-w-sm"
+      >
+        <label className="block text-sm tracking-[0.15em] uppercase text-[var(--text-muted)] mb-3 text-left">
+          {t("signature.email_label")}
+        </label>
+        <input
+          ref={inputRef}
+          type="email"
+          value={email}
+          onChange={(e) => { setEmail(e.target.value); setError(""); }}
+          onKeyDown={(e) => { if (e.key === "Enter") handleSubmit(); }}
+          placeholder={t("signature.email_placeholder")}
+          className="w-full px-5 py-4 rounded-xl text-base font-light outline-none transition-all duration-300 focus:ring-1"
+          style={{
+            background: "var(--dark-card)",
+            border: error ? "1px solid #ef4444" : "1px solid var(--dark-border)",
+            color: "var(--text-primary)",
+          }}
+        />
+        {error && (
+          <p className="text-sm text-red-400 mt-2 text-left">{error}</p>
+        )}
+        <button
+          onClick={handleSubmit}
+          disabled={saving || !email.trim()}
+          className="magnetic-btn w-full mt-5 py-4 rounded-full text-base font-semibold tracking-wide transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed"
+          style={{
+            background: email.trim() ? "linear-gradient(135deg, var(--gold), var(--gold-deep))" : "var(--dark-card)",
+            color: email.trim() ? "#050505" : "var(--text-muted)",
+          }}
+        >
+          {saving ? t("signature.email_saving") : t("signature.email_submit")}
+        </button>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="mt-6 text-xs text-[var(--text-muted)] flex items-center justify-center gap-2"
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+          </svg>
+          {t("signature.email_privacy")}
+        </motion.p>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 function ResultScreen({ profileKey, firstName }: { profileKey: ProfileKey; firstName: string }) {
   const { t } = useTranslation();
   const profile = PROFILES[profileKey];
@@ -462,10 +579,24 @@ export default function SignatureEmotionnellePage() {
 
     setTimeout(() => {
       setResultProfile(result);
-      setPhase("result");
+      setPhase("email");
       window.scrollTo({ top: 0, behavior: "smooth" });
     }, 2800);
   }, []);
+
+  const handleEmailSubmit = useCallback(async (email: string) => {
+    const profileKey = resultProfile;
+    const profileName = profileKey ? PROFILES[profileKey]?.archetype : null;
+    try {
+      await fetch("/api/signature-lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, firstName, profileKey, profileName }),
+      });
+    } catch {}
+    setPhase("result");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [firstName, resultProfile]);
 
   return (
     <main className="relative z-0 min-h-screen" style={{ background: "var(--dark)" }}>
@@ -478,6 +609,9 @@ export default function SignatureEmotionnellePage() {
           {phase === "intro" && <IntroScreen key="intro" onStart={handleStart} />}
           {phase === "quiz" && <QuizScreen key="quiz" onComplete={handleComplete} />}
           {phase === "loading" && <LoadingScreen key="loading" />}
+          {phase === "email" && (
+            <EmailScreen key="email" onSubmit={handleEmailSubmit} firstName={firstName} />
+          )}
           {phase === "result" && resultProfile && (
             <ResultScreen key="result" profileKey={resultProfile} firstName={firstName} />
           )}

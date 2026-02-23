@@ -169,23 +169,38 @@ strong, b {
   font-family: var(--font-cormorant), \'Cormorant Garamond\', serif;
 }
 
-/* Dégradé or sur TOUS les titres (important pour surcharger les inline styles) */
+/* Titres Premium - Or en mode sombre, Noir en mode clair */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-cormorant), \'Cormorant Garamond\', serif !important;
+  font-family: var(--font-cormorant), 'Cormorant Garamond', serif !important;
   color: #D4AF37 !important;
   -webkit-text-fill-color: #D4AF37 !important;
 }
 
-h1 .text-shimmer,
-h2 .text-shimmer,
-h3 .text-shimmer {
+/* Fix spécifique pour le mode clair */
+[data-theme="light"] h1, 
+[data-theme="light"] h2, 
+[data-theme="light"] h3, 
+[data-theme="light"] h4, 
+[data-theme="light"] h5, 
+[data-theme="light"] h6 {
+  color: #1a1a1a !important;
+  -webkit-text-fill-color: #1a1a1a !important;
+}
+
+/* Effet Shimmer (Brillance) - Désactivé en mode clair pour la lisibilité */
+h1 .text-shimmer, h2 .text-shimmer, h3 .text-shimmer, .text-shimmer {
   background: linear-gradient(90deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C, #BF953F) !important;
   background-size: 300% 100% !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
-  background-clip: text !important;
   animation: textShimmer 6s ease-in-out infinite !important;
 }
+
+[data-theme="light"] .text-shimmer {
+  background: none !important;
+  -webkit-text-fill-color: #1a1a1a !important;
+}
+
 
 ::selection {
   background: color-mix(in srgb, var(--gold) 30%, transparent);

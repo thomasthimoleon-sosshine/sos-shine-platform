@@ -3,10 +3,10 @@
 import React, { useState } from 'react';
 
 const ParentsAndChildrenPage = () => {
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState<File[]>([]);
 
-  const uploadFile = (event) => {
-    const newFiles = Array.from(event.target.files);
+  const uploadFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newFiles = event.target.files ? Array.from(event.target.files) : [];
     setFiles((prevFiles) => [...prevFiles, ...newFiles]);
   };
 

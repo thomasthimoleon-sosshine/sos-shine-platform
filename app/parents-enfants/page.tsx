@@ -1,11 +1,11 @@
-// app/parents-enfants/page.tsx
+"use client";
+
 import React, { useState } from 'react';
 
 const ParentsAndChildrenPage = () => {
   const [files, setFiles] = useState([]);
 
   const uploadFile = (event) => {
-    // Function to handle file uploads
     const newFiles = Array.from(event.target.files);
     setFiles((prevFiles) => [...prevFiles, ...newFiles]);
   };
@@ -13,10 +13,10 @@ const ParentsAndChildrenPage = () => {
   return (
     <div>
       <h1>Parents and Children Section</h1>
-      <input 
-        type="file" 
-        multiple 
-        accept="audio/*,video/*,application/pdf" 
+      <input
+        type="file"
+        multiple
+        accept="audio/*,video/*,application/pdf"
         onChange={uploadFile}
       />
       <ul>

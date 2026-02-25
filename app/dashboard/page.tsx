@@ -92,7 +92,7 @@ function ParcoursWidget({ siteSettings }: { siteSettings: Record<string, string>
 }
 
 export default function DashboardHome() {
-  const { t, locale } = useTranslation()
+  const { t } = useTranslation()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [greeting, setGreeting] = useState('')
   const [quote, setQuote] = useState<Quote | null>(null)
@@ -229,10 +229,10 @@ export default function DashboardHome() {
           style={{ background: 'radial-gradient(circle, rgba(212, 175, 55, 0.08), transparent 70%)' }}
         />
         <p className="font-display text-xl sm:text-2xl italic leading-relaxed relative" style={{ color: 'var(--text-primary)' }}>
-          &ldquo;{siteSettings.dash_custom_quote || (quote ? quote.text[locale as keyof typeof quote.text] || quote.text.fr : t('quote.text'))}&rdquo;
+          &ldquo;{siteSettings.dash_custom_quote || (quote ? quote.text.fr : t('quote.text'))}&rdquo;
         </p>
         <p className="mt-4 text-[13px] font-medium relative" style={{ color: 'var(--gold)' }}>
-          — {siteSettings.dash_custom_quote_author || (quote ? quote.author[locale as keyof typeof quote.author] || quote.author.fr : t('quote.author'))}
+          — {siteSettings.dash_custom_quote_author || (quote ? quote.author.fr : t('quote.author'))}
         </p>
       </motion.div>
 

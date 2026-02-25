@@ -7,7 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import { LANDING_DEFAULTS, buildSectionMap } from "@/lib/landing-defaults";
 import type { LandingSectionDefault, SectionContent, SectionStyles } from "@/lib/landing-defaults";
 import ThemeToggle from "@/components/ThemeToggle";
-import LanguageSelector from "@/components/LanguageSelector";
+
 import { useTranslation } from "@/lib/i18n/useTranslation";
 
 function matchCase(original: string, replacement: string): string {
@@ -398,7 +398,6 @@ export default function Home() {
                 <img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-20 md:h-24 w-auto object-contain" />
               </Link>
               <div className="absolute right-6 flex items-center gap-2">
-                <LanguageSelector />
                 <ThemeToggle />
               </div>
             </div>

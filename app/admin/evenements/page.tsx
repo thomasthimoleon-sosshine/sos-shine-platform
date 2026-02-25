@@ -26,6 +26,17 @@ const FOUNDERS = [
   { key: 'thomas', name: 'Thomas', image: '/images/thomas.jpeg' },
 ]
 
+/** Convert a UTC ISO string to a local datetime-local input value */
+function utcToLocalDatetime(utcStr: string): string {
+  const d = new Date(utcStr)
+  const year = d.getFullYear()
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  const hours = String(d.getHours()).padStart(2, '0')
+  const minutes = String(d.getMinutes()).padStart(2, '0')
+  return `${year}-${month}-${day}T${hours}:${minutes}`
+}
+
 const EMPTY_FORM = {
   title: '',
   description: '',
@@ -136,7 +147,7 @@ export default function AdminEvenements() {
       location_name: event.location_name || '',
       latitude: event.latitude != null ? String(event.latitude) : '',
       longitude: event.longitude != null ? String(event.longitude) : '',
-      event_date: event.event_date ? event.event_date.slice(0, 16) : '',
+      event_date: event.event_date ? utcToLocalDatetime(event.event_date) : '',
       price: event.price,
       max_participants: event.max_participants != null ? String(event.max_participants) : '',
       live_url: event.live_url || '',

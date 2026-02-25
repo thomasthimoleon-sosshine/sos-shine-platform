@@ -86,6 +86,7 @@ CREATE TABLE IF NOT EXISTS public.events (
   price             DECIMAL(10,2) NOT NULL DEFAULT 0,
   max_participants  INTEGER,
   created_by        UUID REFERENCES public.profiles(id),
+  hosts             TEXT[] DEFAULT '{}',
   is_active         BOOLEAN NOT NULL DEFAULT true,
   created_at        TIMESTAMPTZ DEFAULT now()
 );

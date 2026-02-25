@@ -49,6 +49,17 @@ function sanitizeContent(content: SectionContent): SectionContent {
   return sanitizeValue(content) as SectionContent;
 }
 
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
 function hexToRgb(hex: string): string {
   const h = hex.replace("#", "");
   const r = parseInt(h.substring(0, 2), 16);
@@ -391,13 +402,13 @@ export default function Home() {
       {/* ═══ FIXED HEADER ═══ */}
       {headerVisible && (
           <header
-            className={`fixed top-0 left-0 right-0 z-50 py-4 header-animate ${headerScrolled ? 'header-scrolled' : ''}`}
+            className={`fixed top-0 left-0 right-0 z-50 py-3 md:py-4 header-animate ${headerScrolled ? 'header-scrolled' : ''}`}
           >
-            <div className="flex items-center justify-center relative">
+            <div className="flex items-center justify-center relative px-4 md:px-6">
               <Link href="/" className="flex items-center gap-3">
-                <img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-20 md:h-24 w-auto object-contain" />
+                <img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-14 sm:h-18 md:h-24 w-auto object-contain" />
               </Link>
-              <div className="absolute right-6 flex items-center gap-2">
+              <div className="absolute right-4 md:right-6 flex items-center gap-2">
                 <ThemeToggle />
               </div>
             </div>
@@ -406,12 +417,12 @@ export default function Home() {
 
       {/* ═══ HERO — Word by word reveal ═══ */}
       {vis('hero') && (
-        <motion.section ref={heroRef} className="relative min-h-screen flex items-center pt-24" style={{ opacity: heroOpacity, scale: heroScale }}>
+        <motion.section ref={heroRef} className="relative min-h-screen flex items-center pt-20 md:pt-24" style={{ opacity: heroOpacity, scale: heroScale }}>
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full opacity-[0.03] blur-[80px]" style={{ background: gold }} />
+            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[300px] h-[300px] md:w-[600px] md:h-[600px] rounded-full opacity-[0.03] blur-[60px] md:blur-[80px]" style={{ background: gold }} />
           </div>
 
-          <div className="relative z-10 px-6 md:px-20 py-24 max-w-6xl mx-auto w-full text-center">
+          <div className="relative z-10 px-5 md:px-20 py-12 md:py-24 max-w-6xl mx-auto w-full text-center">
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -456,7 +467,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
             >
-              <p className="text-xl md:text-2xl text-[var(--text-secondary)] leading-relaxed max-w-2xl mx-auto font-light mb-10" style={{
+              <p className="text-base sm:text-xl md:text-2xl text-[var(--text-secondary)] leading-relaxed max-w-2xl mx-auto font-light mb-8 md:mb-10" style={{
                 fontFamily: fontMap[heroSty.text_font] || undefined,
                 textAlign: (heroSty.text_align as "left" | "center" | "right") || undefined,
               }}>
@@ -466,7 +477,7 @@ export default function Home() {
 
             {hero.video_url && (
               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}>
-                <div className="glass overflow-hidden mb-10 max-w-3xl mx-auto">
+                <div className="glass overflow-hidden mb-8 md:mb-10 max-w-3xl mx-auto">
                   <video src={hero.video_url} controls className="w-full aspect-video" />
                 </div>
               </motion.div>
@@ -474,12 +485,12 @@ export default function Home() {
 
             {!hero.video_url && (
               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}>
-                <div className="glass overflow-hidden mb-10 max-w-3xl mx-auto">
+                <div className="glass overflow-hidden mb-8 md:mb-10 max-w-3xl mx-auto">
                   <div className="relative aspect-video flex items-center justify-center cursor-pointer group">
                     <div className="absolute inset-0" style={{ background: `linear-gradient(to bottom right, rgba(${goldRgb},0.08), transparent)` }} />
                     <div className="relative z-10 text-center">
                       <motion.div
-                        className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4"
+                        className="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4"
                         style={{ background: `rgba(${goldRgb},0.15)`, border: `2px solid rgba(${goldRgb},0.3)` }}
                         whileHover={{ scale: 1.15 }}
                         transition={{ type: "spring", stiffness: 300 }}
@@ -496,15 +507,15 @@ export default function Home() {
             )}
 
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}>
-              <div className="flex flex-wrap gap-5 justify-center">
+              <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-5 justify-center items-center">
                 {(hero.buttons || []).map((btn: { label: string; href: string; variant: string }, i: number) => (
-                  <Link key={i} href={btn.href === '/signup' || btn.href === '/login' ? '/rejoindre' : btn.href}>
+                  <Link key={i} href={btn.href === '/signup' || btn.href === '/login' ? '/rejoindre' : btn.href} className="w-full sm:w-auto">
                     {btn.variant === 'primary' ? (
-                      <button className="magnetic-btn pulse-ring px-8 py-4 rounded-full text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                      <button className="magnetic-btn pulse-ring w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full text-sm sm:text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
                         {btn.label} — {trialDays} {t('landing.trial_days')}
                       </button>
                     ) : (
-                      <button className="magnetic-btn px-8 py-4 rounded-full text-base font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.3)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
+                      <button className="magnetic-btn w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full text-sm sm:text-base font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.3)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
                         {btn.label}
                       </button>
                     )}
@@ -521,20 +532,20 @@ export default function Home() {
       <InfiniteTickerBand items={tickerItems} speed={35} />
 
       {/* ═══ SIGNATURE EMOTIONNELLE CTA ═══ */}
-      <section className="px-6 md:px-20 py-20 relative cv-auto">
+      <section className="px-5 md:px-20 py-12 md:py-20 relative cv-auto">
         <RevealOnScroll>
           <div className="max-w-3xl mx-auto text-center">
             <Link href="/signature-emotionnelle">
-              <div className="glow-card p-8 md:p-12 cursor-pointer group">
-                <p className="luxury-title text-xs tracking-[0.4em] text-[var(--text-muted)] mb-4">{t('signature.cta_label')}</p>
-                <h3 className="font-display text-2xl md:text-4xl font-light mb-4" style={{ color: gold }}>
+              <div className="glow-card p-6 sm:p-8 md:p-12 cursor-pointer group">
+                <p className="luxury-title text-[10px] sm:text-xs tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{t('signature.cta_label')}</p>
+                <h3 className="font-display text-xl sm:text-2xl md:text-4xl font-light mb-3 md:mb-4" style={{ color: gold }}>
                   {t('signature.cta_title')}{' '}
                   <span className="text-shimmer">{t('signature.cta_title_highlight')}</span>
                 </h3>
-                <p className="text-[var(--text-secondary)] font-light mb-6 text-[15px]">
+                <p className="text-[var(--text-secondary)] font-light mb-5 md:mb-6 text-sm md:text-[15px]">
                   {t('signature.cta_desc')}
                 </p>
-                <span className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold tracking-wide group-hover:scale-105 transition-transform" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                <span className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-semibold tracking-wide group-hover:scale-105 transition-transform" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
                   {t('signature.cta_button')}
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M5 12h14M12 5l7 7-7 7" />
@@ -548,24 +559,24 @@ export default function Home() {
 
       {/* ═══ LE PRINCIPE ═══ */}
       {vis('principe') && (
-        <section className="px-6 md:px-20 py-32 relative cv-auto">
+        <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-1/2 left-1/4 w-[400px] h-[400px] rounded-full opacity-[0.02] blur-[60px]" style={{ background: gold }} />
+            <div className="absolute top-1/2 left-1/4 w-[250px] h-[250px] md:w-[400px] md:h-[400px] rounded-full opacity-[0.02] blur-[40px] md:blur-[60px]" style={{ background: gold }} />
           </div>
 
           <div className="max-w-4xl mx-auto text-center relative z-10">
             <RevealOnScroll>
-              <p className="luxury-title text-sm tracking-[0.4em] text-[var(--text-muted)] mb-10">{principe.label || ''}</p>
+              <p className="luxury-title text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-6 md:mb-10">{principe.label || ''}</p>
             </RevealOnScroll>
 
             {principe.image_url && (
               <RevealOnScroll delay={0.1} direction="scale">
-                <img src={principe.image_url} alt="" className="w-full rounded-2xl object-cover max-h-72 mb-10" style={{ border: '1px solid var(--dark-border)' }} />
+                <img src={principe.image_url} alt="" className="w-full rounded-xl md:rounded-2xl object-cover max-h-48 md:max-h-72 mb-6 md:mb-10" style={{ border: '1px solid var(--dark-border)' }} />
               </RevealOnScroll>
             )}
 
             <RevealOnScroll delay={0.15}>
-              <h2 className="font-display font-light leading-[1.15] mb-10" style={tStyle("principe")}>
+              <h2 className="font-display font-light leading-[1.15] mb-6 md:mb-10" style={tStyle("principe")}>
                 {(principe.title || '').split("\n").map((line: string, i: number) => (
                   <span key={i} className="block">
                     {i > 0 && <span className="block h-1" />}
@@ -578,13 +589,13 @@ export default function Home() {
             </RevealOnScroll>
 
             <RevealOnScroll delay={0.25}>
-              <p className="text-lg md:text-xl text-[var(--text-secondary)] leading-relaxed font-light max-w-2xl mx-auto">
+              <p className="text-base md:text-xl text-[var(--text-secondary)] leading-relaxed font-light max-w-2xl mx-auto">
                 {principe.description || ''}
               </p>
             </RevealOnScroll>
 
             <RevealOnScroll delay={0.35}>
-              <div className="mt-10 flex items-center justify-center gap-4">
+              <div className="mt-6 md:mt-10 flex items-center justify-center gap-4">
                 <span className="block w-20 h-px" style={{ background: `linear-gradient(to right, transparent, rgba(${goldRgb}, 0.3))` }} />
                 <span className="block w-2 h-2 rotate-45" style={{ background: gold, opacity: 0.5 }} />
                 <span className="block w-20 h-px" style={{ background: `linear-gradient(to left, transparent, rgba(${goldRgb}, 0.3))` }} />
@@ -596,25 +607,25 @@ export default function Home() {
 
       {/* ═══ LES ETAPES — Glowing Cards ═══ */}
       {vis('steps') && (
-        <section className="px-6 md:px-20 py-32 relative cv-auto">
+        <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
           <div className="max-w-6xl mx-auto">
             <RevealOnScroll>
-              <p className="luxury-title text-center text-sm tracking-[0.4em] text-[var(--text-muted)] mb-4">{stepsData.label || ''}</p>
+              <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{stepsData.label || ''}</p>
             </RevealOnScroll>
             <RevealOnScroll delay={0.1}>
-              <h2 className="font-display font-light text-center mb-20" style={tStyle("steps")}>
+              <h2 className="font-display font-light text-center mb-10 md:mb-20" style={tStyle("steps")}>
                 <WordByWordReveal text={stepsData.title || ''} />
               </h2>
             </RevealOnScroll>
 
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-3 gap-4 md:gap-8">
               {(stepsData.items || []).map((step: { num: string; title: string; description: string; color: string }, i: number) => (
                 <RevealOnScroll key={step.num} delay={i * 0.15} direction={i === 0 ? "left" : i === 2 ? "right" : "up"}>
-                  <GlowingCard className="p-8 md:p-10 h-full" glowColor={`${step.color}25`}>
-                    <div className="mb-6">
-                      <span className="font-display text-6xl font-extralight block mb-2" style={{ color: step.color, opacity: 0.15 }}>{step.num}</span>
-                      <span className="luxury-title text-xs tracking-[0.3em] block mb-3" style={{ color: step.color, opacity: 0.6 }}>{t('landing.step')} {step.num}</span>
-                      <h3 className="font-display text-2xl font-medium">{step.title}</h3>
+                  <GlowingCard className="p-6 md:p-10 h-full" glowColor={`${step.color}25`}>
+                    <div className="mb-4 md:mb-6">
+                      <span className="font-display text-5xl md:text-6xl font-extralight block mb-2" style={{ color: step.color, opacity: 0.15 }}>{step.num}</span>
+                      <span className="luxury-title text-xs tracking-[0.3em] block mb-2 md:mb-3" style={{ color: step.color, opacity: 0.6 }}>{t('landing.step')} {step.num}</span>
+                      <h3 className="font-display text-xl md:text-2xl font-medium">{step.title}</h3>
                     </div>
                     <p className="text-[var(--text-secondary)] leading-relaxed text-[15px] font-light">{step.description}</p>
                     <div className="mt-6 h-px w-full" style={{ background: `linear-gradient(to right, ${step.color}30, transparent)` }} />
@@ -628,34 +639,34 @@ export default function Home() {
 
       {/* ═══ L'ENCYCLOPEDIE ═══ */}
       {vis('encyclopedie') && (
-        <section className="px-6 md:px-20 py-32 relative cv-auto">
+        <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full opacity-[0.02] blur-[60px]" style={{ background: gold }} />
+            <div className="absolute top-0 right-0 w-[250px] h-[250px] md:w-[400px] md:h-[400px] rounded-full opacity-[0.02] blur-[40px] md:blur-[60px]" style={{ background: gold }} />
           </div>
 
           <div className="max-w-5xl mx-auto relative z-10">
             <RevealOnScroll>
-              <p className="luxury-title text-center text-sm tracking-[0.4em] text-[var(--text-muted)] mb-4">{encyclo.label || "L'encyclopedie"}</p>
+              <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{encyclo.label || "L'encyclopedie"}</p>
             </RevealOnScroll>
             <RevealOnScroll delay={0.1}>
-              <h2 className="font-display font-light text-center mb-6" style={tStyle("encyclopedie")}>
+              <h2 className="font-display font-light text-center mb-4 md:mb-6" style={tStyle("encyclopedie")}>
                 <WordByWordReveal text={encyclo.title || ''} />
               </h2>
             </RevealOnScroll>
             <RevealOnScroll delay={0.2}>
-              <p className="text-lg text-[var(--text-secondary)] font-light leading-relaxed mb-16 max-w-2xl mx-auto text-center">
+              <p className="text-base md:text-lg text-[var(--text-secondary)] font-light leading-relaxed mb-10 md:mb-16 max-w-2xl mx-auto text-center">
                 {encyclo.description || ''}
               </p>
             </RevealOnScroll>
 
             <RevealOnScroll delay={0.25}>
-              <div className="max-w-md mx-auto mb-12">
+              <div className="max-w-md mx-auto mb-8 md:mb-12">
                 <input
                   type="text"
                   value={encyclopediaSearch}
                   onChange={(e) => setEncyclopediaSearch(e.target.value)}
                   placeholder={t('landing.search_challenge')}
-                  className="w-full px-5 py-3 rounded-full text-sm font-light"
+                  className="w-full px-4 md:px-5 py-2.5 md:py-3 rounded-full text-sm font-light"
                   style={{
                     background: 'rgba(255,255,255,0.04)',
                     border: `1px solid rgba(${goldRgb}, 0.25)`,
@@ -666,24 +677,26 @@ export default function Home() {
               </div>
             </RevealOnScroll>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 sm:gap-4">
               {(encyclo.items || []).filter((d: string) => !encyclopediaSearch || d.toLowerCase().includes(encyclopediaSearch.toLowerCase())).map((d: string, i: number) => (
                 <RevealOnScroll key={d} delay={i * 0.05} direction="scale">
-                  <GlowingCard className="px-5 py-4 text-center cursor-pointer group">
-                    <span className="text-sm font-light transition-colors duration-300 group-hover:text-[var(--gold)]" style={{
-                      color: i === (encyclo.items || []).length - 1 ? gold : 'var(--text-secondary)',
-                    }}>
-                      {d}
-                    </span>
-                  </GlowingCard>
+                  <Link href={`/encyclopedie/${slugify(d)}`}>
+                    <GlowingCard className="px-3 sm:px-5 py-3 sm:py-4 text-center cursor-pointer group">
+                      <span className="text-xs sm:text-sm font-light transition-colors duration-300 group-hover:text-[var(--gold)]" style={{
+                        color: i === (encyclo.items || []).length - 1 ? gold : 'var(--text-secondary)',
+                      }}>
+                        {d}
+                      </span>
+                    </GlowingCard>
+                  </Link>
                 </RevealOnScroll>
               ))}
             </div>
 
             <RevealOnScroll delay={0.3}>
-              <div className="text-center mt-12">
+              <div className="text-center mt-8 md:mt-12">
                 <Link href="/encyclopedie">
-                  <button className="magnetic-btn px-8 py-3.5 rounded-full text-sm font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.25)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
+                  <button className="magnetic-btn px-6 sm:px-8 py-3 sm:py-3.5 rounded-full text-sm font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.25)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
                     {t('landing.explore_encyclopedia')}
                   </button>
                 </Link>
@@ -698,34 +711,34 @@ export default function Home() {
 
       {/* ═══ COMMUNAUTE ═══ */}
       {vis('communaute') && (
-        <section className="px-6 md:px-20 py-32 relative cv-auto">
+        <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
           <div className="max-w-5xl mx-auto">
             <RevealOnScroll>
-              <h2 className="font-display font-light leading-[1.1] text-center mb-6" style={tStyle("communaute")}>
+              <h2 className="font-display font-light leading-[1.1] text-center mb-4 md:mb-6" style={tStyle("communaute")}>
                 <WordByWordReveal text={comm.title || ''} />
               </h2>
             </RevealOnScroll>
             <RevealOnScroll delay={0.15}>
-              <p className="text-lg md:text-xl text-[var(--text-secondary)] font-light leading-relaxed mb-20 max-w-2xl mx-auto text-center">
+              <p className="text-base md:text-xl text-[var(--text-secondary)] font-light leading-relaxed mb-10 md:mb-20 max-w-2xl mx-auto text-center">
                 {comm.description || ''}
               </p>
             </RevealOnScroll>
 
-            <div className="space-y-6">
+            <div className="space-y-4 md:space-y-6">
               {(comm.blocks || []).filter((b: { title: string; description: string }) => b.title).map((item: { title: string; description: string }, i: number) => (
                 <RevealOnScroll key={item.title} delay={i * 0.12} direction={i % 2 === 0 ? "left" : "right"}>
-                  <GlowingCard className="p-8 md:p-10">
-                    <div className="flex items-start gap-6">
-                      <div className="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: `rgba(${goldRgb}, 0.08)`, border: `1px solid rgba(${goldRgb}, 0.12)` }}>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={gold} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <GlowingCard className="p-5 sm:p-8 md:p-10">
+                    <div className="flex items-start gap-4 sm:gap-6">
+                      <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center" style={{ background: `rgba(${goldRgb}, 0.08)`, border: `1px solid rgba(${goldRgb}, 0.12)` }}>
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke={gold} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                           {i === 0 && <><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><circle cx="9" cy="10" r="1" fill={gold}/><circle cx="15" cy="10" r="1" fill={gold}/></>}
                           {i === 1 && <><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 8h8M8 12h6M8 16h4"/></>}
                           {i === 2 && <><path d="M17 21v-2a4 4 0 0 0-4-4H5" /><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>}
                         </svg>
                       </div>
-                      <div>
-                        <h3 className="font-display text-xl font-medium mb-3">{item.title}</h3>
-                        <p className="text-[var(--text-secondary)] leading-relaxed text-[15px] font-light">{item.description}</p>
+                      <div className="min-w-0">
+                        <h3 className="font-display text-lg sm:text-xl font-medium mb-2 sm:mb-3">{item.title}</h3>
+                        <p className="text-[var(--text-secondary)] leading-relaxed text-sm sm:text-[15px] font-light">{item.description}</p>
                       </div>
                     </div>
                   </GlowingCard>
@@ -738,34 +751,34 @@ export default function Home() {
 
       {/* ═══ TEMOIGNAGES ═══ */}
       {vis('temoignages') && (
-        <section className="px-6 md:px-20 py-32 relative cv-auto">
+        <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute bottom-0 left-1/3 w-[400px] h-[400px] rounded-full opacity-[0.02] blur-[60px]" style={{ background: gold }} />
+            <div className="absolute bottom-0 left-1/3 w-[250px] h-[250px] md:w-[400px] md:h-[400px] rounded-full opacity-[0.02] blur-[40px] md:blur-[60px]" style={{ background: gold }} />
           </div>
 
           <div className="max-w-5xl mx-auto relative z-10">
             <RevealOnScroll>
-              <p className="luxury-title text-center text-sm tracking-[0.4em] text-[var(--text-muted)] mb-20">
+              <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-10 md:mb-20">
                 <WordByWordReveal text={temos.label || ''} />
               </p>
             </RevealOnScroll>
 
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-2 gap-4 md:gap-8">
               {(temos.items || []).filter((t: { quote: string; name: string; city: string }) => t.quote).map((t: { quote: string; name: string; city: string }, i: number) => (
                 <RevealOnScroll key={i} delay={i * 0.12} direction={i % 2 === 0 ? "left" : "right"}>
-                  <GlowingCard className="p-8 md:p-10 h-full flex flex-col justify-between">
+                  <GlowingCard className="p-5 sm:p-8 md:p-10 h-full flex flex-col justify-between">
                     <div>
-                      <div className="flex gap-1 mb-6">
+                      <div className="flex gap-1 mb-4 md:mb-6">
                         {[1,2,3,4,5].map(s => (
                           <span key={s} className="text-sm" style={{ color: gold }}>★</span>
                         ))}
                       </div>
-                      <p className="font-display text-lg italic text-[var(--text-primary)] font-light leading-relaxed mb-8">
+                      <p className="font-display text-base sm:text-lg italic text-[var(--text-primary)] font-light leading-relaxed mb-6 md:mb-8">
                         &laquo; {t.quote} &raquo;
                       </p>
                     </div>
-                    <div className="flex items-center gap-3 pt-4" style={{ borderTop: `1px solid rgba(${goldRgb}, 0.08)` }}>
-                      <div className="w-10 h-10 rounded-full flex items-center justify-center font-display text-sm" style={{ background: `linear-gradient(135deg, rgba(${goldRgb},0.15), rgba(${goldRgb},0.05))`, color: gold }}>
+                    <div className="flex items-center gap-3 pt-3 md:pt-4" style={{ borderTop: `1px solid rgba(${goldRgb}, 0.08)` }}>
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-display text-sm" style={{ background: `linear-gradient(135deg, rgba(${goldRgb},0.15), rgba(${goldRgb},0.05))`, color: gold }}>
                         {t.name.charAt(0)}
                       </div>
                       <div>
@@ -785,21 +798,21 @@ export default function Home() {
       {vis('histoire') && (() => {
         const hist = sec('histoire');
         return (
-          <section className="px-6 md:px-20 py-32 relative cv-auto">
+          <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
             <div className="max-w-5xl mx-auto">
               <RevealOnScroll>
-                <p className="luxury-title text-center text-sm tracking-[0.4em] text-[var(--text-muted)] mb-4">{hist.label || "L'Histoire"}</p>
+                <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{hist.label || "L'Histoire"}</p>
               </RevealOnScroll>
               <RevealOnScroll delay={0.1}>
-                <h2 className="font-display font-light text-center text-3xl md:text-5xl mb-6" style={{ color: 'var(--gold)' }}>
+                <h2 className="font-display font-light text-center text-2xl sm:text-3xl md:text-5xl mb-4 md:mb-6" style={{ color: 'var(--gold)' }}>
                   <WordByWordReveal text={hist.title || ''} />
                 </h2>
               </RevealOnScroll>
-              <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16 mt-12">
+              <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16 mt-8 md:mt-12">
                 <RevealOnScroll delay={0.15}>
                   <div className="flex-shrink-0 group">
                     <a href={hist.book_url || '#'} target="_blank" rel="noopener noreferrer" className="block relative">
-                      <div className="w-56 md:w-64 rounded-lg overflow-hidden border border-[var(--gold)]/20 group-hover:border-[var(--gold)]/60 transition-all duration-500 shadow-lg group-hover:shadow-[0_0_30px_rgba(212,175,55,0.2)]">
+                      <div className="w-44 sm:w-56 md:w-64 rounded-lg overflow-hidden border border-[var(--gold)]/20 group-hover:border-[var(--gold)]/60 transition-all duration-500 shadow-lg group-hover:shadow-[0_0_30px_rgba(212,175,55,0.2)]">
                         <img
                           src={hist.book_image || '/images/book-cover.jpeg'}
                           alt="SOS Shine — Briller Comme un Diamant"
@@ -812,14 +825,14 @@ export default function Home() {
                 </RevealOnScroll>
                 <RevealOnScroll delay={0.25}>
                   <div className="flex-1 text-center md:text-left">
-                    <p className="text-lg md:text-xl text-[var(--text-body)] leading-relaxed mb-6">
+                    <p className="text-base md:text-xl text-[var(--text-body)] leading-relaxed mb-4 md:mb-6">
                       {hist.paragraph1 || ''}
                     </p>
-                    <p className="text-lg md:text-xl text-[var(--text-body)] leading-relaxed mb-6">
+                    <p className="text-base md:text-xl text-[var(--text-body)] leading-relaxed mb-4 md:mb-6">
                       {hist.paragraph2 || ''}
                     </p>
                     {hist.quote && (
-                      <p className="text-base text-[var(--text-muted)] leading-relaxed mb-8 italic">
+                      <p className="text-sm md:text-base text-[var(--text-muted)] leading-relaxed mb-6 md:mb-8 italic">
                         &ldquo;{hist.quote}&rdquo;
                       </p>
                     )}
@@ -827,7 +840,7 @@ export default function Home() {
                       href={hist.book_url || '#'}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-6 py-3 border border-[var(--gold)]/40 rounded-full text-[var(--gold)] text-sm tracking-[0.15em] uppercase hover:bg-[var(--gold)]/10 hover:border-[var(--gold)] transition-all duration-300"
+                      className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 border border-[var(--gold)]/40 rounded-full text-[var(--gold)] text-xs sm:text-sm tracking-[0.15em] uppercase hover:bg-[var(--gold)]/10 hover:border-[var(--gold)] transition-all duration-300"
                     >
                       {hist.button_label || 'Découvrir le livre'}
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
@@ -845,29 +858,29 @@ export default function Home() {
         const fond = sec('fondateurs');
         const members = fond.members || [];
         return (
-          <section className="px-6 md:px-20 py-32 relative cv-auto">
+          <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
             <div className="max-w-5xl mx-auto">
               <RevealOnScroll>
-                <p className="luxury-title text-center text-sm tracking-[0.4em] text-[var(--text-muted)] mb-4">{fond.label || 'Les Fondateurs'}</p>
+                <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{fond.label || 'Les Fondateurs'}</p>
               </RevealOnScroll>
               <RevealOnScroll delay={0.1}>
-                <h2 className="font-display font-light text-center text-3xl md:text-5xl mb-6" style={{ color: 'var(--gold)' }}>
+                <h2 className="font-display font-light text-center text-2xl sm:text-3xl md:text-5xl mb-4 md:mb-6" style={{ color: 'var(--gold)' }}>
                   <WordByWordReveal text={fond.title || ''} />
                 </h2>
               </RevealOnScroll>
               {fond.description && (
                 <RevealOnScroll delay={0.15}>
-                  <p className="text-center text-[var(--text-muted)] max-w-2xl mx-auto mb-16 text-lg leading-relaxed">
+                  <p className="text-center text-[var(--text-muted)] max-w-2xl mx-auto mb-10 md:mb-16 text-base md:text-lg leading-relaxed">
                     {fond.description}
                   </p>
                 </RevealOnScroll>
               )}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-6 md:gap-10">
                 {members.map((founder: { name: string; image: string; role: string }, i: number) => (
                   <RevealOnScroll key={founder.name || i} delay={0.2 + i * 0.15}>
                     <div className="flex flex-col items-center group">
-                      <div className="relative mb-6">
-                        <div className="w-44 h-44 md:w-52 md:h-52 rounded-full overflow-hidden border-2 border-[var(--gold)]/30 group-hover:border-[var(--gold)] transition-all duration-500 relative">
+                      <div className="relative mb-4 md:mb-6">
+                        <div className="w-28 h-28 sm:w-36 sm:h-36 md:w-52 md:h-52 rounded-full overflow-hidden border-2 border-[var(--gold)]/30 group-hover:border-[var(--gold)] transition-all duration-500 relative">
                           {founder.image && (
                             <img
                               src={founder.image}
@@ -878,8 +891,8 @@ export default function Home() {
                         </div>
                         <div className="absolute -inset-1 rounded-full bg-[var(--gold)]/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
                       </div>
-                      <h3 className="font-display text-2xl text-[var(--gold)] mb-1">{founder.name}</h3>
-                      <p className="text-sm tracking-[0.2em] uppercase text-[var(--text-muted)]">{founder.role}</p>
+                      <h3 className="font-display text-lg sm:text-xl md:text-2xl text-[var(--gold)] mb-1 text-center">{founder.name}</h3>
+                      <p className="text-[10px] sm:text-xs md:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-[var(--text-muted)] text-center">{founder.role}</p>
                     </div>
                   </RevealOnScroll>
                 ))}
@@ -891,27 +904,27 @@ export default function Home() {
 
       {/* ═══ OFFRES / PRICING ═══ */}
       {vis('pricing') && (
-        <section className="px-6 md:px-20 py-32 relative cv-auto">
+        <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
           <div className="max-w-5xl mx-auto">
             <RevealOnScroll>
-              <p className="luxury-title text-center text-sm tracking-[0.4em] text-[var(--text-muted)] mb-4">{t('landing.pricing_label')}</p>
+              <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{t('landing.pricing_label')}</p>
             </RevealOnScroll>
             <RevealOnScroll delay={0.1}>
-              <h2 className="font-display font-light text-center mb-4" style={tStyle("pricing")}>
+              <h2 className="font-display font-light text-center mb-3 md:mb-4" style={tStyle("pricing")}>
                 <WordByWordReveal text={pricing.title || ''} />
               </h2>
             </RevealOnScroll>
             <RevealOnScroll delay={0.2}>
-              <p className="text-[var(--text-secondary)] font-light text-center mb-20">{pricing.subtitle || ''}</p>
+              <p className="text-[var(--text-secondary)] font-light text-center text-sm md:text-base mb-10 md:mb-20">{pricing.subtitle || ''}</p>
             </RevealOnScroll>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6 max-w-7xl mx-auto">
               {(pricing.plans || []).map((plan: { name: string; price: string; period: string; button_label: string; button_href: string; highlight: boolean; badge: string; features: string[] }, idx: number) => (
                 <RevealOnScroll key={plan.name} delay={(idx + 1) * 0.15} direction={(["left", "up", "scale", "right"] as const)[idx % 4]}>
-                  <GlowingCard className={`p-8 md:p-10 h-full flex flex-col relative ${plan.highlight ? 'ring-1' : ''}`} glowColor={plan.highlight ? `rgba(${accentRgb},0.15)` : `rgba(${goldRgb},0.15)`} style={plan.highlight ? { '--tw-ring-color': `rgba(${accentRgb},0.15)` } as React.CSSProperties : undefined}>
+                  <GlowingCard className={`p-6 sm:p-8 md:p-10 h-full flex flex-col relative ${plan.highlight ? 'ring-1' : ''}`} glowColor={plan.highlight ? `rgba(${accentRgb},0.15)` : `rgba(${goldRgb},0.15)`} style={plan.highlight ? { '--tw-ring-color': `rgba(${accentRgb},0.15)` } as React.CSSProperties : undefined}>
                     {plan.badge && (
                       <motion.div
-                        className="absolute -top-3 left-1/2 -translate-x-1/2 px-5 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase"
+                        className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 sm:px-5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold tracking-wider uppercase whitespace-nowrap"
                         style={{ background: `linear-gradient(135deg, ${accent}, rgba(${accentRgb},0.7))`, color: '#050505' }}
                         initial={{ y: -10, opacity: 0 }}
                         whileInView={{ y: 0, opacity: 1 }}
@@ -922,33 +935,33 @@ export default function Home() {
                       </motion.div>
                     )}
 
-                    <p className="luxury-title text-sm tracking-[0.25em] text-[var(--text-muted)] mb-6">{plan.name}</p>
+                    <p className="luxury-title text-xs sm:text-sm tracking-[0.2em] sm:tracking-[0.25em] text-[var(--text-muted)] mb-4 md:mb-6">{plan.name}</p>
 
-                    <div className="flex items-baseline gap-1 mb-8">
-                      <span className="font-display text-6xl font-extralight" style={{ color: plan.highlight ? accent : gold }}>
+                    <div className="flex items-baseline gap-1 mb-6 md:mb-8">
+                      <span className="font-display text-4xl sm:text-5xl md:text-6xl font-extralight" style={{ color: plan.highlight ? accent : gold }}>
                         <AnimatedCounter value={plan.price} suffix="€" />
                       </span>
-                      <span className="text-[var(--text-muted)] text-sm">{plan.period}</span>
+                      <span className="text-[var(--text-muted)] text-xs sm:text-sm">{plan.period}</span>
                     </div>
 
-                    <div className="space-y-4 flex-1 mb-10">
+                    <div className="space-y-3 md:space-y-4 flex-1 mb-6 md:mb-10">
                       {(plan.features || []).map((f: string, fi: number) => (
                         <motion.div
                           key={f}
-                          className="flex items-start gap-3"
+                          className="flex items-start gap-2 sm:gap-3"
                           initial={{ opacity: 0, x: -10 }}
                           whileInView={{ opacity: 1, x: 0 }}
                           viewport={{ once: true }}
                           transition={{ delay: 0.3 + fi * 0.05 }}
                         >
-                          <span className="mt-0.5 text-sm" style={{ color: plan.highlight ? accent : gold }}>◆</span>
-                          <span className="text-[var(--text-secondary)] text-[15px] font-light">{f}</span>
+                          <span className="mt-0.5 text-xs sm:text-sm" style={{ color: plan.highlight ? accent : gold }}>◆</span>
+                          <span className="text-[var(--text-secondary)] text-sm sm:text-[15px] font-light">{f}</span>
                         </motion.div>
                       ))}
                     </div>
 
                     <Link href="/rejoindre">
-                      <button className={`magnetic-btn w-full py-4 rounded-full text-base font-semibold tracking-wide ${plan.highlight ? 'pulse-ring' : ''}`} style={{
+                      <button className={`magnetic-btn w-full py-3 sm:py-4 rounded-full text-sm sm:text-base font-semibold tracking-wide ${plan.highlight ? 'pulse-ring' : ''}`} style={{
                         background: plan.highlight ? `linear-gradient(135deg, ${accent}, rgba(${accentRgb},0.7))` : `linear-gradient(135deg, ${gold}, ${goldDeep})`,
                         color: '#050505'
                       }}>
@@ -961,7 +974,7 @@ export default function Home() {
             </div>
 
             <RevealOnScroll delay={0.4}>
-              <p className="text-center text-xs text-[var(--text-muted)] mt-8 font-light italic">{pricing.footer || ''}</p>
+              <p className="text-center text-xs text-[var(--text-muted)] mt-6 md:mt-8 font-light italic">{pricing.footer || ''}</p>
             </RevealOnScroll>
           </div>
         </section>
@@ -969,24 +982,24 @@ export default function Home() {
 
       {/* ═══ CTA FINAL DARK ═══ */}
       {vis('cta_dark') && (
-        <section className="px-6 md:px-20 py-40 relative overflow-hidden cv-auto">
+        <section className="px-5 md:px-20 py-20 md:py-40 relative overflow-hidden cv-auto">
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[400px] rounded-full opacity-[0.03] blur-[60px]" style={{ background: gold }} />
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[300px] h-[250px] md:w-[500px] md:h-[400px] rounded-full opacity-[0.03] blur-[40px] md:blur-[60px]" style={{ background: gold }} />
           </div>
           <div className="relative z-10 max-w-4xl mx-auto text-center">
             {ctaDark.image_url && (
               <RevealOnScroll direction="scale">
-                <img src={ctaDark.image_url} alt="" className="w-48 h-48 rounded-2xl object-cover mx-auto mb-8" />
+                <img src={ctaDark.image_url} alt="" className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-xl md:rounded-2xl object-cover mx-auto mb-6 md:mb-8" />
               </RevealOnScroll>
             )}
             <RevealOnScroll>
-              <h2 className="font-display font-light leading-[1.12] mb-12" style={tStyle("cta_dark")}>
+              <h2 className="font-display font-light leading-[1.12] mb-8 md:mb-12" style={tStyle("cta_dark")}>
                 <WordByWordReveal text={ctaDark.title || ''} />
               </h2>
             </RevealOnScroll>
             <RevealOnScroll delay={0.3}>
               <Link href="/rejoindre">
-                <button className="magnetic-btn pulse-ring px-10 py-5 rounded-full text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                <button className="magnetic-btn pulse-ring px-8 sm:px-10 py-4 sm:py-5 rounded-full text-base sm:text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
                   {t('landing.join_cta')}
                 </button>
               </Link>
@@ -997,20 +1010,20 @@ export default function Home() {
 
       {/* ═══ CTA LIGHT ═══ */}
       {vis('cta_light') && (
-        <section className="px-6 md:px-20 py-32 relative overflow-hidden cv-auto" style={{ background: sty('cta_light').bg || '#ffffff' }}>
+        <section className="px-5 md:px-20 py-16 md:py-32 relative overflow-hidden cv-auto" style={{ background: sty('cta_light').bg || '#ffffff' }}>
           <div className="max-w-3xl mx-auto text-center relative z-10">
             <RevealOnScroll>
-              <p className="text-xl md:text-2xl font-light leading-relaxed mb-12" style={{ color: sty('cta_light').text_color || '#1a1a1a' }}>
+              <p className="text-base sm:text-xl md:text-2xl font-light leading-relaxed mb-8 md:mb-12" style={{ color: sty('cta_light').text_color || '#1a1a1a' }}>
                 {ctaLight.description || ''}
               </p>
             </RevealOnScroll>
             <RevealOnScroll delay={0.15}>
               <Link href="/rejoindre">
-                <button className="magnetic-btn px-10 py-5 rounded-full text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                <button className="magnetic-btn px-8 sm:px-10 py-4 sm:py-5 rounded-full text-base sm:text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
                   {ctaLight.button_label || t('landing.join_cta')}
                 </button>
               </Link>
-              <div className="mt-8">
+              <div className="mt-6 md:mt-8">
                 <Link href="/login" className="text-sm transition-colors duration-300 underline underline-offset-4" style={{ color: sty('cta_light').muted_color || '#6b7280' }}>
                   {ctaLight.login_text || t('landing.already_member')}
                 </Link>
@@ -1022,22 +1035,22 @@ export default function Home() {
 
       {/* ═══ FOOTER ═══ */}
       {vis('footer') && (
-        <footer className="px-6 md:px-20 py-16 border-t border-[var(--dark-border)] relative" style={{ background: "rgba(0,0,0,0.3)" }}>
+        <footer className="px-5 md:px-20 py-10 md:py-16 border-t border-[var(--dark-border)] relative" style={{ background: "rgba(0,0,0,0.3)" }}>
           <div className="max-w-6xl mx-auto">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-10">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-6 md:gap-10">
               <div className="flex items-center gap-3">
-                <img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-16 w-auto object-contain" />
+                <img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-12 sm:h-14 md:h-16 w-auto object-contain" />
               </div>
 
-              <div className="flex flex-wrap justify-center gap-x-8 gap-y-4">
+              <div className="flex flex-wrap justify-center gap-x-5 sm:gap-x-8 gap-y-3">
                 {(foot.links || []).map((link: { label: string; href: string }) => (
-                  <Link key={link.label} href={link.href} className="text-xs tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors duration-300 gold-underline">
+                  <Link key={link.label} href={link.href} className="text-[10px] sm:text-xs tracking-[0.1em] sm:tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors duration-300 gold-underline">
                     {link.label}
                   </Link>
                 ))}
               </div>
 
-              <p className="text-[10px] tracking-[0.2em] uppercase text-[var(--text-muted)]">
+              <p className="text-[10px] tracking-[0.15em] sm:tracking-[0.2em] uppercase text-[var(--text-muted)]">
                 &copy; {foot.copyright_year || '2026'} {foot.name || 'SOS Shine'}
               </p>
             </div>

@@ -91,6 +91,7 @@ export type Event = {
   price: number
   max_participants: number | null
   created_by: string | null
+  hosts: string[] | null
   is_active: boolean
   created_at: string
 }

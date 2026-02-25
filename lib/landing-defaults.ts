@@ -108,8 +108,8 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       title: '3 \u00e9tapes pour chaque challenge \u00e9motionnel',
       items: [
         { num: '01', title: 'Comprendre', description: "Vid\u00e9o de coaching immersive. Analyse \u00e9motionnelle. Explication de votre probl\u00e8me. Apaisement mental. Une approche humaine et directe.", color: '#55EFC4' },
-        { num: '02', title: 'Lib\u00e9ration \u00c9nerg\u00e9tique', description: "Soin \u00e9nerg\u00e9tique. Activation \u00e9motionnelle. D\u00e9charge des tensions. Nettoyage des empreintes qui vous bloquent.", color: '#74C0FC' },
-        { num: '03', title: 'Int\u00e9gration & M\u00e9ditation', description: "M\u00e9ditation guid\u00e9e. Stabilisation int\u00e9rieure. Reconnexion \u00e0 soi. Nouvelle fr\u00e9quence \u00e9motionnelle.", color: '#E17055' },
+        { num: '02', title: 'Lib\u00e9rer & Int\u00e9grer', description: "Vid\u00e9o de lib\u00e9ration \u00e9nerg\u00e9tique et d\u2019int\u00e9gration. Activation \u00e9motionnelle. D\u00e9charge des tensions. Nettoyage des empreintes qui vous bloquent. Stabilisation int\u00e9rieure et reconnexion \u00e0 soi.", color: '#74C0FC' },
+        { num: '03', title: 'Agir', description: "PDF d\u2019exercices pratiques et audio guid\u00e9. Passez \u00e0 l\u2019action concr\u00e8te. Reprogrammation \u00e9motionnelle. Ancrez vos transformations dans le quotidien.", color: '#E17055' },
       ],
     },
     styles: {
@@ -241,7 +241,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
           badge: '',
           features: [
             'Encyclopédie complète des expériences de vie',
-            '3 étapes par challenge émotionnel (vidéo, soin, méditation)',
+            '3 étapes par challenge émotionnel (vidéo, libération, action)',
             'Chat dédié par challenge émotionnel + Chat général',
             'Mur communautaire',
             'Soins collectifs & événements',

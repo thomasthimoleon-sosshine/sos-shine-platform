@@ -20,6 +20,12 @@ const EVENT_TYPE_COLORS: Record<Event['event_type'], string> = {
   shine_walk: '#FF6B35',
 }
 
+const FOUNDERS = [
+  { key: 'julia', name: 'Julia', image: '/images/julia.jpeg' },
+  { key: 'wiliam', name: 'William', image: '/images/wiliam.png' },
+  { key: 'thomas', name: 'Thomas', image: '/images/thomas.jpeg' },
+]
+
 const EMPTY_FORM = {
   title: '',
   description: '',
@@ -33,6 +39,7 @@ const EMPTY_FORM = {
   max_participants: '',
   live_url: '',
   replay_url: '',
+  hosts: [] as string[],
 }
 
 function formatDateFR(dateStr: string): string {
@@ -134,6 +141,7 @@ export default function AdminEvenements() {
       max_participants: event.max_participants != null ? String(event.max_participants) : '',
       live_url: event.live_url || '',
       replay_url: event.replay_url || '',
+      hosts: event.hosts || [],
     })
     setShowForm(true)
     setError(null)
@@ -196,6 +204,7 @@ export default function AdminEvenements() {
         max_participants: form.max_participants ? Number(form.max_participants) : null,
         live_url: form.live_url.trim() || null,
         replay_url: form.replay_url.trim() || null,
+        hosts: form.hosts.length > 0 ? form.hosts : [],
       }
 
       if (editingId) {
@@ -520,6 +529,47 @@ export default function AdminEvenements() {
             </div>
           </div>
 
+          {/* Hosts (fondateurs) */}
+          <div>
+            <label style={labelStyle}>Animé par</label>
+            <div className="flex gap-3">
+              {FOUNDERS.map((f) => {
+                const selected = form.hosts.includes(f.key)
+                return (
+                  <button
+                    key={f.key}
+                    type="button"
+                    onClick={() => {
+                      setForm(prev => ({
+                        ...prev,
+                        hosts: selected
+                          ? prev.hosts.filter(h => h !== f.key)
+                          : [...prev.hosts, f.key],
+                      }))
+                    }}
+                    className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer"
+                    style={{
+                      background: selected ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.03)',
+                      border: selected ? '1px solid rgba(212,175,55,0.4)' : '1px solid var(--dark-border)',
+                      color: selected ? 'var(--gold)' : 'var(--text-muted)',
+                    }}
+                  >
+                    <img
+                      src={f.image}
+                      alt={f.name}
+                      className="w-7 h-7 rounded-full object-cover"
+                      style={{
+                        border: selected ? '2px solid var(--gold)' : '2px solid transparent',
+                        opacity: selected ? 1 : 0.5,
+                      }}
+                    />
+                    {f.name}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
           {/* Actions */}
           <div className="flex items-center gap-3 pt-2">
             <button
@@ -641,6 +691,30 @@ export default function AdminEvenements() {
                         </span>
                       )}
                     </div>
+                    {event.hosts && event.hosts.length > 0 && (
+                      <div className="flex items-center gap-1.5 mt-1">
+                        <span className="text-xs" style={{ color: 'var(--text-muted)' }}>Avec</span>
+                        <div className="flex -space-x-1.5">
+                          {event.hosts.map((h) => {
+                            const founder = FOUNDERS.find(f => f.key === h)
+                            if (!founder) return null
+                            return (
+                              <img
+                                key={h}
+                                src={founder.image}
+                                alt={founder.name}
+                                title={founder.name}
+                                className="w-6 h-6 rounded-full object-cover"
+                                style={{ border: '2px solid var(--dark-card)' }}
+                              />
+                            )
+                          })}
+                        </div>
+                        <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+                          {event.hosts.map(h => FOUNDERS.find(f => f.key === h)?.name).filter(Boolean).join(', ')}
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   {/* Right: actions */}

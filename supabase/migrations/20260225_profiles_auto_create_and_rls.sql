@@ -31,7 +31,22 @@ CREATE POLICY "Users can insert own profile"
   ON public.profiles FOR INSERT
   WITH CHECK (auth.uid() = id);
 
--- 3. RLS: allow founders to update any profile (for role changes)
+-- 3. Backfill: create profiles for all existing users who don't have one yet
+INSERT INTO public.profiles (id, prenom, email, role, avatar_url)
+SELECT
+  u.id,
+  COALESCE(
+    u.raw_user_meta_data->>'prenom',
+    split_part(COALESCE(u.raw_user_meta_data->>'full_name', u.raw_user_meta_data->>'name', 'Membre'), ' ', 1)
+  ),
+  COALESCE(u.email, ''),
+  'member',
+  COALESCE(u.raw_user_meta_data->>'avatar_url', u.raw_user_meta_data->>'picture')
+FROM auth.users u
+LEFT JOIN public.profiles p ON p.id = u.id
+WHERE p.id IS NULL;
+
+-- 4. RLS: allow founders to update any profile (for role changes)
 DROP POLICY IF EXISTS "Founders can update any profile" ON public.profiles;
 CREATE POLICY "Founders can update any profile"
   ON public.profiles FOR UPDATE

@@ -49,6 +49,17 @@ function sanitizeContent(content: SectionContent): SectionContent {
   return sanitizeValue(content) as SectionContent;
 }
 
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
 function hexToRgb(hex: string): string {
   const h = hex.replace("#", "");
   const r = parseInt(h.substring(0, 2), 16);
@@ -669,13 +680,15 @@ export default function Home() {
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 sm:gap-4">
               {(encyclo.items || []).filter((d: string) => !encyclopediaSearch || d.toLowerCase().includes(encyclopediaSearch.toLowerCase())).map((d: string, i: number) => (
                 <RevealOnScroll key={d} delay={i * 0.05} direction="scale">
-                  <GlowingCard className="px-3 sm:px-5 py-3 sm:py-4 text-center cursor-pointer group">
-                    <span className="text-xs sm:text-sm font-light transition-colors duration-300 group-hover:text-[var(--gold)]" style={{
-                      color: i === (encyclo.items || []).length - 1 ? gold : 'var(--text-secondary)',
-                    }}>
-                      {d}
-                    </span>
-                  </GlowingCard>
+                  <Link href={`/encyclopedie/${slugify(d)}`}>
+                    <GlowingCard className="px-3 sm:px-5 py-3 sm:py-4 text-center cursor-pointer group">
+                      <span className="text-xs sm:text-sm font-light transition-colors duration-300 group-hover:text-[var(--gold)]" style={{
+                        color: i === (encyclo.items || []).length - 1 ? gold : 'var(--text-secondary)',
+                      }}>
+                        {d}
+                      </span>
+                    </GlowingCard>
+                  </Link>
                 </RevealOnScroll>
               ))}
             </div>

@@ -101,7 +101,8 @@ export default function DashboardHome() {
   useEffect(() => {
     setQuote(getRandomQuote())
     const hour = new Date().getHours()
-    if (hour < 12) setGreeting('dashboard.morning')
+    if (hour < 5) setGreeting('dashboard.night')
+    else if (hour < 12) setGreeting('dashboard.morning')
     else if (hour < 18) setGreeting('dashboard.afternoon')
     else setGreeting('dashboard.evening')
 
@@ -200,7 +201,8 @@ export default function DashboardHome() {
         transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
         <p className="text-[13px] font-medium tracking-wide uppercase mb-2" style={{ color: 'var(--text-muted)' }}>
-          {greeting === 'dashboard.morning' ? (siteSettings.dash_greeting_morning || t('dashboard.morning'))
+          {greeting === 'dashboard.night' ? (siteSettings.dash_greeting_night || 'Insomnie ? Qu\'est-ce qui te tracasse')
+            : greeting === 'dashboard.morning' ? (siteSettings.dash_greeting_morning || t('dashboard.morning'))
             : greeting === 'dashboard.afternoon' ? (siteSettings.dash_greeting_afternoon || t('dashboard.afternoon'))
             : (siteSettings.dash_greeting_evening || t('dashboard.evening'))}
         </p>

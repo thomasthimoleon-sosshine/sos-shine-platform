@@ -4,27 +4,55 @@ import Link from 'next/link'
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
-const KEYS = ['mentions_title', 'mentions_content', 'logo_url']
-
 export default function MentionsLegalesPage() {
-  const [settings, setSettings] = useState<Record<string, string>>({})
+  const [title, setTitle] = useState('Mentions légales')
+  const [content, setContent] = useState('')
+  const [logoUrl, setLogoUrl] = useState('')
   const [loading, setLoading] = useState(true)
 
   const load = useCallback(async () => {
     try {
       const supabase = createClient()
-      const { data } = await supabase.from('site_settings').select('key, value').in('key', KEYS)
-      const map: Record<string, string> = {}
-      if (data) data.forEach((r: { key: string; value: string }) => { map[r.key] = r.value })
-      setSettings(map)
+
+      // Try landing_sections first (new system)
+      const { data: section } = await supabase
+        .from('landing_sections')
+        .select('content')
+        .eq('section_key', 'legal_mentions')
+        .maybeSingle()
+
+      if (section?.content?.html_content) {
+        setTitle(section.content.title || 'Mentions légales')
+        setContent(section.content.html_content)
+      } else {
+        // Fallback to site_settings (old system)
+        const { data } = await supabase.from('site_settings').select('key, value').in('key', ['mentions_title', 'mentions_content'])
+        if (data) {
+          const map: Record<string, string> = {}
+          data.forEach((r: { key: string; value: string }) => { map[r.key] = r.value })
+          if (map.mentions_title) setTitle(map.mentions_title)
+          if (map.mentions_content) setContent(map.mentions_content)
+        }
+      }
+
+      // Get logo
+      const { data: globalSection } = await supabase
+        .from('landing_sections')
+        .select('content')
+        .eq('section_key', '_global')
+        .maybeSingle()
+
+      if (globalSection?.content?.logo_url) {
+        setLogoUrl(globalSection.content.logo_url)
+      } else {
+        const { data: logoData } = await supabase.from('site_settings').select('value').eq('key', 'logo_url').maybeSingle()
+        if (logoData?.value) setLogoUrl(logoData.value)
+      }
     } catch { /* defaults */ }
     setLoading(false)
   }, [])
 
   useEffect(() => { load() }, [load])
-
-  const title = settings.mentions_title || 'Mentions légales'
-  const content = settings.mentions_content || ''
 
   if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" /></div>
 
@@ -36,11 +64,11 @@ export default function MentionsLegalesPage() {
           Retour à l&apos;accueil
         </Link>
 
-        {settings.logo_url && (
-          <Link href="/"><img src={settings.logo_url} alt="SOS Shine" className="h-10 mb-6 rounded-lg object-cover" /></Link>
+        {logoUrl && (
+          <Link href="/"><img src={logoUrl} alt="SOS Shine" className="h-10 mb-6 rounded-lg object-cover" /></Link>
         )}
 
-        <h1 className="font-display text-3xl md:text-4xl font-semibold mb-8">
+        <h1 className="font-display text-3xl md:text-4xl font-semibold mb-8" style={{ color: 'var(--text-primary)' }}>
           {title}
         </h1>
 

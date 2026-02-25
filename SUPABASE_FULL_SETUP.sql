@@ -109,7 +109,17 @@ CREATE TABLE IF NOT EXISTS public.landing_sections (
   updated_at    TIMESTAMPTZ DEFAULT now()
 );
 
--- ── 8. RLS POLICIES (Public Access) ──
+-- ── 8. ADMIN HELPER FUNCTION ──
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS BOOLEAN AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM public.profiles
+    WHERE id = auth.uid()
+      AND role IN ('founder', 'admin_content', 'admin_support')
+  );
+$$ LANGUAGE sql SECURITY DEFINER STABLE;
+
+-- ── 9. RLS POLICIES ──
 
 -- Profiles
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
@@ -122,6 +132,10 @@ CREATE POLICY "Users can update own profile" ON public.profiles FOR UPDATE USING
 ALTER TABLE public.douleurs ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Published douleurs are viewable by everyone" ON public.douleurs;
 CREATE POLICY "Published douleurs are viewable by everyone" ON public.douleurs FOR SELECT USING (is_published = true);
+DROP POLICY IF EXISTS "Admins can do everything on douleurs" ON public.douleurs;
+CREATE POLICY "Admins can do everything on douleurs" ON public.douleurs FOR ALL USING (public.is_admin()) WITH CHECK (public.is_admin());
+DROP POLICY IF EXISTS "Admins can view all douleurs" ON public.douleurs;
+CREATE POLICY "Admins can view all douleurs" ON public.douleurs FOR SELECT USING (public.is_admin());
 
 -- Subscriptions
 ALTER TABLE public.subscriptions ENABLE ROW LEVEL SECURITY;
@@ -139,3 +153,5 @@ CREATE POLICY "Users can insert messages" ON public.messages FOR INSERT WITH CHE
 ALTER TABLE public.landing_sections ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Landing sections are viewable by everyone" ON public.landing_sections;
 CREATE POLICY "Landing sections are viewable by everyone" ON public.landing_sections FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Admins can manage landing sections" ON public.landing_sections;
+CREATE POLICY "Admins can manage landing sections" ON public.landing_sections FOR ALL USING (public.is_admin()) WITH CHECK (public.is_admin());

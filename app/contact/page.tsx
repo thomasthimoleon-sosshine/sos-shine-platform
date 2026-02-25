@@ -5,31 +5,67 @@ import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 
-const KEYS = ['contact_title', 'contact_email', 'contact_phone', 'contact_address', 'contact_content', 'logo_url']
-
 export default function ContactPage() {
   const { t } = useTranslation()
-  const [settings, setSettings] = useState<Record<string, string>>({})
+  const [title, setTitle] = useState('Contact')
+  const [email, setEmail] = useState('contact@sosshine.fr')
+  const [phone, setPhone] = useState('')
+  const [address, setAddress] = useState('')
+  const [content, setContent] = useState('')
+  const [logoUrl, setLogoUrl] = useState('')
   const [loading, setLoading] = useState(true)
 
   const load = useCallback(async () => {
     try {
       const supabase = createClient()
-      const { data } = await supabase.from('site_settings').select('key, value').in('key', KEYS)
-      const map: Record<string, string> = {}
-      if (data) data.forEach((r: { key: string; value: string }) => { map[r.key] = r.value })
-      setSettings(map)
+
+      // Try landing_sections first (new system)
+      const { data: section } = await supabase
+        .from('landing_sections')
+        .select('content')
+        .eq('section_key', 'legal_contact')
+        .maybeSingle()
+
+      if (section?.content && (section.content.email || section.content.html_content)) {
+        setTitle(section.content.title || 'Contact')
+        setEmail(section.content.email || 'contact@sosshine.fr')
+        setPhone(section.content.phone || '')
+        setAddress(section.content.address || '')
+        setContent(section.content.html_content || '')
+      } else {
+        // Fallback to site_settings (old system)
+        const { data } = await supabase.from('site_settings').select('key, value').in('key', [
+          'contact_title', 'contact_email', 'contact_phone', 'contact_address', 'contact_content',
+        ])
+        if (data) {
+          const map: Record<string, string> = {}
+          data.forEach((r: { key: string; value: string }) => { map[r.key] = r.value })
+          if (map.contact_title) setTitle(map.contact_title)
+          if (map.contact_email) setEmail(map.contact_email)
+          if (map.contact_phone) setPhone(map.contact_phone)
+          if (map.contact_address) setAddress(map.contact_address)
+          if (map.contact_content) setContent(map.contact_content)
+        }
+      }
+
+      // Get logo
+      const { data: globalSection } = await supabase
+        .from('landing_sections')
+        .select('content')
+        .eq('section_key', '_global')
+        .maybeSingle()
+
+      if (globalSection?.content?.logo_url) {
+        setLogoUrl(globalSection.content.logo_url)
+      } else {
+        const { data: logoData } = await supabase.from('site_settings').select('value').eq('key', 'logo_url').maybeSingle()
+        if (logoData?.value) setLogoUrl(logoData.value)
+      }
     } catch { /* defaults */ }
     setLoading(false)
   }, [])
 
   useEffect(() => { load() }, [load])
-
-  const title = settings.contact_title || 'Contact'
-  const email = settings.contact_email || 'contact@sosshine.fr'
-  const phone = settings.contact_phone || ''
-  const address = settings.contact_address || ''
-  const content = settings.contact_content || ''
 
   if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" /></div>
 
@@ -41,8 +77,8 @@ export default function ContactPage() {
           {t('contact.back')}
         </Link>
 
-        {settings.logo_url && (
-          <Link href="/"><img src={settings.logo_url} alt="SOS Shine" className="h-10 mb-6 rounded-lg object-cover" /></Link>
+        {logoUrl && (
+          <Link href="/"><img src={logoUrl} alt="SOS Shine" className="h-10 mb-6 rounded-lg object-cover" /></Link>
         )}
 
         <h1 className="font-display text-3xl md:text-4xl font-semibold mb-8" style={{ color: 'var(--text-primary)' }}>

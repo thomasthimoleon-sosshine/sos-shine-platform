@@ -623,6 +623,78 @@ export default function LandingAdminPage() {
           </>
         )
 
+      /* ────────────── ticker_1 / ticker_2 ────────────── */
+      case 'ticker_1':
+      case 'ticker_2':
+        return (
+          <>
+            <TextAreaField label="Mots du bandeau (un par ligne)" rows={8}
+              value={Array.isArray(c.items) ? c.items.join('\n') : ''}
+              onChange={(v) => updateContent(key, 'items', v.split('\n').filter((line: string) => line.trim() !== ''))} />
+            <TextField label="Vitesse (secondes par boucle)" value={String(c.speed ?? 35)} type="number"
+              onChange={(v) => updateContent(key, 'speed', parseInt(v) || 35)} />
+          </>
+        )
+
+      /* ────────────── legal_mentions / legal_cgv / legal_privacy ────────────── */
+      case 'legal_mentions':
+      case 'legal_cgv':
+      case 'legal_privacy':
+        return (
+          <>
+            <TextField label="Titre de la page" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
+            <div>
+              <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>Contenu HTML</label>
+              <textarea
+                value={c.html_content || ''}
+                onChange={(e) => updateContent(key, 'html_content', e.target.value)}
+                rows={20}
+                className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-y font-mono"
+                style={inputStyle}
+                placeholder="<h2>Titre de section</h2>\n<p>Votre contenu ici...</p>"
+              />
+              <p className="text-[10px] mt-1.5" style={{ color: 'var(--text-muted)' }}>
+                Utilisez du HTML : &lt;h2&gt;, &lt;h3&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;li&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;a href=&quot;...&quot;&gt;
+              </p>
+            </div>
+            {c.html_content && (
+              <div className="rounded-lg p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
+                <p className="text-[10px] font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>Aperçu</p>
+                <div
+                  className="prose prose-invert prose-sm max-w-none"
+                  style={{ color: 'var(--text-secondary)' }}
+                  dangerouslySetInnerHTML={{ __html: c.html_content }}
+                />
+              </div>
+            )}
+          </>
+        )
+
+      /* ────────────── legal_contact ────────────── */
+      case 'legal_contact':
+        return (
+          <>
+            <TextField label="Titre de la page" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
+            <TextField label="Email" value={c.email || ''} onChange={(v) => updateContent(key, 'email', v)} />
+            <TextField label="Téléphone" value={c.phone || ''} onChange={(v) => updateContent(key, 'phone', v)} />
+            <TextField label="Adresse" value={c.address || ''} onChange={(v) => updateContent(key, 'address', v)} />
+            <div>
+              <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>Contenu supplémentaire (HTML)</label>
+              <textarea
+                value={c.html_content || ''}
+                onChange={(e) => updateContent(key, 'html_content', e.target.value)}
+                rows={12}
+                className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-y font-mono"
+                style={inputStyle}
+                placeholder="<p>Contenu additionnel ici...</p>"
+              />
+              <p className="text-[10px] mt-1.5" style={{ color: 'var(--text-muted)' }}>
+                Utilisez du HTML : &lt;h2&gt;, &lt;h3&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;li&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;a href=&quot;...&quot;&gt;
+              </p>
+            </div>
+          </>
+        )
+
       default:
         return <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Section inconnue: {key}</p>
     }
@@ -772,7 +844,13 @@ export default function LandingAdminPage() {
         )
 
       case 'footer':
-        return null // No style fields for footer
+      case 'ticker_1':
+      case 'ticker_2':
+      case 'legal_mentions':
+      case 'legal_cgv':
+      case 'legal_privacy':
+      case 'legal_contact':
+        return null // No style fields
 
       default:
         return null

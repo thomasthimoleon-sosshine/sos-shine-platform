@@ -391,7 +391,16 @@ export default function Home() {
     "--button-bg": buttonBg,
   } as React.CSSProperties;
 
-  const tickerItems = [t('ticker.abuse'), t('ticker.self_love'), t('ticker.burnout'), t('ticker.confidence'), t('ticker.dependency'), t('ticker.grief'), t('ticker.breakup')];
+  const ticker1Data = sec('ticker_1');
+  const ticker2Data = sec('ticker_2');
+  const tickerItems = (Array.isArray(ticker1Data.items) && ticker1Data.items.length > 0)
+    ? ticker1Data.items
+    : [t('ticker.abuse'), t('ticker.self_love'), t('ticker.burnout'), t('ticker.confidence'), t('ticker.dependency'), t('ticker.grief'), t('ticker.breakup')];
+  const ticker1Speed = ticker1Data.speed || 35;
+  const ticker2Items = (Array.isArray(ticker2Data.items) && ticker2Data.items.length > 0)
+    ? ticker2Data.items
+    : [t('ticker.support'), t('ticker.community'), t('ticker.protocols'), t('ticker.collective'), t('ticker.dedicated_chat'), t('ticker.live_events'), t('ticker.meditation'), t('ticker.coaching')];
+  const ticker2Speed = ticker2Data.speed || 40;
 
   return (
     <main className="grain relative z-0 overflow-hidden" style={cssVars}>
@@ -529,7 +538,7 @@ export default function Home() {
       )}
 
       {/* ═══ TICKER BAND ═══ */}
-      <InfiniteTickerBand items={tickerItems} speed={35} />
+      <InfiniteTickerBand items={tickerItems} speed={ticker1Speed} />
 
       {/* ═══ SIGNATURE EMOTIONNELLE CTA ═══ */}
       <section className="px-5 md:px-20 py-12 md:py-20 relative cv-auto">
@@ -707,7 +716,7 @@ export default function Home() {
       )}
 
       {/* ═══ TICKER BAND 2 ═══ */}
-      <InfiniteTickerBand items={[t('ticker.support'), t('ticker.community'), t('ticker.protocols'), t('ticker.collective'), t('ticker.dedicated_chat'), t('ticker.live_events'), t('ticker.meditation'), t('ticker.coaching')]} speed={40} />
+      <InfiniteTickerBand items={ticker2Items} speed={ticker2Speed} />
 
       {/* ═══ COMMUNAUTE ═══ */}
       {vis('communaute') && (

@@ -320,6 +320,61 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     },
     styles: {},
   },
+  {
+    section_key: 'ticker_1',
+    label: 'Bandeau défilant 1',
+    position: 12,
+    is_visible: true,
+    content: {
+      items: ['Abus', 'Amour propre', 'Burn-out', 'Confiance en soi', 'Dépendance affective', 'Deuil', 'Rupture'],
+      speed: 35,
+    },
+    styles: {},
+  },
+  {
+    section_key: 'ticker_2',
+    label: 'Bandeau défilant 2',
+    position: 13,
+    is_visible: true,
+    content: {
+      items: ['Soutien 24/7', 'Communauté bienveillante', 'Protocoles exclusifs', 'Soins collectifs', 'Chat dédié', 'Événements live', 'Méditation guidée', 'Coaching immersif'],
+      speed: 40,
+    },
+    styles: {},
+  },
+  {
+    section_key: 'legal_mentions',
+    label: 'Page — Mentions légales',
+    position: 14,
+    is_visible: true,
+    content: {
+      title: 'Mentions légales',
+      html_content: '',
+    },
+    styles: {},
+  },
+  {
+    section_key: 'legal_cgv',
+    label: 'Page — CGV',
+    position: 15,
+    is_visible: true,
+    content: {
+      title: 'Conditions Générales de Vente',
+      html_content: '',
+    },
+    styles: {},
+  },
+  {
+    section_key: 'legal_privacy',
+    label: 'Page — Confidentialité',
+    position: 16,
+    is_visible: true,
+    content: {
+      title: 'Politique de confidentialité',
+      html_content: '',
+    },
+    styles: {},
+  },
 ]
 
 /** Get default for a specific section_key */

@@ -375,6 +375,20 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     },
     styles: {},
   },
+  {
+    section_key: 'legal_contact',
+    label: 'Page — Contact',
+    position: 17,
+    is_visible: true,
+    content: {
+      title: 'Contact',
+      email: 'contact@sosshine.fr',
+      phone: '',
+      address: '',
+      html_content: '',
+    },
+    styles: {},
+  },
 ]
 
 /** Get default for a specific section_key */

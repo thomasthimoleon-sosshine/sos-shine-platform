@@ -670,6 +670,31 @@ export default function LandingAdminPage() {
           </>
         )
 
+      /* ────────────── legal_contact ────────────── */
+      case 'legal_contact':
+        return (
+          <>
+            <TextField label="Titre de la page" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
+            <TextField label="Email" value={c.email || ''} onChange={(v) => updateContent(key, 'email', v)} />
+            <TextField label="Téléphone" value={c.phone || ''} onChange={(v) => updateContent(key, 'phone', v)} />
+            <TextField label="Adresse" value={c.address || ''} onChange={(v) => updateContent(key, 'address', v)} />
+            <div>
+              <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>Contenu supplémentaire (HTML)</label>
+              <textarea
+                value={c.html_content || ''}
+                onChange={(e) => updateContent(key, 'html_content', e.target.value)}
+                rows={12}
+                className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-y font-mono"
+                style={inputStyle}
+                placeholder="<p>Contenu additionnel ici...</p>"
+              />
+              <p className="text-[10px] mt-1.5" style={{ color: 'var(--text-muted)' }}>
+                Utilisez du HTML : &lt;h2&gt;, &lt;h3&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;li&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;a href=&quot;...&quot;&gt;
+              </p>
+            </div>
+          </>
+        )
+
       default:
         return <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Section inconnue: {key}</p>
     }
@@ -824,6 +849,7 @@ export default function LandingAdminPage() {
       case 'legal_mentions':
       case 'legal_cgv':
       case 'legal_privacy':
+      case 'legal_contact':
         return null // No style fields
 
       default:

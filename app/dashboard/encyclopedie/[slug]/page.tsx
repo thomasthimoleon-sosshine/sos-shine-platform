@@ -44,29 +44,20 @@ export default function DouleurDetailPage() {
     },
     {
       num: 2,
-      title: 'Libération Énergétique',
-      subtitle: 'Soin énergétique',
+      title: 'Libérer & Intégrer',
+      subtitle: 'Vidéo de libération et d\'intégration',
       icon: '✨',
       color: '#74C0FC',
-      description: 'Activation émotionnelle. Décharge des tensions. Nettoyage des empreintes qui vous bloquent.',
+      description: 'Activation émotionnelle. Décharge des tensions. Nettoyage des empreintes qui vous bloquent. Stabilisation intérieure et reconnexion à soi.',
       contentType: 'audio_energy' as const,
     },
     {
       num: 3,
-      title: 'Intégration & Méditation',
-      subtitle: 'Méditation guidée',
-      icon: '🧘',
-      color: '#E17055',
-      description: 'Stabilisation intérieure. Reconnexion à soi. Nouvelle fréquence émotionnelle.',
-      contentType: 'audio_meditation' as const,
-    },
-    {
-      num: 4,
-      title: 'Action & Reprogrammation',
-      subtitle: 'Exercices pratiques',
+      title: 'Agir',
+      subtitle: 'PDF & audio guidé',
       icon: '⚡',
-      color: '#D4AF37',
-      description: 'Carnets de bord. PDF téléchargeable. Habitudes positives. Plan d\'action concret.',
+      color: '#E17055',
+      description: 'PDF d\'exercices pratiques et audio guidé. Passez à l\'action concrète. Reprogrammation émotionnelle. Ancrez vos transformations dans le quotidien.',
       contentType: 'pdf' as const,
     },
   ]
@@ -102,7 +93,6 @@ export default function DouleurDetailPage() {
     switch (step.contentType) {
       case 'video': return douleur.video_url
       case 'audio_energy': return douleur.audio_energy_url
-      case 'audio_meditation': return douleur.audio_meditation_url
       case 'pdf': return douleur.pdf_url
       default: return null
     }
@@ -164,7 +154,7 @@ export default function DouleurDetailPage() {
           </div>
           <div>
             <span className="text-xs font-medium block" style={{ color: currentStep.color, opacity: 0.7 }}>
-              Étape {currentStep.num}/4
+              Étape {currentStep.num}/3
             </span>
             <h2 className="font-display text-xl font-semibold" style={{ color: currentStep.color }}>
               {currentStep.title}
@@ -200,20 +190,20 @@ export default function DouleurDetailPage() {
             )
           }
 
-          if (currentStep.contentType === 'audio_energy' || currentStep.contentType === 'audio_meditation') {
+          if (currentStep.contentType === 'audio_energy') {
             return contentUrl ? (
-              <div className="rounded-xl p-6" style={{ background: 'rgba(0,0,0,0.2)' }}>
-                <audio src={contentUrl} controls className="w-full" />
+              <div className="rounded-xl overflow-hidden aspect-video mb-4" style={{ background: 'var(--dark)' }}>
+                <video src={contentUrl} controls className="w-full h-full" />
               </div>
             ) : (
-              <div className="rounded-xl p-8 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.2)', border: `1px dashed ${currentStep.color}30` }}>
+              <div className="rounded-xl aspect-video flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.3)', border: `1px dashed ${currentStep.color}30` }}>
                 <div className="text-center">
                   <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3" style={{ background: `${currentStep.color}15` }}>
                     <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke={currentStep.color} strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
                     </svg>
                   </div>
-                  <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Audio bientôt disponible</p>
+                  <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Vidéo bientôt disponible</p>
                 </div>
               </div>
             )
@@ -222,6 +212,7 @@ export default function DouleurDetailPage() {
           if (currentStep.contentType === 'pdf') {
             return (
               <div className="space-y-4">
+                {/* PDF */}
                 {contentUrl ? (
                   <a href={contentUrl} target="_blank" rel="noopener noreferrer"
                     className="flex items-center gap-3 p-4 rounded-xl transition-all"
@@ -242,10 +233,17 @@ export default function DouleurDetailPage() {
                           <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                         </svg>
                       </div>
-                      <p className="text-sm" style={{ color: 'var(--text-muted)' }}>PDF & exercices bientôt disponibles</p>
+                      <p className="text-sm" style={{ color: 'var(--text-muted)' }}>PDF bientôt disponible</p>
                     </div>
                   </div>
                 )}
+                {/* Audio */}
+                {douleur.audio_meditation_url ? (
+                  <div className="rounded-xl p-4" style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${currentStep.color}20` }}>
+                    <p className="font-medium text-sm mb-2" style={{ color: 'var(--text-primary)' }}>Audio guidé</p>
+                    <audio src={douleur.audio_meditation_url} controls className="w-full" />
+                  </div>
+                ) : null}
                 {douleur.exercise_content && (
                   <div className="p-5 rounded-xl" style={{ background: 'rgba(0,0,0,0.2)' }}>
                     <h4 className="font-semibold text-sm mb-3" style={{ color: currentStep.color }}>Exercice</h4>
@@ -275,8 +273,8 @@ export default function DouleurDetailPage() {
             Étape précédente
           </button>
           <button
-            onClick={() => setActiveStep(Math.min(4, activeStep + 1))}
-            disabled={activeStep === 4}
+            onClick={() => setActiveStep(Math.min(3, activeStep + 1))}
+            disabled={activeStep === 3}
             className="flex items-center gap-2 text-sm transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
             style={{ color: currentStep.color }}
           >

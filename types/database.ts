@@ -34,11 +34,15 @@ export type Douleur = {
   description: string | null
   // Étape 1 — Comprendre
   video_url: string | null
-  // Étape 2 — Libération Énergétique
+  step1_audio_url: string | null
+  step1_pdf_url: string | null
+  // Étape 2 — Libérer & Intégrer
   audio_energy_url: string | null
-  // Étape 3 — Intégration & Méditation
+  step2_video_url: string | null
+  step2_pdf_url: string | null
+  // Étape 3 — Agir
   audio_meditation_url: string | null
-  // Étape 4 — Action & Reprogrammation
+  step3_video_url: string | null
   pdf_url: string | null
   exercise_content: string | null
   // Meta

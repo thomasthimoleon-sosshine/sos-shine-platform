@@ -85,7 +85,7 @@ const sections: SectionDef[] = [
     fields: [
       { label: 'Sous-titre de section', key: 'principe_label', type: 'text', default: 'Le principe SOS Shine' },
       { label: 'Titre', key: 'principe_title', type: 'textarea', default: "On ne change pas votre identité. On apaise le challenge émotionnel pour libérer votre potentiel." },
-      { label: 'Description', key: 'principe_desc', type: 'textarea', default: "Chaque expérience de vie — abandon, trahison, burn-out, deuil, peur — possède sa propre page dans notre encyclopédie, avec un protocole en 4 étapes conçu pour vous accompagner de A à Z." },
+      { label: 'Description', key: 'principe_desc', type: 'textarea', default: "Chaque expérience de vie — abandon, trahison, burn-out, deuil, peur — possède sa propre page dans notre encyclopédie, avec un protocole en 3 étapes conçu pour vous accompagner de A à Z." },
       sep('Style & mise en page'),
       { label: 'Police du titre', key: 'principe_title_font', type: 'select', options: fontOpts, default: 'Cormorant Garamond' },
       { label: 'Taille du titre', key: 'principe_title_size', type: 'select', options: sizeOpts, default: 'xl' },
@@ -99,7 +99,7 @@ const sections: SectionDef[] = [
     ],
   },
   {
-    title: 'Section — Les 4 Étapes', icon: '🔢',
+    title: 'Section — Les 3 Étapes', icon: '🔢',
     fields: [
       { label: 'Sous-titre de section', key: 'steps_label', type: 'text', default: 'Le parcours SOS Shine' },
       { label: 'Titre de section', key: 'steps_title', type: 'text', default: '3 étapes pour chaque challenge émotionnel' },
@@ -109,8 +109,6 @@ const sections: SectionDef[] = [
       { label: 'Étape 2 — Description', key: 'step2_desc', type: 'textarea', default: "Soin énergétique. Activation émotionnelle. Décharge des tensions." },
       { label: 'Étape 3 — Titre', key: 'step3_title', type: 'text', default: 'Intégration & Méditation' },
       { label: 'Étape 3 — Description', key: 'step3_desc', type: 'textarea', default: "Méditation guidée. Stabilisation intérieure. Reconnexion à soi." },
-      { label: 'Étape 4 — Titre', key: 'step4_title', type: 'text', default: 'Action & Reprogrammation' },
-      { label: 'Étape 4 — Description', key: 'step4_desc', type: 'textarea', default: "Exercices pratiques. Carnets de bord. PDF. Plan d'action concret." },
       sep('Style'),
       { label: 'Police du titre', key: 'steps_title_font', type: 'select', options: fontOpts, default: 'Cormorant Garamond' },
       { label: 'Taille du titre', key: 'steps_title_size', type: 'select', options: sizeOpts, default: 'lg' },

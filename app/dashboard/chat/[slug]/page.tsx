@@ -137,7 +137,7 @@ export default function ChatDouleurPage() {
         </Link>
         <Link href={`/dashboard/encyclopedie/${slug}`} className="px-3 py-1.5 rounded-lg text-xs flex-shrink-0 transition-colors"
           style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-secondary)' }}>
-          Retour aux 4 étapes
+          Retour aux 3 étapes
         </Link>
       </div>
 

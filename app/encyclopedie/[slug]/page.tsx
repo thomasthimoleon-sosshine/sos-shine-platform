@@ -33,7 +33,7 @@ export default function PublicDouleurDetailPage() {
         setDouleur(d)
         document.title = `${d.title} — Encyclopédie SOS Shine`
         const metaDesc = document.querySelector('meta[name="description"]')
-        if (metaDesc) metaDesc.setAttribute('content', `Protocole en 4 étapes pour surmonter ${d.title.toLowerCase()} : vidéos, soins énergétiques et méditations guidées. Rejoins la communauté SOS Shine.`)
+        if (metaDesc) metaDesc.setAttribute('content', `Protocole en 3 étapes pour surmonter ${d.title.toLowerCase()} : vidéos, soins énergétiques et méditations guidées. Rejoins la communauté SOS Shine.`)
       }
       setLoading(false)
     }

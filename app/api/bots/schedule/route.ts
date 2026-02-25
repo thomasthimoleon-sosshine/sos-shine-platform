@@ -41,7 +41,7 @@ const EXTRA_WALL_POSTS: Record<string, { title: string; content: string }[]> = {
     { title: 'Partage générationnel', content: 'J\'ai fait découvrir SOS Shine à ma mère. Elle a été touchée par l\'approche bienveillante. Maintenant on échange sur nos protocoles respectifs. C\'est beau !' },
     { title: 'Objectifs atteints !', content: 'J\'avais fixé 5 objectifs personnels sur la plateforme et j\'en ai déjà accompli 3 ! La fonctionnalité objectifs est super motivante pour rester engagée.' },
     { title: 'Le pouvoir du collectif', content: 'Ce que j\'aime ici, c\'est l\'énergie collective. Chaque message de soutien, chaque partage d\'expérience nous élève tous. C\'est ça la force d\'une communauté.' },
-    { title: 'Coup de cœur protocole', content: 'Le protocole sur la résilience est mon coup de cœur. Les 4 étapes sont claires et progressives. J\'ai senti un vrai déclic à l\'étape 3 avec la méditation.' },
+    { title: 'Coup de cœur protocole', content: 'Le protocole sur la résilience est mon coup de cœur. Les 3 étapes sont claires et progressives. J\'ai senti un vrai déclic à l\'étape 3 avec la méditation.' },
     { title: 'Bonne soirée la communauté', content: 'Juste un petit message de bonne soirée à toute la communauté. Prenez soin de vous ce soir. Vous méritez ce repos. 💛' },
   ],
   'Nicolas': [

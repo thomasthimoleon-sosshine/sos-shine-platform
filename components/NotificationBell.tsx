@@ -6,6 +6,22 @@ import { createClient } from '@/lib/supabase/client'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 import type { Notification } from '@/types/database'
 
+const READ_STORAGE_KEY = 'sos-shine-read-notifications'
+
+function getLocalReadIds(): Set<string> {
+  try {
+    return new Set(JSON.parse(localStorage.getItem(READ_STORAGE_KEY) || '[]'))
+  } catch {
+    return new Set()
+  }
+}
+
+function saveLocalReadIds(ids: Set<string>) {
+  // Keep only last 200 IDs to avoid localStorage bloat
+  const arr = [...ids].slice(-200)
+  localStorage.setItem(READ_STORAGE_KEY, JSON.stringify(arr))
+}
+
 export default function NotificationBell() {
   const { t } = useTranslation()
   const [notifications, setNotifications] = useState<Notification[]>([])
@@ -13,12 +29,16 @@ export default function NotificationBell() {
   const [open, setOpen] = useState(false)
   const [userId, setUserId] = useState<string | null>(null)
   const panelRef = useRef<HTMLDivElement>(null)
+  const localReadIdsRef = useRef<Set<string>>(new Set())
 
   const loadNotifications = useCallback(async () => {
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
     setUserId(user.id)
+
+    // Load locally read IDs
+    localReadIdsRef.current = getLocalReadIds()
 
     try {
       const { data } = await supabase
@@ -29,8 +49,13 @@ export default function NotificationBell() {
         .limit(20)
 
       if (data) {
-        setNotifications(data as Notification[])
-        setUnreadCount((data as Notification[]).filter((n: Notification) => !n.is_read).length)
+        // Merge DB read state with local read state
+        const merged = (data as Notification[]).map(n => ({
+          ...n,
+          is_read: n.is_read || localReadIdsRef.current.has(n.id),
+        }))
+        setNotifications(merged)
+        setUnreadCount(merged.filter(n => !n.is_read).length)
       }
     } catch {
       // Table might not exist yet - silently handle
@@ -55,8 +80,11 @@ export default function NotificationBell() {
       }, (payload) => {
         const notif = payload.new as Notification
         if (notif.user_id === userId || notif.user_id === null) {
-          setNotifications(prev => [notif, ...prev].slice(0, 20))
-          setUnreadCount(prev => prev + 1)
+          // Check if already locally read
+          const isLocallyRead = localReadIdsRef.current.has(notif.id)
+          const merged = { ...notif, is_read: notif.is_read || isLocallyRead }
+          setNotifications(prev => [merged, ...prev].slice(0, 20))
+          if (!merged.is_read) setUnreadCount(prev => prev + 1)
         }
       })
       .subscribe()
@@ -75,18 +103,31 @@ export default function NotificationBell() {
   }, [open])
 
   async function markAsRead(id: string) {
+    // Save to localStorage for persistence
+    localReadIdsRef.current.add(id)
+    saveLocalReadIds(localReadIdsRef.current)
+
+    // Also try to update in DB (may fail for global notifications due to RLS)
     const supabase = createClient()
     await supabase.from('notifications').update({ is_read: true }).eq('id', id)
+
     setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: true } : n))
     setUnreadCount(prev => Math.max(0, prev - 1))
   }
 
   async function markAllRead() {
     if (!userId) return
-    const supabase = createClient()
     const unreadIds = notifications.filter(n => !n.is_read).map(n => n.id)
     if (unreadIds.length === 0) return
+
+    // Save all to localStorage
+    unreadIds.forEach(id => localReadIdsRef.current.add(id))
+    saveLocalReadIds(localReadIdsRef.current)
+
+    // Also try to update in DB
+    const supabase = createClient()
     await supabase.from('notifications').update({ is_read: true }).in('id', unreadIds)
+
     setNotifications(prev => prev.map(n => ({ ...n, is_read: true })))
     setUnreadCount(0)
   }

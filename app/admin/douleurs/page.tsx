@@ -20,13 +20,27 @@ const emptyForm = {
   title: '',
   slug: '',
   description: '',
+  image_url: '',
+  // Step 1
   video_url: '',
+  step1_audio_url: '',
+  step1_pdf_url: '',
+  // Step 2
+  step2_video_url: '',
   audio_energy_url: '',
+  step2_pdf_url: '',
+  // Step 3
+  step3_video_url: '',
   audio_meditation_url: '',
   pdf_url: '',
   exercise_content: '',
-  image_url: '',
 }
+
+const STEPS = [
+  { num: 1, title: 'Comprendre', icon: '🎬', color: '#55EFC4', colorBg: 'rgba(85,239,196,0.04)', colorBorder: 'rgba(85,239,196,0.1)' },
+  { num: 2, title: 'Libérer & Intégrer', icon: '✨', color: '#74C0FC', colorBg: 'rgba(116,192,252,0.04)', colorBorder: 'rgba(116,192,252,0.1)' },
+  { num: 3, title: 'Agir', icon: '⚡', color: '#E17055', colorBg: 'rgba(225,112,85,0.04)', colorBorder: 'rgba(225,112,85,0.1)' },
+]
 
 export default function AdminDouleursPage() {
   const [douleurs, setDouleurs] = useState<Douleur[]>([])
@@ -76,12 +90,17 @@ export default function AdminDouleursPage() {
       title: d.title,
       slug: d.slug,
       description: d.description || '',
+      image_url: d.image_url || '',
       video_url: d.video_url || '',
+      step1_audio_url: d.step1_audio_url || '',
+      step1_pdf_url: d.step1_pdf_url || '',
+      step2_video_url: d.step2_video_url || '',
       audio_energy_url: d.audio_energy_url || '',
+      step2_pdf_url: d.step2_pdf_url || '',
+      step3_video_url: d.step3_video_url || '',
       audio_meditation_url: d.audio_meditation_url || '',
       pdf_url: d.pdf_url || '',
       exercise_content: d.exercise_content || '',
-      image_url: d.image_url || '',
     })
     setShowForm(true)
     setError(null)
@@ -103,12 +122,17 @@ export default function AdminDouleursPage() {
       title: form.title.trim(),
       slug: form.slug,
       description: form.description.trim() || null,
+      image_url: form.image_url.trim() || null,
       video_url: form.video_url.trim() || null,
+      step1_audio_url: form.step1_audio_url.trim() || null,
+      step1_pdf_url: form.step1_pdf_url.trim() || null,
+      step2_video_url: form.step2_video_url.trim() || null,
       audio_energy_url: form.audio_energy_url.trim() || null,
+      step2_pdf_url: form.step2_pdf_url.trim() || null,
+      step3_video_url: form.step3_video_url.trim() || null,
       audio_meditation_url: form.audio_meditation_url.trim() || null,
       pdf_url: form.pdf_url.trim() || null,
       exercise_content: form.exercise_content.trim() || null,
-      image_url: form.image_url.trim() || null,
     }
 
     if (editingId) {
@@ -188,6 +212,22 @@ export default function AdminDouleursPage() {
     }
   }
 
+  // Helper: get media fields for a step
+  function getStepFields(stepNum: number) {
+    if (stepNum === 1) return { video: 'video_url', audio: 'step1_audio_url', pdf: 'step1_pdf_url' }
+    if (stepNum === 2) return { video: 'step2_video_url', audio: 'audio_energy_url', pdf: 'step2_pdf_url' }
+    return { video: 'step3_video_url', audio: 'audio_meditation_url', pdf: 'pdf_url' }
+  }
+
+  // Check if a douleur has content for a given step
+  function hasStepContent(d: Douleur, stepNum: number): boolean {
+    const fields = getStepFields(stepNum)
+    const v = d[fields.video as keyof Douleur]
+    const a = d[fields.audio as keyof Douleur]
+    const p = d[fields.pdf as keyof Douleur]
+    return !!(v || a || p)
+  }
+
   const inputStyle: React.CSSProperties = {
     width: '100%',
     padding: '10px 14px',
@@ -255,7 +295,7 @@ export default function AdminDouleursPage() {
               <input id="title" name="title" type="text" required value={form.title} onChange={handleChange} placeholder="Ex : Abandon" style={inputStyle} />
             </div>
             <div>
-              <label htmlFor="slug" style={labelStyle}>Slug (auto-genere)</label>
+              <label htmlFor="slug" style={labelStyle}>Slug (auto-généré)</label>
               <input id="slug" name="slug" type="text" required value={form.slug} onChange={handleChange} placeholder="abandon" style={{ ...inputStyle, color: 'var(--text-muted)' }} />
             </div>
           </div>
@@ -277,69 +317,68 @@ export default function AdminDouleursPage() {
             onRemoved={() => setForm((prev) => ({ ...prev, image_url: '' }))}
           />
 
-          {/* Uploads for 4 steps */}
-          <div className="rounded-lg p-4" style={{ background: 'rgba(85,239,196,0.04)', border: '1px solid rgba(85,239,196,0.1)' }}>
-            <h3 className="text-sm font-semibold mb-4" style={{ color: '#55EFC4' }}>Etape 1 — Comprendre (Video)</h3>
-            <FileUpload
-              label="Video de coaching"
-              accept="video/*"
-              folder="douleurs"
-              currentUrl={form.video_url || null}
-              hint="MP4 recommande, max 100 Mo"
-              onUploaded={(url) => setForm((prev) => ({ ...prev, video_url: url }))}
-              onRemoved={() => setForm((prev) => ({ ...prev, video_url: '' }))}
-            />
-          </div>
+          {/* 3 Steps — each with Video + Audio + PDF */}
+          {STEPS.map((step) => {
+            const fields = getStepFields(step.num)
+            return (
+              <div key={step.num} className="rounded-lg p-4 space-y-4" style={{ background: step.colorBg, border: `1px solid ${step.colorBorder}` }}>
+                <h3 className="text-sm font-semibold flex items-center gap-2" style={{ color: step.color }}>
+                  <span className="text-lg">{step.icon}</span>
+                  Étape {step.num} — {step.title}
+                </h3>
 
-          <div className="rounded-lg p-4" style={{ background: 'rgba(116,192,252,0.04)', border: '1px solid rgba(116,192,252,0.1)' }}>
-            <h3 className="text-sm font-semibold mb-4" style={{ color: '#74C0FC' }}>Etape 2 — Liberation Energetique (Audio)</h3>
-            <FileUpload
-              label="Audio soin energetique"
-              accept="audio/*"
-              folder="douleurs"
-              currentUrl={form.audio_energy_url || null}
-              hint="MP3 ou WAV, max 100 Mo"
-              onUploaded={(url) => setForm((prev) => ({ ...prev, audio_energy_url: url }))}
-              onRemoved={() => setForm((prev) => ({ ...prev, audio_energy_url: '' }))}
-            />
-          </div>
+                <div className="grid gap-4">
+                  {/* Video */}
+                  <FileUpload
+                    label={`Vidéo — Étape ${step.num}`}
+                    accept="video/*"
+                    folder="douleurs"
+                    currentUrl={(form as Record<string, string>)[fields.video] || null}
+                    hint="MP4 recommandé, max 100 Mo"
+                    onUploaded={(url) => setForm((prev) => ({ ...prev, [fields.video]: url }))}
+                    onRemoved={() => setForm((prev) => ({ ...prev, [fields.video]: '' }))}
+                  />
 
-          <div className="rounded-lg p-4" style={{ background: 'rgba(225,112,85,0.04)', border: '1px solid rgba(225,112,85,0.1)' }}>
-            <h3 className="text-sm font-semibold mb-4" style={{ color: '#E17055' }}>Etape 3 — Integration & Meditation (Audio)</h3>
-            <FileUpload
-              label="Audio meditation guidee"
-              accept="audio/*"
-              folder="douleurs"
-              currentUrl={form.audio_meditation_url || null}
-              hint="MP3 ou WAV, max 100 Mo"
-              onUploaded={(url) => setForm((prev) => ({ ...prev, audio_meditation_url: url }))}
-              onRemoved={() => setForm((prev) => ({ ...prev, audio_meditation_url: '' }))}
-            />
-          </div>
+                  {/* Audio */}
+                  <FileUpload
+                    label={`Audio — Étape ${step.num}`}
+                    accept="audio/*"
+                    folder="douleurs"
+                    currentUrl={(form as Record<string, string>)[fields.audio] || null}
+                    hint="MP3 ou WAV, max 100 Mo"
+                    onUploaded={(url) => setForm((prev) => ({ ...prev, [fields.audio]: url }))}
+                    onRemoved={() => setForm((prev) => ({ ...prev, [fields.audio]: '' }))}
+                  />
 
-          <div className="rounded-lg p-4" style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.1)' }}>
-            <h3 className="text-sm font-semibold mb-4" style={{ color: '#D4AF37' }}>Etape 4 — Action & Reprogrammation</h3>
-            <FileUpload
-              label="PDF exercices"
-              accept="application/pdf"
-              folder="douleurs"
-              currentUrl={form.pdf_url || null}
-              hint="PDF max 100 Mo"
-              onUploaded={(url) => setForm((prev) => ({ ...prev, pdf_url: url }))}
-              onRemoved={() => setForm((prev) => ({ ...prev, pdf_url: '' }))}
-            />
-            <div className="mt-4">
-              <label htmlFor="exercise_content" style={labelStyle}>Contenu exercice (texte)</label>
-              <textarea id="exercise_content" name="exercise_content" rows={5} value={form.exercise_content} onChange={handleChange} placeholder="Instructions de l'exercice..." style={{ ...inputStyle, resize: 'vertical' as const }} />
-            </div>
-          </div>
+                  {/* PDF */}
+                  <FileUpload
+                    label={`PDF — Étape ${step.num}`}
+                    accept="application/pdf"
+                    folder="douleurs"
+                    currentUrl={(form as Record<string, string>)[fields.pdf] || null}
+                    hint="PDF max 100 Mo"
+                    onUploaded={(url) => setForm((prev) => ({ ...prev, [fields.pdf]: url }))}
+                    onRemoved={() => setForm((prev) => ({ ...prev, [fields.pdf]: '' }))}
+                  />
+                </div>
+
+                {/* Exercise content only on step 3 */}
+                {step.num === 3 && (
+                  <div>
+                    <label htmlFor="exercise_content" style={labelStyle}>Contenu exercice (texte)</label>
+                    <textarea id="exercise_content" name="exercise_content" rows={5} value={form.exercise_content} onChange={handleChange} placeholder="Instructions de l'exercice..." style={{ ...inputStyle, resize: 'vertical' as const }} />
+                  </div>
+                )}
+              </div>
+            )
+          })}
 
           {/* Actions */}
           <div className="flex items-center gap-3 pt-2">
             <button type="submit" disabled={saving || !form.title.trim()}
               className="px-6 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 disabled:opacity-40"
               style={{ background: '#74C0FC', color: '#fff' }}>
-              {saving ? 'Enregistrement...' : editingId ? 'Mettre a jour' : 'Enregistrer'}
+              {saving ? 'Enregistrement...' : editingId ? 'Mettre à jour' : 'Enregistrer'}
             </button>
             <button type="button" onClick={cancelForm}
               className="px-5 py-2.5 rounded-lg text-sm transition-colors"
@@ -380,28 +419,27 @@ export default function AdminDouleursPage() {
                         border: `1px solid ${d.is_published ? 'rgba(85,239,196,0.2)' : 'rgba(255,107,53,0.2)'}`,
                       }}>
                       <span className="w-1.5 h-1.5 rounded-full" style={{ background: d.is_published ? '#55EFC4' : '#FF6B35' }} />
-                      {d.is_published ? 'Publie' : 'Brouillon'}
+                      {d.is_published ? 'Publié' : 'Brouillon'}
                     </span>
                   </div>
 
+                  {/* Step indicators */}
                   <div className="flex flex-wrap gap-2">
-                    {[
-                      { ok: !!d.video_url, label: 'Video', color: '#55EFC4' },
-                      { ok: !!d.audio_energy_url, label: 'Audio energie', color: '#74C0FC' },
-                      { ok: !!d.audio_meditation_url, label: 'Audio meditation', color: '#E17055' },
-                      { ok: !!d.pdf_url, label: 'PDF', color: '#D4AF37' },
-                    ].map((item) => (
-                      <span key={item.label} className="text-[10px] px-2 py-0.5 rounded-full" style={{
-                        background: item.ok ? `${item.color}15` : 'rgba(90,83,71,0.2)',
-                        color: item.ok ? item.color : 'var(--text-muted)',
-                      }}>
-                        {item.ok ? '\u25CF' : '\u25CB'} {item.label}
-                      </span>
-                    ))}
+                    {STEPS.map((step) => {
+                      const has = hasStepContent(d, step.num)
+                      return (
+                        <span key={step.num} className="text-[10px] px-2 py-0.5 rounded-full" style={{
+                          background: has ? `${step.color}15` : 'rgba(90,83,71,0.2)',
+                          color: has ? step.color : 'var(--text-muted)',
+                        }}>
+                          {has ? '●' : '○'} {step.icon} Étape {step.num}
+                        </span>
+                      )
+                    })}
                   </div>
 
                   <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
-                    Cree le {new Date(d.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
+                    Créé le {new Date(d.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
                   </p>
                 </div>
 
@@ -418,7 +456,7 @@ export default function AdminDouleursPage() {
                       color: d.is_published ? '#FF6B35' : '#55EFC4',
                       border: `1px solid ${d.is_published ? 'rgba(255,107,53,0.2)' : 'rgba(85,239,196,0.2)'}`,
                     }}>
-                    {d.is_published ? 'Depublier' : 'Publier'}
+                    {d.is_published ? 'Dépublier' : 'Publier'}
                   </button>
                   <button onClick={() => handleDelete(d.id)}
                     className="px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 hover:opacity-80"

@@ -85,7 +85,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     content: {
       label: 'Le principe SOS Shine',
       title: "On ne change pas votre identit\u00e9.\nOn apaise le challenge \u00e9motionnel\npour lib\u00e9rer votre potentiel.",
-      description: "Chaque exp\u00e9rience de vie \u2014 abandon, trahison, burn-out, deuil, peur \u2014 poss\u00e8de sa propre page dans notre encyclop\u00e9die, avec un protocole en 4 \u00e9tapes con\u00e7u pour vous accompagner de A \u00e0 Z.",
+      description: "Chaque exp\u00e9rience de vie \u2014 abandon, trahison, burn-out, deuil, peur \u2014 poss\u00e8de sa propre page dans notre encyclop\u00e9die, avec un protocole en 3 \u00e9tapes con\u00e7u pour vous accompagner de A \u00e0 Z.",
       image_url: '',
       video_url: '',
     },
@@ -171,7 +171,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
         { quote: "Je ne savais m\u00eame pas que j\u2019avais le droit de ne pas aller bien. SOS Shine m\u2019a donn\u00e9 un espace o\u00f9 mon v\u00e9cu avait le droit d\u2019exister.", name: 'Marie, 34 ans', city: 'Lyon' },
         { quote: "La premi\u00e8re fois que quelqu\u2019un m\u2019a dit \u00ab je suis pass\u00e9 par l\u00e0, tiens bon \u00bb \u2014 c\u2019\u00e9tait dans le Feu de Camp. J\u2019ai pleur\u00e9. Des larmes de soulagement.", name: 'Karim, 41 ans', city: 'Bordeaux' },
         { quote: "J\u2019ai fait ma premi\u00e8re Shine Walk un samedi matin. En rentrant, j\u2019ai senti quelque chose que j\u2019avais oubli\u00e9 : je n\u2019\u00e9tais plus seule.", name: 'Sophie, 28 ans', city: 'Bruxelles' },
-        { quote: "Gr\u00e2ce aux 4 \u00e9tapes, j\u2019ai compris mon challenge \u00e9motionnel au lieu de le fuir. Aujourd\u2019hui, je suis \u00c9claireur et j\u2019aide les autres.", name: 'Antoine, 37 ans', city: 'Gen\u00e8ve' },
+        { quote: "Gr\u00e2ce aux 3 \u00e9tapes, j\u2019ai compris mon challenge \u00e9motionnel au lieu de le fuir. Aujourd\u2019hui, je suis \u00c9claireur et j\u2019aide les autres.", name: 'Antoine, 37 ans', city: 'Gen\u00e8ve' },
       ],
     },
     styles: {

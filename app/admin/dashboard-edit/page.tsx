@@ -26,6 +26,11 @@ const sections: SectionDef[] = [
     fields: [
       { label: 'Texte de bienvenue', key: 'dash_welcome', type: 'text', default: 'Bienvenue,' },
       { label: 'Sous-titre', key: 'dash_subtitle', type: 'textarea', default: "Explorez vos ressources, votre communauté et votre parcours d'accompagnement." },
+      sep('Salutations automatiques (selon l\'heure)'),
+      { label: 'Le matin (avant 12h)', key: 'dash_greeting_morning', type: 'text', default: 'Bonjour' },
+      { label: 'L\'apres-midi (12h-18h)', key: 'dash_greeting_afternoon', type: 'text', default: 'Bon apres-midi' },
+      { label: 'Le soir (apres 18h)', key: 'dash_greeting_evening', type: 'text', default: 'Bonsoir' },
+      sep('Image'),
       { label: 'Image de bienvenue (optionnel)', key: 'dash_hero_image', type: 'upload', accept: 'image/*', folder: 'dashboard', hint: 'Image decorative en haut du dashboard', default: '' },
     ],
   },
@@ -40,6 +45,7 @@ const sections: SectionDef[] = [
     title: 'Section Acces rapide', icon: '⚡',
     fields: [
       { label: 'Titre de section', key: 'dash_quick_title', type: 'text', default: 'Acces rapide' },
+      { label: 'Texte au survol des cartes', key: 'dash_explore_label', type: 'text', default: 'Explorer' },
       sep('Carte 1 — Encyclopedie'),
       { label: 'Titre', key: 'dash_quick1_title', type: 'text', default: 'Encyclopedie' },
       { label: 'Description', key: 'dash_quick1_desc', type: 'textarea', default: 'Explorez les challenges emotionnels de A a Z' },
@@ -58,6 +64,12 @@ const sections: SectionDef[] = [
     title: 'Section Mon parcours', icon: '📈',
     fields: [
       { label: 'Titre de section', key: 'dash_journey_title', type: 'text', default: 'Mon parcours' },
+      sep('Carte Objectifs'),
+      { label: 'Label "Mes objectifs"', key: 'dash_goals_label', type: 'text', default: 'Mes objectifs' },
+      { label: 'Texte compteur (ex: "objectifs en cours")', key: 'dash_goals_count_label', type: 'text', default: 'objectifs en cours' },
+      sep('Carte Journal'),
+      { label: 'Label "Mon journal"', key: 'dash_journal_label', type: 'text', default: 'Mon journal' },
+      { label: 'Texte compteur (ex: "entrees ce mois")', key: 'dash_journal_count_label', type: 'text', default: 'entrees ce mois' },
     ],
   },
   {

@@ -61,9 +61,9 @@ function ParcoursWidget({ siteSettings }: { siteSettings: Record<string, string>
           </div>
           <div>
             <p className="font-semibold text-[15px]" style={{ color: 'var(--text-primary)' }}>
-              {goalsCount} {t('dashboard.goals_active')}
+              {goalsCount} {siteSettings.dash_goals_count_label || t('dashboard.goals_active')}
             </p>
-            <p className="text-[12px]" style={{ color: 'var(--text-muted)' }}>{t('nav.goals')}</p>
+            <p className="text-[12px]" style={{ color: 'var(--text-muted)' }}>{siteSettings.dash_goals_label || t('nav.goals')}</p>
           </div>
         </Link>
         <Link
@@ -81,9 +81,9 @@ function ParcoursWidget({ siteSettings }: { siteSettings: Record<string, string>
           </div>
           <div>
             <p className="font-semibold text-[15px]" style={{ color: 'var(--text-primary)' }}>
-              {journalCount} {t('dashboard.journal_entries')}
+              {journalCount} {siteSettings.dash_journal_count_label || t('dashboard.journal_entries')}
             </p>
-            <p className="text-[12px]" style={{ color: 'var(--text-muted)' }}>{t('nav.journal')}</p>
+            <p className="text-[12px]" style={{ color: 'var(--text-muted)' }}>{siteSettings.dash_journal_label || t('nav.journal')}</p>
           </div>
         </Link>
       </div>
@@ -200,7 +200,9 @@ export default function DashboardHome() {
         transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
         <p className="text-[13px] font-medium tracking-wide uppercase mb-2" style={{ color: 'var(--text-muted)' }}>
-          {t(greeting)}
+          {greeting === 'dashboard.morning' ? (siteSettings.dash_greeting_morning || t('dashboard.morning'))
+            : greeting === 'dashboard.afternoon' ? (siteSettings.dash_greeting_afternoon || t('dashboard.afternoon'))
+            : (siteSettings.dash_greeting_evening || t('dashboard.evening'))}
         </p>
         <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight" style={{ color: 'var(--text-primary)' }}>
           {siteSettings.dash_welcome || t('dashboard.welcome')} <span style={{ color: 'var(--gold)' }}>{profile?.prenom || 'Membre'}</span>
@@ -272,7 +274,7 @@ export default function DashboardHome() {
                   className="mt-4 flex items-center gap-1.5 text-[12px] font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-0 group-hover:translate-x-1"
                   style={{ color: item.accent }}
                 >
-                  {t('encyclopedia.explore')}
+                  {siteSettings.dash_explore_label || t('encyclopedia.explore')}
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                   </svg>

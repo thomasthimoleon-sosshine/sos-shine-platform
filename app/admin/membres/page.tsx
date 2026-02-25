@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState, useMemo } from 'react'
-import { createClient } from '@/lib/supabase/client'
 import type { Profile } from '@/types/database'
 
 const ROLES: { value: Profile['role']; label: string }[] = [
@@ -38,16 +37,22 @@ export default function AdminMembres() {
   const [search, setSearch] = useState('')
   const [editingRole, setEditingRole] = useState<string | null>(null)
   const [savingRole, setSavingRole] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     async function load() {
-      const supabase = createClient()
-      const { data } = await supabase
-        .from('profiles')
-        .select('id, prenom, email, role, avatar_url, plan, created_at')
-        .order('created_at', { ascending: false })
-
-      setProfiles((data as Profile[]) || [])
+      try {
+        const res = await fetch('/api/admin/members')
+        if (!res.ok) {
+          setError('Impossible de charger les membres')
+          setLoading(false)
+          return
+        }
+        const json = await res.json()
+        setProfiles(json.profiles || [])
+      } catch {
+        setError('Erreur de connexion')
+      }
       setLoading(false)
     }
     load()
@@ -55,10 +60,21 @@ export default function AdminMembres() {
 
   async function handleRoleChange(memberId: string, newRole: Profile['role']) {
     setSavingRole(memberId)
-    const supabase = createClient()
-    const { error } = await supabase.from('profiles').update({ role: newRole }).eq('id', memberId)
-    if (!error) {
-      setProfiles((prev) => prev.map((p) => p.id === memberId ? { ...p, role: newRole } : p))
+    setError(null)
+    try {
+      const res = await fetch('/api/admin/members', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ memberId, role: newRole }),
+      })
+      if (res.ok) {
+        setProfiles((prev) => prev.map((p) => p.id === memberId ? { ...p, role: newRole } : p))
+      } else {
+        const json = await res.json()
+        setError(json.error || 'Erreur lors du changement de rôle')
+      }
+    } catch {
+      setError('Erreur de connexion')
     }
     setSavingRole(null)
     setEditingRole(null)
@@ -90,6 +106,16 @@ export default function AdminMembres() {
             : `${profiles.length} membre${profiles.length !== 1 ? 's' : ''} inscrit${profiles.length !== 1 ? 's' : ''} sur SOS Shine.`}
         </p>
       </div>
+
+      {/* Error banner */}
+      {error && (
+        <div
+          className="px-4 py-3 rounded-xl text-sm"
+          style={{ color: '#f87171', background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.15)' }}
+        >
+          {error}
+        </div>
+      )}
 
       {/* Search bar */}
       <div className="relative">

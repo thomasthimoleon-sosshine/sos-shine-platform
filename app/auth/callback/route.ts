@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
@@ -13,6 +14,36 @@ export async function GET(request: Request) {
     if (!error) {
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
+        // Ensure profile exists (upsert via admin client to bypass RLS)
+        try {
+          const admin = createAdminClient()
+          const prenom =
+            user.user_metadata?.prenom ||
+            user.user_metadata?.full_name?.split(' ')[0] ||
+            user.user_metadata?.name?.split(' ')[0] ||
+            'Membre'
+          const email = user.email || ''
+          const avatarUrl = user.user_metadata?.avatar_url || user.user_metadata?.picture || null
+
+          await admin.from('profiles').upsert(
+            {
+              id: user.id,
+              prenom,
+              email,
+              role: 'member',
+              avatar_url: avatarUrl,
+              pseudo: null,
+              bio: null,
+              video_url: null,
+              plan: null,
+              is_bot: false,
+            },
+            { onConflict: 'id', ignoreDuplicates: true }
+          )
+        } catch {
+          // Profile creation is best-effort; user can still proceed
+        }
+
         const isNewUser = user.created_at && (Date.now() - new Date(user.created_at).getTime() < 60000)
         if (isNewUser) {
           try {

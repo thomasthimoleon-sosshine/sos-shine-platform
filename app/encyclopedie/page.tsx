@@ -85,7 +85,7 @@ export default function PublicEncyclopediePage() {
             Encyclopédie des expériences de vie
           </h1>
           <p className="mt-2" style={{ color: 'var(--text-secondary)' }}>
-            Chaque challenge émotionnel a sa page dédiée avec un protocole en 4 étapes : vidéo, soin énergétique, méditation et exercices pratiques.
+            Chaque challenge émotionnel a sa page dédiée avec un protocole en 3 étapes : vidéo, soin énergétique et méditation.
           </p>
         </div>
 

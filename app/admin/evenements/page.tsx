@@ -24,6 +24,7 @@ const EMPTY_FORM = {
   title: '',
   description: '',
   event_type: 'soin_collectif' as Event['event_type'],
+  is_online: false,
   location_name: '',
   latitude: '',
   longitude: '',
@@ -119,10 +120,12 @@ export default function AdminEvenements() {
 
   function openEditForm(event: Event) {
     setEditingId(event.id)
+    const isOnline = !event.location_name && !event.latitude && !event.longitude
     setForm({
       title: event.title,
       description: event.description || '',
       event_type: event.event_type,
+      is_online: isOnline,
       location_name: event.location_name || '',
       latitude: event.latitude != null ? String(event.latitude) : '',
       longitude: event.longitude != null ? String(event.longitude) : '',
@@ -151,79 +154,95 @@ export default function AdminEvenements() {
     setSaving(true)
     setError(null)
 
-    // Auto-géocodage si ville renseignée mais pas de coordonnées
-    let lat = form.latitude ? Number(form.latitude) : null
-    let lng = form.longitude ? Number(form.longitude) : null
-    if (form.location_name.trim() && (!lat || !lng)) {
-      try {
-        const geoRes = await fetch(`/api/geocode?city=${encodeURIComponent(form.location_name.trim())}`)
-        const geoData = await geoRes.json()
-        if (geoRes.ok && geoData.latitude != null && geoData.longitude != null) {
-          lat = geoData.latitude
-          lng = geoData.longitude
+    try {
+      // Skip geocoding entirely for online events
+      let lat: number | null = null
+      let lng: number | null = null
+      let locationName: string | null = null
+
+      if (!form.is_online) {
+        lat = form.latitude ? Number(form.latitude) : null
+        lng = form.longitude ? Number(form.longitude) : null
+        locationName = form.location_name.trim() || null
+
+        // Auto-geocoding only if city is provided and no coordinates yet
+        if (locationName && (lat == null || lng == null)) {
+          try {
+            const geoRes = await fetch(`/api/geocode?city=${encodeURIComponent(locationName)}`)
+            const geoData = await geoRes.json()
+            if (geoRes.ok && geoData.latitude != null && geoData.longitude != null) {
+              lat = geoData.latitude
+              lng = geoData.longitude
+            }
+          } catch {
+            // Continue without coordinates if geocoding fails
+          }
         }
-      } catch {
-        // On continue sans coordonnées si le géocodage échoue
+      } else {
+        locationName = 'En ligne'
       }
+
+      const supabase = createClient()
+
+      const payload = {
+        title: form.title.trim(),
+        description: form.description.trim() || null,
+        event_type: form.event_type,
+        location_name: locationName,
+        latitude: lat,
+        longitude: lng,
+        event_date: new Date(form.event_date).toISOString(),
+        price: Number(form.price) || 0,
+        max_participants: form.max_participants ? Number(form.max_participants) : null,
+        live_url: form.live_url.trim() || null,
+        replay_url: form.replay_url.trim() || null,
+      }
+
+      if (editingId) {
+        const { error: updateError } = await supabase
+          .from('events')
+          .update(payload)
+          .eq('id', editingId)
+
+        if (updateError) {
+          setError(`Erreur lors de la mise à jour : ${updateError.message}`)
+          setSaving(false)
+          return
+        }
+      } else {
+        const { error: insertError } = await supabase
+          .from('events')
+          .insert({ ...payload, created_by: userId, is_active: true })
+
+        if (insertError) {
+          setError(`Erreur lors de la création : ${insertError.message}`)
+          setSaving(false)
+          return
+        }
+
+        try {
+          await fetch('/api/notify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              type: 'new_event',
+              title: 'Nouvel événement',
+              body: payload.title,
+              link: '/dashboard/evenements',
+            }),
+          })
+        } catch {
+          // notification sending failed silently
+        }
+      }
+
+      await loadEvents()
+      cancelForm()
+    } catch (err) {
+      setError(`Erreur inattendue : ${err instanceof Error ? err.message : 'Veuillez réessayer'}`)
+    } finally {
+      setSaving(false)
     }
-
-    const supabase = createClient()
-
-    const payload = {
-      title: form.title.trim(),
-      description: form.description.trim() || null,
-      event_type: form.event_type,
-      location_name: form.location_name.trim() || null,
-      latitude: lat,
-      longitude: lng,
-      event_date: new Date(form.event_date).toISOString(),
-      price: Number(form.price) || 0,
-      max_participants: form.max_participants ? Number(form.max_participants) : null,
-      live_url: form.live_url.trim() || null,
-      replay_url: form.replay_url.trim() || null,
-    }
-
-    if (editingId) {
-      const { error: updateError } = await supabase
-        .from('events')
-        .update(payload)
-        .eq('id', editingId)
-
-      if (updateError) {
-        setError(`Erreur lors de la mise à jour : ${updateError.message}`)
-        setSaving(false)
-        return
-      }
-    } else {
-      const { error: insertError } = await supabase
-        .from('events')
-        .insert({ ...payload, created_by: userId, is_active: true })
-
-      if (insertError) {
-        setError(`Erreur lors de la création : ${insertError.message}`)
-        setSaving(false)
-        return
-      }
-
-      try {
-        await fetch('/api/notify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            type: 'new_event',
-            title: 'Nouvel événement',
-            body: payload.title,
-            link: '/dashboard/evenements',
-          }),
-        })
-      } catch {
-        // notification sending failed silently
-      }
-    }
-
-    await loadEvents()
-    cancelForm()
-    setSaving(false)
   }
 
   async function handleToggleActive(event: Event) {
@@ -362,57 +381,90 @@ export default function AdminEvenements() {
             />
           </div>
 
-          {/* Row 2b: Ville pour géocodage automatique */}
+          {/* Row 2b: En ligne / Sur place toggle */}
           <div>
-            <label style={labelStyle}>
-              Ville <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>(pour positionner sur le globe)</span>
-            </label>
+            <label style={labelStyle}>Format</label>
             <div className="flex gap-2">
-              <input
-                type="text"
-                value={form.location_name}
-                onChange={(e) => setForm({ ...form, location_name: e.target.value })}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault()
-                    geocodeCity(form.location_name)
-                  }
-                }}
-                placeholder="Ex: Paris, Lyon, Bali, New York..."
-                style={inputStyle}
-              />
               <button
                 type="button"
-                onClick={() => geocodeCity(form.location_name)}
-                disabled={geocoding || !form.location_name.trim()}
-                className="px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-200 whitespace-nowrap disabled:opacity-40"
+                onClick={() => setForm({ ...form, is_online: true, location_name: '', latitude: '', longitude: '' })}
+                className="flex-1 px-4 py-2.5 rounded-lg text-sm font-medium transition-all cursor-pointer"
                 style={{
-                  background: geocoding ? 'rgba(116,192,252,0.15)' : 'rgba(116,192,252,0.2)',
-                  color: '#74C0FC',
-                  border: '1px solid rgba(116,192,252,0.3)',
+                  background: form.is_online ? 'rgba(85,239,196,0.15)' : 'rgba(255,255,255,0.03)',
+                  color: form.is_online ? '#55EFC4' : 'var(--text-muted)',
+                  border: form.is_online ? '1px solid rgba(85,239,196,0.3)' : '1px solid var(--dark-border)',
                 }}
               >
-                {geocoding ? 'Recherche...' : 'Localiser'}
+                En ligne
+              </button>
+              <button
+                type="button"
+                onClick={() => setForm({ ...form, is_online: false })}
+                className="flex-1 px-4 py-2.5 rounded-lg text-sm font-medium transition-all cursor-pointer"
+                style={{
+                  background: !form.is_online ? 'rgba(116,192,252,0.15)' : 'rgba(255,255,255,0.03)',
+                  color: !form.is_online ? '#74C0FC' : 'var(--text-muted)',
+                  border: !form.is_online ? '1px solid rgba(116,192,252,0.3)' : '1px solid var(--dark-border)',
+                }}
+              >
+                Sur place
               </button>
             </div>
-            {geocodeResult && (
-              <p
-                className="mt-1.5 text-xs"
-                style={{
-                  color: form.latitude && form.longitude ? '#55EFC4' : '#E17055',
-                }}
-              >
-                {form.latitude && form.longitude
-                  ? `Coordonnées trouvées (${Number(form.latitude).toFixed(4)}, ${Number(form.longitude).toFixed(4)})`
-                  : geocodeResult}
-              </p>
-            )}
-            {form.latitude && form.longitude && !geocodeResult && (
-              <p className="mt-1.5 text-xs" style={{ color: 'var(--text-muted)' }}>
-                Coordonnées actuelles : {Number(form.latitude).toFixed(4)}, {Number(form.longitude).toFixed(4)}
-              </p>
-            )}
           </div>
+
+          {/* Row 2c: Ville pour géocodage automatique (only if not online) */}
+          {!form.is_online && (
+            <div>
+              <label style={labelStyle}>
+                Ville <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>(pour positionner sur le globe)</span>
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={form.location_name}
+                  onChange={(e) => setForm({ ...form, location_name: e.target.value })}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      geocodeCity(form.location_name)
+                    }
+                  }}
+                  placeholder="Ex: Paris, Lyon, Bali, New York..."
+                  style={inputStyle}
+                />
+                <button
+                  type="button"
+                  onClick={() => geocodeCity(form.location_name)}
+                  disabled={geocoding || !form.location_name.trim()}
+                  className="px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-200 whitespace-nowrap disabled:opacity-40"
+                  style={{
+                    background: geocoding ? 'rgba(116,192,252,0.15)' : 'rgba(116,192,252,0.2)',
+                    color: '#74C0FC',
+                    border: '1px solid rgba(116,192,252,0.3)',
+                  }}
+                >
+                  {geocoding ? 'Recherche...' : 'Localiser'}
+                </button>
+              </div>
+              {geocodeResult && (
+                <p
+                  className="mt-1.5 text-xs"
+                  style={{
+                    color: form.latitude && form.longitude ? '#55EFC4' : '#E17055',
+                  }}
+                >
+                  {form.latitude && form.longitude
+                    ? `Coordonnées trouvées (${Number(form.latitude).toFixed(4)}, ${Number(form.longitude).toFixed(4)})`
+                    : geocodeResult}
+                </p>
+              )}
+              {form.latitude && form.longitude && !geocodeResult && (
+                <p className="mt-1.5 text-xs" style={{ color: 'var(--text-muted)' }}>
+                  Coordonnées actuelles : {Number(form.latitude).toFixed(4)}, {Number(form.longitude).toFixed(4)}
+                </p>
+              )}
+            </div>
+          )}
 
           {/* Row 3: price + max_participants */}
           <div className="grid sm:grid-cols-2 gap-4">
@@ -572,8 +624,10 @@ export default function AdminEvenements() {
 
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs" style={{ color: 'var(--text-secondary)' }}>
                       <span>{formatDateFR(event.event_date)}</span>
-                      {event.location_name && (
-                        <span style={{ color: 'var(--text-muted)' }}>{event.location_name}</span>
+                      {event.location_name ? (
+                        <span style={{ color: event.location_name === 'En ligne' ? '#55EFC4' : 'var(--text-muted)' }}>{event.location_name}</span>
+                      ) : (
+                        <span style={{ color: '#55EFC4' }}>En ligne</span>
                       )}
                       {event.price > 0 && (
                         <span style={{ color: 'var(--gold)' }}>{event.price.toFixed(2)} EUR</span>

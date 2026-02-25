@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import type { Profile } from '@/types/database'
 import ThemeToggle from '@/components/ThemeToggle'
 import NotificationBell from '@/components/NotificationBell'
-import LanguageSelector from '@/components/LanguageSelector'
+
 import { useTranslation } from '@/lib/i18n/useTranslation'
 
 const navItemDefs = [
@@ -318,7 +318,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
           <div className="flex items-center gap-2 px-3 py-1 mb-1">
             <NotificationBell />
-            <LanguageSelector />
             <ThemeToggle />
           </div>
           <button
@@ -361,7 +360,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           )}
           <div className="flex items-center gap-2">
             <NotificationBell />
-            <LanguageSelector />
+
             <ThemeToggle />
           </div>
         </header>

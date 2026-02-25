@@ -19,7 +19,7 @@ const fadeUp = {
   }),
 }
 
-function ParcoursWidget() {
+function ParcoursWidget({ siteSettings }: { siteSettings: Record<string, string> }) {
   const { t } = useTranslation()
   const [goalsCount, setGoalsCount] = useState(0)
   const [journalCount, setJournalCount] = useState(0)
@@ -43,7 +43,7 @@ function ParcoursWidget() {
   return (
     <div>
       <h2 className="text-[11px] font-semibold uppercase tracking-widest mb-4" style={{ color: 'var(--text-muted)' }}>
-        {t('dashboard.my_journey')}
+        {siteSettings.dash_journey_title || t('dashboard.my_journey')}
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <Link
@@ -61,9 +61,9 @@ function ParcoursWidget() {
           </div>
           <div>
             <p className="font-semibold text-[15px]" style={{ color: 'var(--text-primary)' }}>
-              {goalsCount} {t('dashboard.goals_active')}
+              {goalsCount} {siteSettings.dash_goals_count_label || t('dashboard.goals_active')}
             </p>
-            <p className="text-[12px]" style={{ color: 'var(--text-muted)' }}>{t('nav.goals')}</p>
+            <p className="text-[12px]" style={{ color: 'var(--text-muted)' }}>{siteSettings.dash_goals_label || t('nav.goals')}</p>
           </div>
         </Link>
         <Link
@@ -81,9 +81,9 @@ function ParcoursWidget() {
           </div>
           <div>
             <p className="font-semibold text-[15px]" style={{ color: 'var(--text-primary)' }}>
-              {journalCount} {t('dashboard.journal_entries')}
+              {journalCount} {siteSettings.dash_journal_count_label || t('dashboard.journal_entries')}
             </p>
-            <p className="text-[12px]" style={{ color: 'var(--text-muted)' }}>{t('nav.journal')}</p>
+            <p className="text-[12px]" style={{ color: 'var(--text-muted)' }}>{siteSettings.dash_journal_label || t('nav.journal')}</p>
           </div>
         </Link>
       </div>
@@ -92,7 +92,7 @@ function ParcoursWidget() {
 }
 
 export default function DashboardHome() {
-  const { t, locale } = useTranslation()
+  const { t } = useTranslation()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [greeting, setGreeting] = useState('')
   const [quote, setQuote] = useState<Quote | null>(null)
@@ -137,8 +137,8 @@ export default function DashboardHome() {
   const quickAccess = [
     {
       href: '/dashboard/encyclopedie',
-      title: t('nav.encyclopedia'),
-      description: t('quick.encyclopedia_desc'),
+      title: siteSettings.dash_quick1_title || t('nav.encyclopedia'),
+      description: siteSettings.dash_quick1_desc || t('quick.encyclopedia_desc'),
       icon: (
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
@@ -149,8 +149,8 @@ export default function DashboardHome() {
     },
     {
       href: '/dashboard/chat',
-      title: t('nav.chat'),
-      description: t('quick.chat_desc'),
+      title: siteSettings.dash_quick2_title || t('nav.chat'),
+      description: siteSettings.dash_quick2_desc || t('quick.chat_desc'),
       icon: (
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
@@ -161,8 +161,8 @@ export default function DashboardHome() {
     },
     {
       href: '/dashboard/mur',
-      title: t('nav.wall'),
-      description: t('quick.wall_desc'),
+      title: siteSettings.dash_quick3_title || t('nav.wall'),
+      description: siteSettings.dash_quick3_desc || t('quick.wall_desc'),
       icon: (
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z" />
@@ -173,8 +173,8 @@ export default function DashboardHome() {
     },
     {
       href: '/dashboard/evenements',
-      title: t('nav.events'),
-      description: t('quick.events_desc'),
+      title: siteSettings.dash_quick4_title || t('nav.events'),
+      description: siteSettings.dash_quick4_desc || t('quick.events_desc'),
       icon: (
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
@@ -186,10 +186,9 @@ export default function DashboardHome() {
   ]
 
   const steps = [
-    { num: '01', title: siteSettings.step1_title || t('steps.understand'), desc: siteSettings.step1_desc || t('steps.understand_desc'), accent: '#55EFC4' },
-    { num: '02', title: siteSettings.step2_title || t('steps.release'), desc: siteSettings.step2_desc || t('steps.release_desc'), accent: '#74C0FC' },
-    { num: '03', title: siteSettings.step3_title || t('steps.meditation'), desc: siteSettings.step3_desc || t('steps.meditation_desc'), accent: '#E17055' },
-    { num: '04', title: siteSettings.step4_title || t('steps.action'), desc: siteSettings.step4_desc || t('steps.action_desc'), accent: '#D4AF37' },
+    { num: '01', title: siteSettings.step1_title || t('steps.understand'), desc: siteSettings.step1_desc || t('steps.understand_desc'), accent: siteSettings.step1_color || '#55EFC4' },
+    { num: '02', title: siteSettings.step2_title || t('steps.release'), desc: siteSettings.step2_desc || t('steps.release_desc'), accent: siteSettings.step2_color || '#74C0FC' },
+    { num: '03', title: siteSettings.step3_title || t('steps.meditation'), desc: siteSettings.step3_desc || t('steps.meditation_desc'), accent: siteSettings.step3_color || '#E17055' },
   ]
 
   return (
@@ -201,13 +200,15 @@ export default function DashboardHome() {
         transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
         <p className="text-[13px] font-medium tracking-wide uppercase mb-2" style={{ color: 'var(--text-muted)' }}>
-          {t(greeting)}
+          {greeting === 'dashboard.morning' ? (siteSettings.dash_greeting_morning || t('dashboard.morning'))
+            : greeting === 'dashboard.afternoon' ? (siteSettings.dash_greeting_afternoon || t('dashboard.afternoon'))
+            : (siteSettings.dash_greeting_evening || t('dashboard.evening'))}
         </p>
         <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight" style={{ color: 'var(--text-primary)' }}>
-          {t('dashboard.welcome')} <span style={{ color: 'var(--gold)' }}>{profile?.prenom || 'Membre'}</span>
+          {siteSettings.dash_welcome || t('dashboard.welcome')} <span style={{ color: 'var(--gold)' }}>{profile?.prenom || 'Membre'}</span>
         </h1>
         <p className="mt-2 text-[15px] leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-          {t('dashboard.explore')}
+          {siteSettings.dash_subtitle || t('dashboard.explore')}
         </p>
       </motion.div>
 
@@ -228,17 +229,17 @@ export default function DashboardHome() {
           style={{ background: 'radial-gradient(circle, rgba(212, 175, 55, 0.08), transparent 70%)' }}
         />
         <p className="font-display text-xl sm:text-2xl italic leading-relaxed relative" style={{ color: 'var(--text-primary)' }}>
-          &ldquo;{quote ? quote.text[locale as keyof typeof quote.text] || quote.text.fr : t('quote.text')}&rdquo;
+          &ldquo;{siteSettings.dash_custom_quote || (quote ? quote.text.fr : t('quote.text'))}&rdquo;
         </p>
         <p className="mt-4 text-[13px] font-medium relative" style={{ color: 'var(--gold)' }}>
-          — {quote ? quote.author[locale as keyof typeof quote.author] || quote.author.fr : t('quote.author')}
+          — {siteSettings.dash_custom_quote_author || (quote ? quote.author.fr : t('quote.author'))}
         </p>
       </motion.div>
 
       {/* ── Bento Grid — Accès rapide ── */}
       <div>
         <h2 className="text-[11px] font-semibold uppercase tracking-widest mb-4" style={{ color: 'var(--text-muted)' }}>
-          {t('dashboard.quick_access')}
+          {siteSettings.dash_quick_title || t('dashboard.quick_access')}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
           {quickAccess.map((item, i) => (
@@ -273,7 +274,7 @@ export default function DashboardHome() {
                   className="mt-4 flex items-center gap-1.5 text-[12px] font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-0 group-hover:translate-x-1"
                   style={{ color: item.accent }}
                 >
-                  {t('encyclopedia.explore')}
+                  {siteSettings.dash_explore_label || t('encyclopedia.explore')}
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                   </svg>
@@ -284,15 +285,27 @@ export default function DashboardHome() {
         </div>
       </div>
 
-      {/* ── Mon parcours — summary ── */}
-      <ParcoursWidget />
+      {/* ── Hero image (optional) ── */}
+      {siteSettings.dash_hero_image && (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="glass overflow-hidden rounded-2xl"
+        >
+          <img src={siteSettings.dash_hero_image} alt="" className="w-full h-48 sm:h-64 object-cover" />
+        </motion.div>
+      )}
 
-      {/* ── 4 Étapes — Bento row ── */}
+      {/* ── Mon parcours — summary ── */}
+      <ParcoursWidget siteSettings={siteSettings} />
+
+      {/* ── 3 Étapes — Bento row ── */}
       <div>
         <h2 className="text-[11px] font-semibold uppercase tracking-widest mb-4" style={{ color: 'var(--text-muted)' }}>
           {siteSettings.steps_label || t('dashboard.protocol')}
         </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {steps.map((s, i) => (
             <motion.div
               key={s.num}
@@ -328,9 +341,9 @@ export default function DashboardHome() {
         className="glass p-5 text-center"
       >
         <p className="text-[13px]" style={{ color: 'var(--text-muted)' }}>
-          {t('dashboard.help')}{' '}
-          <a href="mailto:contact@sosshine.fr" className="gold-underline font-medium" style={{ color: 'var(--gold)' }}>
-            contact@sosshine.fr
+          {siteSettings.dash_help_text || t('dashboard.help')}{' '}
+          <a href={`mailto:${siteSettings.dash_help_email || 'contact@sosshine.fr'}`} className="gold-underline font-medium" style={{ color: 'var(--gold)' }}>
+            {siteSettings.dash_help_email || 'contact@sosshine.fr'}
           </a>
         </p>
       </motion.div>

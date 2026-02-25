@@ -5,6 +5,12 @@ import { createClient } from '@/lib/supabase/client'
 import type { Event, EventRegistration } from '@/types/database'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 
+const FOUNDERS_MAP: Record<string, { name: string; image: string }> = {
+  julia: { name: 'Julia', image: '/images/julia.jpeg' },
+  wiliam: { name: 'William', image: '/images/wiliam.png' },
+  thomas: { name: 'Thomas', image: '/images/thomas.jpeg' },
+}
+
 /* ─── Continent polygon data [lng, lat] ─── */
 const CONTINENTS: [number, number][][] = [
   // Europe
@@ -534,6 +540,32 @@ export default function EvenementsPage() {
                         {daysUntil(event.event_date)}
                       </span>
                     </div>
+
+                    {/* Hosts avatars */}
+                    {event.hosts && event.hosts.length > 0 && (
+                      <div className="flex items-center gap-2 mt-2">
+                        <span className="text-xs" style={{ color: 'var(--text-muted)' }}>Avec</span>
+                        <div className="flex -space-x-2">
+                          {event.hosts.map((h: string) => {
+                            const founder = FOUNDERS_MAP[h]
+                            if (!founder) return null
+                            return (
+                              <img
+                                key={h}
+                                src={founder.image}
+                                alt={founder.name}
+                                title={founder.name}
+                                className="w-7 h-7 rounded-full object-cover"
+                                style={{ border: '2px solid var(--dark-card)' }}
+                              />
+                            )
+                          })}
+                        </div>
+                        <span className="text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>
+                          {event.hosts.map((h: string) => FOUNDERS_MAP[h]?.name).filter(Boolean).join(' & ')}
+                        </span>
+                      </div>
+                    )}
 
                     {event.description && (
                       <p className="text-sm mt-3 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>

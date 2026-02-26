@@ -7,6 +7,8 @@ import { createClient } from "@/lib/supabase/client";
 import { LANDING_DEFAULTS, buildSectionMap } from "@/lib/landing-defaults";
 import type { LandingSectionDefault, SectionContent, SectionStyles } from "@/lib/landing-defaults";
 import ThemeToggle from "@/components/ThemeToggle";
+import PreLaunchPage from "./page-prelaunch";
+import type { PrelaunchSettings } from "./page-prelaunch";
 
 import { useTranslation } from "@/lib/i18n/useTranslation";
 
@@ -261,6 +263,9 @@ export default function Home() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 0.15], [1, 0.95]);
 
+  const [prelaunchEnabled, setPrelaunchEnabled] = useState<boolean | null>(null);
+  const [prelaunchSettings, setPrelaunchSettings] = useState<PrelaunchSettings>({});
+
   const [sections, setSections] = useState<Record<string, { content: SectionContent; styles: SectionStyles; is_visible: boolean }>>(() => {
     const map: Record<string, { content: SectionContent; styles: SectionStyles; is_visible: boolean }> = {};
     for (const d of LANDING_DEFAULTS) {
@@ -272,6 +277,20 @@ export default function Home() {
   const loadSections = useCallback(async () => {
     try {
       const supabase = createClient();
+
+      // Check prelaunch setting
+      const { data: settingsData } = await supabase.from("site_settings").select("key, value").like("key", "prelaunch_%");
+      if (settingsData) {
+        const map: PrelaunchSettings = {};
+        settingsData.forEach((row: { key: string; value: string }) => {
+          (map as Record<string, string>)[row.key] = row.value;
+        });
+        setPrelaunchSettings(map);
+        setPrelaunchEnabled((map as Record<string, string>).prelaunch_enabled === 'true');
+      } else {
+        setPrelaunchEnabled(false);
+      }
+
       const { data } = await supabase.from("landing_sections").select("*").order("position");
       if (data && data.length > 0) {
         const rows = data as unknown as LandingSectionDefault[];
@@ -292,6 +311,7 @@ export default function Home() {
       }
     } catch {
       // defaults already set
+      setPrelaunchEnabled(false);
     }
   }, []);
 
@@ -401,6 +421,14 @@ export default function Home() {
     ? ticker2Data.items
     : [t('ticker.support'), t('ticker.community'), t('ticker.protocols'), t('ticker.collective'), t('ticker.dedicated_chat'), t('ticker.live_events'), t('ticker.meditation'), t('ticker.coaching')];
   const ticker2Speed = ticker2Data.speed || 40;
+
+  // Show loading while checking prelaunch, then prelaunch page if enabled
+  if (prelaunchEnabled === null) {
+    return <div className="min-h-screen" style={{ background: 'var(--dark, #0A0A0A)' }} />;
+  }
+  if (prelaunchEnabled) {
+    return <PreLaunchPage settings={prelaunchSettings} />;
+  }
 
   return (
     <main className="grain relative z-0 overflow-hidden" style={cssVars}>

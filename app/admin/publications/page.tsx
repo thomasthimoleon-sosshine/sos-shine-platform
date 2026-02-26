@@ -78,7 +78,7 @@ export default function AdminPublications() {
       if (Object.keys(CATEGORY_CONFIG).includes(filterType)) {
         query = query.eq('category', filterType as PostCategory)
       } else {
-        query = query.eq('post_type', filterType)
+        query = query.eq('post_type', filterType as Post['post_type'])
       }
     }
 

@@ -10,6 +10,7 @@ export type Profile = {
   video_url: string | null
   plan: 'essential' | 'premium' | null
   is_bot: boolean
+  publish_banned_until: string | null
   created_at: string
 }
 

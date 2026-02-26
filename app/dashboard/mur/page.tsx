@@ -98,13 +98,32 @@ export default function MurPage() {
   // Social share
   const [socialShareId, setSocialShareId] = useState<string | null>(null)
 
+  // Ban status
+  const [isBanned, setIsBanned] = useState(false)
+  const [banUntil, setBanUntil] = useState<string | null>(null)
+
   const filterRef = useRef<HTMLDivElement>(null)
 
   /* ── Load posts ── */
   const loadPosts = useCallback(async () => {
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
-    if (user) setCurrentUserId(user.id)
+    if (user) {
+      setCurrentUserId(user.id)
+      // Check if user is banned from publishing
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('publish_banned_until')
+        .eq('id', user.id)
+        .single()
+      if (profile?.publish_banned_until && new Date(profile.publish_banned_until) > new Date()) {
+        setIsBanned(true)
+        setBanUntil(profile.publish_banned_until)
+      } else {
+        setIsBanned(false)
+        setBanUntil(null)
+      }
+    }
 
     let query = supabase
       .from('posts')
@@ -149,6 +168,7 @@ export default function MurPage() {
   /* ── Create post ── */
   async function handleCreate() {
     if (!createContent.trim()) return
+    if (isBanned) return
     setCreating(true)
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
@@ -176,6 +196,9 @@ export default function MurPage() {
       setCreateMediaType('text')
       setShowCreate(false)
       await loadPosts()
+    } else {
+      alert('Erreur lors de la publication. Veuillez reessayer.')
+      console.error('Post create error:', error)
     }
     setCreating(false)
   }
@@ -332,17 +355,27 @@ export default function MurPage() {
             {t('dashboard.wall_subtitle')}
           </p>
         </div>
-        <button
-          onClick={() => setShowCreate(!showCreate)}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all shrink-0 cursor-pointer"
-          style={{
-            background: showCreate ? 'rgba(212,175,55,0.1)' : 'linear-gradient(135deg, var(--gold), #B8960F)',
-            color: showCreate ? 'var(--gold)' : '#050505',
-            border: showCreate ? '1px solid rgba(212,175,55,0.3)' : 'none',
-          }}
-        >
-          {showCreate ? 'Annuler' : '+ Publier'}
-        </button>
+        {isBanned ? (
+          <div className="px-4 py-2.5 rounded-xl text-xs font-medium text-right shrink-0"
+            style={{ background: 'rgba(255,107,85,0.08)', border: '1px solid rgba(255,107,85,0.2)', color: '#FF6B55' }}>
+            Publication suspendue<br />
+            <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>
+              jusqu&apos;au {banUntil ? new Date(banUntil).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' }) : ''}
+            </span>
+          </div>
+        ) : (
+          <button
+            onClick={() => setShowCreate(!showCreate)}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all shrink-0 cursor-pointer"
+            style={{
+              background: showCreate ? 'rgba(212,175,55,0.1)' : 'linear-gradient(135deg, var(--gold), #B8960F)',
+              color: showCreate ? 'var(--gold)' : '#050505',
+              border: showCreate ? '1px solid rgba(212,175,55,0.3)' : 'none',
+            }}
+          >
+            {showCreate ? 'Annuler' : '+ Publier'}
+          </button>
+        )}
       </div>
 
       {/* ── Create post form ── */}

@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
-const LAUNCH_DATE = new Date("2026-03-22T00:00:00+02:00");
+const DEFAULT_LAUNCH_DATE = "2026-03-22T00:00:00+02:00";
 
 const DIAMONDS = [
   { top: "8%", left: "12%", duration: "9s", delay: "0s", size: 3 },
@@ -15,9 +15,9 @@ const DIAMONDS = [
   { top: "85%", left: "78%", duration: "7s", delay: "1.2s", size: 4 },
 ];
 
-function getTimeLeft() {
+function getTimeLeft(launchDate: Date) {
   const now = new Date();
-  const diff = LAUNCH_DATE.getTime() - now.getTime();
+  const diff = launchDate.getTime() - now.getTime();
   if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0, launched: true };
   return {
     days: Math.floor(diff / (1000 * 60 * 60 * 24)),
@@ -117,17 +117,57 @@ function SparklingDiamonds() {
   );
 }
 
-const features = [
-  "Encyclopédie complète des expériences de vie (A-Z)",
-  "Vidéos de coaching immersif",
-  "Soins énergétiques & méditations",
-  "Chat dédié par challenge émotionnel",
-  "Communauté & mur de partage",
-  "Soins collectifs & événements",
+const DEFAULT_FEATURES = [
+  "Encyclop\u00e9die compl\u00e8te des exp\u00e9riences de vie (A-Z)",
+  "Vid\u00e9os de coaching immersif",
+  "Soins \u00e9nerg\u00e9tiques & m\u00e9ditations",
+  "Chat d\u00e9di\u00e9 par challenge \u00e9motionnel",
+  "Communaut\u00e9 & mur de partage",
+  "Soins collectifs & \u00e9v\u00e9nements",
 ];
 
-export default function PreLaunchPage() {
-  const [time, setTime] = useState(getTimeLeft);
+export interface PrelaunchSettings {
+  prelaunch_launch_date?: string
+  prelaunch_badge?: string
+  prelaunch_title_1?: string
+  prelaunch_title_2?: string
+  prelaunch_title_3?: string
+  prelaunch_title_4?: string
+  prelaunch_subtitle_1?: string
+  prelaunch_subtitle_2?: string
+  prelaunch_countdown_label?: string
+  prelaunch_launched_text?: string
+  prelaunch_pricing_label?: string
+  prelaunch_pricing_desc?: string
+  prelaunch_price_early?: string
+  prelaunch_price_early_label?: string
+  prelaunch_price_standard?: string
+  prelaunch_price_standard_label?: string
+  prelaunch_no_commitment?: string
+  prelaunch_savings_text?: string
+  prelaunch_form_name_placeholder?: string
+  prelaunch_form_email_placeholder?: string
+  prelaunch_form_button?: string
+  prelaunch_success_title?: string
+  prelaunch_success_message?: string
+  prelaunch_already_message?: string
+  prelaunch_features_label?: string
+  prelaunch_feature_1?: string
+  prelaunch_feature_2?: string
+  prelaunch_feature_3?: string
+  prelaunch_feature_4?: string
+  prelaunch_feature_5?: string
+  prelaunch_feature_6?: string
+  prelaunch_logo?: string
+}
+
+function s(settings: PrelaunchSettings, key: keyof PrelaunchSettings, fallback: string): string {
+  return settings[key] || fallback;
+}
+
+export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchSettings }) {
+  const launchDate = new Date(s(settings, 'prelaunch_launch_date', DEFAULT_LAUNCH_DATE));
+  const [time, setTime] = useState(() => getTimeLeft(launchDate));
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "already" | "error">("idle");
@@ -135,9 +175,9 @@ export default function PreLaunchPage() {
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    const interval = setInterval(() => setTime(getTimeLeft()), 1000);
+    const interval = setInterval(() => setTime(getTimeLeft(launchDate)), 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [launchDate]);
 
   useEffect(() => {
     fetch("/api/waitlist")
@@ -175,6 +215,24 @@ export default function PreLaunchPage() {
     [email, name, status]
   );
 
+  const titleWords = [
+    s(settings, 'prelaunch_title_1', 'Quelque chose'),
+    s(settings, 'prelaunch_title_2', 'de'),
+    s(settings, 'prelaunch_title_3', 'puissant'),
+    s(settings, 'prelaunch_title_4', 'arrive.'),
+  ];
+
+  const features = [
+    s(settings, 'prelaunch_feature_1', DEFAULT_FEATURES[0]),
+    s(settings, 'prelaunch_feature_2', DEFAULT_FEATURES[1]),
+    s(settings, 'prelaunch_feature_3', DEFAULT_FEATURES[2]),
+    s(settings, 'prelaunch_feature_4', DEFAULT_FEATURES[3]),
+    s(settings, 'prelaunch_feature_5', DEFAULT_FEATURES[4]),
+    s(settings, 'prelaunch_feature_6', DEFAULT_FEATURES[5]),
+  ].filter(Boolean);
+
+  const logoUrl = settings.prelaunch_logo || '/images/logo.png';
+
   return (
     <main className="grain relative z-0 min-h-screen overflow-hidden">
       <FloatingOrbs />
@@ -200,7 +258,7 @@ export default function PreLaunchPage() {
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
         >
           <Link href="/" className="inline-block">
-            <img src="/images/logo.png" alt="SOS Shine" className="h-16 sm:h-20 w-auto" />
+            <img src={logoUrl} alt="SOS Shine" className="h-16 sm:h-20 w-auto" />
           </Link>
         </motion.div>
 
@@ -219,14 +277,14 @@ export default function PreLaunchPage() {
               border: "1px solid rgba(212,175,55,0.15)",
             }}
           >
-            Lancement exclusif
+            {s(settings, 'prelaunch_badge', 'Lancement exclusif')}
           </span>
         </motion.div>
 
         {/* Hero Title */}
         <div className="text-center max-w-3xl mb-10">
           <div className="font-display font-light leading-[1.1] mb-6" style={{ perspective: "1000px", fontSize: "clamp(2.5rem, 6vw, 4rem)", color: "#D4AF37" }}>
-            {["Quelque chose", "de", "puissant", "arrive."].map((word, i) => (
+            {titleWords.map((word, i) => (
               <motion.span
                 key={i}
                 className={`inline-block mr-[0.35em] ${i === 2 ? "text-shimmer" : ""}`}
@@ -246,9 +304,9 @@ export default function PreLaunchPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            L&apos;encyclop&eacute;die compl&egrave;te des challenges &eacute;motionnels.
+            {s(settings, 'prelaunch_subtitle_1', "L\u2019encyclop\u00e9die compl\u00e8te des challenges \u00e9motionnels.")}
             <br />
-            Un espace pour comprendre, apaiser et ne plus jamais &ecirc;tre seul.
+            {s(settings, 'prelaunch_subtitle_2', "Un espace pour comprendre, apaiser et ne plus jamais \u00eatre seul.")}
           </motion.p>
         </div>
 
@@ -263,7 +321,7 @@ export default function PreLaunchPage() {
             className="text-center text-[11px] tracking-[0.35em] uppercase mb-6 font-light"
             style={{ color: "var(--text-muted)" }}
           >
-            Ouverture le 22 mars 2026 &agrave; minuit
+            {s(settings, 'prelaunch_countdown_label', 'Ouverture le 22 mars 2026 \u00e0 minuit')}
           </p>
 
           {!time.launched ? (
@@ -279,7 +337,7 @@ export default function PreLaunchPage() {
           ) : (
             <div className="text-center">
               <span className="font-display text-3xl font-light text-shimmer">
-                Les portes sont ouvertes
+                {s(settings, 'prelaunch_launched_text', 'Les portes sont ouvertes')}
               </span>
             </div>
           )}
@@ -305,11 +363,11 @@ export default function PreLaunchPage() {
               className="text-[11px] tracking-[0.35em] uppercase mb-2 font-medium"
               style={{ color: "var(--text-muted)" }}
             >
-              Avantage liste d&apos;attente
+              {s(settings, 'prelaunch_pricing_label', "Avantage liste d\u2019attente")}
             </p>
 
             <p className="text-sm mb-6 font-light" style={{ color: "var(--text-secondary)" }}>
-              Rejoignez maintenant et b&eacute;n&eacute;ficiez d&apos;un tarif pr&eacute;f&eacute;rentiel &agrave; vie.
+              {s(settings, 'prelaunch_pricing_desc', "Rejoignez maintenant et b\u00e9n\u00e9ficiez d\u2019un tarif pr\u00e9f\u00e9rentiel \u00e0 vie.")}
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10 mb-8">
@@ -317,7 +375,7 @@ export default function PreLaunchPage() {
               <div className="text-center">
                 <div className="flex items-baseline justify-center gap-1.5">
                   <span className="font-display text-5xl sm:text-6xl font-light" style={{ color: "#D4AF37" }}>
-                    19,90&euro;
+                    {s(settings, 'prelaunch_price_early', '19,90')}&euro;
                   </span>
                   <span className="text-sm" style={{ color: "var(--text-muted)" }}>
                     /mois
@@ -327,7 +385,7 @@ export default function PreLaunchPage() {
                   className="inline-block mt-2 px-3 py-1 rounded-full text-[10px] tracking-[0.2em] uppercase font-medium"
                   style={{ background: "rgba(212,175,55,0.1)", color: "#D4AF37", border: "1px solid rgba(212,175,55,0.15)" }}
                 >
-                  Tarif fondateur &mdash; &agrave; vie
+                  {s(settings, 'prelaunch_price_early_label', 'Tarif fondateur \u2014 \u00e0 vie')}
                 </span>
               </div>
 
@@ -353,23 +411,23 @@ export default function PreLaunchPage() {
                     style={{ background: "rgba(255,100,100,0.5)" }}
                   />
                   <span className="font-display text-4xl sm:text-5xl font-light" style={{ color: "var(--text-secondary)" }}>
-                    29,90&euro;
+                    {s(settings, 'prelaunch_price_standard', '29,90')}&euro;
                   </span>
                   <span className="text-sm" style={{ color: "var(--text-muted)" }}>
                     /mois
                   </span>
                 </div>
                 <p className="mt-2 text-[10px] tracking-wider uppercase" style={{ color: "var(--text-muted)" }}>
-                  Tarif standard apr&egrave;s lancement
+                  {s(settings, 'prelaunch_price_standard_label', 'Tarif standard apr\u00e8s lancement')}
                 </p>
               </div>
             </div>
 
             <p className="text-sm font-light mb-1" style={{ color: "var(--text-secondary)" }}>
-              Sans engagement &mdash; Annulable &agrave; tout instant
+              {s(settings, 'prelaunch_no_commitment', 'Sans engagement \u2014 Annulable \u00e0 tout instant')}
             </p>
             <p className="text-xs font-light" style={{ color: "var(--text-muted)" }}>
-              10&euro; d&apos;&eacute;conomie/mois, pour toujours.
+              {s(settings, 'prelaunch_savings_text', "10\u20ac d\u2019\u00e9conomie/mois, pour toujours.")}
             </p>
           </div>
         </motion.div>
@@ -397,10 +455,11 @@ export default function PreLaunchPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                 </svg>
               </div>
-              <div className="font-display text-2xl font-light mb-3" style={{ color: "#D4AF37" }}>Bienvenue parmi les fondateurs</div>
+              <div className="font-display text-2xl font-light mb-3" style={{ color: "#D4AF37" }}>
+                {s(settings, 'prelaunch_success_title', 'Bienvenue parmi les fondateurs')}
+              </div>
               <p className="text-sm font-light leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-                Votre place est r&eacute;serv&eacute;e. Vous recevrez un email le jour de l&apos;ouverture avec votre acc&egrave;s
-                prioritaire au tarif de <strong>19,90&euro;/mois &agrave; vie</strong>.
+                {s(settings, 'prelaunch_success_message', "Votre place est r\u00e9serv\u00e9e. Vous recevrez un email le jour de l\u2019ouverture avec votre acc\u00e8s prioritaire au tarif de 19,90\u20ac/mois \u00e0 vie.")}
               </p>
             </motion.div>
           ) : (
@@ -408,7 +467,7 @@ export default function PreLaunchPage() {
               <div className="flex flex-col sm:flex-row gap-3">
                 <input
                   type="text"
-                  placeholder="Votre pr&eacute;nom (optionnel)"
+                  placeholder={s(settings, 'prelaunch_form_name_placeholder', 'Votre pr\u00e9nom (optionnel)')}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="flex-1 px-5 py-4 rounded-xl text-sm font-light outline-none transition-all duration-300 placeholder:text-[var(--text-muted)]"
@@ -423,7 +482,7 @@ export default function PreLaunchPage() {
                 <input
                   type="email"
                   required
-                  placeholder="Votre email"
+                  placeholder={s(settings, 'prelaunch_form_email_placeholder', 'Votre email')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="flex-[1.5] px-5 py-4 rounded-xl text-sm font-light outline-none transition-all duration-300 placeholder:text-[var(--text-muted)]"
@@ -449,7 +508,7 @@ export default function PreLaunchPage() {
                     Inscription...
                   </span>
                 ) : (
-                  "Rejoindre la liste d\u2019attente \u2014 19,90\u20AC/mois \u00E0 vie"
+                  s(settings, 'prelaunch_form_button', "Rejoindre la liste d\u2019attente \u2014 19,90\u20ac/mois \u00e0 vie")
                 )}
               </button>
 
@@ -460,7 +519,7 @@ export default function PreLaunchPage() {
                   className="text-center text-sm font-light"
                   style={{ color: "#D4AF37" }}
                 >
-                  Vous &ecirc;tes d&eacute;j&agrave; inscrit(e). Nous vous contacterons le 22 mars.
+                  {s(settings, 'prelaunch_already_message', 'Vous \u00eates d\u00e9j\u00e0 inscrit(e). Nous vous contacterons le 22 mars.')}
                 </motion.p>
               )}
 
@@ -503,7 +562,7 @@ export default function PreLaunchPage() {
             className="text-center text-[11px] tracking-[0.35em] uppercase mb-6 font-light"
             style={{ color: "var(--text-muted)" }}
           >
-            Ce qui vous attend
+            {s(settings, 'prelaunch_features_label', 'Ce qui vous attend')}
           </p>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">

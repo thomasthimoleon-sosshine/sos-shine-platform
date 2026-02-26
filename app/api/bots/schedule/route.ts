@@ -87,11 +87,15 @@ export async function POST(req: Request) {
     const totalWeeks = Math.ceil(totalDays / 7)
     const postsPerBotPerWeek = 10
 
+    const categories = ['temoignage', 'partage', 'question', 'remerciements', 'gratitude', 'citation'] as const
+
     const allPosts: {
       author_id: string
       title: string
       content: string
-      post_type: 'general'
+      post_type: 'community'
+      category: typeof categories[number]
+      media_type: 'text'
       is_published: boolean
       image_url: null
       created_at: string
@@ -122,7 +126,9 @@ export async function POST(req: Request) {
             author_id: bot.id,
             title: post.title,
             content: post.content,
-            post_type: 'general',
+            post_type: 'community',
+            category: categories[Math.floor(Math.random() * categories.length)],
+            media_type: 'text',
             is_published: true,
             image_url: null,
             created_at: postDate.toISOString(),

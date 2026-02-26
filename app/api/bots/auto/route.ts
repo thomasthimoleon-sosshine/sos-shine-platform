@@ -54,11 +54,16 @@ export async function POST(req: Request) {
       if (profile) {
         const post = getRandomPost(bot.prenom)
         if (post) {
+          const categories = ['temoignage', 'partage', 'question', 'remerciements', 'gratitude', 'citation'] as const
+          const category = categories[Math.floor(Math.random() * categories.length)]
+
           const { error } = await admin.from('posts').insert({
             author_id: profile.id,
             title: post.title,
             content: post.content,
-            post_type: 'general',
+            post_type: 'community',
+            category,
+            media_type: 'text',
             is_published: true,
             image_url: null,
           })

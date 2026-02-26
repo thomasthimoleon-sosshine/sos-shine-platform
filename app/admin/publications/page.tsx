@@ -28,7 +28,7 @@ const CATEGORY_CONFIG: Record<string, { label: string; color: string; icon: stri
   citation: { label: 'Citation', color: '#FD79A8', icon: '💬' },
 }
 
-const POST_TYPES: Post['post_type'][] = ['announcement', 'douleur_published', 'event_published', 'general']
+const POST_TYPES: Post['post_type'][] = ['community', 'announcement', 'douleur_published', 'event_published', 'general']
 
 const BAN_DURATIONS = [
   { label: '5 jours', days: 5 },
@@ -40,7 +40,8 @@ const BAN_DURATIONS = [
 const emptyForm = {
   title: '',
   content: '',
-  post_type: 'general' as Post['post_type'],
+  post_type: 'community' as Post['post_type'],
+  category: 'partage' as PostCategory,
   image_url: '',
 }
 
@@ -102,6 +103,8 @@ export default function AdminPublications() {
       title: form.title.trim(),
       content: form.content.trim(),
       post_type: form.post_type,
+      category: form.post_type === 'community' ? form.category : 'partage',
+      media_type: 'text' as const,
       image_url: form.image_url.trim() || null,
       author_id: user.id,
       is_published: false,
@@ -282,6 +285,25 @@ export default function AdminPublications() {
             <FileUpload label="Image (optionnel)" accept="image/*" folder="posts" currentUrl={form.image_url || null} hint="JPG, PNG ou WebP"
               onUploaded={(url) => setForm({ ...form, image_url: url })} onRemoved={() => setForm({ ...form, image_url: '' })} />
           </div>
+          {form.post_type === 'community' && (
+            <div>
+              <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>Categorie</label>
+              <div className="flex flex-wrap gap-2">
+                {Object.entries(CATEGORY_CONFIG).map(([key, cat]) => (
+                  <button key={key} type="button"
+                    onClick={() => setForm({ ...form, category: key as PostCategory })}
+                    className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
+                    style={{
+                      background: form.category === key ? `${cat.color}20` : 'rgba(255,255,255,0.03)',
+                      border: `1px solid ${form.category === key ? `${cat.color}50` : 'var(--dark-border)'}`,
+                      color: form.category === key ? cat.color : 'var(--text-muted)',
+                    }}>
+                    {cat.icon} {cat.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
           <div className="flex justify-end">
             <button type="submit" disabled={saving}
               className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all disabled:opacity-50 cursor-pointer"

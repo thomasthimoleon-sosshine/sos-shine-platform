@@ -137,15 +137,23 @@ export default function MurPage() {
       query = query.eq('category', filterCategory)
     }
 
-    const { data } = await query
+    const { data, error: queryError } = await query
+    if (queryError) {
+      console.error('Posts load error:', queryError)
+      setLoading(false)
+      return
+    }
     if (data && user) {
       const postIds = data.map((p: { id: string }) => p.id)
-      const { data: likes } = await supabase
-        .from('post_likes')
-        .select('post_id')
-        .eq('user_id', user.id)
-        .in('post_id', postIds)
-      const likedSet = new Set((likes || []).map((l: { post_id: string }) => l.post_id))
+      let likedSet = new Set<string>()
+      if (postIds.length > 0) {
+        const { data: likes } = await supabase
+          .from('post_likes')
+          .select('post_id')
+          .eq('user_id', user.id)
+          .in('post_id', postIds)
+        likedSet = new Set((likes || []).map((l: { post_id: string }) => l.post_id))
+      }
       const enriched = data.map((p: PostWithAuthor) => ({ ...p, user_has_liked: likedSet.has(p.id) }))
       setPosts(enriched as PostWithAuthor[])
     } else if (data) {
@@ -197,7 +205,12 @@ export default function MurPage() {
       setShowCreate(false)
       await loadPosts()
     } else {
-      alert('Erreur lors de la publication. Veuillez reessayer.')
+      const msg = error.code === '42501'
+        ? 'Vous n\'avez pas la permission de publier. Verifiez que votre compte est actif.'
+        : error.code === '23503'
+        ? 'Erreur de reference. Rechargez la page et reessayez.'
+        : `Erreur lors de la publication (${error.code || 'inconnu'}). Veuillez reessayer.`
+      alert(msg)
       console.error('Post create error:', error)
     }
     setCreating(false)

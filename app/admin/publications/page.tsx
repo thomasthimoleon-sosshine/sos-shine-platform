@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import FileUpload from '@/components/FileUpload'
-import type { Post, PostCommentWithAuthor } from '@/types/database'
+import type { Post, PostCategory, PostCommentWithAuthor } from '@/types/database'
 
 type PostWithProfile = Post & {
   profiles: { prenom: string; role: string; avatar_url: string | null } | null
@@ -76,7 +76,7 @@ export default function AdminPublications() {
 
     if (filterType !== 'all') {
       if (Object.keys(CATEGORY_CONFIG).includes(filterType)) {
-        query = query.eq('category', filterType)
+        query = query.eq('category', filterType as PostCategory)
       } else {
         query = query.eq('post_type', filterType)
       }

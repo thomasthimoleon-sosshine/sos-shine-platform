@@ -68,16 +68,44 @@ export type Message = {
 }
 
 // ── Posts (mur communautaire) ──
+export type PostCategory = 'temoignage' | 'partage' | 'question' | 'remerciements' | 'gratitude' | 'citation'
+export type PostMediaType = 'text' | 'image' | 'video' | 'audio'
+
 export type Post = {
   id: string
   author_id: string
   title: string
   content: string
   image_url: string | null
-  post_type: 'announcement' | 'douleur_published' | 'event_published' | 'general'
+  video_url: string | null
+  audio_url: string | null
+  post_type: 'announcement' | 'douleur_published' | 'event_published' | 'general' | 'community'
+  category: PostCategory
+  media_type: PostMediaType
   is_published: boolean
   created_at: string
   updated_at: string
+}
+
+// ── Post Likes ──
+export type PostLike = {
+  id: string
+  post_id: string
+  user_id: string
+  created_at: string
+}
+
+// ── Post Comments ──
+export type PostComment = {
+  id: string
+  post_id: string
+  author_id: string
+  content: string
+  created_at: string
+}
+
+export type PostCommentWithAuthor = PostComment & {
+  profiles: Pick<Profile, 'prenom' | 'role' | 'avatar_url'>
 }
 
 // ── Events ──
@@ -216,6 +244,8 @@ export type Database = {
       douleurs: Table<Douleur>
       messages: Table<Message>
       posts: Table<Post>
+      post_likes: Table<PostLike>
+      post_comments: Table<PostComment>
       events: Table<Event>
       event_registrations: Table<EventRegistration>
       content_views: Table<ContentView>
@@ -238,6 +268,9 @@ export type MessageWithProfile = Message & {
 
 export type PostWithAuthor = Post & {
   profiles: Pick<Profile, 'prenom' | 'role' | 'avatar_url'>
+  post_likes: { count: number }[]
+  post_comments: { count: number }[]
+  user_has_liked?: boolean
 }
 
 export type EventWithRegistrations = Event & {

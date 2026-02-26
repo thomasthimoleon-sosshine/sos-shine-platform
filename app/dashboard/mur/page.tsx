@@ -3,16 +3,46 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
-import type { PostWithAuthor, PostCategory, PostMediaType, PostCommentWithAuthor } from '@/types/database'
+import type { PostCategory, PostMediaType } from '@/types/database'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 import FileUpload from '@/components/FileUpload'
 import AudioPlayer from '@/components/AudioPlayer'
 import VoiceRecorder from '@/components/VoiceRecorder'
 
+/* ── Types locaux pour les données remontées par Supabase ── */
+type PostRow = {
+  id: string
+  author_id: string
+  title: string
+  content: string
+  image_url: string | null
+  video_url: string | null
+  audio_url: string | null
+  post_type: string
+  category: string
+  media_type: string
+  is_published: boolean
+  created_at: string
+  updated_at: string
+  profiles: { prenom: string; role: string; avatar_url: string | null } | null
+  post_likes: { count: number }[]
+  post_comments: { count: number }[]
+  user_has_liked?: boolean
+}
+
+type CommentRow = {
+  id: string
+  post_id: string
+  author_id: string
+  content: string
+  created_at: string
+  profiles: { prenom: string; role: string; avatar_url: string | null } | null
+}
+
 /* ── Category config ── */
 const CATEGORIES: { value: PostCategory; label: string; icon: string; color: string }[] = [
-  { value: 'temoignage', label: 'Temoignage', icon: '🗣️', color: '#D4AF37' },
-  { value: 'partage', label: "Partage d'experiences", icon: '💫', color: '#74C0FC' },
+  { value: 'temoignage', label: 'Témoignage', icon: '🗣️', color: '#D4AF37' },
+  { value: 'partage', label: "Partage d'expériences", icon: '💫', color: '#74C0FC' },
   { value: 'question', label: 'Question', icon: '❓', color: '#A29BFE' },
   { value: 'remerciements', label: 'Remerciements', icon: '🙏', color: '#55EFC4' },
   { value: 'gratitude', label: 'Gratitude', icon: '✨', color: '#FFEAA7' },
@@ -21,17 +51,16 @@ const CATEGORIES: { value: PostCategory; label: string; icon: string; color: str
 
 const CATEGORY_MAP = Object.fromEntries(CATEGORIES.map(c => [c.value, c]))
 
-function getCategoryInfo(cat: PostCategory | string) {
+function getCategoryInfo(cat: string) {
   return CATEGORY_MAP[cat] || CATEGORIES[1]
 }
 
-/* ── Post type config (legacy + community) ── */
 function getTypeLabel(type: string, category?: string) {
   if (type === 'community' && category) return getCategoryInfo(category)
   const map: Record<string, { label: string; color: string; icon: string }> = {
     announcement: { label: 'Annonce', color: '#D4AF37', icon: '📢' },
     douleur_published: { label: 'Nouveau challenge', color: '#55EFC4', icon: '📘' },
-    event_published: { label: 'Nouvel evenement', color: '#74C0FC', icon: '📅' },
+    event_published: { label: 'Nouvel événement', color: '#74C0FC', icon: '📅' },
     general: { label: 'Publication', color: 'var(--text-secondary)', icon: '💬' },
   }
   return map[type] || map.general
@@ -42,23 +71,24 @@ function formatDate(d: string) {
   const now = new Date()
   const diffMs = now.getTime() - date.getTime()
   const diffMin = Math.floor(diffMs / 60000)
-  if (diffMin < 1) return "A l'instant"
+  if (diffMin < 1) return "À l'instant"
   if (diffMin < 60) return `Il y a ${diffMin}min`
   const diffH = Math.floor(diffMin / 60)
   if (diffH < 24) return `Il y a ${diffH}h`
   return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })
 }
 
-/* ── Share URL helpers ── */
 function getPostUrl(postId: string) {
   if (typeof window !== 'undefined') return `${window.location.origin}/dashboard/mur?post=${postId}`
   return `/dashboard/mur?post=${postId}`
 }
 
+/* ── Composant principal ── */
 export default function MurPage() {
   const { t } = useTranslation()
-  const [posts, setPosts] = useState<PostWithAuthor[]>([])
+  const [posts, setPosts] = useState<PostRow[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
 
   // Filters
@@ -75,6 +105,7 @@ export default function MurPage() {
   const [createVideoUrl, setCreateVideoUrl] = useState('')
   const [createAudioUrl, setCreateAudioUrl] = useState('')
   const [creating, setCreating] = useState(false)
+  const [createError, setCreateError] = useState<string | null>(null)
 
   // Edit
   const [editingPost, setEditingPost] = useState<string | null>(null)
@@ -85,7 +116,7 @@ export default function MurPage() {
 
   // Comments
   const [expandedComments, setExpandedComments] = useState<string | null>(null)
-  const [comments, setComments] = useState<Record<string, PostCommentWithAuthor[]>>({})
+  const [comments, setComments] = useState<Record<string, CommentRow[]>>({})
   const [commentText, setCommentText] = useState('')
   const [sendingComment, setSendingComment] = useState(false)
 
@@ -106,16 +137,34 @@ export default function MurPage() {
 
   /* ── Load posts ── */
   const loadPosts = useCallback(async () => {
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (user) {
+    try {
+      setError(null)
+      const supabase = createClient()
+
+      // 1. Get current user
+      const { data: { user }, error: authError } = await supabase.auth.getUser()
+      if (authError) {
+        console.error('[Mur] Auth error:', authError)
+        setError('Erreur d\'authentification. Veuillez vous reconnecter.')
+        setLoading(false)
+        return
+      }
+      if (!user) {
+        console.error('[Mur] No user found')
+        setError('Vous devez être connecté pour accéder au mur.')
+        setLoading(false)
+        return
+      }
+
       setCurrentUserId(user.id)
-      // Check if user is banned from publishing
+
+      // 2. Check ban status
       const { data: profile } = await supabase
         .from('profiles')
         .select('publish_banned_until')
         .eq('id', user.id)
         .single()
+
       if (profile?.publish_banned_until && new Date(profile.publish_banned_until) > new Date()) {
         setIsBanned(true)
         setBanUntil(profile.publish_banned_until)
@@ -123,44 +172,121 @@ export default function MurPage() {
         setIsBanned(false)
         setBanUntil(null)
       }
-    }
 
-    let query = supabase
-      .from('posts')
-      .select('*, profiles(prenom, role, avatar_url), post_likes(count), post_comments(count)')
-      .eq('is_published', true)
-      .lte('created_at', new Date().toISOString())
-      .order('created_at', { ascending: false })
-      .limit(100)
+      // 3. Load posts with profiles join
+      let query = supabase
+        .from('posts')
+        .select('*, profiles!posts_author_id_fkey(prenom, role, avatar_url), post_likes(count), post_comments(count)')
+        .eq('is_published', true)
+        .lte('created_at', new Date().toISOString())
+        .order('created_at', { ascending: false })
+        .limit(100)
 
-    if (filterCategory !== 'all') {
-      query = query.eq('category', filterCategory)
-    }
+      if (filterCategory !== 'all') {
+        query = query.eq('category', filterCategory)
+      }
 
-    const { data, error: queryError } = await query
-    if (queryError) {
-      console.error('Posts load error:', queryError)
+      const { data, error: queryError } = await query
+
+      if (queryError) {
+        console.error('[Mur] Query error with FK hint:', queryError)
+        // Fallback: try without FK hint
+        let fallbackQuery = supabase
+          .from('posts')
+          .select('*, profiles(prenom, role, avatar_url), post_likes(count), post_comments(count)')
+          .eq('is_published', true)
+          .lte('created_at', new Date().toISOString())
+          .order('created_at', { ascending: false })
+          .limit(100)
+
+        if (filterCategory !== 'all') {
+          fallbackQuery = fallbackQuery.eq('category', filterCategory)
+        }
+
+        const { data: fallbackData, error: fallbackError } = await fallbackQuery
+
+        if (fallbackError) {
+          console.error('[Mur] Fallback query also failed:', fallbackError)
+          // Last resort: load posts without joins
+          let simpleQuery = supabase
+            .from('posts')
+            .select('*')
+            .eq('is_published', true)
+            .lte('created_at', new Date().toISOString())
+            .order('created_at', { ascending: false })
+            .limit(100)
+
+          if (filterCategory !== 'all') {
+            simpleQuery = simpleQuery.eq('category', filterCategory)
+          }
+
+          const { data: simpleData, error: simpleError } = await simpleQuery
+
+          if (simpleError) {
+            console.error('[Mur] Simple query failed:', simpleError)
+            setError(`Erreur de chargement: ${simpleError.message} (code: ${simpleError.code})`)
+            setLoading(false)
+            return
+          }
+
+          // Enrich with empty profiles/counts
+          const enriched = (simpleData || []).map((p: Record<string, unknown>) => ({
+            ...p,
+            profiles: null,
+            post_likes: [{ count: 0 }],
+            post_comments: [{ count: 0 }],
+            user_has_liked: false,
+          })) as PostRow[]
+          setPosts(enriched)
+          setLoading(false)
+          return
+        }
+
+        // Process fallback data
+        await processPostsData(fallbackData as PostRow[], user.id, supabase)
+        setLoading(false)
+        return
+      }
+
+      // Process main data
+      await processPostsData(data as PostRow[], user.id, supabase)
       setLoading(false)
+    } catch (err) {
+      console.error('[Mur] Unexpected error:', err)
+      setError(`Erreur inattendue: ${err instanceof Error ? err.message : 'inconnue'}`)
+      setLoading(false)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterCategory])
+
+  async function processPostsData(
+    data: PostRow[],
+    userId: string,
+    supabase: ReturnType<typeof createClient>
+  ) {
+    if (!data || data.length === 0) {
+      setPosts([])
       return
     }
-    if (data && user) {
-      const postIds = data.map((p: { id: string }) => p.id)
-      let likedSet = new Set<string>()
-      if (postIds.length > 0) {
-        const { data: likes } = await supabase
-          .from('post_likes')
-          .select('post_id')
-          .eq('user_id', user.id)
-          .in('post_id', postIds)
-        likedSet = new Set((likes || []).map((l: { post_id: string }) => l.post_id))
-      }
-      const enriched = data.map((p: PostWithAuthor) => ({ ...p, user_has_liked: likedSet.has(p.id) }))
-      setPosts(enriched as PostWithAuthor[])
-    } else if (data) {
-      setPosts(data as unknown as PostWithAuthor[])
+
+    const postIds = data.map(p => p.id)
+    let likedSet = new Set<string>()
+
+    if (postIds.length > 0) {
+      const { data: likes } = await supabase
+        .from('post_likes')
+        .select('post_id')
+        .eq('user_id', userId)
+        .in('post_id', postIds)
+      likedSet = new Set((likes || []).map((l: { post_id: string }) => l.post_id))
     }
-    setLoading(false)
-  }, [filterCategory])
+
+    const enriched = data.map(p => ({
+      ...p,
+      user_has_liked: likedSet.has(p.id),
+    }))
+    setPosts(enriched)
+  }
 
   useEffect(() => { loadPosts() }, [loadPosts])
 
@@ -178,24 +304,50 @@ export default function MurPage() {
     if (!createContent.trim()) return
     if (isBanned) return
     setCreating(true)
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) { setCreating(false); return }
+    setCreateError(null)
 
-    const { error } = await supabase.from('posts').insert({
-      title: createTitle.trim() || getCategoryInfo(createCategory).label,
-      content: createContent.trim(),
-      post_type: 'community' as const,
-      category: createCategory,
-      media_type: createMediaType,
-      image_url: createMediaType === 'image' ? createImageUrl || null : null,
-      video_url: createMediaType === 'video' ? createVideoUrl || null : null,
-      audio_url: createMediaType === 'audio' ? createAudioUrl || null : null,
-      author_id: user.id,
-      is_published: true,
-    })
+    try {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        setCreateError('Vous devez être connecté.')
+        setCreating(false)
+        return
+      }
 
-    if (!error) {
+      const insertData = {
+        title: createTitle.trim() || getCategoryInfo(createCategory).label,
+        content: createContent.trim(),
+        post_type: 'community' as const,
+        category: createCategory,
+        media_type: createMediaType,
+        image_url: createMediaType === 'image' ? (createImageUrl || null) : null,
+        video_url: createMediaType === 'video' ? (createVideoUrl || null) : null,
+        audio_url: createMediaType === 'audio' ? (createAudioUrl || null) : null,
+        author_id: user.id,
+        is_published: true,
+      }
+
+      console.log('[Mur] Inserting post:', insertData)
+
+      const { error: insertError } = await supabase.from('posts').insert(insertData)
+
+      if (insertError) {
+        console.error('[Mur] Insert error:', insertError)
+        if (insertError.code === '42501') {
+          setCreateError('Permission refusée. Vérifiez que les politiques RLS sont bien appliquées dans Supabase. (Erreur 42501)')
+        } else if (insertError.code === '23503') {
+          setCreateError('Erreur de référence. Votre profil n\'existe peut-être pas encore dans la table profiles.')
+        } else if (insertError.code === '23514') {
+          setCreateError('Valeur invalide. Vérifiez que la contrainte post_type inclut "community".')
+        } else {
+          setCreateError(`Erreur: ${insertError.message} (code: ${insertError.code || 'inconnu'})`)
+        }
+        setCreating(false)
+        return
+      }
+
+      // Success: reset form and reload
       setCreateTitle('')
       setCreateContent('')
       setCreateImageUrl('')
@@ -203,15 +355,11 @@ export default function MurPage() {
       setCreateAudioUrl('')
       setCreateMediaType('text')
       setShowCreate(false)
+      setCreateError(null)
       await loadPosts()
-    } else {
-      const msg = error.code === '42501'
-        ? 'Vous n\'avez pas la permission de publier. Verifiez que votre compte est actif.'
-        : error.code === '23503'
-        ? 'Erreur de reference. Rechargez la page et reessayez.'
-        : `Erreur lors de la publication (${error.code || 'inconnu'}). Veuillez reessayer.`
-      alert(msg)
-      console.error('Post create error:', error)
+    } catch (err) {
+      console.error('[Mur] Create error:', err)
+      setCreateError(`Erreur inattendue: ${err instanceof Error ? err.message : 'inconnue'}`)
     }
     setCreating(false)
   }
@@ -246,7 +394,7 @@ export default function MurPage() {
       .select('*, profiles(prenom, role, avatar_url)')
       .eq('post_id', postId)
       .order('created_at', { ascending: true })
-    if (data) setComments(prev => ({ ...prev, [postId]: data as unknown as PostCommentWithAuthor[] }))
+    if (data) setComments(prev => ({ ...prev, [postId]: data as unknown as CommentRow[] }))
   }
 
   async function toggleComments(postId: string) {
@@ -262,18 +410,20 @@ export default function MurPage() {
     if (!commentText.trim() || !currentUserId) return
     setSendingComment(true)
     const supabase = createClient()
-    const { error } = await supabase.from('post_comments').insert({
+    const { error: commentError } = await supabase.from('post_comments').insert({
       post_id: postId,
       author_id: currentUserId,
       content: commentText.trim(),
     })
-    if (!error) {
+    if (!commentError) {
       setCommentText('')
       await loadComments(postId)
       setPosts(prev => prev.map(p => p.id === postId
         ? { ...p, post_comments: [{ count: (p.post_comments?.[0]?.count || 0) + 1 }] }
         : p
       ))
+    } else {
+      console.error('[Mur] Comment error:', commentError)
     }
     setSendingComment(false)
   }
@@ -297,10 +447,9 @@ export default function MurPage() {
       .from('profiles')
       .select('id, prenom, avatar_url')
       .neq('id', currentUserId!)
-      .eq('is_bot', false)
       .order('prenom')
       .limit(50)
-    if (data) setShareMembers(data)
+    if (data) setShareMembers(data as { id: string; prenom: string; avatar_url: string | null }[])
   }
 
   async function sendShareDM(receiverId: string, postId: string) {
@@ -320,7 +469,7 @@ export default function MurPage() {
   }
 
   /* ── Edit / Delete ── */
-  function startEdit(post: PostWithAuthor) {
+  function startEdit(post: PostRow) {
     setEditingPost(post.id)
     setEditTitle(post.title)
     setEditContent(post.content)
@@ -391,10 +540,31 @@ export default function MurPage() {
         )}
       </div>
 
+      {/* ── Error banner ── */}
+      {error && (
+        <div className="rounded-xl p-4 text-sm" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', color: '#EF4444' }}>
+          <p className="font-medium mb-1">Erreur</p>
+          <p>{error}</p>
+          <button
+            onClick={() => { setError(null); setLoading(true); loadPosts() }}
+            className="mt-2 px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer"
+            style={{ background: 'rgba(239,68,68,0.15)', color: '#EF4444' }}
+          >
+            Réessayer
+          </button>
+        </div>
+      )}
+
       {/* ── Create post form ── */}
       {showCreate && (
         <div className="rounded-2xl p-6 space-y-5" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
           <h2 className="font-semibold text-lg" style={{ color: 'var(--gold)' }}>Nouvelle publication</h2>
+
+          {createError && (
+            <div className="rounded-xl p-3 text-xs" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', color: '#EF4444' }}>
+              {createError}
+            </div>
+          )}
 
           {/* Category selection */}
           <div>
@@ -424,7 +594,7 @@ export default function MurPage() {
               {([
                 { value: 'text' as const, label: 'Texte', icon: '📝' },
                 { value: 'image' as const, label: 'Image', icon: '🖼️' },
-                { value: 'video' as const, label: 'Video', icon: '🎬' },
+                { value: 'video' as const, label: 'Vidéo', icon: '🎬' },
                 { value: 'audio' as const, label: 'Audio', icon: '🎙️' },
               ]).map(mt => (
                 <button
@@ -478,7 +648,7 @@ export default function MurPage() {
 
           {createMediaType === 'video' && (
             <FileUpload
-              label="Video"
+              label="Vidéo"
               accept="video/*"
               folder="posts"
               currentUrl={createVideoUrl || null}
@@ -533,7 +703,7 @@ export default function MurPage() {
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--text-muted)' }}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
               </svg>
-              {filterCategory === 'all' ? 'Toutes les categories' : getCategoryInfo(filterCategory).icon + ' ' + getCategoryInfo(filterCategory).label}
+              {filterCategory === 'all' ? 'Toutes les catégories' : getCategoryInfo(filterCategory).icon + ' ' + getCategoryInfo(filterCategory).label}
             </span>
             <svg className={`w-4 h-4 transition-transform ${filterOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--text-muted)' }}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
@@ -548,7 +718,7 @@ export default function MurPage() {
                 className="w-full text-left px-4 py-2.5 text-sm flex items-center gap-2 transition-colors cursor-pointer"
                 style={{ color: filterCategory === 'all' ? 'var(--gold)' : 'var(--text-secondary)', background: filterCategory === 'all' ? 'rgba(212,175,55,0.08)' : 'transparent' }}
               >
-                Toutes les categories
+                Toutes les catégories
               </button>
               {CATEGORIES.map(cat => (
                 <button
@@ -570,7 +740,7 @@ export default function MurPage() {
         <div className="flex justify-center py-12">
           <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
         </div>
-      ) : posts.length === 0 ? (
+      ) : posts.length === 0 && !error ? (
         <div className="text-center py-16">
           <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-5 text-3xl" style={{ background: 'rgba(212,175,55,0.08)' }}>
             {filterCategory !== 'all' ? getCategoryInfo(filterCategory).icon : '📋'}
@@ -579,7 +749,7 @@ export default function MurPage() {
             {filterCategory !== 'all' ? `Aucune publication dans "${getCategoryInfo(filterCategory).label}"` : t('dashboard.wall_empty_title')}
           </h3>
           <p className="text-sm max-w-sm mx-auto" style={{ color: 'var(--text-secondary)' }}>
-            {filterCategory !== 'all' ? 'Soyez le premier a publier dans cette categorie !' : t('dashboard.wall_empty_desc')}
+            {filterCategory !== 'all' ? 'Soyez le premier à publier dans cette catégorie !' : t('dashboard.wall_empty_desc')}
           </p>
         </div>
       ) : (
@@ -624,14 +794,14 @@ export default function MurPage() {
                                 style={{ color: 'var(--text-secondary)' }}
                                 onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
                                 onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                                {t('common.edit')}
+                                Modifier
                               </button>
                               <button onClick={() => deletePost(post.id)}
                                 className="w-full text-left px-4 py-2 text-sm flex items-center gap-2 transition-colors cursor-pointer"
                                 style={{ color: '#EF4444' }}
                                 onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.08)'}
                                 onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                                {t('common.delete')}
+                                Supprimer
                               </button>
                             </div>
                           )}
@@ -652,7 +822,7 @@ export default function MurPage() {
                     )}
                     <div>
                       <span className="text-sm font-semibold" style={{ color: post.profiles?.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)' }}>
-                        {post.profiles?.prenom || 'SOS Shine'}
+                        {post.profiles?.prenom || 'Membre SOS Shine'}
                       </span>
                       {post.profiles?.role === 'founder' && (
                         <span className="text-xs ml-2 px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>
@@ -673,12 +843,12 @@ export default function MurPage() {
                         <button onClick={() => setEditingPost(null)}
                           className="px-4 py-2 rounded-xl text-xs font-medium cursor-pointer"
                           style={{ color: 'var(--text-muted)', border: '1px solid var(--dark-border)' }}>
-                          {t('common.cancel')}
+                          Annuler
                         </button>
                         <button onClick={() => saveEdit(post.id)} disabled={saving}
                           className="px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer disabled:opacity-50"
                           style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
-                          {saving ? '...' : t('common.save')}
+                          {saving ? '...' : 'Enregistrer'}
                         </button>
                       </div>
                     </div>
@@ -845,7 +1015,7 @@ export default function MurPage() {
                           value={expandedComments === post.id ? commentText : ''}
                           onChange={e => setCommentText(e.target.value)}
                           onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendComment(post.id) } }}
-                          placeholder="Ecrire un commentaire..."
+                          placeholder="Écrire un commentaire..."
                           className="flex-1 px-3 py-2 rounded-xl text-xs outline-none"
                           style={inputStyle}
                         />
@@ -872,7 +1042,7 @@ export default function MurPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
           <div className="w-full max-w-sm rounded-2xl p-6 space-y-4" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold" style={{ color: 'var(--text-primary)' }}>Envoyer en message prive</h3>
+              <h3 className="font-semibold" style={{ color: 'var(--text-primary)' }}>Envoyer en message privé</h3>
               <button onClick={() => setSharePostId(null)} className="p-1 cursor-pointer" style={{ color: 'var(--text-muted)' }}>
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -919,7 +1089,7 @@ export default function MurPage() {
                 </button>
               ))}
               {filteredShareMembers.length === 0 && (
-                <p className="text-center text-xs py-4" style={{ color: 'var(--text-muted)' }}>Aucun membre trouve</p>
+                <p className="text-center text-xs py-4" style={{ color: 'var(--text-muted)' }}>Aucun membre trouvé</p>
               )}
             </div>
           </div>

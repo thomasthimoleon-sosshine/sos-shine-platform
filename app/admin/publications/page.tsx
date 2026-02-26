@@ -5,11 +5,21 @@ import { createClient } from '@/lib/supabase/client'
 import FileUpload from '@/components/FileUpload'
 import type { Post } from '@/types/database'
 
-const POST_TYPE_CONFIG: Record<Post['post_type'], { label: string; color: string; icon: string }> = {
+const POST_TYPE_CONFIG: Record<string, { label: string; color: string; icon: string }> = {
   announcement: { label: 'Annonce', color: '#D4AF37', icon: '📢' },
-  douleur_published: { label: 'Challenge publié', color: '#55EFC4', icon: '📘' },
+  douleur_published: { label: 'Challenge publie', color: '#55EFC4', icon: '📘' },
   event_published: { label: 'Evenement publie', color: '#74C0FC', icon: '📅' },
   general: { label: 'General', color: '#9A9080', icon: '💬' },
+  community: { label: 'Communaute', color: '#A29BFE', icon: '🌟' },
+}
+
+const CATEGORY_CONFIG: Record<string, { label: string; color: string; icon: string }> = {
+  temoignage: { label: 'Temoignage', color: '#D4AF37', icon: '🗣️' },
+  partage: { label: "Partage d'exp.", color: '#74C0FC', icon: '💫' },
+  question: { label: 'Question', color: '#A29BFE', icon: '❓' },
+  remerciements: { label: 'Remerciements', color: '#55EFC4', icon: '🙏' },
+  gratitude: { label: 'Gratitude', color: '#FFEAA7', icon: '✨' },
+  citation: { label: 'Citation', color: '#FD79A8', icon: '💬' },
 }
 
 const POST_TYPES: Post['post_type'][] = ['announcement', 'douleur_published', 'event_published', 'general']
@@ -244,7 +254,8 @@ export default function AdminPublications() {
       ) : (
         <div className="space-y-3">
           {posts.map((post) => {
-            const config = POST_TYPE_CONFIG[post.post_type]
+            const config = POST_TYPE_CONFIG[post.post_type] || POST_TYPE_CONFIG.general
+            const catConfig = post.post_type === 'community' && post.category ? CATEGORY_CONFIG[post.category] : null
             return (
               <div key={post.id} className="rounded-xl p-5 transition-all duration-200"
                 style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
@@ -256,6 +267,13 @@ export default function AdminPublications() {
                         <span className="text-[10px]">{config.icon}</span>
                         {config.label}
                       </span>
+                      {catConfig && (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium"
+                          style={{ background: `${catConfig.color}15`, color: catConfig.color }}>
+                          <span className="text-[10px]">{catConfig.icon}</span>
+                          {catConfig.label}
+                        </span>
+                      )}
                       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium"
                         style={{
                           background: post.is_published ? 'rgba(85,239,196,0.1)' : 'rgba(255,107,85,0.1)',

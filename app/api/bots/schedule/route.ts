@@ -87,7 +87,7 @@ export async function POST(req: Request) {
     const totalWeeks = Math.ceil(totalDays / 7)
     const postsPerBotPerWeek = 10
 
-    // Mise à jour de l'interface pour correspondre au schéma V2
+    // Typage strict corrigé : on force les valeurs littérales
     const allPosts: {
       author_id: string
       title: string
@@ -96,9 +96,9 @@ export async function POST(req: Request) {
       is_published: boolean
       image_url: null
       created_at: string
-      category: string // Ajout V2
-      media_type: string // Ajout V2
-      video_url: null // Ajout V2
+      category: 'partage' // <-- Typage strict
+      media_type: 'text'  // <-- Typage strict
+      video_url: null
     }[] = []
 
     for (const bot of botProfiles) {
@@ -122,7 +122,6 @@ export async function POST(req: Request) {
 
           if (postDate > endDate) continue
 
-          // Injection du payload complet V2
           allPosts.push({
             author_id: bot.id,
             title: post.title,

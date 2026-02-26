@@ -63,6 +63,7 @@ export default function AdminPublications() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { setSaving(false); return }
 
+    // --- CORRECTION ICI : Ajout des champs category, media_type et video_url ---
     const { error } = await supabase.from('posts').insert({
       title: form.title.trim(),
       content: form.content.trim(),
@@ -70,6 +71,9 @@ export default function AdminPublications() {
       image_url: form.image_url.trim() || null,
       author_id: user.id,
       is_published: false,
+      category: 'general', 
+      media_type: form.image_url.trim() ? 'image' : 'text', 
+      video_url: null 
     })
 
     if (!error) {

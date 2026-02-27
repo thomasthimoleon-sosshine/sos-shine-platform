@@ -68,6 +68,10 @@ export default function AdminPublications() {
   const [banUserName, setBanUserName] = useState('')
   const [banning, setBanning] = useState(false)
 
+  // Error/success feedback
+  const [actionError, setActionError] = useState<string | null>(null)
+  const [actionSuccess, setActionSuccess] = useState<string | null>(null)
+
   const loadPosts = useCallback(async () => {
     const supabase = createClient()
 
@@ -155,19 +159,33 @@ export default function AdminPublications() {
       is_published: false,
     })
 
-    if (!error) {
-      setForm(emptyForm)
-      setShowForm(false)
-      await loadPosts()
+    if (error) {
+      console.error('[Admin] Create error:', error)
+      setActionError(`Impossible de creer: ${error.message} (code: ${error.code})`)
+      setSaving(false)
+      return
     }
+    setForm(emptyForm)
+    setShowForm(false)
+    setActionSuccess('Publication creee.')
+    setTimeout(() => setActionSuccess(null), 3000)
+    await loadPosts()
     setSaving(false)
   }
 
   async function togglePublish(post: PostWithProfile) {
     setTogglingId(post.id)
+    setActionError(null)
     const willPublish = !post.is_published
     const supabase = createClient()
-    await supabase.from('posts').update({ is_published: willPublish }).eq('id', post.id)
+    const { error } = await supabase.from('posts').update({ is_published: willPublish }).eq('id', post.id)
+
+    if (error) {
+      console.error('[Admin] Toggle publish error:', error)
+      setActionError(`Impossible de ${willPublish ? 'publier' : 'masquer'}: ${error.message} (code: ${error.code})`)
+      setTogglingId(null)
+      return
+    }
 
     if (willPublish) {
       try {
@@ -179,6 +197,8 @@ export default function AdminPublications() {
       } catch { /* silent */ }
     }
 
+    setActionSuccess(willPublish ? 'Publication rendue visible.' : 'Publication masquee.')
+    setTimeout(() => setActionSuccess(null), 3000)
     await loadPosts()
     setTogglingId(null)
   }
@@ -186,8 +206,17 @@ export default function AdminPublications() {
   async function handleDelete(id: string) {
     if (!confirm('Supprimer cette publication ? Cette action est irreversible.')) return
     setDeletingId(id)
+    setActionError(null)
     const supabase = createClient()
-    await supabase.from('posts').delete().eq('id', id)
+    const { error } = await supabase.from('posts').delete().eq('id', id)
+    if (error) {
+      console.error('[Admin] Delete error:', error)
+      setActionError(`Impossible de supprimer: ${error.message} (code: ${error.code})`)
+      setDeletingId(null)
+      return
+    }
+    setActionSuccess('Publication supprimee.')
+    setTimeout(() => setActionSuccess(null), 3000)
     await loadPosts()
     setDeletingId(null)
   }
@@ -235,10 +264,16 @@ export default function AdminPublications() {
 
   async function deleteComment(commentId: string) {
     setDeletingCommentId(commentId)
+    setActionError(null)
     const supabase = createClient()
-    await supabase.from('post_comments').delete().eq('id', commentId)
+    const { error } = await supabase.from('post_comments').delete().eq('id', commentId)
+    if (error) {
+      console.error('[Admin] Delete comment error:', error)
+      setActionError(`Impossible de supprimer le commentaire: ${error.message}`)
+      setDeletingCommentId(null)
+      return
+    }
     setComments(prev => prev.filter(c => c.id !== commentId))
-    // Update count on the post
     setPosts(prev => prev.map(p => p.id === commentsPostId
       ? { ...p, post_comments: [{ count: Math.max(0, (p.post_comments?.[0]?.count || 1) - 1) }] }
       : p
@@ -250,19 +285,33 @@ export default function AdminPublications() {
   async function banUser(days: number) {
     if (!banUserId) return
     setBanning(true)
+    setActionError(null)
     const supabase = createClient()
     const until = new Date()
     until.setDate(until.getDate() + days)
-    await supabase.from('profiles').update({ publish_banned_until: until.toISOString() }).eq('id', banUserId)
+    const { error } = await supabase.from('profiles').update({ publish_banned_until: until.toISOString() }).eq('id', banUserId)
     setBanning(false)
+    if (error) {
+      console.error('[Admin] Ban error:', error)
+      setActionError(`Impossible de bloquer: ${error.message} (code: ${error.code})`)
+      return
+    }
     setBanUserId(null)
-    alert(`Membre bloque pour ${days} jours.`)
+    setActionSuccess(`Membre bloque pour ${days} jours.`)
+    setTimeout(() => setActionSuccess(null), 3000)
   }
 
   async function unbanUser(userId: string) {
+    setActionError(null)
     const supabase = createClient()
-    await supabase.from('profiles').update({ publish_banned_until: null }).eq('id', userId)
-    alert('Blocage de publication leve.')
+    const { error } = await supabase.from('profiles').update({ publish_banned_until: null }).eq('id', userId)
+    if (error) {
+      console.error('[Admin] Unban error:', error)
+      setActionError(`Impossible de debloquer: ${error.message} (code: ${error.code})`)
+      return
+    }
+    setActionSuccess('Blocage de publication leve.')
+    setTimeout(() => setActionSuccess(null), 3000)
   }
 
   function formatDate(iso: string) {
@@ -295,6 +344,27 @@ export default function AdminPublications() {
           {showForm ? 'Annuler' : '+ Nouvelle publication'}
         </button>
       </div>
+
+      {/* ── Error / Success banners ── */}
+      {actionError && (
+        <div className="rounded-xl p-4 text-sm flex items-start gap-3" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', color: '#EF4444' }}>
+          <span className="flex-1">
+            <p className="font-medium mb-0.5">Erreur</p>
+            <p className="text-xs">{actionError}</p>
+            <p className="text-[10px] mt-1 opacity-70">Verifiez que la migration SQL admin a bien ete executee dans Supabase.</p>
+          </span>
+          <button onClick={() => setActionError(null)} className="shrink-0 cursor-pointer" style={{ color: '#EF4444' }}>
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      )}
+      {actionSuccess && (
+        <div className="rounded-xl p-3 text-sm" style={{ background: 'rgba(85,239,196,0.08)', border: '1px solid rgba(85,239,196,0.2)', color: '#55EFC4' }}>
+          {actionSuccess}
+        </div>
+      )}
 
       {/* Filter bar */}
       <div className="flex flex-wrap gap-2">

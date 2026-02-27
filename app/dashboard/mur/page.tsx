@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
-import type { PostCategory, PostMediaType } from '@/types/database'
+import type { Post, PostCategory, PostMediaType } from '@/types/database'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 import FileUpload from '@/components/FileUpload'
 import AudioPlayer from '@/components/AudioPlayer'
@@ -173,10 +173,10 @@ export default function MurPage() {
         setBanUntil(null)
       }
 
-      // 3. Load posts with profiles join
+      // 3. Load posts (without fragile FK joins — we load profiles separately)
       let query = supabase
         .from('posts')
-        .select('*, profiles!posts_author_id_fkey(prenom, role, avatar_url), post_likes(count), post_comments(count)')
+        .select('*')
         .eq('is_published', true)
         .lte('created_at', new Date().toISOString())
         .order('created_at', { ascending: false })
@@ -186,70 +186,82 @@ export default function MurPage() {
         query = query.eq('category', filterCategory)
       }
 
-      const { data, error: queryError } = await query
+      const { data: rawPostsData, error: queryError } = await query
 
       if (queryError) {
-        console.error('[Mur] Query error with FK hint:', queryError)
-        // Fallback: try without FK hint
-        let fallbackQuery = supabase
-          .from('posts')
-          .select('*, profiles(prenom, role, avatar_url), post_likes(count), post_comments(count)')
-          .eq('is_published', true)
-          .lte('created_at', new Date().toISOString())
-          .order('created_at', { ascending: false })
-          .limit(100)
-
-        if (filterCategory !== 'all') {
-          fallbackQuery = fallbackQuery.eq('category', filterCategory)
-        }
-
-        const { data: fallbackData, error: fallbackError } = await fallbackQuery
-
-        if (fallbackError) {
-          console.error('[Mur] Fallback query also failed:', fallbackError)
-          // Last resort: load posts without joins
-          let simpleQuery = supabase
-            .from('posts')
-            .select('*')
-            .eq('is_published', true)
-            .lte('created_at', new Date().toISOString())
-            .order('created_at', { ascending: false })
-            .limit(100)
-
-          if (filterCategory !== 'all') {
-            simpleQuery = simpleQuery.eq('category', filterCategory)
-          }
-
-          const { data: simpleData, error: simpleError } = await simpleQuery
-
-          if (simpleError) {
-            console.error('[Mur] Simple query failed:', simpleError)
-            setError(`Erreur de chargement: ${simpleError.message} (code: ${simpleError.code})`)
-            setLoading(false)
-            return
-          }
-
-          // Enrich with empty profiles/counts
-          const enriched = (simpleData || []).map((p: Record<string, unknown>) => ({
-            ...p,
-            profiles: null,
-            post_likes: [{ count: 0 }],
-            post_comments: [{ count: 0 }],
-            user_has_liked: false,
-          })) as PostRow[]
-          setPosts(enriched)
-          setLoading(false)
-          return
-        }
-
-        // Process fallback data
-        await processPostsData(fallbackData as PostRow[], user.id, supabase)
+        console.error('[Mur] Posts query error:', queryError)
+        setError(`Erreur de chargement: ${queryError.message}`)
         setLoading(false)
         return
       }
 
-      // Process main data
-      await processPostsData(data as PostRow[], user.id, supabase)
+      const rawPosts = (rawPostsData || []) as Post[]
+
+      if (rawPosts.length === 0) {
+        setPosts([])
+        setLoading(false)
+        return
+      }
+
+      // 4. Load profiles for all unique author_ids
+      const authorIds = [...new Set(rawPosts.map(p => p.author_id))]
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id, prenom, role, avatar_url')
+        .in('id', authorIds)
+
+      const profileMap = new Map(
+        (profiles || []).map((pr: { id: string; prenom: string; role: string; avatar_url: string | null }) => [pr.id, pr])
+      )
+
+      // 5. Load like counts per post
+      const postIds = rawPosts.map(p => p.id)
+      const { data: likeData } = await supabase
+        .from('post_likes')
+        .select('post_id')
+        .in('post_id', postIds)
+      const likeCounts = (likeData || []) as { post_id: string }[]
+
+      const likeCountMap = new Map<string, number>()
+      for (const l of likeCounts) {
+        likeCountMap.set(l.post_id, (likeCountMap.get(l.post_id) || 0) + 1)
+      }
+
+      // 6. Load comment counts per post
+      const { data: commentData } = await supabase
+        .from('post_comments')
+        .select('post_id')
+        .in('post_id', postIds)
+      const commentCounts = (commentData || []) as { post_id: string }[]
+
+      const commentCountMap = new Map<string, number>()
+      for (const c of commentCounts) {
+        commentCountMap.set(c.post_id, (commentCountMap.get(c.post_id) || 0) + 1)
+      }
+
+      // 7. Load which posts the current user has liked
+      const { data: userLikeData } = await supabase
+        .from('post_likes')
+        .select('post_id')
+        .eq('user_id', user.id)
+        .in('post_id', postIds)
+      const userLikes = (userLikeData || []) as { post_id: string }[]
+
+      const likedSet = new Set(userLikes.map(l => l.post_id))
+
+      // 8. Assemble enriched posts
+      const enriched: PostRow[] = rawPosts.map(p => {
+        const prof = profileMap.get(p.author_id)
+        return {
+          ...p,
+          profiles: prof ? { prenom: prof.prenom, role: prof.role, avatar_url: prof.avatar_url } : null,
+          post_likes: [{ count: likeCountMap.get(p.id) || 0 }],
+          post_comments: [{ count: commentCountMap.get(p.id) || 0 }],
+          user_has_liked: likedSet.has(p.id),
+        }
+      })
+
+      setPosts(enriched)
       setLoading(false)
     } catch (err) {
       console.error('[Mur] Unexpected error:', err)
@@ -258,35 +270,6 @@ export default function MurPage() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterCategory])
-
-  async function processPostsData(
-    data: PostRow[],
-    userId: string,
-    supabase: ReturnType<typeof createClient>
-  ) {
-    if (!data || data.length === 0) {
-      setPosts([])
-      return
-    }
-
-    const postIds = data.map(p => p.id)
-    let likedSet = new Set<string>()
-
-    if (postIds.length > 0) {
-      const { data: likes } = await supabase
-        .from('post_likes')
-        .select('post_id')
-        .eq('user_id', userId)
-        .in('post_id', postIds)
-      likedSet = new Set((likes || []).map((l: { post_id: string }) => l.post_id))
-    }
-
-    const enriched = data.map(p => ({
-      ...p,
-      user_has_liked: likedSet.has(p.id),
-    }))
-    setPosts(enriched)
-  }
 
   useEffect(() => { loadPosts() }, [loadPosts])
 
@@ -371,16 +354,31 @@ export default function MurPage() {
     const post = posts.find(p => p.id === postId)
     if (!post) return
 
-    if (post.user_has_liked) {
-      await supabase.from('post_likes').delete().eq('post_id', postId).eq('user_id', currentUserId)
+    const wasLiked = post.user_has_liked
+
+    // Optimistic update
+    setPosts(prev => prev.map(p => p.id === postId
+      ? {
+          ...p,
+          user_has_liked: !wasLiked,
+          post_likes: [{ count: wasLiked ? Math.max(0, (p.post_likes?.[0]?.count || 1) - 1) : (p.post_likes?.[0]?.count || 0) + 1 }],
+        }
+      : p
+    ))
+
+    const { error } = wasLiked
+      ? await supabase.from('post_likes').delete().eq('post_id', postId).eq('user_id', currentUserId)
+      : await supabase.from('post_likes').insert({ post_id: postId, user_id: currentUserId })
+
+    if (error) {
+      console.error('[Mur] Like error:', error)
+      // Revert optimistic update
       setPosts(prev => prev.map(p => p.id === postId
-        ? { ...p, user_has_liked: false, post_likes: [{ count: Math.max(0, (p.post_likes?.[0]?.count || 1) - 1) }] }
-        : p
-      ))
-    } else {
-      await supabase.from('post_likes').insert({ post_id: postId, user_id: currentUserId })
-      setPosts(prev => prev.map(p => p.id === postId
-        ? { ...p, user_has_liked: true, post_likes: [{ count: (p.post_likes?.[0]?.count || 0) + 1 }] }
+        ? {
+            ...p,
+            user_has_liked: wasLiked,
+            post_likes: [{ count: wasLiked ? (p.post_likes?.[0]?.count || 0) + 1 : Math.max(0, (p.post_likes?.[0]?.count || 1) - 1) }],
+          }
         : p
       ))
     }
@@ -389,12 +387,36 @@ export default function MurPage() {
   /* ── Comments ── */
   async function loadComments(postId: string) {
     const supabase = createClient()
-    const { data } = await supabase
+    const { data: rawCommentsData } = await supabase
       .from('post_comments')
-      .select('*, profiles(prenom, role, avatar_url)')
+      .select('*')
       .eq('post_id', postId)
       .order('created_at', { ascending: true })
-    if (data) setComments(prev => ({ ...prev, [postId]: data as unknown as CommentRow[] }))
+
+    const rawComments = (rawCommentsData || []) as { id: string; post_id: string; author_id: string; content: string; created_at: string }[]
+
+    if (rawComments.length === 0) {
+      setComments(prev => ({ ...prev, [postId]: [] }))
+      return
+    }
+
+    // Load author profiles separately
+    const authorIds = [...new Set(rawComments.map(c => c.author_id))]
+    const { data: profiles } = await supabase
+      .from('profiles')
+      .select('id, prenom, role, avatar_url')
+      .in('id', authorIds)
+
+    const profileMap = new Map(
+      (profiles || []).map((pr: { id: string; prenom: string; role: string; avatar_url: string | null }) => [pr.id, pr])
+    )
+
+    const enriched = rawComments.map(c => {
+      const prof = profileMap.get(c.author_id)
+      return { ...c, profiles: prof ? { prenom: prof.prenom, role: prof.role, avatar_url: prof.avatar_url } : null }
+    })
+
+    setComments(prev => ({ ...prev, [postId]: enriched as CommentRow[] }))
   }
 
   async function toggleComments(postId: string) {
@@ -415,15 +437,16 @@ export default function MurPage() {
       author_id: currentUserId,
       content: commentText.trim(),
     })
-    if (!commentError) {
+    if (commentError) {
+      console.error('[Mur] Comment error:', commentError)
+      setError(`Erreur lors de l'envoi du commentaire: ${commentError.message}`)
+    } else {
       setCommentText('')
       await loadComments(postId)
       setPosts(prev => prev.map(p => p.id === postId
         ? { ...p, post_comments: [{ count: (p.post_comments?.[0]?.count || 0) + 1 }] }
         : p
       ))
-    } else {
-      console.error('[Mur] Comment error:', commentError)
     }
     setSendingComment(false)
   }

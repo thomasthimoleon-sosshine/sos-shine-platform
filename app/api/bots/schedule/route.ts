@@ -3,6 +3,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { BOT_PROFILES } from '@/lib/bots/profiles'
 import { WALL_POSTS } from '@/lib/bots/messages'
 import { verifyAdminSession } from '@/lib/bots/auth'
+import type { PostCategory } from '@/types/database'
 
 const EXTRA_WALL_POSTS: Record<string, { title: string; content: string }[]> = {
   'Cécilia': [
@@ -81,26 +82,24 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'No bot profiles found. Run /api/bots/seed first.' }, { status: 400 })
     }
 
+    const categories = ['temoignage', 'partage', 'question', 'remerciements', 'gratitude', 'citation'] as const
     const now = new Date()
     const endDate = new Date('2026-03-22T23:59:59+01:00')
     const totalDays = Math.ceil((endDate.getTime() - now.getTime()) / 86400000)
     const totalWeeks = Math.ceil(totalDays / 7)
     const postsPerBotPerWeek = 10
 
-    // Typage strict corrigé : on force les valeurs littérales
     const allPosts: {
       author_id: string
       title: string
       content: string
       post_type: 'community'
-      category: typeof categories[number]
+      category: PostCategory
       media_type: 'text'
       is_published: boolean
       image_url: null
-      created_at: string
-      category: 'partage' // <-- Typage strict
-      media_type: 'text'  // <-- Typage strict
       video_url: null
+      created_at: string
     }[] = []
 
     for (const bot of botProfiles) {
@@ -133,10 +132,8 @@ export async function POST(req: Request) {
             media_type: 'text',
             is_published: true,
             image_url: null,
+            video_url: null,
             created_at: postDate.toISOString(),
-            category: 'partage', 
-            media_type: 'text',  
-            video_url: null      
           })
         }
       }

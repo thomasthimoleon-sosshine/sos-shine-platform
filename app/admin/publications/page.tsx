@@ -70,9 +70,11 @@ export default function AdminPublications() {
 
   const loadPosts = useCallback(async () => {
     const supabase = createClient()
+
+    // Load posts without fragile FK joins
     let query = supabase
       .from('posts')
-      .select('*, profiles(prenom, role, avatar_url), post_likes(count), post_comments(count)')
+      .select('*')
       .order('created_at', { ascending: false })
 
     if (filterType !== 'all') {
@@ -83,8 +85,50 @@ export default function AdminPublications() {
       }
     }
 
-    const { data } = await query
-    setPosts((data as unknown as PostWithProfile[]) || [])
+    const { data: rawPostsData } = await query
+    const rawPosts = (rawPostsData || []) as Post[]
+
+    if (rawPosts.length === 0) {
+      setPosts([])
+      setLoading(false)
+      return
+    }
+
+    // Load profiles separately
+    const authorIds = [...new Set(rawPosts.map(p => p.author_id))]
+    const { data: profiles } = await supabase
+      .from('profiles')
+      .select('id, prenom, role, avatar_url')
+      .in('id', authorIds)
+
+    const profileMap = new Map(
+      (profiles || []).map((pr: { id: string; prenom: string; role: string; avatar_url: string | null }) => [pr.id, pr])
+    )
+
+    // Load like/comment counts
+    const postIds = rawPosts.map(p => p.id)
+    const { data: likesData } = await supabase.from('post_likes').select('post_id').in('post_id', postIds)
+    const likes = (likesData || []) as { post_id: string }[]
+    const { data: commentData } = await supabase.from('post_comments').select('post_id').in('post_id', postIds)
+    const commentRows = (commentData || []) as { post_id: string }[]
+
+    const likeMap = new Map<string, number>()
+    for (const l of likes) likeMap.set(l.post_id, (likeMap.get(l.post_id) || 0) + 1)
+
+    const commentMap = new Map<string, number>()
+    for (const c of commentRows) commentMap.set(c.post_id, (commentMap.get(c.post_id) || 0) + 1)
+
+    const enriched: PostWithProfile[] = rawPosts.map(p => {
+      const prof = profileMap.get(p.author_id)
+      return {
+        ...p,
+        profiles: prof ? { prenom: prof.prenom, role: prof.role, avatar_url: prof.avatar_url } : null,
+        post_likes: [{ count: likeMap.get(p.id) || 0 }],
+        post_comments: [{ count: commentMap.get(p.id) || 0 }],
+      } as PostWithProfile
+    })
+
+    setPosts(enriched)
     setLoading(false)
   }, [filterType])
 
@@ -99,19 +143,16 @@ export default function AdminPublications() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { setSaving(false); return }
 
-    // Insertion avec les champs alignés sur le typage strict de la BDD
     const { error } = await supabase.from('posts').insert({
       title: form.title.trim(),
       content: form.content.trim(),
       post_type: form.post_type,
       category: form.post_type === 'community' ? form.category : 'partage',
-      media_type: 'text' as const,
+      media_type: form.image_url.trim() ? 'image' : 'text',
       image_url: form.image_url.trim() || null,
+      video_url: null,
       author_id: user.id,
       is_published: false,
-      category: 'partage', // <-- Remplacement de 'general' par une valeur valide
-      media_type: form.image_url.trim() ? 'image' : 'text', 
-      video_url: null 
     })
 
     if (!error) {
@@ -156,12 +197,39 @@ export default function AdminPublications() {
     setCommentsPostId(postId)
     setLoadingComments(true)
     const supabase = createClient()
-    const { data } = await supabase
+
+    // Load comments
+    const { data: rawCommentsData } = await supabase
       .from('post_comments')
-      .select('*, profiles(prenom, role, avatar_url)')
+      .select('*')
       .eq('post_id', postId)
       .order('created_at', { ascending: false })
-    setComments((data as unknown as PostCommentWithAuthor[]) || [])
+
+    const rawComments = (rawCommentsData || []) as { id: string; post_id: string; author_id: string; content: string; created_at: string }[]
+
+    if (rawComments.length === 0) {
+      setComments([])
+      setLoadingComments(false)
+      return
+    }
+
+    // Load author profiles separately
+    const authorIds = [...new Set(rawComments.map(c => c.author_id))]
+    const { data: profiles } = await supabase
+      .from('profiles')
+      .select('id, prenom, role, avatar_url')
+      .in('id', authorIds)
+
+    const profileMap = new Map(
+      (profiles || []).map((pr: { id: string; prenom: string; role: string; avatar_url: string | null }) => [pr.id, pr])
+    )
+
+    const enriched = rawComments.map(c => {
+      const prof = profileMap.get(c.author_id)
+      return { ...c, profiles: prof ? { prenom: prof.prenom, role: prof.role, avatar_url: prof.avatar_url } : null }
+    })
+
+    setComments(enriched as unknown as PostCommentWithAuthor[])
     setLoadingComments(false)
   }
 

@@ -99,6 +99,7 @@ export default function AdminPublications() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { setSaving(false); return }
 
+    // Insertion avec les champs alignés sur le typage strict de la BDD
     const { error } = await supabase.from('posts').insert({
       title: form.title.trim(),
       content: form.content.trim(),
@@ -108,6 +109,9 @@ export default function AdminPublications() {
       image_url: form.image_url.trim() || null,
       author_id: user.id,
       is_published: false,
+      category: 'partage', // <-- Remplacement de 'general' par une valeur valide
+      media_type: form.image_url.trim() ? 'image' : 'text', 
+      video_url: null 
     })
 
     if (!error) {

@@ -463,6 +463,7 @@ export default function MurPage() {
       receiver_id: receiverId,
       content: msg,
       message_type: 'text',
+      is_read: false // Correction apportée pour répondre aux exigences du schéma
     })
     setShareSending(null)
     setSharePostId(null)

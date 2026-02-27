@@ -33,9 +33,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: 'No wall posts available' }, { status: 400 })
       }
 
-      const categories = ['temoignage', 'partage', 'question', 'remerciements', 'gratitude', 'citation'] as const
-      const category = categories[Math.floor(Math.random() * categories.length)]
-
+      // --- CORRECTION ICI : Alignement sur le schéma V2 ---
       const { error } = await admin.from('posts').insert({
         author_id: profile.id,
         title: post.title,
@@ -45,6 +43,9 @@ export async function POST(req: Request) {
         media_type: 'text',
         is_published: true,
         image_url: null,
+        category: 'partage', // Valeur valide requise par le type PostCategory
+        media_type: 'text',  // Valeur valide par défaut
+        video_url: null      // Champ requis par le nouveau schéma
       })
 
       if (error) {

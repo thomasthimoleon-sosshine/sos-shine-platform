@@ -51,7 +51,7 @@ export async function GET() {
     const admin = createAdminClient()
     const { data, error } = await admin
       .from('profiles')
-      .select('id, prenom, email, role, avatar_url, plan, is_active, created_at')
+      .select('id, prenom, email, role, avatar_url, plan, is_active, publish_banned_until, created_at')
       .order('created_at', { ascending: false })
 
     if (error) {
@@ -114,6 +114,55 @@ export async function PUT(request: Request) {
     }
 
     return NextResponse.json({ success: true })
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Unknown error'
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
+}
+
+// POST — toggle publish ban (admin only)
+export async function POST(request: Request) {
+  const caller = await getCallerProfile()
+  if (!caller || !isAdmin(caller.role)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+  }
+
+  try {
+    const { memberId, action, days } = await request.json()
+    if (!memberId || !action) {
+      return NextResponse.json({ error: 'memberId et action requis' }, { status: 400 })
+    }
+
+    const admin = createAdminClient()
+
+    if (action === 'ban') {
+      const banDays = typeof days === 'number' && days > 0 ? days : 30
+      const until = new Date()
+      until.setDate(until.getDate() + banDays)
+      const { error } = await admin
+        .from('profiles')
+        .update({ publish_banned_until: until.toISOString() })
+        .eq('id', memberId)
+
+      if (error) {
+        return NextResponse.json({ error: error.message }, { status: 500 })
+      }
+      return NextResponse.json({ success: true, publish_banned_until: until.toISOString() })
+    }
+
+    if (action === 'unban') {
+      const { error } = await admin
+        .from('profiles')
+        .update({ publish_banned_until: null })
+        .eq('id', memberId)
+
+      if (error) {
+        return NextResponse.json({ error: error.message }, { status: 500 })
+      }
+      return NextResponse.json({ success: true, publish_banned_until: null })
+    }
+
+    return NextResponse.json({ error: 'Action invalide (ban ou unban)' }, { status: 400 })
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Unknown error'
     return NextResponse.json({ error: message }, { status: 500 })

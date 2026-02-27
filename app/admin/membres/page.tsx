@@ -13,6 +13,7 @@ type MemberSubscription = {
 
 type EnrichedProfile = Profile & {
   subscription: MemberSubscription | null
+  publish_banned_until?: string | null
 }
 
 const ROLES: { value: Profile['role']; label: string }[] = [
@@ -62,6 +63,8 @@ export default function AdminMembres() {
   const [editingRole, setEditingRole] = useState<string | null>(null)
   const [savingRole, setSavingRole] = useState<string | null>(null)
   const [togglingActive, setTogglingActive] = useState<string | null>(null)
+  const [togglingBan, setTogglingBan] = useState<string | null>(null)
+  const [banMenuOpen, setBanMenuOpen] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -126,6 +129,55 @@ export default function AdminMembres() {
     setTogglingActive(null)
   }
 
+  async function handleBanPublish(memberId: string, days: number) {
+    setTogglingBan(memberId)
+    setBanMenuOpen(null)
+    setError(null)
+    try {
+      const res = await fetch('/api/admin/members', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ memberId, action: 'ban', days }),
+      })
+      if (res.ok) {
+        const json = await res.json()
+        setProfiles((prev) => prev.map((p) => p.id === memberId ? { ...p, publish_banned_until: json.publish_banned_until } : p))
+      } else {
+        const json = await res.json()
+        setError(json.error || 'Erreur lors du blocage')
+      }
+    } catch {
+      setError('Erreur de connexion')
+    }
+    setTogglingBan(null)
+  }
+
+  async function handleUnbanPublish(memberId: string) {
+    setTogglingBan(memberId)
+    setBanMenuOpen(null)
+    setError(null)
+    try {
+      const res = await fetch('/api/admin/members', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ memberId, action: 'unban' }),
+      })
+      if (res.ok) {
+        setProfiles((prev) => prev.map((p) => p.id === memberId ? { ...p, publish_banned_until: null } : p))
+      } else {
+        const json = await res.json()
+        setError(json.error || 'Erreur lors du d\u00e9blocage')
+      }
+    } catch {
+      setError('Erreur de connexion')
+    }
+    setTogglingBan(null)
+  }
+
+  function isBanned(member: EnrichedProfile): boolean {
+    return !!member.publish_banned_until && new Date(member.publish_banned_until) > new Date()
+  }
+
   // Stats
   const stats = useMemo(() => {
     const total = profiles.length
@@ -144,6 +196,7 @@ export default function AdminMembres() {
         if (filterStatus === 'past_due') return p.subscription?.status === 'past_due'
         if (filterStatus === 'inactive') return !p.subscription || p.subscription.status === 'inactive' || p.subscription.status === 'canceled'
         if (filterStatus === 'deactivated') return p.is_active === false
+        if (filterStatus === 'banned') return !!p.publish_banned_until && new Date(p.publish_banned_until) > new Date()
         return true
       })
     }
@@ -217,6 +270,7 @@ export default function AdminMembres() {
           <option value="past_due">Impay&eacute;s</option>
           <option value="inactive">Sans abonnement</option>
           <option value="deactivated">D&eacute;sactiv&eacute;s</option>
+          <option value="banned">Bloqu&eacute;s (publication)</option>
         </select>
       </div>
 
@@ -244,7 +298,7 @@ export default function AdminMembres() {
             <table className="w-full text-sm">
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--dark-border)' }}>
-                  {['Membre', 'Email', 'R\u00f4le', 'Plan', 'Statut abo', 'Actif', 'Inscription'].map((h) => (
+                  {['Membre', 'Email', 'R\u00f4le', 'Plan', 'Statut abo', 'Publication', 'Actif', 'Inscription'].map((h) => (
                     <th key={h} className="text-left px-4 py-3 font-medium text-xs uppercase tracking-wide" style={{ color: 'var(--text-muted)' }}>
                       {h}
                     </th>
@@ -325,6 +379,59 @@ export default function AdminMembres() {
                         ) : (
                           <span className="text-xs" style={{ color: 'var(--text-muted)' }}>&mdash;</span>
                         )}
+                      </td>
+                      {/* Publish ban */}
+                      <td className="px-4 py-3.5">
+                        <div className="relative">
+                          {isBanned(member) ? (
+                            <div className="flex items-center gap-1.5">
+                              <span className="inline-block px-2.5 py-1 rounded-full text-xs font-medium" style={{ background: 'rgba(239,68,68,0.12)', color: '#ef4444' }}>
+                                Bloqu&eacute;
+                              </span>
+                              <button
+                                onClick={() => handleUnbanPublish(member.id)}
+                                disabled={togglingBan === member.id}
+                                className="text-xs px-2 py-1 rounded-lg cursor-pointer transition-opacity hover:opacity-80 disabled:opacity-50"
+                                style={{ background: 'rgba(85,239,196,0.12)', color: '#55EFC4' }}
+                                title="D&eacute;bloquer la publication"
+                              >
+                                D&eacute;bloquer
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="relative inline-block">
+                              <button
+                                onClick={() => setBanMenuOpen(banMenuOpen === member.id ? null : member.id)}
+                                disabled={togglingBan === member.id}
+                                className="inline-block px-2.5 py-1 rounded-full text-xs font-medium cursor-pointer transition-opacity hover:opacity-80 disabled:opacity-50"
+                                style={{ background: 'rgba(85,239,196,0.12)', color: '#55EFC4' }}
+                                title="Bloquer la publication"
+                              >
+                                Autoris&eacute;
+                              </button>
+                              {banMenuOpen === member.id && (
+                                <div className="absolute z-50 top-full mt-1 left-0 rounded-xl py-1 shadow-lg min-w-[140px]"
+                                  style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                                  <p className="px-3 py-1.5 text-[10px] uppercase tracking-wide" style={{ color: 'var(--text-muted)' }}>Bloquer pour</p>
+                                  {[5, 10, 15, 30].map((d) => (
+                                    <button key={d}
+                                      onClick={() => handleBanPublish(member.id, d)}
+                                      className="w-full text-left px-3 py-1.5 text-xs cursor-pointer transition-colors hover:opacity-80"
+                                      style={{ color: '#E17055' }}>
+                                      {d} jours
+                                    </button>
+                                  ))}
+                                  <button
+                                    onClick={() => setBanMenuOpen(null)}
+                                    className="w-full text-left px-3 py-1.5 text-xs cursor-pointer"
+                                    style={{ color: 'var(--text-muted)' }}>
+                                    Annuler
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
                       </td>
                       {/* Active toggle */}
                       <td className="px-4 py-3.5">
@@ -418,6 +525,47 @@ export default function AdminMembres() {
                       <span className="inline-block px-2.5 py-1 rounded-full text-xs font-medium" style={{ background: subBadge.bg, color: subBadge.color }}>
                         {subBadge.label}
                       </span>
+                    )}
+                    {/* Publish ban badge (mobile) */}
+                    {isBanned(member) ? (
+                      <button
+                        onClick={() => handleUnbanPublish(member.id)}
+                        disabled={togglingBan === member.id}
+                        className="inline-block px-2.5 py-1 rounded-full text-xs font-medium cursor-pointer transition-opacity hover:opacity-80 disabled:opacity-50"
+                        style={{ background: 'rgba(239,68,68,0.12)', color: '#ef4444' }}>
+                        Bloqu&eacute;
+                      </button>
+                    ) : (
+                      <div className="relative inline-block">
+                        <button
+                          onClick={() => setBanMenuOpen(banMenuOpen === member.id ? null : member.id)}
+                          disabled={togglingBan === member.id}
+                          className="inline-block px-2.5 py-1 rounded-full text-xs font-medium cursor-pointer transition-opacity hover:opacity-80 disabled:opacity-50"
+                          style={{ background: 'rgba(85,239,196,0.08)', color: '#55EFC4' }}
+                          title="Bloquer la publication">
+                          Publie
+                        </button>
+                        {banMenuOpen === member.id && (
+                          <div className="absolute z-50 bottom-full mb-1 left-0 rounded-xl py-1 shadow-lg min-w-[140px]"
+                            style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                            <p className="px-3 py-1.5 text-[10px] uppercase tracking-wide" style={{ color: 'var(--text-muted)' }}>Bloquer pour</p>
+                            {[5, 10, 15, 30].map((d) => (
+                              <button key={d}
+                                onClick={() => handleBanPublish(member.id, d)}
+                                className="w-full text-left px-3 py-1.5 text-xs cursor-pointer"
+                                style={{ color: '#E17055' }}>
+                                {d} jours
+                              </button>
+                            ))}
+                            <button
+                              onClick={() => setBanMenuOpen(null)}
+                              className="w-full text-left px-3 py-1.5 text-xs cursor-pointer"
+                              style={{ color: 'var(--text-muted)' }}>
+                              Annuler
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     )}
                     <span className="ml-auto text-xs" style={{ color: 'var(--text-muted)' }}>{formatDateFR(member.created_at)}</span>
                   </div>

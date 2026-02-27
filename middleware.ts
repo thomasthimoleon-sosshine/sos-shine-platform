@@ -41,7 +41,7 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const publicRoutes = ['/', '/login', '/signup', '/rejoindre', '/encyclopedie', '/contact', '/cgv', '/confidentialite', '/mentions-legales', '/signature-emotionnelle']
+  const publicRoutes = ['/', '/login', '/signup', '/rejoindre', '/encyclopedie', '/contact', '/cgv', '/confidentialite', '/mentions-legales', '/signature-emotionnelle', '/compte-inactif']
   const isPublicRoute = publicRoutes.some(route => {
     const isExact = request.nextUrl.pathname === route;
     const isSubRoute = request.nextUrl.pathname.startsWith('/encyclopedie') || request.nextUrl.pathname.startsWith('/auth/') || request.nextUrl.pathname.startsWith('/api/') || request.nextUrl.pathname.startsWith('/signature-emotionnelle');
@@ -50,6 +50,40 @@ export async function middleware(request: NextRequest) {
 
   if (!user && !isPublicRoute) {
     return NextResponse.redirect(new URL('/login', request.url))
+  }
+
+  // Check subscription status for dashboard routes (not admin)
+  if (user && request.nextUrl.pathname.startsWith('/dashboard')) {
+    try {
+      // Check if user is admin (admins always have access)
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role, is_active')
+        .eq('id', user.id)
+        .single()
+
+      if (profile) {
+        const isAdmin = ['founder', 'admin_content', 'admin_support'].includes(profile.role)
+
+        // If not admin and account is explicitly deactivated, redirect
+        if (!isAdmin && profile.is_active === false) {
+          // Check if they have a subscription that might still be valid
+          const { data: sub } = await supabase
+            .from('subscriptions')
+            .select('status')
+            .eq('user_id', user.id)
+            .single()
+
+          const hasActiveSub = sub && (sub.status === 'active' || sub.status === 'trialing')
+
+          if (!hasActiveSub) {
+            return NextResponse.redirect(new URL('/compte-inactif', request.url))
+          }
+        }
+      }
+    } catch {
+      // If profile check fails, allow access (don't block on error)
+    }
   }
 
   return response

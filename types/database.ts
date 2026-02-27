@@ -10,6 +10,7 @@ export type Profile = {
   video_url: string | null
   plan: 'essential' | 'premium' | null
   is_bot?: boolean
+  is_active?: boolean
   publish_banned_until?: string | null
   created_at: string
 }
@@ -23,6 +24,9 @@ export type Subscription = {
   plan: 'essential' | 'premium'
   status: 'trialing' | 'active' | 'inactive' | 'canceled' | 'past_due'
   current_period_end: string | null
+  cancel_at_period_end?: boolean
+  trial_end?: string | null
+  waitlist_discount?: boolean
   created_at: string
   updated_at: string
 }

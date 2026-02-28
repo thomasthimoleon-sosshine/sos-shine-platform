@@ -565,8 +565,8 @@ export default function AdminPublications() {
                     <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{formatDate(post.created_at)}</span>
                   </div>
 
-                  {/* Moderation buttons for non-founder community posts */}
-                  {post.post_type === 'community' && post.profiles?.role !== 'founder' && (
+                  {/* Moderation buttons for non-founder posts */}
+                  {post.profiles?.role !== 'founder' && (
                     <div className="flex items-center gap-1.5">
                       <button
                         onClick={() => { setWarningUserId(post.author_id); setWarningUserName(post.profiles?.prenom || 'Ce membre') }}
@@ -657,8 +657,8 @@ export default function AdminPublications() {
                     {togglingId === post.id ? '...' : post.is_published ? 'Masquer' : 'Rendre visible'}
                   </button>
 
-                  {/* Lock/Unlock delete — only for non-founder community posts */}
-                  {post.post_type === 'community' && post.profiles?.role !== 'founder' && (
+                  {/* Lock/Unlock delete — only for non-founder posts */}
+                  {post.profiles?.role !== 'founder' && (
                     <button onClick={() => toggleDeleteLock(post)} disabled={lockingId === post.id}
                       className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all disabled:opacity-50 cursor-pointer flex items-center gap-1.5"
                       style={{

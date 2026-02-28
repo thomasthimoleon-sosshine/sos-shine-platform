@@ -9,7 +9,9 @@ export type Profile = {
   bio: string | null
   video_url: string | null
   plan: 'essential' | 'premium' | null
-  is_bot: boolean
+  is_bot?: boolean
+  is_active?: boolean
+  publish_banned_until?: string | null
   created_at: string
 }
 
@@ -22,6 +24,9 @@ export type Subscription = {
   plan: 'essential' | 'premium'
   status: 'trialing' | 'active' | 'inactive' | 'canceled' | 'past_due'
   current_period_end: string | null
+  cancel_at_period_end?: boolean
+  trial_end?: string | null
+  waitlist_discount?: boolean
   created_at: string
   updated_at: string
 }
@@ -83,6 +88,7 @@ export type Post = {
   category: PostCategory
   media_type: PostMediaType
   is_published: boolean
+  delete_locked: boolean
   created_at: string
   updated_at: string
 }
@@ -155,7 +161,7 @@ export type Notification = {
   title: string
   body: string
   link: string | null
-  notification_type: 'new_douleur' | 'new_event' | 'new_post' | 'new_soin'
+  notification_type: 'new_douleur' | 'new_event' | 'new_post' | 'new_soin' | 'warning'
   is_read: boolean
   email_sent: boolean
   created_at: string
@@ -223,7 +229,7 @@ export type LandingSection = {
 }
 
 // ── Helper: columns with DB defaults are optional on Insert ──
-type DefaultColumns = 'id' | 'created_at' | 'updated_at' | 'audio_url' | 'message_type' | 'status' | 'room_code' | 'call_type' | 'event_type' | 'target_user_id' | 'room_id'
+type DefaultColumns = 'id' | 'created_at' | 'updated_at' | 'audio_url' | 'message_type' | 'status' | 'room_code' | 'call_type' | 'event_type' | 'target_user_id' | 'room_id' | 'category' | 'media_type' | 'video_url' | 'image_url' | 'is_published' | 'delete_locked' | 'publish_banned_until' | 'is_bot' | 'is_read' | 'is_deleted' | 'is_general' | 'is_anonymous' | 'is_active' | 'email_sent' | 'is_visible' | 'position'
 type OptionalId<T> = Omit<T, Extract<DefaultColumns, keyof T>> &
   Partial<Pick<T, Extract<DefaultColumns, keyof T>>>
 

@@ -1,11 +1,12 @@
 'use client'
 
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslation } from '@/lib/i18n/useTranslation'
+import { createClient } from '@/lib/supabase/client'
 
-const STRIPE_ESSENTIEL = 'https://buy.stripe.com/4gM28j89S7t9c3n2Ke5ZC0c'
-const STRIPE_PREMIUM = 'https://buy.stripe.com/28EeV5gGoeVBffz70u5ZC0d'
+const PRELAUNCH_END = new Date('2026-03-22T00:00:00+02:00')
 
 function Reveal({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
   return (
@@ -20,71 +21,436 @@ function Reveal({ children, delay = 0, className = '' }: { children: React.React
   )
 }
 
-export default function RejoindrePage() {
+/* ─── PRELAUNCH SECTION ─── */
+function getTimeLeft(launchDate: Date) {
+  const now = new Date()
+  const diff = launchDate.getTime() - now.getTime()
+  if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0, launched: true }
+  return {
+    days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+    hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+    minutes: Math.floor((diff / (1000 * 60)) % 60),
+    seconds: Math.floor((diff / 1000) % 60),
+    launched: false,
+  }
+}
+
+function CountdownUnit({ value, label }: { value: number; label: string }) {
+  return (
+    <div className="flex flex-col items-center">
+      <div
+        className="relative w-[60px] h-[72px] sm:w-[72px] sm:h-[88px] flex items-center justify-center rounded-2xl overflow-hidden"
+        style={{
+          background: 'rgba(255,255,255,0.03)',
+          border: '1px solid rgba(212,175,55,0.12)',
+          boxShadow: '0 0 40px rgba(212,175,55,0.04), inset 0 1px 0 rgba(255,255,255,0.04)',
+        }}
+      >
+        <AnimatePresence mode="popLayout">
+          <motion.span
+            key={value}
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 20, opacity: 0 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="font-display text-3xl sm:text-4xl font-light tabular-nums"
+            style={{ color: '#D4AF37' }}
+          >
+            {String(value).padStart(2, '0')}
+          </motion.span>
+        </AnimatePresence>
+      </div>
+      <span className="mt-2 text-[10px] sm:text-xs tracking-[0.3em] uppercase font-light" style={{ color: 'var(--text-muted)' }}>
+        {label}
+      </span>
+    </div>
+  )
+}
+
+function PrelaunchContent() {
+  const [time, setTime] = useState(() => getTimeLeft(PRELAUNCH_END))
+  const [email, setEmail] = useState('')
+  const [name, setName] = useState('')
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'already' | 'error'>('idle')
+  const [waitlistCount, setWaitlistCount] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => setTime(getTimeLeft(PRELAUNCH_END)), 1000)
+    return () => clearInterval(interval)
+  }, [])
+
+  useEffect(() => {
+    fetch('/api/waitlist')
+      .then((r) => r.json())
+      .then((d) => setWaitlistCount(d.count || 0))
+      .catch(() => {})
+  }, [])
+
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!email || status === 'loading') return
+    setStatus('loading')
+    try {
+      const res = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, name }),
+      })
+      const data = await res.json()
+      if (data.message === 'already_registered') setStatus('already')
+      else if (res.ok) { setStatus('success'); setWaitlistCount((c) => c + 1) }
+      else setStatus('error')
+    } catch { setStatus('error') }
+  }, [email, name, status])
+
+  return (
+    <>
+      {/* Countdown */}
+      <Reveal delay={0.3}>
+        <div className="text-center mb-10">
+          <p className="text-[11px] tracking-[0.35em] uppercase mb-6 font-light" style={{ color: 'var(--text-muted)' }}>
+            Ouverture le 22 mars 2026 &agrave; minuit
+          </p>
+          {!time.launched ? (
+            <div className="flex items-center gap-2 sm:gap-4 justify-center">
+              <CountdownUnit value={time.days} label="Jours" />
+              <span className="font-display text-xl font-light mt-[-24px]" style={{ color: 'rgba(212,175,55,0.25)' }}>:</span>
+              <CountdownUnit value={time.hours} label="Heures" />
+              <span className="font-display text-xl font-light mt-[-24px]" style={{ color: 'rgba(212,175,55,0.25)' }}>:</span>
+              <CountdownUnit value={time.minutes} label="Minutes" />
+              <span className="font-display text-xl font-light mt-[-24px]" style={{ color: 'rgba(212,175,55,0.25)' }}>:</span>
+              <CountdownUnit value={time.seconds} label="Secondes" />
+            </div>
+          ) : (
+            <span className="font-display text-2xl font-light text-shimmer">Les portes sont ouvertes</span>
+          )}
+        </div>
+      </Reveal>
+
+      {/* Pricing comparison — waitlist advantage */}
+      <Reveal delay={0.4}>
+        <div className="glass p-8 sm:p-10 text-center mb-10" style={{ borderColor: 'rgba(212,175,55,0.12)' }}>
+          <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(212,175,55,0.3), transparent)' }} />
+          <p className="text-[11px] tracking-[0.35em] uppercase mb-2 font-medium" style={{ color: 'var(--text-muted)' }}>
+            Avantage liste d&apos;attente &mdash; 10&euro; de r&eacute;duction &agrave; vie
+          </p>
+          <p className="text-sm mb-6 font-light" style={{ color: 'var(--text-secondary)' }}>
+            Rejoignez avant le 22 mars et b&eacute;n&eacute;ficiez d&apos;un tarif pr&eacute;f&eacute;rentiel &agrave; vie sur les 2 abonnements.
+          </p>
+
+          <div className="grid sm:grid-cols-2 gap-6 mb-6">
+            {/* Essentiel */}
+            <div className="text-center">
+              <p className="text-xs tracking-[0.25em] uppercase mb-3" style={{ color: 'var(--text-muted)' }}>Essentiel</p>
+              <div className="flex items-baseline justify-center gap-1.5 mb-1">
+                <span className="font-display text-4xl font-light" style={{ color: '#D4AF37' }}>19,90&euro;</span>
+                <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
+              </div>
+              <span className="text-xs line-through" style={{ color: 'var(--text-muted)', opacity: 0.5 }}>29,90&euro;/mois</span>
+              <span className="inline-block mt-2 px-3 py-1 rounded-full text-[10px] tracking-[0.2em] uppercase font-medium"
+                style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.15)' }}>
+                Tarif fondateur &mdash; &agrave; vie
+              </span>
+            </div>
+            {/* Premium */}
+            <div className="text-center">
+              <p className="text-xs tracking-[0.25em] uppercase mb-3" style={{ color: 'var(--gold)' }}>Premium</p>
+              <div className="flex items-baseline justify-center gap-1.5 mb-1">
+                <span className="font-display text-4xl font-light" style={{ color: '#D4AF37' }}>89,90&euro;</span>
+                <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
+              </div>
+              <span className="text-xs line-through" style={{ color: 'var(--text-muted)', opacity: 0.5 }}>99,90&euro;/mois</span>
+              <span className="inline-block mt-2 px-3 py-1 rounded-full text-[10px] tracking-[0.2em] uppercase font-medium"
+                style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.15)' }}>
+                Tarif fondateur &mdash; &agrave; vie
+              </span>
+            </div>
+          </div>
+
+          <p className="text-sm font-light" style={{ color: 'var(--text-secondary)' }}>
+            Sans engagement &mdash; Annulable &agrave; tout instant
+          </p>
+        </div>
+      </Reveal>
+
+      {/* Waitlist Form */}
+      <Reveal delay={0.5}>
+        <div className="max-w-lg mx-auto mb-10">
+          {status === 'success' ? (
+            <motion.div className="glass p-8 text-center" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+              style={{ borderColor: 'rgba(212,175,55,0.15)' }}>
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5"
+                style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="#D4AF37" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+              </div>
+              <div className="font-display text-2xl font-light mb-3" style={{ color: '#D4AF37' }}>
+                Bienvenue parmi les fondateurs
+              </div>
+              <p className="text-sm font-light leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                Votre place est r&eacute;serv&eacute;e. Vous recevrez un email le jour de l&apos;ouverture avec votre acc&egrave;s prioritaire et votre r&eacute;duction de 10&euro;/mois &agrave; vie.
+              </p>
+            </motion.div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <input
+                  type="text"
+                  placeholder="Votre pr&eacute;nom (optionnel)"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="flex-1 px-5 py-4 rounded-xl text-sm font-light outline-none transition-all duration-300"
+                  style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: 'var(--text-primary)' }}
+                  onFocus={(e) => (e.target.style.borderColor = 'rgba(212,175,55,0.3)')}
+                  onBlur={(e) => (e.target.style.borderColor = 'rgba(255,255,255,0.08)')}
+                />
+                <input
+                  type="email"
+                  required
+                  placeholder="Votre email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="flex-[1.5] px-5 py-4 rounded-xl text-sm font-light outline-none transition-all duration-300"
+                  style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: 'var(--text-primary)' }}
+                  onFocus={(e) => (e.target.style.borderColor = 'rgba(212,175,55,0.3)')}
+                  onBlur={(e) => (e.target.style.borderColor = 'rgba(255,255,255,0.08)')}
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={status === 'loading'}
+                className="magnetic-btn pulse-ring w-full py-4 rounded-full text-sm font-semibold tracking-wide transition-all disabled:opacity-50"
+                style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}
+              >
+                {status === 'loading' ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="w-4 h-4 border-2 border-[#050505] border-t-transparent rounded-full animate-spin" />
+                    Inscription...
+                  </span>
+                ) : (
+                  "Rejoindre la liste d\u2019attente \u2014 10\u20ac de r\u00e9duction \u00e0 vie"
+                )}
+              </button>
+              {status === 'already' && (
+                <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }}
+                  className="text-center text-sm font-light" style={{ color: '#D4AF37' }}>
+                  Vous &ecirc;tes d&eacute;j&agrave; inscrit(e). Nous vous contacterons le 22 mars.
+                </motion.p>
+              )}
+              {status === 'error' && (
+                <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }}
+                  className="text-center text-sm font-light" style={{ color: '#ef4444' }}>
+                  Une erreur est survenue. Veuillez r&eacute;essayer.
+                </motion.p>
+              )}
+            </form>
+          )}
+          {waitlistCount > 0 && (
+            <motion.p className="text-center mt-4 text-xs font-light" style={{ color: 'var(--text-muted)' }}
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+              <span style={{ color: '#D4AF37' }}>{waitlistCount}</span> personne{waitlistCount > 1 ? 's' : ''} sur la liste d&apos;attente
+            </motion.p>
+          )}
+        </div>
+      </Reveal>
+    </>
+  )
+}
+
+/* ─── POST-LAUNCH PAYMENT SECTION ─── */
+function PaymentContent() {
+  const { t } = useTranslation()
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null)
+  const [userEmail, setUserEmail] = useState<string | null>(null)
+  const [userId, setUserId] = useState<string | null>(null)
+  const [hasDiscount, setHasDiscount] = useState(false)
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        setUserEmail(user.email || null)
+        setUserId(user.id)
+      }
+    })
+    // Check waitlist discount by trying the status endpoint
+  }, [])
+
+  // Check discount when we have the email
+  useEffect(() => {
+    if (!userEmail) return
+    fetch('/api/waitlist')
+      .then(() => {
+        // We'll rely on checkout API to determine discount
+      })
+      .catch(() => {})
+  }, [userEmail])
+
+  const handleCheckout = async (plan: 'essential' | 'premium') => {
+    setLoadingPlan(plan)
+    try {
+      const res = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan, email: userEmail, user_id: userId }),
+      })
+      const data = await res.json()
+      if (data.url) {
+        if (data.hasWaitlistDiscount) setHasDiscount(true)
+        window.location.href = data.url
+      } else {
+        alert(data.error || 'Erreur lors de la redirection vers le paiement')
+      }
+    } catch {
+      alert('Erreur de connexion')
+    }
+    setLoadingPlan(null)
+  }
+
+  return (
+    <>
+      {hasDiscount && (
+        <Reveal delay={0.3}>
+          <div className="glass p-4 text-center mb-8" style={{ borderColor: 'rgba(212,175,55,0.2)', background: 'rgba(212,175,55,0.05)' }}>
+            <p className="text-sm font-medium" style={{ color: '#D4AF37' }}>
+              Vous b&eacute;n&eacute;ficiez de la r&eacute;duction fondateur : -10&euro;/mois &agrave; vie
+            </p>
+          </div>
+        </Reveal>
+      )}
+
+      {/* Pricing cards */}
+      <div className="grid sm:grid-cols-2 gap-6 mb-6">
+        {/* Essentiel */}
+        <Reveal delay={0.5}>
+          <div className="glass p-8 text-center h-full flex flex-col" style={{ borderColor: 'rgba(212,175,55,0.15)' }}>
+            <p className="text-xs tracking-[0.25em] uppercase mb-4" style={{ color: 'var(--text-muted)' }}>
+              Essentiel
+            </p>
+            <div className="flex items-baseline justify-center gap-1.5 mb-2">
+              <span className="font-display text-4xl font-light" style={{ color: 'var(--gold)' }}>29,90&euro;</span>
+              <span className="text-sm" style={{ color: 'var(--text-muted)' }}>{t('join.per_month')}</span>
+            </div>
+            <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
+              {t('join.no_commitment')}
+            </p>
+
+            <div className="space-y-3 text-left mb-8 flex-1">
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+                <div key={n} className="flex items-start gap-3">
+                  <span className="mt-0.5 text-sm flex-shrink-0" style={{ color: 'var(--gold)' }}>&#9670;</span>
+                  <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{t(`join.included_${n}`)}</span>
+                </div>
+              ))}
+            </div>
+
+            <button
+              onClick={() => handleCheckout('essential')}
+              disabled={loadingPlan !== null}
+              className="cta-glow w-full py-4 rounded-full font-medium tracking-wide transition-all text-sm disabled:opacity-50"
+              style={{ background: 'var(--gold)', color: 'var(--dark)' }}
+            >
+              {loadingPlan === 'essential' ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="w-4 h-4 border-2 border-[var(--dark)] border-t-transparent rounded-full animate-spin" />
+                  Redirection...
+                </span>
+              ) : (
+                t('join.pay_cta')
+              )}
+            </button>
+          </div>
+        </Reveal>
+
+        {/* Premium */}
+        <Reveal delay={0.6}>
+          <div className="glass p-8 text-center h-full flex flex-col relative overflow-hidden" style={{ borderColor: 'rgba(212,175,55,0.3)', boxShadow: '0 0 40px rgba(212,175,55,0.08)' }}>
+            <div className="absolute top-4 right-4 text-[10px] tracking-[0.2em] uppercase px-3 py-1 rounded-full font-semibold"
+              style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: 'var(--dark)' }}>
+              VIP
+            </div>
+            <p className="text-xs tracking-[0.25em] uppercase mb-4" style={{ color: 'var(--gold)' }}>
+              Premium
+            </p>
+            <div className="flex items-baseline justify-center gap-1.5 mb-2">
+              <span className="font-display text-4xl font-light" style={{ color: 'var(--gold)' }}>99,90&euro;</span>
+              <span className="text-sm" style={{ color: 'var(--text-muted)' }}>{t('join.per_month')}</span>
+            </div>
+            <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
+              {t('join.no_commitment')}
+            </p>
+
+            <div className="space-y-3 text-left mb-8 flex-1">
+              {[1, 2, 3, 4].map((n) => (
+                <div key={n} className="flex items-start gap-3">
+                  <span className="mt-0.5 text-sm flex-shrink-0" style={{ color: 'var(--gold)' }}>&#9670;</span>
+                  <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{t(`join.premium_${n}`)}</span>
+                </div>
+              ))}
+            </div>
+
+            <button
+              onClick={() => handleCheckout('premium')}
+              disabled={loadingPlan !== null}
+              className="cta-glow w-full py-4 rounded-full font-medium tracking-wide transition-all text-sm disabled:opacity-50"
+              style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: 'var(--dark)' }}
+            >
+              {loadingPlan === 'premium' ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="w-4 h-4 border-2 border-[var(--dark)] border-t-transparent rounded-full animate-spin" />
+                  Redirection...
+                </span>
+              ) : (
+                t('join.premium_cta')
+              )}
+            </button>
+          </div>
+        </Reveal>
+      </div>
+    </>
+  )
+}
+
+/* ─── FEATURES GRID (shared) ─── */
+function FeaturesGrid() {
   const { t } = useTranslation()
 
   const features = [
-    {
-      icon: (
-        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-        </svg>
-      ),
-      title: t('join.feature_encyclopedia'),
-      description: t('join.feature_encyclopedia_desc'),
-      color: '#D4AF37',
-    },
-    {
-      icon: (
-        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
-        </svg>
-      ),
-      title: t('join.feature_coaching'),
-      description: t('join.feature_coaching_desc'),
-      color: '#55EFC4',
-    },
-    {
-      icon: (
-        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
-        </svg>
-      ),
-      title: t('join.feature_energy'),
-      description: t('join.feature_energy_desc'),
-      color: '#74C0FC',
-    },
-    {
-      icon: (
-        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
-        </svg>
-      ),
-      title: t('join.feature_meditation'),
-      description: t('join.feature_meditation_desc'),
-      color: '#E17055',
-    },
-    {
-      icon: (
-        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
-        </svg>
-      ),
-      title: t('join.feature_community'),
-      description: t('join.feature_community_desc'),
-      color: '#A29BFE',
-    },
-    {
-      icon: (
-        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
-        </svg>
-      ),
-      title: t('join.feature_events'),
-      description: t('join.feature_events_desc'),
-      color: '#FD79A8',
-    },
+    { icon: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /></svg>, title: t('join.feature_encyclopedia'), description: t('join.feature_encyclopedia_desc'), color: '#D4AF37' },
+    { icon: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" /></svg>, title: t('join.feature_coaching'), description: t('join.feature_coaching_desc'), color: '#55EFC4' },
+    { icon: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" /></svg>, title: t('join.feature_energy'), description: t('join.feature_energy_desc'), color: '#74C0FC' },
+    { icon: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" /></svg>, title: t('join.feature_meditation'), description: t('join.feature_meditation_desc'), color: '#E17055' },
+    { icon: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" /></svg>, title: t('join.feature_community'), description: t('join.feature_community_desc'), color: '#A29BFE' },
+    { icon: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" /></svg>, title: t('join.feature_events'), description: t('join.feature_events_desc'), color: '#FD79A8' },
   ]
+
+  return (
+    <div className="grid sm:grid-cols-2 gap-4 mb-16">
+      {features.map((feature, i) => (
+        <Reveal key={feature.title} delay={0.1 + i * 0.07}>
+          <div className="glass p-6 h-full" style={{ borderColor: `${feature.color}15` }}>
+            <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-4"
+              style={{ background: `${feature.color}12`, color: feature.color }}>
+              {feature.icon}
+            </div>
+            <h3 className="font-semibold text-[15px] mb-1.5">{feature.title}</h3>
+            <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{feature.description}</p>
+          </div>
+        </Reveal>
+      ))}
+    </div>
+  )
+}
+
+/* ─── MAIN PAGE ─── */
+export default function RejoindrePage() {
+  const { t } = useTranslation()
+  const [isPrelaunch, setIsPrelaunch] = useState(true)
+
+  useEffect(() => {
+    setIsPrelaunch(new Date() < PRELAUNCH_END)
+  }, [])
 
   return (
     <main className="min-h-screen" style={{ background: 'var(--dark)' }}>
@@ -116,111 +482,27 @@ export default function RejoindrePage() {
               </svg>
             </div>
             <h1 className="font-display text-3xl sm:text-4xl font-light leading-tight mb-4">
-              {t('join.title')}<br />
-              {t('join.title_br')}
+              {isPrelaunch ? (
+                <>Quelque chose de <span className="text-shimmer">puissant</span> arrive.</>
+              ) : (
+                <>{t('join.title')}<br />{t('join.title_br')}</>
+              )}
             </h1>
             <p className="text-lg leading-relaxed max-w-xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
-              {t('join.subtitle')}
+              {isPrelaunch ? (
+                "L\u2019encyclop\u00e9die compl\u00e8te des challenges \u00e9motionnels. Un espace pour comprendre, apaiser et ne plus jamais \u00eatre seul."
+              ) : (
+                t('join.subtitle')
+              )}
             </p>
           </div>
         </Reveal>
 
         {/* Features grid */}
-        <div className="grid sm:grid-cols-2 gap-4 mb-16">
-          {features.map((feature, i) => (
-            <Reveal key={feature.title} delay={0.1 + i * 0.07}>
-              <div className="glass p-6 h-full" style={{ borderColor: `${feature.color}15` }}>
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-4"
-                  style={{ background: `${feature.color}12`, color: feature.color }}>
-                  {feature.icon}
-                </div>
-                <h3 className="font-semibold text-[15px] mb-1.5">
-                  {feature.title}
-                </h3>
-                <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                  {feature.description}
-                </p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
+        <FeaturesGrid />
 
-        {/* Pricing cards — 2 plans */}
-        <div className="grid sm:grid-cols-2 gap-6 mb-6">
-          {/* Essentiel */}
-          <Reveal delay={0.5}>
-            <div className="glass p-8 text-center h-full flex flex-col" style={{ borderColor: 'rgba(212,175,55,0.15)' }}>
-              <p className="text-xs tracking-[0.25em] uppercase mb-4" style={{ color: 'var(--text-muted)' }}>
-                Essentiel
-              </p>
-              <div className="flex items-baseline justify-center gap-1.5 mb-2">
-                <span className="font-display text-4xl font-light" style={{ color: 'var(--gold)' }}>29,90&euro;</span>
-                <span className="text-sm" style={{ color: 'var(--text-muted)' }}>{t('join.per_month')}</span>
-              </div>
-              <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
-                {t('join.no_commitment')}
-              </p>
-
-              <div className="space-y-3 text-left mb-8 flex-1">
-                {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
-                  <div key={n} className="flex items-start gap-3">
-                    <span className="mt-0.5 text-sm flex-shrink-0" style={{ color: 'var(--gold)' }}>&#9670;</span>
-                    <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{t(`join.included_${n}`)}</span>
-                  </div>
-                ))}
-              </div>
-
-              <a
-                href={STRIPE_ESSENTIEL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="cta-glow inline-block w-full py-4 rounded-full font-medium tracking-wide transition-all text-sm"
-                style={{ background: 'var(--gold)', color: 'var(--dark)' }}
-              >
-                {t('join.pay_cta')}
-              </a>
-            </div>
-          </Reveal>
-
-          {/* Premium */}
-          <Reveal delay={0.6}>
-            <div className="glass p-8 text-center h-full flex flex-col relative overflow-hidden" style={{ borderColor: 'rgba(212,175,55,0.3)', boxShadow: '0 0 40px rgba(212,175,55,0.08)' }}>
-              <div className="absolute top-4 right-4 text-[10px] tracking-[0.2em] uppercase px-3 py-1 rounded-full font-semibold"
-                style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: 'var(--dark)' }}>
-                VIP
-              </div>
-              <p className="text-xs tracking-[0.25em] uppercase mb-4" style={{ color: 'var(--gold)' }}>
-                Premium
-              </p>
-              <div className="flex items-baseline justify-center gap-1.5 mb-2">
-                <span className="font-display text-4xl font-light" style={{ color: 'var(--gold)' }}>99,90&euro;</span>
-                <span className="text-sm" style={{ color: 'var(--text-muted)' }}>{t('join.per_month')}</span>
-              </div>
-              <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
-                {t('join.no_commitment')}
-              </p>
-
-              <div className="space-y-3 text-left mb-8 flex-1">
-                {[1, 2, 3, 4].map((n) => (
-                  <div key={n} className="flex items-start gap-3">
-                    <span className="mt-0.5 text-sm flex-shrink-0" style={{ color: 'var(--gold)' }}>&#9670;</span>
-                    <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{t(`join.premium_${n}`)}</span>
-                  </div>
-                ))}
-              </div>
-
-              <a
-                href={STRIPE_PREMIUM}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="cta-glow inline-block w-full py-4 rounded-full font-medium tracking-wide transition-all text-sm"
-                style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: 'var(--dark)' }}
-              >
-                {t('join.premium_cta')}
-              </a>
-            </div>
-          </Reveal>
-        </div>
+        {/* Conditional: Prelaunch OR Payment */}
+        {isPrelaunch ? <PrelaunchContent /> : <PaymentContent />}
 
         {/* Links & secure badge */}
         <Reveal delay={0.65}>

@@ -151,6 +151,7 @@ export default function NotificationBell() {
     new_event: '📅',
     new_post: '📝',
     new_soin: '✨',
+    warning: '⚠️',
   }
 
   return (

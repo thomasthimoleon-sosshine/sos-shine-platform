@@ -218,10 +218,6 @@
 /* ── 3. Base Resets ── */
 html {
   scroll-behavior: smooth;
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
 }
 
 html.founder-mode,
@@ -239,16 +235,9 @@ body {
   font-weight: 300;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  -webkit-touch-callout: none;
 }
 
 /* ── 15. Security & Protection ── */
-@media print {
-  body {
-    display: none !important;
-  }
-}
-
 .watermark-container {
   position: relative;
   overflow: hidden;

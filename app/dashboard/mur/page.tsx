@@ -22,6 +22,7 @@ type PostRow = {
   category: string
   media_type: string
   is_published: boolean
+  delete_locked: boolean
   created_at: string
   updated_at: string
   profiles: { prenom: string; role: string; avatar_url: string | null } | null
@@ -515,9 +516,20 @@ export default function MurPage() {
   }
 
   async function deletePost(postId: string) {
+    const post = posts.find(p => p.id === postId)
+    if (post?.delete_locked) {
+      alert('Cette publication a ete verrouillee par un administrateur et ne peut pas etre supprimee.')
+      setMenuOpen(null)
+      return
+    }
     if (!confirm('Supprimer cette publication ?')) return
     const supabase = createClient()
-    await supabase.from('posts').delete().eq('id', postId).eq('author_id', currentUserId!)
+    const { error } = await supabase.from('posts').delete().eq('id', postId).eq('author_id', currentUserId!)
+    if (error) {
+      alert('Impossible de supprimer cette publication.')
+      setMenuOpen(null)
+      return
+    }
     setPosts(prev => prev.filter(p => p.id !== postId))
     setMenuOpen(null)
   }
@@ -820,13 +832,25 @@ export default function MurPage() {
                                 onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
                                 Modifier
                               </button>
-                              <button onClick={() => deletePost(post.id)}
-                                className="w-full text-left px-4 py-2 text-sm flex items-center gap-2 transition-colors cursor-pointer"
-                                style={{ color: '#EF4444' }}
-                                onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.08)'}
-                                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                                Supprimer
-                              </button>
+                              {post.delete_locked ? (
+                                <span
+                                  className="w-full text-left px-4 py-2 text-sm flex items-center gap-2"
+                                  style={{ color: 'var(--text-muted)', opacity: 0.5 }}
+                                  title="Un administrateur a verrouille la suppression de cette publication">
+                                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                                  </svg>
+                                  Verrouille
+                                </span>
+                              ) : (
+                                <button onClick={() => deletePost(post.id)}
+                                  className="w-full text-left px-4 py-2 text-sm flex items-center gap-2 transition-colors cursor-pointer"
+                                  style={{ color: '#EF4444' }}
+                                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.08)'}
+                                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                                  Supprimer
+                                </button>
+                              )}
                             </div>
                           )}
                         </div>

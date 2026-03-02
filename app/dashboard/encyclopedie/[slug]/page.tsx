@@ -14,22 +14,64 @@ export default function DouleurDetailPage() {
   const [loading, setLoading] = useState(true)
   const [activeStep, setActiveStep] = useState(1)
   const [fetchError, setFetchError] = useState<string | null>(null)
+  const [notPublished, setNotPublished] = useState(false)
 
   useEffect(() => {
     async function load() {
-      const supabase = createClient()
-      const { data, error } = await supabase
-        .from('douleurs')
-        .select('*')
-        .eq('slug', slug)
-        .eq('is_published', true)
-        .maybeSingle()
+      try {
+        const supabase = createClient()
 
-      if (error) {
-        console.error('Erreur chargement challenge:', error.message)
-        setFetchError(error.message)
-      } else if (data) {
-        setDouleur(data as Douleur)
+        // Normalize the slug: decode URI, lowercase, remove accents
+        const normalizedSlug = decodeURIComponent(slug)
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/\s+/g, '-')
+          .replace(/[^a-z0-9-]/g, '')
+
+        // Try 1: exact slug match with is_published = true
+        let { data, error } = await supabase
+          .from('douleurs')
+          .select('*')
+          .eq('slug', normalizedSlug)
+          .eq('is_published', true)
+          .maybeSingle()
+
+        // Try 2: if not found with normalized slug, try original slug
+        if (!data && !error && normalizedSlug !== slug) {
+          const res = await supabase
+            .from('douleurs')
+            .select('*')
+            .eq('slug', slug)
+            .eq('is_published', true)
+            .maybeSingle()
+          data = res.data
+          error = res.error
+        }
+
+        // Try 3: if still not found, check if it exists but is NOT published
+        if (!data && !error) {
+          const { data: unpublished } = await supabase
+            .from('douleurs')
+            .select('id, title, slug, is_published')
+            .or(`slug.eq.${normalizedSlug},slug.eq.${slug}`)
+            .maybeSingle()
+
+          if (unpublished && !unpublished.is_published) {
+            setNotPublished(true)
+            console.warn(`Challenge "${unpublished.title}" (slug: ${unpublished.slug}) exists but is_published=false`)
+          }
+        }
+
+        if (error) {
+          console.error('Erreur chargement challenge:', error.message)
+          setFetchError(error.message)
+        } else if (data) {
+          setDouleur(data as Douleur)
+        }
+      } catch (err) {
+        console.error('Exception chargement challenge:', err)
+        setFetchError(err instanceof Error ? err.message : 'Erreur inattendue')
       }
       setLoading(false)
     }
@@ -78,23 +120,23 @@ export default function DouleurDetailPage() {
     return (
       <div className="max-w-3xl mx-auto text-center py-20">
         <h2 className="font-display text-2xl font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
-          Challenge émotionnel non trouvé
+          {notPublished ? 'Challenge en cours de préparation' : 'Challenge émotionnel non trouvé'}
         </h2>
         <p className="mb-6" style={{ color: 'var(--text-secondary)' }}>
           {fetchError
             ? `Une erreur est survenue lors du chargement. Veuillez réessayer.`
+            : notPublished
+            ? `Ce challenge émotionnel existe mais n'est pas encore publié. L'administrateur doit le publier depuis le back-office.`
             : `Ce challenge émotionnel n'est pas encore disponible ou n'existe pas.`}
         </p>
-        {fetchError && (
-          <button
-            onClick={() => window.location.reload()}
-            className="px-5 py-2.5 rounded-lg text-sm font-medium mb-4 cursor-pointer"
-            style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}
-          >
-            Réessayer
-          </button>
-        )}
-        <Link href="/dashboard/encyclopedie" className="block text-sm font-medium" style={{ color: 'var(--gold)' }}>
+        <button
+          onClick={() => window.location.reload()}
+          className="px-5 py-2.5 rounded-lg text-sm font-medium mb-4 cursor-pointer"
+          style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}
+        >
+          Réessayer
+        </button>
+        <Link href="/dashboard/encyclopedie" className="block text-sm font-medium mt-2" style={{ color: 'var(--gold)' }}>
           Retour à l&apos;encyclopédie
         </Link>
       </div>

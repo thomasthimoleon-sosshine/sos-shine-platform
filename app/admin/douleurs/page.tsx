@@ -166,7 +166,10 @@ export default function AdminDouleursPage() {
   }
 
   async function togglePublish(d: Douleur) {
+    setError(null)
     const willPublish = !d.is_published
+
+    // Method 1: Try direct update
     const { data: updated, error } = await supabase
       .from('douleurs')
       .update({ is_published: willPublish })
@@ -174,23 +177,53 @@ export default function AdminDouleursPage() {
       .select('id, is_published')
       .single()
 
-    if (error) {
-      setError(`Échec de la mise à jour : ${error.message}`)
-      return
+    if (error || !updated) {
+      // Method 2: Fallback to RPC function (bypasses RLS issues)
+      console.warn('Direct update failed, trying RPC fallback:', error?.message)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data: rpcResult, error: rpcError } = await (supabase as any)
+        .rpc('toggle_douleur_publish', {
+          douleur_id: d.id,
+          new_published: willPublish,
+        })
+
+      if (rpcError) {
+        setError(
+          `Échec de la publication : ${rpcError.message}. ` +
+          `Assurez-vous d'avoir exécuté la migration SQL "20260302_fix_douleurs_publish_v2.sql" dans Supabase.`
+        )
+        return
+      }
+
+      if (!rpcResult || (Array.isArray(rpcResult) && rpcResult.length === 0)) {
+        setError('La mise à jour n\'a pas été appliquée. Vérifiez vos permissions administrateur.')
+        return
+      }
     }
 
-    if (!updated) {
-      setError('La mise à jour n\'a pas été appliquée. Vérifiez vos permissions administrateur.')
-      return
+    // Verify the change actually persisted
+    const { data: verified } = await supabase
+      .from('douleurs')
+      .select('id, is_published')
+      .eq('id', d.id)
+      .single()
+
+    const confirmedPublished = verified ? verified.is_published : willPublish
+
+    if (verified && verified.is_published !== willPublish) {
+      setError(
+        `Attention : la publication a été bloquée par les permissions Supabase (RLS). ` +
+        `Exécutez la migration "20260302_fix_douleurs_publish_v2.sql" dans votre dashboard Supabase → SQL Editor.`
+      )
     }
 
     setDouleurs((prev) =>
       prev.map((item) =>
-        item.id === d.id ? { ...item, is_published: updated.is_published } : item
+        item.id === d.id ? { ...item, is_published: confirmedPublished } : item
       )
     )
 
-    if (updated.is_published) {
+    if (confirmedPublished && !d.is_published) {
       try {
         await fetch('/api/notify', {
           method: 'POST',

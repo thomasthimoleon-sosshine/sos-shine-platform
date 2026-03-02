@@ -15,6 +15,7 @@ const defaultDouleurs: Pick<Douleur, 'title' | 'slug' | 'description' | 'image_u
   { title: 'Dépendance affective', slug: 'dependance-affective', description: 'Comprenez les mécanismes et libérez-vous du besoin de l\'autre pour exister.', image_url: null },
   { title: 'Deuil', slug: 'deuil', description: 'Accompagnement doux pour traverser la perte d\'un être cher.', image_url: null },
   { title: 'Rupture', slug: 'rupture', description: 'Traversez la tempête d\'une séparation avec des outils concrets.', image_url: null },
+  { title: 'Séparation', slug: 'separation', description: 'Apprenez à traverser une séparation en douceur et à vous reconstruire.', image_url: null },
 ]
 
 export default function EncyclopediePage() {

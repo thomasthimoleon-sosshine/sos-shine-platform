@@ -21,23 +21,50 @@ export default function PublicDouleurDetailPage() {
 
   useEffect(() => {
     async function load() {
-      const supabase = createClient()
-      const { data, error } = await supabase
-        .from('douleurs')
-        .select('*')
-        .eq('slug', slug)
-        .eq('is_published', true)
-        .maybeSingle()
+      try {
+        const supabase = createClient()
 
-      if (error) {
-        console.error('Erreur chargement challenge:', error.message)
-        setFetchError(error.message)
-      } else if (data) {
-        const d = data as Douleur
-        setDouleur(d)
-        document.title = `${d.title} — Encyclopédie SOS Shine`
-        const metaDesc = document.querySelector('meta[name="description"]')
-        if (metaDesc) metaDesc.setAttribute('content', `Protocole en 3 étapes pour surmonter ${d.title.toLowerCase()} : vidéos, soins énergétiques et méditations guidées. Rejoins la communauté SOS Shine.`)
+        // Normalize slug: decode URI, lowercase, remove accents
+        const normalizedSlug = decodeURIComponent(slug)
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/\s+/g, '-')
+          .replace(/[^a-z0-9-]/g, '')
+
+        // Try exact match first
+        let { data, error } = await supabase
+          .from('douleurs')
+          .select('*')
+          .eq('slug', normalizedSlug)
+          .eq('is_published', true)
+          .maybeSingle()
+
+        // Try original slug if different
+        if (!data && !error && normalizedSlug !== slug) {
+          const res = await supabase
+            .from('douleurs')
+            .select('*')
+            .eq('slug', slug)
+            .eq('is_published', true)
+            .maybeSingle()
+          data = res.data
+          error = res.error
+        }
+
+        if (error) {
+          console.error('Erreur chargement challenge:', error.message)
+          setFetchError(error.message)
+        } else if (data) {
+          const d = data as Douleur
+          setDouleur(d)
+          document.title = `${d.title} — Encyclopédie SOS Shine`
+          const metaDesc = document.querySelector('meta[name="description"]')
+          if (metaDesc) metaDesc.setAttribute('content', `Protocole en 3 étapes pour surmonter ${d.title.toLowerCase()} : vidéos, soins énergétiques et méditations guidées. Rejoins la communauté SOS Shine.`)
+        }
+      } catch (err) {
+        console.error('Exception chargement challenge:', err)
+        setFetchError(err instanceof Error ? err.message : 'Erreur inattendue')
       }
       setLoading(false)
     }

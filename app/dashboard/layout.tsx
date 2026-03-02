@@ -175,7 +175,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }, 30000)
 
     return () => clearInterval(interval)
-  }, [router])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   async function handleSignOut() {
     const supabase = createClient()

@@ -98,7 +98,7 @@ export default function PublicDouleurDetailPage() {
     {
       num: 2,
       title: 'Libérer & Intégrer',
-      subtitle: 'Vidéo de libération et d\'intégration',
+      subtitle: 'Audio de libération et d\'intégration',
       icon: '\u2728',
       color: '#74C0FC',
       description: 'Activation émotionnelle. Décharge des tensions. Nettoyage des empreintes qui vous bloquent. Stabilisation intérieure et reconnexion à soi.',
@@ -316,18 +316,18 @@ export default function PublicDouleurDetailPage() {
 
             if (currentStep.contentType === 'audio_energy') {
               return douleur.audio_energy_url ? (
-                /* Video preview - locked */
+                /* Audio preview - locked */
                 <div
-                  className="rounded-xl overflow-hidden aspect-video mb-4 relative cursor-pointer group"
+                  className="rounded-xl overflow-hidden p-6 mb-4 relative cursor-pointer group"
                   style={{ background: 'rgba(0,0,0,0.4)' }}
                   onClick={handlePlayClick}
                 >
-                  <div className="absolute inset-0 flex items-center justify-center z-10">
+                  <div className="flex items-center justify-center">
                     <div className="text-center">
                       <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 transition-transform group-hover:scale-110"
                         style={{ background: `${currentStep.color}20`, border: `2px solid ${currentStep.color}40` }}>
-                        <svg className="w-8 h-8 ml-1" fill="none" viewBox="0 0 24 24" stroke={currentStep.color} strokeWidth={1.5}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+                        <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke={currentStep.color} strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
                         </svg>
                       </div>
                       <div className="flex items-center justify-center gap-2">
@@ -340,17 +340,16 @@ export default function PublicDouleurDetailPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${currentStep.color}08, rgba(0,0,0,0.5), ${currentStep.color}05)` }} />
                 </div>
               ) : (
-                <div className="rounded-xl aspect-video flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.3)', border: `1px dashed ${currentStep.color}30` }}>
+                <div className="rounded-xl p-8 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.3)', border: `1px dashed ${currentStep.color}30` }}>
                   <div className="text-center">
                     <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3" style={{ background: `${currentStep.color}15` }}>
                       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke={currentStep.color} strokeWidth={1.5}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
                       </svg>
                     </div>
-                    <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Vidéo bientôt disponible</p>
+                    <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Audio bientôt disponible</p>
                   </div>
                 </div>
               )

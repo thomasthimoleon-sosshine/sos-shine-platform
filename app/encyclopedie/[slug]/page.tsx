@@ -17,18 +17,22 @@ export default function PublicDouleurDetailPage() {
   const [loading, setLoading] = useState(true)
   const [activeStep, setActiveStep] = useState(1)
   const [showModal, setShowModal] = useState(false)
+  const [fetchError, setFetchError] = useState<string | null>(null)
 
   useEffect(() => {
     async function load() {
       const supabase = createClient()
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('douleurs')
         .select('*')
         .eq('slug', slug)
         .eq('is_published', true)
-        .single()
+        .maybeSingle()
 
-      if (data) {
+      if (error) {
+        console.error('Erreur chargement challenge:', error.message)
+        setFetchError(error.message)
+      } else if (data) {
         const d = data as Douleur
         setDouleur(d)
         document.title = `${d.title} — Encyclopédie SOS Shine`
@@ -101,9 +105,20 @@ export default function PublicDouleurDetailPage() {
             Challenge émotionnel non trouvé
           </h2>
           <p className="mb-6" style={{ color: 'var(--text-secondary)' }}>
-            Ce challenge émotionnel n&apos;est pas encore disponible ou n&apos;existe pas.
+            {fetchError
+              ? `Une erreur est survenue lors du chargement. Veuillez réessayer.`
+              : `Ce challenge émotionnel n'est pas encore disponible ou n'existe pas.`}
           </p>
-          <Link href="/encyclopedie" className="text-sm font-medium" style={{ color: 'var(--gold)' }}>
+          {fetchError && (
+            <button
+              onClick={() => window.location.reload()}
+              className="px-5 py-2.5 rounded-lg text-sm font-medium mb-4 cursor-pointer"
+              style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}
+            >
+              Réessayer
+            </button>
+          )}
+          <Link href="/encyclopedie" className="block text-sm font-medium" style={{ color: 'var(--gold)' }}>
             Retour à l&apos;encyclopédie
           </Link>
         </div>

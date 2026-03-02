@@ -167,35 +167,43 @@ export default function AdminDouleursPage() {
 
   async function togglePublish(d: Douleur) {
     const willPublish = !d.is_published
-    const { error } = await supabase
+    const { data: updated, error } = await supabase
       .from('douleurs')
       .update({ is_published: willPublish })
       .eq('id', d.id)
+      .select('id, is_published')
+      .single()
 
     if (error) {
-      setError(error.message)
-    } else {
-      setDouleurs((prev) =>
-        prev.map((item) =>
-          item.id === d.id ? { ...item, is_published: willPublish } : item
-        )
-      )
+      setError(`Échec de la mise à jour : ${error.message}`)
+      return
+    }
 
-      if (willPublish) {
-        try {
-          await fetch('/api/notify', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              type: 'new_douleur',
-              title: 'Nouveau protocole disponible',
-              body: d.title,
-              link: `/dashboard/encyclopedie/${d.slug}`,
-            }),
-          })
-        } catch {
-          // notification sending failed silently
-        }
+    if (!updated) {
+      setError('La mise à jour n\'a pas été appliquée. Vérifiez vos permissions administrateur.')
+      return
+    }
+
+    setDouleurs((prev) =>
+      prev.map((item) =>
+        item.id === d.id ? { ...item, is_published: updated.is_published } : item
+      )
+    )
+
+    if (updated.is_published) {
+      try {
+        await fetch('/api/notify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'new_douleur',
+            title: 'Nouveau protocole disponible',
+            body: d.title,
+            link: `/dashboard/encyclopedie/${d.slug}`,
+          }),
+        })
+      } catch {
+        // notification sending failed silently
       }
     }
   }

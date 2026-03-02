@@ -17,57 +17,83 @@ export default function DouleurDetailPage() {
   const [notPublished, setNotPublished] = useState(false)
 
   useEffect(() => {
+    function normalizeSlug(s: string): string {
+      return s
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9-]/g, '')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '')
+    }
+
     async function load() {
       try {
         const supabase = createClient()
+        const decodedSlug = decodeURIComponent(slug)
+        const normalizedSlug = normalizeSlug(decodedSlug)
 
-        // Normalize the slug: decode URI, lowercase, remove accents
-        const normalizedSlug = decodeURIComponent(slug)
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .replace(/\s+/g, '-')
-          .replace(/[^a-z0-9-]/g, '')
-
-        // Try 1: exact slug match with is_published = true
-        let { data, error } = await supabase
+        // Strategy: load ALL published douleurs and match client-side
+        // This handles all slug/accent/encoding edge cases
+        const { data: allDouleurs, error } = await supabase
           .from('douleurs')
           .select('*')
-          .eq('slug', normalizedSlug)
           .eq('is_published', true)
-          .maybeSingle()
 
-        // Try 2: if not found with normalized slug, try original slug
-        if (!data && !error && normalizedSlug !== slug) {
-          const res = await supabase
-            .from('douleurs')
-            .select('*')
-            .eq('slug', slug)
-            .eq('is_published', true)
-            .maybeSingle()
-          data = res.data
-          error = res.error
+        if (error) {
+          console.error('Erreur chargement challenges:', error.message)
+          setFetchError(error.message)
+          setLoading(false)
+          return
         }
 
-        // Try 3: if still not found, check if it exists but is NOT published
-        if (!data && !error) {
-          const { data: unpublished } = await supabase
-            .from('douleurs')
-            .select('id, title, slug, is_published')
-            .or(`slug.eq.${normalizedSlug},slug.eq.${slug}`)
-            .maybeSingle()
+        const published = (allDouleurs ?? []) as Douleur[]
 
-          if (unpublished && !unpublished.is_published) {
-            setNotPublished(true)
-            console.warn(`Challenge "${unpublished.title}" (slug: ${unpublished.slug}) exists but is_published=false`)
+        if (published.length > 0) {
+          // Try multiple matching strategies
+          const match = published.find((d) => {
+            const dbSlugNormalized = normalizeSlug(d.slug)
+            const titleNormalized = normalizeSlug(d.title)
+            return (
+              d.slug === slug ||
+              d.slug === decodedSlug ||
+              d.slug === normalizedSlug ||
+              dbSlugNormalized === normalizedSlug ||
+              titleNormalized === normalizedSlug
+            )
+          })
+
+          if (match) {
+            setDouleur(match)
+            setLoading(false)
+            return
           }
         }
 
-        if (error) {
-          console.error('Erreur chargement challenge:', error.message)
-          setFetchError(error.message)
-        } else if (data) {
-          setDouleur(data as Douleur)
+        // Not found in published — check if it exists but is unpublished
+        const { data: allUnpublished } = await supabase
+          .from('douleurs')
+          .select('id, title, slug, is_published')
+
+        if (allUnpublished) {
+          const items = allUnpublished as { id: string; title: string; slug: string; is_published: boolean }[]
+          const unpublishedMatch = items.find((d) => {
+            const dbSlugNormalized = normalizeSlug(d.slug)
+            const titleNormalized = normalizeSlug(d.title)
+            return (
+              d.slug === slug ||
+              d.slug === decodedSlug ||
+              d.slug === normalizedSlug ||
+              dbSlugNormalized === normalizedSlug ||
+              titleNormalized === normalizedSlug
+            )
+          })
+
+          if (unpublishedMatch && !unpublishedMatch.is_published) {
+            setNotPublished(true)
+            console.warn(`Challenge "${unpublishedMatch.title}" (slug: ${unpublishedMatch.slug}) exists but is_published=false`)
+          }
         }
       } catch (err) {
         console.error('Exception chargement challenge:', err)

@@ -20,47 +20,61 @@ export default function PublicDouleurDetailPage() {
   const [fetchError, setFetchError] = useState<string | null>(null)
 
   useEffect(() => {
+    function normalizeSlug(s: string): string {
+      return s
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9-]/g, '')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '')
+    }
+
     async function load() {
       try {
         const supabase = createClient()
+        const decodedSlug = decodeURIComponent(slug)
+        const normalizedSlug = normalizeSlug(decodedSlug)
 
-        // Normalize slug: decode URI, lowercase, remove accents
-        const normalizedSlug = decodeURIComponent(slug)
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .replace(/\s+/g, '-')
-          .replace(/[^a-z0-9-]/g, '')
-
-        // Try exact match first
-        let { data, error } = await supabase
+        // Strategy: load ALL published douleurs and match client-side
+        // This handles all slug/accent/encoding edge cases
+        const { data: allDouleurs, error } = await supabase
           .from('douleurs')
           .select('*')
-          .eq('slug', normalizedSlug)
           .eq('is_published', true)
-          .maybeSingle()
-
-        // Try original slug if different
-        if (!data && !error && normalizedSlug !== slug) {
-          const res = await supabase
-            .from('douleurs')
-            .select('*')
-            .eq('slug', slug)
-            .eq('is_published', true)
-            .maybeSingle()
-          data = res.data
-          error = res.error
-        }
 
         if (error) {
-          console.error('Erreur chargement challenge:', error.message)
+          console.error('Erreur chargement challenges:', error.message)
           setFetchError(error.message)
-        } else if (data) {
-          const d = data as Douleur
-          setDouleur(d)
-          document.title = `${d.title} — Encyclopédie SOS Shine`
-          const metaDesc = document.querySelector('meta[name="description"]')
-          if (metaDesc) metaDesc.setAttribute('content', `Protocole en 3 étapes pour surmonter ${d.title.toLowerCase()} : vidéos, soins énergétiques et méditations guidées. Rejoins la communauté SOS Shine.`)
+          setLoading(false)
+          return
+        }
+
+        const published = (allDouleurs ?? []) as Douleur[]
+
+        if (published.length > 0) {
+          // Try multiple matching strategies
+          const match = published.find((d) => {
+            const dbSlugNormalized = normalizeSlug(d.slug)
+            const titleNormalized = normalizeSlug(d.title)
+            return (
+              d.slug === slug ||
+              d.slug === decodedSlug ||
+              d.slug === normalizedSlug ||
+              dbSlugNormalized === normalizedSlug ||
+              titleNormalized === normalizedSlug
+            )
+          })
+
+          if (match) {
+            setDouleur(match)
+            document.title = `${match.title} — Encyclopédie SOS Shine`
+            const metaDesc = document.querySelector('meta[name="description"]')
+            if (metaDesc) metaDesc.setAttribute('content', `Protocole en 3 étapes pour surmonter ${match.title.toLowerCase()} : vidéos, soins énergétiques et méditations guidées. Rejoins la communauté SOS Shine.`)
+            setLoading(false)
+            return
+          }
         }
       } catch (err) {
         console.error('Exception chargement challenge:', err)

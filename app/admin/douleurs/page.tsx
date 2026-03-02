@@ -25,14 +25,17 @@ const emptyForm = {
   video_url: '',
   step1_audio_url: '',
   step1_pdf_url: '',
+  step1_image_url: '',
   // Step 2
   step2_video_url: '',
   audio_energy_url: '',
   step2_pdf_url: '',
+  step2_image_url: '',
   // Step 3
   step3_video_url: '',
   audio_meditation_url: '',
   pdf_url: '',
+  step3_image_url: '',
   exercise_content: '',
 }
 
@@ -94,12 +97,15 @@ export default function AdminDouleursPage() {
       video_url: d.video_url || '',
       step1_audio_url: d.step1_audio_url || '',
       step1_pdf_url: d.step1_pdf_url || '',
+      step1_image_url: d.step1_image_url || '',
       step2_video_url: d.step2_video_url || '',
       audio_energy_url: d.audio_energy_url || '',
       step2_pdf_url: d.step2_pdf_url || '',
+      step2_image_url: d.step2_image_url || '',
       step3_video_url: d.step3_video_url || '',
       audio_meditation_url: d.audio_meditation_url || '',
       pdf_url: d.pdf_url || '',
+      step3_image_url: d.step3_image_url || '',
       exercise_content: d.exercise_content || '',
     })
     setShowForm(true)
@@ -126,12 +132,15 @@ export default function AdminDouleursPage() {
       video_url: form.video_url.trim() || null,
       step1_audio_url: form.step1_audio_url.trim() || null,
       step1_pdf_url: form.step1_pdf_url.trim() || null,
+      step1_image_url: form.step1_image_url.trim() || null,
       step2_video_url: form.step2_video_url.trim() || null,
       audio_energy_url: form.audio_energy_url.trim() || null,
       step2_pdf_url: form.step2_pdf_url.trim() || null,
+      step2_image_url: form.step2_image_url.trim() || null,
       step3_video_url: form.step3_video_url.trim() || null,
       audio_meditation_url: form.audio_meditation_url.trim() || null,
       pdf_url: form.pdf_url.trim() || null,
+      step3_image_url: form.step3_image_url.trim() || null,
       exercise_content: form.exercise_content.trim() || null,
     }
 
@@ -255,9 +264,9 @@ export default function AdminDouleursPage() {
 
   // Helper: get media fields for a step
   function getStepFields(stepNum: number) {
-    if (stepNum === 1) return { video: 'video_url', audio: 'step1_audio_url', pdf: 'step1_pdf_url' }
-    if (stepNum === 2) return { video: 'step2_video_url', audio: 'audio_energy_url', pdf: 'step2_pdf_url' }
-    return { video: 'step3_video_url', audio: 'audio_meditation_url', pdf: 'pdf_url' }
+    if (stepNum === 1) return { video: 'video_url', audio: 'step1_audio_url', pdf: 'step1_pdf_url', image: 'step1_image_url' }
+    if (stepNum === 2) return { video: 'step2_video_url', audio: 'audio_energy_url', pdf: 'step2_pdf_url', image: 'step2_image_url' }
+    return { video: 'step3_video_url', audio: 'audio_meditation_url', pdf: 'pdf_url', image: 'step3_image_url' }
   }
 
   // Check if a douleur has content for a given step
@@ -276,6 +285,7 @@ export default function AdminDouleursPage() {
       hasVideo: !!d[fields.video as keyof Douleur],
       hasAudio: !!d[fields.audio as keyof Douleur],
       hasPdf: !!d[fields.pdf as keyof Douleur],
+      hasImage: !!d[fields.image as keyof Douleur],
     }
   }
 
@@ -287,6 +297,7 @@ export default function AdminDouleursPage() {
       if (m.hasVideo) count++
       if (m.hasAudio) count++
       if (m.hasPdf) count++
+      if (m.hasImage) count++
     }
     return count
   }
@@ -423,6 +434,17 @@ export default function AdminDouleursPage() {
                     onUploaded={(url) => setForm((prev) => ({ ...prev, [fields.pdf]: url }))}
                     onRemoved={() => setForm((prev) => ({ ...prev, [fields.pdf]: '' }))}
                   />
+
+                  {/* Image */}
+                  <FileUpload
+                    label={`Image / Photo — Étape ${step.num}`}
+                    accept="image/*"
+                    folder="douleurs"
+                    currentUrl={(form as Record<string, string>)[fields.image] || null}
+                    hint="JPG, PNG ou WebP (optionnel)"
+                    onUploaded={(url) => setForm((prev) => ({ ...prev, [fields.image]: url }))}
+                    onRemoved={() => setForm((prev) => ({ ...prev, [fields.image]: '' }))}
+                  />
                 </div>
 
                 {/* Exercise content only on step 3 */}
@@ -507,7 +529,7 @@ export default function AdminDouleursPage() {
                             {d.is_published ? 'Publié' : 'Brouillon'}
                           </span>
                           <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
-                            {totalMedia}/9 médias
+                            {totalMedia}/12 médias
                           </span>
                           <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
                             Créé le {new Date(d.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
@@ -552,7 +574,7 @@ export default function AdminDouleursPage() {
                   {STEPS.map((step) => {
                     const media = getStepMediaDetails(d, step.num)
                     const has = hasStepContent(d, step.num)
-                    const mediaCount = [media.hasVideo, media.hasAudio, media.hasPdf].filter(Boolean).length
+                    const mediaCount = [media.hasVideo, media.hasAudio, media.hasPdf, media.hasImage].filter(Boolean).length
                     return (
                       <div key={step.num} className="p-3 space-y-2"
                         style={{ background: has ? step.colorBg : 'var(--dark-card)' }}>
@@ -564,10 +586,10 @@ export default function AdminDouleursPage() {
                           </span>
                           <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full"
                             style={{
-                              background: mediaCount === 3 ? 'rgba(85,239,196,0.15)' : mediaCount > 0 ? 'rgba(212,175,55,0.15)' : 'rgba(90,83,71,0.2)',
-                              color: mediaCount === 3 ? '#55EFC4' : mediaCount > 0 ? '#D4AF37' : 'var(--text-muted)',
+                              background: mediaCount === 4 ? 'rgba(85,239,196,0.15)' : mediaCount > 0 ? 'rgba(212,175,55,0.15)' : 'rgba(90,83,71,0.2)',
+                              color: mediaCount === 4 ? '#55EFC4' : mediaCount > 0 ? '#D4AF37' : 'var(--text-muted)',
                             }}>
-                            {mediaCount}/3
+                            {mediaCount}/4
                           </span>
                         </div>
 
@@ -606,6 +628,19 @@ export default function AdminDouleursPage() {
                               PDF
                             </span>
                             {media.hasPdf ? (
+                              <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: '#55EFC4' }} />
+                            ) : (
+                              <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: 'var(--dark-border)' }} />
+                            )}
+                          </div>
+
+                          {/* Image */}
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-[10px]" style={{ opacity: media.hasImage ? 1 : 0.35 }}>🖼️</span>
+                            <span className="text-[10px] font-medium" style={{ color: media.hasImage ? step.color : 'var(--text-muted)', opacity: media.hasImage ? 1 : 0.5 }}>
+                              Image
+                            </span>
+                            {media.hasImage ? (
                               <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: '#55EFC4' }} />
                             ) : (
                               <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: 'var(--dark-border)' }} />

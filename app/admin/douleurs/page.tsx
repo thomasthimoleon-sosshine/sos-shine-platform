@@ -25,14 +25,17 @@ const emptyForm = {
   video_url: '',
   step1_audio_url: '',
   step1_pdf_url: '',
+  step1_image_url: '',
   // Step 2
   step2_video_url: '',
   audio_energy_url: '',
   step2_pdf_url: '',
+  step2_image_url: '',
   // Step 3
   step3_video_url: '',
   audio_meditation_url: '',
   pdf_url: '',
+  step3_image_url: '',
   exercise_content: '',
 }
 
@@ -94,12 +97,15 @@ export default function AdminDouleursPage() {
       video_url: d.video_url || '',
       step1_audio_url: d.step1_audio_url || '',
       step1_pdf_url: d.step1_pdf_url || '',
+      step1_image_url: d.step1_image_url || '',
       step2_video_url: d.step2_video_url || '',
       audio_energy_url: d.audio_energy_url || '',
       step2_pdf_url: d.step2_pdf_url || '',
+      step2_image_url: d.step2_image_url || '',
       step3_video_url: d.step3_video_url || '',
       audio_meditation_url: d.audio_meditation_url || '',
       pdf_url: d.pdf_url || '',
+      step3_image_url: d.step3_image_url || '',
       exercise_content: d.exercise_content || '',
     })
     setShowForm(true)
@@ -126,12 +132,15 @@ export default function AdminDouleursPage() {
       video_url: form.video_url.trim() || null,
       step1_audio_url: form.step1_audio_url.trim() || null,
       step1_pdf_url: form.step1_pdf_url.trim() || null,
+      step1_image_url: form.step1_image_url.trim() || null,
       step2_video_url: form.step2_video_url.trim() || null,
       audio_energy_url: form.audio_energy_url.trim() || null,
       step2_pdf_url: form.step2_pdf_url.trim() || null,
+      step2_image_url: form.step2_image_url.trim() || null,
       step3_video_url: form.step3_video_url.trim() || null,
       audio_meditation_url: form.audio_meditation_url.trim() || null,
       pdf_url: form.pdf_url.trim() || null,
+      step3_image_url: form.step3_image_url.trim() || null,
       exercise_content: form.exercise_content.trim() || null,
     }
 
@@ -255,9 +264,9 @@ export default function AdminDouleursPage() {
 
   // Helper: get media fields for a step
   function getStepFields(stepNum: number) {
-    if (stepNum === 1) return { video: 'video_url', audio: 'step1_audio_url', pdf: 'step1_pdf_url' }
-    if (stepNum === 2) return { video: 'step2_video_url', audio: 'audio_energy_url', pdf: 'step2_pdf_url' }
-    return { video: 'step3_video_url', audio: 'audio_meditation_url', pdf: 'pdf_url' }
+    if (stepNum === 1) return { video: 'video_url', audio: 'step1_audio_url', pdf: 'step1_pdf_url', image: 'step1_image_url' }
+    if (stepNum === 2) return { video: 'step2_video_url', audio: 'audio_energy_url', pdf: 'step2_pdf_url', image: 'step2_image_url' }
+    return { video: 'step3_video_url', audio: 'audio_meditation_url', pdf: 'pdf_url', image: 'step3_image_url' }
   }
 
   // Check if a douleur has content for a given step
@@ -267,6 +276,30 @@ export default function AdminDouleursPage() {
     const a = d[fields.audio as keyof Douleur]
     const p = d[fields.pdf as keyof Douleur]
     return !!(v || a || p)
+  }
+
+  // Get detailed media status for a step
+  function getStepMediaDetails(d: Douleur, stepNum: number) {
+    const fields = getStepFields(stepNum)
+    return {
+      hasVideo: !!d[fields.video as keyof Douleur],
+      hasAudio: !!d[fields.audio as keyof Douleur],
+      hasPdf: !!d[fields.pdf as keyof Douleur],
+      hasImage: !!d[fields.image as keyof Douleur],
+    }
+  }
+
+  // Count total media across all steps
+  function getTotalMediaCount(d: Douleur): number {
+    let count = 0
+    for (let i = 1; i <= 3; i++) {
+      const m = getStepMediaDetails(d, i)
+      if (m.hasVideo) count++
+      if (m.hasAudio) count++
+      if (m.hasPdf) count++
+      if (m.hasImage) count++
+    }
+    return count
   }
 
   const inputStyle: React.CSSProperties = {
@@ -401,6 +434,17 @@ export default function AdminDouleursPage() {
                     onUploaded={(url) => setForm((prev) => ({ ...prev, [fields.pdf]: url }))}
                     onRemoved={() => setForm((prev) => ({ ...prev, [fields.pdf]: '' }))}
                   />
+
+                  {/* Image */}
+                  <FileUpload
+                    label={`Image / Photo — Étape ${step.num}`}
+                    accept="image/*"
+                    folder="douleurs"
+                    currentUrl={(form as Record<string, string>)[fields.image] || null}
+                    hint="JPG, PNG ou WebP (optionnel)"
+                    onUploaded={(url) => setForm((prev) => ({ ...prev, [fields.image]: url }))}
+                    onRemoved={() => setForm((prev) => ({ ...prev, [fields.image]: '' }))}
+                  />
                 </div>
 
                 {/* Exercise content only on step 3 */}
@@ -440,74 +484,191 @@ export default function AdminDouleursPage() {
           <p style={{ color: 'var(--text-muted)' }}>Aucun challenge émotionnel créé pour le moment.</p>
         </div>
       ) : (
-        <div className="space-y-3">
-          {douleurs.map((d) => (
-            <div key={d.id} className="rounded-xl p-5 transition-all duration-200"
-              style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                <div className="flex-1 min-w-0 space-y-1.5">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="font-semibold text-base truncate" style={{ color: 'var(--text-primary)' }}>
-                      {d.title}
-                    </h3>
-                    <span className="text-xs font-mono px-2 py-0.5 rounded" style={{ background: 'rgba(255,255,255,0.04)', color: 'var(--text-muted)' }}>
-                      /{d.slug}
-                    </span>
-                    <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full"
-                      style={{
-                        background: d.is_published ? 'rgba(85,239,196,0.1)' : 'rgba(255,107,53,0.1)',
-                        color: d.is_published ? '#55EFC4' : '#FF6B35',
-                        border: `1px solid ${d.is_published ? 'rgba(85,239,196,0.2)' : 'rgba(255,107,53,0.2)'}`,
-                      }}>
-                      <span className="w-1.5 h-1.5 rounded-full" style={{ background: d.is_published ? '#55EFC4' : '#FF6B35' }} />
-                      {d.is_published ? 'Publié' : 'Brouillon'}
-                    </span>
-                  </div>
+        <div className="space-y-4">
+          {douleurs.map((d) => {
+            const totalMedia = getTotalMediaCount(d)
+            return (
+              <div key={d.id} className="rounded-xl overflow-hidden transition-all duration-200"
+                style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
 
-                  {/* Step indicators */}
-                  <div className="flex flex-wrap gap-2">
-                    {STEPS.map((step) => {
-                      const has = hasStepContent(d, step.num)
-                      return (
-                        <span key={step.num} className="text-[10px] px-2 py-0.5 rounded-full" style={{
-                          background: has ? `${step.color}15` : 'rgba(90,83,71,0.2)',
-                          color: has ? step.color : 'var(--text-muted)',
+                {/* Header row */}
+                <div className="p-5 pb-3">
+                  <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+                    {/* Left: cover image + info */}
+                    <div className="flex gap-4 flex-1 min-w-0">
+                      {/* Cover image thumbnail */}
+                      {d.image_url ? (
+                        <img src={d.image_url} alt={d.title}
+                          className="w-14 h-14 rounded-lg object-cover flex-shrink-0"
+                          style={{ border: '1px solid var(--dark-border)' }} />
+                      ) : (
+                        <div className="w-14 h-14 rounded-lg flex-shrink-0 flex items-center justify-center text-xl"
+                          style={{ background: 'rgba(116,192,252,0.08)', border: '1px solid rgba(116,192,252,0.15)' }}>
+                          💎
+                        </div>
+                      )}
+
+                      <div className="min-w-0 space-y-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <h3 className="font-semibold text-base truncate" style={{ color: 'var(--text-primary)' }}>
+                            {d.title}
+                          </h3>
+                          <span className="text-xs font-mono px-2 py-0.5 rounded" style={{ background: 'rgba(255,255,255,0.04)', color: 'var(--text-muted)' }}>
+                            /{d.slug}
+                          </span>
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-0.5 rounded-full"
+                            style={{
+                              background: d.is_published ? 'rgba(85,239,196,0.1)' : 'rgba(255,107,53,0.1)',
+                              color: d.is_published ? '#55EFC4' : '#FF6B35',
+                              border: `1px solid ${d.is_published ? 'rgba(85,239,196,0.2)' : 'rgba(255,107,53,0.2)'}`,
+                            }}>
+                            <span className="w-1.5 h-1.5 rounded-full" style={{ background: d.is_published ? '#55EFC4' : '#FF6B35' }} />
+                            {d.is_published ? 'Publié' : 'Brouillon'}
+                          </span>
+                          <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
+                            {totalMedia}/12 médias
+                          </span>
+                          <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
+                            Créé le {new Date(d.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
+                          </span>
+                        </div>
+
+                        {d.description && (
+                          <p className="text-xs truncate" style={{ color: 'var(--text-muted)', maxWidth: '500px' }}>
+                            {d.description}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Right: actions */}
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <button onClick={() => openEditForm(d)}
+                        className="px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 hover:opacity-80"
+                        style={{ background: 'rgba(116,192,252,0.1)', color: '#74C0FC', border: '1px solid rgba(116,192,252,0.2)' }}>
+                        Modifier
+                      </button>
+                      <button onClick={() => togglePublish(d)}
+                        className="px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 hover:opacity-80"
+                        style={{
+                          background: d.is_published ? 'rgba(255,107,53,0.1)' : 'rgba(85,239,196,0.1)',
+                          color: d.is_published ? '#FF6B35' : '#55EFC4',
+                          border: `1px solid ${d.is_published ? 'rgba(255,107,53,0.2)' : 'rgba(85,239,196,0.2)'}`,
                         }}>
-                          {has ? '●' : '○'} {step.icon} Étape {step.num}
-                        </span>
-                      )
-                    })}
+                        {d.is_published ? 'Dépublier' : 'Publier'}
+                      </button>
+                      <button onClick={() => handleDelete(d.id)}
+                        className="px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 hover:opacity-80"
+                        style={{ background: 'rgba(255,107,107,0.1)', color: '#FF6B6B', border: '1px solid rgba(255,107,107,0.2)' }}>
+                        Supprimer
+                      </button>
+                    </div>
                   </div>
-
-                  <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
-                    Créé le {new Date(d.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
-                  </p>
                 </div>
 
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  <button onClick={() => openEditForm(d)}
-                    className="px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 hover:opacity-80"
-                    style={{ background: 'rgba(116,192,252,0.1)', color: '#74C0FC', border: '1px solid rgba(116,192,252,0.2)' }}>
-                    Modifier
-                  </button>
-                  <button onClick={() => togglePublish(d)}
-                    className="px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 hover:opacity-80"
-                    style={{
-                      background: d.is_published ? 'rgba(255,107,53,0.1)' : 'rgba(85,239,196,0.1)',
-                      color: d.is_published ? '#FF6B35' : '#55EFC4',
-                      border: `1px solid ${d.is_published ? 'rgba(255,107,53,0.2)' : 'rgba(85,239,196,0.2)'}`,
-                    }}>
-                    {d.is_published ? 'Dépublier' : 'Publier'}
-                  </button>
-                  <button onClick={() => handleDelete(d.id)}
-                    className="px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 hover:opacity-80"
-                    style={{ background: 'rgba(255,107,107,0.1)', color: '#FF6B6B', border: '1px solid rgba(255,107,107,0.2)' }}>
-                    Supprimer
-                  </button>
+                {/* Step media detail grid */}
+                <div className="grid grid-cols-3 gap-px" style={{ background: 'var(--dark-border)' }}>
+                  {STEPS.map((step) => {
+                    const media = getStepMediaDetails(d, step.num)
+                    const has = hasStepContent(d, step.num)
+                    const mediaCount = [media.hasVideo, media.hasAudio, media.hasPdf, media.hasImage].filter(Boolean).length
+                    return (
+                      <div key={step.num} className="p-3 space-y-2"
+                        style={{ background: has ? step.colorBg : 'var(--dark-card)' }}>
+                        {/* Step header */}
+                        <div className="flex items-center justify-between">
+                          <span className="text-[11px] font-semibold flex items-center gap-1.5" style={{ color: has ? step.color : 'var(--text-muted)' }}>
+                            <span className="text-sm">{step.icon}</span>
+                            Ét. {step.num} — {step.title}
+                          </span>
+                          <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full"
+                            style={{
+                              background: mediaCount === 4 ? 'rgba(85,239,196,0.15)' : mediaCount > 0 ? 'rgba(212,175,55,0.15)' : 'rgba(90,83,71,0.2)',
+                              color: mediaCount === 4 ? '#55EFC4' : mediaCount > 0 ? '#D4AF37' : 'var(--text-muted)',
+                            }}>
+                            {mediaCount}/4
+                          </span>
+                        </div>
+
+                        {/* Media type indicators */}
+                        <div className="flex flex-col gap-1">
+                          {/* Video */}
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-[10px]" style={{ opacity: media.hasVideo ? 1 : 0.35 }}>🎬</span>
+                            <span className="text-[10px] font-medium" style={{ color: media.hasVideo ? step.color : 'var(--text-muted)', opacity: media.hasVideo ? 1 : 0.5 }}>
+                              Vidéo
+                            </span>
+                            {media.hasVideo ? (
+                              <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: '#55EFC4' }} />
+                            ) : (
+                              <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: 'var(--dark-border)' }} />
+                            )}
+                          </div>
+
+                          {/* Audio */}
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-[10px]" style={{ opacity: media.hasAudio ? 1 : 0.35 }}>🎵</span>
+                            <span className="text-[10px] font-medium" style={{ color: media.hasAudio ? step.color : 'var(--text-muted)', opacity: media.hasAudio ? 1 : 0.5 }}>
+                              Audio
+                            </span>
+                            {media.hasAudio ? (
+                              <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: '#55EFC4' }} />
+                            ) : (
+                              <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: 'var(--dark-border)' }} />
+                            )}
+                          </div>
+
+                          {/* PDF */}
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-[10px]" style={{ opacity: media.hasPdf ? 1 : 0.35 }}>📄</span>
+                            <span className="text-[10px] font-medium" style={{ color: media.hasPdf ? step.color : 'var(--text-muted)', opacity: media.hasPdf ? 1 : 0.5 }}>
+                              PDF
+                            </span>
+                            {media.hasPdf ? (
+                              <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: '#55EFC4' }} />
+                            ) : (
+                              <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: 'var(--dark-border)' }} />
+                            )}
+                          </div>
+
+                          {/* Image */}
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-[10px]" style={{ opacity: media.hasImage ? 1 : 0.35 }}>🖼️</span>
+                            <span className="text-[10px] font-medium" style={{ color: media.hasImage ? step.color : 'var(--text-muted)', opacity: media.hasImage ? 1 : 0.5 }}>
+                              Image
+                            </span>
+                            {media.hasImage ? (
+                              <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: '#55EFC4' }} />
+                            ) : (
+                              <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: 'var(--dark-border)' }} />
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Exercise content indicator for step 3 */}
+                        {step.num === 3 && (
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-[10px]" style={{ opacity: d.exercise_content ? 1 : 0.35 }}>✍️</span>
+                            <span className="text-[10px] font-medium" style={{ color: d.exercise_content ? step.color : 'var(--text-muted)', opacity: d.exercise_content ? 1 : 0.5 }}>
+                              Exercice
+                            </span>
+                            {d.exercise_content ? (
+                              <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: '#55EFC4' }} />
+                            ) : (
+                              <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: 'var(--dark-border)' }} />
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
     </div>

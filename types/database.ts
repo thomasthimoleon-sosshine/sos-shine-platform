@@ -41,14 +41,17 @@ export type Douleur = {
   video_url: string | null
   step1_audio_url: string | null
   step1_pdf_url: string | null
+  step1_image_url: string | null
   // Étape 2 — Libérer & Intégrer
   audio_energy_url: string | null
   step2_video_url: string | null
   step2_pdf_url: string | null
+  step2_image_url: string | null
   // Étape 3 — Agir
   audio_meditation_url: string | null
   step3_video_url: string | null
   pdf_url: string | null
+  step3_image_url: string | null
   exercise_content: string | null
   // Meta
   image_url: string | null

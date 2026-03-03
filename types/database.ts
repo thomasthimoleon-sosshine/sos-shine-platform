@@ -8,7 +8,7 @@ export type Profile = {
   avatar_url: string | null
   bio: string | null
   video_url: string | null
-  plan: 'essential' | 'premium' | null
+  plan: 'essential' | 'serenite' | 'premium' | null
   is_bot?: boolean
   is_active?: boolean
   publish_banned_until?: string | null
@@ -21,7 +21,7 @@ export type Subscription = {
   user_id: string
   stripe_customer_id: string | null
   stripe_subscription_id: string | null
-  plan: 'essential' | 'premium'
+  plan: 'essential' | 'serenite' | 'premium'
   status: 'trialing' | 'active' | 'inactive' | 'canceled' | 'past_due'
   current_period_end: string | null
   cancel_at_period_end?: boolean

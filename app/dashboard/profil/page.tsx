@@ -313,7 +313,7 @@ export default function ProfilPage() {
             <div className="flex items-center justify-between">
               <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{t('dashboard.plan_label')}</span>
               <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
-                {subscription.plan === 'premium' ? 'Premium — 99,90€/mois' : 'Essentiel — 29,90€/mois'}
+                {subscription.plan === 'premium' ? 'Premium — 99,90€/mois' : subscription.plan === 'serenite' ? 'Sérénité — 49,90€/mois' : 'Essentielle — 9,90€/mois'}
                 {subscription.waitlist_discount && (
                   <span className="ml-2 text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37' }}>
                     -10€ fondateur

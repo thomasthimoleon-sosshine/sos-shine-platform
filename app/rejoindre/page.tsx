@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 import { createClient } from '@/lib/supabase/client'
+import { PRICES, TOTAL_PRICES, DURATIONS, PLAN_INFO, formatPrice, getSavingsPercent } from '@/lib/stripe'
+import type { PlanId, DurationId } from '@/lib/stripe'
 
 const PRELAUNCH_END = new Date('2026-03-22T00:00:00+02:00')
 
@@ -127,46 +129,56 @@ function PrelaunchContent() {
         </div>
       </Reveal>
 
-      {/* Pricing comparison — waitlist advantage */}
+      {/* Pricing preview — 3 tiers */}
       <Reveal delay={0.4}>
         <div className="glass p-8 sm:p-10 text-center mb-10" style={{ borderColor: 'rgba(212,175,55,0.12)' }}>
           <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(212,175,55,0.3), transparent)' }} />
           <p className="text-[11px] tracking-[0.35em] uppercase mb-2 font-medium" style={{ color: 'var(--text-muted)' }}>
-            Avantage liste d&apos;attente &mdash; 10&euro; de r&eacute;duction &agrave; vie
+            D&eacute;couvrez nos 3 offres
           </p>
           <p className="text-sm mb-6 font-light" style={{ color: 'var(--text-secondary)' }}>
-            Rejoignez avant le 22 mars et b&eacute;n&eacute;ficiez d&apos;un tarif pr&eacute;f&eacute;rentiel &agrave; vie sur les 2 abonnements.
+            Rejoignez avant le 22 mars et b&eacute;n&eacute;ficiez d&apos;un tarif pr&eacute;f&eacute;rentiel &agrave; vie.
           </p>
 
-          <div className="grid sm:grid-cols-2 gap-6 mb-6">
-            {/* Essentiel */}
+          <div className="grid sm:grid-cols-3 gap-6 mb-6">
+            {/* Essentielle */}
             <div className="text-center">
-              <p className="text-xs tracking-[0.25em] uppercase mb-3" style={{ color: 'var(--text-muted)' }}>Essentiel</p>
+              <p className="text-xs tracking-[0.25em] uppercase mb-3" style={{ color: 'var(--text-muted)' }}>Essentielle</p>
               <div className="flex items-baseline justify-center gap-1.5 mb-1">
-                <span className="font-display text-4xl font-light" style={{ color: '#D4AF37' }}>19,90&euro;</span>
+                <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#D4AF37' }}>9,90&euro;</span>
                 <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
               </div>
-              <span className="text-xs line-through" style={{ color: 'var(--text-muted)', opacity: 0.5 }}>29,90&euro;/mois</span>
-              <span className="inline-block mt-2 px-3 py-1 rounded-full text-[10px] tracking-[0.2em] uppercase font-medium"
-                style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.15)' }}>
-                Tarif fondateur &mdash; &agrave; vie
-              </span>
+              <p className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>
+                Acc&egrave;s imm&eacute;diat, sans essai gratuit
+              </p>
+            </div>
+            {/* Sérénité */}
+            <div className="text-center">
+              <p className="text-xs tracking-[0.25em] uppercase mb-3" style={{ color: '#55EFC4' }}>S&eacute;r&eacute;nit&eacute;</p>
+              <div className="flex items-baseline justify-center gap-1.5 mb-1">
+                <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#D4AF37' }}>49,90&euro;</span>
+                <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
+              </div>
+              <p className="text-[10px] mt-1" style={{ color: '#55EFC4' }}>
+                7 jours d&apos;essai gratuit
+              </p>
             </div>
             {/* Premium */}
             <div className="text-center">
               <p className="text-xs tracking-[0.25em] uppercase mb-3" style={{ color: 'var(--gold)' }}>Premium</p>
               <div className="flex items-baseline justify-center gap-1.5 mb-1">
-                <span className="font-display text-4xl font-light" style={{ color: '#D4AF37' }}>89,90&euro;</span>
+                <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#D4AF37' }}>99,90&euro;</span>
                 <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
               </div>
-              <span className="text-xs line-through" style={{ color: 'var(--text-muted)', opacity: 0.5 }}>99,90&euro;/mois</span>
-              <span className="inline-block mt-2 px-3 py-1 rounded-full text-[10px] tracking-[0.2em] uppercase font-medium"
-                style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.15)' }}>
-                Tarif fondateur &mdash; &agrave; vie
-              </span>
+              <p className="text-[10px] mt-1" style={{ color: '#55EFC4' }}>
+                7 jours d&apos;essai gratuit
+              </p>
             </div>
           </div>
 
+          <p className="text-xs mb-2 font-light" style={{ color: 'var(--text-secondary)' }}>
+            R&eacute;ductions jusqu&apos;&agrave; <span style={{ color: '#D4AF37' }}>-30%</span> sur les engagements 3 mois, 6 mois et 1 an
+          </p>
           <p className="text-sm font-light" style={{ color: 'var(--text-secondary)' }}>
             Sans engagement &mdash; Annulable &agrave; tout instant
           </p>
@@ -189,7 +201,7 @@ function PrelaunchContent() {
                 Bienvenue parmi les fondateurs
               </div>
               <p className="text-sm font-light leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                Votre place est r&eacute;serv&eacute;e. Vous recevrez un email le jour de l&apos;ouverture avec votre acc&egrave;s prioritaire et votre r&eacute;duction de 10&euro;/mois &agrave; vie.
+                Votre place est r&eacute;serv&eacute;e. Vous recevrez un email le jour de l&apos;ouverture avec votre acc&egrave;s prioritaire.
               </p>
             </motion.div>
           ) : (
@@ -229,7 +241,7 @@ function PrelaunchContent() {
                     Inscription...
                   </span>
                 ) : (
-                  "Rejoindre la liste d\u2019attente \u2014 10\u20ac de r\u00e9duction \u00e0 vie"
+                  "Rejoindre la liste d\u2019attente"
                 )}
               </button>
               {status === 'already' && (
@@ -258,13 +270,41 @@ function PrelaunchContent() {
   )
 }
 
+/* ─── DURATION SELECTOR ─── */
+function DurationSelector({ selected, onChange }: { selected: DurationId; onChange: (d: DurationId) => void }) {
+  return (
+    <div className="flex items-center justify-center gap-1 p-1 rounded-full mb-8 mx-auto max-w-fit"
+      style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+      {DURATIONS.map((d) => (
+        <button
+          key={d.id}
+          onClick={() => onChange(d.id)}
+          className="relative px-3 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-medium transition-all cursor-pointer"
+          style={{
+            background: selected === d.id ? 'linear-gradient(135deg, #D4AF37, #B8960F)' : 'transparent',
+            color: selected === d.id ? '#050505' : 'var(--text-muted)',
+          }}
+        >
+          {d.label}
+          {d.discount && (
+            <span className="absolute -top-2 -right-1 text-[9px] font-bold px-1.5 py-0.5 rounded-full"
+              style={{ background: '#55EFC4', color: '#050505' }}>
+              {d.discount}
+            </span>
+          )}
+        </button>
+      ))}
+    </div>
+  )
+}
+
 /* ─── POST-LAUNCH PAYMENT SECTION ─── */
 function PaymentContent() {
   const { t } = useTranslation()
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null)
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
-  const [hasDiscount, setHasDiscount] = useState(false)
+  const [selectedDuration, setSelectedDuration] = useState<DurationId>('monthly')
 
   useEffect(() => {
     const supabase = createClient()
@@ -274,30 +314,18 @@ function PaymentContent() {
         setUserId(user.id)
       }
     })
-    // Check waitlist discount by trying the status endpoint
   }, [])
 
-  // Check discount when we have the email
-  useEffect(() => {
-    if (!userEmail) return
-    fetch('/api/waitlist')
-      .then(() => {
-        // We'll rely on checkout API to determine discount
-      })
-      .catch(() => {})
-  }, [userEmail])
-
-  const handleCheckout = async (plan: 'essential' | 'premium') => {
+  const handleCheckout = async (plan: PlanId) => {
     setLoadingPlan(plan)
     try {
       const res = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan, email: userEmail, user_id: userId }),
+        body: JSON.stringify({ plan, duration: selectedDuration, email: userEmail, user_id: userId }),
       })
       const data = await res.json()
       if (data.url) {
-        if (data.hasWaitlistDiscount) setHasDiscount(true)
         window.location.href = data.url
       } else {
         alert(data.error || 'Erreur lors de la redirection vers le paiement')
@@ -308,39 +336,60 @@ function PaymentContent() {
     setLoadingPlan(null)
   }
 
+  const durationInfo = DURATIONS.find(d => d.id === selectedDuration)!
+  const showTotalPrice = selectedDuration !== 'monthly'
+
   return (
     <>
-      {hasDiscount && (
-        <Reveal delay={0.3}>
-          <div className="glass p-4 text-center mb-8" style={{ borderColor: 'rgba(212,175,55,0.2)', background: 'rgba(212,175,55,0.05)' }}>
-            <p className="text-sm font-medium" style={{ color: '#D4AF37' }}>
-              Vous b&eacute;n&eacute;ficiez de la r&eacute;duction fondateur : -10&euro;/mois &agrave; vie
-            </p>
-          </div>
-        </Reveal>
-      )}
+      {/* Duration selector */}
+      <Reveal delay={0.3}>
+        <div className="text-center mb-2">
+          <p className="text-[11px] tracking-[0.35em] uppercase mb-4 font-medium" style={{ color: 'var(--text-muted)' }}>
+            Choisissez votre dur&eacute;e d&apos;engagement
+          </p>
+          <DurationSelector selected={selectedDuration} onChange={setSelectedDuration} />
+        </div>
+      </Reveal>
 
-      {/* Pricing cards */}
-      <div className="grid sm:grid-cols-2 gap-6 mb-6">
-        {/* Essentiel */}
-        <Reveal delay={0.5}>
-          <div className="glass p-8 text-center h-full flex flex-col" style={{ borderColor: 'rgba(212,175,55,0.15)' }}>
+      {/* 3 Pricing cards */}
+      <div className="grid sm:grid-cols-3 gap-5 mb-6">
+        {/* Essentielle */}
+        <Reveal delay={0.4}>
+          <div className="glass p-6 sm:p-8 text-center h-full flex flex-col" style={{ borderColor: 'rgba(212,175,55,0.15)' }}>
             <p className="text-xs tracking-[0.25em] uppercase mb-4" style={{ color: 'var(--text-muted)' }}>
-              Essentiel
+              {PLAN_INFO.essential.name}
             </p>
-            <div className="flex items-baseline justify-center gap-1.5 mb-2">
-              <span className="font-display text-4xl font-light" style={{ color: 'var(--gold)' }}>29,90&euro;</span>
-              <span className="text-sm" style={{ color: 'var(--text-muted)' }}>{t('join.per_month')}</span>
+            <div className="flex items-baseline justify-center gap-1.5 mb-1">
+              <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: 'var(--gold)' }}>
+                {formatPrice(PRICES.essential[selectedDuration])}
+              </span>
+              <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
             </div>
-            <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
+            {showTotalPrice && (
+              <p className="text-xs mb-1" style={{ color: '#55EFC4' }}>
+                soit {formatPrice(TOTAL_PRICES.essential[selectedDuration])} / {durationInfo.months} mois
+              </p>
+            )}
+            {selectedDuration !== 'monthly' && (
+              <p className="text-[10px] mb-2" style={{ color: 'var(--text-muted)' }}>
+                au lieu de {formatPrice(PRICES.essential.monthly)}/mois &mdash; <span style={{ color: '#55EFC4' }}>-{getSavingsPercent('essential', selectedDuration)}%</span>
+              </p>
+            )}
+            <p className="text-xs mb-1 font-medium" style={{ color: '#E17055' }}>
+              Sans essai gratuit
+            </p>
+            <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>
               {t('join.no_commitment')}
             </p>
 
-            <div className="space-y-3 text-left mb-8 flex-1">
-              {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
-                <div key={n} className="flex items-start gap-3">
+            <div className="space-y-2.5 text-left mb-6 flex-1">
+              {[
+                'Encyclopédie complète (accès illimité)',
+                'Tchats communautaires',
+              ].map((item) => (
+                <div key={item} className="flex items-start gap-2.5">
                   <span className="mt-0.5 text-sm flex-shrink-0" style={{ color: 'var(--gold)' }}>&#9670;</span>
-                  <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{t(`join.included_${n}`)}</span>
+                  <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{item}</span>
                 </div>
               ))}
             </div>
@@ -348,7 +397,7 @@ function PaymentContent() {
             <button
               onClick={() => handleCheckout('essential')}
               disabled={loadingPlan !== null}
-              className="cta-glow w-full py-4 rounded-full font-medium tracking-wide transition-all text-sm disabled:opacity-50"
+              className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm disabled:opacity-50"
               style={{ background: 'var(--gold)', color: 'var(--dark)' }}
             >
               {loadingPlan === 'essential' ? (
@@ -357,7 +406,70 @@ function PaymentContent() {
                   Redirection...
                 </span>
               ) : (
-                t('join.pay_cta')
+                `Choisir l'Essentielle — ${formatPrice(PRICES.essential[selectedDuration])}/mois`
+              )}
+            </button>
+          </div>
+        </Reveal>
+
+        {/* Sérénité */}
+        <Reveal delay={0.5}>
+          <div className="glass p-6 sm:p-8 text-center h-full flex flex-col relative overflow-hidden" style={{ borderColor: 'rgba(85,239,196,0.25)', boxShadow: '0 0 30px rgba(85,239,196,0.06)' }}>
+            <div className="absolute top-4 right-4 text-[10px] tracking-[0.2em] uppercase px-3 py-1 rounded-full font-semibold"
+              style={{ background: 'rgba(85,239,196,0.15)', color: '#55EFC4', border: '1px solid rgba(85,239,196,0.25)' }}>
+              Populaire
+            </div>
+            <p className="text-xs tracking-[0.25em] uppercase mb-4" style={{ color: '#55EFC4' }}>
+              {PLAN_INFO.serenite.name}
+            </p>
+            <div className="flex items-baseline justify-center gap-1.5 mb-1">
+              <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: 'var(--gold)' }}>
+                {formatPrice(PRICES.serenite[selectedDuration])}
+              </span>
+              <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
+            </div>
+            {showTotalPrice && (
+              <p className="text-xs mb-1" style={{ color: '#55EFC4' }}>
+                soit {formatPrice(TOTAL_PRICES.serenite[selectedDuration])} / {durationInfo.months} mois
+              </p>
+            )}
+            {selectedDuration !== 'monthly' && (
+              <p className="text-[10px] mb-2" style={{ color: 'var(--text-muted)' }}>
+                au lieu de {formatPrice(PRICES.serenite.monthly)}/mois &mdash; <span style={{ color: '#55EFC4' }}>-{getSavingsPercent('serenite', selectedDuration)}%</span>
+              </p>
+            )}
+            <p className="text-xs mb-1 font-medium" style={{ color: '#55EFC4' }}>
+              7 jours d&apos;essai gratuit
+            </p>
+            <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>
+              {t('join.no_commitment')}
+            </p>
+
+            <div className="space-y-2.5 text-left mb-6 flex-1">
+              {[
+                'Tout le contenu de l\'Essentielle',
+                'Soin collectif mensuel',
+              ].map((item) => (
+                <div key={item} className="flex items-start gap-2.5">
+                  <span className="mt-0.5 text-sm flex-shrink-0" style={{ color: '#55EFC4' }}>&#9670;</span>
+                  <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{item}</span>
+                </div>
+              ))}
+            </div>
+
+            <button
+              onClick={() => handleCheckout('serenite')}
+              disabled={loadingPlan !== null}
+              className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm disabled:opacity-50"
+              style={{ background: 'linear-gradient(135deg, #55EFC4, #00B894)', color: '#050505' }}
+            >
+              {loadingPlan === 'serenite' ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="w-4 h-4 border-2 border-[#050505] border-t-transparent rounded-full animate-spin" />
+                  Redirection...
+                </span>
+              ) : (
+                `Essayer Sérénité — 7 jours gratuits`
               )}
             </button>
           </div>
@@ -365,27 +477,47 @@ function PaymentContent() {
 
         {/* Premium */}
         <Reveal delay={0.6}>
-          <div className="glass p-8 text-center h-full flex flex-col relative overflow-hidden" style={{ borderColor: 'rgba(212,175,55,0.3)', boxShadow: '0 0 40px rgba(212,175,55,0.08)' }}>
+          <div className="glass p-6 sm:p-8 text-center h-full flex flex-col relative overflow-hidden" style={{ borderColor: 'rgba(212,175,55,0.3)', boxShadow: '0 0 40px rgba(212,175,55,0.08)' }}>
             <div className="absolute top-4 right-4 text-[10px] tracking-[0.2em] uppercase px-3 py-1 rounded-full font-semibold"
               style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: 'var(--dark)' }}>
               VIP
             </div>
             <p className="text-xs tracking-[0.25em] uppercase mb-4" style={{ color: 'var(--gold)' }}>
-              Premium
+              {PLAN_INFO.premium.name}
             </p>
-            <div className="flex items-baseline justify-center gap-1.5 mb-2">
-              <span className="font-display text-4xl font-light" style={{ color: 'var(--gold)' }}>99,90&euro;</span>
-              <span className="text-sm" style={{ color: 'var(--text-muted)' }}>{t('join.per_month')}</span>
+            <div className="flex items-baseline justify-center gap-1.5 mb-1">
+              <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: 'var(--gold)' }}>
+                {formatPrice(PRICES.premium[selectedDuration])}
+              </span>
+              <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
             </div>
-            <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
+            {showTotalPrice && (
+              <p className="text-xs mb-1" style={{ color: '#55EFC4' }}>
+                soit {formatPrice(TOTAL_PRICES.premium[selectedDuration])} / {durationInfo.months} mois
+              </p>
+            )}
+            {selectedDuration !== 'monthly' && (
+              <p className="text-[10px] mb-2" style={{ color: 'var(--text-muted)' }}>
+                au lieu de {formatPrice(PRICES.premium.monthly)}/mois &mdash; <span style={{ color: '#55EFC4' }}>-{getSavingsPercent('premium', selectedDuration)}%</span>
+              </p>
+            )}
+            <p className="text-xs mb-1 font-medium" style={{ color: '#55EFC4' }}>
+              7 jours d&apos;essai gratuit
+            </p>
+            <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>
               {t('join.no_commitment')}
             </p>
 
-            <div className="space-y-3 text-left mb-8 flex-1">
-              {[1, 2, 3, 4].map((n) => (
-                <div key={n} className="flex items-start gap-3">
+            <div className="space-y-2.5 text-left mb-6 flex-1">
+              {[
+                'Tout le contenu de la Sérénité',
+                'Live thématique hebdomadaire',
+                'Canal privé Telegram',
+                'Accès aux événements',
+              ].map((item) => (
+                <div key={item} className="flex items-start gap-2.5">
                   <span className="mt-0.5 text-sm flex-shrink-0" style={{ color: 'var(--gold)' }}>&#9670;</span>
-                  <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{t(`join.premium_${n}`)}</span>
+                  <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{item}</span>
                 </div>
               ))}
             </div>
@@ -393,7 +525,7 @@ function PaymentContent() {
             <button
               onClick={() => handleCheckout('premium')}
               disabled={loadingPlan !== null}
-              className="cta-glow w-full py-4 rounded-full font-medium tracking-wide transition-all text-sm disabled:opacity-50"
+              className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm disabled:opacity-50"
               style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: 'var(--dark)' }}
             >
               {loadingPlan === 'premium' ? (
@@ -402,12 +534,23 @@ function PaymentContent() {
                   Redirection...
                 </span>
               ) : (
-                t('join.premium_cta')
+                `Essayer Premium — 7 jours gratuits`
               )}
             </button>
           </div>
         </Reveal>
       </div>
+
+      {/* Savings highlight for non-monthly */}
+      {selectedDuration !== 'monthly' && (
+        <Reveal delay={0.7}>
+          <div className="glass p-4 text-center mb-6" style={{ borderColor: 'rgba(85,239,196,0.2)', background: 'rgba(85,239,196,0.03)' }}>
+            <p className="text-sm font-medium" style={{ color: '#55EFC4' }}>
+              Vous &eacute;conomisez jusqu&apos;&agrave; {DURATIONS.find(d => d.id === selectedDuration)?.discount} avec l&apos;engagement {durationInfo.label}
+            </p>
+          </div>
+        </Reveal>
+      )}
     </>
   )
 }
@@ -471,7 +614,7 @@ export default function RejoindrePage() {
         </Link>
       </header>
 
-      <div className="max-w-3xl mx-auto px-6 md:px-8 py-16">
+      <div className="max-w-4xl mx-auto px-6 md:px-8 py-16">
         {/* Hero */}
         <Reveal>
           <div className="text-center mb-16">

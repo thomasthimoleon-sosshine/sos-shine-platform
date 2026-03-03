@@ -43,7 +43,7 @@ export default function CompteInactifPage() {
     loadData()
   }, [router])
 
-  const handleResubscribe = async (plan: 'essential' | 'premium') => {
+  const handleResubscribe = async (plan: 'essential' | 'serenite' | 'premium') => {
     setLoading(true)
     try {
       const res = await fetch('/api/stripe/checkout', {
@@ -149,16 +149,25 @@ export default function CompteInactifPage() {
             onClick={() => handleResubscribe('essential')}
             disabled={loading}
             className="w-full py-4 rounded-full font-semibold tracking-wide transition-all text-sm disabled:opacity-50"
-            style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}
+            style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.25)' }}
           >
-            {loading ? 'Redirection...' : 'S\u2019abonner Essentiel \u2014 29,90\u20ac/mois'}
+            {loading ? 'Redirection...' : 'S\u2019abonner Essentielle \u2014 9,90\u20ac/mois'}
+          </button>
+
+          <button
+            onClick={() => handleResubscribe('serenite')}
+            disabled={loading}
+            className="w-full py-4 rounded-full font-semibold tracking-wide transition-all text-sm disabled:opacity-50"
+            style={{ background: 'linear-gradient(135deg, #55EFC4, #00B894)', color: '#050505' }}
+          >
+            {loading ? 'Redirection...' : 'S\u2019abonner S\u00e9r\u00e9nit\u00e9 \u2014 49,90\u20ac/mois'}
           </button>
 
           <button
             onClick={() => handleResubscribe('premium')}
             disabled={loading}
             className="w-full py-4 rounded-full font-medium tracking-wide transition-all text-sm disabled:opacity-50"
-            style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.25)' }}
+            style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}
           >
             {loading ? 'Redirection...' : 'S\u2019abonner Premium \u2014 99,90\u20ac/mois'}
           </button>

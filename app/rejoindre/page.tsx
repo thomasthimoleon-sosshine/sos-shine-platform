@@ -136,8 +136,11 @@ function PrelaunchContent() {
           <p className="text-[11px] tracking-[0.35em] uppercase mb-2 font-medium" style={{ color: 'var(--text-muted)' }}>
             D&eacute;couvrez nos 3 offres
           </p>
+          <p className="text-xs mb-2 font-light" style={{ color: 'var(--text-secondary)' }}>
+            R&eacute;ductions jusqu&apos;&agrave; <span style={{ color: '#D4AF37' }}>-30%</span> sur les engagements 3 mois, 6 mois et 1 an
+          </p>
           <p className="text-sm mb-6 font-light" style={{ color: 'var(--text-secondary)' }}>
-            Rejoignez avant le 22 mars et b&eacute;n&eacute;ficiez d&apos;un tarif pr&eacute;f&eacute;rentiel &agrave; vie.
+            Sans engagement &mdash; Annulable &agrave; tout instant
           </p>
 
           <div className="grid sm:grid-cols-3 gap-6 mb-6">
@@ -176,11 +179,8 @@ function PrelaunchContent() {
             </div>
           </div>
 
-          <p className="text-xs mb-2 font-light" style={{ color: 'var(--text-secondary)' }}>
-            R&eacute;ductions jusqu&apos;&agrave; <span style={{ color: '#D4AF37' }}>-30%</span> sur les engagements 3 mois, 6 mois et 1 an
-          </p>
           <p className="text-sm font-light" style={{ color: 'var(--text-secondary)' }}>
-            Sans engagement &mdash; Annulable &agrave; tout instant
+            Rejoignez avant le 22 mars et b&eacute;n&eacute;ficiez d&apos;un tarif pr&eacute;f&eacute;rentiel &agrave; vie.
           </p>
         </div>
       </Reveal>

@@ -143,9 +143,9 @@ function PrelaunchContent() {
           <div className="grid sm:grid-cols-3 gap-6 mb-6">
             {/* Essentielle */}
             <div className="text-center">
-              <p className="text-xs tracking-[0.25em] uppercase mb-3" style={{ color: 'var(--text-muted)' }}>Essentielle</p>
+              <p className="text-xs tracking-[0.25em] uppercase mb-3" style={{ color: '#F0A68C' }}>Essentielle</p>
               <div className="flex items-baseline justify-center gap-1.5 mb-1">
-                <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#D4AF37' }}>9,90&euro;</span>
+                <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#F0A68C' }}>9,90&euro;</span>
                 <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
               </div>
               <p className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>
@@ -156,7 +156,7 @@ function PrelaunchContent() {
             <div className="text-center">
               <p className="text-xs tracking-[0.25em] uppercase mb-3" style={{ color: '#55EFC4' }}>S&eacute;r&eacute;nit&eacute;</p>
               <div className="flex items-baseline justify-center gap-1.5 mb-1">
-                <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#D4AF37' }}>49,90&euro;</span>
+                <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#55EFC4' }}>49,90&euro;</span>
                 <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
               </div>
               <p className="text-[10px] mt-1" style={{ color: '#55EFC4' }}>
@@ -165,12 +165,12 @@ function PrelaunchContent() {
             </div>
             {/* Premium */}
             <div className="text-center">
-              <p className="text-xs tracking-[0.25em] uppercase mb-3" style={{ color: 'var(--gold)' }}>Premium</p>
+              <p className="text-xs tracking-[0.25em] uppercase mb-3" style={{ color: '#A78BFA' }}>Premium</p>
               <div className="flex items-baseline justify-center gap-1.5 mb-1">
-                <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#D4AF37' }}>99,90&euro;</span>
+                <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#A78BFA' }}>99,90&euro;</span>
                 <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
               </div>
-              <p className="text-[10px] mt-1" style={{ color: '#55EFC4' }}>
+              <p className="text-[10px] mt-1" style={{ color: '#A78BFA' }}>
                 7 jours d&apos;essai gratuit
               </p>
             </div>
@@ -355,24 +355,24 @@ function PaymentContent() {
       <div className="grid sm:grid-cols-3 gap-5 mb-6">
         {/* Essentielle */}
         <Reveal delay={0.4}>
-          <div className="glass p-6 sm:p-8 text-center h-full flex flex-col" style={{ borderColor: 'rgba(212,175,55,0.15)' }}>
-            <p className="text-xs tracking-[0.25em] uppercase mb-4" style={{ color: 'var(--text-muted)' }}>
+          <div className="glass p-6 sm:p-8 text-center h-full flex flex-col" style={{ borderColor: 'rgba(240,166,140,0.18)' }}>
+            <p className="text-xs tracking-[0.25em] uppercase mb-4" style={{ color: '#F0A68C' }}>
               {PLAN_INFO.essential.name}
             </p>
             <div className="flex items-baseline justify-center gap-1.5 mb-1">
-              <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: 'var(--gold)' }}>
+              <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#F0A68C' }}>
                 {formatPrice(PRICES.essential[selectedDuration])}
               </span>
               <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
             </div>
             {showTotalPrice && (
-              <p className="text-xs mb-1" style={{ color: '#55EFC4' }}>
+              <p className="text-xs mb-1" style={{ color: '#F0A68C' }}>
                 soit {formatPrice(TOTAL_PRICES.essential[selectedDuration])} / {durationInfo.months} mois
               </p>
             )}
             {selectedDuration !== 'monthly' && (
               <p className="text-[10px] mb-2" style={{ color: 'var(--text-muted)' }}>
-                au lieu de {formatPrice(PRICES.essential.monthly)}/mois &mdash; <span style={{ color: '#55EFC4' }}>-{getSavingsPercent('essential', selectedDuration)}%</span>
+                au lieu de {formatPrice(PRICES.essential.monthly)}/mois &mdash; <span style={{ color: '#F0A68C' }}>-{getSavingsPercent('essential', selectedDuration)}%</span>
               </p>
             )}
             <p className="text-xs mb-1 font-medium" style={{ color: '#E17055' }}>
@@ -388,7 +388,7 @@ function PaymentContent() {
                 'Tchats communautaires',
               ].map((item) => (
                 <div key={item} className="flex items-start gap-2.5">
-                  <span className="mt-0.5 text-sm flex-shrink-0" style={{ color: 'var(--gold)' }}>&#9670;</span>
+                  <span className="mt-0.5 text-sm flex-shrink-0" style={{ color: '#F0A68C' }}>&#9670;</span>
                   <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{item}</span>
                 </div>
               ))}
@@ -398,11 +398,11 @@ function PaymentContent() {
               onClick={() => handleCheckout('essential')}
               disabled={loadingPlan !== null}
               className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm disabled:opacity-50"
-              style={{ background: 'var(--gold)', color: 'var(--dark)' }}
+              style={{ background: 'linear-gradient(135deg, #F0A68C, #D4825E)', color: '#050505' }}
             >
               {loadingPlan === 'essential' ? (
                 <span className="flex items-center justify-center gap-2">
-                  <span className="w-4 h-4 border-2 border-[var(--dark)] border-t-transparent rounded-full animate-spin" />
+                  <span className="w-4 h-4 border-2 border-[#050505] border-t-transparent rounded-full animate-spin" />
                   Redirection...
                 </span>
               ) : (
@@ -423,7 +423,7 @@ function PaymentContent() {
               {PLAN_INFO.serenite.name}
             </p>
             <div className="flex items-baseline justify-center gap-1.5 mb-1">
-              <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: 'var(--gold)' }}>
+              <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#55EFC4' }}>
                 {formatPrice(PRICES.serenite[selectedDuration])}
               </span>
               <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
@@ -477,31 +477,31 @@ function PaymentContent() {
 
         {/* Premium */}
         <Reveal delay={0.6}>
-          <div className="glass p-6 sm:p-8 text-center h-full flex flex-col relative overflow-hidden" style={{ borderColor: 'rgba(212,175,55,0.3)', boxShadow: '0 0 40px rgba(212,175,55,0.08)' }}>
+          <div className="glass p-6 sm:p-8 text-center h-full flex flex-col relative overflow-hidden" style={{ borderColor: 'rgba(167,139,250,0.3)', boxShadow: '0 0 40px rgba(167,139,250,0.08)' }}>
             <div className="absolute top-4 right-4 text-[10px] tracking-[0.2em] uppercase px-3 py-1 rounded-full font-semibold"
-              style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: 'var(--dark)' }}>
+              style={{ background: 'linear-gradient(135deg, #A78BFA, #7C3AED)', color: '#fff' }}>
               VIP
             </div>
-            <p className="text-xs tracking-[0.25em] uppercase mb-4" style={{ color: 'var(--gold)' }}>
+            <p className="text-xs tracking-[0.25em] uppercase mb-4" style={{ color: '#A78BFA' }}>
               {PLAN_INFO.premium.name}
             </p>
             <div className="flex items-baseline justify-center gap-1.5 mb-1">
-              <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: 'var(--gold)' }}>
+              <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#A78BFA' }}>
                 {formatPrice(PRICES.premium[selectedDuration])}
               </span>
               <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
             </div>
             {showTotalPrice && (
-              <p className="text-xs mb-1" style={{ color: '#55EFC4' }}>
+              <p className="text-xs mb-1" style={{ color: '#A78BFA' }}>
                 soit {formatPrice(TOTAL_PRICES.premium[selectedDuration])} / {durationInfo.months} mois
               </p>
             )}
             {selectedDuration !== 'monthly' && (
               <p className="text-[10px] mb-2" style={{ color: 'var(--text-muted)' }}>
-                au lieu de {formatPrice(PRICES.premium.monthly)}/mois &mdash; <span style={{ color: '#55EFC4' }}>-{getSavingsPercent('premium', selectedDuration)}%</span>
+                au lieu de {formatPrice(PRICES.premium.monthly)}/mois &mdash; <span style={{ color: '#A78BFA' }}>-{getSavingsPercent('premium', selectedDuration)}%</span>
               </p>
             )}
-            <p className="text-xs mb-1 font-medium" style={{ color: '#55EFC4' }}>
+            <p className="text-xs mb-1 font-medium" style={{ color: '#A78BFA' }}>
               7 jours d&apos;essai gratuit
             </p>
             <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>
@@ -516,7 +516,7 @@ function PaymentContent() {
                 'Accès aux événements',
               ].map((item) => (
                 <div key={item} className="flex items-start gap-2.5">
-                  <span className="mt-0.5 text-sm flex-shrink-0" style={{ color: 'var(--gold)' }}>&#9670;</span>
+                  <span className="mt-0.5 text-sm flex-shrink-0" style={{ color: '#A78BFA' }}>&#9670;</span>
                   <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{item}</span>
                 </div>
               ))}
@@ -526,11 +526,11 @@ function PaymentContent() {
               onClick={() => handleCheckout('premium')}
               disabled={loadingPlan !== null}
               className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm disabled:opacity-50"
-              style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: 'var(--dark)' }}
+              style={{ background: 'linear-gradient(135deg, #A78BFA, #7C3AED)', color: '#fff' }}
             >
               {loadingPlan === 'premium' ? (
                 <span className="flex items-center justify-center gap-2">
-                  <span className="w-4 h-4 border-2 border-[var(--dark)] border-t-transparent rounded-full animate-spin" />
+                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   Redirection...
                 </span>
               ) : (
@@ -544,8 +544,8 @@ function PaymentContent() {
       {/* Savings highlight for non-monthly */}
       {selectedDuration !== 'monthly' && (
         <Reveal delay={0.7}>
-          <div className="glass p-4 text-center mb-6" style={{ borderColor: 'rgba(85,239,196,0.2)', background: 'rgba(85,239,196,0.03)' }}>
-            <p className="text-sm font-medium" style={{ color: '#55EFC4' }}>
+          <div className="glass p-4 text-center mb-6" style={{ borderColor: 'rgba(212,175,55,0.2)', background: 'rgba(212,175,55,0.03)' }}>
+            <p className="text-sm font-medium" style={{ color: '#D4AF37' }}>
               Vous &eacute;conomisez jusqu&apos;&agrave; {DURATIONS.find(d => d.id === selectedDuration)?.discount} avec l&apos;engagement {durationInfo.label}
             </p>
           </div>

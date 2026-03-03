@@ -956,13 +956,22 @@ export default function Home() {
             </RevealOnScroll>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-5xl mx-auto">
-              {(pricing.plans || []).map((plan: { name: string; price: string; period: string; button_label: string; button_href: string; highlight: boolean; badge: string; features: string[] }, idx: number) => (
+              {(pricing.plans || []).map((plan: { name: string; price: string; period: string; button_label: string; button_href: string; highlight: boolean; badge: string; features: string[] }, idx: number) => {
+                const tierColors = [
+                  { main: '#F0A68C', deep: '#D4825E', rgb: '240,166,140' },
+                  { main: '#55EFC4', deep: '#00B894', rgb: '85,239,196' },
+                  { main: '#A78BFA', deep: '#7C3AED', rgb: '167,139,250' },
+                ] as const
+                const tc = tierColors[idx] || tierColors[0]
+                const btnTextColor = idx === 2 ? '#fff' : '#050505'
+
+                return (
                 <RevealOnScroll key={plan.name} delay={(idx + 1) * 0.15} direction={(["left", "up", "scale", "right"] as const)[idx % 4]}>
-                  <GlowingCard className={`p-6 sm:p-8 md:p-10 h-full flex flex-col relative ${plan.highlight ? 'ring-1' : ''}`} glowColor={plan.highlight ? `rgba(${accentRgb},0.15)` : `rgba(${goldRgb},0.15)`} style={plan.highlight ? { '--tw-ring-color': `rgba(${accentRgb},0.15)` } as React.CSSProperties : undefined}>
+                  <GlowingCard className={`p-6 sm:p-8 md:p-10 h-full flex flex-col relative ${plan.highlight ? 'ring-1' : ''}`} glowColor={`rgba(${tc.rgb},0.15)`} style={plan.highlight ? { '--tw-ring-color': `rgba(${tc.rgb},0.15)` } as React.CSSProperties : undefined}>
                     {plan.badge && (
                       <motion.div
                         className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 sm:px-5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold tracking-wider uppercase whitespace-nowrap"
-                        style={{ background: `linear-gradient(135deg, ${accent}, rgba(${accentRgb},0.7))`, color: '#050505' }}
+                        style={{ background: `linear-gradient(135deg, ${tc.main}, ${tc.deep})`, color: btnTextColor }}
                         initial={{ y: -10, opacity: 0 }}
                         whileInView={{ y: 0, opacity: 1 }}
                         viewport={{ once: true }}
@@ -972,10 +981,10 @@ export default function Home() {
                       </motion.div>
                     )}
 
-                    <p className="luxury-title text-xs sm:text-sm tracking-[0.2em] sm:tracking-[0.25em] text-[var(--text-muted)] mb-4 md:mb-6">{plan.name}</p>
+                    <p className="luxury-title text-xs sm:text-sm tracking-[0.2em] sm:tracking-[0.25em] mb-4 md:mb-6" style={{ color: tc.main }}>{plan.name}</p>
 
                     <div className="flex items-baseline gap-1 mb-6 md:mb-8">
-                      <span className="font-display text-4xl sm:text-5xl md:text-6xl font-extralight" style={{ color: plan.highlight ? accent : gold }}>
+                      <span className="font-display text-4xl sm:text-5xl md:text-6xl font-extralight" style={{ color: tc.main }}>
                         <AnimatedCounter value={plan.price} suffix="€" />
                       </span>
                       <span className="text-[var(--text-muted)] text-xs sm:text-sm">{plan.period}</span>
@@ -991,7 +1000,7 @@ export default function Home() {
                           viewport={{ once: true }}
                           transition={{ delay: 0.3 + fi * 0.05 }}
                         >
-                          <span className="mt-0.5 text-xs sm:text-sm" style={{ color: plan.highlight ? accent : gold }}>◆</span>
+                          <span className="mt-0.5 text-xs sm:text-sm" style={{ color: tc.main }}>◆</span>
                           <span className="text-[var(--text-secondary)] text-sm sm:text-[15px] font-light">{f}</span>
                         </motion.div>
                       ))}
@@ -999,15 +1008,15 @@ export default function Home() {
 
                     <Link href="/rejoindre">
                       <button className={`magnetic-btn w-full py-3 sm:py-4 rounded-full text-sm sm:text-base font-semibold tracking-wide ${plan.highlight ? 'pulse-ring' : ''}`} style={{
-                        background: plan.highlight ? `linear-gradient(135deg, ${accent}, rgba(${accentRgb},0.7))` : `linear-gradient(135deg, ${gold}, ${goldDeep})`,
-                        color: '#050505'
+                        background: `linear-gradient(135deg, ${tc.main}, ${tc.deep})`,
+                        color: btnTextColor
                       }}>
                         {plan.button_label}
                       </button>
                     </Link>
                   </GlowingCard>
                 </RevealOnScroll>
-              ))}
+              )})}
             </div>
 
             <RevealOnScroll delay={0.4}>

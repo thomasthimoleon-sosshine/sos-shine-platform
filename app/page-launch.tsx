@@ -887,7 +887,7 @@ export default function Home() {
               <p className="text-[var(--text-secondary)] font-light text-center mb-20">{pricing.subtitle || ''}</p>
             </RevealOnScroll>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
               {(pricing.plans || []).map((plan: { name: string; price: string; period: string; button_label: string; button_href: string; highlight: boolean; badge: string; features: string[] }, idx: number) => (
                 <RevealOnScroll key={plan.name} delay={(idx + 1) * 0.15} direction={(["left", "up", "scale", "right"] as const)[idx % 4]}>
                   <GlowingCard className={`p-8 md:p-10 h-full flex flex-col relative ${plan.highlight ? 'ring-1' : ''}`} glowColor={plan.highlight ? `rgba(${accentRgb},0.15)` : `rgba(${goldRgb},0.15)`} style={plan.highlight ? { '--tw-ring-color': `rgba(${accentRgb},0.15)` } as React.CSSProperties : undefined}>

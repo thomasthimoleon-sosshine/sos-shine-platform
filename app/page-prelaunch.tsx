@@ -137,20 +137,29 @@ export interface PrelaunchSettings {
   prelaunch_subtitle_2?: string
   prelaunch_countdown_label?: string
   prelaunch_launched_text?: string
+  prelaunch_countdown_days?: string
+  prelaunch_countdown_hours?: string
+  prelaunch_countdown_minutes?: string
+  prelaunch_countdown_seconds?: string
   prelaunch_pricing_label?: string
   prelaunch_pricing_desc?: string
   prelaunch_price_early?: string
   prelaunch_price_early_label?: string
   prelaunch_price_standard?: string
   prelaunch_price_standard_label?: string
+  prelaunch_price_suffix?: string
+  prelaunch_price_separator?: string
   prelaunch_no_commitment?: string
   prelaunch_savings_text?: string
   prelaunch_form_name_placeholder?: string
   prelaunch_form_email_placeholder?: string
   prelaunch_form_button?: string
+  prelaunch_form_loading?: string
+  prelaunch_error_message?: string
   prelaunch_success_title?: string
   prelaunch_success_message?: string
   prelaunch_already_message?: string
+  prelaunch_social_proof?: string
   prelaunch_features_label?: string
   prelaunch_feature_1?: string
   prelaunch_feature_2?: string
@@ -158,6 +167,8 @@ export interface PrelaunchSettings {
   prelaunch_feature_4?: string
   prelaunch_feature_5?: string
   prelaunch_feature_6?: string
+  prelaunch_login_link?: string
+  prelaunch_copyright?: string
   prelaunch_logo?: string
 }
 
@@ -326,13 +337,13 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
 
           {!time.launched ? (
             <div className="flex items-center gap-3 sm:gap-5">
-              <CountdownUnit value={time.days} label="Jours" />
+              <CountdownUnit value={time.days} label={s(settings, 'prelaunch_countdown_days', 'Jours')} />
               <span className="font-display text-2xl sm:text-3xl font-light mt-[-24px]" style={{ color: "rgba(212,175,55,0.25)" }}>:</span>
-              <CountdownUnit value={time.hours} label="Heures" />
+              <CountdownUnit value={time.hours} label={s(settings, 'prelaunch_countdown_hours', 'Heures')} />
               <span className="font-display text-2xl sm:text-3xl font-light mt-[-24px]" style={{ color: "rgba(212,175,55,0.25)" }}>:</span>
-              <CountdownUnit value={time.minutes} label="Minutes" />
+              <CountdownUnit value={time.minutes} label={s(settings, 'prelaunch_countdown_minutes', 'Minutes')} />
               <span className="font-display text-2xl sm:text-3xl font-light mt-[-24px]" style={{ color: "rgba(212,175,55,0.25)" }}>:</span>
-              <CountdownUnit value={time.seconds} label="Secondes" />
+              <CountdownUnit value={time.seconds} label={s(settings, 'prelaunch_countdown_seconds', 'Secondes')} />
             </div>
           ) : (
             <div className="text-center">
@@ -378,7 +389,7 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
                     {s(settings, 'prelaunch_price_early', '19,90')}&euro;
                   </span>
                   <span className="text-sm" style={{ color: "var(--text-muted)" }}>
-                    /mois
+                    {s(settings, 'prelaunch_price_suffix', '/mois')}
                   </span>
                 </div>
                 <span
@@ -393,13 +404,13 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
               <div className="hidden sm:flex flex-col items-center gap-2">
                 <span className="block w-px h-12" style={{ background: "rgba(255,255,255,0.06)" }} />
                 <span className="text-[10px] tracking-wider uppercase" style={{ color: "var(--text-muted)" }}>
-                  au lieu de
+                  {s(settings, 'prelaunch_price_separator', 'au lieu de')}
                 </span>
                 <span className="block w-px h-12" style={{ background: "rgba(255,255,255,0.06)" }} />
               </div>
               <div className="sm:hidden">
                 <span className="text-[10px] tracking-wider uppercase" style={{ color: "var(--text-muted)" }}>
-                  au lieu de
+                  {s(settings, 'prelaunch_price_separator', 'au lieu de')}
                 </span>
               </div>
 
@@ -414,7 +425,7 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
                     {s(settings, 'prelaunch_price_standard', '29,90')}&euro;
                   </span>
                   <span className="text-sm" style={{ color: "var(--text-muted)" }}>
-                    /mois
+                    {s(settings, 'prelaunch_price_suffix', '/mois')}
                   </span>
                 </div>
                 <p className="mt-2 text-[10px] tracking-wider uppercase" style={{ color: "var(--text-muted)" }}>
@@ -505,7 +516,7 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
                 {status === "loading" ? (
                   <span className="flex items-center justify-center gap-2">
                     <span className="w-4 h-4 border-2 border-[#050505] border-t-transparent rounded-full animate-spin" />
-                    Inscription...
+                    {s(settings, 'prelaunch_form_loading', 'Inscription...')}
                   </span>
                 ) : (
                   s(settings, 'prelaunch_form_button', "Rejoindre la liste d\u2019attente \u2014 19,90\u20ac/mois \u00e0 vie")
@@ -530,7 +541,7 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
                   className="text-center text-sm font-light"
                   style={{ color: "#ef4444" }}
                 >
-                  Une erreur est survenue. Veuillez r&eacute;essayer.
+                  {s(settings, 'prelaunch_error_message', 'Une erreur est survenue. Veuillez r\u00e9essayer.')}
                 </motion.p>
               )}
             </form>
@@ -545,8 +556,12 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
             >
-              <span style={{ color: "#D4AF37" }}>{waitlistCount}</span> personne{waitlistCount > 1 ? "s" : ""} sur la
-              liste d&apos;attente
+              {s(settings, 'prelaunch_social_proof', '{count} personne(s) sur la liste d\'attente').split('{count}').map((part, i, arr) => (
+                <span key={i}>
+                  {part}
+                  {i < arr.length - 1 && <span style={{ color: "#D4AF37" }}>{waitlistCount}</span>}
+                </span>
+              ))}
             </motion.p>
           )}
         </motion.div>
@@ -596,7 +611,7 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
             className="text-xs gold-underline transition-colors"
             style={{ color: "var(--text-muted)" }}
           >
-            D&eacute;j&agrave; membre ? Se connecter
+            {s(settings, 'prelaunch_login_link', 'D\u00e9j\u00e0 membre ? Se connecter')}
           </Link>
 
           <div className="flex items-center justify-center gap-6 mt-3">
@@ -618,7 +633,7 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
           </div>
 
           <p className="text-[10px] mt-4" style={{ color: "var(--text-muted)", opacity: 0.5 }}>
-            &copy; 2026 SOS Shine. Tous droits r&eacute;serv&eacute;s.
+            {s(settings, 'prelaunch_copyright', '\u00a9 2026 SOS Shine. Tous droits r\u00e9serv\u00e9s.')}
           </p>
         </motion.div>
       </div>

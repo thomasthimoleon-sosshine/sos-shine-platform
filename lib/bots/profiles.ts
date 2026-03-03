@@ -3,7 +3,7 @@ export type BotProfile = {
   email: string
   avatar_url: string
   bio: string
-  plan: 'essential' | 'premium'
+  plan: 'essential' | 'serenite' | 'premium'
 }
 
 export const BOT_PROFILES: BotProfile[] = [

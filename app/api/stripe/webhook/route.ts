@@ -96,7 +96,7 @@ async function handleCheckoutComplete(supabase: any, stripe: Stripe, session: St
   const subscriptionId = session.subscription as string
   const userEmail = session.customer_email || session.metadata?.email
   const userId = session.metadata?.user_id
-  const plan = session.metadata?.plan as 'essential' | 'premium' || 'essential'
+  const plan = session.metadata?.plan as 'essential' | 'serenite' | 'premium' || 'essential'
   const hasWaitlistDiscount = session.metadata?.waitlist_discount === 'true'
 
   if (!userEmail && !userId) return

@@ -32,7 +32,8 @@ const roleBadgeStyles: Record<Profile['role'], { bg: string; color: string; labe
 
 function getPlanBadge(plan: Profile['plan']) {
   if (plan === 'premium')   return { bg: 'rgba(116,192,252,0.12)', color: '#74C0FC', label: 'Premium' }
-  if (plan === 'essential') return { bg: 'rgba(212,175,55,0.12)',  color: '#D4AF37', label: 'Essentiel' }
+  if (plan === 'serenite')  return { bg: 'rgba(85,239,196,0.12)',  color: '#55EFC4', label: 'Sérénité' }
+  if (plan === 'essential') return { bg: 'rgba(212,175,55,0.12)',  color: '#D4AF37', label: 'Essentielle' }
   return { bg: 'rgba(90,83,71,0.12)', color: '#5A5347', label: 'Aucun' }
 }
 

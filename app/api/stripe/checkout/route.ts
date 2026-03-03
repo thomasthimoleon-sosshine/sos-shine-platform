@@ -1,7 +1,11 @@
 import { NextResponse } from 'next/server'
-import { getStripe, STRIPE_PRICES, STRIPE_WAITLIST_COUPON } from '@/lib/stripe'
+import { getStripe, getStripePriceId, STRIPE_WAITLIST_COUPON, PLAN_INFO } from '@/lib/stripe'
+import type { PlanId, DurationId } from '@/lib/stripe'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import pg from 'pg'
+
+const VALID_PLANS: PlanId[] = ['essential', 'serenite', 'premium']
+const VALID_DURATIONS: DurationId[] = ['monthly', 'quarterly', 'semiannual', 'annual']
 
 let pool: pg.Pool | null = null
 function getPool() {
@@ -19,17 +23,21 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Stripe non configuré' }, { status: 500 })
     }
 
-    const { plan, email, user_id } = await request.json()
+    const { plan, duration = 'monthly', email, user_id } = await request.json()
 
-    if (!plan || !['essential', 'premium'].includes(plan)) {
+    if (!plan || !VALID_PLANS.includes(plan)) {
       return NextResponse.json({ error: 'Plan invalide' }, { status: 400 })
+    }
+
+    if (!VALID_DURATIONS.includes(duration)) {
+      return NextResponse.json({ error: 'Durée invalide' }, { status: 400 })
     }
 
     if (!email) {
       return NextResponse.json({ error: 'Email requis' }, { status: 400 })
     }
 
-    // Check if the user is on the waitlist (eligible for 10€ discount)
+    // Check if the user is on the waitlist (eligible for discount)
     let hasWaitlistDiscount = false
     const dbPool = getPool()
     if (dbPool) {
@@ -58,16 +66,18 @@ export async function POST(request: Request) {
     }
 
     // Determine price ID
-    const priceId = plan === 'premium'
-      ? (hasWaitlistDiscount && STRIPE_PRICES.premium_discount ? STRIPE_PRICES.premium_discount : STRIPE_PRICES.premium)
-      : (hasWaitlistDiscount && STRIPE_PRICES.essential_discount ? STRIPE_PRICES.essential_discount : STRIPE_PRICES.essential)
+    const priceId = getStripePriceId(plan as PlanId, duration as DurationId)
 
     if (!priceId) {
-      return NextResponse.json({ error: 'Prix Stripe non configuré' }, { status: 500 })
+      return NextResponse.json({ error: 'Prix Stripe non configuré pour ce plan/durée' }, { status: 500 })
     }
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
       || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : 'http://localhost:5000')
+
+    // Determine if this plan has a free trial
+    const planInfo = PLAN_INFO[plan as PlanId]
+    const hasTrial = planInfo.hasTrial
 
     // Build checkout session params
     const params: Record<string, unknown> = {
@@ -79,6 +89,7 @@ export async function POST(request: Request) {
       cancel_url: `${siteUrl}/rejoindre?checkout=cancel`,
       metadata: {
         plan,
+        duration,
         email,
         user_id: user_id || '',
         waitlist_discount: hasWaitlistDiscount ? 'true' : 'false',
@@ -86,16 +97,18 @@ export async function POST(request: Request) {
       subscription_data: {
         metadata: {
           plan,
+          duration,
           email,
           user_id: user_id || '',
           waitlist_discount: hasWaitlistDiscount ? 'true' : 'false',
         },
+        ...(hasTrial ? { trial_period_days: 7 } : {}),
       },
       allow_promotion_codes: true,
     }
 
-    // Apply waitlist coupon if using standard prices (not discount-specific prices)
-    if (hasWaitlistDiscount && STRIPE_WAITLIST_COUPON && !STRIPE_PRICES.essential_discount) {
+    // Apply waitlist coupon if eligible
+    if (hasWaitlistDiscount && STRIPE_WAITLIST_COUPON) {
       (params as Record<string, unknown>).discounts = [{ coupon: STRIPE_WAITLIST_COUPON }]
       // Remove allow_promotion_codes when discounts are applied
       delete (params as Record<string, unknown>).allow_promotion_codes

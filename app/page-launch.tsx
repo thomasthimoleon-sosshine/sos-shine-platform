@@ -594,8 +594,8 @@ export default function Home() {
                 <RevealOnScroll key={step.num} delay={i * 0.15} direction={i === 0 ? "left" : i === 2 ? "right" : "up"}>
                   <GlowingCard className="p-8 md:p-10 h-full" glowColor={`${step.color}25`}>
                     <div className="mb-6">
-                      <span className="font-display text-6xl font-extralight block mb-2" style={{ color: step.color, opacity: 0.15 }}>{step.num}</span>
-                      <span className="luxury-title text-xs tracking-[0.3em] block mb-3" style={{ color: step.color, opacity: 0.6 }}>Etape {step.num}</span>
+                      <span className="step-number-large font-display text-6xl font-extralight block mb-2" style={{ color: step.color, opacity: 0.15 }}>{step.num}</span>
+                      <span className="step-number-label luxury-title text-xs tracking-[0.3em] block mb-3" style={{ color: step.color, opacity: 0.6 }}>Etape {step.num}</span>
                       <h3 className="font-display text-2xl font-medium">{step.title}</h3>
                     </div>
                     <p className="text-[var(--text-secondary)] leading-relaxed text-[15px] font-light">{step.description}</p>
@@ -652,7 +652,7 @@ export default function Home() {
               {(encyclo.items || []).filter((d: string) => !encyclopediaSearch || d.toLowerCase().includes(encyclopediaSearch.toLowerCase())).map((d: string, i: number) => (
                 <RevealOnScroll key={d} delay={i * 0.05} direction="scale">
                   <GlowingCard className="px-5 py-4 text-center cursor-pointer group">
-                    <span className="text-sm font-light transition-colors duration-300 group-hover:text-[var(--gold)]" style={{
+                    <span className="encyclo-item text-sm font-light transition-colors duration-300 group-hover:text-[var(--gold)]" style={{
                       color: i === (encyclo.items || []).length - 1 ? gold : 'var(--text-secondary)',
                     }}>
                       {d}
@@ -844,7 +844,7 @@ export default function Home() {
                   </p>
                 </RevealOnScroll>
               )}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+              <div className="flex flex-wrap justify-center gap-10">
                 {members.map((founder: { name: string; image: string; role: string }, i: number) => (
                   <RevealOnScroll key={founder.name || i} delay={0.2 + i * 0.15}>
                     <div className="flex flex-col items-center group">

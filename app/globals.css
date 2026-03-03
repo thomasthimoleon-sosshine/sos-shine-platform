@@ -133,7 +133,11 @@
 }
 
 [data-theme="light"] .ticker-track {
-  color: var(--text-secondary);
+  color: #1a1a1a;
+}
+
+[data-theme="light"] .ticker-track span {
+  color: #1a1a1a !important;
 }
 
 [data-theme="light"] .orb {
@@ -168,6 +172,20 @@
 
 [data-theme="light"] .diamond-sparkle svg {
   opacity: 0.4;
+}
+
+[data-theme="light"] .step-number-large {
+  opacity: 0.4 !important;
+  color: #1a1a1a !important;
+}
+
+[data-theme="light"] .step-number-label {
+  opacity: 1 !important;
+  color: #1a1a1a !important;
+}
+
+[data-theme="light"] .encyclo-item {
+  color: #1a1a1a !important;
 }
 
 [data-theme="light"] p,

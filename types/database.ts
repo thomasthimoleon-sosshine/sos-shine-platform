@@ -208,6 +208,66 @@ export type GroupEvent = {
   created_at: string
 }
 
+// ── Affiliates ──
+export type AffiliateTier = 'bronze' | 'silver' | 'gold' | 'diamond'
+export type AffiliateStatus = 'pending' | 'approved' | 'rejected' | 'suspended'
+
+export type Affiliate = {
+  id: string
+  user_id: string
+  status: AffiliateStatus
+  referral_code: string
+  motivation: string
+  audience_size: string | null
+  promotion_channels: string[]
+  social_links: Record<string, string>
+  website_url: string | null
+  total_clicks: number
+  total_referrals: number
+  total_earnings: number
+  pending_earnings: number
+  paid_earnings: number
+  current_tier: AffiliateTier
+  approved_at: string | null
+  rejected_at: string | null
+  rejection_reason: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type AffiliateClick = {
+  id: string
+  affiliate_id: string
+  ip_hash: string | null
+  user_agent: string | null
+  referrer_url: string | null
+  created_at: string
+}
+
+export type AffiliateConversion = {
+  id: string
+  affiliate_id: string
+  referred_user_id: string | null
+  conversion_type: 'signup' | 'subscription' | 'renewal'
+  plan: 'essential' | 'serenite' | 'premium' | null
+  amount: number
+  commission_rate: number
+  commission_amount: number
+  status: 'pending' | 'confirmed' | 'paid' | 'cancelled'
+  created_at: string
+}
+
+export type AffiliatePayout = {
+  id: string
+  affiliate_id: string
+  amount: number
+  payment_method: 'bank_transfer' | 'paypal' | 'stripe'
+  payment_reference: string | null
+  status: 'pending' | 'processing' | 'completed' | 'failed'
+  created_at: string
+  paid_at: string | null
+}
+
 // ── Site Settings (admin customization) ──
 export type SiteSetting = {
   id: string
@@ -232,7 +292,7 @@ export type LandingSection = {
 }
 
 // ── Helper: columns with DB defaults are optional on Insert ──
-type DefaultColumns = 'id' | 'created_at' | 'updated_at' | 'audio_url' | 'message_type' | 'status' | 'room_code' | 'call_type' | 'event_type' | 'target_user_id' | 'room_id' | 'category' | 'media_type' | 'video_url' | 'image_url' | 'is_published' | 'delete_locked' | 'publish_banned_until' | 'is_bot' | 'is_read' | 'is_deleted' | 'is_general' | 'is_anonymous' | 'is_active' | 'email_sent' | 'is_visible' | 'position'
+type DefaultColumns = 'id' | 'created_at' | 'updated_at' | 'audio_url' | 'message_type' | 'status' | 'room_code' | 'call_type' | 'event_type' | 'target_user_id' | 'room_id' | 'category' | 'media_type' | 'video_url' | 'image_url' | 'is_published' | 'delete_locked' | 'publish_banned_until' | 'is_bot' | 'is_read' | 'is_deleted' | 'is_general' | 'is_anonymous' | 'is_active' | 'email_sent' | 'is_visible' | 'position' | 'total_clicks' | 'total_referrals' | 'total_earnings' | 'pending_earnings' | 'paid_earnings' | 'current_tier' | 'referral_code' | 'approved_at' | 'rejected_at' | 'rejection_reason' | 'paid_at' | 'payment_reference' | 'commission_amount'
 type OptionalId<T> = Omit<T, Extract<DefaultColumns, keyof T>> &
   Partial<Pick<T, Extract<DefaultColumns, keyof T>>>
 
@@ -262,6 +322,10 @@ export type Database = {
       private_messages: Table<PrivateMessage>
       signaling_rooms: Table<SignalingRoom>
       group_events: Table<GroupEvent>
+      affiliates: Table<Affiliate>
+      affiliate_clicks: Table<AffiliateClick>
+      affiliate_conversions: Table<AffiliateConversion>
+      affiliate_payouts: Table<AffiliatePayout>
       site_settings: Table<SiteSetting>
       landing_sections: Table<LandingSection>
     }

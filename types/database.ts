@@ -268,6 +268,22 @@ export type AffiliatePayout = {
   paid_at: string | null
 }
 
+// ── Withdrawal Requests (demandes de retrait) ──
+export type WithdrawalRequest = {
+  id: string
+  user_id: string
+  affiliate_id: string
+  amount: number
+  iban: string | null
+  paypal_email: string | null
+  payment_method: 'bank_transfer' | 'paypal'
+  status: 'pending' | 'processing' | 'completed' | 'rejected'
+  admin_note: string | null
+  processed_by: string | null
+  processed_at: string | null
+  created_at: string
+}
+
 // ── Site Settings (admin customization) ──
 export type SiteSetting = {
   id: string
@@ -326,6 +342,7 @@ export type Database = {
       affiliate_clicks: Table<AffiliateClick>
       affiliate_conversions: Table<AffiliateConversion>
       affiliate_payouts: Table<AffiliatePayout>
+      withdrawal_requests: Table<WithdrawalRequest>
       site_settings: Table<SiteSetting>
       landing_sections: Table<LandingSection>
     }
@@ -358,4 +375,12 @@ export type ConversationPreview = {
   partner: Pick<Profile, 'id' | 'prenom' | 'pseudo' | 'avatar_url' | 'role'>
   lastMessage: PrivateMessage
   unreadCount: number
+}
+
+export type WithdrawalRequestWithProfile = WithdrawalRequest & {
+  profiles: Pick<Profile, 'prenom' | 'email' | 'avatar_url'>
+}
+
+export type AffiliateWithProfile = Affiliate & {
+  profiles: Pick<Profile, 'prenom' | 'email' | 'avatar_url'>
 }

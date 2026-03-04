@@ -554,12 +554,170 @@ function AffiliateRejected({ reason }: { reason: string | null }) {
 // ═══════════════════════════════════════════════════════
 // Affiliate Dashboard (Approved)
 // ═══════════════════════════════════════════════════════
+function WithdrawalModal({ affiliate, onClose, onSuccess }: { affiliate: Affiliate; onClose: () => void; onSuccess: () => void }) {
+  const [amount, setAmount] = useState(affiliate.pending_earnings >= 50 ? Math.floor(affiliate.pending_earnings) : 50)
+  const [method, setMethod] = useState<'bank_transfer' | 'paypal'>('bank_transfer')
+  const [iban, setIban] = useState('')
+  const [paypalEmail, setPaypalEmail] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    if (amount < 50 || amount > affiliate.pending_earnings) return
+    if (method === 'bank_transfer' && !iban.trim()) { setError('IBAN requis'); return }
+    if (method === 'paypal' && !paypalEmail.trim()) { setError('Email PayPal requis'); return }
+
+    setSubmitting(true)
+    setError('')
+    try {
+      const res = await fetch('/api/admin/withdrawals', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount,
+          payment_method: method,
+          iban: method === 'bank_transfer' ? iban.trim() : null,
+          paypal_email: method === 'paypal' ? paypalEmail.trim() : null,
+        }),
+      })
+      if (res.ok) {
+        onSuccess()
+        onClose()
+      } else {
+        const json = await res.json()
+        setError(json.error || 'Erreur lors de la demande')
+      }
+    } catch {
+      setError('Erreur de connexion')
+    }
+    setSubmitting(false)
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ background: 'rgba(0, 0, 0, 0.7)', backdropFilter: 'blur(8px)' }}
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
+      <motion.div
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.95, opacity: 0 }}
+        className="w-full max-w-md rounded-2xl p-6 sm:p-8 space-y-6"
+        style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+      >
+        <div>
+          <h2 className="font-display text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+            Demander un retrait
+          </h2>
+          <p className="text-[13px] mt-1" style={{ color: 'var(--text-secondary)' }}>
+            Solde disponible : <span className="font-semibold" style={{ color: 'var(--gold)' }}>{affiliate.pending_earnings.toFixed(2)}€</span>
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Montant */}
+          <div>
+            <label className="block text-[13px] font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+              Montant (min. 50€)
+            </label>
+            <div className="relative">
+              <input
+                type="number" min={50} max={affiliate.pending_earnings} step={0.01}
+                value={amount} onChange={(e) => setAmount(Number(e.target.value))}
+                className="w-full rounded-xl px-4 py-3 text-[14px] outline-none pr-10"
+                style={{ background: 'var(--dark)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+              />
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[14px] font-semibold" style={{ color: 'var(--gold)' }}>€</span>
+            </div>
+          </div>
+
+          {/* Méthode */}
+          <div>
+            <label className="block text-[13px] font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+              Mode de paiement
+            </label>
+            <div className="flex gap-3">
+              {([
+                { key: 'bank_transfer' as const, label: 'Virement bancaire', icon: '🏦' },
+                { key: 'paypal' as const, label: 'PayPal', icon: '💳' },
+              ]).map(m => (
+                <button key={m.key} type="button" onClick={() => setMethod(m.key)}
+                  className="flex-1 py-3 rounded-xl text-[13px] font-medium cursor-pointer transition-all"
+                  style={{
+                    background: method === m.key ? 'rgba(212,175,55,0.1)' : 'var(--dark)',
+                    border: `1px solid ${method === m.key ? 'rgba(212,175,55,0.3)' : 'var(--dark-border)'}`,
+                    color: method === m.key ? 'var(--gold)' : 'var(--text-secondary)',
+                  }}>
+                  {m.icon} {m.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* IBAN ou PayPal */}
+          {method === 'bank_transfer' ? (
+            <div>
+              <label className="block text-[13px] font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                IBAN
+              </label>
+              <input
+                type="text" value={iban} onChange={(e) => setIban(e.target.value)}
+                placeholder="FR76 1234 5678 9012 3456 7890 123"
+                className="w-full rounded-xl px-4 py-3 text-[14px] font-mono outline-none placeholder:opacity-40"
+                style={{ background: 'var(--dark)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+              />
+            </div>
+          ) : (
+            <div>
+              <label className="block text-[13px] font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                Email PayPal
+              </label>
+              <input
+                type="email" value={paypalEmail} onChange={(e) => setPaypalEmail(e.target.value)}
+                placeholder="votre@email.com"
+                className="w-full rounded-xl px-4 py-3 text-[14px] outline-none placeholder:opacity-40"
+                style={{ background: 'var(--dark)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+              />
+            </div>
+          )}
+
+          {error && (
+            <p className="text-[13px] text-center" style={{ color: '#EF4444' }}>{error}</p>
+          )}
+
+          <div className="flex gap-3 pt-2">
+            <button type="button" onClick={onClose}
+              className="flex-1 py-3 rounded-xl text-[13px] font-semibold cursor-pointer transition-all"
+              style={{ background: 'var(--dark)', border: '1px solid var(--dark-border)', color: 'var(--text-secondary)' }}>
+              Annuler
+            </button>
+            <motion.button
+              whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+              type="submit" disabled={submitting || amount < 50 || amount > affiliate.pending_earnings}
+              className="flex-1 py-3 rounded-xl text-[13px] font-semibold cursor-pointer transition-all disabled:opacity-50"
+              style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#09090b' }}>
+              {submitting ? 'Envoi...' : `Retirer ${amount.toFixed(2)}€`}
+            </motion.button>
+          </div>
+        </form>
+      </motion.div>
+    </motion.div>
+  )
+}
+
 function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
   const { t } = useTranslation()
   const [copied, setCopied] = useState(false)
   const [conversions, setConversions] = useState<AffiliateConversion[]>([])
   const [payouts, setPayouts] = useState<AffiliatePayout[]>([])
   const [loadingData, setLoadingData] = useState(true)
+  const [showWithdrawal, setShowWithdrawal] = useState(false)
+  const [withdrawalSuccess, setWithdrawalSuccess] = useState(false)
 
   const currentTier = TIERS.find(t => t.key === affiliate.current_tier) || TIERS[0]
   const nextTier = TIERS[TIERS.indexOf(currentTier) + 1]
@@ -794,6 +952,36 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
         )}
       </motion.div>
 
+      {/* Withdrawal Success Toast */}
+      <AnimatePresence>
+        {withdrawalSuccess && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-24 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-xl text-[14px] font-semibold"
+            style={{ background: 'rgba(85,239,196,0.15)', color: '#55EFC4', border: '1px solid rgba(85,239,196,0.3)', backdropFilter: 'blur(12px)' }}
+          >
+            Demande de retrait envoyee avec succes !
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Withdrawal Modal */}
+      <AnimatePresence>
+        {showWithdrawal && (
+          <WithdrawalModal
+            affiliate={affiliate}
+            onClose={() => setShowWithdrawal(false)}
+            onSuccess={() => {
+              setWithdrawalSuccess(true)
+              setTimeout(() => setWithdrawalSuccess(false), 4000)
+              loadAffiliateData()
+            }}
+          />
+        )}
+      </AnimatePresence>
+
       {/* Payout History */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
@@ -805,7 +993,10 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
             {t('affiliate.payout_history')}
           </h2>
           {affiliate.pending_earnings >= 50 && (
-            <button
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => setShowWithdrawal(true)}
               className="px-4 py-2 rounded-xl text-[12px] font-semibold cursor-pointer transition-all duration-200"
               style={{
                 background: 'rgba(212, 175, 55, 0.1)',
@@ -814,7 +1005,7 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
               }}
             >
               {t('affiliate.request_payout')}
-            </button>
+            </motion.button>
           )}
         </div>
         {!loadingData && payouts.length === 0 ? (

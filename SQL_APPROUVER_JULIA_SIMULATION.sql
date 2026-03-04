@@ -86,13 +86,13 @@ BEGIN
   -- Créer 25 profils fictifs pour respecter la clé étrangère referred_user_id → profiles
   CREATE TEMP TABLE tmp_fake_users (idx INT, fake_id UUID);
   FOR i IN 1..25 LOOP
-    INSERT INTO public.profiles (id, email, prenom, nom, role, created_at)
+    INSERT INTO public.profiles (id, email, prenom, pseudo, role, created_at)
     VALUES (
       gen_random_uuid(),
       'fake_user_' || i || '_' || extract(epoch from now())::int || '@simulation.test',
       'Filleul' || i,
-      'Simulation',
-      'client',
+      'Simulation' || i,
+      'member',
       now() - (i * interval '3 days')
     )
     RETURNING id INTO v_fake_id;

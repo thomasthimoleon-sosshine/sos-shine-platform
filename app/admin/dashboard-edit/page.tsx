@@ -95,7 +95,7 @@ const sections: SectionDef[] = [
     title: 'Pied de page (aide)', icon: '📧',
     fields: [
       { label: 'Texte d\'aide', key: 'dash_help_text', type: 'text', default: 'Besoin d\'aide ? Ecrivez-nous a' },
-      { label: 'Email de contact', key: 'dash_help_email', type: 'text', default: 'contact@sosshine.fr' },
+      { label: 'Email de contact', key: 'dash_help_email', type: 'text', default: 'julialaureau@sosshine.com' },
     ],
   },
 ]

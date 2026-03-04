@@ -216,7 +216,7 @@ export default function ShineChatbot() {
           <img src="/images/shine-avatar.jpeg" alt="Shine" className="w-10 h-10 rounded-full object-cover" />
         )}
         {!open && (
-          <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full animate-pulse" style={{ background: '#22c55e', border: '2px solid #0a0a0a' }} />
+          <span className="absolute top-0 right-0 w-4 h-4 rounded-full animate-pulse" style={{ background: '#22c55e', border: '2px solid #0a0a0a' }} />
         )}
       </motion.button>
     </>

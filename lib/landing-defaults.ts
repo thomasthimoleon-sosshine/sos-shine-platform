@@ -394,7 +394,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     is_visible: true,
     content: {
       title: 'Contact',
-      email: 'contact@sosshine.fr',
+      email: 'julialaureau@sosshine.com',
       phone: '',
       address: '',
       html_content: '',

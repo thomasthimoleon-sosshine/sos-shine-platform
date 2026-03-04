@@ -344,8 +344,8 @@ export default function DashboardHome() {
       >
         <p className="text-[13px]" style={{ color: 'var(--text-muted)' }}>
           {siteSettings.dash_help_text || t('dashboard.help')}{' '}
-          <a href={`mailto:${siteSettings.dash_help_email || 'contact@sosshine.fr'}`} className="gold-underline font-medium" style={{ color: 'var(--gold)' }}>
-            {siteSettings.dash_help_email || 'contact@sosshine.fr'}
+          <a href={`mailto:${siteSettings.dash_help_email || 'julialaureau@sosshine.com'}`} className="gold-underline font-medium" style={{ color: 'var(--gold)' }}>
+            {siteSettings.dash_help_email || 'julialaureau@sosshine.com'}
           </a>
         </p>
       </motion.div>

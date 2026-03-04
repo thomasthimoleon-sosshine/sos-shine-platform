@@ -890,10 +890,10 @@ export default function Home() {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
               {(pricing.plans || []).map((plan: { name: string; price: string; period: string; button_label: string; button_href: string; highlight: boolean; badge: string; features: string[] }, idx: number) => (
                 <RevealOnScroll key={plan.name} delay={(idx + 1) * 0.15} direction={(["left", "up", "scale", "right"] as const)[idx % 4]}>
-                  <GlowingCard className={`p-8 md:p-10 h-full flex flex-col relative ${plan.highlight ? 'ring-1' : ''}`} glowColor={plan.highlight ? `rgba(${accentRgb},0.15)` : `rgba(${goldRgb},0.15)`} style={plan.highlight ? { '--tw-ring-color': `rgba(${accentRgb},0.15)` } as React.CSSProperties : undefined}>
+                  <div className="relative h-full">
                     {plan.badge && (
                       <motion.div
-                        className="absolute -top-3 left-1/2 -translate-x-1/2 px-5 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase"
+                        className="absolute -top-3 left-1/2 -translate-x-1/2 z-20 px-5 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase"
                         style={{ background: `linear-gradient(135deg, ${accent}, rgba(${accentRgb},0.7))`, color: '#050505' }}
                         initial={{ y: -10, opacity: 0 }}
                         whileInView={{ y: 0, opacity: 1 }}
@@ -903,7 +903,7 @@ export default function Home() {
                         {plan.badge}
                       </motion.div>
                     )}
-
+                  <GlowingCard className={`p-8 md:p-10 h-full flex flex-col relative ${plan.highlight ? 'ring-1' : ''}`} glowColor={plan.highlight ? `rgba(${accentRgb},0.15)` : `rgba(${goldRgb},0.15)`} style={plan.highlight ? { '--tw-ring-color': `rgba(${accentRgb},0.15)` } as React.CSSProperties : undefined}>
                     <p className="luxury-title text-sm tracking-[0.25em] text-[var(--text-muted)] mb-6">{plan.name}</p>
 
                     <div className="flex items-baseline gap-1 mb-8">
@@ -938,6 +938,7 @@ export default function Home() {
                       </button>
                     </Link>
                   </GlowingCard>
+                  </div>
                 </RevealOnScroll>
               ))}
             </div>

@@ -274,13 +274,11 @@ export default function Home() {
     return map;
   });
 
-  const loadSections = useCallback(async () => {
+  const loadPrelaunchSettings = useCallback(async () => {
     try {
       const supabase = createClient();
-
-      // Check prelaunch setting
       const { data: settingsData } = await supabase.from("site_settings").select("key, value").like("key", "prelaunch_%");
-      if (settingsData) {
+      if (settingsData && settingsData.length > 0) {
         const map: PrelaunchSettings = {};
         settingsData.forEach((row: { key: string; value: string }) => {
           (map as Record<string, string>)[row.key] = row.value;
@@ -290,7 +288,16 @@ export default function Home() {
       } else {
         setPrelaunchEnabled(false);
       }
+    } catch {
+      setPrelaunchEnabled(false);
+    }
+  }, []);
 
+  const loadSections = useCallback(async () => {
+    await loadPrelaunchSettings();
+
+    try {
+      const supabase = createClient();
       const { data } = await supabase.from("landing_sections").select("*").order("position");
       if (data && data.length > 0) {
         const rows = data as unknown as LandingSectionDefault[];
@@ -310,10 +317,9 @@ export default function Home() {
         setSections(merged);
       }
     } catch {
-      // defaults already set
-      setPrelaunchEnabled(false);
+      // landing defaults already set
     }
-  }, []);
+  }, [loadPrelaunchSettings]);
 
   useEffect(() => {
     loadSections();
@@ -330,8 +336,20 @@ export default function Home() {
       });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [loadSections]);
+
+    // Re-fetch prelaunch settings when tab becomes visible (after admin edits in another tab)
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        loadPrelaunchSettings();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
+  }, [loadSections, loadPrelaunchSettings]);
 
   function sec(key: string): SectionContent { return sections[key]?.content || {}; }
   function sty(key: string): SectionStyles { return sections[key]?.styles || {}; }
@@ -967,10 +985,10 @@ export default function Home() {
 
                 return (
                 <RevealOnScroll key={plan.name} delay={(idx + 1) * 0.15} direction={(["left", "up", "scale", "right"] as const)[idx % 4]}>
-                  <GlowingCard className={`p-6 sm:p-8 md:p-10 h-full flex flex-col relative ${plan.highlight ? 'ring-1' : ''}`} glowColor={`rgba(${tc.rgb},0.15)`} style={plan.highlight ? { '--tw-ring-color': `rgba(${tc.rgb},0.15)` } as React.CSSProperties : undefined}>
+                  <div className="relative h-full">
                     {plan.badge && (
                       <motion.div
-                        className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 sm:px-5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold tracking-wider uppercase whitespace-nowrap"
+                        className="absolute -top-3 left-1/2 -translate-x-1/2 z-20 px-4 sm:px-5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold tracking-wider uppercase whitespace-nowrap"
                         style={{ background: `linear-gradient(135deg, ${tc.main}, ${tc.deep})`, color: btnTextColor }}
                         initial={{ y: -10, opacity: 0 }}
                         whileInView={{ y: 0, opacity: 1 }}
@@ -980,7 +998,7 @@ export default function Home() {
                         {plan.badge}
                       </motion.div>
                     )}
-
+                  <GlowingCard className={`p-6 sm:p-8 md:p-10 h-full flex flex-col relative ${plan.highlight ? 'ring-1' : ''}`} glowColor={`rgba(${tc.rgb},0.15)`} style={plan.highlight ? { '--tw-ring-color': `rgba(${tc.rgb},0.15)` } as React.CSSProperties : undefined}>
                     <p className="luxury-title text-xs sm:text-sm tracking-[0.2em] sm:tracking-[0.25em] mb-4 md:mb-6" style={{ color: tc.main }}>{plan.name}</p>
 
                     <div className="flex items-baseline gap-1 mb-6 md:mb-8">
@@ -1015,6 +1033,7 @@ export default function Home() {
                       </button>
                     </Link>
                   </GlowingCard>
+                  </div>
                 </RevealOnScroll>
               )})}
             </div>

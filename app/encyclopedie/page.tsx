@@ -247,7 +247,7 @@ export default function PublicEncyclopediePage() {
             Vous ne trouvez pas votre challenge émotionnel ? Nous ajoutons régulièrement de nouvelles pages.
           </p>
           <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
-            Contactez-nous à <span style={{ color: 'var(--gold)' }}>contact@sosshine.fr</span>
+            Contactez-nous à <span style={{ color: 'var(--gold)' }}>julialaureau@sosshine.com</span>
           </p>
         </div>
       </div>

@@ -8,7 +8,7 @@ import { useTranslation } from '@/lib/i18n/useTranslation'
 export default function ContactPage() {
   const { t } = useTranslation()
   const [title, setTitle] = useState('Contact')
-  const [email, setEmail] = useState('contact@sosshine.fr')
+  const [email, setEmail] = useState('julialaureau@sosshine.com')
   const [phone, setPhone] = useState('')
   const [address, setAddress] = useState('')
   const [content, setContent] = useState('')
@@ -28,7 +28,7 @@ export default function ContactPage() {
 
       if (section?.content && (section.content.email || section.content.html_content)) {
         setTitle(section.content.title || 'Contact')
-        setEmail(section.content.email || 'contact@sosshine.fr')
+        setEmail(section.content.email || 'julialaureau@sosshine.com')
         setPhone(section.content.phone || '')
         setAddress(section.content.address || '')
         setContent(section.content.html_content || '')

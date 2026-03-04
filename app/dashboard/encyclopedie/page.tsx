@@ -190,7 +190,7 @@ export default function EncyclopediePage() {
           {t('dashboard.not_found_info')}
         </p>
         <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
-          {t('dashboard.contact_us')} <span style={{ color: 'var(--gold)' }}>contact@sosshine.fr</span>
+          {t('dashboard.contact_us')} <span style={{ color: 'var(--gold)' }}>julialaureau@sosshine.com</span>
         </p>
       </div>
     </div>

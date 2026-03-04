@@ -116,6 +116,7 @@ const sections: SectionDef[] = [
 
 export default function PrelaunchEditPage() {
   const [values, setValues] = useState<Record<string, string>>({})
+  const [dbValues, setDbValues] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
@@ -127,15 +128,22 @@ export default function PrelaunchEditPage() {
     const { data, error: fetchError } = await supabase.from('site_settings').select('key, value')
     if (fetchError) { setError(fetchError.message); setLoading(false); return }
 
-    const map: Record<string, string> = {}
-    sections.forEach((sec) => sec.fields.forEach((f) => { if (f.key) map[f.key] = f.default }))
-    if (data) data.forEach((row: { key: string; value: string }) => { map[row.key] = row.value })
+    const defaults: Record<string, string> = {}
+    sections.forEach((sec) => sec.fields.forEach((f) => { if (f.key) defaults[f.key] = f.default }))
+
+    const dbMap: Record<string, string> = {}
+    if (data) data.forEach((row: { key: string; value: string }) => { dbMap[row.key] = row.value })
+
+    const map: Record<string, string> = { ...defaults, ...dbMap }
     setValues(map)
+    setDbValues(map)
     setOpenSections({ [sections[0].title]: true })
     setLoading(false)
   }, [])
 
   useEffect(() => { loadSettings() }, [loadSettings])
+
+  const hasUnsavedChanges = Object.keys(values).some((key) => values[key] !== dbValues[key])
 
   function updateValue(key: string, value: string) {
     setValues((prev) => ({ ...prev, [key]: value }))
@@ -189,6 +197,7 @@ export default function PrelaunchEditPage() {
       sections.forEach((sec) => sec.fields.forEach((f) => { if (f.key) freshMap[f.key] = f.default }))
       if (freshData) freshData.forEach((row: { key: string; value: string }) => { freshMap[row.key] = row.value })
       setValues(freshMap)
+      setDbValues(freshMap)
 
       setSaving(false); setSaved(true); setTimeout(() => setSaved(false), 4000)
     } catch (err) {
@@ -212,7 +221,8 @@ export default function PrelaunchEditPage() {
         </div>
         <div className="flex items-center gap-3">
           {saved && <span className="text-sm font-medium" style={{ color: '#55EFC4' }}>Sauvegarde !</span>}
-          <button onClick={handleSave} disabled={saving} className="px-6 py-3 rounded-xl text-sm font-semibold cursor-pointer disabled:opacity-50" style={{ background: '#74C0FC', color: '#fff' }}>
+          {hasUnsavedChanges && !saved && <span className="text-sm font-medium animate-pulse" style={{ color: '#FECA57' }}>Modifications non sauvegardees</span>}
+          <button onClick={handleSave} disabled={saving} className="px-6 py-3 rounded-xl text-sm font-semibold cursor-pointer disabled:opacity-50" style={{ background: hasUnsavedChanges ? '#FECA57' : '#74C0FC', color: hasUnsavedChanges ? '#000' : '#fff' }}>
             {saving ? 'Sauvegarde...' : 'Sauvegarder'}
           </button>
         </div>

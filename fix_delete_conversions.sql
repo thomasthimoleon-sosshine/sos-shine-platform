@@ -1,1 +1,1 @@
-SELECT aff.id FROM public.affiliates aff JOIN public.profiles prof ON prof.id = aff.user_id WHERE prof.email = 'julialaureau@sosshine.com';
+DELETE FROM public.affiliate_conversions WHERE affiliate_id = '2ce74fc0-4463-41ea-ba14-78052bad7cee';

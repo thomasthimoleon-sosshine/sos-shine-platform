@@ -83,19 +83,25 @@ BEGIN
     current_tier = 'silver'
   WHERE id = v_affiliate_id;
 
-  -- Créer 25 profils fictifs pour respecter la clé étrangère referred_user_id → profiles
+  -- Créer 25 utilisateurs fictifs dans auth.users (le trigger handle_new_user crée le profil automatiquement)
   CREATE TEMP TABLE tmp_fake_users (idx INT, fake_id UUID);
   FOR i IN 1..25 LOOP
-    INSERT INTO public.profiles (id, email, prenom, pseudo, role, created_at)
+    v_fake_id := gen_random_uuid();
+    INSERT INTO auth.users (id, instance_id, email, encrypted_password, email_confirmed_at, raw_user_meta_data, created_at, updated_at, aud, role)
     VALUES (
-      gen_random_uuid(),
+      v_fake_id,
+      '00000000-0000-0000-0000-000000000000',
       'fake_user_' || i || '_' || extract(epoch from now())::int || '@simulation.test',
-      'Filleul' || i,
-      'Simulation' || i,
-      'member',
-      now() - (i * interval '3 days')
-    )
-    RETURNING id INTO v_fake_id;
+      crypt('simulation_password', gen_salt('bf')),
+      now(),
+      jsonb_build_object('prenom', 'Filleul' || i),
+      now() - (i * interval '3 days'),
+      now(),
+      'authenticated',
+      'authenticated'
+    );
+    -- Mettre à jour le pseudo sur le profil créé par le trigger
+    UPDATE public.profiles SET pseudo = 'Simulation' || i, created_at = now() - (i * interval '3 days') WHERE id = v_fake_id;
     INSERT INTO tmp_fake_users (idx, fake_id) VALUES (i, v_fake_id);
   END LOOP;
 

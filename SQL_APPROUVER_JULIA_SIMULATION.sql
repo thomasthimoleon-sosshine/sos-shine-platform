@@ -91,7 +91,7 @@ BEGIN
       v_affiliate_id,
       gen_random_uuid(),  -- utilisateur fictif
       'signup',
-      CASE WHEN i <= 5 THEN 'essentielle' WHEN i <= 12 THEN 'serenite' ELSE 'premium' END,
+      CASE WHEN i <= 5 THEN 'essential' WHEN i <= 12 THEN 'serenite' ELSE 'premium' END,
       CASE WHEN i <= 5 THEN 14.90 WHEN i <= 12 THEN 24.90 ELSE 39.90 END,
       0.15,
       CASE WHEN i <= 5 THEN 2.24 WHEN i <= 12 THEN 3.74 ELSE 5.99 END,
@@ -109,7 +109,7 @@ BEGIN
       v_affiliate_id,
       gen_random_uuid(),
       'renewal',
-      CASE WHEN i <= 4 THEN 'essentielle' WHEN i <= 8 THEN 'serenite' ELSE 'premium' END,
+      CASE WHEN i <= 4 THEN 'essential' WHEN i <= 8 THEN 'serenite' ELSE 'premium' END,
       CASE WHEN i <= 4 THEN 14.90 WHEN i <= 8 THEN 24.90 ELSE 39.90 END,
       0.15,
       CASE WHEN i <= 4 THEN 2.24 WHEN i <= 8 THEN 3.74 ELSE 5.99 END,

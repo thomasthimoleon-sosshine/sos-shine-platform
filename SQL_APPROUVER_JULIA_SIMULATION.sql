@@ -57,6 +57,7 @@ DO $$
 DECLARE
   v_affiliate_id UUID;
   v_user_id UUID;
+  v_fake_id UUID;
   i INT;
 BEGIN
   -- Récupérer l'affilié de Julia
@@ -82,14 +83,31 @@ BEGIN
     current_tier = 'silver'
   WHERE id = v_affiliate_id;
 
-  -- Injecter 25 conversions fictives (inscriptions et abonnements)
+  -- Créer 25 profils fictifs pour respecter la clé étrangère referred_user_id → profiles
+  CREATE TEMP TABLE tmp_fake_users (idx INT, fake_id UUID);
+  FOR i IN 1..25 LOOP
+    INSERT INTO public.profiles (id, email, prenom, nom, role, created_at)
+    VALUES (
+      gen_random_uuid(),
+      'fake_user_' || i || '_' || extract(epoch from now())::int || '@simulation.test',
+      'Filleul' || i,
+      'Simulation',
+      'client',
+      now() - (i * interval '3 days')
+    )
+    RETURNING id INTO v_fake_id;
+    INSERT INTO tmp_fake_users (idx, fake_id) VALUES (i, v_fake_id);
+  END LOOP;
+
+  -- Injecter 15 conversions fictives (inscriptions)
   FOR i IN 1..15 LOOP
+    SELECT fake_id INTO v_fake_id FROM tmp_fake_users WHERE idx = i;
     INSERT INTO public.affiliate_conversions (
       affiliate_id, referred_user_id, conversion_type, plan,
       amount, commission_rate, commission_amount, status, created_at
     ) VALUES (
       v_affiliate_id,
-      gen_random_uuid(),  -- utilisateur fictif
+      v_fake_id,
       'signup',
       CASE WHEN i <= 5 THEN 'essential' WHEN i <= 12 THEN 'serenite' ELSE 'premium' END,
       CASE WHEN i <= 5 THEN 14.90 WHEN i <= 12 THEN 24.90 ELSE 39.90 END,
@@ -100,14 +118,15 @@ BEGIN
     );
   END LOOP;
 
-  -- 10 conversions supplémentaires (renouvellements)
+  -- 10 conversions supplémentaires (renouvellements) — réutilise les 10 premiers profils
   FOR i IN 1..10 LOOP
+    SELECT fake_id INTO v_fake_id FROM tmp_fake_users WHERE idx = i;
     INSERT INTO public.affiliate_conversions (
       affiliate_id, referred_user_id, conversion_type, plan,
       amount, commission_rate, commission_amount, status, created_at
     ) VALUES (
       v_affiliate_id,
-      gen_random_uuid(),
+      v_fake_id,
       'renewal',
       CASE WHEN i <= 4 THEN 'essential' WHEN i <= 8 THEN 'serenite' ELSE 'premium' END,
       CASE WHEN i <= 4 THEN 14.90 WHEN i <= 8 THEN 24.90 ELSE 39.90 END,
@@ -117,6 +136,8 @@ BEGIN
       now() - (i * interval '5 days')
     );
   END LOOP;
+
+  DROP TABLE tmp_fake_users;
 
   -- Injecter un historique de paiements
   INSERT INTO public.affiliate_payouts (affiliate_id, amount, payment_method, status, created_at, paid_at)

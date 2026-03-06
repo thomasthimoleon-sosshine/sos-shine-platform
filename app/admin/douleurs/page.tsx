@@ -324,12 +324,12 @@ export default function AdminDouleursPage() {
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h1 className="font-display text-3xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+          <h1 className="font-display text-2xl sm:text-3xl font-semibold" style={{ color: 'var(--text-primary)' }}>
             Challenges émotionnels
           </h1>
-          <p className="mt-1" style={{ color: 'var(--text-secondary)' }}>
+          <p className="mt-1 text-sm sm:text-base" style={{ color: 'var(--text-secondary)' }}>
             Gérez les challenges émotionnels de l&apos;encyclopédie SOS Shine.
           </p>
         </div>
@@ -341,7 +341,7 @@ export default function AdminDouleursPage() {
               setShowForm(true)
               setError(null)
             }}
-            className="px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 hover:opacity-90"
+            className="px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 hover:opacity-90 self-start sm:self-auto flex-shrink-0"
             style={{ background: '#74C0FC', color: '#fff' }}
           >
             Créer un challenge
@@ -545,7 +545,7 @@ export default function AdminDouleursPage() {
                     </div>
 
                     {/* Right: actions */}
-                    <div className="flex items-center gap-2 flex-shrink-0">
+                    <div className="flex items-center gap-2 flex-shrink-0 flex-wrap">
                       <button onClick={() => openEditForm(d)}
                         className="px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 hover:opacity-80"
                         style={{ background: 'rgba(116,192,252,0.1)', color: '#74C0FC', border: '1px solid rgba(116,192,252,0.2)' }}>
@@ -570,17 +570,23 @@ export default function AdminDouleursPage() {
                 </div>
 
                 {/* Step media detail grid */}
-                <div className="grid grid-cols-3 gap-px" style={{ background: 'var(--dark-border)' }}>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-px" style={{ background: 'var(--dark-border)' }}>
                   {STEPS.map((step) => {
                     const media = getStepMediaDetails(d, step.num)
                     const has = hasStepContent(d, step.num)
                     const mediaCount = [media.hasVideo, media.hasAudio, media.hasPdf, media.hasImage].filter(Boolean).length
+                    const mediaTypes = [
+                      { icon: '🎬', label: 'Vidéo', active: media.hasVideo },
+                      { icon: '🎵', label: 'Audio', active: media.hasAudio },
+                      { icon: '📄', label: 'PDF', active: media.hasPdf },
+                      { icon: '🖼️', label: 'Image', active: media.hasImage },
+                    ]
                     return (
-                      <div key={step.num} className="p-3 space-y-2"
+                      <div key={step.num} className="p-3 sm:space-y-2"
                         style={{ background: has ? step.colorBg : 'var(--dark-card)' }}>
                         {/* Step header */}
                         <div className="flex items-center justify-between">
-                          <span className="text-[11px] font-semibold flex items-center gap-1.5" style={{ color: has ? step.color : 'var(--text-muted)' }}>
+                          <span className="text-xs sm:text-[11px] font-semibold flex items-center gap-1.5" style={{ color: has ? step.color : 'var(--text-muted)' }}>
                             <span className="text-sm">{step.icon}</span>
                             Ét. {step.num} — {step.title}
                           </span>
@@ -593,75 +599,37 @@ export default function AdminDouleursPage() {
                           </span>
                         </div>
 
-                        {/* Media type indicators */}
-                        <div className="flex flex-col gap-1">
-                          {/* Video */}
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-[10px]" style={{ opacity: media.hasVideo ? 1 : 0.35 }}>🎬</span>
-                            <span className="text-[10px] font-medium" style={{ color: media.hasVideo ? step.color : 'var(--text-muted)', opacity: media.hasVideo ? 1 : 0.5 }}>
-                              Vidéo
-                            </span>
-                            {media.hasVideo ? (
-                              <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: '#55EFC4' }} />
-                            ) : (
-                              <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: 'var(--dark-border)' }} />
-                            )}
-                          </div>
+                        {/* Media type indicators — horizontal on mobile, vertical on desktop */}
+                        <div className="flex flex-row flex-wrap gap-x-3 gap-y-1 mt-1.5 sm:mt-0 sm:flex-col sm:gap-1">
+                          {mediaTypes.map((m) => (
+                            <div key={m.label} className="flex items-center gap-1.5">
+                              <span className="text-[10px]" style={{ opacity: m.active ? 1 : 0.35 }}>{m.icon}</span>
+                              <span className="text-[11px] sm:text-[10px] font-medium" style={{ color: m.active ? step.color : 'var(--text-muted)', opacity: m.active ? 1 : 0.5 }}>
+                                {m.label}
+                              </span>
+                              {m.active ? (
+                                <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#55EFC4' }} />
+                              ) : (
+                                <span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--dark-border)' }} />
+                              )}
+                            </div>
+                          ))}
 
-                          {/* Audio */}
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-[10px]" style={{ opacity: media.hasAudio ? 1 : 0.35 }}>🎵</span>
-                            <span className="text-[10px] font-medium" style={{ color: media.hasAudio ? step.color : 'var(--text-muted)', opacity: media.hasAudio ? 1 : 0.5 }}>
-                              Audio
-                            </span>
-                            {media.hasAudio ? (
-                              <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: '#55EFC4' }} />
-                            ) : (
-                              <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: 'var(--dark-border)' }} />
-                            )}
-                          </div>
-
-                          {/* PDF */}
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-[10px]" style={{ opacity: media.hasPdf ? 1 : 0.35 }}>📄</span>
-                            <span className="text-[10px] font-medium" style={{ color: media.hasPdf ? step.color : 'var(--text-muted)', opacity: media.hasPdf ? 1 : 0.5 }}>
-                              PDF
-                            </span>
-                            {media.hasPdf ? (
-                              <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: '#55EFC4' }} />
-                            ) : (
-                              <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: 'var(--dark-border)' }} />
-                            )}
-                          </div>
-
-                          {/* Image */}
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-[10px]" style={{ opacity: media.hasImage ? 1 : 0.35 }}>🖼️</span>
-                            <span className="text-[10px] font-medium" style={{ color: media.hasImage ? step.color : 'var(--text-muted)', opacity: media.hasImage ? 1 : 0.5 }}>
-                              Image
-                            </span>
-                            {media.hasImage ? (
-                              <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: '#55EFC4' }} />
-                            ) : (
-                              <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: 'var(--dark-border)' }} />
-                            )}
-                          </div>
+                          {/* Exercise content indicator for step 3 */}
+                          {step.num === 3 && (
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-[10px]" style={{ opacity: d.exercise_content ? 1 : 0.35 }}>✍️</span>
+                              <span className="text-[11px] sm:text-[10px] font-medium" style={{ color: d.exercise_content ? step.color : 'var(--text-muted)', opacity: d.exercise_content ? 1 : 0.5 }}>
+                                Exercice
+                              </span>
+                              {d.exercise_content ? (
+                                <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#55EFC4' }} />
+                              ) : (
+                                <span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--dark-border)' }} />
+                              )}
+                            </div>
+                          )}
                         </div>
-
-                        {/* Exercise content indicator for step 3 */}
-                        {step.num === 3 && (
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-[10px]" style={{ opacity: d.exercise_content ? 1 : 0.35 }}>✍️</span>
-                            <span className="text-[10px] font-medium" style={{ color: d.exercise_content ? step.color : 'var(--text-muted)', opacity: d.exercise_content ? 1 : 0.5 }}>
-                              Exercice
-                            </span>
-                            {d.exercise_content ? (
-                              <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: '#55EFC4' }} />
-                            ) : (
-                              <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: 'var(--dark-border)' }} />
-                            )}
-                          </div>
-                        )}
                       </div>
                     )
                   })}

@@ -160,7 +160,7 @@ function PendingRayonsWidget() {
               <div className="flex-1 min-w-0">
                 <p className="text-[14px] font-medium" style={{ color: 'var(--text-primary)' }}>
                   <Link href={`/dashboard/membre/${p.id}`} className="hover:underline">{displayName}</Link>
-                  {' '}<span style={{ color: 'var(--text-muted)' }}>vous a envoyé un Rayon</span>
+                  {' '}<span style={{ color: 'var(--text-muted)' }}>veut rayonner avec vous</span>
                 </p>
                 <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
                   {new Date(req.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}

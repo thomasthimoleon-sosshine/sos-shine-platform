@@ -103,7 +103,7 @@ export async function POST(req: NextRequest) {
   await supabase.from('notifications').insert({
     user_id: receiver_id,
     title: 'Nouveau Rayon reçu !',
-    body: `${senderName} vous a envoyé un Rayon. Acceptez pour créer une connexion lumineuse.`,
+    body: `${senderName} veut rayonner avec vous !`,
     link: '/dashboard/mes-rayons',
     notification_type: 'new_post',
   })
@@ -160,7 +160,7 @@ export async function PATCH(req: NextRequest) {
       await supabase.from('notifications').insert({
         user_id: conn.sender_id,
         title: 'Rayon accepté !',
-        body: `${receiverName} a accepté votre Rayon. Vous êtes maintenant connectés !`,
+        body: `${receiverName} rayonne maintenant avec vous !`,
         link: '/dashboard/mes-rayons',
         notification_type: 'new_post',
       })

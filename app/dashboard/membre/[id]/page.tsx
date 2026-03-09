@@ -55,15 +55,40 @@ export default function MembreProfilPage() {
       if (data) setProfile(data as Profile)
       setLoading(false)
 
+      // Vérifier le statut de connexion (rayon) — avant de charger les posts
+      let isRayon = false
+      const { data: connData } = await supabase
+        .from('shine_connections')
+        .select('id, sender_id, receiver_id, status')
+        .or(`and(sender_id.eq.${user.id},receiver_id.eq.${id}),and(sender_id.eq.${id},receiver_id.eq.${user.id})`)
+        .maybeSingle()
+
+      if (connData) {
+        setConnectionId(connData.id)
+        if (connData.status === 'accepted') {
+          setConnectionStatus('accepted')
+          isRayon = true
+        } else if (connData.status === 'pending') {
+          setConnectionStatus(connData.sender_id === user.id ? 'pending_sent' : 'pending_received')
+        }
+      }
+
       // Load member's Éclat posts
-      const { data: posts } = await supabase
+      let postsQuery = supabase
         .from('posts')
-        .select('id, title, content, image_url, video_url, audio_url, category, created_at')
+        .select('id, title, content, image_url, video_url, audio_url, category, visibility, created_at')
         .eq('author_id', id)
         .eq('post_type', 'eclat')
         .eq('is_published', true)
         .order('created_at', { ascending: false })
         .limit(20)
+
+      // Si pas un Rayon, ne montrer que les posts publics
+      if (!isRayon) {
+        postsQuery = postsQuery.eq('visibility', 'public')
+      }
+
+      const { data: posts } = await postsQuery
 
       if (posts && posts.length > 0) {
         const postIds = posts.map(p => p.id)
@@ -89,22 +114,6 @@ export default function MembreProfilPage() {
         })))
       }
       setEclatLoading(false)
-
-      // Vérifier le statut de connexion (rayon)
-      const { data: connData } = await supabase
-        .from('shine_connections')
-        .select('id, sender_id, receiver_id, status')
-        .or(`and(sender_id.eq.${user.id},receiver_id.eq.${id}),and(sender_id.eq.${id},receiver_id.eq.${user.id})`)
-        .maybeSingle()
-
-      if (connData) {
-        setConnectionId(connData.id)
-        if (connData.status === 'accepted') {
-          setConnectionStatus('accepted')
-        } else if (connData.status === 'pending') {
-          setConnectionStatus(connData.sender_id === user.id ? 'pending_sent' : 'pending_received')
-        }
-      }
     }
     load()
   }, [id, router])

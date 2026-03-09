@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
-import type { Post, PostCategory, PostMediaType } from '@/types/database'
+import type { Post, PostCategory, PostMediaType, PostVisibility } from '@/types/database'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 import FileUpload from '@/components/FileUpload'
 import AudioPlayer from '@/components/AudioPlayer'
@@ -21,6 +21,7 @@ type PostRow = {
   post_type: string
   category: string
   media_type: string
+  visibility: string
   is_published: boolean
   delete_locked: boolean
   created_at: string
@@ -86,6 +87,7 @@ export default function MonEclatPage() {
   const [createImageUrl, setCreateImageUrl] = useState('')
   const [createVideoUrl, setCreateVideoUrl] = useState('')
   const [createAudioUrl, setCreateAudioUrl] = useState('')
+  const [createVisibility, setCreateVisibility] = useState<PostVisibility>('public')
   const [creating, setCreating] = useState(false)
   const [createError, setCreateError] = useState<string | null>(null)
 
@@ -252,6 +254,7 @@ export default function MonEclatPage() {
         post_type: 'eclat' as const,
         category: createCategory,
         media_type: createMediaType,
+        visibility: createVisibility,
         image_url: createMediaType === 'image' ? (createImageUrl || null) : null,
         video_url: createMediaType === 'video' ? (createVideoUrl || null) : null,
         audio_url: createMediaType === 'audio' ? (createAudioUrl || null) : null,
@@ -567,6 +570,41 @@ export default function MonEclatPage() {
             </div>
           </div>
 
+          {/* Visibility */}
+          <div>
+            <label className="block text-xs font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>Qui peut voir ?</label>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setCreateVisibility('public')}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer"
+                style={{
+                  background: createVisibility === 'public' ? 'rgba(85,239,196,0.12)' : 'rgba(255,255,255,0.03)',
+                  border: `1px solid ${createVisibility === 'public' ? 'rgba(85,239,196,0.3)' : 'var(--dark-border)'}`,
+                  color: createVisibility === 'public' ? '#55EFC4' : 'var(--text-secondary)',
+                }}
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+                </svg>
+                Public
+              </button>
+              <button
+                onClick={() => setCreateVisibility('rayons_only')}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer"
+                style={{
+                  background: createVisibility === 'rayons_only' ? 'rgba(212,175,55,0.12)' : 'rgba(255,255,255,0.03)',
+                  border: `1px solid ${createVisibility === 'rayons_only' ? 'rgba(212,175,55,0.3)' : 'var(--dark-border)'}`,
+                  color: createVisibility === 'rayons_only' ? 'var(--gold)' : 'var(--text-secondary)',
+                }}
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                </svg>
+                Mes Rayons uniquement
+              </button>
+            </div>
+          </div>
+
           {/* Title */}
           <input
             type="text"
@@ -665,6 +703,15 @@ export default function MonEclatPage() {
                       <span className="text-xs font-medium px-2.5 py-1 rounded-full" style={{ background: `${catInfo.color}15`, color: catInfo.color }}>
                         {catInfo.label}
                       </span>
+                      {post.visibility === 'rayons_only' && (
+                        <span className="text-[10px] font-medium px-2 py-0.5 rounded-full flex items-center gap-1"
+                          style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.15)' }}>
+                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                          </svg>
+                          Rayons
+                        </span>
+                      )}
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{formatDate(post.created_at)}</span>

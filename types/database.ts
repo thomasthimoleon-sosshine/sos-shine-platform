@@ -78,6 +78,7 @@ export type Message = {
 // ── Posts (mur communautaire) ──
 export type PostCategory = 'temoignage' | 'partage' | 'question' | 'remerciements' | 'gratitude' | 'citation'
 export type PostMediaType = 'text' | 'image' | 'video' | 'audio'
+export type PostVisibility = 'public' | 'rayons_only'
 
 export type Post = {
   id: string
@@ -90,6 +91,7 @@ export type Post = {
   post_type: 'announcement' | 'douleur_published' | 'event_published' | 'general' | 'community' | 'eclat'
   category: PostCategory
   media_type: PostMediaType
+  visibility: PostVisibility
   is_published: boolean
   delete_locked: boolean
   created_at: string
@@ -324,7 +326,7 @@ export type LandingSection = {
 }
 
 // ── Helper: columns with DB defaults are optional on Insert ──
-type DefaultColumns = 'id' | 'created_at' | 'updated_at' | 'audio_url' | 'message_type' | 'status' | 'room_code' | 'call_type' | 'event_type' | 'target_user_id' | 'room_id' | 'category' | 'media_type' | 'video_url' | 'image_url' | 'is_published' | 'delete_locked' | 'publish_banned_until' | 'is_bot' | 'is_read' | 'is_deleted' | 'is_general' | 'is_anonymous' | 'is_active' | 'email_sent' | 'is_visible' | 'position' | 'total_clicks' | 'total_referrals' | 'total_earnings' | 'pending_earnings' | 'paid_earnings' | 'current_tier' | 'referral_code' | 'approved_at' | 'rejected_at' | 'rejection_reason' | 'paid_at' | 'payment_reference' | 'commission_amount'
+type DefaultColumns = 'id' | 'created_at' | 'updated_at' | 'audio_url' | 'message_type' | 'status' | 'room_code' | 'call_type' | 'event_type' | 'target_user_id' | 'room_id' | 'category' | 'media_type' | 'video_url' | 'image_url' | 'is_published' | 'delete_locked' | 'publish_banned_until' | 'is_bot' | 'is_read' | 'is_deleted' | 'is_general' | 'is_anonymous' | 'is_active' | 'email_sent' | 'is_visible' | 'position' | 'total_clicks' | 'total_referrals' | 'total_earnings' | 'pending_earnings' | 'paid_earnings' | 'current_tier' | 'referral_code' | 'approved_at' | 'rejected_at' | 'rejection_reason' | 'paid_at' | 'payment_reference' | 'commission_amount' | 'visibility'
 type OptionalId<T> = Omit<T, Extract<DefaultColumns, keyof T>> &
   Partial<Pick<T, Extract<DefaultColumns, keyof T>>>
 

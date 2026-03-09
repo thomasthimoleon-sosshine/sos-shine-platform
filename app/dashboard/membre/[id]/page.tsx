@@ -5,6 +5,29 @@ import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import type { Profile } from '@/types/database'
+import AudioPlayer from '@/components/AudioPlayer'
+
+type EclatPost = {
+  id: string
+  title: string
+  content: string
+  image_url: string | null
+  video_url: string | null
+  audio_url: string | null
+  category: string
+  created_at: string
+  post_likes: { count: number }[]
+  post_comments: { count: number }[]
+}
+
+const ECLAT_CATEGORIES: Record<string, { label: string; icon: string; color: string }> = {
+  temoignage: { label: 'Pensée', icon: '💭', color: '#D4AF37' },
+  partage: { label: 'Partage', icon: '💫', color: '#74C0FC' },
+  gratitude: { label: 'Gratitude', icon: '✨', color: '#FFEAA7' },
+  citation: { label: 'Citation', icon: '💬', color: '#FD79A8' },
+  remerciements: { label: 'Moment de joie', icon: '🌟', color: '#55EFC4' },
+  question: { label: 'Réflexion', icon: '🔮', color: '#A29BFE' },
+}
 
 export default function MembreProfilPage() {
   const { id } = useParams<{ id: string }>()
@@ -12,6 +35,8 @@ export default function MembreProfilPage() {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
+  const [eclatPosts, setEclatPosts] = useState<EclatPost[]>([])
+  const [eclatLoading, setEclatLoading] = useState(true)
 
   useEffect(() => {
     async function load() {
@@ -26,6 +51,41 @@ export default function MembreProfilPage() {
       const { data } = await supabase.from('profiles').select('*').eq('id', id).single()
       if (data) setProfile(data as Profile)
       setLoading(false)
+
+      // Load member's Éclat posts
+      const { data: posts } = await supabase
+        .from('posts')
+        .select('id, title, content, image_url, video_url, audio_url, category, created_at')
+        .eq('author_id', id)
+        .eq('post_type', 'eclat')
+        .eq('is_published', true)
+        .order('created_at', { ascending: false })
+        .limit(20)
+
+      if (posts && posts.length > 0) {
+        const postIds = posts.map(p => p.id)
+
+        const { data: likeData } = await supabase
+          .from('post_likes').select('post_id').in('post_id', postIds)
+        const likeCountMap = new Map<string, number>()
+        for (const l of (likeData || []) as { post_id: string }[]) {
+          likeCountMap.set(l.post_id, (likeCountMap.get(l.post_id) || 0) + 1)
+        }
+
+        const { data: commentData } = await supabase
+          .from('post_comments').select('post_id').in('post_id', postIds)
+        const commentCountMap = new Map<string, number>()
+        for (const c of (commentData || []) as { post_id: string }[]) {
+          commentCountMap.set(c.post_id, (commentCountMap.get(c.post_id) || 0) + 1)
+        }
+
+        setEclatPosts(posts.map(p => ({
+          ...p,
+          post_likes: [{ count: likeCountMap.get(p.id) || 0 }],
+          post_comments: [{ count: commentCountMap.get(p.id) || 0 }],
+        })))
+      }
+      setEclatLoading(false)
     }
     load()
   }, [id, router])
@@ -147,6 +207,82 @@ export default function MembreProfilPage() {
           <video src={profile.video_url} controls className="w-full rounded-xl bg-black max-h-96" />
         </div>
       )}
+
+      {/* Éclat — Personal Wall */}
+      <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <h3 className="font-display text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--gold)' }}>
+          <span className="text-xl">✨</span>
+          Éclat de {displayName}
+        </h3>
+
+        {eclatLoading ? (
+          <div className="flex justify-center py-8">
+            <div className="w-6 h-6 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : eclatPosts.length === 0 ? (
+          <p className="text-sm text-center py-6" style={{ color: 'var(--text-muted)' }}>
+            Ce membre n&apos;a pas encore publié sur son Éclat.
+          </p>
+        ) : (
+          <div className="space-y-4">
+            {eclatPosts.map(post => {
+              const cat = ECLAT_CATEGORIES[post.category] || ECLAT_CATEGORIES.partage
+              return (
+                <div key={post.id} className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-sm">{cat.icon}</span>
+                    <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ background: `${cat.color}15`, color: cat.color }}>
+                      {cat.label}
+                    </span>
+                    <span className="text-[10px] ml-auto" style={{ color: 'var(--text-muted)' }}>
+                      {new Date(post.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}
+                    </span>
+                  </div>
+
+                  {post.title && post.title !== cat.label && (
+                    <h4 className="font-semibold text-sm mb-1" style={{ color: 'var(--text-primary)' }}>{post.title}</h4>
+                  )}
+                  <p className="text-sm leading-relaxed whitespace-pre-line"
+                    style={{ color: post.category === 'citation' ? 'var(--gold)' : 'var(--text-secondary)', fontStyle: post.category === 'citation' ? 'italic' : 'normal' }}>
+                    {post.content}
+                  </p>
+
+                  {post.image_url && (
+                    <div className="mt-3 rounded-lg overflow-hidden">
+                      <img src={post.image_url} alt="" className="w-full" />
+                    </div>
+                  )}
+                  {post.video_url && (
+                    <div className="mt-3 rounded-lg overflow-hidden">
+                      <video src={post.video_url} controls className="w-full" />
+                    </div>
+                  )}
+                  {post.audio_url && (
+                    <div className="mt-3">
+                      <AudioPlayer src={post.audio_url} />
+                    </div>
+                  )}
+
+                  <div className="flex items-center gap-3 mt-3 text-[11px]" style={{ color: 'var(--text-muted)' }}>
+                    <span className="flex items-center gap-1">
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                      </svg>
+                      {post.post_likes[0].count}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" />
+                      </svg>
+                      {post.post_comments[0].count}
+                    </span>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

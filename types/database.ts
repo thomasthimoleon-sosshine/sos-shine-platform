@@ -87,7 +87,7 @@ export type Post = {
   image_url: string | null
   video_url: string | null
   audio_url: string | null
-  post_type: 'announcement' | 'douleur_published' | 'event_published' | 'general' | 'community'
+  post_type: 'announcement' | 'douleur_published' | 'event_published' | 'general' | 'community' | 'eclat'
   category: PostCategory
   media_type: PostMediaType
   is_published: boolean

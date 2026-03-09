@@ -37,6 +37,9 @@ export default function MembreProfilPage() {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
   const [eclatPosts, setEclatPosts] = useState<EclatPost[]>([])
   const [eclatLoading, setEclatLoading] = useState(true)
+  const [connectionStatus, setConnectionStatus] = useState<'none' | 'pending_sent' | 'pending_received' | 'accepted'>('none')
+  const [connectionId, setConnectionId] = useState<string | null>(null)
+  const [rayonLoading, setRayonLoading] = useState(false)
 
   useEffect(() => {
     async function load() {
@@ -86,6 +89,22 @@ export default function MembreProfilPage() {
         })))
       }
       setEclatLoading(false)
+
+      // Vérifier le statut de connexion (rayon)
+      const { data: connData } = await supabase
+        .from('shine_connections')
+        .select('id, sender_id, receiver_id, status')
+        .or(`and(sender_id.eq.${user.id},receiver_id.eq.${id}),and(sender_id.eq.${id},receiver_id.eq.${user.id})`)
+        .maybeSingle()
+
+      if (connData) {
+        setConnectionId(connData.id)
+        if (connData.status === 'accepted') {
+          setConnectionStatus('accepted')
+        } else if (connData.status === 'pending') {
+          setConnectionStatus(connData.sender_id === user.id ? 'pending_sent' : 'pending_received')
+        }
+      }
     }
     load()
   }, [id, router])
@@ -102,6 +121,50 @@ export default function MembreProfilPage() {
       member: { label: 'Membre', color: 'var(--text-secondary)' },
     }
     return map[role] || map.member
+  }
+
+  async function handleSendRayon() {
+    setRayonLoading(true)
+    const res = await fetch('/api/rayons', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ receiver_id: id }),
+    })
+    if (res.ok) {
+      const data = await res.json()
+      setConnectionStatus('pending_sent')
+      setConnectionId(data.connection.id)
+    }
+    setRayonLoading(false)
+  }
+
+  async function handleCancelRayon() {
+    if (!connectionId) return
+    setRayonLoading(true)
+    const res = await fetch('/api/rayons', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ connection_id: connectionId, action: 'cancel' }),
+    })
+    if (res.ok) {
+      setConnectionStatus('none')
+      setConnectionId(null)
+    }
+    setRayonLoading(false)
+  }
+
+  async function handleAcceptRayon() {
+    if (!connectionId) return
+    setRayonLoading(true)
+    const res = await fetch('/api/rayons', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ connection_id: connectionId, action: 'accept' }),
+    })
+    if (res.ok) {
+      setConnectionStatus('accepted')
+    }
+    setRayonLoading(false)
   }
 
   if (loading) {
@@ -169,10 +232,61 @@ export default function MembreProfilPage() {
 
         {/* Action buttons */}
         {currentUserId && currentUserId !== id && (
-          <div className="flex items-center justify-center gap-3 mt-6">
+          <div className="flex items-center justify-center gap-3 mt-6 flex-wrap">
+            {/* Bouton Rayon */}
+            {connectionStatus === 'none' && (
+              <button
+                onClick={handleSendRayon}
+                disabled={rayonLoading}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer"
+                style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: 'var(--dark)' }}
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                </svg>
+                {rayonLoading ? '...' : 'Envoyer un Rayon'}
+              </button>
+            )}
+            {connectionStatus === 'pending_sent' && (
+              <button
+                onClick={handleCancelRayon}
+                disabled={rayonLoading}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-medium transition-all cursor-pointer"
+                style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {rayonLoading ? '...' : 'Rayon envoyé'}
+              </button>
+            )}
+            {connectionStatus === 'pending_received' && (
+              <button
+                onClick={handleAcceptRayon}
+                disabled={rayonLoading}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer"
+                style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: 'var(--dark)' }}
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                </svg>
+                {rayonLoading ? '...' : 'Accepter le Rayon'}
+              </button>
+            )}
+            {connectionStatus === 'accepted' && (
+              <span className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-medium"
+                style={{ background: 'rgba(85,239,196,0.1)', color: '#55EFC4', border: '1px solid rgba(85,239,196,0.2)' }}>
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                </svg>
+                Rayon connect&eacute;
+              </span>
+            )}
+
+            {/* Bouton Message */}
             <Link href={`/dashboard/messages/${id}`}
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold transition-all"
-              style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
+              style={{ background: connectionStatus === 'none' ? 'var(--gold)' : 'rgba(255,255,255,0.05)', color: connectionStatus === 'none' ? 'var(--dark)' : 'var(--text-primary)', border: connectionStatus === 'none' ? 'none' : '1px solid var(--dark-border)' }}>
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
               </svg>

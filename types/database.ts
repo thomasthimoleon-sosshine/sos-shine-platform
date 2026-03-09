@@ -284,6 +284,22 @@ export type WithdrawalRequest = {
   created_at: string
 }
 
+// ── Shine Connections (Mes Rayons — personal connections) ──
+export type ShineConnectionStatus = 'pending' | 'accepted' | 'declined'
+
+export type ShineConnection = {
+  id: string
+  sender_id: string
+  receiver_id: string
+  status: ShineConnectionStatus
+  created_at: string
+  updated_at: string
+}
+
+export type ShineConnectionWithProfile = ShineConnection & {
+  profiles: Pick<Profile, 'id' | 'prenom' | 'pseudo' | 'avatar_url' | 'role' | 'bio'>
+}
+
 // ── Site Settings (admin customization) ──
 export type SiteSetting = {
   id: string
@@ -343,6 +359,7 @@ export type Database = {
       affiliate_conversions: Table<AffiliateConversion>
       affiliate_payouts: Table<AffiliatePayout>
       withdrawal_requests: Table<WithdrawalRequest>
+      shine_connections: Table<ShineConnection>
       site_settings: Table<SiteSetting>
       landing_sections: Table<LandingSection>
     }

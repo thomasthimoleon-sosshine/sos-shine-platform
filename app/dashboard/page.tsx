@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import type { Profile } from '@/types/database'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 import { getRandomQuote, type Quote } from '@/lib/quotes'
+import AudioPlayer from '@/components/AudioPlayer'
 
 const ease = [0.25, 0.46, 0.45, 0.94] as const
 
@@ -86,6 +87,308 @@ function ParcoursWidget({ siteSettings }: { siteSettings: Record<string, string>
             <p className="text-[12px]" style={{ color: 'var(--text-muted)' }}>{siteSettings.dash_journal_label || t('nav.journal')}</p>
           </div>
         </Link>
+      </div>
+    </div>
+  )
+}
+
+function PendingRayonsWidget() {
+  const [pending, setPending] = useState<Array<{ id: string; sender_id: string; created_at: string }>>([])
+  const [profiles, setProfiles] = useState<Record<string, { id: string; prenom: string; pseudo: string | null; avatar_url: string | null }>>({})
+  const [actionLoading, setActionLoading] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const res = await fetch('/api/rayons')
+        if (res.ok) {
+          const data = await res.json()
+          setPending(data.pendingReceived || [])
+          setProfiles(data.profiles || {})
+        }
+      } catch { /* empty */ }
+    }
+    load()
+  }, [])
+
+  async function handleAction(connectionId: string, action: 'accept' | 'decline') {
+    setActionLoading(connectionId)
+    const res = await fetch('/api/rayons', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ connection_id: connectionId, action }),
+    })
+    if (res.ok) {
+      setPending(prev => prev.filter(p => p.id !== connectionId))
+    }
+    setActionLoading(null)
+  }
+
+  if (pending.length === 0) return null
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.12, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+    >
+      <h2 className="text-[11px] font-semibold uppercase tracking-widest mb-3 flex items-center gap-2" style={{ color: 'var(--text-muted)' }}>
+        Rayons en attente
+        <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] rounded-full text-[10px] font-bold animate-pulse"
+          style={{ background: '#EF4444', color: '#fff' }}>
+          {pending.length}
+        </span>
+      </h2>
+      <div className="space-y-2">
+        {pending.map(req => {
+          const p = profiles[req.sender_id]
+          if (!p) return null
+          const displayName = p.pseudo || p.prenom
+          return (
+            <div key={req.id} className="glass glass-hover p-4 flex items-center gap-3"
+              style={{ borderColor: 'rgba(212,175,55,0.15)' }}>
+              <Link href={`/dashboard/membre/${p.id}`} className="shrink-0">
+                {p.avatar_url ? (
+                  <img src={p.avatar_url} alt={displayName} className="w-10 h-10 rounded-full object-cover" />
+                ) : (
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-display font-semibold"
+                    style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                    {displayName.charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </Link>
+              <div className="flex-1 min-w-0">
+                <p className="text-[14px] font-medium" style={{ color: 'var(--text-primary)' }}>
+                  <Link href={`/dashboard/membre/${p.id}`} className="hover:underline">{displayName}</Link>
+                  {' '}<span style={{ color: 'var(--text-muted)' }}>vous a envoyé un Rayon</span>
+                </p>
+                <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
+                  {new Date(req.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}
+                </p>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  onClick={() => handleAction(req.id, 'accept')}
+                  disabled={actionLoading === req.id}
+                  className="px-4 py-2 rounded-xl text-[13px] font-semibold cursor-pointer"
+                  style={{ background: 'var(--gold)', color: 'var(--dark)' }}
+                >
+                  {actionLoading === req.id ? '...' : 'Accepter'}
+                </button>
+                <button
+                  onClick={() => handleAction(req.id, 'decline')}
+                  disabled={actionLoading === req.id}
+                  className="px-3 py-2 rounded-xl text-[13px] cursor-pointer"
+                  style={{ color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--dark-border)' }}
+                >
+                  Décliner
+                </button>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </motion.div>
+  )
+}
+
+const ECLAT_CATEGORIES: Record<string, { label: string; icon: string; color: string }> = {
+  temoignage: { label: 'Pensée', icon: '💭', color: '#D4AF37' },
+  partage: { label: 'Partage', icon: '💫', color: '#74C0FC' },
+  gratitude: { label: 'Gratitude', icon: '✨', color: '#FFEAA7' },
+  citation: { label: 'Citation', icon: '💬', color: '#FD79A8' },
+  remerciements: { label: 'Moment de joie', icon: '🌟', color: '#55EFC4' },
+  question: { label: 'Réflexion', icon: '🔮', color: '#A29BFE' },
+}
+
+type FeedPost = {
+  id: string
+  author_id: string
+  title: string
+  content: string
+  image_url: string | null
+  video_url: string | null
+  audio_url: string | null
+  category: string
+  created_at: string
+  likes_count: number
+  comments_count: number
+  user_has_liked: boolean
+}
+
+type FeedProfile = {
+  id: string
+  prenom: string
+  pseudo: string | null
+  avatar_url: string | null
+  role: string
+}
+
+function FeedWidget() {
+  const { t } = useTranslation()
+  const [posts, setPosts] = useState<FeedPost[]>([])
+  const [profiles, setProfiles] = useState<Record<string, FeedProfile>>({})
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function loadFeed() {
+      try {
+        const res = await fetch('/api/feed')
+        if (res.ok) {
+          const data = await res.json()
+          setPosts(data.posts)
+          setProfiles(data.profiles)
+        }
+      } catch { /* empty */ }
+      setLoading(false)
+    }
+    loadFeed()
+  }, [])
+
+  if (loading) {
+    return (
+      <div>
+        <h2 className="text-[11px] font-semibold uppercase tracking-widest mb-4" style={{ color: 'var(--text-muted)' }}>
+          Fil d&apos;actualité de mes Rayons
+        </h2>
+        <div className="flex justify-center py-8">
+          <div className="w-6 h-6 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+        </div>
+      </div>
+    )
+  }
+
+  if (posts.length === 0) {
+    return (
+      <div>
+        <h2 className="text-[11px] font-semibold uppercase tracking-widest mb-4" style={{ color: 'var(--text-muted)' }}>
+          Fil d&apos;actualité de mes Rayons
+        </h2>
+        <div className="glass p-8 text-center">
+          <div className="text-3xl mb-3">&#9728;</div>
+          <h3 className="font-semibold text-[15px] mb-2" style={{ color: 'var(--text-primary)' }}>
+            Votre fil d&apos;actualité est vide
+          </h3>
+          <p className="text-sm mb-4" style={{ color: 'var(--text-muted)' }}>
+            Envoyez des Rayons aux membres pour voir leurs publications ici.
+          </p>
+          <Link
+            href="/dashboard/mur"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold"
+            style={{ background: 'var(--gold)', color: 'var(--dark)' }}
+          >
+            {t('encyclopedia.explore')} la communauté
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>
+          Fil d&apos;actualité de mes Rayons
+        </h2>
+        <Link href="/dashboard/mes-rayons" className="text-[12px] font-medium" style={{ color: 'var(--gold)' }}>
+          {t('rayons.tab_connections')} →
+        </Link>
+      </div>
+      <div className="space-y-4">
+        {posts.slice(0, 5).map(post => {
+          const author = profiles[post.author_id]
+          if (!author) return null
+          const displayName = author.pseudo || author.prenom
+          const cat = ECLAT_CATEGORIES[post.category] || ECLAT_CATEGORIES.partage
+
+          return (
+            <div key={post.id} className="glass glass-hover p-5 transition-all duration-300">
+              {/* Author header */}
+              <div className="flex items-center gap-3 mb-3">
+                <Link href={`/dashboard/membre/${author.id}`} className="shrink-0">
+                  {author.avatar_url ? (
+                    <img src={author.avatar_url} alt={displayName} className="w-10 h-10 rounded-full object-cover ring-1 ring-white/10" />
+                  ) : (
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-display font-semibold"
+                      style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                      {displayName.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                </Link>
+                <div className="flex-1 min-w-0">
+                  <Link href={`/dashboard/membre/${author.id}`} className="font-semibold text-[14px] hover:underline" style={{ color: 'var(--text-primary)' }}>
+                    {displayName}
+                  </Link>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>
+                      {new Date(post.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}
+                    </span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded-full" style={{ background: `${cat.color}15`, color: cat.color }}>
+                      {cat.icon} {cat.label}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Content */}
+              {post.title && post.title !== cat.label && (
+                <h4 className="font-semibold text-sm mb-1" style={{ color: 'var(--text-primary)' }}>{post.title}</h4>
+              )}
+              <p className="text-sm leading-relaxed whitespace-pre-line"
+                style={{
+                  color: post.category === 'citation' ? 'var(--gold)' : 'var(--text-secondary)',
+                  fontStyle: post.category === 'citation' ? 'italic' : 'normal',
+                }}>
+                {post.content.length > 300 ? post.content.slice(0, 300) + '...' : post.content}
+              </p>
+
+              {/* Media */}
+              {post.image_url && (
+                <div className="mt-3 rounded-lg overflow-hidden">
+                  <img src={post.image_url} alt="" className="w-full max-h-64 object-cover" />
+                </div>
+              )}
+              {post.video_url && (
+                <div className="mt-3 rounded-lg overflow-hidden">
+                  <video src={post.video_url} controls className="w-full max-h-64" />
+                </div>
+              )}
+              {post.audio_url && (
+                <div className="mt-3">
+                  <AudioPlayer src={post.audio_url} />
+                </div>
+              )}
+
+              {/* Footer stats */}
+              <div className="flex items-center gap-4 mt-3 pt-3" style={{ borderTop: '1px solid var(--dark-border)' }}>
+                <span className="flex items-center gap-1.5 text-[12px]" style={{ color: 'var(--text-muted)' }}>
+                  <svg className="w-4 h-4" fill={post.user_has_liked ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}
+                    style={{ color: post.user_has_liked ? '#EF4444' : 'var(--text-muted)' }}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                  </svg>
+                  {post.likes_count}
+                </span>
+                <span className="flex items-center gap-1.5 text-[12px]" style={{ color: 'var(--text-muted)' }}>
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" />
+                  </svg>
+                  {post.comments_count}
+                </span>
+                <Link href={`/dashboard/membre/${author.id}`} className="ml-auto text-[12px] font-medium" style={{ color: 'var(--gold)' }}>
+                  Voir le profil →
+                </Link>
+              </div>
+            </div>
+          )
+        })}
+
+        {posts.length > 5 && (
+          <div className="text-center">
+            <Link href="/dashboard/mes-rayons" className="text-sm font-medium" style={{ color: 'var(--gold)' }}>
+              Voir tous les posts de mes Rayons →
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   )
@@ -298,6 +601,12 @@ export default function DashboardHome() {
           <img src={siteSettings.dash_hero_image} alt="" className="w-full h-48 sm:h-64 object-cover" />
         </motion.div>
       )}
+
+      {/* ── Demandes de Rayons en attente ── */}
+      <PendingRayonsWidget />
+
+      {/* ── Fil d'actualité de mes Rayons ── */}
+      <FeedWidget />
 
       {/* ── Mon parcours — summary ── */}
       <ParcoursWidget siteSettings={siteSettings} />

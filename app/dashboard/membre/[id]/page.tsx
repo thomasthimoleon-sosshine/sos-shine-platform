@@ -40,6 +40,8 @@ export default function MembreProfilPage() {
   const [connectionStatus, setConnectionStatus] = useState<'none' | 'pending_sent' | 'pending_received' | 'accepted'>('none')
   const [connectionId, setConnectionId] = useState<string | null>(null)
   const [rayonLoading, setRayonLoading] = useState(false)
+  const [rayonError, setRayonError] = useState<string | null>(null)
+  const [rayonSuccess, setRayonSuccess] = useState<string | null>(null)
 
   useEffect(() => {
     async function load() {
@@ -64,13 +66,16 @@ export default function MembreProfilPage() {
         .maybeSingle()
 
       if (connData) {
-        setConnectionId(connData.id)
         if (connData.status === 'accepted') {
+          setConnectionId(connData.id)
           setConnectionStatus('accepted')
           isRayon = true
         } else if (connData.status === 'pending') {
+          setConnectionId(connData.id)
           setConnectionStatus(connData.sender_id === user.id ? 'pending_sent' : 'pending_received')
         }
+        // Si 'declined', on ne set pas connectionId ni connectionStatus
+        // pour permettre un nouvel envoi propre
       }
 
       // Load member's Éclat posts
@@ -134,15 +139,34 @@ export default function MembreProfilPage() {
 
   async function handleSendRayon() {
     setRayonLoading(true)
-    const res = await fetch('/api/rayons', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ receiver_id: id }),
-    })
-    if (res.ok) {
-      const data = await res.json()
-      setConnectionStatus('pending_sent')
-      setConnectionId(data.connection.id)
+    setRayonError(null)
+    setRayonSuccess(null)
+    try {
+      const res = await fetch('/api/rayons', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ receiver_id: id }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (res.ok && data.connection) {
+        setConnectionStatus('pending_sent')
+        setConnectionId(data.connection.id)
+        setRayonSuccess(`Rayon envoyé à ${profile?.pseudo || profile?.prenom || 'ce membre'} !`)
+      } else if (res.status === 409) {
+        // Connexion déjà existante — resynchroniser le statut
+        setRayonError('Une demande de connexion existe déjà avec ce membre.')
+        if (data.status === 'pending') {
+          setConnectionStatus('pending_sent')
+        } else if (data.status === 'accepted') {
+          setConnectionStatus('accepted')
+        }
+      } else if (res.status === 401) {
+        setRayonError('Session expirée. Veuillez rafraîchir la page et réessayer.')
+      } else {
+        setRayonError(data.error || 'Une erreur est survenue. Veuillez réessayer.')
+      }
+    } catch {
+      setRayonError('Erreur de connexion. Vérifiez votre réseau et réessayez.')
     }
     setRayonLoading(false)
   }
@@ -150,14 +174,22 @@ export default function MembreProfilPage() {
   async function handleCancelRayon() {
     if (!connectionId) return
     setRayonLoading(true)
-    const res = await fetch('/api/rayons', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ connection_id: connectionId, action: 'cancel' }),
-    })
-    if (res.ok) {
-      setConnectionStatus('none')
-      setConnectionId(null)
+    setRayonError(null)
+    setRayonSuccess(null)
+    try {
+      const res = await fetch('/api/rayons', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ connection_id: connectionId, action: 'cancel' }),
+      })
+      if (res.ok) {
+        setConnectionStatus('none')
+        setConnectionId(null)
+      } else {
+        setRayonError('Impossible d\'annuler le rayon. Veuillez réessayer.')
+      }
+    } catch {
+      setRayonError('Erreur de connexion. Vérifiez votre réseau.')
     }
     setRayonLoading(false)
   }
@@ -165,13 +197,22 @@ export default function MembreProfilPage() {
   async function handleAcceptRayon() {
     if (!connectionId) return
     setRayonLoading(true)
-    const res = await fetch('/api/rayons', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ connection_id: connectionId, action: 'accept' }),
-    })
-    if (res.ok) {
-      setConnectionStatus('accepted')
+    setRayonError(null)
+    setRayonSuccess(null)
+    try {
+      const res = await fetch('/api/rayons', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ connection_id: connectionId, action: 'accept' }),
+      })
+      if (res.ok) {
+        setConnectionStatus('accepted')
+        setRayonSuccess('Rayon accepté ! Vous êtes maintenant connectés.')
+      } else {
+        setRayonError('Impossible d\'accepter le rayon. Veuillez réessayer.')
+      }
+    } catch {
+      setRayonError('Erreur de connexion. Vérifiez votre réseau.')
     }
     setRayonLoading(false)
   }
@@ -245,6 +286,7 @@ export default function MembreProfilPage() {
             {/* Bouton Rayon */}
             {connectionStatus === 'none' && (
               <button
+                type="button"
                 onClick={handleSendRayon}
                 disabled={rayonLoading}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer"
@@ -258,6 +300,7 @@ export default function MembreProfilPage() {
             )}
             {connectionStatus === 'pending_sent' && (
               <button
+                type="button"
                 onClick={handleCancelRayon}
                 disabled={rayonLoading}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-medium transition-all cursor-pointer"
@@ -271,6 +314,7 @@ export default function MembreProfilPage() {
             )}
             {connectionStatus === 'pending_received' && (
               <button
+                type="button"
                 onClick={handleAcceptRayon}
                 disabled={rayonLoading}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer"
@@ -290,6 +334,18 @@ export default function MembreProfilPage() {
                 </svg>
                 Rayon connect&eacute;
               </span>
+            )}
+
+            {/* Feedback Rayon */}
+            {rayonSuccess && (
+              <p className="w-full text-center text-sm font-semibold px-4 py-3 rounded-xl" style={{ background: 'rgba(85,239,196,0.15)', color: '#55EFC4', border: '1px solid rgba(85,239,196,0.3)' }}>
+                {rayonSuccess}
+              </p>
+            )}
+            {rayonError && (
+              <p className="w-full text-center text-sm font-semibold px-4 py-3 rounded-xl" style={{ background: 'rgba(239,68,68,0.15)', color: '#EF4444', border: '1px solid rgba(239,68,68,0.3)' }}>
+                {rayonError}
+              </p>
             )}
 
             {/* Bouton Message */}

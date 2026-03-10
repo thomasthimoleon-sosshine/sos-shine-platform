@@ -72,15 +72,26 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'ID invalide' }, { status: 400 })
   }
 
-  // Vérifier s'il n'y a pas déjà une connexion
-  const { data: existing } = await supabase
+  // Vérifier s'il n'y a pas déjà une connexion (dans les deux sens)
+  const { data: existingRows } = await supabase
     .from('shine_connections')
-    .select('id, status')
+    .select('id, status, sender_id, receiver_id')
     .or(`and(sender_id.eq.${user.id},receiver_id.eq.${receiver_id}),and(sender_id.eq.${receiver_id},receiver_id.eq.${user.id})`)
-    .maybeSingle()
 
-  if (existing) {
-    return NextResponse.json({ error: 'Connexion déjà existante', status: existing.status }, { status: 409 })
+  if (existingRows && existingRows.length > 0) {
+    // Supprimer toutes les connexions déclinées
+    const declined = existingRows.filter(c => c.status === 'declined')
+    const active = existingRows.filter(c => c.status !== 'declined')
+
+    for (const d of declined) {
+      await supabase.from('shine_connections').delete().eq('id', d.id)
+    }
+
+    // S'il reste une connexion active/pending, on ne peut pas en créer une nouvelle
+    if (active.length > 0) {
+      const existing = active[0]
+      return NextResponse.json({ error: 'Connexion déjà existante', status: existing.status }, { status: 409 })
+    }
   }
 
   const { data, error } = await supabase

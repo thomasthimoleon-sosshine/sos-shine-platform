@@ -8,11 +8,16 @@ export async function GET() {
   if (!user) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
 
   // 1. Récupérer les IDs des connexions acceptées (mes Rayons)
-  const { data: connections } = await supabase
+  const { data: connections, error: connError } = await supabase
     .from('shine_connections')
     .select('sender_id, receiver_id')
     .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
     .eq('status', 'accepted')
+
+  // Si la table n'existe pas encore, retourner un feed vide
+  if (connError && connError.message.includes('schema cache')) {
+    return NextResponse.json({ posts: [], profiles: {} })
+  }
 
   const rayonIds = new Set<string>()
   for (const c of connections || []) {

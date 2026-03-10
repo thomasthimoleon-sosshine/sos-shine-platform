@@ -9,12 +9,22 @@ export async function GET() {
   if (!user) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
 
   // Connexions acceptées
-  const { data: connections } = await supabase
+  const { data: connections, error: connError } = await supabase
     .from('shine_connections')
     .select('*')
     .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
     .eq('status', 'accepted')
     .order('updated_at', { ascending: false })
+
+  // Si la table n'existe pas encore, retourner des listes vides
+  if (connError && connError.message.includes('schema cache')) {
+    return NextResponse.json({
+      connections: [],
+      pendingReceived: [],
+      pendingSent: [],
+      profiles: {},
+    })
+  }
 
   // Rayons reçus en attente
   const { data: pendingReceived } = await supabase
@@ -73,10 +83,14 @@ export async function POST(req: NextRequest) {
   }
 
   // Vérifier s'il n'y a pas déjà une connexion (dans les deux sens)
-  const { data: existingRows } = await supabase
+  const { data: existingRows, error: checkError } = await supabase
     .from('shine_connections')
     .select('id, status, sender_id, receiver_id')
     .or(`and(sender_id.eq.${user.id},receiver_id.eq.${receiver_id}),and(sender_id.eq.${receiver_id},receiver_id.eq.${user.id})`)
+
+  if (checkError && checkError.message.includes('schema cache')) {
+    return NextResponse.json({ error: 'Le système de Rayons est en cours de mise en place. Veuillez réessayer dans quelques instants.' }, { status: 503 })
+  }
 
   if (existingRows && existingRows.length > 0) {
     // Supprimer toutes les connexions déclinées
@@ -100,7 +114,12 @@ export async function POST(req: NextRequest) {
     .select()
     .single()
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) {
+    const msg = error.message.includes('schema cache')
+      ? 'Le système de Rayons est en cours de mise en place. Veuillez réessayer dans quelques instants.'
+      : error.message
+    return NextResponse.json({ error: msg }, { status: error.message.includes('schema cache') ? 503 : 500 })
+  }
 
   // Envoyer une notification au destinataire
   const { data: senderProfile } = await supabase

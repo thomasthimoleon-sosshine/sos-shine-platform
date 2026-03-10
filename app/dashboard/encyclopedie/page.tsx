@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
-import type { Douleur } from '@/types/database'
+import type { Douleur, UserProgress } from '@/types/database'
 import FavoriteButton from '@/components/FavoriteButton'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 
@@ -23,6 +24,8 @@ export default function EncyclopediePage() {
   const [douleurs, setDouleurs] = useState<Douleur[]>([])
   const [search, setSearch] = useState('')
   const [loading, setLoading] = useState(true)
+  const [progressMap, setProgressMap] = useState<Record<string, UserProgress>>({})
+  const [totalCompleted, setTotalCompleted] = useState(0)
 
   useEffect(() => {
     async function load() {
@@ -36,6 +39,27 @@ export default function EncyclopediePage() {
       if (data && data.length > 0) {
         setDouleurs(data as Douleur[])
       }
+
+      // Load user progress
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        const { data: progressData } = await supabase
+          .from('user_progress')
+          .select('*')
+          .eq('user_id', user.id)
+
+        if (progressData) {
+          const map: Record<string, UserProgress> = {}
+          let completed = 0
+          for (const p of progressData as UserProgress[]) {
+            map[p.douleur_id] = p
+            if (p.completed_at) completed++
+          }
+          setProgressMap(map)
+          setTotalCompleted(completed)
+        }
+      }
+
       setLoading(false)
     }
     load()
@@ -70,6 +94,36 @@ export default function EncyclopediePage() {
           {t('dashboard.encyclopedia_subtitle')}
         </p>
       </div>
+
+      {/* Global progress widget */}
+      {douleurs.length > 0 && (
+        <div className="rounded-2xl p-5" style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.12)' }}>
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+              Votre progression globale
+            </span>
+            <span className="text-sm font-semibold" style={{ color: 'var(--gold)' }}>
+              {totalCompleted}/{douleurs.length} complétés
+            </span>
+          </div>
+          <div className="h-2.5 rounded-full overflow-hidden" style={{ background: 'var(--dark-border)' }}>
+            <motion.div
+              className="h-full rounded-full"
+              style={{ background: 'linear-gradient(90deg, var(--gold), var(--gold-light))' }}
+              initial={{ width: 0 }}
+              animate={{ width: `${douleurs.length > 0 ? (totalCompleted / douleurs.length) * 100 : 0}%` }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            />
+          </div>
+          {totalCompleted > 0 && (
+            <p className="text-[11px] mt-1.5" style={{ color: 'var(--text-muted)' }}>
+              {totalCompleted === douleurs.length
+                ? 'Bravo ! Vous avez complété tous les challenges disponibles !'
+                : `Continuez votre parcours, chaque étape compte.`}
+            </p>
+          )}
+        </div>
+      )}
 
       {/* Search */}
       <div className="relative">
@@ -141,6 +195,9 @@ export default function EncyclopediePage() {
                 {grouped[letter].map((douleur) => {
                   const slug = douleur.slug
                   const hasId = 'id' in douleur
+                  const douleurId = hasId ? (douleur as Douleur).id : null
+                  const prog = douleurId ? progressMap[douleurId] : null
+                  const stepsCompleted = prog ? [prog.step1_completed, prog.step2_completed, prog.step3_completed].filter(Boolean).length : 0
                   return (
                     <Link
                       key={slug}
@@ -148,19 +205,34 @@ export default function EncyclopediePage() {
                       className={`group rounded-xl p-5 transition-all duration-300 ${hasId ? 'hover:-translate-y-0.5' : ''}`}
                       style={{
                         background: 'var(--dark-card)',
-                        border: '1px solid var(--dark-border)',
+                        border: prog?.completed_at ? '1px solid rgba(85,239,196,0.2)' : '1px solid var(--dark-border)',
                         opacity: hasId ? 1 : 0.7,
                       }}
                       onClick={(e) => { if (!hasId) e.preventDefault() }}
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-base mb-1 group-hover:text-[var(--gold)] transition-colors" style={{ color: 'var(--text-primary)' }}>
-                            {douleur.title}
-                          </h3>
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="font-semibold text-base group-hover:text-[var(--gold)] transition-colors" style={{ color: 'var(--text-primary)' }}>
+                              {douleur.title}
+                            </h3>
+                            {prog?.completed_at && (
+                              <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="#55EFC4" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                            )}
+                          </div>
                           <p className="text-sm leading-relaxed line-clamp-2" style={{ color: 'var(--text-secondary)' }}>
                             {douleur.description}
                           </p>
+                          {hasId && stepsCompleted > 0 && !prog?.completed_at && (
+                            <div className="flex items-center gap-2 mt-2">
+                              <div className="flex-1 h-1 rounded-full overflow-hidden" style={{ background: 'var(--dark-border)' }}>
+                                <div className="h-full rounded-full" style={{ width: `${(stepsCompleted / 3) * 100}%`, background: 'var(--gold)' }} />
+                              </div>
+                              <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{stepsCompleted}/3</span>
+                            </div>
+                          )}
                         </div>
                         {hasId ? (
                           <div className="flex items-center gap-1.5 flex-shrink-0">

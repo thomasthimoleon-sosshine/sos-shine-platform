@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { createClient } from '@/lib/supabase/client'
+import type { Challenge, ChallengeParticipation } from '@/types/database'
+import { XP_REWARDS } from '@/lib/xp'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 
 interface Goal {
@@ -46,9 +49,41 @@ export default function ObjectifsPage() {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [targetDate, setTargetDate] = useState('')
+  const [challenges, setChallenges] = useState<Challenge[]>([])
+  const [participations, setParticipations] = useState<Record<string, ChallengeParticipation>>({})
+  const [userId, setUserId] = useState<string | null>(null)
 
   useEffect(() => {
     setGoals(loadGoals())
+
+    async function loadChallenges() {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+      setUserId(user.id)
+
+      const { data: ch } = await supabase
+        .from('challenges')
+        .select('*')
+        .in('status', ['active', 'completed'])
+        .order('created_at', { ascending: false })
+
+      if (ch) setChallenges(ch as Challenge[])
+
+      const { data: parts } = await supabase
+        .from('challenge_participations')
+        .select('*')
+        .eq('user_id', user.id)
+
+      if (parts) {
+        const map: Record<string, ChallengeParticipation> = {}
+        for (const p of parts as ChallengeParticipation[]) {
+          map[p.challenge_id] = p
+        }
+        setParticipations(map)
+      }
+    }
+    loadChallenges()
   }, [])
 
   const activeGoals = goals.filter((g) => g.status === 'active')
@@ -330,6 +365,109 @@ export default function ObjectifsPage() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* ── Community Challenges Section ── */}
+      {challenges.length > 0 && (
+        <div className="mt-10 space-y-4">
+          <h2 className="font-display text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+            Défis Communautaires
+          </h2>
+          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+            Participez aux défis de la communauté et gagnez des récompenses.
+          </p>
+
+          <div className="space-y-3">
+            {challenges.map(ch => {
+              const part = participations[ch.id]
+              const isEnrolled = !!part
+              const isCompleted = part?.status === 'completed'
+              const daysLeft = ch.end_date ? Math.max(0, Math.ceil((new Date(ch.end_date).getTime() - Date.now()) / 86400000)) : null
+
+              return (
+                <div key={ch.id} className="rounded-xl p-5" style={{
+                  background: isCompleted ? 'rgba(85,239,196,0.04)' : 'var(--dark-card)',
+                  border: isCompleted ? '1px solid rgba(85,239,196,0.15)' : '1px solid var(--dark-border)',
+                }}>
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="font-semibold" style={{ color: 'var(--text-primary)' }}>{ch.title}</h3>
+                        {isCompleted && (
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="#55EFC4" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        )}
+                      </div>
+                      {ch.description && (
+                        <p className="text-sm line-clamp-2 mb-2" style={{ color: 'var(--text-secondary)' }}>{ch.description}</p>
+                      )}
+                      <div className="flex flex-wrap items-center gap-3 text-[11px]" style={{ color: 'var(--text-muted)' }}>
+                        <span style={{ color: 'var(--gold)' }}>+{ch.reward_value} XP</span>
+                        {ch.reward_detail && <span>{ch.reward_detail}</span>}
+                        {daysLeft !== null && daysLeft > 0 && <span>{daysLeft} jours restants</span>}
+                        {ch.status === 'completed' && <span style={{ color: '#D4AF37' }}>Défi terminé</span>}
+                      </div>
+                    </div>
+
+                    <div className="flex-shrink-0">
+                      {!isEnrolled && ch.status === 'active' ? (
+                        <button
+                          onClick={async () => {
+                            if (!userId) return
+                            const supabase = createClient()
+                            const { data } = await supabase.from('challenge_participations').insert({
+                              challenge_id: ch.id,
+                              user_id: userId,
+                              status: 'enrolled',
+                              progress: 0,
+                              completed_at: null,
+                            }).select().single()
+                            if (data) {
+                              setParticipations(prev => ({ ...prev, [ch.id]: data as ChallengeParticipation }))
+                            }
+                          }}
+                          className="px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer"
+                          style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
+                          Participer
+                        </button>
+                      ) : isEnrolled && !isCompleted && ch.status === 'active' ? (
+                        <button
+                          onClick={async () => {
+                            if (!userId) return
+                            const supabase = createClient()
+                            await supabase.from('challenge_participations').update({
+                              status: 'completed',
+                              completed_at: new Date().toISOString(),
+                            }).eq('id', part.id)
+                            setParticipations(prev => ({
+                              ...prev,
+                              [ch.id]: { ...prev[ch.id], status: 'completed', completed_at: new Date().toISOString() } as ChallengeParticipation,
+                            }))
+                            try {
+                              await supabase.rpc('add_xp', {
+                                p_user_id: userId,
+                                p_amount: XP_REWARDS.community_challenge_completed,
+                                p_reason: 'community_challenge_completed',
+                              })
+                            } catch { /* non-critical */ }
+                          }}
+                          className="px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer"
+                          style={{ background: 'rgba(85,239,196,0.1)', color: '#55EFC4', border: '1px solid rgba(85,239,196,0.2)' }}>
+                          Marquer terminé
+                        </button>
+                      ) : isCompleted ? (
+                        <span className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ color: '#55EFC4' }}>
+                          Complété
+                        </span>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

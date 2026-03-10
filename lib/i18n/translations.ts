@@ -71,7 +71,7 @@ export const translations: Record<string, string> = {
   'favorites.title': 'Mes Favoris',
   'favorites.subtitle': 'Les expériences de vie que vous avez sauvegardées pour y revenir facilement.',
   'favorites.empty': 'Aucun favori pour le moment',
-  'favorites.empty_desc': "Cliquez sur le coeur d'un article dans l'encyclopédie pour le sauvegarder ici.",
+  'favorites.empty_desc': "Cliquez sur l'étoile d'un article dans l'encyclopédie pour le sauvegarder ici.",
   'favorites.explore': "Explorer l'encyclopédie",
   'favorites.add': 'Ajouter aux favoris',
   'favorites.remove': 'Retirer des favoris',

@@ -621,8 +621,8 @@ export default function AdminPublications() {
                   )}
                   {/* Stats */}
                   {likeCount > 0 && (
-                    <span className="text-[11px] flex items-center gap-1" style={{ color: '#EF4444' }}>
-                      ❤️ {likeCount}
+                    <span className="text-[11px] flex items-center gap-1" style={{ color: '#D4AF37' }}>
+                      ⭐ {likeCount} Shines
                     </span>
                   )}
                   {commentCount > 0 && (

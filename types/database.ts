@@ -286,6 +286,77 @@ export type WithdrawalRequest = {
   created_at: string
 }
 
+// ── User Progress (encyclopedia progression tracking) ──
+export type UserProgress = {
+  id: string
+  user_id: string
+  douleur_id: string
+  step1_completed: boolean
+  step2_completed: boolean
+  step3_completed: boolean
+  completed_at: string | null
+  created_at: string
+  updated_at: string
+}
+
+// ── User XP (experience points and levels) ──
+export type UserXP = {
+  id: string
+  user_id: string
+  total_xp: number
+  level: number
+  shines_given: number
+  shines_received: number
+  created_at: string
+  updated_at: string
+}
+
+// ── Challenges (community challenges) ──
+export type ChallengeRewardType = 'xp' | 'video' | 'call' | 'badge'
+export type ChallengeStatus = 'draft' | 'active' | 'completed' | 'archived'
+
+export type Challenge = {
+  id: string
+  title: string
+  description: string | null
+  reward_type: ChallengeRewardType
+  reward_value: number
+  reward_detail: string | null
+  start_date: string | null
+  end_date: string | null
+  status: ChallengeStatus
+  max_participants: number | null
+  created_by: string | null
+  winner_id: string | null
+  created_at: string
+  updated_at: string
+}
+
+// ── Challenge Participations ──
+export type ChallengeParticipationStatus = 'enrolled' | 'in_progress' | 'completed' | 'abandoned'
+
+export type ChallengeParticipation = {
+  id: string
+  challenge_id: string
+  user_id: string
+  status: ChallengeParticipationStatus
+  progress: number
+  completed_at: string | null
+  created_at: string
+  updated_at: string
+}
+
+// ── Pinned Posts ──
+export type PinnedPost = {
+  id: string
+  post_id: string | null
+  challenge_id: string | null
+  pinned_by: string | null
+  pin_type: 'winner' | 'announcement' | 'highlight'
+  expires_at: string | null
+  created_at: string
+}
+
 // ── Shine Connections (Mes Rayons — personal connections) ──
 export type ShineConnectionStatus = 'pending' | 'accepted' | 'declined'
 
@@ -364,9 +435,19 @@ export type Database = {
       shine_connections: Table<ShineConnection>
       site_settings: Table<SiteSetting>
       landing_sections: Table<LandingSection>
+      user_progress: Table<UserProgress>
+      user_xp: Table<UserXP>
+      challenges: Table<Challenge>
+      challenge_participations: Table<ChallengeParticipation>
+      pinned_posts: Table<PinnedPost>
     }
     Views: Record<string, never>
-    Functions: Record<string, never>
+    Functions: {
+      add_xp: {
+        Args: { p_user_id: string; p_amount: number; p_reason?: string }
+        Returns: { total_xp: number; level: number; level_up: boolean }
+      }
+    }
   }
 }
 

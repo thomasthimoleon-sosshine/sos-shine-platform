@@ -287,25 +287,25 @@ export default function MonEclatPage() {
     setCreating(false)
   }
 
-  /* ── Like / Unlike ── */
-  async function toggleLike(postId: string) {
+  /* ── Shine / Un-Shine ── */
+  async function toggleShine(postId: string) {
     if (!currentUserId) return
     const supabase = createClient()
     const post = posts.find(p => p.id === postId)
     if (!post) return
 
-    const wasLiked = post.user_has_liked
+    const wasShined = post.user_has_liked
 
     setPosts(prev => prev.map(p => p.id === postId
       ? {
           ...p,
-          user_has_liked: !wasLiked,
-          post_likes: [{ count: wasLiked ? Math.max(0, (p.post_likes?.[0]?.count || 1) - 1) : (p.post_likes?.[0]?.count || 0) + 1 }],
+          user_has_liked: !wasShined,
+          post_likes: [{ count: wasShined ? Math.max(0, (p.post_likes?.[0]?.count || 1) - 1) : (p.post_likes?.[0]?.count || 0) + 1 }],
         }
       : p
     ))
 
-    const { error } = wasLiked
+    const { error } = wasShined
       ? await supabase.from('post_likes').delete().eq('post_id', postId).eq('user_id', currentUserId)
       : await supabase.from('post_likes').insert({ post_id: postId, user_id: currentUserId })
 
@@ -313,11 +313,17 @@ export default function MonEclatPage() {
       setPosts(prev => prev.map(p => p.id === postId
         ? {
             ...p,
-            user_has_liked: wasLiked,
-            post_likes: [{ count: wasLiked ? (p.post_likes?.[0]?.count || 0) + 1 : Math.max(0, (p.post_likes?.[0]?.count || 1) - 1) }],
+            user_has_liked: wasShined,
+            post_likes: [{ count: wasShined ? (p.post_likes?.[0]?.count || 0) + 1 : Math.max(0, (p.post_likes?.[0]?.count || 1) - 1) }],
           }
         : p
       ))
+    }
+
+    if (!wasShined && !error) {
+      try {
+        await supabase.rpc('add_xp', { p_user_id: currentUserId, p_amount: 5, p_reason: 'shine_given' })
+      } catch { /* XP update is non-critical */ }
     }
   }
 
@@ -463,7 +469,7 @@ export default function MonEclatPage() {
           <div className="w-px h-8" style={{ background: 'var(--dark-border)' }} />
           <div className="text-center">
             <p className="text-xl font-semibold" style={{ color: 'var(--gold)' }}>{totalLikes}</p>
-            <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>j&apos;aime</p>
+            <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>shines</p>
           </div>
           <div className="w-px h-8" style={{ background: 'var(--dark-border)' }} />
           <div className="text-center">
@@ -803,11 +809,11 @@ export default function MonEclatPage() {
                 {/* ── Action bar ── */}
                 {!isEditing && (
                   <div className="px-6 py-3 flex items-center gap-1" style={{ borderTop: '1px solid var(--dark-border)' }}>
-                    <button onClick={() => toggleLike(post.id)}
+                    <button onClick={() => toggleShine(post.id)}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
-                      style={{ color: post.user_has_liked ? '#EF4444' : 'var(--text-muted)' }}>
+                      style={{ color: post.user_has_liked ? '#D4AF37' : 'var(--text-muted)' }}>
                       <svg className="w-4 h-4" fill={post.user_has_liked ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
                       </svg>
                       {likeCount > 0 && <span>{likeCount}</span>}
                     </button>

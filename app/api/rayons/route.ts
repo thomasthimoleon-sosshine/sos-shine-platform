@@ -80,7 +80,12 @@ export async function POST(req: NextRequest) {
     .maybeSingle()
 
   if (existing) {
-    return NextResponse.json({ error: 'Connexion déjà existante', status: existing.status }, { status: 409 })
+    // Si la connexion précédente a été refusée, la supprimer pour permettre un nouvel envoi
+    if (existing.status === 'declined') {
+      await supabase.from('shine_connections').delete().eq('id', existing.id)
+    } else {
+      return NextResponse.json({ error: 'Connexion déjà existante', status: existing.status }, { status: 409 })
+    }
   }
 
   const { data, error } = await supabase

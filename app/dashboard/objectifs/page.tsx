@@ -1,9 +1,10 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
-import type { Challenge, ChallengeParticipation } from '@/types/database'
+import type { Challenge, ChallengeParticipation, UserGoal } from '@/types/database'
 import { XP_REWARDS } from '@/lib/xp'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 
@@ -52,6 +53,8 @@ export default function ObjectifsPage() {
   const [challenges, setChallenges] = useState<Challenge[]>([])
   const [participations, setParticipations] = useState<Record<string, ChallengeParticipation>>({})
   const [userId, setUserId] = useState<string | null>(null)
+  const [onboardingGoals, setOnboardingGoals] = useState<UserGoal[]>([])
+  const [hasOnboarding, setHasOnboarding] = useState(false)
 
   useEffect(() => {
     setGoals(loadGoals())
@@ -81,6 +84,22 @@ export default function ObjectifsPage() {
           map[p.challenge_id] = p
         }
         setParticipations(map)
+      }
+
+      // Load onboarding goals
+      try {
+        const { data: userGoals } = await supabase
+          .from('user_goals')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: true })
+
+        if (userGoals && userGoals.length > 0) {
+          setOnboardingGoals(userGoals as UserGoal[])
+          setHasOnboarding(true)
+        }
+      } catch {
+        // Table may not exist yet
       }
     }
     loadChallenges()
@@ -171,7 +190,138 @@ export default function ObjectifsPage() {
         ))}
       </motion.div>
 
-      {goals.length === 0 ? (
+      {/* ── Onboarding Goals Section ── */}
+      {hasOnboarding && onboardingGoals.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.5, ease }}
+          className="space-y-4"
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="font-display text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+                Mon parcours personnalisé
+              </h2>
+              <p className="text-[13px] mt-0.5" style={{ color: 'var(--text-muted)' }}>
+                Basé sur vos réponses au questionnaire d&apos;accueil
+              </p>
+            </div>
+            <Link
+              href="/onboarding"
+              className="text-[12px] px-3 py-1.5 rounded-lg transition-colors"
+              style={{ color: 'var(--gold)', background: 'rgba(212,175,55,0.08)' }}
+            >
+              Modifier
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {onboardingGoals.map((og, i) => (
+              <motion.div
+                key={og.id}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 + i * 0.04, duration: 0.4, ease }}
+                className="rounded-xl p-5 group"
+                style={{
+                  background: og.status === 'completed' ? 'rgba(85,239,196,0.04)' : 'rgba(212,175,55,0.04)',
+                  border: og.status === 'completed' ? '1px solid rgba(85,239,196,0.15)' : '1px solid rgba(212,175,55,0.12)',
+                }}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <span className="inline-block w-2 h-2 rounded-full shrink-0"
+                        style={{ background: og.status === 'completed' ? '#55EFC4' : 'var(--gold)' }} />
+                      <span className="text-[11px] font-medium uppercase tracking-wide"
+                        style={{ color: og.status === 'completed' ? '#55EFC4' : 'var(--gold)' }}>
+                        {og.status === 'completed' ? 'Complété' : 'En cours'}
+                      </span>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}>
+                        Onboarding
+                      </span>
+                    </div>
+                    <h3 className="font-semibold text-[15px] mb-1" style={{
+                      color: 'var(--text-primary)',
+                      textDecoration: og.status === 'completed' ? 'line-through' : 'none',
+                      opacity: og.status === 'completed' ? 0.7 : 1,
+                    }}>
+                      {og.title}
+                    </h3>
+                    {og.description && (
+                      <p className="text-[13px] leading-relaxed mb-2" style={{ color: 'var(--text-secondary)' }}>
+                        {og.description}
+                      </p>
+                    )}
+                    {og.recommended_slug && (
+                      <Link
+                        href={`/dashboard/encyclopedie/${og.recommended_slug}`}
+                        className="inline-flex items-center gap-1.5 text-[12px] font-medium transition-colors hover:opacity-80"
+                        style={{ color: 'var(--gold)' }}
+                      >
+                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                        </svg>
+                        Voir le challenge recommandé
+                      </Link>
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                      onClick={async () => {
+                        if (!userId) return
+                        const newStatus = og.status === 'active' ? 'completed' : 'active'
+                        const supabase = createClient()
+                        await supabase.from('user_goals').update({ status: newStatus }).eq('id', og.id)
+                        setOnboardingGoals(prev => prev.map(g => g.id === og.id ? { ...g, status: newStatus } : g))
+                      }}
+                      className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer"
+                      style={{ background: 'rgba(85,239,196,0.1)', color: '#55EFC4' }}
+                      title={og.status === 'active' ? 'Marquer comme complété' : 'Réactiver'}
+                    >
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      )}
+
+      {/* ── Prompt to take onboarding if not done ── */}
+      {!hasOnboarding && goals.length === 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.5, ease }}
+          className="rounded-xl p-6 text-center"
+          style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.12)' }}
+        >
+          <div className="w-12 h-12 rounded-2xl mx-auto mb-3 flex items-center justify-center"
+            style={{ background: 'rgba(212,175,55,0.1)' }}>
+            <span className="text-2xl">✨</span>
+          </div>
+          <h3 className="font-display text-lg font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
+            Personnalisez votre parcours
+          </h3>
+          <p className="text-[13px] mb-4" style={{ color: 'var(--text-secondary)' }}>
+            Répondez à quelques questions pour que nous puissions vous guider vers les challenges les plus adaptés à vos besoins.
+          </p>
+          <Link
+            href="/onboarding"
+            className="inline-block px-6 py-2.5 rounded-full text-sm font-medium transition-all hover:opacity-90"
+            style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#09090b' }}
+          >
+            Commencer le questionnaire
+          </Link>
+        </motion.div>
+      )}
+
+      {goals.length === 0 && hasOnboarding ? null : goals.length === 0 ? (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

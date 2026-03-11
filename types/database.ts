@@ -396,8 +396,32 @@ export type LandingSection = {
   updated_at: string
 }
 
+// ── Onboarding Responses ──
+export type OnboardingResponse = {
+  id: string
+  user_id: string
+  goals: string[]
+  completed_at: string
+  created_at: string
+  updated_at: string
+}
+
+// ── User Goals (generated from onboarding) ──
+export type UserGoal = {
+  id: string
+  user_id: string
+  title: string
+  description: string | null
+  goal_key: string
+  recommended_slug: string | null
+  status: 'active' | 'completed'
+  source: 'onboarding' | 'manual'
+  created_at: string
+  updated_at: string
+}
+
 // ── Helper: columns with DB defaults are optional on Insert ──
-type DefaultColumns = 'id' | 'created_at' | 'updated_at' | 'audio_url' | 'message_type' | 'status' | 'room_code' | 'call_type' | 'event_type' | 'target_user_id' | 'room_id' | 'category' | 'media_type' | 'video_url' | 'image_url' | 'is_published' | 'delete_locked' | 'publish_banned_until' | 'is_bot' | 'is_read' | 'is_deleted' | 'is_general' | 'is_anonymous' | 'is_active' | 'email_sent' | 'is_visible' | 'position' | 'total_clicks' | 'total_referrals' | 'total_earnings' | 'pending_earnings' | 'paid_earnings' | 'current_tier' | 'referral_code' | 'approved_at' | 'rejected_at' | 'rejection_reason' | 'paid_at' | 'payment_reference' | 'commission_amount' | 'visibility'
+type DefaultColumns = 'id' | 'created_at' | 'updated_at' | 'completed_at' | 'audio_url' | 'message_type' | 'status' | 'room_code' | 'call_type' | 'event_type' | 'target_user_id' | 'room_id' | 'category' | 'media_type' | 'video_url' | 'image_url' | 'is_published' | 'delete_locked' | 'publish_banned_until' | 'is_bot' | 'is_read' | 'is_deleted' | 'is_general' | 'is_anonymous' | 'is_active' | 'email_sent' | 'is_visible' | 'position' | 'total_clicks' | 'total_referrals' | 'total_earnings' | 'pending_earnings' | 'paid_earnings' | 'current_tier' | 'referral_code' | 'approved_at' | 'rejected_at' | 'rejection_reason' | 'paid_at' | 'payment_reference' | 'commission_amount' | 'visibility' | 'source'
 type OptionalId<T> = Omit<T, Extract<DefaultColumns, keyof T>> &
   Partial<Pick<T, Extract<DefaultColumns, keyof T>>>
 
@@ -440,6 +464,8 @@ export type Database = {
       challenges: Table<Challenge>
       challenge_participations: Table<ChallengeParticipation>
       pinned_posts: Table<PinnedPost>
+      onboarding_responses: Table<OnboardingResponse>
+      user_goals: Table<UserGoal>
     }
     Views: Record<string, never>
     Functions: {

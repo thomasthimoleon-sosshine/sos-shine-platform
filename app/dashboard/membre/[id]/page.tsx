@@ -59,13 +59,13 @@ export default function MembreProfilPage() {
 
       // Vérifier le statut de connexion (rayon) — avant de charger les posts
       let isRayon = false
-      const { data: connData } = await supabase
+      const { data: connData, error: connError } = await supabase
         .from('shine_connections')
         .select('id, sender_id, receiver_id, status')
         .or(`and(sender_id.eq.${user.id},receiver_id.eq.${id}),and(sender_id.eq.${id},receiver_id.eq.${user.id})`)
         .maybeSingle()
 
-      if (connData) {
+      if (connData && !connError) {
         if (connData.status === 'accepted') {
           setConnectionId(connData.id)
           setConnectionStatus('accepted')

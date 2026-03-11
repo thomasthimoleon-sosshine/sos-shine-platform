@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS public.messages (
   created_at    TIMESTAMPTZ DEFAULT now()
 );
 
--- ── 5. POSTS (Community Wall) ──
+-- ── 5. POSTS (Community Wall + Éclat) ──
 CREATE TABLE IF NOT EXISTS public.posts (
   id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   author_id     UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
@@ -80,13 +80,17 @@ CREATE TABLE IF NOT EXISTS public.posts (
   image_url     TEXT,
   video_url     TEXT,
   audio_url     TEXT,
-  post_type     TEXT NOT NULL DEFAULT 'general' CHECK (post_type IN ('announcement', 'douleur_published', 'event_published', 'general', 'community')),
+  post_type     TEXT NOT NULL DEFAULT 'general' CHECK (post_type IN ('announcement', 'douleur_published', 'event_published', 'general', 'community', 'eclat')),
   category      TEXT DEFAULT 'partage' CHECK (category IN ('temoignage', 'partage', 'question', 'remerciements', 'gratitude', 'citation')),
   media_type    TEXT DEFAULT 'text' CHECK (media_type IN ('text', 'image', 'video', 'audio')),
+  visibility    TEXT NOT NULL DEFAULT 'public' CHECK (visibility IN ('public', 'rayons_only')),
+  delete_locked BOOLEAN NOT NULL DEFAULT false,
   is_published  BOOLEAN NOT NULL DEFAULT true,
   created_at    TIMESTAMPTZ DEFAULT now(),
   updated_at    TIMESTAMPTZ DEFAULT now()
 );
+
+CREATE INDEX IF NOT EXISTS idx_posts_visibility ON public.posts(visibility);
 
 -- ── 5b. POST LIKES ──
 CREATE TABLE IF NOT EXISTS public.post_likes (
@@ -286,6 +290,18 @@ CREATE POLICY "Members can create community posts" ON public.posts
   FOR INSERT WITH CHECK (
     auth.uid() = author_id
     AND post_type = 'community'
+    AND NOT EXISTS (
+      SELECT 1 FROM public.profiles
+      WHERE id = auth.uid()
+      AND publish_banned_until IS NOT NULL
+      AND publish_banned_until > now()
+    )
+  );
+DROP POLICY IF EXISTS "Members can create eclat posts" ON public.posts;
+CREATE POLICY "Members can create eclat posts" ON public.posts
+  FOR INSERT WITH CHECK (
+    auth.uid() = author_id
+    AND post_type = 'eclat'
     AND NOT EXISTS (
       SELECT 1 FROM public.profiles
       WHERE id = auth.uid()

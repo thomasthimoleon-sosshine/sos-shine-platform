@@ -264,7 +264,11 @@ export default function MonEclatPage() {
 
       if (insertError) {
         if (insertError.code === '23514') {
-          setCreateError('Erreur: le type "eclat" n\'est pas encore configuré dans la base. Appliquez le SQL de migration.')
+          setCreateError('Erreur: le type "eclat" n\'est pas encore configuré dans la base. Appliquez la migration SQL : supabase/migrations/20260309_add_eclat_post_type.sql')
+        } else if (insertError.code === '42501' || insertError.message?.includes('policy')) {
+          setCreateError('Erreur de permission: la politique RLS pour les éclats n\'est pas configurée. Appliquez la migration SQL : supabase/migrations/20260309_add_eclat_post_type.sql')
+        } else if (insertError.code === '42703' || insertError.message?.includes('column')) {
+          setCreateError('Erreur: colonnes manquantes (visibility/delete_locked). Appliquez la migration SQL : supabase/migrations/20260309_add_eclat_post_type.sql')
         } else {
           setCreateError(`Erreur: ${insertError.message}`)
         }

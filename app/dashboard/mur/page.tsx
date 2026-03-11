@@ -57,7 +57,7 @@ function getCategoryInfo(cat: string) {
 }
 
 function getTypeLabel(type: string, category?: string) {
-  if (type === 'community' && category) return getCategoryInfo(category)
+  if ((type === 'community' || type === 'eclat') && category) return getCategoryInfo(category)
   const map: Record<string, { label: string; color: string; icon: string }> = {
     announcement: { label: 'Annonce', color: '#D4AF37', icon: '📢' },
     douleur_published: { label: 'Nouveau challenge', color: '#55EFC4', icon: '📘' },
@@ -179,6 +179,7 @@ export default function MurPage() {
         .from('posts')
         .select('*')
         .eq('is_published', true)
+        .neq('post_type', 'eclat')
         .lte('created_at', new Date().toISOString())
         .order('created_at', { ascending: false })
         .limit(100)

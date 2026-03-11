@@ -39,6 +39,15 @@ const navItemDefs = [
     ),
   },
   {
+    href: '/dashboard/shine-tv',
+    labelKey: 'nav.shine_tv',
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125M3.375 19.5h1.5C5.496 19.5 6 18.996 6 18.375m-2.625 0V5.625m0 12.75v-12.75A1.125 1.125 0 014.5 4.5h15a1.125 1.125 0 011.125 1.125v12.75M3.375 19.5h17.25m0 0a1.125 1.125 0 001.125-1.125m-1.125 1.125h-1.5c-.621 0-1.125-.504-1.125-1.125m2.625 0V5.625m0 12.75h-2.625m2.625-12.75h-17.25m17.25 0v12.75M6 18.375v-1.5m0 1.5h12m-12 0V5.625m12 12.75V5.625m0 12.75h-1.5m1.5-12.75h-12m0 0v12.75M9 9l3 2.25L9 13.5V9z" />
+      </svg>
+    ),
+  },
+  {
     href: '/dashboard/chat',
     labelKey: 'nav.chat',
     icon: (

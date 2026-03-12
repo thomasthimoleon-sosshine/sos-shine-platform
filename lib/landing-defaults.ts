@@ -183,7 +183,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     section_key: 'histoire',
     label: "L'Histoire / Le Livre",
     position: 6,
-    is_visible: true,
+    is_visible: false,
     content: {
       label: "L'Histoire",
       title: "Né d'un livre, devenu une communauté",
@@ -324,6 +324,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       name: 'SOS Shine',
       copyright_year: '2026',
       links: [
+        { label: 'Notre Histoire', href: '/notre-histoire' },
         { label: 'Mentions l\u00e9gales', href: '/mentions-legales' },
         { label: 'CGV', href: '/cgv' },
         { label: 'Confidentialit\u00e9', href: '/confidentialite' },

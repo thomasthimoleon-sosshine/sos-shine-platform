@@ -388,7 +388,12 @@ export default function MurPage() {
     // Update XP: award XP for giving a Shine
     if (!wasShined && !error) {
       try {
+        // +5 XP et +1 shine donné pour le donneur
         await supabase.rpc('add_xp', { p_user_id: currentUserId, p_amount: 5, p_reason: 'shine_given' })
+        // +3 XP et +1 shine reçu pour l'auteur du post
+        if (post.author_id && post.author_id !== currentUserId) {
+          await supabase.rpc('add_xp', { p_user_id: post.author_id, p_amount: 3, p_reason: 'shine_received' })
+        }
       } catch { /* XP update is non-critical */ }
     }
   }

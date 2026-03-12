@@ -420,8 +420,156 @@ export type UserGoal = {
   updated_at: string
 }
 
+// ── Shine TV Videos ──
+export type ShineTvVideo = {
+  id: string
+  title: string
+  description: string | null
+  thumbnail_url: string | null
+  video_url: string | null
+  category: string
+  duration_minutes: number
+  year: number
+  is_published: boolean
+  created_at: string
+  updated_at: string
+}
+
+// ── Shine TV Favorites ──
+export type ShineTvFavorite = {
+  id: string
+  user_id: string
+  video_id: string
+  created_at: string
+}
+
+// ── Shine TV Ratings ──
+export type ShineTvRating = {
+  id: string
+  user_id: string
+  video_id: string
+  rating: number
+  created_at: string
+  updated_at: string
+}
+
+// ── Shine TV Reviews ──
+export type ShineTvReview = {
+  id: string
+  user_id: string
+  video_id: string
+  content: string
+  rating: number
+  created_at: string
+  updated_at: string
+}
+
+// ── Shine Audible Tracks ──
+export type ShineAudibleTrack = {
+  id: string
+  title: string
+  description: string | null
+  cover_url: string | null
+  audio_url: string | null
+  narrator: string | null
+  category: string
+  content_type: 'podcast' | 'audiobook' | 'meditation' | 'hypnosis' | 'ambient'
+  duration_seconds: number
+  year: number
+  is_published: boolean
+  created_at: string
+  updated_at: string
+}
+
+// ── Shine Audible Favorites ──
+export type ShineAudibleFavorite = {
+  id: string
+  user_id: string
+  track_id: string
+  created_at: string
+}
+
+// ── Shine Audible Ratings ──
+export type ShineAudibleRating = {
+  id: string
+  user_id: string
+  track_id: string
+  rating: number
+  created_at: string
+  updated_at: string
+}
+
+// ── Shine Audible Reviews ──
+export type ShineAudibleReview = {
+  id: string
+  user_id: string
+  track_id: string
+  content: string
+  rating: number
+  created_at: string
+  updated_at: string
+}
+
+// ── Shine Audible History ──
+export type ShineAudibleHistory = {
+  id: string
+  user_id: string
+  track_id: string
+  progress_seconds: number
+  completed: boolean
+  listened_at: string
+}
+
+// ── Shine Library Books ──
+export type ShineLibraryBook = {
+  id: string
+  title: string
+  author: string
+  description: string | null
+  cover_url: string | null
+  pdf_url: string | null
+  category: string
+  content_type: 'ebook' | 'guide' | 'workbook' | 'journal' | 'protocol'
+  page_count: number
+  year: number
+  is_published: boolean
+  is_featured: boolean
+  sort_order: number
+  created_at: string
+  updated_at: string
+}
+
+// ── Shine Library Favorites ──
+export type ShineLibraryFavorite = {
+  id: string
+  user_id: string
+  book_id: string
+  created_at: string
+}
+
+// ── Shine Library Ratings ──
+export type ShineLibraryRating = {
+  id: string
+  user_id: string
+  book_id: string
+  rating: number
+  created_at: string
+  updated_at: string
+}
+
+// ── Shine Library Reviews ──
+export type ShineLibraryReview = {
+  id: string
+  user_id: string
+  book_id: string
+  content: string
+  rating: number
+  created_at: string
+  updated_at: string
+}
+
 // ── Helper: columns with DB defaults are optional on Insert ──
-type DefaultColumns = 'id' | 'created_at' | 'updated_at' | 'completed_at' | 'audio_url' | 'message_type' | 'status' | 'room_code' | 'call_type' | 'event_type' | 'target_user_id' | 'room_id' | 'category' | 'media_type' | 'video_url' | 'image_url' | 'is_published' | 'delete_locked' | 'publish_banned_until' | 'is_bot' | 'is_read' | 'is_deleted' | 'is_general' | 'is_anonymous' | 'is_active' | 'email_sent' | 'is_visible' | 'position' | 'total_clicks' | 'total_referrals' | 'total_earnings' | 'pending_earnings' | 'paid_earnings' | 'current_tier' | 'referral_code' | 'approved_at' | 'rejected_at' | 'rejection_reason' | 'paid_at' | 'payment_reference' | 'commission_amount' | 'visibility' | 'source'
+type DefaultColumns = 'id' | 'created_at' | 'updated_at' | 'completed_at' | 'audio_url' | 'message_type' | 'status' | 'room_code' | 'call_type' | 'event_type' | 'target_user_id' | 'room_id' | 'category' | 'media_type' | 'video_url' | 'image_url' | 'is_published' | 'delete_locked' | 'publish_banned_until' | 'is_bot' | 'is_read' | 'is_deleted' | 'is_general' | 'is_anonymous' | 'is_active' | 'email_sent' | 'is_visible' | 'position' | 'total_clicks' | 'total_referrals' | 'total_earnings' | 'pending_earnings' | 'paid_earnings' | 'current_tier' | 'referral_code' | 'approved_at' | 'rejected_at' | 'rejection_reason' | 'paid_at' | 'payment_reference' | 'commission_amount' | 'visibility' | 'source' | 'is_featured' | 'sort_order' | 'duration_minutes' | 'duration_seconds' | 'page_count' | 'year' | 'completed' | 'progress_seconds' | 'listened_at' | 'rating' | 'content_type'
 type OptionalId<T> = Omit<T, Extract<DefaultColumns, keyof T>> &
   Partial<Pick<T, Extract<DefaultColumns, keyof T>>>
 
@@ -466,6 +614,19 @@ export type Database = {
       pinned_posts: Table<PinnedPost>
       onboarding_responses: Table<OnboardingResponse>
       user_goals: Table<UserGoal>
+      shine_tv_videos: Table<ShineTvVideo>
+      shine_tv_favorites: Table<ShineTvFavorite>
+      shine_tv_ratings: Table<ShineTvRating>
+      shine_tv_reviews: Table<ShineTvReview>
+      shine_audible_tracks: Table<ShineAudibleTrack>
+      shine_audible_favorites: Table<ShineAudibleFavorite>
+      shine_audible_ratings: Table<ShineAudibleRating>
+      shine_audible_reviews: Table<ShineAudibleReview>
+      shine_audible_history: Table<ShineAudibleHistory>
+      shine_library_books: Table<ShineLibraryBook>
+      shine_library_favorites: Table<ShineLibraryFavorite>
+      shine_library_ratings: Table<ShineLibraryRating>
+      shine_library_reviews: Table<ShineLibraryReview>
     }
     Views: Record<string, never>
     Functions: {

@@ -120,7 +120,7 @@ export default function AdminShineAudiblePage() {
       audio_url: form.audio_url.trim() || null,
       narrator: form.narrator.trim() || null,
       category: form.category,
-      content_type: form.content_type,
+      content_type: form.content_type as 'podcast' | 'audiobook' | 'meditation' | 'hypnosis' | 'ambient',
       duration_seconds: form.duration_seconds,
       year: form.year,
     }

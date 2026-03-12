@@ -132,7 +132,7 @@ export default function AdminShineLibrairiePage() {
       cover_url: form.cover_url.trim() || null,
       pdf_url: form.pdf_url.trim() || null,
       category: form.category,
-      content_type: form.content_type,
+      content_type: form.content_type as 'ebook' | 'guide' | 'workbook' | 'journal' | 'protocol',
       page_count: form.page_count,
       year: form.year,
       is_featured: form.is_featured,

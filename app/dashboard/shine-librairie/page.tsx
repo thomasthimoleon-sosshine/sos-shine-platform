@@ -56,6 +56,107 @@ const CONTENT_TYPES = [
   { id: 'protocol', label: 'Protocoles', icon: '🩺' },
 ]
 
+// ── Book Covers (Unsplash) ──
+const COVERS = [
+  'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=450&fit=crop',
+  'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=300&h=450&fit=crop',
+  'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=300&h=450&fit=crop',
+  'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=300&h=450&fit=crop',
+  'https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=300&h=450&fit=crop',
+  'https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=300&h=450&fit=crop',
+  'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=300&h=450&fit=crop',
+  'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=300&h=450&fit=crop',
+  'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=300&h=450&fit=crop',
+  'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=300&h=450&fit=crop',
+  'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?w=300&h=450&fit=crop',
+  'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=300&h=450&fit=crop',
+  'https://images.unsplash.com/photo-1528715471579-d1bcf0ba5e83?w=300&h=450&fit=crop',
+  'https://images.unsplash.com/photo-1495344517868-8ebaf0a2044a?w=300&h=450&fit=crop',
+  'https://images.unsplash.com/photo-1602192509154-0b900ee1f851?w=300&h=450&fit=crop',
+  'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=300&h=450&fit=crop',
+]
+
+const BOOK_TITLES = [
+  'Se relever après la tempête',
+  'Les clés de la confiance en soi',
+  'Guérir ses blessures invisibles',
+  'Le journal de ma renaissance',
+  'Protocole anti-anxiété — 21 jours',
+  'Aimer sans se perdre',
+  'La force de la résilience',
+  'Cahier d\'exercices — Estime de soi',
+  'Lâcher prise : mode d\'emploi',
+  'Mon guide du deuil et de la perte',
+  'Libérer son trauma pas à pas',
+  'L\'art de la gratitude au quotidien',
+  'Retrouver sa lumière intérieure',
+  'Les 5 piliers du bien-être émotionnel',
+  'Méditer pour guérir',
+  'Le pouvoir de l\'amour de soi',
+  'Reconstruire après la trahison',
+  'Comprendre ses émotions profondes',
+  'Guide pratique de la sophrologie',
+  'Mon chemin vers la paix intérieure',
+  'Rituels sacrés du matin',
+  'Le courage de dire non',
+  'Écriture thérapeutique — Cahier guidé',
+  'Reprendre le contrôle de sa vie',
+  'Vivre sa spiritualité au quotidien',
+  'La douceur de se pardonner',
+  'Transformer sa douleur en force',
+  'Manuel de survie émotionnelle',
+  'Les 30 jours qui changent tout',
+  'Le petit guide de la sérénité',
+]
+
+const BOOK_AUTHORS = [
+  'Julia Martin',
+  'SOS Shine',
+  'Dr. Camille Rousseau',
+  'Léa Fontaine',
+  'Marie-Claire Duval',
+  'Nadia Benali',
+  'Sophie Lambert',
+  'Isabelle Moreau',
+]
+
+const BOOK_DESCRIPTIONS = [
+  'Un voyage intérieur puissant pour retrouver confiance et sérénité. Des exercices concrets et un accompagnement bienveillant à chaque page.',
+  'Ce guide vous accompagne pas à pas dans votre processus de guérison, avec des outils pratiques et des témoignages inspirants.',
+  'Découvrez les clés essentielles pour transformer vos blessures en forces et construire une vie alignée avec vos valeurs profondes.',
+  'Un cahier interactif rempli d\'exercices de développement personnel, de réflexions guidées et de techniques éprouvées.',
+  'Apprenez à cultiver la paix intérieure grâce à des rituels simples et des pratiques quotidiennes accessibles à toutes.',
+]
+
+const contentTypes: Array<'ebook' | 'guide' | 'workbook' | 'journal' | 'protocol'> = ['ebook', 'guide', 'workbook', 'journal', 'protocol']
+const categoryIds = ['healing', 'confidence', 'relationships', 'resilience', 'anxiety', 'grief', 'trauma', 'self-love', 'spirituality', 'gratitude']
+
+function generateBooks(): ShineBook[] {
+  const books: ShineBook[] = []
+  for (let i = 0; i < 48; i++) {
+    const ct = contentTypes[i % contentTypes.length]
+    const cat = categoryIds[i % categoryIds.length]
+    books.push({
+      id: `book-${i}`,
+      title: BOOK_TITLES[i % BOOK_TITLES.length],
+      author: BOOK_AUTHORS[i % BOOK_AUTHORS.length],
+      description: BOOK_DESCRIPTIONS[i % BOOK_DESCRIPTIONS.length],
+      cover: COVERS[i % COVERS.length],
+      pdfUrl: '',
+      category: cat,
+      contentType: ct,
+      pageCount: 30 + Math.floor(Math.random() * 220),
+      year: 2024 + Math.floor(Math.random() * 3),
+      rating: 3.5 + Math.random() * 1.5,
+      userRating: 0,
+      isFavorite: Math.random() > 0.75,
+      isFeatured: i < 8,
+      reviewCount: Math.floor(Math.random() * 85),
+    })
+  }
+  return books
+}
+
 const SAMPLE_REVIEWS: Review[] = [
   { id: 'r1', author: 'Marie L.', avatar: '', rating: 5, text: 'Ce livre a changé ma façon de voir les choses. Les exercices sont concrets et faciles à appliquer au quotidien.', date: '10 mars 2026' },
   { id: 'r2', author: 'Sarah K.', avatar: '', rating: 4, text: 'Très bien écrit, accessible et profond. Je l\'ai lu d\'une traite et je le relis régulièrement.', date: '7 mars 2026' },
@@ -635,7 +736,8 @@ export default function ShineLibrairiePage() {
         .order('created_at', { ascending: false })
 
       if (!booksData || booksData.length === 0) {
-        setBooks([])
+        // Fallback : données de simulation
+        setBooks(generateBooks())
         setLoading(false)
         return
       }

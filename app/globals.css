@@ -844,3 +844,45 @@ h1 .text-shimmer, h2 .text-shimmer, h3 .text-shimmer, .text-shimmer {
   z-index: 9999;
   transition: width 0.1s ease;
 }
+
+/* ═══════════════════════════════════════════
+   Trinity Triangle Animations — Footer
+═══════════════════════════════════════════ */
+
+@keyframes trinityPulseEnergy {
+  0%, 100% { stroke: var(--gold); filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.2)); }
+  50% { stroke: #FCF6BA; filter: drop-shadow(0 0 12px rgba(252, 246, 186, 0.4)); }
+}
+
+@keyframes trinityPulseBody {
+  0%, 100% { stroke: var(--gold); filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.2)); }
+  50% { stroke: #E8CC6E; filter: drop-shadow(0 0 12px rgba(232, 204, 110, 0.4)); }
+}
+
+@keyframes trinityPulseMind {
+  0%, 100% { stroke: var(--gold); filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.2)); }
+  50% { stroke: #BF953F; filter: drop-shadow(0 0 12px rgba(191, 149, 63, 0.4)); }
+}
+
+.trinity-triangle {
+  transition: all 0.6s ease;
+}
+
+.trinity-energy {
+  animation: trinityPulseEnergy 4s ease-in-out infinite;
+}
+
+.trinity-body {
+  animation: trinityPulseBody 4s ease-in-out infinite;
+  animation-delay: 1.3s;
+}
+
+.trinity-mind {
+  animation: trinityPulseMind 4s ease-in-out infinite;
+  animation-delay: 2.6s;
+}
+
+.group:hover .trinity-triangle {
+  transform: scale(1.08);
+  filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.5));
+}

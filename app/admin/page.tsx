@@ -9,10 +9,13 @@ interface Stats {
   totalDouleurs: number
   totalEvents: number
   totalMessages: number
+  totalVideos: number
+  totalTracks: number
+  totalBooks: number
 }
 
 export default function AdminDashboard() {
-  const [stats, setStats] = useState<Stats>({ totalMembers: 0, newThisMonth: 0, totalDouleurs: 0, totalEvents: 0, totalMessages: 0 })
+  const [stats, setStats] = useState<Stats>({ totalMembers: 0, newThisMonth: 0, totalDouleurs: 0, totalEvents: 0, totalMessages: 0, totalVideos: 0, totalTracks: 0, totalBooks: 0 })
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -21,12 +24,15 @@ export default function AdminDashboard() {
       const now = new Date()
       const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
 
-      const [members, newMembers, douleurs, events, messages] = await Promise.all([
+      const [members, newMembers, douleurs, events, messages, videos, tracks, books] = await Promise.all([
         supabase.from('profiles').select('id', { count: 'exact', head: true }),
         supabase.from('profiles').select('id', { count: 'exact', head: true }).gte('created_at', firstOfMonth),
         supabase.from('douleurs').select('id', { count: 'exact', head: true }),
         supabase.from('events').select('id', { count: 'exact', head: true }),
         supabase.from('messages').select('id', { count: 'exact', head: true }),
+        supabase.from('shine_tv_videos').select('id', { count: 'exact', head: true }),
+        supabase.from('shine_audible_tracks').select('id', { count: 'exact', head: true }),
+        supabase.from('shine_library_books').select('id', { count: 'exact', head: true }),
       ])
 
       setStats({
@@ -35,6 +41,9 @@ export default function AdminDashboard() {
         totalDouleurs: douleurs.count || 0,
         totalEvents: events.count || 0,
         totalMessages: messages.count || 0,
+        totalVideos: videos.count || 0,
+        totalTracks: tracks.count || 0,
+        totalBooks: books.count || 0,
       })
       setLoading(false)
     }
@@ -45,7 +54,10 @@ export default function AdminDashboard() {
     { label: 'Membres total', value: stats.totalMembers, color: '#D4AF37', icon: '👥' },
     { label: 'Nouveaux ce mois', value: stats.newThisMonth, color: '#55EFC4', icon: '📈' },
     { label: 'Challenges publiés', value: stats.totalDouleurs, color: '#74C0FC', icon: '📘' },
-    { label: 'Événements', value: stats.totalEvents, color: '#E17055', icon: '📅' },
+    { label: 'Vidéos Shine TV', value: stats.totalVideos, color: '#E17055', icon: '🎬' },
+    { label: 'Audios Audible', value: stats.totalTracks, color: '#9B59B6', icon: '🎧' },
+    { label: 'Livres Librairie', value: stats.totalBooks, color: '#D4AF37', icon: '📚' },
+    { label: 'Événements', value: stats.totalEvents, color: '#55EFC4', icon: '📅' },
     { label: 'Messages chat', value: stats.totalMessages, color: '#FF6B35', icon: '💬' },
   ]
 
@@ -67,7 +79,7 @@ export default function AdminDashboard() {
       ) : (
         <>
           {/* Stats cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-4">
             {cards.map((card) => (
               <div key={card.label} className="rounded-xl p-5"
                 style={{ background: `${card.color}08`, border: `1px solid ${card.color}20` }}>
@@ -88,8 +100,11 @@ export default function AdminDashboard() {
             <div className="grid sm:grid-cols-3 gap-4">
               {[
                 { href: '/admin/douleurs', label: 'Créer un challenge émotionnel', desc: 'Ajouter une nouvelle page à l\'encyclopédie', icon: '📘', color: '#74C0FC' },
+                { href: '/admin/shine-tv', label: 'Publier une vidéo', desc: 'Ajouter du contenu sur Shine TV', icon: '🎬', color: '#E17055' },
+                { href: '/admin/shine-audible', label: 'Publier un audio', desc: 'Ajouter un podcast, méditation ou livre audio', icon: '🎧', color: '#9B59B6' },
+                { href: '/admin/shine-librairie', label: 'Publier un livre', desc: 'Ajouter un eBook ou guide à la librairie', icon: '📚', color: '#D4AF37' },
                 { href: '/admin/evenements', label: 'Créer un événement', desc: 'Planifier un soin collectif ou une Shine Walk', icon: '📅', color: '#55EFC4' },
-                { href: '/admin/publications', label: 'Publier sur le mur', desc: 'Annoncer une nouvelle à la communauté', icon: '📢', color: '#D4AF37' },
+                { href: '/admin/publications', label: 'Publier sur le mur', desc: 'Annoncer une nouvelle à la communauté', icon: '📢', color: '#FF6B35' },
               ].map((action) => (
                 <a key={action.href} href={action.href}
                   className="rounded-xl p-5 transition-all duration-200 hover:-translate-y-0.5 block"

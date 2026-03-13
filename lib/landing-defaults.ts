@@ -183,7 +183,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     section_key: 'histoire',
     label: "L'Histoire / Le Livre",
     position: 6,
-    is_visible: true,
+    is_visible: false,
     content: {
       label: "L'Histoire",
       title: "Né d'un livre, devenu une communauté",

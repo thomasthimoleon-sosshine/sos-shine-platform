@@ -306,7 +306,7 @@ export default function Home() {
         for (const d of LANDING_DEFAULTS) {
           const row = dbMap[d.section_key];
           merged[d.section_key] = row
-            ? { content: sanitizeContent(row.content), styles: row.styles, is_visible: row.is_visible }
+            ? { content: { ...d.content, ...sanitizeContent(row.content) }, styles: { ...d.styles, ...row.styles }, is_visible: row.is_visible }
             : { content: d.content, styles: d.styles, is_visible: d.is_visible };
         }
         for (const row of rows) {
@@ -1076,11 +1076,16 @@ export default function Home() {
 
                 {/* Links */}
                 <div className="flex flex-wrap justify-center gap-x-5 sm:gap-x-8 gap-y-3">
-                  {(foot.links || []).map((link: { label: string; href: string }) => (
-                    <Link key={link.label} href={link.href} className="text-[10px] sm:text-xs tracking-[0.1em] sm:tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors duration-300 gold-underline">
-                      {link.label}
-                    </Link>
-                  ))}
+                  {(() => {
+                    const links: { label: string; href: string }[] = foot.links || [];
+                    const hasNotreHistoire = links.some((l: { href: string }) => l.href === '/notre-histoire');
+                    const allLinks = hasNotreHistoire ? links : [{ label: 'Notre Histoire', href: '/notre-histoire' }, ...links];
+                    return allLinks.map((link: { label: string; href: string }) => (
+                      <Link key={link.label} href={link.href} className="text-[10px] sm:text-xs tracking-[0.1em] sm:tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors duration-300 gold-underline">
+                        {link.label}
+                      </Link>
+                    ));
+                  })()}
                 </div>
 
                 {/* Copyright */}

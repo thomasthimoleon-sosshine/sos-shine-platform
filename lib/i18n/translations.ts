@@ -381,6 +381,9 @@ export const translations: Record<string, string> = {
   'dashboard.past_due_status': 'Paiement en retard',
   'dashboard.stripe_coming': 'Le paiement Stripe sera bientôt activé',
 
+  // ── Courrier Anonyme ──
+  'nav.courrier': 'Courrier Anonyme',
+
   // ── Programme d'affiliation ──
   'nav.affiliation': 'Affiliation',
   'affiliate.title': 'Programme d\'Affiliation',

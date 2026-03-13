@@ -21,6 +21,7 @@ const adminNav = [
   { href: '/admin/bots', label: 'Bots', icon: '🤖' },
   { href: '/admin/crm', label: 'CRM', icon: '📧' },
   { href: '/admin/defis', label: 'Défis', icon: '🏆' },
+  { href: '/admin/courrier', label: 'Courrier', icon: '✉️' },
   { href: '/admin/candidatures', label: 'Candidatures', icon: '📋' },
   { href: '/admin/retraits', label: 'Retraits', icon: '💸' },
 ]

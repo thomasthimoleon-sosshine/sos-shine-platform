@@ -568,8 +568,30 @@ export type ShineLibraryReview = {
   updated_at: string
 }
 
+// ── Courrier Anonyme (anonymous mailbox) ──
+export type CourrierAnonymeCategory = 'question' | 'recommandation' | 'temoignage' | 'suggestion' | 'autre'
+export type CourrierAnonymeStatus = 'new' | 'read' | 'planned' | 'answered' | 'archived'
+export type CourrierAnsweredVia = 'shine_tv' | 'podcast' | 'article' | 'direct'
+
+export type CourrierAnonyme = {
+  id: string
+  user_id: string | null
+  category: CourrierAnonymeCategory
+  subject: string | null
+  content: string
+  status: CourrierAnonymeStatus
+  admin_note: string | null
+  answered_via: CourrierAnsweredVia | null
+  answered_url: string | null
+  answered_at: string | null
+  answered_by: string | null
+  is_pinned: boolean
+  created_at: string
+  updated_at: string
+}
+
 // ── Helper: columns with DB defaults are optional on Insert ──
-type DefaultColumns = 'id' | 'created_at' | 'updated_at' | 'completed_at' | 'audio_url' | 'message_type' | 'status' | 'room_code' | 'call_type' | 'event_type' | 'target_user_id' | 'room_id' | 'category' | 'media_type' | 'video_url' | 'image_url' | 'is_published' | 'delete_locked' | 'publish_banned_until' | 'is_bot' | 'is_read' | 'is_deleted' | 'is_general' | 'is_anonymous' | 'is_active' | 'email_sent' | 'is_visible' | 'position' | 'total_clicks' | 'total_referrals' | 'total_earnings' | 'pending_earnings' | 'paid_earnings' | 'current_tier' | 'referral_code' | 'approved_at' | 'rejected_at' | 'rejection_reason' | 'paid_at' | 'payment_reference' | 'commission_amount' | 'visibility' | 'source' | 'is_featured' | 'sort_order' | 'duration_minutes' | 'duration_seconds' | 'page_count' | 'year' | 'completed' | 'progress_seconds' | 'listened_at' | 'rating' | 'content_type'
+type DefaultColumns = 'id' | 'created_at' | 'updated_at' | 'completed_at' | 'audio_url' | 'message_type' | 'status' | 'room_code' | 'call_type' | 'event_type' | 'target_user_id' | 'room_id' | 'category' | 'media_type' | 'video_url' | 'image_url' | 'is_published' | 'delete_locked' | 'publish_banned_until' | 'is_bot' | 'is_read' | 'is_deleted' | 'is_general' | 'is_anonymous' | 'is_active' | 'email_sent' | 'is_visible' | 'position' | 'total_clicks' | 'total_referrals' | 'total_earnings' | 'pending_earnings' | 'paid_earnings' | 'current_tier' | 'referral_code' | 'approved_at' | 'rejected_at' | 'rejection_reason' | 'paid_at' | 'payment_reference' | 'commission_amount' | 'visibility' | 'source' | 'is_featured' | 'sort_order' | 'duration_minutes' | 'duration_seconds' | 'page_count' | 'year' | 'completed' | 'progress_seconds' | 'listened_at' | 'rating' | 'content_type' | 'admin_note' | 'answered_via' | 'answered_url' | 'answered_at' | 'answered_by' | 'is_pinned' | 'subject' | 'user_id'
 type OptionalId<T> = Omit<T, Extract<DefaultColumns, keyof T>> &
   Partial<Pick<T, Extract<DefaultColumns, keyof T>>>
 
@@ -627,6 +649,7 @@ export type Database = {
       shine_library_favorites: Table<ShineLibraryFavorite>
       shine_library_ratings: Table<ShineLibraryRating>
       shine_library_reviews: Table<ShineLibraryReview>
+      courrier_anonyme: Table<CourrierAnonyme>
     }
     Views: Record<string, never>
     Functions: {

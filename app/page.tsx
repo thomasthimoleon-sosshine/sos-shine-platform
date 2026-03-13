@@ -849,6 +849,65 @@ export default function Home() {
         </section>
       )}
 
+      {/* ═══ L'HISTOIRE / LE LIVRE ═══ */}
+      {vis('histoire') && (() => {
+        const hist = sec('histoire');
+        return (
+          <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
+            <div className="max-w-5xl mx-auto">
+              <RevealOnScroll>
+                <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{hist.label || "L'Histoire"}</p>
+              </RevealOnScroll>
+              <RevealOnScroll delay={0.1}>
+                <h2 className="font-display font-light text-center text-2xl sm:text-3xl md:text-5xl mb-4 md:mb-6" style={{ color: 'var(--gold)' }}>
+                  <WordByWordReveal text={hist.title || ''} />
+                </h2>
+              </RevealOnScroll>
+              <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16 mt-8 md:mt-12">
+                <RevealOnScroll delay={0.15}>
+                  <div className="flex-shrink-0 group">
+                    <a href={hist.book_url || '#'} target="_blank" rel="noopener noreferrer" className="block relative">
+                      <div className="w-44 sm:w-56 md:w-64 rounded-lg overflow-hidden border border-[var(--gold)]/20 group-hover:border-[var(--gold)]/60 transition-all duration-500 shadow-lg group-hover:shadow-[0_0_30px_rgba(212,175,55,0.2)]">
+                        <img
+                          src={hist.book_image || '/images/book-cover.jpeg'}
+                          alt="SOS Shine — Briller Comme un Diamant"
+                          className="w-full aspect-[3/4] object-cover"
+                        />
+                      </div>
+                      <div className="absolute -inset-2 rounded-xl bg-[var(--gold)]/5 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+                    </a>
+                  </div>
+                </RevealOnScroll>
+                <RevealOnScroll delay={0.25}>
+                  <div className="flex-1 text-center md:text-left">
+                    <p className="text-base md:text-xl text-[var(--text-body)] leading-relaxed mb-4 md:mb-6">
+                      {hist.paragraph1 || ''}
+                    </p>
+                    <p className="text-base md:text-xl text-[var(--text-body)] leading-relaxed mb-4 md:mb-6">
+                      {hist.paragraph2 || ''}
+                    </p>
+                    {hist.quote && (
+                      <p className="text-sm md:text-base text-[var(--text-muted)] leading-relaxed mb-6 md:mb-8 italic">
+                        &ldquo;{hist.quote}&rdquo;
+                      </p>
+                    )}
+                    <a
+                      href={hist.book_url || '#'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 border border-[var(--gold)]/40 rounded-full text-[var(--gold)] text-xs sm:text-sm tracking-[0.15em] uppercase hover:bg-[var(--gold)]/10 hover:border-[var(--gold)] transition-all duration-300"
+                    >
+                      {hist.button_label || 'Découvrir le livre'}
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                    </a>
+                  </div>
+                </RevealOnScroll>
+              </div>
+            </div>
+          </section>
+        );
+      })()}
+
       {/* ═══ FONDATEURS ═══ */}
       {vis('fondateurs') && (() => {
         const fond = sec('fondateurs');

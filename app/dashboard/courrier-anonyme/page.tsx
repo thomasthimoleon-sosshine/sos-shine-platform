@@ -190,7 +190,7 @@ export default function CourrierAnonymePage() {
                   onChange={(e) => setContent(e.target.value)}
                   placeholder="Écrivez librement... Votre question, votre histoire, votre recommandation. Tout est bienvenu et restera anonyme."
                   rows={8}
-                  maxLength={5000}
+                  maxLength={200}
                   required
                   className="w-full px-4 py-3 rounded-xl text-sm transition-all outline-none resize-none"
                   style={{
@@ -203,8 +203,8 @@ export default function CourrierAnonymePage() {
                   <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
                     Votre identité ne sera jamais révélée
                   </p>
-                  <p className="text-[11px]" style={{ color: content.length > 4500 ? '#EF4444' : 'var(--text-muted)' }}>
-                    {content.length}/5000
+                  <p className="text-[11px]" style={{ color: content.length > 180 ? '#EF4444' : 'var(--text-muted)' }}>
+                    {content.length}/200
                   </p>
                 </div>
               </div>

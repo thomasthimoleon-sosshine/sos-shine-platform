@@ -308,7 +308,7 @@ export const translations: Record<string, string> = {
   'dashboard.events_subtitle_detail': 'Shine Walks, cercles de parole, ateliers... Retrouvez-vous dans la vraie vie.',
   'dashboard.drag_globe': 'Glissez pour tourner le globe · Cliquez sur un diamant',
   'dashboard.real_meetings': 'Les rencontres réelles',
-  'dashboard.events_free_desc': "Nos événements sont gratuits ou à prix libre. L'important, c'est d'être ensemble.",
+  'dashboard.events_free_desc': "Retrouvez ici tous les événements SOS Shine : Shine Walks, cercles de parole, ateliers et bien plus.",
   'dashboard.events_empty_title': 'Les événements arrivent',
   'dashboard.events_empty_desc': 'Les prochains événements SOS Shine (Shine Walks, cercles de parole, ateliers...) apparaîtront ici. Restez connecté !',
   'dashboard.today': "Aujourd'hui",

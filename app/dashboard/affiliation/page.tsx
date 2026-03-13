@@ -1066,7 +1066,104 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
           </div>
         )}
       </motion.div>
+
+      {/* Contact Support */}
+      <SupportContact />
     </div>
+  )
+}
+
+// ═══════════════════════════════════════════════════════
+// Support Contact — Contacter les fondateurs
+// ═══════════════════════════════════════════════════════
+function SupportContact() {
+  const [message, setMessage] = useState('')
+  const [sending, setSending] = useState(false)
+  const [sent, setSent] = useState(false)
+  const [error, setError] = useState('')
+
+  async function handleSend() {
+    if (!message.trim()) return
+    setSending(true)
+    setError('')
+
+    try {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+
+      const { error: insertError } = await supabase.from('courrier_anonyme').insert({
+        user_id: user?.id || null,
+        category: 'autre' as const,
+        subject: 'Support Affiliation',
+        content: message.trim(),
+      })
+
+      if (insertError) throw insertError
+
+      setSent(true)
+      setMessage('')
+      setTimeout(() => setSent(false), 5000)
+    } catch {
+      setError('Erreur lors de l\'envoi. Veuillez réessayer.')
+    }
+    setSending(false)
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.4, duration: 0.5, ease: easeArr }}
+    >
+      <div className="glass rounded-2xl p-6">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center"
+            style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.15)' }}>
+            <svg className="w-4 h-4" style={{ color: 'var(--gold)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+            </svg>
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Contacter le support</h3>
+            <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
+              Une question sur votre programme ? Julia, William & Thomas vous répondent personnellement.
+            </p>
+          </div>
+        </div>
+
+        {sent ? (
+          <div className="rounded-xl px-4 py-3 text-sm text-center" style={{ background: 'rgba(85,239,196,0.08)', color: '#55EFC4', border: '1px solid rgba(85,239,196,0.15)' }}>
+            Message envoyé ! L&apos;équipe fondatrice vous répondra dans les plus brefs délais.
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <textarea
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="Votre message pour l'équipe fondatrice..."
+              rows={3}
+              maxLength={2000}
+              className="w-full px-4 py-3 rounded-xl text-sm outline-none resize-none"
+              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+            />
+            {error && (
+              <p className="text-xs" style={{ color: '#EF4444' }}>{error}</p>
+            )}
+            <div className="flex items-center justify-between">
+              <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{message.length}/2000</p>
+              <button
+                onClick={handleSend}
+                disabled={sending || !message.trim()}
+                className="px-5 py-2 rounded-xl text-xs font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}
+              >
+                {sending ? 'Envoi...' : 'Envoyer'}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </motion.div>
   )
 }
 

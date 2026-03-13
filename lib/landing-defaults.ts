@@ -193,6 +193,18 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       book_url: "https://www.amazon.fr/SOS-Shine-Briller-Comme-Diamant/dp/2959566807",
       book_image: "/images/book-cover.jpeg",
       button_label: "Découvrir le livre",
+      // Trinité / Fondateurs (page Notre Histoire)
+      trinite_title: "Trois forces. Une seule mission.",
+      trinite_intro: "Tout a commencé par un livre. Julia, portée par une conviction profonde, a écrit pour libérer ceux qui se sentaient prisonniers d'eux-mêmes. Puis William et Thomas l'ont rejointe. Trois visions. Trois piliers. Une trinité indissociable pour déconditionner l'être humain dans sa totalité.",
+      julia_pilier: "Le Pilier Énergétique",
+      julia_desc: "Auteure du livre fondateur de SOS Shine, Julia canalise l'énergie invisible qui nous traverse. Sa vision : reconnecter chaque individu à sa vibration authentique, celle qu'il a oubliée sous des couches de conditionnements.",
+      william_pilier: "Le Pilier Corporel",
+      william_desc: "Spécialiste en hypnose et diplômé en médecine chinoise internationale, William apporte les solutions physiques concrètes pour déconstruire les croyances et les blocages ancrés dans le corps. Sa maîtrise du lien corps-esprit permet de libérer ce que les mots seuls ne peuvent atteindre.",
+      thomas_pilier: "Le Pilier Pratique",
+      thomas_desc: "Thomas intervient sur le côté pratique et concret du déconditionnement. À travers des cahiers d'exercices et des protocoles d'action, il transforme la prise de conscience en résultats tangibles. Son approche : vous donner les outils pour devenir l'architecte de votre propre transformation.",
+      trinite_tagline: "Énergie · Corps · Pratique",
+      trinite_conclusion: "Trois triangles à côtés égaux. Trois dimensions de l'être. Un seul objectif : vous aider à devenir la personne que vous auriez toujours dû être. Le déconditionnement total commence ici.",
+      manifeste: "Nous ne guérissons pas. Nous révélons. Ce que vous cherchez est déjà en vous — enfoui sous des années de conditionnements. Notre mission est de vous aider à le retrouver.",
     },
     styles: {
       title_font: 'Cormorant Garamond',

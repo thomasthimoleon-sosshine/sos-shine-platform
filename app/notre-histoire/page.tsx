@@ -125,10 +125,10 @@ export default function NotreHistoirePage() {
             Notre Histoire
           </p>
           <h2 className="font-display font-light text-center text-2xl sm:text-3xl md:text-5xl mb-6 md:mb-8" style={{ color: gold }}>
-            Trois forces. Une seule mission.
+            {hist.trinite_title || 'Trois forces. Une seule mission.'}
           </h2>
           <p className="text-center max-w-3xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed font-light mb-12 md:mb-20" style={{ color: 'var(--text-secondary)' }}>
-            Tout a commencé par un livre. Julia, portée par une conviction profonde, a écrit pour libérer ceux qui se sentaient prisonniers d&apos;eux-mêmes. Puis William et Thomas l&apos;ont rejointe. Trois visions. Trois piliers. Une trinité indissociable pour déconditionner l&apos;être humain dans sa totalité.
+            {hist.trinite_intro || "Tout a commencé par un livre. Julia, portée par une conviction profonde, a écrit pour libérer ceux qui se sentaient prisonniers d\u2019eux-mêmes. Puis William et Thomas l\u2019ont rejointe. Trois visions. Trois piliers. Une trinité indissociable pour déconditionner l\u2019être humain dans sa totalité."}
           </p>
 
           {/* Trinity */}
@@ -156,10 +156,10 @@ export default function NotreHistoirePage() {
                   </div>
                   <p className="text-[10px] sm:text-xs tracking-[0.3em] uppercase mb-2 opacity-70" style={{ color: gold }}>Fondatrice</p>
                   <h3 className="font-display text-xl sm:text-2xl md:text-3xl mb-2" style={{ color: gold }}>Julia</h3>
-                  <p className="text-[10px] sm:text-xs tracking-[0.25em] uppercase mb-4 md:mb-5" style={{ color: 'var(--text-muted)' }}>Le Pilier Énergétique</p>
+                  <p className="text-[10px] sm:text-xs tracking-[0.25em] uppercase mb-4 md:mb-5" style={{ color: 'var(--text-muted)' }}>{hist.julia_pilier || 'Le Pilier Énergétique'}</p>
                   <div className="w-8 h-[1px] mx-auto mb-4 md:mb-5" style={{ background: `linear-gradient(90deg, transparent, ${gold}, transparent)` }} />
                   <p className="text-xs sm:text-sm leading-relaxed font-light" style={{ color: 'var(--text-secondary)' }}>
-                    Auteure du livre fondateur de SOS Shine, Julia canalise l&apos;énergie invisible qui nous traverse. Sa vision : reconnecter chaque individu à sa vibration authentique, celle qu&apos;il a oubliée sous des couches de conditionnements.
+                    {hist.julia_desc || "Auteure du livre fondateur de SOS Shine, Julia canalise l\u2019énergie invisible qui nous traverse. Sa vision : reconnecter chaque individu à sa vibration authentique, celle qu\u2019il a oubliée sous des couches de conditionnements."}
                   </p>
                 </div>
               </div>
@@ -175,10 +175,10 @@ export default function NotreHistoirePage() {
                   </div>
                   <p className="text-[10px] sm:text-xs tracking-[0.3em] uppercase mb-2 opacity-70" style={{ color: gold }}>Cofondateur</p>
                   <h3 className="font-display text-xl sm:text-2xl md:text-3xl mb-2" style={{ color: gold }}>William</h3>
-                  <p className="text-[10px] sm:text-xs tracking-[0.25em] uppercase mb-4 md:mb-5" style={{ color: 'var(--text-muted)' }}>Le Pilier Corporel</p>
+                  <p className="text-[10px] sm:text-xs tracking-[0.25em] uppercase mb-4 md:mb-5" style={{ color: 'var(--text-muted)' }}>{hist.william_pilier || 'Le Pilier Corporel'}</p>
                   <div className="w-8 h-[1px] mx-auto mb-4 md:mb-5" style={{ background: `linear-gradient(90deg, transparent, ${gold}, transparent)` }} />
                   <p className="text-xs sm:text-sm leading-relaxed font-light" style={{ color: 'var(--text-secondary)' }}>
-                    William incarne la sagesse du corps. Là où les mots s&apos;arrêtent, le corps parle. Il guide le processus de déconditionnement physique — libérer les tensions, réapprendre à habiter pleinement son enveloppe terrestre.
+                    {hist.william_desc || "Spécialiste en hypnose et diplômé en médecine chinoise internationale, William apporte les solutions physiques concrètes pour déconstruire les croyances et les blocages ancrés dans le corps. Sa maîtrise du lien corps-esprit permet de libérer ce que les mots seuls ne peuvent atteindre."}
                   </p>
                 </div>
               </div>
@@ -194,10 +194,10 @@ export default function NotreHistoirePage() {
                   </div>
                   <p className="text-[10px] sm:text-xs tracking-[0.3em] uppercase mb-2 opacity-70" style={{ color: gold }}>Cofondateur</p>
                   <h3 className="font-display text-xl sm:text-2xl md:text-3xl mb-2" style={{ color: gold }}>Thomas</h3>
-                  <p className="text-[10px] sm:text-xs tracking-[0.25em] uppercase mb-4 md:mb-5" style={{ color: 'var(--text-muted)' }}>Le Pilier Mental</p>
+                  <p className="text-[10px] sm:text-xs tracking-[0.25em] uppercase mb-4 md:mb-5" style={{ color: 'var(--text-muted)' }}>{hist.thomas_pilier || 'Le Pilier Pratique'}</p>
                   <div className="w-8 h-[1px] mx-auto mb-4 md:mb-5" style={{ background: `linear-gradient(90deg, transparent, ${gold}, transparent)` }} />
                   <p className="text-xs sm:text-sm leading-relaxed font-light" style={{ color: 'var(--text-secondary)' }}>
-                    Thomas est l&apos;architecte de la pensée. Déconstruire les schémas limitants, reprogrammer les croyances, libérer l&apos;esprit. Son approche : amener chacun à devenir le maître de son propre mental.
+                    {hist.thomas_desc || "Thomas intervient sur le côté pratique et concret du déconditionnement. À travers des cahiers d\u2019exercices et des protocoles d\u2019action, il transforme la prise de conscience en résultats tangibles. Son approche : vous donner les outils pour devenir l\u2019architecte de votre propre transformation."}
                   </p>
                 </div>
               </div>
@@ -209,12 +209,12 @@ export default function NotreHistoirePage() {
               <div className="inline-flex items-center gap-3 sm:gap-4 md:gap-6">
                 <div className="w-8 sm:w-12 md:w-16 h-[1px]" style={{ background: `linear-gradient(90deg, transparent, ${gold})` }} />
                 <p className="text-[10px] sm:text-xs tracking-[0.3em] sm:tracking-[0.4em] uppercase" style={{ color: 'var(--text-muted)' }}>
-                  Énergie &middot; Corps &middot; Mental
+                  {hist.trinite_tagline || 'Énergie \u00b7 Corps \u00b7 Pratique'}
                 </p>
                 <div className="w-8 sm:w-12 md:w-16 h-[1px]" style={{ background: `linear-gradient(90deg, ${gold}, transparent)` }} />
               </div>
               <p className="max-w-2xl mx-auto mt-4 md:mt-6 text-xs sm:text-sm md:text-base leading-relaxed font-light" style={{ color: 'var(--text-secondary)' }}>
-                Trois triangles à côtés égaux. Trois dimensions de l&apos;être. Un seul objectif : vous aider à devenir la personne que vous auriez toujours dû être. Le déconditionnement total commence ici.
+                {hist.trinite_conclusion || "Trois triangles à côtés égaux. Trois dimensions de l\u2019être. Un seul objectif : vous aider à devenir la personne que vous auriez toujours dû être. Le déconditionnement total commence ici."}
               </p>
             </div>
           </div>
@@ -231,7 +231,7 @@ export default function NotreHistoirePage() {
         <div className="max-w-5xl mx-auto">
           <blockquote className="text-center">
             <p className="font-display font-light text-lg sm:text-xl md:text-2xl lg:text-3xl italic leading-relaxed" style={{ color: gold }}>
-              &ldquo;Nous ne guérissons pas. Nous révélons. Ce que vous cherchez est déjà en vous — enfoui sous des années de conditionnements. Notre mission est de vous aider à le retrouver.&rdquo;
+              &ldquo;{hist.manifeste || "Nous ne guérissons pas. Nous révélons. Ce que vous cherchez est déjà en vous — enfoui sous des années de conditionnements. Notre mission est de vous aider à le retrouver."}&rdquo;
             </p>
             <footer className="mt-6 md:mt-8">
               <p className="text-[10px] sm:text-xs tracking-[0.3em] uppercase" style={{ color: 'var(--text-muted)' }}>— Julia, William & Thomas</p>

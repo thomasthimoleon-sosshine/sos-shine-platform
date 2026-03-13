@@ -508,6 +508,22 @@ export default function LandingAdminPage() {
               onUploaded={(url) => updateContent(key, 'book_image', url)}
               onRemoved={() => updateContent(key, 'book_image', '')} />
             <TextField label="Libelle du bouton" value={c.button_label || ''} onChange={(v) => updateContent(key, 'button_label', v)} />
+            <Separator label="Trinite / Fondateurs (page Notre Histoire)" />
+            <TextAreaField label="Titre trinite" value={c.trinite_title || ''} onChange={(v) => updateContent(key, 'trinite_title', v)} />
+            <TextAreaField label="Introduction trinite" value={c.trinite_intro || ''} rows={4} onChange={(v) => updateContent(key, 'trinite_intro', v)} />
+            <Separator label="Julia" />
+            <TextField label="Sous-titre Julia" value={c.julia_pilier || ''} onChange={(v) => updateContent(key, 'julia_pilier', v)} />
+            <TextAreaField label="Description Julia" value={c.julia_desc || ''} rows={3} onChange={(v) => updateContent(key, 'julia_desc', v)} />
+            <Separator label="William" />
+            <TextField label="Sous-titre William" value={c.william_pilier || ''} onChange={(v) => updateContent(key, 'william_pilier', v)} />
+            <TextAreaField label="Description William" value={c.william_desc || ''} rows={3} onChange={(v) => updateContent(key, 'william_desc', v)} />
+            <Separator label="Thomas" />
+            <TextField label="Sous-titre Thomas" value={c.thomas_pilier || ''} onChange={(v) => updateContent(key, 'thomas_pilier', v)} />
+            <TextAreaField label="Description Thomas" value={c.thomas_desc || ''} rows={3} onChange={(v) => updateContent(key, 'thomas_desc', v)} />
+            <Separator label="Bas de page" />
+            <TextField label="Tagline (ex: Energie . Corps . Pratique)" value={c.trinite_tagline || ''} onChange={(v) => updateContent(key, 'trinite_tagline', v)} />
+            <TextAreaField label="Conclusion" value={c.trinite_conclusion || ''} rows={3} onChange={(v) => updateContent(key, 'trinite_conclusion', v)} />
+            <TextAreaField label="Manifeste (citation)" value={c.manifeste || ''} rows={3} onChange={(v) => updateContent(key, 'manifeste', v)} />
           </>
         )
 

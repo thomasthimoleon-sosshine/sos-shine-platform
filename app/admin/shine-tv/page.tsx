@@ -234,7 +234,8 @@ export default function AdminShineTVPage() {
             accept="video/*"
             folder="shine-tv"
             currentUrl={form.video_url || null}
-            hint="MP4 recommandé, max 500 Mo"
+            hint="MP4 recommandé, aucune limite de taille"
+            maxSize={0}
             onUploaded={(url) => setForm((prev) => ({ ...prev, video_url: url }))}
             onRemoved={() => setForm((prev) => ({ ...prev, video_url: '' }))}
           />

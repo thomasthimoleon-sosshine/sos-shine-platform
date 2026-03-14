@@ -11,6 +11,7 @@ interface FileUploadProps {
   onUploaded: (url: string) => void
   onRemoved?: () => void
   hint?: string
+  maxSize?: number          // max file size in bytes, 0 = no limit, default 100MB
 }
 
 export default function FileUpload({
@@ -21,6 +22,7 @@ export default function FileUpload({
   onUploaded,
   onRemoved,
   hint,
+  maxSize,
 }: FileUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [uploading, setUploading] = useState(false)
@@ -31,9 +33,10 @@ export default function FileUpload({
     const file = e.target.files?.[0]
     if (!file) return
 
-    // Validate size (100MB max)
-    if (file.size > 100 * 1024 * 1024) {
-      setError('Fichier trop volumineux (max 100 Mo)')
+    // Validate size (default 100MB max, 0 = no limit)
+    const limit = maxSize !== undefined ? maxSize : 100 * 1024 * 1024
+    if (limit > 0 && file.size > limit) {
+      setError(`Fichier trop volumineux (max ${Math.round(limit / (1024 * 1024))} Mo)`)
       return
     }
 

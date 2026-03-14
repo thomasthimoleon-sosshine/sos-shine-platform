@@ -272,7 +272,8 @@ export default function AdminShineAudiblePage() {
             accept="audio/*"
             folder="shine-audible"
             currentUrl={form.audio_url || null}
-            hint="MP3, WAV ou M4A recommandé"
+            hint="MP3, WAV ou M4A recommandé, aucune limite de taille"
+            maxSize={0}
             onUploaded={(url) => setForm((prev) => ({ ...prev, audio_url: url }))}
             onRemoved={() => setForm((prev) => ({ ...prev, audio_url: '' }))}
           />

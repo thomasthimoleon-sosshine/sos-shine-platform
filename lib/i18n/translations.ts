@@ -209,6 +209,13 @@ export const translations: Record<string, string> = {
   'auth.min_chars': 'Minimum 6 caractères',
   'auth.email_not_received': "Vous n'avez rien reçu ?",
   'auth.retry': 'Réessayer',
+  'auth.forgot_password': 'Mot de passe oublié ?',
+  'auth.forgot_title': 'Réinitialiser votre mot de passe',
+  'auth.forgot_subtitle': 'Entrez votre adresse email pour recevoir un lien de réinitialisation',
+  'auth.forgot_send': 'Envoyer le lien',
+  'auth.forgot_sending': 'Envoi en cours...',
+  'auth.forgot_success': 'Un email de réinitialisation a été envoyé. Vérifiez votre boîte de réception.',
+  'auth.forgot_back': 'Retour à la connexion',
 
   'contact.back': "Retour à l'accueil",
   'contact.phone': 'Téléphone',

@@ -463,7 +463,10 @@ export default function Home() {
               <Link href="/" className="flex items-center gap-3">
                 <img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-14 sm:h-18 md:h-24 w-auto object-contain" />
               </Link>
-              <div className="absolute right-4 md:right-6 flex items-center gap-2">
+              <div className="absolute right-4 md:right-6 flex items-center gap-3">
+                <Link href="/login" className="px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:opacity-90" style={{ background: 'var(--button-bg, linear-gradient(135deg, #d4a843, #b8922e))', color: 'var(--dark, #1a1a1a)' }}>
+                  Connexion
+                </Link>
                 <ThemeToggle />
               </div>
             </div>

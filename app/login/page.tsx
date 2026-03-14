@@ -143,6 +143,11 @@ export default function LoginPage() {
                 onBlur={(e) => e.currentTarget.style.borderColor = 'var(--dark-border)'}
               />
             </div>
+            <div className="text-right -mt-1">
+              <Link href="/forgot-password" className="text-[12px] transition-colors duration-200 hover:underline" style={{ color: 'var(--gold)' }}>
+                {t('auth.forgot_password')}
+              </Link>
+            </div>
             {error && (
               <p className="text-[13px] px-4 py-3 rounded-xl" style={{ color: '#f87171', background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.15)' }}>
                 {error}

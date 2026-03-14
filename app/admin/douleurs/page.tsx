@@ -112,6 +112,31 @@ export default function AdminDouleursPage() {
     setError(null)
   }
 
+  function duplicateChallenge(d: Douleur) {
+    setEditingId(null)
+    setForm({
+      title: d.title + ' (copie)',
+      slug: generateSlug(d.title + ' copie'),
+      description: d.description || '',
+      image_url: d.image_url || '',
+      video_url: d.video_url || '',
+      step1_audio_url: d.step1_audio_url || '',
+      step1_pdf_url: d.step1_pdf_url || '',
+      step1_image_url: d.step1_image_url || '',
+      step2_video_url: d.step2_video_url || '',
+      audio_energy_url: d.audio_energy_url || '',
+      step2_pdf_url: d.step2_pdf_url || '',
+      step2_image_url: d.step2_image_url || '',
+      step3_video_url: d.step3_video_url || '',
+      audio_meditation_url: d.audio_meditation_url || '',
+      pdf_url: d.pdf_url || '',
+      step3_image_url: d.step3_image_url || '',
+      exercise_content: d.exercise_content || '',
+    })
+    setShowForm(true)
+    setError(null)
+  }
+
   function cancelForm() {
     setShowForm(false)
     setEditingId(null)
@@ -550,6 +575,11 @@ export default function AdminDouleursPage() {
                         className="px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 hover:opacity-80"
                         style={{ background: 'rgba(116,192,252,0.1)', color: '#74C0FC', border: '1px solid rgba(116,192,252,0.2)' }}>
                         Modifier
+                      </button>
+                      <button onClick={() => duplicateChallenge(d)}
+                        className="px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 hover:opacity-80"
+                        style={{ background: 'rgba(186,146,255,0.1)', color: '#BA92FF', border: '1px solid rgba(186,146,255,0.2)' }}>
+                        Dupliquer
                       </button>
                       <button onClick={() => togglePublish(d)}
                         className="px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 hover:opacity-80"

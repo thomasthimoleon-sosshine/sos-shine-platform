@@ -4,6 +4,90 @@ import { useEffect, useState, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 
+// ── PDF Reader Modal (anti-download) ──
+function PdfReaderModal({ url, title, onClose }: { url: string; title: string; onClose: () => void }) {
+  useEffect(() => {
+    // Block keyboard shortcuts for download/print
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'p' || e.key === 'S' || e.key === 'P')) {
+        e.preventDefault()
+        e.stopPropagation()
+      }
+    }
+    // Block right-click
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault()
+    }
+    document.addEventListener('keydown', handleKeyDown, true)
+    document.addEventListener('contextmenu', handleContextMenu, true)
+    // Lock body scroll
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown, true)
+      document.removeEventListener('contextmenu', handleContextMenu, true)
+      document.body.style.overflow = ''
+    }
+  }, [])
+
+  // Add #toolbar=0&navpanes=0 to hide PDF viewer controls (download, print)
+  const safeUrl = `${url}#toolbar=0&navpanes=0&scrollbar=1&view=FitH`
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[200] flex flex-col"
+      style={{ background: '#09090b' }}
+    >
+      {/* Header bar */}
+      <div className="flex items-center justify-between px-4 sm:px-6 py-3 shrink-0"
+        style={{ background: 'var(--dark-card)', borderBottom: '1px solid var(--dark-border)' }}>
+        <div className="flex items-center gap-3 min-w-0">
+          <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+            style={{ color: 'var(--gold)' }}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+          </svg>
+          <h2 className="font-display text-[15px] font-semibold truncate" style={{ color: 'var(--text-primary)' }}>
+            {title}
+          </h2>
+        </div>
+        <button
+          onClick={onClose}
+          className="w-9 h-9 rounded-full flex items-center justify-center cursor-pointer transition-colors hover:bg-white/10 shrink-0"
+          style={{ background: 'rgba(255,255,255,0.06)', color: 'var(--text-secondary)' }}
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      {/* PDF iframe - fills remaining space */}
+      <div className="flex-1 relative select-none">
+        <iframe
+          src={safeUrl}
+          className="w-full h-full border-0"
+          title={title}
+          sandbox="allow-same-origin allow-scripts"
+          style={{ pointerEvents: 'auto' }}
+        />
+        {/* Invisible overlay on corners to block download button clicks in some browsers */}
+        <div className="absolute top-0 right-0 w-14 h-14" style={{ background: 'transparent' }}
+          onContextMenu={(e) => e.preventDefault()} />
+      </div>
+
+      {/* Bottom info bar */}
+      <div className="flex items-center justify-center px-4 py-2 shrink-0"
+        style={{ background: 'var(--dark-card)', borderTop: '1px solid var(--dark-border)' }}>
+        <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
+          Lecture en ligne uniquement — Téléchargement non autorisé
+        </p>
+      </div>
+    </motion.div>
+  )
+}
+
 // ── Types ──
 type ShineBook = {
   id: string
@@ -334,11 +418,12 @@ function HeroBanner({ book, onOpen }: { book: ShineBook; onOpen: () => void }) {
 }
 
 // ── Book Detail Modal ──
-function BookModal({ book, onClose, onToggleFavorite, onRate }: {
+function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
   book: ShineBook
   onClose: () => void
   onToggleFavorite: (id: string) => void
   onRate: (id: string, rating: number) => void
+  onRead: (book: ShineBook) => void
 }) {
   const [tab, setTab] = useState<'overview' | 'reviews'>('overview')
   const [newReview, setNewReview] = useState('')
@@ -450,18 +535,16 @@ function BookModal({ book, onClose, onToggleFavorite, onRate }: {
 
             {/* Read button */}
             {book.pdfUrl && (
-              <a
-                href={book.pdfUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl text-[14px] font-semibold transition-all duration-200 hover:scale-105"
+              <button
+                onClick={() => onRead(book)}
+                className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl text-[14px] font-semibold transition-all duration-200 hover:scale-105 cursor-pointer"
                 style={{ background: 'var(--gold)', color: '#09090b' }}
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
                 </svg>
                 Lire le PDF
-              </a>
+              </button>
             )}
 
             {/* Your rating */}
@@ -610,6 +693,7 @@ export default function ShineLibrairiePage() {
   const [books, setBooks] = useState<ShineBook[]>([])
   const [search, setSearch] = useState('')
   const [selectedBook, setSelectedBook] = useState<ShineBook | null>(null)
+  const [readingBook, setReadingBook] = useState<ShineBook | null>(null)
   const [activeFilter, setActiveFilter] = useState('all')
   const [activeType, setActiveType] = useState('all')
   const [loading, setLoading] = useState(true)
@@ -1053,6 +1137,18 @@ export default function ShineLibrairiePage() {
             onClose={() => setSelectedBook(null)}
             onToggleFavorite={handleToggleFavorite}
             onRate={handleRate}
+            onRead={(book) => { setSelectedBook(null); setReadingBook(book) }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* PDF Reader Modal (anti-download) */}
+      <AnimatePresence>
+        {readingBook && (
+          <PdfReaderModal
+            url={readingBook.pdfUrl}
+            title={readingBook.title}
+            onClose={() => setReadingBook(null)}
           />
         )}
       </AnimatePresence>

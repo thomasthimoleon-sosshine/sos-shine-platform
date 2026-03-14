@@ -217,3 +217,23 @@ export function getDailyQuote(): Quote {
 export function getRandomQuote(): Quote {
   return QUOTES[Math.floor(Math.random() * QUOTES.length)]
 }
+
+/**
+ * Returns the next quote in a rotating cycle.
+ * Each call increments the index stored in localStorage,
+ * so each connection/session shows a different quote,
+ * cycling through all quotes sequentially.
+ */
+export function getNextRotatingQuote(): Quote {
+  if (typeof window === 'undefined') {
+    return QUOTES[0]
+  }
+  const key = 'shine_quote_index'
+  const stored = localStorage.getItem(key)
+  const currentIndex = stored ? parseInt(stored, 10) : 0
+  const safeIndex = isNaN(currentIndex) ? 0 : currentIndex % QUOTES.length
+  const quote = QUOTES[safeIndex]
+  // Advance to next quote for next connection
+  localStorage.setItem(key, String((safeIndex + 1) % QUOTES.length))
+  return quote
+}

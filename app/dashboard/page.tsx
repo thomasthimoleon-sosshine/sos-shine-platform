@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import type { Profile } from '@/types/database'
 import { useTranslation } from '@/lib/i18n/useTranslation'
-import { getRandomQuote, type Quote } from '@/lib/quotes'
+import { getNextRotatingQuote, type Quote } from '@/lib/quotes'
 import AudioPlayer from '@/components/AudioPlayer'
 import XPBadge from '@/components/XPBadge'
 
@@ -403,7 +403,7 @@ export default function DashboardHome() {
   const [siteSettings, setSiteSettings] = useState<Record<string, string>>({})
 
   useEffect(() => {
-    setQuote(getRandomQuote())
+    setQuote(getNextRotatingQuote())
     const hour = new Date().getHours()
     if (hour < 5) setGreeting('dashboard.night')
     else if (hour < 12) setGreeting('dashboard.morning')

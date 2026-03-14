@@ -32,6 +32,7 @@ const CATEGORIES = [
   { id: 'trauma', label: 'Trauma', icon: '💎' },
   { id: 'self-love', label: 'Amour de soi', icon: '🩷' },
   { id: 'spirituality', label: 'Spiritualité', icon: '🙏' },
+  { id: 'children', label: 'Enfants', icon: '👶' },
 ]
 
 const CONTENT_TYPES = [

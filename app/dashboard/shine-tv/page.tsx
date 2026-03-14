@@ -38,6 +38,7 @@ const CATEGORIES = [
   { id: 'resilience', label: 'Résilience', icon: '🔥' },
   { id: 'gratitude', label: 'Gratitude & Joie', icon: '✨' },
   { id: 'sleep', label: 'Sommeil & Détente', icon: '🌙' },
+  { id: 'children', label: 'Enfants', icon: '👶' },
 ]
 
 // ── Stars Component ──

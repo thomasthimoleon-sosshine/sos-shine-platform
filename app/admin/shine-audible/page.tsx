@@ -28,6 +28,7 @@ const CATEGORIES = [
   { id: 'gratitude', label: 'Gratitude', icon: '✨' },
   { id: 'relationships', label: 'Relations', icon: '💛' },
   { id: 'resilience', label: 'Résilience', icon: '🔥' },
+  { id: 'children', label: 'Enfants', icon: '👶' },
 ]
 
 const CONTENT_TYPES = [

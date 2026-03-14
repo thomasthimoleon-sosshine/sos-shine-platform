@@ -45,6 +45,7 @@ const CATEGORIES = [
   { id: 'self-love', label: 'Amour de soi', icon: '🩷' },
   { id: 'spirituality', label: 'Spiritualité', icon: '🙏' },
   { id: 'gratitude', label: 'Gratitude & Joie', icon: '✨' },
+  { id: 'children', label: 'Enfants', icon: '👶' },
 ]
 
 const CONTENT_TYPES = [

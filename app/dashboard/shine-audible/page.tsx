@@ -42,6 +42,7 @@ const CATEGORIES = [
   { id: 'hypnosis', label: 'Hypnose douce', icon: '🌀' },
   { id: 'stories', label: 'Histoires inspirantes', icon: '📖' },
   { id: 'ambient', label: 'Sons & Ambiances', icon: '🎵' },
+  { id: 'children', label: 'Enfants', icon: '👶' },
 ]
 
 const CONTENT_TYPES = [

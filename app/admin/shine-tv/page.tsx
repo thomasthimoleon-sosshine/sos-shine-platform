@@ -27,6 +27,7 @@ const CATEGORIES = [
   { id: 'sleep', label: 'Sommeil & Détente', icon: '🌙' },
   { id: 'masterclass', label: 'Masterclass', icon: '🎓' },
   { id: 'testimony', label: 'Témoignages', icon: '🗣️' },
+  { id: 'children', label: 'Enfants', icon: '👶' },
 ]
 
 const emptyForm = {

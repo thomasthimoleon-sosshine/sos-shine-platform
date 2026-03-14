@@ -765,7 +765,7 @@ export default function AdminDouleursPage() {
                             accept="video/*"
                             folder="douleurs"
                             currentUrl={step.video_url || null}
-                            hint="MP4 recommandé, max 100 Mo"
+                            hint="MP4 recommandé, max 500 Mo"
                             onUploaded={(url) => updateStep(i, 'video_url', url)}
                             onRemoved={() => updateStep(i, 'video_url', '')}
                           />
@@ -774,7 +774,7 @@ export default function AdminDouleursPage() {
                             accept="audio/*"
                             folder="douleurs"
                             currentUrl={step.audio_url || null}
-                            hint="MP3 ou WAV, max 100 Mo"
+                            hint="MP3 ou WAV, max 500 Mo"
                             onUploaded={(url) => updateStep(i, 'audio_url', url)}
                             onRemoved={() => updateStep(i, 'audio_url', '')}
                           />
@@ -783,7 +783,7 @@ export default function AdminDouleursPage() {
                             accept="application/pdf"
                             folder="douleurs"
                             currentUrl={step.pdf_url || null}
-                            hint="PDF max 100 Mo"
+                            hint="PDF max 500 Mo"
                             onUploaded={(url) => updateStep(i, 'pdf_url', url)}
                             onRemoved={() => updateStep(i, 'pdf_url', '')}
                           />

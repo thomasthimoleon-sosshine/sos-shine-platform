@@ -53,113 +53,6 @@ const CONTENT_TYPES = [
   { id: 'ambient', label: 'Ambiances', icon: '🎵' },
 ]
 
-const COVERS = [
-  'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1528715471579-d1bcf0ba5e83?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1477346611705-65d1883cee1e?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1495344517868-8ebaf0a2044a?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1602192509154-0b900ee1f851?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1508672019048-805c876b67e2?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=400&fit=crop',
-]
-
-const AUDIO_TITLES = [
-  'Méditation du matin - Énergie positive',
-  'Hypnose douce - Retrouver la confiance',
-  'Podcast : Se relever après une épreuve',
-  'Sons de la forêt - 1 heure',
-  'Affirmations positives pour s\'endormir',
-  'Histoire inspirante : Le phénix intérieur',
-  'Sophrologie guidée - Lâcher-prise',
-  'Podcast : L\'art de la résilience',
-  'Méditation pleine conscience - 20 min',
-  'Bruit blanc & pluie - Concentration',
-  'Hypnose - Libérer l\'anxiété',
-  'Audiobook : Les chemins de la guérison',
-  'Respiration guidée 4-7-8',
-  'Podcast : Pardonner pour avancer',
-  'Sons tibétains - Harmonisation',
-  'Méditation du soir - Gratitude',
-  'Conte méditatif : La rivière de lumière',
-  'Podcast : Construire des relations saines',
-  'ASMR thérapeutique - Détente profonde',
-  'Hypnose - Reprogrammer ses pensées',
-  'Audiobook : S\'aimer enfin',
-  'Méditation body scan - 30 min',
-  'Podcast : Le courage d\'être vulnérable',
-  'Sons de l\'océan - Paix intérieure',
-  'Yoga Nidra - Sommeil réparateur',
-  'Podcast : Transformer sa douleur en force',
-  'Visualisation créatrice guidée',
-  'Mantra Om - 108 répétitions',
-  'Podcast : Sortir de la dépendance affective',
-  'Audiobook : Renaître après le trauma',
-  'Méditation Metta - Amour bienveillant',
-  'Fréquence 432 Hz - Guérison profonde',
-]
-
-const NARRATORS = [
-  'Sophie Lumière', 'Marie Douceur', 'Camille Sérénité', 'Julie Harmonie',
-  'Nadia Paix', 'Léa Tendresse', 'Sarah Étoile', 'Clara Sagesse',
-]
-
-const DESCRIPTIONS = [
-  'Laissez-vous guider dans un voyage sonore apaisant qui vous reconnectera à votre lumière intérieure et à votre force profonde.',
-  'Un accompagnement audio bienveillant pour traverser les moments difficiles et retrouver confiance en vous, pas à pas.',
-  'Plongez dans une expérience auditive immersive conçue pour libérer vos tensions et accéder à un état de paix profond.',
-  'Découvrez des techniques puissantes à travers cette écoute guidée pour transformer votre quotidien et votre bien-être.',
-  'Une séance audio soigneusement élaborée pour vous accompagner vers la guérison émotionnelle et le renouveau.',
-]
-
-const CONTENT_TYPE_KEYS: Array<'podcast' | 'audiobook' | 'meditation' | 'hypnosis' | 'ambient'> = [
-  'podcast', 'audiobook', 'meditation', 'hypnosis', 'ambient'
-]
-
-function generateAudios(): ShineAudio[] {
-  const audios: ShineAudio[] = []
-  for (let i = 0; i < 64; i++) {
-    const catIndex = i % CATEGORIES.length
-    const secs = 180 + Math.floor(Math.random() * 3420) // 3 min to 60 min
-    const mins = Math.floor(secs / 60)
-    const contentType = CONTENT_TYPE_KEYS[i % CONTENT_TYPE_KEYS.length]
-    audios.push({
-      id: `audio-${i}`,
-      title: AUDIO_TITLES[i % AUDIO_TITLES.length],
-      description: DESCRIPTIONS[i % DESCRIPTIONS.length],
-      cover: COVERS[i % COVERS.length],
-      audioUrl: '',
-      narrator: NARRATORS[i % NARRATORS.length],
-      category: CATEGORIES[catIndex].id,
-      contentType,
-      duration: mins >= 60 ? `${Math.floor(mins / 60)}h${(mins % 60).toString().padStart(2, '0')}` : `${mins} min`,
-      durationSeconds: secs,
-      year: 2024 + Math.floor(Math.random() * 3),
-      rating: 3.5 + Math.random() * 1.5,
-      userRating: 0,
-      isFavorite: Math.random() > 0.75,
-      reviewCount: Math.floor(Math.random() * 200),
-    })
-  }
-  return audios
-}
-
-const SAMPLE_REVIEWS: Review[] = [
-  { id: 'r1', author: 'Marie L.', avatar: '', rating: 5, text: 'Cette méditation m\'a accompagnée chaque matin pendant un mois. Un vrai changement dans ma vie.', date: '12 mars 2026' },
-  { id: 'r2', author: 'Sarah K.', avatar: '', rating: 4, text: 'La voix est incroyablement apaisante. Parfait pour se détendre le soir.', date: '8 mars 2026' },
-  { id: 'r3', author: 'Camille D.', avatar: '', rating: 5, text: 'J\'écoute en boucle ! Chaque écoute m\'apporte quelque chose de nouveau et de profond.', date: '5 mars 2026' },
-  { id: 'r4', author: 'Léa M.', avatar: '', rating: 4, text: 'Très beau contenu audio. La qualité sonore est exceptionnelle.', date: '2 mars 2026' },
-  { id: 'r5', author: 'Nadia B.', avatar: '', rating: 5, text: 'Merci SOS Shine ! Ce podcast a transformé ma façon de voir les épreuves.', date: '28 fév 2026' },
-]
-
 // ── Stars Component ──
 function StarRating({ rating, onRate, size = 'md', interactive = false }: {
   rating: number
@@ -543,7 +436,7 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
   const [tab, setTab] = useState<'overview' | 'reviews'>('overview')
   const [newReview, setNewReview] = useState('')
   const [newRating, setNewRating] = useState(0)
-  const [reviews, setReviews] = useState<Review[]>(SAMPLE_REVIEWS)
+  const [reviews, setReviews] = useState<Review[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleSubmitReview = () => {
@@ -728,26 +621,7 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
                   </div>
                 </div>
 
-                {/* Similar audios */}
-                <h3 className="text-[13px] font-semibold uppercase tracking-wider mt-6 mb-3" style={{ color: 'var(--text-muted)' }}>
-                  Écoutes similaires
-                </h3>
-                <div className="grid grid-cols-3 gap-3">
-                  {[0, 1, 2].map(i => (
-                    <div key={i} className="rounded-xl overflow-hidden cursor-pointer group">
-                      <div className="relative aspect-square">
-                        <img
-                          src={COVERS[(parseInt(audio.id.split('-')[1]) + i + 3) % COVERS.length]}
-                          alt=""
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                        />
-                      </div>
-                      <p className="text-[11px] font-medium mt-1.5 truncate" style={{ color: 'var(--text-secondary)' }}>
-                        {AUDIO_TITLES[(parseInt(audio.id.split('-')[1]) + i + 3) % AUDIO_TITLES.length]}
-                      </p>
-                    </div>
-                  ))}
-                </div>
+                {/* Similar audios section removed - requires data from parent */}
               </motion.div>
             ) : (
               <motion.div key="reviews" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }}>
@@ -840,10 +714,48 @@ export default function ShineAudiblePage() {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
-    setTimeout(() => {
-      setAudios(generateAudios())
+    async function loadAudios() {
+      const supabase = createClient()
+      const { data } = await supabase
+        .from('shine_audible_tracks')
+        .select('*')
+        .eq('is_published', true)
+        .order('created_at', { ascending: false })
+
+      if (!data) {
+        setAudios([])
+        setLoading(false)
+        return
+      }
+
+      const mapped: ShineAudio[] = data.map((t: any) => {
+        const secs = t.duration_seconds ?? 0
+        const duration = secs >= 3600
+          ? `${Math.floor(secs / 3600)}h${((secs % 3600) / 60 | 0).toString().padStart(2, '0')}`
+          : `${Math.floor(secs / 60)} min`
+        return {
+          id: t.id,
+          title: t.title,
+          description: t.description || '',
+          cover: t.cover_url || '',
+          audioUrl: t.audio_url || '',
+          narrator: t.narrator || '',
+          category: t.category,
+          contentType: t.content_type,
+          duration,
+          durationSeconds: secs,
+          year: t.year,
+          rating: 0,
+          userRating: 0,
+          isFavorite: false,
+          reviewCount: 0,
+        }
+      })
+
+      setAudios(mapped)
       setLoading(false)
-    }, 600)
+    }
+    loadAudios()
   }, [])
 
   // Simulate playback

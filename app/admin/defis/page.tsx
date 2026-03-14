@@ -71,6 +71,23 @@ export default function AdminDefisPage() {
     setShowForm(true)
   }
 
+  function duplicateLast() {
+    if (challenges.length === 0) return
+    const last = challenges[0] // Already sorted by created_at desc
+    setEditingId(null)
+    setForm({
+      title: last.title,
+      description: last.description || '',
+      reward_type: last.reward_type,
+      reward_value: last.reward_value,
+      reward_detail: last.reward_detail || '',
+      start_date: last.start_date ? last.start_date.slice(0, 16) : '',
+      end_date: last.end_date ? last.end_date.slice(0, 16) : '',
+      max_participants: last.max_participants ? String(last.max_participants) : '',
+    })
+    setShowForm(true)
+  }
+
   function openEdit(ch: Challenge) {
     setEditingId(ch.id)
     setForm({
@@ -182,11 +199,20 @@ export default function AdminDefisPage() {
           <h1 className="font-display text-3xl font-semibold" style={{ color: 'var(--text-primary)' }}>Défis Communautaires</h1>
           <p className="mt-1 text-sm" style={{ color: 'var(--text-secondary)' }}>Créez et gérez les défis pour engager la communauté.</p>
         </div>
-        <button onClick={openCreate}
-          className="px-5 py-2.5 rounded-xl text-sm font-semibold cursor-pointer transition-all"
-          style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
-          + Nouveau défi
-        </button>
+        <div className="flex items-center gap-2">
+          {challenges.length > 0 && (
+            <button onClick={duplicateLast}
+              className="px-5 py-2.5 rounded-xl text-sm font-semibold cursor-pointer transition-all"
+              style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.3)' }}>
+              Dupliquer le dernier
+            </button>
+          )}
+          <button onClick={openCreate}
+            className="px-5 py-2.5 rounded-xl text-sm font-semibold cursor-pointer transition-all"
+            style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
+            + Nouveau défi
+          </button>
+        </div>
       </div>
 
       {/* Create/Edit Form */}

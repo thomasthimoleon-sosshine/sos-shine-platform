@@ -29,7 +29,6 @@ type Review = {
   date: string
 }
 
-// ── Simulation data ──
 const CATEGORIES = [
   { id: 'trending', label: 'Tendances du moment', icon: '🔥' },
   { id: 'healing', label: 'Guérison intérieure', icon: '🌿' },
@@ -39,99 +38,6 @@ const CATEGORIES = [
   { id: 'resilience', label: 'Résilience', icon: '🔥' },
   { id: 'gratitude', label: 'Gratitude & Joie', icon: '✨' },
   { id: 'sleep', label: 'Sommeil & Détente', icon: '🌙' },
-]
-
-const THUMBNAILS = [
-  'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1528715471579-d1bcf0ba5e83?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1477346611705-65d1883cee1e?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1495344517868-8ebaf0a2044a?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1602192509154-0b900ee1f851?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1508672019048-805c876b67e2?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1510797215324-95aa89f43c33?w=400&h=225&fit=crop',
-]
-
-const VIDEO_TITLES = [
-  'Se relever après une rupture',
-  'Méditation du matin - 15 min',
-  'Retrouver la confiance',
-  'Gérer l\'anxiété au quotidien',
-  'L\'art du lâcher-prise',
-  'Comprendre ses émotions',
-  'Rituels bien-être du soir',
-  'Surmonter le deuil',
-  'Affirmations positives',
-  'Yoga doux pour l\'âme',
-  'Respiration anti-stress',
-  'Pardonner pour avancer',
-  'S\'aimer inconditionnellement',
-  'Reconstruire après un trauma',
-  'La force du silence',
-  'Créer des relations saines',
-  'Méditation pleine conscience',
-  'Écriture thérapeutique',
-  'Sophrologie guidée',
-  'Trouver sa paix intérieure',
-  'Accepter le changement',
-  'Libérer les blocages',
-  'Énergie positive du matin',
-  'Détox émotionnelle',
-  'Le pouvoir de la gratitude',
-  'Visualisation créatrice',
-  'Ancrage et recentrage',
-  'Hypnose douce - Confiance',
-  'Sons de la nature - Forêt',
-  'Méditation du lac calme',
-  'Reprogrammer ses pensées',
-  'Le courage d\'être soi',
-]
-
-const DESCRIPTIONS = [
-  'Un guide complet pour traverser les moments difficiles avec bienveillance et retrouver votre lumière intérieure.',
-  'Découvrez des techniques puissantes pour transformer votre quotidien et accéder à un état de bien-être profond.',
-  'Cette session vous accompagne pas à pas vers la guérison émotionnelle et la reconstruction personnelle.',
-  'Apprenez à développer une relation saine avec vous-même grâce à des exercices pratiques et accessibles.',
-  'Une immersion sonore et visuelle pour vous reconnecter à votre essence et libérer les tensions accumulées.',
-]
-
-function generateVideos(): ShineVideo[] {
-  const videos: ShineVideo[] = []
-  for (let i = 0; i < 48; i++) {
-    const catIndex = i % CATEGORIES.length
-    const mins = 5 + Math.floor(Math.random() * 55)
-    videos.push({
-      id: `video-${i}`,
-      title: VIDEO_TITLES[i % VIDEO_TITLES.length],
-      description: DESCRIPTIONS[i % DESCRIPTIONS.length],
-      thumbnail: THUMBNAILS[i % THUMBNAILS.length],
-      videoUrl: '',
-      category: CATEGORIES[catIndex].id,
-      duration: `${mins} min`,
-      year: 2024 + Math.floor(Math.random() * 3),
-      rating: 3.5 + Math.random() * 1.5,
-      userRating: 0,
-      isFavorite: Math.random() > 0.7,
-      reviewCount: Math.floor(Math.random() * 120),
-    })
-  }
-  return videos
-}
-
-const SAMPLE_REVIEWS: Review[] = [
-  { id: 'r1', author: 'Marie L.', avatar: '', rating: 5, text: 'Incroyable ! Cette vidéo m\'a vraiment aidée à traverser un moment difficile. Je recommande à 100%.', date: '12 mars 2026' },
-  { id: 'r2', author: 'Sarah K.', avatar: '', rating: 4, text: 'Très beau contenu, apaisant et profond. J\'aurais aimé que ce soit un peu plus long.', date: '8 mars 2026' },
-  { id: 'r3', author: 'Camille D.', avatar: '', rating: 5, text: 'Je l\'ai regardé 3 fois déjà. Chaque visionnage m\'apporte quelque chose de nouveau.', date: '5 mars 2026' },
-  { id: 'r4', author: 'Léa M.', avatar: '', rating: 4, text: 'La voix est tellement apaisante. Parfait avant de dormir.', date: '2 mars 2026' },
-  { id: 'r5', author: 'Nadia B.', avatar: '', rating: 5, text: 'Un bijou. Merci SOS Shine pour ce contenu de qualité.', date: '28 fév 2026' },
 ]
 
 // ── Stars Component ──
@@ -394,7 +300,7 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate }: {
   const [tab, setTab] = useState<'overview' | 'reviews'>('overview')
   const [newReview, setNewReview] = useState('')
   const [newRating, setNewRating] = useState(0)
-  const [reviews, setReviews] = useState<Review[]>(SAMPLE_REVIEWS)
+  const [reviews, setReviews] = useState<Review[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleSubmitReview = () => {
@@ -559,26 +465,7 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate }: {
                   </div>
                 </div>
 
-                {/* Similar videos */}
-                <h3 className="text-[13px] font-semibold uppercase tracking-wider mt-6 mb-3" style={{ color: 'var(--text-muted)' }}>
-                  Contenus similaires
-                </h3>
-                <div className="grid grid-cols-3 gap-3">
-                  {[0, 1, 2].map(i => (
-                    <div key={i} className="rounded-lg overflow-hidden cursor-pointer group">
-                      <div className="relative aspect-video">
-                        <img
-                          src={THUMBNAILS[(parseInt(video.id.split('-')[1]) + i + 3) % THUMBNAILS.length]}
-                          alt=""
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                        />
-                      </div>
-                      <p className="text-[11px] font-medium mt-1.5 truncate" style={{ color: 'var(--text-secondary)' }}>
-                        {VIDEO_TITLES[(parseInt(video.id.split('-')[1]) + i + 3) % VIDEO_TITLES.length]}
-                      </p>
-                    </div>
-                  ))}
-                </div>
+                {/* Similar videos section removed - requires simulation data */}
               </motion.div>
             ) : (
               <motion.div key="reviews" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }}>
@@ -663,10 +550,40 @@ export default function ShineTVPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    setTimeout(() => {
-      setVideos(generateVideos())
+    async function loadVideos() {
+      const supabase = createClient()
+      const { data } = await supabase
+        .from('shine_tv_videos')
+        .select('*')
+        .eq('is_published', true)
+        .order('created_at', { ascending: false })
+
+      if (!data) {
+        setVideos([])
+        setLoading(false)
+        return
+      }
+
+      const mapped: ShineVideo[] = data.map((v: any) => ({
+        id: v.id,
+        title: v.title,
+        description: v.description || '',
+        thumbnail: v.thumbnail_url || '',
+        videoUrl: v.video_url || '',
+        category: v.category,
+        duration: `${v.duration_minutes} min`,
+        year: v.year,
+        rating: 0,
+        userRating: 0,
+        isFavorite: false,
+        reviewCount: 0,
+      }))
+
+      setVideos(mapped)
       setLoading(false)
-    }, 600)
+    }
+
+    loadVideos()
   }, [])
 
   const handleToggleFavorite = (id: string) => {

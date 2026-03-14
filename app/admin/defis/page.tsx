@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import type { Challenge, ChallengeRewardType, ChallengeStatus } from '@/types/database'
+import type { Challenge, ChallengePhase, ChallengeRewardType, ChallengeStatus } from '@/types/database'
 
 const REWARD_TYPES = [
   { value: 'xp', label: 'XP', icon: '⭐' },
@@ -18,6 +18,12 @@ const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
   archived: { label: 'Archivé', color: '#EF4444' },
 }
 
+type PhaseForm = {
+  title: string
+  description: string
+  duration_days: string
+}
+
 type ChallengeForm = {
   title: string
   description: string
@@ -27,20 +33,27 @@ type ChallengeForm = {
   start_date: string
   end_date: string
   max_participants: string
+  phases: PhaseForm[]
 }
+
+const emptyPhase: PhaseForm = { title: '', description: '', duration_days: '' }
 
 const emptyForm: ChallengeForm = {
   title: '', description: '', reward_type: 'xp', reward_value: 100,
   reward_detail: '', start_date: '', end_date: '', max_participants: '',
+  phases: [],
 }
 
+type ChallengeWithMeta = Challenge & { participant_count?: number; phases?: ChallengePhase[] }
+
 export default function AdminDefisPage() {
-  const [challenges, setChallenges] = useState<(Challenge & { participant_count?: number })[]>([])
+  const [challenges, setChallenges] = useState<ChallengeWithMeta[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [form, setForm] = useState<ChallengeForm>(emptyForm)
   const [saving, setSaving] = useState(false)
+  const [expandedPhases, setExpandedPhases] = useState<string | null>(null)
 
   async function loadChallenges() {
     const supabase = createClient()
@@ -50,15 +63,20 @@ export default function AdminDefisPage() {
       .order('created_at', { ascending: false })
 
     if (data) {
-      const withCounts = []
+      const withMeta: ChallengeWithMeta[] = []
       for (const ch of data as Challenge[]) {
         const { count } = await supabase
           .from('challenge_participations')
           .select('*', { count: 'exact', head: true })
           .eq('challenge_id', ch.id)
-        withCounts.push({ ...ch, participant_count: count || 0 })
+        const { data: phases } = await supabase
+          .from('challenge_phases')
+          .select('*')
+          .eq('challenge_id', ch.id)
+          .order('phase_number', { ascending: true })
+        withMeta.push({ ...ch, participant_count: count || 0, phases: (phases as ChallengePhase[]) || [] })
       }
-      setChallenges(withCounts)
+      setChallenges(withMeta)
     }
     setLoading(false)
   }
@@ -73,7 +91,7 @@ export default function AdminDefisPage() {
 
   function duplicateLast() {
     if (challenges.length === 0) return
-    const last = challenges[0] // Already sorted by created_at desc
+    const last = challenges[0]
     setEditingId(null)
     setForm({
       title: last.title,
@@ -84,11 +102,16 @@ export default function AdminDefisPage() {
       start_date: last.start_date ? last.start_date.slice(0, 16) : '',
       end_date: last.end_date ? last.end_date.slice(0, 16) : '',
       max_participants: last.max_participants ? String(last.max_participants) : '',
+      phases: (last.phases || []).map(p => ({
+        title: p.title,
+        description: p.description || '',
+        duration_days: p.duration_days ? String(p.duration_days) : '',
+      })),
     })
     setShowForm(true)
   }
 
-  function openEdit(ch: Challenge) {
+  async function openEdit(ch: ChallengeWithMeta) {
     setEditingId(ch.id)
     setForm({
       title: ch.title,
@@ -99,8 +122,37 @@ export default function AdminDefisPage() {
       start_date: ch.start_date ? ch.start_date.slice(0, 16) : '',
       end_date: ch.end_date ? ch.end_date.slice(0, 16) : '',
       max_participants: ch.max_participants ? String(ch.max_participants) : '',
+      phases: (ch.phases || []).map(p => ({
+        title: p.title,
+        description: p.description || '',
+        duration_days: p.duration_days ? String(p.duration_days) : '',
+      })),
     })
     setShowForm(true)
+  }
+
+  function addPhase() {
+    setForm({ ...form, phases: [...form.phases, { ...emptyPhase }] })
+  }
+
+  function removePhase(index: number) {
+    setForm({ ...form, phases: form.phases.filter((_, i) => i !== index) })
+  }
+
+  function updatePhase(index: number, field: keyof PhaseForm, value: string) {
+    const updated = [...form.phases]
+    updated[index] = { ...updated[index], [field]: value }
+    setForm({ ...form, phases: updated })
+  }
+
+  function movePhase(index: number, direction: 'up' | 'down') {
+    const newIndex = direction === 'up' ? index - 1 : index + 1
+    if (newIndex < 0 || newIndex >= form.phases.length) return
+    const updated = [...form.phases]
+    const temp = updated[index]
+    updated[index] = updated[newIndex]
+    updated[newIndex] = temp
+    setForm({ ...form, phases: updated })
   }
 
   async function handleSave() {
@@ -120,10 +172,40 @@ export default function AdminDefisPage() {
       max_participants: form.max_participants ? parseInt(form.max_participants) : null,
     }
 
+    let challengeId: string | null = null
+
     if (editingId) {
       await supabase.from('challenges').update(payload).eq('id', editingId)
+      challengeId = editingId
     } else {
-      await supabase.from('challenges').insert({ ...payload, created_by: user?.id ?? null, status: 'draft' as ChallengeStatus, winner_id: null })
+      const { data: newChallenge } = await supabase.from('challenges')
+        .insert({ ...payload, created_by: user?.id ?? null, status: 'draft' as ChallengeStatus, winner_id: null })
+        .select('id')
+        .single()
+      challengeId = (newChallenge as { id: string } | null)?.id ?? null
+    }
+
+    // Save phases
+    if (challengeId) {
+      // Delete existing phases for this challenge
+      await supabase.from('challenge_phases').delete().eq('challenge_id', challengeId)
+
+      // Insert new phases
+      if (form.phases.length > 0) {
+        const phasesToInsert = form.phases
+          .filter(p => p.title.trim())
+          .map((p, i) => ({
+            challenge_id: challengeId!,
+            phase_number: i + 1,
+            title: p.title.trim(),
+            description: p.description.trim() || null,
+            duration_days: p.duration_days ? parseInt(p.duration_days) : null,
+          }))
+
+        if (phasesToInsert.length > 0) {
+          await supabase.from('challenge_phases').insert(phasesToInsert)
+        }
+      }
     }
 
     setShowForm(false)
@@ -139,7 +221,6 @@ export default function AdminDefisPage() {
 
   async function selectWinner(challengeId: string) {
     const supabase = createClient()
-    // Get first completed participant
     const { data } = await supabase
       .from('challenge_participations')
       .select('user_id')
@@ -152,7 +233,6 @@ export default function AdminDefisPage() {
     if (data) {
       await supabase.from('challenges').update({ winner_id: data.user_id, status: 'completed' as ChallengeStatus }).eq('id', challengeId)
 
-      // Create pinned post announcement
       const challenge = challenges.find(c => c.id === challengeId)
       const { data: { user } } = await supabase.auth.getUser()
 
@@ -174,7 +254,7 @@ export default function AdminDefisPage() {
             challenge_id: challengeId,
             pinned_by: user?.id ?? null,
             pin_type: 'winner' as const,
-            expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days
+            expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
           })
         }
       }
@@ -261,6 +341,86 @@ export default function AdminDefisPage() {
             <input type="number" placeholder="Nombre max de participants (optionnel)" value={form.max_participants} onChange={e => setForm({ ...form, max_participants: e.target.value })}
               className="w-full rounded-xl px-4 py-3 text-sm outline-none" style={inputStyle} />
 
+            {/* ── PHASES SECTION ── */}
+            <div className="rounded-xl p-4" style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.2)' }}>
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <h4 className="text-sm font-semibold" style={{ color: 'var(--gold)' }}>
+                    Phases du défi
+                  </h4>
+                  <p className="text-[11px] mt-0.5" style={{ color: 'var(--text-muted)' }}>
+                    Ajoutez autant de phases que nécessaire. Les participants progresseront phase par phase.
+                  </p>
+                </div>
+                <button onClick={addPhase}
+                  className="px-3 py-1.5 rounded-lg text-[11px] font-semibold cursor-pointer transition-all"
+                  style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.3)' }}>
+                  + Ajouter une phase
+                </button>
+              </div>
+
+              {form.phases.length === 0 ? (
+                <div className="text-center py-6 rounded-xl" style={{ background: 'rgba(255,255,255,0.02)', border: '1px dashed var(--dark-border)' }}>
+                  <p className="text-2xl mb-1">📋</p>
+                  <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                    Aucune phase ajoutée. Cliquez sur &quot;+ Ajouter une phase&quot; pour structurer votre défi.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {form.phases.map((phase, i) => (
+                    <div key={i} className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-xs font-bold px-2.5 py-1 rounded-full"
+                          style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>
+                          Phase {i + 1}
+                        </span>
+                        <div className="flex items-center gap-1">
+                          <button onClick={() => movePhase(i, 'up')} disabled={i === 0}
+                            className="w-7 h-7 rounded-md text-[11px] cursor-pointer disabled:opacity-30 flex items-center justify-center"
+                            style={{ color: 'var(--text-secondary)', background: 'rgba(255,255,255,0.05)' }}
+                            title="Monter">
+                            ↑
+                          </button>
+                          <button onClick={() => movePhase(i, 'down')} disabled={i === form.phases.length - 1}
+                            className="w-7 h-7 rounded-md text-[11px] cursor-pointer disabled:opacity-30 flex items-center justify-center"
+                            style={{ color: 'var(--text-secondary)', background: 'rgba(255,255,255,0.05)' }}
+                            title="Descendre">
+                            ↓
+                          </button>
+                          <button onClick={() => removePhase(i)}
+                            className="w-7 h-7 rounded-md text-[11px] cursor-pointer flex items-center justify-center"
+                            style={{ color: '#EF4444', background: 'rgba(239,68,68,0.1)' }}
+                            title="Supprimer">
+                            ✕
+                          </button>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <input type="text" placeholder={`Titre de la phase ${i + 1}`}
+                          value={phase.title} onChange={e => updatePhase(i, 'title', e.target.value)}
+                          className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputStyle} />
+                        <textarea placeholder="Description de la phase (optionnel)"
+                          value={phase.description} onChange={e => updatePhase(i, 'description', e.target.value)}
+                          rows={2} className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-y" style={inputStyle} />
+                        <input type="number" placeholder="Durée en jours (optionnel)"
+                          value={phase.duration_days} onChange={e => updatePhase(i, 'duration_days', e.target.value)}
+                          className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputStyle} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {form.phases.length > 0 && (
+                <button onClick={addPhase}
+                  className="mt-3 w-full py-2 rounded-lg text-[11px] font-medium cursor-pointer transition-all"
+                  style={{ color: 'var(--gold)', border: '1px dashed rgba(212,175,55,0.3)', background: 'transparent' }}>
+                  + Ajouter une autre phase
+                </button>
+              )}
+            </div>
+
             <div className="flex gap-2">
               <button onClick={handleSave} disabled={saving || !form.title.trim()}
                 className="px-5 py-2.5 rounded-xl text-sm font-semibold cursor-pointer disabled:opacity-50"
@@ -292,6 +452,8 @@ export default function AdminDefisPage() {
           {challenges.map(ch => {
             const status = STATUS_CONFIG[ch.status] || STATUS_CONFIG.draft
             const reward = REWARD_TYPES.find(r => r.value === ch.reward_type) || REWARD_TYPES[0]
+            const phaseCount = ch.phases?.length || 0
+            const isExpanded = expandedPhases === ch.id
             return (
               <div key={ch.id} className="rounded-xl p-5" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
                 <div className="flex items-start justify-between gap-4">
@@ -302,6 +464,12 @@ export default function AdminDefisPage() {
                         style={{ background: `${status.color}15`, color: status.color }}>
                         {status.label}
                       </span>
+                      {phaseCount > 0 && (
+                        <span className="text-[10px] px-2 py-0.5 rounded-full font-medium flex-shrink-0"
+                          style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}>
+                          {phaseCount} phase{phaseCount > 1 ? 's' : ''}
+                        </span>
+                      )}
                     </div>
                     {ch.description && (
                       <p className="text-sm line-clamp-2 mb-2" style={{ color: 'var(--text-secondary)' }}>{ch.description}</p>
@@ -316,6 +484,13 @@ export default function AdminDefisPage() {
                   </div>
 
                   <div className="flex items-center gap-2 flex-shrink-0">
+                    {phaseCount > 0 && (
+                      <button onClick={() => setExpandedPhases(isExpanded ? null : ch.id)}
+                        className="px-3 py-1.5 rounded-lg text-[11px] font-medium cursor-pointer"
+                        style={{ color: 'var(--gold)', background: 'rgba(212,175,55,0.1)' }}>
+                        {isExpanded ? 'Masquer phases' : 'Voir phases'}
+                      </button>
+                    )}
                     {ch.status === 'draft' && (
                       <button onClick={() => updateStatus(ch.id, 'active')}
                         className="px-3 py-1.5 rounded-lg text-[11px] font-medium cursor-pointer"
@@ -342,6 +517,38 @@ export default function AdminDefisPage() {
                     </button>
                   </div>
                 </div>
+
+                {/* Expanded phases view */}
+                {isExpanded && ch.phases && ch.phases.length > 0 && (
+                  <div className="mt-4 pt-4" style={{ borderTop: '1px solid var(--dark-border)' }}>
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-xs font-semibold" style={{ color: 'var(--gold)' }}>Phases du défi</span>
+                    </div>
+                    <div className="space-y-2">
+                      {ch.phases.map((phase, i) => (
+                        <div key={phase.id} className="flex items-start gap-3 rounded-lg p-3"
+                          style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 mt-0.5"
+                            style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>
+                            {i + 1}
+                          </span>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{phase.title}</p>
+                            {phase.description && (
+                              <p className="text-[11px] mt-0.5" style={{ color: 'var(--text-muted)' }}>{phase.description}</p>
+                            )}
+                          </div>
+                          {phase.duration_days && (
+                            <span className="text-[10px] flex-shrink-0 px-2 py-0.5 rounded-full"
+                              style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-muted)' }}>
+                              {phase.duration_days}j
+                            </span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )
           })}

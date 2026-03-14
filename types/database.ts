@@ -346,6 +346,28 @@ export type ChallengeParticipation = {
   updated_at: string
 }
 
+// ── Challenge Phases ──
+export type ChallengePhase = {
+  id: string
+  challenge_id: string
+  phase_number: number
+  title: string
+  description: string | null
+  duration_days: number | null
+  created_at: string
+}
+
+export type ChallengePhaseProgressStatus = 'pending' | 'in_progress' | 'completed'
+
+export type ChallengePhaseProgress = {
+  id: string
+  participation_id: string
+  phase_id: string
+  status: ChallengePhaseProgressStatus
+  completed_at: string | null
+  created_at: string
+}
+
 // ── Pinned Posts ──
 export type PinnedPost = {
   id: string
@@ -656,6 +678,8 @@ export type Database = {
       user_xp: Table<UserXP>
       challenges: Table<Challenge>
       challenge_participations: Table<ChallengeParticipation>
+      challenge_phases: Table<ChallengePhase>
+      challenge_phase_progress: Table<ChallengePhaseProgress>
       pinned_posts: Table<PinnedPost>
       onboarding_responses: Table<OnboardingResponse>
       user_goals: Table<UserGoal>

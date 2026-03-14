@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
-import type { Challenge, ChallengeParticipation, UserGoal } from '@/types/database'
+import type { Challenge, ChallengeParticipation, ChallengePhase, ChallengePhaseProgress, UserGoal } from '@/types/database'
 import { XP_REWARDS } from '@/lib/xp'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 
@@ -50,11 +50,13 @@ export default function ObjectifsPage() {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [targetDate, setTargetDate] = useState('')
-  const [challenges, setChallenges] = useState<Challenge[]>([])
+  const [challenges, setChallenges] = useState<(Challenge & { phases?: ChallengePhase[] })[]>([])
   const [participations, setParticipations] = useState<Record<string, ChallengeParticipation>>({})
+  const [phaseProgress, setPhaseProgress] = useState<Record<string, ChallengePhaseProgress[]>>({})
   const [userId, setUserId] = useState<string | null>(null)
   const [onboardingGoals, setOnboardingGoals] = useState<UserGoal[]>([])
   const [hasOnboarding, setHasOnboarding] = useState(false)
+  const [expandedChallenge, setExpandedChallenge] = useState<string | null>(null)
 
   useEffect(() => {
     setGoals(loadGoals())
@@ -71,7 +73,19 @@ export default function ObjectifsPage() {
         .in('status', ['active', 'completed'])
         .order('created_at', { ascending: false })
 
-      if (ch) setChallenges(ch as Challenge[])
+      if (ch) {
+        // Load phases for each challenge
+        const challengesWithPhases = []
+        for (const c of ch as Challenge[]) {
+          const { data: phases } = await supabase
+            .from('challenge_phases')
+            .select('*')
+            .eq('challenge_id', c.id)
+            .order('phase_number', { ascending: true })
+          challengesWithPhases.push({ ...c, phases: (phases as ChallengePhase[]) || [] })
+        }
+        setChallenges(challengesWithPhases)
+      }
 
       const { data: parts } = await supabase
         .from('challenge_participations')
@@ -80,10 +94,18 @@ export default function ObjectifsPage() {
 
       if (parts) {
         const map: Record<string, ChallengeParticipation> = {}
+        const progressMap: Record<string, ChallengePhaseProgress[]> = {}
         for (const p of parts as ChallengeParticipation[]) {
           map[p.challenge_id] = p
+          // Load phase progress for this participation
+          const { data: pp } = await supabase
+            .from('challenge_phase_progress')
+            .select('*')
+            .eq('participation_id', p.id)
+          if (pp) progressMap[p.challenge_id] = pp as ChallengePhaseProgress[]
         }
         setParticipations(map)
+        setPhaseProgress(progressMap)
       }
 
       // Load onboarding goals
@@ -532,6 +554,11 @@ export default function ObjectifsPage() {
               const isEnrolled = !!part
               const isCompleted = part?.status === 'completed'
               const daysLeft = ch.end_date ? Math.max(0, Math.ceil((new Date(ch.end_date).getTime() - Date.now()) / 86400000)) : null
+              const phases = ch.phases || []
+              const hasPhases = phases.length > 0
+              const myProgress = phaseProgress[ch.id] || []
+              const completedPhases = myProgress.filter(pp => pp.status === 'completed').length
+              const isExpanded = expandedChallenge === ch.id
 
               return (
                 <div key={ch.id} className="rounded-xl p-5" style={{
@@ -547,10 +574,35 @@ export default function ObjectifsPage() {
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
                         )}
+                        {hasPhases && (
+                          <span className="text-[10px] px-2 py-0.5 rounded-full font-medium"
+                            style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}>
+                            {phases.length} phase{phases.length > 1 ? 's' : ''}
+                          </span>
+                        )}
                       </div>
                       {ch.description && (
                         <p className="text-sm line-clamp-2 mb-2" style={{ color: 'var(--text-secondary)' }}>{ch.description}</p>
                       )}
+
+                      {/* Phase progress bar */}
+                      {hasPhases && isEnrolled && (
+                        <div className="mb-2">
+                          <div className="flex items-center gap-2 mb-1">
+                            <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
+                              <div className="h-full rounded-full transition-all duration-500"
+                                style={{
+                                  width: `${phases.length > 0 ? (completedPhases / phases.length) * 100 : 0}%`,
+                                  background: 'linear-gradient(90deg, var(--gold), #55EFC4)',
+                                }} />
+                            </div>
+                            <span className="text-[10px] font-medium" style={{ color: 'var(--text-muted)' }}>
+                              {completedPhases}/{phases.length}
+                            </span>
+                          </div>
+                        </div>
+                      )}
+
                       <div className="flex flex-wrap items-center gap-3 text-[11px]" style={{ color: 'var(--text-muted)' }}>
                         <span style={{ color: 'var(--gold)' }}>+{ch.reward_value} XP</span>
                         {ch.reward_detail && <span>{ch.reward_detail}</span>}
@@ -559,7 +611,7 @@ export default function ObjectifsPage() {
                       </div>
                     </div>
 
-                    <div className="flex-shrink-0">
+                    <div className="flex flex-col items-end gap-2 flex-shrink-0">
                       {!isEnrolled && ch.status === 'active' ? (
                         <button
                           onClick={async () => {
@@ -574,13 +626,23 @@ export default function ObjectifsPage() {
                             }).select().single()
                             if (data) {
                               setParticipations(prev => ({ ...prev, [ch.id]: data as ChallengeParticipation }))
+                              // Create phase progress entries
+                              if (hasPhases) {
+                                const progressEntries = phases.map(p => ({
+                                  participation_id: (data as ChallengeParticipation).id,
+                                  phase_id: p.id,
+                                  status: 'pending' as const,
+                                }))
+                                const { data: pp } = await supabase.from('challenge_phase_progress').insert(progressEntries).select()
+                                if (pp) setPhaseProgress(prev => ({ ...prev, [ch.id]: pp as ChallengePhaseProgress[] }))
+                              }
                             }
                           }}
                           className="px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer"
                           style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
                           Participer
                         </button>
-                      ) : isEnrolled && !isCompleted && ch.status === 'active' ? (
+                      ) : isEnrolled && !isCompleted && ch.status === 'active' && !hasPhases ? (
                         <button
                           onClick={async () => {
                             if (!userId) return
@@ -610,8 +672,116 @@ export default function ObjectifsPage() {
                           Complété
                         </span>
                       ) : null}
+
+                      {hasPhases && isEnrolled && (
+                        <button onClick={() => setExpandedChallenge(isExpanded ? null : ch.id)}
+                          className="text-[11px] font-medium cursor-pointer"
+                          style={{ color: 'var(--gold)' }}>
+                          {isExpanded ? 'Masquer les phases' : 'Voir les phases'}
+                        </button>
+                      )}
+                      {hasPhases && !isEnrolled && (
+                        <button onClick={() => setExpandedChallenge(isExpanded ? null : ch.id)}
+                          className="text-[11px] font-medium cursor-pointer"
+                          style={{ color: 'var(--text-muted)' }}>
+                          {isExpanded ? 'Masquer' : `${phases.length} phases`}
+                        </button>
+                      )}
                     </div>
                   </div>
+
+                  {/* Expanded phases */}
+                  {isExpanded && hasPhases && (
+                    <div className="mt-4 pt-4 space-y-2" style={{ borderTop: '1px solid var(--dark-border)' }}>
+                      {phases.map((phase, i) => {
+                        const pp = myProgress.find(p => p.phase_id === phase.id)
+                        const phaseStatus = pp?.status || 'pending'
+                        const isPhaseCompleted = phaseStatus === 'completed'
+                        const isPrevCompleted = i === 0 || myProgress.find(p => p.phase_id === phases[i - 1].id)?.status === 'completed'
+
+                        return (
+                          <div key={phase.id} className="flex items-start gap-3 rounded-lg p-3"
+                            style={{
+                              background: isPhaseCompleted ? 'rgba(85,239,196,0.04)' : 'rgba(255,255,255,0.02)',
+                              border: isPhaseCompleted ? '1px solid rgba(85,239,196,0.1)' : '1px solid rgba(255,255,255,0.05)',
+                              opacity: !isEnrolled ? 0.7 : 1,
+                            }}>
+                            <div className="flex-shrink-0 mt-0.5">
+                              {isPhaseCompleted ? (
+                                <div className="w-6 h-6 rounded-full flex items-center justify-center"
+                                  style={{ background: 'rgba(85,239,196,0.15)' }}>
+                                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="#55EFC4" strokeWidth={2.5}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                                  </svg>
+                                </div>
+                              ) : (
+                                <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold"
+                                  style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}>
+                                  {i + 1}
+                                </div>
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium" style={{
+                                color: isPhaseCompleted ? '#55EFC4' : 'var(--text-primary)',
+                                textDecoration: isPhaseCompleted ? 'line-through' : 'none',
+                              }}>
+                                {phase.title}
+                              </p>
+                              {phase.description && (
+                                <p className="text-[11px] mt-0.5" style={{ color: 'var(--text-muted)' }}>{phase.description}</p>
+                              )}
+                              {phase.duration_days && (
+                                <span className="text-[10px] mt-1 inline-block" style={{ color: 'var(--text-muted)' }}>
+                                  Durée : {phase.duration_days} jour{phase.duration_days > 1 ? 's' : ''}
+                                </span>
+                              )}
+                            </div>
+                            {isEnrolled && !isPhaseCompleted && isPrevCompleted && ch.status === 'active' && (
+                              <button
+                                onClick={async () => {
+                                  if (!userId || !pp) return
+                                  const supabase = createClient()
+                                  await supabase.from('challenge_phase_progress').update({
+                                    status: 'completed',
+                                    completed_at: new Date().toISOString(),
+                                  }).eq('id', pp.id)
+
+                                  const updatedProgress = myProgress.map(p =>
+                                    p.id === pp.id ? { ...p, status: 'completed' as const, completed_at: new Date().toISOString() } : p
+                                  )
+                                  setPhaseProgress(prev => ({ ...prev, [ch.id]: updatedProgress as ChallengePhaseProgress[] }))
+
+                                  // Check if all phases are now completed
+                                  const allDone = updatedProgress.every(p => p.status === 'completed')
+                                  if (allDone) {
+                                    await supabase.from('challenge_participations').update({
+                                      status: 'completed',
+                                      completed_at: new Date().toISOString(),
+                                    }).eq('id', part.id)
+                                    setParticipations(prev => ({
+                                      ...prev,
+                                      [ch.id]: { ...prev[ch.id], status: 'completed', completed_at: new Date().toISOString() } as ChallengeParticipation,
+                                    }))
+                                    try {
+                                      await supabase.rpc('add_xp', {
+                                        p_user_id: userId,
+                                        p_amount: XP_REWARDS.community_challenge_completed,
+                                        p_reason: 'community_challenge_completed',
+                                      })
+                                    } catch { /* non-critical */ }
+                                  }
+                                }}
+                                className="px-3 py-1.5 rounded-lg text-[10px] font-semibold cursor-pointer flex-shrink-0"
+                                style={{ background: 'rgba(85,239,196,0.1)', color: '#55EFC4', border: '1px solid rgba(85,239,196,0.2)' }}>
+                                Valider
+                              </button>
+                            )}
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
                 </div>
               )
             })}

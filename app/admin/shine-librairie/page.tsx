@@ -297,7 +297,8 @@ export default function AdminShineLibrairiePage() {
             accept="application/pdf"
             folder="shine-library"
             currentUrl={form.pdf_url || null}
-            hint="PDF du livre complet"
+            hint="PDF du livre complet, aucune limite de taille"
+            maxSize={0}
             onUploaded={(url) => setForm((prev) => ({ ...prev, pdf_url: url }))}
             onRemoved={() => setForm((prev) => ({ ...prev, pdf_url: '' }))}
           />

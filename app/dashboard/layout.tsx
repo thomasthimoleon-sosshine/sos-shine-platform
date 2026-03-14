@@ -364,7 +364,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         {/* ── User section ── */}
         <div className="px-3 py-4" style={{ borderTop: '1px solid var(--dark-border)' }}>
-          <div className="flex items-center gap-3 px-3 py-2 rounded-xl mb-2" style={{ background: 'rgba(255, 255, 255, 0.02)' }}>
+          <div className="flex items-center gap-3 px-3 py-2 rounded-xl mb-2" style={{ background: 'var(--dark-card)' }}>
             <div
               className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 ring-1 ring-white/10"
               style={{ background: 'rgba(212, 175, 55, 0.12)', color: 'var(--gold)' }}

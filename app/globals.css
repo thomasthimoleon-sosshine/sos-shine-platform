@@ -225,6 +225,57 @@
   color: #B8960F !important;
 }
 
+/* ── Light mode: force backgrounds on layout containers ── */
+[data-theme="light"] [style*="background: var(--dark)"],
+[data-theme="light"] [style*="background:var(--dark)"] {
+  background: #FAFAF9 !important;
+}
+
+[data-theme="light"] .min-h-screen {
+  background-color: #FAFAF9;
+}
+
+/* Sidebar in light mode */
+[data-theme="light"] aside {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Sidebar user section */
+[data-theme="light"] [style*="rgba(255,255,255,0.02)"] {
+  background: rgba(0, 0, 0, 0.03) !important;
+}
+
+/* ring-white/10 → ring-black/10 in light mode */
+[data-theme="light"] .ring-white\/10 {
+  --tw-ring-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile overlay backdrop */
+[data-theme="light"] [style*="rgba(0, 0, 0, 0.6)"] {
+  background: rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Gold-tinted gradients in light mode */
+[data-theme="light"] [style*="rgba(212, 175, 55, 0.05)"] {
+  background: rgba(212, 175, 55, 0.04) !important;
+}
+
+[data-theme="light"] [style*="rgba(212, 175, 55, 0.08)"] {
+  background: rgba(212, 175, 55, 0.06) !important;
+}
+
+/* Ensure inline color styles are overridden in light mode */
+[data-theme="light"] [style*="color: var(--text-primary)"] {
+  color: #1a1a1a !important;
+}
+[data-theme="light"] [style*="color: var(--text-secondary)"] {
+  color: #52525b !important;
+}
+[data-theme="light"] [style*="color: var(--text-muted)"] {
+  color: #a1a1aa !important;
+}
+
 /* ── 2. Tailwind v4 Theme ── */
 @theme inline {
   --color-background: var(--dark);

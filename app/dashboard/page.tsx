@@ -180,7 +180,7 @@ function PendingRayonsWidget() {
                   onClick={() => handleAction(req.id, 'decline')}
                   disabled={actionLoading === req.id}
                   className="px-3 py-2 rounded-xl text-[13px] cursor-pointer"
-                  style={{ color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--dark-border)' }}
+                  style={{ color: 'var(--text-muted)', background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
                 >
                   Décliner
                 </button>
@@ -528,7 +528,7 @@ export default function DashboardHome() {
         transition={{ delay: 0.1, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
         className="glass glass-hover relative overflow-hidden p-6 sm:p-8"
         style={{
-          background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.05), rgba(255, 255, 255, 0.02))',
+          background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.05), var(--dark-card))',
           borderColor: 'rgba(212, 175, 55, 0.1)',
         }}
       >

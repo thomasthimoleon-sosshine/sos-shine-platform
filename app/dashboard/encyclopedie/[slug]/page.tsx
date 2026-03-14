@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
-import type { Douleur, UserProgress } from '@/types/database'
+import type { Douleur, UserProgress, DouleurQuizQuestion } from '@/types/database'
 import { XP_REWARDS } from '@/lib/xp'
 import FavoriteButton from '@/components/FavoriteButton'
 
@@ -19,6 +19,15 @@ export default function DouleurDetailPage() {
   const [notPublished, setNotPublished] = useState(false)
   const [progress, setProgress] = useState<UserProgress | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
+
+  // Quiz state
+  const [quizQuestions, setQuizQuestions] = useState<DouleurQuizQuestion[]>([])
+  const [quizAnswers, setQuizAnswers] = useState<Record<string, number[]>>({})
+  const [quizSubmitted, setQuizSubmitted] = useState(false)
+  const [quizScore, setQuizScore] = useState<number | null>(null)
+  const [quizPassed, setQuizPassed] = useState(false)
+  const [bestAttempt, setBestAttempt] = useState<{ score: number; total: number; passed: boolean } | null>(null)
+  const [submittingQuiz, setSubmittingQuiz] = useState(false)
 
   useEffect(() => {
     function normalizeSlug(s: string): string {
@@ -108,7 +117,7 @@ export default function DouleurDetailPage() {
     load()
   }, [slug])
 
-  // Load user progress for this challenge
+  // Load user progress + quiz for this challenge
   useEffect(() => {
     async function loadProgress() {
       if (!douleur) return
@@ -125,6 +134,31 @@ export default function DouleurDetailPage() {
         .maybeSingle()
 
       if (data) setProgress(data as UserProgress)
+
+      // Load quiz questions
+      const { data: questions } = await supabase
+        .from('douleur_quiz_questions')
+        .select('*')
+        .eq('douleur_id', douleur.id)
+        .order('sort_order', { ascending: true })
+
+      if (questions && questions.length > 0) {
+        setQuizQuestions(questions as DouleurQuizQuestion[])
+      }
+
+      // Load best attempt
+      const { data: attempts } = await supabase
+        .from('douleur_quiz_attempts')
+        .select('score, total, passed')
+        .eq('user_id', user.id)
+        .eq('douleur_id', douleur.id)
+        .order('score', { ascending: false })
+        .limit(1)
+
+      if (attempts && attempts.length > 0) {
+        setBestAttempt(attempts[0] as { score: number; total: number; passed: boolean })
+        if (attempts[0].passed) setQuizPassed(true)
+      }
     }
     loadProgress()
   }, [douleur])
@@ -185,7 +219,73 @@ export default function DouleurDetailPage() {
     return progress.step3_completed
   }
 
+  async function submitQuiz() {
+    if (!douleur || !userId || submittingQuiz) return
+    setSubmittingQuiz(true)
+
+    let score = 0
+    for (const q of quizQuestions) {
+      const userSelected = quizAnswers[q.id] || []
+      const correct = q.correct_indices as number[]
+      // Correct if user selected exactly the right indices
+      const isCorrect = correct.length === userSelected.length &&
+        correct.every(c => userSelected.includes(c)) &&
+        userSelected.every(u => correct.includes(u))
+      if (isCorrect) score++
+    }
+
+    const total = quizQuestions.length
+    const threshold = Math.ceil(total * 0.8) // 80% = 8/10
+    const passed = score >= threshold
+
+    setQuizScore(score)
+    setQuizPassed(passed)
+    setQuizSubmitted(true)
+
+    // Save attempt
+    const supabase = createClient()
+    await supabase.from('douleur_quiz_attempts').insert({
+      user_id: userId,
+      douleur_id: douleur.id,
+      score,
+      total,
+      passed,
+      answers: quizQuestions.map(q => quizAnswers[q.id] || []),
+    })
+
+    if (passed && (!bestAttempt || !bestAttempt.passed)) {
+      setBestAttempt({ score, total, passed })
+      // Award bonus XP for passing quiz
+      try {
+        await supabase.rpc('add_xp', { p_user_id: userId, p_amount: 50, p_reason: 'quiz_passed' })
+      } catch { /* non-critical */ }
+    }
+
+    setSubmittingQuiz(false)
+  }
+
+  function resetQuiz() {
+    setQuizAnswers({})
+    setQuizSubmitted(false)
+    setQuizScore(null)
+  }
+
+  function toggleQuizAnswer(questionId: string, optionIndex: number) {
+    setQuizAnswers(prev => {
+      const current = prev[questionId] || []
+      const isSelected = current.includes(optionIndex)
+      return {
+        ...prev,
+        [questionId]: isSelected
+          ? current.filter(i => i !== optionIndex)
+          : [...current, optionIndex],
+      }
+    })
+  }
+
   const completedSteps = progress ? [progress.step1_completed, progress.step2_completed, progress.step3_completed].filter(Boolean).length : 0
+  const allStepsCompleted = completedSteps === 3
+  const hasQuiz = quizQuestions.length > 0
 
   const steps = [
     {
@@ -351,10 +451,32 @@ export default function DouleurDetailPage() {
             </button>
           )
         })}
+        {/* Quiz step button */}
+        {hasQuiz && (
+          <button
+            onClick={() => setActiveStep(4)}
+            className="flex items-center gap-2.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer whitespace-nowrap flex-shrink-0"
+            style={{
+              background: activeStep === 4 ? 'rgba(212,175,55,0.15)' : 'var(--dark-card)',
+              border: activeStep === 4 ? '1px solid rgba(212,175,55,0.4)' : '1px solid var(--dark-border)',
+              color: activeStep === 4 ? '#D4AF37' : 'var(--text-secondary)',
+              opacity: allStepsCompleted ? 1 : 0.5,
+            }}
+          >
+            {quizPassed ? (
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="#55EFC4" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            ) : (
+              <span className="text-lg">📝</span>
+            )}
+            <span>Quiz</span>
+          </button>
+        )}
       </div>
 
       {/* Active step content */}
-      <div className="rounded-2xl p-6 sm:p-8" style={{ background: `${currentStep.color}06`, border: `1px solid ${currentStep.color}15` }}>
+      {activeStep <= 3 && <div className="rounded-2xl p-6 sm:p-8" style={{ background: `${currentStep.color}06`, border: `1px solid ${currentStep.color}15` }}>
         <div className="flex items-center gap-4 mb-6">
           <div className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl" style={{ background: `${currentStep.color}15` }}>
             {currentStep.icon}
@@ -480,19 +602,215 @@ export default function DouleurDetailPage() {
               Étape précédente
             </button>
             <button
-              onClick={() => setActiveStep(Math.min(3, activeStep + 1))}
-              disabled={activeStep === 3}
+              onClick={() => setActiveStep(Math.min(hasQuiz ? 4 : 3, activeStep + 1))}
+              disabled={activeStep === 3 && !hasQuiz}
               className="flex items-center gap-2 text-sm transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
               style={{ color: currentStep.color }}
             >
-              Étape suivante
+              {activeStep === 3 && hasQuiz ? 'Passer au Quiz' : 'Étape suivante'}
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
               </svg>
             </button>
           </div>
         </div>
-      </div>
+      </div>}
+
+      {/* ── Quiz Section (Step 4) ── */}
+      {activeStep === 4 && hasQuiz && (
+        <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.15)' }}>
+          <div className="flex items-center gap-4 mb-6">
+            <div className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl" style={{ background: 'rgba(212,175,55,0.12)' }}>
+              📝
+            </div>
+            <div>
+              <span className="text-xs font-medium block" style={{ color: '#D4AF37', opacity: 0.7 }}>
+                Validation
+              </span>
+              <h2 className="font-display text-xl font-semibold" style={{ color: '#D4AF37' }}>
+                Quiz de compréhension
+              </h2>
+              <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                {quizQuestions.length} questions — Minimum {Math.ceil(quizQuestions.length * 0.8)}/{quizQuestions.length} pour valider
+              </p>
+            </div>
+          </div>
+
+          {!allStepsCompleted ? (
+            <div className="rounded-xl p-8 text-center" style={{ background: 'rgba(0,0,0,0.2)', border: '1px dashed rgba(212,175,55,0.3)' }}>
+              <div className="text-4xl mb-3">🔒</div>
+              <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                Terminez les 3 étapes d&apos;abord
+              </h3>
+              <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+                Vous devez compléter les étapes Comprendre, Libérer &amp; Intégrer et Agir avant de passer le quiz.
+              </p>
+            </div>
+          ) : quizPassed && !quizSubmitted ? (
+            <div className="space-y-4">
+              <div className="rounded-xl p-6 text-center" style={{ background: 'rgba(85,239,196,0.06)', border: '1px solid rgba(85,239,196,0.2)' }}>
+                <div className="text-4xl mb-3">🎉</div>
+                <h3 className="font-display text-xl font-semibold mb-2" style={{ color: '#55EFC4' }}>
+                  Quiz validé !
+                </h3>
+                <p className="text-sm mb-1" style={{ color: 'var(--text-secondary)' }}>
+                  Vous avez obtenu {bestAttempt?.score}/{bestAttempt?.total} — Bravo !
+                </p>
+                <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                  Vous pouvez repasser le quiz si vous le souhaitez.
+                </p>
+              </div>
+              <button onClick={resetQuiz}
+                className="w-full py-3 rounded-xl text-sm font-medium cursor-pointer transition-all"
+                style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.2)' }}>
+                Repasser le quiz
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {/* Best attempt info */}
+              {bestAttempt && !quizSubmitted && (
+                <div className="rounded-lg px-4 py-2 text-xs" style={{ background: 'rgba(255,255,255,0.03)', color: 'var(--text-muted)' }}>
+                  Meilleur score précédent : {bestAttempt.score}/{bestAttempt.total}
+                </div>
+              )}
+
+              {/* Questions */}
+              {quizQuestions.map((q, qIdx) => {
+                const userSelected = quizAnswers[q.id] || []
+                const correct = q.correct_indices as number[]
+                const isCorrectAnswer = quizSubmitted && correct.length === userSelected.length &&
+                  correct.every(c => userSelected.includes(c)) && userSelected.every(u => correct.includes(u))
+
+                return (
+                  <div key={q.id} className="rounded-xl p-5" style={{
+                    background: quizSubmitted
+                      ? isCorrectAnswer ? 'rgba(85,239,196,0.04)' : 'rgba(255,107,107,0.04)'
+                      : 'rgba(0,0,0,0.2)',
+                    border: quizSubmitted
+                      ? isCorrectAnswer ? '1px solid rgba(85,239,196,0.2)' : '1px solid rgba(255,107,107,0.2)'
+                      : '1px solid var(--dark-border)',
+                  }}>
+                    <p className="text-sm font-medium mb-3" style={{ color: 'var(--text-primary)' }}>
+                      <span className="font-mono text-xs mr-2" style={{ color: '#D4AF37' }}>Q{qIdx + 1}</span>
+                      {q.question}
+                    </p>
+                    <div className="space-y-2">
+                      {q.options.map((opt, oIdx) => {
+                        const isSelected = userSelected.includes(oIdx)
+                        const isCorrectOpt = correct.includes(oIdx)
+                        let optStyle: React.CSSProperties = {
+                          background: isSelected ? 'rgba(212,175,55,0.12)' : 'rgba(255,255,255,0.03)',
+                          border: isSelected ? '2px solid rgba(212,175,55,0.5)' : '2px solid var(--dark-border)',
+                          color: isSelected ? '#D4AF37' : 'var(--text-secondary)',
+                        }
+                        if (quizSubmitted) {
+                          if (isCorrectOpt) {
+                            optStyle = {
+                              background: 'rgba(85,239,196,0.1)',
+                              border: '2px solid rgba(85,239,196,0.4)',
+                              color: '#55EFC4',
+                            }
+                          } else if (isSelected && !isCorrectOpt) {
+                            optStyle = {
+                              background: 'rgba(255,107,107,0.1)',
+                              border: '2px solid rgba(255,107,107,0.4)',
+                              color: '#FF6B6B',
+                            }
+                          }
+                        }
+                        return (
+                          <button key={oIdx} type="button"
+                            onClick={() => !quizSubmitted && toggleQuizAnswer(q.id, oIdx)}
+                            disabled={quizSubmitted}
+                            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-left transition-all cursor-pointer disabled:cursor-default"
+                            style={optStyle}>
+                            <span className="w-5 h-5 rounded flex items-center justify-center shrink-0 text-xs font-semibold"
+                              style={{
+                                background: isSelected || (quizSubmitted && isCorrectOpt) ? 'currentColor' : 'transparent',
+                                border: isSelected || (quizSubmitted && isCorrectOpt) ? 'none' : '2px solid currentColor',
+                                color: isSelected || (quizSubmitted && isCorrectOpt)
+                                  ? (quizSubmitted && isCorrectOpt ? '#55EFC4' : quizSubmitted && !isCorrectOpt ? '#FF6B6B' : '#D4AF37')
+                                  : 'var(--text-muted)',
+                              }}>
+                              {(isSelected || (quizSubmitted && isCorrectOpt)) && (
+                                <span style={{ color: quizSubmitted ? '#09090b' : '#09090b' }}>
+                                  {quizSubmitted && isCorrectOpt ? '✓' : quizSubmitted && isSelected && !isCorrectOpt ? '✕' : '✓'}
+                                </span>
+                              )}
+                            </span>
+                            {opt}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )
+              })}
+
+              {/* Submit / Results */}
+              {quizSubmitted ? (
+                <div className="space-y-4">
+                  <div className="rounded-xl p-6 text-center" style={{
+                    background: quizPassed ? 'rgba(85,239,196,0.06)' : 'rgba(255,107,107,0.06)',
+                    border: quizPassed ? '1px solid rgba(85,239,196,0.2)' : '1px solid rgba(255,107,107,0.2)',
+                  }}>
+                    <div className="text-4xl mb-3">{quizPassed ? '🎉' : '📖'}</div>
+                    <h3 className="font-display text-xl font-semibold mb-2" style={{ color: quizPassed ? '#55EFC4' : '#FF6B6B' }}>
+                      {quizPassed ? 'Félicitations !' : 'Continuez vos efforts'}
+                    </h3>
+                    <p className="text-2xl font-display font-bold mb-2" style={{ color: quizPassed ? '#55EFC4' : '#FF6B6B' }}>
+                      {quizScore}/{quizQuestions.length}
+                    </p>
+                    {quizPassed ? (
+                      <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                        Vous avez validé ce challenge avec succès ! Votre compréhension est solide. (+50 XP)
+                      </p>
+                    ) : (
+                      <div className="space-y-2">
+                        <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+                          Un changement durable nécessite une compréhension profonde.
+                        </p>
+                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                          Il est essentiel de bien intégrer les concepts de ce challenge. Nous vous encourageons à retravailler les étapes et à repasser le quiz.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                  <button onClick={resetQuiz}
+                    className="w-full py-3 rounded-xl text-sm font-semibold cursor-pointer transition-all"
+                    style={{
+                      background: quizPassed ? 'rgba(85,239,196,0.1)' : 'rgba(212,175,55,0.15)',
+                      color: quizPassed ? '#55EFC4' : '#D4AF37',
+                      border: quizPassed ? '1px solid rgba(85,239,196,0.2)' : '1px solid rgba(212,175,55,0.3)',
+                    }}>
+                    {quizPassed ? 'Repasser le quiz' : 'Réessayer le quiz'}
+                  </button>
+                </div>
+              ) : (
+                <button onClick={submitQuiz}
+                  disabled={submittingQuiz || Object.keys(quizAnswers).length < quizQuestions.length}
+                  className="w-full py-3.5 rounded-xl text-sm font-semibold cursor-pointer transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                  style={{ background: '#D4AF37', color: '#09090b' }}>
+                  {submittingQuiz ? 'Validation en cours...' : `Valider mes réponses (${Object.keys(quizAnswers).length}/${quizQuestions.length})`}
+                </button>
+              )}
+
+              {/* Navigation back */}
+              <div className="pt-2">
+                <button onClick={() => setActiveStep(3)}
+                  className="flex items-center gap-2 text-sm transition-colors cursor-pointer"
+                  style={{ color: 'var(--text-secondary)' }}>
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                  </svg>
+                  Retour à l&apos;étape 3
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Chat button */}
       <Link

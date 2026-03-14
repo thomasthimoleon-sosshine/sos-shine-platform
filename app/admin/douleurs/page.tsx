@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import FileUpload from '@/components/FileUpload'
-import type { Douleur } from '@/types/database'
+import type { Douleur, DouleurQuizQuestion } from '@/types/database'
 
 function generateSlug(title: string): string {
   return title
@@ -45,6 +45,20 @@ const STEPS = [
   { num: 3, title: 'Agir', icon: '⚡', color: '#E17055', colorBg: 'rgba(225,112,85,0.04)', colorBorder: 'rgba(225,112,85,0.1)' },
 ]
 
+// ── Quiz Question Form type ──
+type QuizQuestionForm = {
+  id?: string
+  question: string
+  options: string[]
+  correct_indices: number[]
+}
+
+const emptyQuizQuestion: QuizQuestionForm = {
+  question: '',
+  options: ['', '', '', ''],
+  correct_indices: [],
+}
+
 export default function AdminDouleursPage() {
   const [douleurs, setDouleurs] = useState<Douleur[]>([])
   const [loading, setLoading] = useState(true)
@@ -53,6 +67,14 @@ export default function AdminDouleursPage() {
   const [saving, setSaving] = useState(false)
   const [form, setForm] = useState(emptyForm)
   const [error, setError] = useState<string | null>(null)
+
+  // Quiz state
+  const [quizQuestions, setQuizQuestions] = useState<DouleurQuizQuestion[]>([])
+  const [quizForm, setQuizForm] = useState<QuizQuestionForm>(emptyQuizQuestion)
+  const [editingQuizId, setEditingQuizId] = useState<string | null>(null)
+  const [showQuizForm, setShowQuizForm] = useState(false)
+  const [savingQuiz, setSavingQuiz] = useState(false)
+  const [quizCounts, setQuizCounts] = useState<Record<string, number>>({})
 
   const supabase = createClient()
 
@@ -71,8 +93,82 @@ export default function AdminDouleursPage() {
     setLoading(false)
   }
 
+  async function loadQuizCounts() {
+    const { data } = await supabase
+      .from('douleur_quiz_questions')
+      .select('douleur_id')
+    if (data) {
+      const counts: Record<string, number> = {}
+      for (const q of data) {
+        counts[q.douleur_id] = (counts[q.douleur_id] || 0) + 1
+      }
+      setQuizCounts(counts)
+    }
+  }
+
+  async function loadQuizForDouleur(douleurId: string) {
+    const { data } = await supabase
+      .from('douleur_quiz_questions')
+      .select('*')
+      .eq('douleur_id', douleurId)
+      .order('sort_order', { ascending: true })
+    setQuizQuestions((data as DouleurQuizQuestion[]) || [])
+  }
+
+  async function saveQuizQuestion(douleurId: string) {
+    if (!quizForm.question.trim() || quizForm.correct_indices.length === 0) return
+    setSavingQuiz(true)
+
+    const validOptions = quizForm.options.filter(o => o.trim())
+    if (validOptions.length < 2) { setSavingQuiz(false); return }
+
+    const payload = {
+      douleur_id: douleurId,
+      question: quizForm.question.trim(),
+      options: validOptions,
+      correct_indices: quizForm.correct_indices,
+      sort_order: editingQuizId ? undefined : quizQuestions.length,
+    }
+
+    if (editingQuizId) {
+      await supabase.from('douleur_quiz_questions').update({
+        question: payload.question,
+        options: payload.options,
+        correct_indices: payload.correct_indices,
+      }).eq('id', editingQuizId)
+    } else {
+      await supabase.from('douleur_quiz_questions').insert(payload)
+    }
+
+    setShowQuizForm(false)
+    setEditingQuizId(null)
+    setQuizForm(emptyQuizQuestion)
+    setSavingQuiz(false)
+    await loadQuizForDouleur(douleurId)
+    await loadQuizCounts()
+  }
+
+  async function deleteQuizQuestion(id: string, douleurId: string) {
+    if (!confirm('Supprimer cette question ?')) return
+    await supabase.from('douleur_quiz_questions').delete().eq('id', id)
+    await loadQuizForDouleur(douleurId)
+    await loadQuizCounts()
+  }
+
+  function editQuizQuestion(q: DouleurQuizQuestion) {
+    setEditingQuizId(q.id)
+    setQuizForm({
+      id: q.id,
+      question: q.question,
+      options: [...q.options, ...Array(Math.max(0, 4 - q.options.length)).fill('')],
+      correct_indices: [...q.correct_indices],
+    })
+    setShowQuizForm(true)
+  }
+
   useEffect(() => {
     loadDouleurs()
+    loadQuizCounts()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -110,6 +206,10 @@ export default function AdminDouleursPage() {
     })
     setShowForm(true)
     setError(null)
+    loadQuizForDouleur(d.id)
+    setShowQuizForm(false)
+    setEditingQuizId(null)
+    setQuizForm(emptyQuizQuestion)
   }
 
   function duplicateChallenge(d: Douleur) {
@@ -142,6 +242,10 @@ export default function AdminDouleursPage() {
     setEditingId(null)
     setForm(emptyForm)
     setError(null)
+    setQuizQuestions([])
+    setShowQuizForm(false)
+    setEditingQuizId(null)
+    setQuizForm(emptyQuizQuestion)
   }
 
   async function handleSave(e: React.FormEvent) {
@@ -483,6 +587,161 @@ export default function AdminDouleursPage() {
             )
           })}
 
+          {/* ── Quiz QCM Section (only when editing) ── */}
+          {editingId && (
+            <div className="rounded-lg p-4 space-y-4" style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.15)' }}>
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-semibold flex items-center gap-2" style={{ color: '#D4AF37' }}>
+                  <span className="text-lg">📝</span>
+                  Quiz de validation ({quizQuestions.length} question{quizQuestions.length !== 1 ? 's' : ''})
+                </h3>
+                <button type="button" onClick={() => { setShowQuizForm(true); setEditingQuizId(null); setQuizForm(emptyQuizQuestion) }}
+                  className="px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer"
+                  style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.3)' }}>
+                  + Ajouter une question
+                </button>
+              </div>
+
+              <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                Le membre doit obtenir au moins 8/10 pour valider le challenge. Ajoutez vos questions QCM ci-dessous.
+              </p>
+
+              {/* Existing questions list */}
+              {quizQuestions.length > 0 && (
+                <div className="space-y-2">
+                  {quizQuestions.map((q, idx) => (
+                    <div key={q.id} className="rounded-lg p-3" style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid var(--dark-border)' }}>
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+                            <span className="text-xs font-mono mr-2" style={{ color: '#D4AF37' }}>Q{idx + 1}</span>
+                            {q.question}
+                          </p>
+                          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-1">
+                            {q.options.map((opt, oi) => (
+                              <div key={oi} className="flex items-center gap-2 text-xs py-0.5">
+                                {(q.correct_indices as number[]).includes(oi) ? (
+                                  <span className="w-4 h-4 rounded flex items-center justify-center text-[10px]" style={{ background: 'rgba(85,239,196,0.2)', color: '#55EFC4' }}>✓</span>
+                                ) : (
+                                  <span className="w-4 h-4 rounded flex items-center justify-center text-[10px]" style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-muted)' }}>○</span>
+                                )}
+                                <span style={{ color: (q.correct_indices as number[]).includes(oi) ? '#55EFC4' : 'var(--text-secondary)' }}>{opt}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="flex gap-1 shrink-0">
+                          <button type="button" onClick={() => editQuizQuestion(q)}
+                            className="px-2 py-1 rounded text-[10px] font-medium cursor-pointer"
+                            style={{ color: '#74C0FC' }}>
+                            Modifier
+                          </button>
+                          <button type="button" onClick={() => deleteQuizQuestion(q.id, editingId)}
+                            className="px-2 py-1 rounded text-[10px] font-medium cursor-pointer"
+                            style={{ color: '#FF6B6B' }}>
+                            Supprimer
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Add/Edit question form */}
+              {showQuizForm && (
+                <div className="rounded-lg p-4 space-y-3" style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                  <h4 className="text-xs font-semibold" style={{ color: '#D4AF37' }}>
+                    {editingQuizId ? 'Modifier la question' : 'Nouvelle question'}
+                  </h4>
+
+                  {/* Question text */}
+                  <div>
+                    <label style={labelStyle}>Question *</label>
+                    <input type="text" value={quizForm.question}
+                      onChange={(e) => setQuizForm(prev => ({ ...prev, question: e.target.value }))}
+                      placeholder="Ex : Quel est le premier pas vers la guérison ?"
+                      style={inputStyle} />
+                  </div>
+
+                  {/* Options */}
+                  <div>
+                    <label style={labelStyle}>Réponses proposées (cochez les bonnes réponses)</label>
+                    <div className="space-y-2">
+                      {quizForm.options.map((opt, idx) => (
+                        <div key={idx} className="flex items-center gap-2">
+                          <button type="button"
+                            onClick={() => {
+                              setQuizForm(prev => {
+                                const newCorrect = prev.correct_indices.includes(idx)
+                                  ? prev.correct_indices.filter(i => i !== idx)
+                                  : [...prev.correct_indices, idx]
+                                return { ...prev, correct_indices: newCorrect }
+                              })
+                            }}
+                            className="w-7 h-7 rounded flex items-center justify-center shrink-0 cursor-pointer transition-all"
+                            style={{
+                              background: quizForm.correct_indices.includes(idx) ? 'rgba(85,239,196,0.2)' : 'rgba(255,255,255,0.05)',
+                              border: quizForm.correct_indices.includes(idx) ? '2px solid #55EFC4' : '2px solid var(--dark-border)',
+                              color: quizForm.correct_indices.includes(idx) ? '#55EFC4' : 'var(--text-muted)',
+                              fontSize: '12px',
+                            }}>
+                            {quizForm.correct_indices.includes(idx) ? '✓' : ''}
+                          </button>
+                          <input type="text" value={opt}
+                            onChange={(e) => {
+                              const newOpts = [...quizForm.options]
+                              newOpts[idx] = e.target.value
+                              setQuizForm(prev => ({ ...prev, options: newOpts }))
+                            }}
+                            placeholder={`Réponse ${idx + 1}`}
+                            className="flex-1"
+                            style={inputStyle} />
+                          {quizForm.options.length > 2 && (
+                            <button type="button"
+                              onClick={() => {
+                                const newOpts = quizForm.options.filter((_, i) => i !== idx)
+                                const newCorrect = quizForm.correct_indices
+                                  .filter(i => i !== idx)
+                                  .map(i => i > idx ? i - 1 : i)
+                                setQuizForm(prev => ({ ...prev, options: newOpts, correct_indices: newCorrect }))
+                              }}
+                              className="text-xs cursor-pointer px-1" style={{ color: '#FF6B6B' }}>✕</button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    {quizForm.options.length < 6 && (
+                      <button type="button"
+                        onClick={() => setQuizForm(prev => ({ ...prev, options: [...prev.options, ''] }))}
+                        className="mt-2 text-xs font-medium cursor-pointer"
+                        style={{ color: '#D4AF37' }}>
+                        + Ajouter une réponse
+                      </button>
+                    )}
+                  </div>
+
+                  {quizForm.correct_indices.length === 0 && quizForm.question.trim() && (
+                    <p className="text-xs" style={{ color: '#FF6B6B' }}>Cochez au moins une bonne réponse.</p>
+                  )}
+
+                  <div className="flex gap-2 pt-1">
+                    <button type="button" onClick={() => saveQuizQuestion(editingId!)} disabled={savingQuiz || !quizForm.question.trim() || quizForm.correct_indices.length === 0 || quizForm.options.filter(o => o.trim()).length < 2}
+                      className="px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer disabled:opacity-40"
+                      style={{ background: '#D4AF37', color: '#09090b' }}>
+                      {savingQuiz ? 'Enregistrement...' : editingQuizId ? 'Mettre à jour' : 'Ajouter la question'}
+                    </button>
+                    <button type="button" onClick={() => { setShowQuizForm(false); setEditingQuizId(null); setQuizForm(emptyQuizQuestion) }}
+                      className="px-4 py-2 rounded-lg text-xs cursor-pointer"
+                      style={{ color: 'var(--text-muted)' }}>
+                      Annuler
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Actions */}
           <div className="flex items-center gap-3 pt-2">
             <button type="submit" disabled={saving || !form.title.trim()}
@@ -555,6 +814,9 @@ export default function AdminDouleursPage() {
                           </span>
                           <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
                             {totalMedia}/12 médias
+                          </span>
+                          <span className="text-[11px]" style={{ color: quizCounts[d.id] ? '#D4AF37' : 'var(--text-muted)' }}>
+                            📝 {quizCounts[d.id] || 0} quiz
                           </span>
                           <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
                             Créé le {new Date(d.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}

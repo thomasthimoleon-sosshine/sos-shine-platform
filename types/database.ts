@@ -568,6 +568,29 @@ export type ShineLibraryReview = {
   updated_at: string
 }
 
+// ── Douleur Quiz (QCM per challenge) ──
+export type DouleurQuizQuestion = {
+  id: string
+  douleur_id: string
+  question: string
+  options: string[]          // ["Option A", "Option B", "Option C", "Option D"]
+  correct_indices: number[]  // [0, 2] = indices of correct answers
+  sort_order: number
+  created_at: string
+  updated_at: string
+}
+
+export type DouleurQuizAttempt = {
+  id: string
+  user_id: string
+  douleur_id: string
+  score: number
+  total: number
+  passed: boolean
+  answers: number[][]  // user's selected indices per question
+  created_at: string
+}
+
 // ── Courrier Anonyme (anonymous mailbox) ──
 export type CourrierAnonymeCategory = 'question' | 'recommandation' | 'temoignage' | 'suggestion' | 'autre'
 export type CourrierAnonymeStatus = 'new' | 'read' | 'planned' | 'answered' | 'archived'
@@ -650,6 +673,8 @@ export type Database = {
       shine_library_ratings: Table<ShineLibraryRating>
       shine_library_reviews: Table<ShineLibraryReview>
       courrier_anonyme: Table<CourrierAnonyme>
+      douleur_quiz_questions: Table<DouleurQuizQuestion>
+      douleur_quiz_attempts: Table<DouleurQuizAttempt>
     }
     Views: Record<string, never>
     Functions: {

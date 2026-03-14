@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import FileUpload from '@/components/FileUpload'
-import type { Douleur, DouleurQuizQuestion } from '@/types/database'
+import type { Douleur, DouleurStep, DouleurQuizQuestion } from '@/types/database'
 
 function generateSlug(title: string): string {
   return title
@@ -16,34 +16,59 @@ function generateSlug(title: string): string {
     .replace(/^-|-$/g, '')
 }
 
-const emptyForm = {
+const DEFAULT_STEP_COLORS = ['#55EFC4', '#74C0FC', '#E17055', '#BA92FF', '#F8C291', '#FDA7DF', '#78E08F']
+const DEFAULT_STEP_ICONS = ['🎬', '✨', '⚡', '🌊', '🔥', '💎', '🌟']
+
+type StepForm = {
+  id?: string
+  title: string
+  subtitle: string
+  description: string
+  icon: string
+  color: string
+  video_url: string
+  audio_url: string
+  pdf_url: string
+  image_url: string
+  exercise_content: string
+}
+
+function createEmptyStep(num: number): StepForm {
+  return {
+    title: '',
+    subtitle: '',
+    description: '',
+    icon: DEFAULT_STEP_ICONS[(num - 1) % DEFAULT_STEP_ICONS.length],
+    color: DEFAULT_STEP_COLORS[(num - 1) % DEFAULT_STEP_COLORS.length],
+    video_url: '',
+    audio_url: '',
+    pdf_url: '',
+    image_url: '',
+    exercise_content: '',
+  }
+}
+
+const DEFAULT_STEPS: StepForm[] = [
+  { title: 'Comprendre', subtitle: 'Vidéo, audio & ressources', description: '', icon: '🎬', color: '#55EFC4', video_url: '', audio_url: '', pdf_url: '', image_url: '', exercise_content: '' },
+  { title: 'Libérer & Intégrer', subtitle: 'Audio, vidéo & ressources', description: '', icon: '✨', color: '#74C0FC', video_url: '', audio_url: '', pdf_url: '', image_url: '', exercise_content: '' },
+  { title: 'Agir', subtitle: 'Exercices, audio & ressources', description: '', icon: '⚡', color: '#E17055', video_url: '', audio_url: '', pdf_url: '', image_url: '', exercise_content: '' },
+]
+
+type ChallengeForm = {
+  title: string
+  slug: string
+  description: string
+  image_url: string
+  steps: StepForm[]
+}
+
+const emptyForm: ChallengeForm = {
   title: '',
   slug: '',
   description: '',
   image_url: '',
-  // Step 1
-  video_url: '',
-  step1_audio_url: '',
-  step1_pdf_url: '',
-  step1_image_url: '',
-  // Step 2
-  step2_video_url: '',
-  audio_energy_url: '',
-  step2_pdf_url: '',
-  step2_image_url: '',
-  // Step 3
-  step3_video_url: '',
-  audio_meditation_url: '',
-  pdf_url: '',
-  step3_image_url: '',
-  exercise_content: '',
+  steps: DEFAULT_STEPS.map(s => ({ ...s })),
 }
-
-const STEPS = [
-  { num: 1, title: 'Comprendre', icon: '🎬', color: '#55EFC4', colorBg: 'rgba(85,239,196,0.04)', colorBorder: 'rgba(85,239,196,0.1)' },
-  { num: 2, title: 'Libérer & Intégrer', icon: '✨', color: '#74C0FC', colorBg: 'rgba(116,192,252,0.04)', colorBorder: 'rgba(116,192,252,0.1)' },
-  { num: 3, title: 'Agir', icon: '⚡', color: '#E17055', colorBg: 'rgba(225,112,85,0.04)', colorBorder: 'rgba(225,112,85,0.1)' },
-]
 
 // ── Quiz Question Form type ──
 type QuizQuestionForm = {
@@ -59,14 +84,17 @@ const emptyQuizQuestion: QuizQuestionForm = {
   correct_indices: [],
 }
 
+type DouleurWithSteps = Douleur & { dynamicSteps?: DouleurStep[] }
+
 export default function AdminDouleursPage() {
-  const [douleurs, setDouleurs] = useState<Douleur[]>([])
+  const [douleurs, setDouleurs] = useState<DouleurWithSteps[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
-  const [form, setForm] = useState(emptyForm)
+  const [form, setForm] = useState<ChallengeForm>(emptyForm)
   const [error, setError] = useState<string | null>(null)
+  const [expandedStep, setExpandedStep] = useState<number | null>(null)
 
   // Quiz state
   const [quizQuestions, setQuizQuestions] = useState<DouleurQuizQuestion[]>([])
@@ -88,7 +116,18 @@ export default function AdminDouleursPage() {
     if (error) {
       setError(error.message)
     } else {
-      setDouleurs((data as Douleur[]) ?? [])
+      const items = (data as Douleur[]) ?? []
+      // Load dynamic steps for each douleur
+      const withSteps: DouleurWithSteps[] = []
+      for (const d of items) {
+        const { data: steps } = await supabase
+          .from('douleur_steps')
+          .select('*')
+          .eq('douleur_id', d.id)
+          .order('step_number', { ascending: true })
+        withSteps.push({ ...d, dynamicSteps: (steps as DouleurStep[]) || [] })
+      }
+      setDouleurs(withSteps)
     }
     setLoading(false)
   }
@@ -183,58 +222,76 @@ export default function AdminDouleursPage() {
     })
   }
 
-  function openEditForm(d: Douleur) {
+  // Convert legacy douleur columns to StepForm array
+  function legacyToSteps(d: Douleur): StepForm[] {
+    return [
+      {
+        title: 'Comprendre', subtitle: 'Vidéo, audio & ressources', description: '', icon: '🎬', color: '#55EFC4',
+        video_url: d.video_url || '', audio_url: d.step1_audio_url || '', pdf_url: d.step1_pdf_url || '', image_url: d.step1_image_url || '', exercise_content: '',
+      },
+      {
+        title: 'Libérer & Intégrer', subtitle: 'Audio, vidéo & ressources', description: '', icon: '✨', color: '#74C0FC',
+        video_url: d.step2_video_url || '', audio_url: d.audio_energy_url || '', pdf_url: d.step2_pdf_url || '', image_url: d.step2_image_url || '', exercise_content: '',
+      },
+      {
+        title: 'Agir', subtitle: 'Exercices, audio & ressources', description: '', icon: '⚡', color: '#E17055',
+        video_url: d.step3_video_url || '', audio_url: d.audio_meditation_url || '', pdf_url: d.pdf_url || '', image_url: d.step3_image_url || '', exercise_content: d.exercise_content || '',
+      },
+    ]
+  }
+
+  function dynamicStepsToForm(steps: DouleurStep[]): StepForm[] {
+    return steps.map(s => ({
+      id: s.id,
+      title: s.title,
+      subtitle: s.subtitle || '',
+      description: s.description || '',
+      icon: s.icon,
+      color: s.color,
+      video_url: s.video_url || '',
+      audio_url: s.audio_url || '',
+      pdf_url: s.pdf_url || '',
+      image_url: s.image_url || '',
+      exercise_content: s.exercise_content || '',
+    }))
+  }
+
+  function openEditForm(d: DouleurWithSteps) {
     setEditingId(d.id)
+    const steps = d.dynamicSteps && d.dynamicSteps.length > 0
+      ? dynamicStepsToForm(d.dynamicSteps)
+      : legacyToSteps(d)
     setForm({
       title: d.title,
       slug: d.slug,
       description: d.description || '',
       image_url: d.image_url || '',
-      video_url: d.video_url || '',
-      step1_audio_url: d.step1_audio_url || '',
-      step1_pdf_url: d.step1_pdf_url || '',
-      step1_image_url: d.step1_image_url || '',
-      step2_video_url: d.step2_video_url || '',
-      audio_energy_url: d.audio_energy_url || '',
-      step2_pdf_url: d.step2_pdf_url || '',
-      step2_image_url: d.step2_image_url || '',
-      step3_video_url: d.step3_video_url || '',
-      audio_meditation_url: d.audio_meditation_url || '',
-      pdf_url: d.pdf_url || '',
-      step3_image_url: d.step3_image_url || '',
-      exercise_content: d.exercise_content || '',
+      steps,
     })
     setShowForm(true)
     setError(null)
+    setExpandedStep(null)
     loadQuizForDouleur(d.id)
     setShowQuizForm(false)
     setEditingQuizId(null)
     setQuizForm(emptyQuizQuestion)
   }
 
-  function duplicateChallenge(d: Douleur) {
+  function duplicateChallenge(d: DouleurWithSteps) {
     setEditingId(null)
+    const steps = d.dynamicSteps && d.dynamicSteps.length > 0
+      ? dynamicStepsToForm(d.dynamicSteps)
+      : legacyToSteps(d)
     setForm({
       title: d.title + ' (copie)',
       slug: generateSlug(d.title + ' copie'),
       description: d.description || '',
       image_url: d.image_url || '',
-      video_url: d.video_url || '',
-      step1_audio_url: d.step1_audio_url || '',
-      step1_pdf_url: d.step1_pdf_url || '',
-      step1_image_url: d.step1_image_url || '',
-      step2_video_url: d.step2_video_url || '',
-      audio_energy_url: d.audio_energy_url || '',
-      step2_pdf_url: d.step2_pdf_url || '',
-      step2_image_url: d.step2_image_url || '',
-      step3_video_url: d.step3_video_url || '',
-      audio_meditation_url: d.audio_meditation_url || '',
-      pdf_url: d.pdf_url || '',
-      step3_image_url: d.step3_image_url || '',
-      exercise_content: d.exercise_content || '',
+      steps: steps.map(s => ({ ...s, id: undefined })),
     })
     setShowForm(true)
     setError(null)
+    setExpandedStep(null)
   }
 
   function cancelForm() {
@@ -242,10 +299,47 @@ export default function AdminDouleursPage() {
     setEditingId(null)
     setForm(emptyForm)
     setError(null)
+    setExpandedStep(null)
     setQuizQuestions([])
     setShowQuizForm(false)
     setEditingQuizId(null)
     setQuizForm(emptyQuizQuestion)
+  }
+
+  function addStep() {
+    const num = form.steps.length + 1
+    setForm(prev => ({
+      ...prev,
+      steps: [...prev.steps, createEmptyStep(num)],
+    }))
+    setExpandedStep(form.steps.length) // expand the new step
+  }
+
+  function removeStep(index: number) {
+    if (form.steps.length <= 1) return
+    setForm(prev => ({
+      ...prev,
+      steps: prev.steps.filter((_, i) => i !== index),
+    }))
+    setExpandedStep(null)
+  }
+
+  function moveStep(index: number, direction: 'up' | 'down') {
+    const newIndex = direction === 'up' ? index - 1 : index + 1
+    if (newIndex < 0 || newIndex >= form.steps.length) return
+    const updated = [...form.steps]
+    const temp = updated[index]
+    updated[index] = updated[newIndex]
+    updated[newIndex] = temp
+    setForm(prev => ({ ...prev, steps: updated }))
+  }
+
+  function updateStep(index: number, field: keyof StepForm, value: string) {
+    setForm(prev => {
+      const steps = [...prev.steps]
+      steps[index] = { ...steps[index], [field]: value }
+      return { ...prev, steps }
+    })
   }
 
   async function handleSave(e: React.FormEvent) {
@@ -253,25 +347,33 @@ export default function AdminDouleursPage() {
     setError(null)
     setSaving(true)
 
+    // Build legacy columns from first 3 steps for backward compatibility
+    const s1 = form.steps[0] || createEmptyStep(1)
+    const s2 = form.steps[1] || createEmptyStep(2)
+    const s3 = form.steps[2] || createEmptyStep(3)
+
     const payload = {
       title: form.title.trim(),
       slug: form.slug,
       description: form.description.trim() || null,
       image_url: form.image_url.trim() || null,
-      video_url: form.video_url.trim() || null,
-      step1_audio_url: form.step1_audio_url.trim() || null,
-      step1_pdf_url: form.step1_pdf_url.trim() || null,
-      step1_image_url: form.step1_image_url.trim() || null,
-      step2_video_url: form.step2_video_url.trim() || null,
-      audio_energy_url: form.audio_energy_url.trim() || null,
-      step2_pdf_url: form.step2_pdf_url.trim() || null,
-      step2_image_url: form.step2_image_url.trim() || null,
-      step3_video_url: form.step3_video_url.trim() || null,
-      audio_meditation_url: form.audio_meditation_url.trim() || null,
-      pdf_url: form.pdf_url.trim() || null,
-      step3_image_url: form.step3_image_url.trim() || null,
-      exercise_content: form.exercise_content.trim() || null,
+      // Legacy columns (first 3 steps mapped for backward compat)
+      video_url: s1.video_url.trim() || null,
+      step1_audio_url: s1.audio_url.trim() || null,
+      step1_pdf_url: s1.pdf_url.trim() || null,
+      step1_image_url: s1.image_url.trim() || null,
+      step2_video_url: s2.video_url.trim() || null,
+      audio_energy_url: s2.audio_url.trim() || null,
+      step2_pdf_url: s2.pdf_url.trim() || null,
+      step2_image_url: s2.image_url.trim() || null,
+      step3_video_url: s3.video_url.trim() || null,
+      audio_meditation_url: s3.audio_url.trim() || null,
+      pdf_url: s3.pdf_url.trim() || null,
+      step3_image_url: s3.image_url.trim() || null,
+      exercise_content: s3.exercise_content.trim() || null,
     }
+
+    let douleurId: string | null = null
 
     if (editingId) {
       const { error } = await supabase
@@ -284,17 +386,48 @@ export default function AdminDouleursPage() {
         setSaving(false)
         return
       }
+      douleurId = editingId
     } else {
-      const { error } = await supabase.from('douleurs').insert({
+      const { data, error } = await supabase.from('douleurs').insert({
         ...payload,
         is_active: true,
         is_published: false,
-      })
+      }).select('id').single()
 
       if (error) {
         setError(error.message)
         setSaving(false)
         return
+      }
+      douleurId = (data as { id: string })?.id ?? null
+    }
+
+    // Save dynamic steps
+    if (douleurId) {
+      // Delete existing steps
+      await supabase.from('douleur_steps').delete().eq('douleur_id', douleurId)
+
+      // Insert all steps
+      const stepsToInsert = form.steps.map((s, i) => ({
+        douleur_id: douleurId!,
+        step_number: i + 1,
+        title: s.title.trim() || `Étape ${i + 1}`,
+        subtitle: s.subtitle.trim() || null,
+        description: s.description.trim() || null,
+        icon: s.icon || DEFAULT_STEP_ICONS[i % DEFAULT_STEP_ICONS.length],
+        color: s.color || DEFAULT_STEP_COLORS[i % DEFAULT_STEP_COLORS.length],
+        video_url: s.video_url.trim() || null,
+        audio_url: s.audio_url.trim() || null,
+        pdf_url: s.pdf_url.trim() || null,
+        image_url: s.image_url.trim() || null,
+        exercise_content: s.exercise_content.trim() || null,
+      }))
+
+      if (stepsToInsert.length > 0) {
+        const { error: stepsError } = await supabase.from('douleur_steps').insert(stepsToInsert)
+        if (stepsError) {
+          console.warn('Error saving steps:', stepsError.message)
+        }
       }
     }
 
@@ -307,7 +440,6 @@ export default function AdminDouleursPage() {
     setError(null)
     const willPublish = !d.is_published
 
-    // Method 1: Try direct update
     const { data: updated, error } = await supabase
       .from('douleurs')
       .update({ is_published: willPublish })
@@ -316,7 +448,6 @@ export default function AdminDouleursPage() {
       .single()
 
     if (error || !updated) {
-      // Method 2: Fallback to RPC function (bypasses RLS issues)
       console.warn('Direct update failed, trying RPC fallback:', error?.message)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data: rpcResult, error: rpcError } = await (supabase as any)
@@ -339,7 +470,6 @@ export default function AdminDouleursPage() {
       }
     }
 
-    // Verify the change actually persisted
     const { data: verified } = await supabase
       .from('douleurs')
       .select('id, is_published')
@@ -381,9 +511,7 @@ export default function AdminDouleursPage() {
 
   async function handleDelete(id: string) {
     if (!confirm('Supprimer ce challenge émotionnel ? Cette action est irréversible.')) return
-
     const { error } = await supabase.from('douleurs').delete().eq('id', id)
-
     if (error) {
       setError(error.message)
     } else {
@@ -391,43 +519,38 @@ export default function AdminDouleursPage() {
     }
   }
 
-  // Helper: get media fields for a step
-  function getStepFields(stepNum: number) {
-    if (stepNum === 1) return { video: 'video_url', audio: 'step1_audio_url', pdf: 'step1_pdf_url', image: 'step1_image_url' }
-    if (stepNum === 2) return { video: 'step2_video_url', audio: 'audio_energy_url', pdf: 'step2_pdf_url', image: 'step2_image_url' }
-    return { video: 'step3_video_url', audio: 'audio_meditation_url', pdf: 'pdf_url', image: 'step3_image_url' }
-  }
-
-  // Check if a douleur has content for a given step
-  function hasStepContent(d: Douleur, stepNum: number): boolean {
-    const fields = getStepFields(stepNum)
-    const v = d[fields.video as keyof Douleur]
-    const a = d[fields.audio as keyof Douleur]
-    const p = d[fields.pdf as keyof Douleur]
-    return !!(v || a || p)
-  }
-
-  // Get detailed media status for a step
-  function getStepMediaDetails(d: Douleur, stepNum: number) {
-    const fields = getStepFields(stepNum)
-    return {
-      hasVideo: !!d[fields.video as keyof Douleur],
-      hasAudio: !!d[fields.audio as keyof Douleur],
-      hasPdf: !!d[fields.pdf as keyof Douleur],
-      hasImage: !!d[fields.image as keyof Douleur],
-    }
-  }
-
-  // Count total media across all steps
-  function getTotalMediaCount(d: Douleur): number {
+  // Get step media count
+  function getStepMediaCount(s: StepForm | DouleurStep): number {
     let count = 0
-    for (let i = 1; i <= 3; i++) {
-      const m = getStepMediaDetails(d, i)
-      if (m.hasVideo) count++
-      if (m.hasAudio) count++
-      if (m.hasPdf) count++
-      if (m.hasImage) count++
+    const vid = 'video_url' in s ? s.video_url : null
+    const aud = 'audio_url' in s ? s.audio_url : null
+    const pdf = 'pdf_url' in s ? s.pdf_url : null
+    const img = 'image_url' in s ? s.image_url : null
+    if (vid) count++
+    if (aud) count++
+    if (pdf) count++
+    if (img) count++
+    return count
+  }
+
+  function getTotalMediaCount(d: DouleurWithSteps): number {
+    if (d.dynamicSteps && d.dynamicSteps.length > 0) {
+      return d.dynamicSteps.reduce((sum, s) => sum + getStepMediaCount(s), 0)
     }
+    // Legacy fallback
+    let count = 0
+    if (d.video_url) count++
+    if (d.step1_audio_url) count++
+    if (d.step1_pdf_url) count++
+    if (d.step1_image_url) count++
+    if (d.step2_video_url) count++
+    if (d.audio_energy_url) count++
+    if (d.step2_pdf_url) count++
+    if (d.step2_image_url) count++
+    if (d.step3_video_url) count++
+    if (d.audio_meditation_url) count++
+    if (d.pdf_url) count++
+    if (d.step3_image_url) count++
     return count
   }
 
@@ -466,9 +589,10 @@ export default function AdminDouleursPage() {
           <button
             onClick={() => {
               setEditingId(null)
-              setForm(emptyForm)
+              setForm({ ...emptyForm, steps: DEFAULT_STEPS.map(s => ({ ...s })) })
               setShowForm(true)
               setError(null)
+              setExpandedStep(null)
             }}
             className="px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 hover:opacity-90 self-start sm:self-auto flex-shrink-0"
             style={{ background: '#74C0FC', color: '#fff' }}
@@ -520,72 +644,181 @@ export default function AdminDouleursPage() {
             onRemoved={() => setForm((prev) => ({ ...prev, image_url: '' }))}
           />
 
-          {/* 3 Steps — each with Video + Audio + PDF */}
-          {STEPS.map((step) => {
-            const fields = getStepFields(step.num)
-            return (
-              <div key={step.num} className="rounded-lg p-4 space-y-4" style={{ background: step.colorBg, border: `1px solid ${step.colorBorder}` }}>
-                <h3 className="text-sm font-semibold flex items-center gap-2" style={{ color: step.color }}>
-                  <span className="text-lg">{step.icon}</span>
-                  Étape {step.num} — {step.title}
+          {/* ── DYNAMIC STEPS SECTION ── */}
+          <div className="rounded-xl p-4" style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.2)' }}>
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-sm font-semibold" style={{ color: 'var(--gold)' }}>
+                  Étapes du challenge ({form.steps.length})
                 </h3>
-
-                <div className="grid gap-4">
-                  {/* Video */}
-                  <FileUpload
-                    label={`Vidéo — Étape ${step.num}`}
-                    accept="video/*"
-                    folder="douleurs"
-                    currentUrl={(form as Record<string, string>)[fields.video] || null}
-                    hint="MP4 recommandé, max 100 Mo"
-                    onUploaded={(url) => setForm((prev) => ({ ...prev, [fields.video]: url }))}
-                    onRemoved={() => setForm((prev) => ({ ...prev, [fields.video]: '' }))}
-                  />
-
-                  {/* Audio */}
-                  <FileUpload
-                    label={`Audio — Étape ${step.num}`}
-                    accept="audio/*"
-                    folder="douleurs"
-                    currentUrl={(form as Record<string, string>)[fields.audio] || null}
-                    hint="MP3 ou WAV, max 100 Mo"
-                    onUploaded={(url) => setForm((prev) => ({ ...prev, [fields.audio]: url }))}
-                    onRemoved={() => setForm((prev) => ({ ...prev, [fields.audio]: '' }))}
-                  />
-
-                  {/* PDF */}
-                  <FileUpload
-                    label={`PDF — Étape ${step.num}`}
-                    accept="application/pdf"
-                    folder="douleurs"
-                    currentUrl={(form as Record<string, string>)[fields.pdf] || null}
-                    hint="PDF max 100 Mo"
-                    onUploaded={(url) => setForm((prev) => ({ ...prev, [fields.pdf]: url }))}
-                    onRemoved={() => setForm((prev) => ({ ...prev, [fields.pdf]: '' }))}
-                  />
-
-                  {/* Image */}
-                  <FileUpload
-                    label={`Image / Photo — Étape ${step.num}`}
-                    accept="image/*"
-                    folder="douleurs"
-                    currentUrl={(form as Record<string, string>)[fields.image] || null}
-                    hint="JPG, PNG ou WebP (optionnel)"
-                    onUploaded={(url) => setForm((prev) => ({ ...prev, [fields.image]: url }))}
-                    onRemoved={() => setForm((prev) => ({ ...prev, [fields.image]: '' }))}
-                  />
-                </div>
-
-                {/* Exercise content only on step 3 */}
-                {step.num === 3 && (
-                  <div>
-                    <label htmlFor="exercise_content" style={labelStyle}>Contenu exercice (texte)</label>
-                    <textarea id="exercise_content" name="exercise_content" rows={5} value={form.exercise_content} onChange={handleChange} placeholder="Instructions de l'exercice..." style={{ ...inputStyle, resize: 'vertical' as const }} />
-                  </div>
-                )}
+                <p className="text-[11px] mt-0.5" style={{ color: 'var(--text-muted)' }}>
+                  Ajoutez autant d&apos;étapes que nécessaire. Chaque étape peut contenir vidéo, audio, PDF, image et exercice.
+                </p>
               </div>
-            )
-          })}
+              <button type="button" onClick={addStep}
+                className="px-3 py-1.5 rounded-lg text-[11px] font-semibold cursor-pointer transition-all"
+                style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.3)' }}>
+                + Ajouter une étape
+              </button>
+            </div>
+
+            <div className="space-y-2">
+              {form.steps.map((step, i) => {
+                const isExpanded = expandedStep === i
+                const mediaCount = getStepMediaCount(step)
+                return (
+                  <div key={i} className="rounded-xl overflow-hidden" style={{ border: `1px solid ${step.color}30`, background: `${step.color}04` }}>
+                    {/* Step header - always visible */}
+                    <div
+                      className="flex items-center justify-between p-3 cursor-pointer"
+                      onClick={() => setExpandedStep(isExpanded ? null : i)}
+                      style={{ background: isExpanded ? `${step.color}08` : 'transparent' }}
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <span className="text-lg flex-shrink-0">{step.icon}</span>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-bold px-2 py-0.5 rounded-full"
+                              style={{ background: `${step.color}20`, color: step.color }}>
+                              Étape {i + 1}
+                            </span>
+                            <span className="text-sm font-medium truncate" style={{ color: 'var(--text-primary)' }}>
+                              {step.title || '(sans titre)'}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>
+                              {mediaCount}/4 médias
+                            </span>
+                            {step.exercise_content && (
+                              <span className="text-[10px]" style={{ color: step.color }}>+ exercice</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1 flex-shrink-0">
+                        <button type="button" onClick={(e) => { e.stopPropagation(); moveStep(i, 'up') }} disabled={i === 0}
+                          className="w-7 h-7 rounded-md text-[11px] cursor-pointer disabled:opacity-30 flex items-center justify-center"
+                          style={{ color: 'var(--text-secondary)', background: 'rgba(255,255,255,0.05)' }} title="Monter">
+                          ↑
+                        </button>
+                        <button type="button" onClick={(e) => { e.stopPropagation(); moveStep(i, 'down') }} disabled={i === form.steps.length - 1}
+                          className="w-7 h-7 rounded-md text-[11px] cursor-pointer disabled:opacity-30 flex items-center justify-center"
+                          style={{ color: 'var(--text-secondary)', background: 'rgba(255,255,255,0.05)' }} title="Descendre">
+                          ↓
+                        </button>
+                        {form.steps.length > 1 && (
+                          <button type="button" onClick={(e) => { e.stopPropagation(); removeStep(i) }}
+                            className="w-7 h-7 rounded-md text-[11px] cursor-pointer flex items-center justify-center"
+                            style={{ color: '#EF4444', background: 'rgba(239,68,68,0.1)' }} title="Supprimer">
+                            ✕
+                          </button>
+                        )}
+                        <span className="text-xs ml-1" style={{ color: 'var(--text-muted)' }}>
+                          {isExpanded ? '▼' : '▶'}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Step content - collapsible */}
+                    {isExpanded && (
+                      <div className="p-4 pt-2 space-y-4" style={{ borderTop: `1px solid ${step.color}15` }}>
+                        {/* Step metadata */}
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                          <div>
+                            <label style={labelStyle}>Titre *</label>
+                            <input type="text" value={step.title} onChange={e => updateStep(i, 'title', e.target.value)}
+                              placeholder={`Étape ${i + 1}`} style={inputStyle} />
+                          </div>
+                          <div>
+                            <label style={labelStyle}>Sous-titre</label>
+                            <input type="text" value={step.subtitle} onChange={e => updateStep(i, 'subtitle', e.target.value)}
+                              placeholder="Vidéo, audio & ressources" style={inputStyle} />
+                          </div>
+                          <div>
+                            <label style={labelStyle}>Icône</label>
+                            <input type="text" value={step.icon} onChange={e => updateStep(i, 'icon', e.target.value)}
+                              placeholder="🎬" style={inputStyle} />
+                          </div>
+                          <div>
+                            <label style={labelStyle}>Couleur</label>
+                            <div className="flex gap-2">
+                              <input type="color" value={step.color} onChange={e => updateStep(i, 'color', e.target.value)}
+                                className="w-10 h-10 rounded cursor-pointer" style={{ background: 'transparent', border: 'none' }} />
+                              <input type="text" value={step.color} onChange={e => updateStep(i, 'color', e.target.value)}
+                                style={{ ...inputStyle, flex: 1 }} />
+                            </div>
+                          </div>
+                        </div>
+
+                        <div>
+                          <label style={labelStyle}>Description de l&apos;étape</label>
+                          <textarea value={step.description} onChange={e => updateStep(i, 'description', e.target.value)}
+                            rows={2} placeholder="Description affichée aux membres..."
+                            style={{ ...inputStyle, resize: 'vertical' as const }} />
+                        </div>
+
+                        {/* Media uploads */}
+                        <div className="grid gap-4">
+                          <FileUpload
+                            label={`Vidéo — Étape ${i + 1}`}
+                            accept="video/*"
+                            folder="douleurs"
+                            currentUrl={step.video_url || null}
+                            hint="MP4 recommandé, max 100 Mo"
+                            onUploaded={(url) => updateStep(i, 'video_url', url)}
+                            onRemoved={() => updateStep(i, 'video_url', '')}
+                          />
+                          <FileUpload
+                            label={`Audio — Étape ${i + 1}`}
+                            accept="audio/*"
+                            folder="douleurs"
+                            currentUrl={step.audio_url || null}
+                            hint="MP3 ou WAV, max 100 Mo"
+                            onUploaded={(url) => updateStep(i, 'audio_url', url)}
+                            onRemoved={() => updateStep(i, 'audio_url', '')}
+                          />
+                          <FileUpload
+                            label={`PDF — Étape ${i + 1}`}
+                            accept="application/pdf"
+                            folder="douleurs"
+                            currentUrl={step.pdf_url || null}
+                            hint="PDF max 100 Mo"
+                            onUploaded={(url) => updateStep(i, 'pdf_url', url)}
+                            onRemoved={() => updateStep(i, 'pdf_url', '')}
+                          />
+                          <FileUpload
+                            label={`Image / Photo — Étape ${i + 1}`}
+                            accept="image/*"
+                            folder="douleurs"
+                            currentUrl={step.image_url || null}
+                            hint="JPG, PNG ou WebP (optionnel)"
+                            onUploaded={(url) => updateStep(i, 'image_url', url)}
+                            onRemoved={() => updateStep(i, 'image_url', '')}
+                          />
+                        </div>
+
+                        {/* Exercise content */}
+                        <div>
+                          <label style={labelStyle}>Contenu exercice (texte)</label>
+                          <textarea value={step.exercise_content} onChange={e => updateStep(i, 'exercise_content', e.target.value)}
+                            rows={4} placeholder="Instructions de l'exercice pour cette étape..."
+                            style={{ ...inputStyle, resize: 'vertical' as const }} />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* Add step button at bottom */}
+            <button type="button" onClick={addStep}
+              className="mt-3 w-full py-2.5 rounded-lg text-[11px] font-medium cursor-pointer transition-all"
+              style={{ color: 'var(--gold)', border: '1px dashed rgba(212,175,55,0.3)', background: 'transparent' }}>
+              + Ajouter une autre étape
+            </button>
+          </div>
 
           {/* ── Quiz QCM Section (only when editing) ── */}
           {editingId && (
@@ -655,7 +888,6 @@ export default function AdminDouleursPage() {
                     {editingQuizId ? 'Modifier la question' : 'Nouvelle question'}
                   </h4>
 
-                  {/* Question text */}
                   <div>
                     <label style={labelStyle}>Question *</label>
                     <input type="text" value={quizForm.question}
@@ -664,7 +896,6 @@ export default function AdminDouleursPage() {
                       style={inputStyle} />
                   </div>
 
-                  {/* Options */}
                   <div>
                     <label style={labelStyle}>Réponses proposées (cochez les bonnes réponses)</label>
                     <div className="space-y-2">
@@ -771,6 +1002,8 @@ export default function AdminDouleursPage() {
         <div className="space-y-4">
           {douleurs.map((d) => {
             const totalMedia = getTotalMediaCount(d)
+            const stepCount = d.dynamicSteps && d.dynamicSteps.length > 0 ? d.dynamicSteps.length : 3
+            const totalPossibleMedia = stepCount * 4
             return (
               <div key={d.id} className="rounded-xl overflow-hidden transition-all duration-200"
                 style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
@@ -780,7 +1013,6 @@ export default function AdminDouleursPage() {
                   <div className="flex flex-col sm:flex-row sm:items-start gap-4">
                     {/* Left: cover image + info */}
                     <div className="flex gap-4 flex-1 min-w-0">
-                      {/* Cover image thumbnail */}
                       {d.image_url ? (
                         <img src={d.image_url} alt={d.title}
                           className="w-14 h-14 rounded-lg object-cover flex-shrink-0"
@@ -812,8 +1044,12 @@ export default function AdminDouleursPage() {
                             <span className="w-1.5 h-1.5 rounded-full" style={{ background: d.is_published ? '#55EFC4' : '#FF6B35' }} />
                             {d.is_published ? 'Publié' : 'Brouillon'}
                           </span>
+                          <span className="text-[11px] px-2 py-0.5 rounded-full font-medium"
+                            style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37' }}>
+                            {stepCount} étape{stepCount > 1 ? 's' : ''}
+                          </span>
                           <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
-                            {totalMedia}/12 médias
+                            {totalMedia}/{totalPossibleMedia} médias
                           </span>
                           <span className="text-[11px]" style={{ color: quizCounts[d.id] ? '#D4AF37' : 'var(--text-muted)' }}>
                             📝 {quizCounts[d.id] || 0} quiz
@@ -861,28 +1097,19 @@ export default function AdminDouleursPage() {
                   </div>
                 </div>
 
-                {/* Step media detail grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-px" style={{ background: 'var(--dark-border)' }}>
-                  {STEPS.map((step) => {
-                    const media = getStepMediaDetails(d, step.num)
-                    const has = hasStepContent(d, step.num)
-                    const mediaCount = [media.hasVideo, media.hasAudio, media.hasPdf, media.hasImage].filter(Boolean).length
-                    const mediaTypes = [
-                      { icon: '🎬', label: 'Vidéo', active: media.hasVideo },
-                      { icon: '🎵', label: 'Audio', active: media.hasAudio },
-                      { icon: '📄', label: 'PDF', active: media.hasPdf },
-                      { icon: '🖼️', label: 'Image', active: media.hasImage },
-                    ]
+                {/* Step overview grid */}
+                <div className="flex flex-wrap gap-px" style={{ background: 'var(--dark-border)' }}>
+                  {(d.dynamicSteps && d.dynamicSteps.length > 0 ? d.dynamicSteps : []).map((step, i) => {
+                    const mediaCount = getStepMediaCount(step)
                     return (
-                      <div key={step.num} className="p-3 sm:space-y-2"
-                        style={{ background: has ? step.colorBg : 'var(--dark-card)' }}>
-                        {/* Step header */}
+                      <div key={step.id} className="flex-1 min-w-[120px] p-2.5"
+                        style={{ background: mediaCount > 0 ? `${step.color}06` : 'var(--dark-card)' }}>
                         <div className="flex items-center justify-between">
-                          <span className="text-xs sm:text-[11px] font-semibold flex items-center gap-1.5" style={{ color: has ? step.color : 'var(--text-muted)' }}>
-                            <span className="text-sm">{step.icon}</span>
-                            Ét. {step.num} — {step.title}
+                          <span className="text-[10px] font-semibold flex items-center gap-1" style={{ color: mediaCount > 0 ? step.color : 'var(--text-muted)' }}>
+                            <span className="text-xs">{step.icon}</span>
+                            Ét. {i + 1}
                           </span>
-                          <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full"
+                          <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full"
                             style={{
                               background: mediaCount === 4 ? 'rgba(85,239,196,0.15)' : mediaCount > 0 ? 'rgba(212,175,55,0.15)' : 'rgba(90,83,71,0.2)',
                               color: mediaCount === 4 ? '#55EFC4' : mediaCount > 0 ? '#D4AF37' : 'var(--text-muted)',
@@ -890,38 +1117,9 @@ export default function AdminDouleursPage() {
                             {mediaCount}/4
                           </span>
                         </div>
-
-                        {/* Media type indicators — horizontal on mobile, vertical on desktop */}
-                        <div className="flex flex-row flex-wrap gap-x-3 gap-y-1 mt-1.5 sm:mt-0 sm:flex-col sm:gap-1">
-                          {mediaTypes.map((m) => (
-                            <div key={m.label} className="flex items-center gap-1.5">
-                              <span className="text-[10px]" style={{ opacity: m.active ? 1 : 0.35 }}>{m.icon}</span>
-                              <span className="text-[11px] sm:text-[10px] font-medium" style={{ color: m.active ? step.color : 'var(--text-muted)', opacity: m.active ? 1 : 0.5 }}>
-                                {m.label}
-                              </span>
-                              {m.active ? (
-                                <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#55EFC4' }} />
-                              ) : (
-                                <span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--dark-border)' }} />
-                              )}
-                            </div>
-                          ))}
-
-                          {/* Exercise content indicator for step 3 */}
-                          {step.num === 3 && (
-                            <div className="flex items-center gap-1.5">
-                              <span className="text-[10px]" style={{ opacity: d.exercise_content ? 1 : 0.35 }}>✍️</span>
-                              <span className="text-[11px] sm:text-[10px] font-medium" style={{ color: d.exercise_content ? step.color : 'var(--text-muted)', opacity: d.exercise_content ? 1 : 0.5 }}>
-                                Exercice
-                              </span>
-                              {d.exercise_content ? (
-                                <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#55EFC4' }} />
-                              ) : (
-                                <span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--dark-border)' }} />
-                              )}
-                            </div>
-                          )}
-                        </div>
+                        <p className="text-[10px] mt-0.5 truncate" style={{ color: 'var(--text-muted)' }}>
+                          {step.title}
+                        </p>
                       </div>
                     )
                   })}

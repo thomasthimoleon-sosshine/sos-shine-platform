@@ -61,6 +61,25 @@ export type Douleur = {
   updated_at: string
 }
 
+// ── Douleur Steps (dynamic steps per challenge) ──
+export type DouleurStep = {
+  id: string
+  douleur_id: string
+  step_number: number
+  title: string
+  subtitle: string | null
+  description: string | null
+  icon: string
+  color: string
+  video_url: string | null
+  audio_url: string | null
+  pdf_url: string | null
+  image_url: string | null
+  exercise_content: string | null
+  created_at: string
+  updated_at: string
+}
+
 // ── Messages (chat per douleur + general) ──
 export type Message = {
   id: string
@@ -294,6 +313,7 @@ export type UserProgress = {
   step1_completed: boolean
   step2_completed: boolean
   step3_completed: boolean
+  steps_completed: Record<string, boolean>
   completed_at: string | null
   created_at: string
   updated_at: string
@@ -655,6 +675,7 @@ export type Database = {
       profiles: Table<Profile>
       subscriptions: Table<Subscription>
       douleurs: Table<Douleur>
+      douleur_steps: Table<DouleurStep>
       messages: Table<Message>
       posts: Table<Post>
       post_likes: Table<PostLike>

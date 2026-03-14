@@ -5,14 +5,67 @@ import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
-import type { Douleur, UserProgress, DouleurQuizQuestion } from '@/types/database'
+import type { Douleur, DouleurStep, UserProgress, DouleurQuizQuestion } from '@/types/database'
 import { XP_REWARDS } from '@/lib/xp'
 import FavoriteButton from '@/components/FavoriteButton'
+
+type StepConfig = {
+  num: number
+  title: string
+  subtitle: string
+  icon: string
+  color: string
+  description: string
+  video: string | null
+  audio: string | null
+  pdf: string | null
+  image: string | null
+  exercise_content: string | null
+}
+
+// Build steps from dynamic douleur_steps or fallback to legacy columns
+function buildSteps(douleur: Douleur, dynamicSteps: DouleurStep[]): StepConfig[] {
+  if (dynamicSteps.length > 0) {
+    return dynamicSteps.map((s, i) => ({
+      num: i + 1,
+      title: s.title,
+      subtitle: s.subtitle || 'Vidéo, audio & ressources',
+      icon: s.icon || '📋',
+      color: s.color || '#D4AF37',
+      description: s.description || '',
+      video: s.video_url,
+      audio: s.audio_url,
+      pdf: s.pdf_url,
+      image: s.image_url,
+      exercise_content: s.exercise_content,
+    }))
+  }
+
+  // Legacy fallback (hardcoded 3 steps)
+  return [
+    {
+      num: 1, title: 'Comprendre', subtitle: 'Vidéo, audio & ressources', icon: '🎬', color: '#55EFC4',
+      description: 'Analyse émotionnelle. Explication du problème. Apaisement mental. Une approche humaine et directe.',
+      video: douleur.video_url, audio: douleur.step1_audio_url, pdf: douleur.step1_pdf_url, image: douleur.step1_image_url, exercise_content: null,
+    },
+    {
+      num: 2, title: 'Libérer & Intégrer', subtitle: 'Audio, vidéo & ressources', icon: '✨', color: '#74C0FC',
+      description: 'Activation émotionnelle. Décharge des tensions. Nettoyage des empreintes qui vous bloquent. Stabilisation intérieure et reconnexion à soi.',
+      video: douleur.step2_video_url, audio: douleur.audio_energy_url, pdf: douleur.step2_pdf_url, image: douleur.step2_image_url, exercise_content: null,
+    },
+    {
+      num: 3, title: 'Agir', subtitle: 'Exercices, audio & ressources', icon: '⚡', color: '#E17055',
+      description: 'PDF d\'exercices pratiques et audio guidé. Passez à l\'action concrète. Reprogrammation émotionnelle. Ancrez vos transformations dans le quotidien.',
+      video: douleur.step3_video_url, audio: douleur.audio_meditation_url, pdf: douleur.pdf_url, image: douleur.step3_image_url, exercise_content: douleur.exercise_content,
+    },
+  ]
+}
 
 export default function DouleurDetailPage() {
   const params = useParams()
   const slug = params.slug as string
   const [douleur, setDouleur] = useState<Douleur | null>(null)
+  const [dynamicSteps, setDynamicSteps] = useState<DouleurStep[]>([])
   const [loading, setLoading] = useState(true)
   const [activeStep, setActiveStep] = useState(1)
   const [fetchError, setFetchError] = useState<string | null>(null)
@@ -47,8 +100,6 @@ export default function DouleurDetailPage() {
         const decodedSlug = decodeURIComponent(slug)
         const normalizedSlug = normalizeSlug(decodedSlug)
 
-        // Strategy: load ALL published douleurs and match client-side
-        // This handles all slug/accent/encoding edge cases
         const { data: allDouleurs, error } = await supabase
           .from('douleurs')
           .select('*')
@@ -64,7 +115,6 @@ export default function DouleurDetailPage() {
         const published = (allDouleurs ?? []) as Douleur[]
 
         if (published.length > 0) {
-          // Try multiple matching strategies
           const match = published.find((d) => {
             const dbSlugNormalized = normalizeSlug(d.slug)
             const titleNormalized = normalizeSlug(d.title)
@@ -79,6 +129,18 @@ export default function DouleurDetailPage() {
 
           if (match) {
             setDouleur(match)
+
+            // Load dynamic steps
+            const { data: steps } = await supabase
+              .from('douleur_steps')
+              .select('*')
+              .eq('douleur_id', match.id)
+              .order('step_number', { ascending: true })
+
+            if (steps && steps.length > 0) {
+              setDynamicSteps(steps as DouleurStep[])
+            }
+
             setLoading(false)
             return
           }
@@ -105,7 +167,6 @@ export default function DouleurDetailPage() {
 
           if (unpublishedMatch && !unpublishedMatch.is_published) {
             setNotPublished(true)
-            console.warn(`Challenge "${unpublishedMatch.title}" (slug: ${unpublishedMatch.slug}) exists but is_published=false`)
           }
         }
       } catch (err) {
@@ -163,30 +224,43 @@ export default function DouleurDetailPage() {
     loadProgress()
   }, [douleur])
 
+  const steps = douleur ? buildSteps(douleur, dynamicSteps) : []
+  const totalSteps = steps.length
+
   async function markStepComplete(stepNum: number) {
     if (!douleur || !userId) return
     const supabase = createClient()
 
-    const field = stepNum === 1 ? 'step1_completed' : stepNum === 2 ? 'step2_completed' : 'step3_completed'
+    // Use dynamic steps_completed JSON field
+    const currentCompleted = progress?.steps_completed || {}
+    const newCompleted = { ...currentCompleted, [String(stepNum)]: true }
+
+    // Also update legacy fields for backward compatibility
+    const legacyUpdates: Record<string, boolean | string> = {}
+    if (stepNum === 1) legacyUpdates.step1_completed = true
+    if (stepNum === 2) legacyUpdates.step2_completed = true
+    if (stepNum === 3) legacyUpdates.step3_completed = true
 
     if (progress) {
-      // Update existing progress
-      const updates: Record<string, boolean | string> = { [field]: true }
-      const newProgress = { ...progress, [field]: true }
+      const updates: Record<string, boolean | string | Record<string, boolean>> = {
+        ...legacyUpdates,
+        steps_completed: newCompleted,
+      }
 
-      // Check if all 3 steps are now complete
-      const allComplete = (stepNum === 1 || newProgress.step1_completed) &&
-        (stepNum === 2 || newProgress.step2_completed) &&
-        (stepNum === 3 || newProgress.step3_completed)
-
+      // Check if all steps are now complete
+      const allComplete = steps.every((s) => newCompleted[String(s.num)])
       if (allComplete) {
         updates.completed_at = new Date().toISOString()
       }
 
       await supabase.from('user_progress').update(updates).eq('id', progress.id)
-      setProgress({ ...newProgress, completed_at: allComplete ? new Date().toISOString() : newProgress.completed_at } as UserProgress)
+      setProgress({
+        ...progress,
+        ...legacyUpdates,
+        steps_completed: newCompleted,
+        completed_at: allComplete ? new Date().toISOString() : progress.completed_at,
+      } as UserProgress)
 
-      // Award XP
       try {
         await supabase.rpc('add_xp', { p_user_id: userId, p_amount: XP_REWARDS.step_completed, p_reason: 'step_completed' })
         if (allComplete) {
@@ -194,13 +268,13 @@ export default function DouleurDetailPage() {
         }
       } catch { /* non-critical */ }
     } else {
-      // Create new progress entry
       const newData = {
         user_id: userId,
         douleur_id: douleur.id,
         step1_completed: stepNum === 1,
         step2_completed: stepNum === 2,
         step3_completed: stepNum === 3,
+        steps_completed: newCompleted,
         completed_at: null,
       }
       const { data } = await supabase.from('user_progress').insert(newData).select().single()
@@ -214,9 +288,13 @@ export default function DouleurDetailPage() {
 
   function isStepCompleted(stepNum: number): boolean {
     if (!progress) return false
+    // Check dynamic field first
+    if (progress.steps_completed && progress.steps_completed[String(stepNum)]) return true
+    // Legacy fallback
     if (stepNum === 1) return progress.step1_completed
     if (stepNum === 2) return progress.step2_completed
-    return progress.step3_completed
+    if (stepNum === 3) return progress.step3_completed
+    return false
   }
 
   async function submitQuiz() {
@@ -227,7 +305,6 @@ export default function DouleurDetailPage() {
     for (const q of quizQuestions) {
       const userSelected = quizAnswers[q.id] || []
       const correct = q.correct_indices as number[]
-      // Correct if user selected exactly the right indices
       const isCorrect = correct.length === userSelected.length &&
         correct.every(c => userSelected.includes(c)) &&
         userSelected.every(u => correct.includes(u))
@@ -235,14 +312,13 @@ export default function DouleurDetailPage() {
     }
 
     const total = quizQuestions.length
-    const threshold = Math.ceil(total * 0.8) // 80% = 8/10
+    const threshold = Math.ceil(total * 0.8)
     const passed = score >= threshold
 
     setQuizScore(score)
     setQuizPassed(passed)
     setQuizSubmitted(true)
 
-    // Save attempt
     const supabase = createClient()
     await supabase.from('douleur_quiz_attempts').insert({
       user_id: userId,
@@ -255,7 +331,6 @@ export default function DouleurDetailPage() {
 
     if (passed && (!bestAttempt || !bestAttempt.passed)) {
       setBestAttempt({ score, total, passed })
-      // Award bonus XP for passing quiz
       try {
         await supabase.rpc('add_xp', { p_user_id: userId, p_amount: 50, p_reason: 'quiz_passed' })
       } catch { /* non-critical */ }
@@ -283,59 +358,10 @@ export default function DouleurDetailPage() {
     })
   }
 
-  const completedSteps = progress ? [progress.step1_completed, progress.step2_completed, progress.step3_completed].filter(Boolean).length : 0
-  const allStepsCompleted = completedSteps === 3
+  const completedSteps = steps.filter(s => isStepCompleted(s.num)).length
+  const allStepsCompleted = completedSteps === totalSteps
   const hasQuiz = quizQuestions.length > 0
-
-  const steps = [
-    {
-      num: 1,
-      title: 'Comprendre',
-      subtitle: 'Vidéo, audio & ressources',
-      icon: '🎬',
-      color: '#55EFC4',
-      description: 'Analyse émotionnelle. Explication du problème. Apaisement mental. Une approche humaine et directe.',
-    },
-    {
-      num: 2,
-      title: 'Libérer & Intégrer',
-      subtitle: 'Audio, vidéo & ressources',
-      icon: '✨',
-      color: '#74C0FC',
-      description: 'Activation émotionnelle. Décharge des tensions. Nettoyage des empreintes qui vous bloquent. Stabilisation intérieure et reconnexion à soi.',
-    },
-    {
-      num: 3,
-      title: 'Agir',
-      subtitle: 'Exercices, audio & ressources',
-      icon: '⚡',
-      color: '#E17055',
-      description: 'PDF d\'exercices pratiques et audio guidé. Passez à l\'action concrète. Reprogrammation émotionnelle. Ancrez vos transformations dans le quotidien.',
-    },
-  ]
-
-  // Helper: get all media URLs for a given step
-  function getStepMedia(stepNum: number) {
-    if (!douleur) return { video: null, audio: null, pdf: null, image: null }
-    if (stepNum === 1) return {
-      video: douleur.video_url,
-      audio: douleur.step1_audio_url,
-      pdf: douleur.step1_pdf_url,
-      image: douleur.step1_image_url,
-    }
-    if (stepNum === 2) return {
-      video: douleur.step2_video_url,
-      audio: douleur.audio_energy_url,
-      pdf: douleur.step2_pdf_url,
-      image: douleur.step2_image_url,
-    }
-    return {
-      video: douleur.step3_video_url,
-      audio: douleur.audio_meditation_url,
-      pdf: douleur.pdf_url,
-      image: douleur.step3_image_url,
-    }
-  }
+  const quizStepNum = totalSteps + 1
 
   if (loading) {
     return (
@@ -411,14 +437,14 @@ export default function DouleurDetailPage() {
         <div className="mt-4">
           <div className="flex items-center justify-between mb-1.5">
             <span className="text-xs" style={{ color: 'var(--text-muted)' }}>Progression</span>
-            <span className="text-xs font-medium" style={{ color: 'var(--gold)' }}>{completedSteps}/3 étapes</span>
+            <span className="text-xs font-medium" style={{ color: 'var(--gold)' }}>{completedSteps}/{totalSteps} étapes</span>
           </div>
           <div className="h-2 rounded-full overflow-hidden" style={{ background: 'var(--dark-border)' }}>
             <motion.div
               className="h-full rounded-full"
               style={{ background: 'linear-gradient(90deg, var(--gold), var(--gold-light))' }}
               initial={{ width: 0 }}
-              animate={{ width: `${(completedSteps / 3) * 100}%` }}
+              animate={{ width: `${(completedSteps / totalSteps) * 100}%` }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             />
           </div>
@@ -454,12 +480,12 @@ export default function DouleurDetailPage() {
         {/* Quiz step button */}
         {hasQuiz && (
           <button
-            onClick={() => setActiveStep(4)}
+            onClick={() => setActiveStep(quizStepNum)}
             className="flex items-center gap-2.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer whitespace-nowrap flex-shrink-0"
             style={{
-              background: activeStep === 4 ? 'rgba(212,175,55,0.15)' : 'var(--dark-card)',
-              border: activeStep === 4 ? '1px solid rgba(212,175,55,0.4)' : '1px solid var(--dark-border)',
-              color: activeStep === 4 ? '#D4AF37' : 'var(--text-secondary)',
+              background: activeStep === quizStepNum ? 'rgba(212,175,55,0.15)' : 'var(--dark-card)',
+              border: activeStep === quizStepNum ? '1px solid rgba(212,175,55,0.4)' : '1px solid var(--dark-border)',
+              color: activeStep === quizStepNum ? '#D4AF37' : 'var(--text-secondary)',
               opacity: allStepsCompleted ? 1 : 0.5,
             }}
           >
@@ -476,14 +502,14 @@ export default function DouleurDetailPage() {
       </div>
 
       {/* Active step content */}
-      {activeStep <= 3 && <div className="rounded-2xl p-6 sm:p-8" style={{ background: `${currentStep.color}06`, border: `1px solid ${currentStep.color}15` }}>
+      {activeStep <= totalSteps && currentStep && <div className="rounded-2xl p-6 sm:p-8" style={{ background: `${currentStep.color}06`, border: `1px solid ${currentStep.color}15` }}>
         <div className="flex items-center gap-4 mb-6">
           <div className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl" style={{ background: `${currentStep.color}15` }}>
             {currentStep.icon}
           </div>
           <div>
             <span className="text-xs font-medium block" style={{ color: currentStep.color, opacity: 0.7 }}>
-              Étape {currentStep.num}/3
+              Étape {currentStep.num}/{totalSteps}
             </span>
             <h2 className="font-display text-xl font-semibold" style={{ color: currentStep.color }}>
               {currentStep.title}
@@ -492,14 +518,15 @@ export default function DouleurDetailPage() {
           </div>
         </div>
 
-        <p className="mb-6 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-          {currentStep.description}
-        </p>
+        {currentStep.description && (
+          <p className="mb-6 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+            {currentStep.description}
+          </p>
+        )}
 
         {/* Content area — show ALL available media for this step */}
         {(() => {
-          const media = getStepMedia(currentStep.num)
-          const hasAnyContent = media.video || media.audio || media.pdf || media.image || (currentStep.num === 3 && douleur?.exercise_content)
+          const hasAnyContent = currentStep.video || currentStep.audio || currentStep.pdf || currentStep.image || currentStep.exercise_content
 
           if (!hasAnyContent) {
             return (
@@ -516,33 +543,29 @@ export default function DouleurDetailPage() {
 
           return (
             <div className="space-y-4">
-              {/* Video */}
-              {media.video && (
+              {currentStep.video && (
                 <div className="rounded-xl overflow-hidden aspect-video" style={{ background: 'var(--dark)' }}>
-                  <video src={media.video} controls className="w-full h-full" />
+                  <video src={currentStep.video} controls className="w-full h-full" />
                 </div>
               )}
 
-              {/* Image */}
-              {media.image && (
+              {currentStep.image && (
                 <div className="rounded-xl overflow-hidden" style={{ background: 'var(--dark)' }}>
-                  <img src={media.image} alt={`${douleur?.title} — Étape ${currentStep.num}`} className="w-full h-auto rounded-xl" style={{ maxHeight: '500px', objectFit: 'contain' }} />
+                  <img src={currentStep.image} alt={`${douleur?.title} — Étape ${currentStep.num}`} className="w-full h-auto rounded-xl" style={{ maxHeight: '500px', objectFit: 'contain' }} />
                 </div>
               )}
 
-              {/* Audio */}
-              {media.audio && (
+              {currentStep.audio && (
                 <div className="rounded-xl p-4" style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${currentStep.color}20` }}>
                   <p className="font-medium text-sm mb-2" style={{ color: 'var(--text-primary)' }}>
-                    {currentStep.num === 1 ? 'Audio' : currentStep.num === 2 ? 'Audio de libération' : 'Audio guidé'}
+                    Audio — {currentStep.title}
                   </p>
-                  <audio src={media.audio} controls className="w-full" />
+                  <audio src={currentStep.audio} controls className="w-full" />
                 </div>
               )}
 
-              {/* PDF */}
-              {media.pdf && (
-                <a href={media.pdf} target="_blank" rel="noopener noreferrer"
+              {currentStep.pdf && (
+                <a href={currentStep.pdf} target="_blank" rel="noopener noreferrer"
                   className="flex items-center gap-3 p-4 rounded-xl transition-all hover:opacity-80"
                   style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${currentStep.color}20` }}>
                   <svg className="w-8 h-8 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke={currentStep.color} strokeWidth={1.5}>
@@ -555,12 +578,11 @@ export default function DouleurDetailPage() {
                 </a>
               )}
 
-              {/* Exercise content (step 3 only) */}
-              {currentStep.num === 3 && douleur?.exercise_content && (
+              {currentStep.exercise_content && (
                 <div className="p-5 rounded-xl" style={{ background: 'rgba(0,0,0,0.2)' }}>
                   <h4 className="font-semibold text-sm mb-3" style={{ color: currentStep.color }}>Exercice</h4>
                   <p className="text-sm leading-relaxed whitespace-pre-line" style={{ color: 'var(--text-secondary)' }}>
-                    {douleur.exercise_content}
+                    {currentStep.exercise_content}
                   </p>
                 </div>
               )}
@@ -570,7 +592,6 @@ export default function DouleurDetailPage() {
 
         {/* Step completion + navigation */}
         <div className="mt-8 pt-6 space-y-4" style={{ borderTop: `1px solid ${currentStep.color}15` }}>
-          {/* Mark as completed button */}
           {!isStepCompleted(currentStep.num) ? (
             <button
               onClick={() => markStepComplete(currentStep.num)}
@@ -602,12 +623,12 @@ export default function DouleurDetailPage() {
               Étape précédente
             </button>
             <button
-              onClick={() => setActiveStep(Math.min(hasQuiz ? 4 : 3, activeStep + 1))}
-              disabled={activeStep === 3 && !hasQuiz}
+              onClick={() => setActiveStep(Math.min(hasQuiz ? quizStepNum : totalSteps, activeStep + 1))}
+              disabled={activeStep === totalSteps && !hasQuiz}
               className="flex items-center gap-2 text-sm transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
               style={{ color: currentStep.color }}
             >
-              {activeStep === 3 && hasQuiz ? 'Passer au Quiz' : 'Étape suivante'}
+              {activeStep === totalSteps && hasQuiz ? 'Passer au Quiz' : 'Étape suivante'}
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
               </svg>
@@ -616,8 +637,8 @@ export default function DouleurDetailPage() {
         </div>
       </div>}
 
-      {/* ── Quiz Section (Step 4) ── */}
-      {activeStep === 4 && hasQuiz && (
+      {/* ── Quiz Section ── */}
+      {activeStep === quizStepNum && hasQuiz && (
         <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.15)' }}>
           <div className="flex items-center gap-4 mb-6">
             <div className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl" style={{ background: 'rgba(212,175,55,0.12)' }}>
@@ -640,10 +661,10 @@ export default function DouleurDetailPage() {
             <div className="rounded-xl p-8 text-center" style={{ background: 'rgba(0,0,0,0.2)', border: '1px dashed rgba(212,175,55,0.3)' }}>
               <div className="text-4xl mb-3">🔒</div>
               <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
-                Terminez les 3 étapes d&apos;abord
+                Terminez les {totalSteps} étapes d&apos;abord
               </h3>
               <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
-                Vous devez compléter les étapes Comprendre, Libérer &amp; Intégrer et Agir avant de passer le quiz.
+                Vous devez compléter toutes les étapes avant de passer le quiz.
               </p>
             </div>
           ) : quizPassed && !quizSubmitted ? (
@@ -668,14 +689,12 @@ export default function DouleurDetailPage() {
             </div>
           ) : (
             <div className="space-y-6">
-              {/* Best attempt info */}
               {bestAttempt && !quizSubmitted && (
                 <div className="rounded-lg px-4 py-2 text-xs" style={{ background: 'rgba(255,255,255,0.03)', color: 'var(--text-muted)' }}>
                   Meilleur score précédent : {bestAttempt.score}/{bestAttempt.total}
                 </div>
               )}
 
-              {/* Questions */}
               {quizQuestions.map((q, qIdx) => {
                 const userSelected = quizAnswers[q.id] || []
                 const correct = q.correct_indices as number[]
@@ -734,7 +753,7 @@ export default function DouleurDetailPage() {
                                   : 'var(--text-muted)',
                               }}>
                               {(isSelected || (quizSubmitted && isCorrectOpt)) && (
-                                <span style={{ color: quizSubmitted ? '#09090b' : '#09090b' }}>
+                                <span style={{ color: '#09090b' }}>
                                   {quizSubmitted && isCorrectOpt ? '✓' : quizSubmitted && isSelected && !isCorrectOpt ? '✕' : '✓'}
                                 </span>
                               )}
@@ -748,7 +767,6 @@ export default function DouleurDetailPage() {
                 )
               })}
 
-              {/* Submit / Results */}
               {quizSubmitted ? (
                 <div className="space-y-4">
                   <div className="rounded-xl p-6 text-center" style={{
@@ -798,13 +816,13 @@ export default function DouleurDetailPage() {
 
               {/* Navigation back */}
               <div className="pt-2">
-                <button onClick={() => setActiveStep(3)}
+                <button onClick={() => setActiveStep(totalSteps)}
                   className="flex items-center gap-2 text-sm transition-colors cursor-pointer"
                   style={{ color: 'var(--text-secondary)' }}>
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
                   </svg>
-                  Retour à l&apos;étape 3
+                  Retour à l&apos;étape {totalSteps}
                 </button>
               </div>
             </div>

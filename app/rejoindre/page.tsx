@@ -4,8 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslation } from '@/lib/i18n/useTranslation'
-import { createClient } from '@/lib/supabase/client'
-import { PRICES, TOTAL_PRICES, DURATIONS, PLAN_INFO, formatPrice, getSavingsPercent } from '@/lib/stripe'
+import { PRICES, TOTAL_PRICES, ORIGINAL_PRICES, DURATIONS, PLAN_INFO, formatPrice, getPaymentLink } from '@/lib/stripe'
 import type { PlanId, DurationId } from '@/lib/stripe'
 
 const PRELAUNCH_END = new Date('2026-03-22T00:00:00+02:00')
@@ -301,39 +300,13 @@ function DurationSelector({ selected, onChange }: { selected: DurationId; onChan
 /* ─── POST-LAUNCH PAYMENT SECTION ─── */
 function PaymentContent() {
   const { t } = useTranslation()
-  const [loadingPlan, setLoadingPlan] = useState<string | null>(null)
-  const [userEmail, setUserEmail] = useState<string | null>(null)
-  const [userId, setUserId] = useState<string | null>(null)
   const [selectedDuration, setSelectedDuration] = useState<DurationId>('monthly')
 
-  useEffect(() => {
-    const supabase = createClient()
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user) {
-        setUserEmail(user.email || null)
-        setUserId(user.id)
-      }
-    })
-  }, [])
-
-  const handleCheckout = async (plan: PlanId) => {
-    setLoadingPlan(plan)
-    try {
-      const res = await fetch('/api/stripe/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan, duration: selectedDuration, email: userEmail, user_id: userId }),
-      })
-      const data = await res.json()
-      if (data.url) {
-        window.location.href = data.url
-      } else {
-        alert(data.error || 'Erreur lors de la redirection vers le paiement')
-      }
-    } catch {
-      alert('Erreur de connexion')
+  const handleCheckout = (plan: PlanId) => {
+    const link = getPaymentLink(plan, selectedDuration)
+    if (link) {
+      window.location.href = link
     }
-    setLoadingPlan(null)
   }
 
   const durationInfo = DURATIONS.find(d => d.id === selectedDuration)!
@@ -361,20 +334,10 @@ function PaymentContent() {
             </p>
             <div className="flex items-baseline justify-center gap-1.5 mb-1">
               <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#F0A68C' }}>
-                {formatPrice(PRICES.essential[selectedDuration])}
+                {formatPrice(PRICES.essential.monthly)}
               </span>
               <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
             </div>
-            {showTotalPrice && (
-              <p className="text-xs mb-1" style={{ color: '#F0A68C' }}>
-                soit {formatPrice(TOTAL_PRICES.essential[selectedDuration])} / {durationInfo.months} mois
-              </p>
-            )}
-            {selectedDuration !== 'monthly' && (
-              <p className="text-[10px] mb-2" style={{ color: 'var(--text-muted)' }}>
-                au lieu de {formatPrice(PRICES.essential.monthly)}/mois &mdash; <span style={{ color: '#F0A68C' }}>-{getSavingsPercent('essential', selectedDuration)}%</span>
-              </p>
-            )}
             <p className="text-xs mb-1 font-medium" style={{ color: '#E17055' }}>
               Sans essai gratuit
             </p>
@@ -396,18 +359,10 @@ function PaymentContent() {
 
             <button
               onClick={() => handleCheckout('essential')}
-              disabled={loadingPlan !== null}
-              className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm disabled:opacity-50"
+              className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm"
               style={{ background: 'linear-gradient(135deg, #F0A68C, #D4825E)', color: '#050505' }}
             >
-              {loadingPlan === 'essential' ? (
-                <span className="flex items-center justify-center gap-2">
-                  <span className="w-4 h-4 border-2 border-[#050505] border-t-transparent rounded-full animate-spin" />
-                  Redirection...
-                </span>
-              ) : (
-                `Choisir l'Essentielle — ${formatPrice(PRICES.essential[selectedDuration])}/mois`
-              )}
+              {`Choisir l'Essentielle — ${formatPrice(PRICES.essential.monthly)}/mois`}
             </button>
           </div>
         </Reveal>
@@ -422,25 +377,33 @@ function PaymentContent() {
             <p className="text-xs tracking-[0.25em] uppercase mb-4" style={{ color: '#55EFC4' }}>
               {PLAN_INFO.serenite.name}
             </p>
-            <div className="flex items-baseline justify-center gap-1.5 mb-1">
-              <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#55EFC4' }}>
-                {formatPrice(PRICES.serenite[selectedDuration])}
-              </span>
-              <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
-            </div>
-            {showTotalPrice && (
-              <p className="text-xs mb-1" style={{ color: '#55EFC4' }}>
-                soit {formatPrice(TOTAL_PRICES.serenite[selectedDuration])} / {durationInfo.months} mois
-              </p>
+            {showTotalPrice ? (
+              <>
+                <div className="flex items-baseline justify-center gap-1.5 mb-1">
+                  <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#55EFC4' }}>
+                    {formatPrice(TOTAL_PRICES.serenite[selectedDuration])}
+                  </span>
+                </div>
+                <p className="text-[10px] mb-2 line-through" style={{ color: 'var(--text-muted)' }}>
+                  au lieu de {formatPrice(ORIGINAL_PRICES.serenite[selectedDuration as 'quarterly' | 'semiannual' | 'annual'])}
+                </p>
+                <p className="text-xs mb-1 font-medium" style={{ color: '#55EFC4' }}>
+                  {durationInfo.months} mois &mdash; <span>{durationInfo.discount}</span>
+                </p>
+              </>
+            ) : (
+              <>
+                <div className="flex items-baseline justify-center gap-1.5 mb-1">
+                  <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#55EFC4' }}>
+                    {formatPrice(PRICES.serenite.monthly)}
+                  </span>
+                  <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
+                </div>
+                <p className="text-xs mb-1 font-medium" style={{ color: '#55EFC4' }}>
+                  7 jours d&apos;essai gratuit
+                </p>
+              </>
             )}
-            {selectedDuration !== 'monthly' && (
-              <p className="text-[10px] mb-2" style={{ color: 'var(--text-muted)' }}>
-                au lieu de {formatPrice(PRICES.serenite.monthly)}/mois &mdash; <span style={{ color: '#55EFC4' }}>-{getSavingsPercent('serenite', selectedDuration)}%</span>
-              </p>
-            )}
-            <p className="text-xs mb-1 font-medium" style={{ color: '#55EFC4' }}>
-              7 jours d&apos;essai gratuit
-            </p>
             <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>
               {t('join.no_commitment')}
             </p>
@@ -459,18 +422,13 @@ function PaymentContent() {
 
             <button
               onClick={() => handleCheckout('serenite')}
-              disabled={loadingPlan !== null}
-              className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm disabled:opacity-50"
+              className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm"
               style={{ background: 'linear-gradient(135deg, #55EFC4, #00B894)', color: '#050505' }}
             >
-              {loadingPlan === 'serenite' ? (
-                <span className="flex items-center justify-center gap-2">
-                  <span className="w-4 h-4 border-2 border-[#050505] border-t-transparent rounded-full animate-spin" />
-                  Redirection...
-                </span>
-              ) : (
-                `Essayer Sérénité — 7 jours gratuits`
-              )}
+              {showTotalPrice
+                ? `Sérénité ${durationInfo.months} mois — ${formatPrice(TOTAL_PRICES.serenite[selectedDuration])}`
+                : 'Essayer Sérénité — 7 jours gratuits'
+              }
             </button>
           </div>
         </Reveal>
@@ -485,25 +443,33 @@ function PaymentContent() {
             <p className="text-xs tracking-[0.25em] uppercase mb-4" style={{ color: '#A78BFA' }}>
               {PLAN_INFO.premium.name}
             </p>
-            <div className="flex items-baseline justify-center gap-1.5 mb-1">
-              <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#A78BFA' }}>
-                {formatPrice(PRICES.premium[selectedDuration])}
-              </span>
-              <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
-            </div>
-            {showTotalPrice && (
-              <p className="text-xs mb-1" style={{ color: '#A78BFA' }}>
-                soit {formatPrice(TOTAL_PRICES.premium[selectedDuration])} / {durationInfo.months} mois
-              </p>
+            {showTotalPrice ? (
+              <>
+                <div className="flex items-baseline justify-center gap-1.5 mb-1">
+                  <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#A78BFA' }}>
+                    {formatPrice(TOTAL_PRICES.premium[selectedDuration])}
+                  </span>
+                </div>
+                <p className="text-[10px] mb-2 line-through" style={{ color: 'var(--text-muted)' }}>
+                  au lieu de {formatPrice(ORIGINAL_PRICES.premium[selectedDuration as 'quarterly' | 'semiannual' | 'annual'])}
+                </p>
+                <p className="text-xs mb-1 font-medium" style={{ color: '#A78BFA' }}>
+                  {durationInfo.months} mois &mdash; <span>{durationInfo.discount}</span>
+                </p>
+              </>
+            ) : (
+              <>
+                <div className="flex items-baseline justify-center gap-1.5 mb-1">
+                  <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#A78BFA' }}>
+                    {formatPrice(PRICES.premium.monthly)}
+                  </span>
+                  <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
+                </div>
+                <p className="text-xs mb-1 font-medium" style={{ color: '#A78BFA' }}>
+                  7 jours d&apos;essai gratuit
+                </p>
+              </>
             )}
-            {selectedDuration !== 'monthly' && (
-              <p className="text-[10px] mb-2" style={{ color: 'var(--text-muted)' }}>
-                au lieu de {formatPrice(PRICES.premium.monthly)}/mois &mdash; <span style={{ color: '#A78BFA' }}>-{getSavingsPercent('premium', selectedDuration)}%</span>
-              </p>
-            )}
-            <p className="text-xs mb-1 font-medium" style={{ color: '#A78BFA' }}>
-              7 jours d&apos;essai gratuit
-            </p>
             <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>
               {t('join.no_commitment')}
             </p>
@@ -524,18 +490,13 @@ function PaymentContent() {
 
             <button
               onClick={() => handleCheckout('premium')}
-              disabled={loadingPlan !== null}
-              className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm disabled:opacity-50"
+              className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm"
               style={{ background: 'linear-gradient(135deg, #A78BFA, #7C3AED)', color: '#fff' }}
             >
-              {loadingPlan === 'premium' ? (
-                <span className="flex items-center justify-center gap-2">
-                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Redirection...
-                </span>
-              ) : (
-                `Essayer Premium — 7 jours gratuits`
-              )}
+              {showTotalPrice
+                ? `Premium ${durationInfo.months} mois — ${formatPrice(TOTAL_PRICES.premium[selectedDuration])}`
+                : 'Essayer Premium — 7 jours gratuits'
+              }
             </button>
           </div>
         </Reveal>

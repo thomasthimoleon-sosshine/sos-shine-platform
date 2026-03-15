@@ -14,47 +14,77 @@ export function getStripe(): Stripe | null {
 export type PlanId = 'essential' | 'serenite' | 'premium'
 export type DurationId = 'monthly' | 'quarterly' | 'semiannual' | 'annual'
 
-// Stripe Price IDs — set these in env
+// ─── Stripe Payment Links (direct buy links) ───
+export const PAYMENT_LINKS: Partial<Record<string, string>> = {
+  // Essentielle — mensuel uniquement
+  essential_monthly: 'https://buy.stripe.com/3cIcMXducdRx3wResW5ZC0e',
+
+  // Sérénité
+  serenite_monthly:    'https://buy.stripe.com/3cI5kvai06p51oJbgK5ZC0f',
+  serenite_quarterly:  'https://buy.stripe.com/eVq8wH2PyeVBc3ngB45ZC0h',
+  serenite_semiannual: 'https://buy.stripe.com/6oU5kv61K9Bh6J3doS5ZC0i',
+  serenite_annual:     'https://buy.stripe.com/aFafZ93TC00H6J3esW5ZC0j',
+
+  // Premium
+  premium_monthly:    'https://buy.stripe.com/28EbIT75O8xd8Rb3Oi5ZC0g',
+  premium_quarterly:  'https://buy.stripe.com/bJecMXcq84gXgjDesW5ZC0k',
+  premium_semiannual: 'https://buy.stripe.com/6oU14fcq828P3wRbgK5ZC0l',
+  premium_annual:     'https://buy.stripe.com/dRm3cnbm414LaZj5Wq5ZC0m',
+}
+
+// ─── Stripe Product IDs (pour détection dans le webhook) ───
+export const PRODUCT_IDS: Record<string, { plan: PlanId; duration: DurationId }> = {
+  // Essentielle
+  'prod_U9FSvQJEnIdqJh': { plan: 'essential', duration: 'monthly' },
+
+  // Sérénité
+  'prod_U9FVosDaeyGzYG': { plan: 'serenite', duration: 'monthly' },
+  'prod_U9FvGe0nE2YL1M': { plan: 'serenite', duration: 'quarterly' },
+  'prod_U9Fxv3O06aCI9G': { plan: 'serenite', duration: 'semiannual' },
+  'prod_U9FztZbsXCxagW': { plan: 'serenite', duration: 'annual' },
+
+  // Premium
+  'prod_U9FXlrYKS7xl3A': { plan: 'premium', duration: 'monthly' },
+  'prod_U9G1fXDICPm6KU': { plan: 'premium', duration: 'quarterly' },
+  'prod_U9G320t81v6XsG': { plan: 'premium', duration: 'semiannual' },
+  'prod_U9G4LI1LUcEoYx': { plan: 'premium', duration: 'annual' },
+}
+
+// Stripe Price IDs — set these in env (fallback pour Checkout API)
 export const STRIPE_PRICES: Record<string, string> = {
-  // Essential (Essentielle) — 9,90€/mois
   essential_monthly: process.env.STRIPE_PRICE_ESSENTIAL_MONTHLY || process.env.STRIPE_PRICE_ESSENTIAL || process.env.STRIPE_PRICE_ID || '',
   essential_quarterly: process.env.STRIPE_PRICE_ESSENTIAL_QUARTERLY || '',
   essential_semiannual: process.env.STRIPE_PRICE_ESSENTIAL_SEMIANNUAL || '',
   essential_annual: process.env.STRIPE_PRICE_ESSENTIAL_ANNUAL || '',
-
-  // Sérénité — 49,90€/mois
   serenite_monthly: process.env.STRIPE_PRICE_SERENITE_MONTHLY || '',
   serenite_quarterly: process.env.STRIPE_PRICE_SERENITE_QUARTERLY || '',
   serenite_semiannual: process.env.STRIPE_PRICE_SERENITE_SEMIANNUAL || '',
   serenite_annual: process.env.STRIPE_PRICE_SERENITE_ANNUAL || '',
-
-  // Premium — 99,90€/mois
   premium_monthly: process.env.STRIPE_PRICE_PREMIUM_MONTHLY || process.env.STRIPE_PRICE_PREMIUM || '',
   premium_quarterly: process.env.STRIPE_PRICE_PREMIUM_QUARTERLY || '',
   premium_semiannual: process.env.STRIPE_PRICE_PREMIUM_SEMIANNUAL || '',
   premium_annual: process.env.STRIPE_PRICE_PREMIUM_ANNUAL || '',
 }
 
-// Pricing structure (in euro cents)
-// Discounts: ~10% for 3 months, ~20% for 6 months, ~30% for annual
+// Pricing structure — per-month price (in euro cents)
 export const PRICES = {
   essential: {
     monthly: 990,           // 9,90€/mois
-    quarterly: 890,         // 8,90€/mois (total 26,70€ / 3 mois) — ~10%
-    semiannual: 790,        // 7,90€/mois (total 47,40€ / 6 mois) — ~20%
-    annual: 690,            // 6,90€/mois (total 82,80€ / an) — ~30%
+    quarterly: 990,         // pas de bundle Essential
+    semiannual: 990,
+    annual: 990,
   },
   serenite: {
     monthly: 4990,          // 49,90€/mois
-    quarterly: 4490,        // 44,90€/mois (total 134,70€ / 3 mois) — ~10%
-    semiannual: 3990,       // 39,90€/mois (total 239,40€ / 6 mois) — ~20%
-    annual: 3390,           // 33,90€/mois (total 406,80€ / an) — ~32%
+    quarterly: 4491,        // 44,91€/mois (total 134,73€ / 3 mois) — -10%
+    semiannual: 3992,       // 39,92€/mois (total 239,52€ / 6 mois) — -20%
+    annual: 3493,           // 34,93€/mois (total 419,16€ / 12 mois) — -30%
   },
   premium: {
     monthly: 9990,          // 99,90€/mois
-    quarterly: 8990,        // 89,90€/mois (total 269,70€ / 3 mois) — ~10%
-    semiannual: 7990,       // 79,90€/mois (total 479,40€ / 6 mois) — ~20%
-    annual: 6690,           // 66,90€/mois (total 802,80€ / an) — ~33%
+    quarterly: 9657,        // 96,57€/mois (total 289,70€ / 3 mois) — -10%
+    semiannual: 9657,       // 96,57€/mois (total 579,40€ / 6 mois) — -20%
+    annual: 6993,           // 69,93€/mois (total 839,16€ / 12 mois) — -30%
   },
 } as const
 
@@ -62,21 +92,35 @@ export const PRICES = {
 export const TOTAL_PRICES = {
   essential: {
     monthly: 990,
-    quarterly: 2670,        // 26,70€
-    semiannual: 4740,       // 47,40€
-    annual: 8280,           // 82,80€
+    quarterly: 2970,        // 29,70€ (pas de réduction)
+    semiannual: 5940,       // 59,40€
+    annual: 11880,          // 118,80€
   },
   serenite: {
     monthly: 4990,
-    quarterly: 13470,       // 134,70€
-    semiannual: 23940,      // 239,40€
-    annual: 40680,          // 406,80€
+    quarterly: 13473,       // 134,73€
+    semiannual: 23952,      // 239,52€
+    annual: 41916,          // 419,16€
   },
   premium: {
     monthly: 9990,
-    quarterly: 26970,       // 269,70€
-    semiannual: 47940,      // 479,40€
-    annual: 80280,          // 802,80€
+    quarterly: 28970,       // 289,70€
+    semiannual: 57940,      // 579,40€
+    annual: 83916,          // 839,16€
+  },
+} as const
+
+// Original monthly prices for "au lieu de" display (in euro cents)
+export const ORIGINAL_PRICES = {
+  serenite: {
+    quarterly: 14970,       // 149,70€ (49,90 × 3)
+    semiannual: 29940,      // 299,40€ (49,90 × 6)
+    annual: 59880,          // 598,80€ (49,90 × 12)
+  },
+  premium: {
+    quarterly: 29970,       // 299,70€ (99,90 × 3)
+    semiannual: 59940,      // 599,40€ (99,90 × 6)
+    annual: 119880,         // 1198,80€ (99,90 × 12)
   },
 } as const
 
@@ -110,6 +154,25 @@ export const PLAN_INFO = {
 // Get Stripe price ID for a given plan and duration
 export function getStripePriceId(plan: PlanId, duration: DurationId): string {
   return STRIPE_PRICES[`${plan}_${duration}`] || ''
+}
+
+// Get Stripe Payment Link for a given plan and duration
+export function getPaymentLink(plan: PlanId, duration: DurationId): string {
+  // Essential n'a que le mensuel
+  if (plan === 'essential' && duration !== 'monthly') {
+    return PAYMENT_LINKS['essential_monthly'] || ''
+  }
+  return PAYMENT_LINKS[`${plan}_${duration}`] || ''
+}
+
+// Detect plan & duration from Stripe Product ID
+export function detectPlanFromProductId(productId: string): { plan: PlanId; duration: DurationId } | null {
+  return PRODUCT_IDS[productId] || null
+}
+
+// Check if a plan has multi-month bundles
+export function hasBundles(plan: PlanId): boolean {
+  return plan !== 'essential'
 }
 
 // Coupon ID for waitlist discount (10€/month forever)

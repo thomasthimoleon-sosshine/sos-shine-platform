@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getStripe } from '@/lib/stripe'
+import { getStripe, detectPlanFromProductId } from '@/lib/stripe'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import type Stripe from 'stripe'
 
@@ -120,21 +120,35 @@ async function handleCheckoutComplete(supabase: any, stripe: Stripe, session: St
     items: { data: Array<{ price: { unit_amount: number | null; recurring: { interval: string; interval_count: number } | null } }> }
   }
 
-  // Déterminer le plan : depuis metadata OU depuis le montant Stripe (pour les Payment Links)
+  // Déterminer le plan et la durée :
+  // 1. Depuis metadata (Checkout API)
+  // 2. Depuis le Product ID Stripe (Payment Links)
+  // 3. Fallback : depuis le montant
   let plan = session.metadata?.plan as 'essential' | 'serenite' | 'premium' | undefined
-  if (!plan) {
-    // Détecter le plan depuis le prix Stripe
-    const priceAmount = sub.items?.data?.[0]?.price?.unit_amount || (session as any).amount_total
-    plan = detectPlanFromAmount(priceAmount)
-  }
+  let duration: 'monthly' | 'quarterly' | 'semiannual' | 'annual' =
+    (session.metadata?.duration as 'monthly' | 'quarterly' | 'semiannual' | 'annual') || 'monthly'
 
-  // Déterminer la durée depuis l'intervalle Stripe
-  const interval = sub.items?.data?.[0]?.price?.recurring
-  let duration: 'monthly' | 'quarterly' | 'semiannual' | 'annual' = 'monthly'
-  if (interval) {
-    if (interval.interval === 'month' && interval.interval_count === 3) duration = 'quarterly'
-    else if (interval.interval === 'month' && interval.interval_count === 6) duration = 'semiannual'
-    else if (interval.interval === 'year' || (interval.interval === 'month' && interval.interval_count === 12)) duration = 'annual'
+  if (!plan) {
+    // Essayer de détecter depuis le Product ID (Payment Links)
+    const productId = (sub.items?.data?.[0]?.price as any)?.product as string | undefined
+    const detected = productId ? detectPlanFromProductId(productId) : null
+
+    if (detected) {
+      plan = detected.plan
+      duration = detected.duration
+    } else {
+      // Fallback : détecter depuis le montant
+      const priceAmount = sub.items?.data?.[0]?.price?.unit_amount || (session as any).amount_total
+      plan = detectPlanFromAmount(priceAmount)
+
+      // Déterminer la durée depuis l'intervalle Stripe
+      const interval = sub.items?.data?.[0]?.price?.recurring
+      if (interval) {
+        if (interval.interval === 'month' && interval.interval_count === 3) duration = 'quarterly'
+        else if (interval.interval === 'month' && interval.interval_count === 6) duration = 'semiannual'
+        else if (interval.interval === 'year' || (interval.interval === 'month' && interval.interval_count === 12)) duration = 'annual'
+      }
+    }
   }
 
   // Upsert subscription record

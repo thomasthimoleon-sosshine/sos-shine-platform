@@ -20,6 +20,9 @@ export default function ProfilPage() {
   const [uploadingAvatar, setUploadingAvatar] = useState(false)
   const [uploadingVideo, setUploadingVideo] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
+  const [upgrading, setUpgrading] = useState(false)
+  const [upgradeSuccess, setUpgradeSuccess] = useState<string | null>(null)
+  const [upgradeError, setUpgradeError] = useState<string | null>(null)
   const avatarRef = useRef<HTMLInputElement>(null)
   const videoRef = useRef<HTMLInputElement>(null)
 
@@ -131,6 +134,31 @@ export default function ProfilPage() {
     const supabase = createClient()
     await supabase.auth.signOut()
     router.push('/')
+  }
+
+  async function handleUpgrade(newPlan: 'serenite' | 'premium') {
+    if (!profile || upgrading) return
+    setUpgrading(true)
+    setUpgradeError(null)
+    setUpgradeSuccess(null)
+    try {
+      const res = await fetch('/api/stripe/upgrade', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: profile.id, new_plan: newPlan }),
+      })
+      const data = await res.json()
+      if (res.ok && data.success) {
+        setUpgradeSuccess(data.message)
+        setSubscription(prev => prev ? { ...prev, plan: newPlan } : prev)
+        setProfile(prev => prev ? { ...prev, plan: newPlan } : prev)
+      } else {
+        setUpgradeError(data.error || 'Erreur lors du changement de plan')
+      }
+    } catch {
+      setUpgradeError('Erreur de connexion')
+    }
+    setUpgrading(false)
   }
 
   function formatDate(d: string) {
@@ -338,6 +366,38 @@ export default function ProfilPage() {
                 </p>
               </div>
             )}
+            {/* Upgrade plan */}
+            {(subscription.status === 'active' || subscription.status === 'trialing') && subscription.plan !== 'premium' && (
+              <div className="rounded-xl p-4" style={{ background: 'rgba(116,192,252,0.05)', border: '1px solid rgba(116,192,252,0.12)' }}>
+                <p className="text-xs font-medium mb-3" style={{ color: '#74C0FC' }}>Passer au plan supérieur</p>
+                <div className="flex gap-2">
+                  {subscription.plan === 'essential' && (
+                    <button
+                      onClick={() => handleUpgrade('serenite')}
+                      disabled={upgrading}
+                      className="flex-1 py-2.5 rounded-lg text-xs font-medium cursor-pointer transition-all disabled:opacity-50"
+                      style={{ background: 'rgba(85,239,196,0.12)', color: '#55EFC4', border: '1px solid rgba(85,239,196,0.2)' }}
+                    >
+                      {upgrading ? 'En cours...' : 'Sérénité — 49,90€/mois'}
+                    </button>
+                  )}
+                  <button
+                    onClick={() => handleUpgrade('premium')}
+                    disabled={upgrading}
+                    className="flex-1 py-2.5 rounded-lg text-xs font-medium cursor-pointer transition-all disabled:opacity-50"
+                    style={{ background: 'rgba(116,192,252,0.12)', color: '#74C0FC', border: '1px solid rgba(116,192,252,0.2)' }}
+                  >
+                    {upgrading ? 'En cours...' : 'Premium — 99,90€/mois'}
+                  </button>
+                </div>
+                {upgradeSuccess && (
+                  <p className="text-xs mt-2" style={{ color: '#55EFC4' }}>{upgradeSuccess}</p>
+                )}
+                {upgradeError && (
+                  <p className="text-xs mt-2" style={{ color: '#ef4444' }}>{upgradeError}</p>
+                )}
+              </div>
+            )}
             {/* Manage subscription button */}
             {subscription.stripe_customer_id && (
               <button
@@ -355,7 +415,7 @@ export default function ProfilPage() {
                 className="w-full mt-2 py-3 rounded-xl text-sm font-medium cursor-pointer transition-colors"
                 style={{ background: 'rgba(212,175,55,0.08)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.15)' }}
               >
-                G&eacute;rer mon abonnement
+                Gérer mon abonnement
               </button>
             )}
           </div>

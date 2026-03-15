@@ -219,21 +219,43 @@ async function handlePaymentFailed(supabase: any, invoice: Stripe.Invoice) {
 
   const { data: sub } = await supabase
     .from('subscriptions')
-    .select('user_id')
+    .select('id, user_id, plan, reminder_sent_count')
     .eq('stripe_customer_id', customerId)
     .single()
 
   if (!sub) return
 
+  const now = new Date()
+  const graceEnd = new Date(now)
+  graceEnd.setDate(graceEnd.getDate() + 7) // 7 jours de grâce
+
   await supabase.from('subscriptions').update({
     status: 'past_due',
-    updated_at: new Date().toISOString(),
+    payment_failed_at: now.toISOString(),
+    grace_period_end: graceEnd.toISOString(),
+    reminder_sent_count: 0,
+    updated_at: now.toISOString(),
   }).eq('user_id', sub.user_id)
 
   // Deactivate profile after payment failure
   await supabase.from('profiles').update({
     is_active: false,
   }).eq('id', sub.user_id)
+
+  // Logger l'échec de paiement
+  await supabase.from('subscription_payment_logs').insert({
+    user_id: sub.user_id,
+    subscription_id: sub.id,
+    event_type: 'payment_failed',
+    plan: sub.plan,
+    amount_cents: inv.amount_due || null,
+    stripe_event_id: inv.id,
+    metadata: {
+      invoice_id: inv.id,
+      attempt_count: inv.attempt_count,
+      grace_period_end: graceEnd.toISOString(),
+    },
+  })
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -247,20 +269,40 @@ async function handlePaymentSucceeded(supabase: any, invoice: Stripe.Invoice) {
 
   const { data: sub } = await supabase
     .from('subscriptions')
-    .select('user_id')
+    .select('id, user_id, plan, status')
     .eq('stripe_customer_id', customerId)
     .single()
 
   if (!sub) return
 
+  const wasPastDue = sub.status === 'past_due'
+
   await supabase.from('subscriptions').update({
     status: 'active',
+    payment_failed_at: null,
+    grace_period_end: null,
+    reminder_sent_count: 0,
+    last_reminder_sent_at: null,
     updated_at: new Date().toISOString(),
   }).eq('user_id', sub.user_id)
 
   await supabase.from('profiles').update({
     is_active: true,
   }).eq('id', sub.user_id)
+
+  // Logger le paiement réussi
+  await supabase.from('subscription_payment_logs').insert({
+    user_id: sub.user_id,
+    subscription_id: sub.id,
+    event_type: wasPastDue ? 'access_restored' : 'payment_succeeded',
+    plan: sub.plan,
+    amount_cents: inv.amount_paid || null,
+    stripe_event_id: inv.id,
+    metadata: {
+      invoice_id: inv.id,
+      was_past_due: wasPastDue,
+    },
+  })
 }
 
 function mapStripeStatus(status: string): 'trialing' | 'active' | 'inactive' | 'canceled' | 'past_due' {

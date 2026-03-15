@@ -18,6 +18,7 @@ const adminNav = [
   { href: '/admin/evenements', label: 'Événements', icon: '📅' },
   { href: '/admin/publications', label: 'Publications', icon: '📢' },
   { href: '/admin/membres', label: 'Membres', icon: '👥' },
+  { href: '/admin/abonnements', label: 'Abonnements', icon: '💳' },
   { href: '/admin/bots', label: 'Bots', icon: '🤖' },
   { href: '/admin/crm', label: 'CRM', icon: '📧' },
   { href: '/admin/defis', label: 'Défis', icon: '🏆' },

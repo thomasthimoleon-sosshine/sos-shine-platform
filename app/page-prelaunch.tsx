@@ -354,93 +354,121 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
           )}
         </motion.div>
 
-        {/* Pricing comparison */}
+        {/* Pricing plans */}
         <motion.div
-          className="w-full max-w-2xl mb-10"
+          className="w-full max-w-5xl mb-10"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div
-            className="glass p-8 sm:p-10 text-center relative overflow-hidden"
-            style={{ borderColor: "rgba(212,175,55,0.12)" }}
+          <p
+            className="text-center text-[11px] tracking-[0.35em] uppercase mb-8 font-medium"
+            style={{ color: "var(--text-muted)" }}
           >
+            Nos offres
+          </p>
+
+          {/* Monthly plans */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            {/* Essentiel */}
             <div
-              className="absolute top-0 left-0 right-0 h-px"
-              style={{ background: "linear-gradient(90deg, transparent, rgba(212,175,55,0.3), transparent)" }}
-            />
-
-            <p
-              className="text-[11px] tracking-[0.35em] uppercase mb-2 font-medium"
-              style={{ color: "var(--text-muted)" }}
+              className="glass p-6 sm:p-8 text-center relative overflow-hidden rounded-2xl"
+              style={{ borderColor: "rgba(212,175,55,0.08)" }}
             >
-              {s(settings, 'prelaunch_pricing_label', "Avantage liste d\u2019attente")}
-            </p>
+              <p className="text-[11px] tracking-[0.25em] uppercase font-medium mb-4" style={{ color: "var(--text-muted)" }}>
+                Essentiel
+              </p>
+              <div className="flex items-baseline justify-center gap-1 mb-2">
+                <span className="font-display text-4xl sm:text-5xl font-light" style={{ color: "#D4AF37" }}>
+                  9,90&euro;
+                </span>
+                <span className="text-sm" style={{ color: "var(--text-muted)" }}>/mois</span>
+              </div>
+              <p className="text-xs font-light" style={{ color: "var(--text-secondary)" }}>
+                Sans engagement
+              </p>
+            </div>
 
-            <p className="text-sm mb-6 font-light" style={{ color: "var(--text-secondary)" }}>
-              {s(settings, 'prelaunch_pricing_desc', "Rejoignez maintenant et b\u00e9n\u00e9ficiez d\u2019un tarif pr\u00e9f\u00e9rentiel \u00e0 vie.")}
-            </p>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10 mb-8">
-              {/* Early bird price */}
-              <div className="text-center">
-                <div className="flex items-baseline justify-center gap-1.5">
-                  <span className="font-display text-5xl sm:text-6xl font-light" style={{ color: "#D4AF37" }}>
-                    {s(settings, 'prelaunch_price_early', '19,90')}&euro;
-                  </span>
-                  <span className="text-sm" style={{ color: "var(--text-muted)" }}>
-                    {s(settings, 'prelaunch_price_suffix', '/mois')}
-                  </span>
+            {/* Sérénité */}
+            <div
+              className="glass p-6 sm:p-8 text-center relative overflow-hidden rounded-2xl"
+              style={{ borderColor: "rgba(212,175,55,0.2)" }}
+            >
+              <div
+                className="absolute top-0 left-0 right-0 h-px"
+                style={{ background: "linear-gradient(90deg, transparent, rgba(212,175,55,0.4), transparent)" }}
+              />
+              <span
+                className="absolute top-3 right-3 px-2 py-0.5 rounded-full text-[9px] tracking-wider uppercase font-medium"
+                style={{ background: "rgba(212,175,55,0.12)", color: "#D4AF37", border: "1px solid rgba(212,175,55,0.2)" }}
+              >
+                Populaire
+              </span>
+              <p className="text-[11px] tracking-[0.25em] uppercase font-medium mb-4" style={{ color: "#D4AF37" }}>
+                S&eacute;r&eacute;nit&eacute;
+              </p>
+              <div className="flex items-baseline justify-center gap-1 mb-2">
+                <span className="font-display text-4xl sm:text-5xl font-light" style={{ color: "#D4AF37" }}>
+                  49,90&euro;
+                </span>
+                <span className="text-sm" style={{ color: "var(--text-muted)" }}>/mois</span>
+              </div>
+              <p className="text-xs font-light mb-4" style={{ color: "var(--text-secondary)" }}>
+                Sans engagement
+              </p>
+              <div className="space-y-1.5 text-left">
+                <div className="flex justify-between text-[11px]" style={{ color: "var(--text-secondary)" }}>
+                  <span>3 mois <span style={{ color: "#D4AF37" }}>-10%</span></span>
+                  <span><span className="font-medium" style={{ color: "#D4AF37" }}>134,73&euro;</span> <span className="line-through opacity-50">149,70&euro;</span></span>
                 </div>
-                <span
-                  className="inline-block mt-2 px-3 py-1 rounded-full text-[10px] tracking-[0.2em] uppercase font-medium"
-                  style={{ background: "rgba(212,175,55,0.1)", color: "#D4AF37", border: "1px solid rgba(212,175,55,0.15)" }}
-                >
-                  {s(settings, 'prelaunch_price_early_label', 'Tarif fondateur \u2014 \u00e0 vie')}
-                </span>
-              </div>
-
-              {/* Separator */}
-              <div className="hidden sm:flex flex-col items-center gap-2">
-                <span className="block w-px h-12" style={{ background: "rgba(255,255,255,0.06)" }} />
-                <span className="text-[10px] tracking-wider uppercase" style={{ color: "var(--text-muted)" }}>
-                  {s(settings, 'prelaunch_price_separator', 'au lieu de')}
-                </span>
-                <span className="block w-px h-12" style={{ background: "rgba(255,255,255,0.06)" }} />
-              </div>
-              <div className="sm:hidden">
-                <span className="text-[10px] tracking-wider uppercase" style={{ color: "var(--text-muted)" }}>
-                  {s(settings, 'prelaunch_price_separator', 'au lieu de')}
-                </span>
-              </div>
-
-              {/* Standard price */}
-              <div className="text-center opacity-50">
-                <div className="flex items-baseline justify-center gap-1.5 relative">
-                  <span
-                    className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-px rotate-[-8deg]"
-                    style={{ background: "rgba(255,100,100,0.5)" }}
-                  />
-                  <span className="font-display text-4xl sm:text-5xl font-light" style={{ color: "var(--text-secondary)" }}>
-                    {s(settings, 'prelaunch_price_standard', '29,90')}&euro;
-                  </span>
-                  <span className="text-sm" style={{ color: "var(--text-muted)" }}>
-                    {s(settings, 'prelaunch_price_suffix', '/mois')}
-                  </span>
+                <div className="flex justify-between text-[11px]" style={{ color: "var(--text-secondary)" }}>
+                  <span>6 mois <span style={{ color: "#D4AF37" }}>-20%</span></span>
+                  <span><span className="font-medium" style={{ color: "#D4AF37" }}>239,52&euro;</span> <span className="line-through opacity-50">299,60&euro;</span></span>
                 </div>
-                <p className="mt-2 text-[10px] tracking-wider uppercase" style={{ color: "var(--text-muted)" }}>
-                  {s(settings, 'prelaunch_price_standard_label', 'Tarif standard apr\u00e8s lancement')}
-                </p>
+                <div className="flex justify-between text-[11px]" style={{ color: "var(--text-secondary)" }}>
+                  <span>12 mois <span style={{ color: "#D4AF37" }}>-30%</span></span>
+                  <span><span className="font-medium" style={{ color: "#D4AF37" }}>419,16&euro;</span> <span className="line-through opacity-50">598,80&euro;</span></span>
+                </div>
               </div>
             </div>
 
-            <p className="text-sm font-light mb-1" style={{ color: "var(--text-secondary)" }}>
-              {s(settings, 'prelaunch_no_commitment', 'Sans engagement \u2014 Annulable \u00e0 tout instant')}
-            </p>
-            <p className="text-xs font-light" style={{ color: "var(--text-muted)" }}>
-              {s(settings, 'prelaunch_savings_text', "10\u20ac d\u2019\u00e9conomie/mois, pour toujours.")}
-            </p>
+            {/* Premium */}
+            <div
+              className="glass p-6 sm:p-8 text-center relative overflow-hidden rounded-2xl"
+              style={{ borderColor: "rgba(212,175,55,0.08)" }}
+            >
+              <p className="text-[11px] tracking-[0.25em] uppercase font-medium mb-4" style={{ color: "var(--text-muted)" }}>
+                Premium
+              </p>
+              <div className="flex items-baseline justify-center gap-1 mb-2">
+                <span className="font-display text-4xl sm:text-5xl font-light" style={{ color: "#D4AF37" }}>
+                  99,90&euro;
+                </span>
+                <span className="text-sm" style={{ color: "var(--text-muted)" }}>/mois</span>
+              </div>
+              <p className="text-xs font-light mb-4" style={{ color: "var(--text-secondary)" }}>
+                Sans engagement
+              </p>
+              <div className="space-y-1.5 text-left">
+                <div className="flex justify-between text-[11px]" style={{ color: "var(--text-secondary)" }}>
+                  <span>3 mois <span style={{ color: "#D4AF37" }}>-10%</span></span>
+                  <span><span className="font-medium" style={{ color: "#D4AF37" }}>289,70&euro;</span> <span className="line-through opacity-50">299,70&euro;</span></span>
+                </div>
+                <div className="flex justify-between text-[11px]" style={{ color: "var(--text-secondary)" }}>
+                  <span>6 mois <span style={{ color: "#D4AF37" }}>-20%</span></span>
+                  <span><span className="font-medium" style={{ color: "#D4AF37" }}>579,40&euro;</span> <span className="line-through opacity-50">599,40&euro;</span></span>
+                </div>
+                <div className="flex justify-between text-[11px]" style={{ color: "var(--text-secondary)" }}>
+                  <span>12 mois <span style={{ color: "#D4AF37" }}>-30%</span></span>
+                  <span><span className="font-medium" style={{ color: "#D4AF37" }}>839,16&euro;</span> <span className="line-through opacity-50">1 198,80&euro;</span></span>
+                </div>
+              </div>
+            </div>
           </div>
+
+          <p className="text-center text-sm font-light" style={{ color: "var(--text-secondary)" }}>
+            Sans engagement &mdash; Annulable &agrave; tout instant
+          </p>
         </motion.div>
 
         {/* Waitlist Form */}
@@ -470,7 +498,7 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
                 {s(settings, 'prelaunch_success_title', 'Bienvenue parmi les fondateurs')}
               </div>
               <p className="text-sm font-light leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-                {s(settings, 'prelaunch_success_message', "Votre place est r\u00e9serv\u00e9e. Vous recevrez un email le jour de l\u2019ouverture avec votre acc\u00e8s prioritaire au tarif de 19,90\u20ac/mois \u00e0 vie.")}
+                {s(settings, 'prelaunch_success_message', "Votre place est r\u00e9serv\u00e9e. Vous recevrez un email le jour de l\u2019ouverture avec votre acc\u00e8s prioritaire.")}
               </p>
             </motion.div>
           ) : (
@@ -519,7 +547,7 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
                     {s(settings, 'prelaunch_form_loading', 'Inscription...')}
                   </span>
                 ) : (
-                  s(settings, 'prelaunch_form_button', "Rejoindre la liste d\u2019attente \u2014 19,90\u20ac/mois \u00e0 vie")
+                  s(settings, 'prelaunch_form_button', "Rejoindre la liste d\u2019attente")
                 )}
               </button>
 

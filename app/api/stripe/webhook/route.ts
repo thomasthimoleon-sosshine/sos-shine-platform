@@ -96,7 +96,6 @@ async function handleCheckoutComplete(supabase: any, stripe: Stripe, session: St
   const subscriptionId = session.subscription as string
   const userEmail = session.customer_email || session.metadata?.email
   const userId = session.metadata?.user_id
-  const plan = session.metadata?.plan as 'essential' | 'serenite' | 'premium' || 'essential'
   const hasWaitlistDiscount = session.metadata?.waitlist_discount === 'true'
 
   if (!userEmail && !userId) return
@@ -118,6 +117,24 @@ async function handleCheckoutComplete(supabase: any, stripe: Stripe, session: St
     status: string
     current_period_end: number
     cancel_at_period_end: boolean
+    items: { data: Array<{ price: { unit_amount: number | null; recurring: { interval: string; interval_count: number } | null } }> }
+  }
+
+  // Déterminer le plan : depuis metadata OU depuis le montant Stripe (pour les Payment Links)
+  let plan = session.metadata?.plan as 'essential' | 'serenite' | 'premium' | undefined
+  if (!plan) {
+    // Détecter le plan depuis le prix Stripe
+    const priceAmount = sub.items?.data?.[0]?.price?.unit_amount || (session as any).amount_total
+    plan = detectPlanFromAmount(priceAmount)
+  }
+
+  // Déterminer la durée depuis l'intervalle Stripe
+  const interval = sub.items?.data?.[0]?.price?.recurring
+  let duration: 'monthly' | 'quarterly' | 'semiannual' | 'annual' = 'monthly'
+  if (interval) {
+    if (interval.interval === 'month' && interval.interval_count === 3) duration = 'quarterly'
+    else if (interval.interval === 'month' && interval.interval_count === 6) duration = 'semiannual'
+    else if (interval.interval === 'year' || (interval.interval === 'month' && interval.interval_count === 12)) duration = 'annual'
   }
 
   // Upsert subscription record
@@ -126,10 +143,14 @@ async function handleCheckoutComplete(supabase: any, stripe: Stripe, session: St
     stripe_customer_id: customerId,
     stripe_subscription_id: subscriptionId,
     plan,
+    duration,
     status: mapStripeStatus(sub.status),
     current_period_end: new Date(sub.current_period_end * 1000).toISOString(),
     cancel_at_period_end: sub.cancel_at_period_end,
     waitlist_discount: hasWaitlistDiscount,
+    payment_failed_at: null,
+    grace_period_end: null,
+    reminder_sent_count: 0,
     updated_at: new Date().toISOString(),
   }, { onConflict: 'user_id' })
 
@@ -138,6 +159,33 @@ async function handleCheckoutComplete(supabase: any, stripe: Stripe, session: St
     plan,
     is_active: true,
   }).eq('id', profileId)
+
+  // Logger la création
+  await supabase.from('subscription_payment_logs').insert({
+    user_id: profileId,
+    event_type: 'subscription_created',
+    plan,
+    metadata: {
+      stripe_subscription_id: subscriptionId,
+      duration,
+      amount_total: (session as any).amount_total,
+      via_payment_link: !session.metadata?.plan,
+    },
+  })
+}
+
+// Détecter le plan depuis le montant mensuel en centimes
+function detectPlanFromAmount(amountCents: number | null): 'essential' | 'serenite' | 'premium' {
+  if (!amountCents) return 'essential'
+  // Montants mensuels : Essential ~990, Sérénité ~4990, Premium ~9990
+  // Montants trimestriels : Sérénité ~13473, Premium ~28970
+  // Montants semestriels : Sérénité ~23952, Premium ~57940
+  // Montants annuels : Sérénité ~41916, Premium ~83916
+  if (amountCents >= 50000) return 'premium'    // >= 500€ → Premium (semiannual ou annual)
+  if (amountCents >= 20000) return 'serenite'    // >= 200€ → Sérénité (semiannual ou annual)
+  if (amountCents >= 9000) return 'premium'      // ~99,90€ → Premium mensuel
+  if (amountCents >= 4000) return 'serenite'     // ~49,90€ → Sérénité mensuel
+  return 'essential'                              // ~9,90€ → Essentielle
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

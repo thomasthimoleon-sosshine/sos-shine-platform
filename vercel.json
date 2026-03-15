@@ -1,0 +1,16 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/subscriptions",
+      "schedule": "0 */2 * * *"
+    },
+    {
+      "path": "/api/cron/campaigns",
+      "schedule": "0 */1 * * *"
+    },
+    {
+      "path": "/api/cron/sequences",
+      "schedule": "30 */1 * * *"
+    }
+  ]
+}

@@ -8,6 +8,7 @@ import { useTranslation } from '@/lib/i18n/useTranslation'
 import FileUpload from '@/components/FileUpload'
 import AudioPlayer from '@/components/AudioPlayer'
 import VoiceRecorder from '@/components/VoiceRecorder'
+import ProfileDrawer from '@/components/community/ProfileDrawer'
 
 /* ── Types locaux pour les données remontées par Supabase ── */
 type PostRow = {
@@ -129,6 +130,17 @@ export default function MurPage() {
 
   // Social share
   const [socialShareId, setSocialShareId] = useState<string | null>(null)
+
+  // Profile drawer
+  const [profileDrawerUserId, setProfileDrawerUserId] = useState<string | null>(null)
+
+  // Quick Rayon
+  const [sendingRayon, setSendingRayon] = useState<string | null>(null)
+  const [rayonConnections, setRayonConnections] = useState<Set<string>>(new Set())
+  const [rayonPending, setRayonPending] = useState<Set<string>>(new Set())
+
+  // Bookmarks
+  const [bookmarkedPosts, setBookmarkedPosts] = useState<Set<string>>(new Set())
 
   // Ban status
   const [isBanned, setIsBanned] = useState(false)
@@ -264,6 +276,31 @@ export default function MurPage() {
       })
 
       setPosts(enriched)
+
+      // Load Rayon connections for quick-add feature
+      const { data: connections } = await supabase
+        .from('shine_connections')
+        .select('sender_id, receiver_id, status')
+        .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
+      const connectedSet = new Set<string>()
+      const pendingSet = new Set<string>()
+      for (const c of (connections || [])) {
+        const partnerId = c.sender_id === user.id ? c.receiver_id : c.sender_id
+        if (c.status === 'accepted') connectedSet.add(partnerId)
+        else pendingSet.add(partnerId)
+      }
+      setRayonConnections(connectedSet)
+      setRayonPending(pendingSet)
+
+      // Load bookmarks (table may not exist yet)
+      try {
+        const { data: bookmarks } = await supabase
+          .from('post_bookmarks' as string)
+          .select('post_id')
+          .eq('user_id', user.id) as { data: { post_id: string }[] | null }
+        if (bookmarks) setBookmarkedPosts(new Set(bookmarks.map(b => b.post_id)))
+      } catch { /* table might not exist */ }
+
       setLoading(false)
     } catch (err) {
       console.error('[Mur] Unexpected error:', err)
@@ -274,6 +311,37 @@ export default function MurPage() {
   }, [filterCategory])
 
   useEffect(() => { loadPosts() }, [loadPosts])
+
+  /* ── Quick Rayon request ── */
+  async function sendQuickRayon(targetUserId: string) {
+    if (!currentUserId || sendingRayon || currentUserId === targetUserId) return
+    if (rayonConnections.has(targetUserId) || rayonPending.has(targetUserId)) return
+    setSendingRayon(targetUserId)
+    const supabase = createClient()
+    const { error } = await supabase.from('shine_connections').insert({
+      sender_id: currentUserId,
+      receiver_id: targetUserId,
+      status: 'pending',
+    })
+    if (!error) {
+      setRayonPending(prev => new Set([...prev, targetUserId]))
+    }
+    setSendingRayon(null)
+  }
+
+  /* ── Bookmark toggle ── */
+  async function toggleBookmark(postId: string) {
+    if (!currentUserId) return
+    const supabase = createClient()
+    const isBookmarked = bookmarkedPosts.has(postId)
+    if (isBookmarked) {
+      await (supabase.from('post_bookmarks' as string) as ReturnType<typeof supabase.from>).delete().eq('user_id', currentUserId).eq('post_id', postId)
+      setBookmarkedPosts(prev => { const next = new Set(prev); next.delete(postId); return next })
+    } else {
+      await (supabase.from('post_bookmarks' as string) as ReturnType<typeof supabase.from>).insert({ user_id: currentUserId, post_id: postId } as Record<string, unknown>)
+      setBookmarkedPosts(prev => new Set([...prev, postId]))
+    }
+  }
 
   // Close filter dropdown on outside click
   useEffect(() => {
@@ -862,27 +930,58 @@ export default function MurPage() {
                     </div>
                   </div>
 
-                  {/* Author */}
-                  <Link href={`/dashboard/membre/${post.author_id}`} className="flex items-center gap-2.5 mb-4 hover:opacity-80 transition-opacity">
-                    {post.profiles?.avatar_url ? (
-                      <img src={post.profiles.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
-                    ) : (
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
-                        style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
-                        {post.profiles?.prenom?.charAt(0).toUpperCase() || 'S'}
-                      </div>
-                    )}
-                    <div>
-                      <span className="text-sm font-semibold" style={{ color: post.profiles?.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)' }}>
-                        {post.profiles?.prenom || 'Membre SOS Shine'}
-                      </span>
-                      {post.profiles?.role === 'founder' && (
-                        <span className="text-xs ml-2 px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>
-                          Fondateur
-                        </span>
+                  {/* Author (click opens profile drawer) */}
+                  <div className="flex items-center gap-2.5 mb-4">
+                    <button onClick={() => setProfileDrawerUserId(post.author_id)} className="shrink-0 cursor-pointer hover:opacity-80 transition-opacity">
+                      {post.profiles?.avatar_url ? (
+                        <img src={post.profiles.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
+                      ) : (
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
+                          style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                          {post.profiles?.prenom?.charAt(0).toUpperCase() || 'S'}
+                        </div>
                       )}
+                    </button>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <button onClick={() => setProfileDrawerUserId(post.author_id)}
+                          className="text-sm font-semibold cursor-pointer hover:underline"
+                          style={{ color: post.profiles?.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)' }}>
+                          {post.profiles?.prenom || 'Membre SOS Shine'}
+                        </button>
+                        {post.profiles?.role === 'founder' && (
+                          <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>
+                            Fondateur
+                          </span>
+                        )}
+                        {/* Quick add Rayon button */}
+                        {post.author_id !== currentUserId && !rayonConnections.has(post.author_id) && !rayonPending.has(post.author_id) && (
+                          <button
+                            onClick={() => sendQuickRayon(post.author_id)}
+                            disabled={sendingRayon === post.author_id}
+                            className="w-5 h-5 rounded-full flex items-center justify-center text-xs cursor-pointer transition-all opacity-60 hover:opacity-100"
+                            style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}
+                            title="Envoyer un Rayon"
+                          >
+                            {sendingRayon === post.author_id ? '·' : '+'}
+                          </button>
+                        )}
+                        {rayonPending.has(post.author_id) && (
+                          <span className="text-[9px] px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--gold)' }}>
+                            Envoyé
+                          </span>
+                        )}
+                        {rayonConnections.has(post.author_id) && (
+                          <span title="Rayon connecté">
+                            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+                              style={{ color: '#55EFC4' }}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                            </svg>
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </Link>
+                  </div>
 
                   {/* Content */}
                   {isEditing ? (
@@ -967,6 +1066,15 @@ export default function MurPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
                       </svg>
                       <span>Envoyer</span>
+                    </button>
+
+                    {/* Bookmark */}
+                    <button onClick={() => toggleBookmark(post.id)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
+                      style={{ color: bookmarkedPosts.has(post.id) ? 'var(--gold)' : 'var(--text-muted)' }}>
+                      <svg className="w-4 h-4" fill={bookmarkedPosts.has(post.id) ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
+                      </svg>
                     </button>
 
                     {/* Share Social */}
@@ -1146,6 +1254,13 @@ export default function MurPage() {
             </div>
           </div>
         </div>
+      )}
+      {/* ── Profile Drawer ── */}
+      {profileDrawerUserId && (
+        <ProfileDrawer
+          userId={profileDrawerUserId}
+          onClose={() => setProfileDrawerUserId(null)}
+        />
       )}
     </div>
   )

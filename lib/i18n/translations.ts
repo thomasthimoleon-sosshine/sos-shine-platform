@@ -8,6 +8,7 @@ export const translations: Record<string, string> = {
   'nav.shine_shorts': 'Shine Shorts',
   'nav.shine_audible': 'Shine Audible',
   'nav.shine_librairie': 'Shine Librairie',
+  'nav.community': 'Communauté',
   'nav.chat': 'Chat Général',
   'nav.messages': 'Messages',
   'nav.wall': 'Mur',

@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import type { Profile } from '@/types/database'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 import { getNextRotatingQuote, type Quote } from '@/lib/quotes'
+import { greetingsData, GREETINGS_PER_SLOT, type TimeSlot } from '@/data/greetingsData'
 import AudioPlayer from '@/components/AudioPlayer'
 import XPBadge from '@/components/XPBadge'
 
@@ -596,6 +597,14 @@ function FeedWidget() {
   )
 }
 
+function getTimeSlot(): TimeSlot {
+  const hour = new Date().getHours()
+  if (hour < 5) return 'night'
+  if (hour < 12) return 'morning'
+  if (hour < 18) return 'afternoon'
+  return 'evening'
+}
+
 export default function DashboardHome() {
   const { t } = useTranslation()
   const [profile, setProfile] = useState<Profile | null>(null)
@@ -605,25 +614,35 @@ export default function DashboardHome() {
 
   useEffect(() => {
     setQuote(getNextRotatingQuote())
-    const hour = new Date().getHours()
-    if (hour < 5) setGreeting('dashboard.night')
-    else if (hour < 12) setGreeting('dashboard.morning')
-    else if (hour < 18) setGreeting('dashboard.afternoon')
-    else setGreeting('dashboard.evening')
 
     const supabase = createClient()
+    const currentSlot = getTimeSlot()
+
     async function loadProfile() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
       const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single()
       if (data) {
         setProfile(data as Profile)
+
+        // Rotating greeting logic
+        const progress = (data as Profile).greetings_progress || { night: 0, morning: 0, afternoon: 0, evening: 0 }
+        const currentIndex = progress[currentSlot] ?? 0
+        const message = greetingsData[currentSlot][currentIndex % GREETINGS_PER_SLOT]
+        setGreeting(message)
+
+        // Increment index for next visit (async, non-blocking)
+        const nextIndex = (currentIndex + 1) % GREETINGS_PER_SLOT
+        const updatedProgress = { ...progress, [currentSlot]: nextIndex }
+        supabase.from('profiles').update({ greetings_progress: updatedProgress }).eq('id', user.id).then()
       } else {
         setProfile({
           id: user.id, prenom: user.user_metadata?.prenom || 'Membre',
           email: user.email || '', role: 'member', avatar_url: null, plan: null, created_at: user.created_at,
           pseudo: null, bio: null, video_url: null, is_bot: false,
         })
+        // First visit: show first greeting for current slot
+        setGreeting(greetingsData[currentSlot][0])
       }
     }
     async function loadSettings() {
@@ -654,11 +673,8 @@ export default function DashboardHome() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
-        <p className="text-[13px] font-medium tracking-wide uppercase mb-2" style={{ color: 'var(--text-muted)' }}>
-          {greeting === 'dashboard.night' ? (siteSettings.dash_greeting_night || 'Insomnie ? Qu\'est-ce qui te tracasse')
-            : greeting === 'dashboard.morning' ? (siteSettings.dash_greeting_morning || t('dashboard.morning'))
-            : greeting === 'dashboard.afternoon' ? (siteSettings.dash_greeting_afternoon || t('dashboard.afternoon'))
-            : (siteSettings.dash_greeting_evening || t('dashboard.evening'))}
+        <p className="text-[13px] font-medium tracking-wide mb-2" style={{ color: 'var(--text-muted)' }}>
+          {greeting}
         </p>
         <div className="flex items-center gap-3 flex-wrap">
           <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight" style={{ color: 'var(--text-primary)' }}>

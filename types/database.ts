@@ -9,6 +9,7 @@ export type Profile = {
   bio: string | null
   video_url: string | null
   plan: 'essential' | 'serenite' | 'premium' | null
+  greetings_progress?: { night: number; morning: number; afternoon: number; evening: number }
   is_bot?: boolean
   is_active?: boolean
   publish_banned_until?: string | null

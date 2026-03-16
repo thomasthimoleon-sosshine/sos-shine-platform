@@ -15,6 +15,7 @@ const adminNav = [
   { href: '/admin/shine-tv', label: 'Shine TV', icon: '🎬' },
   { href: '/admin/shine-audible', label: 'Shine Audible', icon: '🎧' },
   { href: '/admin/shine-librairie', label: 'Shine Librairie', icon: '📚' },
+  { href: '/admin/shine-shorts', label: 'Shine Shorts', icon: '📱' },
   { href: '/admin/evenements', label: 'Événements', icon: '📅' },
   { href: '/admin/publications', label: 'Publications', icon: '📢' },
   { href: '/admin/membres', label: 'Membres', icon: '👥' },

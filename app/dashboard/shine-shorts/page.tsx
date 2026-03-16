@@ -202,13 +202,53 @@ function ShortRow({ title, icon, shorts, onSelect }: {
   )
 }
 
-// ── Video Player Modal ──
+type Review = {
+  id: string
+  author: string
+  avatar: string
+  rating: number
+  text: string
+  date: string
+}
+
+// ── Video Detail Modal ──
 function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate }: {
   short: ShineShort
   onClose: () => void
   onToggleFavorite: (id: string) => void
   onRate: (id: string, r: number) => void
 }) {
+  const [tab, setTab] = useState<'overview' | 'reviews'>('overview')
+  const [newReview, setNewReview] = useState('')
+  const [newRating, setNewRating] = useState(0)
+  const [reviews, setReviews] = useState<Review[]>([])
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [liked, setLiked] = useState(false)
+  const [likesCount, setLikesCount] = useState(0)
+
+  const handleSubmitReview = () => {
+    if (!newReview.trim() || newRating === 0) return
+    setIsSubmitting(true)
+    setTimeout(() => {
+      setReviews(prev => [{
+        id: `r-new-${Date.now()}`,
+        author: 'Vous',
+        avatar: '',
+        rating: newRating,
+        text: newReview,
+        date: 'À l\'instant',
+      }, ...prev])
+      setNewReview('')
+      setNewRating(0)
+      setIsSubmitting(false)
+    }, 500)
+  }
+
+  const handleLike = () => {
+    setLiked(prev => !prev)
+    setLikesCount(prev => liked ? prev - 1 : prev + 1)
+  }
+
   useEffect(() => {
     document.body.style.overflow = 'hidden'
     const handleKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
@@ -221,32 +261,32 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate }: {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] flex items-center justify-center"
-      style={{ background: 'rgba(0,0,0,0.92)' }}
+      className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto py-8 px-4"
+      style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)' }}
       onClick={onClose}
     >
       <motion.div
-        initial={{ scale: 0.92, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.92, opacity: 0 }}
+        initial={{ opacity: 0, y: 40, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 40, scale: 0.95 }}
         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-        className="relative w-full max-w-sm mx-4 overflow-hidden rounded-2xl"
+        className="w-full max-w-lg rounded-2xl overflow-hidden relative"
         style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 z-20 w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-colors"
+          className="absolute top-3 right-3 z-20 w-9 h-9 rounded-full flex items-center justify-center cursor-pointer transition-colors hover:bg-white/20"
           style={{ background: 'rgba(0,0,0,0.6)', color: '#fff' }}
         >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
 
         {/* Video */}
-        <div className="relative aspect-[9/16] bg-black">
+        <div className="relative aspect-video bg-black">
           {short.videoUrl ? (
             <video
               src={short.videoUrl}
@@ -257,37 +297,214 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate }: {
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Vidéo bientôt disponible</p>
+              <div className="w-20 h-20 rounded-full flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110"
+                style={{ background: 'rgba(162,155,254,0.9)', color: '#fff' }}>
+                <svg className="w-10 h-10 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+              </div>
             </div>
           )}
         </div>
 
-        {/* Info */}
-        <div className="p-4 space-y-3">
-          <h2 className="font-display text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
-            {short.title}
-          </h2>
+        {/* Content */}
+        <div className="p-5 sm:p-6">
+          {/* Title + Actions */}
+          <div className="flex items-start justify-between gap-4 flex-wrap mb-3">
+            <div className="flex-1 min-w-0">
+              <h2 className="font-display text-xl sm:text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+                {short.title}
+              </h2>
+              <div className="flex items-center gap-3 mt-1">
+                <span className="text-[13px]" style={{ color: 'var(--text-muted)' }}>{short.duration}</span>
+                <span className="px-2 py-0.5 rounded text-[11px] font-medium"
+                  style={{ background: 'rgba(162,155,254,0.12)', color: '#A29BFE' }}>
+                  Short
+                </span>
+              </div>
+            </div>
+
+            {/* Favorite + Like buttons */}
+            <div className="flex items-center gap-2">
+              {/* Like button */}
+              <button
+                onClick={handleLike}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-full cursor-pointer transition-all duration-200 hover:scale-105"
+                style={{
+                  background: liked ? 'rgba(162,155,254,0.15)' : 'rgba(255,255,255,0.06)',
+                  border: `1px solid ${liked ? 'rgba(162,155,254,0.3)' : 'rgba(255,255,255,0.1)'}`,
+                  color: liked ? '#A29BFE' : 'var(--text-muted)',
+                }}
+              >
+                <svg className="w-4.5 h-4.5" fill={liked ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6.633 10.5c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 012.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 00.322-1.672V3.382a.75.75 0 01.863-.73 3.005 3.005 0 012.637 2.98v.5a.75.75 0 01-.75.75H18a2.25 2.25 0 00-2.25 2.25c0 .414.336.75.75.75h2.25a2.25 2.25 0 012.25 2.25c0 .647-.274 1.23-.711 1.64a2.252 2.252 0 01-.711 3.61 2.25 2.25 0 01-2.578 2.5H9.75a2.25 2.25 0 01-2.25-2.25v-5.379c0-.414-.168-.789-.44-1.06a1.5 1.5 0 00-1.06-.44h-.467c-1.05 0-1.903-.856-1.903-1.912v-.351a1.912 1.912 0 011.903-1.912z" />
+                </svg>
+                <span className="text-[12px] font-semibold">{likesCount}</span>
+              </button>
+              {/* Favorite button */}
+              <button
+                onClick={() => onToggleFavorite(short.id)}
+                className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110"
+                style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)' }}
+              >
+                <svg className="w-5 h-5" fill={short.isFavorite ? '#A29BFE' : 'none'} viewBox="0 0 24 24"
+                  stroke={short.isFavorite ? '#A29BFE' : 'white'} strokeWidth={1.5}>
+                  <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* Description */}
           {short.description && (
-            <p className="text-[13px] leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+            <p className="text-[14px] leading-relaxed mb-4" style={{ color: 'var(--text-secondary)' }}>
               {short.description}
             </p>
           )}
 
-          <div className="flex items-center gap-4 pt-1">
-            <button
-              onClick={() => onToggleFavorite(short.id)}
-              className="flex items-center gap-1.5 text-[13px] font-medium cursor-pointer transition-colors"
-              style={{ color: short.isFavorite ? '#A29BFE' : 'var(--text-muted)' }}
-            >
-              <svg className="w-5 h-5" fill={short.isFavorite ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-              </svg>
-              {short.isFavorite ? 'Favori' : 'Ajouter'}
-            </button>
-            <div className="flex items-center gap-2">
-              <StarRating rating={short.userRating || Math.round(short.rating)} size="sm" interactive onRate={(r) => onRate(short.id, r)} />
-            </div>
+          {/* Your rating */}
+          <div className="glass p-4 rounded-xl mb-5 flex items-center gap-4 flex-wrap"
+            style={{ borderColor: 'rgba(162,155,254,0.1)' }}>
+            <span className="text-[13px] font-medium" style={{ color: 'var(--text-muted)' }}>Votre note :</span>
+            <StarRating
+              rating={short.userRating}
+              size="lg"
+              interactive
+              onRate={(r) => onRate(short.id, r)}
+            />
+            {short.userRating > 0 && (
+              <span className="text-[13px] font-semibold" style={{ color: '#A29BFE' }}>
+                {short.userRating}/5
+              </span>
+            )}
           </div>
+
+          {/* Tabs */}
+          <div className="flex gap-1 mb-5 p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.04)' }}>
+            <button
+              onClick={() => setTab('overview')}
+              className="flex-1 py-2.5 rounded-lg text-[13px] font-medium cursor-pointer transition-all duration-200"
+              style={{
+                background: tab === 'overview' ? 'rgba(162,155,254,0.12)' : 'transparent',
+                color: tab === 'overview' ? '#A29BFE' : 'var(--text-muted)',
+              }}
+            >
+              Aperçu
+            </button>
+            <button
+              onClick={() => setTab('reviews')}
+              className="flex-1 py-2.5 rounded-lg text-[13px] font-medium cursor-pointer transition-all duration-200"
+              style={{
+                background: tab === 'reviews' ? 'rgba(162,155,254,0.12)' : 'transparent',
+                color: tab === 'reviews' ? '#A29BFE' : 'var(--text-muted)',
+              }}
+            >
+              Avis ({reviews.length})
+            </button>
+          </div>
+
+          <AnimatePresence mode="wait">
+            {tab === 'overview' ? (
+              <motion.div key="overview" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }}>
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="glass p-4 rounded-xl text-center">
+                    <div className="text-xl font-display font-semibold" style={{ color: '#A29BFE' }}>
+                      {short.rating.toFixed(1)}
+                    </div>
+                    <div className="flex justify-center mt-1">
+                      <StarRating rating={Math.round(short.rating)} size="sm" />
+                    </div>
+                    <p className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Note moyenne</p>
+                  </div>
+                  <div className="glass p-4 rounded-xl text-center">
+                    <div className="text-xl font-display font-semibold" style={{ color: '#A29BFE' }}>
+                      {likesCount}
+                    </div>
+                    <p className="text-[10px] mt-2" style={{ color: 'var(--text-muted)' }}>J&apos;aime</p>
+                  </div>
+                  <div className="glass p-4 rounded-xl text-center">
+                    <div className="text-xl font-display font-semibold" style={{ color: '#A29BFE' }}>
+                      {reviews.length}
+                    </div>
+                    <p className="text-[10px] mt-2" style={{ color: 'var(--text-muted)' }}>Commentaires</p>
+                  </div>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div key="reviews" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }}>
+                {/* Write review */}
+                <div className="glass p-4 rounded-xl mb-4" style={{ borderColor: 'rgba(162,155,254,0.1)' }}>
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="text-[13px] font-medium" style={{ color: 'var(--text-secondary)' }}>Votre avis :</span>
+                    <StarRating rating={newRating} size="md" interactive onRate={setNewRating} />
+                  </div>
+                  <textarea
+                    value={newReview}
+                    onChange={(e) => setNewReview(e.target.value)}
+                    placeholder="Partagez votre avis sur ce short..."
+                    className="w-full rounded-xl p-3 text-[13px] resize-none outline-none transition-all duration-200"
+                    style={{
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid var(--dark-border)',
+                      color: 'var(--text-primary)',
+                      minHeight: 80,
+                    }}
+                    onFocus={(e) => e.target.style.borderColor = 'rgba(162,155,254,0.4)'}
+                    onBlur={(e) => e.target.style.borderColor = 'var(--dark-border)'}
+                  />
+                  <div className="flex justify-end mt-2">
+                    <button
+                      onClick={handleSubmitReview}
+                      disabled={!newReview.trim() || newRating === 0 || isSubmitting}
+                      className="px-5 py-2 rounded-xl text-[13px] font-semibold cursor-pointer transition-all duration-200 hover:scale-105 disabled:opacity-40 disabled:hover:scale-100"
+                      style={{ background: '#A29BFE', color: '#fff' }}
+                    >
+                      {isSubmitting ? 'Envoi...' : 'Publier'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Reviews list */}
+                {reviews.length === 0 ? (
+                  <div className="text-center py-6">
+                    <p className="text-3xl mb-2">💬</p>
+                    <p className="text-[13px]" style={{ color: 'var(--text-muted)' }}>
+                      Aucun avis pour le moment. Soyez le premier !
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {reviews.map((review, idx) => (
+                      <motion.div
+                        key={review.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: idx * 0.05 }}
+                        className="glass p-4 rounded-xl"
+                      >
+                        <div className="flex items-center gap-3 mb-2">
+                          <div
+                            className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
+                            style={{ background: 'rgba(162,155,254,0.12)', color: '#A29BFE' }}
+                          >
+                            {review.author.charAt(0)}
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <span className="text-[13px] font-medium" style={{ color: 'var(--text-primary)' }}>{review.author}</span>
+                              <StarRating rating={review.rating} size="sm" />
+                            </div>
+                            <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{review.date}</span>
+                          </div>
+                        </div>
+                        <p className="text-[13px] leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                          {review.text}
+                        </p>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </motion.div>
     </motion.div>

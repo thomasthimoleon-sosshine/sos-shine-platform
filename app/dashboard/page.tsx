@@ -93,6 +93,188 @@ function ParcoursWidget({ siteSettings }: { siteSettings: Record<string, string>
   )
 }
 
+function VedettesWidget() {
+  const [tvVideos, setTvVideos] = useState<Array<{ id: string; title: string; thumbnail_url: string | null; category: string; duration_minutes: number | null }>>([])
+  const [audios, setAudios] = useState<Array<{ id: string; title: string; cover_url: string | null; narrator: string | null; category: string }>>([])
+  const [books, setBooks] = useState<Array<{ id: string; title: string; cover_url: string | null; author: string | null; category: string }>>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function loadVedettes() {
+      const supabase = createClient()
+      const [tvRes, audioRes, bookRes] = await Promise.all([
+        supabase.from('shine_tv_videos').select('id, title, thumbnail_url, category, duration_minutes').eq('is_published', true).order('created_at', { ascending: false }).limit(4),
+        supabase.from('shine_audible_tracks').select('id, title, cover_url, narrator, category').eq('is_published', true).order('created_at', { ascending: false }).limit(4),
+        supabase.from('shine_library_books').select('id, title, cover_url, author, category').eq('is_published', true).order('created_at', { ascending: false }).limit(4),
+      ])
+      setTvVideos(tvRes.data || [])
+      setAudios(audioRes.data || [])
+      setBooks(bookRes.data || [])
+      setLoading(false)
+    }
+    loadVedettes()
+  }, [])
+
+  const sections = [
+    {
+      title: 'Shine TV',
+      icon: (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125M3.375 19.5h1.5C5.496 19.5 6 18.996 6 18.375m-2.625 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-1.5A1.125 1.125 0 0118 18.375M20.625 4.5H3.375m17.25 0c.621 0 1.125.504 1.125 1.125M20.625 4.5h-1.5C18.504 4.5 18 5.004 18 5.625m3.75 0v1.5c0 .621-.504 1.125-1.125 1.125M3.375 4.5c-.621 0-1.125.504-1.125 1.125M3.375 4.5h1.5C5.496 4.5 6 5.004 6 5.625m-3.75 0v1.5c0 .621.504 1.125 1.125 1.125m0 0h1.5m-1.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m1.5-3.75C5.496 8.25 6 7.746 6 7.125v-1.5M4.875 8.25C5.496 8.25 6 8.754 6 9.375v1.5m0-5.25v5.25m0-5.25C6 5.004 6.504 4.5 7.125 4.5h9.75c.621 0 1.125.504 1.125 1.125m1.125 2.625h1.5m-1.5 0A1.125 1.125 0 0118 7.125v-1.5m1.125 2.625c-.621 0-1.125.504-1.125 1.125v1.5m2.625-2.625c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125M18 5.625v5.25M7.125 12h9.75m-9.75 0A1.125 1.125 0 016 10.875M7.125 12C6.504 12 6 12.504 6 13.125m0-2.25C6 11.496 5.496 12 4.875 12M18 10.875c0 .621-.504 1.125-1.125 1.125M18 10.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125m-12 5.25v-5.25m0 5.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125m-12 0v-1.5c0-.621-.504-1.125-1.125-1.125M18 18.375v-5.25m0 5.25v-1.5c0-.621.504-1.125 1.125-1.125M18 13.125v1.5c0 .621.504 1.125 1.125 1.125M18 13.125c0-.621.504-1.125 1.125-1.125M6 13.125v1.5c0 .621-.504 1.125-1.125 1.125M6 13.125C6 12.504 5.496 12 4.875 12m-1.5 0h1.5m-1.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125M19.125 12h1.5m0 0c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h1.5m14.25 0h1.5" />
+        </svg>
+      ),
+      accent: '#E17055',
+      href: '/dashboard/shine-tv',
+      items: tvVideos.map(v => ({
+        id: v.id,
+        title: v.title,
+        image: v.thumbnail_url,
+        subtitle: v.category,
+      })),
+    },
+    {
+      title: 'Shine Audible',
+      icon: (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
+        </svg>
+      ),
+      accent: '#74C0FC',
+      href: '/dashboard/shine-audible',
+      items: audios.map(a => ({
+        id: a.id,
+        title: a.title,
+        image: a.cover_url,
+        subtitle: a.narrator || a.category,
+      })),
+    },
+    {
+      title: 'Shine Librairie',
+      icon: (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+        </svg>
+      ),
+      accent: '#55EFC4',
+      href: '/dashboard/shine-librairie',
+      items: books.map(b => ({
+        id: b.id,
+        title: b.title,
+        image: b.cover_url,
+        subtitle: b.author || 'SOS Shine',
+      })),
+    },
+  ]
+
+  if (loading) {
+    return (
+      <div>
+        <h2 className="text-[11px] font-semibold uppercase tracking-widest mb-4" style={{ color: 'var(--text-muted)' }}>
+          Vedettes du moment
+        </h2>
+        <div className="flex justify-center py-8">
+          <div className="w-6 h-6 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      <h2 className="text-[11px] font-semibold uppercase tracking-widest mb-6" style={{ color: 'var(--text-muted)' }}>
+        Vedettes du moment
+      </h2>
+      <div className="space-y-8">
+        {sections.map((section) => (
+          <div key={section.title}>
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <div
+                  className="w-8 h-8 rounded-lg flex items-center justify-center"
+                  style={{ background: `${section.accent}15`, color: section.accent }}
+                >
+                  {section.icon}
+                </div>
+                <h3 className="font-display font-semibold text-[16px]" style={{ color: section.accent }}>
+                  {section.title}
+                </h3>
+              </div>
+              <Link
+                href={section.href}
+                className="text-[12px] font-medium flex items-center gap-1 transition-colors hover:opacity-80"
+                style={{ color: section.accent }}
+              >
+                Voir tout
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+              </Link>
+            </div>
+
+            {section.items.length === 0 ? (
+              <div className="glass p-6 text-center">
+                <p className="text-[13px]" style={{ color: 'var(--text-muted)' }}>Aucun contenu pour le moment</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {section.items.map((item, i) => (
+                  <motion.div
+                    key={item.id}
+                    custom={i}
+                    initial="hidden"
+                    animate="visible"
+                    variants={fadeUp}
+                  >
+                    <Link
+                      href={section.href}
+                      className="glass glass-hover group block overflow-hidden transition-all duration-300"
+                      style={{ borderColor: `${section.accent}10` }}
+                    >
+                      {/* Thumbnail / Cover */}
+                      <div className="relative aspect-[3/4] overflow-hidden bg-black/20">
+                        {item.image ? (
+                          <img
+                            src={item.image}
+                            alt={item.title}
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center" style={{ background: `${section.accent}08` }}>
+                            <div style={{ color: section.accent, opacity: 0.3 }}>{section.icon}</div>
+                          </div>
+                        )}
+                        {/* Hover overlay */}
+                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
+                          style={{ background: `${section.accent}20` }}>
+                          <div className="w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md"
+                            style={{ background: 'rgba(0,0,0,0.5)' }}>
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" style={{ color: '#fff' }}>
+                              <path d="M8 5v14l11-7z" />
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+                      {/* Info */}
+                      <div className="p-3">
+                        <h4 className="font-semibold text-[13px] leading-tight truncate" style={{ color: 'var(--text-primary)' }}>
+                          {item.title}
+                        </h4>
+                        <p className="text-[11px] mt-1 truncate" style={{ color: 'var(--text-muted)' }}>
+                          {item.subtitle}
+                        </p>
+                      </div>
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function PendingRayonsWidget() {
   const [pending, setPending] = useState<Array<{ id: string; sender_id: string; created_at: string }>>([])
   const [profiles, setProfiles] = useState<Record<string, { id: string; prenom: string; pseudo: string | null; avatar_url: string | null }>>({})
@@ -439,57 +621,6 @@ export default function DashboardHome() {
     loadSettings()
   }, [])
 
-  const quickAccess = [
-    {
-      href: '/dashboard/encyclopedie',
-      title: siteSettings.dash_quick1_title || t('nav.encyclopedia'),
-      description: siteSettings.dash_quick1_desc || t('quick.encyclopedia_desc'),
-      icon: (
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-        </svg>
-      ),
-      accent: '#D4AF37',
-      span: 'sm:col-span-2',
-    },
-    {
-      href: '/dashboard/chat',
-      title: siteSettings.dash_quick2_title || t('nav.chat'),
-      description: siteSettings.dash_quick2_desc || t('quick.chat_desc'),
-      icon: (
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
-        </svg>
-      ),
-      accent: '#55EFC4',
-      span: '',
-    },
-    {
-      href: '/dashboard/mur',
-      title: siteSettings.dash_quick3_title || t('nav.wall'),
-      description: siteSettings.dash_quick3_desc || t('quick.wall_desc'),
-      icon: (
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z" />
-        </svg>
-      ),
-      accent: '#74C0FC',
-      span: '',
-    },
-    {
-      href: '/dashboard/evenements',
-      title: siteSettings.dash_quick4_title || t('nav.events'),
-      description: siteSettings.dash_quick4_desc || t('quick.events_desc'),
-      icon: (
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
-        </svg>
-      ),
-      accent: '#E17055',
-      span: 'sm:col-span-2',
-    },
-  ]
-
   const steps = [
     { num: '01', title: siteSettings.step1_title || t('steps.understand'), desc: siteSettings.step1_desc || t('steps.understand_desc'), accent: siteSettings.step1_color || '#55EFC4' },
     { num: '02', title: siteSettings.step2_title || t('steps.release'), desc: siteSettings.step2_desc || t('steps.release_desc'), accent: siteSettings.step2_color || '#74C0FC' },
@@ -545,54 +676,8 @@ export default function DashboardHome() {
         </p>
       </motion.div>
 
-      {/* ── Bento Grid — Accès rapide ── */}
-      <div>
-        <h2 className="text-[11px] font-semibold uppercase tracking-widest mb-4" style={{ color: 'var(--text-muted)' }}>
-          {siteSettings.dash_quick_title || t('dashboard.quick_access')}
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
-          {quickAccess.map((item, i) => (
-            <motion.div
-              key={item.href}
-              custom={i}
-              initial="hidden"
-              animate="visible"
-              variants={fadeUp}
-              className={item.span}
-            >
-              <Link
-                href={item.href}
-                className="glass glass-hover group block h-full p-5 sm:p-6 transition-all duration-300"
-                style={{ borderColor: `${item.accent}10` }}
-              >
-                {/* Icon pill */}
-                <div
-                  className="w-9 h-9 rounded-xl flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110"
-                  style={{ background: `${item.accent}12`, color: item.accent }}
-                >
-                  {item.icon}
-                </div>
-                <h3 className="font-semibold text-[15px] mb-1 transition-colors duration-200" style={{ color: 'var(--text-primary)' }}>
-                  {item.title}
-                </h3>
-                <p className="text-[13px] leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                  {item.description}
-                </p>
-                {/* Arrow indicator */}
-                <div
-                  className="mt-4 flex items-center gap-1.5 text-[12px] font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-0 group-hover:translate-x-1"
-                  style={{ color: item.accent }}
-                >
-                  {siteSettings.dash_explore_label || t('encyclopedia.explore')}
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                  </svg>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
-      </div>
+      {/* ── Vedettes du moment ── */}
+      <VedettesWidget />
 
       {/* ── Hero image (optional) ── */}
       {siteSettings.dash_hero_image && (

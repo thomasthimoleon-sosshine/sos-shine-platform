@@ -463,6 +463,46 @@ export type UserGoal = {
 }
 
 // ── Shine TV Videos ──
+// ── Shine Shorts ──
+export type ShineShort = {
+  id: string
+  title: string
+  description: string | null
+  thumbnail_url: string | null
+  video_url: string | null
+  category: string
+  duration_seconds: number
+  is_published: boolean
+  created_at: string
+  updated_at: string
+}
+
+export type ShineShortFavorite = {
+  id: string
+  user_id: string
+  short_id: string
+  created_at: string
+}
+
+export type ShineShortRating = {
+  id: string
+  user_id: string
+  short_id: string
+  rating: number
+  created_at: string
+  updated_at: string
+}
+
+export type ShineShortReview = {
+  id: string
+  user_id: string
+  short_id: string
+  content: string
+  rating: number
+  created_at: string
+  updated_at: string
+}
+
 export type ShineTvVideo = {
   id: string
   title: string
@@ -704,6 +744,10 @@ export type Database = {
       pinned_posts: Table<PinnedPost>
       onboarding_responses: Table<OnboardingResponse>
       user_goals: Table<UserGoal>
+      shine_shorts: Table<ShineShort>
+      shine_shorts_favorites: Table<ShineShortFavorite>
+      shine_shorts_ratings: Table<ShineShortRating>
+      shine_shorts_reviews: Table<ShineShortReview>
       shine_tv_videos: Table<ShineTvVideo>
       shine_tv_favorites: Table<ShineTvFavorite>
       shine_tv_ratings: Table<ShineTvRating>

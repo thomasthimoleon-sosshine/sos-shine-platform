@@ -95,6 +95,7 @@ function ParcoursWidget({ siteSettings }: { siteSettings: Record<string, string>
 
 function VedettesWidget() {
   const [tvVideos, setTvVideos] = useState<Array<{ id: string; title: string; thumbnail_url: string | null; category: string; duration_minutes: number | null }>>([])
+  const [shortsVedettes, setShortsVedettes] = useState<Array<{ id: string; title: string; thumbnail_url: string | null; category: string }>>([])
   const [audios, setAudios] = useState<Array<{ id: string; title: string; cover_url: string | null; narrator: string | null; category: string }>>([])
   const [books, setBooks] = useState<Array<{ id: string; title: string; cover_url: string | null; author: string | null; category: string }>>([])
   const [loading, setLoading] = useState(true)
@@ -102,12 +103,14 @@ function VedettesWidget() {
   useEffect(() => {
     async function loadVedettes() {
       const supabase = createClient()
-      const [tvRes, audioRes, bookRes] = await Promise.all([
+      const [tvRes, shortsRes, audioRes, bookRes] = await Promise.all([
         supabase.from('shine_tv_videos').select('id, title, thumbnail_url, category, duration_minutes').eq('is_published', true).order('created_at', { ascending: false }).limit(4),
+        supabase.from('shine_shorts').select('id, title, thumbnail_url, category').eq('is_published', true).order('created_at', { ascending: false }).limit(4),
         supabase.from('shine_audible_tracks').select('id, title, cover_url, narrator, category').eq('is_published', true).order('created_at', { ascending: false }).limit(4),
         supabase.from('shine_library_books').select('id, title, cover_url, author, category').eq('is_published', true).order('created_at', { ascending: false }).limit(4),
       ])
       setTvVideos(tvRes.data || [])
+      setShortsVedettes(shortsRes.data || [])
       setAudios(audioRes.data || [])
       setBooks(bookRes.data || [])
       setLoading(false)
@@ -130,6 +133,22 @@ function VedettesWidget() {
         title: v.title,
         image: v.thumbnail_url,
         subtitle: v.category,
+      })),
+    },
+    {
+      title: 'Shine Shorts',
+      icon: (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+        </svg>
+      ),
+      accent: '#A29BFE',
+      href: '/dashboard/shine-shorts',
+      items: shortsVedettes.map(s => ({
+        id: s.id,
+        title: s.title,
+        image: s.thumbnail_url,
+        subtitle: s.category,
       })),
     },
     {

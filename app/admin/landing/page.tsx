@@ -521,7 +521,7 @@ export default function LandingAdminPage() {
             <TextField label="Sous-titre Thomas" value={c.thomas_pilier || ''} onChange={(v) => updateContent(key, 'thomas_pilier', v)} />
             <TextAreaField label="Description Thomas" value={c.thomas_desc || ''} rows={3} onChange={(v) => updateContent(key, 'thomas_desc', v)} />
             <Separator label="Bas de page" />
-            <TextField label="Tagline (ex: Energie . Corps . Pratique)" value={c.trinite_tagline || ''} onChange={(v) => updateContent(key, 'trinite_tagline', v)} />
+            <TextField label="Tagline (ex: Âme . Corps . Esprit)" value={c.trinite_tagline || ''} onChange={(v) => updateContent(key, 'trinite_tagline', v)} />
             <TextAreaField label="Conclusion" value={c.trinite_conclusion || ''} rows={3} onChange={(v) => updateContent(key, 'trinite_conclusion', v)} />
             <TextAreaField label="Manifeste (citation)" value={c.manifeste || ''} rows={3} onChange={(v) => updateContent(key, 'manifeste', v)} />
           </>

@@ -202,7 +202,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       william_desc: "Spécialiste en hypnose et diplômé en médecine chinoise internationale, William apporte les solutions physiques concrètes pour déconstruire les croyances et les blocages ancrés dans le corps. Sa maîtrise du lien corps-esprit permet de libérer ce que les mots seuls ne peuvent atteindre.",
       thomas_pilier: "Le Pilier Pratique",
       thomas_desc: "Thomas intervient sur le côté pratique et concret du déconditionnement. À travers des cahiers d'exercices et des protocoles d'action, il transforme la prise de conscience en résultats tangibles. Son approche : vous donner les outils pour devenir l'architecte de votre propre transformation.",
-      trinite_tagline: "Énergie · Corps · Pratique",
+      trinite_tagline: "Âme · Corps · Esprit",
       trinite_conclusion: "Trois triangles à côtés égaux. Trois dimensions de l'être. Un seul objectif : vous aider à devenir la personne que vous auriez toujours dû être. Le déconditionnement total commence ici.",
       manifeste: "Nous ne guérissons pas. Nous révélons. Ce que vous cherchez est déjà en vous — enfoui sous des années de conditionnements. Notre mission est de vous aider à le retrouver.",
     },

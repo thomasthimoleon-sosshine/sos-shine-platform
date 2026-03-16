@@ -209,7 +209,7 @@ export default function NotreHistoirePage() {
               <div className="inline-flex items-center gap-3 sm:gap-4 md:gap-6">
                 <div className="w-8 sm:w-12 md:w-16 h-[1px]" style={{ background: `linear-gradient(90deg, transparent, ${gold})` }} />
                 <p className="text-[10px] sm:text-xs tracking-[0.3em] sm:tracking-[0.4em] uppercase" style={{ color: 'var(--text-muted)' }}>
-                  {hist.trinite_tagline || 'Énergie \u00b7 Corps \u00b7 Pratique'}
+                  {hist.trinite_tagline || 'Âme \u00b7 Corps \u00b7 Esprit'}
                 </p>
                 <div className="w-8 sm:w-12 md:w-16 h-[1px]" style={{ background: `linear-gradient(90deg, ${gold}, transparent)` }} />
               </div>

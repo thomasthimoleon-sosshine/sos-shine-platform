@@ -687,6 +687,20 @@ export default function ShineTVPage() {
               Tout
             </button>
             <button
+              onClick={() => setActiveFilter('encyclopedie')}
+              className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200 flex items-center gap-1.5"
+              style={{
+                background: activeFilter === 'encyclopedie' ? 'var(--gold)' : 'rgba(255,255,255,0.06)',
+                color: activeFilter === 'encyclopedie' ? '#09090b' : 'var(--text-secondary)',
+                border: activeFilter === 'encyclopedie' ? 'none' : '1px solid var(--dark-border)',
+              }}
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
+              </svg>
+              A — Z
+            </button>
+            <button
               onClick={() => setActiveFilter('favorites')}
               className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200 flex items-center gap-1.5"
               style={{
@@ -718,7 +732,7 @@ export default function ShineTVPage() {
         </div>
 
         {/* Search results or category rows */}
-        {search || (activeFilter !== 'all' && activeFilter !== 'favorites') ? (
+        {search || (activeFilter !== 'all' && activeFilter !== 'favorites' && activeFilter !== 'encyclopedie') ? (
           // Grid view for search/filter
           <div>
             <p className="text-[13px] mb-4" style={{ color: 'var(--text-muted)' }}>
@@ -832,6 +846,84 @@ export default function ShineTVPage() {
                 ))}
               </div>
             )}
+          </div>
+        ) : activeFilter === 'encyclopedie' ? (
+          // Encyclopédie A-Z view
+          <div className="space-y-6">
+            <h2 className="text-lg font-display font-semibold flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--gold)' }}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
+              </svg>
+              Encyclopédie A — Z
+            </h2>
+            {(() => {
+              const sorted = [...videos].sort((a, b) => a.title.localeCompare(b.title, 'fr'))
+              const grouped: Record<string, ShineVideo[]> = {}
+              sorted.forEach(v => {
+                const letter = v.title.charAt(0).toUpperCase().match(/[A-ZÀÂÄÉÈÊËÏÎÔÙÛÜŸÆŒÇ]/i)
+                  ? v.title.charAt(0).toUpperCase() : '#'
+                if (!grouped[letter]) grouped[letter] = []
+                grouped[letter].push(v)
+              })
+              const letters = Object.keys(grouped).sort((a, b) => a === '#' ? 1 : b === '#' ? -1 : a.localeCompare(b, 'fr'))
+
+              return (
+                <>
+                  {/* Letter nav */}
+                  <div className="flex flex-wrap gap-1.5">
+                    {letters.map(letter => (
+                      <a
+                        key={letter}
+                        href={`#letter-tv-${letter}`}
+                        className="w-8 h-8 rounded-lg flex items-center justify-center text-[13px] font-semibold transition-colors hover:opacity-80"
+                        style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}
+                      >
+                        {letter}
+                      </a>
+                    ))}
+                  </div>
+
+                  {/* Letter groups */}
+                  {letters.map(letter => (
+                    <div key={letter} id={`letter-tv-${letter}`} className="scroll-mt-24">
+                      <h3 className="font-display text-2xl font-bold mb-3 pb-2" style={{ color: 'var(--gold)', borderBottom: '1px solid var(--dark-border)' }}>
+                        {letter}
+                      </h3>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                        {grouped[letter].map((video, i) => (
+                          <motion.div
+                            key={video.id}
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: i * 0.02, duration: 0.3 }}
+                            className="group cursor-pointer"
+                            onClick={() => setSelectedVideo(video)}
+                          >
+                            <div className="relative overflow-hidden rounded-lg transition-all duration-300 group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-black/50">
+                              <div className="relative aspect-video">
+                                <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" loading="lazy" />
+                                <span className="absolute bottom-2 right-2 text-[10px] font-semibold px-1.5 py-0.5 rounded"
+                                  style={{ background: 'rgba(0,0,0,0.8)', color: '#fff' }}>
+                                  {video.duration}
+                                </span>
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                  <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'var(--gold)', color: '#09090b' }}>
+                                    <svg className="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="mt-2">
+                              <h3 className="text-[13px] font-medium truncate" style={{ color: 'var(--text-primary)' }}>{video.title}</h3>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </>
+              )
+            })()}
           </div>
         ) : (
           // Netflix rows view

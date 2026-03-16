@@ -658,7 +658,7 @@ export default function ObjectifsPage() {
                             try {
                               await supabase.rpc('add_xp', {
                                 p_user_id: userId,
-                                p_amount: XP_REWARDS.community_challenge_completed,
+                                p_amount: 150,
                                 p_reason: 'community_challenge_completed',
                               })
                             } catch { /* non-critical */ }
@@ -766,7 +766,7 @@ export default function ObjectifsPage() {
                                     try {
                                       await supabase.rpc('add_xp', {
                                         p_user_id: userId,
-                                        p_amount: XP_REWARDS.community_challenge_completed,
+                                        p_amount: 150,
                                         p_reason: 'community_challenge_completed',
                                       })
                                     } catch { /* non-critical */ }

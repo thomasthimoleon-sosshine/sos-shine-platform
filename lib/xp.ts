@@ -1,40 +1,40 @@
 /**
- * SOS Shine — XP & Levels Engine
- * Defines XP rewards per action, level thresholds, and helper functions.
+ * SOS Shine — XP & Levels Engine V2
+ * Exponential level thresholds — max Diamant = 1,000,000 XP
+ * Cooperation model: the GIVER gets XP, not the receiver.
  */
 
-// ── XP Rewards per action ──
-export const XP_REWARDS = {
-  shine_given: 5,        // Donner un Shine à un post
-  shine_received: 3,     // Recevoir un Shine
-  post_published: 15,    // Publier sur le mur ou Mon Éclat
-  comment_posted: 10,    // Poster un commentaire
-  step_completed: 25,    // Compléter une étape d'un challenge encyclopédique
-  challenge_completed: 100, // Compléter les 3 étapes d'un challenge
-  community_challenge_completed: 150, // Compléter un défi communautaire
-  event_registered: 10,  // S'inscrire à un événement
-  rayon_accepted: 10,    // Connexion Rayon acceptée
-  daily_login: 5,        // Connexion quotidienne (1x/jour)
-} as const
-
-export type XPAction = keyof typeof XP_REWARDS
-
-// ── Level thresholds ──
-// Each level requires progressively more XP
+// ── Level thresholds (exponential) ──
 export const LEVEL_THRESHOLDS = [
-  { level: 1,  name: 'Étincelle',    minXP: 0,     icon: '✨' },
-  { level: 2,  name: 'Lueur',        minXP: 50,    icon: '🌟' },
-  { level: 3,  name: 'Flamme',       minXP: 150,   icon: '🔥' },
-  { level: 4,  name: 'Rayon',        minXP: 350,   icon: '☀️' },
-  { level: 5,  name: 'Éclat',        minXP: 600,   icon: '💎' },
-  { level: 6,  name: 'Lumière',      minXP: 1000,  icon: '🌈' },
-  { level: 7,  name: 'Aura',         minXP: 1500,  icon: '👑' },
-  { level: 8,  name: 'Prisme',       minXP: 2200,  icon: '🔮' },
-  { level: 9,  name: 'Constellation', minXP: 3000, icon: '🌌' },
-  { level: 10, name: 'Diamant',      minXP: 4000,  icon: '💠' },
+  { level: 1,  name: 'Étincelle',     minXP: 0,        icon: '✨' },
+  { level: 2,  name: 'Lueur',         minXP: 2500,     icon: '🌟' },
+  { level: 3,  name: 'Flamme',        minXP: 10000,    icon: '🔥' },
+  { level: 4,  name: 'Rayon',         minXP: 35000,    icon: '☀️' },
+  { level: 5,  name: 'Éclat',         minXP: 80000,    icon: '💎' },
+  { level: 6,  name: 'Lumière',       minXP: 160000,   icon: '🌈' },
+  { level: 7,  name: 'Aura',          minXP: 300000,   icon: '👑' },
+  { level: 8,  name: 'Prisme',        minXP: 550000,   icon: '🔮' },
+  { level: 9,  name: 'Constellation', minXP: 750000,   icon: '🌌' },
+  { level: 10, name: 'Diamant',       minXP: 1000000,  icon: '💠' },
 ] as const
 
 export type LevelInfo = typeof LEVEL_THRESHOLDS[number]
+
+// ── XP Rewards per action (cooperation model: giver gets XP) ──
+// Daily caps are enforced by XpEngine.ts / server-side RPC
+export const XP_REWARDS = {
+  publish_video: 300,
+  publish_audio: 300,
+  publish_text: 150,
+  comment: 50,
+  shine_given_1: 15,
+  shine_given_2: 10,
+  shine_given_3: 5,
+  consume_media: 25,
+  consume_article: 20,
+} as const
+
+export type XPAction = keyof typeof XP_REWARDS
 
 /**
  * Get the level info for a given XP amount
@@ -73,9 +73,10 @@ export function getLevelProgress(xp: number): number {
 }
 
 /**
- * Format XP display
+ * Format XP display with K/M suffixes
  */
 export function formatXP(xp: number): string {
+  if (xp >= 1000000) return `${(xp / 1000000).toFixed(1)}M`
   if (xp >= 1000) return `${(xp / 1000).toFixed(1)}k`
   return String(xp)
 }

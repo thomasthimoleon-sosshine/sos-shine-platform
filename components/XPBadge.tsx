@@ -59,7 +59,7 @@ export default function XPBadge({ userId, size = 'md', showDetails = false }: XP
         style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.15)' }}
       >
         <span>{level.icon}</span>
-        <span>Niv. {level.level}</span>
+        <span>{level.name}</span>
       </span>
     )
   }
@@ -77,7 +77,7 @@ export default function XPBadge({ userId, size = 'md', showDetails = false }: XP
           <p className="font-display text-lg font-semibold" style={{ color: 'var(--gold)' }}>
             {level.name}
           </p>
-          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Niveau {level.level}</p>
+          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Niveau {level.level} / 10</p>
         </div>
         <div className="text-right">
           <p className="text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>{formatXP(xpData.total_xp)}</p>
@@ -86,13 +86,15 @@ export default function XPBadge({ userId, size = 'md', showDetails = false }: XP
       </div>
 
       {/* Progress bar */}
-      {next && (
+      {next ? (
         <div className="mb-4">
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>Progression vers {next.name}</span>
+            <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
+              Progression vers {next.icon} {next.name}
+            </span>
             <span className="text-[11px] font-medium" style={{ color: 'var(--gold)' }}>{progress}%</span>
           </div>
-          <div className="h-2 rounded-full overflow-hidden" style={{ background: 'var(--dark-border)' }}>
+          <div className="h-2.5 rounded-full overflow-hidden" style={{ background: 'var(--dark-border)' }}>
             <motion.div
               className="h-full rounded-full"
               style={{ background: 'linear-gradient(90deg, var(--gold), var(--gold-light))' }}
@@ -101,9 +103,22 @@ export default function XPBadge({ userId, size = 'md', showDetails = false }: XP
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             />
           </div>
-          <p className="text-[10px] mt-1 text-right" style={{ color: 'var(--text-muted)' }}>
-            {xpData.total_xp} / {next.minXP} XP
+          <div className="flex items-center justify-between mt-1">
+            <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>
+              {formatXP(xpData.total_xp)} XP
+            </p>
+            <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>
+              {formatXP(next.minXP)} XP
+            </p>
+          </div>
+          <p className="text-[10px] mt-0.5 text-center" style={{ color: 'var(--gold)', opacity: 0.7 }}>
+            Encore {formatXP(next.minXP - xpData.total_xp)} XP pour atteindre {next.name}
           </p>
+        </div>
+      ) : (
+        <div className="mb-4 rounded-xl p-3 text-center" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.15)' }}>
+          <p className="text-sm font-semibold" style={{ color: 'var(--gold)' }}>Rang maximum atteint !</p>
+          <p className="text-[11px] mt-0.5" style={{ color: 'var(--text-muted)' }}>1 000 000 XP — Diamant</p>
         </div>
       )}
 
@@ -123,20 +138,31 @@ export default function XPBadge({ userId, size = 'md', showDetails = false }: XP
       {size === 'lg' && (
         <div className="mt-4 pt-3" style={{ borderTop: '1px solid var(--dark-border)' }}>
           <p className="text-[11px] font-medium mb-2" style={{ color: 'var(--text-muted)' }}>Tous les niveaux</p>
-          <div className="grid grid-cols-2 gap-1.5">
-            {LEVEL_THRESHOLDS.map((t) => (
-              <div key={t.level}
-                className="flex items-center gap-2 px-2 py-1.5 rounded-lg text-[11px]"
-                style={{
-                  background: t.level <= level.level ? 'rgba(212,175,55,0.06)' : 'transparent',
-                  color: t.level <= level.level ? 'var(--gold)' : 'var(--text-muted)',
-                  opacity: t.level <= level.level ? 1 : 0.5,
-                }}>
-                <span>{t.icon}</span>
-                <span>{t.name}</span>
-                <span className="ml-auto">{t.minXP} XP</span>
-              </div>
-            ))}
+          <div className="space-y-1.5">
+            {LEVEL_THRESHOLDS.map((t) => {
+              const isReached = xpData.total_xp >= t.minXP
+              const isCurrent = t.level === level.level
+              return (
+                <div key={t.level}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-[11px]"
+                  style={{
+                    background: isCurrent ? 'rgba(212,175,55,0.1)' : isReached ? 'rgba(212,175,55,0.04)' : 'transparent',
+                    color: isReached ? 'var(--gold)' : 'var(--text-muted)',
+                    opacity: isReached ? 1 : 0.4,
+                    border: isCurrent ? '1px solid rgba(212,175,55,0.2)' : '1px solid transparent',
+                  }}>
+                  <span className="text-sm">{t.icon}</span>
+                  <span className="font-medium">{t.name}</span>
+                  <span className="ml-auto font-mono">{formatXP(t.minXP)} XP</span>
+                  {isCurrent && (
+                    <span className="ml-1 px-1.5 py-0.5 rounded text-[9px] font-semibold"
+                      style={{ background: 'var(--gold)', color: '#09090b' }}>
+                      ACTUEL
+                    </span>
+                  )}
+                </div>
+              )
+            })}
           </div>
         </div>
       )}

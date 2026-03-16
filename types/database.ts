@@ -332,6 +332,28 @@ export type UserXP = {
   updated_at: string
 }
 
+// ── Daily User Actions (anti-farming tracking) ──
+export type DailyUserAction = {
+  id: string
+  user_id: string
+  action_date: string
+  action_type: string
+  count: number
+  created_at: string
+  updated_at: string
+}
+
+// ── Encyclopedia Progress (Boss Quest scores) ──
+export type EncyclopediaProgress = {
+  id: string
+  user_id: string
+  module_id: string
+  best_score_percentage: number
+  xp_awarded: number
+  created_at: string
+  updated_at: string
+}
+
 // ── Challenges (community challenges) ──
 export type ChallengeRewardType = 'xp' | 'video' | 'call' | 'badge'
 export type ChallengeStatus = 'draft' | 'active' | 'completed' | 'archived'
@@ -765,12 +787,22 @@ export type Database = {
       courrier_anonyme: Table<CourrierAnonyme>
       douleur_quiz_questions: Table<DouleurQuizQuestion>
       douleur_quiz_attempts: Table<DouleurQuizAttempt>
+      daily_user_actions: Table<DailyUserAction>
+      encyclopedia_progress: Table<EncyclopediaProgress>
     }
     Views: Record<string, never>
     Functions: {
       add_xp: {
         Args: { p_user_id: string; p_amount: number; p_reason?: string }
         Returns: { total_xp: number; level: number; level_up: boolean }
+      }
+      check_and_increment_daily_action: {
+        Args: { p_user_id: string; p_action_type: string }
+        Returns: { allowed: boolean; count: number; xp_to_award: number }
+      }
+      award_encyclopedia_xp: {
+        Args: { p_user_id: string; p_module_id: string; p_score_percentage: number; p_total_steps: number }
+        Returns: { potential_xp: number; xp_earned: number; xp_delta_awarded: number; previous_score: number; new_score: number; xp_remaining: number }
       }
     }
   }

@@ -6,7 +6,6 @@ import { createClient } from '@/lib/supabase/client'
 import { uploadFile } from '@/lib/supabase/storage'
 import type { Profile, Subscription } from '@/types/database'
 import { useTranslation } from '@/lib/i18n/useTranslation'
-import XPBadge from '@/components/XPBadge'
 
 export default function ProfilPage() {
   const { t } = useTranslation()
@@ -326,9 +325,6 @@ export default function ProfilPage() {
           </div>
         )}
       </div>
-
-      {/* XP & Niveau */}
-      <XPBadge showDetails size="lg" />
 
       {/* Subscription */}
       <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>

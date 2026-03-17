@@ -8,9 +8,10 @@ import type { Profile } from '@/types/database'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 import { getNextRotatingQuote, type Quote } from '@/lib/quotes'
 import { greetingsData, GREETINGS_PER_SLOT, type TimeSlot } from '@/data/greetingsData'
-import { getDailyForecast, resolveZodiacSign, ZODIAC_INFO, type ZodiacSign } from '@/data/energyWeather'
-import AudioPlayer from '@/components/AudioPlayer'
-import XPBadge from '@/components/XPBadge'
+import { getDailyForecast, resolveZodiacSign, ZODIAC_INFO } from '@/data/energyWeather'
+import { getLevelForXP, getNextLevel, getLevelProgress, formatXP, LEVEL_THRESHOLDS } from '@/lib/xp'
+import type { UserXP } from '@/types/database'
+import { getAllCategories, getUserBadges, CATEGORY_ICONS, type CategoryConfig } from '@/lib/badgeService'
 
 const ease = [0.25, 0.46, 0.45, 0.94] as const
 
@@ -23,379 +24,116 @@ const fadeUp = {
   }),
 }
 
-function ParcoursWidget({ siteSettings }: { siteSettings: Record<string, string> }) {
-  const { t } = useTranslation()
-  const [goalsCount, setGoalsCount] = useState(0)
-  const [journalCount, setJournalCount] = useState(0)
+/* ─────────────────────────────────────────────
+   Section: Niveau & XP (migrated from Profile)
+   ───────────────────────────────────────────── */
+function LevelXPSection({ xpData }: { xpData: UserXP | null }) {
+  if (!xpData) return null
 
-  useEffect(() => {
-    try {
-      const goals = JSON.parse(localStorage.getItem('sos-shine-goals') || '[]')
-      setGoalsCount(goals.filter((g: { status: string }) => g.status === 'active').length)
-    } catch { /* empty */ }
-    try {
-      const journal = JSON.parse(localStorage.getItem('sos-shine-journal') || '[]')
-      const now = new Date()
-      const thisMonth = journal.filter((e: { created_at: string }) => {
-        const d = new Date(e.created_at)
-        return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()
-      })
-      setJournalCount(thisMonth.length)
-    } catch { /* empty */ }
-  }, [])
-
-  return (
-    <div>
-      <h2 className="text-[11px] font-semibold uppercase tracking-widest mb-4" style={{ color: 'var(--text-muted)' }}>
-        {siteSettings.dash_journey_title || t('dashboard.my_journey')}
-      </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <Link
-          href="/dashboard/objectifs"
-          className="glass glass-hover p-5 group flex items-center gap-4 transition-all duration-300"
-          style={{ borderColor: 'rgba(212, 175, 55, 0.08)' }}
-        >
-          <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110"
-            style={{ background: 'rgba(212, 175, 55, 0.1)', color: 'var(--gold)' }}
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
-            </svg>
-          </div>
-          <div>
-            <p className="font-semibold text-[15px]" style={{ color: 'var(--text-primary)' }}>
-              {goalsCount} {siteSettings.dash_goals_count_label || t('dashboard.goals_active')}
-            </p>
-            <p className="text-[12px]" style={{ color: 'var(--text-muted)' }}>{siteSettings.dash_goals_label || t('nav.goals')}</p>
-          </div>
-        </Link>
-        <Link
-          href="/dashboard/journal"
-          className="glass glass-hover p-5 group flex items-center gap-4 transition-all duration-300"
-          style={{ borderColor: 'rgba(212, 175, 55, 0.08)' }}
-        >
-          <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110"
-            style={{ background: 'rgba(116, 192, 252, 0.1)', color: '#74C0FC' }}
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-            </svg>
-          </div>
-          <div>
-            <p className="font-semibold text-[15px]" style={{ color: 'var(--text-primary)' }}>
-              {journalCount} {siteSettings.dash_journal_count_label || t('dashboard.journal_entries')}
-            </p>
-            <p className="text-[12px]" style={{ color: 'var(--text-muted)' }}>{siteSettings.dash_journal_label || t('nav.journal')}</p>
-          </div>
-        </Link>
-      </div>
-    </div>
-  )
-}
-
-function VedettesWidget() {
-  const [tvVideos, setTvVideos] = useState<Array<{ id: string; title: string; thumbnail_url: string | null; category: string; duration_minutes: number | null }>>([])
-  const [shortsVedettes, setShortsVedettes] = useState<Array<{ id: string; title: string; thumbnail_url: string | null; category: string }>>([])
-  const [audios, setAudios] = useState<Array<{ id: string; title: string; cover_url: string | null; narrator: string | null; category: string }>>([])
-  const [books, setBooks] = useState<Array<{ id: string; title: string; cover_url: string | null; author: string | null; category: string }>>([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    async function loadVedettes() {
-      const supabase = createClient()
-      const [tvRes, shortsRes, audioRes, bookRes] = await Promise.all([
-        supabase.from('shine_tv_videos').select('id, title, thumbnail_url, category, duration_minutes').eq('is_published', true).order('created_at', { ascending: false }).limit(4),
-        supabase.from('shine_shorts').select('id, title, thumbnail_url, category').eq('is_published', true).order('created_at', { ascending: false }).limit(4),
-        supabase.from('shine_audible_tracks').select('id, title, cover_url, narrator, category').eq('is_published', true).order('created_at', { ascending: false }).limit(4),
-        supabase.from('shine_library_books').select('id, title, cover_url, author, category').eq('is_published', true).order('created_at', { ascending: false }).limit(4),
-      ])
-      setTvVideos(tvRes.data || [])
-      setShortsVedettes(shortsRes.data || [])
-      setAudios(audioRes.data || [])
-      setBooks(bookRes.data || [])
-      setLoading(false)
-    }
-    loadVedettes()
-  }, [])
-
-  const sections = [
-    {
-      title: 'Shine TV',
-      icon: (
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125M3.375 19.5h1.5C5.496 19.5 6 18.996 6 18.375m-2.625 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-1.5A1.125 1.125 0 0118 18.375M20.625 4.5H3.375m17.25 0c.621 0 1.125.504 1.125 1.125M20.625 4.5h-1.5C18.504 4.5 18 5.004 18 5.625m3.75 0v1.5c0 .621-.504 1.125-1.125 1.125M3.375 4.5c-.621 0-1.125.504-1.125 1.125M3.375 4.5h1.5C5.496 4.5 6 5.004 6 5.625m-3.75 0v1.5c0 .621.504 1.125 1.125 1.125m0 0h1.5m-1.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m1.5-3.75C5.496 8.25 6 7.746 6 7.125v-1.5M4.875 8.25C5.496 8.25 6 8.754 6 9.375v1.5m0-5.25v5.25m0-5.25C6 5.004 6.504 4.5 7.125 4.5h9.75c.621 0 1.125.504 1.125 1.125m1.125 2.625h1.5m-1.5 0A1.125 1.125 0 0118 7.125v-1.5m1.125 2.625c-.621 0-1.125.504-1.125 1.125v1.5m2.625-2.625c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125M18 5.625v5.25M7.125 12h9.75m-9.75 0A1.125 1.125 0 016 10.875M7.125 12C6.504 12 6 12.504 6 13.125m0-2.25C6 11.496 5.496 12 4.875 12M18 10.875c0 .621-.504 1.125-1.125 1.125M18 10.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125m-12 5.25v-5.25m0 5.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125m-12 0v-1.5c0-.621-.504-1.125-1.125-1.125M18 18.375v-5.25m0 5.25v-1.5c0-.621.504-1.125 1.125-1.125M18 13.125v1.5c0 .621.504 1.125 1.125 1.125M18 13.125c0-.621.504-1.125 1.125-1.125M6 13.125v1.5c0 .621-.504 1.125-1.125 1.125M6 13.125C6 12.504 5.496 12 4.875 12m-1.5 0h1.5m-1.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125M19.125 12h1.5m0 0c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h1.5m14.25 0h1.5" />
-        </svg>
-      ),
-      accent: '#E17055',
-      href: '/dashboard/shine-tv',
-      items: tvVideos.map(v => ({
-        id: v.id,
-        title: v.title,
-        image: v.thumbnail_url,
-        subtitle: v.category,
-      })),
-    },
-    {
-      title: 'Shine Shorts',
-      icon: (
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
-        </svg>
-      ),
-      accent: '#A29BFE',
-      href: '/dashboard/shine-shorts',
-      items: shortsVedettes.map(s => ({
-        id: s.id,
-        title: s.title,
-        image: s.thumbnail_url,
-        subtitle: s.category,
-      })),
-    },
-    {
-      title: 'Shine Audible',
-      icon: (
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
-        </svg>
-      ),
-      accent: '#74C0FC',
-      href: '/dashboard/shine-audible',
-      items: audios.map(a => ({
-        id: a.id,
-        title: a.title,
-        image: a.cover_url,
-        subtitle: a.narrator || a.category,
-      })),
-    },
-    {
-      title: 'Shine Librairie',
-      icon: (
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-        </svg>
-      ),
-      accent: '#55EFC4',
-      href: '/dashboard/shine-librairie',
-      items: books.map(b => ({
-        id: b.id,
-        title: b.title,
-        image: b.cover_url,
-        subtitle: b.author || 'SOS Shine',
-      })),
-    },
-  ]
-
-  if (loading) {
-    return (
-      <div>
-        <h2 className="text-[11px] font-semibold uppercase tracking-widest mb-4" style={{ color: 'var(--text-muted)' }}>
-          Vedettes du moment
-        </h2>
-        <div className="flex justify-center py-8">
-          <div className="w-6 h-6 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
-        </div>
-      </div>
-    )
-  }
-
-  return (
-    <div>
-      <h2 className="text-[11px] font-semibold uppercase tracking-widest mb-6" style={{ color: 'var(--text-muted)' }}>
-        Vedettes du moment
-      </h2>
-      <div className="space-y-8">
-        {sections.map((section) => (
-          <div key={section.title}>
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <div
-                  className="w-8 h-8 rounded-lg flex items-center justify-center"
-                  style={{ background: `${section.accent}15`, color: section.accent }}
-                >
-                  {section.icon}
-                </div>
-                <h3 className="font-display font-semibold text-[16px]" style={{ color: section.accent }}>
-                  {section.title}
-                </h3>
-              </div>
-              <Link
-                href={section.href}
-                className="text-[12px] font-medium flex items-center gap-1 transition-colors hover:opacity-80"
-                style={{ color: section.accent }}
-              >
-                Voir tout
-                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                </svg>
-              </Link>
-            </div>
-
-            {section.items.length === 0 ? (
-              <div className="glass p-6 text-center">
-                <p className="text-[13px]" style={{ color: 'var(--text-muted)' }}>Aucun contenu pour le moment</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {section.items.map((item, i) => (
-                  <motion.div
-                    key={item.id}
-                    custom={i}
-                    initial="hidden"
-                    animate="visible"
-                    variants={fadeUp}
-                  >
-                    <Link
-                      href={section.href}
-                      className="glass glass-hover group block overflow-hidden transition-all duration-300"
-                      style={{ borderColor: `${section.accent}10` }}
-                    >
-                      {/* Thumbnail / Cover */}
-                      <div className="relative aspect-[3/4] overflow-hidden bg-black/20">
-                        {item.image ? (
-                          <img
-                            src={item.image}
-                            alt={item.title}
-                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center" style={{ background: `${section.accent}08` }}>
-                            <div style={{ color: section.accent, opacity: 0.3 }}>{section.icon}</div>
-                          </div>
-                        )}
-                        {/* Hover overlay */}
-                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
-                          style={{ background: `${section.accent}20` }}>
-                          <div className="w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md"
-                            style={{ background: 'rgba(0,0,0,0.5)' }}>
-                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" style={{ color: '#fff' }}>
-                              <path d="M8 5v14l11-7z" />
-                            </svg>
-                          </div>
-                        </div>
-                      </div>
-                      {/* Info */}
-                      <div className="p-3">
-                        <h4 className="font-semibold text-[13px] leading-tight truncate" style={{ color: 'var(--text-primary)' }}>
-                          {item.title}
-                        </h4>
-                        <p className="text-[11px] mt-1 truncate" style={{ color: 'var(--text-muted)' }}>
-                          {item.subtitle}
-                        </p>
-                      </div>
-                    </Link>
-                  </motion.div>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function PendingRayonsWidget() {
-  const [pending, setPending] = useState<Array<{ id: string; sender_id: string; created_at: string }>>([])
-  const [profiles, setProfiles] = useState<Record<string, { id: string; prenom: string; pseudo: string | null; avatar_url: string | null }>>({})
-  const [actionLoading, setActionLoading] = useState<string | null>(null)
-
-  useEffect(() => {
-    async function load() {
-      try {
-        const res = await fetch('/api/rayons')
-        if (res.ok) {
-          const data = await res.json()
-          setPending(data.pendingReceived || [])
-          setProfiles(data.profiles || {})
-        }
-      } catch { /* empty */ }
-    }
-    load()
-  }, [])
-
-  async function handleAction(connectionId: string, action: 'accept' | 'decline') {
-    setActionLoading(connectionId)
-    const res = await fetch('/api/rayons', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ connection_id: connectionId, action }),
-    })
-    if (res.ok) {
-      setPending(prev => prev.filter(p => p.id !== connectionId))
-    }
-    setActionLoading(null)
-  }
-
-  if (pending.length === 0) return null
+  const level = getLevelForXP(xpData.total_xp)
+  const next = getNextLevel(level.level)
+  const progress = getLevelProgress(xpData.total_xp)
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.12, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+      transition={{ delay: 0.05, duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
+      className="glass relative overflow-hidden"
+      style={{
+        background: 'linear-gradient(135deg, rgba(212,175,55,0.06), var(--dark-card))',
+        borderColor: 'rgba(212,175,55,0.15)',
+      }}
     >
-      <h2 className="text-[11px] font-semibold uppercase tracking-widest mb-3 flex items-center gap-2" style={{ color: 'var(--text-muted)' }}>
-        Rayons en attente
-        <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] rounded-full text-[10px] font-bold animate-pulse"
-          style={{ background: '#EF4444', color: '#fff' }}>
-          {pending.length}
-        </span>
-      </h2>
-      <div className="space-y-2">
-        {pending.map(req => {
-          const p = profiles[req.sender_id]
-          if (!p) return null
-          const displayName = p.pseudo || p.prenom
-          return (
-            <div key={req.id} className="glass glass-hover p-4 flex items-center gap-3"
-              style={{ borderColor: 'rgba(212,175,55,0.15)' }}>
-              <Link href={`/dashboard/membre/${p.id}`} className="shrink-0">
-                {p.avatar_url ? (
-                  <img src={p.avatar_url} alt={displayName} className="w-10 h-10 rounded-full object-cover" />
-                ) : (
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-display font-semibold"
-                    style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
-                    {displayName.charAt(0).toUpperCase()}
-                  </div>
-                )}
-              </Link>
-              <div className="flex-1 min-w-0">
-                <p className="text-[14px] font-medium" style={{ color: 'var(--text-primary)' }}>
-                  <Link href={`/dashboard/membre/${p.id}`} className="hover:underline">{displayName}</Link>
-                  {' '}<span style={{ color: 'var(--text-muted)' }}>veut rayonner avec vous</span>
-                </p>
-                <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
-                  {new Date(req.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}
-                </p>
-              </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <button
-                  onClick={() => handleAction(req.id, 'accept')}
-                  disabled={actionLoading === req.id}
-                  className="px-4 py-2 rounded-xl text-[13px] font-semibold cursor-pointer"
-                  style={{ background: 'var(--gold)', color: 'var(--dark)' }}
-                >
-                  {actionLoading === req.id ? '...' : 'Accepter'}
-                </button>
-                <button
-                  onClick={() => handleAction(req.id, 'decline')}
-                  disabled={actionLoading === req.id}
-                  className="px-3 py-2 rounded-xl text-[13px] cursor-pointer"
-                  style={{ color: 'var(--text-muted)', background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
-                >
-                  Décliner
-                </button>
-              </div>
+      <div className="p-5 sm:p-6">
+        {/* Title row */}
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-[11px] font-semibold uppercase tracking-widest flex items-center gap-2" style={{ color: 'var(--text-muted)' }}>
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--gold)' }}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+            </svg>
+            MA LÉGENDE
+          </h2>
+          <span className="text-xl">{level.icon}</span>
+        </div>
+
+        {/* Rank name + XP total */}
+        <div className="flex items-center justify-between mb-1">
+          <div>
+            <p className="font-display text-2xl font-semibold" style={{ color: 'var(--gold)' }}>
+              {level.name}
+            </p>
+            <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>Rang</p>
+          </div>
+        </div>
+
+        {/* Progress bar */}
+        {next ? (
+          <div className="mt-3">
+            <div className="h-3 rounded-full overflow-hidden" style={{ background: 'var(--dark-border)' }}>
+              <motion.div
+                className="h-full rounded-full"
+                style={{ background: 'linear-gradient(90deg, var(--gold), var(--gold-light))' }}
+                initial={{ width: 0 }}
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              />
             </div>
-          )
-        })}
+            <div className="flex items-center justify-between mt-1.5">
+              <p className="text-[11px] font-medium" style={{ color: 'var(--text-primary)' }}>
+                XP: {formatXP(xpData.total_xp)} / {formatXP(next.minXP)} XP
+              </p>
+              <p className="text-[11px]" style={{ color: 'var(--gold)', opacity: 0.8 }}>
+                Encore {formatXP(next.minXP - xpData.total_xp)} XP
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="mt-3 rounded-xl p-3 text-center" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.15)' }}>
+            <p className="text-sm font-semibold" style={{ color: 'var(--gold)' }}>Rang maximum atteint !</p>
+          </div>
+        )}
+
+        {/* All levels list */}
+        <div className="mt-5 pt-4" style={{ borderTop: '1px solid var(--dark-border)' }}>
+          <p className="text-[10px] font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>
+            Les 10 niveaux d&apos;évolution
+          </p>
+          <div className="space-y-1">
+            {LEVEL_THRESHOLDS.map((t) => {
+              const isReached = xpData.total_xp >= t.minXP
+              const isCurrent = t.level === level.level
+              return (
+                <div key={t.level}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-[11px]"
+                  style={{
+                    background: isCurrent ? 'rgba(212,175,55,0.1)' : isReached ? 'rgba(212,175,55,0.04)' : 'transparent',
+                    color: isReached ? 'var(--gold)' : 'var(--text-muted)',
+                    opacity: isReached ? 1 : 0.4,
+                    border: isCurrent ? '1px solid rgba(212,175,55,0.2)' : '1px solid transparent',
+                  }}>
+                  <span className="text-sm">{t.icon}</span>
+                  <span className="font-medium">{t.name}</span>
+                  <span className="ml-auto font-mono">{formatXP(t.minXP)} XP</span>
+                  {isCurrent && (
+                    <span className="ml-1 px-1.5 py-0.5 rounded text-[9px] font-semibold"
+                      style={{ background: 'var(--gold)', color: '#09090b' }}>
+                      ACTUEL
+                    </span>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </div>
       </div>
     </motion.div>
   )
 }
 
+/* ─────────────────────────────────────────────
+   Section: Météo Énergétique
+   ───────────────────────────────────────────── */
 function EnergyWeatherWidget({ profile }: { profile: Profile | null }) {
   const sign = profile ? resolveZodiacSign(profile.prenom, (profile as Profile & { zodiac_sign?: string | null }).zodiac_sign) : null
   if (!sign) return null
@@ -407,16 +145,14 @@ function EnergyWeatherWidget({ profile }: { profile: Profile | null }) {
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.08, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+      transition={{ delay: 0.08, duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
       className="glass relative overflow-hidden"
       style={{
         background: `linear-gradient(135deg, ${forecast.color}08, var(--dark-card))`,
         borderColor: `${forecast.color}20`,
       }}
     >
-      {/* Ambient glow */}
-      <div
-        className="absolute -top-16 -left-16 w-48 h-48 rounded-full opacity-20 pointer-events-none"
+      <div className="absolute -top-16 -left-16 w-48 h-48 rounded-full opacity-20 pointer-events-none"
         style={{ background: `radial-gradient(circle, ${forecast.color}30, transparent 70%)` }}
       />
       <div className="p-5 sm:p-6 relative">
@@ -428,31 +164,20 @@ function EnergyWeatherWidget({ profile }: { profile: Profile | null }) {
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-start gap-4">
-          {/* Left: sign + energy level */}
           <div className="flex items-center gap-3 shrink-0">
-            <div
-              className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl"
-              style={{ background: `${forecast.color}15` }}
-            >
+            <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl"
+              style={{ background: `${forecast.color}15` }}>
               {forecast.element}
             </div>
             <div>
-              <p className="font-display text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
-                {info.label}
-              </p>
+              <p className="font-display text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>{info.label}</p>
               <div className="flex items-center gap-2 mt-0.5">
-                <span
-                  className="inline-block w-2 h-2 rounded-full animate-pulse"
-                  style={{ background: forecast.color }}
-                />
-                <span className="text-[13px] font-medium" style={{ color: forecast.color }}>
-                  Énergie {forecast.energy}
-                </span>
+                <span className="inline-block w-2 h-2 rounded-full animate-pulse" style={{ background: forecast.color }} />
+                <span className="text-[13px] font-medium" style={{ color: forecast.color }}>Énergie {forecast.energy}</span>
               </div>
             </div>
           </div>
 
-          {/* Right: details */}
           <div className="flex-1 space-y-2">
             <div className="flex items-center gap-2">
               <span className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Ambiance</span>
@@ -468,9 +193,7 @@ function EnergyWeatherWidget({ profile }: { profile: Profile | null }) {
                 </svg>
                 Heure favorable : <span className="font-medium" style={{ color: 'var(--text-primary)' }}>{forecast.luckyHour}</span>
               </span>
-              <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
-                {info.dates}
-              </span>
+              <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{info.dates}</span>
             </div>
           </div>
         </div>
@@ -479,208 +202,431 @@ function EnergyWeatherWidget({ profile }: { profile: Profile | null }) {
   )
 }
 
-const ECLAT_CATEGORIES: Record<string, { label: string; icon: string; color: string }> = {
-  temoignage: { label: 'Pensée', icon: '💭', color: '#D4AF37' },
-  partage: { label: 'Partage', icon: '💫', color: '#74C0FC' },
-  gratitude: { label: 'Gratitude', icon: '✨', color: '#FFEAA7' },
-  citation: { label: 'Citation', icon: '💬', color: '#FD79A8' },
-  remerciements: { label: 'Moment de joie', icon: '🌟', color: '#55EFC4' },
-  question: { label: 'Réflexion', icon: '🔮', color: '#A29BFE' },
-}
+/* ─────────────────────────────────────────────
+   Section: Mes contributions
+   ───────────────────────────────────────────── */
+function ContributionsSection({ xpData }: { xpData: UserXP | null }) {
+  const [showLog, setShowLog] = useState(false)
+  const [activityLog, setActivityLog] = useState<Array<{ id: string; action: string; detail: string; date: string }>>([])
+  const [logLoading, setLogLoading] = useState(false)
 
-type FeedPost = {
-  id: string
-  author_id: string
-  title: string
-  content: string
-  image_url: string | null
-  video_url: string | null
-  audio_url: string | null
-  category: string
-  created_at: string
-  likes_count: number
-  comments_count: number
-  user_has_liked: boolean
-}
+  async function loadActivityLog() {
+    if (activityLog.length > 0) { setShowLog(!showLog); return }
+    setLogLoading(true)
+    setShowLog(true)
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) { setLogLoading(false); return }
 
-type FeedProfile = {
-  id: string
-  prenom: string
-  pseudo: string | null
-  avatar_url: string | null
-  role: string
-}
+    // Fetch recent activity from multiple sources
+    const [likesRes, commentsRes, postsRes] = await Promise.all([
+      supabase.from('post_likes').select('id, post_id, created_at').eq('user_id', user.id).order('created_at', { ascending: false }).limit(10),
+      supabase.from('post_comments').select('id, post_id, content, created_at').eq('author_id', user.id).order('created_at', { ascending: false }).limit(10),
+      supabase.from('posts').select('id, title, category, created_at').eq('author_id', user.id).order('created_at', { ascending: false }).limit(10),
+    ])
 
-function FeedWidget() {
-  const { t } = useTranslation()
-  const [posts, setPosts] = useState<FeedPost[]>([])
-  const [profiles, setProfiles] = useState<Record<string, FeedProfile>>({})
-  const [loading, setLoading] = useState(true)
+    const log: Array<{ id: string; action: string; detail: string; date: string }> = []
 
-  useEffect(() => {
-    async function loadFeed() {
-      try {
-        const res = await fetch('/api/feed')
-        if (res.ok) {
-          const data = await res.json()
-          setPosts(data.posts)
-          setProfiles(data.profiles)
-        }
-      } catch { /* empty */ }
-      setLoading(false)
+    // Likes = Shines donnés
+    for (const like of (likesRes.data || [])) {
+      log.push({
+        id: `like-${like.id}`,
+        action: 'Shine donné',
+        detail: 'Vous avez donné un Shine',
+        date: like.created_at,
+      })
     }
-    loadFeed()
-  }, [])
 
-  if (loading) {
-    return (
-      <div>
-        <h2 className="text-[11px] font-semibold uppercase tracking-widest mb-4" style={{ color: 'var(--text-muted)' }}>
-          Fil d&apos;actualité de mes Rayons
-        </h2>
-        <div className="flex justify-center py-8">
-          <div className="w-6 h-6 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
-        </div>
-      </div>
-    )
+    // Comments
+    for (const comment of (commentsRes.data || [])) {
+      log.push({
+        id: `comment-${comment.id}`,
+        action: 'Commentaire',
+        detail: `Vous avez commenté : "${(comment.content || '').slice(0, 60)}${(comment.content || '').length > 60 ? '...' : ''}"`,
+        date: comment.created_at,
+      })
+    }
+
+    // Publications
+    for (const post of (postsRes.data || [])) {
+      log.push({
+        id: `post-${post.id}`,
+        action: 'Publication',
+        detail: `Vous avez publié : "${post.title}"`,
+        date: post.created_at,
+      })
+    }
+
+    // Sort by date descending
+    log.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    setActivityLog(log.slice(0, 20))
+    setLogLoading(false)
   }
 
-  if (posts.length === 0) {
-    return (
-      <div>
-        <h2 className="text-[11px] font-semibold uppercase tracking-widest mb-4" style={{ color: 'var(--text-muted)' }}>
-          Fil d&apos;actualité de mes Rayons
-        </h2>
-        <div className="glass p-8 text-center">
-          <div className="text-3xl mb-3">&#9728;</div>
-          <h3 className="font-semibold text-[15px] mb-2" style={{ color: 'var(--text-primary)' }}>
-            Votre fil d&apos;actualité est vide
-          </h3>
-          <p className="text-sm mb-4" style={{ color: 'var(--text-muted)' }}>
-            Envoyez des Rayons aux membres pour voir leurs publications ici.
-          </p>
-          <Link
-            href="/dashboard/mur"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold"
-            style={{ background: 'var(--gold)', color: 'var(--dark)' }}
-          >
-            {t('encyclopedia.explore')} la communauté
-          </Link>
-        </div>
-      </div>
-    )
-  }
+  const counters = [
+    { label: 'Shines\nTransmis', value: xpData?.shines_given || 0, icon: '💛' },
+    { label: 'Shines\nReçus', value: xpData?.shines_received || 0, icon: '⭐' },
+    { label: 'Commentaires\nLaissés', value: 0, icon: '💬', key: 'comments' },
+    { label: 'Partages', value: 0, icon: '🔗', key: 'shares' },
+  ]
 
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.2, duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
+    >
+      {/* Section header */}
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>
-          Fil d&apos;actualité de mes Rayons
+        <h2 className="text-[11px] font-semibold uppercase tracking-widest flex items-center gap-2" style={{ color: 'var(--text-muted)' }}>
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--gold)' }}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
+          </svg>
+          PUBLIÉ
         </h2>
-        <Link href="/dashboard/mes-rayons" className="text-[12px] font-medium" style={{ color: 'var(--gold)' }}>
-          {t('rayons.tab_connections')} →
-        </Link>
+        <button
+          onClick={loadActivityLog}
+          className="text-[12px] font-medium flex items-center gap-1 cursor-pointer transition-colors hover:opacity-80"
+          style={{ color: 'var(--gold)' }}
+        >
+          Afficher les détails
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+          </svg>
+        </button>
       </div>
-      <div className="space-y-4">
-        {posts.slice(0, 5).map(post => {
-          const author = profiles[post.author_id]
-          if (!author) return null
-          const displayName = author.pseudo || author.prenom
-          const cat = ECLAT_CATEGORIES[post.category] || ECLAT_CATEGORIES.partage
 
-          return (
-            <div key={post.id} className="glass glass-hover p-5 transition-all duration-300">
-              {/* Author header */}
-              <div className="flex items-center gap-3 mb-3">
-                <Link href={`/dashboard/membre/${author.id}`} className="shrink-0">
-                  {author.avatar_url ? (
-                    <img src={author.avatar_url} alt={displayName} className="w-10 h-10 rounded-full object-cover ring-1 ring-white/10" />
-                  ) : (
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-display font-semibold"
-                      style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
-                      {displayName.charAt(0).toUpperCase()}
-                    </div>
-                  )}
-                </Link>
-                <div className="flex-1 min-w-0">
-                  <Link href={`/dashboard/membre/${author.id}`} className="font-semibold text-[14px] hover:underline" style={{ color: 'var(--text-primary)' }}>
-                    {displayName}
-                  </Link>
-                  <div className="flex items-center gap-2 mt-0.5">
-                    <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>
-                      {new Date(post.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}
-                    </span>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded-full" style={{ background: `${cat.color}15`, color: cat.color }}>
-                      {cat.icon} {cat.label}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Content */}
-              {post.title && post.title !== cat.label && (
-                <h4 className="font-semibold text-sm mb-1" style={{ color: 'var(--text-primary)' }}>{post.title}</h4>
-              )}
-              <p className="text-sm leading-relaxed whitespace-pre-line"
-                style={{
-                  color: post.category === 'citation' ? 'var(--gold)' : 'var(--text-secondary)',
-                  fontStyle: post.category === 'citation' ? 'italic' : 'normal',
-                }}>
-                {post.content.length > 300 ? post.content.slice(0, 300) + '...' : post.content}
+      {/* Counters bandeau */}
+      <div className="glass p-4">
+        <div className="grid grid-cols-4 gap-3">
+          {counters.map((c, i) => (
+            <motion.div
+              key={i}
+              custom={i}
+              initial="hidden"
+              animate="visible"
+              variants={fadeUp}
+              className="text-center"
+            >
+              <p className="text-2xl sm:text-3xl font-semibold" style={{ color: 'var(--gold)' }}>
+                {c.value}
               </p>
-
-              {/* Media */}
-              {post.image_url && (
-                <div className="mt-3 rounded-lg overflow-hidden">
-                  <img src={post.image_url} alt="" className="w-full max-h-64 object-cover" />
-                </div>
-              )}
-              {post.video_url && (
-                <div className="mt-3 rounded-lg overflow-hidden">
-                  <video src={post.video_url} controls className="w-full max-h-64" />
-                </div>
-              )}
-              {post.audio_url && (
-                <div className="mt-3">
-                  <AudioPlayer src={post.audio_url} />
-                </div>
-              )}
-
-              {/* Footer stats */}
-              <div className="flex items-center gap-4 mt-3 pt-3" style={{ borderTop: '1px solid var(--dark-border)' }}>
-                <span className="flex items-center gap-1.5 text-[12px]" style={{ color: 'var(--text-muted)' }}>
-                  <svg className="w-4 h-4" fill={post.user_has_liked ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}
-                    style={{ color: post.user_has_liked ? '#D4AF37' : 'var(--text-muted)' }}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
-                  </svg>
-                  {post.likes_count}
-                </span>
-                <span className="flex items-center gap-1.5 text-[12px]" style={{ color: 'var(--text-muted)' }}>
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" />
-                  </svg>
-                  {post.comments_count}
-                </span>
-                <Link href={`/dashboard/membre/${author.id}`} className="ml-auto text-[12px] font-medium" style={{ color: 'var(--gold)' }}>
-                  Voir le profil →
-                </Link>
-              </div>
-            </div>
-          )
-        })}
-
-        {posts.length > 5 && (
-          <div className="text-center">
-            <Link href="/dashboard/mes-rayons" className="text-sm font-medium" style={{ color: 'var(--gold)' }}>
-              Voir tous les posts de mes Rayons →
-            </Link>
-          </div>
-        )}
+              <p className="text-[10px] sm:text-[11px] mt-1 whitespace-pre-line leading-tight" style={{ color: 'var(--text-muted)' }}>
+                {c.label}
+              </p>
+            </motion.div>
+          ))}
+        </div>
       </div>
-    </div>
+
+      {/* Activity log (expandable) */}
+      {showLog && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          transition={{ duration: 0.3 }}
+          className="glass mt-3 p-4 max-h-80 overflow-y-auto"
+        >
+          <h3 className="text-[11px] font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>
+            Journal d&apos;activité
+          </h3>
+          {logLoading ? (
+            <div className="flex justify-center py-4">
+              <div className="w-5 h-5 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+            </div>
+          ) : activityLog.length === 0 ? (
+            <p className="text-[13px] text-center py-4" style={{ color: 'var(--text-muted)' }}>
+              Aucune activité récente
+            </p>
+          ) : (
+            <div className="space-y-2">
+              {activityLog.map((entry) => (
+                <div key={entry.id} className="flex items-start gap-3 py-2" style={{ borderBottom: '1px solid var(--dark-border)' }}>
+                  <div className="w-2 h-2 rounded-full mt-1.5 shrink-0" style={{ background: 'var(--gold)' }} />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[12px]" style={{ color: 'var(--text-primary)' }}>{entry.detail}</p>
+                    <p className="text-[10px] mt-0.5" style={{ color: 'var(--text-muted)' }}>
+                      {new Date(entry.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </div>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded-full shrink-0"
+                    style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}>
+                    {entry.action}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </motion.div>
+      )}
+    </motion.div>
   )
 }
 
+/* ─────────────────────────────────────────────
+   Section: Badges (carrousel)
+   ───────────────────────────────────────────── */
+function BadgesSection({ userId }: { userId: string | null }) {
+  const [unlockedBadges, setUnlockedBadges] = useState<Array<{ badge_id: string; category: string }>>([])
+  const [loading, setLoading] = useState(true)
+  const categories = getAllCategories()
+
+  useEffect(() => {
+    async function load() {
+      if (!userId) { setLoading(false); return }
+      const badges = await getUserBadges(userId)
+      setUnlockedBadges(badges)
+      setLoading(false)
+    }
+    load()
+  }, [userId])
+
+  // Build display items from unlocked badges
+  const displayBadges = unlockedBadges.map(ub => {
+    const cat = categories[ub.category] as CategoryConfig | undefined
+    const badge = cat?.badges.find(b => b.id === ub.badge_id)
+    return badge && cat ? { ...badge, categoryName: cat.name, categoryIcon: cat.icon } : null
+  }).filter(Boolean).slice(0, 10)
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.25, duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
+    >
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-[11px] font-semibold uppercase tracking-widest flex items-center gap-2" style={{ color: 'var(--text-muted)' }}>
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--gold)' }}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M18.75 4.236c.982.143 1.954.317 2.916.52A6.003 6.003 0 0016.27 9.728M18.75 4.236V4.5c0 2.108-.966 3.99-2.48 5.228m0 0a6.023 6.023 0 01-3.52 1.14 6.023 6.023 0 01-3.52-1.14" />
+          </svg>
+          BADGES
+        </h2>
+        <Link
+          href="/dashboard/badges"
+          className="text-[12px] font-medium flex items-center gap-1 transition-colors hover:opacity-80"
+          style={{ color: 'var(--gold)' }}
+        >
+          Voir tout
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+          </svg>
+        </Link>
+      </div>
+
+      {loading ? (
+        <div className="flex justify-center py-6">
+          <div className="w-5 h-5 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+        </div>
+      ) : displayBadges.length === 0 ? (
+        <div className="glass p-6 text-center">
+          <p className="text-[13px]" style={{ color: 'var(--text-muted)' }}>
+            Aucun badge débloqué pour le moment. Continuez à contribuer !
+          </p>
+          <Link href="/dashboard/badges" className="inline-block mt-3 text-[12px] font-medium" style={{ color: 'var(--gold)' }}>
+            Voir tous les badges disponibles →
+          </Link>
+        </div>
+      ) : (
+        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide" style={{ scrollbarWidth: 'none' }}>
+          {displayBadges.map((badge) => {
+            if (!badge) return null
+            return (
+              <div
+                key={badge.id}
+                className="shrink-0 w-28 rounded-xl p-3 text-center"
+                style={{
+                  background: 'rgba(212,175,55,0.06)',
+                  border: '1px solid rgba(212,175,55,0.15)',
+                }}
+              >
+                <div className="w-12 h-12 mx-auto rounded-full flex items-center justify-center mb-2"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.05))',
+                    border: '2px solid var(--gold)',
+                  }}>
+                  <span className="text-lg">{CATEGORY_ICONS[badge.categoryIcon] || '🏆'}</span>
+                </div>
+                <h3 className="font-semibold text-[10px] leading-tight" style={{ color: 'var(--gold)' }}>
+                  {badge.title}
+                </h3>
+                <p className="text-[9px] mt-0.5" style={{ color: 'var(--text-muted)' }}>
+                  {badge.categoryName}
+                </p>
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </motion.div>
+  )
+}
+
+/* ─────────────────────────────────────────────
+   Section: Actu - Shine (5 pillars)
+   ───────────────────────────────────────────── */
+function ActuShineSection() {
+  const [latestContent, setLatestContent] = useState<{
+    encyclopedia: { id: string; title: string; image_url: string | null } | null
+    shineTV: { id: string; title: string; thumbnail_url: string | null } | null
+    audible: { id: string; title: string; cover_url: string | null } | null
+    shorts: { id: string; title: string; thumbnail_url: string | null } | null
+    library: { id: string; title: string; cover_url: string | null } | null
+  }>({
+    encyclopedia: null, shineTV: null, audible: null, shorts: null, library: null,
+  })
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function load() {
+      const supabase = createClient()
+      const [encyclopediaRes, tvRes, audibleRes, shortsRes, libraryRes] = await Promise.all([
+        supabase.from('douleurs').select('id, title, image_url').eq('is_published', true).order('created_at', { ascending: false }).limit(1),
+        supabase.from('shine_tv_videos').select('id, title, thumbnail_url').eq('is_published', true).order('created_at', { ascending: false }).limit(1),
+        supabase.from('shine_audible_tracks').select('id, title, cover_url').eq('is_published', true).order('created_at', { ascending: false }).limit(1),
+        supabase.from('shine_shorts').select('id, title, thumbnail_url').eq('is_published', true).order('created_at', { ascending: false }).limit(1),
+        supabase.from('shine_library_books').select('id, title, cover_url').eq('is_published', true).order('created_at', { ascending: false }).limit(1),
+      ])
+
+      setLatestContent({
+        encyclopedia: encyclopediaRes.data?.[0] || null,
+        shineTV: tvRes.data?.[0] || null,
+        audible: audibleRes.data?.[0] || null,
+        shorts: shortsRes.data?.[0] || null,
+        library: libraryRes.data?.[0] || null,
+      })
+      setLoading(false)
+    }
+    load()
+  }, [])
+
+  const pillars = [
+    {
+      key: 'encyclopedia',
+      title: 'Encyclopédie',
+      icon: (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+        </svg>
+      ),
+      href: '/dashboard/encyclopedie',
+      data: latestContent.encyclopedia,
+      image: latestContent.encyclopedia?.image_url,
+    },
+    {
+      key: 'shineTV',
+      title: 'Shine TV',
+      icon: (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6 20.25h12m-7.5-3v3m3-3v3m-10.125-3h17.25c.621 0 1.125-.504 1.125-1.125V4.875c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125z" />
+        </svg>
+      ),
+      href: '/dashboard/shine-tv',
+      data: latestContent.shineTV,
+      image: latestContent.shineTV?.thumbnail_url,
+    },
+    {
+      key: 'audible',
+      title: 'Audible',
+      icon: (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
+        </svg>
+      ),
+      href: '/dashboard/shine-audible',
+      data: latestContent.audible,
+      image: latestContent.audible?.cover_url,
+    },
+    {
+      key: 'shorts',
+      title: 'Short',
+      icon: (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+        </svg>
+      ),
+      href: '/dashboard/shine-shorts',
+      data: latestContent.shorts,
+      image: latestContent.shorts?.thumbnail_url,
+    },
+    {
+      key: 'library',
+      title: 'Librairie',
+      icon: (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+        </svg>
+      ),
+      href: '/dashboard/shine-librairie',
+      data: latestContent.library,
+      image: latestContent.library?.cover_url,
+    },
+  ]
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.3, duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
+    >
+      <h2 className="text-[11px] font-semibold uppercase tracking-widest flex items-center gap-2 mb-4" style={{ color: 'var(--text-muted)' }}>
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--gold)' }}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9.348 14.651a3.75 3.75 0 010-5.303m5.304 0a3.75 3.75 0 010 5.303m-7.425 2.122a6.75 6.75 0 010-9.546m9.546 0a6.75 6.75 0 010 9.546M5.106 18.894c-3.808-3.808-3.808-9.98 0-13.789m13.788 0c3.808 3.808 3.808 9.981 0 13.79M12 12h.008v.007H12V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+        </svg>
+        ACTU - SHINE
+      </h2>
+
+      {loading ? (
+        <div className="flex justify-center py-8">
+          <div className="w-6 h-6 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+        </div>
+      ) : (
+        <div className="grid grid-cols-5 gap-2 sm:gap-3">
+          {pillars.map((pillar) => (
+            <Link
+              key={pillar.key}
+              href={pillar.href}
+              className="glass glass-hover group block overflow-hidden rounded-xl transition-all duration-300"
+              style={{ borderColor: 'rgba(212,175,55,0.08)' }}
+            >
+              {/* Thumbnail */}
+              <div className="relative aspect-square overflow-hidden bg-black/20">
+                {pillar.image ? (
+                  <img
+                    src={pillar.image}
+                    alt={pillar.data?.title || pillar.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center" style={{ background: 'rgba(212,175,55,0.05)' }}>
+                    <span style={{ color: 'var(--gold)', opacity: 0.3 }}>{pillar.icon}</span>
+                  </div>
+                )}
+              </div>
+              {/* Title */}
+              <div className="p-2 text-center">
+                <div className="flex justify-center mb-1" style={{ color: 'var(--gold)', opacity: 0.7 }}>
+                  {pillar.icon}
+                </div>
+                <h3 className="text-[10px] sm:text-[11px] font-semibold leading-tight" style={{ color: 'var(--text-primary)' }}>
+                  {pillar.title}
+                </h3>
+                {pillar.data && (
+                  <p className="text-[9px] mt-0.5 truncate" style={{ color: 'var(--text-muted)' }}>
+                    {pillar.data.title}
+                  </p>
+                )}
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
+    </motion.div>
+  )
+}
+
+/* ─────────────────────────────────────────────
+   Main Dashboard Page: Ma Légende
+   ───────────────────────────────────────────── */
 function getTimeSlot(): TimeSlot {
   const hour = new Date().getHours()
   if (hour < 5) return 'night'
@@ -695,6 +641,8 @@ export default function DashboardHome() {
   const [greeting, setGreeting] = useState('')
   const [quote, setQuote] = useState<Quote | null>(null)
   const [siteSettings, setSiteSettings] = useState<Record<string, string>>({})
+  const [xpData, setXpData] = useState<UserXP | null>(null)
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null)
 
   useEffect(() => {
     setQuote(getNextRotatingQuote())
@@ -705,17 +653,17 @@ export default function DashboardHome() {
     async function loadProfile() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
+      setCurrentUserId(user.id)
+
       const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single()
       if (data) {
         setProfile(data as Profile)
 
-        // Rotating greeting logic
         const progress = (data as Profile).greetings_progress || { night: 0, morning: 0, afternoon: 0, evening: 0 }
         const currentIndex = progress[currentSlot] ?? 0
         const message = greetingsData[currentSlot][currentIndex % GREETINGS_PER_SLOT]
         setGreeting(message)
 
-        // Increment index for next visit (async, non-blocking)
         const nextIndex = (currentIndex + 1) % GREETINGS_PER_SLOT
         const updatedProgress = { ...progress, [currentSlot]: nextIndex }
         supabase.from('profiles').update({ greetings_progress: updatedProgress }).eq('id', user.id).then()
@@ -725,10 +673,14 @@ export default function DashboardHome() {
           email: user.email || '', role: 'member', avatar_url: null, plan: null, created_at: user.created_at,
           pseudo: null, bio: null, video_url: null, is_bot: false,
         })
-        // First visit: show first greeting for current slot
         setGreeting(greetingsData[currentSlot][0])
       }
+
+      // Load XP
+      const { data: xp } = await supabase.from('user_xp').select('*').eq('user_id', user.id).maybeSingle()
+      if (xp) setXpData(xp as UserXP)
     }
+
     async function loadSettings() {
       try {
         const { data } = await supabase.from('site_settings').select('key, value')
@@ -739,50 +691,47 @@ export default function DashboardHome() {
         }
       } catch {}
     }
+
     loadProfile()
     loadSettings()
   }, [])
 
-  const steps = [
-    { num: '01', title: siteSettings.step1_title || t('steps.understand'), desc: siteSettings.step1_desc || t('steps.understand_desc'), accent: siteSettings.step1_color || '#55EFC4' },
-    { num: '02', title: siteSettings.step2_title || t('steps.release'), desc: siteSettings.step2_desc || t('steps.release_desc'), accent: siteSettings.step2_color || '#74C0FC' },
-    { num: '03', title: siteSettings.step3_title || t('steps.meditation'), desc: siteSettings.step3_desc || t('steps.meditation_desc'), accent: siteSettings.step3_color || '#E17055' },
-  ]
-
   return (
-    <div className="max-w-5xl mx-auto space-y-10">
+    <div className="max-w-5xl mx-auto space-y-8">
       {/* ── Hero greeting ── */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+        transition={{ duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
       >
         <p className="text-[13px] font-medium tracking-wide mb-2" style={{ color: 'var(--text-muted)' }}>
           {greeting}
         </p>
-        <div className="flex items-center gap-3 flex-wrap">
-          <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight" style={{ color: 'var(--text-primary)' }}>
-            {siteSettings.dash_welcome || t('dashboard.welcome')} <span style={{ color: 'var(--gold)' }}>{profile?.prenom || 'Membre'}</span>
-          </h1>
-          <XPBadge size="sm" />
-        </div>
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight" style={{ color: 'var(--text-primary)' }}>
+          {siteSettings.dash_welcome || t('dashboard.welcome')} <span style={{ color: 'var(--gold)' }}>{profile?.prenom || 'Membre'}</span>
+        </h1>
         <p className="mt-2 text-[15px] leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
           {siteSettings.dash_subtitle || t('dashboard.explore')}
         </p>
       </motion.div>
 
-      {/* ── Citation — glass card ── */}
+      {/* ── Étape 1: Niveau & XP (migrated from profile) ── */}
+      <LevelXPSection xpData={xpData} />
+
+      {/* ── Météo Énergétique ── */}
+      <EnergyWeatherWidget profile={profile} />
+
+      {/* ── Citation du jour — DEMARCATION LINE ── */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+        transition={{ delay: 0.1, duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
         className="glass glass-hover relative overflow-hidden p-6 sm:p-8"
         style={{
           background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.05), var(--dark-card))',
           borderColor: 'rgba(212, 175, 55, 0.1)',
         }}
       >
-        {/* Subtle gold ambient */}
         <div
           className="absolute -top-20 -right-20 w-60 h-60 rounded-full opacity-30 pointer-events-none"
           style={{ background: 'radial-gradient(circle, rgba(212, 175, 55, 0.08), transparent 70%)' }}
@@ -795,65 +744,16 @@ export default function DashboardHome() {
         </p>
       </motion.div>
 
-      {/* ── Météo Énergétique ── */}
-      <EnergyWeatherWidget profile={profile} />
+      {/* ══════ BELOW CITATION: New Sections ══════ */}
 
-      {/* ── Vedettes du moment ── */}
-      <VedettesWidget />
+      {/* ── Étape 2: Mes contributions ── */}
+      <ContributionsSection xpData={xpData} />
 
-      {/* ── Hero image (optional) ── */}
-      {siteSettings.dash_hero_image && (
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="glass overflow-hidden rounded-2xl"
-        >
-          <img src={siteSettings.dash_hero_image} alt="" className="w-full h-48 sm:h-64 object-cover" />
-        </motion.div>
-      )}
+      {/* ── Étape 3: Badges ── */}
+      <BadgesSection userId={currentUserId} />
 
-      {/* ── Demandes de Rayons en attente ── */}
-      <PendingRayonsWidget />
-
-      {/* ── Fil d'actualité de mes Rayons ── */}
-      <FeedWidget />
-
-      {/* ── Mon parcours — summary ── */}
-      <ParcoursWidget siteSettings={siteSettings} />
-
-      {/* ── 3 Étapes — Bento row ── */}
-      <div>
-        <h2 className="text-[11px] font-semibold uppercase tracking-widest mb-4" style={{ color: 'var(--text-muted)' }}>
-          {siteSettings.steps_label || t('dashboard.protocol')}
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {steps.map((s, i) => (
-            <motion.div
-              key={s.num}
-              custom={i + 4}
-              initial="hidden"
-              animate="visible"
-              variants={fadeUp}
-              className="glass glass-hover p-5 text-center group"
-            >
-              {/* Step number */}
-              <span
-                className="font-display text-2xl sm:text-3xl font-semibold block mb-2 transition-transform duration-300 group-hover:scale-110"
-                style={{ color: s.accent, opacity: 0.25 }}
-              >
-                {s.num}
-              </span>
-              <h3 className="font-semibold text-[14px] mb-1" style={{ color: s.accent }}>
-                {s.title}
-              </h3>
-              <p className="text-[12px] leading-relaxed" style={{ color: 'var(--text-muted)' }}>
-                {s.desc}
-              </p>
-            </motion.div>
-          ))}
-        </div>
-      </div>
+      {/* ── Étape 4: Actu - Shine ── */}
+      <ActuShineSection />
 
       {/* ── Help footer ── */}
       <motion.div

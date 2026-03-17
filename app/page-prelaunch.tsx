@@ -182,7 +182,7 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "already" | "error">("idle");
-  const [waitlistCount, setWaitlistCount] = useState(0);
+  const [waitlistCount, setWaitlistCount] = useState(34);
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
@@ -193,7 +193,7 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
   useEffect(() => {
     fetch("/api/waitlist")
       .then((r) => r.json())
-      .then((d) => setWaitlistCount(d.count || 0))
+      .then((d) => setWaitlistCount(Math.max(34, d.count || 0)))
       .catch(() => {});
   }, []);
 

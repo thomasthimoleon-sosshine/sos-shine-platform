@@ -73,7 +73,7 @@ function PrelaunchContent() {
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'already' | 'error'>('idle')
-  const [waitlistCount, setWaitlistCount] = useState(0)
+  const [waitlistCount, setWaitlistCount] = useState(34)
 
   useEffect(() => {
     const interval = setInterval(() => setTime(getTimeLeft(PRELAUNCH_END)), 1000)
@@ -83,7 +83,7 @@ function PrelaunchContent() {
   useEffect(() => {
     fetch('/api/waitlist')
       .then((r) => r.json())
-      .then((d) => setWaitlistCount(d.count || 0))
+      .then((d) => setWaitlistCount(Math.max(34, d.count || 0)))
       .catch(() => {})
   }, [])
 

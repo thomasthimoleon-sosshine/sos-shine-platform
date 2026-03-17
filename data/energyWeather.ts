@@ -168,8 +168,9 @@ export function getDailyForecast(sign: ZodiacSign): EnergyForecast & { sign: Zod
  */
 export function resolveZodiacSign(prenom: string, profileSign?: string | null): ZodiacSign | null {
   if (profileSign && profileSign in ZODIAC_INFO) return profileSign as ZodiacSign
-  // Check founder mapping (case-insensitive first name match)
-  const normalizedName = prenom.charAt(0).toUpperCase() + prenom.slice(1).toLowerCase()
+  // Check founder mapping (trim + case-insensitive)
+  const trimmed = prenom.trim()
+  const normalizedName = trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase()
   if (normalizedName in FOUNDER_ZODIAC) return FOUNDER_ZODIAC[normalizedName]
   return null
 }

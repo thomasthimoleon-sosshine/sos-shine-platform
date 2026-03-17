@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 import type { Douleur } from '@/types/database'
 
@@ -63,11 +64,14 @@ export default function PublicEncyclopediePage() {
       {/* Header bar */}
       <header className="px-6 md:px-20 py-5 flex items-center justify-between" style={{ borderBottom: '1px solid var(--dark-border)' }}>
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center font-display text-base font-semibold"
-            style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: 'var(--dark)' }}>
-            S
-          </div>
-          <span className="font-display text-lg font-medium" style={{ color: 'var(--gold)' }}>SOS Shine</span>
+          <Image
+            src="/images/logo-shine-transparent.png"
+            alt="SOS Shine"
+            width={140}
+            height={45}
+            className="object-contain"
+            priority
+          />
         </Link>
         <Link
           href={STRIPE_URL}

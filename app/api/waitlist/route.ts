@@ -1,15 +1,11 @@
 import { NextResponse } from 'next/server'
-import { createClient as createSupabaseClient } from '@supabase/supabase-js'
-import pg from 'pg'
+import { createClient } from '@supabase/supabase-js'
 
-let pool: pg.Pool | null = null
-
-function getPool() {
-  if (pool) return pool
-  const connectionString = process.env.DATABASE_URL
-  if (!connectionString) return null
-  pool = new pg.Pool({ connectionString, max: 5, idleTimeoutMillis: 30000 })
-  return pool
+function getSupabase() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!url || !key) return null
+  return createClient(url, key)
 }
 
 export async function POST(request: Request) {
@@ -20,56 +16,56 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Email invalide' }, { status: 400 })
     }
 
-    const pool = getPool()
-    if (!pool) {
+    const supabase = getSupabase()
+    if (!supabase) {
       return NextResponse.json({ error: 'Configuration serveur manquante' }, { status: 500 })
     }
 
-    try {
-      await pool.query(
-        'INSERT INTO waitlist (email, name) VALUES ($1, $2)',
-        [email.toLowerCase().trim(), name?.trim() || null]
-      )
+    const cleanEmail = email.toLowerCase().trim()
+    const cleanName = name?.trim() || null
 
-      try {
-        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-        const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-        if (supabaseUrl && supabaseKey) {
-          const sb = createSupabaseClient(supabaseUrl, supabaseKey)
-          await sb.from('crm_contacts').upsert({
-            email: email.toLowerCase().trim(),
-            first_name: name?.trim() || null,
-            source: 'waitlist',
-          }, { onConflict: 'email', ignoreDuplicates: true })
-        }
-      } catch {}
+    // Insert into waitlist
+    const { error } = await supabase
+      .from('waitlist')
+      .insert({ email: cleanEmail, name: cleanName })
 
-      try {
-        const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
-          || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : null)
-          || ''
-        if (siteUrl) {
-          await fetch(`${siteUrl}/api/crm/sequences/enroll`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              trigger_type: 'waitlist',
-              email: email.toLowerCase().trim(),
-              first_name: name?.trim() || null,
-            }),
-          })
-        }
-      } catch {}
-
-      return NextResponse.json({ message: 'success' }, { status: 201 })
-    } catch (err: unknown) {
-      const pgErr = err as { code?: string }
-      if (pgErr.code === '23505') {
+    if (error) {
+      // Duplicate email (unique constraint violation)
+      if (error.code === '23505') {
         return NextResponse.json({ message: 'already_registered' }, { status: 200 })
       }
-      console.error('Waitlist insert error:', err)
+      console.error('Waitlist insert error:', error)
       return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
     }
+
+    // Also add to CRM contacts
+    try {
+      await supabase.from('crm_contacts').upsert({
+        email: cleanEmail,
+        first_name: cleanName,
+        source: 'waitlist',
+      }, { onConflict: 'email', ignoreDuplicates: true })
+    } catch {}
+
+    // Enroll in waitlist sequence
+    try {
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
+        || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : null)
+        || ''
+      if (siteUrl) {
+        await fetch(`${siteUrl}/api/crm/sequences/enroll`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            trigger_type: 'waitlist',
+            email: cleanEmail,
+            first_name: cleanName,
+          }),
+        })
+      }
+    } catch {}
+
+    return NextResponse.json({ message: 'success' }, { status: 201 })
   } catch {
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
   }
@@ -77,13 +73,16 @@ export async function POST(request: Request) {
 
 export async function GET() {
   try {
-    const pool = getPool()
-    if (!pool) {
+    const supabase = getSupabase()
+    if (!supabase) {
       return NextResponse.json({ count: 0 })
     }
 
-    const result = await pool.query('SELECT COUNT(*) as count FROM waitlist')
-    return NextResponse.json({ count: parseInt(result.rows[0].count) || 0 })
+    const { count } = await supabase
+      .from('waitlist')
+      .select('*', { count: 'exact', head: true })
+
+    return NextResponse.json({ count: count || 0 })
   } catch {
     return NextResponse.json({ count: 0 })
   }

@@ -266,6 +266,9 @@ export default function Home() {
   const [prelaunchEnabled, setPrelaunchEnabled] = useState<boolean | null>(null);
   const [prelaunchSettings, setPrelaunchSettings] = useState<PrelaunchSettings>({});
 
+  // Early access emails that bypass the pre-launch page (for real-condition testing)
+  const EARLY_ACCESS_EMAILS = ['cabritjulia@gmail.com'];
+
   const [sections, setSections] = useState<Record<string, { content: SectionContent; styles: SectionStyles; is_visible: boolean }>>(() => {
     const map: Record<string, { content: SectionContent; styles: SectionStyles; is_visible: boolean }> = {};
     for (const d of LANDING_DEFAULTS) {
@@ -277,6 +280,19 @@ export default function Home() {
   const loadPrelaunchSettings = useCallback(async () => {
     try {
       const supabase = createClient();
+
+      // Check if current user has early access
+      const { data: { user } } = await supabase.auth.getUser();
+      const hasEarlyAccess = user?.email && EARLY_ACCESS_EMAILS.includes(user.email.toLowerCase());
+
+      // Also check for early access token in URL/localStorage
+      const params = new URLSearchParams(window.location.search);
+      const earlyAccessToken = params.get('early_access');
+      if (earlyAccessToken === 'SHINE2026') {
+        localStorage.setItem('sos_early_access', 'true');
+      }
+      const hasLocalEarlyAccess = localStorage.getItem('sos_early_access') === 'true';
+
       const { data: settingsData } = await supabase.from("site_settings").select("key, value").like("key", "prelaunch_%");
       if (settingsData && settingsData.length > 0) {
         const map: PrelaunchSettings = {};
@@ -284,7 +300,9 @@ export default function Home() {
           (map as Record<string, string>)[row.key] = row.value;
         });
         setPrelaunchSettings(map);
-        setPrelaunchEnabled((map as Record<string, string>).prelaunch_enabled === 'true');
+        const isPrelaunchOn = (map as Record<string, string>).prelaunch_enabled === 'true';
+        // Bypass prelaunch for early access users
+        setPrelaunchEnabled(isPrelaunchOn && !hasEarlyAccess && !hasLocalEarlyAccess);
       } else {
         setPrelaunchEnabled(false);
       }

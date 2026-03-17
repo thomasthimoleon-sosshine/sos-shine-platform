@@ -145,6 +145,67 @@ export async function incrementAndCheckBadges(
 }
 
 /**
+ * Unlock ALL badges for a given user (used for founders).
+ * Inserts all badges that the user hasn't already unlocked.
+ * Also sets action counters to max thresholds so the profile stays consistent.
+ */
+export async function unlockAllBadgesForUser(userId: string): Promise<string[]> {
+  const supabase = createClient()
+  const categories = badgesConfig.categories as Record<string, CategoryConfig>
+
+  // Collect every badge
+  const allBadges: Array<{ badge_id: string; category: string }> = []
+  for (const [catKey, cat] of Object.entries(categories)) {
+    for (const badge of cat.badges) {
+      allBadges.push({ badge_id: badge.id, category: catKey })
+    }
+  }
+
+  // Get already unlocked badges
+  const { data: existing } = await supabase
+    .from('user_badges' as never)
+    .select('badge_id')
+    .eq('user_id', userId) as { data: Array<{ badge_id: string }> | null }
+
+  const existingIds = new Set((existing || []).map(e => e.badge_id))
+  const newBadges = allBadges.filter(b => !existingIds.has(b.badge_id))
+
+  if (newBadges.length === 0) return []
+
+  // Insert all missing badges
+  const inserts = newBadges.map(b => ({
+    user_id: userId,
+    badge_id: b.badge_id,
+    category: b.category,
+  }))
+
+  await supabase.from('user_badges' as never).insert(inserts as never)
+
+  // Also set action counters to max thresholds for consistency
+  const maxCounters: Record<string, number> = {}
+  for (const [catKey, cat] of Object.entries(categories)) {
+    const maxThreshold = Math.max(...cat.badges.map(b => b.threshold))
+    maxCounters[catKey] = maxThreshold
+  }
+
+  await supabase
+    .from('user_action_counters' as never)
+    .upsert({
+      user_id: userId,
+      shines_given: maxCounters.shines_given,
+      shines_received: maxCounters.shines_received,
+      comments_left: maxCounters.comments_left,
+      publications_created: maxCounters.publications_created,
+      shares_external: maxCounters.shares_external,
+      encyclopedia_completed: maxCounters.encyclopedia_completed,
+      media_consumed: maxCounters.media_consumed,
+      login_streak: maxCounters.login_streak,
+    } as never, { onConflict: 'user_id' } as never)
+
+  return newBadges.map(b => b.badge_id)
+}
+
+/**
  * Category icon mapping for UI rendering
  */
 export const CATEGORY_ICONS: Record<string, string> = {

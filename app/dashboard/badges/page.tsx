@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
-import { getAllCategories, getUserBadges, CATEGORY_ICONS, type CategoryConfig } from '@/lib/badgeService'
+import { getAllCategories, getUserBadges, unlockAllBadgesForUser, CATEGORY_ICONS, type CategoryConfig } from '@/lib/badgeService'
 
 const ease = [0.25, 0.46, 0.45, 0.94] as const
 
@@ -18,6 +18,17 @@ export default function BadgesGalleryPage() {
       const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { setLoading(false); return }
+
+      // Check if user is a founder — if so, unlock all badges automatically
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .maybeSingle()
+
+      if (profile?.role === 'founder') {
+        await unlockAllBadgesForUser(user.id)
+      }
 
       const badges = await getUserBadges(user.id)
       setUnlockedBadgeIds(new Set(badges.map(b => b.badge_id)))

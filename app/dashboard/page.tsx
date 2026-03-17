@@ -11,7 +11,7 @@ import { greetingsData, GREETINGS_PER_SLOT, type TimeSlot } from '@/data/greetin
 import { getDailyForecast, resolveZodiacSign, ZODIAC_INFO } from '@/data/energyWeather'
 import { getLevelForXP, getNextLevel, getLevelProgress, formatXP } from '@/lib/xp'
 import type { UserXP } from '@/types/database'
-import { getAllCategories, getUserBadges, CATEGORY_ICONS, type CategoryConfig } from '@/lib/badgeService'
+import { getAllCategories, getUserBadges, unlockAllBadgesForUser, CATEGORY_ICONS, type CategoryConfig } from '@/lib/badgeService'
 
 const ease = [0.25, 0.46, 0.45, 0.94] as const
 
@@ -334,7 +334,7 @@ function ContributionsSection({ xpData }: { xpData: UserXP | null }) {
 /* ─────────────────────────────────────────────
    Section: Badges (carrousel)
    ───────────────────────────────────────────── */
-function BadgesSection({ userId }: { userId: string | null }) {
+function BadgesSection({ userId, role }: { userId: string | null; role?: string }) {
   const [unlockedBadgeIds, setUnlockedBadgeIds] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
   const categories = getAllCategories()
@@ -342,12 +342,18 @@ function BadgesSection({ userId }: { userId: string | null }) {
   useEffect(() => {
     async function load() {
       if (!userId) { setLoading(false); return }
+
+      // Auto-unlock all badges for founders
+      if (role === 'founder') {
+        await unlockAllBadgesForUser(userId)
+      }
+
       const badges = await getUserBadges(userId)
       setUnlockedBadgeIds(new Set(badges.map(b => b.badge_id)))
       setLoading(false)
     }
     load()
-  }, [userId])
+  }, [userId, role])
 
   // Build flat list of ALL badges (unlocked + locked/grayed)
   const allBadges = Object.entries(categories).flatMap(([, cat]) => {
@@ -713,7 +719,7 @@ export default function DashboardHome() {
       <ContributionsSection xpData={xpData} />
 
       {/* ── Étape 3: Badges ── */}
-      <BadgesSection userId={currentUserId} />
+      <BadgesSection userId={currentUserId} role={profile?.role} />
 
       {/* ── Étape 4: Actu - Shine ── */}
       <ActuShineSection />

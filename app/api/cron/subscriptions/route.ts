@@ -5,7 +5,7 @@ import { getResendClient } from '@/lib/crm/resend'
 const GRACE_PERIOD_DAYS = 7
 const REMINDER_INTERVALS_DAYS = [0, 3, 7] // immédiat, +3j, +7j
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sos-shine-platform.vercel.app'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sosshine.com'
 
 export async function GET(request: Request) {
   try {

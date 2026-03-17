@@ -8,6 +8,7 @@ import type { Profile } from '@/types/database'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 import { getNextRotatingQuote, type Quote } from '@/lib/quotes'
 import { greetingsData, GREETINGS_PER_SLOT, type TimeSlot } from '@/data/greetingsData'
+import { getDailyForecast, resolveZodiacSign, ZODIAC_INFO, type ZodiacSign } from '@/data/energyWeather'
 import AudioPlayer from '@/components/AudioPlayer'
 import XPBadge from '@/components/XPBadge'
 
@@ -395,6 +396,89 @@ function PendingRayonsWidget() {
   )
 }
 
+function EnergyWeatherWidget({ profile }: { profile: Profile | null }) {
+  const sign = profile ? resolveZodiacSign(profile.prenom, (profile as Profile & { zodiac_sign?: string | null }).zodiac_sign) : null
+  if (!sign) return null
+
+  const forecast = getDailyForecast(sign)
+  const info = ZODIAC_INFO[sign]
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.08, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+      className="glass relative overflow-hidden"
+      style={{
+        background: `linear-gradient(135deg, ${forecast.color}08, var(--dark-card))`,
+        borderColor: `${forecast.color}20`,
+      }}
+    >
+      {/* Ambient glow */}
+      <div
+        className="absolute -top-16 -left-16 w-48 h-48 rounded-full opacity-20 pointer-events-none"
+        style={{ background: `radial-gradient(circle, ${forecast.color}30, transparent 70%)` }}
+      />
+      <div className="p-5 sm:p-6 relative">
+        <div className="flex items-center gap-2 mb-4">
+          <span className="text-2xl">{info.symbol}</span>
+          <h2 className="text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>
+            Météo Énergétique du jour
+          </h2>
+        </div>
+
+        <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+          {/* Left: sign + energy level */}
+          <div className="flex items-center gap-3 shrink-0">
+            <div
+              className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl"
+              style={{ background: `${forecast.color}15` }}
+            >
+              {forecast.element}
+            </div>
+            <div>
+              <p className="font-display text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
+                {info.label}
+              </p>
+              <div className="flex items-center gap-2 mt-0.5">
+                <span
+                  className="inline-block w-2 h-2 rounded-full animate-pulse"
+                  style={{ background: forecast.color }}
+                />
+                <span className="text-[13px] font-medium" style={{ color: forecast.color }}>
+                  Énergie {forecast.energy}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Right: details */}
+          <div className="flex-1 space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Ambiance</span>
+              <span className="text-[13px] font-medium" style={{ color: 'var(--text-primary)' }}>{forecast.mood}</span>
+            </div>
+            <p className="text-[14px] leading-relaxed italic" style={{ color: 'var(--text-secondary)' }}>
+              &ldquo;{forecast.advice}&rdquo;
+            </p>
+            <div className="flex items-center gap-4 pt-1">
+              <span className="text-[11px] flex items-center gap-1" style={{ color: 'var(--text-muted)' }}>
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Heure favorable : <span className="font-medium" style={{ color: 'var(--text-primary)' }}>{forecast.luckyHour}</span>
+              </span>
+              <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
+                {info.dates}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  )
+}
+
 const ECLAT_CATEGORIES: Record<string, { label: string; icon: string; color: string }> = {
   temoignage: { label: 'Pensée', icon: '💭', color: '#D4AF37' },
   partage: { label: 'Partage', icon: '💫', color: '#74C0FC' },
@@ -710,6 +794,9 @@ export default function DashboardHome() {
           — {siteSettings.dash_custom_quote_author || (quote ? quote.author.fr : t('quote.author'))}
         </p>
       </motion.div>
+
+      {/* ── Météo Énergétique ── */}
+      <EnergyWeatherWidget profile={profile} />
 
       {/* ── Vedettes du moment ── */}
       <VedettesWidget />

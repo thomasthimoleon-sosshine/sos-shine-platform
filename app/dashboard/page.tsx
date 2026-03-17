@@ -409,14 +409,7 @@ function BadgesSection({ userId }: { userId: string | null }) {
                     : 'rgba(255,255,255,0.03)',
                   border: badge.isUnlocked ? '2px solid var(--gold)' : '2px solid var(--dark-border)',
                 }}>
-                {badge.isUnlocked ? (
-                  <span className="text-lg">{CATEGORY_ICONS[badge.categoryIcon] || '🏆'}</span>
-                ) : (
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}
-                    style={{ color: 'var(--text-muted)' }}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-                  </svg>
-                )}
+                <span className="text-lg">{badge.emoji || CATEGORY_ICONS[badge.categoryIcon] || '🏆'}</span>
               </div>
               <h3 className="font-semibold text-[10px] leading-tight"
                 style={{ color: badge.isUnlocked ? 'var(--gold)' : 'var(--text-muted)' }}>

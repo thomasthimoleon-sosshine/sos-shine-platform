@@ -5,16 +5,16 @@
       "description": "Récompense la générosité et le soutien apporté aux autres membres.",
       "icon": "heart",
       "badges": [
-        { "id": "sg_1", "threshold": 1, "title": "Étincelle Initiale" },
-        { "id": "sg_5", "threshold": 5, "title": "Donneur de Lumière" },
-        { "id": "sg_15", "threshold": 15, "title": "Catalyseur d'Énergie" },
-        { "id": "sg_50", "threshold": 50, "title": "Soutien Actif" },
-        { "id": "sg_100", "threshold": 100, "title": "Pilier Communautaire" },
-        { "id": "sg_250", "threshold": 250, "title": "Gardien du Lien" },
-        { "id": "sg_500", "threshold": 500, "title": "Soleil de Bienveillance" },
-        { "id": "sg_1000", "threshold": 1000, "title": "Architecte du Réseau" },
-        { "id": "sg_2500", "threshold": 2500, "title": "Coeur de Diamant" },
-        { "id": "sg_5000", "threshold": 5000, "title": "Altruiste Légendaire" }
+        { "id": "sg_1", "threshold": 1, "title": "Étincelle Initiale", "emoji": "✨" },
+        { "id": "sg_5", "threshold": 5, "title": "Donneur de Lumière", "emoji": "💡" },
+        { "id": "sg_15", "threshold": 15, "title": "Catalyseur d'Énergie", "emoji": "⚡" },
+        { "id": "sg_50", "threshold": 50, "title": "Soutien Actif", "emoji": "🤝" },
+        { "id": "sg_100", "threshold": 100, "title": "Pilier Communautaire", "emoji": "🏛️" },
+        { "id": "sg_250", "threshold": 250, "title": "Gardien du Lien", "emoji": "🔗" },
+        { "id": "sg_500", "threshold": 500, "title": "Soleil de Bienveillance", "emoji": "☀️" },
+        { "id": "sg_1000", "threshold": 1000, "title": "Architecte du Réseau", "emoji": "🕸️" },
+        { "id": "sg_2500", "threshold": 2500, "title": "Coeur de Diamant", "emoji": "💎" },
+        { "id": "sg_5000", "threshold": 5000, "title": "Altruiste Légendaire", "emoji": "👑" }
       ]
     },
     "shines_received": {
@@ -22,16 +22,16 @@
       "description": "Récompense l'impact et la valeur perçue de vos publications.",
       "icon": "star",
       "badges": [
-        { "id": "sr_1", "threshold": 1, "title": "Voix Écoutée" },
-        { "id": "sr_10", "threshold": 10, "title": "Présence Remarquée" },
-        { "id": "sr_50", "threshold": 50, "title": "Lueur Inspirante" },
-        { "id": "sr_100", "threshold": 100, "title": "Guide Émergent" },
-        { "id": "sr_250", "threshold": 250, "title": "Leader d'Opinion" },
-        { "id": "sr_500", "threshold": 500, "title": "Phare dans la Nuit" },
-        { "id": "sr_1000", "threshold": 1000, "title": "Aura Magnétique" },
-        { "id": "sr_2500", "threshold": 2500, "title": "Référence Absolue" },
-        { "id": "sr_5000", "threshold": 5000, "title": "Inspiration Majeure" },
-        { "id": "sr_10000", "threshold": 10000, "title": "Icône de Shine" }
+        { "id": "sr_1", "threshold": 1, "title": "Voix Écoutée", "emoji": "👂" },
+        { "id": "sr_10", "threshold": 10, "title": "Présence Remarquée", "emoji": "👁️" },
+        { "id": "sr_50", "threshold": 50, "title": "Lueur Inspirante", "emoji": "🌟" },
+        { "id": "sr_100", "threshold": 100, "title": "Guide Émergent", "emoji": "🧭" },
+        { "id": "sr_250", "threshold": 250, "title": "Leader d'Opinion", "emoji": "📢" },
+        { "id": "sr_500", "threshold": 500, "title": "Phare dans la Nuit", "emoji": "🏮" },
+        { "id": "sr_1000", "threshold": 1000, "title": "Aura Magnétique", "emoji": "🧲" },
+        { "id": "sr_2500", "threshold": 2500, "title": "Référence Absolue", "emoji": "📌" },
+        { "id": "sr_5000", "threshold": 5000, "title": "Inspiration Majeure", "emoji": "💫" },
+        { "id": "sr_10000", "threshold": 10000, "title": "Icône de Shine", "emoji": "🌞" }
       ]
     },
     "comments_left": {
@@ -39,16 +39,16 @@
       "description": "Récompense l'analyse, le conseil et l'interaction écrite.",
       "icon": "pen",
       "badges": [
-        { "id": "cl_1", "threshold": 1, "title": "Plume Naissante" },
-        { "id": "cl_5", "threshold": 5, "title": "Voix Active" },
-        { "id": "cl_20", "threshold": 20, "title": "Conseiller" },
-        { "id": "cl_50", "threshold": 50, "title": "Plume de Soutien" },
-        { "id": "cl_100", "threshold": 100, "title": "Analyste Bienveillant" },
-        { "id": "cl_250", "threshold": 250, "title": "Auteur Émérite" },
-        { "id": "cl_500", "threshold": 500, "title": "Stratège du Mot" },
-        { "id": "cl_1000", "threshold": 1000, "title": "Mentor Numérique" },
-        { "id": "cl_2500", "threshold": 2500, "title": "Sage de la Communauté" },
-        { "id": "cl_5000", "threshold": 5000, "title": "Oracle de Shine" }
+        { "id": "cl_1", "threshold": 1, "title": "Plume Naissante", "emoji": "🪶" },
+        { "id": "cl_5", "threshold": 5, "title": "Voix Active", "emoji": "🗣️" },
+        { "id": "cl_20", "threshold": 20, "title": "Conseiller", "emoji": "💬" },
+        { "id": "cl_50", "threshold": 50, "title": "Plume de Soutien", "emoji": "✒️" },
+        { "id": "cl_100", "threshold": 100, "title": "Analyste Bienveillant", "emoji": "🔍" },
+        { "id": "cl_250", "threshold": 250, "title": "Auteur Émérite", "emoji": "📜" },
+        { "id": "cl_500", "threshold": 500, "title": "Stratège du Mot", "emoji": "♟️" },
+        { "id": "cl_1000", "threshold": 1000, "title": "Mentor Numérique", "emoji": "🎓" },
+        { "id": "cl_2500", "threshold": 2500, "title": "Sage de la Communauté", "emoji": "🦉" },
+        { "id": "cl_5000", "threshold": 5000, "title": "Oracle de Shine", "emoji": "🔮" }
       ]
     },
     "publications_created": {
@@ -56,14 +56,14 @@
       "description": "Récompense le partage de témoignages et la création de valeur.",
       "icon": "sparkles",
       "badges": [
-        { "id": "pc_1", "threshold": 1, "title": "Premier Pas" },
-        { "id": "pc_5", "threshold": 5, "title": "Conteur d'Histoires" },
-        { "id": "pc_15", "threshold": 15, "title": "Témoin Actif" },
-        { "id": "pc_30", "threshold": 30, "title": "Créateur de Valeur" },
-        { "id": "pc_50", "threshold": 50, "title": "Voix Authentique" },
-        { "id": "pc_100", "threshold": 100, "title": "Producteur d'Éclats" },
-        { "id": "pc_250", "threshold": 250, "title": "Influenceur Positif" },
-        { "id": "pc_500", "threshold": 500, "title": "Pilier Narratif" }
+        { "id": "pc_1", "threshold": 1, "title": "Premier Pas", "emoji": "👣" },
+        { "id": "pc_5", "threshold": 5, "title": "Conteur d'Histoires", "emoji": "📖" },
+        { "id": "pc_15", "threshold": 15, "title": "Témoin Actif", "emoji": "👁️‍🗨️" },
+        { "id": "pc_30", "threshold": 30, "title": "Créateur de Valeur", "emoji": "💎" },
+        { "id": "pc_50", "threshold": 50, "title": "Voix Authentique", "emoji": "🎤" },
+        { "id": "pc_100", "threshold": 100, "title": "Producteur d'Éclats", "emoji": "🌠" },
+        { "id": "pc_250", "threshold": 250, "title": "Influenceur Positif", "emoji": "🌈" },
+        { "id": "pc_500", "threshold": 500, "title": "Pilier Narratif", "emoji": "🏛️" }
       ]
     },
     "shares_external": {
@@ -71,13 +71,13 @@
       "description": "Récompense la diffusion de nos outils vers l'extérieur.",
       "icon": "share",
       "badges": [
-        { "id": "se_1", "threshold": 1, "title": "Écho du Shine" },
-        { "id": "se_10", "threshold": 10, "title": "Messager" },
-        { "id": "se_25", "threshold": 25, "title": "Connecteur" },
-        { "id": "se_50", "threshold": 50, "title": "Porte-Voix" },
-        { "id": "se_100", "threshold": 100, "title": "Diplomate" },
-        { "id": "se_250", "threshold": 250, "title": "Ambassadeur Officiel" },
-        { "id": "se_500", "threshold": 500, "title": "Héraut de la Lumière" }
+        { "id": "se_1", "threshold": 1, "title": "Écho du Shine", "emoji": "📡" },
+        { "id": "se_10", "threshold": 10, "title": "Messager", "emoji": "📨" },
+        { "id": "se_25", "threshold": 25, "title": "Connecteur", "emoji": "🔌" },
+        { "id": "se_50", "threshold": 50, "title": "Porte-Voix", "emoji": "📣" },
+        { "id": "se_100", "threshold": 100, "title": "Diplomate", "emoji": "🤝" },
+        { "id": "se_250", "threshold": 250, "title": "Ambassadeur Officiel", "emoji": "🏅" },
+        { "id": "se_500", "threshold": 500, "title": "Héraut de la Lumière", "emoji": "🕊️" }
       ]
     },
     "encyclopedia_completed": {
@@ -85,13 +85,13 @@
       "description": "Récompense l'assiduité dans la résolution des parcours de douleurs.",
       "icon": "compass",
       "badges": [
-        { "id": "ec_1", "threshold": 1, "title": "Chercheur de Vérité" },
-        { "id": "ec_3", "threshold": 3, "title": "Apprenti Guérisseur" },
-        { "id": "ec_5", "threshold": 5, "title": "Étudiant Assidu" },
-        { "id": "ec_10", "threshold": 10, "title": "Analyste des Douleurs" },
-        { "id": "ec_20", "threshold": 20, "title": "Maître des Parcours" },
-        { "id": "ec_50", "threshold": 50, "title": "Gardien du Savoir" },
-        { "id": "ec_100", "threshold": 100, "title": "Érudit de Shine" }
+        { "id": "ec_1", "threshold": 1, "title": "Chercheur de Vérité", "emoji": "🔎" },
+        { "id": "ec_3", "threshold": 3, "title": "Apprenti Guérisseur", "emoji": "🌿" },
+        { "id": "ec_5", "threshold": 5, "title": "Étudiant Assidu", "emoji": "📚" },
+        { "id": "ec_10", "threshold": 10, "title": "Analyste des Douleurs", "emoji": "🩺" },
+        { "id": "ec_20", "threshold": 20, "title": "Maître des Parcours", "emoji": "🗺️" },
+        { "id": "ec_50", "threshold": 50, "title": "Gardien du Savoir", "emoji": "📕" },
+        { "id": "ec_100", "threshold": 100, "title": "Érudit de Shine", "emoji": "🎓" }
       ]
     },
     "media_consumed": {
@@ -99,13 +99,13 @@
       "description": "Récompense la consommation d'actifs médias (TV, Shorts, Audios, Librairie).",
       "icon": "headphones",
       "badges": [
-        { "id": "mc_10", "threshold": 10, "title": "Spectateur Attentif" },
-        { "id": "mc_50", "threshold": 50, "title": "Esprit Ouvert" },
-        { "id": "mc_100", "threshold": 100, "title": "Consommateur Averti" },
-        { "id": "mc_250", "threshold": 250, "title": "Auditeur Fidèle" },
-        { "id": "mc_500", "threshold": 500, "title": "Analyste Média" },
-        { "id": "mc_1000", "threshold": 1000, "title": "Puits de Science" },
-        { "id": "mc_2500", "threshold": 2500, "title": "Bibliothécaire de Shine" }
+        { "id": "mc_10", "threshold": 10, "title": "Spectateur Attentif", "emoji": "👀" },
+        { "id": "mc_50", "threshold": 50, "title": "Esprit Ouvert", "emoji": "🧠" },
+        { "id": "mc_100", "threshold": 100, "title": "Consommateur Averti", "emoji": "📺" },
+        { "id": "mc_250", "threshold": 250, "title": "Auditeur Fidèle", "emoji": "🎧" },
+        { "id": "mc_500", "threshold": 500, "title": "Analyste Média", "emoji": "📊" },
+        { "id": "mc_1000", "threshold": 1000, "title": "Puits de Science", "emoji": "🏺" },
+        { "id": "mc_2500", "threshold": 2500, "title": "Bibliothécaire de Shine", "emoji": "📚" }
       ]
     },
     "login_streak": {
@@ -113,13 +113,13 @@
       "description": "Récompense les jours de connexion consécutifs (L'habitude).",
       "icon": "flame",
       "badges": [
-        { "id": "ls_3", "threshold": 3, "title": "Première Routine" },
-        { "id": "ls_7", "threshold": 7, "title": "Semaine Parfaite" },
-        { "id": "ls_21", "threshold": 21, "title": "Créateur d'Habitude" },
-        { "id": "ls_50", "threshold": 50, "title": "Régularité Implacable" },
-        { "id": "ls_100", "threshold": 100, "title": "Centurion" },
-        { "id": "ls_365", "threshold": 365, "title": "Une Année Solaire" },
-        { "id": "ls_1000", "threshold": 1000, "title": "Légende Temporelle" }
+        { "id": "ls_3", "threshold": 3, "title": "Première Routine", "emoji": "⏰" },
+        { "id": "ls_7", "threshold": 7, "title": "Semaine Parfaite", "emoji": "📅" },
+        { "id": "ls_21", "threshold": 21, "title": "Créateur d'Habitude", "emoji": "🔄" },
+        { "id": "ls_50", "threshold": 50, "title": "Régularité Implacable", "emoji": "⚙️" },
+        { "id": "ls_100", "threshold": 100, "title": "Centurion", "emoji": "🛡️" },
+        { "id": "ls_365", "threshold": 365, "title": "Une Année Solaire", "emoji": "☀️" },
+        { "id": "ls_1000", "threshold": 1000, "title": "Légende Temporelle", "emoji": "⏳" }
       ]
     }
   }

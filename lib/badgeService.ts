@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import badgesConfig from '@/data/badgesConfig.json'
 
 export type BadgeCategory = keyof typeof badgesConfig.categories
-export type BadgeConfig = { id: string; threshold: number; title: string }
+export type BadgeConfig = { id: string; threshold: number; title: string; emoji?: string }
 export type CategoryConfig = {
   name: string
   description: string

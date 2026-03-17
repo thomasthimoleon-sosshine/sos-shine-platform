@@ -26,6 +26,7 @@ const adminNav = [
   { href: '/admin/courrier', label: 'Courrier', icon: '✉️' },
   { href: '/admin/candidatures', label: 'Candidatures', icon: '📋' },
   { href: '/admin/retraits', label: 'Retraits', icon: '💸' },
+  { href: '/admin/fondateur', label: 'Fondateur', icon: '👑' },
 ]
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

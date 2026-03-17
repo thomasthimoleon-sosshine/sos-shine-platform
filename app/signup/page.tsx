@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useState, useEffect, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import { useTranslation } from '@/lib/i18n/useTranslation'
@@ -37,7 +38,14 @@ const sizeMap: Record<string, string> = {
 }
 
 export default function SignupPage() {
+  const signupRouter = useRouter()
   const { t } = useTranslation()
+
+  // Inscription désactivée — redirection vers la page rejoindre (pré-lancement / tarifs)
+  useEffect(() => {
+    signupRouter.replace('/rejoindre')
+  }, [signupRouter])
+
   const [prenom, setPrenom] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')

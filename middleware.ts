@@ -41,6 +41,11 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
+  // Redirect /signup to /rejoindre — registration goes through the pricing/pre-launch page
+  if (request.nextUrl.pathname === '/signup') {
+    return NextResponse.redirect(new URL('/rejoindre', request.url))
+  }
+
   const publicRoutes = ['/', '/login', '/signup', '/rejoindre', '/encyclopedie', '/contact', '/cgv', '/confidentialite', '/mentions-legales', '/notre-histoire', '/signature-emotionnelle', '/compte-inactif', '/livre-sos-shine', '/livre-supers-pouvoirs']
   const isPublicRoute = publicRoutes.some(route => {
     const isExact = request.nextUrl.pathname === route;

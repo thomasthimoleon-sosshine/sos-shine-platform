@@ -204,7 +204,7 @@ export default function LoginPage() {
 
         <p className="text-center text-[13px] text-[var(--text-muted)] mt-8">
           {s('login_signup_text')}{' '}
-          <Link href="/signup" className="gold-underline font-medium" style={{ color: 'var(--gold)' }}>
+          <Link href="/rejoindre" className="gold-underline font-medium" style={{ color: 'var(--gold)' }}>
             {s('login_signup_link_text')}
           </Link>
         </p>

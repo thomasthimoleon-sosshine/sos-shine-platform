@@ -159,7 +159,7 @@ function PrelaunchContent() {
                 <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
               </div>
               <p className="text-[10px] mt-1" style={{ color: '#55EFC4' }}>
-                7 jours d&apos;essai gratuit
+                7 jours d&apos;essai gratuit &mdash; CB requise
               </p>
             </div>
             {/* Premium */}
@@ -170,7 +170,7 @@ function PrelaunchContent() {
                 <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
               </div>
               <p className="text-[10px] mt-1" style={{ color: '#A78BFA' }}>
-                7 jours d&apos;essai gratuit
+                7 jours d&apos;essai gratuit &mdash; CB requise
               </p>
             </div>
           </div>
@@ -400,7 +400,7 @@ function PaymentContent() {
                   <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
                 </div>
                 <p className="text-xs mb-1 font-medium" style={{ color: '#55EFC4' }}>
-                  7 jours d&apos;essai gratuit
+                  7 jours d&apos;essai gratuit &mdash; CB requise
                 </p>
               </>
             )}
@@ -427,7 +427,7 @@ function PaymentContent() {
             >
               {showTotalPrice
                 ? `Sérénité ${durationInfo.months} mois — ${formatPrice(TOTAL_PRICES.serenite[selectedDuration])}`
-                : 'Essayer Sérénité — 7 jours gratuits'
+                : 'Essayer Sérénité — 7 jours gratuits (CB requise)'
               }
             </button>
           </div>
@@ -466,7 +466,7 @@ function PaymentContent() {
                   <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
                 </div>
                 <p className="text-xs mb-1 font-medium" style={{ color: '#A78BFA' }}>
-                  7 jours d&apos;essai gratuit
+                  7 jours d&apos;essai gratuit &mdash; CB requise
                 </p>
               </>
             )}
@@ -495,7 +495,7 @@ function PaymentContent() {
             >
               {showTotalPrice
                 ? `Premium ${durationInfo.months} mois — ${formatPrice(TOTAL_PRICES.premium[selectedDuration])}`
-                : 'Essayer Premium — 7 jours gratuits'
+                : 'Essayer Premium — 7 jours gratuits (CB requise)'
               }
             </button>
           </div>

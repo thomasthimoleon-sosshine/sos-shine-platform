@@ -58,6 +58,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Check subscription status for dashboard routes (not admin)
+  // After 22/03/2026: subscription (active or trialing) is MANDATORY — no card, no access
   if (user && request.nextUrl.pathname.startsWith('/dashboard')) {
     try {
       // Check if user is admin (admins always have access)
@@ -70,9 +71,8 @@ export async function middleware(request: NextRequest) {
       if (profile) {
         const isAdmin = ['founder', 'admin_content', 'admin_support'].includes(profile.role)
 
-        // If not admin and account is explicitly deactivated, redirect
-        if (!isAdmin && profile.is_active === false) {
-          // Check if they have a subscription that might still be valid
+        if (!isAdmin) {
+          // Check subscription status
           const { data: sub } = await supabase
             .from('subscriptions')
             .select('status')
@@ -81,7 +81,16 @@ export async function middleware(request: NextRequest) {
 
           const hasActiveSub = sub && (sub.status === 'active' || sub.status === 'trialing')
 
-          if (!hasActiveSub) {
+          // Post-launch: require active subscription for ALL non-admin users
+          const LAUNCH_DATE = new Date('2026-03-22T00:00:00+02:00')
+          const isPostLaunch = new Date() >= LAUNCH_DATE
+
+          if (isPostLaunch && !hasActiveSub) {
+            return NextResponse.redirect(new URL('/compte-inactif', request.url))
+          }
+
+          // Pre-launch: only block explicitly deactivated accounts without subscription
+          if (!isPostLaunch && profile.is_active === false && !hasActiveSub) {
             return NextResponse.redirect(new URL('/compte-inactif', request.url))
           }
         }

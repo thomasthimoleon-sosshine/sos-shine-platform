@@ -26,11 +26,13 @@ type Topic = {
   subtitle: string
   cat: string
   original?: boolean
-  slug?: string
+  slug: string
+  dbMatch?: Douleur
 }
 
-/* ─── Liste complète des sujets ─── */
-const ALL_TOPICS: Topic[] = [
+/* ─── Sujets chargés depuis la base de données (BackOffice > Challenges) ─── */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _LEGACY_TOPICS_REMOVED = [
   // A
   { letter: "A", title: "Abandon", subtitle: "grandir sans père, sans mère ou sans les deux", cat: "Blessures & Traumatismes", original: true },
   { letter: "A", title: "Abus émotionnels", subtitle: "identifier, comprendre et guérir", cat: "Blessures & Traumatismes" },
@@ -258,22 +260,18 @@ const ALL_TOPICS: Topic[] = [
   { letter: "Z", title: "Zones d'ombre culturelles", subtitle: "les tabous collectifs qui conditionnent en silence", cat: "Vie & Expériences" },
 ]
 
-const LETTERS = [...new Set(ALL_TOPICS.map(t => t.letter))].sort()
 const CATS = Object.keys(CATEGORIES)
 
-function toSlug(title: string): string {
-  return title
-    .toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')
+function getFirstLetter(title: string): string {
+  const normalized = title.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  return normalized.charAt(0).toUpperCase()
 }
 
 // Page récapitulative avant paiement
 const STRIPE_URL = '/rejoindre'
 
 export default function PublicEncyclopediePage() {
-  const [douleurs, setDouleurs] = useState<Douleur[]>([])
+  const [allDouleurs, setAllDouleurs] = useState<Douleur[]>([])
   const [search, setSearch] = useState('')
   const [activeLetter, setActiveLetter] = useState('ALL')
   const [activeCat, setActiveCat] = useState('ALL')
@@ -283,42 +281,38 @@ export default function PublicEncyclopediePage() {
   useEffect(() => {
     async function load() {
       const supabase = createClient()
+      // Load ALL douleurs from DB (managed via BackOffice)
       const { data } = await supabase
         .from('douleurs')
         .select('*')
-        .eq('is_published', true)
+        .eq('is_active', true)
         .order('title', { ascending: true })
 
       if (data && data.length > 0) {
-        setDouleurs(data as Douleur[])
+        setAllDouleurs(data as Douleur[])
       }
       setLoading(false)
     }
     load()
   }, [])
 
-  // Build a map of slug -> Douleur for linking
-  const douleurMap = useMemo(() => {
-    const map: Record<string, Douleur> = {}
-    douleurs.forEach((d) => {
-      map[d.slug] = d
-      // Also map by normalized title for fuzzy matching
-      map[toSlug(d.title)] = d
-    })
-    return map
-  }, [douleurs])
+  // Build topics from DB douleurs
+  const topics = useMemo(() => {
+    return allDouleurs.map((d): Topic => ({
+      letter: getFirstLetter(d.title),
+      title: d.title,
+      subtitle: d.subtitle || d.description || '',
+      cat: d.category || '',
+      original: d.is_original,
+      slug: d.slug,
+      dbMatch: d.is_published ? d : undefined,
+    }))
+  }, [allDouleurs])
 
-  // Enrich topics with slug and DB match info
-  const enrichedTopics = useMemo(() => {
-    return ALL_TOPICS.map((t) => {
-      const slug = toSlug(t.title)
-      const dbMatch = douleurMap[slug]
-      return { ...t, slug, dbMatch }
-    })
-  }, [douleurMap])
+  const LETTERS = useMemo(() => [...new Set(topics.map(t => t.letter))].sort(), [topics])
 
   const filtered = useMemo(() => {
-    return enrichedTopics.filter((t) => {
+    return topics.filter((t) => {
       const matchSearch = search === '' ||
         t.title.toLowerCase().includes(search.toLowerCase()) ||
         t.subtitle.toLowerCase().includes(search.toLowerCase())
@@ -327,7 +321,7 @@ export default function PublicEncyclopediePage() {
       const matchOriginal = !onlyOriginal || t.original
       return matchSearch && matchLetter && matchCat && matchOriginal
     })
-  }, [enrichedTopics, search, activeLetter, activeCat, onlyOriginal])
+  }, [topics, search, activeLetter, activeCat, onlyOriginal])
 
   const grouped = useMemo(() => {
     const g: Record<string, typeof filtered> = {}
@@ -338,7 +332,7 @@ export default function PublicEncyclopediePage() {
     return g
   }, [filtered])
 
-  const originalCount = ALL_TOPICS.filter(t => t.original).length
+  const originalCount = topics.filter(t => t.original).length
 
   return (
     <main className="min-h-screen watermark-container" style={{ background: 'var(--dark)' }}>
@@ -387,7 +381,7 @@ export default function PublicEncyclopediePage() {
             Cartographie Universelle
           </h1>
           <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
-            {ALL_TOPICS.length} sujets &middot; {originalCount} originaux &diams; &middot; {Object.keys(CATEGORIES).length} catégories
+            {topics.length} sujets &middot; {originalCount} originaux &diams; &middot; {Object.keys(CATEGORIES).length} catégories
           </p>
         </div>
       </div>
@@ -653,7 +647,7 @@ export default function PublicEncyclopediePage() {
             <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Sujet ajouté</span>
           </div>
           <span className="text-xs ml-auto" style={{ color: 'var(--text-muted)' }}>
-            {ALL_TOPICS.length} sujets au total
+            {topics.length} sujets au total
           </span>
         </div>
 

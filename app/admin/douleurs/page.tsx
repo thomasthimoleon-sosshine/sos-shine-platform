@@ -54,9 +54,24 @@ const DEFAULT_STEPS: StepForm[] = [
   { title: 'Agir', subtitle: 'Exercices, audio & ressources', description: '', icon: '⚡', color: '#E17055', video_url: '', audio_url: '', pdf_url: '', image_url: '', exercise_content: '' },
 ]
 
+const ENCYCLOPEDIE_CATEGORIES = [
+  "Émotions & Psychologie",
+  "Relations & Liens",
+  "Blessures & Traumatismes",
+  "Développement Personnel",
+  "Corps & Somatique",
+  "Spiritualité & Énergie",
+  "Soins & Thérapies",
+  "Identité & Mission",
+  "Vie & Expériences",
+  "Pratiques & Outils",
+]
+
 type ChallengeForm = {
   title: string
   slug: string
+  subtitle: string
+  category: string
   description: string
   image_url: string
   steps: StepForm[]
@@ -65,6 +80,8 @@ type ChallengeForm = {
 const emptyForm: ChallengeForm = {
   title: '',
   slug: '',
+  subtitle: '',
+  category: '',
   description: '',
   image_url: '',
   steps: DEFAULT_STEPS.map(s => ({ ...s })),
@@ -95,6 +112,11 @@ export default function AdminDouleursPage() {
   const [form, setForm] = useState<ChallengeForm>(emptyForm)
   const [error, setError] = useState<string | null>(null)
   const [expandedStep, setExpandedStep] = useState<number | null>(null)
+
+  // Filter state
+  const [filterCat, setFilterCat] = useState('ALL')
+  const [filterSearch, setFilterSearch] = useState('')
+  const [filterStatus, setFilterStatus] = useState<'all' | 'published' | 'draft'>('all')
 
   // Quiz state
   const [quizQuestions, setQuizQuestions] = useState<DouleurQuizQuestion[]>([])
@@ -264,6 +286,8 @@ export default function AdminDouleursPage() {
     setForm({
       title: d.title,
       slug: d.slug,
+      subtitle: d.subtitle || '',
+      category: d.category || '',
       description: d.description || '',
       image_url: d.image_url || '',
       steps,
@@ -285,6 +309,8 @@ export default function AdminDouleursPage() {
     setForm({
       title: d.title + ' (copie)',
       slug: generateSlug(d.title + ' copie'),
+      subtitle: d.subtitle || '',
+      category: d.category || '',
       description: d.description || '',
       image_url: d.image_url || '',
       steps: steps.map(s => ({ ...s, id: undefined })),
@@ -355,6 +381,8 @@ export default function AdminDouleursPage() {
     const payload = {
       title: form.title.trim(),
       slug: form.slug,
+      subtitle: form.subtitle.trim() || null,
+      category: form.category || null,
       description: form.description.trim() || null,
       image_url: form.image_url.trim() || null,
       // Legacy columns (first 3 steps mapped for backward compat)
@@ -392,6 +420,7 @@ export default function AdminDouleursPage() {
         ...payload,
         is_active: true,
         is_published: false,
+        is_original: false,
       }).select('id').single()
 
       if (error) {
@@ -624,6 +653,29 @@ export default function AdminDouleursPage() {
             <div>
               <label htmlFor="slug" style={labelStyle}>Slug (auto-généré)</label>
               <input id="slug" name="slug" type="text" required value={form.slug} onChange={handleChange} placeholder="abandon" style={{ ...inputStyle, color: 'var(--text-muted)' }} />
+            </div>
+          </div>
+
+          {/* Subtitle + Category */}
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="subtitle" style={labelStyle}>Sous-titre (encyclopédie)</label>
+              <input id="subtitle" name="subtitle" type="text" value={form.subtitle} onChange={handleChange} placeholder="Ex : grandir sans père, sans mère ou sans les deux" style={inputStyle} />
+            </div>
+            <div>
+              <label htmlFor="category" style={labelStyle}>Catégorie (encyclopédie)</label>
+              <select
+                id="category"
+                name="category"
+                value={form.category}
+                onChange={(e) => setForm(prev => ({ ...prev, category: e.target.value }))}
+                style={inputStyle}
+              >
+                <option value="">— Choisir une catégorie —</option>
+                {ENCYCLOPEDIE_CATEGORIES.map(c => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -989,6 +1041,41 @@ export default function AdminDouleursPage() {
         </form>
       )}
 
+      {/* Filters */}
+      {!showForm && douleurs.length > 0 && (
+        <div className="space-y-3">
+          <div className="flex flex-col sm:flex-row gap-3">
+            <input
+              type="text"
+              value={filterSearch}
+              onChange={(e) => setFilterSearch(e.target.value)}
+              placeholder="Rechercher un challenge..."
+              style={inputStyle}
+              className="sm:max-w-xs"
+            />
+            <select value={filterCat} onChange={(e) => setFilterCat(e.target.value)} style={inputStyle} className="sm:max-w-[220px]">
+              <option value="ALL">Toutes les catégories</option>
+              {ENCYCLOPEDIE_CATEGORIES.map(c => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+            <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value as 'all' | 'published' | 'draft')} style={inputStyle} className="sm:max-w-[160px]">
+              <option value="all">Tous les statuts</option>
+              <option value="published">Publiés</option>
+              <option value="draft">Brouillons</option>
+            </select>
+          </div>
+          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+            {douleurs.filter(d => {
+              const matchSearch = !filterSearch || d.title.toLowerCase().includes(filterSearch.toLowerCase()) || (d.subtitle || '').toLowerCase().includes(filterSearch.toLowerCase())
+              const matchCat = filterCat === 'ALL' || d.category === filterCat
+              const matchStatus = filterStatus === 'all' || (filterStatus === 'published' ? d.is_published : !d.is_published)
+              return matchSearch && matchCat && matchStatus
+            }).length} / {douleurs.length} challenges affichés
+          </p>
+        </div>
+      )}
+
       {/* List */}
       {loading ? (
         <div className="flex justify-center py-12">
@@ -1000,7 +1087,12 @@ export default function AdminDouleursPage() {
         </div>
       ) : (
         <div className="space-y-4">
-          {douleurs.map((d) => {
+          {douleurs.filter(d => {
+            const matchSearch = !filterSearch || d.title.toLowerCase().includes(filterSearch.toLowerCase()) || (d.subtitle || '').toLowerCase().includes(filterSearch.toLowerCase())
+            const matchCat = filterCat === 'ALL' || d.category === filterCat
+            const matchStatus = filterStatus === 'all' || (filterStatus === 'published' ? d.is_published : !d.is_published)
+            return matchSearch && matchCat && matchStatus
+          }).map((d) => {
             const totalMedia = getTotalMediaCount(d)
             const stepCount = d.dynamicSteps && d.dynamicSteps.length > 0 ? d.dynamicSteps.length : 3
             const totalPossibleMedia = stepCount * 4
@@ -1044,6 +1136,12 @@ export default function AdminDouleursPage() {
                             <span className="w-1.5 h-1.5 rounded-full" style={{ background: d.is_published ? '#55EFC4' : '#FF6B35' }} />
                             {d.is_published ? 'Publié' : 'Brouillon'}
                           </span>
+                          {d.is_original && (
+                            <span className="text-[11px] px-2 py-0.5 rounded-full font-medium"
+                              style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.25)' }}>
+                              &diams; Original
+                            </span>
+                          )}
                           <span className="text-[11px] px-2 py-0.5 rounded-full font-medium"
                             style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37' }}>
                             {stepCount} étape{stepCount > 1 ? 's' : ''}
@@ -1059,6 +1157,17 @@ export default function AdminDouleursPage() {
                           </span>
                         </div>
 
+                        {d.subtitle && (
+                          <p className="text-xs italic truncate" style={{ color: 'var(--text-secondary)', maxWidth: '500px' }}>
+                            {d.subtitle}
+                          </p>
+                        )}
+                        {d.category && (
+                          <span className="inline-block text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full"
+                            style={{ background: 'rgba(212,175,55,0.08)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.15)' }}>
+                            {d.category}
+                          </span>
+                        )}
                         {d.description && (
                           <p className="text-xs truncate" style={{ color: 'var(--text-muted)', maxWidth: '500px' }}>
                             {d.description}

@@ -28,13 +28,13 @@ type Topic = {
   subtitle: string
   cat: string
   original?: boolean
-  slug?: string
+  slug: string
+  dbMatch?: Douleur
 }
 
-/* ─── Liste complète des sujets ─── */
-const ALL_TOPICS: Topic[] = [
-  // A
-  { letter: "A", title: "Abandon", subtitle: "grandir sans père, sans mère ou sans les deux", cat: "Blessures & Traumatismes", original: true },
+/* ─── Sujets chargés depuis la base de données (BackOffice > Challenges) ─── */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _LEGACY_TOPICS_REMOVED = [
   { letter: "A", title: "Abus émotionnels", subtitle: "identifier, comprendre et guérir", cat: "Blessures & Traumatismes" },
   { letter: "A", title: "Abus sexuels", subtitle: "identifier, comprendre et guérir", cat: "Blessures & Traumatismes", original: true },
   { letter: "A", title: "Addiction", subtitle: "alcool, drogues, jeux, écrans, travail, sucre", cat: "Émotions & Psychologie" },
@@ -260,7 +260,6 @@ const ALL_TOPICS: Topic[] = [
   { letter: "Z", title: "Zones d'ombre culturelles", subtitle: "les tabous collectifs qui conditionnent en silence", cat: "Vie & Expériences" },
 ]
 
-const LETTERS = [...new Set(ALL_TOPICS.map(t => t.letter))].sort()
 const CATS = Object.keys(CATEGORIES)
 
 function toSlug(title: string): string {
@@ -271,9 +270,14 @@ function toSlug(title: string): string {
     .replace(/^-|-$/g, '')
 }
 
+function getFirstLetter(title: string): string {
+  const normalized = title.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  return normalized.charAt(0).toUpperCase()
+}
+
 export default function EncyclopediePage() {
   const { t } = useTranslation()
-  const [douleurs, setDouleurs] = useState<Douleur[]>([])
+  const [allDouleurs, setAllDouleurs] = useState<Douleur[]>([])
   const [search, setSearch] = useState('')
   const [activeLetter, setActiveLetter] = useState('ALL')
   const [activeCat, setActiveCat] = useState('ALL')
@@ -285,14 +289,15 @@ export default function EncyclopediePage() {
   useEffect(() => {
     async function load() {
       const supabase = createClient()
+      // Load ALL douleurs (the encyclopédie topics) from DB
       const { data } = await supabase
         .from('douleurs')
         .select('*')
-        .eq('is_published', true)
+        .eq('is_active', true)
         .order('title', { ascending: true })
 
       if (data && data.length > 0) {
-        setDouleurs(data as Douleur[])
+        setAllDouleurs(data as Douleur[])
       }
 
       // Load user progress
@@ -320,27 +325,23 @@ export default function EncyclopediePage() {
     load()
   }, [])
 
-  // Build a map of slug -> Douleur for linking
-  const douleurMap = useMemo(() => {
-    const map: Record<string, Douleur> = {}
-    douleurs.forEach((d) => {
-      map[d.slug] = d
-      map[toSlug(d.title)] = d
-    })
-    return map
-  }, [douleurs])
+  // Build topics from DB douleurs
+  const topics = useMemo(() => {
+    return allDouleurs.map((d): Topic => ({
+      letter: getFirstLetter(d.title),
+      title: d.title,
+      subtitle: d.subtitle || d.description || '',
+      cat: d.category || '',
+      original: d.is_original,
+      slug: d.slug,
+      dbMatch: d.is_published ? d : undefined,
+    }))
+  }, [allDouleurs])
 
-  // Enrich topics with slug and DB match info
-  const enrichedTopics = useMemo(() => {
-    return ALL_TOPICS.map((t) => {
-      const slug = toSlug(t.title)
-      const dbMatch = douleurMap[slug]
-      return { ...t, slug, dbMatch }
-    })
-  }, [douleurMap])
+  const LETTERS = useMemo(() => [...new Set(topics.map(t => t.letter))].sort(), [topics])
 
   const filtered = useMemo(() => {
-    return enrichedTopics.filter((t) => {
+    return topics.filter((t) => {
       const matchSearch = search === '' ||
         t.title.toLowerCase().includes(search.toLowerCase()) ||
         t.subtitle.toLowerCase().includes(search.toLowerCase())
@@ -349,7 +350,7 @@ export default function EncyclopediePage() {
       const matchOriginal = !onlyOriginal || t.original
       return matchSearch && matchLetter && matchCat && matchOriginal
     })
-  }, [enrichedTopics, search, activeLetter, activeCat, onlyOriginal])
+  }, [topics, search, activeLetter, activeCat, onlyOriginal])
 
   const grouped = useMemo(() => {
     const g: Record<string, typeof filtered> = {}
@@ -360,8 +361,8 @@ export default function EncyclopediePage() {
     return g
   }, [filtered])
 
-  const originalCount = ALL_TOPICS.filter(t => t.original).length
-  const publishedCount = douleurs.length
+  const originalCount = topics.filter(t => t.original).length
+  const publishedCount = allDouleurs.filter(d => d.is_published).length
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
@@ -374,19 +375,19 @@ export default function EncyclopediePage() {
           {t('dashboard.encyclopedia_subtitle')}
         </p>
         <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
-          {ALL_TOPICS.length} sujets &middot; {originalCount} originaux &diams; &middot; {Object.keys(CATEGORIES).length} catégories &middot; {publishedCount} disponible{publishedCount > 1 ? 's' : ''}
+          {topics.length} sujets &middot; {originalCount} originaux &diams; &middot; {Object.keys(CATEGORIES).length} catégories &middot; {publishedCount} disponible{publishedCount > 1 ? 's' : ''}
         </p>
       </div>
 
       {/* Global progress widget */}
-      {douleurs.length > 0 && (
+      {publishedCount > 0 && (
         <div className="rounded-2xl p-5" style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.12)' }}>
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
               Votre progression globale
             </span>
             <span className="text-sm font-semibold" style={{ color: 'var(--gold)' }}>
-              {totalCompleted}/{douleurs.length} complétés
+              {totalCompleted}/{publishedCount} complétés
             </span>
           </div>
           <div className="h-2.5 rounded-full overflow-hidden" style={{ background: 'var(--dark-border)' }}>
@@ -394,13 +395,13 @@ export default function EncyclopediePage() {
               className="h-full rounded-full"
               style={{ background: 'linear-gradient(90deg, var(--gold), var(--gold-light))' }}
               initial={{ width: 0 }}
-              animate={{ width: `${douleurs.length > 0 ? (totalCompleted / douleurs.length) * 100 : 0}%` }}
+              animate={{ width: `${publishedCount > 0 ? (totalCompleted / publishedCount) * 100 : 0}%` }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             />
           </div>
           {totalCompleted > 0 && (
             <p className="text-[11px] mt-1.5" style={{ color: 'var(--text-muted)' }}>
-              {totalCompleted === douleurs.length
+              {totalCompleted === publishedCount
                 ? 'Bravo ! Vous avez complété tous les challenges disponibles !'
                 : `Continuez votre parcours, chaque étape compte.`}
             </p>
@@ -666,7 +667,7 @@ export default function EncyclopediePage() {
           <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Complété</span>
         </div>
         <span className="text-xs ml-auto" style={{ color: 'var(--text-muted)' }}>
-          {ALL_TOPICS.length} sujets au total
+          {topics.length} sujets au total
         </span>
       </div>
 

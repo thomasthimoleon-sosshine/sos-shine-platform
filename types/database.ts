@@ -38,6 +38,9 @@ export type Douleur = {
   id: string
   title: string
   slug: string
+  subtitle: string | null
+  category: string | null
+  is_original: boolean
   description: string | null
   // Étape 1 — Comprendre
   video_url: string | null

@@ -9,7 +9,7 @@ import { useTranslation } from '@/lib/i18n/useTranslation'
 import { getNextRotatingQuote, type Quote } from '@/lib/quotes'
 import { greetingsData, GREETINGS_PER_SLOT, type TimeSlot } from '@/data/greetingsData'
 import { getDailyForecast, resolveZodiacSign, ZODIAC_INFO } from '@/data/energyWeather'
-import { getLevelForXP, getNextLevel, getLevelProgress, formatXP, LEVEL_THRESHOLDS } from '@/lib/xp'
+import { getLevelForXP, getNextLevel, getLevelProgress, formatXP } from '@/lib/xp'
 import type { UserXP } from '@/types/database'
 import { getAllCategories, getUserBadges, CATEGORY_ICONS, type CategoryConfig } from '@/lib/badgeService'
 
@@ -94,38 +94,6 @@ function LevelXPSection({ xpData }: { xpData: UserXP | null }) {
           </div>
         )}
 
-        {/* All levels list */}
-        <div className="mt-5 pt-4" style={{ borderTop: '1px solid var(--dark-border)' }}>
-          <p className="text-[10px] font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>
-            Les 10 niveaux d&apos;évolution
-          </p>
-          <div className="space-y-1">
-            {LEVEL_THRESHOLDS.map((t) => {
-              const isReached = xpData.total_xp >= t.minXP
-              const isCurrent = t.level === level.level
-              return (
-                <div key={t.level}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-[11px]"
-                  style={{
-                    background: isCurrent ? 'rgba(212,175,55,0.1)' : isReached ? 'rgba(212,175,55,0.04)' : 'transparent',
-                    color: isReached ? 'var(--gold)' : 'var(--text-muted)',
-                    opacity: isReached ? 1 : 0.4,
-                    border: isCurrent ? '1px solid rgba(212,175,55,0.2)' : '1px solid transparent',
-                  }}>
-                  <span className="text-sm">{t.icon}</span>
-                  <span className="font-medium">{t.name}</span>
-                  <span className="ml-auto font-mono">{formatXP(t.minXP)} XP</span>
-                  {isCurrent && (
-                    <span className="ml-1 px-1.5 py-0.5 rounded text-[9px] font-semibold"
-                      style={{ background: 'var(--gold)', color: '#09090b' }}>
-                      ACTUEL
-                    </span>
-                  )}
-                </div>
-              )
-            })}
-          </div>
-        </div>
       </div>
     </motion.div>
   )
@@ -367,7 +335,7 @@ function ContributionsSection({ xpData }: { xpData: UserXP | null }) {
    Section: Badges (carrousel)
    ───────────────────────────────────────────── */
 function BadgesSection({ userId }: { userId: string | null }) {
-  const [unlockedBadges, setUnlockedBadges] = useState<Array<{ badge_id: string; category: string }>>([])
+  const [unlockedBadgeIds, setUnlockedBadgeIds] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
   const categories = getAllCategories()
 
@@ -375,18 +343,22 @@ function BadgesSection({ userId }: { userId: string | null }) {
     async function load() {
       if (!userId) { setLoading(false); return }
       const badges = await getUserBadges(userId)
-      setUnlockedBadges(badges)
+      setUnlockedBadgeIds(new Set(badges.map(b => b.badge_id)))
       setLoading(false)
     }
     load()
   }, [userId])
 
-  // Build display items from unlocked badges
-  const displayBadges = unlockedBadges.map(ub => {
-    const cat = categories[ub.category] as CategoryConfig | undefined
-    const badge = cat?.badges.find(b => b.id === ub.badge_id)
-    return badge && cat ? { ...badge, categoryName: cat.name, categoryIcon: cat.icon } : null
-  }).filter(Boolean).slice(0, 10)
+  // Build flat list of ALL badges (unlocked + locked/grayed)
+  const allBadges = Object.entries(categories).flatMap(([, cat]) => {
+    const category = cat as CategoryConfig
+    return category.badges.map(badge => ({
+      ...badge,
+      categoryName: category.name,
+      categoryIcon: category.icon,
+      isUnlocked: unlockedBadgeIds.has(badge.id),
+    }))
+  })
 
   return (
     <motion.div
@@ -417,44 +389,44 @@ function BadgesSection({ userId }: { userId: string | null }) {
         <div className="flex justify-center py-6">
           <div className="w-5 h-5 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
         </div>
-      ) : displayBadges.length === 0 ? (
-        <div className="glass p-6 text-center">
-          <p className="text-[13px]" style={{ color: 'var(--text-muted)' }}>
-            Aucun badge débloqué pour le moment. Continuez à contribuer !
-          </p>
-          <Link href="/dashboard/badges" className="inline-block mt-3 text-[12px] font-medium" style={{ color: 'var(--gold)' }}>
-            Voir tous les badges disponibles →
-          </Link>
-        </div>
       ) : (
         <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide" style={{ scrollbarWidth: 'none' }}>
-          {displayBadges.map((badge) => {
-            if (!badge) return null
-            return (
-              <div
-                key={badge.id}
-                className="shrink-0 w-28 rounded-xl p-3 text-center"
+          {allBadges.map((badge) => (
+            <div
+              key={badge.id}
+              className="shrink-0 w-28 rounded-xl p-3 text-center"
+              style={{
+                background: badge.isUnlocked ? 'rgba(212,175,55,0.06)' : 'rgba(255,255,255,0.02)',
+                border: badge.isUnlocked ? '1px solid rgba(212,175,55,0.15)' : '1px solid var(--dark-border)',
+                opacity: badge.isUnlocked ? 1 : 0.4,
+                filter: badge.isUnlocked ? 'none' : 'grayscale(1)',
+              }}
+            >
+              <div className="w-12 h-12 mx-auto rounded-full flex items-center justify-center mb-2"
                 style={{
-                  background: 'rgba(212,175,55,0.06)',
-                  border: '1px solid rgba(212,175,55,0.15)',
-                }}
-              >
-                <div className="w-12 h-12 mx-auto rounded-full flex items-center justify-center mb-2"
-                  style={{
-                    background: 'linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.05))',
-                    border: '2px solid var(--gold)',
-                  }}>
+                  background: badge.isUnlocked
+                    ? 'linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.05))'
+                    : 'rgba(255,255,255,0.03)',
+                  border: badge.isUnlocked ? '2px solid var(--gold)' : '2px solid var(--dark-border)',
+                }}>
+                {badge.isUnlocked ? (
                   <span className="text-lg">{CATEGORY_ICONS[badge.categoryIcon] || '🏆'}</span>
-                </div>
-                <h3 className="font-semibold text-[10px] leading-tight" style={{ color: 'var(--gold)' }}>
-                  {badge.title}
-                </h3>
-                <p className="text-[9px] mt-0.5" style={{ color: 'var(--text-muted)' }}>
-                  {badge.categoryName}
-                </p>
+                ) : (
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}
+                    style={{ color: 'var(--text-muted)' }}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                  </svg>
+                )}
               </div>
-            )
-          })}
+              <h3 className="font-semibold text-[10px] leading-tight"
+                style={{ color: badge.isUnlocked ? 'var(--gold)' : 'var(--text-muted)' }}>
+                {badge.title}
+              </h3>
+              <p className="text-[9px] mt-0.5" style={{ color: 'var(--text-muted)' }}>
+                {badge.categoryName}
+              </p>
+            </div>
+          ))}
         </div>
       )}
     </motion.div>
@@ -715,9 +687,6 @@ export default function DashboardHome() {
         </p>
       </motion.div>
 
-      {/* ── Étape 1: Niveau & XP (migrated from profile) ── */}
-      <LevelXPSection xpData={xpData} />
-
       {/* ── Météo Énergétique ── */}
       <EnergyWeatherWidget profile={profile} />
 
@@ -744,7 +713,8 @@ export default function DashboardHome() {
         </p>
       </motion.div>
 
-      {/* ══════ BELOW CITATION: New Sections ══════ */}
+      {/* ── Jauge Niveau & XP (below citation) ── */}
+      <LevelXPSection xpData={xpData} />
 
       {/* ── Étape 2: Mes contributions ── */}
       <ContributionsSection xpData={xpData} />

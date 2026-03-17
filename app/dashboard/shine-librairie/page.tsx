@@ -69,7 +69,6 @@ function PdfReaderModal({ url, title, onClose }: { url: string; title: string; o
           src={safeUrl}
           className="w-full h-full border-0"
           title={title}
-          sandbox="allow-same-origin allow-scripts"
           style={{ pointerEvents: 'auto' }}
         />
         {/* Invisible overlay on corners to block download button clicks in some browsers */}

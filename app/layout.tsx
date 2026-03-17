@@ -28,31 +28,41 @@ const dmSans = localFont({
   ],
 });
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.REPLIT_DEV_DOMAIN
+    ? `https://${process.env.REPLIT_DEV_DOMAIN}`
+    : "https://sosshine.com");
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "SOS Shine — Votre communauté bienveillante",
   description:
     "SOS Shine, votre communauté bienveillante. Plateforme premium d'accompagnement pour traverser les épreuves de la vie. Corps, émotion, action.",
   openGraph: {
-    title: "SOS Shine — Votre communauté bienveillante",
+    title: "SOS Shine — Briller Comme un Diamant",
     description:
-      "SOS Shine, votre communauté bienveillante. Plateforme premium d'accompagnement pour traverser les épreuves de la vie.",
+      "Rejoignez la première communauté bienveillante dédiée à votre transformation. Corps, émotion, action — accompagnement premium pour traverser les épreuves de la vie.",
+    url: siteUrl,
     images: [
       {
-        url: "/images/og-logo.png",
-        width: 1024,
-        height: 1024,
-        alt: "SOS Shine",
+        url: "/api/og",
+        width: 1200,
+        height: 630,
+        alt: "SOS Shine — Briller Comme un Diamant",
+        type: "image/png",
       },
     ],
     type: "website",
     siteName: "SOS Shine",
+    locale: "fr_FR",
   },
   twitter: {
     card: "summary_large_image",
-    title: "SOS Shine — Votre communauté bienveillante",
+    title: "SOS Shine — Briller Comme un Diamant",
     description:
-      "SOS Shine, votre communauté bienveillante. Plateforme premium d'accompagnement pour traverser les épreuves de la vie.",
-    images: ["/images/og-logo.png"],
+      "Rejoignez la première communauté bienveillante dédiée à votre transformation. Corps, émotion, action.",
+    images: ["/api/og"],
   },
   appleWebApp: {
     capable: true,

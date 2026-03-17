@@ -99,8 +99,14 @@ function generateProjection(targetSubscribers: number = 5000) {
     // Stripe fees: 1.4% + 0.25€ (EU cards avg)
     const stripeFees = mrr * 0.025
 
+    // 5% du CA → Fondation (actions humanitaires)
+    const fondationContrib = mrr * 0.05
+
+    // 10% du CA → Organisation d'événements
+    const eventOrganization = mrr * 0.10
+
     const costs = getMonthlyOperatingCosts(subscribers)
-    const totalCosts = costs.total + affiliateRevenue + stripeFees
+    const totalCosts = costs.total + affiliateRevenue + stripeFees + fondationContrib + eventOrganization
 
     // Cyprus corporate tax on profit
     const grossProfit = mrr - totalCosts
@@ -128,6 +134,8 @@ function generateProjection(targetSubscribers: number = 5000) {
       arr: Math.round(mrr * 12),
       affiliateCommissions: Math.round(affiliateRevenue),
       stripeFees: Math.round(stripeFees),
+      fondationContrib: Math.round(fondationContrib),
+      eventOrganization: Math.round(eventOrganization),
       operatingCosts: costs.total,
       totalCosts: Math.round(totalCosts),
       grossProfit: Math.round(grossProfit),
@@ -297,6 +305,8 @@ export default function FounderDashboard() {
   const yearlyAffiliate = projection.reduce((s, m) => s + m.affiliateCommissions, 0)
   const yearlyStripe = projection.reduce((s, m) => s + m.stripeFees, 0)
   const yearlyCosts = projection.reduce((s, m) => s + m.operatingCosts, 0)
+  const yearlyFondation = projection.reduce((s, m) => s + m.fondationContrib, 0)
+  const yearlyEvents = projection.reduce((s, m) => s + m.eventOrganization, 0)
 
   // Health score (0-100)
   const marginPct = month12.mrr > 0 ? (month12.netProfit / month12.mrr) * 100 : 0
@@ -458,6 +468,8 @@ export default function FounderDashboard() {
                   { name: 'CA Brut', value: month12.mrr, color: '#D4AF37' },
                   { name: 'Frais Stripe', value: -month12.stripeFees, color: '#E17055' },
                   { name: 'Commissions Aff.', value: -month12.affiliateCommissions, color: '#FF6B35' },
+                  { name: 'Fondation 5%', value: -month12.fondationContrib, color: '#E84393' },
+                  { name: 'Événements 10%', value: -month12.eventOrganization, color: '#00CEC9' },
                   { name: 'Coûts Opé.', value: -month12.operatingCosts, color: '#74C0FC' },
                   { name: 'IS Chypre 12.5%', value: -month12.corporateTax, color: '#A29BFE' },
                   { name: 'Profit Net', value: month12.netProfit, color: '#55EFC4' },
@@ -470,6 +482,7 @@ export default function FounderDashboard() {
                   <Bar dataKey="value" radius={[6, 6, 0, 0]}>
                     {[
                       { color: '#D4AF37' }, { color: '#E17055' }, { color: '#FF6B35' },
+                      { color: '#E84393' }, { color: '#00CEC9' },
                       { color: '#74C0FC' }, { color: '#A29BFE' }, { color: '#55EFC4' }, { color: '#D4AF37' },
                     ].map((entry, i) => (
                       <Cell key={i} fill={entry.color} opacity={0.85} />
@@ -577,7 +590,7 @@ export default function FounderDashboard() {
                 </BarChart>
               </ResponsiveContainer>
             </div>
-            <div className="grid grid-cols-3 gap-3 mt-4">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mt-4">
               <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(255,107,53,0.05)' }}>
                 <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Commissions annuelles</p>
                 <p className="text-lg font-semibold" style={{ color: '#FF6B35' }}>{fmtEur(yearlyAffiliate)}</p>
@@ -585,6 +598,14 @@ export default function FounderDashboard() {
               <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(162,155,254,0.05)' }}>
                 <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Frais Stripe annuels</p>
                 <p className="text-lg font-semibold" style={{ color: '#A29BFE' }}>{fmtEur(yearlyStripe)}</p>
+              </div>
+              <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(232,67,147,0.05)' }}>
+                <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Fondation humanitaire</p>
+                <p className="text-lg font-semibold" style={{ color: '#E84393' }}>{fmtEur(yearlyFondation)}</p>
+              </div>
+              <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(0,206,201,0.05)' }}>
+                <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Organisation événements</p>
+                <p className="text-lg font-semibold" style={{ color: '#00CEC9' }}>{fmtEur(yearlyEvents)}</p>
               </div>
               <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(85,239,196,0.05)' }}>
                 <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Coûts opé. annuels</p>
@@ -599,7 +620,7 @@ export default function FounderDashboard() {
               Fiscalité Chypre — Simulation détaillée
             </h2>
             <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>
-              SOS Shine Ltd enregistrée à Chypre. IS: 12.5% | Contribution défense: 17% sur dividendes | GHS: 2.65% sur dividendes | 3 associés
+              SOS Shine Ltd enregistrée à Chypre. IS: 12.5% | Contribution défense: 17% sur dividendes | GHS: 2.65% sur dividendes | 3 associés | 5% CA fondation humanitaire | 10% CA événements
             </p>
           </div>
 
@@ -609,8 +630,10 @@ export default function FounderDashboard() {
                 { label: 'Chiffre d\'affaires brut cumulé', value: yearlyRevenue, color: '#D4AF37', icon: '💰' },
                 { label: 'Frais Stripe (2.5% moy.)', value: -yearlyStripe, color: '#E17055', icon: '💳' },
                 { label: 'Commissions affiliation (10% × 30%)', value: -yearlyAffiliate, color: '#FF6B35', icon: '🤝' },
+                { label: 'Fondation humanitaire (5% du CA)', value: -yearlyFondation, color: '#E84393', icon: '❤️' },
+                { label: 'Organisation d\'événements (10% du CA)', value: -yearlyEvents, color: '#00CEC9', icon: '🎪' },
                 { label: 'Coûts opérationnels totaux', value: -yearlyCosts, color: '#74C0FC', icon: '🏗️' },
-                { label: 'Résultat brut avant impôt', value: yearlyRevenue - yearlyStripe - yearlyAffiliate - yearlyCosts, color: '#55EFC4', icon: '📊', bold: true },
+                { label: 'Résultat brut avant impôt', value: yearlyRevenue - yearlyStripe - yearlyAffiliate - yearlyFondation - yearlyEvents - yearlyCosts, color: '#55EFC4', icon: '📊', bold: true },
                 { label: 'Impôt sur les sociétés (12.5%)', value: -yearlyTax, color: '#E17055', icon: '🏛️' },
                 { label: 'Résultat net après IS', value: yearlyNetProfit, color: '#55EFC4', icon: '✅' },
                 { label: 'Contribution défense (17%)', value: -(yearlyNetProfit * CYPRUS.defenceContribDividend), color: '#A29BFE', icon: '🛡️' },
@@ -696,7 +719,7 @@ export default function FounderDashboard() {
               <table className="w-full text-xs" style={{ minWidth: 900 }}>
                 <thead>
                   <tr style={{ borderBottom: '2px solid var(--dark-border)' }}>
-                    {['Mois', 'Abonnés', 'Nouveaux', 'Churn', 'MRR', 'Coûts opé.', 'Stripe', 'Affiliation', 'IS', 'Profit net', 'Par associé'].map((h) => (
+                    {['Mois', 'Abonnés', 'Nouveaux', 'Churn', 'MRR', 'Fondation', 'Événem.', 'Coûts opé.', 'Stripe', 'Affiliation', 'IS', 'Profit net', 'Par associé'].map((h) => (
                       <th key={h} className="py-2 px-2 text-left font-semibold" style={{ color: 'var(--text-muted)' }}>{h}</th>
                     ))}
                   </tr>
@@ -711,6 +734,8 @@ export default function FounderDashboard() {
                       <td className="py-2 px-2" style={{ color: '#55EFC4' }}>+{fmt(m.newSubscribers)}</td>
                       <td className="py-2 px-2" style={{ color: '#E17055' }}>-{fmt(m.churned)}</td>
                       <td className="py-2 px-2 font-semibold" style={{ color: '#D4AF37' }}>{fmtEur(m.mrr)}</td>
+                      <td className="py-2 px-2" style={{ color: '#E84393' }}>{fmtEur(m.fondationContrib)}</td>
+                      <td className="py-2 px-2" style={{ color: '#00CEC9' }}>{fmtEur(m.eventOrganization)}</td>
                       <td className="py-2 px-2" style={{ color: 'var(--text-secondary)' }}>{fmtEur(m.operatingCosts)}</td>
                       <td className="py-2 px-2" style={{ color: 'var(--text-secondary)' }}>{fmtEur(m.stripeFees)}</td>
                       <td className="py-2 px-2" style={{ color: '#FF6B35' }}>{fmtEur(m.affiliateCommissions)}</td>
@@ -727,6 +752,8 @@ export default function FounderDashboard() {
                     <td className="py-3 px-2" />
                     <td className="py-3 px-2" />
                     <td className="py-3 px-2 font-bold" style={{ color: '#D4AF37' }}>{fmtEur(yearlyRevenue)}</td>
+                    <td className="py-3 px-2 font-semibold" style={{ color: '#E84393' }}>{fmtEur(yearlyFondation)}</td>
+                    <td className="py-3 px-2 font-semibold" style={{ color: '#00CEC9' }}>{fmtEur(yearlyEvents)}</td>
                     <td className="py-3 px-2 font-semibold" style={{ color: 'var(--text-secondary)' }}>{fmtEur(yearlyCosts)}</td>
                     <td className="py-3 px-2 font-semibold" style={{ color: 'var(--text-secondary)' }}>{fmtEur(yearlyStripe)}</td>
                     <td className="py-3 px-2 font-semibold" style={{ color: '#FF6B35' }}>{fmtEur(yearlyAffiliate)}</td>
@@ -748,6 +775,8 @@ export default function FounderDashboard() {
               <p>Taux de churn: 6%/mois (moyenne secteur bien-être)</p>
               <p>Affiliation: 30% des inscriptions, commission 10%</p>
               <p>Frais Stripe: ~2.5% moyen (cartes EU)</p>
+              <p>Fondation humanitaire: 5% du CA brut</p>
+              <p>Organisation d&apos;événements: 10% du CA brut</p>
               <p>Serveurs: Supabase Pro + Vercel Pro + CDN vidéo</p>
               <p>IS Chypre: 12.5% | Défense: 17% div. | GHS: 2.65% div.</p>
               <p>Benchmarks: Petit BamBou, Headspace, Insight Timer, Calm</p>

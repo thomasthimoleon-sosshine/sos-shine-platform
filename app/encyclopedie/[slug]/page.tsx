@@ -490,7 +490,7 @@ export default function PublicDouleurDetailPage() {
             className="inline-block px-8 py-3 rounded-full text-sm font-medium transition-all hover:opacity-90"
             style={{ background: 'var(--gold)', color: 'var(--dark)' }}
           >
-            Rejoindre SOS Shine — 29,90&euro;/mois
+            Rejoindre SOS Shine
           </Link>
           <p className="text-xs mt-3" style={{ color: 'var(--text-muted)' }}>
             Accès illimité à toute l&apos;encyclopédie et la communauté

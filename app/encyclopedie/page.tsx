@@ -234,7 +234,7 @@ export default function PublicEncyclopediePage() {
             className="inline-block px-8 py-3 rounded-full text-sm font-medium transition-all hover:opacity-90"
             style={{ background: 'var(--gold)', color: 'var(--dark)' }}
           >
-            Commencer maintenant — 29,90&euro;/mois
+            Découvrir les offres
           </Link>
           <p className="text-xs mt-3" style={{ color: 'var(--text-muted)' }}>
             Accès illimité à toute l&apos;encyclopédie et la communauté

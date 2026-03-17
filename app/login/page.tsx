@@ -188,6 +188,26 @@ export default function LoginPage() {
             {s('login_signup_link_text')}
           </Link>
         </p>
+
+        {/* Resource books buttons */}
+        <div className="flex flex-col sm:flex-row gap-3 mt-6">
+          <Link href="/livre-sos-shine"
+            className="flex-1 py-3 rounded-full text-center text-[13px] font-medium transition-all"
+            style={{ border: '1px solid rgba(212,175,55,0.3)', color: 'var(--gold)', background: 'rgba(212,175,55,0.05)' }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(212,175,55,0.12)'; e.currentTarget.style.borderColor = 'rgba(212,175,55,0.5)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(212,175,55,0.05)'; e.currentTarget.style.borderColor = 'rgba(212,175,55,0.3)' }}
+          >
+            Livre SOS Shine
+          </Link>
+          <Link href="/livre-supers-pouvoirs"
+            className="flex-1 py-3 rounded-full text-center text-[13px] font-medium transition-all"
+            style={{ border: '1px solid rgba(212,175,55,0.3)', color: 'var(--gold)', background: 'rgba(212,175,55,0.05)' }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(212,175,55,0.12)'; e.currentTarget.style.borderColor = 'rgba(212,175,55,0.5)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(212,175,55,0.05)'; e.currentTarget.style.borderColor = 'rgba(212,175,55,0.3)' }}
+          >
+            Livre Supers Pouvoirs
+          </Link>
+        </div>
       </motion.div>
     </main>
   )

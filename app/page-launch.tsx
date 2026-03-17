@@ -475,7 +475,18 @@ export default function Home() {
             {hero.video_url && (
               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}>
                 <div className="glass overflow-hidden mb-10 max-w-3xl mx-auto">
-                  <video src={hero.video_url} controls className="w-full aspect-video" />
+                  <video
+                    src={hero.video_url}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="w-full aspect-video cursor-pointer"
+                    onClick={(e) => {
+                      const v = e.currentTarget;
+                      v.paused ? v.play() : v.pause();
+                    }}
+                  />
                 </div>
               </motion.div>
             )}

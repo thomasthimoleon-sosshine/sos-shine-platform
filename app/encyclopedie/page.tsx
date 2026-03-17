@@ -249,7 +249,7 @@ const ALL_TOPICS: Topic[] = [
   { letter: "V", title: "Vie intérieure", subtitle: "développer une vie intérieure riche", cat: "Spiritualité & Énergie" },
   { letter: "V", title: "Violence physique", subtitle: "se libérer des violences physiques subies", cat: "Blessures & Traumatismes", original: true },
   { letter: "V", title: "Violence verbale & psychologique", subtitle: "reconnaître et guérir des violences psychologiques", cat: "Blessures & Traumatismes", original: true },
-  { letter: "V", title: "Vibrations & fréquences", subtitle: "la science vibratoire — son, eau, pensées et matière", cat: "Spiritualité & Énergie" },
+  { letter: "V", title: "Vibrations & fréquences", subtitle: "la science vibratoire — son, eau, pensées et matière (exp. du riz)", cat: "Spiritualité & Énergie" },
   { letter: "V", title: "Visualisation créatrice", subtitle: "techniques de visualisation pour manifester et guérir", cat: "Pratiques & Outils" },
   { letter: "V", title: "Vulnérabilité", subtitle: "la force paradoxale de la vulnérabilité — Brené Brown et au-delà", cat: "Développement Personnel" },
   // Y

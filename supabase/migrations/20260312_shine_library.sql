@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS shine_library_books (
   is_published BOOLEAN DEFAULT true,
   is_featured BOOLEAN DEFAULT false,
   sort_order INTEGER DEFAULT 0,
+  douleur_id UUID REFERENCES douleurs(id) ON DELETE SET NULL,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -60,6 +61,7 @@ CREATE INDEX IF NOT EXISTS idx_shine_library_reviews_book ON shine_library_revie
 CREATE INDEX IF NOT EXISTS idx_shine_library_books_category ON shine_library_books(category);
 CREATE INDEX IF NOT EXISTS idx_shine_library_books_type ON shine_library_books(content_type);
 CREATE INDEX IF NOT EXISTS idx_shine_library_books_published ON shine_library_books(is_published);
+CREATE INDEX IF NOT EXISTS idx_shine_library_books_douleur_id ON shine_library_books(douleur_id) WHERE douleur_id IS NOT NULL;
 
 -- RLS (Row Level Security)
 ALTER TABLE shine_library_books ENABLE ROW LEVEL SECURITY;

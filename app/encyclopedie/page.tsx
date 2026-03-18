@@ -587,12 +587,12 @@ export default function PublicEncyclopediePage() {
 
                     const card = (
                       <div
-                        className={`group rounded-lg p-4 transition-all duration-200 ${hasDbEntry ? 'hover:-translate-y-0.5' : ''}`}
+                        className="group rounded-lg p-4 transition-all duration-200 hover:-translate-y-0.5"
                         style={{
                           background: 'var(--dark-card)',
                           border: '1px solid var(--dark-border)',
                           borderLeft: topic.original ? '2px solid var(--gold)' : '2px solid transparent',
-                          cursor: hasDbEntry ? 'pointer' : 'default',
+                          cursor: 'pointer',
                         }}
                       >
                         <div className="flex items-start justify-between gap-3">
@@ -647,28 +647,18 @@ export default function PublicEncyclopediePage() {
                               })()}
                             </div>
                           </div>
-                          {hasDbEntry ? (
-                            <svg className="w-4 h-4 flex-shrink-0 mt-1 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--text-muted)' }}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                            </svg>
-                          ) : (
-                            <span className="text-[10px] px-2 py-0.5 rounded-lg flex-shrink-0" style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--gold)' }}>
-                              Bientôt
-                            </span>
-                          )}
+                          <svg className="w-4 h-4 flex-shrink-0 mt-1 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--text-muted)' }}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                          </svg>
                         </div>
                       </div>
                     )
 
-                    if (hasDbEntry) {
-                      return (
-                        <Link key={i} href={`/encyclopedie/${topic.dbMatch!.slug}`} className="block">
-                          {card}
-                        </Link>
-                      )
-                    }
-
-                    return <div key={i}>{card}</div>
+                    return (
+                      <Link key={i} href={`/encyclopedie/${topic.slug}`} className="block">
+                        {card}
+                      </Link>
+                    )
                   })}
                 </div>
               </div>

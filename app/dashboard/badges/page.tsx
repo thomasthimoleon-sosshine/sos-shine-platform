@@ -8,6 +8,18 @@ import { getAllCategories, getUserBadges, unlockAllBadgesForUser, CATEGORY_ICONS
 
 const ease = [0.25, 0.46, 0.45, 0.94] as const
 
+// Mapping des catégories de badges vers les pages de contenu correspondantes
+const CATEGORY_ROUTES: Record<string, string> = {
+  shines_given: '/dashboard/communaute',
+  shines_received: '/dashboard/communaute',
+  comments_left: '/dashboard/communaute',
+  publications_created: '/dashboard/mur',
+  shares_external: '/dashboard/communaute',
+  encyclopedia_completed: '/dashboard/encyclopedie',
+  media_consumed: '/dashboard/shine-tv',
+  login_streak: '/dashboard',
+}
+
 export default function BadgesGalleryPage() {
   const [unlockedBadgeIds, setUnlockedBadgeIds] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
@@ -116,10 +128,12 @@ export default function BadgesGalleryPage() {
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 mt-4">
               {category.badges.map((badge) => {
                 const isUnlocked = unlockedBadgeIds.has(badge.id)
+                const route = CATEGORY_ROUTES[catKey] || '/dashboard'
                 return (
-                  <div
+                  <Link
                     key={badge.id}
-                    className="relative rounded-xl p-4 text-center transition-all duration-300"
+                    href={route}
+                    className="relative rounded-xl p-4 text-center transition-all duration-300 block hover:scale-[1.03]"
                     style={{
                       background: isUnlocked ? 'rgba(212,175,55,0.08)' : 'rgba(255,255,255,0.02)',
                       border: isUnlocked ? '1px solid rgba(212,175,55,0.2)' : '1px solid var(--dark-border)',
@@ -150,7 +164,7 @@ export default function BadgesGalleryPage() {
                     <p className="text-[10px] mt-1 font-mono" style={{ color: isUnlocked ? 'var(--gold)' : 'var(--text-muted)' }}>
                       {badge.threshold} {catKey === 'login_streak' ? 'jours' : 'actions'}
                     </p>
-                  </div>
+                  </Link>
                 )
               })}
             </div>

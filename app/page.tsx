@@ -586,14 +586,20 @@ export default function Home() {
                   <video
                     id="hero-video"
                     src={hero.video_url}
-                    autoPlay
                     muted
                     loop
                     playsInline
+                    preload="auto"
                     className="w-full aspect-video cursor-pointer"
                     onClick={(e) => {
                       const v = e.currentTarget;
                       v.paused ? v.play() : v.pause();
+                    }}
+                    ref={(el) => {
+                      if (el && !el.dataset.delaySet) {
+                        el.dataset.delaySet = '1';
+                        setTimeout(() => { el.play().catch(() => {}); }, 5000);
+                      }
                     }}
                   />
                   {/* Sound toggle – blinks gold when muted, transparent when active */}

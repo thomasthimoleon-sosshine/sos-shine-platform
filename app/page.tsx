@@ -257,6 +257,7 @@ export default function Home() {
   const [headerVisible, setHeaderVisible] = useState(true);
   const [headerScrolled, setHeaderScrolled] = useState(false);
   const [encyclopediaSearch, setEncyclopediaSearch] = useState('');
+  const [allDouleurs, setAllDouleurs] = useState<{ title: string; slug: string; category?: string | null; is_published?: boolean; is_original?: boolean }[]>([]);
   const lastScrollYRef = useRef(0);
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
@@ -333,6 +334,16 @@ export default function Home() {
           }
         }
         setSections(merged);
+      }
+
+      // Fetch all douleurs for the encyclopedie preview
+      const { data: douleursData } = await supabase
+        .from('douleurs')
+        .select('title, slug, category, is_published, is_original')
+        .eq('is_active', true)
+        .order('title', { ascending: true });
+      if (douleursData && douleursData.length > 0) {
+        setAllDouleurs(douleursData);
       }
     } catch {
       // landing defaults already set
@@ -792,16 +803,32 @@ export default function Home() {
               </div>
             </RevealOnScroll>
 
+            {allDouleurs.length > 0 && (
+              <RevealOnScroll delay={0.2}>
+                <p className="text-center text-sm mb-6" style={{ color: 'var(--text-muted)' }}>
+                  {allDouleurs.length} expériences de vie de A à Z
+                </p>
+              </RevealOnScroll>
+            )}
+
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 sm:gap-4">
-              {(encyclo.items || []).filter((d: string) => !encyclopediaSearch || d.toLowerCase().includes(encyclopediaSearch.toLowerCase())).map((d: string, i: number) => (
-                <RevealOnScroll key={d} delay={i * 0.05} direction="scale">
-                  <Link href={`/encyclopedie/${slugify(d)}`}>
-                    <GlowingCard className="px-3 sm:px-5 py-3 sm:py-4 text-center cursor-pointer group">
+              {(allDouleurs.length > 0
+                ? allDouleurs.filter((d) => !encyclopediaSearch || d.title.toLowerCase().includes(encyclopediaSearch.toLowerCase()))
+                : (encyclo.items || []).map((item: string) => ({ title: item, slug: slugify(item), is_published: false, is_original: false }))
+              ).map((d: { title: string; slug: string; is_published?: boolean; is_original?: boolean }, i: number) => (
+                <RevealOnScroll key={d.slug} delay={Math.min(i * 0.02, 1)} direction="scale">
+                  <Link href={`/encyclopedie/${d.slug}`}>
+                    <GlowingCard className="px-3 sm:px-5 py-3 sm:py-4 text-center cursor-pointer group relative">
                       <span className="encyclo-item text-xs sm:text-sm font-light transition-colors duration-300 group-hover:text-[var(--gold)]" style={{
-                        color: i === (encyclo.items || []).length - 1 ? gold : 'var(--text-secondary)',
+                        color: d.is_original ? gold : 'var(--text-secondary)',
                       }}>
-                        {d}
+                        {d.title}
                       </span>
+                      {!d.is_published && (
+                        <span className="block text-[9px] mt-1 uppercase tracking-wider" style={{ color: `rgba(${goldRgb}, 0.5)` }}>
+                          Bientôt
+                        </span>
+                      )}
                     </GlowingCard>
                   </Link>
                 </RevealOnScroll>

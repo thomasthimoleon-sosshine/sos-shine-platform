@@ -264,6 +264,9 @@ export default function Home() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 0.15], [1, 0.95]);
 
+  const heroVideoRef = useRef<HTMLVideoElement>(null);
+  const [videoMuted, setVideoMuted] = useState(true);
+
   const [prelaunchEnabled, setPrelaunchEnabled] = useState<boolean | null>(null);
   const [prelaunchSettings, setPrelaunchSettings] = useState<PrelaunchSettings>({});
 
@@ -566,27 +569,46 @@ export default function Home() {
               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}>
                 <style>{`
                   @keyframes blink-gold {
-                    0%, 100% { background: rgba(212, 175, 55, 0.9); box-shadow: 0 0 16px rgba(212, 175, 55, 0.7), 0 0 6px rgba(255, 215, 0, 0.4); }
-                    50% { background: rgba(212, 175, 55, 0.4); box-shadow: 0 0 6px rgba(212, 175, 55, 0.2); }
+                    0%, 100% { background: rgba(${goldRgb}, 0.25); box-shadow: 0 0 12px rgba(${goldRgb}, 0.3), inset 0 0 8px rgba(${goldRgb}, 0.1); border-color: rgba(${goldRgb}, 0.5); }
+                    50% { background: rgba(${goldRgb}, 0.08); box-shadow: 0 0 4px rgba(${goldRgb}, 0.1); border-color: rgba(${goldRgb}, 0.2); }
                   }
                   .sound-btn-blink {
-                    animation: blink-gold 1.2s ease-in-out infinite;
-                    border: 1px solid rgba(255, 215, 0, 0.6) !important;
+                    animation: blink-gold 2s ease-in-out infinite;
+                    border: 1px solid rgba(${goldRgb}, 0.4) !important;
+                    backdrop-filter: blur(16px) saturate(1.2);
+                    -webkit-backdrop-filter: blur(16px) saturate(1.2);
                   }
                   .sound-btn-active {
                     animation: none;
-                    background: transparent !important;
-                    border: 1px solid transparent !important;
-                    opacity: 0.35;
-                    transition: opacity 0.3s ease;
+                    background: rgba(255, 255, 255, 0.03) !important;
+                    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+                    backdrop-filter: blur(16px) saturate(1.2);
+                    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+                    opacity: 0.4;
+                    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
                   }
-                  .sound-btn-active:hover { opacity: 0.7; }
+                  .sound-btn-active:hover { opacity: 0.85; background: rgba(255, 255, 255, 0.06) !important; }
+                  .video-ctrl-btn {
+                    backdrop-filter: blur(16px) saturate(1.2);
+                    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+                    background: rgba(255, 255, 255, 0.03);
+                    border: 1px solid rgba(255, 255, 255, 0.06);
+                    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                  }
+                  .video-ctrl-btn:hover { background: rgba(255, 255, 255, 0.08); border-color: rgba(${goldRgb}, 0.2); }
                 `}</style>
                 <div className="glass overflow-hidden mb-8 md:mb-10 max-w-3xl mx-auto relative group">
                   <video
                     id="hero-video"
+                    ref={(el) => {
+                      (heroVideoRef as React.MutableRefObject<HTMLVideoElement | null>).current = el;
+                      if (el && !el.dataset.delaySet) {
+                        el.dataset.delaySet = '1';
+                        setTimeout(() => { el.play().catch(() => {}); }, 5000);
+                      }
+                    }}
                     src={hero.video_url}
-                    muted
+                    muted={videoMuted}
                     loop
                     playsInline
                     preload="auto"
@@ -595,44 +617,23 @@ export default function Home() {
                       const v = e.currentTarget;
                       v.paused ? v.play() : v.pause();
                     }}
-                    ref={(el) => {
-                      if (el && !el.dataset.delaySet) {
-                        el.dataset.delaySet = '1';
-                        setTimeout(() => { el.play().catch(() => {}); }, 5000);
-                      }
-                    }}
                   />
-                  {/* Sound toggle – blinks gold when muted, transparent when active */}
+                  {/* Sound toggle – blinks gold when muted, glass when active */}
                   <button
                     type="button"
                     aria-label="Toggle sound"
-                    className="sound-btn-blink absolute bottom-3 right-14 z-10 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md transition-all"
+                    className={`${videoMuted ? 'sound-btn-blink' : 'sound-btn-active'} absolute bottom-3 right-14 z-10 w-8 h-8 rounded-xl flex items-center justify-center transition-all`}
                     onClick={(e) => {
                       e.stopPropagation();
-                      const btn = e.currentTarget;
-                      const video = btn.parentElement?.querySelector('video');
-                      if (video) {
-                        video.muted = !video.muted;
-                        if (video.muted) {
-                          btn.classList.remove('sound-btn-active');
-                          btn.classList.add('sound-btn-blink');
-                        } else {
-                          btn.classList.remove('sound-btn-blink');
-                          btn.classList.add('sound-btn-active');
-                        }
-                        const icon = btn.querySelector('svg');
-                        if (icon) {
-                          if (video.muted) {
-                            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6l4.72-3.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-3.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />';
-                          } else {
-                            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-3.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-3.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />';
-                          }
-                        }
-                      }
+                      setVideoMuted(prev => !prev);
                     }}
                   >
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6l4.72-3.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-3.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="rgba(255,255,255,0.85)" strokeWidth={1.5}>
+                      {videoMuted ? (
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6l4.72-3.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-3.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
+                      ) : (
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-3.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-3.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
+                      )}
                     </svg>
                   </button>
                   {/* Fullscreen button */}
@@ -643,12 +644,17 @@ export default function Home() {
                     style={{ background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.15)' }}
                     onClick={(e) => {
                       e.stopPropagation();
-                      const video = e.currentTarget.parentElement?.querySelector('video');
+                      e.preventDefault();
+                      const video = heroVideoRef.current;
                       if (video) {
                         if (document.fullscreenElement) {
                           document.exitFullscreen();
-                        } else {
+                        } else if (video.requestFullscreen) {
                           video.requestFullscreen().catch(() => {});
+                        } else if ((video as unknown as Record<string, () => void>).webkitEnterFullscreen) {
+                          (video as unknown as Record<string, () => void>).webkitEnterFullscreen();
+                        } else if ((video as unknown as Record<string, () => void>).webkitRequestFullScreen) {
+                          (video as unknown as Record<string, () => void>).webkitRequestFullScreen();
                         }
                       }
                     }}

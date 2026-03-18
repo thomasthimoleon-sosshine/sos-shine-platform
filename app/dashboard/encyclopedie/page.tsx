@@ -609,20 +609,45 @@ export default function EncyclopediePage() {
                             {/* Shine section badges */}
                             {hasDbEntry && (() => {
                               const avail = shineMap[topic.dbMatch!.id]
+                              const douleurId = topic.dbMatch!.id
                               return (
-                                <div className="flex items-center gap-1.5 ml-auto">
-                                  <span title="Shine TV" className="inline-flex items-center justify-center w-5 h-5 rounded" style={{ background: avail?.hasTV ? 'rgba(85,239,196,0.15)' : 'rgba(255,255,255,0.03)' }}>
-                                    <svg className="w-3 h-3" fill={avail?.hasTV ? '#55EFC4' : 'rgba(255,255,255,0.15)'} viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-                                  </span>
-                                  <span title="Shine Audible" className="inline-flex items-center justify-center w-5 h-5 rounded" style={{ background: avail?.hasAudible ? 'rgba(116,192,252,0.15)' : 'rgba(255,255,255,0.03)' }}>
-                                    <svg className="w-3 h-3" fill={avail?.hasAudible ? '#74C0FC' : 'rgba(255,255,255,0.15)'} viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" /></svg>
-                                  </span>
-                                  <span title="Shine Short" className="inline-flex items-center justify-center w-5 h-5 rounded" style={{ background: avail?.hasShort ? 'rgba(162,155,254,0.15)' : 'rgba(255,255,255,0.03)' }}>
-                                    <svg className="w-3 h-3" fill={avail?.hasShort ? '#A29BFE' : 'rgba(255,255,255,0.15)'} viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z" /></svg>
-                                  </span>
-                                  <span title="Shine Librairie" className="inline-flex items-center justify-center w-5 h-5 rounded" style={{ background: avail?.hasLibrary ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.03)' }}>
-                                    <svg className="w-3 h-3" fill={avail?.hasLibrary ? '#D4AF37' : 'rgba(255,255,255,0.15)'} viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" /></svg>
-                                  </span>
+                                <div className="flex items-center gap-1.5 ml-auto" onClick={(e) => e.preventDefault()}>
+                                  {avail?.hasTV ? (
+                                    <Link href={`/dashboard/shine-tv?douleur=${douleurId}`} title="Shine TV" className="inline-flex items-center justify-center w-5 h-5 rounded hover:scale-110 transition-transform" style={{ background: 'rgba(85,239,196,0.15)' }} onClick={(e) => e.stopPropagation()}>
+                                      <svg className="w-3 h-3" fill="#55EFC4" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                                    </Link>
+                                  ) : (
+                                    <span title="Shine TV" className="inline-flex items-center justify-center w-5 h-5 rounded" style={{ background: 'rgba(255,255,255,0.03)' }}>
+                                      <svg className="w-3 h-3" fill="rgba(255,255,255,0.15)" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                                    </span>
+                                  )}
+                                  {avail?.hasAudible ? (
+                                    <Link href={`/dashboard/shine-audible?douleur=${douleurId}`} title="Shine Audible" className="inline-flex items-center justify-center w-5 h-5 rounded hover:scale-110 transition-transform" style={{ background: 'rgba(116,192,252,0.15)' }} onClick={(e) => e.stopPropagation()}>
+                                      <svg className="w-3 h-3" fill="#74C0FC" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" /></svg>
+                                    </Link>
+                                  ) : (
+                                    <span title="Shine Audible" className="inline-flex items-center justify-center w-5 h-5 rounded" style={{ background: 'rgba(255,255,255,0.03)' }}>
+                                      <svg className="w-3 h-3" fill="rgba(255,255,255,0.15)" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" /></svg>
+                                    </span>
+                                  )}
+                                  {avail?.hasShort ? (
+                                    <Link href={`/dashboard/shine-shorts?douleur=${douleurId}`} title="Shine Short" className="inline-flex items-center justify-center w-5 h-5 rounded hover:scale-110 transition-transform" style={{ background: 'rgba(162,155,254,0.15)' }} onClick={(e) => e.stopPropagation()}>
+                                      <svg className="w-3 h-3" fill="#A29BFE" viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z" /></svg>
+                                    </Link>
+                                  ) : (
+                                    <span title="Shine Short" className="inline-flex items-center justify-center w-5 h-5 rounded" style={{ background: 'rgba(255,255,255,0.03)' }}>
+                                      <svg className="w-3 h-3" fill="rgba(255,255,255,0.15)" viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z" /></svg>
+                                    </span>
+                                  )}
+                                  {avail?.hasLibrary ? (
+                                    <Link href={`/dashboard/shine-librairie?douleur=${douleurId}`} title="Shine Librairie" className="inline-flex items-center justify-center w-5 h-5 rounded hover:scale-110 transition-transform" style={{ background: 'rgba(212,175,55,0.15)' }} onClick={(e) => e.stopPropagation()}>
+                                      <svg className="w-3 h-3" fill="#D4AF37" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" /></svg>
+                                    </Link>
+                                  ) : (
+                                    <span title="Shine Librairie" className="inline-flex items-center justify-center w-5 h-5 rounded" style={{ background: 'rgba(255,255,255,0.03)' }}>
+                                      <svg className="w-3 h-3" fill="rgba(255,255,255,0.15)" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" /></svg>
+                                    </span>
+                                  )}
                                 </div>
                               )
                             })()}

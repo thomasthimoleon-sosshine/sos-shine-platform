@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useRef, useCallback } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 
@@ -18,6 +19,7 @@ type ShineVideo = {
   userRating: number
   isFavorite: boolean
   reviewCount: number
+  douleurId: string | null
 }
 
 type Review = {
@@ -544,11 +546,14 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate }: {
 
 // ── Main Page ──
 export default function ShineTVPage() {
+  const searchParams = useSearchParams()
+  const douleurParam = searchParams.get('douleur')
   const [videos, setVideos] = useState<ShineVideo[]>([])
   const [search, setSearch] = useState('')
   const [selectedVideo, setSelectedVideo] = useState<ShineVideo | null>(null)
-  const [activeFilter, setActiveFilter] = useState('all')
+  const [activeFilter, setActiveFilter] = useState(douleurParam ? 'douleur' : 'all')
   const [loading, setLoading] = useState(true)
+  const [douleurName, setDouleurName] = useState<string | null>(null)
 
   useEffect(() => {
     async function loadVideos() {
@@ -565,6 +570,16 @@ export default function ShineTVPage() {
         return
       }
 
+      // Fetch douleur name if filtered
+      if (douleurParam) {
+        const { data: douleur } = await supabase
+          .from('douleurs')
+          .select('title')
+          .eq('id', douleurParam)
+          .maybeSingle()
+        if (douleur) setDouleurName(douleur.title)
+      }
+
       const mapped: ShineVideo[] = data.map((v: any) => ({
         id: v.id,
         title: v.title,
@@ -578,6 +593,7 @@ export default function ShineTVPage() {
         userRating: 0,
         isFavorite: false,
         reviewCount: 0,
+        douleurId: v.douleur_id || null,
       }))
 
       setVideos(mapped)
@@ -603,9 +619,11 @@ export default function ShineTVPage() {
 
   const filteredVideos = videos.filter(v => {
     const matchSearch = !search || v.title.toLowerCase().includes(search.toLowerCase())
-    const matchFilter = activeFilter === 'all' || activeFilter === 'favorites'
-      ? (activeFilter === 'favorites' ? v.isFavorite : true)
-      : v.category === activeFilter
+    const matchFilter = activeFilter === 'douleur'
+      ? v.douleurId === douleurParam
+      : activeFilter === 'all' || activeFilter === 'favorites'
+        ? (activeFilter === 'favorites' ? v.isFavorite : true)
+        : v.category === activeFilter
     return matchSearch && matchFilter
   })
 
@@ -686,6 +704,22 @@ export default function ShineTVPage() {
             >
               Tout
             </button>
+            {douleurParam && (
+              <button
+                onClick={() => setActiveFilter('douleur')}
+                className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200 flex items-center gap-1.5"
+                style={{
+                  background: activeFilter === 'douleur' ? 'var(--gold)' : 'rgba(255,255,255,0.06)',
+                  color: activeFilter === 'douleur' ? '#09090b' : 'var(--text-secondary)',
+                  border: activeFilter === 'douleur' ? 'none' : '1px solid var(--dark-border)',
+                }}
+              >
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.331 0 4.476.884 6.084 2.333M12 6.042A8.967 8.967 0 0118 3.75c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18c-2.331 0-4.476.884-6.084 2.333M12 6.042V20.333" />
+                </svg>
+                {douleurName || 'Douleur'}
+              </button>
+            )}
             <button
               onClick={() => setActiveFilter('encyclopedie')}
               className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200 flex items-center gap-1.5"
@@ -732,7 +766,7 @@ export default function ShineTVPage() {
         </div>
 
         {/* Search results or category rows */}
-        {search || (activeFilter !== 'all' && activeFilter !== 'favorites' && activeFilter !== 'encyclopedie') ? (
+        {search || (activeFilter !== 'all' && activeFilter !== 'favorites' && activeFilter !== 'encyclopedie' && activeFilter !== 'douleur') ? (
           // Grid view for search/filter
           <div>
             <p className="text-[13px] mb-4" style={{ color: 'var(--text-muted)' }}>
@@ -841,6 +875,58 @@ export default function ShineTVPage() {
                         <StarRating rating={Math.round(video.rating)} size="sm" />
                         <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{video.rating.toFixed(1)}</span>
                       </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : activeFilter === 'douleur' ? (
+          // Douleur-filtered view
+          <div>
+            <h2 className="text-lg font-display font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--gold)' }}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.331 0 4.476.884 6.084 2.333M12 6.042A8.967 8.967 0 0118 3.75c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18c-2.331 0-4.476.884-6.084 2.333M12 6.042V20.333" />
+              </svg>
+              {douleurName || 'Contenu lié'}
+            </h2>
+            {filteredVideos.length === 0 ? (
+              <div className="glass p-12 text-center rounded-xl">
+                <div className="text-4xl mb-3">📺</div>
+                <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                  Aucune vidéo liée
+                </h3>
+                <p className="text-[14px]" style={{ color: 'var(--text-muted)' }}>
+                  Aucune vidéo n&apos;est associée à cette douleur pour le moment.
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                {filteredVideos.map((video, i) => (
+                  <motion.div
+                    key={video.id}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.03, duration: 0.3 }}
+                    className="group cursor-pointer"
+                    onClick={() => setSelectedVideo(video)}
+                  >
+                    <div className="relative overflow-hidden rounded-lg transition-all duration-300 group-hover:scale-105">
+                      <div className="relative aspect-video">
+                        <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" loading="lazy" />
+                        <span className="absolute bottom-2 right-2 text-[10px] font-semibold px-1.5 py-0.5 rounded"
+                          style={{ background: 'rgba(0,0,0,0.8)', color: '#fff' }}>
+                          {video.duration}
+                        </span>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                          <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'var(--gold)', color: '#09090b' }}>
+                            <svg className="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-2">
+                      <h3 className="text-[13px] font-medium truncate" style={{ color: 'var(--text-primary)' }}>{video.title}</h3>
                     </div>
                   </motion.div>
                 ))}

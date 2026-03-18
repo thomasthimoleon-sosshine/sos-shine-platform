@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useRef, useCallback } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 
@@ -104,6 +105,7 @@ type ShineBook = {
   isFavorite: boolean
   isFeatured: boolean
   reviewCount: number
+  douleurId: string | null
 }
 
 type Review = {
@@ -689,13 +691,16 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
 
 // ── Main Page ──
 export default function ShineLibrairiePage() {
+  const searchParams = useSearchParams()
+  const douleurParam = searchParams.get('douleur')
   const [books, setBooks] = useState<ShineBook[]>([])
   const [search, setSearch] = useState('')
   const [selectedBook, setSelectedBook] = useState<ShineBook | null>(null)
   const [readingBook, setReadingBook] = useState<ShineBook | null>(null)
-  const [activeFilter, setActiveFilter] = useState('all')
+  const [activeFilter, setActiveFilter] = useState(douleurParam ? 'douleur' : 'all')
   const [activeType, setActiveType] = useState('all')
   const [loading, setLoading] = useState(true)
+  const [douleurName, setDouleurName] = useState<string | null>(null)
 
   useEffect(() => {
     async function loadBooks() {
@@ -762,6 +767,16 @@ export default function ShineLibrairiePage() {
         reviewCountMap[r.book_id] = (reviewCountMap[r.book_id] || 0) + 1
       }
 
+      // Fetch douleur name if filtered
+      if (douleurParam) {
+        const { data: douleur } = await supabase
+          .from('douleurs')
+          .select('title')
+          .eq('id', douleurParam)
+          .maybeSingle()
+        if (douleur) setDouleurName(douleur.title)
+      }
+
       const mapped: ShineBook[] = booksData.map(b => ({
         id: b.id,
         title: b.title,
@@ -778,6 +793,7 @@ export default function ShineLibrairiePage() {
         isFavorite: favoriteIds.includes(b.id),
         isFeatured: b.is_featured || false,
         reviewCount: reviewCountMap[b.id] || 0,
+        douleurId: b.douleur_id || null,
       }))
 
       setBooks(mapped)
@@ -827,9 +843,11 @@ export default function ShineLibrairiePage() {
 
   const filteredBooks = books.filter(b => {
     const matchSearch = !search || b.title.toLowerCase().includes(search.toLowerCase()) || b.author.toLowerCase().includes(search.toLowerCase())
-    const matchFilter = activeFilter === 'all' || activeFilter === 'favorites'
-      ? (activeFilter === 'favorites' ? b.isFavorite : true)
-      : activeFilter === 'featured' ? b.isFeatured : b.category === activeFilter
+    const matchFilter = activeFilter === 'douleur'
+      ? b.douleurId === douleurParam
+      : activeFilter === 'all' || activeFilter === 'favorites'
+        ? (activeFilter === 'favorites' ? b.isFavorite : true)
+        : activeFilter === 'featured' ? b.isFeatured : b.category === activeFilter
     const matchType = activeType === 'all' || b.contentType === activeType
     return matchSearch && matchFilter && matchType
   })
@@ -951,6 +969,22 @@ export default function ShineLibrairiePage() {
             >
               Tout
             </button>
+            {douleurParam && (
+              <button
+                onClick={() => setActiveFilter('douleur')}
+                className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200 flex items-center gap-1.5"
+                style={{
+                  background: activeFilter === 'douleur' ? 'var(--gold)' : 'rgba(255,255,255,0.06)',
+                  color: activeFilter === 'douleur' ? '#09090b' : 'var(--text-secondary)',
+                  border: activeFilter === 'douleur' ? 'none' : '1px solid var(--dark-border)',
+                }}
+              >
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.331 0 4.476.884 6.084 2.333M12 6.042A8.967 8.967 0 0118 3.75c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18c-2.331 0-4.476.884-6.084 2.333M12 6.042V20.333" />
+                </svg>
+                {douleurName || 'Douleur'}
+              </button>
+            )}
             <button
               onClick={() => setActiveFilter('encyclopedie')}
               className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200 flex items-center gap-1.5"
@@ -997,7 +1031,7 @@ export default function ShineLibrairiePage() {
         </div>
 
         {/* Search results or category rows */}
-        {search || (activeFilter !== 'all' && activeFilter !== 'favorites' && activeFilter !== 'encyclopedie') || activeType !== 'all' ? (
+        {search || (activeFilter !== 'all' && activeFilter !== 'favorites' && activeFilter !== 'encyclopedie' && activeFilter !== 'douleur') || activeType !== 'all' ? (
           // Grid view for search/filter
           <div>
             <p className="text-[13px] mb-4" style={{ color: 'var(--text-muted)' }}>
@@ -1102,6 +1136,50 @@ export default function ShineLibrairiePage() {
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-3xl opacity-20">📖</div>
                         )}
+                      </div>
+                    </div>
+                    <div className="mt-2">
+                      <h3 className="text-[13px] font-medium truncate" style={{ color: 'var(--text-primary)' }}>{book.title}</h3>
+                      <p className="text-[11px] truncate" style={{ color: 'var(--text-muted)' }}>{book.author}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : activeFilter === 'douleur' ? (
+          // Douleur-filtered view
+          <div>
+            <h2 className="text-lg font-display font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--gold)' }}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.331 0 4.476.884 6.084 2.333M12 6.042A8.967 8.967 0 0118 3.75c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18c-2.331 0-4.476.884-6.084 2.333M12 6.042V20.333" />
+              </svg>
+              {douleurName || 'Contenu lié'}
+            </h2>
+            {filteredBooks.length === 0 ? (
+              <div className="glass p-12 text-center rounded-xl">
+                <div className="text-4xl mb-3">📚</div>
+                <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                  Aucun livre lié
+                </h3>
+                <p className="text-[14px]" style={{ color: 'var(--text-muted)' }}>
+                  Aucun livre n&apos;est associé à cette douleur pour le moment.
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                {filteredBooks.map((book, i) => (
+                  <motion.div
+                    key={book.id}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.03, duration: 0.3 }}
+                    className="group cursor-pointer"
+                    onClick={() => setSelectedBook(book)}
+                  >
+                    <div className="relative overflow-hidden rounded-lg transition-all duration-300 group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-black/50">
+                      <div className="relative aspect-[2/3]">
+                        <img src={book.cover} alt={book.title} className="w-full h-full object-cover" loading="lazy" />
                       </div>
                     </div>
                     <div className="mt-2">

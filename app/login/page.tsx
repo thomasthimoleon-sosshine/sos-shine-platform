@@ -106,13 +106,7 @@ export default function LoginPage() {
       >
         {/* Logo */}
         <div className="text-center mb-10">
-          {s('login_header_image') ? (
-            <Link href="/"><img src={s('login_header_image')} alt="SOS Shine" className="h-16 mx-auto mb-3 object-contain" /></Link>
-          ) : s('logo_url') ? (
-            <Link href="/"><img src={s('logo_url')} alt="SOS Shine" className="h-12 mx-auto mb-3 rounded-xl object-cover ring-1 ring-white/10" /></Link>
-          ) : (
-            <Link href="/" className="font-display text-2xl text-[var(--gold)] font-medium tracking-tight">SOS Shine</Link>
-          )}
+          <Link href="/"><img src={s('login_header_image') || s('logo_url') || '/images/logo-shine.png'} alt="SOS Shine" className="h-16 mx-auto mb-3 object-contain" /></Link>
           <p className="text-[var(--text-muted)] text-[13px] mt-2">{s('login_subtitle')}</p>
 
           {/* Boutons livres - accessibles sans connexion */}

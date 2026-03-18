@@ -129,13 +129,7 @@ export default function SignupPage() {
           className="max-w-md w-full text-center relative z-10"
         >
           <div className="mb-8">
-            {s('signup_header_image') ? (
-              <Link href="/"><img src={s('signup_header_image')} alt="SOS Shine" className="h-16 mx-auto mb-3 object-contain" /></Link>
-            ) : s('logo_url') ? (
-              <Link href="/"><img src={s('logo_url')} alt="SOS Shine" className="h-12 mx-auto mb-3 rounded-xl object-cover ring-1 ring-white/10" /></Link>
-            ) : (
-              <Link href="/" className="font-display text-2xl text-[var(--gold)] font-medium tracking-tight">SOS Shine</Link>
-            )}
+            <Link href="/"><img src={s('signup_header_image') || s('logo_url') || '/images/logo-shine.png'} alt="SOS Shine" className="h-16 mx-auto mb-3 object-contain" /></Link>
           </div>
 
           <div className="glass p-10">
@@ -196,13 +190,7 @@ export default function SignupPage() {
       >
         {/* Logo */}
         <div className="text-center mb-10">
-          {s('signup_header_image') ? (
-            <Link href="/"><img src={s('signup_header_image')} alt="SOS Shine" className="h-16 mx-auto mb-3 object-contain" /></Link>
-          ) : s('logo_url') ? (
-            <Link href="/"><img src={s('logo_url')} alt="SOS Shine" className="h-12 mx-auto mb-3 rounded-xl object-cover ring-1 ring-white/10" /></Link>
-          ) : (
-            <Link href="/" className="font-display text-2xl text-[var(--gold)] font-medium tracking-tight">SOS Shine</Link>
-          )}
+          <Link href="/"><img src={s('signup_header_image') || s('logo_url') || '/images/logo-shine.png'} alt="SOS Shine" className="h-16 mx-auto mb-3 object-contain" /></Link>
           <p className="text-[var(--text-muted)] text-[13px] mt-2">{s('signup_subtitle')}</p>
         </div>
 

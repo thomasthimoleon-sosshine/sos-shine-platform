@@ -564,6 +564,23 @@ export default function Home() {
 
             {hero.video_url && (
               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}>
+                <style>{`
+                  @keyframes blink-red {
+                    0%, 100% { background: rgba(220, 38, 38, 0.85); box-shadow: 0 0 12px rgba(220, 38, 38, 0.6); }
+                    50% { background: rgba(220, 38, 38, 0.4); box-shadow: 0 0 4px rgba(220, 38, 38, 0.2); }
+                  }
+                  .sound-btn-blink {
+                    animation: blink-red 1.2s ease-in-out infinite;
+                    border: 1px solid rgba(255, 100, 100, 0.5) !important;
+                  }
+                  .sound-btn-active {
+                    animation: none;
+                    background: rgba(0,0,0,0.25) !important;
+                    border: 1px solid rgba(255,255,255,0.1) !important;
+                    opacity: 0.5;
+                  }
+                  .sound-btn-active:hover { opacity: 0.85; }
+                `}</style>
                 <div className="glass overflow-hidden mb-8 md:mb-10 max-w-3xl mx-auto relative group">
                   <video
                     id="hero-video"
@@ -578,19 +595,25 @@ export default function Home() {
                       v.paused ? v.play() : v.pause();
                     }}
                   />
+                  {/* Sound toggle – blinks red when muted, transparent when active */}
                   <button
                     type="button"
                     aria-label="Toggle sound"
-                    className="absolute bottom-3 right-3 z-10 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md transition-all opacity-70 hover:opacity-100"
-                    style={{ background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.15)' }}
+                    className="sound-btn-blink absolute bottom-3 right-14 z-10 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md transition-all"
                     onClick={(e) => {
                       e.stopPropagation();
-                      const video = (e.currentTarget.parentElement as HTMLElement).querySelector('video');
+                      const btn = e.currentTarget;
+                      const video = btn.parentElement?.querySelector('video');
                       if (video) {
                         video.muted = !video.muted;
-                        e.currentTarget.setAttribute('data-muted', String(video.muted));
-                        // Force re-render of the icon
-                        const icon = e.currentTarget.querySelector('svg');
+                        if (video.muted) {
+                          btn.classList.remove('sound-btn-active');
+                          btn.classList.add('sound-btn-blink');
+                        } else {
+                          btn.classList.remove('sound-btn-blink');
+                          btn.classList.add('sound-btn-active');
+                        }
+                        const icon = btn.querySelector('svg');
                         if (icon) {
                           if (video.muted) {
                             icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6l4.72-3.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-3.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />';
@@ -603,6 +626,28 @@ export default function Home() {
                   >
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6l4.72-3.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-3.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
+                    </svg>
+                  </button>
+                  {/* Fullscreen button */}
+                  <button
+                    type="button"
+                    aria-label="Fullscreen"
+                    className="absolute bottom-3 right-3 z-10 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md transition-all opacity-70 hover:opacity-100"
+                    style={{ background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.15)' }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const video = e.currentTarget.parentElement?.querySelector('video');
+                      if (video) {
+                        if (document.fullscreenElement) {
+                          document.exitFullscreen();
+                        } else {
+                          video.requestFullscreen().catch(() => {});
+                        }
+                      }
+                    }}
+                  >
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
                     </svg>
                   </button>
                 </div>

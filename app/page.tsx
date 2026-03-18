@@ -572,6 +572,7 @@ export default function Home() {
                 {[
                   { label: 'Le Principe', id: 'principe' },
                   { label: 'Encyclopédie', id: 'encyclopedie' },
+                  { label: 'Témoignages', id: 'temoignages' },
                   { label: 'Communauté', id: 'communaute' },
                   { label: 'Tarifs', id: 'pricing' },
                   { label: 'FAQ', id: 'faq' },
@@ -641,7 +642,7 @@ export default function Home() {
 
             <h1 className="font-display font-light leading-[1.08] mb-8" style={{ ...tStyle("hero"), perspective: "1000px" }}>
               {(hero.title || '').split("\n").map((line: string, i: number) => {
-                const isHighlight = line.includes("expériences") || line.includes("schémas") || line.includes("potentiel") || line.includes("émotionnels");
+                const isHighlight = line.includes("expériences") || line.includes("schémas") || line.includes("potentiel") || line.includes("émotionnels") || line.includes("tempêtes") || line.includes("seul");
                 const lineWords = line.split(/\s+/);
                 const baseDelay = i * 0.2 + 0.15;
                 return (
@@ -873,32 +874,6 @@ export default function Home() {
       {/* ═══ TICKER BAND ═══ */}
       <InfiniteTickerBand items={tickerItems} speed={ticker1Speed} />
 
-      {/* ═══ SIGNATURE EMOTIONNELLE CTA ═══ */}
-      <section className="px-5 md:px-20 py-12 md:py-20 relative cv-auto">
-        <RevealOnScroll>
-          <div className="max-w-3xl mx-auto text-center">
-            <Link href="/signature-emotionnelle">
-              <div className="glow-card p-6 sm:p-8 md:p-12 cursor-pointer group">
-                <p className="luxury-title text-[10px] sm:text-xs tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{t('signature.cta_label')}</p>
-                <h3 className="font-display text-xl sm:text-2xl md:text-4xl font-light mb-3 md:mb-4" style={{ color: gold }}>
-                  {t('signature.cta_title')}{' '}
-                  <span className="text-shimmer">{t('signature.cta_title_highlight')}</span>
-                </h3>
-                <p className="text-[var(--text-secondary)] font-light mb-5 md:mb-6 text-sm md:text-[15px]">
-                  {t('signature.cta_desc')}
-                </p>
-                <span className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-semibold tracking-wide group-hover:scale-105 transition-transform" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
-                  {t('signature.cta_button')}
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
-                </span>
-              </div>
-            </Link>
-          </div>
-        </RevealOnScroll>
-      </section>
-
       {/* ═══ LE PRINCIPE ═══ */}
       {vis('principe') && (
         <section id="principe" className="px-5 md:px-20 py-16 md:py-32 relative cv-auto scroll-mt-24">
@@ -922,7 +897,7 @@ export default function Home() {
                 {(principe.title || '').split("\n").map((line: string, i: number) => (
                   <span key={i} className="block">
                     {i > 0 && <span className="block h-1" />}
-                    {line.includes("schémas") || line.includes("challenge") || line.includes("potentiel") ? (
+                    {line.includes("schémas") || line.includes("challenge") || line.includes("potentiel") || line.includes("libère") || line.includes("blessures") ? (
                       <span className="text-shimmer">{line}</span>
                     ) : line}
                   </span>
@@ -978,6 +953,32 @@ export default function Home() {
           </div>
         </section>
       )}
+
+      {/* ═══ SIGNATURE EMOTIONNELLE CTA ═══ */}
+      <section className="px-5 md:px-20 py-12 md:py-20 relative cv-auto">
+        <RevealOnScroll>
+          <div className="max-w-3xl mx-auto text-center">
+            <Link href="/signature-emotionnelle">
+              <div className="glow-card p-6 sm:p-8 md:p-12 cursor-pointer group">
+                <p className="luxury-title text-[10px] sm:text-xs tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{t('signature.cta_label')}</p>
+                <h3 className="font-display text-xl sm:text-2xl md:text-4xl font-light mb-3 md:mb-4" style={{ color: gold }}>
+                  {t('signature.cta_title')}{' '}
+                  <span className="text-shimmer">{t('signature.cta_title_highlight')}</span>
+                </h3>
+                <p className="text-[var(--text-secondary)] font-light mb-5 md:mb-6 text-sm md:text-[15px]">
+                  {t('signature.cta_desc')}
+                </p>
+                <span className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-semibold tracking-wide group-hover:scale-105 transition-transform" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                  {t('signature.cta_button')}
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </span>
+              </div>
+            </Link>
+          </div>
+        </RevealOnScroll>
+      </section>
 
       {/* ═══ L'ENCYCLOPEDIE ═══ */}
       {vis('encyclopedie') && (
@@ -1064,6 +1065,51 @@ export default function Home() {
         </section>
       )}
 
+      {/* ═══ TEMOIGNAGES ═══ */}
+      {vis('temoignages') && (
+        <section id="temoignages" className="px-5 md:px-20 py-16 md:py-32 relative cv-auto scroll-mt-24">
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute bottom-0 left-1/3 w-[250px] h-[250px] md:w-[400px] md:h-[400px] rounded-full opacity-[0.02] blur-[40px] md:blur-[60px]" style={{ background: gold }} />
+          </div>
+
+          <div className="max-w-5xl mx-auto relative z-10">
+            <RevealOnScroll>
+              <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-10 md:mb-20">
+                <WordByWordReveal text={temos.label || ''} />
+              </p>
+            </RevealOnScroll>
+
+            <div className="grid md:grid-cols-2 gap-4 md:gap-8">
+              {(temos.items || []).filter((t: { quote: string; name: string; city: string }) => t.quote).map((t: { quote: string; name: string; city: string }, i: number) => (
+                <RevealOnScroll key={i} delay={i * 0.12} direction={i % 2 === 0 ? "left" : "right"}>
+                  <GlowingCard className="p-5 sm:p-8 md:p-10 h-full flex flex-col justify-between">
+                    <div>
+                      <div className="flex gap-1 mb-4 md:mb-6">
+                        {[1,2,3,4,5].map(s => (
+                          <span key={s} className="text-sm" style={{ color: gold }}>★</span>
+                        ))}
+                      </div>
+                      <p className="font-display text-base sm:text-lg italic text-[var(--text-primary)] font-light leading-relaxed mb-6 md:mb-8">
+                        &laquo; {t.quote} &raquo;
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3 pt-3 md:pt-4" style={{ borderTop: `1px solid rgba(${goldRgb}, 0.08)` }}>
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-display text-sm" style={{ background: `linear-gradient(135deg, rgba(${goldRgb},0.15), rgba(${goldRgb},0.05))`, color: gold }}>
+                        {t.name.charAt(0)}
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium" style={{ color: gold }}>{t.name}</p>
+                        <p className="text-xs text-[var(--text-muted)]">{t.city}</p>
+                      </div>
+                    </div>
+                  </GlowingCard>
+                </RevealOnScroll>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* ═══ TICKER BAND 2 ═══ */}
       <InfiniteTickerBand items={ticker2Items} speed={ticker2Speed} />
 
@@ -1107,50 +1153,54 @@ export default function Home() {
         </section>
       )}
 
-      {/* ═══ TEMOIGNAGES ═══ */}
-      {vis('temoignages') && (
-        <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute bottom-0 left-1/3 w-[250px] h-[250px] md:w-[400px] md:h-[400px] rounded-full opacity-[0.02] blur-[40px] md:blur-[60px]" style={{ background: gold }} />
-          </div>
-
-          <div className="max-w-5xl mx-auto relative z-10">
-            <RevealOnScroll>
-              <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-10 md:mb-20">
-                <WordByWordReveal text={temos.label || ''} />
-              </p>
-            </RevealOnScroll>
-
-            <div className="grid md:grid-cols-2 gap-4 md:gap-8">
-              {(temos.items || []).filter((t: { quote: string; name: string; city: string }) => t.quote).map((t: { quote: string; name: string; city: string }, i: number) => (
-                <RevealOnScroll key={i} delay={i * 0.12} direction={i % 2 === 0 ? "left" : "right"}>
-                  <GlowingCard className="p-5 sm:p-8 md:p-10 h-full flex flex-col justify-between">
-                    <div>
-                      <div className="flex gap-1 mb-4 md:mb-6">
-                        {[1,2,3,4,5].map(s => (
-                          <span key={s} className="text-sm" style={{ color: gold }}>★</span>
-                        ))}
-                      </div>
-                      <p className="font-display text-base sm:text-lg italic text-[var(--text-primary)] font-light leading-relaxed mb-6 md:mb-8">
-                        &laquo; {t.quote} &raquo;
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-3 pt-3 md:pt-4" style={{ borderTop: `1px solid rgba(${goldRgb}, 0.08)` }}>
-                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-display text-sm" style={{ background: `linear-gradient(135deg, rgba(${goldRgb},0.15), rgba(${goldRgb},0.05))`, color: gold }}>
-                        {t.name.charAt(0)}
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium" style={{ color: gold }}>{t.name}</p>
-                        <p className="text-xs text-[var(--text-muted)]">{t.city}</p>
-                      </div>
-                    </div>
-                  </GlowingCard>
+      {/* ═══ FONDATEURS ═══ */}
+      {vis('fondateurs') && (() => {
+        const fond = sec('fondateurs');
+        const members = fond.members || [];
+        return (
+          <section id="fondateurs" className="px-5 md:px-20 py-16 md:py-32 relative cv-auto scroll-mt-24">
+            <div className="max-w-5xl mx-auto">
+              <RevealOnScroll>
+                <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{fond.label || 'Les Fondateurs'}</p>
+              </RevealOnScroll>
+              <RevealOnScroll delay={0.1}>
+                <h2 className="font-display font-light text-center text-2xl sm:text-3xl md:text-5xl mb-4 md:mb-6" style={{ color: 'var(--gold)' }}>
+                  <WordByWordReveal text={fond.title || ''} />
+                </h2>
+              </RevealOnScroll>
+              {fond.description && (
+                <RevealOnScroll delay={0.15}>
+                  <p className="text-center text-[var(--text-muted)] max-w-2xl mx-auto mb-10 md:mb-16 text-base md:text-lg leading-relaxed">
+                    {fond.description}
+                  </p>
                 </RevealOnScroll>
-              ))}
+              )}
+              <div className="flex flex-wrap justify-center gap-6 md:gap-10">
+                {members.map((founder: { name: string; image: string; role: string }, i: number) => (
+                  <RevealOnScroll key={founder.name || i} delay={0.2 + i * 0.15}>
+                    <div className="flex flex-col items-center group">
+                      <div className="relative mb-4 md:mb-6">
+                        <div className="w-28 h-28 sm:w-36 sm:h-36 md:w-52 md:h-52 rounded-full overflow-hidden border-2 border-[var(--gold)]/30 group-hover:border-[var(--gold)] transition-all duration-500 relative">
+                          {founder.image && (
+                            <img
+                              src={founder.image}
+                              alt={founder.name}
+                              className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                            />
+                          )}
+                        </div>
+                        <div className="absolute -inset-1 rounded-full bg-[var(--gold)]/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+                      </div>
+                      <h3 className="font-display text-lg sm:text-xl md:text-2xl text-[var(--gold)] mb-1 text-center">{founder.name}</h3>
+                      <p className="text-[10px] sm:text-xs md:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-[var(--text-muted)] text-center">{founder.role}</p>
+                    </div>
+                  </RevealOnScroll>
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
-      )}
+          </section>
+        );
+      })()}
 
       {/* ═══ L'HISTOIRE / LE LIVRE ═══ */}
       {vis('histoire') && (() => {
@@ -1205,55 +1255,6 @@ export default function Home() {
                     </a>
                   </div>
                 </RevealOnScroll>
-              </div>
-            </div>
-          </section>
-        );
-      })()}
-
-      {/* ═══ FONDATEURS ═══ */}
-      {vis('fondateurs') && (() => {
-        const fond = sec('fondateurs');
-        const members = fond.members || [];
-        return (
-          <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
-            <div className="max-w-5xl mx-auto">
-              <RevealOnScroll>
-                <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{fond.label || 'Les Fondateurs'}</p>
-              </RevealOnScroll>
-              <RevealOnScroll delay={0.1}>
-                <h2 className="font-display font-light text-center text-2xl sm:text-3xl md:text-5xl mb-4 md:mb-6" style={{ color: 'var(--gold)' }}>
-                  <WordByWordReveal text={fond.title || ''} />
-                </h2>
-              </RevealOnScroll>
-              {fond.description && (
-                <RevealOnScroll delay={0.15}>
-                  <p className="text-center text-[var(--text-muted)] max-w-2xl mx-auto mb-10 md:mb-16 text-base md:text-lg leading-relaxed">
-                    {fond.description}
-                  </p>
-                </RevealOnScroll>
-              )}
-              <div className="flex flex-wrap justify-center gap-6 md:gap-10">
-                {members.map((founder: { name: string; image: string; role: string }, i: number) => (
-                  <RevealOnScroll key={founder.name || i} delay={0.2 + i * 0.15}>
-                    <div className="flex flex-col items-center group">
-                      <div className="relative mb-4 md:mb-6">
-                        <div className="w-28 h-28 sm:w-36 sm:h-36 md:w-52 md:h-52 rounded-full overflow-hidden border-2 border-[var(--gold)]/30 group-hover:border-[var(--gold)] transition-all duration-500 relative">
-                          {founder.image && (
-                            <img
-                              src={founder.image}
-                              alt={founder.name}
-                              className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                            />
-                          )}
-                        </div>
-                        <div className="absolute -inset-1 rounded-full bg-[var(--gold)]/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
-                      </div>
-                      <h3 className="font-display text-lg sm:text-xl md:text-2xl text-[var(--gold)] mb-1 text-center">{founder.name}</h3>
-                      <p className="text-[10px] sm:text-xs md:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-[var(--text-muted)] text-center">{founder.role}</p>
-                    </div>
-                  </RevealOnScroll>
-                ))}
               </div>
             </div>
           </section>
@@ -1414,17 +1415,17 @@ export default function Home() {
               <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at center, rgba(${goldRgb}, 0.04), transparent 70%)` }} />
               <div className="relative z-10">
                 <span className="inline-block px-4 py-1.5 rounded-full text-[10px] sm:text-xs tracking-[0.2em] uppercase font-semibold mb-4" style={{ background: `rgba(${goldRgb}, 0.12)`, color: gold, border: `1px solid rgba(${goldRgb}, 0.2)` }}>
-                  ✦ Membre fondateur
+                  Offre de lancement
                 </span>
                 <h3 className="font-display text-xl sm:text-2xl md:text-3xl font-light mb-3" style={{ color: gold }}>
-                  Rejoignez la première vague
+                  Les 100 premiers membres fondateurs
                 </h3>
                 <p className="text-sm md:text-base font-light leading-relaxed mb-6 max-w-lg mx-auto" style={{ color: 'var(--text-secondary)' }}>
-                  Les premiers membres bénéficieront d&apos;un tarif préférentiel à vie et d&apos;un accès prioritaire à toutes les nouvelles fonctionnalités.
+                  Tarif pr&eacute;f&eacute;rentiel garanti &agrave; vie, acc&egrave;s prioritaire &agrave; toutes les nouvelles fonctionnalit&eacute;s, et un badge exclusif &laquo;&nbsp;Fondateur&nbsp;&raquo; sur votre profil.
                 </p>
                 <Link href="/rejoindre">
                   <button className="magnetic-btn pulse-ring px-8 py-4 rounded-full text-sm sm:text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
-                    Devenir membre fondateur
+                    Rejoindre les fondateurs
                   </button>
                 </Link>
               </div>

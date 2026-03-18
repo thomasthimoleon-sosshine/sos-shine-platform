@@ -411,11 +411,14 @@ export default function PublicEncyclopediePage() {
           <Image
             src="/images/logo-shine-transparent.png"
             alt="SOS Shine"
-            width={140}
-            height={45}
-            className="object-contain"
+            width={36}
+            height={36}
+            className="w-9 h-9 rounded-full object-cover ring-1 ring-white/10"
             priority
           />
+          <span className="font-display text-base font-semibold tracking-tight" style={{ color: 'var(--text-primary)' }}>
+            SOS Shine
+          </span>
         </Link>
         <Link
           href={STRIPE_URL}

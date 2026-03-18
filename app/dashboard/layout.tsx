@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
+import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import type { Profile } from '@/types/database'
 import ThemeToggle from '@/components/ThemeToggle'
@@ -133,7 +134,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [unreadMessages, setUnreadMessages] = useState(0)
   const [logoUrl, setLogoUrl] = useState<string | null>(null)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
+  const [showWelcomePopup, setShowWelcomePopup] = useState(false)
 
+  const dismissWelcomePopup = useCallback(() => {
+    setShowWelcomePopup(false)
+    sessionStorage.setItem('sos_welcome_shown', '1')
+  }, [])
 
   useEffect(() => {
     const supabase = createClient()
@@ -166,6 +172,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           video_url: null,
           is_bot: false,
         })
+      }
+
+      // Afficher le popup de bienvenue une fois par session
+      if (!sessionStorage.getItem('sos_welcome_shown')) {
+        setShowWelcomePopup(true)
       }
 
       // Compter les messages privés non lus
@@ -388,6 +399,68 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">{children}</main>
 
       </div>
+
+      {/* ── Welcome Popup ── */}
+      <AnimatePresence>
+        {showWelcomePopup && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-[200] flex items-center justify-center px-4"
+            style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}
+            onClick={dismissWelcomePopup}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.85, y: 30 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ type: 'spring', damping: 22, stiffness: 260 }}
+              className="w-full max-w-md rounded-2xl overflow-hidden text-center relative"
+              style={{
+                background: 'linear-gradient(160deg, var(--dark-card) 0%, rgba(212,175,55,0.06) 100%)',
+                border: '1px solid rgba(212,175,55,0.2)',
+                boxShadow: '0 25px 60px rgba(0,0,0,0.5), 0 0 40px rgba(212,175,55,0.08)',
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Glow */}
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 rounded-full opacity-20 blur-[60px]" style={{ background: 'var(--gold)' }} />
+
+              <div className="relative z-10 px-6 sm:px-8 py-8 sm:py-10">
+                {/* Diamond icon */}
+                <div
+                  className="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center"
+                  style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}
+                >
+                  <span className="text-3xl">✨</span>
+                </div>
+
+                <h2 className="font-display text-xl sm:text-2xl font-semibold mb-3" style={{ color: 'var(--gold)' }}>
+                  Félicitations Shiner !
+                </h2>
+
+                <p className="text-[15px] leading-relaxed mb-8" style={{ color: 'var(--text-secondary)' }}>
+                  Pour ta résilience, ta lumière est en train de se rallumer ✨
+                </p>
+
+                <button
+                  onClick={dismissWelcomePopup}
+                  className="w-full sm:w-auto px-8 py-3.5 rounded-full text-sm font-semibold tracking-wide cursor-pointer transition-all duration-200 hover:scale-[1.03] active:scale-[0.98]"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))',
+                    color: '#050505',
+                    boxShadow: '0 4px 20px rgba(212,175,55,0.3)',
+                  }}
+                >
+                  Continuer à façonner mon diamant 💎
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

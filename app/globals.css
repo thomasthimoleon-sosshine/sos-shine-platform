@@ -683,6 +683,18 @@ h1 .text-shimmer, h2 .text-shimmer, h3 .text-shimmer, .text-shimmer {
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 
+/* ── Scroll margin for anchor links ── */
+.scroll-mt-24 {
+  scroll-margin-top: 6rem;
+}
+
+/* ── Safe area padding for mobile CTA bar ── */
+@media (max-width: 1023px) {
+  footer {
+    padding-bottom: 4.5rem !important;
+  }
+}
+
 /* ── Reduced motion support ── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

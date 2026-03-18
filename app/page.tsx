@@ -252,10 +252,74 @@ function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: strin
   );
 }
 
+const FAQ_ITEMS = [
+  {
+    q: "Est-ce que SOS Shine remplace un thérapeute ?",
+    a: "Non. SOS Shine est un complément d'accompagnement. Nous offrons des protocoles de compréhension, de libération et d'action, mais nous recommandons de consulter un professionnel de santé si nécessaire. Nos contenus sont créés par des thérapeutes certifiés.",
+  },
+  {
+    q: "Puis-je annuler mon abonnement à tout moment ?",
+    a: "Absolument. Aucun engagement, aucune condition cachée. Vous pouvez annuler en un clic depuis votre espace membre. Si vous annulez pendant la période d'essai, vous ne serez pas débité.",
+  },
+  {
+    q: "Combien de temps dure le protocole en 3 étapes ?",
+    a: "Chaque protocole est conçu pour être suivi à votre rythme. Certains membres complètent une étape en 20 minutes, d'autres prennent plusieurs jours. Il n'y a aucune pression — vous avancez selon votre ressenti.",
+  },
+  {
+    q: "Est-ce que mes données sont confidentielles ?",
+    a: "100%. Vos données ne sont jamais vendues ni partagées. Vos échanges dans les chats sont protégés, et vous pouvez utiliser un pseudo. Le courrier anonyme garantit un anonymat total.",
+  },
+  {
+    q: "La communauté est-elle vraiment active 24h/24 ?",
+    a: "Oui. Notre communauté est internationale et les chats sont accessibles en permanence. Que ce soit à 3h du matin ou en plein après-midi, quelqu'un sera là pour vous écouter.",
+  },
+  {
+    q: "Comment fonctionne l'essai gratuit de 7 jours ?",
+    a: "Vous accédez immédiatement à l'intégralité du contenu de votre formule. Si vous n'êtes pas convaincu(e), annulez avant la fin des 7 jours — aucun prélèvement ne sera effectué.",
+  },
+];
+
+function FAQItem({ item, isOpen, onToggle }: { item: { q: string; a: string }; isOpen: boolean; onToggle: () => void }) {
+  return (
+    <div
+      className="glow-card mb-3"
+      style={{ borderRadius: '1rem' }}
+    >
+      <button
+        type="button"
+        onClick={onToggle}
+        className="w-full flex items-center justify-between px-5 sm:px-6 py-4 sm:py-5 text-left"
+      >
+        <span className="text-sm sm:text-base font-medium pr-4" style={{ color: 'var(--text-primary)' }}>{item.q}</span>
+        <motion.span
+          animate={{ rotate: isOpen ? 45 : 0 }}
+          transition={{ duration: 0.2 }}
+          className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-lg"
+          style={{ color: 'var(--gold)', background: 'rgba(212, 175, 55, 0.08)' }}
+        >
+          +
+        </motion.span>
+      </button>
+      <motion.div
+        initial={false}
+        animate={{ height: isOpen ? 'auto' : 0, opacity: isOpen ? 1 : 0 }}
+        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        className="overflow-hidden"
+      >
+        <p className="px-5 sm:px-6 pb-5 text-sm sm:text-[15px] font-light leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+          {item.a}
+        </p>
+      </motion.div>
+    </div>
+  );
+}
+
 export default function Home() {
   const { t } = useTranslation();
   const [headerVisible, setHeaderVisible] = useState(true);
   const [headerScrolled, setHeaderScrolled] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [showMobileCta, setShowMobileCta] = useState(false);
   const [encyclopediaSearch, setEncyclopediaSearch] = useState('');
   const [allDouleurs, setAllDouleurs] = useState<{ title: string; slug: string; category?: string | null; is_published?: boolean; is_original?: boolean }[]>([]);
   const lastScrollYRef = useRef(0);
@@ -369,6 +433,12 @@ export default function Home() {
     };
     window.addEventListener("scroll", onScroll, { passive: true });
 
+    // Show mobile CTA after scrolling past hero
+    const onScrollMobileCta = () => {
+      setShowMobileCta(window.scrollY > 600);
+    };
+    window.addEventListener("scroll", onScrollMobileCta, { passive: true });
+
     // Re-fetch prelaunch settings when tab becomes visible (after admin edits in another tab)
     const handleVisibility = () => {
       if (document.visibilityState === 'visible') {
@@ -379,6 +449,7 @@ export default function Home() {
 
     return () => {
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("scroll", onScrollMobileCta);
       document.removeEventListener('visibilitychange', handleVisibility);
     };
   }, [loadSections, loadPrelaunchSettings]);
@@ -491,12 +562,40 @@ export default function Home() {
           <header
             className={`fixed top-0 left-0 right-0 z-50 py-3 md:py-4 header-animate ${headerScrolled ? 'header-scrolled' : ''}`}
           >
-            <div className="flex items-center justify-center relative px-4 md:px-6">
-              <Link href="/" className="flex items-center gap-3">
+            <div className="flex items-center justify-between relative px-4 md:px-6 max-w-7xl mx-auto">
+              <Link href="/" className="flex items-center gap-3 flex-shrink-0">
                 <img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-14 sm:h-18 md:h-24 w-auto object-contain" />
               </Link>
-              <div className="absolute right-4 md:right-6 flex items-center gap-3">
-                <Link href="/login" className="px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:opacity-90" style={{ background: 'var(--button-bg, linear-gradient(135deg, #d4a843, #b8922e))', color: 'var(--dark, #1a1a1a)' }}>
+
+              {/* ── Desktop nav anchors ── */}
+              <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
+                {[
+                  { label: 'Le Principe', id: 'principe' },
+                  { label: 'Encyclopédie', id: 'encyclopedie' },
+                  { label: 'Communauté', id: 'communaute' },
+                  { label: 'Tarifs', id: 'pricing' },
+                  { label: 'FAQ', id: 'faq' },
+                ].map(nav => (
+                  <a
+                    key={nav.id}
+                    href={`#${nav.id}`}
+                    className="text-xs tracking-[0.12em] uppercase font-light transition-colors duration-300 hover:text-[var(--gold)]"
+                    style={{ color: 'var(--text-secondary)' }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      document.getElementById(nav.id)?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                  >
+                    {nav.label}
+                  </a>
+                ))}
+              </nav>
+
+              <div className="flex items-center gap-3">
+                <Link href="/rejoindre" className="hidden sm:inline-flex px-5 py-2.5 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 hover:scale-105" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                  Commencer
+                </Link>
+                <Link href="/login" className="px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:opacity-90" style={{ border: `1px solid rgba(${goldRgb}, 0.3)`, color: gold }}>
                   Connexion
                 </Link>
                 <ThemeToggle />
@@ -504,6 +603,22 @@ export default function Home() {
             </div>
           </header>
         )}
+
+      {/* ═══ STICKY MOBILE CTA ═══ */}
+      <motion.div
+        className="fixed bottom-0 left-0 right-0 z-50 lg:hidden"
+        initial={{ y: 100 }}
+        animate={{ y: showMobileCta ? 0 : 100 }}
+        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <div className="px-4 py-3 glass-dense" style={{ borderTop: `1px solid rgba(${goldRgb}, 0.15)` }}>
+          <Link href="/rejoindre" className="block">
+            <button className="magnetic-btn pulse-ring w-full py-3.5 rounded-full text-sm font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+              Essayer gratuitement — {trialDays} jours
+            </button>
+          </Link>
+        </div>
+      </motion.div>
 
       {/* ═══ HERO — Word by word reveal ═══ */}
       {vis('hero') && (
@@ -706,11 +821,54 @@ export default function Home() {
                   </Link>
                 ))}
               </div>
+
+              {/* ── Trust signal ── */}
+              <div className="flex items-center justify-center gap-4 mt-6 text-xs font-light" style={{ color: 'var(--text-muted)' }}>
+                <span className="flex items-center gap-1.5">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  Paiement sécurisé
+                </span>
+                <span className="w-px h-3 bg-[var(--dark-border)]" />
+                <span className="flex items-center gap-1.5">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  Sans engagement
+                </span>
+                <span className="w-px h-3 bg-[var(--dark-border)]" />
+                <span className="flex items-center gap-1.5">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                  Annulation en 1 clic
+                </span>
+              </div>
             </motion.div>
           </div>
 
         </motion.section>
       )}
+
+      {/* ═══ SOCIAL PROOF STATS ═══ */}
+      <section className="relative py-8 md:py-12 border-y border-[var(--dark-border)]" style={{ background: `rgba(${goldRgb}, 0.015)` }}>
+        <div className="max-w-5xl mx-auto px-5 md:px-20">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+            {[
+              { value: '50+', label: 'Challenges émotionnels', icon: '📖' },
+              { value: '3', label: 'Étapes par protocole', icon: '✦' },
+              { value: '24/7', label: 'Communauté active', icon: '💬' },
+              { value: '100%', label: 'Confidentialité garantie', icon: '🔒' },
+            ].map((stat, i) => (
+              <RevealOnScroll key={stat.label} delay={i * 0.1}>
+                <div className="text-center">
+                  <p className="text-2xl sm:text-3xl md:text-4xl font-display font-light mb-1" style={{ color: gold }}>
+                    <AnimatedCounter value={stat.value} />
+                  </p>
+                  <p className="text-[10px] sm:text-xs tracking-[0.1em] uppercase font-light" style={{ color: 'var(--text-muted)' }}>
+                    {stat.label}
+                  </p>
+                </div>
+              </RevealOnScroll>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* ═══ TICKER BAND ═══ */}
       <InfiniteTickerBand items={tickerItems} speed={ticker1Speed} />
@@ -743,7 +901,7 @@ export default function Home() {
 
       {/* ═══ LE PRINCIPE ═══ */}
       {vis('principe') && (
-        <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
+        <section id="principe" className="px-5 md:px-20 py-16 md:py-32 relative cv-auto scroll-mt-24">
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute top-1/2 left-1/4 w-[250px] h-[250px] md:w-[400px] md:h-[400px] rounded-full opacity-[0.02] blur-[40px] md:blur-[60px]" style={{ background: gold }} />
           </div>
@@ -823,7 +981,7 @@ export default function Home() {
 
       {/* ═══ L'ENCYCLOPEDIE ═══ */}
       {vis('encyclopedie') && (
-        <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
+        <section id="encyclopedie" className="px-5 md:px-20 py-16 md:py-32 relative cv-auto scroll-mt-24">
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute top-0 right-0 w-[250px] h-[250px] md:w-[400px] md:h-[400px] rounded-full opacity-[0.02] blur-[40px] md:blur-[60px]" style={{ background: gold }} />
           </div>
@@ -911,7 +1069,7 @@ export default function Home() {
 
       {/* ═══ COMMUNAUTE ═══ */}
       {vis('communaute') && (
-        <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
+        <section id="communaute" className="px-5 md:px-20 py-16 md:py-32 relative cv-auto scroll-mt-24">
           <div className="max-w-5xl mx-auto">
             <RevealOnScroll>
               <h2 className="font-display font-light leading-[1.1] text-center mb-4 md:mb-6" style={tStyle("communaute")}>
@@ -1104,7 +1262,7 @@ export default function Home() {
 
       {/* ═══ OFFRES / PRICING ═══ */}
       {vis('pricing') && (
-        <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
+        <section id="pricing" className="px-5 md:px-20 py-16 md:py-32 relative cv-auto scroll-mt-24">
           <div className="max-w-5xl mx-auto">
             <RevealOnScroll>
               <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{t('landing.pricing_label')}</p>
@@ -1183,12 +1341,97 @@ export default function Home() {
               )})}
             </div>
 
+            {/* ── Guarantee Badge ── */}
+            <RevealOnScroll delay={0.35}>
+              <div className="mt-10 md:mt-16 flex flex-col items-center text-center">
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mb-4" style={{ background: `rgba(${goldRgb}, 0.08)`, border: `2px solid rgba(${goldRgb}, 0.2)` }}>
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={gold} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <path d="M9 12l2 2 4-4"/>
+                  </svg>
+                </div>
+                <h3 className="font-display text-lg md:text-xl font-light mb-2" style={{ color: gold }}>Garantie sérénité</h3>
+                <p className="text-sm font-light max-w-md" style={{ color: 'var(--text-secondary)' }}>
+                  {trialDays} jours d&apos;essai gratuit. Aucun prélèvement pendant la période d&apos;essai. Annulation en un clic, sans justification.
+                </p>
+              </div>
+            </RevealOnScroll>
+
             <RevealOnScroll delay={0.4}>
               <p className="text-center text-xs text-[var(--text-muted)] mt-6 md:mt-8 font-light italic">{pricing.footer || ''}</p>
             </RevealOnScroll>
           </div>
         </section>
       )}
+
+      {/* ═══ FAQ ═══ */}
+      <section id="faq" className="px-5 md:px-20 py-16 md:py-32 relative cv-auto scroll-mt-24">
+        <div className="max-w-3xl mx-auto">
+          <RevealOnScroll>
+            <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">Questions fréquentes</p>
+          </RevealOnScroll>
+          <RevealOnScroll delay={0.1}>
+            <h2 className="font-display font-light text-center mb-4 md:mb-6" style={{ fontSize: 'clamp(2.25rem, 5vw, 3rem)' }}>
+              <WordByWordReveal text="Tout ce que vous devez savoir" />
+            </h2>
+          </RevealOnScroll>
+          <RevealOnScroll delay={0.15}>
+            <p className="text-center text-[var(--text-secondary)] font-light mb-10 md:mb-14 text-sm md:text-base max-w-lg mx-auto">
+              Si votre question n&apos;est pas ici, écrivez-nous — on répond toujours.
+            </p>
+          </RevealOnScroll>
+
+          <div>
+            {FAQ_ITEMS.map((item, i) => (
+              <RevealOnScroll key={i} delay={Math.min(i * 0.05, 0.3)}>
+                <FAQItem
+                  item={item}
+                  isOpen={openFaq === i}
+                  onToggle={() => setOpenFaq(openFaq === i ? null : i)}
+                />
+              </RevealOnScroll>
+            ))}
+          </div>
+
+          <RevealOnScroll delay={0.3}>
+            <div className="mt-8 md:mt-12 text-center">
+              <p className="text-sm font-light mb-4" style={{ color: 'var(--text-muted)' }}>Encore des doutes ?</p>
+              <Link href="/contact">
+                <button className="magnetic-btn px-6 sm:px-8 py-3 sm:py-3.5 rounded-full text-sm font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.25)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
+                  Contactez-nous
+                </button>
+              </Link>
+            </div>
+          </RevealOnScroll>
+        </div>
+      </section>
+
+      {/* ═══ URGENCY / FOUNDING MEMBER ═══ */}
+      <section className="px-5 md:px-20 py-10 md:py-16 relative cv-auto">
+        <RevealOnScroll>
+          <div className="max-w-3xl mx-auto">
+            <div className="glow-card p-6 sm:p-8 md:p-10 text-center relative overflow-hidden">
+              <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at center, rgba(${goldRgb}, 0.04), transparent 70%)` }} />
+              <div className="relative z-10">
+                <span className="inline-block px-4 py-1.5 rounded-full text-[10px] sm:text-xs tracking-[0.2em] uppercase font-semibold mb-4" style={{ background: `rgba(${goldRgb}, 0.12)`, color: gold, border: `1px solid rgba(${goldRgb}, 0.2)` }}>
+                  ✦ Membre fondateur
+                </span>
+                <h3 className="font-display text-xl sm:text-2xl md:text-3xl font-light mb-3" style={{ color: gold }}>
+                  Rejoignez la première vague
+                </h3>
+                <p className="text-sm md:text-base font-light leading-relaxed mb-6 max-w-lg mx-auto" style={{ color: 'var(--text-secondary)' }}>
+                  Les premiers membres bénéficieront d&apos;un tarif préférentiel à vie et d&apos;un accès prioritaire à toutes les nouvelles fonctionnalités.
+                </p>
+                <Link href="/rejoindre">
+                  <button className="magnetic-btn pulse-ring px-8 py-4 rounded-full text-sm sm:text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                    Devenir membre fondateur
+                  </button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </RevealOnScroll>
+      </section>
 
       {/* ═══ CTA FINAL DARK ═══ */}
       {vis('cta_dark') && (
@@ -1292,8 +1535,19 @@ export default function Home() {
                   })()}
                 </div>
 
-                {/* Copyright */}
+                {/* Copyright & Social */}
                 <div className="text-center md:text-right">
+                  <div className="flex items-center justify-center md:justify-end gap-4 mb-3">
+                    {[
+                      { label: 'Instagram', href: 'https://instagram.com/sosshine', icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg> },
+                      { label: 'TikTok', href: 'https://tiktok.com/@sosshine', icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg> },
+                      { label: 'YouTube', href: 'https://youtube.com/@sosshine', icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M22.54 6.42a2.78 2.78 0 00-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 00-1.94 2A29 29 0 001 12a29 29 0 00.46 5.58A2.78 2.78 0 003.4 19.6C5.12 20 12 20 12 20s6.88 0 8.6-.46a2.78 2.78 0 001.94-2A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/></svg> },
+                    ].map(social => (
+                      <a key={social.label} href={social.href} target="_blank" rel="noopener noreferrer" aria-label={social.label} className="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110" style={{ color: 'var(--text-muted)', background: 'rgba(255,255,255,0.04)', border: '1px solid var(--dark-border)' }}>
+                        {social.icon}
+                      </a>
+                    ))}
+                  </div>
                   <p className="text-[10px] tracking-[0.15em] sm:tracking-[0.2em] uppercase text-[var(--text-muted)]">
                     &copy; {foot.copyright_year || '2026'} {foot.name || 'SOS Shine'}
                   </p>

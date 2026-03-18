@@ -15,10 +15,17 @@ interface ShineBook {
   content_type: string
   page_count: number
   year: number
+  douleur_id: string | null
   is_published: boolean
   is_featured: boolean
   sort_order: number
   created_at: string
+}
+
+interface DouleurOption {
+  id: string
+  title: string
+  slug: string
 }
 
 const CATEGORIES = [
@@ -54,6 +61,7 @@ const emptyForm = {
   page_count: 0,
   year: new Date().getFullYear(),
   is_featured: false,
+  douleur_id: '',
 }
 
 export default function AdminShineLibrairiePage() {
@@ -65,6 +73,7 @@ export default function AdminShineLibrairiePage() {
   const [form, setForm] = useState(emptyForm)
   const [error, setError] = useState<string | null>(null)
   const [filterType, setFilterType] = useState<string>('all')
+  const [douleurs, setDouleurs] = useState<DouleurOption[]>([])
 
   const supabase = createClient()
 
@@ -81,8 +90,18 @@ export default function AdminShineLibrairiePage() {
     setLoading(false)
   }
 
+  async function loadDouleurs() {
+    const { data } = await supabase
+      .from('douleurs')
+      .select('id, title, slug')
+      .eq('is_active', true)
+      .order('title', { ascending: true })
+    if (data) setDouleurs(data as DouleurOption[])
+  }
+
   useEffect(() => {
     loadBooks()
+    loadDouleurs()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -109,6 +128,7 @@ export default function AdminShineLibrairiePage() {
       page_count: b.page_count || 0,
       year: b.year || new Date().getFullYear(),
       is_featured: b.is_featured || false,
+      douleur_id: b.douleur_id || '',
     })
     setShowForm(true)
     setError(null)
@@ -137,6 +157,7 @@ export default function AdminShineLibrairiePage() {
       page_count: form.page_count,
       year: form.year,
       is_featured: form.is_featured,
+      douleur_id: form.douleur_id || null,
     }
 
     if (editingId) {
@@ -280,6 +301,16 @@ export default function AdminShineLibrairiePage() {
             <label htmlFor="is_featured" className="text-sm" style={{ color: 'var(--text-secondary)' }}>
               Mettre en avant (Featured)
             </label>
+          </div>
+
+          <div>
+            <label htmlFor="douleur_id" style={labelStyle}>Lier à une douleur (Encyclopédie)</label>
+            <select id="douleur_id" name="douleur_id" value={form.douleur_id} onChange={handleChange} style={inputStyle}>
+              <option value="">— Aucune —</option>
+              {douleurs.map((d) => (
+                <option key={d.id} value={d.id}>{d.title}</option>
+              ))}
+            </select>
           </div>
 
           <FileUpload

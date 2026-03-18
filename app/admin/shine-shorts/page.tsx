@@ -12,8 +12,15 @@ interface ShineShort {
   video_url: string | null
   category: string
   duration_seconds: number
+  douleur_id: string | null
   is_published: boolean
   created_at: string
+}
+
+interface DouleurOption {
+  id: string
+  title: string
+  slug: string
 }
 
 const CATEGORIES = [
@@ -34,6 +41,7 @@ const emptyForm = {
   video_url: '',
   category: 'cours',
   duration_seconds: 0,
+  douleur_id: '',
 }
 
 export default function AdminShineShortsPage() {
@@ -45,6 +53,7 @@ export default function AdminShineShortsPage() {
   const [form, setForm] = useState(emptyForm)
   const [error, setError] = useState<string | null>(null)
   const [filterCategory, setFilterCategory] = useState<string>('all')
+  const [douleurs, setDouleurs] = useState<DouleurOption[]>([])
 
   const supabase = createClient()
 
@@ -60,8 +69,18 @@ export default function AdminShineShortsPage() {
     setLoading(false)
   }
 
+  async function loadDouleurs() {
+    const { data } = await supabase
+      .from('douleurs')
+      .select('id, title, slug')
+      .eq('is_active', true)
+      .order('title', { ascending: true })
+    if (data) setDouleurs(data as DouleurOption[])
+  }
+
   useEffect(() => {
     loadShorts()
+    loadDouleurs()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -79,6 +98,7 @@ export default function AdminShineShortsPage() {
       video_url: s.video_url || '',
       category: s.category,
       duration_seconds: s.duration_seconds || 0,
+      douleur_id: s.douleur_id || '',
     })
     setShowForm(true)
     setError(null)
@@ -103,6 +123,7 @@ export default function AdminShineShortsPage() {
       video_url: form.video_url.trim() || null,
       category: form.category,
       duration_seconds: form.duration_seconds,
+      douleur_id: form.douleur_id || null,
     }
 
     if (editingId) {
@@ -210,6 +231,16 @@ export default function AdminShineShortsPage() {
           <div>
             <label htmlFor="duration_seconds" style={labelStyle}>Durée (secondes)</label>
             <input id="duration_seconds" name="duration_seconds" type="number" min={0} value={form.duration_seconds} onChange={handleChange} style={inputStyle} />
+          </div>
+
+          <div>
+            <label htmlFor="douleur_id" style={labelStyle}>Lier à une douleur (Encyclopédie)</label>
+            <select id="douleur_id" name="douleur_id" value={form.douleur_id} onChange={handleChange} style={inputStyle}>
+              <option value="">— Aucune —</option>
+              {douleurs.map((d) => (
+                <option key={d.id} value={d.id}>{d.title}</option>
+              ))}
+            </select>
           </div>
 
           <FileUpload

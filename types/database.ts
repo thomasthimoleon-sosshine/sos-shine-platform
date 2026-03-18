@@ -499,6 +499,7 @@ export type ShineShort = {
   video_url: string | null
   category: string
   duration_seconds: number
+  douleur_id: string | null
   is_published: boolean
   created_at: string
   updated_at: string
@@ -539,6 +540,7 @@ export type ShineTvVideo = {
   category: string
   duration_minutes: number
   year: number
+  douleur_id: string | null
   is_published: boolean
   created_at: string
   updated_at: string
@@ -585,6 +587,7 @@ export type ShineAudibleTrack = {
   content_type: 'podcast' | 'audiobook' | 'meditation' | 'hypnosis' | 'ambient'
   duration_seconds: number
   year: number
+  douleur_id: string | null
   is_published: boolean
   created_at: string
   updated_at: string
@@ -641,6 +644,7 @@ export type ShineLibraryBook = {
   content_type: 'ebook' | 'guide' | 'workbook' | 'journal' | 'protocol'
   page_count: number
   year: number
+  douleur_id: string | null
   is_published: boolean
   is_featured: boolean
   sort_order: number
@@ -723,7 +727,7 @@ export type CourrierAnonyme = {
 }
 
 // ── Helper: columns with DB defaults are optional on Insert ──
-type DefaultColumns = 'id' | 'created_at' | 'updated_at' | 'completed_at' | 'audio_url' | 'message_type' | 'status' | 'room_code' | 'call_type' | 'event_type' | 'target_user_id' | 'room_id' | 'category' | 'media_type' | 'video_url' | 'image_url' | 'is_published' | 'delete_locked' | 'publish_banned_until' | 'is_bot' | 'is_read' | 'is_deleted' | 'is_general' | 'is_anonymous' | 'is_active' | 'email_sent' | 'is_visible' | 'position' | 'total_clicks' | 'total_referrals' | 'total_earnings' | 'pending_earnings' | 'paid_earnings' | 'current_tier' | 'referral_code' | 'approved_at' | 'rejected_at' | 'rejection_reason' | 'paid_at' | 'payment_reference' | 'commission_amount' | 'visibility' | 'source' | 'is_featured' | 'sort_order' | 'duration_minutes' | 'duration_seconds' | 'page_count' | 'year' | 'completed' | 'progress_seconds' | 'listened_at' | 'rating' | 'content_type' | 'admin_note' | 'answered_via' | 'answered_url' | 'answered_at' | 'answered_by' | 'is_pinned' | 'subject' | 'user_id'
+type DefaultColumns = 'id' | 'created_at' | 'updated_at' | 'completed_at' | 'audio_url' | 'message_type' | 'status' | 'room_code' | 'call_type' | 'event_type' | 'target_user_id' | 'room_id' | 'category' | 'media_type' | 'video_url' | 'image_url' | 'is_published' | 'delete_locked' | 'publish_banned_until' | 'is_bot' | 'is_read' | 'is_deleted' | 'is_general' | 'is_anonymous' | 'is_active' | 'email_sent' | 'is_visible' | 'position' | 'total_clicks' | 'total_referrals' | 'total_earnings' | 'pending_earnings' | 'paid_earnings' | 'current_tier' | 'referral_code' | 'approved_at' | 'rejected_at' | 'rejection_reason' | 'paid_at' | 'payment_reference' | 'commission_amount' | 'visibility' | 'source' | 'is_featured' | 'sort_order' | 'duration_minutes' | 'duration_seconds' | 'page_count' | 'year' | 'completed' | 'progress_seconds' | 'listened_at' | 'rating' | 'content_type' | 'admin_note' | 'answered_via' | 'answered_url' | 'answered_at' | 'answered_by' | 'is_pinned' | 'subject' | 'user_id' | 'douleur_id'
 type OptionalId<T> = Omit<T, Extract<DefaultColumns, keyof T>> &
   Partial<Pick<T, Extract<DefaultColumns, keyof T>>>
 

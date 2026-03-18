@@ -13,8 +13,15 @@ interface ShineVideo {
   category: string
   duration_minutes: number
   year: number
+  douleur_id: string | null
   is_published: boolean
   created_at: string
+}
+
+interface DouleurOption {
+  id: string
+  title: string
+  slug: string
 }
 
 const CATEGORIES = [
@@ -38,6 +45,7 @@ const emptyForm = {
   category: 'healing',
   duration_minutes: 0,
   year: new Date().getFullYear(),
+  douleur_id: '',
 }
 
 export default function AdminShineTVPage() {
@@ -49,6 +57,7 @@ export default function AdminShineTVPage() {
   const [form, setForm] = useState(emptyForm)
   const [error, setError] = useState<string | null>(null)
   const [filterCategory, setFilterCategory] = useState<string>('all')
+  const [douleurs, setDouleurs] = useState<DouleurOption[]>([])
 
   const supabase = createClient()
 
@@ -64,8 +73,18 @@ export default function AdminShineTVPage() {
     setLoading(false)
   }
 
+  async function loadDouleurs() {
+    const { data } = await supabase
+      .from('douleurs')
+      .select('id, title, slug')
+      .eq('is_active', true)
+      .order('title', { ascending: true })
+    if (data) setDouleurs(data as DouleurOption[])
+  }
+
   useEffect(() => {
     loadVideos()
+    loadDouleurs()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -84,6 +103,7 @@ export default function AdminShineTVPage() {
       category: v.category,
       duration_minutes: v.duration_minutes || 0,
       year: v.year || new Date().getFullYear(),
+      douleur_id: v.douleur_id || '',
     })
     setShowForm(true)
     setError(null)
@@ -109,6 +129,7 @@ export default function AdminShineTVPage() {
       category: form.category,
       duration_minutes: form.duration_minutes,
       year: form.year,
+      douleur_id: form.douleur_id || null,
     }
 
     if (editingId) {
@@ -217,6 +238,16 @@ export default function AdminShineTVPage() {
               <label htmlFor="year" style={labelStyle}>Année</label>
               <input id="year" name="year" type="number" min={2020} value={form.year} onChange={handleChange} style={inputStyle} />
             </div>
+          </div>
+
+          <div>
+            <label htmlFor="douleur_id" style={labelStyle}>Lier à une douleur (Encyclopédie)</label>
+            <select id="douleur_id" name="douleur_id" value={form.douleur_id} onChange={handleChange} style={inputStyle}>
+              <option value="">— Aucune —</option>
+              {douleurs.map((d) => (
+                <option key={d.id} value={d.id}>{d.title}</option>
+              ))}
+            </select>
           </div>
 
           <FileUpload

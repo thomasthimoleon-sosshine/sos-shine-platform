@@ -270,6 +270,13 @@ function getFirstLetter(title: string): string {
 // Page récapitulative avant paiement
 const STRIPE_URL = '/rejoindre'
 
+type ShineAvailability = {
+  hasTV: boolean
+  hasAudible: boolean
+  hasShort: boolean
+  hasLibrary: boolean
+}
+
 export default function PublicEncyclopediePage() {
   const [allDouleurs, setAllDouleurs] = useState<Douleur[]>([])
   const [search, setSearch] = useState('')
@@ -277,6 +284,7 @@ export default function PublicEncyclopediePage() {
   const [activeCat, setActiveCat] = useState('ALL')
   const [onlyOriginal, setOnlyOriginal] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [shineMap, setShineMap] = useState<Record<string, ShineAvailability>>({})
 
   useEffect(() => {
     async function load() {
@@ -291,6 +299,25 @@ export default function PublicEncyclopediePage() {
       if (data && data.length > 0) {
         setAllDouleurs(data as Douleur[])
       }
+
+      // Load shine content links for badges
+      const [tvRes, audibleRes, shortsRes, libraryRes] = await Promise.all([
+        supabase.from('shine_tv_videos').select('douleur_id').eq('is_published', true).not('douleur_id', 'is', null),
+        supabase.from('shine_audible_tracks').select('douleur_id').eq('is_published', true).not('douleur_id', 'is', null),
+        supabase.from('shine_shorts').select('douleur_id').eq('is_published', true).not('douleur_id', 'is', null),
+        supabase.from('shine_library_books').select('douleur_id').eq('is_published', true).not('douleur_id', 'is', null),
+      ])
+
+      const map: Record<string, ShineAvailability> = {}
+      const ensure = (id: string) => {
+        if (!map[id]) map[id] = { hasTV: false, hasAudible: false, hasShort: false, hasLibrary: false }
+      }
+      tvRes.data?.forEach((r) => { if (r.douleur_id) { ensure(r.douleur_id); map[r.douleur_id].hasTV = true } })
+      audibleRes.data?.forEach((r) => { if (r.douleur_id) { ensure(r.douleur_id); map[r.douleur_id].hasAudible = true } })
+      shortsRes.data?.forEach((r) => { if (r.douleur_id) { ensure(r.douleur_id); map[r.douleur_id].hasShort = true } })
+      libraryRes.data?.forEach((r) => { if (r.douleur_id) { ensure(r.douleur_id); map[r.douleur_id].hasLibrary = true } })
+      setShineMap(map)
+
       setLoading(false)
     }
     load()
@@ -520,11 +547,6 @@ export default function PublicEncyclopediePage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   {grouped[letter].map((topic, i) => {
                     const hasDbEntry = !!topic.dbMatch
-                    const hasContent = hasDbEntry && (
-                      topic.dbMatch!.video_url ||
-                      topic.dbMatch!.audio_energy_url ||
-                      topic.dbMatch!.audio_meditation_url
-                    )
 
                     const card = (
                       <div
@@ -562,23 +584,30 @@ export default function PublicEncyclopediePage() {
                               >
                                 {topic.cat}
                               </span>
-                              {/* Content indicators */}
-                              {hasContent && (
-                                <>
-                                  {topic.dbMatch!.video_url && (
-                                    <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded" style={{ background: 'rgba(85,239,196,0.1)', color: '#55EFC4' }}>
-                                      <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-                                      Vidéo
+                              {/* Shine section badges */}
+                              {hasDbEntry && (() => {
+                                const avail = shineMap[topic.dbMatch!.id]
+                                return (
+                                  <div className="flex items-center gap-1.5 ml-auto">
+                                    {/* Shine TV */}
+                                    <span title="Shine TV" className="inline-flex items-center justify-center w-5 h-5 rounded" style={{ background: avail?.hasTV ? 'rgba(85,239,196,0.15)' : 'rgba(255,255,255,0.03)' }}>
+                                      <svg className="w-3 h-3" fill={avail?.hasTV ? '#55EFC4' : 'rgba(255,255,255,0.15)'} viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                                     </span>
-                                  )}
-                                  {topic.dbMatch!.audio_energy_url && (
-                                    <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded" style={{ background: 'rgba(116,192,252,0.1)', color: '#74C0FC' }}>
-                                      <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" /></svg>
-                                      Audio
+                                    {/* Shine Audible */}
+                                    <span title="Shine Audible" className="inline-flex items-center justify-center w-5 h-5 rounded" style={{ background: avail?.hasAudible ? 'rgba(116,192,252,0.15)' : 'rgba(255,255,255,0.03)' }}>
+                                      <svg className="w-3 h-3" fill={avail?.hasAudible ? '#74C0FC' : 'rgba(255,255,255,0.15)'} viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" /></svg>
                                     </span>
-                                  )}
-                                </>
-                              )}
+                                    {/* Shine Short */}
+                                    <span title="Shine Short" className="inline-flex items-center justify-center w-5 h-5 rounded" style={{ background: avail?.hasShort ? 'rgba(162,155,254,0.15)' : 'rgba(255,255,255,0.03)' }}>
+                                      <svg className="w-3 h-3" fill={avail?.hasShort ? '#A29BFE' : 'rgba(255,255,255,0.15)'} viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z" /></svg>
+                                    </span>
+                                    {/* Shine Librairie */}
+                                    <span title="Shine Librairie" className="inline-flex items-center justify-center w-5 h-5 rounded" style={{ background: avail?.hasLibrary ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.03)' }}>
+                                      <svg className="w-3 h-3" fill={avail?.hasLibrary ? '#D4AF37' : 'rgba(255,255,255,0.15)'} viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" /></svg>
+                                    </span>
+                                  </div>
+                                )
+                              })()}
                             </div>
                           </div>
                           {hasDbEntry ? (
@@ -632,7 +661,7 @@ export default function PublicEncyclopediePage() {
 
         {/* Legend */}
         <div
-          className="rounded-xl p-5 flex flex-wrap gap-6 items-center"
+          className="rounded-xl p-5 flex flex-wrap gap-x-6 gap-y-3 items-center"
           style={{
             background: 'rgba(212,175,55,0.03)',
             border: '1px solid var(--dark-border)',
@@ -643,8 +672,20 @@ export default function PublicEncyclopediePage() {
             <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>&diams; Sujet de la liste originale</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-0.5" style={{ background: 'var(--dark-border)' }} />
-            <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Sujet ajouté</span>
+            <svg className="w-3 h-3" fill="#55EFC4" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+            <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Shine TV</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <svg className="w-3 h-3" fill="#74C0FC" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" /></svg>
+            <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Shine Audible</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <svg className="w-3 h-3" fill="#A29BFE" viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z" /></svg>
+            <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Shine Short</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <svg className="w-3 h-3" fill="#D4AF37" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" /></svg>
+            <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Shine Librairie</span>
           </div>
           <span className="text-xs ml-auto" style={{ color: 'var(--text-muted)' }}>
             {topics.length} sujets au total

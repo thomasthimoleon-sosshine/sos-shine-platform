@@ -565,21 +565,22 @@ export default function Home() {
             {hero.video_url && (
               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}>
                 <style>{`
-                  @keyframes blink-red {
-                    0%, 100% { background: rgba(220, 38, 38, 0.85); box-shadow: 0 0 12px rgba(220, 38, 38, 0.6); }
-                    50% { background: rgba(220, 38, 38, 0.4); box-shadow: 0 0 4px rgba(220, 38, 38, 0.2); }
+                  @keyframes blink-gold {
+                    0%, 100% { background: rgba(212, 175, 55, 0.9); box-shadow: 0 0 16px rgba(212, 175, 55, 0.7), 0 0 6px rgba(255, 215, 0, 0.4); }
+                    50% { background: rgba(212, 175, 55, 0.4); box-shadow: 0 0 6px rgba(212, 175, 55, 0.2); }
                   }
                   .sound-btn-blink {
-                    animation: blink-red 1.2s ease-in-out infinite;
-                    border: 1px solid rgba(255, 100, 100, 0.5) !important;
+                    animation: blink-gold 1.2s ease-in-out infinite;
+                    border: 1px solid rgba(255, 215, 0, 0.6) !important;
                   }
                   .sound-btn-active {
                     animation: none;
-                    background: rgba(0,0,0,0.25) !important;
-                    border: 1px solid rgba(255,255,255,0.1) !important;
-                    opacity: 0.5;
+                    background: transparent !important;
+                    border: 1px solid transparent !important;
+                    opacity: 0.35;
+                    transition: opacity 0.3s ease;
                   }
-                  .sound-btn-active:hover { opacity: 0.85; }
+                  .sound-btn-active:hover { opacity: 0.7; }
                 `}</style>
                 <div className="glass overflow-hidden mb-8 md:mb-10 max-w-3xl mx-auto relative group">
                   <video
@@ -595,7 +596,7 @@ export default function Home() {
                       v.paused ? v.play() : v.pause();
                     }}
                   />
-                  {/* Sound toggle – blinks red when muted, transparent when active */}
+                  {/* Sound toggle – blinks gold when muted, transparent when active */}
                   <button
                     type="button"
                     aria-label="Toggle sound"

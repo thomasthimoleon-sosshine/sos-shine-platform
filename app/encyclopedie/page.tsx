@@ -30,9 +30,8 @@ type Topic = {
   dbMatch?: Douleur
 }
 
-/* ─── Sujets chargés depuis la base de données (BackOffice > Challenges) ─── */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _LEGACY_TOPICS_REMOVED = [
+/* ─── Liste complète des 170+ sujets (fallback + base) ─── */
+const ALL_TOPICS: Omit<Topic, 'dbMatch' | 'slug'>[] = [
   // A
   { letter: "A", title: "Abandon", subtitle: "grandir sans père, sans mère ou sans les deux", cat: "Blessures & Traumatismes", original: true },
   { letter: "A", title: "Abus émotionnels", subtitle: "identifier, comprendre et guérir", cat: "Blessures & Traumatismes" },
@@ -267,6 +266,17 @@ function getFirstLetter(title: string): string {
   return normalized.charAt(0).toUpperCase()
 }
 
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+}
+
 // Page récapitulative avant paiement
 const STRIPE_URL = '/rejoindre'
 
@@ -323,17 +333,44 @@ export default function PublicEncyclopediePage() {
     load()
   }, [])
 
-  // Build topics from DB douleurs
+  // Build topics: start from static list, enrich with DB data
   const topics = useMemo(() => {
-    return allDouleurs.map((d): Topic => ({
-      letter: getFirstLetter(d.title),
-      title: d.title,
-      subtitle: d.subtitle || d.description || '',
-      cat: d.category || '',
-      original: d.is_original,
-      slug: d.slug,
-      dbMatch: d.is_published ? d : undefined,
-    }))
+    // Index DB douleurs by slug for fast lookup
+    const dbBySlug: Record<string, Douleur> = {}
+    for (const d of allDouleurs) {
+      dbBySlug[d.slug] = d
+    }
+
+    // Build from static list, enriched with DB data
+    const fromStatic = ALL_TOPICS.map((t): Topic => {
+      const slug = slugify(t.title)
+      const db = dbBySlug[slug]
+      return {
+        letter: t.letter,
+        title: db?.title || t.title,
+        subtitle: db?.subtitle || db?.description || t.subtitle,
+        cat: db?.category || t.cat,
+        original: db?.is_original ?? t.original,
+        slug: db?.slug || slug,
+        dbMatch: db?.is_published ? db : undefined,
+      }
+    })
+
+    // Add any DB entries not in the static list
+    const staticSlugs = new Set(fromStatic.map(t => t.slug))
+    const extraFromDb = allDouleurs
+      .filter(d => !staticSlugs.has(d.slug))
+      .map((d): Topic => ({
+        letter: getFirstLetter(d.title),
+        title: d.title,
+        subtitle: d.subtitle || d.description || '',
+        cat: d.category || '',
+        original: d.is_original,
+        slug: d.slug,
+        dbMatch: d.is_published ? d : undefined,
+      }))
+
+    return [...fromStatic, ...extraFromDb].sort((a, b) => a.title.localeCompare(b.title, 'fr'))
   }, [allDouleurs])
 
   const LETTERS = useMemo(() => [...new Set(topics.map(t => t.letter))].sort(), [topics])

@@ -1014,30 +1014,6 @@ export default function Home() {
         </section>
       )}
 
-      {/* ═══ CTA LIGHT ═══ */}
-      {vis('cta_light') && (
-        <section className="px-6 md:px-20 py-32 relative overflow-hidden" style={{ background: sty('cta_light').bg || '#ffffff' }}>
-          <div className="max-w-3xl mx-auto text-center relative z-10">
-            <RevealOnScroll>
-              <p className="text-xl md:text-2xl font-light leading-relaxed mb-12" style={{ color: sty('cta_light').text_color || '#1a1a1a' }}>
-                {ctaLight.description || ''}
-              </p>
-            </RevealOnScroll>
-            <RevealOnScroll delay={0.15}>
-              <Link href="/rejoindre">
-                <button className="magnetic-btn px-10 py-5 rounded-full text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
-                  {ctaLight.button_label || 'Rejoindre SOS Shine'}
-                </button>
-              </Link>
-              <div className="mt-8">
-                <Link href="/login" className="text-sm transition-colors duration-300 underline underline-offset-4" style={{ color: sty('cta_light').muted_color || '#6b7280' }}>
-                  {ctaLight.login_text || 'Deja membre ? Se connecter'}
-                </Link>
-              </div>
-            </RevealOnScroll>
-          </div>
-        </section>
-      )}
 
       {/* ═══ FOOTER ═══ */}
       {vis('footer') && (

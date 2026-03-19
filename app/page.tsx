@@ -216,7 +216,7 @@ function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: strin
 const FAQ_ITEMS = [
   {
     q: "Est-ce que SOS Shine remplace un thérapeute ?",
-    a: "Non. SOS Shine est un complément, pas un substitut. Nos protocoles sont créés par des thérapeutes certifiés, mais nous recommandons de consulter un professionnel de santé si nécessaire.",
+    a: "Non. SOS Shine est un complément, pas un substitut. Nos protocoles sont créés par nos trois fondateurs, chacun expert dans son domaine, mais nous recommandons de consulter un professionnel de santé si nécessaire.",
   },
   {
     q: "Comment fonctionne l'essai gratuit ?",
@@ -224,7 +224,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "C'est quoi exactement un protocole en 3 étapes ?",
-    a: "Pour chaque blessure émotionnelle, nos thérapeutes ont créé : une vidéo pour comprendre l'origine du blocage, une séance guidée pour libérer l'émotion, et des exercices concrets pour ancrer la transformation. Vous avancez à votre rythme.",
+    a: "Pour chaque blessure émotionnelle, nos fondateurs ont créé : une vidéo pour comprendre l'origine du blocage, une séance guidée pour libérer l'émotion, et des exercices concrets pour ancrer la transformation. Vous avancez à votre rythme.",
   },
   {
     q: "Mes données sont-elles protégées ?",
@@ -813,7 +813,7 @@ export default function Home() {
           <div className="grid grid-cols-3 gap-6 md:gap-8">
             {[
               { value: '50+', label: 'Protocoles thérapeutiques' },
-              { value: '3', label: 'Thérapeutes créateurs' },
+              { value: '3', label: 'Fondateurs engagés' },
               { value: '24/7', label: 'Communauté disponible' },
             ].map((stat, i) => (
               <RevealOnScroll key={stat.label} delay={i * 0.1}>

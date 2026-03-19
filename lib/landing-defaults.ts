@@ -59,13 +59,13 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     position: 0,
     is_visible: true,
     content: {
-      title: "Vous n\u2019avez plus\n\u00e0 traverser vos temp\u00eates\nseul(e).",
-      subtitle: "L\u2019encyclop\u00e9die qui transforme vos blessures \u00e9motionnelles en force \u2014 avec des protocoles en 3 \u00e9tapes, une communaut\u00e9 bienveillante et un accompagnement 24h/24.",
+      title: "Ce que vous ressentez\nn\u2019est pas le probl\u00e8me.\nC\u2019est la sortie.",
+      subtitle: "Un protocole th\u00e9rapeutique en 3 \u00e9tapes pour chaque blessure \u00e9motionnelle. Cr\u00e9\u00e9 par des th\u00e9rapeutes. Accessible \u00e0 tout moment. Vous n\u2019\u00eates plus seul(e).",
       video_url: '',
       image_url: '',
       buttons: [
-        { label: "Explorer l\u2019encyclop\u00e9die", href: '/encyclopedie', variant: 'outline' },
-        { label: "Commencer ma transformation", href: '/rejoindre', variant: 'primary' },
+        { label: "D\u00e9couvrir les protocoles", href: '/encyclopedie', variant: 'outline' },
+        { label: "Commencer gratuitement", href: '/rejoindre', variant: 'primary' },
       ],
     },
     styles: {
@@ -85,7 +85,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     content: {
       label: 'Le principe SOS Shine',
       title: "On ne change pas qui vous \u00eates.\nOn lib\u00e8re qui vous \u00e9tiez\navant les blessures.",
-      description: "Abandon, trahison, burn-out, deuil, peur\u2026 Chaque blessure \u00e9motionnelle poss\u00e8de sa propre page dans notre encyclop\u00e9die, avec un protocole en 3 \u00e9tapes cr\u00e9\u00e9 par des th\u00e9rapeutes pour vous accompagner de la compr\u00e9hension \u00e0 la transformation.",
+      description: "Abandon, trahison, burn-out, deuil, rupture\u2026 Chaque blessure a une origine, un m\u00e9canisme et une cl\u00e9 de lib\u00e9ration. Nos th\u00e9rapeutes ont cr\u00e9\u00e9 un protocole pr\u00e9cis en 3 \u00e9tapes pour chacune. Comprendre. Lib\u00e9rer. Agir.",
       image_url: '',
       video_url: '',
     },
@@ -104,12 +104,12 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     position: 2,
     is_visible: true,
     content: {
-      label: 'Le parcours SOS Shine',
-      title: 'Un protocole en 3 \u00e9tapes qui transforme des vies',
+      label: 'Comment \u00e7a marche',
+      title: '3 \u00e9tapes. Un protocole. Votre lib\u00e9ration.',
       items: [
-        { num: '01', title: 'Comprendre', description: "Une vid\u00e9o de coaching immersive pour enfin mettre des mots sur ce que vous ressentez. Vous comprendrez l\u2019origine de votre blocage, et ce simple \u00e9clairage commence d\u00e9j\u00e0 \u00e0 lib\u00e9rer.", color: '#55EFC4' },
-        { num: '02', title: 'Lib\u00e9rer & Int\u00e9grer', description: "Une s\u00e9ance guid\u00e9e pour d\u00e9charger les tensions, nettoyer les empreintes \u00e9motionnelles et retrouver votre stabilit\u00e9 int\u00e9rieure. Le moment o\u00f9 tout bascule.", color: '#74C0FC' },
-        { num: '03', title: 'Agir', description: "Des exercices concrets et un audio guid\u00e9 pour ancrer votre transformation dans le quotidien. Vous repartez avec des outils que vous utiliserez toute votre vie.", color: '#E17055' },
+        { num: '01', title: 'Comprendre', description: "Une vid\u00e9o cr\u00e9\u00e9e par nos th\u00e9rapeutes pour mettre des mots sur ce que vous vivez. Vous identifiez l\u2019origine du blocage. Ce simple \u00e9clairage change d\u00e9j\u00e0 tout.", color: '#55EFC4' },
+        { num: '02', title: 'Lib\u00e9rer', description: "S\u00e9ance guid\u00e9e d\u2019hypnose, de m\u00e9ditation ou de soin \u00e9nerg\u00e9tique pour d\u00e9charger ce qui est ancr\u00e9 dans le corps. Le moment o\u00f9 l\u2019\u00e9motion se dissout.", color: '#74C0FC' },
+        { num: '03', title: 'Ancrer', description: "Exercices pratiques et audio guid\u00e9 pour transformer la prise de conscience en habitude de vie. Vous repartez transform\u00e9(e), pas juste inform\u00e9(e).", color: '#E17055' },
       ],
     },
     styles: {
@@ -126,10 +126,11 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     is_visible: true,
     content: {
       label: "L\u2019encyclop\u00e9die",
-      title: "Trouvez votre challenge.\nCommencez votre transformation.",
-      description: "Plus de 50 exp\u00e9riences de vie r\u00e9pertori\u00e9es de A \u00e0 Z. Chacune avec son protocole complet en 3 \u00e9tapes. Trouvez la v\u00f4tre en un clic.",
+      title: "Trouvez ce que vous traversez.\nOn s\u2019occupe du reste.",
+      description: "Chaque blessure \u00e9motionnelle a son protocole d\u00e9di\u00e9, cr\u00e9\u00e9 par nos th\u00e9rapeutes. Vid\u00e9o, s\u00e9ance guid\u00e9e, exercices concrets \u2014 tout est l\u00e0.",
       image_url: '',
-      items: ['Abus', 'Amour propre', 'Burn-out', 'Confiance en soi', 'Dépendance affective', 'Deuil', 'Rupture'],
+      items: ['Abandon', 'Anxi\u00e9t\u00e9', 'Burn-out', 'Confiance en soi', 'D\u00e9pendance affective', 'D\u00e9pression', 'Deuil', 'Intuition', 'Mission de vie', 'Pardon', 'R\u00e9silience', 'Relations toxiques', 'Stress', 'Trauma', 'Violence'],
+      show_max: 15,
     },
     styles: {
       title_font: 'Cormorant Garamond',
@@ -144,13 +145,13 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     position: 4,
     is_visible: true,
     content: {
-      title: "Vous n\u2019\u00eates plus jamais seul(e)\n\u00e0 3h du matin.",
-      description: "Un chat d\u00e9di\u00e9 pour chaque challenge \u00e9motionnel, un mur communautaire vivant, des soins collectifs et des \u00e9v\u00e9nements r\u00e9els \u2014 ici, on ne fait pas semblant. On s\u2019entraide vraiment.",
+      title: "3h du matin.\nVous n\u2019\u00eates plus seul(e).",
+      description: "Une communaut\u00e9 de personnes qui comprennent ce que vous vivez \u2014 parce qu\u2019elles le vivent aussi. Pas de jugement. Pas de platitudes. Du vrai.",
       image_url: '',
       blocks: [
-        { title: 'Le Feu de Camp', description: "\u00c9changez avec des personnes qui traversent exactement la m\u00eame \u00e9preuve que vous. Pas de jugement. Pas de conseils g\u00e9n\u00e9riques. Juste des \u00eatres humains qui comprennent." },
-        { title: 'Le Mur Communautaire', description: "Partagez vos avanc\u00e9es, vos victoires, vos questionnements. Chaque publication est un pas de plus vers la gu\u00e9rison collective." },
-        { title: 'Les Rencontres R\u00e9elles', description: "Soins collectifs, ateliers en pr\u00e9sentiel, lives exclusifs, Shine Walks \u2014 le digital pr\u00e9pare, le physique transforme. C\u2019est l\u00e0 que la magie op\u00e8re." },
+        { title: 'Le Feu de Camp', description: "Un chat d\u00e9di\u00e9 \u00e0 chaque blessure \u00e9motionnelle. Vous \u00e9changez avec des personnes qui traversent la m\u00eame \u00e9preuve. Quelqu\u2019un r\u00e9pond toujours, m\u00eame \u00e0 3h du matin." },
+        { title: 'Le Mur Communautaire', description: "Partagez vos avanc\u00e9es, vos prises de conscience, vos victoires. Chaque t\u00e9moignage inspire quelqu\u2019un d\u2019autre \u00e0 avancer." },
+        { title: 'Les Rencontres', description: "Soins collectifs en live, ateliers en pr\u00e9sentiel, Shine Walks. Le digital pr\u00e9pare, le r\u00e9el transforme." },
       ],
     },
     styles: {
@@ -166,12 +167,12 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     position: 5,
     is_visible: true,
     content: {
-      label: "Ils ont transform\u00e9 leur vie",
+      label: "Ce qu\u2019ils en disent",
       items: [
-        { quote: "Apr\u00e8s 15 ans de d\u00e9pendance affective, j\u2019ai enfin compris le sch\u00e9ma qui me pi\u00e9geait. Le protocole m\u2019a lib\u00e9r\u00e9e en 3 semaines. Aujourd\u2019hui, je suis en couple — avec moi-m\u00eame d\u2019abord.", name: 'Marie, 34 ans', city: 'Lyon' },
-        { quote: "La premi\u00e8re fois que quelqu\u2019un m\u2019a dit \u00ab je suis pass\u00e9 par l\u00e0, tiens bon \u00bb — c\u2019\u00e9tait dans le Feu de Camp \u00e0 3h du matin. J\u2019ai pleur\u00e9. C\u2019\u00e9tait la premi\u00e8re fois que je ne me sentais plus seul.", name: 'Karim, 41 ans', city: 'Bordeaux' },
-        { quote: "Burn-out total. Je ne reconnaissais plus la personne dans le miroir. En 2 mois avec SOS Shine, j\u2019ai retrouv\u00e9 mon \u00e9nergie et quitt\u00e9 un job qui me d\u00e9truisait. Meilleure d\u00e9cision de ma vie.", name: 'Sophie, 28 ans', city: 'Bruxelles' },
-        { quote: "Gr\u00e2ce aux 3 \u00e9tapes sur le deuil, j\u2019ai enfin pu faire la paix avec la perte de mon p\u00e8re. Aujourd\u2019hui je suis \u00c9claireur sur la plateforme et j\u2019aide d\u2019autres personnes \u00e0 traverser cette \u00e9preuve.", name: 'Antoine, 37 ans', city: 'Gen\u00e8ve' },
+        { quote: "15 ans de d\u00e9pendance affective. J\u2019ai compris le sch\u00e9ma d\u00e8s la premi\u00e8re vid\u00e9o. Le protocole m\u2019a lib\u00e9r\u00e9e en 3 semaines.", name: 'Marie, 34 ans', city: 'Lyon' },
+        { quote: "3h du matin, seul, au fond du trou. J\u2019ai ouvert le Feu de Camp. Quelqu\u2019un m\u2019a dit \u00ab tiens bon, je suis pass\u00e9 par l\u00e0 \u00bb. Cette nuit-l\u00e0 a tout chang\u00e9.", name: 'Karim, 41 ans', city: 'Bordeaux' },
+        { quote: "Burn-out total. En 2 mois, j\u2019ai retrouv\u00e9 mon \u00e9nergie et quitt\u00e9 le job qui me d\u00e9truisait. SOS Shine m\u2019a redonn\u00e9 l\u2019\u00e9lan que j\u2019avais perdu.", name: 'Sophie, 28 ans', city: 'Bruxelles' },
+        { quote: "Le protocole sur le deuil m\u2019a permis de faire la paix avec la perte de mon p\u00e8re. Aujourd\u2019hui j\u2019aide d\u2019autres personnes \u00e0 traverser \u00e7a.", name: 'Antoine, 37 ans', city: 'Gen\u00e8ve' },
       ],
     },
     styles: {
@@ -183,7 +184,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     section_key: 'histoire',
     label: "L'Histoire / Le Livre",
     position: 6,
-    is_visible: true,
+    is_visible: false,
     content: {
       label: "L'Histoire",
       title: "N\u00e9 d\u2019un livre.\nDevenu un mouvement.",
@@ -219,8 +220,8 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     is_visible: true,
     content: {
       label: 'Les Fondateurs',
-      title: "Trois forces. Une mission.",
-      description: "Une thérapeute holistique, un spécialiste en hypnose et médecine chinoise, un architecte de la transformation pratique. Ensemble, ils couvrent les trois dimensions de l'être : âme, corps et esprit.",
+      title: "Trois forces.\nUne seule mission.",
+      description: "Julia, th\u00e9rapeute holistique. William, sp\u00e9cialiste en hypnose et m\u00e9decine chinoise. Thomas, architecte de la transformation. Ensemble, ils couvrent les trois dimensions de l\u2019\u00eatre : \u00e2me, corps et esprit.",
       members: [
         { name: 'Julia', role: 'Fondatrice', image: '/images/julia.jpeg' },
         { name: 'Wiliam', role: 'Co-fondateur', image: '/images/wiliam.png' },
@@ -239,9 +240,9 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     position: 8,
     is_visible: true,
     content: {
-      title: "Investissez dans votre transformation",
-      subtitle: "Sans engagement. Annulable en un clic. 7 jours gratuits pour tout essayer.",
-      footer: "Parce que si on doit vous retenir par un contrat, c\u2019est qu\u2019on n\u2019a pas fait notre travail.",
+      title: "Choisissez votre rythme",
+      subtitle: "7 jours gratuits. Sans engagement. Annulation en un clic.",
+      footer: "Si on doit vous retenir par un contrat, c\u2019est qu\u2019on n\u2019a pas fait notre travail.",
       plans: [
         {
           name: 'Essentielle',
@@ -303,7 +304,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     position: 9,
     is_visible: true,
     content: {
-      title: "Votre transformation\ncommence maintenant.",
+      title: "Le premier pas\nest toujours le plus dur.\nOn le fait ensemble.",
       image_url: '',
     },
     styles: {
@@ -316,10 +317,10 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     section_key: 'cta_light',
     label: 'CTA (fond clair)',
     position: 10,
-    is_visible: true,
+    is_visible: false,
     content: {
-      description: "Que ce soit une blessure ancienne, une crise que vous traversez maintenant, ou simplement le besoin d'\u00eatre compris(e) \u2014 tout commence par un premier pas. Le v\u00f4tre est ici.",
-      button_label: 'Commencer ma transformation',
+      description: "Blessure ancienne ou crise en cours \u2014 on a cr\u00e9\u00e9 un protocole pour ce que vous vivez. Il vous attend.",
+      button_label: 'Commencer gratuitement',
       button_href: '/rejoindre',
       login_text: "Déjà membre ? Se connecter",
     },
@@ -353,7 +354,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     position: 12,
     is_visible: true,
     content: {
-      items: ['Abus', 'Amour propre', 'Burn-out', 'Confiance en soi', 'Dépendance affective', 'Deuil', 'Rupture'],
+      items: ['Abandon', 'Anxiété', 'Burn-out', 'Confiance en soi', 'Dépendance', 'Deuil', 'Trauma', 'Résilience', 'Pardon'],
       speed: 35,
     },
     styles: {},
@@ -362,7 +363,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     section_key: 'ticker_2',
     label: 'Bandeau défilant 2',
     position: 13,
-    is_visible: true,
+    is_visible: false,
     content: {
       items: ['Soutien 24/7', 'Communauté bienveillante', 'Protocoles exclusifs', 'Soins collectifs', 'Chat dédié', 'Événements live', 'Méditation guidée', 'Coaching immersif'],
       speed: 40,

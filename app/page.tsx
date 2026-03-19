@@ -255,27 +255,27 @@ function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: strin
 const FAQ_ITEMS = [
   {
     q: "Est-ce que SOS Shine remplace un thérapeute ?",
-    a: "Non. SOS Shine est un complément d'accompagnement. Nous offrons des protocoles de compréhension, de libération et d'action, mais nous recommandons de consulter un professionnel de santé si nécessaire. Nos contenus sont créés par des thérapeutes certifiés.",
+    a: "Non. SOS Shine est un complément, pas un substitut. Nos protocoles sont créés par des thérapeutes certifiés, mais nous recommandons de consulter un professionnel de santé si nécessaire.",
   },
   {
-    q: "Puis-je annuler mon abonnement à tout moment ?",
-    a: "Absolument. Aucun engagement, aucune condition cachée. Vous pouvez annuler en un clic depuis votre espace membre. Si vous annulez pendant la période d'essai, vous ne serez pas débité.",
+    q: "Comment fonctionne l'essai gratuit ?",
+    a: "Vous accédez à tout le contenu de votre formule pendant 7 jours. Si ça ne vous convient pas, annulez en un clic — zéro prélèvement, zéro question.",
   },
   {
-    q: "Combien de temps dure le protocole en 3 étapes ?",
-    a: "Chaque protocole est conçu pour être suivi à votre rythme. Certains membres complètent une étape en 20 minutes, d'autres prennent plusieurs jours. Il n'y a aucune pression — vous avancez selon votre ressenti.",
+    q: "C'est quoi exactement un protocole en 3 étapes ?",
+    a: "Pour chaque blessure émotionnelle, nos thérapeutes ont créé : une vidéo pour comprendre l'origine du blocage, une séance guidée pour libérer l'émotion, et des exercices concrets pour ancrer la transformation. Vous avancez à votre rythme.",
   },
   {
-    q: "Est-ce que mes données sont confidentielles ?",
-    a: "100%. Vos données ne sont jamais vendues ni partagées. Vos échanges dans les chats sont protégés, et vous pouvez utiliser un pseudo. Le courrier anonyme garantit un anonymat total.",
+    q: "Mes données sont-elles protégées ?",
+    a: "Vos données ne sont jamais vendues ni partagées. Vous pouvez utiliser un pseudo dans la communauté. Tout est chiffré et confidentiel.",
   },
   {
-    q: "La communauté est-elle vraiment active 24h/24 ?",
-    a: "Oui. Notre communauté est internationale et les chats sont accessibles en permanence. Que ce soit à 3h du matin ou en plein après-midi, quelqu'un sera là pour vous écouter.",
+    q: "Qui crée les contenus ?",
+    a: "Julia (thérapeute holistique), William (hypnose et médecine chinoise) et Thomas (protocoles pratiques). Chaque protocole combine leurs trois expertises : âme, corps et esprit.",
   },
   {
-    q: "Comment fonctionne l'essai gratuit de 7 jours ?",
-    a: "Vous accédez immédiatement à l'intégralité du contenu de votre formule. Si vous n'êtes pas convaincu(e), annulez avant la fin des 7 jours — aucun prélèvement ne sera effectué.",
+    q: "Je peux annuler quand je veux ?",
+    a: "Oui. Aucun engagement, aucune condition cachée. Annulation en un clic depuis votre espace membre. Si on doit vous retenir par un contrat, c'est qu'on n'a pas fait notre travail.",
   },
 ];
 
@@ -849,12 +849,11 @@ export default function Home() {
       {/* ═══ SOCIAL PROOF STATS ═══ */}
       <section className="relative py-8 md:py-12 border-y border-[var(--dark-border)]" style={{ background: `rgba(${goldRgb}, 0.015)` }}>
         <div className="max-w-5xl mx-auto px-5 md:px-20">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+          <div className="grid grid-cols-3 gap-6 md:gap-8">
             {[
-              { value: '50+', label: 'Challenges émotionnels', icon: '📖' },
-              { value: '3', label: 'Étapes par protocole', icon: '✦' },
-              { value: '24/7', label: 'Communauté active', icon: '💬' },
-              { value: '100%', label: 'Confidentialité garantie', icon: '🔒' },
+              { value: '50+', label: 'Protocoles thérapeutiques' },
+              { value: '3', label: 'Thérapeutes créateurs' },
+              { value: '24/7', label: 'Communauté disponible' },
             ].map((stat, i) => (
               <RevealOnScroll key={stat.label} delay={i * 0.1}>
                 <div className="text-center">
@@ -954,117 +953,6 @@ export default function Home() {
         </section>
       )}
 
-      {/* ═══ SIGNATURE EMOTIONNELLE CTA ═══ */}
-      <section className="px-5 md:px-20 py-12 md:py-20 relative cv-auto">
-        <RevealOnScroll>
-          <div className="max-w-3xl mx-auto text-center">
-            <Link href="/signature-emotionnelle">
-              <div className="glow-card p-6 sm:p-8 md:p-12 cursor-pointer group">
-                <p className="luxury-title text-[10px] sm:text-xs tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{t('signature.cta_label')}</p>
-                <h3 className="font-display text-xl sm:text-2xl md:text-4xl font-light mb-3 md:mb-4" style={{ color: gold }}>
-                  {t('signature.cta_title')}{' '}
-                  <span className="text-shimmer">{t('signature.cta_title_highlight')}</span>
-                </h3>
-                <p className="text-[var(--text-secondary)] font-light mb-5 md:mb-6 text-sm md:text-[15px]">
-                  {t('signature.cta_desc')}
-                </p>
-                <span className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-semibold tracking-wide group-hover:scale-105 transition-transform" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
-                  {t('signature.cta_button')}
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
-                </span>
-              </div>
-            </Link>
-          </div>
-        </RevealOnScroll>
-      </section>
-
-      {/* ═══ L'ENCYCLOPEDIE ═══ */}
-      {vis('encyclopedie') && (
-        <section id="encyclopedie" className="px-5 md:px-20 py-16 md:py-32 relative cv-auto scroll-mt-24">
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-0 right-0 w-[250px] h-[250px] md:w-[400px] md:h-[400px] rounded-full opacity-[0.02] blur-[40px] md:blur-[60px]" style={{ background: gold }} />
-          </div>
-
-          <div className="max-w-5xl mx-auto relative z-10">
-            <RevealOnScroll>
-              <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{encyclo.label || "L'encyclopedie"}</p>
-            </RevealOnScroll>
-            <RevealOnScroll delay={0.1}>
-              <h2 className="font-display font-light text-center mb-4 md:mb-6" style={tStyle("encyclopedie")}>
-                <WordByWordReveal text={encyclo.title || ''} />
-              </h2>
-            </RevealOnScroll>
-            <RevealOnScroll delay={0.2}>
-              <p className="text-base md:text-lg text-[var(--text-secondary)] font-light leading-relaxed mb-10 md:mb-16 max-w-2xl mx-auto text-center">
-                {encyclo.description || ''}
-              </p>
-            </RevealOnScroll>
-
-            <RevealOnScroll delay={0.25}>
-              <div className="max-w-md mx-auto mb-8 md:mb-12">
-                <input
-                  type="text"
-                  value={encyclopediaSearch}
-                  onChange={(e) => setEncyclopediaSearch(e.target.value)}
-                  placeholder={t('landing.search_challenge')}
-                  className="w-full px-4 md:px-5 py-2.5 md:py-3 rounded-full text-sm font-light"
-                  style={{
-                    background: 'rgba(255,255,255,0.04)',
-                    border: `1px solid rgba(${goldRgb}, 0.25)`,
-                    color: 'var(--text-primary)',
-                    outline: 'none',
-                  }}
-                />
-              </div>
-            </RevealOnScroll>
-
-            {allDouleurs.length > 0 && (
-              <RevealOnScroll delay={0.2}>
-                <p className="text-center text-sm mb-6" style={{ color: 'var(--text-muted)' }}>
-                  {allDouleurs.length} expériences de vie de A à Z
-                </p>
-              </RevealOnScroll>
-            )}
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 sm:gap-4">
-              {(allDouleurs.length > 0
-                ? allDouleurs.filter((d) => !encyclopediaSearch || d.title.toLowerCase().includes(encyclopediaSearch.toLowerCase()))
-                : (encyclo.items || []).map((item: string) => ({ title: item, slug: slugify(item), is_published: false, is_original: false }))
-              ).map((d: { title: string; slug: string; is_published?: boolean; is_original?: boolean }, i: number) => (
-                <RevealOnScroll key={d.slug} delay={Math.min(i * 0.02, 1)} direction="scale">
-                  <Link href={`/encyclopedie/${d.slug}`}>
-                    <GlowingCard className="px-3 sm:px-5 py-3 sm:py-4 text-center cursor-pointer group relative">
-                      <span className="encyclo-item text-xs sm:text-sm font-light transition-colors duration-300 group-hover:text-[var(--gold)]" style={{
-                        color: d.is_original ? gold : 'var(--text-secondary)',
-                      }}>
-                        {d.title}
-                      </span>
-                      {!d.is_published && (
-                        <span className="block text-[9px] mt-1 uppercase tracking-wider" style={{ color: `rgba(${goldRgb}, 0.5)` }}>
-                          Bientôt
-                        </span>
-                      )}
-                    </GlowingCard>
-                  </Link>
-                </RevealOnScroll>
-              ))}
-            </div>
-
-            <RevealOnScroll delay={0.3}>
-              <div className="text-center mt-8 md:mt-12">
-                <Link href="/encyclopedie">
-                  <button className="magnetic-btn px-6 sm:px-8 py-3 sm:py-3.5 rounded-full text-sm font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.25)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
-                    {t('landing.explore_encyclopedia')}
-                  </button>
-                </Link>
-              </div>
-            </RevealOnScroll>
-          </div>
-        </section>
-      )}
-
       {/* ═══ TEMOIGNAGES ═══ */}
       {vis('temoignages') && (
         <section id="temoignages" className="px-5 md:px-20 py-16 md:py-32 relative cv-auto scroll-mt-24">
@@ -1110,8 +998,87 @@ export default function Home() {
         </section>
       )}
 
-      {/* ═══ TICKER BAND 2 ═══ */}
-      <InfiniteTickerBand items={ticker2Items} speed={ticker2Speed} />
+      {/* ═══ L'ENCYCLOPEDIE ═══ */}
+      {vis('encyclopedie') && (
+        <section id="encyclopedie" className="px-5 md:px-20 py-16 md:py-32 relative cv-auto scroll-mt-24">
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute top-0 right-0 w-[250px] h-[250px] md:w-[400px] md:h-[400px] rounded-full opacity-[0.02] blur-[40px] md:blur-[60px]" style={{ background: gold }} />
+          </div>
+
+          <div className="max-w-5xl mx-auto relative z-10">
+            <RevealOnScroll>
+              <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{encyclo.label || "L'encyclopedie"}</p>
+            </RevealOnScroll>
+            <RevealOnScroll delay={0.1}>
+              <h2 className="font-display font-light text-center mb-4 md:mb-6" style={tStyle("encyclopedie")}>
+                <WordByWordReveal text={encyclo.title || ''} />
+              </h2>
+            </RevealOnScroll>
+            <RevealOnScroll delay={0.2}>
+              <p className="text-base md:text-lg text-[var(--text-secondary)] font-light leading-relaxed mb-10 md:mb-16 max-w-2xl mx-auto text-center">
+                {encyclo.description || ''}
+              </p>
+            </RevealOnScroll>
+
+            <RevealOnScroll delay={0.25}>
+              <div className="max-w-md mx-auto mb-8 md:mb-12">
+                <input
+                  type="text"
+                  value={encyclopediaSearch}
+                  onChange={(e) => setEncyclopediaSearch(e.target.value)}
+                  placeholder={t('landing.search_challenge')}
+                  className="w-full px-4 md:px-5 py-2.5 md:py-3 rounded-full text-sm font-light"
+                  style={{
+                    background: 'rgba(255,255,255,0.04)',
+                    border: `1px solid rgba(${goldRgb}, 0.25)`,
+                    color: 'var(--text-primary)',
+                    outline: 'none',
+                  }}
+                />
+              </div>
+            </RevealOnScroll>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5 sm:gap-4">
+              {(() => {
+                const maxShow = encyclo.show_max || 15;
+                // Show only published/original items from DB, or fallback to curated defaults
+                const curatedItems = allDouleurs.length > 0
+                  ? allDouleurs
+                      .filter((d) => d.is_original || d.is_published)
+                      .filter((d) => !encyclopediaSearch || d.title.toLowerCase().includes(encyclopediaSearch.toLowerCase()))
+                      .slice(0, encyclopediaSearch ? 20 : maxShow)
+                  : (encyclo.items || []).map((item: string) => ({ title: item, slug: slugify(item), is_published: true, is_original: true }));
+                return curatedItems.map((d: { title: string; slug: string; is_published?: boolean; is_original?: boolean }, i: number) => (
+                  <RevealOnScroll key={d.slug} delay={Math.min(i * 0.03, 0.8)} direction="scale">
+                    <Link href={`/encyclopedie/${d.slug}`}>
+                      <GlowingCard className="px-3 sm:px-5 py-3 sm:py-4 text-center cursor-pointer group relative">
+                        <span className="encyclo-item text-xs sm:text-sm font-light transition-colors duration-300 group-hover:text-[var(--gold)]" style={{
+                          color: 'var(--text-secondary)',
+                        }}>
+                          {d.title}
+                        </span>
+                      </GlowingCard>
+                    </Link>
+                  </RevealOnScroll>
+                ));
+              })()}
+            </div>
+
+            <RevealOnScroll delay={0.3}>
+              <div className="text-center mt-8 md:mt-12">
+                <p className="text-sm font-light mb-4" style={{ color: 'var(--text-muted)' }}>
+                  {allDouleurs.length > 0 ? `+ ${allDouleurs.length - (encyclo.show_max || 15)} autres protocoles disponibles` : 'Et bien d\u2019autres\u2026'}
+                </p>
+                <Link href="/encyclopedie">
+                  <button className="magnetic-btn px-6 sm:px-8 py-3 sm:py-3.5 rounded-full text-sm font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.25)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
+                    {t('landing.explore_encyclopedia')}
+                  </button>
+                </Link>
+              </div>
+            </RevealOnScroll>
+          </div>
+        </section>
+      )}
 
       {/* ═══ COMMUNAUTE ═══ */}
       {vis('communaute') && (
@@ -1369,16 +1336,16 @@ export default function Home() {
       <section id="faq" className="px-5 md:px-20 py-16 md:py-32 relative cv-auto scroll-mt-24">
         <div className="max-w-3xl mx-auto">
           <RevealOnScroll>
-            <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">Questions fréquentes</p>
+            <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">FAQ</p>
           </RevealOnScroll>
           <RevealOnScroll delay={0.1}>
             <h2 className="font-display font-light text-center mb-4 md:mb-6" style={{ fontSize: 'clamp(2.25rem, 5vw, 3rem)' }}>
-              <WordByWordReveal text="Tout ce que vous devez savoir" />
+              <WordByWordReveal text="Vos questions, nos r\u00e9ponses" />
             </h2>
           </RevealOnScroll>
           <RevealOnScroll delay={0.15}>
             <p className="text-center text-[var(--text-secondary)] font-light mb-10 md:mb-14 text-sm md:text-base max-w-lg mx-auto">
-              Si votre question n&apos;est pas ici, écrivez-nous — on répond toujours.
+              Une question qui n&apos;est pas ici ? &Eacute;crivez-nous, on r&eacute;pond toujours.
             </p>
           </RevealOnScroll>
 
@@ -1405,33 +1372,6 @@ export default function Home() {
             </div>
           </RevealOnScroll>
         </div>
-      </section>
-
-      {/* ═══ URGENCY / FOUNDING MEMBER ═══ */}
-      <section className="px-5 md:px-20 py-10 md:py-16 relative cv-auto">
-        <RevealOnScroll>
-          <div className="max-w-3xl mx-auto">
-            <div className="glow-card p-6 sm:p-8 md:p-10 text-center relative overflow-hidden">
-              <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at center, rgba(${goldRgb}, 0.04), transparent 70%)` }} />
-              <div className="relative z-10">
-                <span className="inline-block px-4 py-1.5 rounded-full text-[10px] sm:text-xs tracking-[0.2em] uppercase font-semibold mb-4" style={{ background: `rgba(${goldRgb}, 0.12)`, color: gold, border: `1px solid rgba(${goldRgb}, 0.2)` }}>
-                  Offre de lancement
-                </span>
-                <h3 className="font-display text-xl sm:text-2xl md:text-3xl font-light mb-3" style={{ color: gold }}>
-                  Les 100 premiers membres fondateurs
-                </h3>
-                <p className="text-sm md:text-base font-light leading-relaxed mb-6 max-w-lg mx-auto" style={{ color: 'var(--text-secondary)' }}>
-                  Tarif pr&eacute;f&eacute;rentiel garanti &agrave; vie, acc&egrave;s prioritaire &agrave; toutes les nouvelles fonctionnalit&eacute;s, et un badge exclusif &laquo;&nbsp;Fondateur&nbsp;&raquo; sur votre profil.
-                </p>
-                <Link href="/rejoindre">
-                  <button className="magnetic-btn pulse-ring px-8 py-4 rounded-full text-sm sm:text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
-                    Rejoindre les fondateurs
-                  </button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </RevealOnScroll>
       </section>
 
       {/* ═══ CTA FINAL DARK ═══ */}
@@ -1553,7 +1493,7 @@ export default function Home() {
                     &copy; {foot.copyright_year || '2026'} {foot.name || 'SOS Shine'}
                   </p>
                   <p className="text-[9px] tracking-[0.1em] uppercase text-[var(--text-muted)] mt-1 opacity-50">
-                    Le déconditionnement commence ici
+                    Votre transformation commence ici
                   </p>
                 </div>
 

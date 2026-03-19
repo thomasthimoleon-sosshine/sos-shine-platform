@@ -532,8 +532,8 @@ export default function Home() {
               <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
                 {[
                   { label: 'Le Principe', id: 'principe' },
+                  { label: 'L\u2019Univers', id: 'univers' },
                   { label: 'Encyclopédie', id: 'encyclopedie' },
-                  { label: 'Témoignages', id: 'temoignages' },
                   { label: 'Communauté', id: 'communaute' },
                   { label: 'Tarifs', id: 'pricing' },
                   { label: 'FAQ', id: 'faq' },
@@ -812,9 +812,9 @@ export default function Home() {
         <div className="max-w-5xl mx-auto px-5 md:px-20">
           <div className="grid grid-cols-3 gap-6 md:gap-8">
             {[
-              { value: '50+', label: 'Protocoles thérapeutiques' },
-              { value: '3', label: 'Fondateurs engagés' },
-              { value: '24/7', label: 'Communauté disponible' },
+              { value: '50+', label: 'Protocoles de transformation' },
+              { value: '5', label: 'Univers de contenu' },
+              { value: '24/7', label: 'Communauté & soutien' },
             ].map((stat, i) => (
               <RevealOnScroll key={stat.label} delay={i * 0.1}>
                 <div className="text-center">
@@ -914,51 +914,6 @@ export default function Home() {
         </section>
       )}
 
-      {/* ═══ TEMOIGNAGES ═══ */}
-      {vis('temoignages') && (
-        <section id="temoignages" className="px-5 md:px-20 py-16 md:py-32 relative cv-auto scroll-mt-24">
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute bottom-0 left-1/3 w-[250px] h-[250px] md:w-[400px] md:h-[400px] rounded-full opacity-[0.02] blur-[40px] md:blur-[60px]" style={{ background: gold }} />
-          </div>
-
-          <div className="max-w-5xl mx-auto relative z-10">
-            <RevealOnScroll>
-              <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-10 md:mb-20">
-                <WordByWordReveal text={temos.label || ''} />
-              </p>
-            </RevealOnScroll>
-
-            <div className="grid md:grid-cols-2 gap-4 md:gap-8">
-              {(temos.items || []).filter((t: { quote: string; name: string; city: string }) => t.quote).map((t: { quote: string; name: string; city: string }, i: number) => (
-                <RevealOnScroll key={i} delay={i * 0.12} direction={i % 2 === 0 ? "left" : "right"}>
-                  <GlowingCard className="p-5 sm:p-8 md:p-10 h-full flex flex-col justify-between">
-                    <div>
-                      <div className="flex gap-1 mb-4 md:mb-6">
-                        {[1,2,3,4,5].map(s => (
-                          <span key={s} className="text-sm" style={{ color: gold }}>★</span>
-                        ))}
-                      </div>
-                      <p className="font-display text-base sm:text-lg italic text-[var(--text-primary)] font-light leading-relaxed mb-6 md:mb-8">
-                        &laquo; {t.quote} &raquo;
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-3 pt-3 md:pt-4" style={{ borderTop: `1px solid rgba(${goldRgb}, 0.08)` }}>
-                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-display text-sm" style={{ background: `linear-gradient(135deg, rgba(${goldRgb},0.15), rgba(${goldRgb},0.05))`, color: gold }}>
-                        {t.name.charAt(0)}
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium" style={{ color: gold }}>{t.name}</p>
-                        <p className="text-xs text-[var(--text-muted)]">{t.city}</p>
-                      </div>
-                    </div>
-                  </GlowingCard>
-                </RevealOnScroll>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
       {/* ═══ L'ENCYCLOPEDIE ═══ */}
       {vis('encyclopedie') && (
         <section id="encyclopedie" className="px-5 md:px-20 py-16 md:py-32 relative cv-auto scroll-mt-24">
@@ -1041,11 +996,102 @@ export default function Home() {
         </section>
       )}
 
+      {/* ═══ L'UNIVERS SOS SHINE — 5 plateformes en 1 ═══ */}
+      <section id="univers" className="px-5 md:px-20 py-16 md:py-32 relative cv-auto scroll-mt-24">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/3 right-0 w-[300px] h-[300px] md:w-[500px] md:h-[500px] rounded-full opacity-[0.02] blur-[60px]" style={{ background: gold }} />
+        </div>
+        <div className="max-w-6xl mx-auto relative z-10">
+          <RevealOnScroll>
+            <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">L&apos;UNIVERS</p>
+          </RevealOnScroll>
+          <RevealOnScroll delay={0.1}>
+            <h2 className="font-display font-light text-center mb-4 md:mb-6" style={{ fontSize: 'clamp(2.25rem, 5vw, 3rem)', color: gold }}>
+              <WordByWordReveal text="5 plateformes en une seule" />
+            </h2>
+          </RevealOnScroll>
+          <RevealOnScroll delay={0.2}>
+            <p className="text-base md:text-xl text-[var(--text-secondary)] font-light leading-relaxed mb-12 md:mb-20 max-w-2xl mx-auto text-center">
+              Netflix, Spotify, TikTok, Kindle et un réseau social bienveillant — réunis dans un seul espace dédié à votre transformation.
+            </p>
+          </RevealOnScroll>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            {[
+              {
+                icon: <><path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></>,
+                title: 'Shine TV',
+                desc: 'Votre chaîne de transformation personnelle. Des vidéos classées par thème : guérison, méditations guidées, confiance, relations, résilience, sommeil... Regardez, notez, sauvegardez.',
+                color: '#A78BFA',
+              },
+              {
+                icon: <><path d="M9 19V6l12-3v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="15" r="3"/></>,
+                title: 'Shine Audible',
+                desc: 'Podcasts, livres audio, méditations, hypnoses douces et sons d\u2019ambiance. Branchez vos écouteurs et laissez-vous guider, où que vous soyez.',
+                color: '#55EFC4',
+              },
+              {
+                icon: <><path d="M12 18v-6m0 0V6m0 6h6m-6 0H6"/><rect x="2" y="2" width="20" height="20" rx="5"/></>,
+                title: 'Shine Shorts',
+                desc: 'Des capsules vidéo percutantes de moins de 60 secondes. Tips rapides, exercices express, mini-méditations et techniques de respiration pour les journées intenses.',
+                color: '#F0A68C',
+              },
+              {
+                icon: <><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></>,
+                title: 'Shine Librairie',
+                desc: 'E-books, guides pratiques, cahiers d\u2019exercices et journaux guidés. Lisez directement en ligne dans un lecteur protégé — votre bibliothèque de transformation.',
+                color: '#74C0FC',
+              },
+              {
+                icon: <><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>,
+                title: 'La Communauté',
+                desc: 'Mur communautaire, messages privés, connexions entre membres, chat en temps réel, posts anonymes. Vous n\u2019êtes plus jamais seul(e) dans votre parcours.',
+                color: '#FBBF24',
+              },
+              {
+                icon: <><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></>,
+                title: 'Événements Live',
+                desc: 'Soins collectifs, ateliers en groupe, sessions live thématiques et Shine Walks. Vivez la transformation en direct avec les fondateurs et la communauté.',
+                color: '#F472B6',
+              },
+            ].map((item, i) => (
+              <RevealOnScroll key={item.title} delay={i * 0.1} direction="scale">
+                <GlowingCard className="p-6 md:p-8 h-full" glowColor={`${item.color}20`}>
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style={{ background: `${item.color}15`, border: `1px solid ${item.color}25` }}>
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke={item.color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      {item.icon}
+                    </svg>
+                  </div>
+                  <h3 className="font-display text-lg sm:text-xl font-medium mb-3" style={{ color: item.color }}>{item.title}</h3>
+                  <p className="text-[var(--text-secondary)] leading-relaxed text-sm font-light">{item.desc}</p>
+                </GlowingCard>
+              </RevealOnScroll>
+            ))}
+          </div>
+
+          <RevealOnScroll delay={0.4}>
+            <div className="text-center mt-10 md:mt-16">
+              <Link href="/rejoindre">
+                <button className="magnetic-btn px-6 sm:px-8 py-3 sm:py-3.5 rounded-full text-sm font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.25)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
+                  Découvrir tout l&apos;univers
+                </button>
+              </Link>
+            </div>
+          </RevealOnScroll>
+        </div>
+      </section>
+
+      {/* ═══ TICKER BAND 2 ═══ */}
+      <InfiniteTickerBand items={ticker2Items} speed={ticker2Speed} />
+
       {/* ═══ COMMUNAUTE ═══ */}
       {vis('communaute') && (
         <section id="communaute" className="px-5 md:px-20 py-16 md:py-32 relative cv-auto scroll-mt-24">
           <div className="max-w-5xl mx-auto">
             <RevealOnScroll>
+              <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">LA COMMUNAUTÉ</p>
+            </RevealOnScroll>
+            <RevealOnScroll delay={0.1}>
               <h2 className="font-display font-light leading-[1.1] text-center mb-4 md:mb-6" style={tStyle("communaute")}>
                 <WordByWordReveal text={comm.title || ''} />
               </h2>
@@ -1056,21 +1102,124 @@ export default function Home() {
               </p>
             </RevealOnScroll>
 
-            <div className="space-y-4 md:space-y-6">
-              {(comm.blocks || []).filter((b: { title: string; description: string }) => b.title).map((item: { title: string; description: string }, i: number) => (
+            <div className="grid md:grid-cols-2 gap-4 md:gap-6">
+              {[
+                {
+                  icon: <><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></>,
+                  title: 'Le Feu de Camp',
+                  desc: 'Chat en temps réel, messages texte et audio, option anonyme. 3h du matin ou 14h, il y a toujours quelqu\u2019un pour vous écouter.',
+                },
+                {
+                  icon: <><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 8h8M8 12h6M8 16h4"/></>,
+                  title: 'Le Mur Communautaire',
+                  desc: 'Partagez vos victoires, vos questions, vos gratitudes. Recevez des Shines (likes), des commentaires et du soutien de toute la communauté.',
+                },
+                {
+                  icon: <><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></>,
+                  title: 'Les Rayons',
+                  desc: 'Connectez-vous en 1-to-1 avec d\u2019autres membres. Envoyez un Rayon, échangez en privé, créez des liens sincères avec des personnes qui vous comprennent.',
+                },
+                {
+                  icon: <><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>,
+                  title: 'Mon Éclat',
+                  desc: 'Votre espace personnel pour noter vos victoires, vos prises de conscience et votre évolution. Public ou privé, c\u2019est vous qui choisissez.',
+                },
+              ].map((item, i) => (
                 <RevealOnScroll key={item.title} delay={i * 0.12} direction={i % 2 === 0 ? "left" : "right"}>
-                  <GlowingCard className="p-5 sm:p-8 md:p-10">
+                  <GlowingCard className="p-5 sm:p-8 md:p-10 h-full">
                     <div className="flex items-start gap-4 sm:gap-6">
                       <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center" style={{ background: `rgba(${goldRgb}, 0.08)`, border: `1px solid rgba(${goldRgb}, 0.12)` }}>
                         <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke={gold} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                          {i === 0 && <><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><circle cx="9" cy="10" r="1" fill={gold}/><circle cx="15" cy="10" r="1" fill={gold}/></>}
-                          {i === 1 && <><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 8h8M8 12h6M8 16h4"/></>}
-                          {i === 2 && <><path d="M17 21v-2a4 4 0 0 0-4-4H5" /><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>}
+                          {item.icon}
                         </svg>
                       </div>
                       <div className="min-w-0">
                         <h3 className="font-display text-lg sm:text-xl font-medium mb-2 sm:mb-3">{item.title}</h3>
-                        <p className="text-[var(--text-secondary)] leading-relaxed text-sm sm:text-[15px] font-light">{item.description}</p>
+                        <p className="text-[var(--text-secondary)] leading-relaxed text-sm sm:text-[15px] font-light">{item.desc}</p>
+                      </div>
+                    </div>
+                  </GlowingCard>
+                </RevealOnScroll>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ═══ VOTRE PROGRESSION — Gamification ═══ */}
+      <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute bottom-1/4 left-1/4 w-[300px] h-[300px] md:w-[400px] md:h-[400px] rounded-full opacity-[0.02] blur-[60px]" style={{ background: gold }} />
+        </div>
+        <div className="max-w-5xl mx-auto relative z-10">
+          <RevealOnScroll>
+            <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">VOTRE PROGRESSION</p>
+          </RevealOnScroll>
+          <RevealOnScroll delay={0.1}>
+            <h2 className="font-display font-light text-center mb-4 md:mb-6" style={{ fontSize: 'clamp(2.25rem, 5vw, 3rem)', color: gold }}>
+              <WordByWordReveal text="Chaque pas compte. Chaque victoire brille." />
+            </h2>
+          </RevealOnScroll>
+          <RevealOnScroll delay={0.2}>
+            <p className="text-base md:text-xl text-[var(--text-secondary)] font-light leading-relaxed mb-12 md:mb-20 max-w-2xl mx-auto text-center">
+              Gagnez de l&apos;XP, débloquez des badges, montez en niveau. Votre transformation n&apos;est pas abstraite — elle se mesure, se célèbre et se partage.
+            </p>
+          </RevealOnScroll>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            {[
+              { icon: '⚡', title: 'Système XP', desc: 'Chaque action vous rapporte de l\u2019XP : vidéo regardée, commentaire posté, protocole terminé. Progressez naturellement.' },
+              { icon: '🏅', title: '100+ Badges', desc: 'Débloquez des badges uniques selon vos actions : Shines donnés, protocoles complétés, jours consécutifs de connexion...' },
+              { icon: '📈', title: '10 Niveaux', desc: 'D\u2019Explorateur à Créateur, traversez 10 rangs qui reflètent votre cheminement. Chaque niveau est une étape de votre légende.' },
+              { icon: '📓', title: 'Journal Intime', desc: 'Notez vos humeurs, vos pensées, vos victoires. Suivez votre évolution émotionnelle jour après jour en toute confidentialité.' },
+            ].map((item, i) => (
+              <RevealOnScroll key={item.title} delay={i * 0.1} direction="scale">
+                <GlowingCard className="p-6 md:p-8 h-full text-center">
+                  <div className="text-3xl mb-4">{item.icon}</div>
+                  <h3 className="font-display text-base sm:text-lg font-medium mb-2" style={{ color: gold }}>{item.title}</h3>
+                  <p className="text-[var(--text-secondary)] leading-relaxed text-sm font-light">{item.desc}</p>
+                </GlowingCard>
+              </RevealOnScroll>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ TEMOIGNAGES ═══ */}
+      {vis('temoignages') && (
+        <section id="temoignages" className="px-5 md:px-20 py-16 md:py-32 relative cv-auto scroll-mt-24">
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute bottom-0 left-1/3 w-[250px] h-[250px] md:w-[400px] md:h-[400px] rounded-full opacity-[0.02] blur-[40px] md:blur-[60px]" style={{ background: gold }} />
+          </div>
+
+          <div className="max-w-5xl mx-auto relative z-10">
+            <RevealOnScroll>
+              <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-10 md:mb-20">
+                <WordByWordReveal text={temos.label || ''} />
+              </p>
+            </RevealOnScroll>
+
+            <div className="grid md:grid-cols-2 gap-4 md:gap-8">
+              {(temos.items || []).filter((t: { quote: string; name: string; city: string }) => t.quote).map((t: { quote: string; name: string; city: string }, i: number) => (
+                <RevealOnScroll key={i} delay={i * 0.12} direction={i % 2 === 0 ? "left" : "right"}>
+                  <GlowingCard className="p-5 sm:p-8 md:p-10 h-full flex flex-col justify-between">
+                    <div>
+                      <div className="flex gap-1 mb-4 md:mb-6">
+                        {[1,2,3,4,5].map(s => (
+                          <span key={s} className="text-sm" style={{ color: gold }}>★</span>
+                        ))}
+                      </div>
+                      <p className="font-display text-base sm:text-lg italic text-[var(--text-primary)] font-light leading-relaxed mb-6 md:mb-8">
+                        &laquo; {t.quote} &raquo;
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3 pt-3 md:pt-4" style={{ borderTop: `1px solid rgba(${goldRgb}, 0.08)` }}>
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-display text-sm" style={{ background: `linear-gradient(135deg, rgba(${goldRgb},0.15), rgba(${goldRgb},0.05))`, color: gold }}>
+                        {t.name.charAt(0)}
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium" style={{ color: gold }}>{t.name}</p>
+                        <p className="text-xs text-[var(--text-muted)]">{t.city}</p>
                       </div>
                     </div>
                   </GlowingCard>

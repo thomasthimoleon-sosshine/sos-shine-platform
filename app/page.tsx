@@ -523,6 +523,27 @@ export default function Home() {
                 <img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-14 sm:h-18 md:h-24 w-auto object-contain" />
               </Link>
               <div className="absolute right-4 md:right-6 flex items-center gap-2">
+                <Link
+                  href="/login"
+                  className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300"
+                  style={{
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                  }}
+                  title="Connexion"
+                  aria-label="Connexion"
+                >
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                    style={{ color: 'var(--gold)' }}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                  </svg>
+                </Link>
                 <ThemeToggle />
               </div>
             </div>

@@ -294,6 +294,9 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate }: {
               src={short.videoUrl}
               controls
               autoPlay
+              muted
+              playsInline
+              preload="metadata"
               className="w-full h-full object-contain"
               controlsList="nodownload"
             />

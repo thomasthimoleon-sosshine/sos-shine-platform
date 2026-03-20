@@ -353,21 +353,35 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate }: {
           </svg>
         </button>
 
-        {/* Video preview */}
-        <div className="relative aspect-video">
-          <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" />
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, var(--dark-card), transparent 50%)' }} />
-          {/* Play overlay */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div
-              className="w-20 h-20 rounded-full flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110"
-              style={{ background: 'rgba(212,175,55,0.9)', color: '#09090b' }}
-            >
-              <svg className="w-10 h-10 ml-1" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M8 5v14l11-7z" />
-              </svg>
-            </div>
-          </div>
+        {/* Video player */}
+        <div className="relative aspect-video bg-black">
+          {video.videoUrl ? (
+            <video
+              src={video.videoUrl}
+              controls
+              autoPlay
+              muted
+              playsInline
+              preload="metadata"
+              className="w-full h-full object-contain"
+              controlsList="nodownload"
+            />
+          ) : (
+            <>
+              <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" />
+              <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, var(--dark-card), transparent 50%)' }} />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div
+                  className="w-20 h-20 rounded-full flex items-center justify-center"
+                  style={{ background: 'rgba(212,175,55,0.9)', color: '#09090b' }}
+                >
+                  <svg className="w-10 h-10 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </div>
+              </div>
+            </>
+          )}
         </div>
 
         {/* Content */}

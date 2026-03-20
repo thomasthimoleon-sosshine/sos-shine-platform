@@ -1285,6 +1285,26 @@ export default function Home() {
         </section>
       )}
 
+      {/* ═══ CUSTOM HTML SECTIONS ═══ */}
+      {Object.entries(sections).filter(([key, s]) => key.startsWith('custom_') && s.is_visible && s.content.html_content).map(([key, s]) => (
+        <section key={key} className="relative cv-auto" style={{ background: s.content.bg_color || 'transparent', padding: s.content.padding || '4rem 1.5rem' }}>
+          <RevealOnScroll>
+            <div className="max-w-5xl mx-auto">
+              {s.content.title && (
+                <h2 className="font-display font-light text-center text-3xl md:text-5xl mb-8" style={{ color: 'var(--gold)' }}>
+                  <WordByWordReveal text={s.content.title} />
+                </h2>
+              )}
+              <div
+                className="prose prose-invert prose-lg max-w-none"
+                style={{ color: 'var(--text-secondary)' }}
+                dangerouslySetInnerHTML={{ __html: s.content.html_content }}
+              />
+            </div>
+          </RevealOnScroll>
+        </section>
+      ))}
+
       {/* ═══ FOOTER ═══ */}
       {vis('footer') && (
         <footer className="px-5 md:px-20 py-10 md:py-16 border-t border-[var(--dark-border)] relative" style={{ background: "rgba(0,0,0,0.3)" }}>

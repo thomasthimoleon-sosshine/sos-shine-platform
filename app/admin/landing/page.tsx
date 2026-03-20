@@ -117,6 +117,7 @@ export default function LandingAdminPage() {
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [openPanels, setOpenPanels] = useState<Record<string, boolean>>({})
+  const [selectedSection, setSelectedSection] = useState<string>('')
 
   /* ── Load sections ── */
   const loadSections = useCallback(async () => {
@@ -149,7 +150,7 @@ export default function LandingAdminPage() {
       if (seeded) {
         const rows = seeded as LandingSectionRow[]
         setSections(rows)
-        if (rows.length > 0) setOpenPanels({ [rows[0].section_key]: true })
+        if (rows.length > 0) { setOpenPanels({ [rows[0].section_key]: true }); setSelectedSection(rows[0].section_key) }
       }
     } else {
       const rows = data as LandingSectionRow[]
@@ -173,13 +174,13 @@ export default function LandingAdminPage() {
         if (refreshed) {
           const allRows = refreshed as LandingSectionRow[]
           setSections(allRows)
-          if (allRows.length > 0) setOpenPanels({ [allRows[0].section_key]: true })
+          if (allRows.length > 0) { setOpenPanels({ [allRows[0].section_key]: true }); setSelectedSection(allRows[0].section_key) }
           setLoading(false)
           return
         }
       }
       setSections(rows)
-      if (rows.length > 0) setOpenPanels({ [rows[0].section_key]: true })
+      if (rows.length > 0) { setOpenPanels({ [rows[0].section_key]: true }); setSelectedSection(rows[0].section_key) }
     }
     setLoading(false)
   }, [])
@@ -253,6 +254,39 @@ export default function LandingAdminPage() {
       arr.splice(index, 1)
       return { ...s, content: { ...s.content, [field]: arr } }
     }))
+    setSaved(false)
+  }
+
+  /* ── Built-in section keys that cannot be deleted ── */
+  const BUILTIN_KEYS = new Set(LANDING_DEFAULTS.map((d) => d.section_key))
+
+  /* ── Add a custom HTML section ── */
+  function addCustomSection() {
+    const id = `custom_${Date.now()}`
+    const newSec: LandingSectionRow = {
+      id: '',
+      section_key: id,
+      label: 'Nouvelle section HTML',
+      position: sections.length,
+      is_visible: true,
+      content: { title: '', html_content: '', bg_color: '', padding: '4rem 1.5rem' },
+      styles: {},
+      updated_by: null,
+      updated_at: new Date().toISOString(),
+    }
+    setSections((prev) => [...prev, newSec])
+    setOpenPanels((prev) => ({ ...prev, [id]: true }))
+    setSelectedSection(id)
+    setSaved(false)
+  }
+
+  /* ── Delete a custom section ── */
+  async function deleteSection(sectionKey: string) {
+    if (BUILTIN_KEYS.has(sectionKey)) return
+    if (!confirm('Supprimer cette section ?')) return
+    const supabase = createClient()
+    await supabase.from('landing_sections').delete().eq('section_key', sectionKey)
+    setSections((prev) => prev.filter((s) => s.section_key !== sectionKey))
     setSaved(false)
   }
 
@@ -712,7 +746,39 @@ export default function LandingAdminPage() {
         )
 
       default:
-        return <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Section inconnue: {key}</p>
+        // Custom HTML sections
+        return (
+          <>
+            <TextField label="Titre de la section" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
+            <div>
+              <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>Contenu HTML</label>
+              <textarea
+                value={c.html_content || ''}
+                onChange={(e) => updateContent(key, 'html_content', e.target.value)}
+                rows={16}
+                className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-y font-mono"
+                style={inputStyle}
+                placeholder={'<h2>Titre</h2>\n<p>Votre contenu ici...</p>\n<a href="/rejoindre">Bouton</a>'}
+              />
+              <p className="text-[10px] mt-1.5" style={{ color: 'var(--text-muted)' }}>
+                HTML complet : &lt;h2&gt;, &lt;h3&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;li&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;a&gt;, &lt;img&gt;, &lt;div&gt;, &lt;section&gt;, &lt;style&gt;
+              </p>
+            </div>
+            <Separator label="Style" />
+            <ColorField label="Couleur de fond" value={c.bg_color || ''} onChange={(v) => updateContent(key, 'bg_color', v)} />
+            <TextField label="Padding (ex: 4rem 0)" value={c.padding || ''} onChange={(v) => updateContent(key, 'padding', v)} />
+            {c.html_content && (
+              <div className="rounded-lg p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
+                <p className="text-[10px] font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>Apercu</p>
+                <div
+                  className="prose prose-invert prose-sm max-w-none"
+                  style={{ color: 'var(--text-secondary)' }}
+                  dangerouslySetInnerHTML={{ __html: c.html_content }}
+                />
+              </div>
+            )}
+          </>
+        )
     }
   }
 
@@ -902,37 +968,55 @@ export default function LandingAdminPage() {
         </div>
       )}
 
-      {/* ── Section panels ── */}
-      {sections.map((sec, idx) => {
-        const isOpen = openPanels[sec.section_key]
+      {/* ── Section dropdown selector ── */}
+      <div className="rounded-xl p-5 space-y-4" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+          <label className="text-sm font-medium flex-shrink-0" style={{ color: 'var(--text-secondary)' }}>Section a editer</label>
+          <select
+            value={selectedSection}
+            onChange={(e) => setSelectedSection(e.target.value)}
+            className="flex-1 rounded-lg px-4 py-3 text-sm outline-none cursor-pointer appearance-none"
+            style={{ ...inputStyle, backgroundImage: selectBgImage, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px center' }}>
+            <option value="" style={{ background: '#1a1a2e', color: '#F5EDF0' }}>-- Choisir une section --</option>
+            {sections.map((s) => (
+              <option key={s.section_key} value={s.section_key} style={{ background: '#1a1a2e', color: '#F5EDF0' }}>
+                {s.label} {!s.is_visible ? '(masquee)' : ''}
+              </option>
+            ))}
+          </select>
+          <button type="button" onClick={addCustomSection}
+            className="px-4 py-2.5 rounded-lg text-sm font-medium cursor-pointer flex items-center gap-2 flex-shrink-0"
+            style={{ border: '1px dashed rgba(116,192,252,0.4)', color: '#74C0FC', background: 'rgba(116,192,252,0.04)' }}>
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+            + Section HTML
+          </button>
+        </div>
+      </div>
+
+      {/* ── Selected section editor ── */}
+      {(() => {
+        const idx = sections.findIndex((s) => s.section_key === selectedSection)
+        if (idx === -1) return null
+        const sec = sections[idx]
         return (
-          <div key={sec.section_key} className="rounded-xl overflow-hidden"
-            style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-
-            {/* ── Panel header ── */}
-            <div className="flex items-center justify-between p-5">
-              <button type="button" onClick={() => togglePanel(sec.section_key)}
-                className="flex-1 flex items-center gap-3 cursor-pointer text-left bg-transparent border-0">
-                <h2 className="font-semibold text-base" style={{ color: 'var(--text-primary)' }}>
-                  {sec.label}
-                </h2>
-                <svg className={`w-5 h-5 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-                  fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}
-                  style={{ color: 'var(--text-muted)' }}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                </svg>
-              </button>
-
-              <div className="flex items-center gap-2 ml-3">
-                {/* Reorder buttons */}
-                <button type="button" onClick={() => moveSection(idx, -1)} disabled={idx === 0}
+          <div className="rounded-xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+            {/* ── Section toolbar ── */}
+            <div className="flex items-center justify-between p-5" style={{ borderBottom: '1px solid var(--dark-border)' }}>
+              <h2 className="font-semibold text-lg" style={{ color: 'var(--text-primary)' }}>
+                {sec.label}
+              </h2>
+              <div className="flex items-center gap-2">
+                {/* Reorder */}
+                <button type="button" onClick={() => { moveSection(idx, -1) }} disabled={idx === 0}
                   className="p-1.5 rounded-lg cursor-pointer disabled:opacity-20"
                   style={{ color: 'var(--text-muted)' }} title="Monter">
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
                   </svg>
                 </button>
-                <button type="button" onClick={() => moveSection(idx, 1)} disabled={idx === sections.length - 1}
+                <button type="button" onClick={() => { moveSection(idx, 1) }} disabled={idx === sections.length - 1}
                   className="p-1.5 rounded-lg cursor-pointer disabled:opacity-20"
                   style={{ color: 'var(--text-muted)' }} title="Descendre">
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -940,7 +1024,7 @@ export default function LandingAdminPage() {
                   </svg>
                 </button>
 
-                {/* Visibility toggle (eye icon) */}
+                {/* Visibility */}
                 <button type="button" onClick={() => toggleVisibility(sec.section_key)}
                   className="p-1.5 rounded-lg cursor-pointer"
                   style={{ color: sec.is_visible ? '#74C0FC' : 'var(--text-muted)' }}
@@ -956,24 +1040,39 @@ export default function LandingAdminPage() {
                     </svg>
                   )}
                 </button>
+
+                {/* Delete for custom */}
+                {!BUILTIN_KEYS.has(sec.section_key) && (
+                  <button type="button" onClick={() => { deleteSection(sec.section_key); setSelectedSection('') }}
+                    className="p-1.5 rounded-lg cursor-pointer" style={{ color: '#FF6B6B' }}
+                    title="Supprimer cette section">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                    </svg>
+                  </button>
+                )}
               </div>
             </div>
 
-            {/* ── Panel body ── */}
-            {isOpen && (
-              <div className="px-5 pb-5 space-y-4">
-                {!sec.is_visible && (
-                  <div className="rounded-lg px-3 py-2 text-xs" style={{ background: 'rgba(255,255,255,0.03)', color: 'var(--text-muted)' }}>
-                    Cette section est actuellement masquee sur la page d&apos;accueil.
-                  </div>
-                )}
-                {renderContentFields(sec)}
-                {renderStyleFields(sec)}
-              </div>
-            )}
+            {/* ── Section content ── */}
+            <div className="px-5 pb-5 pt-4 space-y-4">
+              {!sec.is_visible && (
+                <div className="rounded-lg px-3 py-2 text-xs" style={{ background: 'rgba(255,255,255,0.03)', color: 'var(--text-muted)' }}>
+                  Cette section est actuellement masquee sur la page d&apos;accueil.
+                </div>
+              )}
+              {!BUILTIN_KEYS.has(sec.section_key) && (
+                <TextField label="Nom de la section" value={sec.label || ''} onChange={(v) => {
+                  setSections((prev) => prev.map((s) => s.section_key === sec.section_key ? { ...s, label: v } : s))
+                  setSaved(false)
+                }} />
+              )}
+              {renderContentFields(sec)}
+              {renderStyleFields(sec)}
+            </div>
           </div>
         )
-      })}
+      })()}
 
       {/* ── Bottom save ── */}
       <div className="flex justify-end pb-8">

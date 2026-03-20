@@ -785,19 +785,19 @@ export default function Home() {
               </div>
 
               {/* ── Trust signal ── */}
-              <div className="flex items-center justify-center gap-4 mt-6 text-xs font-light" style={{ color: 'var(--text-muted)' }}>
-                <span className="flex items-center gap-1.5">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 mt-8 md:mt-10">
+                <span className="flex items-center gap-2.5 text-sm sm:text-base font-light" style={{ color: 'var(--text-secondary)' }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: 'var(--text-muted)' }}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                   Paiement sécurisé
                 </span>
-                <span className="w-px h-3 bg-[var(--dark-border)]" />
-                <span className="flex items-center gap-1.5">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span className="hidden sm:block w-px h-5" style={{ background: 'var(--dark-border)' }} />
+                <span className="flex items-center gap-2.5 text-sm sm:text-base font-light" style={{ color: 'var(--text-secondary)' }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: 'var(--text-muted)' }}><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                   Sans engagement
                 </span>
-                <span className="w-px h-3 bg-[var(--dark-border)]" />
-                <span className="flex items-center gap-1.5">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                <span className="hidden sm:block w-px h-5" style={{ background: 'var(--dark-border)' }} />
+                <span className="flex items-center gap-2.5 text-sm sm:text-base font-light" style={{ color: 'var(--text-secondary)' }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: 'var(--text-muted)' }}><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
                   Annulation en 1 clic
                 </span>
               </div>
@@ -808,20 +808,21 @@ export default function Home() {
       )}
 
       {/* ═══ SOCIAL PROOF STATS ═══ */}
-      <section className="relative py-8 md:py-12 border-y border-[var(--dark-border)]" style={{ background: `rgba(${goldRgb}, 0.015)` }}>
-        <div className="max-w-5xl mx-auto px-5 md:px-20">
-          <div className="grid grid-cols-3 gap-6 md:gap-8">
+      <section className="relative py-16 md:py-24" style={{ background: 'linear-gradient(180deg, rgba(15,12,8,0.95) 0%, rgba(20,16,10,0.98) 100%)' }}>
+        <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at center, rgba(${goldRgb}, 0.04) 0%, transparent 70%)` }} />
+        <div className="max-w-5xl mx-auto px-5 md:px-20 relative z-10">
+          <div className="grid grid-cols-3 gap-8 md:gap-12">
             {[
-              { value: '50+', label: 'Protocoles de transformation' },
-              { value: '5', label: 'Univers de contenu' },
-              { value: '24/7', label: 'Communauté & soutien' },
+              { value: '50+', label: 'PROTOCOLES DE TRANSFORMATION' },
+              { value: '5', label: 'UNIVERS DE CONTENU' },
+              { value: '24/7', label: 'COMMUNAUTÉ & SOUTIEN' },
             ].map((stat, i) => (
-              <RevealOnScroll key={stat.label} delay={i * 0.1}>
+              <RevealOnScroll key={stat.label} delay={i * 0.15}>
                 <div className="text-center">
-                  <p className="text-2xl sm:text-3xl md:text-4xl font-display font-light mb-1" style={{ color: gold }}>
+                  <p className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display italic font-light mb-3 md:mb-4" style={{ color: gold }}>
                     <AnimatedCounter value={stat.value} />
                   </p>
-                  <p className="text-[10px] sm:text-xs tracking-[0.1em] uppercase font-light" style={{ color: 'var(--text-muted)' }}>
+                  <p className="text-[10px] sm:text-xs md:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase font-medium" style={{ color: 'var(--text-muted)' }}>
                     {stat.label}
                   </p>
                 </div>

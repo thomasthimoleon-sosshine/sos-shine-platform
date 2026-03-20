@@ -76,22 +76,26 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <span className="font-display text-lg font-semibold" style={{ color: '#74C0FC' }}>Back-office</span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-1 ml-6">
-            {adminNav.map((item) => {
-              const isActive = item.href === '/admin' ? pathname === '/admin' : pathname.startsWith(item.href)
-              return (
-                <Link key={item.href} href={item.href}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm transition-all"
-                  style={{
-                    background: isActive ? 'rgba(116,192,252,0.1)' : 'transparent',
-                    color: isActive ? '#74C0FC' : 'var(--text-secondary)',
-                  }}>
-                  <span className="text-xs">{item.icon}</span>
-                  {item.label}
-                </Link>
-              )
-            })}
-          </nav>
+          <div className="ml-4 sm:ml-6 flex-1 max-w-xs">
+            <select
+              value={adminNav.find((item) => item.href === '/admin' ? pathname === '/admin' : pathname.startsWith(item.href))?.href || '/admin'}
+              onChange={(e) => router.push(e.target.value)}
+              className="w-full rounded-lg px-3 py-2 text-sm outline-none cursor-pointer appearance-none"
+              style={{
+                background: 'rgba(116,192,252,0.08)',
+                border: '1px solid rgba(116,192,252,0.2)',
+                color: '#74C0FC',
+                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2374C0FC' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'right 10px center',
+              }}>
+              {adminNav.map((item) => (
+                <option key={item.href} value={item.href} style={{ background: '#0a0a0a', color: '#e0e0e0' }}>
+                  {item.icon} {item.label}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <div className="flex items-center gap-3">
@@ -105,24 +109,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
         </div>
       </header>
-
-      {/* Mobile nav */}
-      <div className="md:hidden flex overflow-x-auto gap-1 px-4 py-2" style={{ borderBottom: '1px solid var(--dark-border)' }}>
-        {adminNav.map((item) => {
-          const isActive = item.href === '/admin' ? pathname === '/admin' : pathname.startsWith(item.href)
-          return (
-            <Link key={item.href} href={item.href}
-              className="flex items-center gap-1 px-3 py-2 rounded-lg text-xs whitespace-nowrap"
-              style={{
-                background: isActive ? 'rgba(116,192,252,0.1)' : 'transparent',
-                color: isActive ? '#74C0FC' : 'var(--text-secondary)',
-              }}>
-              <span>{item.icon}</span>
-              {item.label}
-            </Link>
-          )
-        })}
-      </div>
 
       <main className="p-4 sm:p-6 lg:p-8">{children}</main>
     </div>

@@ -12,6 +12,45 @@ import type { PrelaunchSettings } from "./page-prelaunch";
 
 import { useTranslation } from "@/lib/i18n/useTranslation";
 
+function matchCase(original: string, replacement: string): string {
+  if (original === original.toUpperCase()) return replacement.toUpperCase();
+  if (original[0] === original[0].toUpperCase()) return replacement[0].toUpperCase() + replacement.slice(1);
+  return replacement;
+}
+
+function sanitizeContent(content: SectionContent): SectionContent {
+  function sanitizeStr(str: string): string {
+    let r = str;
+    r = r.replace(/Encyclopédie complète des douleurs/gi, (m) => {
+      const isUpper = m[0] === m[0].toUpperCase();
+      return isUpper ? 'Encyclopédie complète des expériences de vie' : 'encyclopédie complète des expériences de vie';
+    });
+    r = r.replace(/(\d+)\s+étapes?\s+par\s+douleur/gi, '$1 étapes par challenge émotionnel');
+    r = r.replace(/Chat dédié par douleur/gi, (m) => matchCase(m[0], 'C') === 'C' ? 'Chat dédié par challenge émotionnel' : 'chat dédié par challenge émotionnel');
+    r = r.replace(/une\s+douleur\s+ancienne/gi, (m) => matchCase(m[0], 'u') + 'n challenge émotionnel ancien');
+    r = r.replace(/(chaque)\s+douleur/gi, (_m, p1: string) => p1 + ' challenge émotionnel');
+    r = r.replace(/(la)\s+douleur/gi, (_m, p1: string) => matchCase(p1, 'le') + ' challenge émotionnel');
+    r = r.replace(/(nouvelle)\s+douleur/gi, (_m, p1: string) => p1 + ' expérience de vie');
+    r = r.replace(/(des|les|vos)\s+douleurs/gi, (_m, p1: string) => p1 + ' expériences de vie');
+    r = r.replace(/douleurs/gi, (m) => matchCase(m[0], 'e') === 'E' ? 'Expériences de vie' : 'expériences de vie');
+    r = r.replace(/douleur/gi, (m) => m[0] === m[0].toUpperCase() ? 'Challenge émotionnel' : 'challenge émotionnel');
+    return r;
+  }
+
+  function sanitizeValue(val: unknown): unknown {
+    if (typeof val === 'string') return sanitizeStr(val);
+    if (Array.isArray(val)) return val.map(sanitizeValue);
+    if (val && typeof val === 'object') {
+      const out: Record<string, unknown> = {};
+      for (const [k, v] of Object.entries(val)) out[k] = sanitizeValue(v);
+      return out;
+    }
+    return val;
+  }
+
+  return sanitizeValue(content) as SectionContent;
+}
+
 function slugify(text: string): string {
   return text
     .toLowerCase()
@@ -242,10 +281,7 @@ const FAQ_ITEMS = [
 
 function FAQItem({ item, isOpen, onToggle }: { item: { q: string; a: string }; isOpen: boolean; onToggle: () => void }) {
   return (
-    <div
-      className="glow-card mb-3"
-      style={{ borderRadius: '1rem' }}
-    >
+    <div className="glow-card mb-3" style={{ borderRadius: '1rem' }}>
       <button
         type="button"
         onClick={onToggle}
@@ -280,23 +316,15 @@ export default function Home() {
   const [headerVisible, setHeaderVisible] = useState(true);
   const [headerScrolled, setHeaderScrolled] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [showMobileCta, setShowMobileCta] = useState(false);
   const [encyclopediaSearch, setEncyclopediaSearch] = useState('');
-  const [allDouleurs, setAllDouleurs] = useState<{ title: string; slug: string; category?: string | null; is_published?: boolean; is_original?: boolean }[]>([]);
   const lastScrollYRef = useRef(0);
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
   const heroOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 0.15], [1, 0.95]);
 
-  const heroVideoRef = useRef<HTMLVideoElement>(null);
-  const [videoMuted, setVideoMuted] = useState(true);
-
   const [prelaunchEnabled, setPrelaunchEnabled] = useState<boolean | null>(null);
   const [prelaunchSettings, setPrelaunchSettings] = useState<PrelaunchSettings>({});
-
-  // Early access emails that bypass the pre-launch page (for real-condition testing)
-  const EARLY_ACCESS_EMAILS = ['cabritjulia@gmail.com'];
 
   const [sections, setSections] = useState<Record<string, { content: SectionContent; styles: SectionStyles; is_visible: boolean }>>(() => {
     const map: Record<string, { content: SectionContent; styles: SectionStyles; is_visible: boolean }> = {};
@@ -309,19 +337,6 @@ export default function Home() {
   const loadPrelaunchSettings = useCallback(async () => {
     try {
       const supabase = createClient();
-
-      // Check if current user has early access
-      const { data: { user } } = await supabase.auth.getUser();
-      const hasEarlyAccess = user?.email && EARLY_ACCESS_EMAILS.includes(user.email.toLowerCase());
-
-      // Also check for early access token in URL/localStorage
-      const params = new URLSearchParams(window.location.search);
-      const earlyAccessToken = params.get('early_access');
-      if (earlyAccessToken === 'SHINE2026') {
-        localStorage.setItem('sos_early_access', 'true');
-      }
-      const hasLocalEarlyAccess = localStorage.getItem('sos_early_access') === 'true';
-
       const { data: settingsData } = await supabase.from("site_settings").select("key, value").like("key", "prelaunch_%");
       if (settingsData && settingsData.length > 0) {
         const map: PrelaunchSettings = {};
@@ -329,9 +344,7 @@ export default function Home() {
           (map as Record<string, string>)[row.key] = row.value;
         });
         setPrelaunchSettings(map);
-        const isPrelaunchOn = (map as Record<string, string>).prelaunch_enabled === 'true';
-        // Bypass prelaunch for early access users
-        setPrelaunchEnabled(isPrelaunchOn && !hasEarlyAccess && !hasLocalEarlyAccess);
+        setPrelaunchEnabled((map as Record<string, string>).prelaunch_enabled === 'true');
       } else {
         setPrelaunchEnabled(false);
       }
@@ -353,25 +366,15 @@ export default function Home() {
         for (const d of LANDING_DEFAULTS) {
           const row = dbMap[d.section_key];
           merged[d.section_key] = row
-            ? { content: { ...d.content, ...row.content }, styles: { ...d.styles, ...row.styles }, is_visible: row.is_visible }
+            ? { content: sanitizeContent(row.content), styles: row.styles, is_visible: row.is_visible }
             : { content: d.content, styles: d.styles, is_visible: d.is_visible };
         }
         for (const row of rows) {
           if (!merged[row.section_key]) {
-            merged[row.section_key] = { content: row.content, styles: row.styles, is_visible: row.is_visible };
+            merged[row.section_key] = { content: sanitizeContent(row.content), styles: row.styles, is_visible: row.is_visible };
           }
         }
         setSections(merged);
-      }
-
-      // Fetch all douleurs for the encyclopedie preview
-      const { data: douleursData } = await supabase
-        .from('douleurs')
-        .select('title, slug, category, is_published, is_original')
-        .eq('is_active', true)
-        .order('title', { ascending: true });
-      if (douleursData && douleursData.length > 0) {
-        setAllDouleurs(douleursData);
       }
     } catch {
       // landing defaults already set
@@ -394,12 +397,6 @@ export default function Home() {
     };
     window.addEventListener("scroll", onScroll, { passive: true });
 
-    // Show mobile CTA after scrolling past hero
-    const onScrollMobileCta = () => {
-      setShowMobileCta(window.scrollY > 600);
-    };
-    window.addEventListener("scroll", onScrollMobileCta, { passive: true });
-
     // Re-fetch prelaunch settings when tab becomes visible (after admin edits in another tab)
     const handleVisibility = () => {
       if (document.visibilityState === 'visible') {
@@ -410,7 +407,6 @@ export default function Home() {
 
     return () => {
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("scroll", onScrollMobileCta);
       document.removeEventListener('visibilitychange', handleVisibility);
     };
   }, [loadSections, loadPrelaunchSettings]);
@@ -523,64 +519,16 @@ export default function Home() {
           <header
             className={`fixed top-0 left-0 right-0 z-50 py-3 md:py-4 header-animate ${headerScrolled ? 'header-scrolled' : ''}`}
           >
-            <div className="flex items-center justify-between relative px-4 md:px-6 max-w-7xl mx-auto">
-              <Link href="/" className="flex items-center gap-3 flex-shrink-0">
+            <div className="flex items-center justify-center relative px-4 md:px-6">
+              <Link href="/" className="flex items-center gap-3">
                 <img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-14 sm:h-18 md:h-24 w-auto object-contain" />
               </Link>
-
-              {/* ── Desktop nav anchors ── */}
-              <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
-                {[
-                  { label: 'Le Principe', id: 'principe' },
-                  { label: 'L\u2019Univers', id: 'univers' },
-                  { label: 'Encyclopédie', id: 'encyclopedie' },
-                  { label: 'Communauté', id: 'communaute' },
-                  { label: 'Tarifs', id: 'pricing' },
-                  { label: 'FAQ', id: 'faq' },
-                ].map(nav => (
-                  <a
-                    key={nav.id}
-                    href={`#${nav.id}`}
-                    className="text-xs tracking-[0.12em] uppercase font-light transition-colors duration-300 hover:text-[var(--gold)]"
-                    style={{ color: 'var(--text-secondary)' }}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      document.getElementById(nav.id)?.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                  >
-                    {nav.label}
-                  </a>
-                ))}
-              </nav>
-
-              <div className="flex items-center gap-3">
-                <Link href="/rejoindre" className="hidden sm:inline-flex px-5 py-2.5 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 hover:scale-105" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
-                  Commencer
-                </Link>
-                <Link href="/login" className="px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:opacity-90" style={{ border: `1px solid rgba(${goldRgb}, 0.3)`, color: gold }}>
-                  Connexion
-                </Link>
+              <div className="absolute right-4 md:right-6 flex items-center gap-2">
                 <ThemeToggle />
               </div>
             </div>
           </header>
         )}
-
-      {/* ═══ STICKY MOBILE CTA ═══ */}
-      <motion.div
-        className="fixed bottom-0 left-0 right-0 z-50 lg:hidden"
-        initial={{ y: 100 }}
-        animate={{ y: showMobileCta ? 0 : 100 }}
-        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <div className="px-4 py-3 glass-dense" style={{ borderTop: `1px solid rgba(${goldRgb}, 0.15)` }}>
-          <Link href="/rejoindre" className="block">
-            <button className="magnetic-btn pulse-ring w-full py-3.5 rounded-full text-sm font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
-              Essayer gratuitement — {trialDays} jours
-            </button>
-          </Link>
-        </div>
-      </motion.div>
 
       {/* ═══ HERO — Word by word reveal ═══ */}
       {vis('hero') && (
@@ -603,7 +551,7 @@ export default function Home() {
 
             <h1 className="font-display font-light leading-[1.08] mb-8" style={{ ...tStyle("hero"), perspective: "1000px" }}>
               {(hero.title || '').split("\n").map((line: string, i: number) => {
-                const isHighlight = line.includes("expériences") || line.includes("schémas") || line.includes("potentiel") || line.includes("émotionnels") || line.includes("tempêtes") || line.includes("seul");
+                const isHighlight = line.includes("expériences") || line.includes("schémas") || line.includes("potentiel") || line.includes("émotionnels");
                 const lineWords = line.split(/\s+/);
                 const baseDelay = i * 0.2 + 0.15;
                 return (
@@ -644,102 +592,8 @@ export default function Home() {
 
             {hero.video_url && (
               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}>
-                <style>{`
-                  @keyframes blink-gold {
-                    0%, 100% { background: rgba(${goldRgb}, 0.25); box-shadow: 0 0 12px rgba(${goldRgb}, 0.3), inset 0 0 8px rgba(${goldRgb}, 0.1); border-color: rgba(${goldRgb}, 0.5); }
-                    50% { background: rgba(${goldRgb}, 0.08); box-shadow: 0 0 4px rgba(${goldRgb}, 0.1); border-color: rgba(${goldRgb}, 0.2); }
-                  }
-                  .sound-btn-blink {
-                    animation: blink-gold 2s ease-in-out infinite;
-                    border: 1px solid rgba(${goldRgb}, 0.4) !important;
-                    backdrop-filter: blur(16px) saturate(1.2);
-                    -webkit-backdrop-filter: blur(16px) saturate(1.2);
-                  }
-                  .sound-btn-active {
-                    animation: none;
-                    background: rgba(255, 255, 255, 0.03) !important;
-                    border: 1px solid rgba(255, 255, 255, 0.06) !important;
-                    backdrop-filter: blur(16px) saturate(1.2);
-                    -webkit-backdrop-filter: blur(16px) saturate(1.2);
-                    opacity: 0.4;
-                    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-                  }
-                  .sound-btn-active:hover { opacity: 0.85; background: rgba(255, 255, 255, 0.06) !important; }
-                  .video-ctrl-btn {
-                    backdrop-filter: blur(16px) saturate(1.2);
-                    -webkit-backdrop-filter: blur(16px) saturate(1.2);
-                    background: rgba(255, 255, 255, 0.03);
-                    border: 1px solid rgba(255, 255, 255, 0.06);
-                    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-                  }
-                  .video-ctrl-btn:hover { background: rgba(255, 255, 255, 0.08); border-color: rgba(${goldRgb}, 0.2); }
-                `}</style>
-                <div className="glass overflow-hidden mb-8 md:mb-10 max-w-3xl mx-auto relative group">
-                  <video
-                    id="hero-video"
-                    ref={(el) => {
-                      (heroVideoRef as React.MutableRefObject<HTMLVideoElement | null>).current = el;
-                      if (el && !el.dataset.delaySet) {
-                        el.dataset.delaySet = '1';
-                        setTimeout(() => { el.play().catch(() => {}); }, 5000);
-                      }
-                    }}
-                    src={hero.video_url}
-                    muted={videoMuted}
-                    loop
-                    playsInline
-                    preload="auto"
-                    className="w-full aspect-video cursor-pointer"
-                    onClick={(e) => {
-                      const v = e.currentTarget;
-                      v.paused ? v.play() : v.pause();
-                    }}
-                  />
-                  {/* Sound toggle – blinks gold when muted, glass when active */}
-                  <button
-                    type="button"
-                    aria-label="Toggle sound"
-                    className={`${videoMuted ? 'sound-btn-blink' : 'sound-btn-active'} absolute bottom-3 right-14 z-10 w-8 h-8 rounded-xl flex items-center justify-center transition-all`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setVideoMuted(prev => !prev);
-                    }}
-                  >
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="rgba(255,255,255,0.85)" strokeWidth={1.5}>
-                      {videoMuted ? (
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6l4.72-3.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-3.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
-                      ) : (
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-3.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-3.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
-                      )}
-                    </svg>
-                  </button>
-                  {/* Fullscreen button */}
-                  <button
-                    type="button"
-                    aria-label="Fullscreen"
-                    className="absolute bottom-3 right-3 z-10 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md transition-all opacity-70 hover:opacity-100"
-                    style={{ background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.15)' }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                      const video = heroVideoRef.current;
-                      if (video) {
-                        if (document.fullscreenElement) {
-                          document.exitFullscreen();
-                        } else if (video.requestFullscreen) {
-                          video.requestFullscreen().catch(() => {});
-                        } else if ((video as unknown as Record<string, () => void>).webkitEnterFullscreen) {
-                          (video as unknown as Record<string, () => void>).webkitEnterFullscreen();
-                        } else if ((video as unknown as Record<string, () => void>).webkitRequestFullScreen) {
-                          (video as unknown as Record<string, () => void>).webkitRequestFullScreen();
-                        }
-                      }
-                    }}
-                  >
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
-                    </svg>
-                  </button>
+                <div className="glass overflow-hidden mb-8 md:mb-10 max-w-3xl mx-auto">
+                  <video src={hero.video_url} controls className="w-full aspect-video" />
                 </div>
               </motion.div>
             )}
@@ -784,7 +638,7 @@ export default function Home() {
                 ))}
               </div>
 
-              {/* ── Trust signal ── */}
+              {/* ── Trust signals ── */}
               <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 mt-8 md:mt-10">
                 <span className="flex items-center gap-2.5 text-sm sm:text-base font-light" style={{ color: 'var(--text-secondary)' }}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: 'var(--text-muted)' }}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -835,9 +689,35 @@ export default function Home() {
       {/* ═══ TICKER BAND ═══ */}
       <InfiniteTickerBand items={tickerItems} speed={ticker1Speed} />
 
+      {/* ═══ SIGNATURE EMOTIONNELLE CTA ═══ */}
+      <section className="px-5 md:px-20 py-12 md:py-20 relative cv-auto">
+        <RevealOnScroll>
+          <div className="max-w-3xl mx-auto text-center">
+            <Link href="/signature-emotionnelle">
+              <div className="glow-card p-6 sm:p-8 md:p-12 cursor-pointer group">
+                <p className="luxury-title text-[10px] sm:text-xs tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{t('signature.cta_label')}</p>
+                <h3 className="font-display text-xl sm:text-2xl md:text-4xl font-light mb-3 md:mb-4" style={{ color: gold }}>
+                  {t('signature.cta_title')}{' '}
+                  <span className="text-shimmer">{t('signature.cta_title_highlight')}</span>
+                </h3>
+                <p className="text-[var(--text-secondary)] font-light mb-5 md:mb-6 text-sm md:text-[15px]">
+                  {t('signature.cta_desc')}
+                </p>
+                <span className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-semibold tracking-wide group-hover:scale-105 transition-transform" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                  {t('signature.cta_button')}
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </span>
+              </div>
+            </Link>
+          </div>
+        </RevealOnScroll>
+      </section>
+
       {/* ═══ LE PRINCIPE ═══ */}
       {vis('principe') && (
-        <section id="principe" className="px-5 md:px-20 py-16 md:py-32 relative cv-auto scroll-mt-24">
+        <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute top-1/2 left-1/4 w-[250px] h-[250px] md:w-[400px] md:h-[400px] rounded-full opacity-[0.02] blur-[40px] md:blur-[60px]" style={{ background: gold }} />
           </div>
@@ -858,7 +738,7 @@ export default function Home() {
                 {(principe.title || '').split("\n").map((line: string, i: number) => (
                   <span key={i} className="block">
                     {i > 0 && <span className="block h-1" />}
-                    {line.includes("schémas") || line.includes("challenge") || line.includes("potentiel") || line.includes("libère") || line.includes("blessures") ? (
+                    {line.includes("schémas") || line.includes("challenge") || line.includes("potentiel") ? (
                       <span className="text-shimmer">{line}</span>
                     ) : line}
                   </span>
@@ -917,7 +797,7 @@ export default function Home() {
 
       {/* ═══ L'ENCYCLOPEDIE ═══ */}
       {vis('encyclopedie') && (
-        <section id="encyclopedie" className="px-5 md:px-20 py-16 md:py-32 relative cv-auto scroll-mt-24">
+        <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute top-0 right-0 w-[250px] h-[250px] md:w-[400px] md:h-[400px] rounded-full opacity-[0.02] blur-[40px] md:blur-[60px]" style={{ background: gold }} />
           </div>
@@ -955,37 +835,24 @@ export default function Home() {
               </div>
             </RevealOnScroll>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5 sm:gap-4">
-              {(() => {
-                const maxShow = encyclo.show_max || 15;
-                // Show only published/original items from DB, or fallback to curated defaults
-                const curatedItems = allDouleurs.length > 0
-                  ? allDouleurs
-                      .filter((d) => d.is_original || d.is_published)
-                      .filter((d) => !encyclopediaSearch || d.title.toLowerCase().includes(encyclopediaSearch.toLowerCase()))
-                      .slice(0, encyclopediaSearch ? 20 : maxShow)
-                  : (encyclo.items || []).map((item: string) => ({ title: item, slug: slugify(item), is_published: true, is_original: true }));
-                return curatedItems.map((d: { title: string; slug: string; is_published?: boolean; is_original?: boolean }, i: number) => (
-                  <RevealOnScroll key={d.slug} delay={Math.min(i * 0.03, 0.8)} direction="scale">
-                    <Link href={`/encyclopedie/${d.slug}`}>
-                      <GlowingCard className="px-3 sm:px-5 py-3 sm:py-4 text-center cursor-pointer group relative">
-                        <span className="encyclo-item text-xs sm:text-sm font-light transition-colors duration-300 group-hover:text-[var(--gold)]" style={{
-                          color: 'var(--text-secondary)',
-                        }}>
-                          {d.title}
-                        </span>
-                      </GlowingCard>
-                    </Link>
-                  </RevealOnScroll>
-                ));
-              })()}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 sm:gap-4">
+              {(encyclo.items || []).filter((d: string) => !encyclopediaSearch || d.toLowerCase().includes(encyclopediaSearch.toLowerCase())).map((d: string, i: number) => (
+                <RevealOnScroll key={d} delay={i * 0.05} direction="scale">
+                  <Link href={`/encyclopedie/${slugify(d)}`}>
+                    <GlowingCard className="px-3 sm:px-5 py-3 sm:py-4 text-center cursor-pointer group">
+                      <span className="encyclo-item text-xs sm:text-sm font-light transition-colors duration-300 group-hover:text-[var(--gold)]" style={{
+                        color: i === (encyclo.items || []).length - 1 ? gold : 'var(--text-secondary)',
+                      }}>
+                        {d}
+                      </span>
+                    </GlowingCard>
+                  </Link>
+                </RevealOnScroll>
+              ))}
             </div>
 
             <RevealOnScroll delay={0.3}>
               <div className="text-center mt-8 md:mt-12">
-                <p className="text-sm font-light mb-4" style={{ color: 'var(--text-muted)' }}>
-                  {allDouleurs.length > 0 ? `+ ${allDouleurs.length - (encyclo.show_max || 15)} autres protocoles disponibles` : 'Et bien d\u2019autres\u2026'}
-                </p>
                 <Link href="/encyclopedie">
                   <button className="magnetic-btn px-6 sm:px-8 py-3 sm:py-3.5 rounded-full text-sm font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.25)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
                     {t('landing.explore_encyclopedia')}
@@ -997,102 +864,14 @@ export default function Home() {
         </section>
       )}
 
-      {/* ═══ L'UNIVERS SOS SHINE — 5 plateformes en 1 ═══ */}
-      <section id="univers" className="px-5 md:px-20 py-16 md:py-32 relative cv-auto scroll-mt-24">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/3 right-0 w-[300px] h-[300px] md:w-[500px] md:h-[500px] rounded-full opacity-[0.02] blur-[60px]" style={{ background: gold }} />
-        </div>
-        <div className="max-w-6xl mx-auto relative z-10">
-          <RevealOnScroll>
-            <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">L&apos;UNIVERS</p>
-          </RevealOnScroll>
-          <RevealOnScroll delay={0.1}>
-            <h2 className="font-display font-light text-center mb-4 md:mb-6" style={{ fontSize: 'clamp(2.25rem, 5vw, 3rem)', color: gold }}>
-              <WordByWordReveal text="5 plateformes en une seule" />
-            </h2>
-          </RevealOnScroll>
-          <RevealOnScroll delay={0.2}>
-            <p className="text-base md:text-xl text-[var(--text-secondary)] font-light leading-relaxed mb-12 md:mb-20 max-w-2xl mx-auto text-center">
-              Netflix, Spotify, TikTok, Kindle et un réseau social bienveillant — réunis dans un seul espace dédié à votre transformation.
-            </p>
-          </RevealOnScroll>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {[
-              {
-                icon: <><path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></>,
-                title: 'Shine TV',
-                desc: 'Votre chaîne de transformation personnelle. Des vidéos classées par thème : guérison, méditations guidées, confiance, relations, résilience, sommeil... Regardez, notez, sauvegardez.',
-                color: '#A78BFA',
-              },
-              {
-                icon: <><path d="M9 19V6l12-3v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="15" r="3"/></>,
-                title: 'Shine Audible',
-                desc: 'Podcasts, livres audio, méditations, hypnoses douces et sons d\u2019ambiance. Branchez vos écouteurs et laissez-vous guider, où que vous soyez.',
-                color: '#55EFC4',
-              },
-              {
-                icon: <><path d="M12 18v-6m0 0V6m0 6h6m-6 0H6"/><rect x="2" y="2" width="20" height="20" rx="5"/></>,
-                title: 'Shine Shorts',
-                desc: 'Des capsules vidéo percutantes de moins de 60 secondes. Tips rapides, exercices express, mini-méditations et techniques de respiration pour les journées intenses.',
-                color: '#F0A68C',
-              },
-              {
-                icon: <><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></>,
-                title: 'Shine Librairie',
-                desc: 'E-books, guides pratiques, cahiers d\u2019exercices et journaux guidés. Lisez directement en ligne dans un lecteur protégé — votre bibliothèque de transformation.',
-                color: '#74C0FC',
-              },
-              {
-                icon: <><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>,
-                title: 'La Communauté',
-                desc: 'Mur communautaire, messages privés, connexions entre membres, chat en temps réel, posts anonymes. Vous n\u2019êtes plus jamais seul(e) dans votre parcours.',
-                color: '#FBBF24',
-              },
-              {
-                icon: <><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></>,
-                title: 'Événements Live',
-                desc: 'Soins collectifs, ateliers en groupe, sessions live thématiques et Shine Walks. Vivez la transformation en direct avec les fondateurs et la communauté.',
-                color: '#F472B6',
-              },
-            ].map((item, i) => (
-              <RevealOnScroll key={item.title} delay={i * 0.1} direction="scale">
-                <GlowingCard className="p-6 md:p-8 h-full" glowColor={`${item.color}20`}>
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style={{ background: `${item.color}15`, border: `1px solid ${item.color}25` }}>
-                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke={item.color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                      {item.icon}
-                    </svg>
-                  </div>
-                  <h3 className="font-display text-lg sm:text-xl font-medium mb-3" style={{ color: item.color }}>{item.title}</h3>
-                  <p className="text-[var(--text-secondary)] leading-relaxed text-sm font-light">{item.desc}</p>
-                </GlowingCard>
-              </RevealOnScroll>
-            ))}
-          </div>
-
-          <RevealOnScroll delay={0.4}>
-            <div className="text-center mt-10 md:mt-16">
-              <Link href="/rejoindre">
-                <button className="magnetic-btn px-6 sm:px-8 py-3 sm:py-3.5 rounded-full text-sm font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.25)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
-                  Découvrir tout l&apos;univers
-                </button>
-              </Link>
-            </div>
-          </RevealOnScroll>
-        </div>
-      </section>
-
       {/* ═══ TICKER BAND 2 ═══ */}
       <InfiniteTickerBand items={ticker2Items} speed={ticker2Speed} />
 
       {/* ═══ COMMUNAUTE ═══ */}
       {vis('communaute') && (
-        <section id="communaute" className="px-5 md:px-20 py-16 md:py-32 relative cv-auto scroll-mt-24">
+        <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
           <div className="max-w-5xl mx-auto">
             <RevealOnScroll>
-              <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">LA COMMUNAUTÉ</p>
-            </RevealOnScroll>
-            <RevealOnScroll delay={0.1}>
               <h2 className="font-display font-light leading-[1.1] text-center mb-4 md:mb-6" style={tStyle("communaute")}>
                 <WordByWordReveal text={comm.title || ''} />
               </h2>
@@ -1103,40 +882,21 @@ export default function Home() {
               </p>
             </RevealOnScroll>
 
-            <div className="grid md:grid-cols-2 gap-4 md:gap-6">
-              {[
-                {
-                  icon: <><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></>,
-                  title: 'Le Feu de Camp',
-                  desc: 'Chat en temps réel, messages texte et audio, option anonyme. 3h du matin ou 14h, il y a toujours quelqu\u2019un pour vous écouter.',
-                },
-                {
-                  icon: <><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 8h8M8 12h6M8 16h4"/></>,
-                  title: 'Le Mur Communautaire',
-                  desc: 'Partagez vos victoires, vos questions, vos gratitudes. Recevez des Shines (likes), des commentaires et du soutien de toute la communauté.',
-                },
-                {
-                  icon: <><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></>,
-                  title: 'Les Rayons',
-                  desc: 'Connectez-vous en 1-to-1 avec d\u2019autres membres. Envoyez un Rayon, échangez en privé, créez des liens sincères avec des personnes qui vous comprennent.',
-                },
-                {
-                  icon: <><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>,
-                  title: 'Mon Éclat',
-                  desc: 'Votre espace personnel pour noter vos victoires, vos prises de conscience et votre évolution. Public ou privé, c\u2019est vous qui choisissez.',
-                },
-              ].map((item, i) => (
+            <div className="space-y-4 md:space-y-6">
+              {(comm.blocks || []).filter((b: { title: string; description: string }) => b.title).map((item: { title: string; description: string }, i: number) => (
                 <RevealOnScroll key={item.title} delay={i * 0.12} direction={i % 2 === 0 ? "left" : "right"}>
-                  <GlowingCard className="p-5 sm:p-8 md:p-10 h-full">
+                  <GlowingCard className="p-5 sm:p-8 md:p-10">
                     <div className="flex items-start gap-4 sm:gap-6">
                       <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center" style={{ background: `rgba(${goldRgb}, 0.08)`, border: `1px solid rgba(${goldRgb}, 0.12)` }}>
                         <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke={gold} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                          {item.icon}
+                          {i === 0 && <><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><circle cx="9" cy="10" r="1" fill={gold}/><circle cx="15" cy="10" r="1" fill={gold}/></>}
+                          {i === 1 && <><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 8h8M8 12h6M8 16h4"/></>}
+                          {i === 2 && <><path d="M17 21v-2a4 4 0 0 0-4-4H5" /><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>}
                         </svg>
                       </div>
                       <div className="min-w-0">
                         <h3 className="font-display text-lg sm:text-xl font-medium mb-2 sm:mb-3">{item.title}</h3>
-                        <p className="text-[var(--text-secondary)] leading-relaxed text-sm sm:text-[15px] font-light">{item.desc}</p>
+                        <p className="text-[var(--text-secondary)] leading-relaxed text-sm sm:text-[15px] font-light">{item.description}</p>
                       </div>
                     </div>
                   </GlowingCard>
@@ -1147,48 +907,9 @@ export default function Home() {
         </section>
       )}
 
-      {/* ═══ VOTRE PROGRESSION — Gamification ═══ */}
-      <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute bottom-1/4 left-1/4 w-[300px] h-[300px] md:w-[400px] md:h-[400px] rounded-full opacity-[0.02] blur-[60px]" style={{ background: gold }} />
-        </div>
-        <div className="max-w-5xl mx-auto relative z-10">
-          <RevealOnScroll>
-            <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">VOTRE PROGRESSION</p>
-          </RevealOnScroll>
-          <RevealOnScroll delay={0.1}>
-            <h2 className="font-display font-light text-center mb-4 md:mb-6" style={{ fontSize: 'clamp(2.25rem, 5vw, 3rem)', color: gold }}>
-              <WordByWordReveal text="Chaque pas compte. Chaque victoire brille." />
-            </h2>
-          </RevealOnScroll>
-          <RevealOnScroll delay={0.2}>
-            <p className="text-base md:text-xl text-[var(--text-secondary)] font-light leading-relaxed mb-12 md:mb-20 max-w-2xl mx-auto text-center">
-              Gagnez de l&apos;XP, débloquez des badges, montez en niveau. Votre transformation n&apos;est pas abstraite — elle se mesure, se célèbre et se partage.
-            </p>
-          </RevealOnScroll>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            {[
-              { icon: '⚡', title: 'Système XP', desc: 'Chaque action vous rapporte de l\u2019XP : vidéo regardée, commentaire posté, protocole terminé. Progressez naturellement.' },
-              { icon: '🏅', title: '100+ Badges', desc: 'Débloquez des badges uniques selon vos actions : Shines donnés, protocoles complétés, jours consécutifs de connexion...' },
-              { icon: '📈', title: '10 Niveaux', desc: 'D\u2019Explorateur à Créateur, traversez 10 rangs qui reflètent votre cheminement. Chaque niveau est une étape de votre légende.' },
-              { icon: '📓', title: 'Journal Intime', desc: 'Notez vos humeurs, vos pensées, vos victoires. Suivez votre évolution émotionnelle jour après jour en toute confidentialité.' },
-            ].map((item, i) => (
-              <RevealOnScroll key={item.title} delay={i * 0.1} direction="scale">
-                <GlowingCard className="p-6 md:p-8 h-full text-center">
-                  <div className="text-3xl mb-4">{item.icon}</div>
-                  <h3 className="font-display text-base sm:text-lg font-medium mb-2" style={{ color: gold }}>{item.title}</h3>
-                  <p className="text-[var(--text-secondary)] leading-relaxed text-sm font-light">{item.desc}</p>
-                </GlowingCard>
-              </RevealOnScroll>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ═══ TEMOIGNAGES ═══ */}
       {vis('temoignages') && (
-        <section id="temoignages" className="px-5 md:px-20 py-16 md:py-32 relative cv-auto scroll-mt-24">
+        <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute bottom-0 left-1/3 w-[250px] h-[250px] md:w-[400px] md:h-[400px] rounded-full opacity-[0.02] blur-[40px] md:blur-[60px]" style={{ background: gold }} />
           </div>
@@ -1231,12 +952,71 @@ export default function Home() {
         </section>
       )}
 
+      {/* ═══ L'HISTOIRE / LE LIVRE ═══ */}
+      {vis('histoire') && (() => {
+        const hist = sec('histoire');
+        return (
+          <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
+            <div className="max-w-5xl mx-auto">
+              <RevealOnScroll>
+                <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{hist.label || "L'Histoire"}</p>
+              </RevealOnScroll>
+              <RevealOnScroll delay={0.1}>
+                <h2 className="font-display font-light text-center text-2xl sm:text-3xl md:text-5xl mb-4 md:mb-6" style={{ color: 'var(--gold)' }}>
+                  <WordByWordReveal text={hist.title || ''} />
+                </h2>
+              </RevealOnScroll>
+              <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16 mt-8 md:mt-12">
+                <RevealOnScroll delay={0.15}>
+                  <div className="flex-shrink-0 group">
+                    <a href={hist.book_url || '#'} target="_blank" rel="noopener noreferrer" className="block relative">
+                      <div className="w-44 sm:w-56 md:w-64 rounded-lg overflow-hidden border border-[var(--gold)]/20 group-hover:border-[var(--gold)]/60 transition-all duration-500 shadow-lg group-hover:shadow-[0_0_30px_rgba(212,175,55,0.2)]">
+                        <img
+                          src={hist.book_image || '/images/book-cover.jpeg'}
+                          alt="SOS Shine — Briller Comme un Diamant"
+                          className="w-full aspect-[3/4] object-cover"
+                        />
+                      </div>
+                      <div className="absolute -inset-2 rounded-xl bg-[var(--gold)]/5 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+                    </a>
+                  </div>
+                </RevealOnScroll>
+                <RevealOnScroll delay={0.25}>
+                  <div className="flex-1 text-center md:text-left">
+                    <p className="text-base md:text-xl text-[var(--text-body)] leading-relaxed mb-4 md:mb-6">
+                      {hist.paragraph1 || ''}
+                    </p>
+                    <p className="text-base md:text-xl text-[var(--text-body)] leading-relaxed mb-4 md:mb-6">
+                      {hist.paragraph2 || ''}
+                    </p>
+                    {hist.quote && (
+                      <p className="text-sm md:text-base text-[var(--text-muted)] leading-relaxed mb-6 md:mb-8 italic">
+                        &ldquo;{hist.quote}&rdquo;
+                      </p>
+                    )}
+                    <a
+                      href={hist.book_url || '#'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 border border-[var(--gold)]/40 rounded-full text-[var(--gold)] text-xs sm:text-sm tracking-[0.15em] uppercase hover:bg-[var(--gold)]/10 hover:border-[var(--gold)] transition-all duration-300"
+                    >
+                      {hist.button_label || 'Découvrir le livre'}
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                    </a>
+                  </div>
+                </RevealOnScroll>
+              </div>
+            </div>
+          </section>
+        );
+      })()}
+
       {/* ═══ FONDATEURS ═══ */}
       {vis('fondateurs') && (() => {
         const fond = sec('fondateurs');
         const members = fond.members || [];
         return (
-          <section id="fondateurs" className="px-5 md:px-20 py-16 md:py-32 relative cv-auto scroll-mt-24">
+          <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
             <div className="max-w-5xl mx-auto">
               <RevealOnScroll>
                 <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{fond.label || 'Les Fondateurs'}</p>
@@ -1280,11 +1060,9 @@ export default function Home() {
         );
       })()}
 
-      {/* Section livre retirée de la page d'accueil */}
-
       {/* ═══ OFFRES / PRICING ═══ */}
       {vis('pricing') && (
-        <section id="pricing" className="px-5 md:px-20 py-16 md:py-32 relative cv-auto scroll-mt-24">
+        <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
           <div className="max-w-5xl mx-auto">
             <RevealOnScroll>
               <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{t('landing.pricing_label')}</p>
@@ -1362,22 +1140,6 @@ export default function Home() {
                 </RevealOnScroll>
               )})}
             </div>
-
-            {/* ── Guarantee Badge ── */}
-            <RevealOnScroll delay={0.35}>
-              <div className="mt-10 md:mt-16 flex flex-col items-center text-center">
-                <div className="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mb-4" style={{ background: `rgba(${goldRgb}, 0.08)`, border: `2px solid rgba(${goldRgb}, 0.2)` }}>
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={gold} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                    <path d="M9 12l2 2 4-4"/>
-                  </svg>
-                </div>
-                <h3 className="font-display text-lg md:text-xl font-light mb-2" style={{ color: gold }}>Garantie sérénité</h3>
-                <p className="text-sm font-light max-w-md" style={{ color: 'var(--text-secondary)' }}>
-                  {trialDays} jours d&apos;essai gratuit. Aucun prélèvement pendant la période d&apos;essai. Annulation en un clic, sans justification.
-                </p>
-              </div>
-            </RevealOnScroll>
 
             <RevealOnScroll delay={0.4}>
               <p className="text-center text-xs text-[var(--text-muted)] mt-6 md:mt-8 font-light italic">{pricing.footer || ''}</p>
@@ -1481,80 +1243,28 @@ export default function Home() {
         </section>
       )}
 
-      {/* ═══ FOOTER — WORLD-CLASS ═══ */}
+      {/* ═══ FOOTER ═══ */}
       {vis('footer') && (
-        <footer className="relative overflow-hidden" style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.6) 100%)" }}>
-
-          {/* ── Ambient background elements ── */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] md:w-[900px] md:h-[900px] rounded-full opacity-[0.015]" style={{ background: 'radial-gradient(circle, var(--gold) 0%, transparent 70%)' }} />
-          </div>
-
-          {/* ── Section 1: Manifeste ── */}
-          <div className="border-t border-[var(--dark-border)]">
-            <div className="max-w-5xl mx-auto px-5 md:px-20 py-12 md:py-20">
-              <RevealOnScroll>
-                <blockquote className="text-center">
-                  <p className="font-display font-light text-lg sm:text-xl md:text-2xl lg:text-3xl italic leading-relaxed" style={{ color: 'var(--gold)' }}>
-                    &ldquo;Nous ne guérissons pas. Nous révélons. Ce que vous cherchez est déjà en vous — enfoui sous des années de conditionnements. Notre mission est de vous aider à le retrouver.&rdquo;
-                  </p>
-                  <footer className="mt-6 md:mt-8">
-                    <p className="luxury-title text-[10px] sm:text-xs tracking-[0.3em] text-[var(--text-muted)]">— Julia, William & Thomas</p>
-                  </footer>
-                </blockquote>
-              </RevealOnScroll>
-            </div>
-          </div>
-
-          {/* ── Section 3: Links & Legal ── */}
-          <div className="border-t border-[var(--dark-border)]">
-            <div className="max-w-7xl mx-auto px-5 md:px-20 py-10 md:py-14">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 items-center">
-
-                {/* Logo */}
-                <div className="flex justify-center md:justify-start">
-                  <img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-14 sm:h-16 md:h-20 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-500" />
-                </div>
-
-                {/* Links */}
-                <div className="flex flex-wrap justify-center gap-x-5 sm:gap-x-8 gap-y-3">
-                  {(() => {
-                    const links: { label: string; href: string }[] = foot.links || [];
-                    const hasNotreHistoire = links.some((l: { href: string }) => l.href === '/notre-histoire');
-                    const allLinks = hasNotreHistoire ? links : [{ label: 'Notre Histoire', href: '/notre-histoire' }, ...links];
-                    return allLinks.map((link: { label: string; href: string }) => (
-                      <Link key={link.label} href={link.href} className="text-[10px] sm:text-xs tracking-[0.1em] sm:tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors duration-300 gold-underline">
-                        {link.label}
-                      </Link>
-                    ));
-                  })()}
-                </div>
-
-                {/* Copyright & Social */}
-                <div className="text-center md:text-right">
-                  <div className="flex items-center justify-center md:justify-end gap-4 mb-3">
-                    {[
-                      { label: 'Instagram', href: 'https://instagram.com/sosshine', icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg> },
-                      { label: 'TikTok', href: 'https://tiktok.com/@sosshine', icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg> },
-                      { label: 'YouTube', href: 'https://youtube.com/@sosshine', icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M22.54 6.42a2.78 2.78 0 00-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 00-1.94 2A29 29 0 001 12a29 29 0 00.46 5.58A2.78 2.78 0 003.4 19.6C5.12 20 12 20 12 20s6.88 0 8.6-.46a2.78 2.78 0 001.94-2A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/></svg> },
-                    ].map(social => (
-                      <a key={social.label} href={social.href} target="_blank" rel="noopener noreferrer" aria-label={social.label} className="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110" style={{ color: 'var(--text-muted)', background: 'rgba(255,255,255,0.04)', border: '1px solid var(--dark-border)' }}>
-                        {social.icon}
-                      </a>
-                    ))}
-                  </div>
-                  <p className="text-[10px] tracking-[0.15em] sm:tracking-[0.2em] uppercase text-[var(--text-muted)]">
-                    &copy; {foot.copyright_year || '2026'} {foot.name || 'SOS Shine'}
-                  </p>
-                  <p className="text-[9px] tracking-[0.1em] uppercase text-[var(--text-muted)] mt-1 opacity-50">
-                    Votre transformation commence ici
-                  </p>
-                </div>
-
+        <footer className="px-5 md:px-20 py-10 md:py-16 border-t border-[var(--dark-border)] relative" style={{ background: "rgba(0,0,0,0.3)" }}>
+          <div className="max-w-6xl mx-auto">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-6 md:gap-10">
+              <div className="flex items-center gap-3">
+                <img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-12 sm:h-14 md:h-16 w-auto object-contain" />
               </div>
+
+              <div className="flex flex-wrap justify-center gap-x-5 sm:gap-x-8 gap-y-3">
+                {(foot.links || []).map((link: { label: string; href: string }) => (
+                  <Link key={link.label} href={link.href} className="text-[10px] sm:text-xs tracking-[0.1em] sm:tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors duration-300 gold-underline">
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+
+              <p className="text-[10px] tracking-[0.15em] sm:tracking-[0.2em] uppercase text-[var(--text-muted)]">
+                &copy; {foot.copyright_year || '2026'} {foot.name || 'SOS Shine'}
+              </p>
             </div>
           </div>
-
         </footer>
       )}
 

@@ -21,25 +21,29 @@ interface Stats {
   totalCampaigns: number
   totalSent: number
   avgOpenRate: number
+  signatureEmailsSent: number
 }
 
 export default function CRMDashboardPage() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([])
-  const [stats, setStats] = useState<Stats>({ totalContacts: 0, totalCampaigns: 0, totalSent: 0, avgOpenRate: 0 })
+  const [stats, setStats] = useState<Stats>({ totalContacts: 0, totalCampaigns: 0, totalSent: 0, avgOpenRate: 0, signatureEmailsSent: 0 })
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function load() {
       try {
-        const [campRes, contactsRes] = await Promise.all([
+        const [campRes, contactsRes, sigEmailsRes] = await Promise.all([
           fetch('/api/crm/campaigns'),
           fetch('/api/crm/contacts?page=1'),
+          fetch('/api/crm/signature-emails'),
         ])
         const campData = await campRes.json()
         const contactsData = await contactsRes.json()
 
         const camps = campData.campaigns || []
         setCampaigns(camps)
+
+        const sigEmailsData = await sigEmailsRes.json().catch(() => ({ total: 0 }))
 
         const totalSent = camps.reduce((s: number, c: Campaign) => s + (c.sent_count || 0), 0)
         const totalOpens = camps.reduce((s: number, c: Campaign) => s + (c.open_count || 0), 0)
@@ -50,6 +54,7 @@ export default function CRMDashboardPage() {
           totalCampaigns: camps.length,
           totalSent,
           avgOpenRate: avgOpen,
+          signatureEmailsSent: sigEmailsData.total || 0,
         })
       } catch (e) {
         console.error('CRM load error:', e)
@@ -64,6 +69,7 @@ export default function CRMDashboardPage() {
     { label: 'Campagnes', value: stats.totalCampaigns, icon: '📧', color: '#4A90D9' },
     { label: 'Emails envoyés', value: stats.totalSent, icon: '✉️', color: '#50C878' },
     { label: 'Taux d\'ouverture', value: `${stats.avgOpenRate}%`, icon: '📊', color: '#E8A87C' },
+    { label: 'Emails résultats', value: stats.signatureEmailsSent, icon: '🧬', color: '#C4A0E8' },
   ]
 
   return (
@@ -90,7 +96,7 @@ export default function CRMDashboardPage() {
         <div className="text-center py-12 text-[var(--text-muted)]">Chargement...</div>
       ) : (
         <>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             {statCards.map((card) => (
               <div
                 key={card.label}
@@ -108,7 +114,7 @@ export default function CRMDashboardPage() {
             ))}
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <Link
               href="/admin/crm/contacts"
               className="p-6 rounded-xl text-center transition-all hover:scale-[1.02]"
@@ -135,6 +141,15 @@ export default function CRMDashboardPage() {
               <div className="text-3xl mb-2">🔄</div>
               <div className="font-display text-lg" style={{ color: 'var(--gold)' }}>Séquences</div>
               <div className="text-xs text-[var(--text-muted)] mt-1">Emails automatiques par déclencheur</div>
+            </Link>
+            <Link
+              href="/admin/crm/signature-emails"
+              className="p-6 rounded-xl text-center transition-all hover:scale-[1.02]"
+              style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+            >
+              <div className="text-3xl mb-2">🧬</div>
+              <div className="font-display text-lg" style={{ color: 'var(--gold)' }}>Emails Signature</div>
+              <div className="text-xs text-[var(--text-muted)] mt-1">Résultats envoyés par email</div>
             </Link>
           </div>
 

@@ -450,7 +450,7 @@ function EmailScreen({ onSubmit, firstName }: { onSubmit: (email: string) => voi
   );
 }
 
-function ResultScreen({ profileKey, firstName }: { profileKey: ProfileKey; firstName: string }) {
+function ResultScreen({ profileKey, firstName, emailSent }: { profileKey: ProfileKey; firstName: string; emailSent: boolean }) {
   const { t } = useTranslation();
   const profile = PROFILES[profileKey];
   const inject = (text: string) => text.replace(/\{firstName\}/g, firstName);
@@ -507,6 +507,21 @@ function ResultScreen({ profileKey, firstName }: { profileKey: ProfileKey; first
           >
             {profile.subtitle}
           </motion.p>
+
+          {emailSent && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.55 }}
+              className="mt-5 inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm"
+              style={{ background: "rgba(80,200,120,0.1)", border: "1px solid rgba(80,200,120,0.2)", color: "#50C878" }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              {t('signature.email_confirmed')}
+            </motion.div>
+          )}
         </motion.div>
 
         <div className="space-y-6">
@@ -584,15 +599,19 @@ export default function SignatureEmotionnellePage() {
     }, 2800);
   }, []);
 
+  const [emailSent, setEmailSent] = useState(false);
+
   const handleEmailSubmit = useCallback(async (email: string) => {
     const profileKey = resultProfile;
     const profileName = profileKey ? PROFILES[profileKey]?.archetype : null;
     try {
-      await fetch("/api/signature-lead", {
+      const res = await fetch("/api/signature-lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, firstName, profileKey, profileName }),
       });
+      const data = await res.json();
+      if (data.emailSent) setEmailSent(true);
     } catch {}
     setPhase("result");
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -613,7 +632,7 @@ export default function SignatureEmotionnellePage() {
             <EmailScreen key="email" onSubmit={handleEmailSubmit} firstName={firstName} />
           )}
           {phase === "result" && resultProfile && (
-            <ResultScreen key="result" profileKey={resultProfile} firstName={firstName} />
+            <ResultScreen key="result" profileKey={resultProfile} firstName={firstName} emailSent={emailSent} />
           )}
         </AnimatePresence>
       </div>

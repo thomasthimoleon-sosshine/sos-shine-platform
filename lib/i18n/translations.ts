@@ -190,6 +190,7 @@ export const translations: Record<string, string> = {
   'signature.email_privacy': 'Vos données sont confidentielles et ne seront jamais partagées.',
   'signature.email_error': 'Veuillez entrer un email valide.',
   'signature.email_saving': 'Envoi...',
+  'signature.email_confirmed': 'Résultat envoyé par email',
 
   'signature.cta_label': 'Test exclusif',
   'signature.cta_title': 'Découvrez votre',

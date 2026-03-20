@@ -473,7 +473,6 @@ export default function Home() {
   const temos = sec('temoignages');
   const pricing = sec('pricing');
   const ctaDark = sec('cta_dark');
-  const ctaLight = sec('cta_light');
   const foot = sec('footer');
 
   const trialDays = globalContent.trial_days || 7;
@@ -592,8 +591,76 @@ export default function Home() {
 
             {hero.video_url && (
               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}>
-                <div className="glass overflow-hidden mb-8 md:mb-10 max-w-3xl mx-auto">
-                  <video src={hero.video_url} controls className="w-full aspect-video" />
+                <div className="glass overflow-hidden mb-8 md:mb-10 max-w-3xl mx-auto relative group">
+                  <video
+                    src={hero.video_url}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="w-full aspect-video cursor-pointer"
+                    onClick={(e) => {
+                      const v = e.currentTarget;
+                      v.paused ? v.play() : v.pause();
+                    }}
+                  />
+                  {/* Sound toggle — gold blink, transparent once clicked */}
+                  <button
+                    type="button"
+                    aria-label="Toggle sound"
+                    className="video-sound-btn video-sound-blink absolute bottom-3 right-14 z-10 w-10 h-10 rounded-full flex items-center justify-center transition-all"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const btn = e.currentTarget;
+                      const video = btn.parentElement?.querySelector('video');
+                      if (video) {
+                        video.muted = !video.muted;
+                        if (!video.muted) {
+                          btn.classList.remove('video-sound-blink');
+                          btn.style.background = 'rgba(0,0,0,0.3)';
+                          btn.style.borderColor = 'rgba(255,255,255,0.15)';
+                        } else {
+                          btn.classList.add('video-sound-blink');
+                          btn.style.background = '';
+                          btn.style.borderColor = '';
+                        }
+                        const icon = btn.querySelector('svg');
+                        if (icon) {
+                          if (video.muted) {
+                            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6l4.72-3.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-3.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />';
+                          } else {
+                            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-3.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-3.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />';
+                          }
+                        }
+                      }
+                    }}
+                  >
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6l4.72-3.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-3.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
+                    </svg>
+                  </button>
+                  {/* Fullscreen button */}
+                  <button
+                    type="button"
+                    aria-label="Fullscreen"
+                    className="absolute bottom-3 right-3 z-10 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md transition-all opacity-70 hover:opacity-100"
+                    style={{ background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.15)' }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const video = e.currentTarget.parentElement?.querySelector('video');
+                      if (video) {
+                        if (video.requestFullscreen) {
+                          video.requestFullscreen();
+                        } else if ((video as unknown as { webkitEnterFullscreen?: () => void }).webkitEnterFullscreen) {
+                          (video as unknown as { webkitEnterFullscreen: () => void }).webkitEnterFullscreen();
+                        }
+                      }
+                    }}
+                  >
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+                    </svg>
+                  </button>
                 </div>
               </motion.div>
             )}
@@ -1213,31 +1280,6 @@ export default function Home() {
                   {t('landing.join_cta')}
                 </button>
               </Link>
-            </RevealOnScroll>
-          </div>
-        </section>
-      )}
-
-      {/* ═══ CTA LIGHT ═══ */}
-      {vis('cta_light') && (
-        <section className="px-5 md:px-20 py-16 md:py-32 relative overflow-hidden cv-auto" style={{ background: sty('cta_light').bg || '#ffffff' }}>
-          <div className="max-w-3xl mx-auto text-center relative z-10">
-            <RevealOnScroll>
-              <p className="text-base sm:text-xl md:text-2xl font-light leading-relaxed mb-8 md:mb-12" style={{ color: sty('cta_light').text_color || '#1a1a1a' }}>
-                {ctaLight.description || ''}
-              </p>
-            </RevealOnScroll>
-            <RevealOnScroll delay={0.15}>
-              <Link href="/rejoindre">
-                <button className="magnetic-btn px-8 sm:px-10 py-4 sm:py-5 rounded-full text-base sm:text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
-                  {ctaLight.button_label || t('landing.join_cta')}
-                </button>
-              </Link>
-              <div className="mt-6 md:mt-8">
-                <Link href="/login" className="text-sm transition-colors duration-300 underline underline-offset-4" style={{ color: sty('cta_light').muted_color || '#6b7280' }}>
-                  {ctaLight.login_text || t('landing.already_member')}
-                </Link>
-              </div>
             </RevealOnScroll>
           </div>
         </section>

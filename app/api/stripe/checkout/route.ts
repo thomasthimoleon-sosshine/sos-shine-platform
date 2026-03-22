@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getStripe, getStripePriceId, STRIPE_WAITLIST_COUPON, PLAN_INFO } from '@/lib/stripe'
+import { getStripe, getStripePriceId, getPaymentLink, STRIPE_WAITLIST_COUPON, PLAN_INFO } from '@/lib/stripe'
 import type { PlanId, DurationId } from '@/lib/stripe'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import pg from 'pg'
@@ -19,9 +19,6 @@ function getPool() {
 export async function POST(request: Request) {
   try {
     const stripe = getStripe()
-    if (!stripe) {
-      return NextResponse.json({ error: 'Stripe non configuré' }, { status: 500 })
-    }
 
     const { plan, duration = 'monthly', email, user_id, prenom } = await request.json()
 
@@ -68,8 +65,17 @@ export async function POST(request: Request) {
     // Determine price ID
     const priceId = getStripePriceId(plan as PlanId, duration as DurationId)
 
-    if (!priceId) {
-      return NextResponse.json({ error: 'Prix Stripe non configuré pour ce plan/durée' }, { status: 500 })
+    // If Stripe SDK is not available or price IDs are not configured,
+    // fall back to pre-configured Stripe Payment Links
+    if (!stripe || !priceId) {
+      const paymentLink = getPaymentLink(plan as PlanId, duration as DurationId)
+      if (paymentLink) {
+        // Append prefilled email to the payment link
+        const url = new URL(paymentLink)
+        url.searchParams.set('prefilled_email', email.trim())
+        return NextResponse.json({ url: url.toString(), hasWaitlistDiscount })
+      }
+      return NextResponse.json({ error: 'Paiement temporairement indisponible. Veuillez réessayer plus tard.' }, { status: 500 })
     }
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL

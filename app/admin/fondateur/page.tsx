@@ -236,6 +236,7 @@ export default function FounderDashboard() {
     pendingPayouts: 0,
   })
   const [loading, setLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState<'cockpit' | 'tracker'>('cockpit')
 
   // Visit tracker stats
   const [visitStats, setVisitStats] = useState<{
@@ -407,6 +408,32 @@ export default function FounderDashboard() {
             </p>
           </div>
         </div>
+
+        {/* ─── Onglets ─── */}
+        <div className="flex gap-2 mt-4">
+          {([
+            { key: 'cockpit' as const, label: 'Cockpit', icon: '📊' },
+            { key: 'tracker' as const, label: 'Tracker', icon: '👁️' },
+          ]).map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className="px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
+              style={{
+                background: activeTab === tab.key
+                  ? 'linear-gradient(135deg, rgba(212,175,55,0.15), rgba(212,175,55,0.05))'
+                  : 'rgba(255,255,255,0.02)',
+                border: activeTab === tab.key
+                  ? '1px solid rgba(212,175,55,0.4)'
+                  : '1px solid var(--dark-border)',
+                color: activeTab === tab.key ? '#D4AF37' : 'var(--text-muted)',
+              }}
+            >
+              <span className="mr-2">{tab.icon}</span>
+              {tab.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {loading ? (
@@ -415,6 +442,8 @@ export default function FounderDashboard() {
         </div>
       ) : (
         <>
+          {activeTab === 'cockpit' && (
+          <>
           {/* ═══════════════════ SECTION 1: LIVE STATS ═══════════════════ */}
           <div>
             <h2 className="text-sm font-semibold uppercase tracking-wider mb-4" style={{ color: '#D4AF37' }}>
@@ -449,114 +478,6 @@ export default function FounderDashboard() {
                 </div>
               )
             })}
-          </div>
-
-          {/* ═══════════════════ TRAQUEUR DE CONNEXIONS ═══════════════════ */}
-          <div>
-            <h2 className="text-sm font-semibold uppercase tracking-wider mb-1" style={{ color: '#D4AF37' }}>
-              Traqueur de connexions
-            </h2>
-            <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>
-              Suivi en temps réel des visites et connexions sur le site.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
-            <StatCard icon="👁️" label="Visites aujourd'hui" value={fmt(visitStats.today)} color="#74C0FC" />
-            <StatCard icon="👤" label="Visiteurs uniques (jour)" value={fmt(visitStats.uniqueToday)} color="#55EFC4" />
-            <StatCard icon="📅" label="Visites (7 jours)" value={fmt(visitStats.week)} color="#A29BFE" />
-            <StatCard icon="👥" label="Uniques (7 jours)" value={fmt(visitStats.uniqueWeek)} color="#E8A87C" />
-            <StatCard icon="📊" label="Visites ce mois" value={fmt(visitStats.month)} color="#D4AF37" />
-            <StatCard icon="🌟" label="Uniques ce mois" value={fmt(visitStats.uniqueMonth)} color="#FF6B35" />
-            <StatCard icon="🔐" label="Connectés ce mois" value={fmt(visitStats.authenticatedMonth)} color="#E84393" />
-            <StatCard icon="🌍" label="Total depuis le début" value={fmt(visitStats.total)} color="#00CEC9" />
-          </div>
-
-          {/* Charts row: daily trend + hourly + devices */}
-          <div className="grid lg:grid-cols-2 gap-6">
-            <Section title="Visites quotidiennes (30 derniers jours)" subtitle="Nombre de pages vues par jour">
-              <div style={{ height: 280 }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={visitStats.dailyData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                    <XAxis dataKey="date" stroke="var(--text-muted)" tick={{ fontSize: 10 }}
-                      tickFormatter={(d: string) => { const p = d.split('-'); return `${p[2]}/${p[1]}` }} />
-                    <YAxis stroke="var(--text-muted)" tick={{ fontSize: 11 }} />
-                    <Tooltip content={<CustomTooltip />} />
-                    <Area type="monotone" dataKey="count" name="Visites" stroke="#D4AF37" fill="rgba(212,175,55,0.15)" strokeWidth={2} />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
-            </Section>
-
-            <Section title="Distribution horaire (aujourd'hui)" subtitle="Activité par heure de la journée">
-              <div style={{ height: 280 }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={visitStats.hourlyData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                    <XAxis dataKey="hour" stroke="var(--text-muted)" tick={{ fontSize: 10 }} />
-                    <YAxis stroke="var(--text-muted)" tick={{ fontSize: 11 }} />
-                    <Tooltip content={<CustomTooltip />} />
-                    <Bar dataKey="count" name="Visites" fill="#74C0FC" radius={[4, 4, 0, 0]} opacity={0.85} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </Section>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-6">
-            {/* Device distribution */}
-            <Section title="Répartition par appareil" subtitle="Ce mois — Desktop, Mobile, Tablette">
-              <div style={{ height: 260 }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={visitStats.devices.map(d => ({
-                        name: d.type === 'desktop' ? 'Desktop' : d.type === 'mobile' ? 'Mobile' : 'Tablette',
-                        value: d.count,
-                        color: d.type === 'desktop' ? '#74C0FC' : d.type === 'mobile' ? '#55EFC4' : '#A29BFE',
-                      }))}
-                      cx="50%" cy="50%" innerRadius={50} outerRadius={90} paddingAngle={4} dataKey="value"
-                      label={(props: { name?: string; value?: number }) => `${props.name}: ${fmt(props.value ?? 0)}`}
-                    >
-                      {visitStats.devices.map((d, i) => (
-                        <Cell key={i} fill={d.type === 'desktop' ? '#74C0FC' : d.type === 'mobile' ? '#55EFC4' : '#A29BFE'} />
-                      ))}
-                    </Pie>
-                    <Tooltip content={<CustomTooltip />} />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-            </Section>
-
-            {/* Top pages */}
-            <Section title="Pages les plus visitées" subtitle="Top 10 ce mois">
-              <div className="space-y-2">
-                {visitStats.topPages.length === 0 && (
-                  <p className="text-xs py-6 text-center" style={{ color: 'var(--text-muted)' }}>
-                    Aucune donnée de visite pour le moment.
-                  </p>
-                )}
-                {visitStats.topPages.map((page, i) => {
-                  const maxCount = visitStats.topPages[0]?.count || 1
-                  const pct = (page.count / maxCount) * 100
-                  return (
-                    <div key={page.path} className="flex items-center gap-3">
-                      <span className="text-xs font-semibold w-5 text-right" style={{ color: '#D4AF37' }}>{i + 1}</span>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="text-xs truncate" style={{ color: 'var(--text-primary)' }}>{page.path}</span>
-                          <span className="text-xs font-semibold ml-2" style={{ color: '#74C0FC' }}>{fmt(page.count)}</span>
-                        </div>
-                        <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
-                          <div className="h-full rounded-full" style={{ width: `${pct}%`, background: 'linear-gradient(90deg, #D4AF37, #74C0FC)' }} />
-                        </div>
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            </Section>
           </div>
 
           {/* ═══════════════════ CRM — VUE FONDATEUR ═══════════════════ */}
@@ -1061,6 +982,120 @@ export default function FounderDashboard() {
               <p>Marketing: 1 500€ base + 0.40€/abonné</p>
             </div>
           </div>
+          </>
+          )}
+
+          {/* ═══════════════════ ONGLET TRACKER ═══════════════════ */}
+          {activeTab === 'tracker' && (
+          <>
+          <div>
+            <h2 className="text-sm font-semibold uppercase tracking-wider mb-1" style={{ color: '#D4AF37' }}>
+              Traqueur de connexions
+            </h2>
+            <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>
+              Suivi en temps réel des visites et connexions sur le site.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+            <StatCard icon="👁️" label="Visites aujourd'hui" value={fmt(visitStats.today)} color="#74C0FC" />
+            <StatCard icon="👤" label="Visiteurs uniques (jour)" value={fmt(visitStats.uniqueToday)} color="#55EFC4" />
+            <StatCard icon="📅" label="Visites (7 jours)" value={fmt(visitStats.week)} color="#A29BFE" />
+            <StatCard icon="👥" label="Uniques (7 jours)" value={fmt(visitStats.uniqueWeek)} color="#E8A87C" />
+            <StatCard icon="📊" label="Visites ce mois" value={fmt(visitStats.month)} color="#D4AF37" />
+            <StatCard icon="🌟" label="Uniques ce mois" value={fmt(visitStats.uniqueMonth)} color="#FF6B35" />
+            <StatCard icon="🔐" label="Connectés ce mois" value={fmt(visitStats.authenticatedMonth)} color="#E84393" />
+            <StatCard icon="🌍" label="Total depuis le début" value={fmt(visitStats.total)} color="#00CEC9" />
+          </div>
+
+          {/* Charts: daily trend + hourly */}
+          <div className="grid lg:grid-cols-2 gap-6">
+            <Section title="Visites quotidiennes (30 derniers jours)" subtitle="Nombre de pages vues par jour">
+              <div style={{ height: 280 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={visitStats.dailyData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                    <XAxis dataKey="date" stroke="var(--text-muted)" tick={{ fontSize: 10 }}
+                      tickFormatter={(d: string) => { const p = d.split('-'); return `${p[2]}/${p[1]}` }} />
+                    <YAxis stroke="var(--text-muted)" tick={{ fontSize: 11 }} />
+                    <Tooltip content={<CustomTooltip />} />
+                    <Area type="monotone" dataKey="count" name="Visites" stroke="#D4AF37" fill="rgba(212,175,55,0.15)" strokeWidth={2} />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </Section>
+
+            <Section title="Distribution horaire (aujourd'hui)" subtitle="Activité par heure de la journée">
+              <div style={{ height: 280 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={visitStats.hourlyData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                    <XAxis dataKey="hour" stroke="var(--text-muted)" tick={{ fontSize: 10 }} />
+                    <YAxis stroke="var(--text-muted)" tick={{ fontSize: 11 }} />
+                    <Tooltip content={<CustomTooltip />} />
+                    <Bar dataKey="count" name="Visites" fill="#74C0FC" radius={[4, 4, 0, 0]} opacity={0.85} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </Section>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-6">
+            {/* Device distribution */}
+            <Section title="Répartition par appareil" subtitle="Ce mois — Desktop, Mobile, Tablette">
+              <div style={{ height: 260 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={visitStats.devices.map(d => ({
+                        name: d.type === 'desktop' ? 'Desktop' : d.type === 'mobile' ? 'Mobile' : 'Tablette',
+                        value: d.count,
+                        color: d.type === 'desktop' ? '#74C0FC' : d.type === 'mobile' ? '#55EFC4' : '#A29BFE',
+                      }))}
+                      cx="50%" cy="50%" innerRadius={50} outerRadius={90} paddingAngle={4} dataKey="value"
+                      label={(props: { name?: string; value?: number }) => `${props.name}: ${fmt(props.value ?? 0)}`}
+                    >
+                      {visitStats.devices.map((d, i) => (
+                        <Cell key={i} fill={d.type === 'desktop' ? '#74C0FC' : d.type === 'mobile' ? '#55EFC4' : '#A29BFE'} />
+                      ))}
+                    </Pie>
+                    <Tooltip content={<CustomTooltip />} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </Section>
+
+            {/* Top pages */}
+            <Section title="Pages les plus visitées" subtitle="Top 10 ce mois">
+              <div className="space-y-2">
+                {visitStats.topPages.length === 0 && (
+                  <p className="text-xs py-6 text-center" style={{ color: 'var(--text-muted)' }}>
+                    Aucune donnée de visite pour le moment.
+                  </p>
+                )}
+                {visitStats.topPages.map((page, i) => {
+                  const maxCount = visitStats.topPages[0]?.count || 1
+                  const pct = (page.count / maxCount) * 100
+                  return (
+                    <div key={page.path} className="flex items-center gap-3">
+                      <span className="text-xs font-semibold w-5 text-right" style={{ color: '#D4AF37' }}>{i + 1}</span>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-xs truncate" style={{ color: 'var(--text-primary)' }}>{page.path}</span>
+                          <span className="text-xs font-semibold ml-2" style={{ color: '#74C0FC' }}>{fmt(page.count)}</span>
+                        </div>
+                        <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
+                          <div className="h-full rounded-full" style={{ width: `${pct}%`, background: 'linear-gradient(90deg, #D4AF37, #74C0FC)' }} />
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </Section>
+          </div>
+          </>
+          )}
         </>
       )}
     </div>

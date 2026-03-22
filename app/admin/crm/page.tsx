@@ -114,7 +114,7 @@ export default function CRMDashboardPage() {
             ))}
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             <Link
               href="/admin/crm/contacts"
               className="p-6 rounded-xl text-center transition-all hover:scale-[1.02]"
@@ -150,6 +150,15 @@ export default function CRMDashboardPage() {
               <div className="text-3xl mb-2">🧬</div>
               <div className="font-display text-lg" style={{ color: 'var(--gold)' }}>Emails Signature</div>
               <div className="text-xs text-[var(--text-muted)] mt-1">Résultats envoyés par email</div>
+            </Link>
+            <Link
+              href="/admin/crm/email-templates"
+              className="p-6 rounded-xl text-center transition-all hover:scale-[1.02]"
+              style={{ background: 'var(--dark-card)', border: '1px solid rgba(212,175,55,0.3)' }}
+            >
+              <div className="text-3xl mb-2">📬</div>
+              <div className="font-display text-lg" style={{ color: 'var(--gold)' }}>Templates Julia</div>
+              <div className="text-xs text-[var(--text-muted)] mt-1">Modifier les emails automatiques</div>
             </Link>
           </div>
 

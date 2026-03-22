@@ -252,33 +252,6 @@ function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: strin
   );
 }
 
-const FAQ_ITEMS = [
-  {
-    q: "Est-ce que SOS Shine remplace un thérapeute ?",
-    a: "Non. SOS Shine est un complément, pas un substitut. Nos protocoles sont créés par nos trois fondateurs, chacun expert dans son domaine, mais nous recommandons de consulter un professionnel de santé si nécessaire.",
-  },
-  {
-    q: "Comment fonctionne l'essai gratuit ?",
-    a: "Vous accédez à tout le contenu de votre formule pendant 7 jours. Si ça ne vous convient pas, annulez en un clic — zéro prélèvement, zéro question.",
-  },
-  {
-    q: "C'est quoi exactement un protocole en 3 étapes ?",
-    a: "Pour chaque blessure émotionnelle, nos fondateurs ont créé : une vidéo pour comprendre l'origine du blocage, une séance guidée pour libérer l'émotion, et des exercices concrets pour ancrer la transformation. Vous avancez à votre rythme.",
-  },
-  {
-    q: "Mes données sont-elles protégées ?",
-    a: "Vos données ne sont jamais vendues ni partagées. Vous pouvez utiliser un pseudo dans la communauté. Tout est chiffré et confidentiel.",
-  },
-  {
-    q: "Qui crée les contenus ?",
-    a: "Julia (thérapeute holistique), William (hypnose et médecine chinoise) et Thomas (protocoles pratiques). Chaque protocole combine leurs trois expertises : âme, corps et esprit.",
-  },
-  {
-    q: "Je peux annuler quand je veux ?",
-    a: "Oui. Aucun engagement, aucune condition cachée. Annulation en un clic depuis votre espace membre. Si on doit vous retenir par un contrat, c'est qu'on n'a pas fait notre travail.",
-  },
-];
-
 function FAQItem({ item, isOpen, onToggle }: { item: { q: string; a: string }; isOpen: boolean; onToggle: () => void }) {
   return (
     <div className="glow-card mb-3" style={{ borderRadius: '1rem' }}>
@@ -1237,46 +1210,58 @@ export default function Home() {
       )}
 
       {/* ═══ FAQ ═══ */}
-      <section id="faq" className="px-5 md:px-20 py-16 md:py-32 relative cv-auto scroll-mt-24">
-        <div className="max-w-3xl mx-auto">
-          <RevealOnScroll>
-            <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">FAQ</p>
-          </RevealOnScroll>
-          <RevealOnScroll delay={0.1}>
-            <h2 className="font-display font-light text-center mb-4 md:mb-6" style={{ fontSize: 'clamp(2.25rem, 5vw, 3rem)' }}>
-              <WordByWordReveal text="Vos questions, nos r\u00e9ponses" />
-            </h2>
-          </RevealOnScroll>
-          <RevealOnScroll delay={0.15}>
-            <p className="text-center text-[var(--text-secondary)] font-light mb-10 md:mb-14 text-sm md:text-base max-w-lg mx-auto">
-              Une question qui n&apos;est pas ici ? &Eacute;crivez-nous, on r&eacute;pond toujours.
-            </p>
-          </RevealOnScroll>
-
-          <div>
-            {FAQ_ITEMS.map((item, i) => (
-              <RevealOnScroll key={i} delay={Math.min(i * 0.05, 0.3)}>
-                <FAQItem
-                  item={item}
-                  isOpen={openFaq === i}
-                  onToggle={() => setOpenFaq(openFaq === i ? null : i)}
-                />
+      {vis('faq') && (() => {
+        const faq = sec('faq');
+        const faqItems: { q: string; a: string }[] = faq.items || [];
+        return (
+          <section id="faq" className="px-5 md:px-20 py-16 md:py-32 relative cv-auto scroll-mt-24">
+            <div className="max-w-3xl mx-auto">
+              <RevealOnScroll>
+                <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{faq.label || 'FAQ'}</p>
               </RevealOnScroll>
-            ))}
-          </div>
+              <RevealOnScroll delay={0.1}>
+                <h2 className="font-display font-light text-center mb-4 md:mb-6" style={{ fontSize: 'clamp(2.25rem, 5vw, 3rem)' }}>
+                  <WordByWordReveal text={faq.title || 'Vos questions, nos réponses'} />
+                </h2>
+              </RevealOnScroll>
+              {faq.subtitle && (
+                <RevealOnScroll delay={0.15}>
+                  <p className="text-center text-[var(--text-secondary)] font-light mb-10 md:mb-14 text-sm md:text-base max-w-lg mx-auto">
+                    {faq.subtitle}
+                  </p>
+                </RevealOnScroll>
+              )}
 
-          <RevealOnScroll delay={0.3}>
-            <div className="mt-8 md:mt-12 text-center">
-              <p className="text-sm font-light mb-4" style={{ color: 'var(--text-muted)' }}>Encore des doutes ?</p>
-              <Link href="/contact">
-                <button className="magnetic-btn px-6 sm:px-8 py-3 sm:py-3.5 rounded-full text-sm font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.25)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
-                  Contactez-nous
-                </button>
-              </Link>
+              <div>
+                {faqItems.map((item, i) => (
+                  <RevealOnScroll key={i} delay={Math.min(i * 0.05, 0.3)}>
+                    <FAQItem
+                      item={item}
+                      isOpen={openFaq === i}
+                      onToggle={() => setOpenFaq(openFaq === i ? null : i)}
+                    />
+                  </RevealOnScroll>
+                ))}
+              </div>
+
+              {(faq.cta_text || faq.cta_button_label) && (
+                <RevealOnScroll delay={0.3}>
+                  <div className="mt-8 md:mt-12 text-center">
+                    {faq.cta_text && <p className="text-sm font-light mb-4" style={{ color: 'var(--text-muted)' }}>{faq.cta_text}</p>}
+                    {faq.cta_button_label && (
+                      <Link href={faq.cta_button_href || '/contact'}>
+                        <button className="magnetic-btn px-6 sm:px-8 py-3 sm:py-3.5 rounded-full text-sm font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.25)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
+                          {faq.cta_button_label}
+                        </button>
+                      </Link>
+                    )}
+                  </div>
+                </RevealOnScroll>
+              )}
             </div>
-          </RevealOnScroll>
-        </div>
-      </section>
+          </section>
+        );
+      })()}
 
       {/* ═══ CTA FINAL DARK ═══ */}
       {vis('cta_dark') && (

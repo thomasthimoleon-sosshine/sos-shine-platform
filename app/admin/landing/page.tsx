@@ -686,6 +686,36 @@ export default function LandingAdminPage() {
           </>
         )
 
+      /* ────────────── faq ────────────── */
+      case 'faq':
+        return (
+          <>
+            <TextField label="Label de section" value={c.label || ''} onChange={(v) => updateContent(key, 'label', v)} />
+            <TextField label="Titre" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
+            <TextAreaField label="Sous-titre" value={c.subtitle || ''} onChange={(v) => updateContent(key, 'subtitle', v)} />
+            <Separator label="Questions / Reponses" />
+            {(c.items || []).map((item: { q: string; a: string }, i: number) => (
+              <div key={i} className="rounded-lg p-4 space-y-3" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Question {i + 1}</p>
+                  <button type="button" onClick={() => removeArrayItem(key, 'items', i)}
+                    className="text-xs px-2 py-1 rounded cursor-pointer" style={{ color: '#FF6B6B' }}>Supprimer</button>
+                </div>
+                <TextField label="Question" value={item.q || ''} onChange={(v) => updateArrayItem(key, 'items', i, 'q', v)} />
+                <TextAreaField label="Reponse" value={item.a || ''} rows={3} onChange={(v) => updateArrayItem(key, 'items', i, 'a', v)} />
+              </div>
+            ))}
+            <button type="button" onClick={() => addArrayItem(key, 'items', { q: '', a: '' })}
+              className="text-sm px-4 py-2 rounded-lg cursor-pointer" style={{ color: '#74C0FC', border: '1px dashed #74C0FC' }}>
+              + Ajouter une question
+            </button>
+            <Separator label="Bas de section" />
+            <TextField label="Texte d'accroche" value={c.cta_text || ''} onChange={(v) => updateContent(key, 'cta_text', v)} />
+            <TextField label="Libelle du bouton" value={c.cta_button_label || ''} onChange={(v) => updateContent(key, 'cta_button_label', v)} />
+            <TextField label="Lien du bouton" value={c.cta_button_href || ''} onChange={(v) => updateContent(key, 'cta_button_href', v)} />
+          </>
+        )
+
       /* ────────────── legal_mentions / legal_cgv / legal_privacy ────────────── */
       case 'legal_mentions':
       case 'legal_cgv':
@@ -922,6 +952,16 @@ export default function LandingAdminPage() {
             <ColorField label="Couleur de fond" value={st.bg || ''} onChange={(v) => updateStyle(key, 'bg', v)} />
             <ColorField label="Couleur du texte" value={st.text_color || ''} onChange={(v) => updateStyle(key, 'text_color', v)} />
             <ColorField label="Couleur texte discret" value={st.muted_color || ''} onChange={(v) => updateStyle(key, 'muted_color', v)} />
+          </>
+        )
+
+      case 'faq':
+        return (
+          <>
+            <Separator label="Style" />
+            <SelectField label="Police du titre" value={st.title_font || ''} options={fontOpts} onChange={(v) => updateStyle(key, 'title_font', v)} />
+            <SelectField label="Taille du titre" value={st.title_size || ''} options={sizeOpts} onChange={(v) => updateStyle(key, 'title_size', v)} />
+            <SelectField label="Alignement du titre" value={st.title_align || ''} options={alignOpts} onChange={(v) => updateStyle(key, 'title_align', v)} />
           </>
         )
 

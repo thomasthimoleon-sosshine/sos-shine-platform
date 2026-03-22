@@ -371,9 +371,54 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     styles: {},
   },
   {
+    section_key: 'faq',
+    label: 'FAQ',
+    position: 14,
+    is_visible: true,
+    content: {
+      label: 'FAQ',
+      title: 'Vos questions, nos réponses',
+      subtitle: "Une question qui n'est pas ici ? Écrivez-nous, on répond toujours.",
+      cta_text: 'Encore des doutes ?',
+      cta_button_label: 'Contactez-nous',
+      cta_button_href: '/contact',
+      items: [
+        {
+          q: "Est-ce que SOS Shine remplace un thérapeute ?",
+          a: "Non. SOS Shine est un complément, pas un substitut. Nos protocoles sont créés par nos trois fondateurs, chacun expert dans son domaine, mais nous recommandons de consulter un professionnel de santé si nécessaire.",
+        },
+        {
+          q: "Comment fonctionne l'essai gratuit ?",
+          a: "Vous accédez à tout le contenu de votre formule pendant 7 jours. Si ça ne vous convient pas, annulez en un clic — zéro prélèvement, zéro question.",
+        },
+        {
+          q: "C'est quoi exactement un protocole en 3 étapes ?",
+          a: "Pour chaque blessure émotionnelle, nos fondateurs ont créé : une vidéo pour comprendre l'origine du blocage, une séance guidée pour libérer l'émotion, et des exercices concrets pour ancrer la transformation. Vous avancez à votre rythme.",
+        },
+        {
+          q: "Mes données sont-elles protégées ?",
+          a: "Vos données ne sont jamais vendues ni partagées. Vous pouvez utiliser un pseudo dans la communauté. Tout est chiffré et confidentiel.",
+        },
+        {
+          q: "Qui crée les contenus ?",
+          a: "Julia (thérapeute holistique), William (hypnose et médecine chinoise) et Thomas (protocoles pratiques). Chaque protocole combine leurs trois expertises : âme, corps et esprit.",
+        },
+        {
+          q: "Je peux annuler quand je veux ?",
+          a: "Oui. Aucun engagement, aucune condition cachée. Annulation en un clic depuis votre espace membre. Si on doit vous retenir par un contrat, c'est qu'on n'a pas fait notre travail.",
+        },
+      ],
+    },
+    styles: {
+      title_font: 'Cormorant Garamond',
+      title_size: 'lg',
+      title_align: 'center',
+    },
+  },
+  {
     section_key: 'legal_mentions',
     label: 'Page — Mentions légales',
-    position: 14,
+    position: 15,
     is_visible: true,
     content: {
       title: 'Mentions légales',
@@ -384,7 +429,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'legal_cgv',
     label: 'Page — CGV',
-    position: 15,
+    position: 16,
     is_visible: true,
     content: {
       title: 'Conditions Générales de Vente',
@@ -395,7 +440,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'legal_privacy',
     label: 'Page — Confidentialité',
-    position: 16,
+    position: 17,
     is_visible: true,
     content: {
       title: 'Politique de confidentialité',
@@ -406,7 +451,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'legal_contact',
     label: 'Page — Contact',
-    position: 17,
+    position: 18,
     is_visible: true,
     content: {
       title: 'Contact',

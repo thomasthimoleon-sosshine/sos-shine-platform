@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useMemo } from 'react'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import {
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, LineChart, Line,
@@ -236,6 +237,17 @@ export default function FounderDashboard() {
   })
   const [loading, setLoading] = useState(true)
 
+  // CRM stats
+  const [crmStats, setCrmStats] = useState({
+    totalContacts: 0,
+    totalCampaigns: 0,
+    totalSent: 0,
+    avgOpenRate: 0,
+    totalSequences: 0,
+    signatureEmailsSent: 0,
+  })
+  const [recentCampaigns, setRecentCampaigns] = useState<{ id: string; name: string; subject: string; status: string; sent_count: number; open_count: number; click_count: number }[]>([])
+
   // Fetch live data from Supabase
   useEffect(() => {
     async function fetchLive() {
@@ -263,6 +275,38 @@ export default function FounderDashboard() {
         totalAffiliates: affData.length,
         pendingPayouts: affData.reduce((sum: number, a: { pending_earnings: number }) => sum + (a.pending_earnings || 0), 0),
       })
+
+      // Fetch CRM stats
+      try {
+        const [campRes, contactsRes, seqRes, sigEmailsRes] = await Promise.all([
+          fetch('/api/crm/campaigns'),
+          fetch('/api/crm/contacts?page=1'),
+          fetch('/api/crm/sequences'),
+          fetch('/api/crm/signature-emails'),
+        ])
+        const campData = await campRes.json().catch(() => ({ campaigns: [] }))
+        const contactsData = await contactsRes.json().catch(() => ({ total: 0 }))
+        const seqData = await seqRes.json().catch(() => ({ sequences: [] }))
+        const sigData = await sigEmailsRes.json().catch(() => ({ total: 0 }))
+
+        const camps = campData.campaigns || []
+        const totalSent = camps.reduce((s: number, c: { sent_count?: number }) => s + (c.sent_count || 0), 0)
+        const totalOpens = camps.reduce((s: number, c: { open_count?: number }) => s + (c.open_count || 0), 0)
+        const avgOpen = totalSent > 0 ? Math.round((totalOpens / totalSent) * 100) : 0
+
+        setCrmStats({
+          totalContacts: contactsData.total || 0,
+          totalCampaigns: camps.length,
+          totalSent,
+          avgOpenRate: avgOpen,
+          totalSequences: (seqData.sequences || []).length,
+          signatureEmailsSent: sigData.total || 0,
+        })
+        setRecentCampaigns(camps.slice(0, 3))
+      } catch (e) {
+        console.error('CRM stats error:', e)
+      }
+
       setLoading(false)
     }
     fetchLive()
@@ -374,6 +418,99 @@ export default function FounderDashboard() {
               )
             })}
           </div>
+
+          {/* ═══════════════════ CRM — VUE FONDATEUR ═══════════════════ */}
+          <div>
+            <h2 className="text-sm font-semibold uppercase tracking-wider mb-1" style={{ color: '#D4AF37' }}>
+              CRM & Campagnes Email
+            </h2>
+            <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>
+              Vue d&apos;ensemble de vos contacts, campagnes et séquences email.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+            <StatCard icon="👥" label="Contacts CRM" value={fmt(crmStats.totalContacts)} color="#4A90D9" />
+            <StatCard icon="📧" label="Campagnes" value={fmt(crmStats.totalCampaigns)} color="#74C0FC" />
+            <StatCard icon="✉️" label="Emails envoyés" value={fmt(crmStats.totalSent)} color="#55EFC4" />
+            <StatCard icon="📊" label="Taux d'ouverture" value={`${crmStats.avgOpenRate}%`} color="#E8A87C" />
+            <StatCard icon="🔄" label="Séquences" value={fmt(crmStats.totalSequences)} color="#A29BFE" />
+            <StatCard icon="🧬" label="Emails résultats" value={fmt(crmStats.signatureEmailsSent)} color="#C4A0E8" />
+          </div>
+
+          {/* CRM quick actions */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+            <Link href="/admin/crm/contacts" className="rounded-xl p-4 text-center transition-all hover:scale-[1.02]"
+              style={{ background: 'rgba(74,144,217,0.06)', border: '1px solid rgba(74,144,217,0.15)' }}>
+              <div className="text-2xl mb-2">👥</div>
+              <div className="text-sm font-medium" style={{ color: '#4A90D9' }}>Contacts</div>
+              <div className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Voir et synchroniser</div>
+            </Link>
+            <Link href="/admin/crm/campaigns" className="rounded-xl p-4 text-center transition-all hover:scale-[1.02]"
+              style={{ background: 'rgba(116,192,252,0.06)', border: '1px solid rgba(116,192,252,0.15)' }}>
+              <div className="text-2xl mb-2">📧</div>
+              <div className="text-sm font-medium" style={{ color: '#74C0FC' }}>Campagnes</div>
+              <div className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Créer et planifier</div>
+            </Link>
+            <Link href="/admin/crm/sequences" className="rounded-xl p-4 text-center transition-all hover:scale-[1.02]"
+              style={{ background: 'rgba(162,155,254,0.06)', border: '1px solid rgba(162,155,254,0.15)' }}>
+              <div className="text-2xl mb-2">🔄</div>
+              <div className="text-sm font-medium" style={{ color: '#A29BFE' }}>Séquences</div>
+              <div className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Emails automatiques</div>
+            </Link>
+            <Link href="/admin/crm/email-templates" className="rounded-xl p-4 text-center transition-all hover:scale-[1.02]"
+              style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.15)' }}>
+              <div className="text-2xl mb-2">📬</div>
+              <div className="text-sm font-medium" style={{ color: '#D4AF37' }}>Templates</div>
+              <div className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Modifier les emails</div>
+            </Link>
+            <Link href="/admin/crm/signature-emails" className="rounded-xl p-4 text-center transition-all hover:scale-[1.02]"
+              style={{ background: 'rgba(196,160,232,0.06)', border: '1px solid rgba(196,160,232,0.15)' }}>
+              <div className="text-2xl mb-2">🧬</div>
+              <div className="text-sm font-medium" style={{ color: '#C4A0E8' }}>Emails Signature</div>
+              <div className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Résultats envoyés</div>
+            </Link>
+          </div>
+
+          {/* Recent campaigns */}
+          {recentCampaigns.length > 0 && (
+            <Section title="Dernières campagnes" subtitle="Aperçu rapide de vos campagnes récentes">
+              <div className="space-y-2">
+                {recentCampaigns.map((camp) => (
+                  <Link key={camp.id} href={`/admin/crm/campaigns?selected=${camp.id}`}
+                    className="block p-3 rounded-lg transition-all hover:scale-[1.005]"
+                    style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{camp.name}</div>
+                        <div className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{camp.subject}</div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-medium"
+                          style={{
+                            background: camp.status === 'sent' ? 'rgba(80,200,120,0.15)' : camp.status === 'scheduled' ? 'rgba(74,144,217,0.15)' : 'rgba(212,175,55,0.15)',
+                            color: camp.status === 'sent' ? '#50C878' : camp.status === 'scheduled' ? '#4A90D9' : '#D4AF37',
+                          }}>
+                          {camp.status === 'sent' ? 'Envoyée' : camp.status === 'scheduled' ? 'Planifiée' : 'Brouillon'}
+                        </span>
+                        {camp.status === 'sent' && (
+                          <div className="text-[10px]" style={{ color: 'var(--text-muted)' }}>
+                            {camp.sent_count} envoyés · {camp.open_count} ouverts
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+              <div className="mt-3 text-center">
+                <Link href="/admin/crm" className="text-xs font-medium px-4 py-2 rounded-lg inline-block transition-colors"
+                  style={{ color: '#74C0FC', border: '1px solid rgba(116,192,252,0.2)' }}>
+                  Voir tout le CRM →
+                </Link>
+              </div>
+            </Section>
+          )}
 
           {/* ═══════════════════ SECTION 2: PROJECTION 12 MOIS ═══════════════════ */}
           <div>

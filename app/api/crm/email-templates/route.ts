@@ -16,6 +16,10 @@ export async function GET() {
       .order('category')
       .order('template_key')
 
+    if (error && error.code === '42P01') {
+      // Table doesn't exist yet
+      return NextResponse.json({ templates: [], categories: [], table_missing: true })
+    }
     if (error) throw error
 
     // Group by category

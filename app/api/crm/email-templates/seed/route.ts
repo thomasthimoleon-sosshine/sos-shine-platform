@@ -11,6 +11,19 @@ export async function POST() {
     const supabase = getAdminClient()
     if (!supabase) return NextResponse.json({ error: 'Config missing' }, { status: 500 })
 
+    // Check if table exists
+    const { error: tableCheck } = await supabase
+      .from('email_templates')
+      .select('id')
+      .limit(1)
+
+    if (tableCheck?.code === '42P01') {
+      return NextResponse.json({
+        error: 'La table email_templates n\'existe pas. Lancez la migration 20260322_email_templates_and_fixes.sql dans Supabase SQL Editor.',
+        migration_needed: true,
+      }, { status: 500 })
+    }
+
     let inserted = 0
     let updated = 0
 

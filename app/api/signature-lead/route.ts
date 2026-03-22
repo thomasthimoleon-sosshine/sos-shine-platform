@@ -96,8 +96,7 @@ export async function POST(request: Request) {
           // Log in CRM events for tracking
           try {
             await supabase.from('crm_campaign_events').insert({
-              campaign_id: null,
-              contact_id: null,
+              contact_email: cleanEmail,
               event_type: 'signature_result_sent',
               metadata: {
                 email: cleanEmail,

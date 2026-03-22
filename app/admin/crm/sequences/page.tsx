@@ -24,6 +24,7 @@ const triggerLabels: Record<string, string> = {
 export default function CRMSequencesPage() {
   const [sequences, setSequences] = useState<Sequence[]>([])
   const [loading, setLoading] = useState(true)
+  const [seeding, setSeeding] = useState(false)
 
   async function loadSequences() {
     setLoading(true)
@@ -90,15 +91,39 @@ export default function CRMSequencesPage() {
           <div className="text-5xl mb-4">🔄</div>
           <p className="text-[var(--text-muted)] mb-2">Aucune séquence créée pour le moment.</p>
           <p className="text-sm text-[var(--text-muted)] mb-6">
-            Créez des parcours d'emails qui s'envoient automatiquement quand quelqu'un s'inscrit ou fait le test.
+            Initialisez les 3 séquences automatiques par défaut ou créez les vôtres.
           </p>
-          <Link
-            href="/admin/crm/sequences/new"
-            className="inline-block px-6 py-3 rounded-full text-sm font-semibold"
-            style={{ background: 'var(--gold)', color: '#050505' }}
-          >
-            Créer ma première séquence
-          </Link>
+          <div className="flex items-center justify-center gap-4">
+            <button
+              onClick={async () => {
+                setSeeding(true)
+                try {
+                  const res = await fetch('/api/crm/sequences/seed', { method: 'POST' })
+                  const data = await res.json()
+                  if (data.success) {
+                    loadSequences()
+                  } else {
+                    alert(`Erreur : ${data.error}`)
+                  }
+                } catch {
+                  alert('Erreur lors de l\'initialisation')
+                }
+                setSeeding(false)
+              }}
+              disabled={seeding}
+              className="px-6 py-3 rounded-full text-sm font-semibold transition-all disabled:opacity-50"
+              style={{ background: 'var(--gold)', color: '#050505' }}
+            >
+              {seeding ? 'Initialisation...' : 'Initialiser les séquences par défaut'}
+            </button>
+            <Link
+              href="/admin/crm/sequences/new"
+              className="inline-block px-6 py-3 rounded-full text-sm font-semibold"
+              style={{ border: '1px solid var(--gold)', color: 'var(--gold)' }}
+            >
+              Créer une séquence personnalisée
+            </Link>
+          </div>
         </div>
       ) : (
         <div className="space-y-4">

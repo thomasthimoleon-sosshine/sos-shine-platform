@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { createServerClient } from '@supabase/ssr'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { sendTemplateEmail } from '@/lib/email-templates/automated-emails'
 import type { Database } from '@/types/database'
 
 async function getCallerProfile(): Promise<{ id: string; role: string } | null> {
@@ -129,6 +130,30 @@ export async function PATCH(request: Request) {
             paid_earnings: (affiliate.paid_earnings || 0) + withdrawal.amount,
           })
           .eq('id', withdrawal.affiliate_id)
+      }
+
+      // ── Email automatique : notification virement affilié ──
+      const { data: affiliateData } = await admin
+        .from('affiliates')
+        .select('user_id')
+        .eq('id', withdrawal.affiliate_id)
+        .single()
+
+      if (affiliateData) {
+        const { data: prof } = await admin
+          .from('profiles')
+          .select('prenom, email')
+          .eq('id', affiliateData.user_id)
+          .single()
+
+        if (prof?.email) {
+          const amountFormatted = `${withdrawal.amount.toFixed(2).replace('.', ',')}€`
+          sendTemplateEmail('affiliate_payout', prof.email, {
+            firstName: prof.prenom || 'Ambassadeur',
+            email: prof.email,
+            payoutAmount: amountFormatted,
+          }, { recipientName: prof.prenom || 'Ambassadeur' }).catch(() => {})
+        }
       }
 
       return NextResponse.json({ success: true, status: 'completed' })

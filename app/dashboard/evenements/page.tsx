@@ -355,18 +355,21 @@ export default function EvenementsPage() {
     if (!userId || registering) return
     setRegistering(eventId)
 
-    const supabase = createClient()
-    const { error } = await supabase.from('event_registrations').insert({
-      event_id: eventId,
-      user_id: userId,
-      status: 'registered',
-    })
+    try {
+      const res = await fetch('/api/events/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ eventId }),
+      })
 
-    if (!error) {
-      setRegistrations((prev) => [
-        ...prev,
-        { id: crypto.randomUUID(), event_id: eventId, user_id: userId, status: 'registered', created_at: new Date().toISOString() },
-      ])
+      if (res.ok) {
+        setRegistrations((prev) => [
+          ...prev,
+          { id: crypto.randomUUID(), event_id: eventId, user_id: userId, status: 'registered', created_at: new Date().toISOString() },
+        ])
+      }
+    } catch {
+      // Silent fail
     }
     setRegistering(null)
   }

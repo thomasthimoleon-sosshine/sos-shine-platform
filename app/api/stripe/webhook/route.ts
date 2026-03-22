@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { getStripe, detectPlanFromProductId } from '@/lib/stripe'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import type Stripe from 'stripe'
+import { sendTemplateEmail, scheduleEmail, getPlanDisplayName, getPlanAmount, cancelScheduledEmails } from '@/lib/email-templates/automated-emails'
 
 function getAdminSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -186,6 +187,35 @@ async function handleCheckoutComplete(supabase: any, stripe: Stripe, session: St
       via_payment_link: !session.metadata?.plan,
     },
   })
+
+  // ── Emails automatiques : bienvenue + nurturing ──
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('prenom, email')
+    .eq('id', profileId)
+    .single()
+
+  if (profile?.email) {
+    const firstName = profile.prenom || 'Membre'
+    const planName = getPlanDisplayName(plan || 'essential')
+    const planAmountStr = getPlanAmount(plan || 'essential')
+    const vars = { firstName, email: profile.email, planName, planAmount: planAmountStr }
+
+    // Annuler les emails de conversion en attente (waitlist, quiz) car la personne s'est abonnée
+    await cancelScheduledEmails(profile.email, [
+      'waitlist_reminder_j3', 'waitlist_opening',
+      'quiz_followup_j2', 'quiz_conversion_j5',
+    ])
+
+    // Email de bienvenue immédiat
+    sendTemplateEmail('subscription_welcome', profile.email, vars, { recipientName: firstName }).catch(() => {})
+
+    // Séquence nurturing post-inscription
+    scheduleEmail('nurturing_j1', profile.email, vars, 1, { recipientName: firstName }).catch(() => {})
+    scheduleEmail('nurturing_j3', profile.email, vars, 3, { recipientName: firstName }).catch(() => {})
+    scheduleEmail('nurturing_j7', profile.email, vars, 7, { recipientName: firstName }).catch(() => {})
+    scheduleEmail('nurturing_j14', profile.email, vars, 14, { recipientName: firstName }).catch(() => {})
+  }
 }
 
 // Détecter le plan depuis le montant mensuel en centimes
@@ -271,6 +301,28 @@ async function handleSubscriptionDeleted(supabase: any, subscription: Stripe.Sub
     is_active: false,
     plan: null,
   }).eq('id', existingSub.user_id)
+
+  // ── Email automatique : confirmation résiliation + win-back J+7 ──
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('prenom, email, plan')
+    .eq('id', existingSub.user_id)
+    .single()
+
+  if (profile?.email) {
+    const firstName = profile.prenom || 'Membre'
+    const planName = getPlanDisplayName(profile.plan || 'essential')
+    const vars = { firstName, email: profile.email, planName }
+
+    // Annuler les emails de nurturing en attente
+    await cancelScheduledEmails(profile.email, [
+      'nurturing_j1', 'nurturing_j3', 'nurturing_j7', 'nurturing_j14',
+      'renewal_reminder_j7',
+    ])
+
+    sendTemplateEmail('cancellation_confirmation', profile.email, vars, { recipientName: firstName }).catch(() => {})
+    scheduleEmail('cancellation_winback_j7', profile.email, vars, 7, { recipientName: firstName }).catch(() => {})
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -318,6 +370,22 @@ async function handlePaymentFailed(supabase: any, invoice: Stripe.Invoice) {
       grace_period_end: graceEnd.toISOString(),
     },
   })
+
+  // ── Email automatique : échec de paiement ──
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('prenom, email')
+    .eq('id', sub.user_id)
+    .single()
+
+  if (profile?.email) {
+    const firstName = profile.prenom || 'Membre'
+    const planName = getPlanDisplayName(sub.plan || 'essential')
+    const planAmountStr = getPlanAmount(sub.plan || 'essential')
+    sendTemplateEmail('renewal_failed', profile.email, {
+      firstName, email: profile.email, planName, planAmount: planAmountStr,
+    }, { recipientName: firstName }).catch(() => {})
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -365,6 +433,26 @@ async function handlePaymentSucceeded(supabase: any, invoice: Stripe.Invoice) {
       was_past_due: wasPastDue,
     },
   })
+
+  // ── Email automatique : confirmation paiement / renouvellement ──
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('prenom, email')
+    .eq('id', sub.user_id)
+    .single()
+
+  if (profile?.email) {
+    const firstName = profile.prenom || 'Membre'
+    const planName = getPlanDisplayName(sub.plan || 'essential')
+    const planAmountStr = getPlanAmount(sub.plan || 'essential')
+    const vars = { firstName, email: profile.email, planName, planAmount: planAmountStr }
+
+    // Envoyer confirmation de paiement (pour renouvellements, pas la première souscription)
+    sendTemplateEmail(
+      wasPastDue ? 'renewal_success' : 'subscription_confirmation',
+      profile.email, vars, { recipientName: firstName }
+    ).catch(() => {})
+  }
 }
 
 function mapStripeStatus(status: string): 'trialing' | 'active' | 'inactive' | 'canceled' | 'past_due' {

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { createServerClient } from '@supabase/ssr'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { sendTemplateEmail } from '@/lib/email-templates/automated-emails'
 import type { Database } from '@/types/database'
 
 async function getCallerProfile(): Promise<{ id: string; role: string } | null> {
@@ -91,6 +92,22 @@ export async function PATCH(request: Request) {
         .eq('id', affiliateId)
 
       if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+
+      // ── Email automatique : bienvenue programme affilié ──
+      const { data: affiliateProfile } = await admin
+        .from('affiliates')
+        .select('user_id, profiles:user_id(prenom, email)')
+        .eq('id', affiliateId)
+        .single()
+
+      const prof = (affiliateProfile as any)?.profiles
+      if (prof?.email) {
+        sendTemplateEmail('affiliate_welcome', prof.email, {
+          firstName: prof.prenom || 'Ambassadeur',
+          email: prof.email,
+        }, { recipientName: prof.prenom || 'Ambassadeur' }).catch(() => {})
+      }
+
       return NextResponse.json({ success: true, status: 'approved' })
     }
 

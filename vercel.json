@@ -11,6 +11,10 @@
     {
       "path": "/api/cron/sequences",
       "schedule": "30 */1 * * *"
+    },
+    {
+      "path": "/api/cron/emails",
+      "schedule": "15 */1 * * *"
     }
   ]
 }

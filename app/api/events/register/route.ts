@@ -3,6 +3,7 @@ import { cookies } from 'next/headers'
 import { createServerClient } from '@supabase/ssr'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { sendTemplateEmail } from '@/lib/email-templates/automated-emails'
+import { enrollInSequence } from '@/lib/crm/enroll'
 
 function getAdminClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -78,6 +79,9 @@ export async function POST(request: Request) {
         eventDate,
         eventTime,
       }, { recipientName: firstName }).catch(() => {})
+
+      // Enrôler dans la séquence CRM "events"
+      enrollInSequence('events', profile.email, firstName).catch(() => {})
     }
 
     return NextResponse.json({ success: true })

@@ -3,6 +3,7 @@ import { cookies } from 'next/headers'
 import { createServerClient } from '@supabase/ssr'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { sendTemplateEmail } from '@/lib/email-templates/automated-emails'
+import { enrollInSequence } from '@/lib/crm/enroll'
 import type { Database } from '@/types/database'
 
 async function getCallerProfile(): Promise<{ id: string; role: string } | null> {
@@ -106,6 +107,9 @@ export async function PATCH(request: Request) {
           firstName: prof.prenom || 'Ambassadeur',
           email: prof.email,
         }, { recipientName: prof.prenom || 'Ambassadeur' }).catch(() => {})
+
+        // Enrôler dans la séquence CRM "affiliate"
+        enrollInSequence('affiliate', prof.email, prof.prenom).catch(() => {})
       }
 
       return NextResponse.json({ success: true, status: 'approved' })

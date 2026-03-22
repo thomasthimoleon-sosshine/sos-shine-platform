@@ -18,6 +18,11 @@ const triggerLabels: Record<string, string> = {
   signup: 'Inscription membre',
   signature_test: 'Test Signature Émotionnelle',
   waitlist: 'Inscription liste d\'attente',
+  subscription: 'Nouvel abonné',
+  renewal: 'Renouvellement',
+  cancellation: 'Résiliation',
+  affiliate: 'Programme affilié',
+  events: 'Événements',
   manual: 'Manuel',
 }
 
@@ -91,7 +96,7 @@ export default function CRMSequencesPage() {
           <div className="text-5xl mb-4">🔄</div>
           <p className="text-[var(--text-muted)] mb-2">Aucune séquence créée pour le moment.</p>
           <p className="text-sm text-[var(--text-muted)] mb-6">
-            Initialisez les 3 séquences automatiques par défaut ou créez les vôtres.
+            Initialisez les 7 séquences automatiques avec les 23 emails de Julia, ou créez les vôtres.
           </p>
           <div className="flex items-center justify-center gap-4">
             <button

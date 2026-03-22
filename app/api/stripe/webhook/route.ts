@@ -3,6 +3,7 @@ import { getStripe, detectPlanFromProductId } from '@/lib/stripe'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import type Stripe from 'stripe'
 import { sendTemplateEmail, scheduleEmail, getPlanDisplayName, getPlanAmount, cancelScheduledEmails } from '@/lib/email-templates/automated-emails'
+import { enrollInSequence } from '@/lib/crm/enroll'
 
 function getAdminSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -215,6 +216,9 @@ async function handleCheckoutComplete(supabase: any, stripe: Stripe, session: St
     scheduleEmail('nurturing_j3', profile.email, vars, 3, { recipientName: firstName }).catch(() => {})
     scheduleEmail('nurturing_j7', profile.email, vars, 7, { recipientName: firstName }).catch(() => {})
     scheduleEmail('nurturing_j14', profile.email, vars, 14, { recipientName: firstName }).catch(() => {})
+
+    // Enrôler dans la séquence CRM "subscription"
+    enrollInSequence('subscription', profile.email, firstName).catch(() => {})
   }
 }
 
@@ -322,6 +326,9 @@ async function handleSubscriptionDeleted(supabase: any, subscription: Stripe.Sub
 
     sendTemplateEmail('cancellation_confirmation', profile.email, vars, { recipientName: firstName }).catch(() => {})
     scheduleEmail('cancellation_winback_j7', profile.email, vars, 7, { recipientName: firstName }).catch(() => {})
+
+    // Enrôler dans la séquence CRM "cancellation"
+    enrollInSequence('cancellation', profile.email, firstName).catch(() => {})
   }
 }
 
@@ -385,6 +392,9 @@ async function handlePaymentFailed(supabase: any, invoice: Stripe.Invoice) {
     sendTemplateEmail('renewal_failed', profile.email, {
       firstName, email: profile.email, planName, planAmount: planAmountStr,
     }, { recipientName: firstName }).catch(() => {})
+
+    // Enrôler dans la séquence CRM "renewal"
+    enrollInSequence('renewal', profile.email, firstName).catch(() => {})
   }
 }
 

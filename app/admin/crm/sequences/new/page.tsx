@@ -23,6 +23,11 @@ export default function NewSequencePage() {
     { value: 'signup', label: 'Inscription membre', desc: 'Quand quelqu\'un crée un compte' },
     { value: 'signature_test', label: 'Test Signature Émotionnelle', desc: 'Quand quelqu\'un termine le test' },
     { value: 'waitlist', label: 'Liste d\'attente', desc: 'Quand quelqu\'un rejoint la liste d\'attente' },
+    { value: 'subscription', label: 'Nouvel abonné', desc: 'Quand quelqu\'un souscrit un abonnement' },
+    { value: 'renewal', label: 'Renouvellement', desc: 'Quand un abonnement se renouvelle' },
+    { value: 'cancellation', label: 'Résiliation', desc: 'Quand quelqu\'un résilie son abonnement' },
+    { value: 'affiliate', label: 'Programme affilié', desc: 'Quand quelqu\'un rejoint le programme' },
+    { value: 'events', label: 'Événements', desc: 'Inscription à un événement' },
     { value: 'manual', label: 'Manuel', desc: 'Inscription manuelle via le CRM' },
   ]
 

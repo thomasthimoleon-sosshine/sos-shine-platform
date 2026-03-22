@@ -1,80 +1,81 @@
 import { NextResponse } from 'next/server'
 import { getAdminClient } from '@/lib/crm/supabase-admin'
 import { verifyAdminAccess } from '@/lib/crm/auth'
+import { EMAIL_TEMPLATE_SEEDS } from '@/lib/email-templates/seeds'
 
-const DEFAULT_SEQUENCES = [
+// =============================================
+// Organisation des 23 templates de Julia en séquences
+// Chaque séquence regroupe les templates par trigger_type
+// =============================================
+
+interface SequenceDef {
+  name: string
+  trigger_type: string
+  template_keys: string[]
+}
+
+const SEQUENCE_DEFINITIONS: SequenceDef[] = [
+  // ── 1. LISTE D'ATTENTE (3 templates) ──
   {
-    name: 'Bienvenue — Test Signature Émotionnelle',
-    trigger_type: 'signature_test',
-    steps: [
-      {
-        delay_days: 2,
-        subject: '{firstName}, votre Signature Émotionnelle vous a révélé quelque chose...',
-        html_content: `<h2 style="color:#D4AF37;font-family:Georgia,serif;font-weight:300;margin:0 0 20px;">Bonjour {firstName},</h2>
-<p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Il y a 2 jours, vous avez découvert votre <strong style="color:#D4AF37;">Signature Émotionnelle</strong>. Ce profil unique révèle vos forces et vos zones d'ombre.</p>
-<p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Saviez-vous que chez <strong style="color:#D4AF37;">SOS Shine®</strong>, Julia accompagne chaque profil avec un protocole personnalisé ?</p>
-<p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Rejoignez la communauté et transformez votre ombre en lumière.</p>
-<p style="color:#a1a1aa;font-size:14px;line-height:1.8;margin-top:24px;">Avec bienveillance,<br/><strong style="color:#D4AF37;">Julia</strong> — Fondatrice SOS Shine®</p>`,
-      },
-      {
-        delay_days: 5,
-        subject: '{firstName}, 3 clés pour transformer votre Signature Émotionnelle',
-        html_content: `<h2 style="color:#D4AF37;font-family:Georgia,serif;font-weight:300;margin:0 0 20px;">Votre lumière attend, {firstName}</h2>
-<p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Votre Signature Émotionnelle est un point de départ. Voici <strong style="color:#D4AF37;">3 clés</strong> pour aller plus loin :</p>
-<ol style="color:#E0E0E0;font-size:15px;line-height:2;">
-<li><strong style="color:#D4AF37;">Acceptez votre ombre</strong> — elle fait partie de votre force</li>
-<li><strong style="color:#D4AF37;">Nourrissez votre lumière</strong> — un petit geste chaque jour</li>
-<li><strong style="color:#D4AF37;">Connectez-vous</strong> — la communauté SOS Shine® est là pour vous</li>
-</ol>
-<p style="color:#a1a1aa;font-size:14px;line-height:1.8;margin-top:24px;">Prête à briller ?<br/><strong style="color:#D4AF37;">Julia</strong></p>`,
-      },
-    ],
-  },
-  {
-    name: 'Bienvenue — Inscription Membre',
-    trigger_type: 'signup',
-    steps: [
-      {
-        delay_days: 0,
-        subject: 'Bienvenue dans la famille SOS Shine®, {firstName} !',
-        html_content: `<h2 style="color:#D4AF37;font-family:Georgia,serif;font-weight:300;margin:0 0 20px;">Bienvenue {firstName} !</h2>
-<p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Vous venez de rejoindre <strong style="color:#D4AF37;">SOS Shine®</strong> et nous sommes ravies de vous accueillir.</p>
-<p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Votre espace membre est prêt. Explorez les ressources, connectez-vous avec la communauté, et commencez votre transformation.</p>
-<p style="color:#a1a1aa;font-size:14px;line-height:1.8;margin-top:24px;">Avec amour et lumière,<br/><strong style="color:#D4AF37;">Julia</strong> — Fondatrice SOS Shine®</p>`,
-      },
-      {
-        delay_days: 3,
-        subject: '{firstName}, avez-vous découvert votre Signature Émotionnelle ?',
-        html_content: `<h2 style="color:#D4AF37;font-family:Georgia,serif;font-weight:300;margin:0 0 20px;">Bonjour {firstName},</h2>
-<p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Cela fait quelques jours que vous nous avez rejoints. Avez-vous déjà fait le <strong style="color:#D4AF37;">Test de Signature Émotionnelle</strong> ?</p>
-<p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Ce test gratuit de 5 minutes révèle votre profil émotionnel unique et vous aide à comprendre vos forces profondes.</p>
-<p style="color:#a1a1aa;font-size:14px;line-height:1.8;margin-top:24px;">À bientôt,<br/><strong style="color:#D4AF37;">Julia</strong></p>`,
-      },
-    ],
-  },
-  {
-    name: 'Bienvenue — Liste d\'attente',
+    name: 'Parcours Liste d\'attente',
     trigger_type: 'waitlist',
-    steps: [
-      {
-        delay_days: 0,
-        subject: '{firstName}, vous êtes sur la liste d\'attente SOS Shine® !',
-        html_content: `<h2 style="color:#D4AF37;font-family:Georgia,serif;font-weight:300;margin:0 0 20px;">Merci {firstName} !</h2>
-<p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Vous faites désormais partie de la <strong style="color:#D4AF37;">liste d'attente</strong> de SOS Shine®.</p>
-<p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Nous vous préviendrons en priorité dès que les portes s'ouvriront. En attendant, découvrez votre Signature Émotionnelle avec notre test gratuit.</p>
-<p style="color:#a1a1aa;font-size:14px;line-height:1.8;margin-top:24px;">Avec bienveillance,<br/><strong style="color:#D4AF37;">Julia</strong></p>`,
-      },
-      {
-        delay_days: 5,
-        subject: '{firstName}, les portes de SOS Shine® s\'ouvrent bientôt...',
-        html_content: `<h2 style="color:#D4AF37;font-family:Georgia,serif;font-weight:300;margin:0 0 20px;">Patience, {firstName}...</h2>
-<p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Nous préparons quelque chose de <strong style="color:#D4AF37;">magnifique</strong> pour vous. Votre place est réservée.</p>
-<p style="color:#a1a1aa;font-size:14px;line-height:1.8;">En attendant, restez connecté(e) à votre lumière intérieure. Chaque jour est une opportunité de briller.</p>
-<p style="color:#a1a1aa;font-size:14px;line-height:1.8;margin-top:24px;">À très bientôt,<br/><strong style="color:#D4AF37;">Julia</strong></p>`,
-      },
+    template_keys: ['waitlist_confirmation', 'waitlist_reminder_j3', 'waitlist_opening'],
+  },
+
+  // ── 2. TEST SIGNATURE ÉMOTIONNELLE (3 templates) ──
+  {
+    name: 'Parcours Signature Émotionnelle',
+    trigger_type: 'signature_test',
+    template_keys: ['quiz_result', 'quiz_followup_j2', 'quiz_conversion_j5'],
+  },
+
+  // ── 3. NOUVEL ABONNÉ + NURTURING (6 templates) ──
+  {
+    name: 'Parcours Nouvel Abonné + Nurturing',
+    trigger_type: 'subscription',
+    template_keys: [
+      'subscription_welcome',
+      'subscription_confirmation',
+      'nurturing_j1',
+      'nurturing_j3',
+      'nurturing_j7',
+      'nurturing_j14',
     ],
+  },
+
+  // ── 4. RENOUVELLEMENT (3 templates) ──
+  {
+    name: 'Parcours Renouvellement',
+    trigger_type: 'renewal',
+    template_keys: ['renewal_reminder_j7', 'renewal_success', 'renewal_failed'],
+  },
+
+  // ── 5. RÉSILIATION + WIN-BACK (2 templates) ──
+  {
+    name: 'Parcours Résiliation + Win-back',
+    trigger_type: 'cancellation',
+    template_keys: ['cancellation_confirmation', 'cancellation_winback_j7'],
+  },
+
+  // ── 6. PROGRAMME AFFILIÉ (3 templates) ──
+  {
+    name: 'Parcours Programme Affilié',
+    trigger_type: 'affiliate',
+    template_keys: ['affiliate_welcome', 'affiliate_referral', 'affiliate_payout'],
+  },
+
+  // ── 7. ÉVÉNEMENTS (2 templates) ──
+  {
+    name: 'Parcours Événements',
+    trigger_type: 'events',
+    template_keys: ['event_registration', 'event_reminder'],
   },
 ]
+
+// Build a lookup of template_key -> template seed data
+const TEMPLATE_MAP = new Map(
+  EMAIL_TEMPLATE_SEEDS.map(t => [t.template_key, t])
+)
 
 export async function POST() {
   try {
@@ -86,9 +87,10 @@ export async function POST() {
 
     let created = 0
     let skipped = 0
+    const details: string[] = []
 
-    for (const seqDef of DEFAULT_SEQUENCES) {
-      // Check if a sequence with same trigger_type already exists
+    for (const seqDef of SEQUENCE_DEFINITIONS) {
+      // Check if a sequence with same name or trigger_type already exists
       const { data: existing } = await supabase
         .from('crm_sequences')
         .select('id')
@@ -97,36 +99,68 @@ export async function POST() {
 
       if (existing && existing.length > 0) {
         skipped++
+        details.push(`⏭ "${seqDef.name}" — déjà existante`)
+        continue
+      }
+
+      // Build steps from Julia's templates
+      const steps = seqDef.template_keys
+        .map(key => TEMPLATE_MAP.get(key))
+        .filter(Boolean)
+        .map((template, i) => ({
+          step_order: i,
+          delay_days: template!.trigger_delay_days < 0
+            ? 0 // negative delays (J-7, J-1) become 0 (event-triggered)
+            : template!.trigger_delay_days,
+          subject: template!.subject,
+          html_content: template!.html_content,
+        }))
+
+      if (steps.length === 0) {
+        details.push(`⚠ "${seqDef.name}" — aucun template trouvé`)
         continue
       }
 
       const { data: sequence, error } = await supabase
         .from('crm_sequences')
-        .insert({ name: seqDef.name, trigger_type: seqDef.trigger_type, status: 'active' })
+        .insert({
+          name: seqDef.name,
+          trigger_type: seqDef.trigger_type,
+          status: 'active',
+        })
         .select()
         .single()
 
       if (error) {
         console.error(`Failed to create sequence ${seqDef.name}:`, error)
+        details.push(`❌ "${seqDef.name}" — erreur création`)
         continue
       }
 
-      const stepsToInsert = seqDef.steps.map((step, i) => ({
+      const stepsToInsert = steps.map(step => ({
+        ...step,
         sequence_id: sequence.id,
-        step_order: i,
-        delay_days: step.delay_days,
-        subject: step.subject,
-        html_content: step.html_content,
       }))
 
-      await supabase.from('crm_sequence_steps').insert(stepsToInsert)
+      const { error: stepsErr } = await supabase
+        .from('crm_sequence_steps')
+        .insert(stepsToInsert)
+
+      if (stepsErr) {
+        console.error(`Failed to create steps for ${seqDef.name}:`, stepsErr)
+        details.push(`❌ "${seqDef.name}" — erreur steps`)
+        continue
+      }
+
       created++
+      details.push(`✅ "${seqDef.name}" — ${steps.length} emails`)
     }
 
     return NextResponse.json({
       success: true,
       message: `${created} séquences créées, ${skipped} déjà existantes`,
-      total: DEFAULT_SEQUENCES.length,
+      total: SEQUENCE_DEFINITIONS.length,
+      details,
     })
   } catch (err) {
     console.error('Seed sequences error:', err)

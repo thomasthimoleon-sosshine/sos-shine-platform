@@ -1,18 +1,40 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 
 export default function InscriptionConfirmeePage() {
-  const [dots, setDots] = useState('')
+  const searchParams = useSearchParams()
+  const sessionId = searchParams.get('session_id')
+  const [verificationStatus, setVerificationStatus] = useState<'verifying' | 'verified' | 'error' | 'idle'>('idle')
+  const [emailSent, setEmailSent] = useState(false)
 
+  // Verify the checkout session and trigger email if webhook didn't fire
   useEffect(() => {
-    const interval = setInterval(() => {
-      setDots(d => d.length >= 3 ? '' : d + '.')
-    }, 500)
-    return () => clearInterval(interval)
-  }, [])
+    if (!sessionId) return
+
+    setVerificationStatus('verifying')
+
+    fetch('/api/stripe/verify-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session_id: sessionId }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.verified) {
+          setVerificationStatus('verified')
+          setEmailSent(!!data.email_sent)
+        } else {
+          setVerificationStatus('error')
+        }
+      })
+      .catch(() => {
+        setVerificationStatus('error')
+      })
+  }, [sessionId])
 
   return (
     <main className="min-h-screen flex items-center justify-center px-6" style={{ background: 'var(--dark)' }}>
@@ -40,13 +62,32 @@ export default function InscriptionConfirmeePage() {
           Inscription confirm&eacute;e !
         </h1>
 
+        {/* Verification status */}
+        {verificationStatus === 'verifying' && (
+          <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
+            V&eacute;rification de votre paiement en cours...
+          </p>
+        )}
+
+        {verificationStatus === 'verified' && emailSent && (
+          <div
+            className="flex items-center gap-2 justify-center mb-4 px-4 py-2 rounded-full mx-auto"
+            style={{ background: 'rgba(85,239,196,0.08)', border: '1px solid rgba(85,239,196,0.2)', width: 'fit-content' }}
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="#55EFC4" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+            </svg>
+            <span className="text-xs" style={{ color: '#55EFC4' }}>Email de confirmation envoy&eacute;</span>
+          </div>
+        )}
+
         {/* Message */}
         <div
           className="glass p-8 mb-8 text-left"
           style={{ borderColor: 'rgba(212,175,55,0.15)' }}
         >
           <p className="text-base leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
-            Votre paiement a &eacute;t&eacute; trait&eacute; avec succ&egrave;s et votre compte <strong style={{ color: '#D4AF37' }}>SOS Shine</strong> est en cours de cr&eacute;ation{dots}
+            Votre paiement a &eacute;t&eacute; trait&eacute; avec succ&egrave;s et votre compte <strong style={{ color: '#D4AF37' }}>SOS Shine</strong> est en cours de cr&eacute;ation.
           </p>
 
           <div

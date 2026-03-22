@@ -46,10 +46,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Database not configured' }, { status: 500 })
   }
 
+  console.log(`[Stripe Webhook] Received event: ${event.type} (${event.id})`)
+
   try {
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session
+        console.log(`[Stripe Webhook] checkout.session.completed — email: ${session.customer_email || session.metadata?.email}, plan: ${session.metadata?.plan}`)
         await handleCheckoutComplete(supabase, stripe, session)
         break
       }
@@ -226,10 +229,15 @@ async function handleCheckoutComplete(supabase: any, stripe: Stripe, session: St
       // Send account creation email with temporary password
       const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
         || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : 'https://sos-shine-platform.vercel.app')
+      console.log(`[Stripe Webhook] Sending account creation email to ${profile.email}`)
       await sendAccountCreatedEmail(profile.email, firstName, planName, tempPassword, siteUrl)
+      console.log(`[Stripe Webhook] Account creation email sent to ${profile.email}`)
     } else {
       // Email de bienvenue immédiat (utilisateur existant)
-      sendTemplateEmail('subscription_welcome', profile.email, vars, { recipientName: firstName }).catch(() => {})
+      console.log(`[Stripe Webhook] Sending subscription_welcome email to ${profile.email}`)
+      sendTemplateEmail('subscription_welcome', profile.email, vars, { recipientName: firstName })
+        .then(r => console.log(`[Stripe Webhook] subscription_welcome result:`, r))
+        .catch(err => console.error(`[Stripe Webhook] subscription_welcome failed:`, err))
     }
 
     // Séquence nurturing post-inscription

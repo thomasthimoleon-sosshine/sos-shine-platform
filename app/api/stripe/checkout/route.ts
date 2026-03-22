@@ -68,12 +68,13 @@ export async function POST(request: Request) {
     // If Stripe SDK is not available or price IDs are not configured,
     // fall back to pre-configured Stripe Payment Links
     if (!stripe || !priceId) {
+      console.warn(`[Checkout] Falling back to Payment Links — stripe=${!!stripe}, priceId=${priceId || '(empty)'}. Configure STRIPE_PRICE_* env vars for full checkout experience.`)
       const paymentLink = getPaymentLink(plan as PlanId, duration as DurationId)
       if (paymentLink) {
         // Append prefilled email to the payment link
         const url = new URL(paymentLink)
         url.searchParams.set('prefilled_email', email.trim())
-        return NextResponse.json({ url: url.toString(), hasWaitlistDiscount })
+        return NextResponse.json({ url: url.toString(), fallback: true, hasWaitlistDiscount })
       }
       return NextResponse.json({ error: 'Paiement temporairement indisponible. Veuillez réessayer plus tard.' }, { status: 500 })
     }
@@ -91,7 +92,7 @@ export async function POST(request: Request) {
       payment_method_types: ['card'],
       customer_email: email,
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${siteUrl}/inscription-confirmee?checkout=success`,
+      success_url: `${siteUrl}/inscription-confirmee?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/rejoindre?checkout=cancel`,
       metadata: {
         plan,

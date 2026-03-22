@@ -250,3 +250,53 @@ export function getPlanAmount(plan: string): string {
     default: return plan
   }
 }
+
+// ============================================================
+// Envoi d'un email brut (HTML custom, sans template DB)
+// ============================================================
+
+export async function sendRawEmail(
+  recipientEmail: string,
+  subject: string,
+  bodyHtml: string,
+  options?: { recipientName?: string }
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const fullHtml = wrapInEmailLayout(bodyHtml)
+    const { client: resend, fromEmail } = await getResendClient()
+
+    const { error: sendErr } = await resend.emails.send({
+      from: `SOS Shine® <${fromEmail}>`,
+      to: recipientEmail,
+      subject,
+      html: fullHtml,
+    })
+
+    if (sendErr) {
+      console.error(`Failed to send raw email to ${recipientEmail}:`, sendErr)
+      return { success: false, error: String(sendErr) }
+    }
+
+    // Log in CRM events
+    try {
+      const supabase = getAdminClient()
+      if (supabase) {
+        await supabase.from('crm_campaign_events').insert({
+          campaign_id: null,
+          contact_id: null,
+          event_type: 'auto_email_account_created',
+          metadata: {
+            recipient: recipientEmail,
+            recipient_name: options?.recipientName,
+            sent_at: new Date().toISOString(),
+          },
+        })
+      }
+    } catch {}
+
+    return { success: true }
+  } catch (err) {
+    console.error(`sendRawEmail error:`, err)
+    return { success: false, error: String(err) }
+  }
+}

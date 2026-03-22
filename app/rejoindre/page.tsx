@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslation } from '@/lib/i18n/useTranslation'
-import { PRICES, TOTAL_PRICES, ORIGINAL_PRICES, DURATIONS, PLAN_INFO, formatPrice, getPaymentLink } from '@/lib/stripe'
+import { PRICES, TOTAL_PRICES, ORIGINAL_PRICES, DURATIONS, PLAN_INFO, formatPrice } from '@/lib/stripe'
 import type { PlanId, DurationId } from '@/lib/stripe'
 
 const PRELAUNCH_END = new Date('2026-03-22T00:00:00+02:00')
@@ -297,16 +297,135 @@ function DurationSelector({ selected, onChange }: { selected: DurationId; onChan
   )
 }
 
+/* ─── EMAIL COLLECTION MODAL ─── */
+function EmailModal({ plan, duration, onClose }: { plan: PlanId; duration: DurationId; onClose: () => void }) {
+  const [email, setEmail] = useState('')
+  const [prenom, setPrenom] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!email || loading) return
+    setLoading(true)
+    setError('')
+
+    try {
+      const res = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan, duration, email: email.trim(), prenom: prenom.trim() || undefined }),
+      })
+      const data = await res.json()
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        setError(data.error || 'Une erreur est survenue')
+        setLoading(false)
+      }
+    } catch {
+      setError('Erreur de connexion. Veuillez r\u00e9essayer.')
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 10 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 10 }}
+        className="glass w-full max-w-md p-8 relative"
+        style={{ borderColor: 'rgba(212,175,55,0.2)' }}
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full transition-colors"
+          style={{ color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)' }}
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        <h3 className="font-display text-xl font-light mb-2" style={{ color: '#D4AF37' }}>
+          Finalisez votre inscription
+        </h3>
+        <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
+          Entrez votre email pour cr&eacute;er votre compte et proc&eacute;der au paiement.
+          Vous recevrez vos identifiants de connexion par email.
+        </p>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <input
+              type="text"
+              placeholder="Votre pr&eacute;nom (optionnel)"
+              value={prenom}
+              onChange={(e) => setPrenom(e.target.value)}
+              className="w-full px-5 py-3.5 rounded-xl text-sm font-light outline-none transition-all duration-300"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: 'var(--text-primary)' }}
+              onFocus={(e) => (e.target.style.borderColor = 'rgba(212,175,55,0.3)')}
+              onBlur={(e) => (e.target.style.borderColor = 'rgba(255,255,255,0.08)')}
+            />
+          </div>
+          <div>
+            <input
+              type="email"
+              required
+              placeholder="Votre email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-5 py-3.5 rounded-xl text-sm font-light outline-none transition-all duration-300"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: 'var(--text-primary)' }}
+              onFocus={(e) => (e.target.style.borderColor = 'rgba(212,175,55,0.3)')}
+              onBlur={(e) => (e.target.style.borderColor = 'rgba(255,255,255,0.08)')}
+            />
+          </div>
+
+          {error && (
+            <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }}
+              className="text-sm text-center" style={{ color: '#ef4444' }}>
+              {error}
+            </motion.p>
+          )}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm disabled:opacity-50"
+            style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}
+          >
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="w-4 h-4 border-2 border-[#050505] border-t-transparent rounded-full animate-spin" />
+                Redirection vers le paiement...
+              </span>
+            ) : (
+              'Continuer vers le paiement'
+            )}
+          </button>
+
+          <p className="text-center text-[11px]" style={{ color: 'var(--text-muted)' }}>
+            <svg className="w-3 h-3 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+            </svg>
+            Paiement s&eacute;curis&eacute; par Stripe
+          </p>
+        </form>
+      </motion.div>
+    </div>
+  )
+}
+
 /* ─── POST-LAUNCH PAYMENT SECTION ─── */
 function PaymentContent() {
   const { t } = useTranslation()
   const [selectedDuration, setSelectedDuration] = useState<DurationId>('monthly')
+  const [checkoutModal, setCheckoutModal] = useState<{ plan: PlanId } | null>(null)
 
   const handleCheckout = (plan: PlanId) => {
-    const link = getPaymentLink(plan, selectedDuration)
-    if (link) {
-      window.location.href = link
-    }
+    setCheckoutModal({ plan })
   }
 
   const durationInfo = DURATIONS.find(d => d.id === selectedDuration)!
@@ -314,6 +433,17 @@ function PaymentContent() {
 
   return (
     <>
+      {/* Email collection modal */}
+      <AnimatePresence>
+        {checkoutModal && (
+          <EmailModal
+            plan={checkoutModal.plan}
+            duration={selectedDuration}
+            onClose={() => setCheckoutModal(null)}
+          />
+        )}
+      </AnimatePresence>
+
       {/* Duration selector */}
       <Reveal delay={0.3}>
         <div className="text-center mb-2">
@@ -347,7 +477,7 @@ function PaymentContent() {
 
             <div className="space-y-2.5 text-left mb-6 flex-1">
               {[
-                'Encyclopédie complète (accès illimité)',
+                'Encyclop\u00e9die compl\u00e8te (acc\u00e8s illimit\u00e9)',
                 'Tchats communautaires',
               ].map((item) => (
                 <div key={item} className="flex items-start gap-2.5">
@@ -362,12 +492,12 @@ function PaymentContent() {
               className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm"
               style={{ background: 'linear-gradient(135deg, #F0A68C, #D4825E)', color: '#050505' }}
             >
-              {`Choisir l'Essentielle — ${formatPrice(PRICES.essential.monthly)}/mois`}
+              {`Choisir l'Essentielle \u2014 ${formatPrice(PRICES.essential.monthly)}/mois`}
             </button>
           </div>
         </Reveal>
 
-        {/* Sérénité */}
+        {/* S\u00e9r\u00e9nit\u00e9 */}
         <Reveal delay={0.5}>
           <div className="glass p-6 sm:p-8 text-center h-full flex flex-col relative overflow-hidden" style={{ borderColor: 'rgba(85,239,196,0.25)', boxShadow: '0 0 30px rgba(85,239,196,0.06)' }}>
             <div className="absolute top-4 right-4 text-[10px] tracking-[0.2em] uppercase px-3 py-1 rounded-full font-semibold"
@@ -426,8 +556,8 @@ function PaymentContent() {
               style={{ background: 'linear-gradient(135deg, #55EFC4, #00B894)', color: '#050505' }}
             >
               {showTotalPrice
-                ? `Sérénité ${durationInfo.months} mois — ${formatPrice(TOTAL_PRICES.serenite[selectedDuration])}`
-                : 'Essayer Sérénité — 7 jours gratuits (CB requise)'
+                ? `S\u00e9r\u00e9nit\u00e9 ${durationInfo.months} mois \u2014 ${formatPrice(TOTAL_PRICES.serenite[selectedDuration])}`
+                : 'Essayer S\u00e9r\u00e9nit\u00e9 \u2014 7 jours gratuits (CB requise)'
               }
             </button>
           </div>
@@ -476,10 +606,10 @@ function PaymentContent() {
 
             <div className="space-y-2.5 text-left mb-6 flex-1">
               {[
-                'Tout le contenu de la Sérénité',
-                'Live thématique hebdomadaire',
-                'Canal privé Telegram',
-                'Accès aux événements',
+                'Tout le contenu de la S\u00e9r\u00e9nit\u00e9',
+                'Live th\u00e9matique hebdomadaire',
+                'Canal priv\u00e9 Telegram',
+                'Acc\u00e8s aux \u00e9v\u00e9nements',
               ].map((item) => (
                 <div key={item} className="flex items-start gap-2.5">
                   <span className="mt-0.5 text-sm flex-shrink-0" style={{ color: '#A78BFA' }}>&#9670;</span>
@@ -494,8 +624,8 @@ function PaymentContent() {
               style={{ background: 'linear-gradient(135deg, #A78BFA, #7C3AED)', color: '#fff' }}
             >
               {showTotalPrice
-                ? `Premium ${durationInfo.months} mois — ${formatPrice(TOTAL_PRICES.premium[selectedDuration])}`
-                : 'Essayer Premium — 7 jours gratuits (CB requise)'
+                ? `Premium ${durationInfo.months} mois \u2014 ${formatPrice(TOTAL_PRICES.premium[selectedDuration])}`
+                : 'Essayer Premium \u2014 7 jours gratuits (CB requise)'
               }
             </button>
           </div>

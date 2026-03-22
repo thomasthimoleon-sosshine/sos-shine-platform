@@ -23,7 +23,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Stripe non configuré' }, { status: 500 })
     }
 
-    const { plan, duration = 'monthly', email, user_id } = await request.json()
+    const { plan, duration = 'monthly', email, user_id, prenom } = await request.json()
 
     if (!plan || !VALID_PLANS.includes(plan)) {
       return NextResponse.json({ error: 'Plan invalide' }, { status: 400 })
@@ -85,12 +85,13 @@ export async function POST(request: Request) {
       payment_method_types: ['card'],
       customer_email: email,
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${siteUrl}/dashboard?checkout=success`,
+      success_url: `${siteUrl}/inscription-confirmee?checkout=success`,
       cancel_url: `${siteUrl}/rejoindre?checkout=cancel`,
       metadata: {
         plan,
         duration,
         email,
+        prenom: prenom || '',
         user_id: user_id || '',
         waitlist_discount: hasWaitlistDiscount ? 'true' : 'false',
       },
@@ -99,6 +100,7 @@ export async function POST(request: Request) {
           plan,
           duration,
           email,
+          prenom: prenom || '',
           user_id: user_id || '',
           waitlist_discount: hasWaitlistDiscount ? 'true' : 'false',
         },

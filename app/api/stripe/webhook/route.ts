@@ -2,8 +2,9 @@ import { NextResponse } from 'next/server'
 import { getStripe, detectPlanFromProductId } from '@/lib/stripe'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import type Stripe from 'stripe'
-import { sendTemplateEmail, scheduleEmail, getPlanDisplayName, getPlanAmount, cancelScheduledEmails } from '@/lib/email-templates/automated-emails'
+import { sendTemplateEmail, scheduleEmail, getPlanDisplayName, getPlanAmount, cancelScheduledEmails, sendRawEmail } from '@/lib/email-templates/automated-emails'
 import { enrollInSequence } from '@/lib/crm/enroll'
+import crypto from 'crypto'
 
 function getAdminSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -104,6 +105,9 @@ async function handleCheckoutComplete(supabase: any, stripe: Stripe, session: St
 
   // Find user by ID or email
   let profileId = userId
+  let isNewUser = false
+  let tempPassword: string | null = null
+
   if (!profileId && userEmail) {
     const { data: profile } = await supabase
       .from('profiles')
@@ -112,6 +116,16 @@ async function handleCheckoutComplete(supabase: any, stripe: Stripe, session: St
       .single()
     profileId = profile?.id
   }
+
+  // Auto-create user account if no profile exists
+  if (!profileId && userEmail) {
+    const result = await autoCreateUser(supabase, userEmail, session.metadata?.prenom)
+    if (!result) return
+    profileId = result.userId
+    isNewUser = true
+    tempPassword = result.tempPassword
+  }
+
   if (!profileId) return
 
   // Get subscription details from Stripe
@@ -208,8 +222,15 @@ async function handleCheckoutComplete(supabase: any, stripe: Stripe, session: St
       'quiz_followup_j2', 'quiz_conversion_j5',
     ])
 
-    // Email de bienvenue immédiat
-    sendTemplateEmail('subscription_welcome', profile.email, vars, { recipientName: firstName }).catch(() => {})
+    if (isNewUser && tempPassword) {
+      // Send account creation email with temporary password
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
+        || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : 'https://sos-shine-platform.vercel.app')
+      await sendAccountCreatedEmail(profile.email, firstName, planName, tempPassword, siteUrl)
+    } else {
+      // Email de bienvenue immédiat (utilisateur existant)
+      sendTemplateEmail('subscription_welcome', profile.email, vars, { recipientName: firstName }).catch(() => {})
+    }
 
     // Séquence nurturing post-inscription
     scheduleEmail('nurturing_j1', profile.email, vars, 1, { recipientName: firstName }).catch(() => {})
@@ -463,6 +484,95 @@ async function handlePaymentSucceeded(supabase: any, invoice: Stripe.Invoice) {
       profile.email, vars, { recipientName: firstName }
     ).catch(() => {})
   }
+}
+
+// ── Auto-create Supabase user when payment is made without an account ──
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function autoCreateUser(supabase: any, email: string, prenom?: string | null): Promise<{ userId: string; tempPassword: string } | null> {
+  try {
+    // Generate a secure temporary password
+    const tempPassword = crypto.randomBytes(6).toString('base64url') // ~8 chars, URL-safe
+
+    // Create user in Supabase Auth
+    const { data: authUser, error: authError } = await supabase.auth.admin.createUser({
+      email,
+      password: tempPassword,
+      email_confirm: true, // Auto-confirm email since they paid
+    })
+
+    if (authError || !authUser?.user) {
+      console.error('Failed to auto-create user:', authError)
+      return null
+    }
+
+    const userId = authUser.user.id
+
+    // Create profile (the DB trigger may also do this, but let's be explicit)
+    await supabase.from('profiles').upsert({
+      id: userId,
+      email,
+      prenom: prenom || null,
+      role: 'member',
+      is_active: true,
+      created_at: new Date().toISOString(),
+    }, { onConflict: 'id' })
+
+    return { userId, tempPassword }
+  } catch (err) {
+    console.error('autoCreateUser error:', err)
+    return null
+  }
+}
+
+// ── Send account creation email with temporary password ──
+async function sendAccountCreatedEmail(
+  email: string,
+  firstName: string,
+  planName: string,
+  tempPassword: string,
+  siteUrl: string,
+) {
+  const loginUrl = `${siteUrl}/login`
+  const resetUrl = `${siteUrl}/forgot-password`
+
+  const html = `
+    <h2 style="color:#D4AF37;font-family:Georgia,'Times New Roman',serif;font-weight:300;font-size:24px;margin:0 0 24px;">
+      Bienvenue dans SOS Shine, ${firstName} !
+    </h2>
+    <p style="color:#E0E0E0;font-size:15px;line-height:1.7;margin:0 0 16px;">
+      Votre paiement a bien été confirmé et votre compte <strong>SOS Shine</strong> a été créé automatiquement
+      avec l'offre <strong style="color:#D4AF37;">${planName}</strong>.
+    </p>
+    <div style="background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.2);border-radius:12px;padding:24px;margin:24px 0;">
+      <p style="color:#D4AF37;font-size:13px;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 12px;font-weight:600;">
+        Vos identifiants de connexion
+      </p>
+      <p style="color:#E0E0E0;font-size:15px;margin:0 0 8px;">
+        <strong>Email :</strong> ${email}
+      </p>
+      <p style="color:#E0E0E0;font-size:15px;margin:0;">
+        <strong>Mot de passe temporaire :</strong> <code style="background:rgba(255,255,255,0.08);padding:3px 8px;border-radius:4px;font-size:16px;letter-spacing:0.05em;">${tempPassword}</code>
+      </p>
+    </div>
+    <p style="color:#E0E0E0;font-size:15px;line-height:1.7;margin:0 0 24px;">
+      Connectez-vous et changez votre mot de passe d&egrave;s que possible pour s&eacute;curiser votre compte.
+    </p>
+    <div style="text-align:center;margin:32px 0;">
+      <a href="${loginUrl}" style="display:inline-block;background:linear-gradient(135deg,#D4AF37,#B8960F);color:#050505;padding:14px 40px;border-radius:50px;text-decoration:none;font-weight:600;font-size:15px;">
+        Se connecter
+      </a>
+    </div>
+    <p style="color:#999;font-size:13px;line-height:1.6;margin:24px 0 0;text-align:center;">
+      Vous pouvez aussi <a href="${resetUrl}" style="color:#D4AF37;text-decoration:underline;">cr&eacute;er un nouveau mot de passe</a> si vous pr&eacute;f&eacute;rez.
+    </p>
+  `
+
+  await sendRawEmail(
+    email,
+    `Bienvenue sur SOS Shine — Vos identifiants de connexion`,
+    html,
+    { recipientName: firstName }
+  )
 }
 
 function mapStripeStatus(status: string): 'trialing' | 'active' | 'inactive' | 'canceled' | 'past_due' {

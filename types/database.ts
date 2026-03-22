@@ -726,6 +726,21 @@ export type CourrierAnonyme = {
   updated_at: string
 }
 
+// ── Site Visits (connection tracking) ──
+export type SiteVisit = {
+  id: string
+  user_id: string | null
+  page_path: string
+  referrer: string | null
+  user_agent: string | null
+  ip_hash: string | null
+  country: string | null
+  device_type: string
+  session_id: string | null
+  is_authenticated: boolean
+  created_at: string
+}
+
 // ── Helper: columns with DB defaults are optional on Insert ──
 type DefaultColumns = 'id' | 'created_at' | 'updated_at' | 'completed_at' | 'audio_url' | 'message_type' | 'status' | 'room_code' | 'call_type' | 'event_type' | 'target_user_id' | 'room_id' | 'category' | 'media_type' | 'video_url' | 'image_url' | 'is_published' | 'delete_locked' | 'publish_banned_until' | 'is_bot' | 'is_read' | 'is_deleted' | 'is_general' | 'is_anonymous' | 'is_active' | 'email_sent' | 'is_visible' | 'position' | 'total_clicks' | 'total_referrals' | 'total_earnings' | 'pending_earnings' | 'paid_earnings' | 'current_tier' | 'referral_code' | 'approved_at' | 'rejected_at' | 'rejection_reason' | 'paid_at' | 'payment_reference' | 'commission_amount' | 'visibility' | 'source' | 'is_featured' | 'sort_order' | 'duration_minutes' | 'duration_seconds' | 'page_count' | 'year' | 'completed' | 'progress_seconds' | 'listened_at' | 'rating' | 'content_type' | 'admin_note' | 'answered_via' | 'answered_url' | 'answered_at' | 'answered_by' | 'is_pinned' | 'subject' | 'user_id' | 'douleur_id'
 type OptionalId<T> = Omit<T, Extract<DefaultColumns, keyof T>> &
@@ -797,6 +812,7 @@ export type Database = {
       douleur_quiz_attempts: Table<DouleurQuizAttempt>
       daily_user_actions: Table<DailyUserAction>
       encyclopedia_progress: Table<EncyclopediaProgress>
+      site_visits: Table<SiteVisit>
     }
     Views: Record<string, never>
     Functions: {

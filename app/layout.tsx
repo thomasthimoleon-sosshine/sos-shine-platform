@@ -4,6 +4,7 @@ import "./globals.css";
 import ThemeProvider from "@/components/ThemeProvider";
 import SecurityProvider from "@/components/SecurityProvider";
 import ShineChatbot from "@/components/ShineChatbot";
+import VisitTracker from "@/components/VisitTracker";
 
 const cormorant = localFont({
   variable: "--font-cormorant",
@@ -99,6 +100,7 @@ export default function RootLayout({
         <SecurityProvider>
           <ThemeProvider>{children}</ThemeProvider>
           <ShineChatbot />
+          <VisitTracker />
         </SecurityProvider>
       </body>
     </html>

@@ -37,6 +37,21 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Email requis' }, { status: 400 })
     }
 
+    // If Stripe SDK is not available, return the direct Payment Link as fallback
+    if (!stripe) {
+      console.error('[Checkout] Stripe SDK not initialized — check STRIPE_SECRET_KEY env var')
+      const fallbackLink = getPaymentLink(plan as PlanId, effectiveDuration)
+      if (fallbackLink) {
+        const separator = fallbackLink.includes('?') ? '&' : '?'
+        return NextResponse.json({
+          url: `${fallbackLink}${separator}prefilled_email=${encodeURIComponent(email.trim())}`,
+          fallback: true,
+          hasWaitlistDiscount: false,
+        })
+      }
+      return NextResponse.json({ error: 'Paiement temporairement indisponible. Veuillez réessayer plus tard.' }, { status: 500 })
+    }
+
     // Check if the user is on the waitlist (eligible for discount)
     let hasWaitlistDiscount = false
     const dbPool = getPool()
@@ -68,14 +83,19 @@ export async function POST(request: Request) {
     // Determine price ID
     const priceId = getStripePriceId(plan as PlanId, effectiveDuration)
 
-    if (!stripe) {
-      console.error('[Checkout] Stripe SDK not initialized — check STRIPE_SECRET_KEY')
-      return NextResponse.json({ error: 'Paiement temporairement indisponible. Veuillez réessayer plus tard.' }, { status: 500 })
-    }
-
     if (!priceId) {
-      console.error(`[Checkout] No price ID for ${plan}_${duration} — check STRIPE_PRICE_* env vars`)
-      return NextResponse.json({ error: `L'offre ${plan} en ${duration} n'est pas encore disponible.` }, { status: 400 })
+      console.error(`[Checkout] No price ID for ${plan}_${effectiveDuration} — check STRIPE_PRICE_* env vars`)
+      // Fallback to Payment Link if no price ID configured
+      const fallbackLink = getPaymentLink(plan as PlanId, effectiveDuration)
+      if (fallbackLink) {
+        const separator = fallbackLink.includes('?') ? '&' : '?'
+        return NextResponse.json({
+          url: `${fallbackLink}${separator}prefilled_email=${encodeURIComponent(email.trim())}`,
+          fallback: true,
+          hasWaitlistDiscount: false,
+        })
+      }
+      return NextResponse.json({ error: `L'offre ${plan} en ${effectiveDuration} n'est pas encore disponible.` }, { status: 400 })
     }
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
@@ -130,7 +150,24 @@ export async function POST(request: Request) {
       hasWaitlistDiscount,
     })
   } catch (err) {
-    console.error('Checkout session error:', err)
-    return NextResponse.json({ error: 'Erreur lors de la création de la session' }, { status: 500 })
+    console.error('[Checkout] Session creation error:', err)
+    // Try to extract plan info from the request for fallback
+    try {
+      const body = await request.clone().json().catch(() => ({}))
+      const { plan, duration = 'monthly', email } = body as { plan?: string; duration?: string; email?: string }
+      if (plan && email && VALID_PLANS.includes(plan as PlanId)) {
+        const effectiveDuration: DurationId = (plan === 'essential' && duration !== 'monthly') ? 'monthly' : (duration as DurationId)
+        const fallbackLink = getPaymentLink(plan as PlanId, effectiveDuration)
+        if (fallbackLink) {
+          const separator = fallbackLink.includes('?') ? '&' : '?'
+          return NextResponse.json({
+            url: `${fallbackLink}${separator}prefilled_email=${encodeURIComponent(email.trim())}`,
+            fallback: true,
+            hasWaitlistDiscount: false,
+          })
+        }
+      }
+    } catch {}
+    return NextResponse.json({ error: 'Erreur lors de la création de la session. Veuillez réessayer.' }, { status: 500 })
   }
 }

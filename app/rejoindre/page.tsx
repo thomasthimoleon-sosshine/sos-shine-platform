@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslation } from '@/lib/i18n/useTranslation'
-import { PRICES, TOTAL_PRICES, ORIGINAL_PRICES, DURATIONS, PLAN_INFO, formatPrice } from '@/lib/stripe'
+import { PRICES, TOTAL_PRICES, ORIGINAL_PRICES, DURATIONS, PLAN_INFO, formatPrice, getPaymentLink } from '@/lib/stripe'
 import type { PlanId, DurationId } from '@/lib/stripe'
 
 const PRELAUNCH_END = new Date('2026-03-22T00:00:00+02:00')
@@ -311,21 +311,37 @@ function EmailModal({ plan, duration, onClose }: { plan: PlanId; duration: Durat
     setError('')
 
     try {
+      const effectiveDuration = plan === 'essential' ? 'monthly' : duration
       const res = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan, duration: plan === 'essential' ? 'monthly' : duration, email: email.trim(), prenom: prenom.trim() || undefined }),
+        body: JSON.stringify({ plan, duration: effectiveDuration, email: email.trim(), prenom: prenom.trim() || undefined }),
       })
       const data = await res.json()
       if (data.url) {
         window.location.href = data.url
       } else {
-        setError(data.error || 'Une erreur est survenue')
-        setLoading(false)
+        // Fallback to direct Stripe Payment Link if checkout API fails
+        const paymentLink = getPaymentLink(plan, effectiveDuration)
+        if (paymentLink) {
+          const separator = paymentLink.includes('?') ? '&' : '?'
+          window.location.href = `${paymentLink}${separator}prefilled_email=${encodeURIComponent(email.trim())}`
+        } else {
+          setError(data.error || 'Une erreur est survenue')
+          setLoading(false)
+        }
       }
     } catch {
-      setError('Erreur de connexion. Veuillez r\u00e9essayer.')
-      setLoading(false)
+      // Network error — fallback to direct Stripe Payment Link
+      const effectiveDuration = plan === 'essential' ? 'monthly' : duration
+      const paymentLink = getPaymentLink(plan, effectiveDuration)
+      if (paymentLink) {
+        const separator = paymentLink.includes('?') ? '&' : '?'
+        window.location.href = `${paymentLink}${separator}prefilled_email=${encodeURIComponent(email.trim())}`
+      } else {
+        setError('Erreur de connexion. Veuillez réessayer.')
+        setLoading(false)
+      }
     }
   }
 

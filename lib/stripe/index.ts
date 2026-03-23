@@ -5,9 +5,17 @@ let stripeInstance: Stripe | null = null
 export function getStripe(): Stripe | null {
   if (stripeInstance) return stripeInstance
   const key = process.env.STRIPE_SECRET_KEY
-  if (!key) return null
-  stripeInstance = new Stripe(key, { apiVersion: '2026-01-28.clover' as Stripe.LatestApiVersion })
-  return stripeInstance
+  if (!key) {
+    console.error('[Stripe] STRIPE_SECRET_KEY is missing from environment variables')
+    return null
+  }
+  try {
+    stripeInstance = new Stripe(key, { apiVersion: '2026-01-28.clover' as Stripe.LatestApiVersion })
+    return stripeInstance
+  } catch (err) {
+    console.error('[Stripe] Failed to initialize SDK:', err)
+    return null
+  }
 }
 
 // Plan types

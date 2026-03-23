@@ -40,11 +40,11 @@ export const PRODUCT_IDS: Record<string, { plan: PlanId; duration: DurationId }>
   // Sérénité
   'prod_U9FVosDaeyGzYG': { plan: 'serenite', duration: 'monthly' },
   'prod_U9FvGe0nE2YL1M': { plan: 'serenite', duration: 'quarterly' },
-  'prod_U9Fxv3O06aCI9G': { plan: 'serenite', duration: 'semiannual' },
+  'prod_U9Fxv3OO6aCI9G': { plan: 'serenite', duration: 'semiannual' },
   'prod_U9FztZbsXCxagW': { plan: 'serenite', duration: 'annual' },
 
   // Premium
-  'prod_U9FXlrYKS7xl3A': { plan: 'premium', duration: 'monthly' },
+  'prod_U9FXlrYKS7xI3A': { plan: 'premium', duration: 'monthly' },
   'prod_U9G1fXDICPm6KU': { plan: 'premium', duration: 'quarterly' },
   'prod_U9G320t81v6XsG': { plan: 'premium', duration: 'semiannual' },
   'prod_U9G4LI1LUcEoYx': { plan: 'premium', duration: 'annual' },

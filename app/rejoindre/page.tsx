@@ -318,17 +318,6 @@ function EmailModal({ plan, duration, onClose }: { plan: PlanId; duration: Durat
       })
       const data = await res.json()
       if (data.url) {
-        if (data.fallback) {
-          // Payment Link: open in new tab so user can return to confirmation page
-          // Store email for the confirmation page to use
-          try { sessionStorage.setItem('sos_checkout_email', email.trim()) } catch {}
-          window.open(data.url, '_blank')
-          // Redirect to confirmation page after a short delay
-          setTimeout(() => {
-            window.location.href = '/inscription-confirmee?checkout=success&via=payment_link'
-          }, 1000)
-          return
-        }
         window.location.href = data.url
       } else {
         setError(data.error || 'Une erreur est survenue')

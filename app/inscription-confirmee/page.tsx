@@ -1,11 +1,23 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 
 export default function InscriptionConfirmeePage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen flex items-center justify-center" style={{ background: 'var(--dark)' }}>
+        <div className="w-8 h-8 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin" />
+      </main>
+    }>
+      <InscriptionConfirmeeContent />
+    </Suspense>
+  )
+}
+
+function InscriptionConfirmeeContent() {
   const searchParams = useSearchParams()
   const sessionId = searchParams.get('session_id')
   const [verificationStatus, setVerificationStatus] = useState<'verifying' | 'verified' | 'error' | 'idle'>('idle')
@@ -153,12 +165,45 @@ export default function InscriptionConfirmeePage() {
           </Link>
         </div>
 
+        {/* Error state */}
+        {verificationStatus === 'error' && (
+          <div
+            className="mt-6 p-5 rounded-xl text-left"
+            style={{ background: 'rgba(248,113,113,0.06)', border: '1px solid rgba(248,113,113,0.15)' }}
+          >
+            <div className="flex items-start gap-3">
+              <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="#f87171" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+              </svg>
+              <div>
+                <p className="font-semibold text-sm mb-1" style={{ color: '#f87171' }}>
+                  Impossible de v&eacute;rifier le paiement
+                </p>
+                <p className="text-[13px] leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                  Pas d&apos;inqui&eacute;tude, votre paiement a bien &eacute;t&eacute; re&ccedil;u par Stripe.
+                  Vos identifiants vous seront envoy&eacute;s par email dans les prochaines minutes.
+                  Si vous ne recevez rien sous 15 minutes, contactez le support.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Help text */}
-        <p className="mt-8 text-xs" style={{ color: 'var(--text-muted)' }}>
-          Vous n&apos;avez pas re&ccedil;u l&apos;email ? Attendez quelques minutes puis v&eacute;rifiez vos spams.
-          <br />
-          Besoin d&apos;aide ? <a href="mailto:hello@sosshine.com" style={{ color: '#D4AF37', textDecoration: 'underline' }}>Contactez-nous</a>
-        </p>
+        <div className="mt-8 p-4 rounded-xl text-center" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}>
+          <p className="text-xs mb-2" style={{ color: 'var(--text-muted)' }}>
+            Vous n&apos;avez pas re&ccedil;u l&apos;email ? Attendez quelques minutes puis v&eacute;rifiez vos spams.
+          </p>
+          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+            Toujours rien ?{' '}
+            <a href="mailto:hello@sosshine.com" style={{ color: '#D4AF37', textDecoration: 'underline' }}>hello@sosshine.com</a>
+            {' '}ou essayez de{' '}
+            <Link href="/forgot-password" style={{ color: '#D4AF37', textDecoration: 'underline' }}>
+              cr&eacute;er un mot de passe
+            </Link>
+            {' '}avec l&apos;email utilis&eacute; lors du paiement.
+          </p>
+        </div>
       </motion.div>
     </main>
   )

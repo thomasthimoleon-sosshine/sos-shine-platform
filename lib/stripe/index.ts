@@ -40,6 +40,7 @@ export const PRODUCT_IDS: Record<string, { plan: PlanId; duration: DurationId }>
   // Sérénité
   'prod_U9FVosDaeyGzYG': { plan: 'serenite', duration: 'monthly' },
   'prod_U9FvGe0nE2YL1M': { plan: 'serenite', duration: 'quarterly' },
+  'prod_UCedniSB1YzvJe': { plan: 'serenite', duration: 'quarterly' },
   'prod_U9Fxv3OO6aCI9G': { plan: 'serenite', duration: 'semiannual' },
   'prod_U9FztZbsXCxagW': { plan: 'serenite', duration: 'annual' },
 

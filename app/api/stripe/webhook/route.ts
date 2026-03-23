@@ -228,7 +228,7 @@ async function handleCheckoutComplete(supabase: any, stripe: Stripe, session: St
     if (isNewUser && tempPassword) {
       // Send account creation email with temporary password
       const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
-        || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : 'https://sos-shine-platform.vercel.app')
+        || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : 'https://sosshine.com')
       console.log(`[Stripe Webhook] Sending account creation email to ${profile.email}`)
       await sendAccountCreatedEmail(profile.email, firstName, planName, tempPassword, siteUrl)
       console.log(`[Stripe Webhook] Account creation email sent to ${profile.email}`)

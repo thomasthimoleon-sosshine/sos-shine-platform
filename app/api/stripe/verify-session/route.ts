@@ -14,7 +14,7 @@ function getAdminSupabase() {
 
 function getSiteUrl(): string {
   return process.env.NEXT_PUBLIC_SITE_URL
-    || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : 'https://sos-shine-platform.vercel.app')
+    || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : 'https://sosshine.com')
 }
 
 /**

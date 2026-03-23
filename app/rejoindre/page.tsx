@@ -314,7 +314,7 @@ function EmailModal({ plan, duration, onClose }: { plan: PlanId; duration: Durat
       const res = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan, duration, email: email.trim(), prenom: prenom.trim() || undefined }),
+        body: JSON.stringify({ plan, duration: plan === 'essential' ? 'monthly' : duration, email: email.trim(), prenom: prenom.trim() || undefined }),
       })
       const data = await res.json()
       if (data.url) {
@@ -425,6 +425,10 @@ function PaymentContent() {
   const [checkoutModal, setCheckoutModal] = useState<{ plan: PlanId } | null>(null)
 
   const handleCheckout = (plan: PlanId) => {
+    // Essential only has monthly pricing — force monthly regardless of selected duration
+    if (plan === 'essential') {
+      setSelectedDuration('monthly')
+    }
     setCheckoutModal({ plan })
   }
 

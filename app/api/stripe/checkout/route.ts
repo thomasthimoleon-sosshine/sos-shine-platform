@@ -30,6 +30,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Durée invalide' }, { status: 400 })
     }
 
+    // Essential plan only supports monthly — force it server-side
+    const effectiveDuration: DurationId = (plan === 'essential' && duration !== 'monthly') ? 'monthly' : duration
+
     if (!email) {
       return NextResponse.json({ error: 'Email requis' }, { status: 400 })
     }
@@ -63,7 +66,7 @@ export async function POST(request: Request) {
     }
 
     // Determine price ID
-    const priceId = getStripePriceId(plan as PlanId, duration as DurationId)
+    const priceId = getStripePriceId(plan as PlanId, effectiveDuration)
 
     if (!stripe) {
       console.error('[Checkout] Stripe SDK not initialized — check STRIPE_SECRET_KEY')
@@ -92,7 +95,7 @@ export async function POST(request: Request) {
       cancel_url: `${siteUrl}/rejoindre?checkout=cancel`,
       metadata: {
         plan,
-        duration,
+        duration: effectiveDuration,
         email,
         prenom: prenom || '',
         user_id: user_id || '',
@@ -101,7 +104,7 @@ export async function POST(request: Request) {
       subscription_data: {
         metadata: {
           plan,
-          duration,
+          duration: effectiveDuration,
           email,
           prenom: prenom || '',
           user_id: user_id || '',

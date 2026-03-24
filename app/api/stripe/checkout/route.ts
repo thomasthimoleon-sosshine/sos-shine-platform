@@ -130,8 +130,10 @@ export async function POST(request: Request) {
       url: session.url,
       hasWaitlistDiscount,
     })
-  } catch (err) {
+  } catch (err: unknown) {
     console.error('[Checkout] Session creation error:', err)
-    return NextResponse.json({ error: 'Erreur lors de la création de la session. Veuillez réessayer.' }, { status: 500 })
+    const stripeMsg = err instanceof Error ? err.message : 'Unknown error'
+    console.error('[Checkout] Error details:', stripeMsg)
+    return NextResponse.json({ error: `Erreur lors de la création de la session: ${stripeMsg}` }, { status: 500 })
   }
 }

@@ -10,7 +10,7 @@ export function getStripe(): Stripe | null {
     return null
   }
   try {
-    stripeInstance = new Stripe(key, { apiVersion: '2026-01-28.clover' as Stripe.LatestApiVersion })
+    stripeInstance = new Stripe(key)
     return stripeInstance
   } catch (err) {
     console.error('[Stripe] Failed to initialize SDK:', err)

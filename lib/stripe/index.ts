@@ -59,20 +59,20 @@ export const PRODUCT_IDS: Record<string, { plan: PlanId; duration: DurationId }>
   'prod_U9G4LI1LUcEoYx': { plan: 'premium', duration: 'annual' },
 }
 
-// Stripe Price IDs — set these in env (fallback pour Checkout API)
+// Stripe Price IDs — env vars override hardcoded defaults
 export const STRIPE_PRICES: Record<string, string> = {
-  essential_monthly: process.env.STRIPE_PRICE_ESSENTIAL_MONTHLY || process.env.STRIPE_PRICE_ESSENTIAL || process.env.STRIPE_PRICE_ID || '',
+  essential_monthly: process.env.STRIPE_PRICE_ESSENTIAL_MONTHLY || process.env.STRIPE_PRICE_ESSENTIAL || process.env.STRIPE_PRICE_ID || 'price_1TAwx903aEbW4K6eeoRj1Ejo',
   essential_quarterly: process.env.STRIPE_PRICE_ESSENTIAL_QUARTERLY || '',
   essential_semiannual: process.env.STRIPE_PRICE_ESSENTIAL_SEMIANNUAL || '',
   essential_annual: process.env.STRIPE_PRICE_ESSENTIAL_ANNUAL || '',
-  serenite_monthly: process.env.STRIPE_PRICE_SERENITE_MONTHLY || '',
-  serenite_quarterly: process.env.STRIPE_PRICE_SERENITE_QUARTERLY || '',
-  serenite_semiannual: process.env.STRIPE_PRICE_SERENITE_SEMIANNUAL || '',
-  serenite_annual: process.env.STRIPE_PRICE_SERENITE_ANNUAL || '',
-  premium_monthly: process.env.STRIPE_PRICE_PREMIUM_MONTHLY || process.env.STRIPE_PRICE_PREMIUM || '',
-  premium_quarterly: process.env.STRIPE_PRICE_PREMIUM_QUARTERLY || '',
-  premium_semiannual: process.env.STRIPE_PRICE_PREMIUM_SEMIANNUAL || '',
-  premium_annual: process.env.STRIPE_PRICE_PREMIUM_ANNUAL || '',
+  serenite_monthly: process.env.STRIPE_PRICE_SERENITE_MONTHLY || 'price_1TAx0J03aEbW4K6ec9Pkn9IS',
+  serenite_quarterly: process.env.STRIPE_PRICE_SERENITE_QUARTERLY || 'price_1TEFK503aEbW4K6eixkwpolJ',
+  serenite_semiannual: process.env.STRIPE_PRICE_SERENITE_SEMIANNUAL || 'price_1TAxRi03aEbW4K6ewbLtrt3O',
+  serenite_annual: process.env.STRIPE_PRICE_SERENITE_ANNUAL || 'price_1TAxTI03aEbW4K6eIe9os4sH',
+  premium_monthly: process.env.STRIPE_PRICE_PREMIUM_MONTHLY || process.env.STRIPE_PRICE_PREMIUM || 'price_1TAx2s03aEbW4K6eH4SL0Qno',
+  premium_quarterly: process.env.STRIPE_PRICE_PREMIUM_QUARTERLY || 'price_1TAxVW03aEbW4K6efSa1xH1o',
+  premium_semiannual: process.env.STRIPE_PRICE_PREMIUM_SEMIANNUAL || 'price_1TAxWx03aEbW4K6ebRBuxORq',
+  premium_annual: process.env.STRIPE_PRICE_PREMIUM_ANNUAL || 'price_1TAxYV03aEbW4K6eIwPMLRyw',
 }
 
 // Pricing structure — per-month price (in euro cents)

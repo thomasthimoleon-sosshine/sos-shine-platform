@@ -94,7 +94,9 @@ export async function POST(request: Request) {
           const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
             || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : 'https://sosshine.com')
 
-          await sendWelcomeEmail(trimmedEmail, firstName, planName, tempPassword, siteUrl)
+          console.log(`[Checkout] Sending welcome email to ${trimmedEmail}...`)
+          const emailResult = await sendWelcomeEmail(trimmedEmail, firstName, planName, tempPassword, siteUrl)
+          console.log(`[Checkout] Welcome email result for ${trimmedEmail}:`, JSON.stringify(emailResult))
 
           console.log(`[Checkout] Account created for ${trimmedEmail} — plan: ${plan}_${effectiveDuration}`)
         }
@@ -157,10 +159,12 @@ async function sendWelcomeEmail(
     </p>
   `
 
-  await sendRawEmail(
+  const result = await sendRawEmail(
     email,
     'Bienvenue sur SOS Shine — Vos identifiants de connexion',
     html,
     { recipientName: firstName }
   )
+  console.log(`[Checkout] sendRawEmail result for ${email}:`, JSON.stringify(result))
+  return result
 }

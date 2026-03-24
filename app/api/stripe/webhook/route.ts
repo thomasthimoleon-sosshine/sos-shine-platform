@@ -100,11 +100,29 @@ async function handleCheckoutComplete(supabase: any, stripe: Stripe, session: St
 
   const customerId = session.customer as string
   const subscriptionId = session.subscription as string
-  const userEmail = session.customer_email || session.metadata?.email
+  let userEmail = session.customer_email || session.metadata?.email
   const userId = session.metadata?.user_id
   const hasWaitlistDiscount = session.metadata?.waitlist_discount === 'true'
 
-  if (!userEmail && !userId) return
+  // If no email from session, try to get it from Stripe customer
+  if (!userEmail && customerId && stripe) {
+    try {
+      const customer = await stripe.customers.retrieve(customerId)
+      if (customer && !customer.deleted && 'email' in customer) {
+        userEmail = customer.email
+        console.log(`[Stripe Webhook] Retrieved email from customer: ${userEmail}`)
+      }
+    } catch (e) {
+      console.error('[Stripe Webhook] Failed to retrieve customer email:', e)
+    }
+  }
+
+  console.log(`[Stripe Webhook] handleCheckoutComplete — email: ${userEmail}, userId: ${userId}, customerId: ${customerId}, subscriptionId: ${subscriptionId}`)
+
+  if (!userEmail && !userId) {
+    console.error('[Stripe Webhook] No email and no userId — cannot process checkout')
+    return
+  }
 
   // Find user by ID or email
   let profileId = userId
@@ -122,8 +140,13 @@ async function handleCheckoutComplete(supabase: any, stripe: Stripe, session: St
 
   // Auto-create user account if no profile exists
   if (!profileId && userEmail) {
-    const result = await autoCreateUser(supabase, userEmail, session.metadata?.prenom)
-    if (!result) return
+    const prenom = session.metadata?.prenom || session.client_reference_id || null
+    console.log(`[Stripe Webhook] Auto-creating user for ${userEmail} (prenom: ${prenom})`)
+    const result = await autoCreateUser(supabase, userEmail, prenom)
+    if (!result) {
+      console.error(`[Stripe Webhook] Failed to auto-create user for ${userEmail}`)
+      return
+    }
     profileId = result.userId
     isNewUser = true
     tempPassword = result.tempPassword
@@ -229,9 +252,13 @@ async function handleCheckoutComplete(supabase: any, stripe: Stripe, session: St
       // Send account creation email with temporary password
       const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
         || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : 'https://sosshine.com')
-      console.log(`[Stripe Webhook] Sending account creation email to ${profile.email}`)
-      await sendAccountCreatedEmail(profile.email, firstName, planName, tempPassword, siteUrl)
-      console.log(`[Stripe Webhook] Account creation email sent to ${profile.email}`)
+      console.log(`[Stripe Webhook] Sending account creation email to ${profile.email} (new user, temp password generated)`)
+      try {
+        await sendAccountCreatedEmail(profile.email, firstName, planName, tempPassword, siteUrl)
+        console.log(`[Stripe Webhook] Account creation email SENT to ${profile.email}`)
+      } catch (emailErr) {
+        console.error(`[Stripe Webhook] FAILED to send account creation email to ${profile.email}:`, emailErr)
+      }
     } else {
       // Email de bienvenue immédiat (utilisateur existant)
       console.log(`[Stripe Webhook] Sending subscription_welcome email to ${profile.email}`)
@@ -575,12 +602,17 @@ async function sendAccountCreatedEmail(
     </p>
   `
 
-  await sendRawEmail(
+  const result = await sendRawEmail(
     email,
     `Bienvenue sur SOS Shine — Vos identifiants de connexion`,
     html,
     { recipientName: firstName }
   )
+  if (!result.success) {
+    console.error(`[Stripe Webhook] sendAccountCreatedEmail FAILED for ${email}:`, result.error)
+  } else {
+    console.log(`[Stripe Webhook] sendAccountCreatedEmail SUCCESS for ${email}`)
+  }
 }
 
 function mapStripeStatus(status: string): 'trialing' | 'active' | 'inactive' | 'canceled' | 'past_due' {

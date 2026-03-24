@@ -160,9 +160,14 @@ export const PLAN_INFO = {
   },
 } as const
 
-// Get Stripe price ID for a given plan and duration
+// Get Stripe price ID for a given plan and duration (reads env at call-time for hot-reload support)
 export function getStripePriceId(plan: PlanId, duration: DurationId): string {
-  return STRIPE_PRICES[`${plan}_${duration}`] || ''
+  const key = `${plan}_${duration}`
+  // Try the static map first (populated at module load)
+  if (STRIPE_PRICES[key]) return STRIPE_PRICES[key]
+  // Fallback: read env directly (handles hot-reload / late env injection)
+  const envKey = `STRIPE_PRICE_${plan.toUpperCase()}_${duration.toUpperCase()}`
+  return process.env[envKey] || ''
 }
 
 // Get Stripe Payment Link for a given plan and duration

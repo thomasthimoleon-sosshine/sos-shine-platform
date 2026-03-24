@@ -77,14 +77,18 @@ export async function POST(request: Request) {
           }, { onConflict: 'id' })
 
           // Create subscription record
-          await supabase.from('subscriptions').upsert({
-            user_id: userId,
-            plan,
-            duration: effectiveDuration,
-            status: 'active',
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          }, { onConflict: 'user_id' }).then(() => {}).catch(() => {})
+          try {
+            await supabase.from('subscriptions').upsert({
+              user_id: userId,
+              plan,
+              duration: effectiveDuration,
+              status: 'active',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+            }, { onConflict: 'user_id' })
+          } catch {
+            // Ignore subscription creation errors
+          }
 
           // Send welcome email with credentials
           const siteUrl = process.env.NEXT_PUBLIC_SITE_URL

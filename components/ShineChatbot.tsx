@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const FAQ_DATA: { keywords: string[]; answer: string }[] = [
   {
     keywords: ['prix', 'tarif', 'coût', 'combien', 'abonnement', 'payer', 'gratuit', 'cher'],
-    answer: "Nous proposons deux formules : l'Essentiel à 29.90€/mois avec accès à l'encyclopédie et au forum, et le Premium à 99.90€/mois avec en plus les conférences en direct, l'accompagnement personnalisé et les groupes de parole. 💎",
+    answer: "Nous proposons trois formules : l'Essentielle à 9,90€/mois avec accès à l'encyclopédie et aux tchats communautaires, la Sérénité à 49,90€/mois avec en plus un soin collectif mensuel (7 jours d'essai gratuit), et le Premium à 99,90€/mois avec les lives hebdomadaires, le canal privé Telegram et l'accès aux événements (7 jours d'essai gratuit). 💎",
   },
   {
     keywords: ['essai', 'tester', 'essayer', 'période'],

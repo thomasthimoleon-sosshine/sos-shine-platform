@@ -8,11 +8,7 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
   ComposedChart, RadialBarChart, RadialBar,
 } from 'recharts'
-
-// ─── Pricing (monthly in €) ───
-const PLAN_PRICES = { essential: 9.90, serenite: 49.90, premium: 99.90 }
-const PLAN_NAMES = { essential: 'Essentielle', serenite: 'Sérénité', premium: 'Premium' }
-const PLAN_COLORS = { essential: '#74C0FC', serenite: '#55EFC4', premium: '#D4AF37' }
+import { PLAN_PRICES, PLAN_NAMES, PLAN_COLORS } from '@/lib/stripe'
 
 // ─── Cyprus fiscal data (2025-2026) ───
 const CYPRUS = {

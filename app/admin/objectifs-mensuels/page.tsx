@@ -22,9 +22,7 @@ const MONTHLY_TARGETS = [
 const PLAN_TARGET_RATIOS = { essential: 0.55, serenite: 0.30, premium: 0.15 }
 const DURATION_RATIOS = { monthly: 0.50, quarterly: 0.20, semiannual: 0.15, annual: 0.15 }
 
-const PLAN_PRICES: Record<string, number> = { essential: 9.90, serenite: 49.90, premium: 99.90 }
-const PLAN_LABELS: Record<string, string> = { essential: 'Essentielle', serenite: 'Sérénité', premium: 'Premium' }
-const PLAN_COLORS: Record<string, string> = { essential: '#74C0FC', serenite: '#55EFC4', premium: '#D4AF37' }
+import { PLAN_PRICES, PLAN_NAMES as PLAN_LABELS, PLAN_COLORS } from '@/lib/stripe'
 
 const MILESTONES = [
   { date: '22/03/2026', label: 'Lancement', target: 'Conversion waitlist → 50 premiers abonnés', icon: '🚀' },

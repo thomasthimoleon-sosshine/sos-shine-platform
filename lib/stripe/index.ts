@@ -187,6 +187,27 @@ export function hasBundles(plan: PlanId): boolean {
 // Coupon ID for waitlist discount (10€/month forever)
 export const STRIPE_WAITLIST_COUPON = process.env.STRIPE_WAITLIST_COUPON_ID || ''
 
+// Plan prices in EUR (derived from PRICES in cents) — single source of truth
+export const PLAN_PRICES: Record<PlanId, number> = {
+  essential: PRICES.essential.monthly / 100,
+  serenite: PRICES.serenite.monthly / 100,
+  premium: PRICES.premium.monthly / 100,
+}
+
+// Plan display names
+export const PLAN_NAMES: Record<PlanId, string> = {
+  essential: 'Essentielle',
+  serenite: 'Sérénité',
+  premium: 'Premium',
+}
+
+// Plan colors
+export const PLAN_COLORS: Record<PlanId, string> = {
+  essential: '#74C0FC',
+  serenite: '#55EFC4',
+  premium: '#D4AF37',
+}
+
 // Pre-launch date
 export const PRELAUNCH_END_DATE = new Date('2026-03-22T00:00:00+02:00')
 

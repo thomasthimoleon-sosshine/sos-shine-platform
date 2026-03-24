@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { PRICES, TOTAL_PRICES, ORIGINAL_PRICES, formatPrice } from "@/lib/stripe";
 
 const DEFAULT_LAUNCH_DATE = "2026-03-22T00:00:00+02:00";
 
@@ -380,7 +381,7 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
               </p>
               <div className="flex items-baseline justify-center gap-1 mb-2">
                 <span className="font-display text-4xl sm:text-5xl font-light" style={{ color: "#D4AF37" }}>
-                  9,90&euro;
+                  {formatPrice(PRICES.essential.monthly)}
                 </span>
                 <span className="text-sm" style={{ color: "var(--text-muted)" }}>/mois</span>
               </div>
@@ -409,7 +410,7 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
               </p>
               <div className="flex items-baseline justify-center gap-1 mb-2">
                 <span className="font-display text-4xl sm:text-5xl font-light" style={{ color: "#D4AF37" }}>
-                  49,90&euro;
+                  {formatPrice(PRICES.serenite.monthly)}
                 </span>
                 <span className="text-sm" style={{ color: "var(--text-muted)" }}>/mois</span>
               </div>
@@ -419,15 +420,15 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
               <div className="space-y-1.5 text-left">
                 <div className="flex justify-between text-[11px]" style={{ color: "var(--text-secondary)" }}>
                   <span>3 mois <span style={{ color: "#D4AF37" }}>-10%</span></span>
-                  <span><span className="font-medium" style={{ color: "#D4AF37" }}>134,73&euro;</span> <span className="line-through opacity-50">149,70&euro;</span></span>
+                  <span><span className="font-medium" style={{ color: "#D4AF37" }}>{formatPrice(TOTAL_PRICES.serenite.quarterly)}</span> <span className="line-through opacity-50">{formatPrice(ORIGINAL_PRICES.serenite.quarterly)}</span></span>
                 </div>
                 <div className="flex justify-between text-[11px]" style={{ color: "var(--text-secondary)" }}>
                   <span>6 mois <span style={{ color: "#D4AF37" }}>-20%</span></span>
-                  <span><span className="font-medium" style={{ color: "#D4AF37" }}>239,52&euro;</span> <span className="line-through opacity-50">299,60&euro;</span></span>
+                  <span><span className="font-medium" style={{ color: "#D4AF37" }}>{formatPrice(TOTAL_PRICES.serenite.semiannual)}</span> <span className="line-through opacity-50">{formatPrice(ORIGINAL_PRICES.serenite.semiannual)}</span></span>
                 </div>
                 <div className="flex justify-between text-[11px]" style={{ color: "var(--text-secondary)" }}>
                   <span>12 mois <span style={{ color: "#D4AF37" }}>-30%</span></span>
-                  <span><span className="font-medium" style={{ color: "#D4AF37" }}>419,16&euro;</span> <span className="line-through opacity-50">598,80&euro;</span></span>
+                  <span><span className="font-medium" style={{ color: "#D4AF37" }}>{formatPrice(TOTAL_PRICES.serenite.annual)}</span> <span className="line-through opacity-50">{formatPrice(ORIGINAL_PRICES.serenite.annual)}</span></span>
                 </div>
               </div>
             </div>
@@ -442,7 +443,7 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
               </p>
               <div className="flex items-baseline justify-center gap-1 mb-2">
                 <span className="font-display text-4xl sm:text-5xl font-light" style={{ color: "#D4AF37" }}>
-                  99,90&euro;
+                  {formatPrice(PRICES.premium.monthly)}
                 </span>
                 <span className="text-sm" style={{ color: "var(--text-muted)" }}>/mois</span>
               </div>
@@ -452,15 +453,15 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
               <div className="space-y-1.5 text-left">
                 <div className="flex justify-between text-[11px]" style={{ color: "var(--text-secondary)" }}>
                   <span>3 mois <span style={{ color: "#D4AF37" }}>-10%</span></span>
-                  <span><span className="font-medium" style={{ color: "#D4AF37" }}>289,70&euro;</span> <span className="line-through opacity-50">299,70&euro;</span></span>
+                  <span><span className="font-medium" style={{ color: "#D4AF37" }}>{formatPrice(TOTAL_PRICES.premium.quarterly)}</span> <span className="line-through opacity-50">{formatPrice(ORIGINAL_PRICES.premium.quarterly)}</span></span>
                 </div>
                 <div className="flex justify-between text-[11px]" style={{ color: "var(--text-secondary)" }}>
                   <span>6 mois <span style={{ color: "#D4AF37" }}>-20%</span></span>
-                  <span><span className="font-medium" style={{ color: "#D4AF37" }}>579,40&euro;</span> <span className="line-through opacity-50">599,40&euro;</span></span>
+                  <span><span className="font-medium" style={{ color: "#D4AF37" }}>{formatPrice(TOTAL_PRICES.premium.semiannual)}</span> <span className="line-through opacity-50">{formatPrice(ORIGINAL_PRICES.premium.semiannual)}</span></span>
                 </div>
                 <div className="flex justify-between text-[11px]" style={{ color: "var(--text-secondary)" }}>
                   <span>12 mois <span style={{ color: "#D4AF37" }}>-30%</span></span>
-                  <span><span className="font-medium" style={{ color: "#D4AF37" }}>839,16&euro;</span> <span className="line-through opacity-50">1 198,80&euro;</span></span>
+                  <span><span className="font-medium" style={{ color: "#D4AF37" }}>{formatPrice(TOTAL_PRICES.premium.annual)}</span> <span className="line-through opacity-50">{formatPrice(ORIGINAL_PRICES.premium.annual)}</span></span>
                 </div>
               </div>
             </div>

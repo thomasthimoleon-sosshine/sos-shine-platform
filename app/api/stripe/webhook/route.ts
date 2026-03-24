@@ -109,7 +109,7 @@ async function handleCheckoutComplete(supabase: any, stripe: Stripe, session: St
     try {
       const customer = await stripe.customers.retrieve(customerId)
       if (customer && !customer.deleted && 'email' in customer) {
-        userEmail = customer.email
+        userEmail = customer.email || undefined
         console.log(`[Stripe Webhook] Retrieved email from customer: ${userEmail}`)
       }
     } catch (e) {

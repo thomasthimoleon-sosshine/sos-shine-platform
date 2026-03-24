@@ -1,20 +1,10 @@
 import { NextResponse } from 'next/server'
-import { getStripe, getStripePriceId, STRIPE_WAITLIST_COUPON, PLAN_INFO } from '@/lib/stripe'
+import { getStripe, getStripePriceId, getPaymentLink, STRIPE_WAITLIST_COUPON, PLAN_INFO } from '@/lib/stripe'
 import type { PlanId, DurationId } from '@/lib/stripe'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
-import pg from 'pg'
 
 const VALID_PLANS: PlanId[] = ['essential', 'serenite', 'premium']
 const VALID_DURATIONS: DurationId[] = ['monthly', 'quarterly', 'semiannual', 'annual']
-
-let pool: pg.Pool | null = null
-function getPool() {
-  if (pool) return pool
-  const connectionString = process.env.DATABASE_URL
-  if (!connectionString) return null
-  pool = new pg.Pool({ connectionString, max: 5, idleTimeoutMillis: 30000 })
-  return pool
-}
 
 export async function POST(request: Request) {
   try {
@@ -37,50 +27,40 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Email requis' }, { status: 400 })
     }
 
-    // Stripe SDK is required — no fallback to static payment links (metadata would be lost)
+    // If Stripe SDK not available, fallback to Payment Links
     if (!stripe) {
-      console.error('[Checkout] Stripe SDK not initialized — check STRIPE_SECRET_KEY env var')
-      return NextResponse.json({ error: 'Paiement temporairement indisponible. Veuillez réessayer plus tard.' }, { status: 500 })
+      console.error('[Checkout] Stripe SDK not initialized — falling back to Payment Link')
+      return fallbackToPaymentLink(plan as PlanId, effectiveDuration, email, prenom)
     }
 
     // Check if the user is on the waitlist (eligible for discount)
     let hasWaitlistDiscount = false
-    const dbPool = getPool()
-    if (dbPool) {
-      try {
-        const result = await dbPool.query(
-          'SELECT id FROM waitlist WHERE LOWER(email) = LOWER($1) LIMIT 1',
-          [email.trim()]
-        )
-        hasWaitlistDiscount = (result.rows?.length || 0) > 0
-      } catch {
-        // If waitlist table doesn't exist or error, check via Supabase
-        try {
-          const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-          const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-          if (supabaseUrl && supabaseKey) {
-            const sb = createSupabaseClient(supabaseUrl, supabaseKey)
-            const { data } = await sb.from('crm_contacts')
-              .select('id')
-              .eq('email', email.toLowerCase().trim())
-              .eq('source', 'waitlist')
-              .limit(1)
-            hasWaitlistDiscount = (data?.length || 0) > 0
-          }
-        } catch {}
+    try {
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+      const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+      if (supabaseUrl && supabaseKey) {
+        const sb = createSupabaseClient(supabaseUrl, supabaseKey)
+        const { data } = await sb.from('crm_contacts')
+          .select('id')
+          .eq('email', email.toLowerCase().trim())
+          .eq('source', 'waitlist')
+          .limit(1)
+        hasWaitlistDiscount = (data?.length || 0) > 0
       }
+    } catch {
+      // Ignore waitlist check errors
     }
 
     // Determine price ID
     const priceId = getStripePriceId(plan as PlanId, effectiveDuration)
 
     if (!priceId) {
-      console.error(`[Checkout] No price ID for ${plan}_${effectiveDuration} — check STRIPE_PRICE_* env vars`)
-      return NextResponse.json({ error: `L'offre ${plan} en ${effectiveDuration} n'est pas encore disponible.` }, { status: 400 })
+      console.error(`[Checkout] No price ID for ${plan}_${effectiveDuration} — falling back to Payment Link`)
+      return fallbackToPaymentLink(plan as PlanId, effectiveDuration, email, prenom)
     }
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
-      || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : 'http://localhost:5000')
+      || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : 'https://sosshine.com')
 
     // Determine if this plan has a free trial
     const planInfo = PLAN_INFO[plan as PlanId]
@@ -134,6 +114,37 @@ export async function POST(request: Request) {
     console.error('[Checkout] Session creation error:', err)
     const stripeMsg = err instanceof Error ? err.message : 'Unknown error'
     console.error('[Checkout] Error details:', stripeMsg)
-    return NextResponse.json({ error: `Erreur lors de la création de la session: ${stripeMsg}` }, { status: 500 })
+
+    // Fallback to Payment Link on Stripe API errors (e.g. invalid price ID)
+    try {
+      const body = await request.clone().json().catch(() => ({}))
+      const plan = body.plan as PlanId
+      const duration = (body.duration || 'monthly') as DurationId
+      const effectiveDuration: DurationId = (plan === 'essential' && duration !== 'monthly') ? 'monthly' : duration
+
+      return fallbackToPaymentLink(plan, effectiveDuration, body.email, body.prenom)
+    } catch {
+      return NextResponse.json({ error: `Erreur lors de la création de la session: ${stripeMsg}` }, { status: 500 })
+    }
   }
+}
+
+function fallbackToPaymentLink(plan: PlanId, duration: DurationId, email?: string, prenom?: string) {
+  const paymentLink = getPaymentLink(plan, duration)
+  if (!paymentLink) {
+    return NextResponse.json({ error: `L'offre ${plan} en ${duration} n'est pas encore disponible.` }, { status: 400 })
+  }
+
+  // Append prefilled email to payment link URL
+  const url = new URL(paymentLink)
+  if (email) url.searchParams.set('prefilled_email', email)
+  if (prenom) url.searchParams.set('client_reference_id', prenom)
+
+  console.log(`[Checkout] Fallback to Payment Link: ${url.toString()}`)
+
+  return NextResponse.json({
+    url: url.toString(),
+    hasWaitlistDiscount: false,
+    fallback: true,
+  })
 }

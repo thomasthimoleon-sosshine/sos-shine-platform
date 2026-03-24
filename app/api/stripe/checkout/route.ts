@@ -83,7 +83,20 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ url: session.url })
   } catch (err: unknown) {
-    console.error('[Checkout] Error:', err)
-    return NextResponse.json({ error: 'Une erreur est survenue. Veuillez réessayer.' }, { status: 500 })
+    const stripeErr = err as { type?: string; code?: string; message?: string }
+    console.error('[Checkout] Error:', stripeErr.type, stripeErr.code, stripeErr.message, err)
+
+    // Return specific error for debugging
+    if (stripeErr.type === 'StripeInvalidRequestError') {
+      return NextResponse.json({ error: `Erreur Stripe: ${stripeErr.message}` }, { status: 400 })
+    }
+    if (stripeErr.type === 'StripeAuthenticationError') {
+      return NextResponse.json({ error: 'Clé API Stripe invalide. Contactez le support.' }, { status: 500 })
+    }
+    if (stripeErr.type === 'StripeConnectionError') {
+      return NextResponse.json({ error: 'Impossible de contacter Stripe. Veuillez réessayer.' }, { status: 502 })
+    }
+
+    return NextResponse.json({ error: `Une erreur est survenue: ${stripeErr.message || 'Veuillez réessayer.'}` }, { status: 500 })
   }
 }

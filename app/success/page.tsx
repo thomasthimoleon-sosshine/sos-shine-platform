@@ -1,52 +1,9 @@
 'use client'
 
-import { Suspense, useEffect, useState } from 'react'
-import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 
 export default function SuccessPage() {
-  return (
-    <Suspense fallback={
-      <main className="min-h-screen flex items-center justify-center" style={{ background: 'var(--dark)' }}>
-        <div className="w-8 h-8 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin" />
-      </main>
-    }>
-      <SuccessContent />
-    </Suspense>
-  )
-}
-
-function SuccessContent() {
-  const searchParams = useSearchParams()
-  const sessionId = searchParams.get('session_id')
-  const [verificationStatus, setVerificationStatus] = useState<'verifying' | 'verified' | 'error' | 'idle'>('idle')
-  const [emailSent, setEmailSent] = useState(false)
-
-  useEffect(() => {
-    if (!sessionId) return
-
-    setVerificationStatus('verifying')
-
-    fetch('/api/stripe/verify-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ session_id: sessionId }),
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.verified) {
-          setVerificationStatus('verified')
-          setEmailSent(!!data.email_sent)
-        } else {
-          setVerificationStatus('error')
-        }
-      })
-      .catch(() => {
-        setVerificationStatus('error')
-      })
-  }, [sessionId])
-
   return (
     <main className="min-h-screen flex items-center justify-center px-6" style={{ background: 'var(--dark)' }}>
       <motion.div
@@ -71,30 +28,12 @@ function SuccessContent() {
           Inscription confirm&eacute;e !
         </h1>
 
-        {verificationStatus === 'verifying' && (
-          <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
-            V&eacute;rification de votre paiement en cours...
-          </p>
-        )}
-
-        {verificationStatus === 'verified' && emailSent && (
-          <div
-            className="flex items-center gap-2 justify-center mb-4 px-4 py-2 rounded-full mx-auto"
-            style={{ background: 'rgba(85,239,196,0.08)', border: '1px solid rgba(85,239,196,0.2)', width: 'fit-content' }}
-          >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="#55EFC4" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-            </svg>
-            <span className="text-xs" style={{ color: '#55EFC4' }}>Email de confirmation envoy&eacute;</span>
-          </div>
-        )}
-
         <div
           className="glass p-8 mb-8 text-left"
           style={{ borderColor: 'rgba(212,175,55,0.15)' }}
         >
           <p className="text-base leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
-            Votre paiement a &eacute;t&eacute; trait&eacute; avec succ&egrave;s et votre compte <strong style={{ color: '#D4AF37' }}>SOS Shine</strong> est en cours de cr&eacute;ation.
+            Votre compte <strong style={{ color: '#D4AF37' }}>SOS Shine</strong> a &eacute;t&eacute; cr&eacute;&eacute; avec succ&egrave;s.
           </p>
 
           <div
@@ -110,7 +49,7 @@ function SuccessContent() {
                   V&eacute;rifiez votre bo&icirc;te mail
                 </p>
                 <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                  Vous allez recevoir un email avec vos <strong>identifiants de connexion</strong> (email + mot de passe temporaire).
+                  Vous avez re&ccedil;u un email avec vos <strong>identifiants de connexion</strong> (email + mot de passe temporaire).
                   Pensez &agrave; v&eacute;rifier vos spams si vous ne le voyez pas.
                 </p>
               </div>
@@ -159,29 +98,6 @@ function SuccessContent() {
           </Link>
         </div>
 
-        {verificationStatus === 'error' && (
-          <div
-            className="mt-6 p-5 rounded-xl text-left"
-            style={{ background: 'rgba(248,113,113,0.06)', border: '1px solid rgba(248,113,113,0.15)' }}
-          >
-            <div className="flex items-start gap-3">
-              <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="#f87171" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
-              </svg>
-              <div>
-                <p className="font-semibold text-sm mb-1" style={{ color: '#f87171' }}>
-                  Impossible de v&eacute;rifier le paiement
-                </p>
-                <p className="text-[13px] leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                  Pas d&apos;inqui&eacute;tude, votre paiement a bien &eacute;t&eacute; re&ccedil;u par Stripe.
-                  Vos identifiants vous seront envoy&eacute;s par email dans les prochaines minutes.
-                  Si vous ne recevez rien sous 15 minutes, contactez le support.
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
         <div className="mt-8 p-4 rounded-xl text-center" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}>
           <p className="text-xs mb-2" style={{ color: 'var(--text-muted)' }}>
             Vous n&apos;avez pas re&ccedil;u l&apos;email ? Attendez quelques minutes puis v&eacute;rifiez vos spams.
@@ -193,7 +109,7 @@ function SuccessContent() {
             <Link href="/forgot-password" style={{ color: '#D4AF37', textDecoration: 'underline' }}>
               cr&eacute;er un mot de passe
             </Link>
-            {' '}avec l&apos;email utilis&eacute; lors du paiement.
+            {' '}avec l&apos;email utilis&eacute; lors de l&apos;inscription.
           </p>
         </div>
       </motion.div>

@@ -303,6 +303,8 @@ function EmailModal({ plan, duration, onClose }: { plan: PlanId; duration: Durat
   const [prenom, setPrenom] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [accountCreated, setAccountCreated] = useState(false)
+  const [paymentUrl, setPaymentUrl] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -319,7 +321,9 @@ function EmailModal({ plan, duration, onClose }: { plan: PlanId; duration: Durat
       })
       const data = await res.json()
       if (data.url) {
-        window.location.href = data.url
+        setAccountCreated(true)
+        setPaymentUrl(data.url)
+        setLoading(false)
       } else {
         setError(data.error || 'Une erreur est survenue')
         setLoading(false)
@@ -349,71 +353,118 @@ function EmailModal({ plan, duration, onClose }: { plan: PlanId; duration: Durat
           </svg>
         </button>
 
-        <h3 className="font-display text-xl font-light mb-2" style={{ color: '#D4AF37' }}>
-          Finalisez votre inscription
-        </h3>
-        <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
-          Entrez votre email pour cr&eacute;er votre compte et proc&eacute;der au paiement.
-          Vous recevrez vos identifiants de connexion par email.
-        </p>
+        {accountCreated ? (
+          <>
+            <div className="flex items-center justify-center mb-4">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'rgba(85,239,196,0.1)', border: '1px solid rgba(85,239,196,0.25)' }}>
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="#55EFC4" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+              </div>
+            </div>
+            <h3 className="font-display text-xl font-light mb-2 text-center" style={{ color: '#D4AF37' }}>
+              Compte cr&eacute;&eacute; !
+            </h3>
+            <p className="text-sm mb-2 text-center" style={{ color: '#55EFC4' }}>
+              Vos identifiants de connexion ont &eacute;t&eacute; envoy&eacute;s &agrave; <strong>{email}</strong>
+            </p>
+            <p className="text-xs mb-6 text-center" style={{ color: 'var(--text-muted)' }}>
+              Pensez &agrave; v&eacute;rifier vos spams si vous ne voyez pas l&apos;email.
+            </p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <input
-              type="text"
-              placeholder="Votre pr&eacute;nom (optionnel)"
-              value={prenom}
-              onChange={(e) => setPrenom(e.target.value)}
-              className="w-full px-5 py-3.5 rounded-xl text-sm font-light outline-none transition-all duration-300"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: 'var(--text-primary)' }}
-              onFocus={(e) => (e.target.style.borderColor = 'rgba(212,175,55,0.3)')}
-              onBlur={(e) => (e.target.style.borderColor = 'rgba(255,255,255,0.08)')}
-            />
-          </div>
-          <div>
-            <input
-              type="email"
-              required
-              placeholder="Votre email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-5 py-3.5 rounded-xl text-sm font-light outline-none transition-all duration-300"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: 'var(--text-primary)' }}
-              onFocus={(e) => (e.target.style.borderColor = 'rgba(212,175,55,0.3)')}
-              onBlur={(e) => (e.target.style.borderColor = 'rgba(255,255,255,0.08)')}
-            />
-          </div>
+            <div className="space-y-3">
+              <a
+                href={paymentUrl}
+                className="block w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm text-center"
+                style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}
+              >
+                Proc&eacute;der au paiement
+              </a>
+              <a
+                href="/login"
+                className="block w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm text-center"
+                style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)' }}
+              >
+                Se connecter
+              </a>
+            </div>
 
-          {error && (
-            <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }}
-              className="text-sm text-center" style={{ color: '#ef4444' }}>
-              {error}
-            </motion.p>
-          )}
+            <p className="text-center text-[11px] mt-4" style={{ color: 'var(--text-muted)' }}>
+              <svg className="w-3 h-3 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+              </svg>
+              Paiement s&eacute;curis&eacute; par Stripe
+            </p>
+          </>
+        ) : (
+          <>
+            <h3 className="font-display text-xl font-light mb-2" style={{ color: '#D4AF37' }}>
+              Finalisez votre inscription
+            </h3>
+            <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
+              Entrez votre email pour cr&eacute;er votre compte et proc&eacute;der au paiement.
+              Vous recevrez vos identifiants de connexion par email.
+            </p>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm disabled:opacity-50"
-            style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}
-          >
-            {loading ? (
-              <span className="flex items-center justify-center gap-2">
-                <span className="w-4 h-4 border-2 border-[#050505] border-t-transparent rounded-full animate-spin" />
-                Redirection vers le paiement...
-              </span>
-            ) : (
-              'Continuer vers le paiement'
-            )}
-          </button>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <input
+                  type="text"
+                  placeholder="Votre pr&eacute;nom (optionnel)"
+                  value={prenom}
+                  onChange={(e) => setPrenom(e.target.value)}
+                  className="w-full px-5 py-3.5 rounded-xl text-sm font-light outline-none transition-all duration-300"
+                  style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: 'var(--text-primary)' }}
+                  onFocus={(e) => (e.target.style.borderColor = 'rgba(212,175,55,0.3)')}
+                  onBlur={(e) => (e.target.style.borderColor = 'rgba(255,255,255,0.08)')}
+                />
+              </div>
+              <div>
+                <input
+                  type="email"
+                  required
+                  placeholder="Votre email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-5 py-3.5 rounded-xl text-sm font-light outline-none transition-all duration-300"
+                  style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: 'var(--text-primary)' }}
+                  onFocus={(e) => (e.target.style.borderColor = 'rgba(212,175,55,0.3)')}
+                  onBlur={(e) => (e.target.style.borderColor = 'rgba(255,255,255,0.08)')}
+                />
+              </div>
 
-          <p className="text-center text-[11px]" style={{ color: 'var(--text-muted)' }}>
-            <svg className="w-3 h-3 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-            </svg>
-            Paiement s&eacute;curis&eacute; par Stripe
-          </p>
-        </form>
+              {error && (
+                <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }}
+                  className="text-sm text-center" style={{ color: '#ef4444' }}>
+                  {error}
+                </motion.p>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm disabled:opacity-50"
+                style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}
+              >
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="w-4 h-4 border-2 border-[#050505] border-t-transparent rounded-full animate-spin" />
+                    Cr&eacute;ation du compte...
+                  </span>
+                ) : (
+                  'Continuer vers le paiement'
+                )}
+              </button>
+
+              <p className="text-center text-[11px]" style={{ color: 'var(--text-muted)' }}>
+                <svg className="w-3 h-3 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                </svg>
+                Paiement s&eacute;curis&eacute; par Stripe
+              </p>
+            </form>
+          </>
+        )}
       </motion.div>
     </div>
   )

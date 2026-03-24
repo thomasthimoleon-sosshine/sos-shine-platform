@@ -1,9 +1,63 @@
 'use client'
 
+import { useEffect, useState, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 
-export default function SuccessPage() {
+function SuccessContent() {
+  const searchParams = useSearchParams()
+  const sessionId = searchParams.get('session_id')
+  const [status, setStatus] = useState<'loading' | 'verified' | 'error'>('loading')
+  const [emailSent, setEmailSent] = useState(false)
+  const [isNewAccount, setIsNewAccount] = useState(false)
+
+  useEffect(() => {
+    if (!sessionId) {
+      // No session_id — show generic success
+      setStatus('verified')
+      return
+    }
+
+    // Verify the Stripe session and trigger account creation + email if webhook didn't fire
+    fetch('/api/stripe/verify-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session_id: sessionId }),
+    })
+      .then(r => r.json())
+      .then(data => {
+        if (data.verified) {
+          setStatus('verified')
+          setEmailSent(data.email_sent || false)
+          setIsNewAccount(data.account_created || false)
+        } else {
+          setStatus('verified') // Still show success UI
+        }
+      })
+      .catch(() => setStatus('verified'))
+  }, [sessionId])
+
+  if (status === 'loading') {
+    return (
+      <main className="min-h-screen flex items-center justify-center px-6" style={{ background: 'var(--dark)' }}>
+        <div className="text-center">
+          <div
+            className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse"
+            style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.25)' }}
+          >
+            <svg className="w-8 h-8 animate-spin" fill="none" viewBox="0 0 24 24" stroke="#D4AF37" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182" />
+            </svg>
+          </div>
+          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+            V&eacute;rification de votre paiement...
+          </p>
+        </div>
+      </main>
+    )
+  }
+
   return (
     <main className="min-h-screen flex items-center justify-center px-6" style={{ background: 'var(--dark)' }}>
       <motion.div
@@ -25,7 +79,7 @@ export default function SuccessPage() {
           className="font-display text-3xl sm:text-4xl font-light mb-4"
           style={{ color: '#D4AF37' }}
         >
-          Inscription confirm&eacute;e !
+          Paiement confirm&eacute; !
         </h1>
 
         <div
@@ -33,7 +87,7 @@ export default function SuccessPage() {
           style={{ borderColor: 'rgba(212,175,55,0.15)' }}
         >
           <p className="text-base leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
-            Votre compte <strong style={{ color: '#D4AF37' }}>SOS Shine</strong> a &eacute;t&eacute; cr&eacute;&eacute; avec succ&egrave;s.
+            Votre paiement a bien &eacute;t&eacute; re&ccedil;u. Votre compte <strong style={{ color: '#D4AF37' }}>SOS Shine</strong> est pr&ecirc;t.
           </p>
 
           <div
@@ -49,8 +103,10 @@ export default function SuccessPage() {
                   V&eacute;rifiez votre bo&icirc;te mail
                 </p>
                 <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                  Vous avez re&ccedil;u un email avec vos <strong>identifiants de connexion</strong> (email + mot de passe temporaire).
-                  Pensez &agrave; v&eacute;rifier vos spams si vous ne le voyez pas.
+                  {isNewAccount
+                    ? <>Vous avez re&ccedil;u un email avec vos <strong>identifiants de connexion</strong> (email + mot de passe temporaire). Pensez &agrave; v&eacute;rifier vos spams si vous ne le voyez pas.</>
+                    : <>Un email de confirmation vous a &eacute;t&eacute; envoy&eacute;. Pensez &agrave; v&eacute;rifier vos spams si vous ne le voyez pas.</>
+                  }
                 </p>
               </div>
             </div>
@@ -114,5 +170,19 @@ export default function SuccessPage() {
         </div>
       </motion.div>
     </main>
+  )
+}
+
+export default function SuccessPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen flex items-center justify-center px-6" style={{ background: 'var(--dark)' }}>
+        <div className="text-center">
+          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Chargement...</p>
+        </div>
+      </main>
+    }>
+      <SuccessContent />
+    </Suspense>
   )
 }

@@ -37,8 +37,11 @@ export async function POST(request: Request) {
     // Get Stripe Price ID
     const priceId = getStripePriceId(plan as PlanId, effectiveDuration)
     if (!priceId) {
-      return NextResponse.json({ error: `L'offre ${plan} en ${effectiveDuration} n'est pas encore disponible.` }, { status: 400 })
+      console.error(`[Checkout] No price ID found for ${plan}_${effectiveDuration}`)
+      return NextResponse.json({ error: `L'offre ${PLAN_NAMES[plan as PlanId] || plan} en ${effectiveDuration} n'est pas encore disponible. Veuillez contacter le support.` }, { status: 400 })
     }
+
+    console.log(`[Checkout] Using price ID: ${priceId} for ${plan}_${effectiveDuration}`)
 
     const siteUrl = getSiteUrl()
     const firstName = prenom?.trim() || 'Membre'
@@ -83,20 +86,30 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ url: session.url })
   } catch (err: unknown) {
-    const stripeErr = err as { type?: string; code?: string; message?: string }
-    console.error('[Checkout] Error:', stripeErr.type, stripeErr.code, stripeErr.message, err)
+    const stripeErr = err as { type?: string; code?: string; message?: string; statusCode?: number }
+    console.error('[Checkout] Error:', JSON.stringify({
+      type: stripeErr.type,
+      code: stripeErr.code,
+      message: stripeErr.message,
+      statusCode: stripeErr.statusCode,
+    }))
 
     // Return specific error for debugging
     if (stripeErr.type === 'StripeInvalidRequestError') {
-      return NextResponse.json({ error: `Erreur Stripe: ${stripeErr.message}` }, { status: 400 })
+      // Common: invalid price ID, missing product, etc.
+      const msg = stripeErr.message || 'Requête invalide'
+      console.error(`[Checkout] StripeInvalidRequestError: ${msg}`)
+      return NextResponse.json({ error: `Erreur de configuration: ${msg}` }, { status: 400 })
     }
     if (stripeErr.type === 'StripeAuthenticationError') {
-      return NextResponse.json({ error: 'Clé API Stripe invalide. Contactez le support.' }, { status: 500 })
+      console.error('[Checkout] StripeAuthenticationError — check STRIPE_SECRET_KEY')
+      return NextResponse.json({ error: 'Erreur d\'authentification Stripe. Contactez le support.' }, { status: 500 })
     }
     if (stripeErr.type === 'StripeConnectionError') {
       return NextResponse.json({ error: 'Impossible de contacter Stripe. Veuillez réessayer.' }, { status: 502 })
     }
 
-    return NextResponse.json({ error: `Une erreur est survenue: ${stripeErr.message || 'Veuillez réessayer.'}` }, { status: 500 })
+    const errorMsg = stripeErr.message || 'Erreur inconnue'
+    return NextResponse.json({ error: `Erreur: ${errorMsg}` }, { status: 500 })
   }
 }

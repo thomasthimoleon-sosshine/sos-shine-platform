@@ -279,7 +279,7 @@ async function sendAccountEmail(
       </p>
     `
 
-    await sendRawEmail(email, 'Bienvenue sur SOS Shine — Vos identifiants de connexion', html, { recipientName: firstName })
+    await sendRawEmail(email, 'Bienvenue sur SOS Shine — Vos identifiants de connexion', html, { recipientName: firstName, eventType: 'auto_email_account_created' })
   } else {
     // Existing user: send welcome/confirmation
     const result = await sendTemplateEmail('subscription_welcome', email, {

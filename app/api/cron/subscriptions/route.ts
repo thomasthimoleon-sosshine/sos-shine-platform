@@ -209,7 +209,7 @@ async function sendReminder(
     const { client: resend, fromEmail } = await getResendClient()
 
     const { error } = await resend.emails.send({
-      from: fromEmail,
+      from: `SOS Shine® <${fromEmail}>`,
       to: profile.email,
       subject: emailContent.subject,
       html: emailContent.html,

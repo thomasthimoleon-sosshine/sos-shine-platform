@@ -259,7 +259,7 @@ export async function sendRawEmail(
   recipientEmail: string,
   subject: string,
   bodyHtml: string,
-  options?: { recipientName?: string }
+  options?: { recipientName?: string; eventType?: string }
 ): Promise<{ success: boolean; error?: string }> {
   try {
     const fullHtml = wrapInEmailLayout(bodyHtml)
@@ -284,7 +284,7 @@ export async function sendRawEmail(
         await supabase.from('crm_campaign_events').insert({
           campaign_id: null,
           contact_id: null,
-          event_type: 'auto_email_account_created',
+          event_type: options?.eventType || 'auto_email_raw',
           metadata: {
             recipient: recipientEmail,
             recipient_name: options?.recipientName,

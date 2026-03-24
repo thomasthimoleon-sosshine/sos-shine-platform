@@ -85,7 +85,7 @@ export async function POST(request: Request) {
 
         const { client: resend, fromEmail } = await getResendClient()
         const { error: sendErr } = await resend.emails.send({
-          from: fromEmail,
+          from: `SOS Shine® <${fromEmail}>`,
           to: cleanEmail,
           subject,
           html,

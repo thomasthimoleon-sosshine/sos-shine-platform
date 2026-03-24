@@ -25,8 +25,16 @@ export async function GET(request: Request) {
           const email = user.email || ''
           const avatarUrl = user.user_metadata?.avatar_url || user.user_metadata?.picture || null
 
-          await admin.from('profiles').upsert(
-            {
+          // Check if profile already exists to avoid overwriting plan/role
+          const { data: existingProfile } = await admin
+            .from('profiles')
+            .select('id')
+            .eq('id', user.id)
+            .maybeSingle()
+
+          if (!existingProfile) {
+            // Only create profile if it doesn't exist — never overwrite existing data
+            await admin.from('profiles').insert({
               id: user.id,
               prenom,
               email,
@@ -37,9 +45,14 @@ export async function GET(request: Request) {
               video_url: null,
               plan: null,
               is_bot: false,
-            },
-            { onConflict: 'id', ignoreDuplicates: true }
-          )
+            })
+          } else {
+            // Update only safe fields (avatar, prenom if empty)
+            await admin.from('profiles').update({
+              avatar_url: avatarUrl,
+              email,
+            }).eq('id', user.id)
+          }
         } catch {
           // Profile creation is best-effort; user can still proceed
         }

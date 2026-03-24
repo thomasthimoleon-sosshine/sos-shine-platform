@@ -414,10 +414,8 @@ async function handlePaymentFailed(supabase: any, invoice: Stripe.Invoice) {
     updated_at: now.toISOString(),
   }).eq('user_id', sub.user_id)
 
-  // Deactivate profile after payment failure
-  await supabase.from('profiles').update({
-    is_active: false,
-  }).eq('id', sub.user_id)
+  // Keep user active during grace period — they have 7 days to fix payment
+  // Access will be blocked by the cron job after grace_period_end
 
   // Logger l'échec de paiement
   await supabase.from('subscription_payment_logs').insert({
@@ -606,7 +604,7 @@ async function sendAccountCreatedEmail(
     email,
     `Bienvenue sur SOS Shine — Vos identifiants de connexion`,
     html,
-    { recipientName: firstName }
+    { recipientName: firstName, eventType: 'auto_email_account_created' }
   )
   if (!result.success) {
     console.error(`[Stripe Webhook] sendAccountCreatedEmail FAILED for ${email}:`, result.error)

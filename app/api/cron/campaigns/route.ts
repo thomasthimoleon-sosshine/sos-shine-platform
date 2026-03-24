@@ -63,7 +63,7 @@ export async function GET(request: Request) {
           )
 
           const { error: sendErr } = await resend.emails.send({
-            from: fromEmail,
+            from: `SOS Shine® <${fromEmail}>`,
             to: contact.email,
             subject: campaign.subject.replace(/\{firstName\}/g, contact.first_name || 'Membre'),
             html: wrappedHtml + trackingPixel,

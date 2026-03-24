@@ -68,20 +68,13 @@ export async function POST(request: Request) {
         price: newPriceId,
       }],
       proration_behavior: isUpgrade ? 'create_prorations' : 'none',
-      // Pour un downgrade, on applique à la fin de la période
-      ...(isUpgrade ? {} : {
-        cancel_at_period_end: false,
-        metadata: {
-          ...stripeSubscription.metadata,
-          plan: new_plan,
-          pending_downgrade: 'false',
-        },
-      }),
+      ...(isUpgrade ? {} : { cancel_at_period_end: false }),
       metadata: {
         ...stripeSubscription.metadata,
         plan: new_plan,
         duration,
         previous_plan: sub.plan,
+        ...(isUpgrade ? {} : { pending_downgrade: 'false' }),
       },
     })
 

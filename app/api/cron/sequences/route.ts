@@ -58,7 +58,7 @@ export async function GET(request: Request) {
           .replace(/\{firstName\}/g, enrollment.contact_first_name || 'Membre')
 
         const { error: sendErr } = await resend.emails.send({
-          from: fromEmail,
+          from: `SOS Shine® <${fromEmail}>`,
           to: enrollment.contact_email,
           subject: personalizedSubject,
           html: personalizedHtml,

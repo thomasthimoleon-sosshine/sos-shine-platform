@@ -189,12 +189,17 @@ export async function POST(request: NextRequest) {
       const supabase = getAdminClient()
       if (!supabase) return NextResponse.json({ error: 'Config missing' }, { status: 500 })
 
-      // Reset failed emails to pending so cron picks them up
+      // Count failed emails first
       const { count } = await supabase
+        .from('scheduled_emails')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'failed')
+
+      // Reset failed emails to pending so cron picks them up
+      await supabase
         .from('scheduled_emails')
         .update({ status: 'pending', error_message: null })
         .eq('status', 'failed')
-        .select('*', { count: 'exact', head: true })
 
       return NextResponse.json({ success: true, retried: count || 0 })
     }

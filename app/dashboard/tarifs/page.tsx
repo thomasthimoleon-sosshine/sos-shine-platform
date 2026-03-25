@@ -62,6 +62,17 @@ export default function TarifsPage() {
   useEffect(() => {
     if (searchParams.get('checkout') === 'success') {
       setCheckoutSuccess(true)
+
+      // Filet de sécurité : si le webhook n'a pas fonctionné,
+      // verify-session déclenche la création du compte + email
+      const sessionId = searchParams.get('session_id')
+      if (sessionId) {
+        fetch('/api/stripe/verify-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ session_id: sessionId }),
+        }).catch(() => {})
+      }
     }
   }, [searchParams])
 

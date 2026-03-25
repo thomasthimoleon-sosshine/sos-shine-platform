@@ -371,11 +371,11 @@ export default function OnboardingPage() {
 
               <div className="flex flex-col items-center gap-3">
                 <button
-                  onClick={() => router.push('/dashboard/objectifs')}
+                  onClick={() => router.push('/dashboard')}
                   className="px-8 py-3.5 rounded-full text-sm font-medium transition-all hover:opacity-90 cursor-pointer"
                   style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#09090b' }}
                 >
-                  Voir mes objectifs
+                  Accéder à mon espace
                 </button>
                 <button
                   onClick={() => router.push('/dashboard/encyclopedie')}

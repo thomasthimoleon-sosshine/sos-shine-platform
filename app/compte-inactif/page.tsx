@@ -1,19 +1,23 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
+import { loadStripe } from '@stripe/stripe-js'
+import { EmbeddedCheckoutProvider, EmbeddedCheckout } from '@stripe/react-stripe-js'
 import { createClient } from '@/lib/supabase/client'
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '')
 
 export default function CompteInactifPage() {
   const router = useRouter()
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
+  const [userPrenom, setUserPrenom] = useState('')
   const [subStatus, setSubStatus] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [loadingPortal, setLoadingPortal] = useState(false)
   const [hasSubscription, setHasSubscription] = useState(false)
+  const [checkoutPlan, setCheckoutPlan] = useState<{ plan: string; duration: string } | null>(null)
 
   useEffect(() => {
     const supabase = createClient()
@@ -23,6 +27,7 @@ export default function CompteInactifPage() {
 
       setUserEmail(user.email || null)
       setUserId(user.id)
+      setUserPrenom(user.user_metadata?.prenom || user.user_metadata?.full_name?.split(' ')[0] || '')
 
       const { data: sub } = await supabase
         .from('subscriptions')
@@ -34,7 +39,6 @@ export default function CompteInactifPage() {
         setSubStatus(sub.status)
         setHasSubscription(true)
 
-        // If subscription is active, redirect to dashboard
         if (sub.status === 'active' || sub.status === 'trialing') {
           router.push('/dashboard')
         }
@@ -43,42 +47,27 @@ export default function CompteInactifPage() {
     loadData()
   }, [router])
 
-  const handleResubscribe = async (plan: 'essential' | 'serenite' | 'premium') => {
-    setLoading(true)
-    try {
-      const res = await fetch('/api/stripe/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan, email: userEmail, user_id: userId }),
-      })
-      const data = await res.json()
-      if (data.url) {
-        window.location.href = data.url
-      } else {
-        alert(data.error || 'Erreur lors de la redirection')
-      }
-    } catch {
-      alert('Erreur de connexion')
-    }
-    setLoading(false)
+  const handleResubscribe = (plan: 'essential' | 'serenite' | 'premium') => {
+    setCheckoutPlan({ plan, duration: 'monthly' })
   }
 
-  const handleManageSubscription = async () => {
-    if (!userId) return
-    setLoadingPortal(true)
-    try {
-      const res = await fetch('/api/stripe/portal', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: userId }),
-      })
-      const data = await res.json()
-      if (data.url) {
-        window.location.href = data.url
-      }
-    } catch {}
-    setLoadingPortal(false)
-  }
+  const fetchClientSecret = useCallback(async () => {
+    if (!checkoutPlan || !userEmail) return ''
+    const res = await fetch('/api/stripe/create-embedded-checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        plan: checkoutPlan.plan,
+        duration: checkoutPlan.duration,
+        email: userEmail,
+        prenom: userPrenom,
+        userId,
+      }),
+    })
+    const data = await res.json()
+    if (data.error) throw new Error(data.error)
+    return data.clientSecret
+  }, [checkoutPlan, userEmail, userPrenom, userId])
 
   const handleSignOut = async () => {
     const supabase = createClient()
@@ -88,11 +77,48 @@ export default function CompteInactifPage() {
 
   const statusLabels: Record<string, { label: string; color: string }> = {
     past_due: { label: 'Paiement en retard', color: '#E17055' },
-    canceled: { label: 'Annul\u00e9', color: '#ef4444' },
+    canceled: { label: 'Annulé', color: '#ef4444' },
     inactive: { label: 'Inactif', color: '#9A9080' },
   }
 
   const statusInfo = subStatus ? statusLabels[subStatus] || statusLabels.inactive : statusLabels.inactive
+
+  // Embedded checkout overlay
+  if (checkoutPlan) {
+    const planNames: Record<string, string> = { essential: 'Essentielle', serenite: 'Sérénité', premium: 'Premium' }
+    return (
+      <main className="min-h-screen flex items-center justify-center p-6" style={{ background: 'var(--dark)' }}>
+        <div className="w-full max-w-2xl">
+          <button
+            onClick={() => setCheckoutPlan(null)}
+            className="flex items-center gap-2 mb-6 text-sm font-medium transition-colors cursor-pointer"
+            style={{ color: 'var(--text-secondary)' }}
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+            Retour
+          </button>
+
+          <div className="rounded-2xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+            <div className="p-6 text-center" style={{ borderBottom: '1px solid var(--dark-border)' }}>
+              <h2 className="font-display text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+                {planNames[checkoutPlan.plan] || checkoutPlan.plan}
+              </h2>
+              <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+                Paiement sécurisé
+              </p>
+            </div>
+            <div className="p-1">
+              <EmbeddedCheckoutProvider stripe={stripePromise} options={{ fetchClientSecret }}>
+                <EmbeddedCheckout />
+              </EmbeddedCheckoutProvider>
+            </div>
+          </div>
+        </div>
+      </main>
+    )
+  }
 
   return (
     <main className="min-h-screen flex items-center justify-center p-6" style={{ background: 'var(--dark)' }}>
@@ -114,13 +140,16 @@ export default function CompteInactifPage() {
           Acc&egrave;s suspendu
         </h1>
 
-        {subStatus && (
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6"
-            style={{ background: `${statusInfo.color}15`, border: `1px solid ${statusInfo.color}30` }}>
-            <span className="w-2 h-2 rounded-full" style={{ background: statusInfo.color }} />
-            <span className="text-sm font-medium" style={{ color: statusInfo.color }}>{statusInfo.label}</span>
-          </div>
-        )}
+        <AnimatePresence>
+          {subStatus && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6"
+              style={{ background: `${statusInfo.color}15`, border: `1px solid ${statusInfo.color}30` }}>
+              <span className="w-2 h-2 rounded-full" style={{ background: statusInfo.color }} />
+              <span className="text-sm font-medium" style={{ color: statusInfo.color }}>{statusInfo.label}</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <p className="text-base leading-relaxed mb-8" style={{ color: 'var(--text-secondary)' }}>
           {subStatus === 'past_due' ? (
@@ -136,40 +165,36 @@ export default function CompteInactifPage() {
         <div className="space-y-3 mb-8">
           {hasSubscription && subStatus === 'past_due' && (
             <button
-              onClick={handleManageSubscription}
-              disabled={loadingPortal}
-              className="w-full py-4 rounded-full font-semibold tracking-wide transition-all text-sm disabled:opacity-50"
+              onClick={() => handleResubscribe('serenite')}
+              className="w-full py-4 rounded-full font-semibold tracking-wide transition-all text-sm"
               style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}
             >
-              {loadingPortal ? 'Redirection...' : 'Mettre \u00e0 jour le paiement'}
+              Mettre &agrave; jour le paiement
             </button>
           )}
 
           <button
             onClick={() => handleResubscribe('essential')}
-            disabled={loading}
-            className="w-full py-4 rounded-full font-semibold tracking-wide transition-all text-sm disabled:opacity-50"
+            className="w-full py-4 rounded-full font-semibold tracking-wide transition-all text-sm"
             style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.25)' }}
           >
-            {loading ? 'Redirection...' : 'S\u2019abonner Essentielle \u2014 9,90\u20ac/mois'}
+            S&apos;abonner Essentielle &mdash; 9,90&euro;/mois
           </button>
 
           <button
             onClick={() => handleResubscribe('serenite')}
-            disabled={loading}
-            className="w-full py-4 rounded-full font-semibold tracking-wide transition-all text-sm disabled:opacity-50"
+            className="w-full py-4 rounded-full font-semibold tracking-wide transition-all text-sm"
             style={{ background: 'linear-gradient(135deg, #55EFC4, #00B894)', color: '#050505' }}
           >
-            {loading ? 'Redirection...' : 'S\u2019abonner S\u00e9r\u00e9nit\u00e9 \u2014 49,90\u20ac/mois'}
+            S&apos;abonner S&eacute;r&eacute;nit&eacute; &mdash; 49,90&euro;/mois
           </button>
 
           <button
             onClick={() => handleResubscribe('premium')}
-            disabled={loading}
-            className="w-full py-4 rounded-full font-medium tracking-wide transition-all text-sm disabled:opacity-50"
+            className="w-full py-4 rounded-full font-medium tracking-wide transition-all text-sm"
             style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}
           >
-            {loading ? 'Redirection...' : 'S\u2019abonner Premium \u2014 99,90\u20ac/mois'}
+            S&apos;abonner Premium &mdash; 99,90&euro;/mois
           </button>
         </div>
 

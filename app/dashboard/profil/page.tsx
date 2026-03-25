@@ -396,23 +396,13 @@ export default function ProfilPage() {
             )}
             {/* Manage subscription button */}
             {subscription.stripe_customer_id && (
-              <button
-                onClick={async () => {
-                  try {
-                    const res = await fetch('/api/stripe/portal', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ user_id: profile?.id }),
-                    })
-                    const data = await res.json()
-                    if (data.url) window.location.href = data.url
-                  } catch {}
-                }}
-                className="w-full mt-2 py-3 rounded-xl text-sm font-medium cursor-pointer transition-colors"
+              <a
+                href="/dashboard/tarifs"
+                className="block w-full mt-2 py-3 rounded-xl text-sm font-medium text-center transition-colors"
                 style={{ background: 'rgba(212,175,55,0.08)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.15)' }}
               >
                 Gérer mon abonnement
-              </button>
+              </a>
             )}
           </div>
         ) : (

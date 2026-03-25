@@ -71,7 +71,7 @@ export async function GET(request: Request) {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                  trigger_type: 'signup',
+                  trigger_type: 'subscription',
                   email: user.email,
                   first_name: firstName,
                 }),

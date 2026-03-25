@@ -413,11 +413,16 @@ export default function MonEclatPage() {
     if (!editTitle.trim() || !editContent.trim()) return
     setSaving(true)
     const supabase = createClient()
-    await supabase
+    const { error } = await supabase
       .from('posts')
       .update({ title: editTitle.trim(), content: editContent.trim(), updated_at: new Date().toISOString() })
       .eq('id', postId)
       .eq('author_id', currentUserId!)
+    if (error) {
+      alert('Erreur lors de la sauvegarde. Veuillez réessayer.')
+      setSaving(false)
+      return
+    }
     setPosts(prev => prev.map(p => p.id === postId ? { ...p, title: editTitle.trim(), content: editContent.trim() } : p))
     setEditingPost(null)
     setSaving(false)
@@ -655,7 +660,7 @@ export default function MonEclatPage() {
                   </button>
                 </div>
               ) : currentUserId ? (
-                <VoiceRecorder userId={currentUserId} onSend={(audioUrl) => setCreateAudioUrl(audioUrl)} />
+                <VoiceRecorder userId={currentUserId} onSend={(audioUrl: string) => setCreateAudioUrl(audioUrl)} />
               ) : null}
             </div>
           )}

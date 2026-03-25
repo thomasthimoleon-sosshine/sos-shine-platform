@@ -13,7 +13,7 @@ const DEFAULTS: Record<string, string> = {
   signup_button_text: 'Créer mon compte',
   signup_login_text: 'Déjà membre ?',
   signup_login_link_text: 'Se connecter',
-  signup_trial_text: 'Abonnement requis — Carte bancaire obligatoire',
+  signup_trial_text: 'Un abonnement sera nécessaire pour accéder à la plateforme',
   signup_confirm_title: 'Vérifiez votre email',
   signup_confirm_text: 'Un lien de confirmation a été envoyé. Cliquez dessus pour activer votre compte.',
   signup_title_font: 'Cormorant Garamond',
@@ -41,9 +41,12 @@ export default function SignupPage() {
   const signupRouter = useRouter()
   const { t } = useTranslation()
 
-  // Inscription désactivée — redirection vers la page rejoindre (pré-lancement / tarifs)
+  // Redirect to dashboard if already logged in
   useEffect(() => {
-    signupRouter.replace('/rejoindre')
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) signupRouter.replace('/dashboard')
+    })
   }, [signupRouter])
 
   const [prenom, setPrenom] = useState('')

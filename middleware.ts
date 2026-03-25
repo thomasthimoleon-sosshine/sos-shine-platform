@@ -41,11 +41,6 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // Redirect /signup to /rejoindre — registration goes through the pricing/pre-launch page
-  if (request.nextUrl.pathname === '/signup') {
-    return NextResponse.redirect(new URL('/rejoindre', request.url))
-  }
-
   const publicRoutes = ['/', '/login', '/signup', '/rejoindre', '/encyclopedie', '/contact', '/cgv', '/confidentialite', '/mentions-legales', '/notre-histoire', '/signature-emotionnelle', '/compte-inactif', '/livre-sos-shine', '/livre-supers-pouvoirs', '/forgot-password', '/reset-password', '/inscription-confirmee', '/parents-enfants', '/success', '/cancel']
   const isPublicRoute = publicRoutes.some(route => {
     const isExact = request.nextUrl.pathname === route;
@@ -81,17 +76,9 @@ export async function middleware(request: NextRequest) {
 
           const hasActiveSub = sub && (sub.status === 'active' || sub.status === 'trialing')
 
-          // Post-launch: require active subscription for ALL non-admin users
-          const LAUNCH_DATE = new Date('2026-03-22T00:00:00+02:00')
-          const isPostLaunch = new Date() >= LAUNCH_DATE
-
-          if (isPostLaunch && !hasActiveSub) {
-            return NextResponse.redirect(new URL('/compte-inactif', request.url))
-          }
-
-          // Pre-launch: only block explicitly deactivated accounts without subscription
-          if (!isPostLaunch && profile.is_active === false && !hasActiveSub) {
-            return NextResponse.redirect(new URL('/compte-inactif', request.url))
+          // Require active subscription for ALL non-admin users
+          if (!hasActiveSub) {
+            return NextResponse.redirect(new URL('/rejoindre', request.url))
           }
         }
       }

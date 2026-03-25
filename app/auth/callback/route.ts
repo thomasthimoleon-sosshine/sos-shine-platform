@@ -80,24 +80,25 @@ export async function GET(request: Request) {
           } catch {}
         }
 
-        // Redirect new users to onboarding questionnaire
-        if (isNewUser) {
-          const adminCheck = createAdminClient()
-          const { data: onboardingDone } = await adminCheck.from('onboarding_responses')
-            .select('id')
-            .eq('user_id', user.id)
-            .maybeSingle()
+        // Check if user has an active subscription
+        const adminCheck = createAdminClient()
+        const { data: sub } = await adminCheck.from('subscriptions')
+          .select('status')
+          .eq('user_id', user.id)
+          .maybeSingle()
 
-          if (!onboardingDone) {
-            const forwardedHost = request.headers.get('x-forwarded-host')
-            const isLocalEnv = process.env.NODE_ENV === 'development'
-            if (isLocalEnv) {
-              return NextResponse.redirect(`${origin}/onboarding`)
-            } else if (forwardedHost) {
-              return NextResponse.redirect(`https://${forwardedHost}/onboarding`)
-            } else {
-              return NextResponse.redirect(`${origin}/onboarding`)
-            }
+        const hasActiveSub = sub && (sub.status === 'active' || sub.status === 'trialing')
+
+        // No subscription → redirect to pricing page
+        if (!hasActiveSub) {
+          const forwardedHost = request.headers.get('x-forwarded-host')
+          const isLocalEnv = process.env.NODE_ENV === 'development'
+          if (isLocalEnv) {
+            return NextResponse.redirect(`${origin}/rejoindre`)
+          } else if (forwardedHost) {
+            return NextResponse.redirect(`https://${forwardedHost}/rejoindre`)
+          } else {
+            return NextResponse.redirect(`${origin}/rejoindre`)
           }
         }
       }

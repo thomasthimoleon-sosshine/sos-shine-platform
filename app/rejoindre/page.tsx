@@ -2,8 +2,10 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslation } from '@/lib/i18n/useTranslation'
+import { createClient } from '@/lib/supabase/client'
 import { PRICES, TOTAL_PRICES, ORIGINAL_PRICES, DURATIONS, PLAN_INFO, formatPrice } from '@/lib/stripe'
 import type { PlanId, DurationId } from '@/lib/stripe'
 
@@ -425,12 +427,52 @@ function PaymentContent() {
   const { t } = useTranslation()
   const [selectedDuration, setSelectedDuration] = useState<DurationId>('monthly')
   const [checkoutModal, setCheckoutModal] = useState<{ plan: PlanId } | null>(null)
+  const [loggedInUser, setLoggedInUser] = useState<{ email: string; prenom: string } | null>(null)
+  const [directCheckoutLoading, setDirectCheckoutLoading] = useState(false)
 
-  const handleCheckout = (plan: PlanId) => {
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        setLoggedInUser({
+          email: user.email || '',
+          prenom: user.user_metadata?.prenom || user.user_metadata?.full_name?.split(' ')[0] || '',
+        })
+      }
+    })
+  }, [])
+
+  const handleCheckout = async (plan: PlanId) => {
     // Essential only has monthly pricing — force monthly regardless of selected duration
     if (plan === 'essential') {
       setSelectedDuration('monthly')
     }
+
+    // If user is logged in, go directly to Stripe checkout (no email modal needed)
+    if (loggedInUser) {
+      setDirectCheckoutLoading(true)
+      try {
+        const effectiveDuration = plan === 'essential' ? 'monthly' : selectedDuration
+        const res = await fetch('/api/stripe/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ plan, duration: effectiveDuration, email: loggedInUser.email, prenom: loggedInUser.prenom || undefined }),
+        })
+        const data = await res.json()
+        if (data.url) {
+          window.location.href = data.url
+        } else {
+          // Fallback to modal if checkout fails
+          setDirectCheckoutLoading(false)
+          setCheckoutModal({ plan })
+        }
+      } catch {
+        setDirectCheckoutLoading(false)
+        setCheckoutModal({ plan })
+      }
+      return
+    }
+
     setCheckoutModal({ plan })
   }
 
@@ -686,10 +728,20 @@ function FeaturesGrid() {
 /* ─── MAIN PAGE ─── */
 export default function RejoindrePage() {
   const { t } = useTranslation()
+  const router = useRouter()
   const [isPrelaunch, setIsPrelaunch] = useState(true)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [userName, setUserName] = useState('')
 
   useEffect(() => {
     setIsPrelaunch(new Date() < PRELAUNCH_END)
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        setIsLoggedIn(true)
+        setUserName(user.user_metadata?.prenom || user.user_metadata?.full_name?.split(' ')[0] || '')
+      }
+    })
   }, [])
 
   return (
@@ -745,12 +797,32 @@ export default function RejoindrePage() {
         {isPrelaunch ? <PrelaunchContent /> : <PaymentContent />}
 
         {/* Links & secure badge */}
+        {/* Logged-in user banner */}
+        {isLoggedIn && (
+          <Reveal delay={0.6}>
+            <div className="glass p-4 text-center mb-6" style={{ borderColor: 'rgba(212,175,55,0.2)', background: 'rgba(212,175,55,0.03)' }}>
+              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                Connect\u00e9{userName ? ` en tant que ` : ''}
+                {userName && <span style={{ color: '#D4AF37' }}>{userName}</span>}
+                {' '}&mdash; Choisissez votre abonnement pour acc\u00e9der \u00e0 la plateforme.
+              </p>
+            </div>
+          </Reveal>
+        )}
+
         <Reveal delay={0.65}>
           <div className="text-center space-y-4">
             <div className="flex items-center justify-center gap-6">
-              <Link href="/login" className="text-xs gold-underline" style={{ color: 'var(--text-secondary)' }}>
-                {t('join.already_member')}
-              </Link>
+              {!isLoggedIn && (
+                <>
+                  <Link href="/login" className="text-xs gold-underline" style={{ color: 'var(--text-secondary)' }}>
+                    {t('join.already_member')}
+                  </Link>
+                  <Link href="/signup" className="text-xs gold-underline" style={{ color: 'var(--text-secondary)' }}>
+                    Cr\u00e9er un compte
+                  </Link>
+                </>
+              )}
               <Link href="/encyclopedie" className="text-xs gold-underline" style={{ color: 'var(--text-secondary)' }}>
                 {t('join.continue_explore')}
               </Link>

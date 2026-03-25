@@ -1,6 +1,12 @@
+// ═══════════════════════════════════════════════════════════════
+// POST /api/stripe/portal
+// Crée un lien vers le portail de facturation Stripe
+// ═══════════════════════════════════════════════════════════════
+
 import { NextResponse } from 'next/server'
-import { getStripe } from '@/lib/stripe'
+import { getStripe } from '@/lib/stripe/client'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
+import { getSiteUrl } from '@/lib/stripe/config'
 
 export async function POST(request: Request) {
   try {
@@ -14,7 +20,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Utilisateur requis' }, { status: 400 })
     }
 
-    // Find the user's Stripe customer ID
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
     if (!supabaseUrl || !supabaseKey) {
@@ -32,17 +37,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Aucun abonnement trouvé' }, { status: 404 })
     }
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
-      || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : 'http://localhost:5000')
-
     const session = await stripe.billingPortal.sessions.create({
       customer: sub.stripe_customer_id,
-      return_url: `${siteUrl}/dashboard/profil`,
+      return_url: `${getSiteUrl()}/dashboard/profil`,
     })
 
     return NextResponse.json({ url: session.url })
   } catch (err) {
-    console.error('Portal session error:', err)
+    console.error('[Portal] Erreur:', err)
     return NextResponse.json({ error: 'Erreur lors de la création du portail' }, { status: 500 })
   }
 }

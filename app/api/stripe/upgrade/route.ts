@@ -1,10 +1,19 @@
-import { NextResponse } from 'next/server'
-import { getStripe, getStripePriceId } from '@/lib/stripe'
-import type { PlanId, DurationId } from '@/lib/stripe'
-import { createClient as createSupabaseClient } from '@supabase/supabase-js'
+// ═══════════════════════════════════════════════════════════════
+// POST /api/stripe/upgrade
+// Change le plan d'un abonnement (upgrade ou downgrade)
+// ═══════════════════════════════════════════════════════════════
 
-const VALID_PLANS: PlanId[] = ['essential', 'serenite', 'premium']
-const PLAN_ORDER: Record<PlanId, number> = { essential: 1, serenite: 2, premium: 3 }
+import { NextResponse } from 'next/server'
+import { getStripe } from '@/lib/stripe/client'
+import {
+  type PlanId,
+  type DurationId,
+  isValidPlan,
+  getStripePriceId,
+  PLAN_ORDER,
+} from '@/lib/stripe/config'
+import { logPaymentEvent } from '@/lib/stripe/subscription-service'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 
 export async function POST(request: Request) {
   try {
@@ -16,18 +25,16 @@ export async function POST(request: Request) {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
     if (!supabaseUrl || !supabaseKey) {
-      return NextResponse.json({ error: 'Config missing' }, { status: 500 })
+      return NextResponse.json({ error: 'Configuration manquante' }, { status: 500 })
     }
 
     const supabase = createSupabaseClient(supabaseUrl, supabaseKey)
-
     const { user_id, new_plan, duration = 'monthly' } = await request.json()
 
     if (!user_id || !new_plan) {
       return NextResponse.json({ error: 'user_id et new_plan requis' }, { status: 400 })
     }
-
-    if (!VALID_PLANS.includes(new_plan)) {
+    if (!isValidPlan(new_plan)) {
       return NextResponse.json({ error: 'Plan invalide' }, { status: 400 })
     }
 
@@ -41,27 +48,24 @@ export async function POST(request: Request) {
     if (!sub || !sub.stripe_subscription_id) {
       return NextResponse.json({ error: 'Aucun abonnement Stripe actif' }, { status: 400 })
     }
-
     if (sub.plan === new_plan) {
       return NextResponse.json({ error: 'Vous êtes déjà sur ce plan' }, { status: 400 })
     }
 
     const isUpgrade = PLAN_ORDER[new_plan as PlanId] > PLAN_ORDER[sub.plan as PlanId]
 
-    // Récupérer l'abonnement Stripe
+    // Vérifier l'abonnement Stripe
     const stripeSubscription = await stripe.subscriptions.retrieve(sub.stripe_subscription_id)
-
     if (stripeSubscription.status === 'canceled') {
       return NextResponse.json({ error: 'Abonnement annulé, veuillez vous réabonner' }, { status: 400 })
     }
 
     const newPriceId = getStripePriceId(new_plan as PlanId, duration as DurationId)
     if (!newPriceId) {
-      return NextResponse.json({ error: 'Prix Stripe non configuré pour ce plan' }, { status: 500 })
+      return NextResponse.json({ error: 'Prix non configuré pour ce plan' }, { status: 500 })
     }
 
     // Modifier l'abonnement Stripe
-    // Upgrade = immédiat avec prorata, Downgrade = à la fin de la période
     const updatedSubscription = await stripe.subscriptions.update(sub.stripe_subscription_id, {
       items: [{
         id: stripeSubscription.items.data[0].id,
@@ -74,11 +78,10 @@ export async function POST(request: Request) {
         plan: new_plan,
         duration,
         previous_plan: sub.plan,
-        ...(isUpgrade ? {} : { pending_downgrade: 'false' }),
       },
     })
 
-    // Mettre à jour dans Supabase
+    // Mettre à jour en base
     await supabase.from('subscriptions').update({
       plan: new_plan,
       duration,
@@ -87,23 +90,17 @@ export async function POST(request: Request) {
       updated_at: new Date().toISOString(),
     }).eq('user_id', user_id)
 
-    // Mettre à jour le profil
     await supabase.from('profiles').update({
       plan: new_plan,
       updated_at: new Date().toISOString(),
     }).eq('id', user_id)
 
-    // Logger le changement
-    await supabase.from('subscription_payment_logs').insert({
-      user_id,
-      event_type: isUpgrade ? 'plan_upgraded' : 'plan_downgraded',
-      plan: new_plan,
+    // Logger
+    await logPaymentEvent(user_id, isUpgrade ? 'plan_upgraded' : 'plan_downgraded', new_plan, {
+      stripe_subscription_id: updatedSubscription.id,
       previous_plan: sub.plan,
-      metadata: {
-        stripe_subscription_id: updatedSubscription.id,
-        proration: isUpgrade,
-        duration,
-      },
+      proration: isUpgrade,
+      duration,
     })
 
     return NextResponse.json({
@@ -112,11 +109,11 @@ export async function POST(request: Request) {
       new_plan,
       previous_plan: sub.plan,
       message: isUpgrade
-        ? `Upgrade vers ${new_plan} effectué avec succès`
+        ? `Upgrade vers ${new_plan} effectué`
         : `Changement vers ${new_plan} effectué`,
     })
   } catch (err) {
-    console.error('Upgrade error:', err)
+    console.error('[Upgrade] Erreur:', err)
     return NextResponse.json({ error: 'Erreur lors du changement de plan' }, { status: 500 })
   }
 }

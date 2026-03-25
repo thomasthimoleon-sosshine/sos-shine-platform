@@ -1,3 +1,8 @@
+// ═══════════════════════════════════════════════════════════════
+// GET /api/stripe/status?user_id=xxx
+// Vérifie le statut d'abonnement d'un utilisateur
+// ═══════════════════════════════════════════════════════════════
+
 import { NextResponse } from 'next/server'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 
@@ -13,12 +18,12 @@ export async function GET(request: Request) {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
     if (!supabaseUrl || !supabaseKey) {
-      return NextResponse.json({ active: true }) // Allow access if not configured
+      return NextResponse.json({ active: true }) // Accès si pas configuré
     }
 
     const supabase = createSupabaseClient(supabaseUrl, supabaseKey)
 
-    // Check profile
+    // Vérifier le profil
     const { data: profile } = await supabase
       .from('profiles')
       .select('role, is_active, plan')
@@ -29,12 +34,12 @@ export async function GET(request: Request) {
       return NextResponse.json({ active: false, reason: 'no_profile' })
     }
 
-    // Admins/founders always have access
+    // Admins/founders = toujours actifs
     if (['founder', 'admin_content', 'admin_support'].includes(profile.role)) {
       return NextResponse.json({ active: true, role: profile.role })
     }
 
-    // Check subscription
+    // Vérifier l'abonnement
     const { data: sub } = await supabase
       .from('subscriptions')
       .select('status, plan, current_period_end, cancel_at_period_end, waitlist_discount')
@@ -43,7 +48,7 @@ export async function GET(request: Request) {
 
     if (!sub) {
       return NextResponse.json({
-        active: profile.is_active !== false, // Allow if no subscription system yet
+        active: profile.is_active !== false,
         has_subscription: false,
         plan: profile.plan,
       })
@@ -61,7 +66,7 @@ export async function GET(request: Request) {
       waitlist_discount: sub.waitlist_discount,
     })
   } catch (err) {
-    console.error('Status check error:', err)
-    return NextResponse.json({ active: true }) // Allow access on error
+    console.error('[Status] Erreur:', err)
+    return NextResponse.json({ active: true }) // Accès en cas d'erreur
   }
 }

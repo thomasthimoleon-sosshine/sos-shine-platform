@@ -499,6 +499,7 @@ function EmailModal({ plan, duration, onClose }: { plan: PlanId; duration: Durat
 function PaymentContent() {
   const { t } = useTranslation()
   const [selectedDuration, setSelectedDuration] = useState<DurationId>('monthly')
+  const [checkoutModal, setCheckoutModal] = useState<{ plan: PlanId } | null>(null)
   const [embeddedCheckout, setEmbeddedCheckout] = useState<{ plan: PlanId; duration: DurationId; email: string; prenom: string } | null>(null)
   const [loggedInUser, setLoggedInUser] = useState<{ email: string; prenom: string } | null>(null)
 
@@ -526,8 +527,8 @@ function PaymentContent() {
       return
     }
 
-    // Not logged in — redirect to signup first
-    window.location.href = '/signup'
+    // Not logged in — collect email then show embedded checkout
+    setCheckoutModal({ plan })
   }
 
   const durationInfo = DURATIONS.find(d => d.id === selectedDuration)!
@@ -535,6 +536,17 @@ function PaymentContent() {
 
   return (
     <>
+      {/* Email collection → embedded checkout modal for non-logged-in users */}
+      <AnimatePresence>
+        {checkoutModal && (
+          <EmailModal
+            plan={checkoutModal.plan}
+            duration={selectedDuration}
+            onClose={() => setCheckoutModal(null)}
+          />
+        )}
+      </AnimatePresence>
+
       {/* Embedded checkout for logged-in users */}
       <AnimatePresence>
         {embeddedCheckout && (

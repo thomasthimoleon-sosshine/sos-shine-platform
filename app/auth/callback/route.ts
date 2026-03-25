@@ -80,27 +80,7 @@ export async function GET(request: Request) {
           } catch {}
         }
 
-        // Check if user has an active subscription
-        const adminCheck = createAdminClient()
-        const { data: sub } = await adminCheck.from('subscriptions')
-          .select('status')
-          .eq('user_id', user.id)
-          .maybeSingle()
-
-        const hasActiveSub = sub && (sub.status === 'active' || sub.status === 'trialing')
-
-        // No subscription → redirect to pricing page
-        if (!hasActiveSub) {
-          const forwardedHost = request.headers.get('x-forwarded-host')
-          const isLocalEnv = process.env.NODE_ENV === 'development'
-          if (isLocalEnv) {
-            return NextResponse.redirect(`${origin}/rejoindre`)
-          } else if (forwardedHost) {
-            return NextResponse.redirect(`https://${forwardedHost}/rejoindre`)
-          } else {
-            return NextResponse.redirect(`${origin}/rejoindre`)
-          }
-        }
+        // Users can access dashboard freely — subscription check is handled client-side
       }
 
       const forwardedHost = request.headers.get('x-forwarded-host')

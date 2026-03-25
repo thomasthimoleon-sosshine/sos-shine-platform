@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { createClient } from '@/lib/supabase/client'
+import SubscriptionGate from '@/components/SubscriptionGate'
 import ProfileDrawer from '@/components/community/ProfileDrawer'
 
 const MurTab = dynamic(() => import('@/app/dashboard/mur/page'), { ssr: false })
@@ -104,6 +105,7 @@ export default function CommunautePage() {
   }
 
   return (
+    <SubscriptionGate>
     <div className="max-w-4xl mx-auto">
       {/* ── Header ── */}
       <div className="mb-6">
@@ -163,5 +165,6 @@ export default function CommunautePage() {
         />
       )}
     </div>
+    </SubscriptionGate>
   )
 }

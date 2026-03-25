@@ -65,7 +65,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       image_url: '',
       buttons: [
         { label: "D\u00e9couvrir les protocoles", href: '/encyclopedie', variant: 'outline' },
-        { label: "Commencer gratuitement", href: '/rejoindre', variant: 'primary' },
+        { label: "Cr\u00e9er mon compte gratuitement", href: '/signup', variant: 'primary' },
       ],
     },
     styles: {
@@ -249,7 +249,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
           price: '9,90',
           period: '/mois',
           button_label: "Commencer maintenant",
-          button_href: '/rejoindre',
+          button_href: '/signup',
           highlight: false,
           badge: '',
           features: [
@@ -264,7 +264,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
           price: '49,90',
           period: '/mois',
           button_label: 'Essayer gratuitement — 7 jours',
-          button_href: '/rejoindre',
+          button_href: '/signup',
           highlight: true,
           badge: 'Le plus choisi',
           features: [
@@ -279,7 +279,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
           price: '99,90',
           period: '/mois',
           button_label: 'Essayer gratuitement — 7 jours',
-          button_href: '/rejoindre',
+          button_href: '/signup',
           highlight: false,
           badge: 'Exp\u00e9rience compl\u00e8te',
           features: [
@@ -321,7 +321,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     content: {
       description: "Blessure ancienne ou crise en cours \u2014 on a cr\u00e9\u00e9 un protocole pour ce que vous vivez. Il vous attend.",
       button_label: 'Commencer gratuitement',
-      button_href: '/rejoindre',
+      button_href: '/signup',
       login_text: "Déjà membre ? Se connecter",
     },
     styles: {

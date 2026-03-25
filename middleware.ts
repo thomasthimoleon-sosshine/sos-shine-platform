@@ -52,40 +52,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  // Check subscription status for dashboard routes (not admin)
-  // After 22/03/2026: subscription (active or trialing) is MANDATORY — no card, no access
-  if (user && request.nextUrl.pathname.startsWith('/dashboard')) {
-    try {
-      // Check if user is admin (admins always have access)
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role, is_active')
-        .eq('id', user.id)
-        .single()
-
-      if (profile) {
-        const isAdmin = ['founder', 'admin_content', 'admin_support'].includes(profile.role)
-
-        if (!isAdmin) {
-          // Check subscription status
-          const { data: sub } = await supabase
-            .from('subscriptions')
-            .select('status')
-            .eq('user_id', user.id)
-            .single()
-
-          const hasActiveSub = sub && (sub.status === 'active' || sub.status === 'trialing')
-
-          // Require active subscription for ALL non-admin users
-          if (!hasActiveSub) {
-            return NextResponse.redirect(new URL('/rejoindre', request.url))
-          }
-        }
-      }
-    } catch {
-      // If profile check fails, allow access (don't block on error)
-    }
-  }
+  // Dashboard routes: authenticated users can browse freely (no subscription required)
+  // Content restriction is handled client-side via SubscriptionGate component
 
   return response
 }

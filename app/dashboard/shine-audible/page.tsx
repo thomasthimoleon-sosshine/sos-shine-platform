@@ -4,6 +4,7 @@ import { useEffect, useState, useRef, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
+import SubscriptionGate from '@/components/SubscriptionGate'
 
 // ── Types ──
 type ShineAudio = {
@@ -861,6 +862,7 @@ export default function ShineAudiblePage() {
   }
 
   return (
+    <SubscriptionGate>
     <div className="-mx-4 sm:-mx-6 lg:-mx-8 -mt-4 sm:-mt-6 lg:-mt-8">
       {/* Hero */}
       {heroAudio && !search && activeFilter === 'all' && activeType === 'all' && (
@@ -1331,5 +1333,6 @@ export default function ShineAudiblePage() {
         }
       `}</style>
     </div>
+    </SubscriptionGate>
   )
 }

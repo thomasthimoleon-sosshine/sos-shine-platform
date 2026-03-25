@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
+import SubscriptionGate from '@/components/SubscriptionGate'
 import type { Douleur, DouleurStep, UserProgress, DouleurQuizQuestion } from '@/types/database'
 import { formatXP } from '@/lib/xp'
 import { getEncyclopediaPotentialXp, awardEncyclopediaXp } from '@/lib/XpEngine'
@@ -413,6 +414,7 @@ export default function DouleurDetailPage() {
   const currentStep = steps[activeStep - 1]
 
   return (
+    <SubscriptionGate>
     <div className="max-w-4xl mx-auto space-y-8">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm">
@@ -902,5 +904,6 @@ export default function DouleurDetailPage() {
         </p>
       </Link>
     </div>
+    </SubscriptionGate>
   )
 }

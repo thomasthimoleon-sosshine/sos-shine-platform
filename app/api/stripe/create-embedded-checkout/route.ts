@@ -61,7 +61,7 @@ export async function POST(request: Request) {
 
     if (!priceId) {
       return NextResponse.json({
-        error: `L'offre ${PLAN_NAMES[plan as PlanId]} en ${effectiveDuration} n'est pas encore disponible.`
+        error: `Prix Stripe non configuré pour ${PLAN_NAMES[plan as PlanId]} (${effectiveDuration}). Lancez POST /api/stripe/setup-prices pour créer les prix, puis ajoutez les variables d'environnement STRIPE_PRICE_* dans Vercel.`
       }, { status: 400 })
     }
 

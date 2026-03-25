@@ -45,7 +45,9 @@ export async function POST(request: Request) {
       }, { status: 400 })
     }
 
-    const siteUrl = getSiteUrl()
+    // Use the request origin for return_url so it matches the embedding domain
+    // (Stripe requires return_url domain = page domain for embedded checkout)
+    const origin = request.headers.get('origin') || request.headers.get('referer')?.replace(/\/[^/]*$/, '') || getSiteUrl()
     const firstName = prenom?.trim() || 'Membre'
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -55,7 +57,7 @@ export async function POST(request: Request) {
       payment_method_types: ['card'],
       line_items: [{ price: priceId, quantity: 1 }],
       customer_email: trimmedEmail,
-      return_url: `${siteUrl}/dashboard/tarifs?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
+      return_url: `${origin}/dashboard/tarifs?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
       metadata: {
         plan,
         duration: effectiveDuration,

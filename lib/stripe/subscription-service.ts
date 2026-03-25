@@ -357,14 +357,15 @@ export async function logPaymentEvent(
   const supabase = getAdminSupabase()
   if (!supabase) return
 
-  await supabase.from('subscription_payment_logs').insert({
+  const { error } = await supabase.from('subscription_payment_logs').insert({
     user_id: userId,
     event_type: eventType,
     plan,
     metadata: metadata || {},
-  }).catch((err: unknown) => {
-    console.error('[SubscriptionService] Erreur log événement:', err)
   })
+  if (error) {
+    console.error('[SubscriptionService] Erreur log événement:', error)
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -496,8 +497,10 @@ export async function handleSubscriptionUpdate(subscription: Stripe.Subscription
 
   await supabase.from('subscriptions').update({
     status,
-    current_period_end: new Date(sub.current_period_end * 1000).toISOString(),
-    cancel_at_period_end: sub.cancel_at_period_end,
+    current_period_end: sub.current_period_end
+      ? new Date(sub.current_period_end * 1000).toISOString()
+      : null,
+    cancel_at_period_end: sub.cancel_at_period_end ?? false,
     stripe_subscription_id: sub.id,
     updated_at: new Date().toISOString(),
   }).eq('user_id', existingSub.user_id)

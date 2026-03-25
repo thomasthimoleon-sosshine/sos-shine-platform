@@ -56,6 +56,8 @@ export default function TarifsPage() {
   const [userEmail, setUserEmail] = useState('')
   const [userPrenom, setUserPrenom] = useState('')
   const [checkoutSuccess, setCheckoutSuccess] = useState(false)
+  const [showInfoForm, setShowInfoForm] = useState(false)
+  const [pendingPlan, setPendingPlan] = useState<{ plan: PlanId; duration: DurationId } | null>(null)
 
   useEffect(() => {
     if (searchParams.get('checkout') === 'success') {
@@ -108,7 +110,23 @@ export default function TarifsPage() {
 
   function handleSelectPlan(plan: PlanId) {
     const duration = plan === 'essential' ? 'monthly' : selectedDuration
-    setCheckoutPlan({ plan, duration })
+    // Si prénom ou email manquant, afficher le formulaire d'abord
+    if (!userPrenom.trim() || !userEmail.trim()) {
+      setPendingPlan({ plan, duration })
+      setShowInfoForm(true)
+    } else {
+      setCheckoutPlan({ plan, duration })
+    }
+  }
+
+  function handleInfoFormSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    if (!userPrenom.trim() || !userEmail.trim()) return
+    setShowInfoForm(false)
+    if (pendingPlan) {
+      setCheckoutPlan(pendingPlan)
+      setPendingPlan(null)
+    }
   }
 
   // Success screen
@@ -177,6 +195,93 @@ export default function TarifsPage() {
             style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)', color: 'var(--gold)' }}>
             Gérer mon abonnement
           </Link>
+        </div>
+      </div>
+    )
+  }
+
+  // Info form (prénom + email) before checkout
+  if (showInfoForm && pendingPlan) {
+    return (
+      <div className="max-w-md mx-auto py-16">
+        <button
+          onClick={() => { setShowInfoForm(false); setPendingPlan(null) }}
+          className="flex items-center gap-2 mb-6 text-sm font-medium transition-colors cursor-pointer"
+          style={{ color: 'var(--text-secondary)' }}
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          </svg>
+          Retour aux tarifs
+        </button>
+
+        <div
+          className="rounded-2xl p-8"
+          style={{
+            background: 'var(--dark-card)',
+            border: '1px solid var(--dark-border)',
+          }}
+        >
+          <h2 className="font-display text-xl font-semibold mb-2 text-center" style={{ color: 'var(--text-primary)' }}>
+            Vos informations
+          </h2>
+          <p className="text-sm mb-6 text-center" style={{ color: 'var(--text-secondary)' }}>
+            Pour personnaliser votre expérience et créer votre compte.
+          </p>
+
+          <form onSubmit={handleInfoFormSubmit} className="space-y-4">
+            <div>
+              <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
+                Prénom
+              </label>
+              <input
+                type="text"
+                value={userPrenom}
+                onChange={(e) => setUserPrenom(e.target.value)}
+                placeholder="Votre prénom"
+                required
+                className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-colors"
+                style={{
+                  background: 'var(--dark-bg)',
+                  border: '1px solid var(--dark-border)',
+                  color: 'var(--text-primary)',
+                }}
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
+                Email
+              </label>
+              <input
+                type="email"
+                value={userEmail}
+                onChange={(e) => setUserEmail(e.target.value)}
+                placeholder="votre@email.com"
+                required
+                className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-colors"
+                style={{
+                  background: 'var(--dark-bg)',
+                  border: '1px solid var(--dark-border)',
+                  color: 'var(--text-primary)',
+                }}
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={!userPrenom.trim() || !userEmail.trim()}
+              className="w-full py-3 rounded-full text-sm font-semibold tracking-wide transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] cursor-pointer mt-2"
+              style={{
+                background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))',
+                color: '#050505',
+                boxShadow: '0 4px 20px rgba(212,175,55,0.3)',
+                opacity: (!userPrenom.trim() || !userEmail.trim()) ? 0.5 : 1,
+              }}
+            >
+              Continuer vers le paiement
+            </button>
+          </form>
         </div>
       </div>
     )

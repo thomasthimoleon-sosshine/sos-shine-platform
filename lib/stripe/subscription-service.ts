@@ -176,7 +176,9 @@ export async function upsertSubscription(params: UpsertSubscriptionParams): Prom
   const supabase = getAdminSupabase()
   if (!supabase) return false
 
-  const { error } = await supabase.from('subscriptions').upsert({
+  // Données de base (colonnes toujours présentes)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const upsertData: Record<string, any> = {
     user_id: params.userId,
     stripe_customer_id: params.stripeCustomerId,
     stripe_subscription_id: params.stripeSubscriptionId,
@@ -191,7 +193,17 @@ export async function upsertSubscription(params: UpsertSubscriptionParams): Prom
     grace_period_end: null,
     reminder_sent_count: 0,
     updated_at: new Date().toISOString(),
-  }, { onConflict: 'user_id' })
+  }
+
+  let { error } = await supabase.from('subscriptions').upsert(upsertData, { onConflict: 'user_id' })
+
+  // Si la colonne 'duration' n'existe pas encore en base, réessayer sans
+  if (error && error.code === 'PGRST204' && error.message?.includes('duration')) {
+    console.warn('[SubscriptionService] Colonne "duration" absente — upsert sans duration')
+    delete upsertData.duration
+    const retry = await supabase.from('subscriptions').upsert(upsertData, { onConflict: 'user_id' })
+    error = retry.error
+  }
 
   if (error) {
     console.error('[SubscriptionService] Erreur upsert subscription:', error)

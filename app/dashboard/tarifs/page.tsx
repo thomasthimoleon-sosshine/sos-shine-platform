@@ -76,23 +76,35 @@ export default function TarifsPage() {
     loadUser()
   }, [])
 
+  const [checkoutError, setCheckoutError] = useState<string | null>(null)
+
   const fetchClientSecret = useCallback(async () => {
     if (!checkoutPlan) return ''
-    const res = await fetch('/api/stripe/create-embedded-checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        plan: checkoutPlan.plan,
-        duration: checkoutPlan.duration,
-        email: userEmail,
-        prenom: userPrenom,
-        userId,
-      }),
-    })
-    const data = await res.json()
-    if (data.error) throw new Error(data.error)
-    return data.clientSecret
-  }, [checkoutPlan, userEmail, userPrenom, userId])
+    try {
+      const res = await fetch('/api/stripe/create-embedded-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          plan: checkoutPlan.plan,
+          duration: checkoutPlan.duration,
+          email: userEmail,
+          prenom: userPrenom,
+          userId,
+        }),
+      })
+      const data = await res.json()
+      if (data.error) {
+        console.error('[Checkout] API error:', data.error)
+        setCheckoutError(data.error)
+        throw new Error(data.error)
+      }
+      return data.clientSecret
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Erreur inconnue'
+      if (!checkoutError) setCheckoutError(msg)
+      throw err
+    }
+  }, [checkoutPlan, userEmail, userPrenom, userId, checkoutError])
 
   function handleSelectPlan(plan: PlanId) {
     const duration = plan === 'essential' ? 'monthly' : selectedDuration
@@ -201,14 +213,27 @@ export default function TarifsPage() {
             </p>
           </div>
 
-          <div className="p-1" id="checkout-container">
-            <EmbeddedCheckoutProvider
-              stripe={stripePromise}
-              options={{ fetchClientSecret }}
-            >
-              <EmbeddedCheckout />
-            </EmbeddedCheckoutProvider>
-          </div>
+          {checkoutError ? (
+            <div className="p-8 text-center">
+              <p className="text-sm mb-4" style={{ color: '#ef4444' }}>{checkoutError}</p>
+              <button
+                onClick={() => { setCheckoutError(null); setCheckoutPlan(null) }}
+                className="px-6 py-2.5 rounded-full text-sm font-medium"
+                style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.25)' }}
+              >
+                Retour aux tarifs
+              </button>
+            </div>
+          ) : (
+            <div className="p-1" id="checkout-container">
+              <EmbeddedCheckoutProvider
+                stripe={stripePromise}
+                options={{ fetchClientSecret }}
+              >
+                <EmbeddedCheckout />
+              </EmbeddedCheckoutProvider>
+            </div>
+          )}
         </div>
       </div>
     )

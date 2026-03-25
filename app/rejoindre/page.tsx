@@ -305,17 +305,33 @@ function DurationSelector({ selected, onChange }: { selected: DurationId; onChan
 
 /* ─── EMBEDDED CHECKOUT MODAL ─── */
 function EmbeddedCheckoutModal({ plan, duration, email, prenom, onClose }: { plan: PlanId; duration: DurationId; email: string; prenom: string; onClose: () => void }) {
+  const [checkoutError, setCheckoutError] = useState<string | null>(null)
+
   const fetchClientSecret = useCallback(async () => {
     const effectiveDuration = plan === 'essential' ? 'monthly' : duration
-    const res = await fetch('/api/stripe/create-embedded-checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ plan, duration: effectiveDuration, email, prenom: prenom || undefined }),
-    })
-    const data = await res.json()
-    if (data.error) throw new Error(data.error)
-    return data.clientSecret
-  }, [plan, duration, email, prenom])
+    try {
+      const res = await fetch('/api/stripe/create-embedded-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan, duration: effectiveDuration, email, prenom: prenom || undefined }),
+      })
+      const data = await res.json()
+      if (data.error) {
+        console.error('[Checkout] API error:', data.error)
+        setCheckoutError(data.error)
+        throw new Error(data.error)
+      }
+      if (!data.clientSecret) {
+        setCheckoutError('Le serveur n\'a pas retourné de session de paiement.')
+        throw new Error('No clientSecret returned')
+      }
+      return data.clientSecret
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Erreur inconnue'
+      if (!checkoutError) setCheckoutError(msg)
+      throw err
+    }
+  }, [plan, duration, email, prenom, checkoutError])
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}>
@@ -344,14 +360,29 @@ function EmbeddedCheckoutModal({ plan, duration, email, prenom, onClose }: { pla
           </p>
         </div>
 
-        <div className="p-1">
-          <EmbeddedCheckoutProvider
-            stripe={stripePromise}
-            options={{ fetchClientSecret }}
-          >
-            <EmbeddedCheckout />
-          </EmbeddedCheckoutProvider>
-        </div>
+        {checkoutError ? (
+          <div className="p-8 text-center">
+            <p className="text-sm mb-4" style={{ color: '#ef4444' }}>
+              {checkoutError}
+            </p>
+            <button
+              onClick={() => { setCheckoutError(null) }}
+              className="px-6 py-2.5 rounded-full text-sm font-medium"
+              style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.25)' }}
+            >
+              R&eacute;essayer
+            </button>
+          </div>
+        ) : (
+          <div className="p-1">
+            <EmbeddedCheckoutProvider
+              stripe={stripePromise}
+              options={{ fetchClientSecret }}
+            >
+              <EmbeddedCheckout />
+            </EmbeddedCheckoutProvider>
+          </div>
+        )}
       </motion.div>
     </div>
   )
@@ -468,10 +499,8 @@ function EmailModal({ plan, duration, onClose }: { plan: PlanId; duration: Durat
 function PaymentContent() {
   const { t } = useTranslation()
   const [selectedDuration, setSelectedDuration] = useState<DurationId>('monthly')
-  const [checkoutModal, setCheckoutModal] = useState<{ plan: PlanId } | null>(null)
   const [embeddedCheckout, setEmbeddedCheckout] = useState<{ plan: PlanId; duration: DurationId; email: string; prenom: string } | null>(null)
   const [loggedInUser, setLoggedInUser] = useState<{ email: string; prenom: string } | null>(null)
-  const [directCheckoutLoading, setDirectCheckoutLoading] = useState(false)
 
   useEffect(() => {
     const supabase = createClient()
@@ -491,15 +520,14 @@ function PaymentContent() {
       setSelectedDuration('monthly')
     }
 
-    // If user is logged in, show embedded checkout directly (no email modal needed)
+    // If user is logged in, show embedded checkout directly
     if (loggedInUser) {
-      setDirectCheckoutLoading(false)
       setEmbeddedCheckout({ plan, duration: plan === 'essential' ? 'monthly' : selectedDuration, email: loggedInUser.email, prenom: loggedInUser.prenom || '' })
       return
     }
 
-    // Not logged in — show email collection modal first
-    setCheckoutModal({ plan })
+    // Not logged in — redirect to signup first
+    window.location.href = '/signup'
   }
 
   const durationInfo = DURATIONS.find(d => d.id === selectedDuration)!
@@ -507,17 +535,6 @@ function PaymentContent() {
 
   return (
     <>
-      {/* Email collection modal */}
-      <AnimatePresence>
-        {checkoutModal && (
-          <EmailModal
-            plan={checkoutModal.plan}
-            duration={selectedDuration}
-            onClose={() => setCheckoutModal(null)}
-          />
-        )}
-      </AnimatePresence>
-
       {/* Embedded checkout for logged-in users */}
       <AnimatePresence>
         {embeddedCheckout && (

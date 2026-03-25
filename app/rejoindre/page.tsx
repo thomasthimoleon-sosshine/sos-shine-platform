@@ -4,10 +4,14 @@ import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
+import { loadStripe } from '@stripe/stripe-js'
+import { EmbeddedCheckoutProvider, EmbeddedCheckout } from '@stripe/react-stripe-js'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 import { createClient } from '@/lib/supabase/client'
 import { PRICES, TOTAL_PRICES, ORIGINAL_PRICES, DURATIONS, PLAN_INFO, formatPrice } from '@/lib/stripe'
 import type { PlanId, DurationId } from '@/lib/stripe'
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '')
 
 const PRELAUNCH_END = new Date('2026-03-22T00:00:00+02:00')
 
@@ -299,38 +303,84 @@ function DurationSelector({ selected, onChange }: { selected: DurationId; onChan
   )
 }
 
-/* ─── EMAIL COLLECTION MODAL ─── */
+/* ─── EMBEDDED CHECKOUT MODAL ─── */
+function EmbeddedCheckoutModal({ plan, duration, email, prenom, onClose }: { plan: PlanId; duration: DurationId; email: string; prenom: string; onClose: () => void }) {
+  const fetchClientSecret = useCallback(async () => {
+    const effectiveDuration = plan === 'essential' ? 'monthly' : duration
+    const res = await fetch('/api/stripe/create-embedded-checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ plan, duration: effectiveDuration, email, prenom: prenom || undefined }),
+    })
+    const data = await res.json()
+    if (data.error) throw new Error(data.error)
+    return data.clientSecret
+  }, [plan, duration, email, prenom])
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 10 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 10 }}
+        className="glass w-full max-w-2xl relative overflow-hidden"
+        style={{ borderColor: 'rgba(212,175,55,0.2)', maxHeight: '90vh', overflowY: 'auto' }}
+      >
+        <div className="p-6 text-center" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full transition-colors"
+            style={{ color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)' }}
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          <h3 className="font-display text-xl font-light" style={{ color: '#D4AF37' }}>
+            {PLAN_INFO[plan].name} — {DURATIONS.find(d => d.id === duration)?.label}
+          </h3>
+          <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+            {formatPrice(PRICES[plan][duration])}/mois
+          </p>
+        </div>
+
+        <div className="p-1">
+          <EmbeddedCheckoutProvider
+            stripe={stripePromise}
+            options={{ fetchClientSecret }}
+          >
+            <EmbeddedCheckout />
+          </EmbeddedCheckoutProvider>
+        </div>
+      </motion.div>
+    </div>
+  )
+}
+
+/* ─── EMAIL COLLECTION MODAL (step 1: collect email, step 2: embedded checkout) ─── */
 function EmailModal({ plan, duration, onClose }: { plan: PlanId; duration: DurationId; onClose: () => void }) {
   const [email, setEmail] = useState('')
   const [prenom, setPrenom] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [showCheckout, setShowCheckout] = useState(false)
   const [error, setError] = useState('')
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!email || loading) return
-    setLoading(true)
-    setError('')
+  if (showCheckout && email) {
+    return (
+      <EmbeddedCheckoutModal
+        plan={plan}
+        duration={duration}
+        email={email.trim()}
+        prenom={prenom.trim()}
+        onClose={onClose}
+      />
+    )
+  }
 
-    try {
-      const effectiveDuration = plan === 'essential' ? 'monthly' : duration
-      const res = await fetch('/api/stripe/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan, duration: effectiveDuration, email: email.trim(), prenom: prenom.trim() || undefined }),
-      })
-      const data = await res.json()
-      if (data.url) {
-        // Redirect directly to Stripe Checkout
-        window.location.href = data.url
-      } else {
-        setError(data.error || 'Une erreur est survenue')
-        setLoading(false)
-      }
-    } catch {
-      setError('Erreur de connexion. Veuillez réessayer.')
-      setLoading(false)
-    }
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!email) return
+    setError('')
+    setShowCheckout(true)
   }
 
   return (
@@ -396,18 +446,10 @@ function EmailModal({ plan, duration, onClose }: { plan: PlanId; duration: Durat
 
           <button
             type="submit"
-            disabled={loading}
-            className="w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm disabled:opacity-50"
+            className="w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm"
             style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}
           >
-            {loading ? (
-              <span className="flex items-center justify-center gap-2">
-                <span className="w-4 h-4 border-2 border-[#050505] border-t-transparent rounded-full animate-spin" />
-                Redirection vers le paiement...
-              </span>
-            ) : (
-              'Continuer vers le paiement'
-            )}
+            Continuer vers le paiement
           </button>
 
           <p className="text-center text-[11px]" style={{ color: 'var(--text-muted)' }}>
@@ -427,6 +469,7 @@ function PaymentContent() {
   const { t } = useTranslation()
   const [selectedDuration, setSelectedDuration] = useState<DurationId>('monthly')
   const [checkoutModal, setCheckoutModal] = useState<{ plan: PlanId } | null>(null)
+  const [embeddedCheckout, setEmbeddedCheckout] = useState<{ plan: PlanId; duration: DurationId; email: string; prenom: string } | null>(null)
   const [loggedInUser, setLoggedInUser] = useState<{ email: string; prenom: string } | null>(null)
   const [directCheckoutLoading, setDirectCheckoutLoading] = useState(false)
 
@@ -448,31 +491,14 @@ function PaymentContent() {
       setSelectedDuration('monthly')
     }
 
-    // If user is logged in, go directly to Stripe checkout (no email modal needed)
+    // If user is logged in, show embedded checkout directly (no email modal needed)
     if (loggedInUser) {
-      setDirectCheckoutLoading(true)
-      try {
-        const effectiveDuration = plan === 'essential' ? 'monthly' : selectedDuration
-        const res = await fetch('/api/stripe/checkout', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ plan, duration: effectiveDuration, email: loggedInUser.email, prenom: loggedInUser.prenom || undefined }),
-        })
-        const data = await res.json()
-        if (data.url) {
-          window.location.href = data.url
-        } else {
-          // Fallback to modal if checkout fails
-          setDirectCheckoutLoading(false)
-          setCheckoutModal({ plan })
-        }
-      } catch {
-        setDirectCheckoutLoading(false)
-        setCheckoutModal({ plan })
-      }
+      setDirectCheckoutLoading(false)
+      setEmbeddedCheckout({ plan, duration: plan === 'essential' ? 'monthly' : selectedDuration, email: loggedInUser.email, prenom: loggedInUser.prenom || '' })
       return
     }
 
+    // Not logged in — show email collection modal first
     setCheckoutModal({ plan })
   }
 
@@ -488,6 +514,19 @@ function PaymentContent() {
             plan={checkoutModal.plan}
             duration={selectedDuration}
             onClose={() => setCheckoutModal(null)}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Embedded checkout for logged-in users */}
+      <AnimatePresence>
+        {embeddedCheckout && (
+          <EmbeddedCheckoutModal
+            plan={embeddedCheckout.plan}
+            duration={embeddedCheckout.duration}
+            email={embeddedCheckout.email}
+            prenom={embeddedCheckout.prenom}
+            onClose={() => setEmbeddedCheckout(null)}
           />
         )}
       </AnimatePresence>

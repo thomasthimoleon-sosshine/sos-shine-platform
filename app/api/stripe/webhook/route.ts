@@ -13,6 +13,7 @@ import {
   handleSubscriptionDeleted,
   handlePaymentFailed,
   handlePaymentSucceeded,
+  handleChargeRefunded,
 } from '@/lib/stripe/subscription-service'
 
 export async function POST(request: Request) {
@@ -123,6 +124,12 @@ export async function POST(request: Request) {
       // ── Paiement réussi (renouvellement) ──
       case 'invoice.payment_succeeded': {
         await handlePaymentSucceeded(event.data.object as Stripe.Invoice)
+        break
+      }
+
+      // ── Remboursement ──
+      case 'charge.refunded': {
+        await handleChargeRefunded(event.data.object as Stripe.Charge)
         break
       }
 

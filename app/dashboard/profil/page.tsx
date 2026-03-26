@@ -22,6 +22,7 @@ export default function ProfilPage() {
   const [upgrading, setUpgrading] = useState(false)
   const [upgradeSuccess, setUpgradeSuccess] = useState<string | null>(null)
   const [upgradeError, setUpgradeError] = useState<string | null>(null)
+  const [portalLoading, setPortalLoading] = useState(false)
   const avatarRef = useRef<HTMLInputElement>(null)
   const videoRef = useRef<HTMLInputElement>(null)
 
@@ -137,6 +138,11 @@ export default function ProfilPage() {
 
   async function handleUpgrade(newPlan: 'serenite' | 'premium') {
     if (!profile || upgrading) return
+    // If no Stripe subscription exists, redirect to checkout
+    if (!subscription?.stripe_subscription_id) {
+      router.push(`/dashboard/tarifs?plan=${newPlan}`)
+      return
+    }
     setUpgrading(true)
     setUpgradeError(null)
     setUpgradeSuccess(null)
@@ -152,6 +158,11 @@ export default function ProfilPage() {
         setSubscription(prev => prev ? { ...prev, plan: newPlan } : prev)
         setProfile(prev => prev ? { ...prev, plan: newPlan } : prev)
       } else {
+        // If Stripe subscription not found, redirect to checkout
+        if (res.status === 400 && data.error?.includes('Aucun abonnement Stripe')) {
+          router.push(`/dashboard/tarifs?plan=${newPlan}`)
+          return
+        }
         setUpgradeError(data.error || 'Erreur lors du changement de plan')
       }
     } catch {
@@ -396,19 +407,39 @@ export default function ProfilPage() {
             )}
             {/* Manage subscription button */}
             {subscription.stripe_customer_id && (
-              <a
-                href="/dashboard/tarifs"
-                className="block w-full mt-2 py-3 rounded-xl text-sm font-medium text-center transition-colors"
+              <button
+                onClick={async () => {
+                  if (portalLoading) return
+                  setPortalLoading(true)
+                  try {
+                    const res = await fetch('/api/stripe/portal', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ user_id: profile?.id }),
+                    })
+                    const data = await res.json()
+                    if (res.ok && data.url) {
+                      window.location.href = data.url
+                    } else {
+                      setUpgradeError(data.error || 'Impossible d\'ouvrir le portail de gestion')
+                    }
+                  } catch {
+                    setUpgradeError('Erreur de connexion au portail')
+                  }
+                  setPortalLoading(false)
+                }}
+                disabled={portalLoading}
+                className="block w-full mt-2 py-3 rounded-xl text-sm font-medium text-center transition-colors cursor-pointer disabled:opacity-50"
                 style={{ background: 'rgba(212,175,55,0.08)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.15)' }}
               >
-                Gérer mon abonnement
-              </a>
+                {portalLoading ? 'Chargement...' : 'Gérer mon abonnement'}
+              </button>
             )}
           </div>
         ) : (
           <div className="rounded-xl p-5 text-center" style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.12)' }}>
             <p className="text-sm mb-1" style={{ color: 'var(--text-primary)' }}>{t('dashboard.free_trial')}</p>
-            <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>Essentiel : 29,90€/mois · Premium : 99,90€/mois</p>
+            <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>Essentielle : 9,90€/mois · Sérénité : 49,90€/mois · Premium : 99,90€/mois</p>
             <a href="/dashboard/tarifs" className="inline-block px-6 py-2.5 rounded-full text-sm font-medium transition-all"
               style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}>
               Choisir un abonnement

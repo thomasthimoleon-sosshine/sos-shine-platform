@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
@@ -16,20 +16,40 @@ export default function ResetPasswordPage() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [checking, setChecking] = useState(true)
+  const sessionFound = useRef(false)
 
   useEffect(() => {
-    async function checkSession() {
-      const supabase = createClient()
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session) {
-        // No active session — user might have an expired or invalid reset link
-        router.push('/forgot-password')
-        return
+    const supabase = createClient()
+
+    // Listen for auth state changes — handles recovery token from URL hash
+    const { data: { subscription: authSub } } = supabase.auth.onAuthStateChange((event, session) => {
+      if ((event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') && session) {
+        sessionFound.current = true
+        setChecking(false)
       }
-      setChecking(false)
+    })
+
+    // Also check if already have a valid session (e.g. from auth callback redirect)
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        sessionFound.current = true
+        setChecking(false)
+      }
+    })
+
+    // Wait for potential auth state change from URL hash/code
+    const timeout = setTimeout(() => {
+      if (!sessionFound.current) {
+        router.push('/forgot-password')
+      }
+    }, 3000)
+
+    return () => {
+      authSub.unsubscribe()
+      clearTimeout(timeout)
     }
-    checkSession()
-  }, [router])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()

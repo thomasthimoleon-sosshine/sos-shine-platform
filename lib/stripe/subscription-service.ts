@@ -530,7 +530,59 @@ export async function handlePaymentSucceeded(invoice: Stripe.Invoice): Promise<v
 }
 
 // ═══════════════════════════════════════════════════════════════
-// 9. VÉRIFIER SI UN PAIEMENT A DÉJÀ ÉTÉ TRAITÉ
+// 9. GESTION DES REMBOURSEMENTS
+// ═══════════════════════════════════════════════════════════════
+
+export async function handleChargeRefunded(charge: Stripe.Charge): Promise<void> {
+  const supabase = getAdminSupabase()
+  if (!supabase) return
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const ch = charge as any
+  const customerId = ch.customer as string
+  if (!customerId) return
+
+  // Find the subscription by customer ID
+  const { data: sub } = await supabase
+    .from('subscriptions')
+    .select('user_id, plan')
+    .eq('stripe_customer_id', customerId)
+    .maybeSingle()
+
+  if (!sub) return
+
+  // Full refund → deactivate the user
+  if (ch.refunded === true || ch.amount_refunded >= ch.amount) {
+    await supabase.from('subscriptions').update({
+      status: 'canceled',
+      cancel_at_period_end: false,
+      updated_at: new Date().toISOString(),
+    }).eq('user_id', sub.user_id)
+
+    await supabase.from('profiles').update({
+      is_active: false,
+      plan: null,
+    }).eq('id', sub.user_id)
+
+    await logPaymentEvent(sub.user_id, 'refunded', sub.plan || 'essential', {
+      charge_id: ch.id,
+      amount_refunded: ch.amount_refunded,
+    })
+
+    console.log(`[Webhook] Remboursement total — userId: ${sub.user_id} désactivé`)
+  } else {
+    // Partial refund — just log it
+    await logPaymentEvent(sub.user_id, 'partial_refund', sub.plan || 'essential', {
+      charge_id: ch.id,
+      amount_refunded: ch.amount_refunded,
+      amount_total: ch.amount,
+    })
+    console.log(`[Webhook] Remboursement partiel — userId: ${sub.user_id}`)
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 10. VÉRIFIER SI UN PAIEMENT A DÉJÀ ÉTÉ TRAITÉ
 // ═══════════════════════════════════════════════════════════════
 
 export async function isPaymentAlreadyProcessed(stripeSubscriptionId: string): Promise<{

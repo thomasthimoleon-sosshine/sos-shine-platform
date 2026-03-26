@@ -169,6 +169,44 @@ export async function POST(request: Request) {
   }
 }
 
+// DELETE — permanently delete a member (founder only)
+export async function DELETE(request: Request) {
+  const caller = await getCallerProfile()
+  if (!caller || caller.role !== 'founder') {
+    return NextResponse.json({ error: 'Seuls les fondateurs peuvent supprimer des membres' }, { status: 403 })
+  }
+
+  try {
+    const { memberId } = await request.json()
+    if (!memberId) {
+      return NextResponse.json({ error: 'memberId requis' }, { status: 400 })
+    }
+
+    const admin = createAdminClient()
+
+    // Delete subscription data
+    await admin.from('subscriptions').delete().eq('user_id', memberId)
+
+    // Delete payment logs
+    await admin.from('subscription_payment_logs').delete().eq('user_id', memberId)
+
+    // Delete profile
+    await admin.from('profiles').delete().eq('id', memberId)
+
+    // Delete the auth user via Supabase Admin API
+    const { error: authError } = await admin.auth.admin.deleteUser(memberId)
+    if (authError) {
+      console.error('[Admin] Erreur suppression auth user:', authError)
+      // Profile/subscription already deleted, log but don't fail
+    }
+
+    return NextResponse.json({ success: true })
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Unknown error'
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
+}
+
 // PATCH — update a member's role (founder only)
 export async function PATCH(request: Request) {
   const caller = await getCallerProfile()

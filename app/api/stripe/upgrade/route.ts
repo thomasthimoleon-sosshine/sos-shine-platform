@@ -65,14 +65,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Prix non configuré pour ce plan' }, { status: 500 })
     }
 
-    // Modifier l'abonnement Stripe
+    // Modifier l'abonnement Stripe — changement immédiat avec prorata dans les deux sens
     const updatedSubscription = await stripe.subscriptions.update(sub.stripe_subscription_id, {
       items: [{
         id: stripeSubscription.items.data[0].id,
         price: newPriceId,
       }],
-      proration_behavior: isUpgrade ? 'always_invoice' : 'none',
-      ...(isUpgrade ? {} : { cancel_at_period_end: false }),
+      proration_behavior: 'always_invoice',
+      cancel_at_period_end: false,
       metadata: {
         ...stripeSubscription.metadata,
         plan: new_plan,

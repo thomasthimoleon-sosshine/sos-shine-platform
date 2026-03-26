@@ -71,7 +71,7 @@ export async function POST(request: Request) {
         id: stripeSubscription.items.data[0].id,
         price: newPriceId,
       }],
-      proration_behavior: isUpgrade ? 'create_prorations' : 'none',
+      proration_behavior: isUpgrade ? 'always_invoice' : 'none',
       ...(isUpgrade ? {} : { cancel_at_period_end: false }),
       metadata: {
         ...stripeSubscription.metadata,

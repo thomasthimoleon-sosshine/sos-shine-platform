@@ -17,6 +17,108 @@ export interface EmailTemplateSeed {
 }
 
 export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
+  // ========== INSCRIPTION (BIENVENUE + CONVERSION) ==========
+  {
+    template_key: 'registration_welcome',
+    category: 'registration',
+    name: 'Bienvenue dans la famille SOS Shine',
+    subject: '{firstName}, bienvenue dans la famille SOS Shine !',
+    html_content: `<h2 style="color:#D4AF37;font-family:Georgia,serif;font-weight:300;margin:0 0 20px;">Bienvenue dans la famille, {firstName} !</h2>
+<p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Nous sommes tellement heureux de vous accueillir chez <strong style="color:#D4AF37;">SOS Shine\u00ae</strong>. Votre compte est maintenant actif.</p>
+<p style="color:#a1a1aa;font-size:14px;line-height:1.8;">SOS Shine\u00ae est la premi\u00e8re encyclop\u00e9die mondiale du bien-\u00eatre \u00e9motionnel. Ici, vous trouverez des outils concrets pour transformer vos \u00e9motions en force.</p>
+<p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Pour profiter pleinement de l'exp\u00e9rience \u2014 vid\u00e9os exclusives, m\u00e9ditations guid\u00e9es, protocoles personnalis\u00e9s et communaut\u00e9 bienveillante \u2014 d\u00e9couvrez nos offres d'abonnement.</p>
+<div style="text-align:center;margin:32px 0;">
+  <a href="{site_url}/rejoindre" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#D4AF37,#B8960F);">D\u00e9couvrir les offres</a>
+</div>
+<p style="color:#a1a1aa;font-size:14px;line-height:1.8;margin-top:24px;">Avec bienveillance,<br/><strong style="color:#D4AF37;">Julia</strong> \u2014 Fondatrice SOS Shine\u00ae</p>`,
+    trigger_type: 'registration',
+    trigger_delay_days: 0,
+    description: 'Envoy\u00e9 imm\u00e9diatement \u00e0 la cr\u00e9ation du compte',
+    variables: ['firstName', 'email', 'site_url'],
+    is_active: true,
+  },
+  {
+    template_key: 'registration_conversion_j1',
+    category: 'registration',
+    name: 'Conversion J+1 \u2014 D\u00e9couvrez SOS Shine',
+    subject: '{firstName}, avez-vous d\u00e9couvert votre Signature \u00c9motionnelle ?',
+    html_content: `<h2 style="color:#D4AF37;font-family:Georgia,serif;font-weight:300;margin:0 0 20px;">Votre premi\u00e8re \u00e9tape, {firstName}</h2>
+<p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Bienvenue dans votre deuxi\u00e8me jour chez SOS Shine\u00ae ! Avez-vous d\u00e9j\u00e0 d\u00e9couvert votre <strong style="color:#D4AF37;">Signature \u00c9motionnelle</strong> ?</p>
+<p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Ce test gratuit r\u00e9v\u00e8le votre profil \u00e9motionnel unique. C'est le point de d\u00e9part id\u00e9al pour comprendre comment SOS Shine peut vous accompagner.</p>
+<div style="text-align:center;margin:32px 0;">
+  <a href="{site_url}/signature-emotionnelle" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#D4AF37,#B8960F);">D\u00e9couvrir ma Signature</a>
+</div>`,
+    trigger_type: 'registration',
+    trigger_delay_days: 1,
+    description: 'Envoy\u00e9 1 jour apr\u00e8s l\'inscription (non-abonn\u00e9s)',
+    variables: ['firstName', 'email', 'site_url'],
+    is_active: true,
+  },
+  {
+    template_key: 'registration_conversion_j3',
+    category: 'registration',
+    name: 'Conversion J+3 \u2014 Ce qui vous attend',
+    subject: '{firstName}, voici ce qui vous attend chez SOS Shine',
+    html_content: `<h2 style="color:#D4AF37;font-family:Georgia,serif;font-weight:300;margin:0 0 20px;">Tout un monde vous attend, {firstName}</h2>
+<p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Imaginez avoir acc\u00e8s \u00e0 tout cela :</p>
+<ul style="color:#a1a1aa;font-size:14px;line-height:2.2;">
+  <li><strong style="color:#D4AF37;">Shine TV</strong> \u2014 Des vid\u00e9os exclusives pour nourrir votre \u00e2me</li>
+  <li><strong style="color:#D4AF37;">Shine Audible</strong> \u2014 Des m\u00e9ditations guid\u00e9es pour chaque \u00e9motion</li>
+  <li><strong style="color:#D4AF37;">Shine Librairie</strong> \u2014 Une biblioth\u00e8que de ressources uniques</li>
+  <li><strong style="color:#D4AF37;">Communaut\u00e9</strong> \u2014 Un espace bienveillant pour \u00e9changer</li>
+  <li><strong style="color:#D4AF37;">D\u00e9fis Shine</strong> \u2014 Des challenges pour grandir chaque jour</li>
+</ul>
+<p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Tout cela vous attend d\u00e8s votre abonnement. Et \u00e7a commence \u00e0 seulement 9,90\u20ac/mois.</p>
+<div style="text-align:center;margin:32px 0;">
+  <a href="{site_url}/rejoindre" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#D4AF37,#B8960F);">Voir les offres</a>
+</div>`,
+    trigger_type: 'registration',
+    trigger_delay_days: 3,
+    description: 'Envoy\u00e9 3 jours apr\u00e8s l\'inscription (non-abonn\u00e9s)',
+    variables: ['firstName', 'email', 'site_url'],
+    is_active: true,
+  },
+  {
+    template_key: 'registration_conversion_j7',
+    category: 'registration',
+    name: 'Conversion J+7 \u2014 T\u00e9moignage',
+    subject: '{firstName}, elles ont transform\u00e9 leur vie avec SOS Shine',
+    html_content: `<h2 style="color:#D4AF37;font-family:Georgia,serif;font-weight:300;margin:0 0 20px;">Des vies transform\u00e9es, {firstName}</h2>
+<p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Depuis le lancement de SOS Shine\u00ae, des centaines de personnes ont commenc\u00e9 leur voyage vers le bien-\u00eatre \u00e9motionnel.</p>
+<div style="background:rgba(212,175,55,0.06);border-left:3px solid #D4AF37;padding:16px 20px;margin:20px 0;border-radius:0 8px 8px 0;">
+  <p style="color:#E0E0E0;font-size:14px;line-height:1.8;font-style:italic;margin:0;">\u00ab SOS Shine m'a permis de comprendre mes \u00e9motions et de les transformer en force. Les m\u00e9ditations sont incroyables. \u00bb</p>
+  <p style="color:#D4AF37;font-size:13px;margin:8px 0 0;">\u2014 Une membre SOS Shine</p>
+</div>
+<p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Votre place vous attend dans cette communaut\u00e9 de lumi\u00e8re.</p>
+<div style="text-align:center;margin:32px 0;">
+  <a href="{site_url}/rejoindre" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#D4AF37,#B8960F);">Rejoindre la famille</a>
+</div>`,
+    trigger_type: 'registration',
+    trigger_delay_days: 7,
+    description: 'Envoy\u00e9 7 jours apr\u00e8s l\'inscription (non-abonn\u00e9s)',
+    variables: ['firstName', 'email', 'site_url'],
+    is_active: true,
+  },
+  {
+    template_key: 'registration_conversion_j14',
+    category: 'registration',
+    name: 'Conversion J+14 \u2014 Derni\u00e8re invitation',
+    subject: '{firstName}, votre lumi\u00e8re int\u00e9rieure n\'attend que vous',
+    html_content: `<h2 style="color:#D4AF37;font-family:Georgia,serif;font-weight:300;margin:0 0 20px;">Votre lumi\u00e8re attend, {firstName}</h2>
+<p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Cela fait deux semaines que vous avez rejoint SOS Shine\u00ae. Nous esp\u00e9rons que vous avez pu d\u00e9couvrir votre Signature \u00c9motionnelle.</p>
+<p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Aujourd'hui, nous vous invitons \u00e0 franchir le pas et \u00e0 acc\u00e9der \u00e0 l'int\u00e9gralit\u00e9 de nos ressources. Des vid\u00e9os, des m\u00e9ditations, des protocoles, des d\u00e9fis... tout est pr\u00eat pour vous.</p>
+<p style="color:#E0E0E0;font-size:15px;line-height:1.8;"><strong>L'offre Essentielle d\u00e9marre \u00e0 seulement 9,90\u20ac/mois.</strong></p>
+<div style="text-align:center;margin:32px 0;">
+  <a href="{site_url}/rejoindre" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#D4AF37,#B8960F);">Commencer maintenant</a>
+</div>
+<p style="color:#a1a1aa;font-size:14px;line-height:1.8;margin-top:24px;">Avec toute ma bienveillance,<br/><strong style="color:#D4AF37;">Julia</strong> \u2014 Fondatrice SOS Shine\u00ae</p>`,
+    trigger_type: 'registration',
+    trigger_delay_days: 14,
+    description: 'Envoy\u00e9 14 jours apr\u00e8s l\'inscription (non-abonn\u00e9s)',
+    variables: ['firstName', 'email', 'site_url'],
+    is_active: true,
+  },
+
   // ========== LISTE D'ATTENTE ==========
   {
     template_key: 'waitlist_confirmation',

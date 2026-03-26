@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { sendTemplateEmail, scheduleEmail } from '@/lib/email-templates/automated-emails'
+import { enrollInSequence } from '@/lib/crm/enroll'
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
@@ -60,24 +62,28 @@ export async function GET(request: Request) {
 
         const isNewUser = user.created_at && (Date.now() - new Date(user.created_at).getTime() < 60000)
         if (isNewUser) {
+          const firstName = user.user_metadata?.prenom
+            || user.user_metadata?.full_name?.split(' ')[0]
+            || user.user_metadata?.name?.split(' ')[0]
+            || 'Membre'
+          const userEmail = user.email || ''
+
           try {
-            const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
-              || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : null)
-              || ''
-            if (siteUrl) {
-              const firstName = user.user_metadata?.full_name?.split(' ')[0]
-                || user.user_metadata?.name?.split(' ')[0]
-                || null
-              await fetch(`${siteUrl}/api/crm/sequences/enroll`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  trigger_type: 'subscription',
-                  email: user.email,
-                  first_name: firstName,
-                }),
-              })
-            }
+            // Email de bienvenue immédiat
+            await sendTemplateEmail('registration_welcome', userEmail, {
+              firstName,
+              email: userEmail,
+            }, { recipientName: firstName })
+
+            // Séquence de conversion pour les non-abonnés (J+1, J+3, J+7, J+14)
+            const vars = { firstName, email: userEmail }
+            scheduleEmail('registration_conversion_j1', userEmail, vars, 1, { recipientName: firstName }).catch(() => {})
+            scheduleEmail('registration_conversion_j3', userEmail, vars, 3, { recipientName: firstName }).catch(() => {})
+            scheduleEmail('registration_conversion_j7', userEmail, vars, 7, { recipientName: firstName }).catch(() => {})
+            scheduleEmail('registration_conversion_j14', userEmail, vars, 14, { recipientName: firstName }).catch(() => {})
+
+            // Enrôlement CRM
+            enrollInSequence('registration', userEmail, firstName).catch(() => {})
           } catch {}
         }
 

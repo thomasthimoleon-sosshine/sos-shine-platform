@@ -6,7 +6,6 @@
 
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import type Stripe from 'stripe'
-import crypto from 'crypto'
 import {
   type PlanId,
   type DurationId,
@@ -90,19 +89,10 @@ export function detectPlanFromSession(
 // 2. CREER UN COMPTE utilisateur automatiquement
 // ═══════════════════════════════════════════════════════════════
 
-interface CreateAccountResult {
+interface AccountResult {
   userId: string
-  tempPassword: string
-  isNew: true
+  isNew: boolean
 }
-
-interface ExistingAccountResult {
-  userId: string
-  tempPassword: null
-  isNew: false
-}
-
-type AccountResult = CreateAccountResult | ExistingAccountResult
 
 export async function findOrCreateAccount(
   email: string,
@@ -122,16 +112,14 @@ export async function findOrCreateAccount(
     .maybeSingle()
 
   if (existingProfile) {
-    return { userId: existingProfile.id, tempPassword: null, isNew: false }
+    return { userId: existingProfile.id, isNew: false }
   }
 
-  // Créer un nouveau compte
-  const tempPassword = crypto.randomBytes(8).toString('base64url') // ~11 chars, URL-safe
-
+  // Fallback : créer un compte si l'utilisateur n'existe pas encore
+  // (cas rare — normalement l'utilisateur s'inscrit avant de payer)
   const { data: authUser, error: authError } = await supabase.auth.admin.createUser({
     email,
-    password: tempPassword,
-    email_confirm: true, // Auto-confirm car ils ont payé
+    email_confirm: true,
   })
 
   if (authError || !authUser?.user) {
@@ -152,7 +140,7 @@ export async function findOrCreateAccount(
   }, { onConflict: 'id' })
 
   console.log(`[SubscriptionService] Compte créé pour ${email} (id: ${userId})`)
-  return { userId, tempPassword, isNew: true }
+  return { userId, isNew: true }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -227,92 +215,37 @@ export async function sendWelcomeEmail(
   email: string,
   firstName: string,
   plan: PlanId,
-  tempPassword: string | null,
-  isNewUser: boolean
 ): Promise<boolean> {
   const planName = getPlanDisplayName(plan)
   const siteUrl = getSiteUrl()
+  const planAmountStr = getPlanAmount(plan)
 
-  if (isNewUser && tempPassword) {
-    // Nouvel utilisateur : email avec identifiants
-    const loginUrl = `${siteUrl}/login`
-    const resetUrl = `${siteUrl}/forgot-password`
+  // Email de bienvenue abonnement (template DB)
+  const result = await sendTemplateEmail('subscription_welcome', email, {
+    firstName,
+    email,
+    planName,
+    planAmount: planAmountStr,
+  }, { recipientName: firstName })
 
+  if (!result.success) {
+    // Fallback : email brut
     const html = `
       <h2 style="color:#D4AF37;font-family:Georgia,'Times New Roman',serif;font-weight:300;font-size:24px;margin:0 0 24px;">
         Bienvenue dans SOS Shine, ${firstName} !
       </h2>
       <p style="color:#E0E0E0;font-size:15px;line-height:1.7;margin:0 0 16px;">
-        Votre paiement a bien &eacute;t&eacute; confirm&eacute; et votre compte <strong>SOS Shine</strong> a &eacute;t&eacute; cr&eacute;&eacute; automatiquement
-        avec l'offre <strong style="color:#D4AF37;">${planName}</strong>.
-      </p>
-      <div style="background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.2);border-radius:12px;padding:24px;margin:24px 0;">
-        <p style="color:#D4AF37;font-size:13px;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 12px;font-weight:600;">
-          Vos identifiants de connexion
-        </p>
-        <p style="color:#E0E0E0;font-size:15px;margin:0 0 8px;">
-          <strong>Email :</strong> ${email}
-        </p>
-        <p style="color:#E0E0E0;font-size:15px;margin:0;">
-          <strong>Mot de passe temporaire :</strong>
-          <code style="background:rgba(255,255,255,0.08);padding:3px 8px;border-radius:4px;font-size:16px;letter-spacing:0.05em;">${tempPassword}</code>
-        </p>
-      </div>
-      <p style="color:#E0E0E0;font-size:15px;line-height:1.7;margin:0 0 24px;">
-        Connectez-vous et changez votre mot de passe d&egrave;s que possible pour s&eacute;curiser votre compte.
+        Votre paiement a bien &eacute;t&eacute; confirm&eacute; pour l'offre <strong style="color:#D4AF37;">${planName}</strong>.
       </p>
       <div style="text-align:center;margin:32px 0;">
-        <a href="${loginUrl}" style="display:inline-block;background:linear-gradient(135deg,#D4AF37,#B8960F);color:#050505;padding:14px 40px;border-radius:50px;text-decoration:none;font-weight:600;font-size:15px;">
-          Se connecter
+        <a href="${siteUrl}/login" style="display:inline-block;background:linear-gradient(135deg,#D4AF37,#B8960F);color:#050505;padding:14px 40px;border-radius:50px;text-decoration:none;font-weight:600;font-size:15px;">
+          Acc&eacute;der &agrave; mon espace
         </a>
       </div>
-      <p style="color:#999;font-size:13px;line-height:1.6;margin:24px 0 0;text-align:center;">
-        Vous pouvez aussi <a href="${resetUrl}" style="color:#D4AF37;text-decoration:underline;">cr&eacute;er un nouveau mot de passe</a> si vous pr&eacute;f&eacute;rez.
-      </p>
     `
-
-    const result = await sendRawEmail(
-      email,
-      `Bienvenue sur SOS Shine — Vos identifiants de connexion`,
-      html,
-      { recipientName: firstName, eventType: 'auto_email_account_created' }
-    )
-
-    if (!result.success) {
-      console.error(`[SubscriptionService] Email identifiants ECHOUE pour ${email}:`, result.error)
-      return false
-    }
-    console.log(`[SubscriptionService] Email identifiants ENVOYE à ${email}`)
-    return true
-  } else {
-    // Utilisateur existant : email de bienvenue template
-    const planAmountStr = getPlanAmount(plan)
-    const result = await sendTemplateEmail('subscription_welcome', email, {
-      firstName,
-      email,
-      planName,
-      planAmount: planAmountStr,
-    }, { recipientName: firstName })
-
-    if (!result.success) {
-      // Fallback : email brut
-      const html = `
-        <h2 style="color:#D4AF37;font-family:Georgia,'Times New Roman',serif;font-weight:300;font-size:24px;margin:0 0 24px;">
-          Bienvenue dans SOS Shine, ${firstName} !
-        </h2>
-        <p style="color:#E0E0E0;font-size:15px;line-height:1.7;margin:0 0 16px;">
-          Votre paiement a bien &eacute;t&eacute; confirm&eacute; pour l'offre <strong style="color:#D4AF37;">${planName}</strong>.
-        </p>
-        <div style="text-align:center;margin:32px 0;">
-          <a href="${siteUrl}/login" style="display:inline-block;background:linear-gradient(135deg,#D4AF37,#B8960F);color:#050505;padding:14px 40px;border-radius:50px;text-decoration:none;font-weight:600;font-size:15px;">
-            Acc&eacute;der &agrave; mon espace
-          </a>
-        </div>
-      `
-      await sendRawEmail(email, 'Bienvenue sur SOS Shine — Paiement confirmé', html, { recipientName: firstName })
-    }
-    return true
+    await sendRawEmail(email, 'Bienvenue sur SOS Shine — Paiement confirmé', html, { recipientName: firstName })
   }
+  return true
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -332,6 +265,8 @@ export async function scheduleNurturingEmails(
   await cancelScheduledEmails(email, [
     'waitlist_reminder_j3', 'waitlist_opening',
     'quiz_followup_j2', 'quiz_conversion_j5',
+    'registration_conversion_j1', 'registration_conversion_j3',
+    'registration_conversion_j7', 'registration_conversion_j14',
   ])
 
   // Programmer la séquence nurturing
@@ -439,15 +374,9 @@ export async function processSuccessfulPayment(params: ProcessPaymentParams): Pr
     is_new_user: account.isNew,
   })
 
-  // Étape 4 : Envoyer l'email de bienvenue
+  // Étape 4 : Envoyer l'email de bienvenue abonnement
   const firstName = prenom || 'Membre'
-  const emailSent = await sendWelcomeEmail(
-    email,
-    firstName,
-    plan,
-    account.isNew ? account.tempPassword : null,
-    account.isNew
-  )
+  const emailSent = await sendWelcomeEmail(email, firstName, plan)
 
   // Étape 5 : Programmer les emails de nurturing
   await scheduleNurturingEmails(email, firstName, plan)

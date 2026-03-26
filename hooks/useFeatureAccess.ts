@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
 interface FeatureAccess {
@@ -10,6 +10,8 @@ interface FeatureAccess {
   features: Record<string, boolean>
   loading: boolean
   hasFeature: (key: string) => boolean
+  /** Recharger les features (ex: après paiement ou upgrade) */
+  refresh: () => void
 }
 
 export function useFeatureAccess(): FeatureAccess {
@@ -26,6 +28,12 @@ export function useFeatureAccess(): FeatureAccess {
     features: {},
     loading: true,
   })
+  const [refreshKey, setRefreshKey] = useState(0)
+
+  const refresh = useCallback(() => {
+    setState(prev => ({ ...prev, loading: true }))
+    setRefreshKey(k => k + 1)
+  }, [])
 
   useEffect(() => {
     async function load() {
@@ -52,7 +60,7 @@ export function useFeatureAccess(): FeatureAccess {
       }
     }
     load()
-  }, [])
+  }, [refreshKey])
 
   return {
     ...state,
@@ -60,5 +68,6 @@ export function useFeatureAccess(): FeatureAccess {
       if (state.isAdmin) return true
       return state.features[key] ?? false
     },
+    refresh,
   }
 }

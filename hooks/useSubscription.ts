@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
 export interface SubscriptionState {
@@ -10,10 +10,12 @@ export interface SubscriptionState {
   plan: string | null
   status: string | null
   userId: string | null
+  /** Recharger l'état de l'abonnement (ex: après paiement) */
+  refresh: () => void
 }
 
 export function useSubscription(): SubscriptionState {
-  const [state, setState] = useState<SubscriptionState>({
+  const [state, setState] = useState<Omit<SubscriptionState, 'refresh'>>({
     loading: true,
     isActive: false,
     isAdmin: false,
@@ -21,6 +23,12 @@ export function useSubscription(): SubscriptionState {
     status: null,
     userId: null,
   })
+  const [refreshKey, setRefreshKey] = useState(0)
+
+  const refresh = useCallback(() => {
+    setState(prev => ({ ...prev, loading: true }))
+    setRefreshKey(k => k + 1)
+  }, [])
 
   useEffect(() => {
     async function check() {
@@ -71,7 +79,7 @@ export function useSubscription(): SubscriptionState {
       })
     }
     check()
-  }, [])
+  }, [refreshKey])
 
-  return state
+  return { ...state, refresh }
 }

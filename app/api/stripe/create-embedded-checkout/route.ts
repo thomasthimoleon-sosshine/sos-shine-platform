@@ -46,6 +46,9 @@ export async function POST(request: Request) {
     if (!isValidDuration(duration)) {
       return NextResponse.json({ error: 'Durée invalide' }, { status: 400 })
     }
+    if (!userId) {
+      return NextResponse.json({ error: 'Vous devez être connecté pour vous abonner' }, { status: 401 })
+    }
     const trimmedEmail = email?.trim()?.toLowerCase()
     if (!trimmedEmail) {
       return NextResponse.json({ error: 'Email requis' }, { status: 400 })

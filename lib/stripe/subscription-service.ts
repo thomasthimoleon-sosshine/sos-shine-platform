@@ -86,34 +86,6 @@ export function detectPlanFromSession(
 }
 
 // ═══════════════════════════════════════════════════════════════
-// 2. TROUVER le compte utilisateur existant
-// L'utilisateur DOIT être inscrit avant de pouvoir s'abonner.
-// ═══════════════════════════════════════════════════════════════
-
-export async function findExistingAccount(
-  email: string,
-): Promise<string | null> {
-  const supabase = getAdminSupabase()
-  if (!supabase) {
-    console.error('[SubscriptionService] Supabase admin non configuré')
-    return null
-  }
-
-  const { data: existingProfile } = await supabase
-    .from('profiles')
-    .select('id')
-    .eq('email', email)
-    .maybeSingle()
-
-  if (!existingProfile) {
-    console.error(`[SubscriptionService] Aucun compte trouvé pour ${email} — l'utilisateur doit s'inscrire avant de s'abonner`)
-    return null
-  }
-
-  return existingProfile.id
-}
-
-// ═══════════════════════════════════════════════════════════════
 // 3. CREER/METTRE A JOUR l'abonnement en base
 // ═══════════════════════════════════════════════════════════════
 
@@ -278,6 +250,7 @@ export async function logPaymentEvent(
 // ═══════════════════════════════════════════════════════════════
 
 interface ProcessPaymentParams {
+  userId: string
   email: string
   prenom?: string | null
   plan: PlanId
@@ -295,28 +268,22 @@ interface ProcessPaymentParams {
 
 interface ProcessPaymentResult {
   success: boolean
-  userId: string | null
+  userId: string
   emailSent: boolean
   error?: string
 }
 
 export async function processSuccessfulPayment(params: ProcessPaymentParams): Promise<ProcessPaymentResult> {
   const {
-    email, prenom, plan, duration,
+    userId, email, prenom, plan, duration,
     stripeCustomerId, stripeSubscriptionId,
     stripeStatus, currentPeriodEnd, cancelAtPeriodEnd,
     trialEnd, waitlistDiscount, amountTotal, source
   } = params
 
-  console.log(`[SubscriptionService] Traitement paiement (${source}) — email: ${email}, plan: ${plan}, durée: ${duration}`)
+  console.log(`[SubscriptionService] Activation abonnement (${source}) — userId: ${userId}, plan: ${plan}, durée: ${duration}`)
 
-  // Étape 1 : Trouver le compte existant (l'utilisateur doit être inscrit)
-  const userId = await findExistingAccount(email)
-  if (!userId) {
-    return { success: false, userId: null, emailSent: false, error: 'Aucun compte trouvé — l\'utilisateur doit s\'inscrire avant de s\'abonner' }
-  }
-
-  // Étape 2 : Activer l'abonnement
+  // Étape 1 : Activer l'abonnement
   const subCreated = await upsertSubscription({
     userId,
     plan,
@@ -334,7 +301,7 @@ export async function processSuccessfulPayment(params: ProcessPaymentParams): Pr
     return { success: false, userId, emailSent: false, error: 'Erreur activation abonnement' }
   }
 
-  // Étape 3 : Logger l'événement
+  // Étape 2 : Logger l'événement
   await logPaymentEvent(userId, 'subscription_activated', plan, {
     stripe_subscription_id: stripeSubscriptionId,
     duration,
@@ -342,11 +309,11 @@ export async function processSuccessfulPayment(params: ProcessPaymentParams): Pr
     source,
   })
 
-  // Étape 4 : Envoyer l'email de confirmation d'abonnement
+  // Étape 3 : Envoyer l'email de confirmation d'abonnement
   const firstName = prenom || 'Membre'
   const emailSent = await sendWelcomeEmail(email, firstName, plan)
 
-  // Étape 5 : Programmer les emails de nurturing
+  // Étape 4 : Programmer les emails de nurturing
   await scheduleNurturingEmails(email, firstName, plan)
 
   console.log(`[SubscriptionService] Abonnement activé — userId: ${userId}, email: ${emailSent}`)
@@ -606,18 +573,3 @@ export async function isPaymentAlreadyProcessed(stripeSubscriptionId: string): P
   }
 }
 
-// ═══════════════════════════════════════════════════════════════
-// 10. RÉCUPÉRER L'EMAIL depuis un customer Stripe
-// ═══════════════════════════════════════════════════════════════
-
-export async function getEmailFromStripeCustomer(stripe: Stripe, customerId: string): Promise<string | null> {
-  try {
-    const customer = await stripe.customers.retrieve(customerId)
-    if (customer && !customer.deleted && 'email' in customer) {
-      return customer.email || null
-    }
-  } catch (e) {
-    console.error('[SubscriptionService] Erreur récupération email client Stripe:', e)
-  }
-  return null
-}

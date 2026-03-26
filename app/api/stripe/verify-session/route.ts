@@ -63,7 +63,13 @@ export async function POST(request: Request) {
     }
 
     // Le webhook n'a pas traité → on fait le flux complet
+    // L'utilisateur est connecté : userId vient des metadata
+    const userId = session.metadata?.user_id
     const email = session.customer_email || session.metadata?.email
+
+    if (!userId) {
+      return NextResponse.json({ verified: true, email_sent: false, reason: 'no_user_id' })
+    }
     if (!email) {
       return NextResponse.json({ verified: true, email_sent: false, reason: 'no_email' })
     }
@@ -100,10 +106,11 @@ export async function POST(request: Request) {
     // Détecter le plan
     const { plan, duration } = detectPlanFromSession(session, subForDetection)
 
-    // Traiter le paiement (même logique que le webhook)
+    // Activer l'abonnement pour l'utilisateur connecté
     const result = await processSuccessfulPayment({
+      userId,
       email,
-      prenom: session.metadata?.prenom || session.client_reference_id || null,
+      prenom: session.metadata?.prenom || null,
       plan,
       duration,
       stripeCustomerId: customerId || null,

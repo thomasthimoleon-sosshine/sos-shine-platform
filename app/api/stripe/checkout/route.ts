@@ -18,9 +18,12 @@ import {
 
 export async function POST(request: Request) {
   try {
-    const { plan, duration = 'monthly', email, prenom } = await request.json()
+    const { plan, duration = 'monthly', email, prenom, userId } = await request.json()
 
-    // Validation
+    // Validation — l'utilisateur doit être connecté
+    if (!userId) {
+      return NextResponse.json({ error: 'Vous devez être connecté pour vous abonner' }, { status: 401 })
+    }
     if (!plan || !isValidPlan(plan)) {
       return NextResponse.json({ error: 'Plan invalide' }, { status: 400 })
     }
@@ -64,8 +67,9 @@ export async function POST(request: Request) {
         duration: effectiveDuration,
         email: trimmedEmail,
         prenom: firstName,
+        user_id: userId,
       },
-      client_reference_id: firstName,
+      client_reference_id: userId,
       allow_promotion_codes: true,
     }
 

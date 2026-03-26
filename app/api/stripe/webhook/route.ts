@@ -13,7 +13,6 @@ import {
   handleSubscriptionDeleted,
   handlePaymentFailed,
   handlePaymentSucceeded,
-  getEmailFromStripeCustomer,
 } from '@/lib/stripe/subscription-service'
 
 export async function POST(request: Request) {
@@ -54,10 +53,13 @@ export async function POST(request: Request) {
         const customerId = session.customer as string
         const subscriptionId = session.subscription as string
 
-        // Récupérer l'email
-        let email = session.customer_email || session.metadata?.email
-        if (!email && customerId) {
-          email = await getEmailFromStripeCustomer(stripe, customerId) || undefined
+        // L'utilisateur est connecté : userId vient des metadata
+        const userId = session.metadata?.user_id
+        const email = session.customer_email || session.metadata?.email
+
+        if (!userId) {
+          console.error('[Webhook] Pas de user_id dans les metadata de la session:', session.id)
+          break
         }
 
         if (!email) {
@@ -77,10 +79,11 @@ export async function POST(request: Request) {
         // Détecter le plan
         const { plan, duration } = detectPlanFromSession(session, sub)
 
-        // Traiter le paiement (création compte + email + DB)
+        // Activer l'abonnement pour l'utilisateur connecté
         const result = await processSuccessfulPayment({
+          userId,
           email,
-          prenom: session.metadata?.prenom || session.client_reference_id || null,
+          prenom: session.metadata?.prenom || null,
           plan,
           duration,
           stripeCustomerId: customerId,
@@ -94,7 +97,7 @@ export async function POST(request: Request) {
           source: 'webhook',
         })
 
-        console.log(`[Webhook] checkout.session.completed traité: ${email} → ${result.success ? 'OK' : 'ERREUR'}`)
+        console.log(`[Webhook] checkout.session.completed traité: userId=${userId} → ${result.success ? 'OK' : 'ERREUR'}`)
         break
       }
 

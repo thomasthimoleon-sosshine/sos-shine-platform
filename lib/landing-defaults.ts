@@ -340,6 +340,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       copyright_year: '2026',
       links: [
         { label: 'Notre Histoire', href: '/notre-histoire' },
+        { label: 'Blog', href: '/blog' },
         { label: 'Mentions l\u00e9gales', href: '/mentions-legales' },
         { label: 'CGV', href: '/cgv' },
         { label: 'Confidentialit\u00e9', href: '/confidentialite' },

@@ -728,7 +728,7 @@ export default function Home() {
         <div className="max-w-5xl mx-auto px-5 md:px-20 relative z-10">
           <div className="grid grid-cols-3 gap-8 md:gap-12">
             {[
-              { value: '50+', label: 'PROTOCOLES DE TRANSFORMATION' },
+              { value: '200+', label: 'PROTOCOLES DE TRANSFORMATION' },
               { value: '5', label: 'UNIVERS DE CONTENU' },
               { value: '24/7', label: 'COMMUNAUTÉ & SOUTIEN' },
             ].map((stat, i) => (

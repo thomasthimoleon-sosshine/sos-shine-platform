@@ -561,19 +561,19 @@ function ActuShineSection() {
           <div className="w-6 h-6 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : (
-        <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-5 sm:overflow-visible snap-x snap-mandatory scrollbar-hide">
+        <div className="flex gap-3 overflow-x-auto pb-3 -mx-4 px-4 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-5 sm:overflow-visible snap-x snap-mandatory scrollbar-hide" style={{ WebkitOverflowScrolling: 'touch' }}>
           {pillars.map((pillar) => (
             <Link
               key={pillar.key}
               href={pillar.href}
-              className="group block overflow-hidden rounded-2xl transition-all duration-300 hover:scale-[1.03] hover:shadow-lg min-w-[140px] snap-start flex-shrink-0 sm:min-w-0 sm:flex-shrink"
+              className="group block overflow-hidden rounded-2xl transition-all duration-300 hover:scale-[1.03] hover:shadow-lg min-w-[130px] max-w-[160px] snap-start flex-shrink-0 sm:min-w-0 sm:max-w-none sm:flex-shrink"
               style={{
                 background: pillar.image ? 'var(--dark-card)' : pillar.gradient,
                 border: `1px solid rgba(${pillar.accentColor === '#D4AF37' ? '212,175,55' : pillar.accentColor === '#74C0FC' ? '116,192,252' : pillar.accentColor === '#A29BFE' ? '162,155,254' : pillar.accentColor === '#55EFC4' ? '85,239,196' : '253,203,110'},0.15)`,
               }}
             >
               {/* Thumbnail */}
-              <div className="relative aspect-square overflow-hidden" style={{ background: pillar.image ? 'rgba(0,0,0,0.3)' : undefined }}>
+              <div className="relative aspect-[4/3] sm:aspect-square overflow-hidden" style={{ background: pillar.image ? 'rgba(0,0,0,0.3)' : undefined }}>
                 {pillar.image ? (
                   <>
                     <img

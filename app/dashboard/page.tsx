@@ -475,61 +475,71 @@ function ActuShineSection() {
       key: 'encyclopedia',
       title: 'Encyclopédie',
       icon: (
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
         </svg>
       ),
       href: '/dashboard/encyclopedie',
       data: latestContent.encyclopedia,
       image: latestContent.encyclopedia?.image_url,
+      gradient: 'linear-gradient(135deg, rgba(212,175,55,0.15), rgba(180,130,20,0.05))',
+      accentColor: '#D4AF37',
     },
     {
       key: 'shineTV',
       title: 'Shine TV',
       icon: (
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M6 20.25h12m-7.5-3v3m3-3v3m-10.125-3h17.25c.621 0 1.125-.504 1.125-1.125V4.875c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125z" />
         </svg>
       ),
       href: '/dashboard/shine-tv',
       data: latestContent.shineTV,
       image: latestContent.shineTV?.thumbnail_url,
+      gradient: 'linear-gradient(135deg, rgba(116,192,252,0.15), rgba(70,130,200,0.05))',
+      accentColor: '#74C0FC',
     },
     {
       key: 'audible',
       title: 'Audible',
       icon: (
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
         </svg>
       ),
       href: '/dashboard/shine-audible',
       data: latestContent.audible,
       image: latestContent.audible?.cover_url,
+      gradient: 'linear-gradient(135deg, rgba(162,155,254,0.15), rgba(120,100,220,0.05))',
+      accentColor: '#A29BFE',
     },
     {
       key: 'shorts',
-      title: 'Short',
+      title: 'Shorts',
       icon: (
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
         </svg>
       ),
       href: '/dashboard/shine-shorts',
       data: latestContent.shorts,
       image: latestContent.shorts?.thumbnail_url,
+      gradient: 'linear-gradient(135deg, rgba(85,239,196,0.15), rgba(50,180,140,0.05))',
+      accentColor: '#55EFC4',
     },
     {
       key: 'library',
       title: 'Librairie',
       icon: (
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
         </svg>
       ),
       href: '/dashboard/shine-librairie',
       data: latestContent.library,
       image: latestContent.library?.cover_url,
+      gradient: 'linear-gradient(135deg, rgba(253,203,110,0.15), rgba(220,160,60,0.05))',
+      accentColor: '#FDCB6E',
     },
   ]
 
@@ -551,38 +561,63 @@ function ActuShineSection() {
           <div className="w-6 h-6 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4">
+        <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-5 sm:overflow-visible snap-x snap-mandatory scrollbar-hide">
           {pillars.map((pillar) => (
             <Link
               key={pillar.key}
               href={pillar.href}
-              className="glass glass-hover group block overflow-hidden rounded-xl transition-all duration-300"
-              style={{ borderColor: 'rgba(212,175,55,0.08)' }}
+              className="group block overflow-hidden rounded-2xl transition-all duration-300 hover:scale-[1.03] hover:shadow-lg min-w-[140px] snap-start flex-shrink-0 sm:min-w-0 sm:flex-shrink"
+              style={{
+                background: pillar.image ? 'var(--dark-card)' : pillar.gradient,
+                border: `1px solid rgba(${pillar.accentColor === '#D4AF37' ? '212,175,55' : pillar.accentColor === '#74C0FC' ? '116,192,252' : pillar.accentColor === '#A29BFE' ? '162,155,254' : pillar.accentColor === '#55EFC4' ? '85,239,196' : '253,203,110'},0.15)`,
+              }}
             >
               {/* Thumbnail */}
-              <div className="relative aspect-[4/3] sm:aspect-square overflow-hidden bg-black/20">
+              <div className="relative aspect-[4/3] overflow-hidden">
                 {pillar.image ? (
-                  <img
-                    src={pillar.image}
-                    alt={pillar.data?.title || pillar.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
+                  <>
+                    <img
+                      src={pillar.image}
+                      alt={pillar.data?.title || pillar.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  </>
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center" style={{ background: 'rgba(212,175,55,0.05)' }}>
-                    <span style={{ color: 'var(--gold)', opacity: 0.3 }}>{pillar.icon}</span>
+                  <div className="w-full h-full flex flex-col items-center justify-center gap-2 relative">
+                    <div
+                      className="absolute inset-0 opacity-[0.03]"
+                      style={{
+                        backgroundImage: `radial-gradient(circle at 30% 40%, ${pillar.accentColor}, transparent 60%), radial-gradient(circle at 70% 60%, ${pillar.accentColor}, transparent 60%)`,
+                      }}
+                    />
+                    <div
+                      className="w-12 h-12 rounded-full flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
+                      style={{
+                        background: `linear-gradient(135deg, ${pillar.accentColor}22, ${pillar.accentColor}08)`,
+                        border: `1px solid ${pillar.accentColor}30`,
+                      }}
+                    >
+                      <span style={{ color: pillar.accentColor }}>{pillar.icon}</span>
+                    </div>
+                    <span className="text-[10px] font-medium uppercase tracking-wider" style={{ color: `${pillar.accentColor}99` }}>
+                      Nouveau
+                    </span>
                   </div>
                 )}
               </div>
               {/* Title */}
-              <div className="p-2 sm:p-3 text-center">
-                <div className="flex justify-center mb-1" style={{ color: 'var(--gold)', opacity: 0.7 }}>
-                  {pillar.icon}
+              <div className="p-3 text-center">
+                <div className="flex items-center justify-center gap-1.5 mb-0.5">
+                  <span style={{ color: pillar.accentColor, opacity: 0.8 }} className="w-4 h-4 flex items-center justify-center [&>svg]:w-4 [&>svg]:h-4">
+                    {pillar.icon}
+                  </span>
+                  <h3 className="text-xs font-bold uppercase tracking-wide" style={{ color: pillar.accentColor }}>
+                    {pillar.title}
+                  </h3>
                 </div>
-                <h3 className="text-xs sm:text-sm font-semibold leading-tight" style={{ color: 'var(--text-primary)' }}>
-                  {pillar.title}
-                </h3>
                 {pillar.data && (
-                  <p className="text-[10px] sm:text-xs mt-1 truncate" style={{ color: 'var(--text-muted)' }}>
+                  <p className="text-[10px] mt-1 truncate leading-snug" style={{ color: 'var(--text-muted)' }}>
                     {pillar.data.title}
                   </p>
                 )}

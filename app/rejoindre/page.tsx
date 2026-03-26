@@ -593,7 +593,7 @@ function PaymentContent() {
 
             <div className="space-y-2.5 text-left mb-6 flex-1">
               {[
-                'Encyclop\u00e9die compl\u00e8te (acc\u00e8s illimit\u00e9)',
+                'Encyclopédie complète (accès illimité)',
                 'Tchats communautaires',
               ].map((item) => (
                 <div key={item} className="flex items-start gap-2.5">
@@ -613,7 +613,7 @@ function PaymentContent() {
           </div>
         </Reveal>
 
-        {/* S\u00e9r\u00e9nit\u00e9 */}
+        {/* Sérénité */}
         <Reveal delay={0.5}>
           <div className="glass p-6 sm:p-8 text-center h-full flex flex-col relative overflow-hidden" style={{ borderColor: 'rgba(85,239,196,0.25)', boxShadow: '0 0 30px rgba(85,239,196,0.06)' }}>
             <div className="absolute top-4 right-4 text-[10px] tracking-[0.2em] uppercase px-3 py-1 rounded-full font-semibold"
@@ -672,8 +672,8 @@ function PaymentContent() {
               style={{ background: 'linear-gradient(135deg, #55EFC4, #00B894)', color: '#050505' }}
             >
               {showTotalPrice
-                ? `S\u00e9r\u00e9nit\u00e9 ${durationInfo.months} mois \u2014 ${formatPrice(TOTAL_PRICES.serenite[selectedDuration])}`
-                : 'Essayer S\u00e9r\u00e9nit\u00e9 \u2014 7 jours gratuits (CB requise)'
+                ? `Sérénité ${durationInfo.months} mois — ${formatPrice(TOTAL_PRICES.serenite[selectedDuration])}`
+                : 'Essayer Sérénité — 7 jours gratuits (CB requise)'
               }
             </button>
           </div>
@@ -722,10 +722,10 @@ function PaymentContent() {
 
             <div className="space-y-2.5 text-left mb-6 flex-1">
               {[
-                'Tout le contenu de la S\u00e9r\u00e9nit\u00e9',
-                'Live th\u00e9matique hebdomadaire',
-                'Canal priv\u00e9 Telegram',
-                'Acc\u00e8s aux \u00e9v\u00e9nements',
+                'Tout le contenu de la Sérénité',
+                'Live thématique hebdomadaire',
+                'Canal privé Telegram',
+                'Accès aux événements',
               ].map((item) => (
                 <div key={item} className="flex items-start gap-2.5">
                   <span className="mt-0.5 text-sm flex-shrink-0" style={{ color: '#A78BFA' }}>&#9670;</span>
@@ -850,7 +850,7 @@ export default function RejoindrePage() {
             </h1>
             <p className="text-lg leading-relaxed max-w-xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
               {isPrelaunch ? (
-                "L\u2019encyclop\u00e9die compl\u00e8te des challenges \u00e9motionnels. Un espace pour comprendre, apaiser et ne plus jamais \u00eatre seul."
+                "L\u2019encyclopédie complète des challenges émotionnels. Un espace pour comprendre, apaiser et ne plus jamais être seul."
               ) : (
                 t('join.subtitle')
               )}
@@ -870,9 +870,9 @@ export default function RejoindrePage() {
           <Reveal delay={0.6}>
             <div className="glass p-4 text-center mb-6" style={{ borderColor: 'rgba(212,175,55,0.2)', background: 'rgba(212,175,55,0.03)' }}>
               <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                Connect\u00e9{userName ? ` en tant que ` : ''}
+                Connecté{userName ? ' en tant que ' : ''}
                 {userName && <span style={{ color: '#D4AF37' }}>{userName}</span>}
-                {' '}&mdash; Choisissez votre abonnement pour acc\u00e9der \u00e0 la plateforme.
+                {' '}&mdash; Choisissez votre abonnement pour accéder à la plateforme.
               </p>
             </div>
           </Reveal>
@@ -887,7 +887,7 @@ export default function RejoindrePage() {
                     {t('join.already_member')}
                   </Link>
                   <Link href="/signup" className="text-xs gold-underline" style={{ color: 'var(--text-secondary)' }}>
-                    Cr\u00e9er un compte
+                    Créer un compte
                   </Link>
                 </>
               )}

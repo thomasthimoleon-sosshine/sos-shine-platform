@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
       auth: { autoRefreshToken: false, persistSession: false },
     })
 
-    await adminSupabase.from('site_visits').insert({
+    const { error: insertError } = await adminSupabase.from('site_visits').insert({
       user_id: user?.id || null,
       page_path: page_path || '/',
       referrer: referrer || null,
@@ -59,8 +59,14 @@ export async function POST(request: NextRequest) {
       is_authenticated: !!user,
     })
 
+    if (insertError) {
+      console.error('Visit tracking insert error:', insertError.message, insertError.code)
+      return NextResponse.json({ error: 'Insert failed', detail: insertError.message }, { status: 500 })
+    }
+
     return NextResponse.json({ ok: true })
-  } catch {
+  } catch (e) {
+    console.error('Visit tracking error:', e)
     return NextResponse.json({ error: 'Failed' }, { status: 500 })
   }
 }

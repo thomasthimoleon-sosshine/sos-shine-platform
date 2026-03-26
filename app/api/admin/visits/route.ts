@@ -87,6 +87,10 @@ export async function GET() {
       admin.from('site_visits').select('created_at').gte('created_at', todayStart).limit(5000),
     ])
 
+    // Log any query errors
+    if (totalRes.error) console.error('Visit stats - total query error:', totalRes.error.message)
+    if (todayRes.error) console.error('Visit stats - today query error:', todayRes.error.message)
+
     // Count unique sessions
     const uniqueToday = new Set((uniqueTodayRes.data || []).map(v => v.session_id).filter(Boolean)).size
     const uniqueWeek = new Set((uniqueWeekRes.data || []).map(v => v.session_id).filter(Boolean)).size

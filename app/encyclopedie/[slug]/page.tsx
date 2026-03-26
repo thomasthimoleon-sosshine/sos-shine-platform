@@ -521,7 +521,7 @@ export default function PublicDouleurDetailPage() {
 
               <div className="space-y-3">
                 <Link
-                  href="/rejoindre"
+                  href="/signup"
                   className="block w-full py-3.5 rounded-full font-medium transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center"
                   style={{ background: 'var(--gold)', color: 'var(--dark)' }}
                 >

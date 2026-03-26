@@ -92,7 +92,7 @@ export default function ParentsEnfantsPage() {
         <div className="flex items-center gap-4">
           <ThemeToggle />
           <Link
-            href="/rejoindre"
+            href="/signup"
             className="px-5 py-2.5 rounded-full text-sm font-medium transition-all"
             style={{ background: 'var(--gold)', color: 'var(--dark)' }}
           >
@@ -130,7 +130,7 @@ export default function ParentsEnfantsPage() {
           </Reveal>
           <Reveal delay={0.4}>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/rejoindre"
+              <Link href="/signup"
                 className="px-8 py-3.5 rounded-full text-sm font-semibold transition-all"
                 style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}>
                 Rejoindre la communauté
@@ -293,7 +293,7 @@ export default function ParentsEnfantsPage() {
               parmi les premiers à y accéder et bénéficier du tarif fondateur.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/rejoindre"
+              <Link href="/signup"
                 className="px-8 py-3.5 rounded-full text-sm font-semibold transition-all"
                 style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}>
                 Rejoindre SOS Shine

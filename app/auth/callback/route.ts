@@ -5,7 +5,8 @@ import { createAdminClient } from '@/lib/supabase/admin'
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
-  const next = searchParams.get('next') ?? '/dashboard'
+  const nextParam = searchParams.get('next') ?? '/dashboard'
+  let next = nextParam
 
   if (code) {
     const supabase = await createClient()
@@ -80,7 +81,10 @@ export async function GET(request: Request) {
           } catch {}
         }
 
-        // Users can access dashboard freely — subscription check is handled client-side
+        // New users without subscription → redirect to pricing page
+        if (isNewUser && nextParam === '/dashboard') {
+          next = '/dashboard/tarifs'
+        }
       }
 
       const forwardedHost = request.headers.get('x-forwarded-host')

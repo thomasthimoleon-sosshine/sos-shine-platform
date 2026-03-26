@@ -85,7 +85,7 @@ export default function SignupPage() {
         password,
         options: {
           data: { prenom },
-          emailRedirectTo: `${window.location.origin}/auth/callback?next=/onboarding`,
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard/tarifs`,
         },
       })
 
@@ -106,7 +106,7 @@ export default function SignupPage() {
     const supabase = createClient()
     await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${window.location.origin}/auth/callback?next=/dashboard` },
+      options: { redirectTo: `${window.location.origin}/auth/callback?next=/dashboard/tarifs` },
     })
   }
 

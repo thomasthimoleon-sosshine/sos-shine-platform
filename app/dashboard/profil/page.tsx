@@ -409,7 +409,7 @@ export default function ProfilPage() {
           <div className="rounded-xl p-5 text-center" style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.12)' }}>
             <p className="text-sm mb-1" style={{ color: 'var(--text-primary)' }}>{t('dashboard.free_trial')}</p>
             <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>Essentiel : 29,90€/mois · Premium : 99,90€/mois</p>
-            <a href="/rejoindre" className="inline-block px-6 py-2.5 rounded-full text-sm font-medium transition-all"
+            <a href="/dashboard/tarifs" className="inline-block px-6 py-2.5 rounded-full text-sm font-medium transition-all"
               style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}>
               Choisir un abonnement
             </a>

@@ -35,7 +35,7 @@ export default function CancelPage() {
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
-            href="/rejoindre"
+            href="/dashboard/tarifs"
             className="inline-flex items-center justify-center px-8 py-3.5 rounded-full font-medium text-sm tracking-wide transition-all"
             style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}
           >

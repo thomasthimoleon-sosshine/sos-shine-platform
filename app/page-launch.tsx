@@ -542,7 +542,7 @@ export default function Home() {
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}>
               <div className="flex flex-wrap gap-5 justify-center">
                 {(hero.buttons || []).map((btn: { label: string; href: string; variant: string }, i: number) => (
-                  <Link key={i} href={btn.href === '/signup' || btn.href === '/login' ? '/rejoindre' : btn.href}>
+                  <Link key={i} href={btn.href === '/signup' || btn.href === '/login' ? '/signup' : btn.href}>
                     {btn.variant === 'primary' ? (
                       <button className="magnetic-btn pulse-ring px-8 py-4 rounded-full text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
                         {btn.label} — {trialDays} jours d&apos;essai
@@ -965,7 +965,7 @@ export default function Home() {
                       ))}
                     </div>
 
-                    <Link href="/rejoindre">
+                    <Link href="/signup">
                       <button className={`magnetic-btn w-full py-4 rounded-full text-base font-semibold tracking-wide ${plan.highlight ? 'pulse-ring' : ''}`} style={{
                         background: plan.highlight ? `linear-gradient(135deg, ${accent}, rgba(${accentRgb},0.7))` : `linear-gradient(135deg, ${gold}, ${goldDeep})`,
                         color: '#050505'
@@ -1004,7 +1004,7 @@ export default function Home() {
               </h2>
             </RevealOnScroll>
             <RevealOnScroll delay={0.3}>
-              <Link href="/rejoindre">
+              <Link href="/signup">
                 <button className="magnetic-btn pulse-ring px-10 py-5 rounded-full text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
                   Rejoindre SOS Shine
                 </button>

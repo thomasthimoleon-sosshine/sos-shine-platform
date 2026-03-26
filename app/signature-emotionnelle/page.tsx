@@ -552,7 +552,7 @@ function ResultScreen({ profileKey, firstName, emailSent }: { profileKey: Profil
           transition={{ delay: 1.2 }}
           className="mt-12 text-center space-y-4"
         >
-          <Link href="/rejoindre">
+          <Link href="/signup">
             <button
               className="magnetic-btn pulse-ring px-10 py-5 rounded-full text-base font-semibold tracking-wide"
               style={{ background: "linear-gradient(135deg, var(--gold), var(--gold-deep))", color: "#050505" }}

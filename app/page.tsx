@@ -685,7 +685,7 @@ export default function Home() {
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}>
               <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-5 justify-center items-center">
                 {(hero.buttons || []).map((btn: { label: string; href: string; variant: string }, i: number) => (
-                  <Link key={i} href={btn.variant === 'primary' ? '/rejoindre' : (btn.href || '/encyclopedie')} className="w-full sm:w-auto">
+                  <Link key={i} href={btn.variant === 'primary' ? '/signup' : (btn.href || '/encyclopedie')} className="w-full sm:w-auto">
                     {btn.variant === 'primary' ? (
                       <button className="magnetic-btn pulse-ring w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full text-sm sm:text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
                         {btn.label} — {trialDays} {t('landing.trial_days')}
@@ -1188,7 +1188,7 @@ export default function Home() {
                       ))}
                     </div>
 
-                    <Link href="/rejoindre">
+                    <Link href="/signup">
                       <button className={`magnetic-btn w-full py-3 sm:py-4 rounded-full text-sm sm:text-base font-semibold tracking-wide ${plan.highlight ? 'pulse-ring' : ''}`} style={{
                         background: `linear-gradient(135deg, ${tc.main}, ${tc.deep})`,
                         color: btnTextColor
@@ -1281,7 +1281,7 @@ export default function Home() {
               </h2>
             </RevealOnScroll>
             <RevealOnScroll delay={0.3}>
-              <Link href="/rejoindre">
+              <Link href="/signup">
                 <button className="magnetic-btn pulse-ring px-8 sm:px-10 py-4 sm:py-5 rounded-full text-base sm:text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
                   {t('landing.join_cta')}
                 </button>

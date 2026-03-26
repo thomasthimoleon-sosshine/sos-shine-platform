@@ -790,7 +790,7 @@ export default function Home() {
 
             {principe.image_url && (
               <RevealOnScroll delay={0.1} direction="scale">
-                <img src={principe.image_url} alt="" className="w-full rounded-xl md:rounded-2xl object-cover max-h-48 md:max-h-72 mb-6 md:mb-10" style={{ border: '1px solid var(--dark-border)' }} />
+                <img src={principe.image_url} alt="" className="w-full rounded-xl md:rounded-2xl object-contain max-h-64 md:max-h-96 mb-6 md:mb-10" style={{ border: '1px solid var(--dark-border)' }} />
               </RevealOnScroll>
             )}
 
@@ -1035,7 +1035,7 @@ export default function Home() {
                         <img
                           src={hist.book_image || '/images/book-cover.jpeg'}
                           alt="SOS Shine — Briller Comme un Diamant"
-                          className="w-full aspect-[3/4] object-cover"
+                          className="w-full aspect-[3/4] object-contain"
                         />
                       </div>
                       <div className="absolute -inset-2 rounded-xl bg-[var(--gold)]/5 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />

@@ -177,7 +177,7 @@ function VideoRow({ title, icon, videos, onSelect }: {
                 <img
                   src={video.thumbnail}
                   alt={video.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain bg-black/40"
                   loading="lazy"
                 />
                 {/* Duration badge */}

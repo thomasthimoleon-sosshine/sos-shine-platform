@@ -637,7 +637,7 @@ export default function AdminPublications() {
                 {/* Content preview */}
                 <div className="flex items-start gap-3 mb-3">
                   {post.image_url && (
-                    <img src={post.image_url} alt="" className="w-16 h-16 object-cover rounded-lg flex-shrink-0" />
+                    <img src={post.image_url} alt="" className="w-16 h-16 object-contain rounded-lg flex-shrink-0" />
                   )}
                   <div className="min-w-0">
                     <h3 className="font-semibold text-sm truncate" style={{ color: 'var(--text-primary)' }}>{post.title}</h3>

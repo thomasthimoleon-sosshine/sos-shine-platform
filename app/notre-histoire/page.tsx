@@ -77,7 +77,7 @@ export default function NotreHistoirePage() {
                   <img
                     src={hist.book_image || '/images/book-cover.jpeg'}
                     alt="SOS Shine — Briller Comme un Diamant"
-                    className="w-full aspect-[3/4] object-cover"
+                    className="w-full aspect-[3/4] object-contain"
                   />
                 </div>
               </a>

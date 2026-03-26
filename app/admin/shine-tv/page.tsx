@@ -334,7 +334,7 @@ export default function AdminShineTVPage() {
               {/* Thumbnail */}
               <div className="relative aspect-video" style={{ background: 'rgba(225,112,85,0.08)' }}>
                 {v.thumbnail_url ? (
-                  <img src={v.thumbnail_url} alt={v.title} className="w-full h-full object-cover" />
+                  <img src={v.thumbnail_url} alt={v.title} className="w-full h-full object-contain" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-4xl opacity-30">🎬</div>
                 )}

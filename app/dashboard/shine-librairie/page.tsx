@@ -277,7 +277,7 @@ function BookRow({ title, icon, books, onSelect }: {
                   <img
                     src={book.cover}
                     alt={book.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                     loading="lazy"
                   />
                 ) : (

@@ -1107,7 +1107,7 @@ export default function AdminDouleursPage() {
                     <div className="flex gap-4 flex-1 min-w-0">
                       {d.image_url ? (
                         <img src={d.image_url} alt={d.title}
-                          className="w-14 h-14 rounded-lg object-cover flex-shrink-0"
+                          className="w-14 h-14 rounded-lg object-contain flex-shrink-0"
                           style={{ border: '1px solid var(--dark-border)' }} />
                       ) : (
                         <div className="w-14 h-14 rounded-lg flex-shrink-0 flex items-center justify-center text-xl"

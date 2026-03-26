@@ -66,7 +66,7 @@ export default function LivreSupersPouvoirsPage() {
           {/* Cover image */}
           {page.cover_image && (
             <div className="rounded-2xl overflow-hidden">
-              <img src={page.cover_image} alt={page.title} className="w-full max-h-[400px] object-cover" />
+              <img src={page.cover_image} alt={page.title} className="w-full max-h-[500px] object-contain" />
             </div>
           )}
 

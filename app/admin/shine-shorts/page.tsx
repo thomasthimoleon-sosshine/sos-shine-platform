@@ -327,7 +327,7 @@ export default function AdminShineShortsPage() {
               {/* Thumbnail */}
               <div className="relative aspect-[9/16] max-h-64" style={{ background: 'rgba(162,155,254,0.08)' }}>
                 {s.thumbnail_url ? (
-                  <img src={s.thumbnail_url} alt={s.title} className="w-full h-full object-cover" />
+                  <img src={s.thumbnail_url} alt={s.title} className="w-full h-full object-contain" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-4xl opacity-30">📱</div>
                 )}

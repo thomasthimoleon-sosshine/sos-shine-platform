@@ -169,7 +169,7 @@ function ShortRow({ title, icon, shorts, onSelect }: {
                   <img
                     src={short.thumbnail}
                     alt={short.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain bg-black/40"
                     loading="lazy"
                   />
                 ) : (

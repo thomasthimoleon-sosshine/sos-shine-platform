@@ -373,7 +373,7 @@ export default function AdminShineAudiblePage() {
                 {/* Cover */}
                 <div className="w-16 h-16 rounded-lg flex-shrink-0 overflow-hidden" style={{ background: 'rgba(155,89,182,0.08)' }}>
                   {t.cover_url ? (
-                    <img src={t.cover_url} alt={t.title} className="w-full h-full object-cover" />
+                    <img src={t.cover_url} alt={t.title} className="w-full h-full object-contain" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-2xl opacity-30">🎧</div>
                   )}

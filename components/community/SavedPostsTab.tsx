@@ -216,7 +216,7 @@ export default function SavedPostsTab({ onProfileClick }: Props) {
               {/* Media preview */}
               {saved.post.image_url && (
                 <div className="mt-3 rounded-xl overflow-hidden">
-                  <img src={saved.post.image_url} alt="" className="w-full max-h-48 object-cover" />
+                  <img src={saved.post.image_url} alt="" className="w-full object-contain max-h-80 rounded-xl" />
                 </div>
               )}
               {saved.post.video_url && (

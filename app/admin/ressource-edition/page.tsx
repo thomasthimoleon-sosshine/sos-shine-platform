@@ -137,7 +137,7 @@ export default function RessourceEditionPage() {
                 style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
               />
               {page.cover_image && (
-                <img src={page.cover_image} alt="Aperçu" className="mt-2 h-32 rounded-xl object-cover" />
+                <img src={page.cover_image} alt="Aperçu" className="mt-2 h-32 rounded-xl object-contain" />
               )}
             </div>
 

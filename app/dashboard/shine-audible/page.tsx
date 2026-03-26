@@ -125,7 +125,7 @@ function MiniPlayer({ audio, isPlaying, onToggle, progress, currentTime, duratio
         <img
           src={audio.cover}
           alt={audio.title}
-          className="w-12 h-12 rounded-lg object-cover ring-1 ring-white/10 shrink-0"
+          className="w-12 h-12 rounded-lg object-contain ring-1 ring-white/10 shrink-0"
         />
 
         {/* Info */}
@@ -275,7 +275,7 @@ function AudioRow({ title, icon, audios, onSelect, nowPlayingId }: {
                 <img
                   src={audio.cover}
                   alt={audio.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                   loading="lazy"
                 />
                 {/* Now playing indicator */}
@@ -373,7 +373,7 @@ function HeroBanner({ audio, onOpen, onPlay }: { audio: ShineAudio; onOpen: () =
           <motion.img
             src={audio.cover}
             alt={audio.title}
-            className="w-40 h-40 sm:w-52 sm:h-52 rounded-2xl object-cover shadow-2xl shadow-black/60 ring-1 ring-white/10 shrink-0"
+            className="w-40 h-40 sm:w-52 sm:h-52 rounded-2xl object-contain shadow-2xl shadow-black/60 ring-1 ring-white/10 shrink-0"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
@@ -498,7 +498,7 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
 
           <div className="absolute inset-0 flex items-center justify-center gap-6 px-6">
             <img src={audio.cover} alt={audio.title}
-              className="w-36 h-36 sm:w-44 sm:h-44 rounded-2xl object-cover shadow-2xl shadow-black/60 ring-1 ring-white/10 shrink-0" />
+              className="w-36 h-36 sm:w-44 sm:h-44 rounded-2xl object-contain shadow-2xl shadow-black/60 ring-1 ring-white/10 shrink-0" />
 
             {/* Play overlay on cover */}
             <button
@@ -1030,7 +1030,7 @@ export default function ShineAudiblePage() {
                   >
                     <div className="relative overflow-hidden rounded-xl transition-all duration-300 group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-black/50">
                       <div className="relative aspect-square">
-                        <img src={audio.cover} alt={audio.title} className="w-full h-full object-cover" loading="lazy" />
+                        <img src={audio.cover} alt={audio.title} className="w-full h-full object-contain" loading="lazy" />
                         <span className="absolute bottom-2 right-2 text-[10px] font-semibold px-1.5 py-0.5 rounded"
                           style={{ background: 'rgba(0,0,0,0.8)', color: '#fff' }}>
                           {audio.duration}
@@ -1106,7 +1106,7 @@ export default function ShineAudiblePage() {
                   >
                     <div className="relative overflow-hidden rounded-xl transition-all duration-300 group-hover:scale-105">
                       <div className="relative aspect-square">
-                        <img src={audio.cover} alt={audio.title} className="w-full h-full object-cover" loading="lazy" />
+                        <img src={audio.cover} alt={audio.title} className="w-full h-full object-contain" loading="lazy" />
                         <span className="absolute bottom-2 right-2 text-[10px] font-semibold px-1.5 py-0.5 rounded"
                           style={{ background: 'rgba(0,0,0,0.8)', color: '#fff' }}>
                           {audio.duration}
@@ -1166,7 +1166,7 @@ export default function ShineAudiblePage() {
                   >
                     <div className="relative overflow-hidden rounded-lg transition-all duration-300 group-hover:scale-105">
                       <div className="relative aspect-square">
-                        <img src={audio.cover} alt={audio.title} className="w-full h-full object-cover" loading="lazy" />
+                        <img src={audio.cover} alt={audio.title} className="w-full h-full object-contain" loading="lazy" />
                         <span className="absolute bottom-2 right-2 text-[10px] font-semibold px-1.5 py-0.5 rounded"
                           style={{ background: 'rgba(0,0,0,0.8)', color: '#fff' }}>
                           {audio.duration}
@@ -1237,7 +1237,7 @@ export default function ShineAudiblePage() {
                             <div className="relative overflow-hidden rounded-xl transition-all duration-300 group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-black/50">
                               <div className="relative aspect-square">
                                 {audio.cover ? (
-                                  <img src={audio.cover} alt={audio.title} className="w-full h-full object-cover" loading="lazy" />
+                                  <img src={audio.cover} alt={audio.title} className="w-full h-full object-contain" loading="lazy" />
                                 ) : (
                                   <div className="w-full h-full flex items-center justify-center" style={{ background: 'rgba(212,175,55,0.05)' }}>
                                     <svg className="w-12 h-12 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} style={{ color: 'var(--gold)' }}>

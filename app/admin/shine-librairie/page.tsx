@@ -418,7 +418,7 @@ export default function AdminShineLibrairiePage() {
               {/* Cover */}
               <div className="relative aspect-[3/4]" style={{ background: 'rgba(212,175,55,0.05)' }}>
                 {b.cover_url ? (
-                  <img src={b.cover_url} alt={b.title} className="w-full h-full object-cover" />
+                  <img src={b.cover_url} alt={b.title} className="w-full h-full object-contain" />
                 ) : (
                   <div className="w-full h-full flex flex-col items-center justify-center gap-2 p-4">
                     <span className="text-5xl opacity-20">📖</span>

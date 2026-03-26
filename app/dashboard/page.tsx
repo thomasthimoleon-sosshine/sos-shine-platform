@@ -551,7 +551,7 @@ function ActuShineSection() {
           <div className="w-6 h-6 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : (
-        <div className="grid grid-cols-5 gap-2 sm:gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4">
           {pillars.map((pillar) => (
             <Link
               key={pillar.key}
@@ -560,7 +560,7 @@ function ActuShineSection() {
               style={{ borderColor: 'rgba(212,175,55,0.08)' }}
             >
               {/* Thumbnail */}
-              <div className="relative aspect-square overflow-hidden bg-black/20">
+              <div className="relative aspect-[4/3] sm:aspect-square overflow-hidden bg-black/20">
                 {pillar.image ? (
                   <img
                     src={pillar.image}
@@ -574,15 +574,15 @@ function ActuShineSection() {
                 )}
               </div>
               {/* Title */}
-              <div className="p-2 text-center">
+              <div className="p-2 sm:p-3 text-center">
                 <div className="flex justify-center mb-1" style={{ color: 'var(--gold)', opacity: 0.7 }}>
                   {pillar.icon}
                 </div>
-                <h3 className="text-[10px] sm:text-[11px] font-semibold leading-tight" style={{ color: 'var(--text-primary)' }}>
+                <h3 className="text-xs sm:text-sm font-semibold leading-tight" style={{ color: 'var(--text-primary)' }}>
                   {pillar.title}
                 </h3>
                 {pillar.data && (
-                  <p className="text-[9px] mt-0.5 truncate" style={{ color: 'var(--text-muted)' }}>
+                  <p className="text-[10px] sm:text-xs mt-1 truncate" style={{ color: 'var(--text-muted)' }}>
                     {pillar.data.title}
                   </p>
                 )}

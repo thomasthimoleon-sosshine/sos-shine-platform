@@ -71,8 +71,11 @@ export const metadata: Metadata = {
     title: "SOS Shine",
   },
   icons: {
-    icon: "/favicon.ico",
-    apple: "/api/apple-icon",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
   },
   other: {
     "mobile-web-app-capable": "yes",

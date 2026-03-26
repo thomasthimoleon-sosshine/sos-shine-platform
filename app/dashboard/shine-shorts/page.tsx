@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
-import SubscriptionGate from '@/components/SubscriptionGate'
+import FeatureGate from '@/components/FeatureGate'
 
 // ── Types ──
 type ShineShort = {
@@ -627,7 +627,7 @@ export default function ShineShortsPage() {
   }
 
   return (
-    <SubscriptionGate>
+    <FeatureGate featureKey="shine_tv">
     <div className="-mx-4 sm:-mx-6 lg:-mx-8 -mt-4 sm:-mt-6 lg:-mt-8">
       {/* Header */}
       <div className="px-4 sm:px-6 lg:px-8 pt-6 pb-4" style={{ background: 'linear-gradient(180deg, rgba(162,155,254,0.08) 0%, transparent 100%)' }}>
@@ -1047,6 +1047,6 @@ export default function ShineShortsPage() {
         )}
       </AnimatePresence>
     </div>
-    </SubscriptionGate>
+    </FeatureGate>
   )
 }

@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
-import SubscriptionGate from '@/components/SubscriptionGate'
+import FeatureGate from '@/components/FeatureGate'
 import type { MessageWithProfile, Douleur } from '@/types/database'
 import AudioPlayer from '@/components/AudioPlayer'
 import VoiceRecorder from '@/components/VoiceRecorder'
@@ -105,7 +105,7 @@ export default function ChatDouleurPage() {
   const displayTitle = douleur?.title || slug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 
   return (
-    <SubscriptionGate>
+    <FeatureGate featureKey="chat_douleur">
     <div className="max-w-4xl mx-auto h-[calc(100vh-8rem)] flex flex-col">
       <div className="mb-4">
         <div className="flex items-center gap-2 text-sm mb-2">
@@ -266,6 +266,6 @@ export default function ChatDouleurPage() {
         </div>
       </div>
     </div>
-    </SubscriptionGate>
+    </FeatureGate>
   )
 }

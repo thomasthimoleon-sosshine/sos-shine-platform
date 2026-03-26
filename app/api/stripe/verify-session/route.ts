@@ -122,7 +122,6 @@ export async function POST(request: Request) {
       verified: true,
       email_sent: result.emailSent,
       webhook_processed: false,
-      account_created: result.isNewUser,
     })
   } catch (err) {
     console.error('[verify-session] Erreur:', err)

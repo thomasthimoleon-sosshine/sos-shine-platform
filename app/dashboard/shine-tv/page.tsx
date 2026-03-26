@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
-import SubscriptionGate from '@/components/SubscriptionGate'
+import FeatureGate from '@/components/FeatureGate'
 
 // ── Types ──
 type ShineVideo = {
@@ -664,7 +664,7 @@ export default function ShineTVPage() {
   }
 
   return (
-    <SubscriptionGate>
+    <FeatureGate featureKey="shine_tv">
     <div className="-mx-4 sm:-mx-6 lg:-mx-8 -mt-4 sm:-mt-6 lg:-mt-8">
       {/* Hero */}
       {heroVideo && !search && activeFilter === 'all' && (
@@ -1076,6 +1076,6 @@ export default function ShineTVPage() {
         }
       `}</style>
     </div>
-    </SubscriptionGate>
+    </FeatureGate>
   )
 }

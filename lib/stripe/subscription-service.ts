@@ -86,61 +86,31 @@ export function detectPlanFromSession(
 }
 
 // ═══════════════════════════════════════════════════════════════
-// 2. CREER UN COMPTE utilisateur automatiquement
+// 2. TROUVER le compte utilisateur existant
+// L'utilisateur DOIT être inscrit avant de pouvoir s'abonner.
 // ═══════════════════════════════════════════════════════════════
 
-interface AccountResult {
-  userId: string
-  isNew: boolean
-}
-
-export async function findOrCreateAccount(
+export async function findExistingAccount(
   email: string,
-  prenom?: string | null
-): Promise<AccountResult | null> {
+): Promise<string | null> {
   const supabase = getAdminSupabase()
   if (!supabase) {
     console.error('[SubscriptionService] Supabase admin non configuré')
     return null
   }
 
-  // Chercher un profil existant par email
   const { data: existingProfile } = await supabase
     .from('profiles')
     .select('id')
     .eq('email', email)
     .maybeSingle()
 
-  if (existingProfile) {
-    return { userId: existingProfile.id, isNew: false }
-  }
-
-  // Fallback : créer un compte si l'utilisateur n'existe pas encore
-  // (cas rare — normalement l'utilisateur s'inscrit avant de payer)
-  const { data: authUser, error: authError } = await supabase.auth.admin.createUser({
-    email,
-    email_confirm: true,
-  })
-
-  if (authError || !authUser?.user) {
-    console.error('[SubscriptionService] Erreur création compte:', authError)
+  if (!existingProfile) {
+    console.error(`[SubscriptionService] Aucun compte trouvé pour ${email} — l'utilisateur doit s'inscrire avant de s'abonner`)
     return null
   }
 
-  const userId = authUser.user.id
-
-  // Créer le profil
-  await supabase.from('profiles').upsert({
-    id: userId,
-    email,
-    prenom: prenom || null,
-    role: 'member',
-    is_active: true,
-    created_at: new Date().toISOString(),
-  }, { onConflict: 'id' })
-
-  console.log(`[SubscriptionService] Compte créé pour ${email} (id: ${userId})`)
-  return { userId, isNew: true }
+  return existingProfile.id
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -326,7 +296,6 @@ interface ProcessPaymentParams {
 interface ProcessPaymentResult {
   success: boolean
   userId: string | null
-  isNewUser: boolean
   emailSent: boolean
   error?: string
 }
@@ -341,15 +310,15 @@ export async function processSuccessfulPayment(params: ProcessPaymentParams): Pr
 
   console.log(`[SubscriptionService] Traitement paiement (${source}) — email: ${email}, plan: ${plan}, durée: ${duration}`)
 
-  // Étape 1 : Trouver ou créer le compte
-  const account = await findOrCreateAccount(email, prenom)
-  if (!account) {
-    return { success: false, userId: null, isNewUser: false, emailSent: false, error: 'Impossible de créer le compte' }
+  // Étape 1 : Trouver le compte existant (l'utilisateur doit être inscrit)
+  const userId = await findExistingAccount(email)
+  if (!userId) {
+    return { success: false, userId: null, emailSent: false, error: 'Aucun compte trouvé — l\'utilisateur doit s\'inscrire avant de s\'abonner' }
   }
 
-  // Étape 2 : Créer/mettre à jour l'abonnement
+  // Étape 2 : Activer l'abonnement
   const subCreated = await upsertSubscription({
-    userId: account.userId,
+    userId,
     plan,
     duration,
     stripeCustomerId,
@@ -362,31 +331,29 @@ export async function processSuccessfulPayment(params: ProcessPaymentParams): Pr
   })
 
   if (!subCreated) {
-    return { success: false, userId: account.userId, isNewUser: account.isNew, emailSent: false, error: 'Erreur création abonnement' }
+    return { success: false, userId, emailSent: false, error: 'Erreur activation abonnement' }
   }
 
   // Étape 3 : Logger l'événement
-  await logPaymentEvent(account.userId, 'subscription_created', plan, {
+  await logPaymentEvent(userId, 'subscription_activated', plan, {
     stripe_subscription_id: stripeSubscriptionId,
     duration,
     amount_total: amountTotal,
     source,
-    is_new_user: account.isNew,
   })
 
-  // Étape 4 : Envoyer l'email de bienvenue abonnement
+  // Étape 4 : Envoyer l'email de confirmation d'abonnement
   const firstName = prenom || 'Membre'
   const emailSent = await sendWelcomeEmail(email, firstName, plan)
 
   // Étape 5 : Programmer les emails de nurturing
   await scheduleNurturingEmails(email, firstName, plan)
 
-  console.log(`[SubscriptionService] Paiement traité avec succès — userId: ${account.userId}, nouveau: ${account.isNew}, email: ${emailSent}`)
+  console.log(`[SubscriptionService] Abonnement activé — userId: ${userId}, email: ${emailSent}`)
 
   return {
     success: true,
-    userId: account.userId,
-    isNewUser: account.isNew,
+    userId,
     emailSent,
   }
 }

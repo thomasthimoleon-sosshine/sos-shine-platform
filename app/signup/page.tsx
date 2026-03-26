@@ -396,9 +396,6 @@ export default function SignupPage() {
           </Link>
         </p>
 
-        <p className="text-center text-[11px] text-[var(--text-muted)] mt-4 italic">
-          {s('signup_trial_text')}
-        </p>
       </motion.div>
     </main>
   )

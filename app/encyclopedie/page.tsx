@@ -278,7 +278,7 @@ function slugify(text: string): string {
 }
 
 // Page récapitulative avant paiement
-const STRIPE_URL = '/rejoindre'
+const STRIPE_URL = '/signup'
 
 type ShineAvailability = {
   hasTV: boolean

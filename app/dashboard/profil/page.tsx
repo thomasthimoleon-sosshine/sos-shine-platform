@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { uploadFile } from '@/lib/supabase/storage'
 import type { Profile, Subscription } from '@/types/database'
+import type { PlanId } from '@/lib/stripe/config'
+import { PLAN_ORDER, PLAN_NAMES, PLAN_COLORS, PLAN_PRICES_EUR } from '@/lib/stripe/config'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 
 export default function ProfilPage() {
@@ -23,6 +25,7 @@ export default function ProfilPage() {
   const [upgradeSuccess, setUpgradeSuccess] = useState<string | null>(null)
   const [upgradeError, setUpgradeError] = useState<string | null>(null)
   const [portalLoading, setPortalLoading] = useState(false)
+  const [confirmDowngrade, setConfirmDowngrade] = useState<PlanId | null>(null)
   const avatarRef = useRef<HTMLInputElement>(null)
   const videoRef = useRef<HTMLInputElement>(null)
 
@@ -136,8 +139,19 @@ export default function ProfilPage() {
     router.push('/')
   }
 
-  async function handleUpgrade(newPlan: 'serenite' | 'premium') {
+  async function handleChangePlan(newPlan: PlanId) {
     if (!profile || upgrading) return
+
+    const currentPlan = subscription?.plan as PlanId | undefined
+    const isDowngrade = currentPlan && PLAN_ORDER[newPlan] < PLAN_ORDER[currentPlan]
+
+    // For downgrades, ask for confirmation first
+    if (isDowngrade && confirmDowngrade !== newPlan) {
+      setConfirmDowngrade(newPlan)
+      return
+    }
+    setConfirmDowngrade(null)
+
     // If no Stripe subscription exists, redirect to checkout
     if (!subscription?.stripe_subscription_id) {
       router.push(`/dashboard/tarifs?plan=${newPlan}`)
@@ -373,29 +387,58 @@ export default function ProfilPage() {
                 </p>
               </div>
             )}
-            {/* Upgrade plan */}
-            {(subscription.status === 'active' || subscription.status === 'trialing') && subscription.plan !== 'premium' && (
-              <div className="rounded-xl p-4" style={{ background: 'rgba(116,192,252,0.05)', border: '1px solid rgba(116,192,252,0.12)' }}>
-                <p className="text-xs font-medium mb-3" style={{ color: '#74C0FC' }}>Passer au plan supérieur</p>
-                <div className="flex gap-2">
-                  {subscription.plan === 'essential' && (
-                    <button
-                      onClick={() => handleUpgrade('serenite')}
-                      disabled={upgrading}
-                      className="flex-1 py-2.5 rounded-lg text-xs font-medium cursor-pointer transition-all disabled:opacity-50"
-                      style={{ background: 'rgba(85,239,196,0.12)', color: '#55EFC4', border: '1px solid rgba(85,239,196,0.2)' }}
-                    >
-                      {upgrading ? 'En cours...' : 'Sérénité — 49,90€/mois'}
-                    </button>
-                  )}
-                  <button
-                    onClick={() => handleUpgrade('premium')}
-                    disabled={upgrading}
-                    className="flex-1 py-2.5 rounded-lg text-xs font-medium cursor-pointer transition-all disabled:opacity-50"
-                    style={{ background: 'rgba(116,192,252,0.12)', color: '#74C0FC', border: '1px solid rgba(116,192,252,0.2)' }}
-                  >
-                    {upgrading ? 'En cours...' : 'Premium — 99,90€/mois'}
-                  </button>
+            {/* Change plan (upgrade or downgrade) */}
+            {(subscription.status === 'active' || subscription.status === 'trialing') && (
+              <div className="rounded-xl p-4" style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.12)' }}>
+                <p className="text-xs font-medium mb-3" style={{ color: '#D4AF37' }}>Changer de forfait</p>
+                <div className="flex flex-col gap-2">
+                  {(['essential', 'serenite', 'premium'] as PlanId[])
+                    .filter(p => p !== subscription.plan)
+                    .map(plan => {
+                      const isUpgrade = PLAN_ORDER[plan] > PLAN_ORDER[subscription.plan as PlanId]
+                      const color = PLAN_COLORS[plan]
+                      return (
+                        <div key={plan}>
+                          <button
+                            onClick={() => handleChangePlan(plan)}
+                            disabled={upgrading}
+                            className="w-full py-2.5 rounded-lg text-xs font-medium cursor-pointer transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                            style={{ background: `${color}12`, color, border: `1px solid ${color}33` }}
+                          >
+                            {upgrading ? 'En cours...' : (
+                              <>
+                                {isUpgrade ? '↑' : '↓'} {PLAN_NAMES[plan]} — {PLAN_PRICES_EUR[plan].toFixed(2).replace('.', ',')}€/mois
+                              </>
+                            )}
+                          </button>
+                          {/* Downgrade confirmation */}
+                          {confirmDowngrade === plan && (
+                            <div className="mt-2 rounded-lg p-3" style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.15)' }}>
+                              <p className="text-xs mb-2" style={{ color: '#ef4444' }}>
+                                En passant à {PLAN_NAMES[plan]}, vous perdrez l&apos;accès à certaines fonctionnalités de votre forfait actuel. Le changement prendra effet à la fin de votre période en cours.
+                              </p>
+                              <div className="flex gap-2">
+                                <button
+                                  onClick={() => handleChangePlan(plan)}
+                                  disabled={upgrading}
+                                  className="px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer disabled:opacity-50"
+                                  style={{ background: 'rgba(239,68,68,0.12)', color: '#ef4444', border: '1px solid rgba(239,68,68,0.2)' }}
+                                >
+                                  {upgrading ? 'En cours...' : 'Confirmer le changement'}
+                                </button>
+                                <button
+                                  onClick={() => setConfirmDowngrade(null)}
+                                  className="px-3 py-1.5 rounded-lg text-xs cursor-pointer"
+                                  style={{ color: 'var(--text-secondary)' }}
+                                >
+                                  Annuler
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )
+                    })}
                 </div>
                 {upgradeSuccess && (
                   <p className="text-xs mt-2" style={{ color: '#55EFC4' }}>{upgradeSuccess}</p>

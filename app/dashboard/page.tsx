@@ -573,15 +573,15 @@ function ActuShineSection() {
               }}
             >
               {/* Thumbnail */}
-              <div className="relative aspect-[4/3] overflow-hidden">
+              <div className="relative aspect-square overflow-hidden" style={{ background: pillar.image ? 'rgba(0,0,0,0.3)' : undefined }}>
                 {pillar.image ? (
                   <>
                     <img
                       src={pillar.image}
                       alt={pillar.data?.title || pillar.title}
-                      className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
+                      className="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
                   </>
                 ) : (
                   <div className="w-full h-full flex flex-col items-center justify-center gap-2 relative">

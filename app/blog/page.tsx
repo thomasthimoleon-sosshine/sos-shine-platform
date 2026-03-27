@@ -1,16 +1,60 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { blogArticles, BLOG_CATEGORIES } from '@/data/blog/articles'
+import { blogArticles as staticArticles, BLOG_CATEGORIES } from '@/data/blog/articles'
+import type { BlogArticle } from '@/data/blog/articles'
 import ThemeToggle from '@/components/ThemeToggle'
+import { createClient } from '@/lib/supabase/client'
 
 const gold = '#D4AF37'
 const goldRgb = '212,175,55'
 
 export default function BlogPage() {
-  const featured = blogArticles.find((a) => a.featured)
-  const others = blogArticles.filter((a) => !a.featured)
+  const [allArticles, setAllArticles] = useState<BlogArticle[]>(staticArticles)
+
+  useEffect(() => {
+    async function loadDbArticles() {
+      try {
+        const supabase = createClient()
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { data } = await (supabase as any)
+          .from('blog_articles')
+          .select('*')
+          .eq('is_published', true)
+          .order('published_at', { ascending: false })
+        if (data && data.length > 0) {
+          const dbArticles: BlogArticle[] = data.map((a: Record<string, unknown>) => ({
+            slug: a.slug as string,
+            title: a.title as string,
+            subtitle: (a.subtitle as string) || '',
+            excerpt: (a.excerpt as string) || '',
+            metaTitle: (a.meta_title as string) || (a.title as string),
+            metaDescription: (a.meta_description as string) || (a.excerpt as string),
+            author: { name: (a.author_name as string) || 'SOS Shine', role: (a.author_role as string) || '' },
+            publishedAt: (a.published_at as string) || '',
+            readTime: (a.read_time as number) || 5,
+            category: (a.category as string) || 'transformation',
+            tags: (a.tags as string[]) || [],
+            coverImage: a.cover_image as string | undefined,
+            featured: (a.featured as boolean) || false,
+            content: (a.content as string) || '',
+          }))
+          // Merge: DB articles first, then static articles not already in DB
+          const dbSlugs = new Set(dbArticles.map(a => a.slug))
+          const merged = [...dbArticles, ...staticArticles.filter(a => !dbSlugs.has(a.slug))]
+          setAllArticles(merged)
+        }
+      } catch {
+        // Silently use static articles if DB not available
+      }
+    }
+    loadDbArticles()
+  }, [])
+
+  const featured = allArticles.find((a) => a.featured)
+  const others = allArticles.filter((a) => !a.featured)
 
   return (
     <main className="grain relative z-0 min-h-screen" style={{ background: 'var(--dark, #050505)' }}>

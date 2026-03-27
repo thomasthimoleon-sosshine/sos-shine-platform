@@ -391,6 +391,9 @@ export const translations: Record<string, string> = {
   'dashboard.past_due_status': 'Paiement en retard',
   'dashboard.stripe_coming': 'Le paiement Stripe sera bientôt activé',
 
+  // ── Blog ──
+  'nav.blog': 'Blog',
+
   // ── Courrier Anonyme ──
   'nav.courrier': 'Courrier Anonyme',
 

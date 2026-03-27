@@ -1,6 +1,8 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { blogArticles } from '@/data/blog/articles'
+import type { BlogArticle } from '@/data/blog/articles'
+import { createClient } from '@/lib/supabase/server'
 import BlogArticleContent from './BlogArticleContent'
 
 interface Props {
@@ -11,9 +13,48 @@ export async function generateStaticParams() {
   return blogArticles.map((article) => ({ slug: article.slug }))
 }
 
+async function findArticle(slug: string): Promise<BlogArticle | undefined> {
+  // First check static articles
+  const staticArticle = blogArticles.find((a) => a.slug === slug)
+  if (staticArticle) return staticArticle
+
+  // Then check Supabase
+  try {
+    const supabase = await createClient()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data } = await (supabase as any)
+      .from('blog_articles')
+      .select('*')
+      .eq('slug', slug)
+      .eq('is_published', true)
+      .single()
+    if (data) {
+      return {
+        slug: data.slug,
+        title: data.title,
+        subtitle: data.subtitle || '',
+        excerpt: data.excerpt || '',
+        metaTitle: data.meta_title || data.title,
+        metaDescription: data.meta_description || data.excerpt,
+        author: { name: data.author_name || 'SOS Shine', role: data.author_role || '' },
+        publishedAt: data.published_at || '',
+        readTime: data.read_time || 5,
+        category: data.category || 'transformation',
+        tags: data.tags || [],
+        coverImage: data.cover_image,
+        featured: data.featured || false,
+        content: data.content || '',
+      }
+    }
+  } catch {
+    // DB not available, only static
+  }
+  return undefined
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const article = blogArticles.find((a) => a.slug === slug)
+  const article = await findArticle(slug)
   if (!article) return {}
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sosshine.com'
@@ -48,7 +89,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogArticlePage({ params }: Props) {
   const { slug } = await params
-  const article = blogArticles.find((a) => a.slug === slug)
+  const article = await findArticle(slug)
 
   if (!article) notFound()
 

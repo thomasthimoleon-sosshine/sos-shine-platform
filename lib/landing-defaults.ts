@@ -59,13 +59,24 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     position: 0,
     is_visible: true,
     content: {
-      title: "Ce que vous ressentez\nn\u2019est pas le probl\u00e8me.\nC\u2019est la sortie.",
-      subtitle: "Un protocole th\u00e9rapeutique en 3 \u00e9tapes pour chaque blessure \u00e9motionnelle. Cr\u00e9\u00e9 par des th\u00e9rapeutes. Accessible \u00e0 tout moment. Vous n\u2019\u00eates plus seul(e).",
+      surtitle: "L'Encyclopédie Pratique des Schémas Émotionnels",
+      title: "Ne subissez plus\nvotre chaos intérieur.\nReprogrammez-le.",
+      subtitle: "Un écosystème de déconditionnement émotionnel accessible 24/7. Synergie de 3 experts, 50+ protocoles exclusifs et une communauté d'élite pour transformer vos blocages (anxiété, deuil, dépendance) en clarté absolue.",
       video_url: '',
       image_url: '',
+      cta_primary_label: 'Découvrir ma Signature Émotionnelle',
+      cta_primary_href: '/signature-emotionnelle',
+      cta_primary_subtext: 'Test gratuit en 15 questions — Diagnostic immédiat.',
+      cta_secondary_label: 'Découvrir les protocoles',
+      cta_secondary_href: '/encyclopedie',
+      trust_items: [
+        'Approche holistique validée',
+        '50+ Protocoles',
+        'Sans engagement',
+      ],
       buttons: [
-        { label: "D\u00e9couvrir les protocoles", href: '/encyclopedie', variant: 'outline' },
-        { label: "Cr\u00e9er mon compte gratuitement", href: '/signup', variant: 'primary' },
+        { label: "Découvrir ma Signature Émotionnelle", href: '/signature-emotionnelle', variant: 'primary' },
+        { label: "Découvrir les protocoles", href: '/encyclopedie', variant: 'outline' },
       ],
     },
     styles: {
@@ -78,14 +89,44 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     },
   },
   {
-    section_key: 'principe',
-    label: 'Le Principe',
+    section_key: 'probleme',
+    label: 'Problème & Agitation',
     position: 1,
     is_visible: true,
     content: {
+      label: 'Le vrai problème',
+      title: "Le vrai problème n'est pas\nce que vous ressentez.\nC'est que vous l'affrontez\nseul(e) à 3h du matin.",
+      description: "Anxiété vertigineuse, schémas amoureux destructeurs, deuil insurmontable ou burn-out silencieux. La thérapie classique vous aide à comprendre le « pourquoi ». Mais quand la tempête frappe en pleine nuit, les mots ne suffisent plus. Votre système nerveux est en alerte maximale et vos anciens schémas reprennent le contrôle.",
+      closing: "Vous n'êtes pas brisé(e). Vous manquez simplement des outils tactiques pour désamorcer la crise en temps réel.",
+      cta_text: "Explorer l'Index des Solutions",
+      cta_href: '/encyclopedie',
+      symptoms: [
+        { icon: 'anxiety', label: 'Anxiété & Crises' },
+        { icon: 'heart', label: 'Schémas amoureux' },
+        { icon: 'grief', label: 'Deuil & Perte' },
+        { icon: 'burnout', label: 'Burn-out silencieux' },
+        { icon: 'dependency', label: 'Dépendance affective' },
+        { icon: 'trauma', label: 'Trauma & PTSD' },
+      ],
+    },
+    styles: {
+      title_font: 'Cormorant Garamond',
+      title_size: 'xl',
+      title_align: 'center',
+      title_color: '',
+      text_font: 'DM Sans',
+      text_align: 'center',
+    },
+  },
+  {
+    section_key: 'principe',
+    label: 'Le Principe',
+    position: 2,
+    is_visible: true,
+    content: {
       label: 'Le principe SOS Shine',
-      title: "On ne change pas qui vous \u00eates.\nOn lib\u00e8re qui vous \u00e9tiez\navant les blessures.",
-      description: "Abandon, trahison, burn-out, deuil, rupture\u2026 Chaque blessure a une origine, un m\u00e9canisme et une cl\u00e9 de lib\u00e9ration. Nos th\u00e9rapeutes ont cr\u00e9\u00e9 un protocole pr\u00e9cis en 3 \u00e9tapes pour chacune. Comprendre. Lib\u00e9rer. Agir.",
+      title: "On ne change pas qui vous êtes.\nOn libère qui vous étiez\navant les blessures.",
+      description: "Abandon, trahison, burn-out, deuil, rupture\u2026 Chaque blessure a une origine, un mécanisme et une clé de libération. Nos thérapeutes ont créé un protocole précis en 3 étapes pour chacune. Comprendre. Libérer. Agir.",
       image_url: '',
       video_url: '',
     },
@@ -100,16 +141,16 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   },
   {
     section_key: 'steps',
-    label: 'Les \u00c9tapes',
-    position: 2,
+    label: 'La Méthode (3 Phases)',
+    position: 3,
     is_visible: true,
     content: {
-      label: 'Comment \u00e7a marche',
-      title: '3 \u00e9tapes. Un protocole. Votre lib\u00e9ration.',
+      label: 'La Méthode SOS Shine®',
+      title: "L'ingénierie de votre libération\nen 3 phases.",
       items: [
-        { num: '01', title: 'Comprendre', description: "Une vid\u00e9o cr\u00e9\u00e9e par nos th\u00e9rapeutes pour mettre des mots sur ce que vous vivez. Vous identifiez l\u2019origine du blocage. Ce simple \u00e9clairage change d\u00e9j\u00e0 tout.", color: '#55EFC4' },
-        { num: '02', title: 'Lib\u00e9rer', description: "S\u00e9ance guid\u00e9e d\u2019hypnose, de m\u00e9ditation ou de soin \u00e9nerg\u00e9tique pour d\u00e9charger ce qui est ancr\u00e9 dans le corps. Le moment o\u00f9 l\u2019\u00e9motion se dissout.", color: '#74C0FC' },
-        { num: '03', title: 'Ancrer', description: "Exercices pratiques et audio guid\u00e9 pour transformer la prise de conscience en habitude de vie. Vous repartez transform\u00e9(e), pas juste inform\u00e9(e).", color: '#E17055' },
+        { num: '01', title: 'Comprendre', subtitle: 'Le Diagnostic', description: "Nous décodons votre architecture émotionnelle. Mettez des mots précis sur un chaos invisible. Une vidéo créée par nos thérapeutes pour identifier l'origine du blocage.", color: '#55EFC4' },
+        { num: '02', title: 'Libérer & Intégrer', subtitle: "L'Urgence", description: "Un accès instantané à des outils de décharge nerveuse. Court-circuitez l'angoisse, le rejet ou la peur en temps réel, où que vous soyez. Séance guidée d'hypnose, méditation ou soin énergétique.", color: '#74C0FC' },
+        { num: '03', title: 'Agir', subtitle: 'Le Hack du Subconscient', description: "Ne vous contentez pas d'aller mieux temporairement. Grâce à l'hypnose clinique et nos protocoles somatiques, transformez la prise de conscience en réflexe neurologique automatique.", color: '#E17055' },
       ],
     },
     styles: {
@@ -121,8 +162,8 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   },
   {
     section_key: 'encyclopedie',
-    label: "L\u2019Encyclop\u00e9die",
-    position: 3,
+    label: "L'Encyclopédie",
+    position: 4,
     is_visible: true,
     content: {
       label: "L\u2019encyclop\u00e9die",
@@ -140,9 +181,34 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     },
   },
   {
+    section_key: 'produit',
+    label: "L'Écosystème (Produit)",
+    position: 5,
+    is_visible: true,
+    content: {
+      label: "Votre sanctuaire privé",
+      title: "Votre sanctuaire privé.\nDans votre poche, 24/7.",
+      features: [
+        { icon: 'encyclopedia', title: "L'Encyclopédie Interactive", description: "Une issue en un clic pour chaque expérience de vie (Dépendance affective, Trahison, Peur). Protocoles créés par nos 3 experts." },
+        { icon: 'community', title: 'Le Feu de Camp', description: "Un espace d'entraide anonyme et bienveillant. Échangez avec ceux qui partagent votre fréquence. Quelqu'un répond toujours." },
+        { icon: 'events', title: 'Les Shine Walks & Soins Collectifs', description: "Le digital prépare le terrain, le physique scelle la transformation. Événements live et rencontres en présentiel." },
+        { icon: 'media', title: '5 Univers de Contenu', description: "Shine TV, Shine Audible, Shine Shorts, Shine Librairie, Shine Journal. Chaque format adapté à votre moment." },
+      ],
+      cta_label: "Voir l'intérieur de la plateforme",
+      cta_href: '/signup',
+      mockup_image: '',
+    },
+    styles: {
+      title_font: 'Cormorant Garamond',
+      title_size: 'lg',
+      title_align: 'center',
+      text_font: 'DM Sans',
+    },
+  },
+  {
     section_key: 'communaute',
-    label: 'Communaut\u00e9',
-    position: 4,
+    label: 'Communauté',
+    position: 6,
     is_visible: true,
     content: {
       title: "3h du matin.\nVous n\u2019\u00eates plus seul(e).",
@@ -163,16 +229,18 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   },
   {
     section_key: 'temoignages',
-    label: 'T\u00e9moignages',
-    position: 5,
+    label: 'Témoignages',
+    position: 7,
     is_visible: true,
     content: {
-      label: "Ce qu\u2019ils en disent",
+      label: "Preuve sociale",
+      title: "Ils ont traversé la tempête.\nIls ont repris le contrôle.",
+      verified_badge: "Avis vérifiés de membres actifs",
       items: [
-        { quote: "15 ans de d\u00e9pendance affective. J\u2019ai compris le sch\u00e9ma d\u00e8s la premi\u00e8re vid\u00e9o. Le protocole m\u2019a lib\u00e9r\u00e9e en 3 semaines.", name: 'Marie, 34 ans', city: 'Lyon' },
-        { quote: "3h du matin, seul, au fond du trou. J\u2019ai ouvert le Feu de Camp. Quelqu\u2019un m\u2019a dit \u00ab tiens bon, je suis pass\u00e9 par l\u00e0 \u00bb. Cette nuit-l\u00e0 a tout chang\u00e9.", name: 'Karim, 41 ans', city: 'Bordeaux' },
-        { quote: "Burn-out total. En 2 mois, j\u2019ai retrouv\u00e9 mon \u00e9nergie et quitt\u00e9 le job qui me d\u00e9truisait. SOS Shine m\u2019a redonn\u00e9 l\u2019\u00e9lan que j\u2019avais perdu.", name: 'Sophie, 28 ans', city: 'Bruxelles' },
-        { quote: "Le protocole sur le deuil m\u2019a permis de faire la paix avec la perte de mon p\u00e8re. Aujourd\u2019hui j\u2019aide d\u2019autres personnes \u00e0 traverser \u00e7a.", name: 'Antoine, 37 ans', city: 'Gen\u00e8ve' },
+        { quote: "15 ans de dépendance affective. J'ai compris le schéma dès la première vidéo. Le protocole m'a libérée en 3 semaines.", name: 'Marie, 34 ans', city: 'Lyon' },
+        { quote: "3h du matin, seul, au fond du trou. J'ai ouvert le Feu de Camp. Quelqu'un m'a dit « tiens bon, je suis passé par là ». Cette nuit-là a tout changé.", name: 'Karim, 41 ans', city: 'Bordeaux' },
+        { quote: "Burn-out total. En 2 mois, j'ai retrouvé mon énergie et quitté le job qui me détruisait. SOS Shine m'a redonné l'élan que j'avais perdu.", name: 'Sophie, 28 ans', city: 'Bruxelles' },
+        { quote: "Le protocole sur le deuil m'a permis de faire la paix avec la perte de mon père. Aujourd'hui j'aide d'autres personnes à traverser ça.", name: 'Antoine, 37 ans', city: 'Genève' },
       ],
     },
     styles: {
@@ -183,7 +251,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'histoire',
     label: "L'Histoire / Le Livre",
-    position: 6,
+    position: 8,
     is_visible: false,
     content: {
       label: "L'Histoire",
@@ -215,17 +283,17 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   },
   {
     section_key: 'fondateurs',
-    label: 'Les Fondateurs',
-    position: 7,
+    label: 'Les Fondateurs (Cartes d\'Autorité)',
+    position: 9,
     is_visible: true,
     content: {
       label: 'Les Fondateurs',
       title: "Trois forces.\nUne seule mission.",
-      description: "Julia, th\u00e9rapeute holistique. William, sp\u00e9cialiste en hypnose et m\u00e9decine chinoise. Thomas, architecte de la transformation. Ensemble, ils couvrent les trois dimensions de l\u2019\u00eatre : \u00e2me, corps et esprit.",
+      description: "Julia, thérapeute holistique. William, spécialiste en hypnose et médecine chinoise. Thomas, architecte de la transformation. Ensemble, ils couvrent les trois dimensions de l'être : âme, corps et esprit.",
       members: [
-        { name: 'Julia', role: 'Fondatrice', image: '/images/julia.jpeg' },
-        { name: 'Wiliam', role: 'Co-fondateur', image: '/images/wiliam.png' },
-        { name: 'Thomas', role: 'Co-fondateur', image: '/images/thomas.jpeg' },
+        { name: 'Julia', role: 'Fondatrice', expertise: 'Thérapie holistique & Énergie', image: '/images/julia.jpeg' },
+        { name: 'Wiliam', role: 'Co-fondateur', expertise: 'Hypnose & Médecine chinoise', image: '/images/wiliam.png' },
+        { name: 'Thomas', role: 'Co-fondateur', expertise: 'Protocoles pratiques & Action', image: '/images/thomas.jpeg' },
       ],
     },
     styles: {
@@ -237,15 +305,18 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'pricing',
     label: 'Tarification',
-    position: 8,
+    position: 10,
     is_visible: true,
     content: {
-      title: "Choisissez votre rythme",
+      label: 'Investissement',
+      title: "Sécurisez votre écosystème\nde croissance.",
       subtitle: "7 jours gratuits. Sans engagement. Annulation en un clic.",
-      footer: "Si on doit vous retenir par un contrat, c\u2019est qu\u2019on n\u2019a pas fait notre travail.",
+      footer: "Parce que si on doit vous retenir par un contrat, c'est qu'on n'a pas fait notre travail. Annulation garantie en 1 clic.",
+      trust_badges: ['Paiement sécurisé Stripe', 'Données chiffrées', 'Annulation en 1 clic'],
       plans: [
         {
           name: 'Essentielle',
+          tagline: 'Les fondations',
           price: '9,90',
           period: '/mois',
           button_label: "Commencer maintenant",
@@ -253,41 +324,43 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
           highlight: false,
           badge: '',
           features: [
-            'Acc\u00e8s illimit\u00e9 \u00e0 toute l\u2019encyclop\u00e9die',
-            'Protocoles complets en 3 \u00e9tapes',
+            "Accès illimité à toute l'encyclopédie",
+            'Protocoles complets en 3 étapes',
             'Chats communautaires 24h/24',
-            'Acc\u00e8s imm\u00e9diat d\u00e8s l\u2019inscription',
+            "Accès immédiat dès l'inscription",
           ],
         },
         {
-          name: 'S\u00e9r\u00e9nit\u00e9',
+          name: 'Sérénité',
+          tagline: "Le point d'équilibre",
           price: '49,90',
           period: '/mois',
-          button_label: 'Essayer gratuitement — 7 jours',
+          button_label: 'Démarrer mon essai de 7 jours (Gratuit)',
           button_href: '/signup',
           highlight: true,
-          badge: 'Le plus choisi',
+          badge: 'Choix Stratégique',
           features: [
-            "Tout le contenu de l\u2019Essentielle",
+            "Tout le contenu de l'Essentielle",
             'Soin collectif mensuel en direct',
-            'Acc\u00e8s prioritaire aux nouveaut\u00e9s',
-            '7 jours d\u2019essai gratuit — 0\u20ac',
+            'Accès prioritaire aux nouveautés',
+            "7 jours d'essai gratuit — 0€",
           ],
         },
         {
           name: 'Premium',
+          tagline: "L'immersion totale",
           price: '99,90',
           period: '/mois',
-          button_label: 'Essayer gratuitement — 7 jours',
+          button_label: 'Démarrer mon essai de 7 jours (Gratuit)',
           button_href: '/signup',
           highlight: false,
-          badge: 'Exp\u00e9rience compl\u00e8te',
+          badge: 'Expérience complète',
           features: [
-            "Tout le contenu de la S\u00e9r\u00e9nit\u00e9",
-            'Live th\u00e9matique chaque semaine',
-            'Canal priv\u00e9 Telegram avec les fondateurs',
-            'Acc\u00e8s \u00e0 tous les \u00e9v\u00e9nements physiques',
-            '7 jours d\u2019essai gratuit — 0\u20ac',
+            "Tout le contenu de la Sérénité",
+            'Live thématique chaque semaine',
+            'Canal privé Telegram avec les fondateurs',
+            'Accès à tous les événements physiques',
+            "7 jours d'essai gratuit — 0€",
           ],
         },
       ],
@@ -301,7 +374,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'cta_dark',
     label: 'CTA (fond sombre)',
-    position: 9,
+    position: 11,
     is_visible: true,
     content: {
       title: "Le premier pas\nest toujours le plus dur.\nOn le fait ensemble.",
@@ -316,7 +389,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'cta_light',
     label: 'CTA (fond clair)',
-    position: 10,
+    position: 12,
     is_visible: false,
     content: {
       description: "Blessure ancienne ou crise en cours \u2014 on a cr\u00e9\u00e9 un protocole pour ce que vous vivez. Il vous attend.",
@@ -333,7 +406,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'footer',
     label: 'Pied de page',
-    position: 11,
+    position: 13,
     is_visible: true,
     content: {
       name: 'SOS Shine',
@@ -352,7 +425,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'ticker_1',
     label: 'Bandeau défilant 1',
-    position: 12,
+    position: 14,
     is_visible: true,
     content: {
       items: ['Abandon', 'Anxiété', 'Burn-out', 'Confiance en soi', 'Dépendance', 'Deuil', 'Trauma', 'Résilience', 'Pardon'],
@@ -363,7 +436,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'ticker_2',
     label: 'Bandeau défilant 2',
-    position: 13,
+    position: 15,
     is_visible: false,
     content: {
       items: ['Soutien 24/7', 'Communauté bienveillante', 'Protocoles exclusifs', 'Soins collectifs', 'Chat dédié', 'Événements live', 'Méditation guidée', 'Coaching immersif'],
@@ -374,7 +447,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'faq',
     label: 'FAQ',
-    position: 14,
+    position: 16,
     is_visible: true,
     content: {
       label: 'FAQ',
@@ -419,7 +492,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'legal_mentions',
     label: 'Page — Mentions légales',
-    position: 15,
+    position: 17,
     is_visible: true,
     content: {
       title: 'Mentions légales',
@@ -430,7 +503,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'legal_cgv',
     label: 'Page — CGV',
-    position: 16,
+    position: 18,
     is_visible: true,
     content: {
       title: 'Conditions Générales de Vente',
@@ -441,7 +514,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'legal_privacy',
     label: 'Page — Confidentialité',
-    position: 17,
+    position: 19,
     is_visible: true,
     content: {
       title: 'Politique de confidentialité',
@@ -452,7 +525,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'legal_contact',
     label: 'Page — Contact',
-    position: 18,
+    position: 20,
     is_visible: true,
     content: {
       title: 'Contact',

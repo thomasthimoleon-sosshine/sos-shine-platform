@@ -531,20 +531,35 @@ export default function Home() {
           </div>
 
           <div className="relative z-10 px-5 md:px-20 py-12 md:py-24 max-w-6xl mx-auto w-full text-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="mb-8"
-            >
-              <span className="inline-block px-4 py-1.5 rounded-full text-xs tracking-[0.25em] uppercase font-medium" style={{ background: `rgba(${goldRgb}, 0.08)`, color: gold, border: `1px solid rgba(${goldRgb}, 0.15)` }}>
-                {t('landing.premium_badge')}
-              </span>
-            </motion.div>
+            {/* Surtitle / Micro-copy */}
+            {hero.surtitle && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                className="mb-8"
+              >
+                <span className="inline-block px-4 py-1.5 rounded-full text-xs tracking-[0.25em] uppercase font-medium" style={{ background: `rgba(${goldRgb}, 0.08)`, color: gold, border: `1px solid rgba(${goldRgb}, 0.15)` }}>
+                  {hero.surtitle}
+                </span>
+              </motion.div>
+            )}
+            {!hero.surtitle && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                className="mb-8"
+              >
+                <span className="inline-block px-4 py-1.5 rounded-full text-xs tracking-[0.25em] uppercase font-medium" style={{ background: `rgba(${goldRgb}, 0.08)`, color: gold, border: `1px solid rgba(${goldRgb}, 0.15)` }}>
+                  {t('landing.premium_badge')}
+                </span>
+              </motion.div>
+            )}
 
             <h1 className="font-display font-light leading-[1.08] mb-8" style={{ ...tStyle("hero"), perspective: "1000px" }}>
               {(hero.title || '').split("\n").map((line: string, i: number) => {
-                const isHighlight = line.includes("expériences") || line.includes("schémas") || line.includes("potentiel") || line.includes("émotionnels");
+                const isHighlight = line.includes("chaos") || line.includes("Reprogrammez") || line.includes("expériences") || line.includes("schémas") || line.includes("potentiel") || line.includes("émotionnels");
                 const lineWords = line.split(/\s+/);
                 const baseDelay = i * 0.2 + 0.15;
                 return (
@@ -684,37 +699,40 @@ export default function Home() {
 
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}>
               <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-5 justify-center items-center">
-                {(hero.buttons || []).map((btn: { label: string; href: string; variant: string }, i: number) => (
-                  <Link key={i} href={btn.variant === 'primary' ? '/signup' : (btn.href || '/encyclopedie')} className="w-full sm:w-auto">
-                    {btn.variant === 'primary' ? (
-                      <button className="magnetic-btn pulse-ring w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full text-sm sm:text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
-                        {btn.label} — {trialDays} {t('landing.trial_days')}
-                      </button>
-                    ) : (
-                      <button className="magnetic-btn w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full text-sm sm:text-base font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.3)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
-                        {btn.label}
-                      </button>
-                    )}
-                  </Link>
-                ))}
+                {/* Primary CTA — Signature Émotionnelle */}
+                <Link href={hero.cta_primary_href || '/signature-emotionnelle'} className="w-full sm:w-auto">
+                  <button className="magnetic-btn pulse-ring w-full sm:w-auto px-6 sm:px-10 py-3.5 sm:py-4.5 rounded-full text-sm sm:text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                    {hero.cta_primary_label || 'Découvrir ma Signature Émotionnelle'}
+                  </button>
+                </Link>
+                {/* Secondary CTA */}
+                <Link href={hero.cta_secondary_href || '/encyclopedie'} className="w-full sm:w-auto">
+                  <button className="magnetic-btn w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full text-sm sm:text-base font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.3)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
+                    {hero.cta_secondary_label || 'Découvrir les protocoles'}
+                  </button>
+                </Link>
               </div>
+
+              {/* CTA Subtext */}
+              {hero.cta_primary_subtext && (
+                <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-3 text-center font-light">
+                  {hero.cta_primary_subtext}
+                </p>
+              )}
 
               {/* ── Trust signals ── */}
               <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 mt-8 md:mt-10">
-                <span className="flex items-center gap-2.5 text-sm sm:text-base font-light" style={{ color: 'var(--text-secondary)' }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: 'var(--text-muted)' }}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                  Paiement sécurisé
-                </span>
-                <span className="hidden sm:block w-px h-5" style={{ background: 'var(--dark-border)' }} />
-                <span className="flex items-center gap-2.5 text-sm sm:text-base font-light" style={{ color: 'var(--text-secondary)' }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: 'var(--text-muted)' }}><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                  Sans engagement
-                </span>
-                <span className="hidden sm:block w-px h-5" style={{ background: 'var(--dark-border)' }} />
-                <span className="flex items-center gap-2.5 text-sm sm:text-base font-light" style={{ color: 'var(--text-secondary)' }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: 'var(--text-muted)' }}><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-                  Annulation en 1 clic
-                </span>
+                {(hero.trust_items || ['Approche holistique validée', '50+ Protocoles', 'Sans engagement']).map((item: string, i: number) => (
+                  <span key={i} className="flex items-center gap-2.5 text-sm sm:text-base font-light" style={{ color: 'var(--text-secondary)' }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: gold, opacity: 0.6 }}>
+                      <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    {item}
+                    {i < (hero.trust_items || []).length - 1 && (
+                      <span className="hidden sm:block w-px h-4 ml-2" style={{ background: 'var(--dark-border)' }} />
+                    )}
+                  </span>
+                ))}
               </div>
             </motion.div>
           </div>
@@ -775,6 +793,82 @@ export default function Home() {
           </div>
         </RevealOnScroll>
       </section>
+
+      {/* ═══ PROBLÈME & AGITATION (PAS Framework) ═══ */}
+      {vis('probleme') && (() => {
+        const prob = sec('probleme');
+        const symptoms = prob.symptoms || [];
+        return (
+          <section className="relative py-16 md:py-32 cv-auto" style={{ background: 'linear-gradient(180deg, rgba(250,250,249,0.02) 0%, rgba(250,250,249,0.04) 50%, transparent 100%)' }}>
+            <div className="max-w-4xl mx-auto px-5 md:px-20 relative z-10">
+              <RevealOnScroll>
+                <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{prob.label || 'Le vrai problème'}</p>
+              </RevealOnScroll>
+
+              <RevealOnScroll delay={0.1}>
+                <h2 className="font-display font-light leading-[1.15] text-center mb-6 md:mb-10" style={tStyle("probleme")}>
+                  {(prob.title || '').split("\n").map((line: string, i: number) => (
+                    <span key={i} className="block">
+                      {i > 0 && <span className="block h-1" />}
+                      {line.includes("seul(e)") || line.includes("3h du matin") ? (
+                        <span className="text-shimmer">{line}</span>
+                      ) : line}
+                    </span>
+                  ))}
+                </h2>
+              </RevealOnScroll>
+
+              <RevealOnScroll delay={0.2}>
+                <p className="text-base md:text-xl text-[var(--text-secondary)] leading-relaxed font-light max-w-2xl mx-auto text-center mb-6 md:mb-8">
+                  {prob.description || ''}
+                </p>
+              </RevealOnScroll>
+
+              {prob.closing && (
+                <RevealOnScroll delay={0.25}>
+                  <p className="text-base md:text-lg font-light text-center max-w-2xl mx-auto mb-10 md:mb-14" style={{ color: gold }}>
+                    {prob.closing}
+                  </p>
+                </RevealOnScroll>
+              )}
+
+              {/* Symptom Grid */}
+              {symptoms.length > 0 && (
+                <RevealOnScroll delay={0.3}>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4 max-w-2xl mx-auto mb-8 md:mb-12">
+                    {symptoms.map((symptom: { icon: string; label: string }, i: number) => (
+                      <motion.div
+                        key={symptom.label}
+                        className="glow-card px-4 py-3 text-center"
+                        initial={{ opacity: 0, y: 15 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.3 + i * 0.08 }}
+                      >
+                        <span className="text-xs sm:text-sm font-light" style={{ color: 'var(--text-secondary)' }}>
+                          {symptom.label}
+                        </span>
+                      </motion.div>
+                    ))}
+                  </div>
+                </RevealOnScroll>
+              )}
+
+              {/* CTA Link */}
+              {prob.cta_text && (
+                <RevealOnScroll delay={0.35}>
+                  <div className="text-center">
+                    <Link href={prob.cta_href || '/encyclopedie'} className="inline-flex items-center gap-2 text-sm font-medium transition-colors duration-300 hover:opacity-80" style={{ color: gold }}>
+                      {prob.cta_text}
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                    </Link>
+                  </div>
+                </RevealOnScroll>
+              )}
+            </div>
+          </section>
+        );
+      })()}
 
       {/* ═══ LE PRINCIPE ═══ */}
       {vis('principe') && (
@@ -838,13 +932,16 @@ export default function Home() {
             </RevealOnScroll>
 
             <div className="grid md:grid-cols-3 gap-4 md:gap-8">
-              {(stepsData.items || []).map((step: { num: string; title: string; description: string; color: string }, i: number) => (
+              {(stepsData.items || []).map((step: { num: string; title: string; subtitle?: string; description: string; color: string }, i: number) => (
                 <RevealOnScroll key={step.num} delay={i * 0.15} direction={i === 0 ? "left" : i === 2 ? "right" : "up"}>
                   <GlowingCard className="p-6 md:p-10 h-full" glowColor={`${step.color}25`}>
                     <div className="mb-4 md:mb-6">
                       <span className="step-number-large font-display text-5xl md:text-6xl font-extralight block mb-2" style={{ color: step.color, opacity: 0.15 }}>{step.num}</span>
                       <span className="step-number-label luxury-title text-xs tracking-[0.3em] block mb-2 md:mb-3" style={{ color: step.color, opacity: 0.6 }}>{t('landing.step')} {step.num}</span>
                       <h3 className="font-display text-xl md:text-2xl font-medium">{step.title}</h3>
+                      {step.subtitle && (
+                        <p className="text-xs sm:text-sm mt-1 font-light italic" style={{ color: step.color, opacity: 0.7 }}>{step.subtitle}</p>
+                      )}
                     </div>
                     <p className="text-[var(--text-secondary)] leading-relaxed text-[15px] font-light">{step.description}</p>
                     <div className="mt-6 h-px w-full" style={{ background: `linear-gradient(to right, ${step.color}30, transparent)` }} />
@@ -925,6 +1022,88 @@ export default function Home() {
         </section>
       )}
 
+      {/* ═══ L'ÉCOSYSTÈME / PRODUIT ═══ */}
+      {vis('produit') && (() => {
+        const prod = sec('produit');
+        const features = prod.features || [];
+        return (
+          <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="absolute top-1/3 right-0 w-[250px] h-[250px] md:w-[500px] md:h-[500px] rounded-full opacity-[0.02] blur-[60px]" style={{ background: gold }} />
+            </div>
+
+            <div className="max-w-5xl mx-auto relative z-10">
+              <RevealOnScroll>
+                <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{prod.label || 'Votre sanctuaire privé'}</p>
+              </RevealOnScroll>
+              <RevealOnScroll delay={0.1}>
+                <h2 className="font-display font-light text-center mb-10 md:mb-16" style={tStyle("produit")}>
+                  {(prod.title || '').split("\n").map((line: string, i: number) => (
+                    <span key={i} className="block">
+                      {i > 0 && <span className="block h-1" />}
+                      {line.includes("24/7") || line.includes("poche") ? (
+                        <span className="text-shimmer">{line}</span>
+                      ) : line}
+                    </span>
+                  ))}
+                </h2>
+              </RevealOnScroll>
+
+              {/* Platform Mockup */}
+              {prod.mockup_image && (
+                <RevealOnScroll delay={0.15} direction="scale">
+                  <div className="mb-10 md:mb-16 max-w-3xl mx-auto">
+                    <div className="glass overflow-hidden rounded-xl md:rounded-2xl" style={{ border: `1px solid rgba(${goldRgb}, 0.1)` }}>
+                      <img src={prod.mockup_image} alt="Plateforme SOS Shine" className="w-full object-cover" />
+                    </div>
+                  </div>
+                </RevealOnScroll>
+              )}
+
+              {/* Feature Cards */}
+              <div className="grid sm:grid-cols-2 gap-4 md:gap-6">
+                {features.map((feature: { icon: string; title: string; description: string }, i: number) => {
+                  const featureIcons: Record<string, React.ReactElement> = {
+                    encyclopedia: <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke={gold} strokeWidth="1.5"><path d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" strokeLinecap="round" strokeLinejoin="round" /></svg>,
+                    community: <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke={gold} strokeWidth="1.5"><path d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" strokeLinecap="round" strokeLinejoin="round" /><path d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1A3.75 3.75 0 0012 18z" strokeLinecap="round" strokeLinejoin="round" /></svg>,
+                    events: <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke={gold} strokeWidth="1.5"><path d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" strokeLinecap="round" strokeLinejoin="round" /></svg>,
+                    media: <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke={gold} strokeWidth="1.5"><path d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125M3.375 19.5h1.5C5.496 19.5 6 18.996 6 18.375m-2.625 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-1.5A1.125 1.125 0 0118 18.375M20.625 4.5H3.375m17.25 0c.621 0 1.125.504 1.125 1.125M20.625 4.5h-1.5C18.504 4.5 18 5.004 18 5.625m3.75 0v1.5c0 .621-.504 1.125-1.125 1.125M3.375 4.5c-.621 0-1.125.504-1.125 1.125M3.375 4.5h1.5C5.496 4.5 6 5.004 6 5.625m-3.75 0v1.5c0 .621.504 1.125 1.125 1.125m0 0h1.5m-1.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m1.5-3.75C5.496 8.25 6 7.746 6 7.125v-1.5M4.875 8.25C5.496 8.25 6 8.754 6 9.375v1.5m0-5.25v5.25m0-5.25C6 5.004 6.504 4.5 7.125 4.5h9.75c.621 0 1.125.504 1.125 1.125m1.125 2.625h1.5m-1.5 0A1.125 1.125 0 0118 7.125v-1.5m1.125 2.625c-.621 0-1.125.504-1.125 1.125v1.5m2.625-2.625c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125M18 5.625v5.25M7.125 12h9.75m-9.75 0A1.125 1.125 0 016 10.875M7.125 12C6.504 12 6 12.504 6 13.125m0-2.25C6 11.496 5.496 12 4.875 12M18 10.875c0 .621-.504 1.125-1.125 1.125M18 10.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125m-12 5.25v-5.25m0 5.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125m-12 0v-1.5c0-.621-.504-1.125-1.125-1.125M18 18.375v-5.25m0 5.25v-1.5c0-.621.504-1.125 1.125-1.125M18 13.125v1.5c0 .621.504 1.125 1.125 1.125M18 13.125c0-.621.504-1.125 1.125-1.125M6 13.125v1.5c0 .621-.504 1.125-1.125 1.125M6 13.125C6 12.504 5.496 12 4.875 12m-1.5 0h1.5m-1.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125M19.125 12h1.5m0 0c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h1.5m14.25 0h1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>,
+                  };
+                  return (
+                    <RevealOnScroll key={feature.title || i} delay={0.2 + i * 0.1} direction={i % 2 === 0 ? 'left' : 'right'}>
+                      <GlowingCard className="p-5 sm:p-8 h-full">
+                        <div className="flex items-start gap-4 sm:gap-5">
+                          <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center" style={{ background: `rgba(${goldRgb}, 0.08)`, border: `1px solid rgba(${goldRgb}, 0.12)` }}>
+                            {featureIcons[feature.icon] || featureIcons.encyclopedia}
+                          </div>
+                          <div className="min-w-0">
+                            <h3 className="font-display text-lg sm:text-xl font-medium mb-2">{feature.title}</h3>
+                            <p className="text-[var(--text-secondary)] leading-relaxed text-sm sm:text-[15px] font-light">{feature.description}</p>
+                          </div>
+                        </div>
+                      </GlowingCard>
+                    </RevealOnScroll>
+                  );
+                })}
+              </div>
+
+              {/* CTA */}
+              {prod.cta_label && (
+                <RevealOnScroll delay={0.5}>
+                  <div className="text-center mt-8 md:mt-12">
+                    <Link href={prod.cta_href || '/signup'}>
+                      <button className="magnetic-btn px-6 sm:px-8 py-3 sm:py-3.5 rounded-full text-sm font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.25)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
+                        {prod.cta_label}
+                      </button>
+                    </Link>
+                  </div>
+                </RevealOnScroll>
+              )}
+            </div>
+          </section>
+        );
+      })()}
+
       {/* ═══ TICKER BAND 2 ═══ */}
       <InfiniteTickerBand items={ticker2Items} speed={ticker2Speed} />
 
@@ -977,10 +1156,34 @@ export default function Home() {
 
           <div className="max-w-5xl mx-auto relative z-10">
             <RevealOnScroll>
-              <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-10 md:mb-20">
-                <WordByWordReveal text={temos.label || ''} />
+              <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">
+                {temos.label || 'Preuve sociale'}
               </p>
             </RevealOnScroll>
+            {temos.title && (
+              <RevealOnScroll delay={0.1}>
+                <h2 className="font-display font-light text-center mb-4 md:mb-6" style={tStyle("temoignages")}>
+                  {(temos.title || '').split("\n").map((line: string, i: number) => (
+                    <span key={i} className="block">
+                      {i > 0 && <span className="block h-1" />}
+                      {line.includes("contrôle") || line.includes("tempête") ? (
+                        <span className="text-shimmer">{line}</span>
+                      ) : line}
+                    </span>
+                  ))}
+                </h2>
+              </RevealOnScroll>
+            )}
+            {temos.verified_badge && (
+              <RevealOnScroll delay={0.15}>
+                <p className="text-center text-xs sm:text-sm font-light mb-10 md:mb-16 flex items-center justify-center gap-2" style={{ color: 'var(--text-muted)' }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: '#55EFC4' }}>
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  {temos.verified_badge}
+                </p>
+              </RevealOnScroll>
+            )}
 
             <div className="grid md:grid-cols-2 gap-4 md:gap-8">
               {(temos.items || []).filter((t: { quote: string; name: string; city: string }) => t.quote).map((t: { quote: string; name: string; city: string }, i: number) => (
@@ -1095,7 +1298,7 @@ export default function Home() {
                 </RevealOnScroll>
               )}
               <div className="flex flex-wrap justify-center gap-6 md:gap-10">
-                {members.map((founder: { name: string; image: string; role: string }, i: number) => (
+                {members.map((founder: { name: string; image: string; role: string; expertise?: string }, i: number) => (
                   <RevealOnScroll key={founder.name || i} delay={0.2 + i * 0.15}>
                     <div className="flex flex-col items-center group">
                       <div className="relative mb-4 md:mb-6">
@@ -1112,6 +1315,9 @@ export default function Home() {
                       </div>
                       <h3 className="font-display text-lg sm:text-xl md:text-2xl text-[var(--gold)] mb-1 text-center">{founder.name}</h3>
                       <p className="text-[10px] sm:text-xs md:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-[var(--text-muted)] text-center">{founder.role}</p>
+                      {founder.expertise && (
+                        <p className="text-xs sm:text-sm font-light text-[var(--text-secondary)] text-center mt-1">{founder.expertise}</p>
+                      )}
                     </div>
                   </RevealOnScroll>
                 ))}
@@ -1138,7 +1344,7 @@ export default function Home() {
             </RevealOnScroll>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-5xl mx-auto">
-              {(pricing.plans || []).map((plan: { name: string; price: string; period: string; button_label: string; button_href: string; highlight: boolean; badge: string; features: string[] }, idx: number) => {
+              {(pricing.plans || []).map((plan: { name: string; tagline?: string; price: string; period: string; button_label: string; button_href: string; highlight: boolean; badge: string; features: string[] }, idx: number) => {
                 const tierColors = [
                   { main: '#F0A68C', deep: '#D4825E', rgb: '240,166,140' },
                   { main: '#55EFC4', deep: '#00B894', rgb: '85,239,196' },
@@ -1163,7 +1369,11 @@ export default function Home() {
                       </motion.div>
                     )}
                   <GlowingCard className={`p-6 sm:p-8 md:p-10 h-full flex flex-col relative ${plan.highlight ? 'ring-1' : ''}`} glowColor={`rgba(${tc.rgb},0.15)`} style={plan.highlight ? { '--tw-ring-color': `rgba(${tc.rgb},0.15)` } as React.CSSProperties : undefined}>
-                    <p className="luxury-title text-xs sm:text-sm tracking-[0.2em] sm:tracking-[0.25em] mb-4 md:mb-6" style={{ color: tc.main }}>{plan.name}</p>
+                    <p className="luxury-title text-xs sm:text-sm tracking-[0.2em] sm:tracking-[0.25em] mb-1" style={{ color: tc.main }}>{plan.name}</p>
+                    {plan.tagline && (
+                      <p className="text-xs font-light mb-4 md:mb-6" style={{ color: 'var(--text-muted)' }}>{plan.tagline}</p>
+                    )}
+                    {!plan.tagline && <div className="mb-4 md:mb-6" />}
 
                     <div className="flex items-baseline gap-1 mb-6 md:mb-8">
                       <span className="font-display text-4xl sm:text-5xl md:text-6xl font-extralight" style={{ color: tc.main }}>
@@ -1205,6 +1415,22 @@ export default function Home() {
             <RevealOnScroll delay={0.4}>
               <p className="text-center text-xs text-[var(--text-muted)] mt-6 md:mt-8 font-light italic">{pricing.footer || ''}</p>
             </RevealOnScroll>
+
+            {/* Trust Badges */}
+            {pricing.trust_badges && Array.isArray(pricing.trust_badges) && pricing.trust_badges.length > 0 && (
+              <RevealOnScroll delay={0.5}>
+                <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 mt-6 md:mt-10">
+                  {pricing.trust_badges.map((badge: string, i: number) => (
+                    <span key={i} className="flex items-center gap-2 text-xs font-light" style={{ color: 'var(--text-muted)' }}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: gold, opacity: 0.5 }}>
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                      </svg>
+                      {badge}
+                    </span>
+                  ))}
+                </div>
+              </RevealOnScroll>
+            )}
           </div>
         </section>
       )}

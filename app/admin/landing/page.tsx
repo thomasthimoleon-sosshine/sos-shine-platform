@@ -380,6 +380,7 @@ export default function LandingAdminPage() {
       case 'hero':
         return (
           <>
+            <TextField label="Sur-titre (micro-copy)" value={c.surtitle || ''} onChange={(v) => updateContent(key, 'surtitle', v)} />
             <TextAreaField label="Titre principal" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
             <TextAreaField label="Sous-titre" value={c.subtitle || ''} onChange={(v) => updateContent(key, 'subtitle', v)} />
             <FileUpload label="Video d'introduction" accept="video/*" folder="site"
@@ -390,23 +391,52 @@ export default function LandingAdminPage() {
               currentUrl={c.image_url || null}
               onUploaded={(url) => updateContent(key, 'image_url', url)}
               onRemoved={() => updateContent(key, 'image_url', '')} />
-            <Separator label="Boutons" />
-            {(c.buttons || []).map((btn: { label: string; href: string; variant: string }, i: number) => (
+            <Separator label="CTA Principal (Signature Emotionnelle)" />
+            <TextField label="Libelle du bouton principal" value={c.cta_primary_label || ''} onChange={(v) => updateContent(key, 'cta_primary_label', v)} />
+            <TextField label="Lien du bouton principal" value={c.cta_primary_href || ''} onChange={(v) => updateContent(key, 'cta_primary_href', v)} />
+            <TextField label="Sous-texte du bouton principal" value={c.cta_primary_subtext || ''} onChange={(v) => updateContent(key, 'cta_primary_subtext', v)} />
+            <Separator label="CTA Secondaire" />
+            <TextField label="Libelle du bouton secondaire" value={c.cta_secondary_label || ''} onChange={(v) => updateContent(key, 'cta_secondary_label', v)} />
+            <TextField label="Lien du bouton secondaire" value={c.cta_secondary_href || ''} onChange={(v) => updateContent(key, 'cta_secondary_href', v)} />
+            <Separator label="Elements de reassurance" />
+            <TextAreaField label="Elements de confiance (un par ligne)" rows={4}
+              value={Array.isArray(c.trust_items) ? c.trust_items.join('\n') : ''}
+              onChange={(v) => updateContent(key, 'trust_items', v.split('\n').filter((line: string) => line.trim() !== ''))} />
+          </>
+        )
+
+      /* ────────────── probleme ────────────── */
+      case 'probleme':
+        return (
+          <>
+            <TextField label="Label de section" value={c.label || ''} onChange={(v) => updateContent(key, 'label', v)} />
+            <TextAreaField label="Titre (agitation)" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
+            <TextAreaField label="Description (corps du texte)" value={c.description || ''} rows={5} onChange={(v) => updateContent(key, 'description', v)} />
+            <TextAreaField label="Phrase de conclusion (en or)" value={c.closing || ''} onChange={(v) => updateContent(key, 'closing', v)} />
+            <TextField label="Texte du lien CTA" value={c.cta_text || ''} onChange={(v) => updateContent(key, 'cta_text', v)} />
+            <TextField label="Lien CTA (href)" value={c.cta_href || ''} onChange={(v) => updateContent(key, 'cta_href', v)} />
+            <Separator label="Symptomes affiches" />
+            {(c.symptoms || []).map((symptom: { icon: string; label: string }, i: number) => (
               <div key={i} className="rounded-lg p-4 space-y-3" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
                 <div className="flex items-center justify-between">
-                  <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Bouton {i + 1}</p>
-                  <button type="button" onClick={() => removeArrayItem(key, 'buttons', i)}
+                  <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Symptome {i + 1}</p>
+                  <button type="button" onClick={() => removeArrayItem(key, 'symptoms', i)}
                     className="text-xs px-2 py-1 rounded cursor-pointer" style={{ color: '#FF6B6B' }}>Supprimer</button>
                 </div>
-                <TextField label="Libelle" value={btn.label || ''} onChange={(v) => updateArrayItem(key, 'buttons', i, 'label', v)} />
-                <TextField label="Lien (href)" value={btn.href || ''} onChange={(v) => updateArrayItem(key, 'buttons', i, 'href', v)} />
-                <SelectField label="Variante" value={btn.variant || 'primary'} options={variantOpts}
-                  onChange={(v) => updateArrayItem(key, 'buttons', i, 'variant', v)} />
+                <TextField label="Label" value={symptom.label || ''} onChange={(v) => updateArrayItem(key, 'symptoms', i, 'label', v)} />
+                <SelectField label="Icone" value={symptom.icon || 'anxiety'} options={[
+                  { label: 'Anxiete', value: 'anxiety' },
+                  { label: 'Coeur', value: 'heart' },
+                  { label: 'Deuil', value: 'grief' },
+                  { label: 'Burn-out', value: 'burnout' },
+                  { label: 'Dependance', value: 'dependency' },
+                  { label: 'Trauma', value: 'trauma' },
+                ]} onChange={(v) => updateArrayItem(key, 'symptoms', i, 'icon', v)} />
               </div>
             ))}
-            <button type="button" onClick={() => addArrayItem(key, 'buttons', { label: '', href: '', variant: 'primary' })}
+            <button type="button" onClick={() => addArrayItem(key, 'symptoms', { icon: 'anxiety', label: '' })}
               className="text-sm px-4 py-2 rounded-lg cursor-pointer" style={{ color: '#74C0FC', border: '1px dashed #74C0FC' }}>
-              + Ajouter un bouton
+              + Ajouter un symptome
             </button>
           </>
         )
@@ -436,7 +466,7 @@ export default function LandingAdminPage() {
             <TextField label="Label de section" value={c.label || ''} onChange={(v) => updateContent(key, 'label', v)} />
             <TextField label="Titre de section" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
             <Separator label="Etapes" />
-            {(c.items || []).map((item: { num: string; title: string; description: string; color: string }, i: number) => (
+            {(c.items || []).map((item: { num: string; title: string; subtitle?: string; description: string; color: string }, i: number) => (
               <div key={i} className="rounded-lg p-4 space-y-3" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
                 <div className="flex items-center justify-between">
                   <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Etape {String(i + 1).padStart(2, '0')}</p>
@@ -445,6 +475,7 @@ export default function LandingAdminPage() {
                 </div>
                 <TextField label="Numero" value={item.num || ''} onChange={(v) => updateArrayItem(key, 'items', i, 'num', v)} />
                 <TextField label="Titre" value={item.title || ''} onChange={(v) => updateArrayItem(key, 'items', i, 'title', v)} />
+                <TextField label="Sous-titre (ex: Le Diagnostic)" value={item.subtitle || ''} onChange={(v) => updateArrayItem(key, 'items', i, 'subtitle', v)} />
                 <TextAreaField label="Description" value={item.description || ''} onChange={(v) => updateArrayItem(key, 'items', i, 'description', v)} />
                 <ColorField label="Couleur" value={item.color || ''} onChange={(v) => updateArrayItem(key, 'items', i, 'color', v)} />
               </div>
@@ -470,6 +501,44 @@ export default function LandingAdminPage() {
             <TextAreaField label="Elements (un par ligne)" rows={6}
               value={Array.isArray(c.items) ? c.items.join('\n') : ''}
               onChange={(v) => updateContent(key, 'items', v.split('\n').filter((line: string) => line.trim() !== ''))} />
+          </>
+        )
+
+      /* ────────────── produit ────────────── */
+      case 'produit':
+        return (
+          <>
+            <TextField label="Label de section" value={c.label || ''} onChange={(v) => updateContent(key, 'label', v)} />
+            <TextAreaField label="Titre" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
+            <FileUpload label="Image mockup de la plateforme" accept="image/*" folder="site"
+              currentUrl={c.mockup_image || null} hint="Screenshot ou mockup de la plateforme"
+              onUploaded={(url) => updateContent(key, 'mockup_image', url)}
+              onRemoved={() => updateContent(key, 'mockup_image', '')} />
+            <Separator label="Fonctionnalites" />
+            {(c.features || []).map((feature: { icon: string; title: string; description: string }, i: number) => (
+              <div key={i} className="rounded-lg p-4 space-y-3" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Feature {i + 1}</p>
+                  <button type="button" onClick={() => removeArrayItem(key, 'features', i)}
+                    className="text-xs px-2 py-1 rounded cursor-pointer" style={{ color: '#FF6B6B' }}>Supprimer</button>
+                </div>
+                <TextField label="Titre" value={feature.title || ''} onChange={(v) => updateArrayItem(key, 'features', i, 'title', v)} />
+                <TextAreaField label="Description" value={feature.description || ''} onChange={(v) => updateArrayItem(key, 'features', i, 'description', v)} />
+                <SelectField label="Icone" value={feature.icon || 'encyclopedia'} options={[
+                  { label: 'Encyclopedie', value: 'encyclopedia' },
+                  { label: 'Communaute', value: 'community' },
+                  { label: 'Evenements', value: 'events' },
+                  { label: 'Media', value: 'media' },
+                ]} onChange={(v) => updateArrayItem(key, 'features', i, 'icon', v)} />
+              </div>
+            ))}
+            <button type="button" onClick={() => addArrayItem(key, 'features', { icon: 'encyclopedia', title: '', description: '' })}
+              className="text-sm px-4 py-2 rounded-lg cursor-pointer" style={{ color: '#74C0FC', border: '1px dashed #74C0FC' }}>
+              + Ajouter une fonctionnalite
+            </button>
+            <Separator label="Bouton CTA" />
+            <TextField label="Libelle du bouton" value={c.cta_label || ''} onChange={(v) => updateContent(key, 'cta_label', v)} />
+            <TextField label="Lien du bouton" value={c.cta_href || ''} onChange={(v) => updateContent(key, 'cta_href', v)} />
           </>
         )
 
@@ -507,6 +576,8 @@ export default function LandingAdminPage() {
         return (
           <>
             <TextField label="Label de section" value={c.label || ''} onChange={(v) => updateContent(key, 'label', v)} />
+            <TextAreaField label="Titre de section" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
+            <TextField label="Badge verifie" value={c.verified_badge || ''} onChange={(v) => updateContent(key, 'verified_badge', v)} />
             <Separator label="Temoignages" />
             {(c.items || []).map((item: { quote: string; name: string; city: string }, i: number) => (
               <div key={i} className="rounded-lg p-4 space-y-3" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
@@ -569,7 +640,7 @@ export default function LandingAdminPage() {
             <TextAreaField label="Titre" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
             <TextAreaField label="Description" value={c.description || ''} onChange={(v) => updateContent(key, 'description', v)} />
             <Separator label="Membres de l'equipe" />
-            {(c.members || []).map((member: { name: string; role: string; image: string }, i: number) => (
+            {(c.members || []).map((member: { name: string; role: string; expertise?: string; image: string }, i: number) => (
               <div key={i} className="rounded-lg p-4 space-y-3" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
                 <div className="flex items-center justify-between">
                   <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Membre {i + 1}</p>
@@ -578,6 +649,7 @@ export default function LandingAdminPage() {
                 </div>
                 <TextField label="Prenom" value={member.name || ''} onChange={(v) => updateArrayItem(key, 'members', i, 'name', v)} />
                 <TextField label="Role" value={member.role || ''} onChange={(v) => updateArrayItem(key, 'members', i, 'role', v)} />
+                <TextField label="Expertise" value={member.expertise || ''} onChange={(v) => updateArrayItem(key, 'members', i, 'expertise', v)} />
                 <FileUpload label="Photo" accept="image/*" folder="team"
                   currentUrl={member.image || null} hint="Photo de profil"
                   onUploaded={(url) => updateArrayItem(key, 'members', i, 'image', url)}
@@ -595,11 +667,15 @@ export default function LandingAdminPage() {
       case 'pricing':
         return (
           <>
-            <TextField label="Titre de section" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
+            <TextField label="Label de section" value={c.label || ''} onChange={(v) => updateContent(key, 'label', v)} />
+            <TextAreaField label="Titre de section" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
             <TextField label="Sous-titre" value={c.subtitle || ''} onChange={(v) => updateContent(key, 'subtitle', v)} />
-            <TextField label="Texte de pied" value={c.footer || ''} onChange={(v) => updateContent(key, 'footer', v)} />
+            <TextAreaField label="Texte d'inversion de risque" value={c.footer || ''} onChange={(v) => updateContent(key, 'footer', v)} />
+            <TextAreaField label="Badges de confiance (un par ligne)" rows={3}
+              value={Array.isArray(c.trust_badges) ? c.trust_badges.join('\n') : ''}
+              onChange={(v) => updateContent(key, 'trust_badges', v.split('\n').filter((line: string) => line.trim() !== ''))} />
             <Separator label="Plans tarifaires" />
-            {(c.plans || []).map((plan: { name: string; price: string; period: string; button_label: string; button_href: string; highlight: boolean; badge: string; features: string[] }, i: number) => (
+            {(c.plans || []).map((plan: { name: string; tagline?: string; price: string; period: string; button_label: string; button_href: string; highlight: boolean; badge: string; features: string[] }, i: number) => (
               <div key={i} className="rounded-lg p-4 space-y-3" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
                 <div className="flex items-center justify-between">
                   <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Plan {i + 1}</p>
@@ -607,6 +683,7 @@ export default function LandingAdminPage() {
                     className="text-xs px-2 py-1 rounded cursor-pointer" style={{ color: '#FF6B6B' }}>Supprimer</button>
                 </div>
                 <TextField label="Nom du plan" value={plan.name || ''} onChange={(v) => updateArrayItem(key, 'plans', i, 'name', v)} />
+                <TextField label="Tagline (ex: Les fondations)" value={plan.tagline || ''} onChange={(v) => updateArrayItem(key, 'plans', i, 'tagline', v)} />
                 <TextField label="Prix" value={plan.price || ''} onChange={(v) => updateArrayItem(key, 'plans', i, 'price', v)} />
                 <TextField label="Periode" value={plan.period || ''} onChange={(v) => updateArrayItem(key, 'plans', i, 'period', v)} />
                 <TextField label="Libelle du bouton" value={plan.button_label || ''} onChange={(v) => updateArrayItem(key, 'plans', i, 'button_label', v)} />
@@ -850,6 +927,8 @@ export default function LandingAdminPage() {
           </>
         )
 
+      case 'probleme':
+      case 'produit':
       case 'principe':
         return (
           <>

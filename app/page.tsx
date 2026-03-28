@@ -497,13 +497,6 @@ export default function Home() {
               </Link>
               <div className="absolute right-4 md:right-6 flex items-center gap-2">
                 <Link
-                  href="/blog"
-                  className="text-xs tracking-[0.15em] uppercase font-medium px-3 py-1.5 rounded-full transition-all duration-300"
-                  style={{ color: 'var(--gold)', background: 'rgba(var(--gold-rgb, 212,175,55), 0.1)', border: '1px solid rgba(var(--gold-rgb, 212,175,55), 0.2)' }}
-                >
-                  Blog
-                </Link>
-                <Link
                   href="/login"
                   className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300"
                   style={{
@@ -1333,6 +1326,9 @@ export default function Home() {
                     {link.label}
                   </Link>
                 ))}
+                <Link href="/blog" className="text-[10px] sm:text-xs tracking-[0.1em] sm:tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors duration-300 gold-underline">
+                  Blog
+                </Link>
               </div>
 
               <p className="text-[10px] tracking-[0.15em] sm:tracking-[0.2em] uppercase text-[var(--text-muted)]">

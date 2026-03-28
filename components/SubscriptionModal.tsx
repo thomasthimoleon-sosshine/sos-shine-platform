@@ -25,20 +25,22 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY 
 const PLAN_FEATURES: Record<PlanId, string[]> = {
   essential: [
     'Encyclopedie complete',
-    'Protocoles en 3 etapes',
-    'Chats communautaires',
+    'Chat & Communaute',
   ],
   serenite: [
     'Tout de l\'Essentielle',
-    'Shine TV & Audible',
+    'Shine Librairie',
+    'Shine TV & Shorts',
+    'Shine Audible',
     'Soin collectif mensuel',
     '7 jours d\'essai gratuit',
   ],
   premium: [
     'Tout de la Serenite',
-    'Shine Librairie',
-    'Lives hebdomadaires',
+    'Live hebdomadaire',
     'Canal Telegram prive',
+    'Evenements physiques',
+    'Ateliers Premium (48 semaines)',
     '7 jours d\'essai gratuit',
   ],
 }

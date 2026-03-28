@@ -324,10 +324,8 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
           highlight: false,
           badge: '',
           features: [
-            "Accès illimité à toute l'encyclopédie",
-            'Protocoles complets en 3 étapes',
-            'Chats communautaires 24h/24',
-            "Accès immédiat dès l'inscription",
+            "Encyclopédie complète (accès illimité)",
+            'Chat & Communauté',
           ],
         },
         {
@@ -341,8 +339,10 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
           badge: 'Choix Stratégique',
           features: [
             "Tout le contenu de l'Essentielle",
-            'Soin collectif mensuel en direct',
-            'Accès prioritaire aux nouveautés',
+            'Shine Librairie',
+            'Shine TV & Shorts',
+            'Shine Audible',
+            'Soin collectif mensuel',
             "7 jours d'essai gratuit — 0€",
           ],
         },
@@ -357,9 +357,10 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
           badge: 'Expérience complète',
           features: [
             "Tout le contenu de la Sérénité",
-            'Live thématique chaque semaine',
+            'Live thématique hebdomadaire',
             'Canal privé Telegram avec les fondateurs',
-            'Accès à tous les événements physiques',
+            'Événements physiques',
+            'Ateliers Premium (48 semaines)',
             "7 jours d'essai gratuit — 0€",
           ],
         },

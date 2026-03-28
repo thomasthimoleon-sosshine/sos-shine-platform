@@ -202,7 +202,11 @@ CREATE POLICY "Admins can manage plan features" ON public.plan_features
   FOR ALL USING (public.is_admin()) WITH CHECK (public.is_admin());
 
 -- Insérer les fonctionnalités par plan par défaut
--- Essential (Essentielle) : accès de base
+-- Essentielle (9,90€) : Encyclopédie + Chat + Communauté
+-- Sérénité (49,90€) : + Librairie + Shine TV + Shorts + Audible + Soin collectif
+-- Premium (99,90€) : + Live hebdo + Telegram + Événements physiques + Ateliers
+
+-- Essential (Essentielle) : Encyclopédie + Chat + Communauté
 INSERT INTO public.plan_features (plan, feature_key, feature_label, is_enabled) VALUES
   ('essential', 'encyclopedie',       'Encyclopédie des challenges émotionnels', true),
   ('essential', 'chat_general',       'Chat général communautaire',              true),
@@ -213,17 +217,22 @@ INSERT INTO public.plan_features (plan, feature_key, feature_label, is_enabled) 
   ('essential', 'journal',            'Journal intime',                           true),
   ('essential', 'objectifs',          'Suivi d''objectifs',                       true),
   ('essential', 'signature_quiz',     'Quiz Signature Émotionnelle',             true),
+  ('essential', 'chat_douleur',       'Chats par challenge',                     true),
+  ('essential', 'affiliation',        'Programme d''affiliation',                true),
   ('essential', 'evenements_gratuits','Événements gratuits',                      true),
-  ('essential', 'chat_douleur',       'Chats par challenge',                     false),
   ('essential', 'visio',              'Visio / Audio (WebRTC)',                  false),
-  ('essential', 'evenements_payants', 'Événements payants / soins collectifs',  false),
   ('essential', 'shine_tv',           'Shine TV (vidéos exclusives)',            false),
+  ('essential', 'shine_shorts',       'Shine Shorts',                            false),
   ('essential', 'shine_audible',      'Shine Audible (audios exclusifs)',        false),
   ('essential', 'shine_librairie',    'Shine Librairie (PDFs exclusifs)',        false),
-  ('essential', 'affiliation',        'Programme d''affiliation',                true)
+  ('essential', 'soin_collectif',     'Soin collectif mensuel',                  false),
+  ('essential', 'evenements_payants', 'Événements physiques',                    false),
+  ('essential', 'live_hebdo',         'Live thématique hebdomadaire',            false),
+  ('essential', 'telegram',           'Canal privé Telegram',                    false),
+  ('essential', 'ateliers_premium',   'Ateliers Premium (48 semaines)',          false)
 ON CONFLICT (plan, feature_key) DO NOTHING;
 
--- Sérénité : accès élargi
+-- Sérénité : + Librairie + Shine TV + Shorts + Audible + Soin collectif
 INSERT INTO public.plan_features (plan, feature_key, feature_label, is_enabled) VALUES
   ('serenite', 'encyclopedie',       'Encyclopédie des challenges émotionnels', true),
   ('serenite', 'chat_general',       'Chat général communautaire',              true),
@@ -234,17 +243,22 @@ INSERT INTO public.plan_features (plan, feature_key, feature_label, is_enabled) 
   ('serenite', 'journal',            'Journal intime',                           true),
   ('serenite', 'objectifs',          'Suivi d''objectifs',                       true),
   ('serenite', 'signature_quiz',     'Quiz Signature Émotionnelle',             true),
-  ('serenite', 'evenements_gratuits','Événements gratuits',                      true),
   ('serenite', 'chat_douleur',       'Chats par challenge',                     true),
+  ('serenite', 'affiliation',        'Programme d''affiliation',                true),
+  ('serenite', 'evenements_gratuits','Événements gratuits',                      true),
   ('serenite', 'visio',              'Visio / Audio (WebRTC)',                  true),
-  ('serenite', 'evenements_payants', 'Événements payants / soins collectifs',  true),
   ('serenite', 'shine_tv',           'Shine TV (vidéos exclusives)',            true),
+  ('serenite', 'shine_shorts',       'Shine Shorts',                            true),
   ('serenite', 'shine_audible',      'Shine Audible (audios exclusifs)',        true),
-  ('serenite', 'shine_librairie',    'Shine Librairie (PDFs exclusifs)',        false),
-  ('serenite', 'affiliation',        'Programme d''affiliation',                true)
+  ('serenite', 'shine_librairie',    'Shine Librairie (PDFs exclusifs)',        true),
+  ('serenite', 'soin_collectif',     'Soin collectif mensuel',                  true),
+  ('serenite', 'evenements_payants', 'Événements physiques',                    false),
+  ('serenite', 'live_hebdo',         'Live thématique hebdomadaire',            false),
+  ('serenite', 'telegram',           'Canal privé Telegram',                    false),
+  ('serenite', 'ateliers_premium',   'Ateliers Premium (48 semaines)',          false)
 ON CONFLICT (plan, feature_key) DO NOTHING;
 
--- Premium : accès total
+-- Premium : accès total + Live + Telegram + Événements + Ateliers
 INSERT INTO public.plan_features (plan, feature_key, feature_label, is_enabled) VALUES
   ('premium', 'encyclopedie',       'Encyclopédie des challenges émotionnels', true),
   ('premium', 'chat_general',       'Chat général communautaire',              true),
@@ -255,14 +269,19 @@ INSERT INTO public.plan_features (plan, feature_key, feature_label, is_enabled) 
   ('premium', 'journal',            'Journal intime',                           true),
   ('premium', 'objectifs',          'Suivi d''objectifs',                       true),
   ('premium', 'signature_quiz',     'Quiz Signature Émotionnelle',             true),
-  ('premium', 'evenements_gratuits','Événements gratuits',                      true),
   ('premium', 'chat_douleur',       'Chats par challenge',                     true),
+  ('premium', 'affiliation',        'Programme d''affiliation',                true),
+  ('premium', 'evenements_gratuits','Événements gratuits',                      true),
   ('premium', 'visio',              'Visio / Audio (WebRTC)',                  true),
-  ('premium', 'evenements_payants', 'Événements payants / soins collectifs',  true),
   ('premium', 'shine_tv',           'Shine TV (vidéos exclusives)',            true),
+  ('premium', 'shine_shorts',       'Shine Shorts',                            true),
   ('premium', 'shine_audible',      'Shine Audible (audios exclusifs)',        true),
   ('premium', 'shine_librairie',    'Shine Librairie (PDFs exclusifs)',        true),
-  ('premium', 'affiliation',        'Programme d''affiliation',                true)
+  ('premium', 'soin_collectif',     'Soin collectif mensuel',                  true),
+  ('premium', 'evenements_payants', 'Événements physiques',                    true),
+  ('premium', 'live_hebdo',         'Live thématique hebdomadaire',            true),
+  ('premium', 'telegram',           'Canal privé Telegram',                    true),
+  ('premium', 'ateliers_premium',   'Ateliers Premium (48 semaines)',          true)
 ON CONFLICT (plan, feature_key) DO NOTHING;
 
 

@@ -594,7 +594,7 @@ function PaymentContent() {
             <div className="space-y-2.5 text-left mb-6 flex-1">
               {[
                 'Encyclopédie complète (accès illimité)',
-                'Tchats communautaires',
+                'Chat & Communauté',
               ].map((item) => (
                 <div key={item} className="flex items-start gap-2.5">
                   <span className="mt-0.5 text-sm flex-shrink-0" style={{ color: '#F0A68C' }}>&#9670;</span>
@@ -657,6 +657,9 @@ function PaymentContent() {
             <div className="space-y-2.5 text-left mb-6 flex-1">
               {[
                 'Tout le contenu de l\'Essentielle',
+                'Shine Librairie',
+                'Shine TV & Shorts',
+                'Shine Audible',
                 'Soin collectif mensuel',
               ].map((item) => (
                 <div key={item} className="flex items-start gap-2.5">
@@ -725,7 +728,8 @@ function PaymentContent() {
                 'Tout le contenu de la Sérénité',
                 'Live thématique hebdomadaire',
                 'Canal privé Telegram',
-                'Accès aux événements',
+                'Événements physiques',
+                'Ateliers Premium (48 semaines)',
               ].map((item) => (
                 <div key={item} className="flex items-start gap-2.5">
                   <span className="mt-0.5 text-sm flex-shrink-0" style={{ color: '#A78BFA' }}>&#9670;</span>

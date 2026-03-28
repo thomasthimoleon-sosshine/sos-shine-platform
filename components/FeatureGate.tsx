@@ -16,6 +16,7 @@ const FEATURE_MIN_PLAN: Record<string, { plan: PlanId; label: string }> = {
   chat_douleur: { plan: 'serenite', label: 'Sérénité' },
   visio: { plan: 'serenite', label: 'Sérénité' },
   evenements_payants: { plan: 'serenite', label: 'Sérénité' },
+  ateliers_premium: { plan: 'premium', label: 'Premium' },
 }
 
 interface FeatureGateProps {

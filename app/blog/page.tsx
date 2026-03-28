@@ -40,6 +40,7 @@ export default function BlogPage() {
             coverImage: a.cover_image as string | undefined,
             featured: (a.featured as boolean) || false,
             content: (a.content as string) || '',
+            contentType: (a.content_type as 'markdown' | 'html') || 'markdown',
           }))
           // Merge: DB articles first, then static articles not already in DB
           const dbSlugs = new Set(dbArticles.map(a => a.slug))

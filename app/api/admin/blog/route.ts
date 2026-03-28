@@ -91,6 +91,7 @@ export async function POST(req: NextRequest) {
       cover_image: body.cover_image || null,
       featured: body.featured || false,
       content: body.content || '',
+      content_type: body.content_type || 'markdown',
       is_published: body.is_published ?? true,
     })
     .select()

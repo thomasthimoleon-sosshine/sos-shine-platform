@@ -265,7 +265,11 @@ export default function BlogArticleContent({ article }: { article: BlogArticle }
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
           >
-            <MarkdownRenderer content={article.content} />
+            {article.contentType === 'html' ? (
+              <div className="blog-html-content" dangerouslySetInnerHTML={{ __html: article.content }} />
+            ) : (
+              <MarkdownRenderer content={article.content} />
+            )}
           </motion.div>
 
           {/* Tags */}

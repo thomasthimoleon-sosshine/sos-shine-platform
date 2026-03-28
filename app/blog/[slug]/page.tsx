@@ -44,6 +44,7 @@ async function findArticle(slug: string): Promise<BlogArticle | undefined> {
         coverImage: data.cover_image,
         featured: data.featured || false,
         content: data.content || '',
+        contentType: data.content_type || 'markdown',
       }
     }
   } catch {

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { BLOG_CATEGORIES } from '@/data/blog/articles'
 
 interface BlogArticle {
@@ -20,6 +20,7 @@ interface BlogArticle {
   cover_image: string | null
   featured: boolean
   content: string
+  content_type: 'markdown' | 'html'
   is_published: boolean
   created_at: string
 }
@@ -31,8 +32,8 @@ const emptyForm = {
   excerpt: '',
   meta_title: '',
   meta_description: '',
-  author_name: '',
-  author_role: '',
+  author_name: 'Thomas Thimoleon',
+  author_role: 'Co-fondateur SOS Shine',
   published_at: new Date().toISOString().split('T')[0],
   read_time: 5,
   category: 'transformation',
@@ -40,6 +41,7 @@ const emptyForm = {
   cover_image: '',
   featured: false,
   content: '',
+  content_type: 'markdown' as 'markdown' | 'html',
   is_published: true,
 }
 
@@ -64,6 +66,8 @@ export default function AdminBlog() {
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [tableExists, setTableExists] = useState(true)
   const [creatingTable, setCreatingTable] = useState(false)
+  const [showPreview, setShowPreview] = useState(false)
+  const contentRef = useRef<HTMLTextAreaElement>(null)
 
   const loadArticles = useCallback(async () => {
     try {
@@ -103,6 +107,7 @@ export default function AdminBlog() {
   function openNew() {
     setForm(emptyForm)
     setEditingId(null)
+    setShowPreview(false)
     setShowForm(true)
   }
 
@@ -123,10 +128,44 @@ export default function AdminBlog() {
       cover_image: article.cover_image || '',
       featured: article.featured || false,
       content: article.content || '',
+      content_type: article.content_type || 'markdown',
       is_published: article.is_published ?? true,
     })
     setEditingId(article.id)
+    setShowPreview(false)
     setShowForm(true)
+  }
+
+  // HTML toolbar actions
+  function insertHtmlTag(tag: string, attr?: string) {
+    const textarea = contentRef.current
+    if (!textarea) return
+    const start = textarea.selectionStart
+    const end = textarea.selectionEnd
+    const selected = form.content.substring(start, end)
+    const openTag = attr ? `<${tag} ${attr}>` : `<${tag}>`
+    const closeTag = `</${tag}>`
+    const newContent = form.content.substring(0, start) + openTag + (selected || '') + closeTag + form.content.substring(end)
+    setForm({ ...form, content: newContent })
+    setTimeout(() => {
+      textarea.focus()
+      const cursorPos = start + openTag.length + (selected?.length || 0)
+      textarea.setSelectionRange(cursorPos, cursorPos)
+    }, 0)
+  }
+
+  function insertHtmlSelfClosing(tag: string) {
+    const textarea = contentRef.current
+    if (!textarea) return
+    const start = textarea.selectionStart
+    const insertion = `<${tag} />`
+    const newContent = form.content.substring(0, start) + insertion + form.content.substring(start)
+    setForm({ ...form, content: newContent })
+    setTimeout(() => {
+      textarea.focus()
+      const cursorPos = start + insertion.length
+      textarea.setSelectionRange(cursorPos, cursorPos)
+    }, 0)
   }
 
   async function handleSave() {
@@ -237,6 +276,7 @@ export default function AdminBlog() {
   cover_image TEXT,
   featured BOOLEAN DEFAULT false,
   content TEXT DEFAULT '',
+  content_type TEXT DEFAULT 'markdown',
   is_published BOOLEAN DEFAULT true,
   created_at TIMESTAMPTZ DEFAULT now()
 );
@@ -278,7 +318,7 @@ CREATE POLICY "Admins can manage articles"
             Blog
           </h1>
           <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
-            {articles.length} article{articles.length !== 1 ? 's' : ''}
+            {articles.length} article{articles.length !== 1 ? 's' : ''} — Cr&eacute;ez en Markdown ou HTML
           </p>
         </div>
         <button
@@ -327,6 +367,12 @@ CREATE POLICY "Admins can manage articles"
                       {cat.label}
                     </span>
                   )}
+                  <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold" style={{
+                    background: article.content_type === 'html' ? 'rgba(255,107,107,0.15)' : 'rgba(116,192,252,0.15)',
+                    color: article.content_type === 'html' ? '#FF6B6B' : '#74C0FC',
+                  }}>
+                    {article.content_type === 'html' ? 'HTML' : 'Markdown'}
+                  </span>
                 </div>
                 <h3 className="text-sm font-semibold truncate" style={{ color: 'var(--text-primary)' }}>
                   {article.title}
@@ -394,13 +440,38 @@ CREATE POLICY "Admins can manage articles"
           onClick={() => setShowForm(false)}
         >
           <div
-            className="w-full max-w-3xl rounded-2xl p-6 space-y-5"
+            className="w-full max-w-4xl rounded-2xl p-6 space-y-5"
             style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-lg font-display font-semibold" style={{ color: '#74C0FC' }}>
-              {editingId ? 'Modifier l\u2019article' : 'Nouvel article'}
-            </h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-display font-semibold" style={{ color: '#74C0FC' }}>
+                {editingId ? 'Modifier l\u2019article' : 'Nouvel article'}
+              </h2>
+              {/* Content type toggle */}
+              <div className="flex items-center gap-1 p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--dark-border)' }}>
+                <button
+                  onClick={() => setForm({ ...form, content_type: 'markdown' })}
+                  className="px-4 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer"
+                  style={{
+                    background: form.content_type === 'markdown' ? 'rgba(116,192,252,0.2)' : 'transparent',
+                    color: form.content_type === 'markdown' ? '#74C0FC' : 'var(--text-muted)',
+                  }}
+                >
+                  Markdown
+                </button>
+                <button
+                  onClick={() => setForm({ ...form, content_type: 'html' })}
+                  className="px-4 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer"
+                  style={{
+                    background: form.content_type === 'html' ? 'rgba(255,107,107,0.2)' : 'transparent',
+                    color: form.content_type === 'html' ? '#FF6B6B' : 'var(--text-muted)',
+                  }}
+                >
+                  HTML
+                </button>
+              </div>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Title */}
@@ -487,7 +558,7 @@ CREATE POLICY "Admins can manage articles"
                   onChange={(e) => setForm({ ...form, author_role: e.target.value })}
                   className="w-full rounded-lg px-3 py-2.5 text-sm outline-none"
                   style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
-                  placeholder="Ex: Th&eacute;rapeute holistique"
+                  placeholder="Ex: Co-fondateur SOS Shine"
                 />
               </div>
 
@@ -585,21 +656,91 @@ CREATE POLICY "Admins can manage articles"
                 </label>
               </div>
 
-              {/* Content */}
+              {/* Content editor */}
               <div className="md:col-span-2">
-                <label className="text-xs font-medium mb-1 block" style={{ color: 'var(--text-muted)' }}>
-                  Contenu (Markdown) *
-                </label>
-                <textarea
-                  value={form.content}
-                  onChange={(e) => setForm({ ...form, content: e.target.value })}
-                  rows={15}
-                  className="w-full rounded-lg px-3 py-2.5 text-sm outline-none resize-y font-mono"
-                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
-                  placeholder="## Mon titre&#10;&#10;Votre contenu en markdown..."
-                />
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs font-medium" style={{ color: 'var(--text-muted)' }}>
+                    Contenu ({form.content_type === 'html' ? 'HTML' : 'Markdown'}) *
+                  </label>
+                  <button
+                    onClick={() => setShowPreview(!showPreview)}
+                    className="text-xs px-3 py-1 rounded-lg cursor-pointer transition-colors"
+                    style={{
+                      background: showPreview ? 'rgba(85,239,196,0.15)' : 'rgba(255,255,255,0.05)',
+                      color: showPreview ? '#55EFC4' : 'var(--text-muted)',
+                      border: `1px solid ${showPreview ? 'rgba(85,239,196,0.2)' : 'var(--dark-border)'}`,
+                    }}
+                  >
+                    {showPreview ? 'Fermer l\u2019aper\u00e7u' : 'Aper\u00e7u'}
+                  </button>
+                </div>
+
+                {/* HTML Toolbar */}
+                {form.content_type === 'html' && (
+                  <div className="flex flex-wrap items-center gap-1 mb-2 p-2 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
+                    <button onClick={() => insertHtmlTag('h2')} className="px-2 py-1 rounded text-[11px] font-bold cursor-pointer" style={{ color: '#74C0FC', background: 'rgba(116,192,252,0.1)' }} title="Titre H2">H2</button>
+                    <button onClick={() => insertHtmlTag('h3')} className="px-2 py-1 rounded text-[11px] font-bold cursor-pointer" style={{ color: '#74C0FC', background: 'rgba(116,192,252,0.1)' }} title="Titre H3">H3</button>
+                    <button onClick={() => insertHtmlTag('p')} className="px-2 py-1 rounded text-[11px] cursor-pointer" style={{ color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)' }} title="Paragraphe">P</button>
+                    <button onClick={() => insertHtmlTag('strong')} className="px-2 py-1 rounded text-[11px] font-bold cursor-pointer" style={{ color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)' }} title="Gras">B</button>
+                    <button onClick={() => insertHtmlTag('em')} className="px-2 py-1 rounded text-[11px] italic cursor-pointer" style={{ color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)' }} title="Italique">I</button>
+                    <button onClick={() => insertHtmlTag('ul')} className="px-2 py-1 rounded text-[11px] cursor-pointer" style={{ color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)' }} title="Liste">UL</button>
+                    <button onClick={() => insertHtmlTag('li')} className="px-2 py-1 rounded text-[11px] cursor-pointer" style={{ color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)' }} title="Item liste">LI</button>
+                    <button onClick={() => insertHtmlTag('blockquote')} className="px-2 py-1 rounded text-[11px] cursor-pointer" style={{ color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)' }} title="Citation">Quote</button>
+                    <button onClick={() => insertHtmlTag('a', 'href=""')} className="px-2 py-1 rounded text-[11px] cursor-pointer" style={{ color: '#D4AF37', background: 'rgba(212,175,55,0.1)' }} title="Lien">Link</button>
+                    <button onClick={() => insertHtmlTag('div', 'class="my-section"')} className="px-2 py-1 rounded text-[11px] cursor-pointer" style={{ color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)' }} title="Div">Div</button>
+                    <button onClick={() => insertHtmlTag('span', 'style="color: #D4AF37;"')} className="px-2 py-1 rounded text-[11px] cursor-pointer" style={{ color: '#D4AF37', background: 'rgba(212,175,55,0.1)' }} title="Span color&eacute;">Color</button>
+                    <button onClick={() => insertHtmlSelfClosing('br')} className="px-2 py-1 rounded text-[11px] cursor-pointer" style={{ color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)' }} title="Saut de ligne">BR</button>
+                    <button onClick={() => insertHtmlSelfClosing('hr')} className="px-2 py-1 rounded text-[11px] cursor-pointer" style={{ color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)' }} title="Ligne horizontale">HR</button>
+                    <button onClick={() => insertHtmlTag('img', 'src="" alt="" style="max-width:100%;border-radius:12px;"')} className="px-2 py-1 rounded text-[11px] cursor-pointer" style={{ color: '#55EFC4', background: 'rgba(85,239,196,0.1)' }} title="Image">IMG</button>
+                  </div>
+                )}
+
+                {showPreview ? (
+                  <div className="grid grid-cols-2 gap-4">
+                    <textarea
+                      ref={contentRef}
+                      value={form.content}
+                      onChange={(e) => setForm({ ...form, content: e.target.value })}
+                      rows={20}
+                      className="w-full rounded-lg px-3 py-2.5 text-sm outline-none resize-y font-mono"
+                      style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                    />
+                    <div
+                      className="rounded-lg px-4 py-3 text-sm overflow-y-auto prose-sm"
+                      style={{
+                        background: 'rgba(255,255,255,0.03)',
+                        border: '1px solid var(--dark-border)',
+                        color: 'var(--text-secondary)',
+                        maxHeight: '500px',
+                      }}
+                    >
+                      <p className="text-[10px] uppercase tracking-widest mb-3 font-semibold" style={{ color: 'var(--text-muted)' }}>Aper&ccedil;u</p>
+                      {form.content_type === 'html' ? (
+                        <div dangerouslySetInnerHTML={{ __html: form.content }} />
+                      ) : (
+                        <div style={{ whiteSpace: 'pre-wrap' }}>{form.content}</div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <textarea
+                    ref={contentRef}
+                    value={form.content}
+                    onChange={(e) => setForm({ ...form, content: e.target.value })}
+                    rows={15}
+                    className="w-full rounded-lg px-3 py-2.5 text-sm outline-none resize-y font-mono"
+                    style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                    placeholder={form.content_type === 'html'
+                      ? '<h2>Mon titre</h2>\n<p>Votre contenu en HTML...</p>'
+                      : '## Mon titre\n\nVotre contenu en markdown...'
+                    }
+                  />
+                )}
                 <p className="text-[11px] mt-1" style={{ color: 'var(--text-muted)' }}>
-                  Utilisez ## pour les titres, **gras**, *italique*, - pour les listes
+                  {form.content_type === 'html'
+                    ? 'Utilisez la barre d\u2019outils ou &eacute;crivez directement du HTML. Les styles inline sont support&eacute;s.'
+                    : 'Utilisez ## pour les titres, **gras**, *italique*, - pour les listes'
+                  }
                 </p>
               </div>
             </div>

@@ -18,6 +18,7 @@ export interface BlogArticle {
   coverImage?: string
   featured: boolean
   content: string
+  contentType?: 'markdown' | 'html'
 }
 
 export const BLOG_CATEGORIES = [
@@ -38,8 +39,8 @@ export const blogArticles: BlogArticle[] = [
     metaTitle: 'Pourquoi vos emotions ne sont pas le probleme mais la solution | SOS Shine',
     metaDescription: 'Decouvrez comment les neurosciences prouvent que ressentir pleinement ses emotions est la cle de la transformation. Guide complet sur l\'intelligence emotionnelle par SOS Shine.',
     author: {
-      name: 'Julia Martinez',
-      role: 'Therapeute holistique & Co-fondatrice SOS Shine',
+      name: 'Thomas Thimoleon',
+      role: 'Co-fondateur SOS Shine',
     },
     publishedAt: '2026-03-26',
     readTime: 12,

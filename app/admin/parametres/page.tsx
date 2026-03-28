@@ -176,6 +176,7 @@ const sections: SectionDef[] = [
       { label: 'Features Essentielle (une par ligne)', key: 'features_essential', type: 'textarea', default: "Encyclopédie complète (accès illimité)\nTchats communautaires" },
       { label: 'Features Sérénité (une par ligne)', key: 'features_serenite', type: 'textarea', default: "Tout le contenu de l'Essentielle\nSoin collectif mensuel\n7 jours d'essai gratuit" },
       { label: 'Features Premium (une par ligne)', key: 'features_premium', type: 'textarea', default: "Tout le contenu de la Sérénité\nLive thématique hebdomadaire\nCanal privé Telegram\nAccès aux événements\n7 jours d'essai gratuit" },
+      { label: 'Lien Telegram Premium', key: 'telegram_link', type: 'text', default: '' },
       { label: 'Texte sous les offres', key: 'pricing_footer', type: 'text', default: "Parce que si on doit vous retenir par un contrat, c'est qu'on n'a pas fait notre travail." },
       sep('Style'),
       { label: 'Police du titre', key: 'pricing_title_font', type: 'select', options: fontOpts, default: 'Cormorant Garamond' },

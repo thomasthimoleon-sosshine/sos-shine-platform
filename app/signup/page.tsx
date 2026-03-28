@@ -81,6 +81,7 @@ export default function SignupPage() {
 
   const [prenom, setPrenom] = useState('')
   const [email, setEmail] = useState('')
+  const [birthDate, setBirthDate] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -131,7 +132,7 @@ export default function SignupPage() {
         email,
         password,
         options: {
-          data: { prenom },
+          data: { prenom, ...(birthDate ? { birth_date: birthDate } : {}) },
           emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard/tarifs`,
         },
       })
@@ -278,6 +279,14 @@ export default function SignupPage() {
               <label htmlFor="email" className="block text-[13px] text-[var(--text-secondary)] mb-2 font-medium">Email</label>
               <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
                 placeholder="votre@email.com"
+                className="w-full px-4 py-3 rounded-xl text-sm transition-colors"
+                style={inputStyle} onFocus={focusIn} onBlur={focusOut} />
+            </div>
+            <div>
+              <label htmlFor="birthDate" className="block text-[13px] text-[var(--text-secondary)] mb-2 font-medium">
+                Date de naissance <span className="text-[11px] text-[var(--text-muted)] font-normal">(optionnel — pour votre météo énergétique)</span>
+              </label>
+              <input id="birthDate" type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)}
                 className="w-full px-4 py-3 rounded-xl text-sm transition-colors"
                 style={inputStyle} onFocus={focusIn} onBlur={focusOut} />
             </div>

@@ -103,7 +103,8 @@ function LevelXPSection({ xpData }: { xpData: UserXP | null }) {
    Section: Météo Énergétique
    ───────────────────────────────────────────── */
 function EnergyWeatherWidget({ profile }: { profile: Profile | null }) {
-  const sign = profile ? resolveZodiacSign(profile.prenom, (profile as Profile & { zodiac_sign?: string | null }).zodiac_sign) : null
+  const p = profile as (Profile & { zodiac_sign?: string | null; birth_date?: string | null }) | null
+  const sign = p ? resolveZodiacSign(p.prenom, p.zodiac_sign, p.birth_date) : null
   if (!sign) return null
 
   const forecast = getDailyForecast(sign)

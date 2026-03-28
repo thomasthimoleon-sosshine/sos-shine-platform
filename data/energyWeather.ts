@@ -161,13 +161,45 @@ export function getDailyForecast(sign: ZodiacSign): EnergyForecast & { sign: Zod
 }
 
 /**
- * Resolves the zodiac sign for a user, checking:
- * 1. Profile zodiac_sign field
- * 2. Founder mapping by first name
- * Returns null if no sign is found.
+ * Determines the zodiac sign from a birth date string (YYYY-MM-DD or any parseable date).
+ * Returns null if the date is invalid.
  */
-export function resolveZodiacSign(prenom: string, profileSign?: string | null): ZodiacSign | null {
+export function getZodiacSignFromDate(birthDate: string): ZodiacSign | null {
+  const date = new Date(birthDate)
+  if (isNaN(date.getTime())) return null
+
+  const month = date.getMonth() + 1 // 1-12
+  const day = date.getDate()
+
+  if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) return 'belier'
+  if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) return 'taureau'
+  if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) return 'gemeaux'
+  if ((month === 6 && day >= 21) || (month === 7 && day <= 22)) return 'cancer'
+  if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return 'lion'
+  if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return 'vierge'
+  if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) return 'balance'
+  if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) return 'scorpion'
+  if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) return 'sagittaire'
+  if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) return 'capricorne'
+  if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) return 'verseau'
+  if ((month === 2 && day >= 19) || (month === 3 && day <= 20)) return 'poisson'
+
+  return null
+}
+
+/**
+ * Resolves the zodiac sign for a user, checking:
+ * 1. Profile zodiac_sign field (explicit override)
+ * 2. Birth date calculation
+ * 3. Founder mapping by first name
+ * Returns null if no sign is found (user didn't provide birth date).
+ */
+export function resolveZodiacSign(prenom: string, profileSign?: string | null, birthDate?: string | null): ZodiacSign | null {
   if (profileSign && profileSign in ZODIAC_INFO) return profileSign as ZodiacSign
+  if (birthDate) {
+    const fromDate = getZodiacSignFromDate(birthDate)
+    if (fromDate) return fromDate
+  }
   // Check founder mapping (trim + case-insensitive)
   const trimmed = prenom.trim()
   const normalizedName = trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase()

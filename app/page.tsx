@@ -1326,9 +1326,6 @@ export default function Home() {
                     {link.label}
                   </Link>
                 ))}
-                <Link href="/blog" className="text-[10px] sm:text-xs tracking-[0.1em] sm:tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors duration-300 gold-underline">
-                  Blog
-                </Link>
               </div>
 
               <p className="text-[10px] tracking-[0.15em] sm:tracking-[0.2em] uppercase text-[var(--text-muted)]">

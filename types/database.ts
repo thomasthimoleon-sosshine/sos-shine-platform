@@ -173,6 +173,25 @@ export type EventRegistration = {
   created_at: string
 }
 
+// ── Premium Ateliers (programme 48 semaines) ──
+export type PremiumAtelier = {
+  id: string
+  month_index: number
+  week: number
+  arc_number: number
+  arc_label: string
+  month_theme: string
+  month_icon: string
+  title: string
+  description: string | null
+  video_url: string | null
+  live_url: string | null
+  replay_url: string | null
+  is_live: boolean
+  is_active: boolean
+  created_at: string
+}
+
 // ── Content Tracking (analytics) ──
 export type ContentView = {
   id: string
@@ -814,6 +833,7 @@ export type Database = {
       daily_user_actions: Table<DailyUserAction>
       encyclopedia_progress: Table<EncyclopediaProgress>
       site_visits: Table<SiteVisit>
+      premium_ateliers: Table<PremiumAtelier>
     }
     Views: Record<string, never>
     Functions: {

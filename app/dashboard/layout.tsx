@@ -203,7 +203,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       // Charger le lien Telegram
       const { data: tgData } = await supabase.from('site_settings').select('value').eq('key', 'telegram_link').maybeSingle()
-      if (tgData?.value) setTelegramLink(tgData.value)
+      setTelegramLink(tgData?.value || 'https://t.me/+fwJP4eo0t9BhODA8')
 
       // Afficher le popup de bienvenue une fois par session
       if (!sessionStorage.getItem('sos_welcome_shown')) {

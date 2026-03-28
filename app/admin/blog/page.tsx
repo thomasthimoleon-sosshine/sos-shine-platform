@@ -259,7 +259,7 @@ export default function AdminBlog() {
           <p className="text-sm font-medium mb-3" style={{ color: 'var(--text-primary)' }}>
             Ex&eacute;cutez ce SQL dans l&apos;&eacute;diteur SQL de Supabase :
           </p>
-          <pre className="text-xs p-4 rounded-lg overflow-x-auto" style={{ background: 'rgba(0,0,0,0.3)', color: '#74C0FC' }}>{`CREATE TABLE blog_articles (
+          <pre className="text-xs p-4 rounded-lg overflow-x-auto" style={{ background: 'rgba(0,0,0,0.3)', color: '#74C0FC' }}>{`CREATE TABLE IF NOT EXISTS blog_articles (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   slug TEXT UNIQUE NOT NULL,
   title TEXT NOT NULL,
@@ -283,19 +283,31 @@ export default function AdminBlog() {
 
 ALTER TABLE blog_articles ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Public can read published articles"
-  ON blog_articles FOR SELECT
-  USING (is_published = true);
+DO $$ BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies WHERE tablename = 'blog_articles' AND policyname = 'Public can read published articles'
+  ) THEN
+    CREATE POLICY "Public can read published articles"
+      ON blog_articles FOR SELECT
+      USING (is_published = true);
+  END IF;
+END $$;
 
-CREATE POLICY "Admins can manage articles"
-  ON blog_articles FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM profiles
-      WHERE profiles.id = auth.uid()
-      AND profiles.role IN ('founder', 'admin_content', 'admin_support')
-    )
-  );`}</pre>
+DO $$ BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies WHERE tablename = 'blog_articles' AND policyname = 'Admins can manage articles'
+  ) THEN
+    CREATE POLICY "Admins can manage articles"
+      ON blog_articles FOR ALL
+      USING (
+        EXISTS (
+          SELECT 1 FROM profiles
+          WHERE profiles.id = auth.uid()
+          AND profiles.role IN ('founder', 'admin_content', 'admin_support')
+        )
+      );
+  END IF;
+END $$;`}</pre>
         </div>
         <button
           onClick={createTable}

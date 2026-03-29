@@ -15,7 +15,7 @@ type Conversation = {
 
 type SubTab = 'inbox' | 'requests'
 
-export default function MessagesTab() {
+export default function MessagesTab({ onProfileClick }: { onProfileClick?: (userId: string) => void }) {
   const [conversations, setConversations] = useState<Conversation[]>([])
   const [loading, setLoading] = useState(true)
   const [userId, setUserId] = useState<string | null>(null)
@@ -244,18 +244,23 @@ export default function MessagesTab() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
             </svg>
           </button>
-          {activePartner.avatar_url ? (
-            <img src={activePartner.avatar_url} alt={partnerName} className="w-10 h-10 rounded-full object-cover" />
-          ) : (
-            <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold"
-              style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
-              {partnerName.charAt(0).toUpperCase()}
-            </div>
-          )}
-          <div className="flex-1 min-w-0">
+          <button
+            onClick={() => onProfileClick?.(activePartner.id)}
+            className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
+          >
+            {activePartner.avatar_url ? (
+              <img src={activePartner.avatar_url} alt={partnerName} className="w-10 h-10 rounded-full object-cover" />
+            ) : (
+              <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold"
+                style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                {partnerName.charAt(0).toUpperCase()}
+              </div>
+            )}
             <h3 className="font-semibold text-sm truncate" style={{ color: activePartner.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)' }}>
               {partnerName}
             </h3>
+          </button>
+          <div className="flex-1 min-w-0">
             {isRequest && (
               <span className="text-[10px] font-medium px-2 py-0.5 rounded-full"
                 style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}>

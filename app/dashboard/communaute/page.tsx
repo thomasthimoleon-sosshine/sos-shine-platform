@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic'
 import { createClient } from '@/lib/supabase/client'
 import SubscriptionGate from '@/components/SubscriptionGate'
 import ProfileDrawer from '@/components/community/ProfileDrawer'
+import CommunityStatsBar from '@/components/community/CommunityStatsBar'
 
 const MurTab = dynamic(() => import('@/app/dashboard/mur/page'), { ssr: false })
 const MonEclatTab = dynamic(() => import('@/app/dashboard/mon-eclat/page'), { ssr: false })
@@ -107,6 +108,9 @@ export default function CommunautePage() {
   return (
     <SubscriptionGate>
     <div className="max-w-4xl mx-auto">
+      {/* ── Community Stats Bar ── */}
+      <CommunityStatsBar />
+
       {/* ── Top Tab Navigation ── */}
       <div className="mb-6 overflow-x-auto scrollbar-hide">
         <div className="flex gap-1 p-1 rounded-xl min-w-max" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
@@ -143,7 +147,7 @@ export default function CommunautePage() {
         {activeTab === 'mur' && <MurTab />}
         {activeTab === 'rayons' && <RayonsFeedTab onProfileClick={openProfileDrawer} />}
         {activeTab === 'eclat' && <MonEclatTab />}
-        {activeTab === 'messages' && <MessagesTab />}
+        {activeTab === 'messages' && <MessagesTab onProfileClick={openProfileDrawer} />}
         {activeTab === 'saved' && <SavedPostsTab onProfileClick={openProfileDrawer} />}
       </div>
 

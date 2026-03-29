@@ -730,6 +730,7 @@ export default function ShineAudiblePage() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [playerProgress, setPlayerProgress] = useState(0)
   const [fakeTime, setFakeTime] = useState(0)
+  const [audioDisclaimer, setAudioDisclaimer] = useState<ShineAudio | null>(null)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
@@ -863,14 +864,20 @@ export default function ShineAudiblePage() {
     return `${m}:${sec.toString().padStart(2, '0')}`
   }
 
+  const startPlayback = (audio: ShineAudio) => {
+    setNowPlaying(audio)
+    setFakeTime(0)
+    setPlayerProgress(0)
+    setIsPlaying(true)
+  }
+
   const handlePlay = (audio: ShineAudio) => {
     if (nowPlaying?.id === audio.id) {
       setIsPlaying(!isPlaying)
+    } else if (audio.contentType === 'hypnosis' || audio.contentType === 'meditation') {
+      setAudioDisclaimer(audio)
     } else {
-      setNowPlaying(audio)
-      setFakeTime(0)
-      setPlayerProgress(0)
-      setIsPlaying(true)
+      startPlayback(audio)
     }
   }
 
@@ -1383,6 +1390,55 @@ export default function ShineAudiblePage() {
             onRate={handleRate}
             onPlay={handlePlay}
           />
+        )}
+      </AnimatePresence>
+
+      {/* Audio Disclaimer Modal for Hypnosis/Meditation */}
+      <AnimatePresence>
+        {audioDisclaimer && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+            style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}
+            onClick={() => setAudioDisclaimer(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="w-full max-w-sm rounded-2xl p-6 space-y-4"
+              style={{ background: 'var(--dark-card)', border: '1px solid rgba(212,175,55,0.2)' }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="text-center">
+                <span className="text-4xl">🎧</span>
+                <h3 className="font-display text-lg font-semibold mt-3" style={{ color: 'var(--text-primary)' }}>
+                  {audioDisclaimer.contentType === 'hypnosis' ? 'Séance d\'hypnose' : 'Méditation guidée'}
+                </h3>
+              </div>
+              <p className="text-sm text-center leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                Avant de commencer, installez-vous confortablement dans un endroit calme et détendu. Mettez votre casque audio sur les oreilles, respirez profondément et préparez-vous à vous laisser guider en toute sérénité.
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setAudioDisclaimer(null)}
+                  className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium cursor-pointer transition-all"
+                  style={{ color: 'var(--text-muted)', border: '1px solid var(--dark-border)' }}
+                >
+                  Annuler
+                </button>
+                <button
+                  onClick={() => { startPlayback(audioDisclaimer); setAudioDisclaimer(null) }}
+                  className="flex-1 px-4 py-2.5 rounded-xl text-sm font-semibold cursor-pointer transition-all hover:opacity-90"
+                  style={{ background: 'var(--gold)', color: 'var(--dark)' }}
+                >
+                  Je suis prêt(e)
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
         )}
       </AnimatePresence>
 

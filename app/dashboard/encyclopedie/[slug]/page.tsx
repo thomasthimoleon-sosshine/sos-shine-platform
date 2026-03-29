@@ -589,10 +589,17 @@ export default function DouleurDetailPage() {
               )}
 
               {currentStep.audio && (
-                <div className="rounded-xl p-4" style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${currentStep.color}20` }}>
-                  <p className="font-medium text-sm mb-2" style={{ color: 'var(--text-primary)' }}>
+                <div className="rounded-xl p-4 space-y-3" style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${currentStep.color}20` }}>
+                  <p className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>
                     Audio — {currentStep.title}
                   </p>
+                  {/* Audio relaxation disclaimer */}
+                  <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.12)' }}>
+                    <span className="text-lg flex-shrink-0 mt-0.5">🎧</span>
+                    <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                      Avant de lancer cet audio, installez-vous confortablement dans un endroit calme et détendu. Mettez votre casque audio, respirez profondément et laissez-vous guider en toute sérénité.
+                    </p>
+                  </div>
                   <audio src={currentStep.audio} controls className="w-full" />
                 </div>
               )}

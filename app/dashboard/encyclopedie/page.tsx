@@ -289,6 +289,7 @@ export default function EncyclopediePage() {
   const [activeLetter, setActiveLetter] = useState('ALL')
   const [activeCat, setActiveCat] = useState('ALL')
   const [onlyOriginal, setOnlyOriginal] = useState(false)
+  const [onlyAvailable, setOnlyAvailable] = useState(false)
   const [loading, setLoading] = useState(true)
   const [progressMap, setProgressMap] = useState<Record<string, UserProgress>>({})
   const [totalCompleted, setTotalCompleted] = useState(0)
@@ -374,9 +375,10 @@ export default function EncyclopediePage() {
       const matchLetter = activeLetter === 'ALL' || t.letter === activeLetter
       const matchCat = activeCat === 'ALL' || t.cat === activeCat
       const matchOriginal = !onlyOriginal || t.original
-      return matchSearch && matchLetter && matchCat && matchOriginal
+      const matchAvailable = !onlyAvailable || !!t.dbMatch
+      return matchSearch && matchLetter && matchCat && matchOriginal && matchAvailable
     })
-  }, [topics, search, activeLetter, activeCat, onlyOriginal])
+  }, [topics, search, activeLetter, activeCat, onlyOriginal, onlyAvailable])
 
   const grouped = useMemo(() => {
     const g: Record<string, typeof filtered> = {}
@@ -512,20 +514,36 @@ export default function EncyclopediePage() {
         ))}
       </div>
 
-      {/* Count & original toggle */}
-      <div className="flex justify-between items-center">
+      {/* Count & filter toggles */}
+      <div className="flex flex-wrap justify-between items-center gap-3">
         <p className="text-[13px]" style={{ color: 'var(--text-muted)' }}>
           {filtered.length} sujet{filtered.length > 1 ? 's' : ''} affiché{filtered.length > 1 ? 's' : ''}
         </p>
-        <label className="flex items-center gap-2 cursor-pointer text-[12px] uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
-          <input
-            type="checkbox"
-            checked={onlyOriginal}
-            onChange={(e) => setOnlyOriginal(e.target.checked)}
-            className="accent-[#D4AF37]"
-          />
-          <span>&diams; Liste originale uniquement</span>
-        </label>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => setOnlyAvailable(!onlyAvailable)}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-[12px] uppercase tracking-wider transition-all cursor-pointer"
+            style={{
+              background: onlyAvailable ? 'rgba(85,239,196,0.12)' : 'transparent',
+              border: `1px solid ${onlyAvailable ? 'rgba(85,239,196,0.4)' : 'var(--dark-border)'}`,
+              color: onlyAvailable ? '#55EFC4' : 'var(--text-muted)',
+            }}
+          >
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Disponibles ({publishedCount})
+          </button>
+          <label className="flex items-center gap-2 cursor-pointer text-[12px] uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
+            <input
+              type="checkbox"
+              checked={onlyOriginal}
+              onChange={(e) => setOnlyOriginal(e.target.checked)}
+              className="accent-[#D4AF37]"
+            />
+            <span>&diams; Liste originale uniquement</span>
+          </label>
+        </div>
       </div>
 
       {/* Topics list */}

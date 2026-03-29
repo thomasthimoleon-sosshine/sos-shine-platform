@@ -36,8 +36,13 @@ export default function VisitTracker() {
         referrer: document.referrer || null,
         session_id: sessionId,
       }),
-    }).catch(() => {
-      // Silent fail — tracking should never break the app
+    }).then(async (res) => {
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        console.warn('[VisitTracker] Tracking failed:', res.status, body)
+      }
+    }).catch((err) => {
+      console.warn('[VisitTracker] Network error:', err.message)
     })
   }, [pathname])
 

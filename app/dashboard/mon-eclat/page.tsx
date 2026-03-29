@@ -111,6 +111,8 @@ export default function MonEclatPage() {
   // Stats
   const [totalLikes, setTotalLikes] = useState(0)
   const [totalComments, setTotalComments] = useState(0)
+  const [shinesGiven, setShinesGiven] = useState(0)
+  const [commentsLeft, setCommentsLeft] = useState(0)
 
   const menuRef = useRef<HTMLDivElement>(null)
 
@@ -143,6 +145,14 @@ export default function MonEclatPage() {
           setBanUntil(profile.publish_banned_until)
         }
       }
+
+      // Load shines given (from user_xp) and comments left (from post_comments)
+      const [xpRes, commentsLeftRes] = await Promise.all([
+        supabase.from('user_xp').select('shines_given').eq('user_id', user.id).maybeSingle(),
+        supabase.from('post_comments').select('id', { count: 'exact', head: true }).eq('author_id', user.id),
+      ])
+      setShinesGiven(xpRes.data?.shines_given || 0)
+      setCommentsLeft(commentsLeftRes.count || 0)
 
       // Load user's eclat posts
       const { data: rawPostsData, error: queryError } = await supabase
@@ -467,20 +477,30 @@ export default function MonEclatPage() {
         </p>
 
         {/* Stats */}
-        <div className="flex items-center justify-center gap-6 mt-5 relative">
+        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 mt-5 relative">
           <div className="text-center">
             <p className="text-xl font-semibold" style={{ color: 'var(--gold)' }}>{posts.length}</p>
             <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>publications</p>
           </div>
           <div className="w-px h-8" style={{ background: 'var(--dark-border)' }} />
           <div className="text-center">
+            <p className="text-xl font-semibold" style={{ color: 'var(--gold)' }}>{shinesGiven}</p>
+            <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>shines transmis</p>
+          </div>
+          <div className="w-px h-8" style={{ background: 'var(--dark-border)' }} />
+          <div className="text-center">
             <p className="text-xl font-semibold" style={{ color: 'var(--gold)' }}>{totalLikes}</p>
-            <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>shines</p>
+            <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>shines reçus</p>
+          </div>
+          <div className="w-px h-8" style={{ background: 'var(--dark-border)' }} />
+          <div className="text-center">
+            <p className="text-xl font-semibold" style={{ color: 'var(--gold)' }}>{commentsLeft}</p>
+            <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>commentaires laissés</p>
           </div>
           <div className="w-px h-8" style={{ background: 'var(--dark-border)' }} />
           <div className="text-center">
             <p className="text-xl font-semibold" style={{ color: 'var(--gold)' }}>{totalComments}</p>
-            <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>commentaires</p>
+            <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>commentaires reçus</p>
           </div>
         </div>
       </div>

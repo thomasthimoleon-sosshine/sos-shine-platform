@@ -178,6 +178,21 @@ function ContributionsSection({ xpData }: { xpData: UserXP | null }) {
   const [showLog, setShowLog] = useState(false)
   const [activityLog, setActivityLog] = useState<Array<{ id: string; action: string; detail: string; date: string }>>([])
   const [logLoading, setLogLoading] = useState(false)
+  const [commentsLeftCount, setCommentsLeftCount] = useState(0)
+
+  useEffect(() => {
+    async function loadCommentsLeft() {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+      const { count } = await supabase
+        .from('post_comments')
+        .select('id', { count: 'exact', head: true })
+        .eq('author_id', user.id)
+      setCommentsLeftCount(count || 0)
+    }
+    loadCommentsLeft()
+  }, [])
 
   async function loadActivityLog() {
     if (activityLog.length > 0) { setShowLog(!showLog); return }
@@ -235,7 +250,7 @@ function ContributionsSection({ xpData }: { xpData: UserXP | null }) {
   const counters = [
     { label: 'Shines\nTransmis', value: xpData?.shines_given || 0, icon: '💛' },
     { label: 'Shines\nReçus', value: xpData?.shines_received || 0, icon: '⭐' },
-    { label: 'Commentaires\nLaissés', value: 0, icon: '💬', key: 'comments' },
+    { label: 'Commentaires\nLaissés', value: commentsLeftCount, icon: '💬', key: 'comments' },
     { label: 'Partages', value: 0, icon: '🔗', key: 'shares' },
   ]
 

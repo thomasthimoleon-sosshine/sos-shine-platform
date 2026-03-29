@@ -616,15 +616,7 @@ export default function MurPage() {
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       {/* Header */}
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h1 className="font-display text-3xl sm:text-4xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-            {t('dashboard.wall_title')}
-          </h1>
-          <p className="mt-2" style={{ color: 'var(--text-secondary)' }}>
-            {t('dashboard.wall_subtitle')}
-          </p>
-        </div>
+      <div className="flex items-start justify-end gap-4">
         {isBanned ? (
           <div className="px-4 py-2.5 rounded-xl text-xs font-medium text-right shrink-0"
             style={{ background: 'rgba(255,107,85,0.08)', border: '1px solid rgba(255,107,85,0.2)', color: '#FF6B55' }}>

@@ -107,16 +107,6 @@ export default function CommunautePage() {
   return (
     <SubscriptionGate>
     <div className="max-w-4xl mx-auto">
-      {/* ── Header ── */}
-      <div className="mb-6">
-        <h1 className="font-display text-2xl sm:text-3xl font-semibold tracking-tight" style={{ color: 'var(--text-primary)' }}>
-          <span style={{ color: 'var(--gold)' }}>&#9733;</span> Communauté
-        </h1>
-        <p className="mt-1 text-sm" style={{ color: 'var(--text-secondary)' }}>
-          Votre hub central pour échanger, partager et briller ensemble.
-        </p>
-      </div>
-
       {/* ── Top Tab Navigation ── */}
       <div className="mb-6 overflow-x-auto scrollbar-hide">
         <div className="flex gap-1 p-1 rounded-xl min-w-max" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>

@@ -443,10 +443,21 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
   const [reviews, setReviews] = useState<Review[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleSubmitReview = () => {
+  const handleSubmitReview = async () => {
     if (!newReview.trim() || newRating === 0) return
     setIsSubmitting(true)
-    setTimeout(() => {
+    try {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+
+      await supabase.from('shine_audible_reviews').insert({
+        user_id: user.id,
+        track_id: audio.id,
+        content: newReview.trim(),
+        rating: newRating,
+      })
+
       setReviews(prev => [{
         id: `r-new-${Date.now()}`,
         author: 'Vous',
@@ -457,8 +468,9 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
       }, ...prev])
       setNewReview('')
       setNewRating(0)
+    } finally {
       setIsSubmitting(false)
-    }, 500)
+    }
   }
 
   return (
@@ -735,6 +747,9 @@ export default function ShineAudiblePage() {
         return
       }
 
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser()
+
       // Fetch douleur name if filtered
       if (douleurParam) {
         const { data: douleur } = await supabase
@@ -743,6 +758,52 @@ export default function ShineAudiblePage() {
           .eq('id', douleurParam)
           .maybeSingle()
         if (douleur) setDouleurName(douleur.title)
+      }
+
+      // Load user ratings
+      const userRatingsMap: Record<string, number> = {}
+      if (user) {
+        const { data: ratingsData } = await supabase
+          .from('shine_audible_ratings')
+          .select('track_id, rating')
+          .eq('user_id', user.id)
+        for (const r of ratingsData || []) {
+          userRatingsMap[r.track_id] = r.rating
+        }
+      }
+
+      // Load average ratings & review counts
+      const trackIds = data.map((t: any) => t.id)
+      const { data: avgRatings } = await supabase
+        .from('shine_audible_ratings')
+        .select('track_id, rating')
+        .in('track_id', trackIds)
+
+      const { data: reviewCounts } = await supabase
+        .from('shine_audible_reviews')
+        .select('track_id')
+        .in('track_id', trackIds)
+
+      const avgMap: Record<string, { sum: number; count: number }> = {}
+      for (const r of avgRatings || []) {
+        if (!avgMap[r.track_id]) avgMap[r.track_id] = { sum: 0, count: 0 }
+        avgMap[r.track_id].sum += r.rating
+        avgMap[r.track_id].count++
+      }
+
+      const reviewCountMap: Record<string, number> = {}
+      for (const r of reviewCounts || []) {
+        reviewCountMap[r.track_id] = (reviewCountMap[r.track_id] || 0) + 1
+      }
+
+      // Load user favorites
+      let favoriteIds: string[] = []
+      if (user) {
+        const { data: favData } = await supabase
+          .from('shine_audible_favorites')
+          .select('track_id')
+          .eq('user_id', user.id)
+        favoriteIds = (favData || []).map((f: any) => f.track_id)
       }
 
       const mapped: ShineAudio[] = data.map((t: any) => {
@@ -762,10 +823,10 @@ export default function ShineAudiblePage() {
           duration,
           durationSeconds: secs,
           year: t.year,
-          rating: 0,
-          userRating: 0,
-          isFavorite: false,
-          reviewCount: 0,
+          rating: avgMap[t.id] ? avgMap[t.id].sum / avgMap[t.id].count : 0,
+          userRating: userRatingsMap[t.id] || 0,
+          isFavorite: favoriteIds.includes(t.id),
+          reviewCount: reviewCountMap[t.id] || 0,
           douleurId: t.douleur_id || null,
         }
       })
@@ -813,14 +874,38 @@ export default function ShineAudiblePage() {
     }
   }
 
-  const handleToggleFavorite = (id: string) => {
+  const handleToggleFavorite = async (id: string) => {
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+
+    const audio = audios.find(a => a.id === id)
+    if (!audio) return
+
+    if (audio.isFavorite) {
+      await supabase.from('shine_audible_favorites').delete().eq('user_id', user.id).eq('track_id', id)
+    } else {
+      await supabase.from('shine_audible_favorites').insert({ user_id: user.id, track_id: id })
+    }
+
     setAudios(prev => prev.map(a => a.id === id ? { ...a, isFavorite: !a.isFavorite } : a))
     if (selectedAudio?.id === id) {
       setSelectedAudio(prev => prev ? { ...prev, isFavorite: !prev.isFavorite } : null)
     }
   }
 
-  const handleRate = (id: string, rating: number) => {
+  const handleRate = async (id: string, rating: number) => {
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+
+    await supabase.from('shine_audible_ratings').upsert({
+      user_id: user.id,
+      track_id: id,
+      rating,
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'user_id,track_id' })
+
     setAudios(prev => prev.map(a => a.id === id ? { ...a, userRating: rating } : a))
     if (selectedAudio?.id === id) {
       setSelectedAudio(prev => prev ? { ...prev, userRating: rating } : null)

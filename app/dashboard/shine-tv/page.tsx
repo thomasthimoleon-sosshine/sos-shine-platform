@@ -307,10 +307,21 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate }: {
   const [reviews, setReviews] = useState<Review[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleSubmitReview = () => {
+  const handleSubmitReview = async () => {
     if (!newReview.trim() || newRating === 0) return
     setIsSubmitting(true)
-    setTimeout(() => {
+    try {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+
+      await supabase.from('shine_tv_reviews').insert({
+        user_id: user.id,
+        video_id: video.id,
+        content: newReview.trim(),
+        rating: newRating,
+      })
+
       setReviews(prev => [{
         id: `r-new-${Date.now()}`,
         author: 'Vous',
@@ -321,8 +332,9 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate }: {
       }, ...prev])
       setNewReview('')
       setNewRating(0)
+    } finally {
       setIsSubmitting(false)
-    }, 500)
+    }
   }
 
   return (
@@ -585,6 +597,9 @@ export default function ShineTVPage() {
         return
       }
 
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser()
+
       // Fetch douleur name if filtered
       if (douleurParam) {
         const { data: douleur } = await supabase
@@ -593,6 +608,52 @@ export default function ShineTVPage() {
           .eq('id', douleurParam)
           .maybeSingle()
         if (douleur) setDouleurName(douleur.title)
+      }
+
+      // Load user ratings
+      const userRatingsMap: Record<string, number> = {}
+      if (user) {
+        const { data: ratingsData } = await supabase
+          .from('shine_tv_ratings')
+          .select('video_id, rating')
+          .eq('user_id', user.id)
+        for (const r of ratingsData || []) {
+          userRatingsMap[r.video_id] = r.rating
+        }
+      }
+
+      // Load average ratings & review counts
+      const videoIds = data.map((v: any) => v.id)
+      const { data: avgRatings } = await supabase
+        .from('shine_tv_ratings')
+        .select('video_id, rating')
+        .in('video_id', videoIds)
+
+      const { data: reviewCounts } = await supabase
+        .from('shine_tv_reviews')
+        .select('video_id')
+        .in('video_id', videoIds)
+
+      const avgMap: Record<string, { sum: number; count: number }> = {}
+      for (const r of avgRatings || []) {
+        if (!avgMap[r.video_id]) avgMap[r.video_id] = { sum: 0, count: 0 }
+        avgMap[r.video_id].sum += r.rating
+        avgMap[r.video_id].count++
+      }
+
+      const reviewCountMap: Record<string, number> = {}
+      for (const r of reviewCounts || []) {
+        reviewCountMap[r.video_id] = (reviewCountMap[r.video_id] || 0) + 1
+      }
+
+      // Load user favorites
+      let favoriteIds: string[] = []
+      if (user) {
+        const { data: favData } = await supabase
+          .from('shine_tv_favorites')
+          .select('video_id')
+          .eq('user_id', user.id)
+        favoriteIds = (favData || []).map((f: any) => f.video_id)
       }
 
       const mapped: ShineVideo[] = data.map((v: any) => ({
@@ -604,10 +665,10 @@ export default function ShineTVPage() {
         category: v.category,
         duration: `${v.duration_minutes} min`,
         year: v.year,
-        rating: 0,
-        userRating: 0,
-        isFavorite: false,
-        reviewCount: 0,
+        rating: avgMap[v.id] ? avgMap[v.id].sum / avgMap[v.id].count : 0,
+        userRating: userRatingsMap[v.id] || 0,
+        isFavorite: favoriteIds.includes(v.id),
+        reviewCount: reviewCountMap[v.id] || 0,
         douleurId: v.douleur_id || null,
       }))
 
@@ -618,14 +679,38 @@ export default function ShineTVPage() {
     loadVideos()
   }, [])
 
-  const handleToggleFavorite = (id: string) => {
+  const handleToggleFavorite = async (id: string) => {
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+
+    const video = videos.find(v => v.id === id)
+    if (!video) return
+
+    if (video.isFavorite) {
+      await supabase.from('shine_tv_favorites').delete().eq('user_id', user.id).eq('video_id', id)
+    } else {
+      await supabase.from('shine_tv_favorites').insert({ user_id: user.id, video_id: id })
+    }
+
     setVideos(prev => prev.map(v => v.id === id ? { ...v, isFavorite: !v.isFavorite } : v))
     if (selectedVideo?.id === id) {
       setSelectedVideo(prev => prev ? { ...prev, isFavorite: !prev.isFavorite } : null)
     }
   }
 
-  const handleRate = (id: string, rating: number) => {
+  const handleRate = async (id: string, rating: number) => {
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+
+    await supabase.from('shine_tv_ratings').upsert({
+      user_id: user.id,
+      video_id: id,
+      rating,
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'user_id,video_id' })
+
     setVideos(prev => prev.map(v => v.id === id ? { ...v, userRating: rating } : v))
     if (selectedVideo?.id === id) {
       setSelectedVideo(prev => prev ? { ...prev, userRating: rating } : null)

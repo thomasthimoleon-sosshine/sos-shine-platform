@@ -438,18 +438,30 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
     journal: 'Journal guidé', protocol: 'Protocole de soin',
   }
 
-  const handleSubmitReview = () => {
+  const handleSubmitReview = async () => {
     if (!newReview.trim() || newRating === 0) return
     setIsSubmitting(true)
-    setTimeout(() => {
+    try {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+
+      await supabase.from('shine_library_reviews').insert({
+        user_id: user.id,
+        book_id: book.id,
+        content: newReview.trim(),
+        rating: newRating,
+      })
+
       setReviews(prev => [{
         id: `r-new-${Date.now()}`, author: 'Vous', avatar: '', rating: newRating,
         text: newReview, date: "À l'instant",
       }, ...prev])
       setNewReview('')
       setNewRating(0)
+    } finally {
       setIsSubmitting(false)
-    }, 500)
+    }
   }
 
   return (

@@ -229,10 +229,21 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate }: {
   const [liked, setLiked] = useState(false)
   const [likesCount, setLikesCount] = useState(0)
 
-  const handleSubmitReview = () => {
+  const handleSubmitReview = async () => {
     if (!newReview.trim() || newRating === 0) return
     setIsSubmitting(true)
-    setTimeout(() => {
+    try {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+
+      await supabase.from('shine_shorts_reviews').insert({
+        user_id: user.id,
+        short_id: short.id,
+        content: newReview.trim(),
+        rating: newRating,
+      })
+
       setReviews(prev => [{
         id: `r-new-${Date.now()}`,
         author: 'Vous',
@@ -243,8 +254,9 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate }: {
       }, ...prev])
       setNewReview('')
       setNewRating(0)
+    } finally {
       setIsSubmitting(false)
-    }, 500)
+    }
   }
 
   const handleLike = () => {
@@ -543,6 +555,9 @@ export default function ShineShortsPage() {
         return
       }
 
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser()
+
       // Fetch douleur name if filtered
       if (douleurParam) {
         const { data: douleur } = await supabase
@@ -551,6 +566,52 @@ export default function ShineShortsPage() {
           .eq('id', douleurParam)
           .maybeSingle()
         if (douleur) setDouleurName(douleur.title)
+      }
+
+      // Load user ratings
+      const userRatingsMap: Record<string, number> = {}
+      if (user) {
+        const { data: ratingsData } = await supabase
+          .from('shine_shorts_ratings')
+          .select('short_id, rating')
+          .eq('user_id', user.id)
+        for (const r of ratingsData || []) {
+          userRatingsMap[r.short_id] = r.rating
+        }
+      }
+
+      // Load average ratings & review counts
+      const shortIds = data.map((s: any) => s.id)
+      const { data: avgRatings } = await supabase
+        .from('shine_shorts_ratings')
+        .select('short_id, rating')
+        .in('short_id', shortIds)
+
+      const { data: reviewCounts } = await supabase
+        .from('shine_shorts_reviews')
+        .select('short_id')
+        .in('short_id', shortIds)
+
+      const avgMap: Record<string, { sum: number; count: number }> = {}
+      for (const r of avgRatings || []) {
+        if (!avgMap[r.short_id]) avgMap[r.short_id] = { sum: 0, count: 0 }
+        avgMap[r.short_id].sum += r.rating
+        avgMap[r.short_id].count++
+      }
+
+      const reviewCountMap: Record<string, number> = {}
+      for (const r of reviewCounts || []) {
+        reviewCountMap[r.short_id] = (reviewCountMap[r.short_id] || 0) + 1
+      }
+
+      // Load user favorites
+      let favoriteIds: string[] = []
+      if (user) {
+        const { data: favData } = await supabase
+          .from('shine_shorts_favorites')
+          .select('short_id')
+          .eq('user_id', user.id)
+        favoriteIds = (favData || []).map((f: any) => f.short_id)
       }
 
       const mapped: ShineShort[] = data.map((s: any) => {
@@ -567,10 +628,10 @@ export default function ShineShortsPage() {
           category: s.category,
           duration,
           durationSeconds: secs,
-          rating: 0,
-          userRating: 0,
-          isFavorite: false,
-          reviewCount: 0,
+          rating: avgMap[s.id] ? avgMap[s.id].sum / avgMap[s.id].count : 0,
+          userRating: userRatingsMap[s.id] || 0,
+          isFavorite: favoriteIds.includes(s.id),
+          reviewCount: reviewCountMap[s.id] || 0,
           douleurId: s.douleur_id || null,
         }
       })
@@ -582,14 +643,38 @@ export default function ShineShortsPage() {
     loadShorts()
   }, [])
 
-  const handleToggleFavorite = (id: string) => {
+  const handleToggleFavorite = async (id: string) => {
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+
+    const short = shorts.find(s => s.id === id)
+    if (!short) return
+
+    if (short.isFavorite) {
+      await supabase.from('shine_shorts_favorites').delete().eq('user_id', user.id).eq('short_id', id)
+    } else {
+      await supabase.from('shine_shorts_favorites').insert({ user_id: user.id, short_id: id })
+    }
+
     setShorts(prev => prev.map(s => s.id === id ? { ...s, isFavorite: !s.isFavorite } : s))
     if (selectedShort?.id === id) {
       setSelectedShort(prev => prev ? { ...prev, isFavorite: !prev.isFavorite } : null)
     }
   }
 
-  const handleRate = (id: string, rating: number) => {
+  const handleRate = async (id: string, rating: number) => {
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+
+    await supabase.from('shine_shorts_ratings').upsert({
+      user_id: user.id,
+      short_id: id,
+      rating,
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'user_id,short_id' })
+
     setShorts(prev => prev.map(s => s.id === id ? { ...s, userRating: rating } : s))
     if (selectedShort?.id === id) {
       setSelectedShort(prev => prev ? { ...prev, userRating: rating } : null)

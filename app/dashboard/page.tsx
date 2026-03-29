@@ -726,14 +726,11 @@ export default function DashboardHome() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
       >
-        <p className="text-[13px] font-medium tracking-wide mb-2" style={{ color: 'var(--text-muted)' }}>
-          {greeting}
-        </p>
-        <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight" style={{ color: 'var(--text-primary)' }}>
+        <h1 className="font-display text-xl sm:text-2xl font-semibold tracking-tight" style={{ color: 'var(--text-primary)' }}>
           {siteSettings.dash_welcome || t('dashboard.welcome')} <span style={{ color: 'var(--gold)' }}>{profile?.prenom || 'Membre'}</span>
         </h1>
-        <p className="mt-2 text-[15px] leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-          {siteSettings.dash_subtitle || t('dashboard.explore')}
+        <p className="mt-3 text-[17px] sm:text-[19px] font-medium leading-relaxed tracking-wide" style={{ color: 'var(--gold)' }}>
+          {greeting}
         </p>
       </motion.div>
 

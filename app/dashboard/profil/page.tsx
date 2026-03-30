@@ -34,6 +34,20 @@ export default function ProfilPage() {
   const [pseudo, setPseudo] = useState('')
   const [bio, setBio] = useState('')
 
+  // Email & password
+  const [editingEmail, setEditingEmail] = useState(false)
+  const [newEmail, setNewEmail] = useState('')
+  const [emailSaving, setEmailSaving] = useState(false)
+  const [emailSuccess, setEmailSuccess] = useState<string | null>(null)
+  const [emailError, setEmailError] = useState<string | null>(null)
+  const [editingPassword, setEditingPassword] = useState(false)
+  const [currentPassword, setCurrentPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [passwordSaving, setPasswordSaving] = useState(false)
+  const [passwordSuccess, setPasswordSuccess] = useState<string | null>(null)
+  const [passwordError, setPasswordError] = useState<string | null>(null)
+
   useEffect(() => {
     async function loadData() {
       const supabase = createClient()
@@ -137,6 +151,54 @@ export default function ProfilPage() {
     const supabase = createClient()
     await supabase.auth.signOut()
     router.push('/')
+  }
+
+  async function handleEmailChange() {
+    if (!newEmail.trim() || emailSaving) return
+    setEmailSaving(true)
+    setEmailError(null)
+    setEmailSuccess(null)
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.auth.updateUser({ email: newEmail.trim() })
+      if (error) throw error
+      setEmailSuccess('Un e-mail de confirmation a été envoyé à votre nouvelle adresse. Veuillez cliquer sur le lien pour valider le changement.')
+      setEditingEmail(false)
+      setNewEmail('')
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Erreur lors du changement d'e-mail"
+      setEmailError(message)
+    }
+    setEmailSaving(false)
+  }
+
+  async function handlePasswordChange() {
+    if (!newPassword || !confirmPassword || passwordSaving) return
+    setPasswordError(null)
+    setPasswordSuccess(null)
+    if (newPassword.length < 6) {
+      setPasswordError('Le mot de passe doit contenir au moins 6 caractères.')
+      return
+    }
+    if (newPassword !== confirmPassword) {
+      setPasswordError('Les mots de passe ne correspondent pas.')
+      return
+    }
+    setPasswordSaving(true)
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.auth.updateUser({ password: newPassword })
+      if (error) throw error
+      setPasswordSuccess('Mot de passe modifié avec succès.')
+      setEditingPassword(false)
+      setCurrentPassword('')
+      setNewPassword('')
+      setConfirmPassword('')
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Erreur lors du changement de mot de passe'
+      setPasswordError(message)
+    }
+    setPasswordSaving(false)
   }
 
   async function handleChangePlan(newPlan: PlanId) {
@@ -489,6 +551,106 @@ export default function ProfilPage() {
             </a>
           </div>
         )}
+      </div>
+
+      {/* E-mail & Sécurité */}
+      <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <h3 className="font-semibold text-base mb-5" style={{ color: 'var(--text-primary)' }}>E-mail & Sécurité</h3>
+
+        {/* Changement d'e-mail */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-2">
+            <label className="text-xs font-medium" style={{ color: 'var(--text-muted)' }}>Adresse e-mail</label>
+            {!editingEmail && (
+              <button onClick={() => { setEditingEmail(true); setNewEmail(profile?.email || ''); setEmailSuccess(null); setEmailError(null) }}
+                className="text-xs font-medium cursor-pointer" style={{ color: 'var(--gold)' }}>
+                Modifier
+              </button>
+            )}
+          </div>
+          {editingEmail ? (
+            <div className="space-y-3">
+              <input type="email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)}
+                placeholder="nouvelle@adresse.com"
+                className="w-full rounded-xl px-4 py-2.5 text-sm outline-none" style={inputStyle} />
+              <div className="flex gap-2">
+                <button onClick={handleEmailChange} disabled={emailSaving || !newEmail.trim()}
+                  className="px-4 py-2 rounded-xl text-sm font-semibold transition-all cursor-pointer disabled:opacity-50"
+                  style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
+                  {emailSaving ? 'Envoi...' : 'Confirmer'}
+                </button>
+                <button onClick={() => { setEditingEmail(false); setNewEmail(''); setEmailError(null) }}
+                  className="px-4 py-2 rounded-xl text-sm cursor-pointer" style={{ color: 'var(--text-secondary)' }}>
+                  Annuler
+                </button>
+              </div>
+            </div>
+          ) : (
+            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{profile?.email}</p>
+          )}
+          {emailSuccess && (
+            <p className="mt-2 text-xs px-3 py-2 rounded-lg" style={{ background: 'rgba(85,239,196,0.1)', color: '#55EFC4' }}>
+              {emailSuccess}
+            </p>
+          )}
+          {emailError && (
+            <p className="mt-2 text-xs px-3 py-2 rounded-lg" style={{ background: 'rgba(255,107,107,0.1)', color: '#FF6B6B' }}>
+              {emailError}
+            </p>
+          )}
+        </div>
+
+        {/* Changement de mot de passe */}
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <label className="text-xs font-medium" style={{ color: 'var(--text-muted)' }}>Mot de passe</label>
+            {!editingPassword && (
+              <button onClick={() => { setEditingPassword(true); setPasswordSuccess(null); setPasswordError(null) }}
+                className="text-xs font-medium cursor-pointer" style={{ color: 'var(--gold)' }}>
+                Modifier
+              </button>
+            )}
+          </div>
+          {editingPassword ? (
+            <div className="space-y-3">
+              <div>
+                <label className="text-xs block mb-1" style={{ color: 'var(--text-muted)' }}>Nouveau mot de passe</label>
+                <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="6 caractères minimum"
+                  className="w-full rounded-xl px-4 py-2.5 text-sm outline-none" style={inputStyle} />
+              </div>
+              <div>
+                <label className="text-xs block mb-1" style={{ color: 'var(--text-muted)' }}>Confirmer le mot de passe</label>
+                <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Retapez le mot de passe"
+                  className="w-full rounded-xl px-4 py-2.5 text-sm outline-none" style={inputStyle} />
+              </div>
+              <div className="flex gap-2">
+                <button onClick={handlePasswordChange} disabled={passwordSaving || !newPassword || !confirmPassword}
+                  className="px-4 py-2 rounded-xl text-sm font-semibold transition-all cursor-pointer disabled:opacity-50"
+                  style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
+                  {passwordSaving ? 'Enregistrement...' : 'Changer le mot de passe'}
+                </button>
+                <button onClick={() => { setEditingPassword(false); setNewPassword(''); setConfirmPassword(''); setPasswordError(null) }}
+                  className="px-4 py-2 rounded-xl text-sm cursor-pointer" style={{ color: 'var(--text-secondary)' }}>
+                  Annuler
+                </button>
+              </div>
+            </div>
+          ) : (
+            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>••••••••</p>
+          )}
+          {passwordSuccess && (
+            <p className="mt-2 text-xs px-3 py-2 rounded-lg" style={{ background: 'rgba(85,239,196,0.1)', color: '#55EFC4' }}>
+              {passwordSuccess}
+            </p>
+          )}
+          {passwordError && (
+            <p className="mt-2 text-xs px-3 py-2 rounded-lg" style={{ background: 'rgba(255,107,107,0.1)', color: '#FF6B6B' }}>
+              {passwordError}
+            </p>
+          )}
+        </div>
       </div>
 
       {/* Account */}

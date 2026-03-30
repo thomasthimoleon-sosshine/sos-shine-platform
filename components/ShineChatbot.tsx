@@ -79,12 +79,22 @@ type Message = { from: 'user' | 'bot'; text: string };
 
 export default function ShineChatbot() {
   const [open, setOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     { from: 'bot', text: "Bonjour ! Je suis Shine, votre petit guide. Posez-moi vos questions sur la plateforme, je suis là pour vous aider ! ✨" },
   ]);
   const [input, setInput] = useState('');
   const [typing, setTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      setHidden((e as CustomEvent).detail);
+      if ((e as CustomEvent).detail) setOpen(false);
+    };
+    window.addEventListener('fullscreen-player-toggle', handler);
+    return () => window.removeEventListener('fullscreen-player-toggle', handler);
+  }, []);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -103,6 +113,8 @@ export default function ShineChatbot() {
       setTyping(false);
     }, 800 + Math.random() * 600);
   };
+
+  if (hidden) return null;
 
   return (
     <>

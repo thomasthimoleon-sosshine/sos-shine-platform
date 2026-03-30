@@ -382,6 +382,13 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
   }, [resetHideTimer])
 
   useEffect(() => {
+    window.dispatchEvent(new CustomEvent('fullscreen-player-toggle', { detail: true }))
+    return () => {
+      window.dispatchEvent(new CustomEvent('fullscreen-player-toggle', { detail: false }))
+    }
+  }, [])
+
+  useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
       if (e.key === ' ' || e.key === 'k') {

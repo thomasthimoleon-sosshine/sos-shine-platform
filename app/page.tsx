@@ -720,20 +720,6 @@ export default function Home() {
                 </p>
               )}
 
-              {/* ── Trust signals ── */}
-              <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 mt-8 md:mt-10">
-                {(hero.trust_items || ['Approche holistique validée', '50+ Protocoles', 'Sans engagement']).map((item: string, i: number) => (
-                  <span key={i} className="flex items-center gap-2.5 text-sm sm:text-base font-light" style={{ color: 'var(--text-secondary)' }}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: gold, opacity: 0.6 }}>
-                      <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    {item}
-                    {i < (hero.trust_items || []).length - 1 && (
-                      <span className="hidden sm:block w-px h-4 ml-2" style={{ background: 'var(--dark-border)' }} />
-                    )}
-                  </span>
-                ))}
-              </div>
             </motion.div>
           </div>
 

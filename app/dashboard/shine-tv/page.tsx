@@ -237,61 +237,107 @@ function VideoRow({ title, icon, videos, onSelect }: {
 // ── Hero Banner ──
 function HeroBanner({ video, onOpen, onInfo }: { video: ShineVideo; onOpen: () => void; onInfo: () => void }) {
   return (
-    <div className="relative w-full overflow-hidden sm:rounded-2xl" style={{ height: 'clamp(380px, 60vh, 650px)' }}>
-      <img
-        src={video.thumbnail}
-        alt={video.title}
-        className="absolute inset-0 w-full h-full object-cover object-center"
-      />
-      <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(9,9,11,0.92) 25%, rgba(9,9,11,0.5) 55%, rgba(9,9,11,0.15))' }} />
-      <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(9,9,11,1) 0%, rgba(9,9,11,0.4) 30%, transparent 50%)' }} />
-
-      <div className="absolute bottom-0 left-0 p-6 sm:p-10 max-w-xl z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold mb-4"
-            style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.3)' }}>
+    <>
+      {/* ─── Mobile: image compl\u00e8te en haut + infos en dessous ─── */}
+      <div className="sm:hidden w-full">
+        {/* Image compl\u00e8te visible */}
+        <div className="relative w-full">
+          <img
+            src={video.thumbnail}
+            alt={video.title}
+            className="w-full h-auto object-contain"
+          />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(9,9,11,1) 0%, rgba(9,9,11,0.3) 30%, transparent 60%)' }} />
+          <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold"
+            style={{ background: 'rgba(9,9,11,0.7)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.3)', backdropFilter: 'blur(8px)' }}>
             <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" /></svg>
-            Recommandé pour vous
+            Recommand&eacute; pour vous
           </span>
-          <h1 className="font-display text-3xl sm:text-5xl font-semibold tracking-tight mb-3" style={{ color: '#fff' }}>
-            {video.title}
-          </h1>
-          <p className="text-[14px] sm:text-[15px] leading-relaxed mb-5 line-clamp-2" style={{ color: 'rgba(255,255,255,0.7)' }}>
-            {video.description}
-          </p>
-          <div className="flex items-center gap-3 flex-wrap">
-            <button
-              onClick={onOpen}
-              className="flex items-center gap-2.5 px-6 py-3 rounded-xl text-[14px] font-semibold cursor-pointer transition-all duration-200 hover:scale-105"
-              style={{ background: 'var(--gold)', color: '#09090b' }}
-            >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-              Regarder
-            </button>
-            <button
-              onClick={onInfo}
-              className="flex items-center gap-2 px-5 py-3 rounded-xl text-[14px] font-medium cursor-pointer transition-all duration-200 hover:bg-white/10"
-              style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.15)' }}
-            >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-              </svg>
-              Plus d&apos;infos
-            </button>
-          </div>
-          <div className="flex items-center gap-4 mt-4">
-            <StarRating rating={Math.round(video.rating)} size="sm" />
-            <span className="text-[13px] font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>
-              {video.rating.toFixed(1)} / 5 · {video.reviewCount} avis · {video.duration}
-            </span>
-          </div>
-        </motion.div>
+        </div>
+        {/* Infos sous l'image */}
+        <div className="px-4 -mt-10 relative z-10 pb-2">
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+            <h1 className="font-display text-2xl font-semibold tracking-tight mb-2" style={{ color: '#fff' }}>
+              {video.title}
+            </h1>
+            <p className="text-[13px] leading-relaxed mb-4 line-clamp-2" style={{ color: 'rgba(255,255,255,0.7)' }}>
+              {video.description}
+            </p>
+            <div className="flex items-center gap-3">
+              <button onClick={onOpen}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-semibold cursor-pointer transition-all duration-200 hover:scale-105"
+                style={{ background: 'var(--gold)', color: '#09090b' }}>
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                Regarder
+              </button>
+              <button onClick={onInfo}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-medium cursor-pointer transition-all duration-200"
+                style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.15)' }}>
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                </svg>
+                Plus d&apos;infos
+              </button>
+            </div>
+            <div className="flex items-center gap-3 mt-3">
+              <StarRating rating={Math.round(video.rating)} size="sm" />
+              <span className="text-[12px] font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                {video.rating.toFixed(1)} / 5 · {video.reviewCount} avis · {video.duration}
+              </span>
+            </div>
+          </motion.div>
+        </div>
       </div>
-    </div>
+
+      {/* ─── Desktop: layout Netflix classique avec overlay ─── */}
+      <div className="hidden sm:block relative w-full overflow-hidden sm:rounded-2xl" style={{ height: 'clamp(400px, 55vh, 600px)' }}>
+        <img
+          src={video.thumbnail}
+          alt={video.title}
+          className="absolute inset-0 w-full h-full object-cover object-top"
+        />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(9,9,11,0.92) 25%, rgba(9,9,11,0.5) 55%, rgba(9,9,11,0.15))' }} />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(9,9,11,1) 0%, rgba(9,9,11,0.3) 25%, transparent 50%)' }} />
+
+        <div className="absolute bottom-0 left-0 p-10 max-w-xl z-10">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold mb-4"
+              style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.3)' }}>
+              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" /></svg>
+              Recommand&eacute; pour vous
+            </span>
+            <h1 className="font-display text-5xl font-semibold tracking-tight mb-3" style={{ color: '#fff' }}>
+              {video.title}
+            </h1>
+            <p className="text-[15px] leading-relaxed mb-5 line-clamp-2" style={{ color: 'rgba(255,255,255,0.7)' }}>
+              {video.description}
+            </p>
+            <div className="flex items-center gap-3 flex-wrap">
+              <button onClick={onOpen}
+                className="flex items-center gap-2.5 px-6 py-3 rounded-xl text-[14px] font-semibold cursor-pointer transition-all duration-200 hover:scale-105"
+                style={{ background: 'var(--gold)', color: '#09090b' }}>
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                Regarder
+              </button>
+              <button onClick={onInfo}
+                className="flex items-center gap-2 px-5 py-3 rounded-xl text-[14px] font-medium cursor-pointer transition-all duration-200 hover:bg-white/10"
+                style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.15)' }}>
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                </svg>
+                Plus d&apos;infos
+              </button>
+            </div>
+            <div className="flex items-center gap-4 mt-4">
+              <StarRating rating={Math.round(video.rating)} size="sm" />
+              <span className="text-[13px] font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                {video.rating.toFixed(1)} / 5 · {video.reviewCount} avis · {video.duration}
+              </span>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </>
   )
 }
 

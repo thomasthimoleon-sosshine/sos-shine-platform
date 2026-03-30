@@ -234,16 +234,16 @@ function VideoRow({ title, icon, videos, onSelect }: {
 }
 
 // ── Hero Banner ──
-function HeroBanner({ video, onOpen }: { video: ShineVideo; onOpen: () => void }) {
+function HeroBanner({ video, onOpen, onInfo }: { video: ShineVideo; onOpen: () => void; onInfo: () => void }) {
   return (
-    <div className="relative w-full overflow-hidden rounded-2xl" style={{ height: 'clamp(300px, 50vh, 550px)' }}>
+    <div className="relative w-full overflow-hidden sm:rounded-2xl" style={{ height: 'clamp(380px, 60vh, 650px)' }}>
       <img
         src={video.thumbnail}
         alt={video.title}
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full object-cover object-center"
       />
-      <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(9,9,11,0.95) 30%, rgba(9,9,11,0.4) 60%, transparent)' }} />
-      <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(9,9,11,1) 0%, transparent 40%)' }} />
+      <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(9,9,11,0.92) 25%, rgba(9,9,11,0.5) 55%, rgba(9,9,11,0.15))' }} />
+      <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(9,9,11,1) 0%, rgba(9,9,11,0.4) 30%, transparent 50%)' }} />
 
       <div className="absolute bottom-0 left-0 p-6 sm:p-10 max-w-xl z-10">
         <motion.div
@@ -272,7 +272,7 @@ function HeroBanner({ video, onOpen }: { video: ShineVideo; onOpen: () => void }
               Regarder
             </button>
             <button
-              onClick={onOpen}
+              onClick={onInfo}
               className="flex items-center gap-2 px-5 py-3 rounded-xl text-[14px] font-medium cursor-pointer transition-all duration-200 hover:bg-white/10"
               style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.15)' }}
             >
@@ -294,12 +294,305 @@ function HeroBanner({ video, onOpen }: { video: ShineVideo; onOpen: () => void }
   )
 }
 
+// ── Netflix-Style Full Screen Player ──
+function FullScreenPlayer({ video, onClose, onShowInfo }: {
+  video: ShineVideo
+  onClose: () => void
+  onShowInfo: () => void
+}) {
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [isPlaying, setIsPlaying] = useState(true)
+  const [progress, setProgress] = useState(0)
+  const [currentTime, setCurrentTime] = useState(0)
+  const [duration, setDuration] = useState(0)
+  const [volume, setVolume] = useState(1)
+  const [isMuted, setIsMuted] = useState(false)
+  const [showControls, setShowControls] = useState(true)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const hideTimer = useRef<NodeJS.Timeout | null>(null)
+
+  const formatTime = (s: number) => {
+    const m = Math.floor(s / 60)
+    const sec = Math.floor(s % 60)
+    return `${m}:${sec.toString().padStart(2, '0')}`
+  }
+
+  const resetHideTimer = useCallback(() => {
+    setShowControls(true)
+    if (hideTimer.current) clearTimeout(hideTimer.current)
+    hideTimer.current = setTimeout(() => {
+      if (isPlaying) setShowControls(false)
+    }, 3000)
+  }, [isPlaying])
+
+  useEffect(() => {
+    resetHideTimer()
+    return () => { if (hideTimer.current) clearTimeout(hideTimer.current) }
+  }, [resetHideTimer])
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+      if (e.key === ' ' || e.key === 'k') {
+        e.preventDefault()
+        togglePlay()
+      }
+      if (e.key === 'f') toggleFullscreen()
+      if (e.key === 'm') toggleMute()
+      if (e.key === 'ArrowRight') skip(10)
+      if (e.key === 'ArrowLeft') skip(-10)
+    }
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  }, [isPlaying])
+
+  const togglePlay = () => {
+    const v = videoRef.current
+    if (!v) return
+    if (v.paused) { v.play(); setIsPlaying(true) }
+    else { v.pause(); setIsPlaying(false) }
+  }
+
+  const toggleMute = () => {
+    const v = videoRef.current
+    if (!v) return
+    v.muted = !v.muted
+    setIsMuted(v.muted)
+  }
+
+  const toggleFullscreen = async () => {
+    const el = containerRef.current
+    if (!el) return
+    if (document.fullscreenElement) {
+      await document.exitFullscreen()
+      setIsFullscreen(false)
+    } else {
+      await el.requestFullscreen()
+      setIsFullscreen(true)
+    }
+  }
+
+  const skip = (seconds: number) => {
+    const v = videoRef.current
+    if (v) v.currentTime = Math.max(0, Math.min(v.duration, v.currentTime + seconds))
+  }
+
+  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
+    const v = videoRef.current
+    if (!v) return
+    const rect = e.currentTarget.getBoundingClientRect()
+    const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width))
+    v.currentTime = pct * v.duration
+  }
+
+  const handleVolumeChange = (e: React.MouseEvent<HTMLDivElement>) => {
+    const v = videoRef.current
+    if (!v) return
+    const rect = e.currentTarget.getBoundingClientRect()
+    const val = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width))
+    v.volume = val
+    v.muted = val === 0
+    setVolume(val)
+    setIsMuted(val === 0)
+  }
+
+  return (
+    <motion.div
+      ref={containerRef}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[200] bg-black flex items-center justify-center cursor-none"
+      style={{ cursor: showControls ? 'default' : 'none' }}
+      onMouseMove={resetHideTimer}
+      onClick={togglePlay}
+    >
+      {/* Video */}
+      {video.videoUrl ? (
+        <video
+          ref={videoRef}
+          src={video.videoUrl}
+          autoPlay
+          playsInline
+          preload="auto"
+          className="w-full h-full object-contain"
+          controlsList="nodownload"
+          onTimeUpdate={() => {
+            const v = videoRef.current
+            if (!v) return
+            setCurrentTime(v.currentTime)
+            setProgress(v.duration ? (v.currentTime / v.duration) * 100 : 0)
+          }}
+          onLoadedMetadata={() => {
+            const v = videoRef.current
+            if (v) { setDuration(v.duration); v.volume = volume }
+          }}
+          onEnded={() => setIsPlaying(false)}
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+        />
+      ) : (
+        <div className="w-full h-full relative">
+          <img src={video.thumbnail} alt={video.title} className="w-full h-full object-contain" />
+          <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+            <p className="text-white text-lg">Vidéo non disponible</p>
+          </div>
+        </div>
+      )}
+
+      {/* Top bar - Back + Title */}
+      <motion.div
+        initial={false}
+        animate={{ opacity: showControls ? 1 : 0 }}
+        transition={{ duration: 0.3 }}
+        className="absolute top-0 left-0 right-0 p-4 sm:p-6 flex items-center gap-4 z-10"
+        style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%)', pointerEvents: showControls ? 'auto' : 'none' }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all hover:bg-white/20"
+          style={{ background: 'rgba(255,255,255,0.1)' }}
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+          </svg>
+        </button>
+        <div className="flex-1 min-w-0">
+          <h2 className="text-white text-lg sm:text-xl font-display font-semibold truncate">{video.title}</h2>
+          <p className="text-white/50 text-[12px]">{video.category} · {video.year}</p>
+        </div>
+        <button
+          onClick={onShowInfo}
+          className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all hover:bg-white/20"
+          style={{ background: 'rgba(255,255,255,0.1)' }}
+          title="Plus d'infos"
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+          </svg>
+        </button>
+      </motion.div>
+
+      {/* Center play/pause indicator */}
+      <AnimatePresence>
+        {!isPlaying && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.5 }}
+            className="absolute inset-0 flex items-center justify-center pointer-events-none z-10"
+          >
+            <div className="w-20 h-20 rounded-full flex items-center justify-center" style={{ background: 'rgba(212,175,55,0.9)' }}>
+              <svg className="w-10 h-10 ml-1" fill="#09090b" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Bottom controls bar */}
+      <motion.div
+        initial={false}
+        animate={{ opacity: showControls ? 1 : 0 }}
+        transition={{ duration: 0.3 }}
+        className="absolute bottom-0 left-0 right-0 px-4 sm:px-6 pb-4 sm:pb-6 pt-16 z-10"
+        style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%)', pointerEvents: showControls ? 'auto' : 'none' }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Progress bar */}
+        <div
+          className="w-full h-1.5 rounded-full cursor-pointer mb-4 group/progress relative"
+          style={{ background: 'rgba(255,255,255,0.2)' }}
+          onClick={handleSeek}
+        >
+          <div
+            className="h-full rounded-full relative transition-all"
+            style={{ width: `${progress}%`, background: 'var(--gold)' }}
+          >
+            <div
+              className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full opacity-0 group-hover/progress:opacity-100 transition-opacity"
+              style={{ background: 'var(--gold)', boxShadow: '0 0 8px rgba(212,175,55,0.5)' }}
+            />
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            {/* Play/Pause */}
+            <button onClick={togglePlay} className="w-10 h-10 flex items-center justify-center cursor-pointer hover:scale-110 transition-transform">
+              {isPlaying ? (
+                <svg className="w-7 h-7" fill="white" viewBox="0 0 24 24"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" /></svg>
+              ) : (
+                <svg className="w-7 h-7" fill="white" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+              )}
+            </button>
+
+            {/* Skip backward */}
+            <button onClick={() => skip(-10)} className="w-8 h-8 flex items-center justify-center cursor-pointer hover:scale-110 transition-transform">
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
+              </svg>
+            </button>
+
+            {/* Skip forward */}
+            <button onClick={() => skip(10)} className="w-8 h-8 flex items-center justify-center cursor-pointer hover:scale-110 transition-transform">
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 15l6-6m0 0l-6-6m6 6H9a6 6 0 000 12h3" />
+              </svg>
+            </button>
+
+            {/* Volume */}
+            <div className="flex items-center gap-2 group/vol">
+              <button onClick={toggleMute} className="w-8 h-8 flex items-center justify-center cursor-pointer hover:scale-110 transition-transform">
+                {isMuted || volume === 0 ? (
+                  <svg className="w-5 h-5" fill="white" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" /></svg>
+                ) : (
+                  <svg className="w-5 h-5" fill="white" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" /></svg>
+                )}
+              </button>
+              <div
+                className="w-20 h-1 rounded-full cursor-pointer hidden sm:block"
+                style={{ background: 'rgba(255,255,255,0.2)' }}
+                onClick={handleVolumeChange}
+              >
+                <div className="h-full rounded-full" style={{ width: `${isMuted ? 0 : volume * 100}%`, background: 'white' }} />
+              </div>
+            </div>
+
+            {/* Time */}
+            <span className="text-white text-[13px] font-mono hidden sm:block">
+              {formatTime(currentTime)} / {formatTime(duration)}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-3">
+            {/* Fullscreen */}
+            <button onClick={toggleFullscreen} className="w-8 h-8 flex items-center justify-center cursor-pointer hover:scale-110 transition-transform">
+              {isFullscreen ? (
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 9V4.5M9 9H4.5M9 9L3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5l5.25 5.25" />
+                </svg>
+              ) : (
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+                </svg>
+              )}
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}
+
 // ── Video Detail Modal ──
-function VideoModal({ video, onClose, onToggleFavorite, onRate }: {
+function VideoModal({ video, onClose, onToggleFavorite, onRate, onWatch }: {
   video: ShineVideo
   onClose: () => void
   onToggleFavorite: (id: string) => void
   onRate: (id: string, rating: number) => void
+  onWatch: () => void
 }) {
   const [tab, setTab] = useState<'overview' | 'reviews'>('overview')
   const [newReview, setNewReview] = useState('')
@@ -366,35 +659,24 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate }: {
           </svg>
         </button>
 
-        {/* Video player */}
-        <div className="relative aspect-video bg-black">
-          {video.videoUrl ? (
-            <video
-              src={video.videoUrl}
-              controls
-              autoPlay
-              muted
-              playsInline
-              preload="metadata"
-              className="w-full h-full object-contain"
-              controlsList="nodownload"
-            />
-          ) : (
-            <>
-              <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" />
-              <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, var(--dark-card), transparent 50%)' }} />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div
-                  className="w-20 h-20 rounded-full flex items-center justify-center"
-                  style={{ background: 'rgba(212,175,55,0.9)', color: '#09090b' }}
-                >
-                  <svg className="w-10 h-10 ml-1" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M8 5v14l11-7z" />
-                  </svg>
-                </div>
-              </div>
-            </>
-          )}
+        {/* Video preview - click to launch full player */}
+        <div className="relative aspect-video bg-black cursor-pointer group/preview" onClick={onWatch}>
+          <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, var(--dark-card), transparent 50%)' }} />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div
+              className="w-20 h-20 rounded-full flex items-center justify-center transition-transform duration-200 group-hover/preview:scale-110"
+              style={{ background: 'rgba(212,175,55,0.9)', color: '#09090b' }}
+            >
+              <svg className="w-10 h-10 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </div>
+          </div>
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full text-[12px] font-semibold opacity-0 group-hover/preview:opacity-100 transition-opacity"
+            style={{ background: 'rgba(0,0,0,0.7)', color: 'white' }}>
+            Lancer la lecture
+          </div>
         </div>
 
         {/* Content */}
@@ -578,6 +860,7 @@ export default function ShineTVPage() {
   const [videos, setVideos] = useState<ShineVideo[]>([])
   const [search, setSearch] = useState('')
   const [selectedVideo, setSelectedVideo] = useState<ShineVideo | null>(null)
+  const [watchingVideo, setWatchingVideo] = useState<ShineVideo | null>(null)
   const [activeFilter, setActiveFilter] = useState(douleurParam ? 'douleur' : 'all')
   const [loading, setLoading] = useState(true)
   const [douleurName, setDouleurName] = useState<string | null>(null)
@@ -753,7 +1036,7 @@ export default function ShineTVPage() {
     <div className="-mx-4 sm:-mx-6 lg:-mx-8 -mt-4 sm:-mt-6 lg:-mt-8">
       {/* Hero */}
       {heroVideo && !search && activeFilter === 'all' && (
-        <HeroBanner video={heroVideo} onOpen={() => setSelectedVideo(heroVideo)} />
+        <HeroBanner video={heroVideo} onOpen={() => setWatchingVideo(heroVideo)} onInfo={() => setSelectedVideo(heroVideo)} />
       )}
 
       <div className="px-4 sm:px-6 lg:px-8 pt-6 space-y-8">
@@ -1132,6 +1415,17 @@ export default function ShineTVPage() {
         )}
       </div>
 
+      {/* Netflix Full Screen Player */}
+      <AnimatePresence>
+        {watchingVideo && (
+          <FullScreenPlayer
+            video={watchingVideo}
+            onClose={() => setWatchingVideo(null)}
+            onShowInfo={() => { setSelectedVideo(watchingVideo); setWatchingVideo(null) }}
+          />
+        )}
+      </AnimatePresence>
+
       {/* Video Detail Modal */}
       <AnimatePresence>
         {selectedVideo && (
@@ -1140,6 +1434,7 @@ export default function ShineTVPage() {
             onClose={() => setSelectedVideo(null)}
             onToggleFavorite={handleToggleFavorite}
             onRate={handleRate}
+            onWatch={() => { setWatchingVideo(selectedVideo); setSelectedVideo(null) }}
           />
         )}
       </AnimatePresence>

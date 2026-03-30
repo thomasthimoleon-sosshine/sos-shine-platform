@@ -502,7 +502,7 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
     }
   }
 
-  // Cast: tries all available methods
+  // Chromecast only (AirPlay has its own dedicated button)
   const startCast = async () => {
     const v = videoRef.current as any
     if (!v) return
@@ -529,7 +529,7 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
       }
     }
 
-    // 2. Try Remote Playback API (Chrome/Edge without Cast SDK)
+    // 2. Try Remote Playback API (Chrome/Edge)
     if (v.remote && typeof v.remote.prompt === 'function') {
       try {
         await v.remote.prompt()
@@ -543,22 +543,12 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
       }
     }
 
-    // 3. Try AirPlay as fallback (Safari)
-    if (v.webkitShowPlaybackTargetPicker) {
-      v.webkitShowPlaybackTargetPicker()
-      return
-    }
-
-    // 4. No method available — guide the user
-    const isChrome = /Chrome/.test(navigator.userAgent) && !/Edge/.test(navigator.userAgent)
+    // 3. No Chromecast method available — guide the user
     const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent)
-
-    if (isChrome) {
-      alert('Pour caster sur Chromecast :\n\n1. Cliquez sur les 3 points (⋮) en haut à droite de Chrome\n2. Sélectionnez "Caster..."\n3. Choisissez votre appareil')
-    } else if (isSafari) {
-      alert('Pour caster sur Apple TV :\n\nUtilisez le bouton AirPlay à côté, ou activez la recopie d\'écran depuis le Centre de contrôle.')
+    if (isSafari) {
+      alert('Chromecast n\'est pas supporté sur Safari.\n\nPour caster sur Apple TV, utilisez le bouton AirPlay juste à côté.\n\nPour Chromecast, ouvrez cette page dans Google Chrome.')
     } else {
-      alert('Pour caster cette vidéo :\n\nUtilisez la fonction "Caster" de votre navigateur (menu ⋮ > Caster) ou la recopie d\'écran de votre appareil.')
+      alert('Pour caster sur Chromecast :\n\n1. Cliquez sur les 3 points (⋮) en haut à droite de Chrome\n2. Sélectionnez "Caster..."\n3. Choisissez votre appareil Chromecast')
     }
   }
 

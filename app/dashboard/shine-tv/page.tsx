@@ -419,14 +419,39 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
   }
 
   const toggleFullscreen = async () => {
+    const v = videoRef.current as any
     const el = containerRef.current
     if (!el) return
-    if (document.fullscreenElement) {
-      await document.exitFullscreen()
+
+    // Check if already fullscreen
+    const isFS = !!(document.fullscreenElement || (document as any).webkitFullscreenElement)
+
+    if (isFS) {
+      try {
+        if (document.exitFullscreen) await document.exitFullscreen()
+        else if ((document as any).webkitExitFullscreen) (document as any).webkitExitFullscreen()
+      } catch {}
       setIsFullscreen(false)
     } else {
-      await el.requestFullscreen()
-      setIsFullscreen(true)
+      try {
+        // Try container first (desktop browsers)
+        if (el.requestFullscreen) {
+          await el.requestFullscreen()
+        } else if ((el as any).webkitRequestFullscreen) {
+          (el as any).webkitRequestFullscreen()
+        // Fallback to video element (iOS Safari)
+        } else if (v?.webkitEnterFullscreen) {
+          v.webkitEnterFullscreen()
+        } else if (v?.requestFullscreen) {
+          await v.requestFullscreen()
+        }
+        setIsFullscreen(true)
+      } catch {
+        // Last resort: try video element directly
+        try {
+          if (v?.webkitEnterFullscreen) v.webkitEnterFullscreen()
+        } catch {}
+      }
     }
   }
 
@@ -473,16 +498,38 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
     if (v.webkitShowPlaybackTargetPicker) {
       v.webkitShowPlaybackTargetPicker()
     } else {
-      alert('AirPlay n\'est disponible que sur Safari (Mac/iPhone/iPad)')
+      alert('AirPlay est disponible uniquement sur Safari (Mac, iPhone, iPad).\n\nSur Chrome, utilisez le bouton Chromecast à côté.')
     }
   }
 
-  // Chromecast via Remote Playback API (standard W3C)
+  // Cast: tries all available methods
   const startCast = async () => {
     const v = videoRef.current as any
     if (!v) return
 
-    // Try Remote Playback API first (Chrome)
+    // 1. Try Google Cast Framework API (if SDK loaded)
+    const castCtx = (window as any).cast?.framework?.CastContext?.getInstance()
+    if (castCtx) {
+      try {
+        await castCtx.requestSession()
+        const session = castCtx.getCurrentSession()
+        if (session) {
+          const chrome = (window as any).chrome
+          const mediaInfo = new chrome.cast.media.MediaInfo(video.videoUrl, 'video/mp4')
+          mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata()
+          mediaInfo.metadata.title = video.title
+          if (video.thumbnail) mediaInfo.metadata.images = [{ url: video.thumbnail }]
+          const request = new chrome.cast.media.LoadRequest(mediaInfo)
+          await session.loadMedia(request)
+          setIsCasting(true)
+          return
+        }
+      } catch {
+        // User cancelled or no device
+      }
+    }
+
+    // 2. Try Remote Playback API (Chrome/Edge without Cast SDK)
     if (v.remote && typeof v.remote.prompt === 'function') {
       try {
         await v.remote.prompt()
@@ -490,33 +537,44 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
         v.remote.onconnecting = () => setIsCasting(true)
         v.remote.onconnect = () => setIsCasting(true)
         v.remote.ondisconnect = () => setIsCasting(false)
+        return
       } catch {
-        // User cancelled or no device found
         setIsCasting(false)
       }
+    }
+
+    // 3. Try AirPlay as fallback (Safari)
+    if (v.webkitShowPlaybackTargetPicker) {
+      v.webkitShowPlaybackTargetPicker()
       return
     }
 
-    // Fallback: try Cast API (if Google Cast SDK is loaded)
-    const cast = (window as any).chrome?.cast
-    if (cast) {
-      const session = cast.framework?.CastContext?.getInstance()?.getCurrentSession()
-      if (session) {
-        const mediaInfo = new cast.media.MediaInfo(video.videoUrl, 'video/mp4')
-        mediaInfo.metadata = new cast.media.GenericMediaMetadata()
-        mediaInfo.metadata.title = video.title
-        mediaInfo.metadata.images = [{ url: video.thumbnail }]
-        const request = new cast.media.LoadRequest(mediaInfo)
-        try {
-          await session.loadMedia(request)
-          setIsCasting(true)
-        } catch { setIsCasting(false) }
-      }
-      return
-    }
+    // 4. No method available — guide the user
+    const isChrome = /Chrome/.test(navigator.userAgent) && !/Edge/.test(navigator.userAgent)
+    const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent)
 
-    alert('Pour caster, utilisez le menu de votre navigateur ou un appareil compatible (Chromecast, Apple TV via AirPlay)')
+    if (isChrome) {
+      alert('Pour caster sur Chromecast :\n\n1. Cliquez sur les 3 points (⋮) en haut à droite de Chrome\n2. Sélectionnez "Caster..."\n3. Choisissez votre appareil')
+    } else if (isSafari) {
+      alert('Pour caster sur Apple TV :\n\nUtilisez le bouton AirPlay à côté, ou activez la recopie d\'écran depuis le Centre de contrôle.')
+    } else {
+      alert('Pour caster cette vidéo :\n\nUtilisez la fonction "Caster" de votre navigateur (menu ⋮ > Caster) ou la recopie d\'écran de votre appareil.')
+    }
   }
+
+  // Sync fullscreen state when user exits via Escape or browser UI
+  useEffect(() => {
+    const handler = () => {
+      const isFS = !!(document.fullscreenElement || (document as any).webkitFullscreenElement)
+      setIsFullscreen(isFS)
+    }
+    document.addEventListener('fullscreenchange', handler)
+    document.addEventListener('webkitfullscreenchange', handler)
+    return () => {
+      document.removeEventListener('fullscreenchange', handler)
+      document.removeEventListener('webkitfullscreenchange', handler)
+    }
+  }, [])
 
   // Listen for AirPlay availability
   useEffect(() => {

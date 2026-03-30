@@ -650,6 +650,8 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
         className="absolute bottom-0 left-0 right-0 px-4 sm:px-6 pb-4 sm:pb-6 pt-16 z-10"
         style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%)', pointerEvents: showControls ? 'auto' : 'none' }}
         onClick={(e) => e.stopPropagation()}
+        onMouseMove={resetHideTimer}
+        onTouchStart={resetHideTimer}
       >
         {/* Progress bar */}
         <div
@@ -763,8 +765,8 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
 
             {/* AirPlay (Safari) */}
             <button
-              onClick={startAirPlay}
-              className="w-8 h-8 flex items-center justify-center cursor-pointer hover:scale-110 transition-transform"
+              onClick={(e) => { e.stopPropagation(); startAirPlay() }}
+              className="w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center cursor-pointer hover:scale-110 active:scale-95 transition-transform rounded-full hover:bg-white/10 active:bg-white/20"
               title="AirPlay"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={1.5}>
@@ -775,8 +777,8 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
 
             {/* Chromecast / Remote Playback */}
             <button
-              onClick={startCast}
-              className="w-8 h-8 flex items-center justify-center cursor-pointer hover:scale-110 transition-transform"
+              onClick={(e) => { e.stopPropagation(); startCast() }}
+              className="w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center cursor-pointer hover:scale-110 active:scale-95 transition-transform rounded-full hover:bg-white/10 active:bg-white/20"
               title="Caster sur un appareil"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke={isCasting ? 'var(--gold)' : 'white'} strokeWidth={1.5}>
@@ -786,7 +788,7 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
             </button>
 
             {/* Fullscreen */}
-            <button onClick={toggleFullscreen} className="w-8 h-8 flex items-center justify-center cursor-pointer hover:scale-110 transition-transform" title="Plein &eacute;cran (F)">
+            <button onClick={(e) => { e.stopPropagation(); toggleFullscreen() }} className="w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center cursor-pointer hover:scale-110 active:scale-95 transition-transform rounded-full hover:bg-white/10 active:bg-white/20" title="Plein &eacute;cran (F)">
               {isFullscreen ? (
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 9V4.5M9 9H4.5M9 9L3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5l5.25 5.25" />

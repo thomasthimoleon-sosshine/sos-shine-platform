@@ -10,6 +10,7 @@ interface ShineVideo {
   description: string | null
   thumbnail_url: string | null
   video_url: string | null
+  subtitle_url?: string | null
   category: string
   duration_minutes: number
   year: number
@@ -42,6 +43,7 @@ const emptyForm = {
   description: '',
   thumbnail_url: '',
   video_url: '',
+  subtitle_url: '',
   category: 'healing',
   duration_minutes: 0,
   year: new Date().getFullYear(),
@@ -100,6 +102,7 @@ export default function AdminShineTVPage() {
       description: v.description || '',
       thumbnail_url: v.thumbnail_url || '',
       video_url: v.video_url || '',
+      subtitle_url: v.subtitle_url || '',
       category: v.category,
       duration_minutes: v.duration_minutes || 0,
       year: v.year || new Date().getFullYear(),
@@ -126,6 +129,7 @@ export default function AdminShineTVPage() {
       description: form.description.trim() || null,
       thumbnail_url: form.thumbnail_url.trim() || null,
       video_url: form.video_url.trim() || null,
+      subtitle_url: form.subtitle_url.trim() || null,
       category: form.category,
       duration_minutes: form.duration_minutes,
       year: form.year,
@@ -261,14 +265,24 @@ export default function AdminShineTVPage() {
           />
 
           <FileUpload
-            label="Fichier vidéo"
+            label="Fichier vid\u00e9o"
             accept="video/*"
             folder="shine-tv"
             currentUrl={form.video_url || null}
-            hint="MP4 recommandé, aucune limite de taille"
+            hint="MP4 recommand\u00e9, aucune limite de taille"
             maxSize={0}
             onUploaded={(url) => setForm((prev) => ({ ...prev, video_url: url }))}
             onRemoved={() => setForm((prev) => ({ ...prev, video_url: '' }))}
+          />
+
+          <FileUpload
+            label="Sous-titres (WebVTT)"
+            accept=".vtt,.srt"
+            folder="shine-tv/subtitles"
+            currentUrl={form.subtitle_url || null}
+            hint="Fichier .vtt ou .srt pour les sous-titres"
+            onUploaded={(url) => setForm((prev) => ({ ...prev, subtitle_url: url }))}
+            onRemoved={() => setForm((prev) => ({ ...prev, subtitle_url: '' }))}
           />
 
           <div className="flex items-center gap-3 pt-2">

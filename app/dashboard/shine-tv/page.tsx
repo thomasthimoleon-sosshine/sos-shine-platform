@@ -13,6 +13,7 @@ type ShineVideo = {
   description: string
   thumbnail: string
   videoUrl: string
+  subtitleUrl: string
   category: string
   duration: string
   year: number
@@ -310,6 +311,9 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
   const [isMuted, setIsMuted] = useState(false)
   const [showControls, setShowControls] = useState(true)
   const [isFullscreen, setIsFullscreen] = useState(false)
+  const [subtitlesOn, setSubtitlesOn] = useState(true)
+  const [showSubtitleMenu, setShowSubtitleMenu] = useState(false)
+  const [isCasting, setIsCasting] = useState(false)
   const hideTimer = useRef<NodeJS.Timeout | null>(null)
 
   const formatTime = (s: number) => {
@@ -397,6 +401,81 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
     setIsMuted(val === 0)
   }
 
+  const toggleSubtitles = () => {
+    const v = videoRef.current
+    if (!v) return
+    const track = v.textTracks[0]
+    if (track) {
+      const newState = !subtitlesOn
+      track.mode = newState ? 'showing' : 'hidden'
+      setSubtitlesOn(newState)
+    }
+    setShowSubtitleMenu(false)
+  }
+
+  // AirPlay (Safari / Apple TV)
+  const startAirPlay = () => {
+    const v = videoRef.current as any
+    if (!v) return
+    if (v.webkitShowPlaybackTargetPicker) {
+      v.webkitShowPlaybackTargetPicker()
+    } else {
+      alert('AirPlay n\'est disponible que sur Safari (Mac/iPhone/iPad)')
+    }
+  }
+
+  // Chromecast via Remote Playback API (standard W3C)
+  const startCast = async () => {
+    const v = videoRef.current as any
+    if (!v) return
+
+    // Try Remote Playback API first (Chrome)
+    if (v.remote && typeof v.remote.prompt === 'function') {
+      try {
+        await v.remote.prompt()
+        setIsCasting(true)
+        v.remote.onconnecting = () => setIsCasting(true)
+        v.remote.onconnect = () => setIsCasting(true)
+        v.remote.ondisconnect = () => setIsCasting(false)
+      } catch {
+        // User cancelled or no device found
+        setIsCasting(false)
+      }
+      return
+    }
+
+    // Fallback: try Cast API (if Google Cast SDK is loaded)
+    const cast = (window as any).chrome?.cast
+    if (cast) {
+      const session = cast.framework?.CastContext?.getInstance()?.getCurrentSession()
+      if (session) {
+        const mediaInfo = new cast.media.MediaInfo(video.videoUrl, 'video/mp4')
+        mediaInfo.metadata = new cast.media.GenericMediaMetadata()
+        mediaInfo.metadata.title = video.title
+        mediaInfo.metadata.images = [{ url: video.thumbnail }]
+        const request = new cast.media.LoadRequest(mediaInfo)
+        try {
+          await session.loadMedia(request)
+          setIsCasting(true)
+        } catch { setIsCasting(false) }
+      }
+      return
+    }
+
+    alert('Pour caster, utilisez le menu de votre navigateur ou un appareil compatible (Chromecast, Apple TV via AirPlay)')
+  }
+
+  // Listen for AirPlay availability
+  useEffect(() => {
+    const v = videoRef.current as any
+    if (!v) return
+    const handlePlaying = () => {
+      if (v.webkitCurrentPlaybackTargetIsWireless) setIsCasting(true)
+    }
+    v.addEventListener('webkitcurrentplaybacktargetiswirelesschanged', handlePlaying)
+    return () => v.removeEventListener('webkitcurrentplaybacktargetiswirelesschanged', handlePlaying)
+  }, [])
+
   return (
     <motion.div
       ref={containerRef}
@@ -416,6 +495,7 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
           autoPlay
           playsInline
           preload="auto"
+          crossOrigin="anonymous"
           className="w-full h-full object-contain"
           controlsList="nodownload"
           onTimeUpdate={() => {
@@ -431,7 +511,17 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
           onEnded={() => setIsPlaying(false)}
           onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}
-        />
+        >
+          {video.subtitleUrl && (
+            <track
+              kind="subtitles"
+              src={video.subtitleUrl}
+              srcLang="fr"
+              label="Fran\u00e7ais"
+              default
+            />
+          )}
+        </video>
       ) : (
         <div className="w-full h-full relative">
           <img src={video.thumbnail} alt={video.title} className="w-full h-full object-contain" />
@@ -461,7 +551,15 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
         </button>
         <div className="flex-1 min-w-0">
           <h2 className="text-white text-lg sm:text-xl font-display font-semibold truncate">{video.title}</h2>
-          <p className="text-white/50 text-[12px]">{video.category} · {video.year}</p>
+          <div className="flex items-center gap-2">
+            <p className="text-white/50 text-[12px]">{video.category} · {video.year}</p>
+            {isCasting && (
+              <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold" style={{ background: 'rgba(212,175,55,0.2)', color: 'var(--gold)' }}>
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: 'var(--gold)' }} />
+                Casting
+              </span>
+            )}
+          </div>
         </div>
         <button
           onClick={onShowInfo}
@@ -566,9 +664,76 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Subtitles toggle */}
+            {video.subtitleUrl && (
+              <div className="relative">
+                <button
+                  onClick={(e) => { e.stopPropagation(); setShowSubtitleMenu(!showSubtitleMenu) }}
+                  className="w-8 h-8 flex items-center justify-center cursor-pointer hover:scale-110 transition-transform relative"
+                  title="Sous-titres"
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+                  </svg>
+                  {subtitlesOn && (
+                    <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full" style={{ background: 'var(--gold)' }} />
+                  )}
+                </button>
+                {showSubtitleMenu && (
+                  <div
+                    className="absolute bottom-full right-0 mb-2 rounded-lg p-2 min-w-[160px]"
+                    style={{ background: 'rgba(20,20,20,0.95)', border: '1px solid rgba(255,255,255,0.15)' }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <p className="text-[11px] font-semibold px-2 py-1 mb-1" style={{ color: 'var(--text-muted)' }}>Sous-titres</p>
+                    <button
+                      onClick={toggleSubtitles}
+                      className="w-full text-left px-2 py-1.5 rounded text-[13px] flex items-center gap-2 hover:bg-white/10 transition-colors cursor-pointer"
+                      style={{ color: !subtitlesOn ? 'white' : 'var(--text-muted)' }}
+                    >
+                      {!subtitlesOn && <span style={{ color: 'var(--gold)' }}>&#10003;</span>}
+                      D&eacute;sactiv&eacute;s
+                    </button>
+                    <button
+                      onClick={toggleSubtitles}
+                      className="w-full text-left px-2 py-1.5 rounded text-[13px] flex items-center gap-2 hover:bg-white/10 transition-colors cursor-pointer"
+                      style={{ color: subtitlesOn ? 'white' : 'var(--text-muted)' }}
+                    >
+                      {subtitlesOn && <span style={{ color: 'var(--gold)' }}>&#10003;</span>}
+                      Fran&ccedil;ais
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* AirPlay (Safari) */}
+            <button
+              onClick={startAirPlay}
+              className="w-8 h-8 flex items-center justify-center cursor-pointer hover:scale-110 transition-transform"
+              title="AirPlay"
+            >
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 5h18v12H3z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M7 21l5-5 5 5H7z" fill={isCasting ? 'var(--gold)' : 'none'} stroke={isCasting ? 'var(--gold)' : 'white'} />
+              </svg>
+            </button>
+
+            {/* Chromecast / Remote Playback */}
+            <button
+              onClick={startCast}
+              className="w-8 h-8 flex items-center justify-center cursor-pointer hover:scale-110 transition-transform"
+              title="Caster sur un appareil"
+            >
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke={isCasting ? 'var(--gold)' : 'white'} strokeWidth={1.5}>
+                <path d="M2 16.1A5 5 0 015.9 20M2 12.05A9 9 0 019.95 20M2 8V6a2 2 0 012-2h16a2 2 0 012 2v12a2 2 0 01-2 2h-6" strokeLinecap="round" strokeLinejoin="round" />
+                <circle cx="2" cy="20" r="1" fill={isCasting ? 'var(--gold)' : 'white'} stroke="none" />
+              </svg>
+            </button>
+
             {/* Fullscreen */}
-            <button onClick={toggleFullscreen} className="w-8 h-8 flex items-center justify-center cursor-pointer hover:scale-110 transition-transform">
+            <button onClick={toggleFullscreen} className="w-8 h-8 flex items-center justify-center cursor-pointer hover:scale-110 transition-transform" title="Plein &eacute;cran (F)">
               {isFullscreen ? (
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 9V4.5M9 9H4.5M9 9L3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5l5.25 5.25" />
@@ -945,6 +1110,7 @@ export default function ShineTVPage() {
         description: v.description || '',
         thumbnail: v.thumbnail_url || '',
         videoUrl: v.video_url || '',
+        subtitleUrl: v.subtitle_url || '',
         category: v.category,
         duration: `${v.duration_minutes} min`,
         year: v.year,

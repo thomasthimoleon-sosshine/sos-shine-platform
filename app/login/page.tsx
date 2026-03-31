@@ -109,24 +109,18 @@ export default function LoginPage() {
           <Link href="/"><img src={s('login_header_image') || s('logo_url') || '/images/logo-shine.png'} alt="SOS Shine" className="h-16 mx-auto mb-3 object-contain" /></Link>
           <p className="text-[var(--text-muted)] text-[13px] mt-2">{s('login_subtitle')}</p>
 
-          {/* Boutons livres - accessibles sans connexion */}
-          <div className="flex gap-3 mt-4 justify-center">
-            <Link href="/livre-sos-shine"
+          {/* Bouton SOS Shine Kids - accessible sans connexion */}
+          <div className="flex mt-4 justify-center">
+            <a href="https://sosshine.fr"
+              target="_blank"
+              rel="noopener noreferrer"
               className="py-2.5 px-5 rounded-full text-center text-[13px] font-medium transition-all"
               style={{ border: '1px solid rgba(212,175,55,0.3)', color: 'var(--gold)', background: 'rgba(212,175,55,0.05)' }}
               onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(212,175,55,0.12)'; e.currentTarget.style.borderColor = 'rgba(212,175,55,0.5)' }}
               onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(212,175,55,0.05)'; e.currentTarget.style.borderColor = 'rgba(212,175,55,0.3)' }}
             >
-              Livre SOS Shine
-            </Link>
-            <Link href="/livre-supers-pouvoirs"
-              className="py-2.5 px-5 rounded-full text-center text-[13px] font-medium transition-all"
-              style={{ border: '1px solid rgba(212,175,55,0.3)', color: 'var(--gold)', background: 'rgba(212,175,55,0.05)' }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(212,175,55,0.12)'; e.currentTarget.style.borderColor = 'rgba(212,175,55,0.5)' }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(212,175,55,0.05)'; e.currentTarget.style.borderColor = 'rgba(212,175,55,0.3)' }}
-            >
-              Livre Supers Pouvoirs
-            </Link>
+              Accès à SOS Shine®️ Kids
+            </a>
           </div>
         </div>
 

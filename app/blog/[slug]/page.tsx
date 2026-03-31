@@ -5,12 +5,11 @@ import type { BlogArticle } from '@/data/blog/articles'
 import { createClient } from '@/lib/supabase/server'
 import BlogArticleContent from './BlogArticleContent'
 
+// Force dynamic rendering - articles come from Supabase, not static
+export const dynamic = 'force-dynamic'
+
 interface Props {
   params: Promise<{ slug: string }>
-}
-
-export async function generateStaticParams() {
-  return blogArticles.map((article) => ({ slug: article.slug }))
 }
 
 async function findArticle(slug: string): Promise<BlogArticle | undefined> {
@@ -22,30 +21,32 @@ async function findArticle(slug: string): Promise<BlogArticle | undefined> {
   try {
     const supabase = await createClient()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data } = await (supabase as any)
+    const { data, error } = await (supabase as any)
       .from('blog_articles')
       .select('*')
       .eq('slug', slug)
       .eq('is_published', true)
       .single()
-    if (data) {
-      return {
-        slug: data.slug,
-        title: data.title,
-        subtitle: data.subtitle || '',
-        excerpt: data.excerpt || '',
-        metaTitle: data.meta_title || data.title,
-        metaDescription: data.meta_description || data.excerpt,
-        author: { name: data.author_name || 'SOS Shine', role: data.author_role || '' },
-        publishedAt: data.published_at || '',
-        readTime: data.read_time || 5,
-        category: data.category || 'transformation',
-        tags: data.tags || [],
-        coverImage: data.cover_image,
-        featured: data.featured || false,
-        content: data.content || '',
-        contentType: data.content_type || 'markdown',
-      }
+    if (error || !data) {
+      return undefined
+    }
+    const tags = Array.isArray(data.tags) ? data.tags : []
+    return {
+      slug: data.slug || slug,
+      title: data.title || '',
+      subtitle: data.subtitle || '',
+      excerpt: data.excerpt || '',
+      metaTitle: data.meta_title || data.title || '',
+      metaDescription: data.meta_description || data.excerpt || '',
+      author: { name: data.author_name || 'SOS Shine', role: data.author_role || '' },
+      publishedAt: data.published_at ? String(data.published_at) : new Date().toISOString(),
+      readTime: data.read_time || 5,
+      category: data.category || 'transformation',
+      tags,
+      coverImage: data.cover_image,
+      featured: data.featured || false,
+      content: data.content || '',
+      contentType: data.content_type || 'markdown',
     }
   } catch {
     // DB not available, only static
@@ -54,43 +55,53 @@ async function findArticle(slug: string): Promise<BlogArticle | undefined> {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params
-  const article = await findArticle(slug)
-  if (!article) return {}
+  try {
+    const { slug } = await params
+    const article = await findArticle(slug)
+    if (!article) return {}
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sosshine.com'
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sosshine.com'
 
-  return {
-    title: article.metaTitle,
-    description: article.metaDescription,
-    keywords: article.tags.join(', '),
-    authors: [{ name: article.author.name }],
-    openGraph: {
+    return {
       title: article.metaTitle,
       description: article.metaDescription,
-      type: 'article',
-      publishedTime: article.publishedAt,
-      modifiedTime: article.updatedAt || article.publishedAt,
-      authors: [article.author.name],
-      tags: article.tags,
-      siteName: 'SOS Shine',
-      locale: 'fr_FR',
-      url: `${siteUrl}/blog/${article.slug}`,
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: article.metaTitle,
-      description: article.metaDescription,
-    },
-    alternates: {
-      canonical: `/blog/${article.slug}`,
-    },
+      keywords: article.tags.length > 0 ? article.tags.join(', ') : undefined,
+      authors: [{ name: article.author.name }],
+      openGraph: {
+        title: article.metaTitle,
+        description: article.metaDescription,
+        type: 'article',
+        publishedTime: article.publishedAt,
+        modifiedTime: article.updatedAt || article.publishedAt,
+        authors: [article.author.name],
+        tags: article.tags,
+        siteName: 'SOS Shine',
+        locale: 'fr_FR',
+        url: `${siteUrl}/blog/${article.slug}`,
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: article.metaTitle,
+        description: article.metaDescription,
+      },
+      alternates: {
+        canonical: `/blog/${article.slug}`,
+      },
+    }
+  } catch {
+    return {}
   }
 }
 
 export default async function BlogArticlePage({ params }: Props) {
-  const { slug } = await params
-  const article = await findArticle(slug)
+  let slug: string
+  try {
+    const resolvedParams = await params
+    slug = resolvedParams.slug
+  } catch {
+    notFound()
+  }
+  const article = await findArticle(slug!)
 
   if (!article) notFound()
 

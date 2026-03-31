@@ -10,8 +10,13 @@ const gold = '#D4AF37'
 const goldRgb = '212,175,55'
 
 function formatDate(dateStr: string) {
-  const d = new Date(dateStr)
-  return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+  try {
+    const d = new Date(dateStr)
+    if (isNaN(d.getTime())) return ''
+    return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+  } catch {
+    return ''
+  }
 }
 
 function ReadingProgress() {

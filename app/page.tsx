@@ -727,58 +727,65 @@ export default function Home() {
       )}
 
       {/* ═══ SOCIAL PROOF STATS ═══ */}
-      <section className="relative py-16 md:py-24" style={{ background: 'linear-gradient(180deg, rgba(15,12,8,0.95) 0%, rgba(20,16,10,0.98) 100%)' }}>
-        <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at center, rgba(${goldRgb}, 0.04) 0%, transparent 70%)` }} />
-        <div className="max-w-5xl mx-auto px-5 md:px-20 relative z-10">
-          <div className="grid grid-cols-3 gap-8 md:gap-12">
-            {[
-              { value: '200+', label: 'PROTOCOLES DE TRANSFORMATION' },
-              { value: '5', label: 'UNIVERS DE CONTENU' },
-              { value: '24/7', label: 'COMMUNAUTÉ & SOUTIEN' },
-            ].map((stat, i) => (
-              <RevealOnScroll key={stat.label} delay={i * 0.15}>
-                <div className="text-center">
-                  <p className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display italic font-light mb-3 md:mb-4" style={{ color: gold }}>
-                    <AnimatedCounter value={stat.value} />
-                  </p>
-                  <p className="text-[10px] sm:text-xs md:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase font-medium" style={{ color: 'var(--text-muted)' }}>
-                    {stat.label}
-                  </p>
-                </div>
-              </RevealOnScroll>
-            ))}
-          </div>
-        </div>
-      </section>
+      {vis('stats') && (() => {
+        const statsData = sec('stats');
+        const statsItems = statsData.items || [];
+        return (
+          <section className="relative py-16 md:py-24" style={{ background: 'linear-gradient(180deg, rgba(15,12,8,0.95) 0%, rgba(20,16,10,0.98) 100%)' }}>
+            <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at center, rgba(${goldRgb}, 0.04) 0%, transparent 70%)` }} />
+            <div className="max-w-5xl mx-auto px-5 md:px-20 relative z-10">
+              <div className={`grid gap-8 md:gap-12`} style={{ gridTemplateColumns: `repeat(${statsItems.length || 3}, minmax(0, 1fr))` }}>
+                {statsItems.map((stat: { value: string; label: string }, i: number) => (
+                  <RevealOnScroll key={stat.label || i} delay={i * 0.15}>
+                    <div className="text-center">
+                      <p className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display italic font-light mb-3 md:mb-4" style={{ color: gold }}>
+                        <AnimatedCounter value={stat.value} />
+                      </p>
+                      <p className="text-[10px] sm:text-xs md:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase font-medium" style={{ color: 'var(--text-muted)' }}>
+                        {stat.label}
+                      </p>
+                    </div>
+                  </RevealOnScroll>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      })()}
 
       {/* ═══ TICKER BAND ═══ */}
       <InfiniteTickerBand items={tickerItems} speed={ticker1Speed} />
 
       {/* ═══ SIGNATURE EMOTIONNELLE CTA ═══ */}
-      <section className="px-5 md:px-20 py-12 md:py-20 relative cv-auto">
-        <RevealOnScroll>
-          <div className="max-w-3xl mx-auto text-center">
-            <Link href="/signature-emotionnelle">
-              <div className="glow-card p-6 sm:p-8 md:p-12 cursor-pointer group">
-                <p className="luxury-title text-[10px] sm:text-xs tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{t('signature.cta_label')}</p>
-                <h3 className="font-display text-xl sm:text-2xl md:text-4xl font-light mb-3 md:mb-4" style={{ color: gold }}>
-                  {t('signature.cta_title')}{' '}
-                  <span className="text-shimmer">{t('signature.cta_title_highlight')}</span>
-                </h3>
-                <p className="text-[var(--text-secondary)] font-light mb-5 md:mb-6 text-sm md:text-[15px]">
-                  {t('signature.cta_desc')}
-                </p>
-                <span className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-semibold tracking-wide group-hover:scale-105 transition-transform" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
-                  {t('signature.cta_button')}
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
-                </span>
+      {vis('signature_cta') && (() => {
+        const sigCta = sec('signature_cta');
+        return (
+          <section className="px-5 md:px-20 py-12 md:py-20 relative cv-auto">
+            <RevealOnScroll>
+              <div className="max-w-3xl mx-auto text-center">
+                <Link href={sigCta.button_href || '/signature-emotionnelle'}>
+                  <div className="glow-card p-6 sm:p-8 md:p-12 cursor-pointer group">
+                    <p className="luxury-title text-[10px] sm:text-xs tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{sigCta.label || t('signature.cta_label')}</p>
+                    <h3 className="font-display text-xl sm:text-2xl md:text-4xl font-light mb-3 md:mb-4" style={{ color: gold }}>
+                      {sigCta.title || t('signature.cta_title')}{' '}
+                      <span className="text-shimmer">{sigCta.title_highlight || t('signature.cta_title_highlight')}</span>
+                    </h3>
+                    <p className="text-[var(--text-secondary)] font-light mb-5 md:mb-6 text-sm md:text-[15px]">
+                      {sigCta.description || t('signature.cta_desc')}
+                    </p>
+                    <span className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-semibold tracking-wide group-hover:scale-105 transition-transform" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                      {sigCta.button_label || t('signature.cta_button')}
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                  </div>
+                </Link>
               </div>
-            </Link>
-          </div>
-        </RevealOnScroll>
-      </section>
+            </RevealOnScroll>
+          </section>
+        );
+      })()}
 
       {/* ═══ PROBLÈME & AGITATION (PAS Framework) ═══ */}
       {vis('probleme') && (() => {
@@ -1318,7 +1325,7 @@ export default function Home() {
         <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
           <div className="max-w-5xl mx-auto">
             <RevealOnScroll>
-              <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{t('landing.pricing_label')}</p>
+              <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{pricing.label || t('landing.pricing_label')}</p>
             </RevealOnScroll>
             <RevealOnScroll delay={0.1}>
               <h2 className="font-display font-light text-center mb-3 md:mb-4" style={tStyle("pricing")}>
@@ -1384,7 +1391,7 @@ export default function Home() {
                       ))}
                     </div>
 
-                    <Link href="/signup">
+                    <Link href={plan.button_href || '/signup'}>
                       <button className={`magnetic-btn w-full py-3 sm:py-4 rounded-full text-sm sm:text-base font-semibold tracking-wide ${plan.highlight ? 'pulse-ring' : ''}`} style={{
                         background: `linear-gradient(135deg, ${tc.main}, ${tc.deep})`,
                         color: btnTextColor
@@ -1493,9 +1500,9 @@ export default function Home() {
               </h2>
             </RevealOnScroll>
             <RevealOnScroll delay={0.3}>
-              <Link href="/signup">
+              <Link href={ctaDark.button_href || '/signup'}>
                 <button className="magnetic-btn pulse-ring px-8 sm:px-10 py-4 sm:py-5 rounded-full text-base sm:text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
-                  {t('landing.join_cta')}
+                  {ctaDark.button_label || t('landing.join_cta')}
                 </button>
               </Link>
             </RevealOnScroll>

@@ -89,6 +89,35 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     },
   },
   {
+    section_key: 'stats',
+    label: 'Chiffres clés (Social Proof)',
+    position: 0.5,
+    is_visible: true,
+    content: {
+      items: [
+        { value: '200+', label: 'PROTOCOLES DE TRANSFORMATION' },
+        { value: '5', label: 'UNIVERS DE CONTENU' },
+        { value: '24/7', label: 'COMMUNAUTÉ & SOUTIEN' },
+      ],
+    },
+    styles: {},
+  },
+  {
+    section_key: 'signature_cta',
+    label: 'CTA Signature Émotionnelle',
+    position: 0.7,
+    is_visible: true,
+    content: {
+      label: 'Test exclusif',
+      title: 'Découvrez votre',
+      title_highlight: 'Signature Émotionnelle',
+      description: 'Un test exclusif en 15 questions — créé par nos thérapeutes — pour révéler votre architecture émotionnelle profonde. Gratuit. Confidentiel. Immédiat.',
+      button_label: 'Faire le test gratuit →',
+      button_href: '/signature-emotionnelle',
+    },
+    styles: {},
+  },
+  {
     section_key: 'probleme',
     label: 'Problème & Agitation',
     position: 1,
@@ -380,6 +409,8 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     content: {
       title: "Le premier pas\nest toujours le plus dur.\nOn le fait ensemble.",
       image_url: '',
+      button_label: 'Rejoindre SOS Shine',
+      button_href: '/signup',
     },
     styles: {
       title_font: 'Cormorant Garamond',

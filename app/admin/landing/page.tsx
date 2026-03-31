@@ -257,7 +257,7 @@ export default function LandingAdminPage() {
     setSaved(false)
   }
 
-  /* ── Built-in section keys that cannot be deleted ── */
+  /* ── Built-in section keys (can be hidden or deleted & re-seeded from defaults) ── */
   const BUILTIN_KEYS = new Set(LANDING_DEFAULTS.map((d) => d.section_key))
 
   /* ── Add a custom HTML section ── */
@@ -280,10 +280,13 @@ export default function LandingAdminPage() {
     setSaved(false)
   }
 
-  /* ── Delete a custom section ── */
+  /* ── Delete any section (built-in sections can be re-added from defaults) ── */
   async function deleteSection(sectionKey: string) {
-    if (BUILTIN_KEYS.has(sectionKey)) return
-    if (!confirm('Supprimer cette section ?')) return
+    const isBuiltin = BUILTIN_KEYS.has(sectionKey)
+    const msg = isBuiltin
+      ? 'Supprimer cette section ? Elle pourra être recréée depuis les valeurs par défaut en actualisant la page.'
+      : 'Supprimer cette section ?'
+    if (!confirm(msg)) return
     const supabase = createClient()
     await supabase.from('landing_sections').delete().eq('section_key', sectionKey)
     setSections((prev) => prev.filter((s) => s.section_key !== sectionKey))
@@ -373,6 +376,42 @@ export default function LandingAdminPage() {
               onRemoved={() => updateContent(key, 'logo_url', '')} />
             <TextField label="Jours d'essai gratuit" value={String(c.trial_days ?? '')} type="number"
               onChange={(v) => updateContent(key, 'trial_days', parseInt(v) || 0)} />
+          </>
+        )
+
+      /* ────────────── stats ────────────── */
+      case 'stats':
+        return (
+          <>
+            <Separator label="Chiffres cles" />
+            {(c.items || []).map((item: { value: string; label: string }, i: number) => (
+              <div key={i} className="rounded-lg p-4 space-y-3" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Chiffre {i + 1}</p>
+                  <button type="button" onClick={() => removeArrayItem(key, 'items', i)}
+                    className="text-xs px-2 py-1 rounded cursor-pointer" style={{ color: '#FF6B6B' }}>Supprimer</button>
+                </div>
+                <TextField label="Valeur (ex: 200+)" value={item.value || ''} onChange={(v) => updateArrayItem(key, 'items', i, 'value', v)} />
+                <TextField label="Label" value={item.label || ''} onChange={(v) => updateArrayItem(key, 'items', i, 'label', v)} />
+              </div>
+            ))}
+            <button type="button" onClick={() => addArrayItem(key, 'items', { value: '', label: '' })}
+              className="text-sm px-4 py-2 rounded-lg cursor-pointer" style={{ color: '#74C0FC', border: '1px dashed #74C0FC' }}>
+              + Ajouter un chiffre
+            </button>
+          </>
+        )
+
+      /* ────────────── signature_cta ────────────── */
+      case 'signature_cta':
+        return (
+          <>
+            <TextField label="Label de section" value={c.label || ''} onChange={(v) => updateContent(key, 'label', v)} />
+            <TextField label="Titre" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
+            <TextField label="Texte en surbrillance" value={c.title_highlight || ''} onChange={(v) => updateContent(key, 'title_highlight', v)} />
+            <TextAreaField label="Description" value={c.description || ''} onChange={(v) => updateContent(key, 'description', v)} />
+            <TextField label="Libelle du bouton" value={c.button_label || ''} onChange={(v) => updateContent(key, 'button_label', v)} />
+            <TextField label="Lien du bouton" value={c.button_href || ''} onChange={(v) => updateContent(key, 'button_href', v)} />
           </>
         )
 
@@ -711,6 +750,9 @@ export default function LandingAdminPage() {
               currentUrl={c.image_url || null}
               onUploaded={(url) => updateContent(key, 'image_url', url)}
               onRemoved={() => updateContent(key, 'image_url', '')} />
+            <Separator label="Bouton CTA" />
+            <TextField label="Libelle du bouton" value={c.button_label || ''} onChange={(v) => updateContent(key, 'button_label', v)} />
+            <TextField label="Lien du bouton" value={c.button_href || ''} onChange={(v) => updateContent(key, 'button_href', v)} />
           </>
         )
 
@@ -1160,16 +1202,14 @@ export default function LandingAdminPage() {
                   )}
                 </button>
 
-                {/* Delete for custom */}
-                {!BUILTIN_KEYS.has(sec.section_key) && (
-                  <button type="button" onClick={() => { deleteSection(sec.section_key); setSelectedSection('') }}
-                    className="p-1.5 rounded-lg cursor-pointer" style={{ color: '#FF6B6B' }}
-                    title="Supprimer cette section">
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                    </svg>
-                  </button>
-                )}
+                {/* Delete section */}
+                <button type="button" onClick={() => { deleteSection(sec.section_key); setSelectedSection('') }}
+                  className="p-1.5 rounded-lg cursor-pointer" style={{ color: '#FF6B6B' }}
+                  title="Supprimer cette section">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                  </svg>
+                </button>
               </div>
             </div>
 
@@ -1180,12 +1220,10 @@ export default function LandingAdminPage() {
                   Cette section est actuellement masquee sur la page d&apos;accueil.
                 </div>
               )}
-              {!BUILTIN_KEYS.has(sec.section_key) && (
-                <TextField label="Nom de la section" value={sec.label || ''} onChange={(v) => {
-                  setSections((prev) => prev.map((s) => s.section_key === sec.section_key ? { ...s, label: v } : s))
-                  setSaved(false)
-                }} />
-              )}
+              <TextField label="Nom de la section" value={sec.label || ''} onChange={(v) => {
+                setSections((prev) => prev.map((s) => s.section_key === sec.section_key ? { ...s, label: v } : s))
+                setSaved(false)
+              }} />
               {renderContentFields(sec)}
               {renderStyleFields(sec)}
             </div>

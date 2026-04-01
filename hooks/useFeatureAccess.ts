@@ -50,7 +50,7 @@ export function useFeatureAccess(): FeatureAccess {
 
         setState({
           plan: data.plan || null,
-          isActive: data.is_active ?? data.is_admin ?? false,
+          isActive: (data.is_active ?? false) || (data.is_admin ?? false),
           isAdmin: data.is_admin ?? false,
           features: data.features || {},
           loading: false,

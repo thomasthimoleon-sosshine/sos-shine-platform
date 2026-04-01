@@ -14,6 +14,7 @@ import {
 } from '@/lib/stripe/config'
 import { logPaymentEvent } from '@/lib/stripe/subscription-service'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
+import { createClient } from '@/lib/supabase/server'
 
 export async function POST(request: Request) {
   try {
@@ -33,6 +34,13 @@ export async function POST(request: Request) {
 
     if (!user_id || !new_plan) {
       return NextResponse.json({ error: 'user_id et new_plan requis' }, { status: 400 })
+    }
+
+    // Vérifier que le user_id correspond à l'utilisateur authentifié
+    const authSupabase = await createClient()
+    const { data: { user: authUser } } = await authSupabase.auth.getUser()
+    if (!authUser || authUser.id !== user_id) {
+      return NextResponse.json({ error: 'Utilisateur non autorisé' }, { status: 403 })
     }
     if (!isValidPlan(new_plan)) {
       return NextResponse.json({ error: 'Plan invalide' }, { status: 400 })

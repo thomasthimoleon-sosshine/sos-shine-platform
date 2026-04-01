@@ -202,10 +202,11 @@ export function detectPlanFromProductId(productId: string): { plan: PlanId; dura
 
 export function detectPlanFromAmount(amountCents: number | null): PlanId {
   if (!amountCents) return 'essential'
-  if (amountCents >= 50000) return 'premium'
-  if (amountCents >= 20000) return 'serenite'
+  // Premium: 99.90€/mois = 9990 cents, annual can be higher
   if (amountCents >= 9000) return 'premium'
+  // Sérénité: 49.90€/mois = 4990 cents
   if (amountCents >= 4000) return 'serenite'
+  // Essential: 9.90€/mois = 990 cents
   return 'essential'
 }
 

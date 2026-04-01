@@ -42,7 +42,7 @@ export default function ResetPasswordPage() {
       if (!sessionFound.current) {
         router.push('/forgot-password')
       }
-    }, 3000)
+    }, 8000)
 
     return () => {
       authSub.unsubscribe()

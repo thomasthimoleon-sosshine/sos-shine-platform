@@ -5,6 +5,7 @@
 
 import { NextResponse } from 'next/server'
 import { getStripe } from '@/lib/stripe/client'
+import { createClient } from '@/lib/supabase/server'
 import {
   type PlanId,
   type DurationId,
@@ -23,6 +24,13 @@ export async function POST(request: Request) {
     // Validation — l'utilisateur doit être connecté
     if (!userId) {
       return NextResponse.json({ error: 'Vous devez être connecté pour vous abonner' }, { status: 401 })
+    }
+
+    // Vérifier que le userId correspond à l'utilisateur authentifié
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user || user.id !== userId) {
+      return NextResponse.json({ error: 'Utilisateur non autorisé' }, { status: 403 })
     }
     if (!plan || !isValidPlan(plan)) {
       return NextResponse.json({ error: 'Plan invalide' }, { status: 400 })

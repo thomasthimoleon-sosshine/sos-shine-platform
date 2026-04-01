@@ -32,11 +32,55 @@ function SuccessContent() {
           setEmailSent(data.email_sent || false)
           setIsNewAccount(data.account_created || false)
         } else {
-          setStatus('verified') // Still show success UI
+          setStatus('error')
         }
       })
-      .catch(() => setStatus('verified'))
+      .catch(() => setStatus('error'))
   }, [sessionId])
+
+  if (status === 'error') {
+    return (
+      <main className="min-h-screen flex items-center justify-center px-6" style={{ background: 'var(--dark)' }}>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="max-w-lg w-full text-center"
+        >
+          <div
+            className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-8"
+            style={{ background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.25)' }}
+          >
+            <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="#f87171" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+            </svg>
+          </div>
+          <h1 className="font-display text-3xl sm:text-4xl font-light mb-4" style={{ color: '#D4AF37' }}>
+            V&eacute;rification en cours
+          </h1>
+          <p className="text-base leading-relaxed mb-8" style={{ color: 'var(--text-secondary)' }}>
+            Nous n&apos;avons pas pu v&eacute;rifier votre paiement imm&eacute;diatement. Pas d&apos;inqui&eacute;tude, votre acc&egrave;s sera activ&eacute; sous quelques minutes.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link
+              href="/login"
+              className="inline-flex items-center justify-center px-8 py-3.5 rounded-full font-medium text-sm tracking-wide transition-all"
+              style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}
+            >
+              Se connecter
+            </Link>
+            <Link
+              href="/"
+              className="inline-flex items-center justify-center px-8 py-3.5 rounded-full font-medium text-sm tracking-wide transition-all"
+              style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)' }}
+            >
+              Retour &agrave; l&apos;accueil
+            </Link>
+          </div>
+        </motion.div>
+      </main>
+    )
+  }
 
   if (status === 'loading') {
     return (

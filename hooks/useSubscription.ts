@@ -32,51 +32,55 @@ export function useSubscription(): SubscriptionState {
 
   useEffect(() => {
     async function check() {
-      const supabase = createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) {
-        setState(prev => ({ ...prev, loading: false }))
-        return
-      }
+      try {
+        const supabase = createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) {
+          setState(prev => ({ ...prev, loading: false }))
+          return
+        }
 
-      // Check profile role
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role, plan')
-        .eq('id', user.id)
-        .single()
+        // Check profile role
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role, plan')
+          .eq('id', user.id)
+          .single()
 
-      const isAdmin = profile && ['founder', 'admin_content', 'admin_support'].includes(profile.role)
+        const isAdmin = profile && ['founder', 'admin_content', 'admin_support'].includes(profile.role)
 
-      if (isAdmin) {
+        if (isAdmin) {
+          setState({
+            loading: false,
+            isActive: true,
+            isAdmin: true,
+            plan: profile.plan || 'premium',
+            status: 'active',
+            userId: user.id,
+          })
+          return
+        }
+
+        // Check subscription
+        const { data: sub } = await supabase
+          .from('subscriptions')
+          .select('status, plan')
+          .eq('user_id', user.id)
+          .maybeSingle()
+
+        const hasActiveSub = sub && (sub.status === 'active' || sub.status === 'trialing')
+
         setState({
           loading: false,
-          isActive: true,
-          isAdmin: true,
-          plan: profile.plan || 'premium',
-          status: 'active',
+          isActive: !!hasActiveSub,
+          isAdmin: false,
+          plan: sub?.plan || null,
+          status: sub?.status || null,
           userId: user.id,
         })
-        return
+      } catch {
+        setState(prev => ({ ...prev, loading: false }))
       }
-
-      // Check subscription
-      const { data: sub } = await supabase
-        .from('subscriptions')
-        .select('status, plan')
-        .eq('user_id', user.id)
-        .maybeSingle()
-
-      const hasActiveSub = sub && (sub.status === 'active' || sub.status === 'trialing')
-
-      setState({
-        loading: false,
-        isActive: !!hasActiveSub,
-        isAdmin: false,
-        plan: sub?.plan || null,
-        status: sub?.status || null,
-        userId: user.id,
-      })
     }
     check()
   }, [refreshKey])

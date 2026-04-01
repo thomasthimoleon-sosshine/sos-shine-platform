@@ -28,7 +28,7 @@ export async function GET(request: Request) {
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
       || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : null)
-      || 'https://sos-shine.com'
+      || 'https://sosshine.com'
 
     const { client: resend, fromEmail } = await getResendClient()
     let totalSent = 0

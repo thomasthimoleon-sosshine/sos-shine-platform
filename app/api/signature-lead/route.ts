@@ -14,7 +14,7 @@ function getAdminClient() {
 function getSiteUrl(): string {
   return process.env.NEXT_PUBLIC_SITE_URL
     || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : null)
-    || 'https://sos-shine.com'
+    || 'https://sosshine.com'
 }
 
 export async function POST(request: Request) {

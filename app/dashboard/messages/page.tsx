@@ -125,7 +125,7 @@ export default function MessagesPage() {
       ) : (
         <div className="rounded-2xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
           {conversations.map((convo, i) => {
-            const name = convo.partner.pseudo || convo.partner.prenom
+            const name = convo.partner?.pseudo || convo.partner?.prenom || 'Utilisateur'
             const isOwnMessage = convo.lastMessage.sender_id === userId
             const msgText = convo.lastMessage.message_type === 'audio' ? `🎤 ${t('dashboard.voice_message')}` : (convo.lastMessage.content || '')
             const preview = isOwnMessage ? `${t('dashboard.you')} : ${msgText}` : msgText

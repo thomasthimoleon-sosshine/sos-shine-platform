@@ -495,27 +495,28 @@ export default function Home() {
               <Link href="/" className="flex items-center gap-3">
                 <img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-14 sm:h-18 md:h-24 w-auto object-contain" />
               </Link>
-              <div className="absolute right-4 md:right-6 flex items-center gap-2">
+              <div className="absolute right-4 md:right-6 flex items-center gap-2 sm:gap-3">
                 <Link
                   href="/login"
-                  className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300"
+                  className="hidden sm:inline-flex items-center px-4 py-2 rounded-full text-xs tracking-[0.1em] uppercase font-medium transition-all duration-300 hover:scale-105"
                   style={{
-                    background: 'rgba(255,255,255,0.05)',
-                    border: '1px solid rgba(255,255,255,0.08)',
+                    color: gold,
+                    border: `1px solid rgba(${goldRgb}, 0.2)`,
+                    background: `rgba(${goldRgb}, 0.04)`,
                   }}
-                  title="Connexion"
-                  aria-label="Connexion"
                 >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={1.5}
-                    style={{ color: 'var(--gold)' }}
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-                  </svg>
+                  Connexion
+                </Link>
+                <Link
+                  href="/signup"
+                  className="inline-flex items-center px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs tracking-[0.05em] uppercase font-semibold transition-all duration-300 hover:scale-105"
+                  style={{
+                    background: `linear-gradient(135deg, ${gold}, ${goldDeep})`,
+                    color: '#050505',
+                  }}
+                >
+                  <span className="hidden sm:inline">Commencer</span>
+                  <span className="sm:hidden">Rejoindre</span>
                 </Link>
                 <ThemeToggle />
               </div>
@@ -1209,6 +1210,69 @@ export default function Home() {
         </section>
       )}
 
+      {/* ═══ TRANSFORMATION (Avant / Après) ═══ */}
+      {vis('transformation') && (() => {
+        const transfo = sec('transformation');
+        const items = transfo.items || [];
+        return (
+          <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] md:w-[700px] md:h-[700px] rounded-full opacity-[0.02] blur-[80px]" style={{ background: gold }} />
+            </div>
+            <div className="max-w-5xl mx-auto relative z-10">
+              <RevealOnScroll>
+                <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{transfo.label || 'Transformations réelles'}</p>
+              </RevealOnScroll>
+              <RevealOnScroll delay={0.1}>
+                <h2 className="font-display font-light text-center mb-4 md:mb-6" style={tStyle("transformation")}>
+                  <WordByWordReveal text={transfo.title || ''} />
+                </h2>
+              </RevealOnScroll>
+              {transfo.description && (
+                <RevealOnScroll delay={0.15}>
+                  <p className="text-center text-[var(--text-secondary)] font-light mb-12 md:mb-20 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
+                    {transfo.description}
+                  </p>
+                </RevealOnScroll>
+              )}
+
+              <div className="space-y-6 md:space-y-8">
+                {items.map((item: { before: string; after: string; timeframe: string; challenge: string }, i: number) => (
+                  <RevealOnScroll key={i} delay={i * 0.12}>
+                    <GlowingCard className="p-6 sm:p-8 md:p-10">
+                      <div className="flex flex-col md:flex-row gap-6 md:gap-10 items-center">
+                        {/* Before */}
+                        <div className="flex-1 text-center md:text-left">
+                          <p className="text-[10px] sm:text-xs tracking-[0.2em] uppercase font-medium mb-2" style={{ color: '#f87171' }}>Avant</p>
+                          <p className="text-sm sm:text-base text-[var(--text-secondary)] font-light leading-relaxed italic">&laquo; {item.before} &raquo;</p>
+                        </div>
+                        {/* Arrow */}
+                        <div className="flex-shrink-0 flex flex-col items-center gap-2">
+                          <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: `rgba(${goldRgb}, 0.1)`, border: `1px solid rgba(${goldRgb}, 0.2)` }}>
+                            <svg className="w-5 h-5 md:rotate-0 rotate-90" fill="none" viewBox="0 0 24 24" stroke={gold} strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                            </svg>
+                          </div>
+                          <span className="text-[10px] tracking-[0.15em] uppercase font-medium" style={{ color: gold }}>{item.timeframe}</span>
+                        </div>
+                        {/* After */}
+                        <div className="flex-1 text-center md:text-right">
+                          <p className="text-[10px] sm:text-xs tracking-[0.2em] uppercase font-medium mb-2" style={{ color: '#55EFC4' }}>Après</p>
+                          <p className="text-sm sm:text-base text-[var(--text-primary)] font-medium leading-relaxed">&laquo; {item.after} &raquo;</p>
+                        </div>
+                      </div>
+                      <div className="mt-4 pt-4 text-center" style={{ borderTop: `1px solid rgba(${goldRgb}, 0.06)` }}>
+                        <span className="text-xs font-light" style={{ color: 'var(--text-muted)' }}>Protocole : <span style={{ color: gold }}>{item.challenge}</span></span>
+                      </div>
+                    </GlowingCard>
+                  </RevealOnScroll>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      })()}
+
       {/* ═══ L'HISTOIRE / LE LIVRE ═══ */}
       {vis('histoire') && (() => {
         const hist = sec('histoire');
@@ -1315,6 +1379,48 @@ export default function Home() {
                   </RevealOnScroll>
                 ))}
               </div>
+            </div>
+          </section>
+        );
+      })()}
+
+      {/* ═══ MANIFESTE ═══ */}
+      {vis('manifeste') && (() => {
+        const manif = sec('manifeste');
+        const paragraphs: string[] = manif.paragraphs || [];
+        return (
+          <section className="px-5 md:px-20 py-20 md:py-40 relative cv-auto overflow-hidden">
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="absolute top-0 left-0 w-full h-full" style={{ background: `radial-gradient(ellipse 50% 50% at 50% 50%, rgba(${goldRgb}, 0.04), transparent)` }} />
+            </div>
+            <div className="max-w-3xl mx-auto relative z-10 text-center">
+              <RevealOnScroll>
+                <div className="mb-8 md:mb-12">
+                  <span className="block w-16 h-px mx-auto mb-6" style={{ background: gold }} />
+                  <h2 className="font-display font-light italic text-2xl sm:text-3xl md:text-5xl leading-[1.2]" style={{ color: gold }}>
+                    <WordByWordReveal text={manif.title || ''} />
+                  </h2>
+                  <span className="block w-16 h-px mx-auto mt-6" style={{ background: gold }} />
+                </div>
+              </RevealOnScroll>
+
+              <div className="space-y-6 md:space-y-8">
+                {paragraphs.map((p: string, i: number) => (
+                  <RevealOnScroll key={i} delay={0.15 + i * 0.1}>
+                    <p className="text-base md:text-xl font-light leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                      {p}
+                    </p>
+                  </RevealOnScroll>
+                ))}
+              </div>
+
+              {manif.signature && (
+                <RevealOnScroll delay={0.5}>
+                  <p className="mt-10 md:mt-14 font-display text-lg md:text-xl italic" style={{ color: gold }}>
+                    — {manif.signature}
+                  </p>
+                </RevealOnScroll>
+              )}
             </div>
           </section>
         );
@@ -1427,6 +1533,39 @@ export default function Home() {
           </div>
         </section>
       )}
+
+      {/* ═══ GARANTIE ═══ */}
+      {vis('garantie') && (() => {
+        const gar = sec('garantie');
+        return (
+          <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
+            <div className="max-w-3xl mx-auto text-center">
+              <RevealOnScroll direction="scale">
+                <div className="glow-card p-8 sm:p-10 md:p-14">
+                  <div className="w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center mx-auto mb-6 md:mb-8" style={{ background: `rgba(85, 239, 196, 0.08)`, border: `2px solid rgba(85, 239, 196, 0.2)` }}>
+                    <svg className="w-10 h-10 md:w-12 md:h-12" fill="none" viewBox="0 0 24 24" stroke="#55EFC4" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                    </svg>
+                  </div>
+                  <RevealOnScroll delay={0.1}>
+                    <p className="luxury-title text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{gar.label || 'Notre engagement'}</p>
+                  </RevealOnScroll>
+                  <RevealOnScroll delay={0.15}>
+                    <h2 className="font-display font-light text-2xl sm:text-3xl md:text-4xl mb-4 md:mb-6" style={{ color: 'var(--text-primary)' }}>
+                      {gar.title || ''}
+                    </h2>
+                  </RevealOnScroll>
+                  <RevealOnScroll delay={0.2}>
+                    <p className="text-base md:text-lg text-[var(--text-secondary)] font-light leading-relaxed max-w-xl mx-auto">
+                      {gar.description || ''}
+                    </p>
+                  </RevealOnScroll>
+                </div>
+              </RevealOnScroll>
+            </div>
+          </section>
+        );
+      })()}
 
       {/* ═══ FAQ ═══ */}
       {vis('faq') && (() => {

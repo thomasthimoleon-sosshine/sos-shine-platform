@@ -5,14 +5,14 @@ export function generateSignatureResultEmail(
   profile: Profile,
   siteUrl: string
 ): { subject: string; html: string } {
-  const subject = `${firstName}, votre Signature Emotionnelle : ${profile.archetype}`
+  const subject = `${firstName}, votre Signature Émotionnelle : ${profile.archetype}`
 
   const html = `<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Votre Signature Emotionnelle - SOS Shine</title>
+  <title>Votre Signature Émotionnelle - SOS Shine</title>
 </head>
 <body style="margin:0;padding:0;background-color:#050505;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#e0e0e0;">
   <!-- Wrapper -->
@@ -39,7 +39,7 @@ export function generateSignatureResultEmail(
           <tr>
             <td align="center" style="padding-bottom:24px;">
               <span style="display:inline-block;padding:8px 20px;border-radius:50px;font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:#D4AF37;border:1px solid rgba(212,175,55,0.2);background:rgba(212,175,55,0.06);">
-                Votre Signature Emotionnelle
+                Votre Signature Émotionnelle
               </span>
             </td>
           </tr>
@@ -73,8 +73,8 @@ export function generateSignatureResultEmail(
           <tr>
             <td style="padding-bottom:32px;">
               <p style="margin:0;font-size:16px;color:#e0e0e0;font-weight:300;line-height:1.7;text-align:center;">
-                ${firstName}, merci d'avoir pris le temps de decouvrir votre signature emotionnelle.
-                Voici votre profil complet, a conserver precieusement.
+                ${firstName}, merci d'avoir pris le temps de découvrir votre signature émotionnelle.
+                Voici votre profil complet, à conserver précieusement.
               </p>
             </td>
           </tr>
@@ -82,8 +82,8 @@ export function generateSignatureResultEmail(
           <!-- Section: Essence -->
           ${renderSection('Votre Essence', profile.essence, firstName, profile.color)}
 
-          <!-- Section: Lumiere -->
-          ${renderSection('Votre Lumiere', profile.lumiere, firstName, profile.color)}
+          <!-- Section: Lumière -->
+          ${renderSection('Votre Lumière', profile.lumiere, firstName, profile.color)}
 
           <!-- Section: Ombre -->
           ${renderSection('Votre Ombre', profile.ombre, firstName, profile.color)}
@@ -96,7 +96,7 @@ export function generateSignatureResultEmail(
             <td align="center" style="padding:40px 0 32px;">
               <div style="width:60px;height:1px;background:linear-gradient(90deg,transparent,#D4AF37,transparent);margin-bottom:32px;"></div>
               <p style="margin:0 0 24px;font-size:18px;color:#D4AF37;font-weight:300;font-family:Georgia,'Times New Roman',serif;">
-                Pret(e) a transformer votre signature emotionnelle en force&nbsp;?
+                Prêt(e) à transformer votre signature émotionnelle en force&nbsp;?
               </p>
               <a href="${siteUrl}/rejoindre" style="display:inline-block;padding:16px 40px;border-radius:50px;font-size:14px;font-weight:600;letter-spacing:0.05em;text-decoration:none;color:#050505;background:linear-gradient(135deg,#D4AF37,#B8960F);">
                 Rejoindre SOS Shine
@@ -115,8 +115,8 @@ export function generateSignatureResultEmail(
           <tr>
             <td align="center" style="padding:24px 0 16px;">
               <p style="margin:0;font-size:12px;color:#52525b;line-height:1.6;">
-                Cet email vous a ete envoye suite a votre test de Signature Emotionnelle sur SOS Shine.<br/>
-                Vous pouvez consulter vos resultats a tout moment en repassant le test sur notre site.
+                Cet email vous a été envoyé suite à votre test de Signature Émotionnelle sur SOS Shine.<br/>
+                Vous pouvez consulter vos résultats à tout moment en repassant le test sur notre site.
               </p>
             </td>
           </tr>
@@ -130,7 +130,7 @@ export function generateSignatureResultEmail(
           <tr>
             <td align="center" style="padding-bottom:32px;">
               <p style="margin:0;font-size:10px;color:#3f3f46;">
-                &copy; ${new Date().getFullYear()} SOS Shine. Tous droits reserves.
+                &copy; ${new Date().getFullYear()} SOS Shine. Tous droits réservés.
               </p>
             </td>
           </tr>
@@ -149,7 +149,7 @@ function renderSection(title: string, content: string, firstName: string, color:
   const injected = content.replace(/\{firstName\}/g, firstName)
   const sectionIcons: Record<string, string> = {
     'Votre Essence': '&#9670;',
-    'Votre Lumiere': '&#10022;',
+    'Votre Lumière': '&#10022;',
     'Votre Ombre': '&#9671;',
     'Votre Protocole': '&#9656;',
   }

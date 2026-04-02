@@ -371,7 +371,7 @@ export default function AdminPublications() {
       setActionSuccess('Avertissement envoye au membre.')
       setTimeout(() => setActionSuccess(null), 4000)
     } catch {
-      setActionError("Erreur reseau lors de l'envoi de l'avertissement.")
+      setActionError("Erreur réseau lors de l'envoi de l'avertissement.")
     }
     setSendingWarning(false)
   }

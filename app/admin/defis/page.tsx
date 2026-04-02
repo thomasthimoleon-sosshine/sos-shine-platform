@@ -158,87 +158,108 @@ export default function AdminDefisPage() {
   async function handleSave() {
     if (!form.title.trim() || saving) return
     setSaving(true)
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    try {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
 
-    const payload = {
-      title: form.title.trim(),
-      description: form.description.trim() || null,
-      reward_type: form.reward_type as ChallengeRewardType,
-      reward_value: form.reward_value,
-      reward_detail: form.reward_detail.trim() || null,
-      start_date: form.start_date ? new Date(form.start_date).toISOString() : null,
-      end_date: form.end_date ? new Date(form.end_date).toISOString() : null,
-      max_participants: form.max_participants ? parseInt(form.max_participants) : null,
-    }
+      const payload = {
+        title: form.title.trim(),
+        description: form.description.trim() || null,
+        reward_type: form.reward_type as ChallengeRewardType,
+        reward_value: form.reward_value,
+        reward_detail: form.reward_detail.trim() || null,
+        start_date: form.start_date ? new Date(form.start_date).toISOString() : null,
+        end_date: form.end_date ? new Date(form.end_date).toISOString() : null,
+        max_participants: form.max_participants ? parseInt(form.max_participants) : null,
+      }
 
-    let challengeId: string | null = null
+      let challengeId: string | null = null
 
-    if (editingId) {
-      await supabase.from('challenges').update(payload).eq('id', editingId)
-      challengeId = editingId
-    } else {
-      const { data: newChallenge } = await supabase.from('challenges')
-        .insert({ ...payload, created_by: user?.id ?? null, status: 'draft' as ChallengeStatus, winner_id: null })
-        .select('id')
-        .single()
-      challengeId = (newChallenge as { id: string } | null)?.id ?? null
-    }
+      if (editingId) {
+        const { error } = await supabase.from('challenges').update(payload).eq('id', editingId)
+        if (error) throw error
+        challengeId = editingId
+      } else {
+        const { data: newChallenge, error } = await supabase.from('challenges')
+          .insert({ ...payload, created_by: user?.id ?? null, status: 'draft' as ChallengeStatus, winner_id: null })
+          .select('id')
+          .single()
+        if (error) throw error
+        challengeId = (newChallenge as { id: string } | null)?.id ?? null
+      }
 
-    // Save phases
-    if (challengeId) {
-      // Delete existing phases for this challenge
-      await supabase.from('challenge_phases').delete().eq('challenge_id', challengeId)
+      // Save phases
+      if (challengeId) {
+        // Delete existing phases for this challenge
+        const { error: delErr } = await supabase.from('challenge_phases').delete().eq('challenge_id', challengeId)
+        if (delErr) throw delErr
 
-      // Insert new phases
-      if (form.phases.length > 0) {
-        const phasesToInsert = form.phases
-          .filter(p => p.title.trim())
-          .map((p, i) => ({
-            challenge_id: challengeId!,
-            phase_number: i + 1,
-            title: p.title.trim(),
-            description: p.description.trim() || null,
-            duration_days: p.duration_days ? parseInt(p.duration_days) : null,
-          }))
+        // Insert new phases
+        if (form.phases.length > 0) {
+          const phasesToInsert = form.phases
+            .filter(p => p.title.trim())
+            .map((p, i) => ({
+              challenge_id: challengeId!,
+              phase_number: i + 1,
+              title: p.title.trim(),
+              description: p.description.trim() || null,
+              duration_days: p.duration_days ? parseInt(p.duration_days) : null,
+            }))
 
-        if (phasesToInsert.length > 0) {
-          await supabase.from('challenge_phases').insert(phasesToInsert)
+          if (phasesToInsert.length > 0) {
+            const { error: insErr } = await supabase.from('challenge_phases').insert(phasesToInsert)
+            if (insErr) throw insErr
+          }
         }
       }
-    }
 
-    setShowForm(false)
-    setSaving(false)
-    await loadChallenges()
+      setShowForm(false)
+      await loadChallenges()
+    } catch (err) {
+      console.error('Erreur sauvegarde défi:', err)
+      alert('Erreur lors de la sauvegarde du défi. Veuillez réessayer.')
+    } finally {
+      setSaving(false)
+    }
   }
 
   async function updateStatus(id: string, status: ChallengeStatus) {
     const supabase = createClient()
-    await supabase.from('challenges').update({ status }).eq('id', id)
+    const { error } = await supabase.from('challenges').update({ status }).eq('id', id)
+    if (error) {
+      console.error('Erreur mise à jour statut:', error)
+      alert('Erreur lors de la mise à jour du statut.')
+      return
+    }
     await loadChallenges()
   }
 
   async function selectWinner(challengeId: string) {
-    const supabase = createClient()
-    const { data } = await supabase
-      .from('challenge_participations')
-      .select('user_id')
-      .eq('challenge_id', challengeId)
-      .eq('status', 'completed')
-      .order('completed_at', { ascending: true })
-      .limit(1)
-      .single()
+    try {
+      const supabase = createClient()
+      const { data, error: fetchErr } = await supabase
+        .from('challenge_participations')
+        .select('user_id')
+        .eq('challenge_id', challengeId)
+        .eq('status', 'completed')
+        .order('completed_at', { ascending: true })
+        .limit(1)
+        .single()
 
-    if (data) {
-      await supabase.from('challenges').update({ winner_id: data.user_id, status: 'completed' as ChallengeStatus }).eq('id', challengeId)
+      if (fetchErr || !data) {
+        alert('Aucun participant éligible trouvé pour ce défi.')
+        return
+      }
+
+      const { error: updateErr } = await supabase.from('challenges').update({ winner_id: data.user_id, status: 'completed' as ChallengeStatus }).eq('id', challengeId)
+      if (updateErr) throw updateErr
 
       const challenge = challenges.find(c => c.id === challengeId)
       const { data: { user } } = await supabase.auth.getUser()
 
-      if (challenge) {
-        const { data: post } = await supabase.from('posts').insert({
-          author_id: user!.id,
+      if (challenge && user) {
+        const { data: post, error: postErr } = await supabase.from('posts').insert({
+          author_id: user.id,
           title: `Défi "${challenge.title}" — Vainqueur !`,
           content: `Félicitations au vainqueur du défi "${challenge.title}" ! Bravo pour votre engagement et votre persévérance.`,
           post_type: 'announcement',
@@ -248,11 +269,11 @@ export default function AdminDefisPage() {
           is_published: true,
         } as never).select('id').single()
 
-        if (post) {
+        if (!postErr && post) {
           await supabase.from('pinned_posts').insert({
             post_id: (post as { id: string }).id,
             challenge_id: challengeId,
-            pinned_by: user?.id ?? null,
+            pinned_by: user.id,
             pin_type: 'winner' as const,
             expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
           })
@@ -260,13 +281,21 @@ export default function AdminDefisPage() {
       }
 
       await loadChallenges()
+    } catch (err) {
+      console.error('Erreur sélection vainqueur:', err)
+      alert('Erreur lors de la sélection du vainqueur. Veuillez réessayer.')
     }
   }
 
   async function deleteChallenge(id: string) {
     if (!confirm('Supprimer ce défi ?')) return
     const supabase = createClient()
-    await supabase.from('challenges').delete().eq('id', id)
+    const { error } = await supabase.from('challenges').delete().eq('id', id)
+    if (error) {
+      console.error('Erreur suppression défi:', error)
+      alert('Erreur lors de la suppression du défi.')
+      return
+    }
     await loadChallenges()
   }
 

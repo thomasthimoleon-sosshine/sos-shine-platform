@@ -30,8 +30,8 @@ type Candidature = {
 
 const statusStyles: Record<string, { bg: string; color: string; label: string }> = {
   pending:   { bg: 'rgba(212,175,55,0.12)',  color: '#D4AF37', label: 'En attente' },
-  approved:  { bg: 'rgba(85,239,196,0.12)',  color: '#55EFC4', label: 'Approuvee' },
-  rejected:  { bg: 'rgba(239,68,68,0.12)',   color: '#ef4444', label: 'Refusee' },
+  approved:  { bg: 'rgba(85,239,196,0.12)',  color: '#55EFC4', label: 'Approuvée' },
+  rejected:  { bg: 'rgba(239,68,68,0.12)',   color: '#ef4444', label: 'Refusée' },
   suspended: { bg: 'rgba(225,112,85,0.12)',  color: '#E17055', label: 'Suspendue' },
 }
 
@@ -137,8 +137,8 @@ export default function AdminCandidatures() {
           {[
             { label: 'Total', value: stats.total, color: 'var(--text-primary)' },
             { label: 'En attente', value: stats.pending, color: '#D4AF37' },
-            { label: 'Approuvees', value: stats.approved, color: '#55EFC4' },
-            { label: 'Refusees', value: stats.rejected, color: '#ef4444' },
+            { label: 'Approuvées', value: stats.approved, color: '#55EFC4' },
+            { label: 'Refusées', value: stats.rejected, color: '#ef4444' },
           ].map(s => (
             <div key={s.label} className="rounded-xl p-4 text-center" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
               <p className="font-display text-2xl font-light" style={{ color: s.color }}>{s.value}</p>
@@ -172,8 +172,8 @@ export default function AdminCandidatures() {
           style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}>
           <option value="all">Toutes</option>
           <option value="pending">En attente</option>
-          <option value="approved">Approuvees</option>
-          <option value="rejected">Refusees</option>
+          <option value="approved">Approuvées</option>
+          <option value="rejected">Refusées</option>
         </select>
       </div>
 
@@ -260,7 +260,7 @@ export default function AdminCandidatures() {
                       )}
                       {c.social_links?.main && (
                         <div>
-                          <p className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Reseau social</p>
+                          <p className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Réseau social</p>
                           <a href={c.social_links.main} target="_blank" rel="noopener noreferrer"
                             className="text-sm underline" style={{ color: '#74C0FC' }}>
                             Voir le profil

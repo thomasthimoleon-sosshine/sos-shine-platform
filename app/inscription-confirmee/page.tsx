@@ -71,13 +71,13 @@ function InscriptionConfirmeeContent() {
           className="font-display text-3xl sm:text-4xl font-light mb-4"
           style={{ color: '#D4AF37' }}
         >
-          Inscription confirm&eacute;e !
+          Inscription confirmée !
         </h1>
 
         {/* Verification status */}
         {verificationStatus === 'verifying' && (
           <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
-            V&eacute;rification de votre paiement en cours...
+            Vérification de votre paiement en cours...
           </p>
         )}
 
@@ -89,7 +89,7 @@ function InscriptionConfirmeeContent() {
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="#55EFC4" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
             </svg>
-            <span className="text-xs" style={{ color: '#55EFC4' }}>Email de confirmation envoy&eacute;</span>
+            <span className="text-xs" style={{ color: '#55EFC4' }}>Email de confirmation envoyé</span>
           </div>
         )}
 
@@ -99,7 +99,7 @@ function InscriptionConfirmeeContent() {
           style={{ borderColor: 'rgba(212,175,55,0.15)' }}
         >
           <p className="text-base leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
-            Votre paiement a &eacute;t&eacute; trait&eacute; avec succ&egrave;s et votre compte <strong style={{ color: '#D4AF37' }}>SOS Shine</strong> est en cours de cr&eacute;ation.
+            Votre paiement a été traité avec succès et votre compte <strong style={{ color: '#D4AF37' }}>SOS Shine</strong> est en cours de création.
           </p>
 
           <div
@@ -112,11 +112,11 @@ function InscriptionConfirmeeContent() {
               </svg>
               <div>
                 <p className="font-semibold text-sm mb-1" style={{ color: '#D4AF37' }}>
-                  V&eacute;rifiez votre bo&icirc;te mail
+                  Vérifiez votre boîte mail
                 </p>
                 <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
                   Vous allez recevoir un email avec vos <strong>identifiants de connexion</strong> (email + mot de passe temporaire).
-                  Pensez &agrave; v&eacute;rifier vos spams si vous ne le voyez pas.
+                  Pensez à vérifier vos spams si vous ne le voyez pas.
                 </p>
               </div>
             </div>
@@ -141,7 +141,7 @@ function InscriptionConfirmeeContent() {
               <span className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold"
                 style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37' }}>3</span>
               <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                Changez votre mot de passe pour s&eacute;curiser votre compte
+                Changez votre mot de passe pour sécuriser votre compte
               </p>
             </div>
           </div>
@@ -161,7 +161,7 @@ function InscriptionConfirmeeContent() {
             className="inline-flex items-center justify-center px-8 py-3.5 rounded-full font-medium text-sm tracking-wide transition-all"
             style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)' }}
           >
-            Retour &agrave; l&apos;accueil
+            Retour à l&apos;accueil
           </Link>
         </div>
 
@@ -177,11 +177,11 @@ function InscriptionConfirmeeContent() {
               </svg>
               <div>
                 <p className="font-semibold text-sm mb-1" style={{ color: '#f87171' }}>
-                  Impossible de v&eacute;rifier le paiement
+                  Impossible de vérifier le paiement
                 </p>
                 <p className="text-[13px] leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                  Pas d&apos;inqui&eacute;tude, votre paiement a bien &eacute;t&eacute; re&ccedil;u par Stripe.
-                  Vos identifiants vous seront envoy&eacute;s par email dans les prochaines minutes.
+                  Pas d&apos;inquiétude, votre paiement a bien été reçu par Stripe.
+                  Vos identifiants vous seront envoyés par email dans les prochaines minutes.
                   Si vous ne recevez rien sous 15 minutes, contactez le support.
                 </p>
               </div>
@@ -192,16 +192,16 @@ function InscriptionConfirmeeContent() {
         {/* Help text */}
         <div className="mt-8 p-4 rounded-xl text-center" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}>
           <p className="text-xs mb-2" style={{ color: 'var(--text-muted)' }}>
-            Vous n&apos;avez pas re&ccedil;u l&apos;email ? Attendez quelques minutes puis v&eacute;rifiez vos spams.
+            Vous n&apos;avez pas reçu l&apos;email ? Attendez quelques minutes puis vérifiez vos spams.
           </p>
           <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
             Toujours rien ?{' '}
             <a href="mailto:hello@sosshine.com" style={{ color: '#D4AF37', textDecoration: 'underline' }}>hello@sosshine.com</a>
             {' '}ou essayez de{' '}
             <Link href="/forgot-password" style={{ color: '#D4AF37', textDecoration: 'underline' }}>
-              cr&eacute;er un mot de passe
+              créer un mot de passe
             </Link>
-            {' '}avec l&apos;email utilis&eacute; lors du paiement.
+            {' '}avec l&apos;email utilisé lors du paiement.
           </p>
         </div>
       </motion.div>

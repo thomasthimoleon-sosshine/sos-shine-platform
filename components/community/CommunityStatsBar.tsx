@@ -48,10 +48,10 @@ export default function CommunityStatsBar() {
   if (!stats) return null
 
   const items = [
-    { label: 'Shines donnees', value: stats.totalShinesGiven, icon: '💛' },
-    { label: 'Shines recus', value: stats.totalShinesReceived, icon: '⭐' },
+    { label: 'Shines données', value: stats.totalShinesGiven, icon: '💛' },
+    { label: 'Shines reçus', value: stats.totalShinesReceived, icon: '⭐' },
     { label: 'Commentaires', value: stats.totalComments, icon: '💬' },
-    { label: 'Parcours completes', value: stats.totalParcoursCompleted, icon: '🏆' },
+    { label: 'Parcours complétés', value: stats.totalParcoursCompleted, icon: '🏆' },
   ]
 
   const total = stats.totalShinesGiven + stats.totalShinesReceived + stats.totalComments + stats.totalParcoursCompleted

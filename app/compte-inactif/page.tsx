@@ -137,7 +137,7 @@ export default function CompteInactifPage() {
         </div>
 
         <h1 className="font-display text-2xl sm:text-3xl font-light mb-4" style={{ color: 'var(--text-primary)' }}>
-          Acc&egrave;s suspendu
+          Accès suspendu
         </h1>
 
         <AnimatePresence>
@@ -169,7 +169,7 @@ export default function CompteInactifPage() {
               className="w-full py-4 rounded-full font-semibold tracking-wide transition-all text-sm"
               style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}
             >
-              Mettre &agrave; jour le paiement
+              Mettre à jour le paiement
             </button>
           )}
 
@@ -178,7 +178,7 @@ export default function CompteInactifPage() {
             className="w-full py-4 rounded-full font-semibold tracking-wide transition-all text-sm"
             style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.25)' }}
           >
-            S&apos;abonner Essentielle &mdash; 9,90&euro;/mois
+            S&apos;abonner Essentielle — 9,90€/mois
           </button>
 
           <button
@@ -186,7 +186,7 @@ export default function CompteInactifPage() {
             className="w-full py-4 rounded-full font-semibold tracking-wide transition-all text-sm"
             style={{ background: 'linear-gradient(135deg, #55EFC4, #00B894)', color: '#050505' }}
           >
-            S&apos;abonner S&eacute;r&eacute;nit&eacute; &mdash; 49,90&euro;/mois
+            S&apos;abonner Sérénité — 49,90€/mois
           </button>
 
           <button
@@ -194,16 +194,16 @@ export default function CompteInactifPage() {
             className="w-full py-4 rounded-full font-medium tracking-wide transition-all text-sm"
             style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}
           >
-            S&apos;abonner Premium &mdash; 99,90&euro;/mois
+            S&apos;abonner Premium — 99,90€/mois
           </button>
         </div>
 
         <div className="flex items-center justify-center gap-6">
           <Link href="/" className="text-xs transition-colors" style={{ color: 'var(--text-muted)' }}>
-            Retour &agrave; l&apos;accueil
+            Retour à l&apos;accueil
           </Link>
           <button onClick={handleSignOut} className="text-xs transition-colors cursor-pointer" style={{ color: 'var(--text-muted)' }}>
-            Se d&eacute;connecter
+            Se déconnecter
           </button>
           <Link href="/contact" className="text-xs transition-colors" style={{ color: 'var(--text-muted)' }}>
             Contacter le support

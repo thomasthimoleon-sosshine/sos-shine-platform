@@ -82,6 +82,32 @@ export const metadata: Metadata = {
   },
 };
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': `${siteUrl}/#website`,
+      url: siteUrl,
+      name: 'SOS Shine',
+      description: 'Plateforme premium d\'accompagnement pour traverser les épreuves de la vie. Corps, émotion, action.',
+      inLanguage: 'fr-FR',
+    },
+    {
+      '@type': 'Organization',
+      '@id': `${siteUrl}/#organization`,
+      name: 'SOS Shine',
+      url: siteUrl,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${siteUrl}/images/logo-shine.png`,
+      },
+      description: 'Communauté bienveillante dédiée à la transformation personnelle à travers le Corps, l\'Émotion et l\'Action.',
+      sameAs: [],
+    },
+  ],
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -89,6 +115,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body
         className={`${cormorant.variable} ${dmSans.variable} antialiased grain`}
       >

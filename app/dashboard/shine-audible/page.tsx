@@ -95,13 +95,16 @@ function StarRating({ rating, onRate, size = 'md', interactive = false }: {
 }
 
 // ── Mini Audio Player ──
-function MiniPlayer({ audio, isPlaying, onToggle, progress, currentTime, duration }: {
+function MiniPlayer({ audio, isPlaying, onToggle, progress, currentTime, duration, onRewind, onForward, onSeek }: {
   audio: ShineAudio
   isPlaying: boolean
   onToggle: () => void
   progress: number
   currentTime: string
   duration: string
+  onRewind: () => void
+  onForward: () => void
+  onSeek: (pct: number) => void
 }) {
   return (
     <motion.div
@@ -115,8 +118,16 @@ function MiniPlayer({ audio, isPlaying, onToggle, progress, currentTime, duratio
         borderTop: '1px solid var(--dark-border)',
       }}
     >
-      {/* Progress bar at top */}
-      <div className="h-1 w-full" style={{ background: 'rgba(255,255,255,0.06)' }}>
+      {/* Progress bar at top (clickable for seeking) */}
+      <div
+        className="h-1 w-full cursor-pointer"
+        style={{ background: 'rgba(255,255,255,0.06)' }}
+        onClick={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect()
+          const pct = ((e.clientX - rect.left) / rect.width) * 100
+          onSeek(Math.max(0, Math.min(100, pct)))
+        }}
+      >
         <div className="h-full transition-all duration-300" style={{ width: `${progress}%`, background: 'var(--gold)' }} />
       </div>
 
@@ -141,7 +152,7 @@ function MiniPlayer({ audio, isPlaying, onToggle, progress, currentTime, duratio
         {/* Controls */}
         <div className="flex items-center gap-2 shrink-0">
           {/* Rewind 15s */}
-          <button className="w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-colors hover:bg-white/10"
+          <button onClick={onRewind} className="w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-colors hover:bg-white/10"
             style={{ color: 'var(--text-secondary)' }}>
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
@@ -166,7 +177,7 @@ function MiniPlayer({ audio, isPlaying, onToggle, progress, currentTime, duratio
           </button>
 
           {/* Forward 15s */}
-          <button className="w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-colors hover:bg-white/10"
+          <button onClick={onForward} className="w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-colors hover:bg-white/10"
             style={{ color: 'var(--text-secondary)' }}>
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 15l6-6m0 0l-6-6m6 6H9a6 6 0 000 12h3" />
@@ -729,9 +740,10 @@ export default function ShineAudiblePage() {
   const [nowPlaying, setNowPlaying] = useState<ShineAudio | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [playerProgress, setPlayerProgress] = useState(0)
-  const [fakeTime, setFakeTime] = useState(0)
+  const [currentTime, setCurrentTime] = useState(0)
+  const [audioDuration, setAudioDuration] = useState(0)
   const [audioDisclaimer, setAudioDisclaimer] = useState<ShineAudio | null>(null)
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
 
   useEffect(() => {
     async function loadAudios() {
@@ -838,25 +850,27 @@ export default function ShineAudiblePage() {
     loadAudios()
   }, [])
 
-  // Simulate playback
+  // Sync play/pause state with audio element
   useEffect(() => {
-    if (isPlaying && nowPlaying) {
-      timerRef.current = setInterval(() => {
-        setFakeTime(prev => {
-          const next = prev + 1
-          if (next >= nowPlaying.durationSeconds) {
-            setIsPlaying(false)
-            return 0
-          }
-          setPlayerProgress((next / nowPlaying.durationSeconds) * 100)
-          return next
-        })
-      }, 1000)
+    const audio = audioRef.current
+    if (!audio) return
+    if (isPlaying) {
+      audio.play().catch(() => setIsPlaying(false))
     } else {
-      if (timerRef.current) clearInterval(timerRef.current)
+      audio.pause()
     }
-    return () => { if (timerRef.current) clearInterval(timerRef.current) }
-  }, [isPlaying, nowPlaying])
+  }, [isPlaying])
+
+  // Cleanup audio on unmount
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current.removeAttribute('src')
+        audioRef.current.load()
+      }
+    }
+  }, [])
 
   const formatTime = (s: number) => {
     const m = Math.floor(s / 60)
@@ -865,10 +879,42 @@ export default function ShineAudiblePage() {
   }
 
   const startPlayback = (audio: ShineAudio) => {
+    // Stop previous audio if any
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current.removeAttribute('src')
+      audioRef.current.load()
+    }
+
+    // Create new audio element
+    const el = new Audio(audio.audioUrl)
+    audioRef.current = el
+
+    el.addEventListener('timeupdate', () => {
+      setCurrentTime(el.currentTime)
+      if (el.duration && isFinite(el.duration)) {
+        setPlayerProgress((el.currentTime / el.duration) * 100)
+      }
+    })
+    el.addEventListener('loadedmetadata', () => {
+      setAudioDuration(el.duration && isFinite(el.duration) ? el.duration : audio.durationSeconds)
+    })
+    el.addEventListener('ended', () => {
+      setIsPlaying(false)
+      setPlayerProgress(0)
+      setCurrentTime(0)
+    })
+    el.addEventListener('error', () => {
+      console.error('Audio playback error:', el.error)
+      setIsPlaying(false)
+    })
+
     setNowPlaying(audio)
-    setFakeTime(0)
+    setCurrentTime(0)
     setPlayerProgress(0)
+    setAudioDuration(audio.durationSeconds)
     setIsPlaying(true)
+    el.play().catch(() => setIsPlaying(false))
   }
 
   const handlePlay = (audio: ShineAudio) => {
@@ -878,6 +924,24 @@ export default function ShineAudiblePage() {
       setAudioDisclaimer(audio)
     } else {
       startPlayback(audio)
+    }
+  }
+
+  const handleRewind = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = Math.max(0, audioRef.current.currentTime - 15)
+    }
+  }
+
+  const handleForward = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = Math.min(audioRef.current.duration || 0, audioRef.current.currentTime + 15)
+    }
+  }
+
+  const handleSeek = (pct: number) => {
+    if (audioRef.current && audioRef.current.duration) {
+      audioRef.current.currentTime = (pct / 100) * audioRef.current.duration
     }
   }
 
@@ -1450,8 +1514,11 @@ export default function ShineAudiblePage() {
             isPlaying={isPlaying}
             onToggle={() => setIsPlaying(!isPlaying)}
             progress={playerProgress}
-            currentTime={formatTime(fakeTime)}
-            duration={formatTime(nowPlaying.durationSeconds)}
+            currentTime={formatTime(currentTime)}
+            duration={formatTime(audioDuration)}
+            onRewind={handleRewind}
+            onForward={handleForward}
+            onSeek={handleSeek}
           />
         )}
       </AnimatePresence>

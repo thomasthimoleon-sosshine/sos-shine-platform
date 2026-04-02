@@ -56,10 +56,10 @@ function SuccessContent() {
             </svg>
           </div>
           <h1 className="font-display text-3xl sm:text-4xl font-light mb-4" style={{ color: '#D4AF37' }}>
-            V&eacute;rification en cours
+            Vérification en cours
           </h1>
           <p className="text-base leading-relaxed mb-8" style={{ color: 'var(--text-secondary)' }}>
-            Nous n&apos;avons pas pu v&eacute;rifier votre paiement imm&eacute;diatement. Pas d&apos;inqui&eacute;tude, votre acc&egrave;s sera activ&eacute; sous quelques minutes.
+            Nous n&apos;avons pas pu vérifier votre paiement immédiatement. Pas d&apos;inquiétude, votre accès sera activé sous quelques minutes.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
@@ -95,7 +95,7 @@ function SuccessContent() {
             </svg>
           </div>
           <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-            V&eacute;rification de votre paiement...
+            Vérification de votre paiement...
           </p>
         </div>
       </main>
@@ -144,12 +144,12 @@ function SuccessContent() {
               </svg>
               <div>
                 <p className="font-semibold text-sm mb-1" style={{ color: '#D4AF37' }}>
-                  V&eacute;rifiez votre bo&icirc;te mail
+                  Vérifiez votre boîte mail
                 </p>
                 <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
                   {isNewAccount
-                    ? <>Vous avez re&ccedil;u un email avec vos <strong>identifiants de connexion</strong> (email + mot de passe temporaire). Pensez &agrave; v&eacute;rifier vos spams si vous ne le voyez pas.</>
-                    : <>Un email de confirmation vous a &eacute;t&eacute; envoy&eacute;. Pensez &agrave; v&eacute;rifier vos spams si vous ne le voyez pas.</>
+                    ? <>Vous avez reçu un email avec vos <strong>identifiants de connexion</strong> (email + mot de passe temporaire). Pensez à vérifier vos spams si vous ne le voyez pas.</>
+                    : <>Un email de confirmation vous a été envoyé. Pensez à vérifier vos spams si vous ne le voyez pas.</>
                   }
                 </p>
               </div>

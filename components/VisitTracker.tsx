@@ -28,22 +28,23 @@ export default function VisitTracker() {
     const sessionId = getSessionId()
 
     // Fire and forget — don't block rendering
-    fetch('/api/track/visit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        page_path: pathname,
-        referrer: document.referrer || null,
-        session_id: sessionId,
-      }),
-    }).then(async (res) => {
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}))
-        console.warn('[VisitTracker] Tracking failed:', res.status, body)
-      }
-    }).catch((err) => {
-      console.warn('[VisitTracker] Network error:', err.message)
-    })
+    // Small delay to not compete with critical page resources
+    const timer = setTimeout(() => {
+      fetch('/api/track/visit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          page_path: pathname,
+          referrer: document.referrer || null,
+          session_id: sessionId,
+          timestamp: new Date().toISOString(),
+        }),
+      }).catch(() => {
+        // Silently fail — tracking should never break UX
+      })
+    }, 500)
+
+    return () => clearTimeout(timer)
   }, [pathname])
 
   return null

@@ -24,8 +24,8 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY 
 
 const PLAN_FEATURES: Record<PlanId, string[]> = {
   essential: [
-    'Encyclopedie complete',
-    'Chat & Communaute',
+    'Encyclopédie complète',
+    'Chat & Communauté',
   ],
   serenite: [
     'Tout de l\'Essentielle',
@@ -36,10 +36,10 @@ const PLAN_FEATURES: Record<PlanId, string[]> = {
     '7 jours d\'essai gratuit',
   ],
   premium: [
-    'Tout de la Serenite',
+    'Tout de la Sérénité',
     'Live hebdomadaire',
-    'Canal Telegram prive',
-    'Evenements physiques',
+    'Canal Telegram privé',
+    'Événements physiques',
     'Ateliers Premium (48 semaines)',
     '7 jours d\'essai gratuit',
   ],
@@ -290,7 +290,7 @@ export default function SubscriptionModal({
                             className="text-center py-1 text-[10px] font-semibold tracking-wide uppercase"
                             style={{ background: color, color: '#050505' }}
                           >
-                            {isSuggested ? 'Recommande' : 'Le plus choisi'}
+                            {isSuggested ? 'Recommandé' : 'Le plus choisi'}
                           </div>
                         )}
 
@@ -411,10 +411,10 @@ export default function SubscriptionModal({
                   </svg>
                 </div>
                 <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
-                  Bienvenue dans la communaute !
+                  Bienvenue dans la communauté !
                 </h3>
                 <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
-                  Votre abonnement est actif. Le contenu est maintenant debloque.
+                  Votre abonnement est actif. Le contenu est maintenant débloqué.
                 </p>
                 <button
                   onClick={handleSuccess}

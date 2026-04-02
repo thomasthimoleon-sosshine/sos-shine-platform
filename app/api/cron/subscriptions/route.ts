@@ -32,6 +32,51 @@ export async function GET(request: Request) {
       errors: [] as string[],
     }
 
+    // ─── 0. Détecter les essais gratuits expirés (trial_end dépassé) ───
+    const { data: expiredTrials } = await supabase
+      .from('subscriptions')
+      .select('id, user_id, plan, status, trial_end, profiles(prenom, email)')
+      .eq('status', 'trialing')
+      .not('trial_end', 'is', null)
+      .lt('trial_end', now.toISOString())
+
+    if (expiredTrials && expiredTrials.length > 0) {
+      for (const trial of expiredTrials) {
+        try {
+          // Mettre à jour le statut : l'essai est terminé, vérifier si le paiement a été capturé
+          // Si Stripe n'a pas converti automatiquement en 'active', on passe en past_due
+          const graceEnd = new Date(now)
+          graceEnd.setDate(graceEnd.getDate() + GRACE_PERIOD_DAYS)
+
+          await supabase.from('subscriptions').update({
+            status: 'past_due',
+            payment_failed_at: now.toISOString(),
+            grace_period_end: graceEnd.toISOString(),
+            reminder_sent_count: 0,
+            updated_at: now.toISOString(),
+          }).eq('id', trial.id)
+
+          await supabase.from('subscription_payment_logs').insert({
+            user_id: trial.user_id,
+            subscription_id: trial.id,
+            event_type: 'trial_expired',
+            plan: trial.plan,
+            metadata: { trial_end: trial.trial_end },
+          })
+
+          results.grace_periods_started++
+
+          const profile = (trial as Record<string, unknown>).profiles as { prenom: string; email: string } | null
+          if (profile?.email) {
+            await sendReminder(supabase, trial, profile, 'payment_failed_1', now)
+            results.reminders_sent++
+          }
+        } catch (e) {
+          results.errors.push(`Expired trial ${trial.id}: ${(e as Error).message}`)
+        }
+      }
+    }
+
     // ─── 1. Détecter les abonnements expirés (current_period_end dépassé) ───
     const { data: expiredSubs } = await supabase
       .from('subscriptions')

@@ -42,7 +42,7 @@ export async function GET(request: Request) {
     // Vérifier l'abonnement
     const { data: sub } = await supabase
       .from('subscriptions')
-      .select('status, plan, current_period_end, cancel_at_period_end, waitlist_discount')
+      .select('status, plan, current_period_end, cancel_at_period_end, waitlist_discount, trial_end')
       .eq('user_id', userId)
       .single()
 
@@ -54,7 +54,9 @@ export async function GET(request: Request) {
       })
     }
 
-    const isActive = sub.status === 'active' || sub.status === 'trialing'
+    // Vérifier si l'essai n'est pas expiré
+    const isTrialExpired = sub.status === 'trialing' && sub.trial_end && new Date(sub.trial_end) < new Date()
+    const isActive = (sub.status === 'active' || sub.status === 'trialing') && !isTrialExpired
 
     return NextResponse.json({
       active: isActive,

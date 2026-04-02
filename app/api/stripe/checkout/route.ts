@@ -61,6 +61,9 @@ export async function POST(request: Request) {
     const siteUrl = getSiteUrl()
     const firstName = prenom?.trim() || 'Membre'
 
+    // Vérifier si le plan a un essai gratuit
+    const hasTrial = (plan === 'serenite' || plan === 'premium')
+
     // Paramètres de la session Checkout
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const sessionParams: any = {
@@ -79,6 +82,11 @@ export async function POST(request: Request) {
       },
       client_reference_id: userId,
       allow_promotion_codes: true,
+      ...(hasTrial ? {
+        subscription_data: {
+          trial_period_days: 7,
+        },
+      } : {}),
     }
 
     // Coupon waitlist

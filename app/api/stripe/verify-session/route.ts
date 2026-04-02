@@ -32,9 +32,11 @@ export async function POST(request: Request) {
     })
 
     // Vérifier que le paiement est valide
+    // 'unpaid' = essai gratuit (trial) → la session est complète mais pas encore de paiement
     const isValid = session.status === 'complete'
       || session.payment_status === 'paid'
-      || session.payment_status === 'no_payment_required' // Essais gratuits
+      || session.payment_status === 'no_payment_required'
+      || session.payment_status === 'unpaid' // Essais gratuits (trial 7 jours)
 
     if (!isValid) {
       return NextResponse.json({

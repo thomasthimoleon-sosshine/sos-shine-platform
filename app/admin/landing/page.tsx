@@ -23,7 +23,7 @@ const sizeOpts = [
   { label: 'Petit (30px)', value: 'sm' },
   { label: 'Moyen (36px)', value: 'md' },
   { label: 'Grand (48px)', value: 'lg' },
-  { label: 'Tres grand (60px)', value: 'xl' },
+  { label: 'Très grand (60px)', value: 'xl' },
   { label: 'Immense (72px)', value: '2xl' },
 ]
 const variantOpts = [
@@ -68,7 +68,7 @@ function ColorField({ label, value, onChange }: { label: string; value: string; 
         <input type="color" value={value || '#000000'} onChange={(e) => onChange(e.target.value)}
           className="w-10 h-10 rounded-lg cursor-pointer border-0" style={{ background: 'transparent' }} />
         <input type="text" value={value || ''} onChange={(e) => onChange(e.target.value)}
-          placeholder="Defaut" className="flex-1 rounded-lg px-3 py-2 text-sm outline-none" style={inputStyle} />
+          placeholder="Défaut" className="flex-1 rounded-lg px-3 py-2 text-sm outline-none" style={inputStyle} />
       </div>
     </div>
   )
@@ -345,7 +345,7 @@ export default function LandingAdminPage() {
       setSaved(true)
       setTimeout(() => setSaved(false), 4000)
     } catch (err) {
-      setError(`Erreur: ${err instanceof Error ? err.message : 'Veuillez reessayer'}`)
+      setError(`Erreur: ${err instanceof Error ? err.message : 'Veuillez réessayer'}`)
       setSaving(false)
     }
   }
@@ -564,9 +564,9 @@ export default function LandingAdminPage() {
                 <TextField label="Titre" value={feature.title || ''} onChange={(v) => updateArrayItem(key, 'features', i, 'title', v)} />
                 <TextAreaField label="Description" value={feature.description || ''} onChange={(v) => updateArrayItem(key, 'features', i, 'description', v)} />
                 <SelectField label="Icone" value={feature.icon || 'encyclopedia'} options={[
-                  { label: 'Encyclopedie', value: 'encyclopedia' },
-                  { label: 'Communaute', value: 'community' },
-                  { label: 'Evenements', value: 'events' },
+                  { label: 'Encyclopédie', value: 'encyclopedia' },
+                  { label: 'Communauté', value: 'community' },
+                  { label: 'Événements', value: 'events' },
                   { label: 'Media', value: 'media' },
                 ]} onChange={(v) => updateArrayItem(key, 'features', i, 'icon', v)} />
               </div>
@@ -616,12 +616,12 @@ export default function LandingAdminPage() {
           <>
             <TextField label="Label de section" value={c.label || ''} onChange={(v) => updateContent(key, 'label', v)} />
             <TextAreaField label="Titre de section" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
-            <TextField label="Badge verifie" value={c.verified_badge || ''} onChange={(v) => updateContent(key, 'verified_badge', v)} />
-            <Separator label="Temoignages" />
+            <TextField label="Badge vérifié" value={c.verified_badge || ''} onChange={(v) => updateContent(key, 'verified_badge', v)} />
+            <Separator label="Témoignages" />
             {(c.items || []).map((item: { quote: string; name: string; city: string }, i: number) => (
               <div key={i} className="rounded-lg p-4 space-y-3" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
                 <div className="flex items-center justify-between">
-                  <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Temoignage {i + 1}</p>
+                  <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Témoignage {i + 1}</p>
                   <button type="button" onClick={() => removeArrayItem(key, 'items', i)}
                     className="text-xs px-2 py-1 rounded cursor-pointer" style={{ color: '#FF6B6B' }}>Supprimer</button>
                 </div>

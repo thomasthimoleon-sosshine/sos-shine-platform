@@ -13,14 +13,14 @@ type PostWithProfile = Post & {
 
 const POST_TYPE_CONFIG: Record<string, { label: string; color: string; icon: string }> = {
   announcement: { label: 'Annonce', color: '#D4AF37', icon: '📢' },
-  douleur_published: { label: 'Challenge publie', color: '#55EFC4', icon: '📘' },
-  event_published: { label: 'Evenement publie', color: '#74C0FC', icon: '📅' },
-  general: { label: 'General', color: '#9A9080', icon: '💬' },
-  community: { label: 'Communaute', color: '#A29BFE', icon: '🌟' },
+  douleur_published: { label: 'Challenge publié', color: '#55EFC4', icon: '📘' },
+  event_published: { label: 'Événement publié', color: '#74C0FC', icon: '📅' },
+  general: { label: 'Général', color: '#9A9080', icon: '💬' },
+  community: { label: 'Communauté', color: '#A29BFE', icon: '🌟' },
 }
 
 const CATEGORY_CONFIG: Record<string, { label: string; color: string; icon: string }> = {
-  temoignage: { label: 'Temoignage', color: '#D4AF37', icon: '🗣️' },
+  temoignage: { label: 'Témoignage', color: '#D4AF37', icon: '🗣️' },
   partage: { label: "Partage d'exp.", color: '#74C0FC', icon: '💫' },
   question: { label: 'Question', color: '#A29BFE', icon: '❓' },
   remerciements: { label: 'Remerciements', color: '#55EFC4', icon: '🙏' },
@@ -432,7 +432,7 @@ export default function AdminPublications() {
       <div className="flex flex-wrap gap-2">
         {[
           { value: 'all', label: 'Tout', color: 'var(--text-secondary)' },
-          { value: 'community', label: 'Communaute', color: '#A29BFE' },
+          { value: 'community', label: 'Communauté', color: '#A29BFE' },
           { value: 'announcement', label: 'Annonces', color: '#D4AF37' },
           { value: 'general', label: 'General', color: '#9A9080' },
         ].map(f => (
@@ -837,7 +837,7 @@ export default function AdminPublications() {
                 rows={4}
                 value={warningMessage}
                 onChange={(e) => setWarningMessage(e.target.value)}
-                placeholder="Votre publication ne respecte pas les regles de la communaute. Merci de corriger..."
+                placeholder="Votre publication ne respecte pas les règles de la communauté. Merci de corriger..."
                 className="w-full rounded-lg px-4 py-2.5 text-sm outline-none resize-y"
                 style={inputStyle}
               />

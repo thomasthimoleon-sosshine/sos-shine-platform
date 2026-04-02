@@ -12,7 +12,7 @@ export default function BlogArticleError({ reset }: { error: Error; reset: () =>
           Article indisponible
         </h1>
         <p className="text-sm font-light mb-6" style={{ color: 'var(--text-secondary)' }}>
-          Cet article n&apos;est pas disponible pour le moment. Veuillez reessayer.
+          Cet article n&apos;est pas disponible pour le moment. Veuillez réessayer.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
@@ -20,7 +20,7 @@ export default function BlogArticleError({ reset }: { error: Error; reset: () =>
             className="px-6 py-2.5 rounded-full text-sm font-semibold tracking-wide hover:scale-105 transition-transform"
             style={{ background: `linear-gradient(135deg, ${gold}, #B8960F)`, color: '#050505' }}
           >
-            Reessayer
+            Réessayer
           </button>
           <Link
             href="/blog"

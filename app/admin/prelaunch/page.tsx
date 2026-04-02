@@ -74,15 +74,15 @@ const sections: SectionDef[] = [
   {
     title: 'Formulaire & Waitlist', icon: '📝',
     fields: [
-      { label: 'Placeholder prenom', key: 'prelaunch_form_name_placeholder', type: 'text', default: 'Votre prenom (optionnel)' },
+      { label: 'Placeholder prénom', key: 'prelaunch_form_name_placeholder', type: 'text', default: 'Votre prénom (optionnel)' },
       { label: 'Placeholder email', key: 'prelaunch_form_email_placeholder', type: 'text', default: 'Votre email' },
-      { label: 'Texte du bouton', key: 'prelaunch_form_button', type: 'text', default: "Rejoindre la liste d'attente — 19,90€/mois a vie" },
+      { label: 'Texte du bouton', key: 'prelaunch_form_button', type: 'text', default: "Rejoindre la liste d'attente — 19,90€/mois à vie" },
       sep('Messages'),
-      { label: 'Titre apres inscription', key: 'prelaunch_success_title', type: 'text', default: 'Bienvenue parmi les fondateurs' },
-      { label: 'Message apres inscription', key: 'prelaunch_success_message', type: 'textarea', default: "Votre place est reservee. Vous recevrez un email le jour de l'ouverture avec votre acces prioritaire au tarif de 19,90€/mois a vie." },
-      { label: 'Message deja inscrit', key: 'prelaunch_already_message', type: 'text', default: 'Vous etes deja inscrit(e). Nous vous contacterons le 22 mars.' },
+      { label: 'Titre après inscription', key: 'prelaunch_success_title', type: 'text', default: 'Bienvenue parmi les fondateurs' },
+      { label: 'Message après inscription', key: 'prelaunch_success_message', type: 'textarea', default: "Votre place est réservée. Vous recevrez un email le jour de l'ouverture avec votre accès prioritaire au tarif de 19,90€/mois à vie." },
+      { label: 'Message déjà inscrit', key: 'prelaunch_already_message', type: 'text', default: 'Vous êtes déjà inscrit(e). Nous vous contacterons le 22 mars.' },
       { label: 'Texte en cours (bouton)', key: 'prelaunch_form_loading', type: 'text', default: 'Inscription...' },
-      { label: 'Message d\'erreur', key: 'prelaunch_error_message', type: 'text', default: 'Une erreur est survenue. Veuillez reessayer.' },
+      { label: 'Message d\'erreur', key: 'prelaunch_error_message', type: 'text', default: 'Une erreur est survenue. Veuillez réessayer.' },
       sep('Preuve sociale'),
       { label: 'Texte preuve sociale (utilisez {count} pour le nombre)', key: 'prelaunch_social_proof', type: 'text', default: '{count} personne(s) sur la liste d\'attente' },
     ],
@@ -91,12 +91,12 @@ const sections: SectionDef[] = [
     title: 'Features teaser', icon: '🎯',
     fields: [
       { label: 'Titre section', key: 'prelaunch_features_label', type: 'text', default: 'Ce qui vous attend' },
-      { label: 'Feature 1', key: 'prelaunch_feature_1', type: 'text', default: "Encyclopedie complete des experiences de vie (A-Z)" },
-      { label: 'Feature 2', key: 'prelaunch_feature_2', type: 'text', default: 'Videos de coaching immersif' },
-      { label: 'Feature 3', key: 'prelaunch_feature_3', type: 'text', default: 'Soins energetiques & meditations' },
-      { label: 'Feature 4', key: 'prelaunch_feature_4', type: 'text', default: 'Chat dedie par challenge emotionnel' },
-      { label: 'Feature 5', key: 'prelaunch_feature_5', type: 'text', default: 'Communaute & mur de partage' },
-      { label: 'Feature 6', key: 'prelaunch_feature_6', type: 'text', default: 'Soins collectifs & evenements' },
+      { label: 'Feature 1', key: 'prelaunch_feature_1', type: 'text', default: "Encyclopédie complète des expériences de vie (A-Z)" },
+      { label: 'Feature 2', key: 'prelaunch_feature_2', type: 'text', default: 'Vidéos de coaching immersif' },
+      { label: 'Feature 3', key: 'prelaunch_feature_3', type: 'text', default: 'Soins énergétiques & méditations' },
+      { label: 'Feature 4', key: 'prelaunch_feature_4', type: 'text', default: 'Chat dédié par challenge émotionnel' },
+      { label: 'Feature 5', key: 'prelaunch_feature_5', type: 'text', default: 'Communauté & mur de partage' },
+      { label: 'Feature 6', key: 'prelaunch_feature_6', type: 'text', default: 'Soins collectifs & événements' },
     ],
   },
   {
@@ -201,7 +201,7 @@ export default function PrelaunchEditPage() {
 
       setSaving(false); setSaved(true); setTimeout(() => setSaved(false), 4000)
     } catch (err) {
-      setError(`Erreur: ${err instanceof Error ? err.message : 'Veuillez reessayer'}`); setSaving(false)
+      setError(`Erreur: ${err instanceof Error ? err.message : 'Veuillez réessayer'}`); setSaving(false)
     }
   }
 

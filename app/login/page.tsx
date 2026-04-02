@@ -119,7 +119,7 @@ export default function LoginPage() {
               onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(212,175,55,0.12)'; e.currentTarget.style.borderColor = 'rgba(212,175,55,0.5)' }}
               onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(212,175,55,0.05)'; e.currentTarget.style.borderColor = 'rgba(212,175,55,0.3)' }}
             >
-              Accès à SOS Shine®️ Kids
+              Accès à SOS Shine® Kids
             </a>
           </div>
         </div>

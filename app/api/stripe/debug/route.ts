@@ -6,8 +6,15 @@ import type { PlanId } from '@/lib/stripe'
  * GET /api/stripe/debug
  * Diagnostic endpoint to test Stripe connectivity and configuration.
  * Returns the status of each component without creating any sessions.
+ * PROTECTED: Requires BOT_SECRET or CRON_SECRET authorization.
  */
-export async function GET() {
+export async function GET(request: Request) {
+  // Protect debug endpoint — only accessible with authorization
+  const authHeader = request.headers.get('authorization')
+  const secret = process.env.CRON_SECRET || process.env.BOT_SECRET
+  if (!secret || authHeader !== `Bearer ${secret}`) {
+    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+  }
   const results: Record<string, unknown> = {
     timestamp: new Date().toISOString(),
     env: {

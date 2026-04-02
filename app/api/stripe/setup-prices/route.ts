@@ -82,8 +82,15 @@ const PRODUCTS_TO_CREATE = [
   },
 ]
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
+    // Protect this endpoint — only accessible with authorization
+    const authHeader = request.headers.get('authorization')
+    const secret = process.env.CRON_SECRET || process.env.BOT_SECRET
+    if (!secret || authHeader !== `Bearer ${secret}`) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+    }
+
     const stripe = getStripe()
     if (!stripe) {
       return NextResponse.json(

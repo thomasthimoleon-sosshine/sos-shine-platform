@@ -712,7 +712,7 @@ export default function Home() {
       )}
 
       {/* ═══ TICKER BAND 2 ═══ */}
-      <InfiniteTickerBand items={["Soutien 24/7", "Communaute bienveillante", "Protocoles exclusifs", "Soins collectifs", "Chat dedie", "Evenements live", "Meditation guidee", "Coaching immersif"]} speed={40} />
+      <InfiniteTickerBand items={["Soutien 24/7", "Communauté bienveillante", "Protocoles exclusifs", "Soins collectifs", "Chat dédié", "Événements live", "Méditation guidée", "Coaching immersif"]} speed={40} />
 
       {/* ═══ COMMUNAUTE ═══ */}
       {vis('communaute') && (

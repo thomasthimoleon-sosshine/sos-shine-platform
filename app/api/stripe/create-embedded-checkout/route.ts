@@ -81,6 +81,9 @@ export async function POST(request: Request) {
 
     console.log(`[EmbeddedCheckout] Creating session: ${plan} ${effectiveDuration}, email=${trimmedEmail}, origin=${siteOrigin}, priceId=${priceId}`)
 
+    // Vérifier si le plan a un essai gratuit
+    const hasTrial = (plan === 'serenite' || plan === 'premium')
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const sessionParams: any = {
       mode: 'subscription',
@@ -98,6 +101,11 @@ export async function POST(request: Request) {
       },
       client_reference_id: userId || firstName,
       allow_promotion_codes: true,
+      ...(hasTrial ? {
+        subscription_data: {
+          trial_period_days: 7,
+        },
+      } : {}),
     }
 
     if (STRIPE_WAITLIST_COUPON) {

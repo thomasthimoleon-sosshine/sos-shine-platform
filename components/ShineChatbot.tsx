@@ -224,26 +224,20 @@ export default function ShineChatbot() {
       {/* Petit onglet discret au lieu du gros bouton rond */}
       <motion.button
         onClick={() => setOpen(!open)}
-        className={`fixed right-4 z-[9998] flex items-center gap-2 cursor-pointer rounded-full px-3 py-2 transition-all duration-300 ${miniPlayerActive ? 'bottom-[5rem]' : 'bottom-4'}`}
+        className={`fixed right-4 z-[9998] cursor-pointer rounded-full w-10 h-10 flex items-center justify-center transition-all duration-300 ${miniPlayerActive ? 'bottom-[5rem]' : 'bottom-4'}`}
         style={{
-          background: open
-            ? 'rgba(212, 175, 55, 0.15)'
-            : 'linear-gradient(135deg, rgba(26,26,26,0.95), rgba(13,13,13,0.95))',
-          border: '1px solid rgba(212, 175, 55, 0.3)',
-          boxShadow: '0 2px 12px rgba(0,0,0,0.3), 0 0 8px rgba(212,175,55,0.08)',
-          backdropFilter: 'blur(8px)',
+          border: '1.5px solid rgba(212, 175, 55, 0.4)',
+          boxShadow: '0 2px 12px rgba(0,0,0,0.4), 0 0 8px rgba(212,175,55,0.1)',
         }}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
       >
         {open ? (
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          <div className="w-full h-full rounded-full flex items-center justify-center" style={{ background: 'rgba(212, 175, 55, 0.15)' }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </div>
         ) : (
-          <>
-            <img src="/images/shine-avatar.jpeg" alt="Shine" className="w-6 h-6 rounded-full object-cover" style={{ border: '1.5px solid #D4AF37' }} />
-            <span className="text-xs font-medium" style={{ color: '#D4AF37' }}>Aide</span>
-            <span className="w-2 h-2 rounded-full animate-pulse flex-shrink-0" style={{ background: '#22c55e' }} />
-          </>
+          <img src="/images/shine-avatar.jpeg" alt="Shine" className="w-full h-full rounded-full object-cover" />
         )}
       </motion.button>
     </>

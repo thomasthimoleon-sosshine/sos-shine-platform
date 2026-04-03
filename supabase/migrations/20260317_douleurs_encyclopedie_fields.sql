@@ -8,7 +8,7 @@ ALTER TABLE douleurs ADD COLUMN IF NOT EXISTS is_original boolean DEFAULT false;
 -- Update existing douleurs that match known original topics
 -- (they'll get their subtitle/category set via the admin panel or seed below)
 
--- Seed all 170+ encyclopédie topics as douleurs entries
+-- Seed all 200+ encyclopédie topics as douleurs entries
 -- Uses ON CONFLICT to avoid duplicating existing entries (matched by slug)
 -- Existing douleurs keep their content; new ones are created as placeholders
 

@@ -61,7 +61,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     content: {
       surtitle: "Plateforme de déconditionnement émotionnel",
       title: "Comprenez vos schémas.\nReprenez le contrôle\nde vos émotions.",
-      subtitle: "170+ protocoles concrets pour décoder vos réactions automatiques, comprendre votre biologie émotionnelle et changer durablement vos comportements. Créés par 3 spécialistes. Accessibles 24/7.",
+      subtitle: "200+ protocoles concrets pour décoder vos réactions automatiques, comprendre votre biologie émotionnelle et changer durablement vos comportements. Créés par 3 spécialistes. Accessibles 24/7.",
       video_url: '',
       image_url: '',
       cta_primary_label: 'Découvrir ma Signature Émotionnelle',
@@ -70,7 +70,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       cta_secondary_label: "Explorer l'encyclopédie",
       cta_secondary_href: '/encyclopedie',
       trust_items: [
-        '170+ protocoles',
+        '200+ protocoles',
         '7 jours gratuits',
         'Sans engagement',
       ],
@@ -95,7 +95,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     is_visible: true,
     content: {
       items: [
-        { value: '170+', label: 'PROTOCOLES DE DÉCONDITIONNEMENT' },
+        { value: '200+', label: 'PROTOCOLES DE DÉCONDITIONNEMENT' },
         { value: '5', label: 'UNIVERS DE CONTENU' },
         { value: '24/7', label: 'ACCESSIBLE À TOUT MOMENT' },
       ],
@@ -196,7 +196,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     is_visible: true,
     content: {
       label: "L'encyclopédie",
-      title: "170+ schémas émotionnels.\nChacun a son protocole.",
+      title: "200+ schémas émotionnels.\nChacun a son protocole.",
       description: "Tapez ce que vous traversez. Chaque sujet a un protocole en 3 étapes : vidéo explicative, séance audio guidée, exercices d'action. Vous avancez à votre rythme.",
       image_url: '',
       items: ['Abandon', 'Anxiété', 'Burn-out', 'Confiance en soi', 'Dépendance affective', 'Deuil', 'Intuition', 'Mission de vie', 'Pardon', 'Résilience', 'Relations toxiques', 'Stress', 'Trahison', 'Et plus...'],
@@ -218,7 +218,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       label: "Votre espace privé",
       title: "Tout ce dont vous avez besoin.\nDans votre poche, 24/7.",
       features: [
-        { icon: 'encyclopedia', title: "L'Encyclopédie Interactive", description: "170+ protocoles de déconditionnement classés par thème. Dépendance affective, trahison, anxiété, deuil — trouvez votre sujet, suivez le protocole." },
+        { icon: 'encyclopedia', title: "L'Encyclopédie Interactive", description: "200+ protocoles de déconditionnement classés par thème. Dépendance affective, trahison, anxiété, deuil — trouvez votre sujet, suivez le protocole." },
         { icon: 'community', title: 'La Communauté', description: "Un espace d'échange entre personnes qui traversent les mêmes épreuves. Pas de jugement. Pas de leçons de morale. Du vrai." },
         { icon: 'events', title: 'Les Événements Live', description: "Conférences hebdomadaires, ateliers en présentiel, Shine Walks. Le digital donne les clés, le présentiel ancre le changement." },
         { icon: 'media', title: '5 Univers de Contenu', description: "Shine TV (vidéos), Shine Audible (podcasts, méditations), Shine Shorts, Shine Librairie (guides, cahiers d'exercices). Le format qui vous correspond." },
@@ -530,7 +530,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     position: 15,
     is_visible: false,
     content: {
-      items: ['Accessible 24/7', 'Communauté bienveillante', '170+ protocoles', 'Sessions collectives', 'Chat dédié', 'Événements live', 'Séances guidées', 'Cahiers d\'exercices'],
+      items: ['Accessible 24/7', 'Communauté bienveillante', '200+ protocoles', 'Sessions collectives', 'Chat dédié', 'Événements live', 'Séances guidées', 'Cahiers d\'exercices'],
       speed: 40,
     },
     styles: {},

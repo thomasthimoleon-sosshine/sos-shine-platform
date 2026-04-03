@@ -30,7 +30,7 @@ type Topic = {
   dbMatch?: Douleur
 }
 
-/* ─── Liste complète des 170+ sujets (fallback + base) ─── */
+/* ─── Liste complète des 200+ sujets (fallback + base) ─── */
 const ALL_TOPICS: Omit<Topic, 'dbMatch' | 'slug'>[] = [
   // A
   { letter: "A", title: "Abandon", subtitle: "grandir sans père, sans mère ou sans les deux", cat: "Blessures & Traumatismes", original: true },

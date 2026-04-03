@@ -861,6 +861,16 @@ export default function ShineAudiblePage() {
     }
   }, [isPlaying])
 
+  // Signal mini-player presence to other components (e.g. chatbot)
+  useEffect(() => {
+    if (nowPlaying) {
+      document.documentElement.setAttribute('data-mini-player', 'true')
+    } else {
+      document.documentElement.removeAttribute('data-mini-player')
+    }
+    return () => document.documentElement.removeAttribute('data-mini-player')
+  }, [nowPlaying])
+
   // Cleanup audio on unmount
   useEffect(() => {
     return () => {

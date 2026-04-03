@@ -85,6 +85,7 @@ export default function ShineChatbot() {
   ]);
   const [input, setInput] = useState('');
   const [typing, setTyping] = useState(false);
+  const [miniPlayerActive, setMiniPlayerActive] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -94,6 +95,15 @@ export default function ShineChatbot() {
     };
     window.addEventListener('fullscreen-player-toggle', handler);
     return () => window.removeEventListener('fullscreen-player-toggle', handler);
+  }, []);
+
+  // Watch for mini-player presence via data attribute
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setMiniPlayerActive(document.documentElement.hasAttribute('data-mini-player'));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-mini-player'] });
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -125,7 +135,7 @@ export default function ShineChatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
             transition={{ duration: 0.3 }}
-            className="fixed bottom-14 right-4 z-[9998] w-[340px] max-w-[calc(100vw-2rem)] rounded-2xl overflow-hidden"
+            className={`fixed right-4 z-[9998] w-[340px] max-w-[calc(100vw-2rem)] rounded-2xl overflow-hidden transition-all duration-300 ${miniPlayerActive ? 'bottom-[5.5rem]' : 'bottom-14'}`}
             style={{
               background: 'linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 100%)',
               border: '1px solid rgba(212, 175, 55, 0.3)',
@@ -214,7 +224,7 @@ export default function ShineChatbot() {
       {/* Petit onglet discret au lieu du gros bouton rond */}
       <motion.button
         onClick={() => setOpen(!open)}
-        className="fixed bottom-4 right-4 z-[9998] flex items-center gap-2 cursor-pointer rounded-full px-3 py-2"
+        className={`fixed right-4 z-[9998] flex items-center gap-2 cursor-pointer rounded-full px-3 py-2 transition-all duration-300 ${miniPlayerActive ? 'bottom-[5rem]' : 'bottom-4'}`}
         style={{
           background: open
             ? 'rgba(212, 175, 55, 0.15)'

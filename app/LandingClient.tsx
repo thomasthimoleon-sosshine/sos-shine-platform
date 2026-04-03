@@ -504,28 +504,27 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
               <Link href="/" className="flex items-center gap-3">
                 <img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-14 sm:h-18 md:h-24 w-auto object-contain" />
               </Link>
-              <div className="absolute right-4 md:right-6 flex items-center gap-2 sm:gap-3">
+              <div className="absolute right-4 md:right-6 flex items-center gap-2">
                 <Link
                   href="/login"
-                  className="hidden sm:inline-flex items-center px-4 py-2 rounded-full text-xs tracking-[0.1em] uppercase font-medium transition-all duration-300 hover:scale-105"
+                  className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300"
                   style={{
-                    color: gold,
-                    border: `1px solid rgba(${goldRgb}, 0.2)`,
-                    background: `rgba(${goldRgb}, 0.04)`,
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid rgba(255,255,255,0.08)',
                   }}
+                  title="Connexion"
+                  aria-label="Connexion"
                 >
-                  Connexion
-                </Link>
-                <Link
-                  href="/signup"
-                  className="inline-flex items-center px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs tracking-[0.05em] uppercase font-semibold transition-all duration-300 hover:scale-105"
-                  style={{
-                    background: `linear-gradient(135deg, ${gold}, ${goldDeep})`,
-                    color: '#050505',
-                  }}
-                >
-                  <span className="hidden sm:inline">Commencer</span>
-                  <span className="sm:hidden">Rejoindre</span>
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                    style={{ color: 'var(--gold)' }}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                  </svg>
                 </Link>
                 <ThemeToggle />
               </div>
@@ -1223,6 +1222,7 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
       {vis('transformation') && (() => {
         const transfo = sec('transformation');
         const items = transfo.items || [];
+        if (!transfo.title && items.length === 0) return null;
         return (
           <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
             <div className="absolute inset-0 pointer-events-none">
@@ -1397,6 +1397,7 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
       {vis('manifeste') && (() => {
         const manif = sec('manifeste');
         const paragraphs: string[] = manif.paragraphs || [];
+        if (!manif.title && paragraphs.length === 0) return null;
         return (
           <section className="px-5 md:px-20 py-20 md:py-40 relative cv-auto overflow-hidden">
             <div className="absolute inset-0 pointer-events-none">
@@ -1546,6 +1547,7 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
       {/* ═══ GARANTIE ═══ */}
       {vis('garantie') && (() => {
         const gar = sec('garantie');
+        if (!gar.title && !gar.description) return null;
         return (
           <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
             <div className="max-w-3xl mx-auto text-center">

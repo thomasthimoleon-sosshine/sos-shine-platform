@@ -332,9 +332,52 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     },
   },
   {
+    section_key: 'transformation',
+    label: 'Transformations Réelles',
+    position: 10,
+    is_visible: true,
+    content: {
+      label: 'Transformations réelles',
+      title: "Des vies transformées.\nDes résultats concrets.",
+      description: "Chaque parcours est unique, mais le résultat est le même : une vie plus libre, plus alignée, plus lumineuse.",
+      items: [
+        { before: "Je n'arrivais plus à dormir. Je ruminais sans cesse, paralysée par l'angoisse de l'abandon.", after: "Je dors paisiblement. J'ai compris que ma valeur ne dépend pas du regard de l'autre.", timeframe: "6 semaines", challenge: "Dépendance affective" },
+        { before: "Je portais une colère sourde depuis l'enfance. Chaque relation finissait par exploser.", after: "J'ai fait la paix avec mon histoire. Aujourd'hui, je construis des liens sains et durables.", timeframe: "8 semaines", challenge: "Trahison" },
+        { before: "Burn-out total. Je me sentais vide, déconnecté de tout ce qui comptait pour moi.", after: "J'ai retrouvé mon énergie et ma direction. J'ai quitté ce qui me détruisait et j'avance enfin.", timeframe: "2 mois", challenge: "Perte de sens" },
+      ],
+    },
+    styles: {
+      title_font: 'Cormorant Garamond',
+      title_size: 'lg',
+      title_align: 'center',
+    },
+  },
+  {
+    section_key: 'manifeste',
+    label: 'Manifeste',
+    position: 11,
+    is_visible: true,
+    content: {
+      label: 'Notre Manifeste',
+      title: "Nous ne guérissons pas.\nNous révélons.",
+      paragraphs: [
+        "Ce que vous cherchez est déjà en vous — enfoui sous des années de conditionnements, de croyances héritées, de blessures non dites.",
+        "Notre mission n'est pas de vous réparer. Vous n'êtes pas cassé(e). Notre mission est de vous aider à retrouver ce que la vie vous a fait oublier : votre puissance, votre lumière, votre vérité.",
+        "SOS Shine existe parce que personne ne devrait traverser ses épreuves seul(e). Parce que la souffrance mérite d'être entendue, comprise, et transformée — pas ignorée.",
+        "Nous croyons que chaque être humain porte en lui le pouvoir de se reconstruire. Et nous avons créé l'espace pour que cela devienne possible.",
+      ],
+      signature: "L'équipe SOS Shine",
+    },
+    styles: {
+      title_font: 'Cormorant Garamond',
+      title_size: 'lg',
+      title_align: 'center',
+    },
+  },
+  {
     section_key: 'pricing',
     label: 'Tarification',
-    position: 10,
+    position: 12,
     is_visible: true,
     content: {
       label: 'Investissement',
@@ -402,9 +445,25 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     },
   },
   {
+    section_key: 'garantie',
+    label: 'Garantie',
+    position: 13,
+    is_visible: true,
+    content: {
+      label: 'Notre engagement',
+      title: "Satisfait ou remboursé.\nSans condition.",
+      description: "Testez SOS Shine pendant 7 jours gratuitement. Si notre approche ne vous convient pas, vous ne payez rien. Pas de justification, pas de procédure compliquée. On croit en ce qu'on fait — et on vous le prouve.",
+    },
+    styles: {
+      title_font: 'Cormorant Garamond',
+      title_size: 'lg',
+      title_align: 'center',
+    },
+  },
+  {
     section_key: 'cta_dark',
     label: 'CTA (fond sombre)',
-    position: 11,
+    position: 14,
     is_visible: true,
     content: {
       title: "Le premier pas\nest toujours le plus dur.\nOn le fait ensemble.",

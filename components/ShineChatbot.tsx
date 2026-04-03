@@ -30,15 +30,15 @@ const FAQ_DATA: { keywords: string[]; answer: string }[] = [
   },
   {
     keywords: ['julia', 'fondatrice', 'fondateur', 'créateur', 'qui'],
-    answer: "SOS Shine a été fondé par Julia Laureau, thérapeute holistique et auteure du livre \"SOS Shine — Briller Comme un Diamant\". Elle est accompagnée de Wiliam et Thomas, co-fondateurs passionnés. 💫",
+    answer: "SOS Shine a été fondé par Julia Laureau, auteure du livre \"SOS Shine — Briller Comme un Diamant\" et spécialiste du déconditionnement émotionnel. Elle est accompagnée de Wiliam et Thomas, co-fondateurs passionnés. 💫",
   },
   {
     keywords: ['livre', 'bouquin', 'ouvrage', 'amazon'],
-    answer: "Le livre \"SOS Shine — Briller Comme un Diamant\" de Julia Laureau est disponible sur Amazon. C'est un programme interactif de transformation personnelle avec coaching vidéo et méditations guidées. C'est de là que tout est parti ! 📚",
+    answer: "Le livre \"SOS Shine — Briller Comme un Diamant\" de Julia Laureau est disponible sur Amazon. C'est un programme interactif de déconditionnement émotionnel avec vidéos explicatives et exercices pratiques. C'est de là que tout est parti ! 📚",
   },
   {
     keywords: ['groupe', 'parole', 'communauté', 'communaute', 'forum', 'échanger', 'echanger'],
-    answer: "Notre communauté est un espace bienveillant où chacun peut s'exprimer librement. Les groupes de parole (Premium) sont encadrés par des professionnels pour garantir un cadre sûr et respectueux. 🤝",
+    answer: "Notre communauté est un espace bienveillant où chacun peut s'exprimer librement. Les espaces d'échange sont organisés par thème pour garantir un cadre sûr et respectueux. 🤝",
   },
   {
     keywords: ['annuler', 'résilier', 'resilier', 'arrêter', 'arreter', 'désabonner', 'desabonner'],

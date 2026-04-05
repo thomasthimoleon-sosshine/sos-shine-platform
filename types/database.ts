@@ -774,6 +774,29 @@ type Table<Row, Insert = OptionalId<Row>, Update = Partial<Row>> = {
   Relationships: []
 }
 
+// ── Encouragement Messages ──
+export type EncouragementMessage = {
+  id: string
+  time_slot: 'night' | 'morning' | 'afternoon' | 'evening'
+  message: string
+  sort_order: number
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
+// ── Push Subscriptions ──
+export type PushSubscription = {
+  id: string
+  user_id: string
+  endpoint: string
+  p256dh: string
+  auth: string
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
 // ── Database (Supabase schema) ──
 export type Database = {
   public: {
@@ -834,6 +857,8 @@ export type Database = {
       encyclopedia_progress: Table<EncyclopediaProgress>
       site_visits: Table<SiteVisit>
       premium_ateliers: Table<PremiumAtelier>
+      encouragement_messages: Table<EncouragementMessage>
+      push_subscriptions: Table<PushSubscription>
     }
     Views: Record<string, never>
     Functions: {

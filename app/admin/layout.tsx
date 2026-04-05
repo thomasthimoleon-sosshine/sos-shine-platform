@@ -9,6 +9,7 @@ import type { Profile } from '@/types/database'
 const adminNav = [
   { href: '/admin', label: 'Dashboard', icon: '📊' },
   { href: '/admin/dashboard-edit', label: 'Espace Membre', icon: '🎨' },
+  { href: '/admin/messages-encouragement', label: 'Encouragements', icon: '💬' },
   { href: '/admin/landing', label: 'Landing Page', icon: '🏠' },
   { href: '/admin/prelaunch', label: 'Pre-lancement', icon: '🚀' },
   { href: '/admin/douleurs', label: 'Challenges', icon: '📘' },

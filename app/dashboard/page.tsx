@@ -9,6 +9,7 @@ import { useTranslation } from '@/lib/i18n/useTranslation'
 import { getNextRotatingQuote, type Quote } from '@/lib/quotes'
 import { greetingsData, GREETINGS_PER_SLOT, type TimeSlot } from '@/data/greetingsData'
 import { getDailyForecast, resolveZodiacSign, ZODIAC_INFO } from '@/data/energyWeather'
+import PushNotificationButton from '@/components/PushNotificationButton'
 import { getLevelForXP, getNextLevel, getLevelProgress, formatXP } from '@/lib/xp'
 import type { UserXP } from '@/types/database'
 import { getAllCategories, getUserBadges, unlockAllBadgesForUser, CATEGORY_ICONS, type CategoryConfig } from '@/lib/badgeService'
@@ -677,16 +678,35 @@ export default function DashboardHome() {
       if (!user) return
       setCurrentUserId(user.id)
 
+      // Load custom encouragement messages from DB (fallback to hardcoded)
+      let slotMessages: string[] = []
+      try {
+        const { data: dbMessages } = await supabase
+          .from('encouragement_messages')
+          .select('message')
+          .eq('time_slot', currentSlot)
+          .eq('is_active', true)
+          .order('sort_order', { ascending: true })
+        if (dbMessages && dbMessages.length > 0) {
+          slotMessages = dbMessages.map((m: { message: string }) => m.message)
+        }
+      } catch { /* table may not exist yet */ }
+      // Fallback to hardcoded messages
+      if (slotMessages.length === 0) {
+        slotMessages = greetingsData[currentSlot]
+      }
+      const totalMessages = slotMessages.length
+
       const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single()
       if (data) {
         setProfile(data as Profile)
 
         const progress = (data as Profile).greetings_progress || { night: 0, morning: 0, afternoon: 0, evening: 0 }
         const currentIndex = progress[currentSlot] ?? 0
-        const message = greetingsData[currentSlot][currentIndex % GREETINGS_PER_SLOT]
+        const message = slotMessages[currentIndex % totalMessages]
         setGreeting(message)
 
-        const nextIndex = (currentIndex + 1) % GREETINGS_PER_SLOT
+        const nextIndex = (currentIndex + 1) % totalMessages
         const updatedProgress = { ...progress, [currentSlot]: nextIndex }
         supabase.from('profiles').update({ greetings_progress: updatedProgress }).eq('id', user.id).then()
       } else {
@@ -695,7 +715,7 @@ export default function DashboardHome() {
           email: user.email || '', role: 'member', avatar_url: null, plan: null, created_at: user.created_at,
           pseudo: null, bio: null, video_url: null, is_bot: false,
         })
-        setGreeting(greetingsData[currentSlot][0])
+        setGreeting(slotMessages[0])
       }
 
       // Load XP
@@ -732,6 +752,9 @@ export default function DashboardHome() {
         <p className="mt-3 text-[17px] sm:text-[19px] font-medium leading-relaxed tracking-wide" style={{ color: 'var(--gold)' }}>
           {greeting}
         </p>
+        <div className="mt-4">
+          <PushNotificationButton />
+        </div>
       </motion.div>
 
       {/* ── Météo Énergétique ── */}

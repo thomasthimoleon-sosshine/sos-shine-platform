@@ -77,6 +77,15 @@ self.addEventListener('push', function (event) {
 
   badgeCount++
 
+  // Set app badge independently (don't chain - avoid silent failures on iOS)
+  try {
+    if (self.navigator && self.navigator.setAppBadge) {
+      self.navigator.setAppBadge(badgeCount)
+    }
+  } catch (e) {
+    // Badge API may not be available in all contexts
+  }
+
   event.waitUntil(
     self.registration.showNotification(data.title, {
       body: data.body,
@@ -89,10 +98,6 @@ self.addEventListener('push', function (event) {
       actions: data.type === 'new_video' || data.type === 'new_audio' || data.type === 'new_book' || data.type === 'new_protocol'
         ? [{ action: 'open', title: 'Découvrir' }]
         : [],
-    }).then(function () {
-      if (self.navigator && self.navigator.setAppBadge) {
-        return self.navigator.setAppBadge(badgeCount)
-      }
     }).then(function () {
       // Notify all open clients about the new notification for real-time badge update
       return self.clients.matchAll({ type: 'window', includeUncontrolled: true })

@@ -55,7 +55,15 @@ export default function NotificationBell() {
           is_read: n.is_read || localReadIdsRef.current.has(n.id),
         }))
         setNotifications(merged)
-        setUnreadCount(merged.filter(n => !n.is_read).length)
+        const count = merged.filter(n => !n.is_read).length
+        setUnreadCount(count)
+
+        // Sync app icon badge (pastille on home screen) with actual unread count
+        if ('setAppBadge' in navigator && count > 0) {
+          navigator.setAppBadge(count).catch(() => {})
+        } else if ('clearAppBadge' in navigator && count === 0) {
+          navigator.clearAppBadge().catch(() => {})
+        }
       }
     } catch {
       // Table might not exist yet - silently handle
@@ -96,6 +104,10 @@ export default function NotificationBell() {
 
     function handleSWMessage(event: MessageEvent) {
       if (event.data?.type === 'PUSH_RECEIVED') {
+        // Set app icon badge from client context (more reliable on iOS PWA)
+        if ('setAppBadge' in navigator && event.data.badgeCount) {
+          navigator.setAppBadge(event.data.badgeCount).catch(() => {})
+        }
         // Refresh notifications when a push is received while the app is open
         loadNotifications()
       } else if (event.data?.type === 'NOTIFICATION_CLICKED') {
@@ -128,7 +140,15 @@ export default function NotificationBell() {
     await supabase.from('notifications').update({ is_read: true }).eq('id', id)
 
     setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: true } : n))
-    setUnreadCount(prev => Math.max(0, prev - 1))
+    const newUnread = Math.max(0, unreadCount - 1)
+    setUnreadCount(newUnread)
+
+    // Update app icon badge (pastille on home screen)
+    if (newUnread === 0 && 'clearAppBadge' in navigator) {
+      navigator.clearAppBadge().catch(() => {})
+    } else if ('setAppBadge' in navigator) {
+      navigator.setAppBadge(newUnread).catch(() => {})
+    }
   }
 
   async function markAllRead() {
@@ -146,6 +166,11 @@ export default function NotificationBell() {
 
     setNotifications(prev => prev.map(n => ({ ...n, is_read: true })))
     setUnreadCount(0)
+
+    // Clear app icon badge (pastille on home screen)
+    if ('clearAppBadge' in navigator) {
+      navigator.clearAppBadge().catch(() => {})
+    }
   }
 
   function formatTime(dateStr: string) {

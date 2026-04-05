@@ -15,12 +15,6 @@
     {
       "path": "/api/cron/emails",
       "schedule": "15 */1 * * *"
-    },
-    {
-      "path": "/api/push/cron",
-      "schedule": "0 8,13,19 * * *",
-      "_disabled": true,
-      "_note": "Encouragement push notifications temporarily disabled"
     }
   ]
 }

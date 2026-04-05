@@ -105,6 +105,21 @@ export async function POST(request: Request) {
       await supabase.from('push_subscriptions').delete().in('endpoint', expiredEndpoints)
     }
 
+    // Also create an in-app notification so the badge (pastille rouge) appears
+    try {
+      await supabase.from('notifications').insert({
+        user_id: null, // broadcast to all
+        title,
+        body,
+        link: url || null,
+        notification_type: type || 'new_post',
+        is_read: false,
+        email_sent: false,
+      })
+    } catch {
+      // Best-effort: don't fail the push send if notification insert fails
+    }
+
     return NextResponse.json({ sent, failed, expired: expiredEndpoints.length })
   } catch (err) {
     return NextResponse.json({ error: err instanceof Error ? err.message : 'Erreur' }, { status: 500 })

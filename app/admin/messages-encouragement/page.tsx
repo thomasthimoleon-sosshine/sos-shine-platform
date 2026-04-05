@@ -411,17 +411,21 @@ function PushNotificationAdmin() {
       const supabase = createClient()
       const { data: { session } } = await supabase.auth.getSession()
 
-      const res = await fetch('/api/push/send', {
+      const res = await fetch('/api/notify', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-user-token': session?.access_token || '',
         },
-        body: JSON.stringify({ title: testTitle, body: testBody.trim(), url: '/dashboard' }),
+        body: JSON.stringify({
+          type: 'new_soin',
+          title: testTitle,
+          body: testBody.trim(),
+          link: '/dashboard',
+        }),
       })
       const data = await res.json()
       if (res.ok) {
-        setResult(`Envoyé: ${data.sent} | Échoué: ${data.failed} | Expiré: ${data.expired || 0}`)
+        setResult(`${data.count} notifications créées et push envoyés`)
       } else {
         setResult(`Erreur: ${data.error}`)
       }

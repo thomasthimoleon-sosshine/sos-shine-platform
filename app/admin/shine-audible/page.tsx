@@ -161,13 +161,29 @@ export default function AdminShineAudiblePage() {
   }
 
   async function togglePublish(t: ShineTrack) {
+    const willPublish = !t.is_published
     const { error } = await supabase
       .from('shine_audible_tracks')
-      .update({ is_published: !t.is_published })
+      .update({ is_published: willPublish })
       .eq('id', t.id)
 
     if (error) { setError(error.message); return }
-    setTracks((prev) => prev.map((item) => item.id === t.id ? { ...item, is_published: !t.is_published } : item))
+    setTracks((prev) => prev.map((item) => item.id === t.id ? { ...item, is_published: willPublish } : item))
+
+    if (willPublish) {
+      try {
+        await fetch('/api/notify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'new_post',
+            title: 'Nouveau contenu audio sur Shine Audible',
+            body: t.title,
+            link: '/dashboard/shine-audible',
+          }),
+        })
+      } catch { /* notification best-effort */ }
+    }
   }
 
   async function handleDelete(id: string) {

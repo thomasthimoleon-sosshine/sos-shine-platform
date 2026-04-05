@@ -174,13 +174,29 @@ export default function AdminShineLibrairiePage() {
   }
 
   async function togglePublish(b: ShineBook) {
+    const willPublish = !b.is_published
     const { error } = await supabase
       .from('shine_library_books')
-      .update({ is_published: !b.is_published })
+      .update({ is_published: willPublish })
       .eq('id', b.id)
 
     if (error) { setError(error.message); return }
-    setBooks((prev) => prev.map((item) => item.id === b.id ? { ...item, is_published: !b.is_published } : item))
+    setBooks((prev) => prev.map((item) => item.id === b.id ? { ...item, is_published: willPublish } : item))
+
+    if (willPublish) {
+      try {
+        await fetch('/api/notify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'new_post',
+            title: 'Nouveau livre dans la Librairie Shine',
+            body: b.title,
+            link: '/dashboard/shine-librairie',
+          }),
+        })
+      } catch { /* notification best-effort */ }
+    }
   }
 
   async function toggleFeatured(b: ShineBook) {

@@ -150,13 +150,29 @@ export default function AdminShineTVPage() {
   }
 
   async function togglePublish(v: ShineVideo) {
+    const willPublish = !v.is_published
     const { error } = await supabase
       .from('shine_tv_videos')
-      .update({ is_published: !v.is_published })
+      .update({ is_published: willPublish })
       .eq('id', v.id)
 
     if (error) { setError(error.message); return }
-    setVideos((prev) => prev.map((item) => item.id === v.id ? { ...item, is_published: !v.is_published } : item))
+    setVideos((prev) => prev.map((item) => item.id === v.id ? { ...item, is_published: willPublish } : item))
+
+    if (willPublish) {
+      try {
+        await fetch('/api/notify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'new_post',
+            title: 'Nouvelle vidéo sur Shine TV',
+            body: v.title,
+            link: '/dashboard/shine-tv',
+          }),
+        })
+      } catch { /* notification best-effort */ }
+    }
   }
 
   async function handleDelete(id: string) {

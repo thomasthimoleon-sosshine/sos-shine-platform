@@ -140,13 +140,29 @@ export default function AdminShineShortsPage() {
   }
 
   async function togglePublish(s: ShineShort) {
+    const willPublish = !s.is_published
     const { error } = await supabase
       .from('shine_shorts')
-      .update({ is_published: !s.is_published })
+      .update({ is_published: willPublish })
       .eq('id', s.id)
 
     if (error) { setError(error.message); return }
-    setShorts((prev) => prev.map((item) => item.id === s.id ? { ...item, is_published: !s.is_published } : item))
+    setShorts((prev) => prev.map((item) => item.id === s.id ? { ...item, is_published: willPublish } : item))
+
+    if (willPublish) {
+      try {
+        await fetch('/api/notify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'new_post',
+            title: 'Nouveau Shine Short',
+            body: s.title,
+            link: '/dashboard/shine-shorts',
+          }),
+        })
+      } catch { /* notification best-effort */ }
+    }
   }
 
   async function handleDelete(id: string) {

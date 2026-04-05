@@ -6,6 +6,7 @@ export default function PushNotificationButton() {
   const [permission, setPermission] = useState<NotificationPermission | 'unsupported'>('default')
   const [loading, setLoading] = useState(false)
   const [subscribed, setSubscribed] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!('Notification' in window) || !('serviceWorker' in navigator)) {
@@ -29,6 +30,7 @@ export default function PushNotificationButton() {
   async function handleSubscribe() {
     if (permission === 'unsupported') return
     setLoading(true)
+    setError(null)
 
     try {
       // Register service worker
@@ -37,7 +39,7 @@ export default function PushNotificationButton() {
 
       const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
       if (!vapidKey) {
-        console.error('VAPID public key missing')
+        setError('Configuration manquante (VAPID)')
         setLoading(false)
         return
       }
@@ -54,7 +56,7 @@ export default function PushNotificationButton() {
       // Subscribe to push
       const subscription = await reg.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(vapidKey).buffer as ArrayBuffer,
+        applicationServerKey: urlBase64ToUint8Array(vapidKey),
       })
 
       // Send subscription to server
@@ -66,9 +68,13 @@ export default function PushNotificationButton() {
 
       if (res.ok) {
         setSubscribed(true)
+      } else {
+        const data = await res.json().catch(() => ({}))
+        setError(data.error || `Erreur serveur (${res.status})`)
       }
     } catch (err) {
       console.error('Push subscription error:', err)
+      setError(err instanceof Error ? err.message : 'Erreur lors de l\'inscription')
     }
     setLoading(false)
   }
@@ -110,29 +116,34 @@ export default function PushNotificationButton() {
   }
 
   return (
-    <button
-      onClick={subscribed ? handleUnsubscribe : handleSubscribe}
-      disabled={loading}
-      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer disabled:opacity-50"
-      style={{
-        background: subscribed ? 'rgba(85,239,196,0.1)' : 'rgba(116,192,252,0.1)',
-        border: subscribed ? '1px solid rgba(85,239,196,0.25)' : '1px solid rgba(116,192,252,0.25)',
-        color: subscribed ? '#55EFC4' : '#74C0FC',
-      }}
-    >
-      {loading ? (
-        <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-      ) : (
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          {subscribed ? (
-            <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
-          ) : (
-            <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0M3.124 7.5A8.969 8.969 0 015.292 3m13.416 0a8.969 8.969 0 012.168 4.5" />
-          )}
-        </svg>
+    <div className="flex flex-col gap-1.5">
+      <button
+        onClick={subscribed ? handleUnsubscribe : handleSubscribe}
+        disabled={loading}
+        className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer disabled:opacity-50"
+        style={{
+          background: subscribed ? 'rgba(85,239,196,0.1)' : 'rgba(116,192,252,0.1)',
+          border: subscribed ? '1px solid rgba(85,239,196,0.25)' : '1px solid rgba(116,192,252,0.25)',
+          color: subscribed ? '#55EFC4' : '#74C0FC',
+        }}
+      >
+        {loading ? (
+          <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+        ) : (
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            {subscribed ? (
+              <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+            ) : (
+              <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0M3.124 7.5A8.969 8.969 0 015.292 3m13.416 0a8.969 8.969 0 012.168 4.5" />
+            )}
+          </svg>
+        )}
+        {subscribed ? 'Notifications actives' : 'Activer les notifications'}
+      </button>
+      {error && (
+        <p className="text-xs px-2" style={{ color: '#FF6B6B' }}>{error}</p>
       )}
-      {subscribed ? 'Notifications actives' : 'Activer les notifications'}
-    </button>
+    </div>
   )
 }
 

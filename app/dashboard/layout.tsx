@@ -289,7 +289,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="px-5 py-5 flex items-center gap-3" style={{ borderBottom: '1px solid var(--dark-border)' }}>
           <Link href="/dashboard" className="flex items-center gap-3 group" onClick={() => setSidebarOpen(false)}>
             {logoUrl ? (
-              <img src={logoUrl} alt="SOS Shine" className="w-9 h-9 rounded-xl object-cover ring-1 ring-white/10" />
+              <img src={logoUrl} alt="SOS Shine" className="w-9 h-9 rounded-xl object-contain" />
             ) : (
               <div
                 className="w-9 h-9 rounded-xl flex items-center justify-center font-display text-base font-semibold"
@@ -480,7 +480,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </svg>
           </button>
           {logoUrl ? (
-            <img src={logoUrl} alt="SOS Shine" className="h-7 rounded-lg object-cover ring-1 ring-white/10" />
+            <img src={logoUrl} alt="SOS Shine" className="h-7 object-contain" />
           ) : (
             <span className="font-display text-base font-semibold tracking-tight" style={{ color: 'var(--gold)' }}>
               SOS Shine

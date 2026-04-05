@@ -243,7 +243,7 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
     s(settings, 'prelaunch_feature_6', DEFAULT_FEATURES[5]),
   ].filter(Boolean);
 
-  const logoUrl = settings.prelaunch_logo || '/images/logo.png';
+  const logoUrl = settings.prelaunch_logo || '/images/logo-shine.png';
 
   return (
     <main className="grain relative z-0 min-h-screen overflow-hidden">

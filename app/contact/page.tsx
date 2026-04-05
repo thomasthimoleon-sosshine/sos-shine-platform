@@ -77,7 +77,7 @@ export default function ContactPage() {
           {t('contact.back')}
         </Link>
 
-        <Link href="/"><img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-10 mb-6 rounded-lg object-contain" /></Link>
+        <Link href="/"><img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-10 mb-6 object-contain" /></Link>
 
         <h1 className="font-display text-3xl md:text-4xl font-semibold mb-8" style={{ color: 'var(--text-primary)' }}>
           {title}

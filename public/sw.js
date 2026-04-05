@@ -2,7 +2,7 @@
 
 self.addEventListener('push', function (event) {
   const defaultData = {
-    title: 'SOS Shine',
+    title: 'Nouveau message',
     body: 'Tu as un nouveau message !',
     icon: '/icon-192.png',
     badge: '/icon-192.png',
@@ -30,8 +30,8 @@ self.addEventListener('push', function (event) {
       tag: 'sos-shine-notification',
       renotify: true,
     }).then(function () {
-      if (navigator.setAppBadge) {
-        navigator.setAppBadge()
+      if (self.navigator && self.navigator.setAppBadge) {
+        return self.navigator.setAppBadge(1)
       }
     })
   )
@@ -39,8 +39,8 @@ self.addEventListener('push', function (event) {
 
 self.addEventListener('notificationclick', function (event) {
   event.notification.close()
-  if (navigator.clearAppBadge) {
-    navigator.clearAppBadge()
+  if (self.navigator && self.navigator.clearAppBadge) {
+    self.navigator.clearAppBadge()
   }
   const url = event.notification.data?.url || '/dashboard'
 

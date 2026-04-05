@@ -14,6 +14,11 @@ export default function PushNotificationButton() {
     }
     setPermission(Notification.permission)
 
+    // Clear badge when user opens the app
+    if ('clearAppBadge' in navigator) {
+      navigator.clearAppBadge?.()
+    }
+
     // Check if already subscribed
     navigator.serviceWorker.ready.then(async (reg) => {
       const sub = await reg.pushManager.getSubscription()

@@ -29,12 +29,19 @@ self.addEventListener('push', function (event) {
       vibrate: [200, 100, 200],
       tag: 'sos-shine-notification',
       renotify: true,
+    }).then(function () {
+      if (navigator.setAppBadge) {
+        navigator.setAppBadge()
+      }
     })
   )
 })
 
 self.addEventListener('notificationclick', function (event) {
   event.notification.close()
+  if (navigator.clearAppBadge) {
+    navigator.clearAppBadge()
+  }
   const url = event.notification.data?.url || '/dashboard'
 
   event.waitUntil(

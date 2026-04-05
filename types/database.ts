@@ -210,7 +210,7 @@ export type Notification = {
   title: string
   body: string
   link: string | null
-  notification_type: 'new_douleur' | 'new_event' | 'new_post' | 'new_soin' | 'warning'
+  notification_type: 'new_douleur' | 'new_event' | 'new_post' | 'new_soin' | 'warning' | 'new_video' | 'new_audio' | 'new_book' | 'new_protocol'
   is_read: boolean
   email_sent: boolean
   created_at: string

@@ -189,8 +189,8 @@ export default function AdminShineLibrairiePage() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            type: 'new_post',
-            title: 'Nouveau livre dans la Librairie Shine',
+            type: 'new_book',
+            title: '📚 Nouveau livre dans la Librairie Shine',
             body: b.title,
             link: '/dashboard/shine-librairie',
           }),

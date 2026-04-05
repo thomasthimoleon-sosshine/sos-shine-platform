@@ -165,8 +165,8 @@ export default function AdminShineTVPage() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            type: 'new_post',
-            title: 'Nouvelle vidéo sur Shine TV',
+            type: 'new_video',
+            title: '🎬 Nouvelle vidéo sur Shine TV',
             body: v.title,
             link: '/dashboard/shine-tv',
           }),

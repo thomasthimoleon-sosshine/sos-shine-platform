@@ -176,8 +176,8 @@ export default function AdminShineAudiblePage() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            type: 'new_post',
-            title: 'Nouveau contenu audio sur Shine Audible',
+            type: 'new_audio',
+            title: '🎧 Nouveau contenu audio sur Shine Audible',
             body: t.title,
             link: '/dashboard/shine-audible',
           }),

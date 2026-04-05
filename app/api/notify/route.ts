@@ -6,7 +6,7 @@ import webpush from 'web-push'
 /**
  * Send push notifications to all active subscribers (fire-and-forget).
  */
-async function sendPushToAll(title: string, body: string, url?: string) {
+async function sendPushToAll(title: string, body: string, url?: string, notificationType?: string) {
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
     const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -34,6 +34,7 @@ async function sendPushToAll(title: string, body: string, url?: string) {
       icon: '/icon-192.png',
       badge: '/icon-192.png',
       url: url || '/dashboard',
+      type: notificationType || 'new_post',
     })
 
     const expiredEndpoints: string[] = []
@@ -154,7 +155,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Also send push notification to all subscribers (fire-and-forget)
-    sendPushToAll(title, notifBody, link || undefined)
+    sendPushToAll(title, notifBody, link || undefined, type)
 
     return NextResponse.json({
       success: true,

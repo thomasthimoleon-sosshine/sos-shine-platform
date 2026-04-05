@@ -155,8 +155,8 @@ export default function AdminShineShortsPage() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            type: 'new_post',
-            title: 'Nouveau Shine Short',
+            type: 'new_video',
+            title: '🎬 Nouveau Shine Short',
             body: s.title,
             link: '/dashboard/shine-shorts',
           }),

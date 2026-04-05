@@ -90,6 +90,24 @@ export default function NotificationBell() {
     return () => { supabase.removeChannel(channel) }
   }, [userId])
 
+  // Listen for push notification events from service worker to update badge in real-time
+  useEffect(() => {
+    if (typeof navigator === 'undefined' || !navigator.serviceWorker) return
+
+    function handleSWMessage(event: MessageEvent) {
+      if (event.data?.type === 'PUSH_RECEIVED') {
+        // Refresh notifications when a push is received while the app is open
+        loadNotifications()
+      } else if (event.data?.type === 'NOTIFICATION_CLICKED') {
+        // Refresh after user clicks a notification
+        loadNotifications()
+      }
+    }
+
+    navigator.serviceWorker.addEventListener('message', handleSWMessage)
+    return () => navigator.serviceWorker.removeEventListener('message', handleSWMessage)
+  }, [loadNotifications])
+
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (panelRef.current && !panelRef.current.contains(e.target as Node)) {
@@ -150,6 +168,10 @@ export default function NotificationBell() {
     new_post: '📝',
     new_soin: '✨',
     warning: '⚠️',
+    new_video: '🎬',
+    new_audio: '🎧',
+    new_book: '📚',
+    new_protocol: '📖',
   }
 
   return (

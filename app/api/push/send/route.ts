@@ -53,7 +53,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'VAPID keys non configurées' }, { status: 500 })
     }
 
-    const { title, body, url, user_ids } = await request.json()
+    const { title, body, url, user_ids, type } = await request.json()
 
     if (!title || !body) {
       return NextResponse.json({ error: 'title et body requis' }, { status: 400 })
@@ -76,6 +76,7 @@ export async function POST(request: Request) {
       icon: '/icon-192.png',
       badge: '/icon-192.png',
       url: url || '/dashboard',
+      type: type || 'new_post',
     })
 
     let sent = 0

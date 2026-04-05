@@ -526,8 +526,8 @@ export default function AdminDouleursPage() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            type: 'new_douleur',
-            title: 'Nouveau protocole disponible',
+            type: 'new_protocol',
+            title: '📖 Nouveau protocole dans l\'Encyclopédie',
             body: d.title,
             link: `/dashboard/encyclopedie/${d.slug}`,
           }),

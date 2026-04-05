@@ -21,6 +21,9 @@ function getTimeSlot(): 'night' | 'morning' | 'afternoon' | 'evening' {
 
 export async function GET(request: Request) {
   try {
+    // Encouragement push notifications are temporarily disabled
+    return NextResponse.json({ message: 'Encouragement push notifications désactivées temporairement' })
+
     const authHeader = request.headers.get('authorization')
     const cronSecret = process.env.CRON_SECRET || process.env.BOT_SECRET
     const isVercelCron = request.headers.get('x-vercel-cron') === '1'

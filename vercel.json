@@ -18,7 +18,9 @@
     },
     {
       "path": "/api/push/cron",
-      "schedule": "0 8,13,19 * * *"
+      "schedule": "0 8,13,19 * * *",
+      "_disabled": true,
+      "_note": "Encouragement push notifications temporarily disabled"
     }
   ]
 }

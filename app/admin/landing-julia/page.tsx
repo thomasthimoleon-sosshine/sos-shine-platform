@@ -284,22 +284,96 @@ export default function LandingJuliaPage() {
     setSaved(false)
   }
 
-  /* ── Add a custom HTML section ── */
-  function addCustomSection() {
+  /* ── Section type menu ── */
+  const [showSectionTypeMenu, setShowSectionTypeMenu] = useState(false)
+
+  const CUSTOM_SECTION_TYPES = [
+    { type: 'text', label: 'Section Texte', desc: 'Titre, description, image, bouton', icon: 'T' },
+    { type: 'cards', label: 'Section Cartes', desc: 'Titre + liste de cartes', icon: '▦' },
+    { type: 'cta', label: 'Section CTA', desc: 'Appel à l\'action avec bouton', icon: '→' },
+    { type: 'gallery', label: 'Section Galerie', desc: 'Titre + grille d\'images', icon: '▣' },
+    { type: 'html', label: 'Section HTML', desc: 'Contenu HTML libre', icon: '</>' },
+  ]
+
+  /* ── Add a custom section with a given type ── */
+  function addCustomSection(sectionType: string = 'html') {
     const id = `custom_${Date.now()}`
+    let label = 'Nouvelle section'
+    let content: Record<string, unknown> = {}
+
+    switch (sectionType) {
+      case 'text':
+        label = 'Nouvelle section Texte'
+        content = {
+          section_type: 'text',
+          label: '',
+          title: '',
+          subtitle: '',
+          description: '',
+          image_url: '',
+          video_url: '',
+          button_label: '',
+          button_href: '',
+        }
+        break
+      case 'cards':
+        label = 'Nouvelle section Cartes'
+        content = {
+          section_type: 'cards',
+          label: '',
+          title: '',
+          description: '',
+          cards: [
+            { title: '', description: '', icon: '', image_url: '' },
+          ],
+        }
+        break
+      case 'cta':
+        label = 'Nouvelle section CTA'
+        content = {
+          section_type: 'cta',
+          title: '',
+          description: '',
+          button_label: '',
+          button_href: '',
+          image_url: '',
+        }
+        break
+      case 'gallery':
+        label = 'Nouvelle section Galerie'
+        content = {
+          section_type: 'gallery',
+          label: '',
+          title: '',
+          description: '',
+          images: [],
+        }
+        break
+      case 'html':
+      default:
+        label = 'Nouvelle section HTML'
+        content = { section_type: 'html', title: '', html_content: '', bg_color: '', padding: '4rem 1.5rem' }
+        break
+    }
+
     const newSec: LandingSectionRow = {
       id: '',
       section_key: id,
-      label: 'Nouvelle section HTML',
+      label,
       position: sections.length,
       is_visible: true,
-      content: { title: '', html_content: '', bg_color: '', padding: '4rem 1.5rem' },
-      styles: {},
+      content,
+      styles: sectionType !== 'html' ? {
+        title_font: 'Cormorant Garamond',
+        title_size: 'lg',
+        title_align: 'center',
+      } : {},
       updated_by: null,
       updated_at: new Date().toISOString(),
     }
     setSections((prev) => [...prev, newSec])
     setSelectedSection(id)
+    setShowSectionTypeMenu(false)
     setSaved(false)
   }
 
@@ -591,11 +665,41 @@ export default function LandingJuliaPage() {
                 ))}
               </select>
               <div className="flex gap-2">
-                <button type="button" onClick={addCustomSection}
-                  className="px-4 py-2.5 rounded-lg text-sm font-medium cursor-pointer flex items-center gap-2 flex-shrink-0"
-                  style={{ border: '1px dashed rgba(167,139,250,0.4)', color: '#A78BFA', background: 'rgba(167,139,250,0.04)' }}>
-                  + Section HTML
-                </button>
+                <div className="relative">
+                  <button type="button" onClick={() => setShowSectionTypeMenu(!showSectionTypeMenu)}
+                    className="px-4 py-2.5 rounded-lg text-sm font-medium cursor-pointer flex items-center gap-2 flex-shrink-0"
+                    style={{ border: '1px dashed rgba(167,139,250,0.4)', color: '#A78BFA', background: 'rgba(167,139,250,0.04)' }}>
+                    + Nouvelle section
+                  </button>
+                  {showSectionTypeMenu && (
+                    <>
+                      <div className="fixed inset-0 z-30" onClick={() => setShowSectionTypeMenu(false)} />
+                      <div className="absolute right-0 top-full mt-2 z-40 rounded-xl overflow-hidden shadow-xl w-72"
+                        style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                        <p className="px-4 pt-3 pb-2 text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
+                          Type de section
+                        </p>
+                        {CUSTOM_SECTION_TYPES.map((st) => (
+                          <button key={st.type} type="button"
+                            onClick={() => addCustomSection(st.type)}
+                            className="w-full text-left px-4 py-3 flex items-center gap-3 cursor-pointer transition-colors"
+                            style={{ borderTop: '1px solid var(--dark-border)' }}
+                            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = 'rgba(167,139,250,0.08)' }}
+                            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = 'transparent' }}>
+                            <span className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-mono flex-shrink-0"
+                              style={{ background: 'rgba(167,139,250,0.1)', color: '#A78BFA' }}>
+                              {st.icon}
+                            </span>
+                            <div>
+                              <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{st.label}</p>
+                              <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{st.desc}</p>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
                 <button type="button" onClick={duplicateFromCurrent} disabled={duplicating}
                   className="px-4 py-2.5 rounded-lg text-sm font-medium cursor-pointer flex items-center gap-2 flex-shrink-0"
                   style={{ border: '1px dashed rgba(255,107,107,0.4)', color: '#FF6B6B', background: 'rgba(255,107,107,0.04)' }}>

@@ -260,23 +260,97 @@ export default function LandingAdminPage() {
   /* ── Built-in section keys (can be hidden or deleted & re-seeded from defaults) ── */
   const BUILTIN_KEYS = new Set(LANDING_DEFAULTS.map((d) => d.section_key))
 
-  /* ── Add a custom HTML section ── */
-  function addCustomSection() {
+  /* ── Section type menu ── */
+  const [showSectionTypeMenu, setShowSectionTypeMenu] = useState(false)
+
+  const CUSTOM_SECTION_TYPES = [
+    { type: 'text', label: 'Section Texte', desc: 'Titre, description, image, bouton', icon: 'T' },
+    { type: 'cards', label: 'Section Cartes', desc: 'Titre + liste de cartes', icon: '▦' },
+    { type: 'cta', label: 'Section CTA', desc: 'Appel à l\'action avec bouton', icon: '→' },
+    { type: 'gallery', label: 'Section Galerie', desc: 'Titre + grille d\'images', icon: '▣' },
+    { type: 'html', label: 'Section HTML', desc: 'Contenu HTML libre', icon: '</>' },
+  ]
+
+  /* ── Add a custom section with a given type ── */
+  function addCustomSection(sectionType: string = 'html') {
     const id = `custom_${Date.now()}`
+    let label = 'Nouvelle section'
+    let content: Record<string, unknown> = {}
+
+    switch (sectionType) {
+      case 'text':
+        label = 'Nouvelle section Texte'
+        content = {
+          section_type: 'text',
+          label: '',
+          title: '',
+          subtitle: '',
+          description: '',
+          image_url: '',
+          video_url: '',
+          button_label: '',
+          button_href: '',
+        }
+        break
+      case 'cards':
+        label = 'Nouvelle section Cartes'
+        content = {
+          section_type: 'cards',
+          label: '',
+          title: '',
+          description: '',
+          cards: [
+            { title: '', description: '', icon: '', image_url: '' },
+          ],
+        }
+        break
+      case 'cta':
+        label = 'Nouvelle section CTA'
+        content = {
+          section_type: 'cta',
+          title: '',
+          description: '',
+          button_label: '',
+          button_href: '',
+          image_url: '',
+        }
+        break
+      case 'gallery':
+        label = 'Nouvelle section Galerie'
+        content = {
+          section_type: 'gallery',
+          label: '',
+          title: '',
+          description: '',
+          images: [],
+        }
+        break
+      case 'html':
+      default:
+        label = 'Nouvelle section HTML'
+        content = { section_type: 'html', title: '', html_content: '', bg_color: '', padding: '4rem 1.5rem' }
+        break
+    }
+
     const newSec: LandingSectionRow = {
       id: '',
       section_key: id,
-      label: 'Nouvelle section HTML',
+      label,
       position: sections.length,
       is_visible: true,
-      content: { title: '', html_content: '', bg_color: '', padding: '4rem 1.5rem' },
-      styles: {},
+      content,
+      styles: sectionType !== 'html' ? {
+        title_font: 'Cormorant Garamond',
+        title_size: 'lg',
+        title_align: 'center',
+      } : {},
       updated_by: null,
       updated_at: new Date().toISOString(),
     }
     setSections((prev) => [...prev, newSec])
     setOpenPanels((prev) => ({ ...prev, [id]: true }))
     setSelectedSection(id)
+    setShowSectionTypeMenu(false)
     setSaved(false)
   }
 
@@ -894,8 +968,110 @@ export default function LandingAdminPage() {
           </>
         )
 
-      default:
-        // Custom HTML sections
+      default: {
+        // Custom sections — differentiate by section_type
+        const sectionType = c.section_type || 'html'
+
+        if (sectionType === 'text') {
+          return (
+            <>
+              <TextField label="Label de section" value={c.label || ''} onChange={(v) => updateContent(key, 'label', v)} />
+              <TextAreaField label="Titre" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
+              <TextField label="Sous-titre" value={c.subtitle || ''} onChange={(v) => updateContent(key, 'subtitle', v)} />
+              <TextAreaField label="Description" value={c.description || ''} rows={5} onChange={(v) => updateContent(key, 'description', v)} />
+              <FileUpload label="Image de section" accept="image/*" folder="site"
+                currentUrl={c.image_url || null}
+                onUploaded={(url) => updateContent(key, 'image_url', url)}
+                onRemoved={() => updateContent(key, 'image_url', '')} />
+              <FileUpload label="Video de section" accept="video/*" folder="site"
+                currentUrl={c.video_url || null}
+                onUploaded={(url) => updateContent(key, 'video_url', url)}
+                onRemoved={() => updateContent(key, 'video_url', '')} />
+              <Separator label="Bouton (optionnel)" />
+              <TextField label="Libelle du bouton" value={c.button_label || ''} onChange={(v) => updateContent(key, 'button_label', v)} />
+              <TextField label="Lien du bouton" value={c.button_href || ''} onChange={(v) => updateContent(key, 'button_href', v)} />
+            </>
+          )
+        }
+
+        if (sectionType === 'cards') {
+          return (
+            <>
+              <TextField label="Label de section" value={c.label || ''} onChange={(v) => updateContent(key, 'label', v)} />
+              <TextAreaField label="Titre" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
+              <TextAreaField label="Description" value={c.description || ''} onChange={(v) => updateContent(key, 'description', v)} />
+              <Separator label="Cartes" />
+              {(c.cards || []).map((card: { title: string; description: string; icon: string; image_url: string }, i: number) => (
+                <div key={i} className="rounded-lg p-4 space-y-3" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Carte {i + 1}</p>
+                    <button type="button" onClick={() => removeArrayItem(key, 'cards', i)}
+                      className="text-xs px-2 py-1 rounded cursor-pointer" style={{ color: '#FF6B6B' }}>Supprimer</button>
+                  </div>
+                  <TextField label="Titre" value={card.title || ''} onChange={(v) => updateArrayItem(key, 'cards', i, 'title', v)} />
+                  <TextAreaField label="Description" value={card.description || ''} onChange={(v) => updateArrayItem(key, 'cards', i, 'description', v)} />
+                  <TextField label="Icone (emoji ou texte)" value={card.icon || ''} onChange={(v) => updateArrayItem(key, 'cards', i, 'icon', v)} />
+                  <FileUpload label="Image de la carte" accept="image/*" folder="site"
+                    currentUrl={card.image_url || null}
+                    onUploaded={(url) => updateArrayItem(key, 'cards', i, 'image_url', url)}
+                    onRemoved={() => updateArrayItem(key, 'cards', i, 'image_url', '')} />
+                </div>
+              ))}
+              <button type="button" onClick={() => addArrayItem(key, 'cards', { title: '', description: '', icon: '', image_url: '' })}
+                className="text-sm px-4 py-2 rounded-lg cursor-pointer" style={{ color: '#74C0FC', border: '1px dashed #74C0FC' }}>
+                + Ajouter une carte
+              </button>
+            </>
+          )
+        }
+
+        if (sectionType === 'cta') {
+          return (
+            <>
+              <TextAreaField label="Titre" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
+              <TextAreaField label="Description" value={c.description || ''} onChange={(v) => updateContent(key, 'description', v)} />
+              <FileUpload label="Image de fond" accept="image/*" folder="site"
+                currentUrl={c.image_url || null}
+                onUploaded={(url) => updateContent(key, 'image_url', url)}
+                onRemoved={() => updateContent(key, 'image_url', '')} />
+              <Separator label="Bouton" />
+              <TextField label="Libelle du bouton" value={c.button_label || ''} onChange={(v) => updateContent(key, 'button_label', v)} />
+              <TextField label="Lien du bouton" value={c.button_href || ''} onChange={(v) => updateContent(key, 'button_href', v)} />
+            </>
+          )
+        }
+
+        if (sectionType === 'gallery') {
+          return (
+            <>
+              <TextField label="Label de section" value={c.label || ''} onChange={(v) => updateContent(key, 'label', v)} />
+              <TextAreaField label="Titre" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
+              <TextAreaField label="Description" value={c.description || ''} onChange={(v) => updateContent(key, 'description', v)} />
+              <Separator label="Images" />
+              {(c.images || []).map((img: { url: string; alt: string; caption: string }, i: number) => (
+                <div key={i} className="rounded-lg p-4 space-y-3" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Image {i + 1}</p>
+                    <button type="button" onClick={() => removeArrayItem(key, 'images', i)}
+                      className="text-xs px-2 py-1 rounded cursor-pointer" style={{ color: '#FF6B6B' }}>Supprimer</button>
+                  </div>
+                  <FileUpload label="Image" accept="image/*" folder="site"
+                    currentUrl={img.url || null}
+                    onUploaded={(url) => updateArrayItem(key, 'images', i, 'url', url)}
+                    onRemoved={() => updateArrayItem(key, 'images', i, 'url', '')} />
+                  <TextField label="Texte alternatif" value={img.alt || ''} onChange={(v) => updateArrayItem(key, 'images', i, 'alt', v)} />
+                  <TextField label="Legende" value={img.caption || ''} onChange={(v) => updateArrayItem(key, 'images', i, 'caption', v)} />
+                </div>
+              ))}
+              <button type="button" onClick={() => addArrayItem(key, 'images', { url: '', alt: '', caption: '' })}
+                className="text-sm px-4 py-2 rounded-lg cursor-pointer" style={{ color: '#74C0FC', border: '1px dashed #74C0FC' }}>
+                + Ajouter une image
+              </button>
+            </>
+          )
+        }
+
+        // Default: HTML section
         return (
           <>
             <TextField label="Titre de la section" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
@@ -928,6 +1104,7 @@ export default function LandingAdminPage() {
             )}
           </>
         )
+      }
     }
   }
 
@@ -1095,8 +1272,22 @@ export default function LandingAdminPage() {
       case 'legal_contact':
         return null // No style fields
 
-      default:
-        return null
+      default: {
+        const sectionType = sec.content?.section_type || 'html'
+        if (sectionType === 'html') return null
+        // Style fields for structured custom sections (text, cards, cta, gallery)
+        return (
+          <>
+            <Separator label="Style" />
+            <SelectField label="Police du titre" value={st.title_font || ''} options={fontOpts} onChange={(v) => updateStyle(key, 'title_font', v)} />
+            <SelectField label="Taille du titre" value={st.title_size || ''} options={sizeOpts} onChange={(v) => updateStyle(key, 'title_size', v)} />
+            <SelectField label="Alignement du titre" value={st.title_align || ''} options={alignOpts} onChange={(v) => updateStyle(key, 'title_align', v)} />
+            <ColorField label="Couleur du titre" value={st.title_color || ''} onChange={(v) => updateStyle(key, 'title_color', v)} />
+            <SelectField label="Police du texte" value={st.text_font || ''} options={fontOpts} onChange={(v) => updateStyle(key, 'text_font', v)} />
+            <SelectField label="Alignement du texte" value={st.text_align || ''} options={alignOpts} onChange={(v) => updateStyle(key, 'text_align', v)} />
+          </>
+        )
+      }
     }
   }
 
@@ -1145,14 +1336,44 @@ export default function LandingAdminPage() {
               </option>
             ))}
           </select>
-          <button type="button" onClick={addCustomSection}
-            className="px-4 py-2.5 rounded-lg text-sm font-medium cursor-pointer flex items-center gap-2 flex-shrink-0"
-            style={{ border: '1px dashed rgba(116,192,252,0.4)', color: '#74C0FC', background: 'rgba(116,192,252,0.04)' }}>
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-            + Section HTML
-          </button>
+          <div className="relative flex-shrink-0">
+            <button type="button" onClick={() => setShowSectionTypeMenu(!showSectionTypeMenu)}
+              className="px-4 py-2.5 rounded-lg text-sm font-medium cursor-pointer flex items-center gap-2"
+              style={{ border: '1px dashed rgba(116,192,252,0.4)', color: '#74C0FC', background: 'rgba(116,192,252,0.04)' }}>
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              + Nouvelle section
+            </button>
+            {showSectionTypeMenu && (
+              <>
+                <div className="fixed inset-0 z-30" onClick={() => setShowSectionTypeMenu(false)} />
+                <div className="absolute right-0 top-full mt-2 z-40 rounded-xl overflow-hidden shadow-xl w-72"
+                  style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                  <p className="px-4 pt-3 pb-2 text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
+                    Type de section
+                  </p>
+                  {CUSTOM_SECTION_TYPES.map((st) => (
+                    <button key={st.type} type="button"
+                      onClick={() => addCustomSection(st.type)}
+                      className="w-full text-left px-4 py-3 flex items-center gap-3 cursor-pointer transition-colors"
+                      style={{ borderTop: '1px solid var(--dark-border)' }}
+                      onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = 'rgba(116,192,252,0.08)' }}
+                      onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = 'transparent' }}>
+                      <span className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-mono flex-shrink-0"
+                        style={{ background: 'rgba(116,192,252,0.1)', color: '#74C0FC' }}>
+                        {st.icon}
+                      </span>
+                      <div>
+                        <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{st.label}</p>
+                        <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{st.desc}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
 

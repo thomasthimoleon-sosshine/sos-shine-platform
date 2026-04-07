@@ -82,7 +82,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
           <div className="ml-4 sm:ml-6 flex-1 max-w-xs">
             <select
-              value={adminNav.find((item) => item.href === '/admin' ? pathname === '/admin' : pathname.startsWith(item.href))?.href || '/admin'}
+              value={adminNav.find((item) => item.href === '/admin' ? pathname === '/admin' : (pathname === item.href || pathname.startsWith(item.href + '/')))?.href || '/admin'}
               onChange={(e) => router.push(e.target.value)}
               className="w-full rounded-lg px-3 py-2 text-sm outline-none cursor-pointer appearance-none"
               style={{

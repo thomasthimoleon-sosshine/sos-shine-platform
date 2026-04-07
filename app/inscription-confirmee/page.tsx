@@ -23,6 +23,18 @@ function InscriptionConfirmeeContent() {
   const [verificationStatus, setVerificationStatus] = useState<'verifying' | 'verified' | 'error' | 'idle'>('idle')
   const [emailSent, setEmailSent] = useState(false)
 
+  // Track A/B conversion
+  useEffect(() => {
+    const variantId = sessionStorage.getItem('ab_variant_id')
+    if (variantId) {
+      fetch('/api/ab-test', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ variant_id: variantId, conversion_type: 'subscription' }),
+      }).catch(() => {})
+    }
+  }, [])
+
   // Verify the checkout session and trigger email if webhook didn't fire
   useEffect(() => {
     if (!sessionId) return

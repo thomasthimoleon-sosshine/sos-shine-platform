@@ -596,6 +596,16 @@ export default function SignatureEmotionnellePage() {
       setResultProfile(result);
       setPhase("email");
       window.scrollTo({ top: 0, behavior: "smooth" });
+
+      // Track A/B conversion
+      const variantId = sessionStorage.getItem('ab_variant_id');
+      if (variantId) {
+        fetch('/api/ab-test', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ variant_id: variantId, conversion_type: 'signature_test' }),
+        }).catch(() => {});
+      }
     }, 2800);
   }, []);
 

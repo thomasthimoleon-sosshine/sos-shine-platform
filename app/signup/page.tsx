@@ -144,6 +144,16 @@ export default function SignupPage() {
       }
 
       setSuccess(true)
+
+      // Track A/B conversion
+      const variantId = sessionStorage.getItem('ab_variant_id')
+      if (variantId) {
+        fetch('/api/ab-test', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ variant_id: variantId, conversion_type: 'signup' }),
+        }).catch(() => {})
+      }
     } catch {
       setError(t('auth.signup_error'))
       setLoading(false)

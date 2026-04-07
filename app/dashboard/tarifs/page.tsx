@@ -37,15 +37,12 @@ const PLAN_FEATURES: Record<PlanId, string[]> = {
     'Shine TV & Shorts',
     'Shine Audible',
     'Soin collectif mensuel',
+    'Live thématique hebdomadaire',
+    'Événements physiques',
     '7 jours d\'essai gratuit',
   ],
   premium: [
-    'Tout le contenu de la Sérénité',
-    'Live thématique hebdomadaire',
-    'Canal privé Telegram avec les fondateurs',
-    'Événements physiques',
-    'Ateliers Premium (48 semaines)',
-    '7 jours d\'essai gratuit',
+    'Plan archivé',
   ],
 }
 
@@ -357,7 +354,7 @@ export default function TarifsPage() {
   }
 
   // Pricing cards
-  const plans: PlanId[] = ['essential', 'serenite', 'premium']
+  const plans: PlanId[] = ['essential', 'serenite']
 
   return (
     <div className="max-w-5xl mx-auto py-8">

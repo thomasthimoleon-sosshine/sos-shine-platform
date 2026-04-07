@@ -10,8 +10,7 @@ import type { PlanId } from '@/lib/stripe/config'
 
 // Plan minimum requis pour chaque feature
 // Essentielle (9,90€) : Encyclopédie + Chat + Communauté
-// Sérénité (49,90€) : + Librairie + Shine TV + Shorts + Audible + Soin collectif
-// Premium (99,90€) : + Live hebdo + Telegram + Événements physiques + Ateliers
+// Sérénité (49,90€) : + Librairie + Shine TV + Shorts + Audible + Soin collectif + Live hebdo + Événements
 const FEATURE_MIN_PLAN: Record<string, { plan: PlanId; label: string }> = {
   shine_tv: { plan: 'serenite', label: 'Sérénité' },
   shine_shorts: { plan: 'serenite', label: 'Sérénité' },
@@ -20,10 +19,8 @@ const FEATURE_MIN_PLAN: Record<string, { plan: PlanId; label: string }> = {
   soin_collectif: { plan: 'serenite', label: 'Sérénité' },
   chat_douleur: { plan: 'essential', label: 'Essentielle' },
   visio: { plan: 'serenite', label: 'Sérénité' },
-  live_hebdo: { plan: 'premium', label: 'Premium' },
-  evenements_payants: { plan: 'premium', label: 'Premium' },
-  ateliers_premium: { plan: 'premium', label: 'Premium' },
-  telegram: { plan: 'premium', label: 'Premium' },
+  live_hebdo: { plan: 'serenite', label: 'Sérénité' },
+  evenements_payants: { plan: 'serenite', label: 'Sérénité' },
 }
 
 interface FeatureGateProps {

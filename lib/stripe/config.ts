@@ -16,10 +16,6 @@ export const STRIPE_PRICES: Record<string, string> = {
   serenite_quarterly:   process.env.STRIPE_PRICE_SERENITE_QUARTERLY || '',
   serenite_semiannual:  process.env.STRIPE_PRICE_SERENITE_SEMIANNUAL || '',
   serenite_annual:      process.env.STRIPE_PRICE_SERENITE_ANNUAL || '',
-  premium_monthly:      process.env.STRIPE_PRICE_PREMIUM_MONTHLY || '',
-  premium_quarterly:    process.env.STRIPE_PRICE_PREMIUM_QUARTERLY || '',
-  premium_semiannual:   process.env.STRIPE_PRICE_PREMIUM_SEMIANNUAL || '',
-  premium_annual:       process.env.STRIPE_PRICE_PREMIUM_ANNUAL || '',
 }
 
 // ── Stripe Product IDs → Plan mapping (pour détection Payment Links dans webhook) ──
@@ -31,10 +27,6 @@ export const PRODUCT_TO_PLAN: Record<string, { plan: PlanId; duration: DurationI
   'prod_UCedniSB1YzvJe': { plan: 'serenite', duration: 'quarterly' },
   'prod_U9Fxv3OO6aCI9G': { plan: 'serenite', duration: 'semiannual' },
   'prod_U9FztZbsXCxagW': { plan: 'serenite', duration: 'annual' },
-  'prod_U9FXlrYKS7xI3A': { plan: 'premium', duration: 'monthly' },
-  'prod_U9G1fXDICPm6KU': { plan: 'premium', duration: 'quarterly' },
-  'prod_U9G320t81v6XsG': { plan: 'premium', duration: 'semiannual' },
-  'prod_U9G4LI1LUcEoYx': { plan: 'premium', duration: 'annual' },
 }
 
 // ── Payment Links ──
@@ -45,10 +37,6 @@ export const PAYMENT_LINKS: Record<string, string> = {
   serenite_quarterly:   'https://buy.stripe.com/eVq8wH2PyeVBc3ngB45ZC0h',
   serenite_semiannual:  'https://buy.stripe.com/6oU5kv61K9Bh6J3doS5ZC0i',
   serenite_annual:      'https://buy.stripe.com/aFafZ93TC00H6J3esW5ZC0j',
-  premium_monthly:      'https://buy.stripe.com/28EbIT75O8xd8Rb3Oi5ZC0g',
-  premium_quarterly:    'https://buy.stripe.com/bJecMXcq84gXgjDesW5ZC0k',
-  premium_semiannual:   'https://buy.stripe.com/6oU14fcq828P3wRbgK5ZC0l',
-  premium_annual:       'https://buy.stripe.com/dRm3cnbm414LaZj5Wq5ZC0m',
 }
 
 // ── Prix mensuels (en centimes d'euro) ──
@@ -68,9 +56,9 @@ export const PRICES: Record<PlanId, Record<DurationId, number>> = {
   },
   premium: {
     monthly: 9990,
-    quarterly: 9657,     // -10%
-    semiannual: 9657,    // -20%
-    annual: 6993,        // -30%
+    quarterly: 9990,
+    semiannual: 9990,
+    annual: 9990,
   },
 }
 
@@ -91,9 +79,9 @@ export const TOTAL_PRICES: Record<PlanId, Record<DurationId, number>> = {
   },
   premium: {
     monthly: 9990,
-    quarterly: 28970,
-    semiannual: 57940,
-    annual: 83916,
+    quarterly: 29970,
+    semiannual: 59940,
+    annual: 119880,
   },
 }
 
@@ -104,11 +92,6 @@ export const ORIGINAL_PRICES: Record<string, Record<string, number>> = {
     quarterly: 14970,
     semiannual: 29940,
     annual: 59880,
-  },
-  premium: {
-    quarterly: 29970,
-    semiannual: 59940,
-    annual: 119880,
   },
 }
 
@@ -135,16 +118,16 @@ export const PLAN_INFO: Record<PlanId, { name: string; tagline: string; hasTrial
     hasTrial: true,
   },
   premium: {
-    name: 'Premium',
-    tagline: "L'immersion totale et l'accès privilégié",
-    hasTrial: true,
+    name: 'Premium (archivé)',
+    tagline: "Plan archivé — non disponible à la vente",
+    hasTrial: false,
   },
 }
 
 export const PLAN_NAMES: Record<PlanId, string> = {
   essential: 'Essentielle',
   serenite: 'Sérénité',
-  premium: 'Premium',
+  premium: 'Premium (archivé)',
 }
 
 export const PLAN_COLORS: Record<PlanId, string> = {
@@ -164,6 +147,9 @@ export const PLAN_ORDER: Record<PlanId, number> = {
   serenite: 2,
   premium: 3,
 }
+
+// Plans disponibles à l'achat (Premium archivé)
+export const PURCHASABLE_PLANS: PlanId[] = ['essential', 'serenite']
 
 // ── Coupon waitlist ──
 
@@ -202,8 +188,6 @@ export function detectPlanFromProductId(productId: string): { plan: PlanId; dura
 
 export function detectPlanFromAmount(amountCents: number | null): PlanId {
   if (!amountCents) return 'essential'
-  // Premium: 99.90€/mois = 9990 cents, annual can be higher
-  if (amountCents >= 9000) return 'premium'
   // Sérénité: 49.90€/mois = 4990 cents
   if (amountCents >= 4000) return 'serenite'
   // Essential: 9.90€/mois = 990 cents

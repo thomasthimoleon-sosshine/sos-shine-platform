@@ -33,15 +33,12 @@ const PLAN_FEATURES: Record<PlanId, string[]> = {
     'Shine TV & Shorts',
     'Shine Audible',
     'Soin collectif mensuel',
+    'Live hebdomadaire',
+    'Événements physiques',
     '7 jours d\'essai gratuit',
   ],
   premium: [
-    'Tout de la Sérénité',
-    'Live hebdomadaire',
-    'Canal Telegram privé',
-    'Événements physiques',
-    'Ateliers Premium (48 semaines)',
-    '7 jours d\'essai gratuit',
+    'Plan archivé',
   ],
 }
 
@@ -159,7 +156,7 @@ export default function SubscriptionModal({
 
   if (!isOpen) return null
 
-  const plans: PlanId[] = ['essential', 'serenite', 'premium']
+  const plans: PlanId[] = ['essential', 'serenite']
 
   return (
     <AnimatePresence>
@@ -263,7 +260,7 @@ export default function SubscriptionModal({
                 </div>
 
                 {/* Plan cards */}
-                <div className="grid sm:grid-cols-3 gap-4">
+                <div className="grid sm:grid-cols-2 gap-4">
                   {plans.map((planId) => {
                     const info = PLAN_INFO[planId]
                     const color = PLAN_COLORS[planId]

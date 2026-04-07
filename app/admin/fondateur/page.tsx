@@ -81,14 +81,13 @@ function generateProjection(targetSubscribers: number = 5000) {
     const subscribers = Math.round(50 + (targetSubscribers - 50) * growthFactor)
 
     // Distribution based on similar wellness/coaching platforms
-    // Essential ~55%, Sérénité ~30%, Premium ~15%
-    const essential = Math.round(subscribers * 0.55)
-    const serenite = Math.round(subscribers * 0.30)
-    const premium = subscribers - essential - serenite
+    // Essential ~60%, Sérénité ~40%
+    const essential = Math.round(subscribers * 0.60)
+    const serenite = subscribers - essential
+    const premium = 0
 
     const mrr = essential * PLAN_PRICES.essential +
-      serenite * PLAN_PRICES.serenite +
-      premium * PLAN_PRICES.premium
+      serenite * PLAN_PRICES.serenite
 
     // Affiliate: ~10% commission on referred subscriptions, ~30% of subs via affiliation
     const affiliateRevenue = mrr * 0.30 * 0.10

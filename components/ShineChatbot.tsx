@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const FAQ_DATA: { keywords: string[]; answer: string }[] = [
   {
     keywords: ['prix', 'tarif', 'coût', 'combien', 'abonnement', 'payer', 'gratuit', 'cher'],
-    answer: "Nous proposons trois formules : l'Essentielle à 9,90€/mois avec l'encyclopédie et le chat communauté, la Sérénité à 49,90€/mois avec en plus la librairie, Shine TV, Shorts, Audible et le soin collectif mensuel (7 jours d'essai gratuit), et le Premium à 99,90€/mois avec les lives hebdomadaires, le canal privé Telegram, les événements physiques et les 48 ateliers Premium (7 jours d'essai gratuit). 💎",
+    answer: "Nous proposons deux formules : l'Essentielle à 9,90€/mois avec l'encyclopédie et le chat communauté, et la Sérénité à 49,90€/mois avec en plus la librairie, Shine TV, Shorts, Audible, le soin collectif mensuel, les lives hebdomadaires et les événements physiques (7 jours d'essai gratuit). 💎",
   },
   {
     keywords: ['essai', 'tester', 'essayer', 'période'],

@@ -570,8 +570,8 @@ function PaymentContent() {
         </div>
       </Reveal>
 
-      {/* 3 Pricing cards */}
-      <div className="grid sm:grid-cols-3 gap-5 mb-6">
+      {/* Pricing cards */}
+      <div className="grid sm:grid-cols-2 gap-5 mb-6 max-w-3xl mx-auto">
         {/* Essentielle */}
         <Reveal delay={0.4}>
           <div className="glass p-6 sm:p-8 text-center h-full flex flex-col" style={{ borderColor: 'rgba(240,166,140,0.18)' }}>
@@ -661,6 +661,8 @@ function PaymentContent() {
                 'Shine TV & Shorts',
                 'Shine Audible',
                 'Soin collectif mensuel',
+                'Live thématique hebdomadaire',
+                'Événements physiques',
               ].map((item) => (
                 <div key={item} className="flex items-start gap-2.5">
                   <span className="mt-0.5 text-sm flex-shrink-0" style={{ color: '#55EFC4' }}>&#9670;</span>
@@ -682,74 +684,6 @@ function PaymentContent() {
           </div>
         </Reveal>
 
-        {/* Premium */}
-        <Reveal delay={0.6}>
-          <div className="glass p-6 sm:p-8 text-center h-full flex flex-col relative overflow-hidden" style={{ borderColor: 'rgba(167,139,250,0.3)', boxShadow: '0 0 40px rgba(167,139,250,0.08)' }}>
-            <div className="absolute top-4 right-4 text-[10px] tracking-[0.2em] uppercase px-3 py-1 rounded-full font-semibold"
-              style={{ background: 'linear-gradient(135deg, #A78BFA, #7C3AED)', color: '#fff' }}>
-              VIP
-            </div>
-            <p className="text-xs tracking-[0.25em] uppercase mb-4" style={{ color: '#A78BFA' }}>
-              {PLAN_INFO.premium.name}
-            </p>
-            {showTotalPrice ? (
-              <>
-                <div className="flex items-baseline justify-center gap-1.5 mb-1">
-                  <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#A78BFA' }}>
-                    {formatPrice(TOTAL_PRICES.premium[selectedDuration])}
-                  </span>
-                </div>
-                <p className="text-[10px] mb-2 line-through" style={{ color: 'var(--text-muted)' }}>
-                  au lieu de {formatPrice(ORIGINAL_PRICES.premium[selectedDuration as 'quarterly' | 'semiannual' | 'annual'])}
-                </p>
-                <p className="text-xs mb-1 font-medium" style={{ color: '#A78BFA' }}>
-                  {durationInfo.months} mois &mdash; <span>{durationInfo.discount}</span>
-                </p>
-              </>
-            ) : (
-              <>
-                <div className="flex items-baseline justify-center gap-1.5 mb-1">
-                  <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#A78BFA' }}>
-                    {formatPrice(PRICES.premium.monthly)}
-                  </span>
-                  <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
-                </div>
-                <p className="text-xs mb-1 font-medium" style={{ color: '#A78BFA' }}>
-                  7 jours d&apos;essai gratuit &mdash; CB requise
-                </p>
-              </>
-            )}
-            <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>
-              {t('join.no_commitment')}
-            </p>
-
-            <div className="space-y-2.5 text-left mb-6 flex-1">
-              {[
-                'Tout le contenu de la Sérénité',
-                'Live thématique hebdomadaire',
-                'Canal privé Telegram',
-                'Événements physiques',
-                'Ateliers Premium (48 semaines)',
-              ].map((item) => (
-                <div key={item} className="flex items-start gap-2.5">
-                  <span className="mt-0.5 text-sm flex-shrink-0" style={{ color: '#A78BFA' }}>&#9670;</span>
-                  <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{item}</span>
-                </div>
-              ))}
-            </div>
-
-            <button
-              onClick={() => handleCheckout('premium')}
-              className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm"
-              style={{ background: 'linear-gradient(135deg, #A78BFA, #7C3AED)', color: '#fff' }}
-            >
-              {showTotalPrice
-                ? `Premium ${durationInfo.months} mois \u2014 ${formatPrice(TOTAL_PRICES.premium[selectedDuration])}`
-                : 'Essayer Premium \u2014 7 jours gratuits (CB requise)'
-              }
-            </button>
-          </div>
-        </Reveal>
       </div>
 
       {/* Savings highlight for non-monthly */}

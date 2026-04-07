@@ -58,34 +58,41 @@ ALTER TABLE landing_variant_sections ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ab_test_visits ENABLE ROW LEVEL SECURITY;
 
 -- Lecture publique des variantes actives
+DROP POLICY IF EXISTS "Public read active variants" ON landing_page_variants;
 CREATE POLICY "Public read active variants" ON landing_page_variants
   FOR SELECT USING (is_active = true);
 
 -- Lecture publique des sections de variantes
+DROP POLICY IF EXISTS "Public read variant sections" ON landing_variant_sections;
 CREATE POLICY "Public read variant sections" ON landing_variant_sections
   FOR SELECT USING (true);
 
 -- Les fondateurs/admins peuvent tout faire sur les variantes
+DROP POLICY IF EXISTS "Founders manage variants" ON landing_page_variants;
 CREATE POLICY "Founders manage variants" ON landing_page_variants
   FOR ALL USING (
     EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role IN ('founder', 'admin_content'))
   );
 
+DROP POLICY IF EXISTS "Founders manage variant sections" ON landing_variant_sections;
 CREATE POLICY "Founders manage variant sections" ON landing_variant_sections
   FOR ALL USING (
     EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role IN ('founder', 'admin_content'))
   );
 
 -- Insert public pour le tracking (anonyme)
+DROP POLICY IF EXISTS "Public insert visits" ON ab_test_visits;
 CREATE POLICY "Public insert visits" ON ab_test_visits
   FOR INSERT WITH CHECK (true);
 
 -- Les fondateurs peuvent lire les visits pour les stats
+DROP POLICY IF EXISTS "Founders read visits" ON ab_test_visits;
 CREATE POLICY "Founders read visits" ON ab_test_visits
   FOR SELECT USING (
     EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role IN ('founder', 'admin_content'))
   );
 
 -- Update visits pour marquer les conversions
+DROP POLICY IF EXISTS "Public update visits" ON ab_test_visits;
 CREATE POLICY "Public update visits" ON ab_test_visits
   FOR UPDATE USING (true);

@@ -5,6 +5,8 @@ import { createClient } from '@/lib/supabase/client'
 import { LANDING_DEFAULTS } from '@/lib/landing-defaults'
 import type { LandingSectionRow } from '@/lib/landing-defaults'
 import FileUpload from '@/components/FileUpload'
+import LandingStyleToolbar from '@/components/LandingStyleToolbar'
+import LandingPreview from '@/components/LandingPreview'
 
 /* ── Select options ── */
 const fontOpts = [
@@ -607,27 +609,12 @@ export default function LandingJuliaPage() {
           </div>
         )}
 
-        {/* Style fields */}
-        {Object.keys(sec.styles).length > 0 && (
-          <>
-            <Separator label="Styles" />
-            {Object.entries(sec.styles).map(([styleKey, styleVal]) => {
-              if (styleKey.includes('color')) {
-                return <ColorField key={styleKey} label={styleKey.replace(/_/g, ' ')} value={styleVal} onChange={(v) => updateStyle(key, styleKey, v)} />
-              }
-              if (styleKey.includes('font')) {
-                return <SelectField key={styleKey} label={styleKey.replace(/_/g, ' ')} value={styleVal} options={fontOpts} onChange={(v) => updateStyle(key, styleKey, v)} />
-              }
-              if (styleKey.includes('align')) {
-                return <SelectField key={styleKey} label={styleKey.replace(/_/g, ' ')} value={styleVal} options={alignOpts} onChange={(v) => updateStyle(key, styleKey, v)} />
-              }
-              if (styleKey.includes('size')) {
-                return <SelectField key={styleKey} label={styleKey.replace(/_/g, ' ')} value={styleVal} options={sizeOpts} onChange={(v) => updateStyle(key, styleKey, v)} />
-              }
-              return <TextField key={styleKey} label={styleKey.replace(/_/g, ' ')} value={styleVal} onChange={(v) => updateStyle(key, styleKey, v)} />
-            })}
-          </>
-        )}
+        {/* Style toolbar with live preview */}
+        <LandingStyleToolbar
+          styles={sec.styles}
+          onChange={(field, value) => updateStyle(key, field, value)}
+          previewText={c.title || c.label || sec.label}
+        />
       </>
     )
   }
@@ -863,18 +850,11 @@ export default function LandingJuliaPage() {
             )
           })()}
 
-          {/* Bottom save + preview */}
+          {/* Responsive preview */}
+          <LandingPreview variant="julia" />
+
+          {/* Bottom save */}
           <div className="flex justify-end gap-3 pb-8">
-            <button
-              onClick={() => window.open('/?preview=julia', '_blank')}
-              className="px-5 py-3 rounded-xl text-sm font-semibold cursor-pointer flex items-center gap-2"
-              style={{ background: 'rgba(167,139,250,0.1)', color: '#A78BFA', border: '1px solid rgba(167,139,250,0.3)' }}>
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              Prévisualiser
-            </button>
             <button onClick={handleSave} disabled={saving}
               className="px-6 py-3 rounded-xl text-sm font-semibold cursor-pointer disabled:opacity-50"
               style={{ background: '#A78BFA', color: '#fff' }}>

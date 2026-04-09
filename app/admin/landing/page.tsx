@@ -5,6 +5,8 @@ import { createClient } from '@/lib/supabase/client'
 import { LANDING_DEFAULTS } from '@/lib/landing-defaults'
 import type { LandingSectionRow } from '@/lib/landing-defaults'
 import FileUpload from '@/components/FileUpload'
+import LandingStyleToolbar from '@/components/LandingStyleToolbar'
+import LandingPreview from '@/components/LandingPreview'
 
 /* ── Select options ── */
 const fontOpts = [
@@ -1446,11 +1448,24 @@ export default function LandingAdminPage() {
                 setSaved(false)
               }} />
               {renderContentFields(sec)}
-              {renderStyleFields(sec)}
+              {sec.section_key === '_global' ? (
+                renderStyleFields(sec)
+              ) : ['footer', 'ticker_1', 'ticker_2', 'legal_mentions', 'legal_cgv', 'legal_privacy', 'legal_contact'].includes(sec.section_key) ? null
+              : sec.section_key.startsWith('custom_') && (sec.content?.section_type || 'html') === 'html' ? null
+              : (
+                <LandingStyleToolbar
+                  styles={sec.styles}
+                  onChange={(field, value) => updateStyle(sec.section_key, field, value)}
+                  previewText={sec.content?.title || sec.label || ''}
+                />
+              )}
             </div>
           </div>
         )
       })()}
+
+      {/* ── Responsive preview ── */}
+      <LandingPreview variant="default" />
 
       {/* ── Bottom save ── */}
       <div className="flex justify-end pb-8">

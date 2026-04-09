@@ -406,12 +406,39 @@ export default function LandingJuliaPage() {
       const now = new Date().toISOString()
       const userId = user?.id || null
 
-      // Supprimer toutes les sections existantes puis réinsérer
-      await supabase
+      // 1. Récupérer les section_keys existantes en BDD
+      const { data: existing, error: fetchErr } = await supabase
         .from('landing_variant_sections')
-        .delete()
+        .select('section_key')
         .eq('variant_id', variantId)
 
+      if (fetchErr) {
+        setError(`Erreur lecture: ${fetchErr.message}`)
+        setSaving(false)
+        return
+      }
+
+      // 2. Supprimer les sections qui ne sont plus dans la liste locale
+      const currentKeys = new Set(sections.map((s) => s.section_key))
+      const keysToDelete = (existing || [])
+        .map((e: { section_key: string }) => e.section_key)
+        .filter((k: string) => !currentKeys.has(k))
+
+      if (keysToDelete.length > 0) {
+        const { error: delErr } = await supabase
+          .from('landing_variant_sections')
+          .delete()
+          .eq('variant_id', variantId)
+          .in('section_key', keysToDelete)
+
+        if (delErr) {
+          setError(`Erreur suppression: ${delErr.message}`)
+          setSaving(false)
+          return
+        }
+      }
+
+      // 3. Upsert toutes les sections actuelles (insert ou update)
       const rows = sections.map((s) => ({
         variant_id: variantId,
         section_key: s.section_key,
@@ -424,14 +451,25 @@ export default function LandingJuliaPage() {
         updated_at: now,
       }))
 
-      const { error: insertErr } = await supabase
+      const { error: upsertErr } = await supabase
         .from('landing_variant_sections')
-        .insert(rows)
+        .upsert(rows, { onConflict: 'variant_id,section_key' })
 
-      if (insertErr) {
-        setError(`Erreur: ${insertErr.message}`)
+      if (upsertErr) {
+        setError(`Erreur sauvegarde: ${upsertErr.message}`)
         setSaving(false)
         return
+      }
+
+      // 4. Recharger les sections depuis la BDD pour confirmer la persistance
+      const { data: reloaded } = await supabase
+        .from('landing_variant_sections')
+        .select('*')
+        .eq('variant_id', variantId)
+        .order('position')
+
+      if (reloaded && reloaded.length > 0) {
+        setSections(reloaded as LandingSectionRow[])
       }
 
       setSaving(false)
@@ -607,6 +645,18 @@ export default function LandingJuliaPage() {
         </div>
         <div className="flex items-center gap-3">
           {saved && <span className="text-sm font-medium" style={{ color: '#55EFC4' }}>Sauvegardé !</span>}
+          {sections.length > 0 && (
+            <button
+              onClick={() => window.open('/?preview=julia', '_blank')}
+              className="px-5 py-3 rounded-xl text-sm font-semibold cursor-pointer flex items-center gap-2"
+              style={{ background: 'rgba(167,139,250,0.1)', color: '#A78BFA', border: '1px solid rgba(167,139,250,0.3)' }}>
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              Prévisualiser
+            </button>
+          )}
           <button onClick={handleSave} disabled={saving}
             className="px-6 py-3 rounded-xl text-sm font-semibold cursor-pointer disabled:opacity-50"
             style={{ background: '#A78BFA', color: '#fff' }}>
@@ -765,8 +815,18 @@ export default function LandingJuliaPage() {
             )
           })()}
 
-          {/* Bottom save */}
-          <div className="flex justify-end pb-8">
+          {/* Bottom save + preview */}
+          <div className="flex justify-end gap-3 pb-8">
+            <button
+              onClick={() => window.open('/?preview=julia', '_blank')}
+              className="px-5 py-3 rounded-xl text-sm font-semibold cursor-pointer flex items-center gap-2"
+              style={{ background: 'rgba(167,139,250,0.1)', color: '#A78BFA', border: '1px solid rgba(167,139,250,0.3)' }}>
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              Prévisualiser
+            </button>
             <button onClick={handleSave} disabled={saving}
               className="px-6 py-3 rounded-xl text-sm font-semibold cursor-pointer disabled:opacity-50"
               style={{ background: '#A78BFA', color: '#fff' }}>

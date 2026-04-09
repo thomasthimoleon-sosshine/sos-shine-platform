@@ -341,25 +341,44 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
     try {
       const supabase = createClient();
 
+      // Preview mode: ?preview=julia force l'affichage de la variante Julia
+      const urlParams = new URLSearchParams(window.location.search);
+      const previewVariant = urlParams.get('preview');
+
       // A/B Testing: vérifier si le visiteur doit voir la variante B
       let useVariantB = false;
       let abVariantId: string | null = null;
-      try {
-        const abRes = await fetch('/api/ab-test');
-        if (abRes.ok) {
-          const abData = await abRes.json();
-          // Stocker le variant_id pour le tracking de conversion
-          if (abData.variant_id) {
-            sessionStorage.setItem('ab_variant_id', abData.variant_id);
-            sessionStorage.setItem('ab_variant_name', abData.variant || 'default');
-          }
-          if (abData.variant === 'julia' && abData.variant_id) {
-            useVariantB = true;
-            abVariantId = abData.variant_id;
-          }
+
+      if (previewVariant === 'julia') {
+        // Mode preview: charger directement la variante Julia
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { data: variant } = await (supabase as any)
+          .from('landing_page_variants')
+          .select('id')
+          .eq('name', 'julia')
+          .single();
+        if (variant) {
+          useVariantB = true;
+          abVariantId = variant.id;
         }
-      } catch {
-        // Pas de A/B test, utiliser la landing par défaut
+      } else {
+        try {
+          const abRes = await fetch('/api/ab-test');
+          if (abRes.ok) {
+            const abData = await abRes.json();
+            // Stocker le variant_id pour le tracking de conversion
+            if (abData.variant_id) {
+              sessionStorage.setItem('ab_variant_id', abData.variant_id);
+              sessionStorage.setItem('ab_variant_name', abData.variant || 'default');
+            }
+            if (abData.variant === 'julia' && abData.variant_id) {
+              useVariantB = true;
+              abVariantId = abData.variant_id;
+            }
+          }
+        } catch {
+          // Pas de A/B test, utiliser la landing par défaut
+        }
       }
 
       if (useVariantB && abVariantId) {

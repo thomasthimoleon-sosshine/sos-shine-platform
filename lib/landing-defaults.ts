@@ -94,7 +94,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'stats',
     label: 'Chiffres clés (Social Proof)',
-    position: 0.5,
+    position: 1,
     is_visible: true,
     content: {
       items: [
@@ -108,7 +108,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'signature_cta',
     label: 'CTA Signature Émotionnelle',
-    position: 0.7,
+    position: 2,
     is_visible: true,
     content: {
       label: 'Test exclusif',
@@ -123,7 +123,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'probleme',
     label: 'Problème & Agitation',
-    position: 1,
+    position: 3,
     is_visible: true,
     content: {
       label: 'Le vrai problème',
@@ -153,7 +153,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'principe',
     label: 'Le Principe',
-    position: 2,
+    position: 4,
     is_visible: true,
     content: {
       label: 'Notre approche',
@@ -174,7 +174,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'steps',
     label: 'La Méthode (3 Phases)',
-    position: 3,
+    position: 5,
     is_visible: true,
     content: {
       label: 'La Méthode',
@@ -196,7 +196,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'encyclopedie',
     label: "L'Encyclopédie",
-    position: 4,
+    position: 6,
     is_visible: true,
     content: {
       label: "L'encyclopédie",
@@ -218,7 +218,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'produit',
     label: "L'Écosystème (Produit)",
-    position: 5,
+    position: 7,
     is_visible: true,
     content: {
       label: "Votre espace privé",
@@ -243,7 +243,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'communaute',
     label: 'Communauté',
-    position: 6,
+    position: 8,
     is_visible: true,
     content: {
       title: "Vous n'êtes plus seul(e)\nface à ce que vous traversez.",
@@ -265,7 +265,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'temoignages',
     label: 'Témoignages',
-    position: 7,
+    position: 9,
     is_visible: true,
     content: {
       label: "Témoignages",
@@ -286,7 +286,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'histoire',
     label: "L'Histoire / Le Livre",
-    position: 8,
+    position: 10,
     is_visible: false,
     content: {
       label: "L'Histoire",
@@ -319,7 +319,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'fondateurs',
     label: 'Les Fondateurs (Cartes d\'Autorité)',
-    position: 9,
+    position: 11,
     is_visible: true,
     content: {
       label: 'Les Fondateurs',
@@ -340,7 +340,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'transformation',
     label: 'Avant / Après',
-    position: 10,
+    position: 12,
     is_visible: true,
     content: {
       label: 'Résultats concrets',
@@ -361,7 +361,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'manifeste',
     label: 'Manifeste',
-    position: 11,
+    position: 13,
     is_visible: true,
     content: {
       label: 'Ce en quoi on croit',
@@ -383,7 +383,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'pricing',
     label: 'Tarification',
-    position: 12,
+    position: 14,
     is_visible: true,
     content: {
       label: 'Tarification',
@@ -437,7 +437,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'garantie',
     label: 'Garantie',
-    position: 13,
+    position: 15,
     is_visible: true,
     content: {
       label: 'Notre engagement',
@@ -453,7 +453,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'cta_dark',
     label: 'CTA (fond sombre)',
-    position: 14,
+    position: 16,
     is_visible: true,
     content: {
       title: "Rejoignez-nous.\nNe soyez plus jamais\nseul(e) face à vos émotions.",
@@ -470,7 +470,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'cta_light',
     label: 'CTA (fond clair)',
-    position: 12,
+    position: 17,
     is_visible: false,
     content: {
       description: "Quel que soit votre schéma émotionnel, on a créé un protocole pour vous aider à le comprendre et à le changer.",
@@ -487,7 +487,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'footer',
     label: 'Pied de page',
-    position: 13,
+    position: 18,
     is_visible: true,
     content: {
       name: 'SOS Shine',
@@ -509,7 +509,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'ticker_1',
     label: 'Bandeau défilant 1',
-    position: 14,
+    position: 19,
     is_visible: true,
     content: {
       items: ['Abandon', 'Anxiété', 'Burn-out', 'Confiance en soi', 'Dépendance', 'Deuil', 'Trauma', 'Résilience', 'Pardon'],
@@ -520,7 +520,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'ticker_2',
     label: 'Bandeau défilant 2',
-    position: 15,
+    position: 20,
     is_visible: false,
     content: {
       items: ['Accessible 24/7', 'Communauté bienveillante', '200+ protocoles', 'Sessions collectives', 'Chat dédié', 'Événements live', 'Séances guidées', 'Cahiers d\'exercices'],
@@ -531,7 +531,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'faq',
     label: 'FAQ',
-    position: 16,
+    position: 21,
     is_visible: true,
     content: {
       label: 'FAQ',
@@ -580,7 +580,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'legal_mentions',
     label: 'Page — Mentions légales',
-    position: 17,
+    position: 22,
     is_visible: true,
     content: {
       title: 'Mentions légales',
@@ -591,7 +591,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'legal_cgv',
     label: 'Page — CGV',
-    position: 18,
+    position: 23,
     is_visible: true,
     content: {
       title: 'Conditions Générales de Vente',
@@ -602,7 +602,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'legal_privacy',
     label: 'Page — Confidentialité',
-    position: 19,
+    position: 24,
     is_visible: true,
     content: {
       title: 'Politique de confidentialité',
@@ -613,7 +613,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   {
     section_key: 'legal_contact',
     label: 'Page — Contact',
-    position: 20,
+    position: 25,
     is_visible: true,
     content: {
       title: 'Contact',

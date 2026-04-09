@@ -162,17 +162,25 @@ export default function LandingAdminPage() {
       if (missingDefaults.length > 0) {
         const { data: { user } } = await supabase.auth.getUser()
         const now = new Date().toISOString()
-        const newRows = missingDefaults.map((d) => ({
+        const maxPos = Math.max(...rows.map((r) => r.position), -1)
+        const newRows = missingDefaults.map((d, i) => ({
           section_key: d.section_key,
           label: d.label,
-          position: d.position,
+          position: maxPos + 1 + i,
           is_visible: d.is_visible,
           content: d.content,
           styles: d.styles,
           updated_by: user?.id || null,
           updated_at: now,
         }))
-        await supabase.from('landing_sections').insert(newRows)
+        const { error: insertErr } = await supabase.from('landing_sections').insert(newRows)
+        if (insertErr) {
+          console.error('Auto-seed missing sections failed:', insertErr.message)
+          // Fallback: try inserting one by one
+          for (const row of newRows) {
+            await supabase.from('landing_sections').insert(row)
+          }
+        }
         const { data: refreshed } = await supabase.from('landing_sections').select('*').order('position', { ascending: true })
         if (refreshed) {
           const allRows = refreshed as LandingSectionRow[]

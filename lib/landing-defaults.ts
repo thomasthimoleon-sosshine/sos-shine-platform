@@ -64,7 +64,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     is_visible: true,
     content: {
       surtitle: "PLATEFORME DE DÉCONDITIONNEMENT ÉMOTIONNEL",
-      title: "Ce que vous vivez\na une explication.\nEt une sortie.",
+      title: "Ce que vous vivez a une explication.\nEt une sortie.",
       subtitle: "SOS Shine décode les schémas émotionnels qui pilotent votre vie — et vous donne les outils pour reprendre les commandes. Pas du bien-être. De la transformation réelle.",
       video_url: '',
       video_label: 'Découvrir SOS Shine en 2 minutes',
@@ -174,7 +174,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     content: {
       label: "L'origine",
       title: "Tout est parti d'un livre.\nÉcrit par Julia. Pour vous.",
-      paragraph1: "Je m'appelle Julia Laureau. Pendant des années, j'ai accompagné des personnes en souffrance — en burn-out, en rupture, perdues dans des schémas relationnels qui se répètent.",
+      paragraph1: "Je m'appelle Julia Laureau. Pendant des années, j'ai accompagné des personnes en souffrance en burn-out, en rupture, perdues dans des schémas relationnels qui se répètent.",
       paragraph2: "J'ai mis des années à comprendre les mécanismes qui nous emprisonnent. Et quand j'ai compris, j'ai écrit Le Déconditionnement pour que d'autres n'aient pas à attendre aussi longtemps.",
       paragraph3: "SOS Shine, c'est ce livre mis en vie. Chaque protocole, chaque section de cette plateforme est construit sur ce que j'ai appris en accompagnant des centaines de personnes.",
       paragraph4: "Je ne vous promets pas que tout va aller bien. Je vous promets que vous allez comprendre. Et que comprendre change tout.",
@@ -216,7 +216,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       items: [
         { quote: "Je ne comprenais pas pourquoi je réagissais comme ça. En lisant le premier protocole, j'ai eu l'impression qu'on m'avait enfin expliqué ma propre histoire.", name: '', city: '' },
         { quote: "J'ai mis des mots sur quelque chose que je portais depuis 10 ans. Juste ça. Et tout a changé.", name: '', city: '' },
-        { quote: "La nuit où tout s'est effondré, il était 2h du matin. J'ai réécouté l'audio de Julia. Ce n'était pas de la magie — mais j'étais moins seule.", name: '', city: '' },
+        { quote: "La nuit où tout s'est effondré, il était 2h du matin. J'ai réécouté l'audio de Julia. Ce n'était pas de la magie mais j'étais moins seule.", name: '', city: '' },
       ],
     },
     styles: {
@@ -256,7 +256,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       title: "Trois étapes. Dans l'ordre.\nPour que ça dure.",
       step_label: '',
       items: [
-        { num: '01', title: 'COMPRENDRE', subtitle: '', description: "Mettre des mots sur ce qui vous détruit en silence. Les protocoles SOS Shine — construits par Julia à partir de centaines d'accompagnements — décodent votre schéma pour que vous puissiez enfin regarder ce qui se passe en face.", color: '#55EFC4' },
+        { num: '01', title: 'COMPRENDRE', subtitle: '', description: "Mettre des mots sur ce qui vous détruit en silence. Les protocoles SOS Shine construits par Julia à partir de centaines d'accompagnements décodent votre schéma pour que vous puissiez enfin regarder ce qui se passe en face.", color: '#55EFC4' },
         { num: '02', title: 'LIBÉRER', subtitle: '', description: "Une crise à 2h du matin ? Un effondrement qui arrive d'un coup ? Cette étape est là pour ça. Elle court-circuite la panique en temps réel. Pas de la méditation. Une libération physique et émotionnelle immédiate.", color: '#74C0FC' },
         { num: '03', title: 'AGIR', subtitle: '', description: "Comprendre ne suffit pas. Pour ne plus retomber dans le même schéma, vous devez le reprogrammer. L'hypnose et les protocoles pratiques transforment vos prises de conscience en nouveaux réflexes automatiques.", color: '#E17055' },
       ],
@@ -276,7 +276,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     content: {
       label: "VOTRE RÉSEAU DE SOUTIEN PRIVÉ",
       title: "Vous n'avez pas besoin d'expliquer.\nIci, on comprend.\nParce qu'on est passés par là.",
-      description: "SOS Shine n'est pas une plateforme de contenu. C'est un espace vivant. Un réseau social privé de personnes qui traversent — ou ont traversé — ce que vous vivez.\n\nPosez une question à 23h. Partagez une victoire. Lisez que quelqu'un ressent exactement la même chose.\n\nParfois, être vu suffit à changer quelque chose.",
+      description: "SOS Shine n'est pas une plateforme de contenu. C'est un espace vivant. Un réseau social privé de personnes qui traversent — ou ont traversé ce que vous vivez.\n\nPosez une question à 23h. Partagez une victoire. Lisez que quelqu'un ressent exactement la même chose.\n\nParfois, être vu suffit à changer quelque chose.",
       image_url: '',
       blocks: [
         { icon: 'fire', title: 'Le Feu de Camp', description: "L'espace d'entraide anonyme et bienveillant. Échangez sans jugement avec ceux qui traversent la même tempête." },

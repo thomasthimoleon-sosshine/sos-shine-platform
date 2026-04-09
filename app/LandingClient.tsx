@@ -288,11 +288,12 @@ export type SectionMap = Record<string, { content: SectionContent; styles: Secti
 
 interface LandingClientProps {
   initialSections?: SectionMap
+  initialPositions?: Record<string, number>
   initialPrelaunchEnabled?: boolean
   initialPrelaunchSettings?: PrelaunchSettings
 }
 
-export default function LandingClient({ initialSections, initialPrelaunchEnabled, initialPrelaunchSettings }: LandingClientProps) {
+export default function LandingClient({ initialSections, initialPositions, initialPrelaunchEnabled, initialPrelaunchSettings }: LandingClientProps) {
   const { t } = useTranslation();
   const [headerVisible, setHeaderVisible] = useState(true);
   const [headerScrolled, setHeaderScrolled] = useState(false);
@@ -315,7 +316,7 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
     }
     return map;
   });
-  const [sectionPositions, setSectionPositions] = useState<Record<string, number>>({});
+  const [sectionPositions, setSectionPositions] = useState<Record<string, number>>(initialPositions ?? {});
 
   const loadPrelaunchSettings = useCallback(async () => {
     try {
@@ -611,8 +612,8 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
           </header>
         )}
 
-      {/* Flex wrapper for dynamic section ordering */}
-      <div style={hasDynamicOrder ? { display: "flex", flexDirection: "column" } : undefined}>
+      {/* Flex wrapper for dynamic section ordering — always active so CSS order works */}
+      <div style={{ display: "flex", flexDirection: "column" }}>
 
       <div style={{ order: ord("hero") }}>
       {/* ═══ HERO — Word by word reveal ═══ */}
@@ -1708,8 +1709,7 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
 
       </div>
 
-      <div style={{ order: ord("custom") }}>
-      {/* ═══ CUSTOM SECTIONS (all types) ═══ */}
+      {/* ═══ CUSTOM SECTIONS (all types) — each wrapped with its own order ═══ */}
       {Object.entries(sections).filter(([key, s]) => key.startsWith('custom_') && s.is_visible).map(([key, s]) => {
         const c = s.content
         const sType = c.section_type || (c.html_content ? 'html' : 'text')
@@ -1718,7 +1718,8 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
         // HTML type
         if (sType === 'html' && c.html_content) {
           return (
-            <section key={key} className="relative cv-auto" style={{ background: c.bg_color || 'transparent', padding: c.padding || '4rem 1.5rem' }}>
+            <div key={key} style={{ order: ord(key) }}>
+            <section className="relative cv-auto" style={{ background: c.bg_color || 'transparent', padding: c.padding || '4rem 1.5rem' }}>
               <RevealOnScroll>
                 <div className="max-w-5xl mx-auto">
                   {c.title && (
@@ -1730,13 +1731,15 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
                 </div>
               </RevealOnScroll>
             </section>
+            </div>
           )
         }
 
         // Text type
         if (sType === 'text') {
           return (
-            <section key={key} className="relative cv-auto px-5 md:px-20 py-16 md:py-24">
+            <div key={key} style={{ order: ord(key) }}>
+            <section className="relative cv-auto px-5 md:px-20 py-16 md:py-24">
               <RevealOnScroll>
                 <div className="max-w-5xl mx-auto text-center">
                   {c.subtitle && <p className="text-xs tracking-[0.2em] uppercase mb-4" style={{ color: 'var(--gold)' }}>{c.subtitle}</p>}
@@ -1768,6 +1771,7 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
                 </div>
               </RevealOnScroll>
             </section>
+            </div>
           )
         }
 
@@ -1775,7 +1779,8 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
         if (sType === 'cards') {
           const cards = (c.cards || []) as { title?: string; description?: string; icon?: string; image_url?: string }[]
           return (
-            <section key={key} className="relative cv-auto px-5 md:px-20 py-16 md:py-24">
+            <div key={key} style={{ order: ord(key) }}>
+            <section className="relative cv-auto px-5 md:px-20 py-16 md:py-24">
               <RevealOnScroll>
                 <div className="max-w-6xl mx-auto text-center">
                   {c.title && (
@@ -1800,13 +1805,15 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
                 </div>
               </RevealOnScroll>
             </section>
+            </div>
           )
         }
 
         // CTA type
         if (sType === 'cta') {
           return (
-            <section key={key} className="relative cv-auto px-5 md:px-20 py-16 md:py-24">
+            <div key={key} style={{ order: ord(key) }}>
+            <section className="relative cv-auto px-5 md:px-20 py-16 md:py-24">
               <RevealOnScroll>
                 <div className="max-w-3xl mx-auto text-center">
                   {c.image_url && <img src={c.image_url} alt="" className="w-32 h-32 mx-auto mb-8 rounded-2xl object-cover" />}
@@ -1827,6 +1834,7 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
                 </div>
               </RevealOnScroll>
             </section>
+            </div>
           )
         }
 
@@ -1834,7 +1842,8 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
         if (sType === 'gallery') {
           const images = (c.images || []) as { url?: string; caption?: string }[]
           return (
-            <section key={key} className="relative cv-auto px-5 md:px-20 py-16 md:py-24">
+            <div key={key} style={{ order: ord(key) }}>
+            <section className="relative cv-auto px-5 md:px-20 py-16 md:py-24">
               <RevealOnScroll>
                 <div className="max-w-6xl mx-auto text-center">
                   {c.title && (
@@ -1857,12 +1866,14 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
                 </div>
               </RevealOnScroll>
             </section>
+            </div>
           )
         }
 
         // Fallback: render any content with html_content or title+description
         return (
-          <section key={key} className="relative cv-auto px-5 md:px-20 py-16 md:py-24" style={{ background: c.bg_color || 'transparent' }}>
+          <div key={key} style={{ order: ord(key) }}>
+          <section className="relative cv-auto px-5 md:px-20 py-16 md:py-24" style={{ background: c.bg_color || 'transparent' }}>
             <RevealOnScroll>
               <div className="max-w-5xl mx-auto text-center">
                 {c.title && (
@@ -1876,9 +1887,9 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
               </div>
             </RevealOnScroll>
           </section>
+          </div>
         )
       })}
-      </div>
 
       </div>{/* /flex wrapper */}
 

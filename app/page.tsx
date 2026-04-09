@@ -46,6 +46,7 @@ function sanitizeContent(content: SectionContent): SectionContent {
 
 export default async function Home() {
   let initialSections: SectionMap = {}
+  let initialPositions: Record<string, number> = {}
   let initialPrelaunchEnabled = false
   let initialPrelaunchSettings: PrelaunchSettings = {}
 
@@ -58,18 +59,22 @@ export default async function Home() {
       const rows = data as unknown as LandingSectionDefault[]
       const dbMap = buildSectionMap(rows)
       const merged: SectionMap = {}
+      const posMap: Record<string, number> = {}
       for (const d of LANDING_DEFAULTS) {
         const row = dbMap[d.section_key]
         merged[d.section_key] = row
           ? { content: sanitizeContent(row.content), styles: row.styles, is_visible: row.is_visible }
           : { content: d.content, styles: d.styles, is_visible: d.is_visible }
+        if (row) posMap[row.section_key] = row.position
       }
       for (const row of rows) {
         if (!merged[row.section_key]) {
           merged[row.section_key] = { content: sanitizeContent(row.content), styles: row.styles, is_visible: row.is_visible }
         }
+        if (!(row.section_key in posMap)) posMap[row.section_key] = row.position
       }
       initialSections = merged
+      initialPositions = posMap
     }
 
     // Fetch prelaunch settings server-side
@@ -89,6 +94,7 @@ export default async function Home() {
   return (
     <LandingClient
       initialSections={initialSections}
+      initialPositions={initialPositions}
       initialPrelaunchEnabled={initialPrelaunchEnabled}
       initialPrelaunchSettings={initialPrelaunchSettings}
     />

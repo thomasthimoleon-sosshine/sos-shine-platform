@@ -65,11 +65,11 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     content: {
       surtitle: "PLATEFORME DE DÉCONDITIONNEMENT ÉMOTIONNEL",
       title: "Ce que vous vivez a une explication.\nEt une sortie.",
-      subtitle: "SOS Shine décode les schémas émotionnels qui pilotent votre vie — et vous donne les outils pour reprendre les commandes. Pas du bien-être. De la transformation réelle.",
+      subtitle: "SOS Shine décode les schémas émotionnels qui pilotent votre vie et vous donne les outils pour reprendre les commandes. Pas du bien-être. De la transformation réelle.",
       video_url: '',
       video_label: 'Découvrir SOS Shine en 2 minutes',
       image_url: '',
-      cta_primary_label: 'Rejoindre SOS Shine — 7 jours gratuits',
+      cta_primary_label: 'Rejoindre SOS Shine, 7 jours gratuits',
       cta_primary_href: '/signup',
       cta_primary_subtext: '',
       cta_secondary_label: "Découvrir comment ça fonctionne",
@@ -80,7 +80,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
         'Sans engagement',
       ],
       buttons: [
-        { label: "Rejoindre SOS Shine — 7 jours gratuits", href: '/signup', variant: 'primary' },
+        { label: "Rejoindre SOS Shine, 7 jours gratuits", href: '/signup', variant: 'primary' },
         { label: "Découvrir comment ça fonctionne", href: '#parcours', variant: 'outline' },
       ],
     },
@@ -116,7 +116,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       label: 'Test exclusif',
       title: 'Découvrez votre',
       title_highlight: 'Signature Émotionnelle',
-      description: "20 questions pour identifier votre profil émotionnel dominant — comment vous réagissez au stress, aux relations, aux épreuves. Comprendre son fonctionnement, c'est le premier pas pour le changer.",
+      description: "20 questions pour identifier votre profil émotionnel dominant, comment vous réagissez au stress, aux relations, aux épreuves. Comprendre son fonctionnement, c'est le premier pas pour le changer.",
       button_label: 'Faire le test gratuit →',
       button_href: '/signature-emotionnelle',
     },
@@ -276,7 +276,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     content: {
       label: "VOTRE RÉSEAU DE SOUTIEN PRIVÉ",
       title: "Vous n'avez pas besoin d'expliquer.\nIci, on comprend.\nParce qu'on est passés par là.",
-      description: "SOS Shine n'est pas une plateforme de contenu. C'est un espace vivant. Un réseau social privé de personnes qui traversent — ou ont traversé ce que vous vivez.\n\nPosez une question à 23h. Partagez une victoire. Lisez que quelqu'un ressent exactement la même chose.\n\nParfois, être vu suffit à changer quelque chose.",
+      description: "SOS Shine n'est pas une plateforme de contenu. C'est un espace vivant. Un réseau social privé de personnes qui traversent, ou ont traversé, ce que vous vivez.\n\nPosez une question à 23h. Partagez une victoire. Lisez que quelqu'un ressent exactement la même chose.\n\nParfois, être vu suffit à changer quelque chose.",
       image_url: '',
       blocks: [
         { icon: 'fire', title: 'Le Feu de Camp', description: "L'espace d'entraide anonyme et bienveillant. Échangez sans jugement avec ceux qui traversent la même tempête." },
@@ -301,11 +301,11 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       label: "Ce que vous recevez dès J1",
       title: "Pas demain. Pas dans 3 semaines.\nCe soir.",
       checklist: [
-        "Votre Signature Émotionnelle — identifiez votre profil en 20 questions",
-        "L'encyclopédie complète — un protocole pour chaque situation de vie",
-        "Le protocole d'urgence — si vous êtes en crise ce soir, allez-y directement",
-        "La communauté Feu de Camp — des gens qui comprennent, maintenant",
-        "Shine TV, Shine Audible, Shine Journal, Shine Shorts — le format qui vous convient",
+        "Votre Signature Émotionnelle, identifiez votre profil en 20 questions",
+        "L'encyclopédie complète, un protocole pour chaque situation de vie",
+        "Le protocole d'urgence, si vous êtes en crise ce soir, allez-y directement",
+        "La communauté Feu de Camp, des gens qui comprennent, maintenant",
+        "Shine TV, Shine Audible, Shine Journal, Shine Shorts, le format qui vous convient",
         "200+ protocoles guidés, construits sur des années d'accompagnement réel",
       ],
       features: [],
@@ -331,7 +331,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       description: "",
       members: [
         { name: 'Julia', role: 'Fondatrice', expertise: 'Déconditionnement émotionnel', image: '/images/julia.jpeg' },
-        { name: 'Wiliam', role: 'Co-fondateur', expertise: 'Approche corporelle & Hypnose', image: '/images/wiliam.png' },
+        { name: 'William', role: 'Co-fondateur', expertise: 'Approche corporelle & Hypnose', image: '/images/william.png' },
         { name: 'Thomas', role: 'Co-fondateur', expertise: 'Protocoles d\'action', image: '/images/thomas.jpeg' },
       ],
     },
@@ -388,10 +388,10 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     content: {
       label: 'TARIFICATION',
       title: "Choisissez votre niveau\nd'engagement.",
-      subtitle: "Sans engagement — Annulable à tout instant.",
+      subtitle: "Sans engagement. Annulable à tout instant.",
       footer: "Parce que si on doit vous retenir par un contrat, c'est qu'on n'a pas fait notre travail.",
       guarantee_title: "7 jours pour tester l'intégralité de votre formule.",
-      guarantee_description: "Si ce n'est pas pour vous — zéro prélèvement. Zéro justification.\n\nOn croit en ce qu'on fait. On vous laisse vérifier.",
+      guarantee_description: "Si ce n'est pas pour vous, zéro prélèvement. Zéro justification.\n\nOn croit en ce qu'on fait. On vous laisse vérifier.",
       trust_badges: ['Paiement sécurisé Stripe', 'Données chiffrées', 'Annulation en 1 clic'],
       plans: [
         {
@@ -399,7 +399,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
           tagline: 'Pour explorer à votre rythme.',
           price: '9,90',
           period: '/mois',
-          button_label: "Commencer — 7 jours gratuits",
+          button_label: "Commencer, 7 jours gratuits",
           button_href: '/signup',
           highlight: false,
           badge: '',
@@ -414,7 +414,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
           tagline: "Pour ceux qui veulent vraiment transformer quelque chose.",
           price: '49,90',
           period: '/mois',
-          button_label: 'Commencer — 7 jours gratuits',
+          button_label: 'Commencer, 7 jours gratuits',
           button_href: '/signup',
           highlight: true,
           badge: 'Populaire',
@@ -443,7 +443,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     content: {
       label: 'Notre engagement',
       title: "7 jours pour juger\npar vous-même.",
-      description: "Accédez à tout le contenu de votre formule pendant 7 jours. Si ça ne vous correspond pas, annulez en un clic — zéro prélèvement, zéro justification. On croit en ce qu'on fait. Et on vous laisse vérifier.",
+      description: "Accédez à tout le contenu de votre formule pendant 7 jours. Si ça ne vous correspond pas, annulez en un clic, zéro prélèvement, zéro justification. On croit en ce qu'on fait. Et on vous laisse vérifier.",
     },
     styles: {
       title_font: 'Cormorant Garamond',
@@ -520,7 +520,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     content: {
       name: 'SOS Shine\u00ae',
       copyright_year: '2026',
-      copyright_suffix: ' — Tous droits réservés',
+      copyright_suffix: '. Tous droits réservés',
       links: [
         { label: 'Mentions l\u00e9gales', href: '/mentions-legales' },
         { label: 'CGV', href: '/cgv' },

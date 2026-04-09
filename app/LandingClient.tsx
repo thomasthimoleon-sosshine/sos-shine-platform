@@ -469,10 +469,12 @@ export default function LandingClient({ initialSections, initialPositions, initi
 
   // Default section order (matches hardcoded JSX order as fallback)
   const DEFAULT_ORDER: Record<string, number> = {
-    hero: 0, stats: 1, ticker_1: 2, signature_cta: 3, probleme: 4, principe: 5,
-    steps: 6, encyclopedie: 7, produit: 8, ticker_2: 9, communaute: 10,
-    temoignages: 11, histoire: 12, fondateurs: 13, transformation: 14, manifeste: 15,
-    pricing: 16, garantie: 17, faq: 18, cta_dark: 19, cta_light: 20, custom: 21,
+    hero: 0, probleme: 1, histoire: 2, temoignages: 3, encyclopedie: 4,
+    steps: 5, communaute: 6, produit: 7, manifeste: 8, pricing: 9,
+    pour_qui: 10, cta_dark: 11,
+    // Hidden sections
+    stats: 50, signature_cta: 51, principe: 52, fondateurs: 53, transformation: 54,
+    garantie: 55, cta_light: 56, ticker_1: 57, ticker_2: 58, faq: 59, custom: 99,
   };
   const hasDynamicOrder = Object.keys(sectionPositions).length > 0;
   function ord(key: string): number { return sectionPositions[key] ?? DEFAULT_ORDER[key] ?? 999; }
@@ -584,27 +586,20 @@ export default function LandingClient({ initialSections, initialPositions, initi
               <Link href="/" className="flex items-center gap-3">
                 <img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-14 sm:h-18 md:h-24 w-auto object-contain" />
               </Link>
-              <div className="absolute right-4 md:right-6 flex items-center gap-2">
+              <div className="absolute right-4 md:right-6 flex items-center gap-2 sm:gap-3">
                 <Link
                   href={g.header_login_href || '/login'}
-                  className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300"
-                  style={{
-                    background: 'rgba(255,255,255,0.05)',
-                    border: '1px solid rgba(255,255,255,0.08)',
-                  }}
-                  title={g.header_login_label || 'Connexion'}
-                  aria-label={g.header_login_label || 'Connexion'}
+                  className="text-xs sm:text-sm tracking-wide transition-colors duration-300 hover:opacity-80"
+                  style={{ color: 'var(--text-secondary)' }}
                 >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={1.5}
-                    style={{ color: 'var(--gold)' }}
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-                  </svg>
+                  {g.header_login_label || 'Se connecter'}
+                </Link>
+                <Link
+                  href={globalContent.header_cta_href || '/signup'}
+                  className="hidden sm:inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all duration-300 hover:scale-105"
+                  style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}
+                >
+                  {globalContent.header_cta_label || 'Commencer gratuitement'}
                 </Link>
                 <ThemeToggle />
               </div>
@@ -1115,10 +1110,11 @@ export default function LandingClient({ initialSections, initialPositions, initi
       </div>
 
       <div style={{ order: ord("produit") }}>
-      {/* ═══ L'ÉCOSYSTÈME / PRODUIT ═══ */}
+      {/* ═══ CE QUE VOUS RECEVEZ DÈS J1 ═══ */}
       {vis('produit') && (() => {
         const prod = sec('produit');
         const features = prod.features || [];
+        const checklist: string[] = prod.checklist || [];
         return (
           <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
             <div className="absolute inset-0 pointer-events-none">
@@ -1127,14 +1123,14 @@ export default function LandingClient({ initialSections, initialPositions, initi
 
             <div className="max-w-5xl mx-auto relative z-10">
               <RevealOnScroll>
-                <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{prod.label || 'Votre sanctuaire privé'}</p>
+                <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{prod.label || ''}</p>
               </RevealOnScroll>
               <RevealOnScroll delay={0.1}>
                 <h2 className="font-display font-light text-center mb-10 md:mb-16" style={tStyle("produit")}>
                   {(prod.title || '').split("\n").map((line: string, i: number) => (
                     <span key={i} className="block">
                       {i > 0 && <span className="block h-1" />}
-                      {line.includes("24/7") || line.includes("poche") ? (
+                      {line.includes("Ce soir") || line.includes("24/7") || line.includes("poche") ? (
                         <span className="text-shimmer">{line}</span>
                       ) : line}
                     </span>
@@ -1142,32 +1138,38 @@ export default function LandingClient({ initialSections, initialPositions, initi
                 </h2>
               </RevealOnScroll>
 
-              {/* Platform Mockup */}
-              {prod.mockup_image && (
-                <RevealOnScroll delay={0.15} direction="scale">
-                  <div className="mb-10 md:mb-16 max-w-3xl mx-auto">
-                    <div className="glass overflow-hidden rounded-xl md:rounded-2xl" style={{ border: `1px solid rgba(${goldRgb}, 0.1)` }}>
-                      <img src={prod.mockup_image} alt="Plateforme SOS Shine" className="w-full object-cover" />
+              {/* Checklist format */}
+              {checklist.length > 0 && (
+                <div className="max-w-3xl mx-auto">
+                  <GlowingCard className="p-6 sm:p-8 md:p-10">
+                    <div className="space-y-4 md:space-y-5">
+                      {checklist.map((item: string, i: number) => (
+                        <motion.div
+                          key={i}
+                          className="flex items-start gap-3 sm:gap-4"
+                          initial={{ opacity: 0, x: -15 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: 0.15 + i * 0.08 }}
+                        >
+                          <span className="mt-0.5 text-sm sm:text-base flex-shrink-0" style={{ color: gold }}>&#10022;</span>
+                          <span className="text-[var(--text-secondary)] text-sm sm:text-base font-light leading-relaxed">{item}</span>
+                        </motion.div>
+                      ))}
                     </div>
-                  </div>
-                </RevealOnScroll>
+                  </GlowingCard>
+                </div>
               )}
 
-              {/* Feature Cards */}
-              <div className="grid sm:grid-cols-2 gap-4 md:gap-6">
-                {features.map((feature: { icon: string; title: string; description: string }, i: number) => {
-                  const featureIcons: Record<string, React.ReactElement> = {
-                    encyclopedia: <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke={gold} strokeWidth="1.5"><path d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" strokeLinecap="round" strokeLinejoin="round" /></svg>,
-                    community: <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke={gold} strokeWidth="1.5"><path d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" strokeLinecap="round" strokeLinejoin="round" /><path d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1A3.75 3.75 0 0012 18z" strokeLinecap="round" strokeLinejoin="round" /></svg>,
-                    events: <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke={gold} strokeWidth="1.5"><path d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" strokeLinecap="round" strokeLinejoin="round" /></svg>,
-                    media: <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke={gold} strokeWidth="1.5"><path d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125M3.375 19.5h1.5C5.496 19.5 6 18.996 6 18.375m-2.625 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-1.5A1.125 1.125 0 0118 18.375M20.625 4.5H3.375m17.25 0c.621 0 1.125.504 1.125 1.125M20.625 4.5h-1.5C18.504 4.5 18 5.004 18 5.625m3.75 0v1.5c0 .621-.504 1.125-1.125 1.125M3.375 4.5c-.621 0-1.125.504-1.125 1.125M3.375 4.5h1.5C5.496 4.5 6 5.004 6 5.625m-3.75 0v1.5c0 .621.504 1.125 1.125 1.125m0 0h1.5m-1.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m1.5-3.75C5.496 8.25 6 7.746 6 7.125v-1.5M4.875 8.25C5.496 8.25 6 8.754 6 9.375v1.5m0-5.25v5.25m0-5.25C6 5.004 6.504 4.5 7.125 4.5h9.75c.621 0 1.125.504 1.125 1.125m1.125 2.625h1.5m-1.5 0A1.125 1.125 0 0118 7.125v-1.5m1.125 2.625c-.621 0-1.125.504-1.125 1.125v1.5m2.625-2.625c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125M18 5.625v5.25M7.125 12h9.75m-9.75 0A1.125 1.125 0 016 10.875M7.125 12C6.504 12 6 12.504 6 13.125m0-2.25C6 11.496 5.496 12 4.875 12M18 10.875c0 .621-.504 1.125-1.125 1.125M18 10.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125m-12 5.25v-5.25m0 5.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125m-12 0v-1.5c0-.621-.504-1.125-1.125-1.125M18 18.375v-5.25m0 5.25v-1.5c0-.621.504-1.125 1.125-1.125M18 13.125v1.5c0 .621.504 1.125 1.125 1.125M18 13.125c0-.621.504-1.125 1.125-1.125M6 13.125v1.5c0 .621-.504 1.125-1.125 1.125M6 13.125C6 12.504 5.496 12 4.875 12m-1.5 0h1.5m-1.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125M19.125 12h1.5m0 0c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h1.5m14.25 0h1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>,
-                  };
-                  return (
+              {/* Feature Cards (legacy format) */}
+              {features.length > 0 && checklist.length === 0 && (
+                <div className="grid sm:grid-cols-2 gap-4 md:gap-6">
+                  {features.map((feature: { icon: string; title: string; description: string }, i: number) => (
                     <RevealOnScroll key={feature.title || i} delay={0.2 + i * 0.1} direction={i % 2 === 0 ? 'left' : 'right'}>
                       <GlowingCard className="p-5 sm:p-8 h-full">
                         <div className="flex items-start gap-4 sm:gap-5">
                           <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center" style={{ background: `rgba(${goldRgb}, 0.08)`, border: `1px solid rgba(${goldRgb}, 0.12)` }}>
-                            {featureIcons[feature.icon] || featureIcons.encyclopedia}
+                            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke={gold} strokeWidth="1.5"><path d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" strokeLinecap="round" strokeLinejoin="round" /></svg>
                           </div>
                           <div className="min-w-0">
                             <h3 className="font-display text-lg sm:text-xl font-medium mb-2">{feature.title}</h3>
@@ -1176,9 +1178,9 @@ export default function LandingClient({ initialSections, initialPositions, initi
                         </div>
                       </GlowingCard>
                     </RevealOnScroll>
-                  );
-                })}
-              </div>
+                  ))}
+                </div>
+              )}
 
               {/* CTA */}
               {prod.cta_label && (
@@ -1205,31 +1207,40 @@ export default function LandingClient({ initialSections, initialPositions, initi
 
       <div style={{ order: ord("communaute") }}>
       {/* ═══ COMMUNAUTE ═══ */}
-      {vis('communaute') && (
+      {vis('communaute') && (() => {
+        const commLabel = comm.label || 'VOTRE RÉSEAU DE SOUTIEN PRIVÉ';
+        const communityIcons: Record<string, string> = { fire: '\uD83D\uDD25', sparkle: '\u2728', journal: '\uD83D\uDCDD', live: '\uD83C\uDFA5' };
+        return (
         <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
           <div className="max-w-5xl mx-auto">
+            <RevealOnScroll>
+              <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{commLabel}</p>
+            </RevealOnScroll>
             <RevealOnScroll>
               <h2 className="font-display font-light leading-[1.1] text-center mb-4 md:mb-6" style={tStyle("communaute")}>
                 <WordByWordReveal text={comm.title || ''} />
               </h2>
             </RevealOnScroll>
             <RevealOnScroll delay={0.15}>
-              <p className="text-base md:text-xl text-[var(--text-secondary)] font-light leading-relaxed mb-10 md:mb-20 max-w-2xl mx-auto text-center">
+              <p className="text-base md:text-lg text-[var(--text-secondary)] font-light leading-relaxed mb-10 md:mb-20 max-w-2xl mx-auto text-center whitespace-pre-line">
                 {comm.description || ''}
               </p>
             </RevealOnScroll>
 
-            <div className="space-y-4 md:space-y-6">
-              {(comm.blocks || []).filter((b: { title: string; description: string }) => b.title).map((item: { title: string; description: string }, i: number) => (
-                <RevealOnScroll key={item.title} delay={i * 0.12} direction={i % 2 === 0 ? "left" : "right"}>
-                  <GlowingCard className="p-5 sm:p-8 md:p-10">
-                    <div className="flex items-start gap-4 sm:gap-6">
-                      <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center" style={{ background: `rgba(${goldRgb}, 0.08)`, border: `1px solid rgba(${goldRgb}, 0.12)` }}>
-                        <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke={gold} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                          {i === 0 && <><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><circle cx="9" cy="10" r="1" fill={gold}/><circle cx="15" cy="10" r="1" fill={gold}/></>}
-                          {i === 1 && <><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 8h8M8 12h6M8 16h4"/></>}
-                          {i === 2 && <><path d="M17 21v-2a4 4 0 0 0-4-4H5" /><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>}
-                        </svg>
+            <div className="grid sm:grid-cols-2 gap-4 md:gap-6">
+              {(comm.blocks || []).filter((b: { title: string; description: string }) => b.title).map((item: { icon?: string; title: string; description: string }, i: number) => (
+                <RevealOnScroll key={item.title} delay={i * 0.1} direction={i % 2 === 0 ? "left" : "right"}>
+                  <GlowingCard className="p-5 sm:p-8 h-full">
+                    <div className="flex items-start gap-4 sm:gap-5">
+                      <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center text-xl" style={{ background: `rgba(${goldRgb}, 0.08)`, border: `1px solid rgba(${goldRgb}, 0.12)` }}>
+                        {item.icon && communityIcons[item.icon] ? communityIcons[item.icon] : (
+                          <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke={gold} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                            {i === 0 && <><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><circle cx="9" cy="10" r="1" fill={gold}/><circle cx="15" cy="10" r="1" fill={gold}/></>}
+                            {i === 1 && <><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 8h8M8 12h6M8 16h4"/></>}
+                            {i === 2 && <><path d="M17 21v-2a4 4 0 0 0-4-4H5" /><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>}
+                            {i >= 3 && <><path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></>}
+                          </svg>
+                        )}
                       </div>
                       <div className="min-w-0">
                         <h3 className="font-display text-lg sm:text-xl font-medium mb-2 sm:mb-3">{item.title}</h3>
@@ -1242,7 +1253,8 @@ export default function LandingClient({ initialSections, initialPositions, initi
             </div>
           </div>
         </section>
-      )}
+        );
+      })()}
       </div>
 
       <div style={{ order: ord("temoignages") }}>
@@ -1317,60 +1329,89 @@ export default function LandingClient({ initialSections, initialPositions, initi
       </div>
 
       <div style={{ order: ord("histoire") }}>
-      {/* ═══ L'HISTOIRE / LE LIVRE ═══ */}
+      {/* ═══ JULIA ET LE LIVRE ═══ */}
       {vis('histoire') && (() => {
         const hist = sec('histoire');
         return (
           <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
-            <div className="max-w-5xl mx-auto">
+            <div className="max-w-4xl mx-auto">
               <RevealOnScroll>
-                <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{hist.label || "L'Histoire"}</p>
+                <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{hist.label || "L'origine"}</p>
               </RevealOnScroll>
               <RevealOnScroll delay={0.1}>
-                <h2 className="font-display font-light text-center text-2xl sm:text-3xl md:text-5xl mb-4 md:mb-6" style={{ color: 'var(--gold)' }}>
+                <h2 className="font-display font-light text-center text-2xl sm:text-3xl md:text-5xl mb-8 md:mb-12" style={{ color: 'var(--gold)' }}>
                   <WordByWordReveal text={hist.title || ''} />
                 </h2>
               </RevealOnScroll>
-              <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16 mt-8 md:mt-12">
-                <RevealOnScroll delay={0.15}>
-                  <div className="flex-shrink-0 group">
-                    <a href={hist.book_url || '#'} target="_blank" rel="noopener noreferrer" className="block relative">
-                      <div className="w-44 sm:w-56 md:w-64 rounded-lg overflow-hidden border border-[var(--gold)]/20 group-hover:border-[var(--gold)]/60 transition-all duration-500 shadow-lg group-hover:shadow-[0_0_30px_rgba(212,175,55,0.2)]">
-                        <img
-                          src={hist.book_image || '/images/book-cover.jpeg'}
-                          alt="SOS Shine — Briller Comme un Diamant"
-                          className="w-full aspect-[3/4] object-contain"
-                        />
-                      </div>
-                      <div className="absolute -inset-2 rounded-xl bg-[var(--gold)]/5 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
-                    </a>
-                  </div>
-                </RevealOnScroll>
-                <RevealOnScroll delay={0.25}>
-                  <div className="flex-1 text-center md:text-left">
-                    <p className="text-base md:text-xl text-[var(--text-body)] leading-relaxed mb-4 md:mb-6">
-                      {hist.paragraph1 || ''}
+
+              {/* Julia's bio paragraphs */}
+              <div className="max-w-3xl mx-auto space-y-6 md:space-y-8 mb-8 md:mb-12">
+                {hist.paragraph1 && (
+                  <RevealOnScroll delay={0.15}>
+                    <p className="text-base md:text-lg text-[var(--text-secondary)] leading-relaxed font-light">
+                      {hist.paragraph1}
                     </p>
-                    <p className="text-base md:text-xl text-[var(--text-body)] leading-relaxed mb-4 md:mb-6">
-                      {hist.paragraph2 || ''}
+                  </RevealOnScroll>
+                )}
+                {hist.paragraph2 && (
+                  <RevealOnScroll delay={0.2}>
+                    <p className="text-base md:text-lg text-[var(--text-secondary)] leading-relaxed font-light">
+                      {hist.paragraph2}
                     </p>
-                    {hist.quote && (
-                      <p className="text-sm md:text-base text-[var(--text-muted)] leading-relaxed mb-6 md:mb-8 italic">
-                        &ldquo;{hist.quote}&rdquo;
+                  </RevealOnScroll>
+                )}
+                {hist.paragraph3 && (
+                  <RevealOnScroll delay={0.25}>
+                    <p className="text-base md:text-lg text-[var(--text-secondary)] leading-relaxed font-light">
+                      {hist.paragraph3}
+                    </p>
+                  </RevealOnScroll>
+                )}
+                {hist.paragraph4 && (
+                  <RevealOnScroll delay={0.3}>
+                    <p className="text-base md:text-lg font-light italic" style={{ color: gold }}>
+                      {hist.paragraph4}
+                    </p>
+                  </RevealOnScroll>
+                )}
+              </div>
+
+              {/* Julia signature */}
+              {hist.signature && (
+                <RevealOnScroll delay={0.35}>
+                  <div className="text-center mb-10 md:mb-16">
+                    <p className="font-display text-lg md:text-xl italic" style={{ color: gold }}>
+                      — {hist.signature}
+                    </p>
+                    {hist.signature_subtitle && (
+                      <p className="text-xs sm:text-sm mt-1 font-light" style={{ color: 'var(--text-muted)' }}>
+                        {hist.signature_subtitle}
                       </p>
                     )}
-                    <a
-                      href={hist.book_url || '#'}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 border border-[var(--gold)]/40 rounded-full text-[var(--gold)] text-xs sm:text-sm tracking-[0.15em] uppercase hover:bg-[var(--gold)]/10 hover:border-[var(--gold)] transition-all duration-300"
-                    >
-                      {hist.button_label || 'Découvrir le livre'}
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                    </a>
                   </div>
                 </RevealOnScroll>
-              </div>
+              )}
+
+              {/* Team section */}
+              {hist.team_title && (
+                <RevealOnScroll delay={0.4}>
+                  <div className="max-w-3xl mx-auto text-center">
+                    <div className="flex items-center justify-center gap-4 mb-6">
+                      <span className="block w-16 h-px" style={{ background: `linear-gradient(to right, transparent, rgba(${goldRgb}, 0.3))` }} />
+                      <span className="block w-2 h-2 rotate-45" style={{ background: gold, opacity: 0.5 }} />
+                      <span className="block w-16 h-px" style={{ background: `linear-gradient(to left, transparent, rgba(${goldRgb}, 0.3))` }} />
+                    </div>
+                    <h3 className="font-display text-xl sm:text-2xl md:text-3xl font-light mb-4 md:mb-6" style={{ color: 'var(--text-primary)' }}>
+                      {hist.team_title}
+                    </h3>
+                    {hist.team_description && (
+                      <p className="text-base md:text-lg text-[var(--text-secondary)] leading-relaxed font-light">
+                        {hist.team_description}
+                      </p>
+                    )}
+                  </div>
+                </RevealOnScroll>
+              )}
             </div>
           </section>
         );
@@ -1617,6 +1658,24 @@ export default function LandingClient({ initialSections, initialPositions, initi
               );
             })()}
 
+            {/* Guarantee within pricing */}
+            {pricing.guarantee_title && (
+              <RevealOnScroll delay={0.35}>
+                <div className="mt-10 md:mt-16 text-center max-w-2xl mx-auto">
+                  <div className="glow-card p-6 sm:p-8 md:p-10">
+                    <h3 className="font-display text-lg sm:text-xl md:text-2xl font-light mb-4" style={{ color: 'var(--text-primary)' }}>
+                      {pricing.guarantee_title}
+                    </h3>
+                    {pricing.guarantee_description && (
+                      <p className="text-sm md:text-base text-[var(--text-secondary)] font-light leading-relaxed whitespace-pre-line">
+                        {pricing.guarantee_description}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </RevealOnScroll>
+            )}
+
             <RevealOnScroll delay={0.4}>
               <p className="text-center text-xs text-[var(--text-muted)] mt-6 md:mt-8 font-light italic">{pricing.footer || ''}</p>
             </RevealOnScroll>
@@ -1733,6 +1792,82 @@ export default function LandingClient({ initialSections, initialPositions, initi
       })()}
       </div>
 
+      <div style={{ order: ord("pour_qui") }}>
+      {/* ═══ POUR QUI / PAS POUR QUI ═══ */}
+      {vis('pour_qui') && (() => {
+        const pq = sec('pour_qui');
+        const forItems: string[] = pq.for_items || [];
+        const notItems: string[] = pq.not_items || [];
+        if (!pq.title && forItems.length === 0) return null;
+        return (
+          <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
+            <div className="max-w-4xl mx-auto">
+              <RevealOnScroll>
+                <h2 className="font-display font-light text-center mb-10 md:mb-16" style={tStyle("pour_qui")}>
+                  <WordByWordReveal text={pq.title || ''} />
+                </h2>
+              </RevealOnScroll>
+
+              <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+                {/* Pour vous */}
+                {forItems.length > 0 && (
+                  <RevealOnScroll delay={0.1} direction="left">
+                    <GlowingCard className="p-6 sm:p-8 h-full">
+                      <div className="space-y-4">
+                        {forItems.map((item: string, i: number) => (
+                          <motion.div
+                            key={i}
+                            className="flex items-start gap-3"
+                            initial={{ opacity: 0, x: -10 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.2 + i * 0.08 }}
+                          >
+                            <span className="mt-0.5 text-sm flex-shrink-0" style={{ color: '#55EFC4' }}>&#10022;</span>
+                            <span className="text-[var(--text-secondary)] text-sm sm:text-[15px] font-light leading-relaxed">{item}</span>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </GlowingCard>
+                  </RevealOnScroll>
+                )}
+
+                {/* Pas pour vous */}
+                {notItems.length > 0 && (
+                  <RevealOnScroll delay={0.2} direction="right">
+                    <div className="h-full">
+                      {pq.not_title && (
+                        <h3 className="font-display text-xl sm:text-2xl font-light mb-6" style={{ color: 'var(--text-primary)' }}>
+                          {pq.not_title}
+                        </h3>
+                      )}
+                      <div className="glow-card p-6 sm:p-8 h-full" style={{ border: '1px solid rgba(255,100,100,0.1)' }}>
+                        <div className="space-y-4">
+                          {notItems.map((item: string, i: number) => (
+                            <motion.div
+                              key={i}
+                              className="flex items-start gap-3"
+                              initial={{ opacity: 0, x: 10 }}
+                              whileInView={{ opacity: 1, x: 0 }}
+                              viewport={{ once: true }}
+                              transition={{ delay: 0.3 + i * 0.08 }}
+                            >
+                              <span className="mt-0.5 text-sm flex-shrink-0" style={{ color: '#FF6B6B' }}>&#10007;</span>
+                              <span className="text-[var(--text-secondary)] text-sm sm:text-[15px] font-light leading-relaxed">{item}</span>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </RevealOnScroll>
+                )}
+              </div>
+            </div>
+          </section>
+        );
+      })()}
+      </div>
+
       <div style={{ order: ord("cta_dark") }}>
       {/* ═══ CTA FINAL DARK ═══ */}
       {vis('cta_dark') && (
@@ -1747,10 +1882,17 @@ export default function LandingClient({ initialSections, initialPositions, initi
               </RevealOnScroll>
             )}
             <RevealOnScroll>
-              <h2 className="font-display font-light leading-[1.12] mb-8 md:mb-12" style={tStyle("cta_dark")}>
+              <h2 className="font-display font-light leading-[1.12] mb-4 md:mb-6" style={tStyle("cta_dark")}>
                 <WordByWordReveal text={ctaDark.title || ''} />
               </h2>
             </RevealOnScroll>
+            {ctaDark.subtitle && (
+              <RevealOnScroll delay={0.15}>
+                <p className="text-base sm:text-xl md:text-2xl text-[var(--text-secondary)] font-light leading-relaxed mb-8 md:mb-12 max-w-2xl mx-auto">
+                  {ctaDark.subtitle}
+                </p>
+              </RevealOnScroll>
+            )}
             <RevealOnScroll delay={0.3}>
               <Link href={ctaDark.button_href || '/signup'}>
                 <button className="magnetic-btn pulse-ring px-8 sm:px-10 py-4 sm:py-5 rounded-full text-base sm:text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
@@ -1758,6 +1900,13 @@ export default function LandingClient({ initialSections, initialPositions, initi
                 </button>
               </Link>
             </RevealOnScroll>
+            {ctaDark.trust_line && (
+              <RevealOnScroll delay={0.4}>
+                <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-4 md:mt-6 font-light tracking-wide">
+                  {ctaDark.trust_line}
+                </p>
+              </RevealOnScroll>
+            )}
           </div>
         </section>
       )}
@@ -2048,7 +2197,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
               </div>
 
               <p className="text-[10px] tracking-[0.15em] sm:tracking-[0.2em] uppercase text-[var(--text-muted)]">
-                &copy; {foot.copyright_year || '2026'} {foot.name || 'SOS Shine'}
+                &copy; {foot.copyright_year || '2026'} {foot.name || 'SOS Shine\u00ae'}{foot.copyright_suffix || ' — Tous droits réservés'}
               </p>
             </div>
           </div>

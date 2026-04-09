@@ -1657,25 +1657,168 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
         </section>
       )}
 
-      {/* ═══ CUSTOM HTML SECTIONS ═══ */}
-      {Object.entries(sections).filter(([key, s]) => key.startsWith('custom_') && s.is_visible && s.content.html_content).map(([key, s]) => (
-        <section key={key} className="relative cv-auto" style={{ background: s.content.bg_color || 'transparent', padding: s.content.padding || '4rem 1.5rem' }}>
-          <RevealOnScroll>
-            <div className="max-w-5xl mx-auto">
-              {s.content.title && (
-                <h2 className="font-display font-light text-center text-3xl md:text-5xl mb-8" style={{ color: 'var(--gold)' }}>
-                  <WordByWordReveal text={s.content.title} />
-                </h2>
-              )}
-              <div
-                className="prose prose-invert prose-lg max-w-none"
-                style={{ color: 'var(--text-secondary)' }}
-                dangerouslySetInnerHTML={{ __html: s.content.html_content }}
-              />
-            </div>
-          </RevealOnScroll>
-        </section>
-      ))}
+      {/* ═══ CUSTOM SECTIONS (all types) ═══ */}
+      {Object.entries(sections).filter(([key, s]) => key.startsWith('custom_') && s.is_visible).map(([key, s]) => {
+        const c = s.content
+        const sType = c.section_type || (c.html_content ? 'html' : 'text')
+        const titleStyle = s.styles?.title_font ? { fontFamily: s.styles.title_font } : {}
+
+        // HTML type
+        if (sType === 'html' && c.html_content) {
+          return (
+            <section key={key} className="relative cv-auto" style={{ background: c.bg_color || 'transparent', padding: c.padding || '4rem 1.5rem' }}>
+              <RevealOnScroll>
+                <div className="max-w-5xl mx-auto">
+                  {c.title && (
+                    <h2 className="font-display font-light text-center text-3xl md:text-5xl mb-8" style={{ color: 'var(--gold)', ...titleStyle }}>
+                      <WordByWordReveal text={c.title} />
+                    </h2>
+                  )}
+                  <div className="prose prose-invert prose-lg max-w-none" style={{ color: 'var(--text-secondary)' }} dangerouslySetInnerHTML={{ __html: c.html_content }} />
+                </div>
+              </RevealOnScroll>
+            </section>
+          )
+        }
+
+        // Text type
+        if (sType === 'text') {
+          return (
+            <section key={key} className="relative cv-auto px-5 md:px-20 py-16 md:py-24">
+              <RevealOnScroll>
+                <div className="max-w-5xl mx-auto text-center">
+                  {c.subtitle && <p className="text-xs tracking-[0.2em] uppercase mb-4" style={{ color: 'var(--gold)' }}>{c.subtitle}</p>}
+                  {c.title && (
+                    <h2 className="font-display font-light text-3xl md:text-5xl mb-6" style={{ color: 'var(--gold)', ...titleStyle }}>
+                      <WordByWordReveal text={c.title} />
+                    </h2>
+                  )}
+                  {c.image_url && <img src={c.image_url} alt="" className="w-full max-w-2xl mx-auto rounded-2xl mb-8 object-cover" />}
+                  {c.video_url && (
+                    <video src={c.video_url} controls className="w-full max-w-2xl mx-auto rounded-2xl mb-8" />
+                  )}
+                  {c.description && <p className="text-base md:text-lg leading-relaxed max-w-3xl mx-auto mb-8" style={{ color: 'var(--text-secondary)' }}>{c.description}</p>}
+                  {c.button_label && (
+                    <Link href={c.button_href || '/signup'}>
+                      <button className="magnetic-btn px-8 py-4 rounded-full text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, var(--gold), var(--gold-deep))`, color: '#050505' }}>
+                        {c.button_label}
+                      </button>
+                    </Link>
+                  )}
+                  {c.html_content && <div className="prose prose-invert prose-lg max-w-none mt-8" style={{ color: 'var(--text-secondary)' }} dangerouslySetInnerHTML={{ __html: c.html_content }} />}
+                </div>
+              </RevealOnScroll>
+            </section>
+          )
+        }
+
+        // Cards type
+        if (sType === 'cards') {
+          const cards = (c.cards || []) as { title?: string; description?: string; icon?: string; image_url?: string }[]
+          return (
+            <section key={key} className="relative cv-auto px-5 md:px-20 py-16 md:py-24">
+              <RevealOnScroll>
+                <div className="max-w-6xl mx-auto text-center">
+                  {c.title && (
+                    <h2 className="font-display font-light text-3xl md:text-5xl mb-4" style={{ color: 'var(--gold)', ...titleStyle }}>
+                      <WordByWordReveal text={c.title} />
+                    </h2>
+                  )}
+                  {c.description && <p className="text-base md:text-lg max-w-3xl mx-auto mb-12" style={{ color: 'var(--text-secondary)' }}>{c.description}</p>}
+                  <div className={`grid gap-6 ${cards.length <= 2 ? 'md:grid-cols-2' : cards.length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-2 lg:grid-cols-4'}`}>
+                    {cards.map((card, i) => (
+                      <RevealOnScroll key={i} delay={i * 0.1}>
+                        <div className="rounded-2xl p-6 md:p-8 text-center" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
+                          {card.image_url && <img src={card.image_url} alt="" className="w-16 h-16 mx-auto mb-4 rounded-xl object-cover" />}
+                          {card.icon && !card.image_url && <span className="text-3xl mb-4 block">{card.icon}</span>}
+                          {card.title && <h3 className="font-display text-lg md:text-xl font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>{card.title}</h3>}
+                          {card.description && <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{card.description}</p>}
+                        </div>
+                      </RevealOnScroll>
+                    ))}
+                  </div>
+                  {c.html_content && <div className="prose prose-invert prose-lg max-w-none mt-8" style={{ color: 'var(--text-secondary)' }} dangerouslySetInnerHTML={{ __html: c.html_content }} />}
+                </div>
+              </RevealOnScroll>
+            </section>
+          )
+        }
+
+        // CTA type
+        if (sType === 'cta') {
+          return (
+            <section key={key} className="relative cv-auto px-5 md:px-20 py-16 md:py-24">
+              <RevealOnScroll>
+                <div className="max-w-3xl mx-auto text-center">
+                  {c.image_url && <img src={c.image_url} alt="" className="w-32 h-32 mx-auto mb-8 rounded-2xl object-cover" />}
+                  {c.title && (
+                    <h2 className="font-display font-light text-3xl md:text-5xl mb-6" style={{ color: 'var(--gold)', ...titleStyle }}>
+                      <WordByWordReveal text={c.title} />
+                    </h2>
+                  )}
+                  {c.description && <p className="text-base md:text-lg leading-relaxed mb-10" style={{ color: 'var(--text-secondary)' }}>{c.description}</p>}
+                  {c.button_label && (
+                    <Link href={c.button_href || '/signup'}>
+                      <button className="magnetic-btn pulse-ring px-10 py-5 rounded-full text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, var(--gold), var(--gold-deep))`, color: '#050505' }}>
+                        {c.button_label}
+                      </button>
+                    </Link>
+                  )}
+                  {c.html_content && <div className="prose prose-invert prose-lg max-w-none mt-8" style={{ color: 'var(--text-secondary)' }} dangerouslySetInnerHTML={{ __html: c.html_content }} />}
+                </div>
+              </RevealOnScroll>
+            </section>
+          )
+        }
+
+        // Gallery type
+        if (sType === 'gallery') {
+          const images = (c.images || []) as { url?: string; caption?: string }[]
+          return (
+            <section key={key} className="relative cv-auto px-5 md:px-20 py-16 md:py-24">
+              <RevealOnScroll>
+                <div className="max-w-6xl mx-auto text-center">
+                  {c.title && (
+                    <h2 className="font-display font-light text-3xl md:text-5xl mb-4" style={{ color: 'var(--gold)', ...titleStyle }}>
+                      <WordByWordReveal text={c.title} />
+                    </h2>
+                  )}
+                  {c.description && <p className="text-base md:text-lg max-w-3xl mx-auto mb-12" style={{ color: 'var(--text-secondary)' }}>{c.description}</p>}
+                  <div className={`grid gap-4 ${images.length <= 2 ? 'md:grid-cols-2' : images.length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-2 lg:grid-cols-4'}`}>
+                    {images.map((img, i) => (
+                      <RevealOnScroll key={i} delay={i * 0.08}>
+                        <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid var(--dark-border)' }}>
+                          {img.url && <img src={img.url} alt={img.caption || ''} className="w-full aspect-square object-cover" />}
+                          {img.caption && <p className="px-4 py-3 text-sm" style={{ color: 'var(--text-secondary)' }}>{img.caption}</p>}
+                        </div>
+                      </RevealOnScroll>
+                    ))}
+                  </div>
+                  {c.html_content && <div className="prose prose-invert prose-lg max-w-none mt-8" style={{ color: 'var(--text-secondary)' }} dangerouslySetInnerHTML={{ __html: c.html_content }} />}
+                </div>
+              </RevealOnScroll>
+            </section>
+          )
+        }
+
+        // Fallback: render any content with html_content or title+description
+        return (
+          <section key={key} className="relative cv-auto px-5 md:px-20 py-16 md:py-24" style={{ background: c.bg_color || 'transparent' }}>
+            <RevealOnScroll>
+              <div className="max-w-5xl mx-auto text-center">
+                {c.title && (
+                  <h2 className="font-display font-light text-3xl md:text-5xl mb-6" style={{ color: 'var(--gold)', ...titleStyle }}>
+                    <WordByWordReveal text={c.title} />
+                  </h2>
+                )}
+                {c.description && <p className="text-base md:text-lg leading-relaxed max-w-3xl mx-auto mb-8" style={{ color: 'var(--text-secondary)' }}>{c.description}</p>}
+                {c.image_url && <img src={c.image_url} alt="" className="w-full max-w-2xl mx-auto rounded-2xl mb-8 object-cover" />}
+                {c.html_content && <div className="prose prose-invert prose-lg max-w-none" style={{ color: 'var(--text-secondary)' }} dangerouslySetInnerHTML={{ __html: c.html_content }} />}
+              </div>
+            </RevealOnScroll>
+          </section>
+        )
+      })}
 
       {/* ═══ FOOTER ═══ */}
       {vis('footer') && (

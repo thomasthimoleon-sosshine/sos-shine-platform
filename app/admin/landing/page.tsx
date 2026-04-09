@@ -511,6 +511,7 @@ export default function LandingAdminPage() {
               currentUrl={c.video_url || null} hint="MP4 recommande"
               onUploaded={(url) => updateContent(key, 'video_url', url)}
               onRemoved={() => updateContent(key, 'video_url', '')} />
+            <TextField label="Label de la video (placeholder)" value={c.video_label || ''} onChange={(v) => updateContent(key, 'video_label', v)} />
             <FileUpload label="Image hero" accept="image/*" folder="site"
               currentUrl={c.image_url || null}
               onUploaded={(url) => updateContent(key, 'image_url', url)}
@@ -835,6 +836,9 @@ export default function LandingAdminPage() {
               className="text-sm px-4 py-2 rounded-lg cursor-pointer" style={{ color: '#74C0FC', border: '1px dashed #74C0FC' }}>
               + Ajouter un plan
             </button>
+            <Separator label="Garantie sous les plans" />
+            <TextField label="Titre de la garantie" value={c.guarantee_title || ''} onChange={(v) => updateContent(key, 'guarantee_title', v)} />
+            <TextAreaField label="Description de la garantie" rows={4} value={c.guarantee_description || ''} onChange={(v) => updateContent(key, 'guarantee_description', v)} />
           </>
         )
 

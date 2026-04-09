@@ -638,6 +638,10 @@ export default function LandingAdminPage() {
               currentUrl={c.mockup_image || null} hint="Screenshot ou mockup de la plateforme"
               onUploaded={(url) => updateContent(key, 'mockup_image', url)}
               onRemoved={() => updateContent(key, 'mockup_image', '')} />
+            <Separator label="Checklist (elements recus des J1)" />
+            <TextAreaField label="Elements (un par ligne)" rows={8}
+              value={Array.isArray(c.checklist) ? c.checklist.join('\n') : ''}
+              onChange={(v) => updateContent(key, 'checklist', v.split('\n').filter((line: string) => line.trim() !== ''))} />
             <Separator label="Fonctionnalites" />
             {(c.features || []).map((feature: { icon: string; title: string; description: string }, i: number) => (
               <div key={i} className="rounded-lg p-4 space-y-3" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
@@ -670,6 +674,7 @@ export default function LandingAdminPage() {
       case 'communaute':
         return (
           <>
+            <TextField label="Label de section" value={c.label || ''} onChange={(v) => updateContent(key, 'label', v)} />
             <TextAreaField label="Titre" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
             <TextAreaField label="Description" value={c.description || ''} onChange={(v) => updateContent(key, 'description', v)} />
             <FileUpload label="Image de section" accept="image/*" folder="site"
@@ -730,7 +735,14 @@ export default function LandingAdminPage() {
             <TextAreaField label="Titre" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
             <TextAreaField label="Paragraphe 1" value={c.paragraph1 || ''} rows={4} onChange={(v) => updateContent(key, 'paragraph1', v)} />
             <TextAreaField label="Paragraphe 2" value={c.paragraph2 || ''} rows={4} onChange={(v) => updateContent(key, 'paragraph2', v)} />
+            <TextAreaField label="Paragraphe 3" value={c.paragraph3 || ''} rows={4} onChange={(v) => updateContent(key, 'paragraph3', v)} />
+            <TextAreaField label="Paragraphe 4" value={c.paragraph4 || ''} rows={4} onChange={(v) => updateContent(key, 'paragraph4', v)} />
             <TextAreaField label="Citation" value={c.quote || ''} onChange={(v) => updateContent(key, 'quote', v)} />
+            <TextField label="Signature (nom)" value={c.signature || ''} onChange={(v) => updateContent(key, 'signature', v)} />
+            <TextField label="Sous-titre de la signature" value={c.signature_subtitle || ''} onChange={(v) => updateContent(key, 'signature_subtitle', v)} />
+            <Separator label="Equipe" />
+            <TextField label="Titre equipe" value={c.team_title || ''} onChange={(v) => updateContent(key, 'team_title', v)} />
+            <TextAreaField label="Description equipe" value={c.team_description || ''} rows={3} onChange={(v) => updateContent(key, 'team_description', v)} />
             <TextField label="Lien du livre (Amazon)" value={c.book_url || ''} onChange={(v) => updateContent(key, 'book_url', v)} />
             <FileUpload label="Image couverture du livre" accept="image/*" folder="site"
               currentUrl={c.book_image || null} hint="Image de la couverture"
@@ -854,11 +866,53 @@ export default function LandingAdminPage() {
           </>
         )
 
+      /* ────────────── manifeste (Ce que nous ne sommes pas) ────────────── */
+      case 'manifeste':
+        return (
+          <>
+            <TextField label="Label de section" value={c.label || ''} onChange={(v) => updateContent(key, 'label', v)} />
+            <TextAreaField label="Titre" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
+            <Separator label="Paragraphes" />
+            <TextAreaField label="Paragraphes (un par bloc, separes par un saut de ligne)" rows={12}
+              value={Array.isArray(c.paragraphs) ? c.paragraphs.join('\n\n') : ''}
+              onChange={(v) => updateContent(key, 'paragraphs', v.split('\n\n').filter((line: string) => line.trim() !== ''))} />
+            <TextField label="Signature" value={c.signature || ''} onChange={(v) => updateContent(key, 'signature', v)} />
+          </>
+        )
+
+      /* ────────────── pour_qui (Pour qui / Pas pour qui) ────────────── */
+      case 'pour_qui':
+        return (
+          <>
+            <TextAreaField label="Titre (Pour vous si...)" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
+            <Separator label="Elements positifs" />
+            <TextAreaField label="Pour vous si... (un par ligne)" rows={6}
+              value={Array.isArray(c.for_items) ? c.for_items.join('\n') : ''}
+              onChange={(v) => updateContent(key, 'for_items', v.split('\n').filter((line: string) => line.trim() !== ''))} />
+            <Separator label="Elements negatifs" />
+            <TextField label="Titre (Pas pour vous si...)" value={c.not_title || ''} onChange={(v) => updateContent(key, 'not_title', v)} />
+            <TextAreaField label="Pas pour vous si... (un par ligne)" rows={4}
+              value={Array.isArray(c.not_items) ? c.not_items.join('\n') : ''}
+              onChange={(v) => updateContent(key, 'not_items', v.split('\n').filter((line: string) => line.trim() !== ''))} />
+          </>
+        )
+
+      /* ────────────── garantie ────────────── */
+      case 'garantie':
+        return (
+          <>
+            <TextField label="Label de section" value={c.label || ''} onChange={(v) => updateContent(key, 'label', v)} />
+            <TextAreaField label="Titre" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
+            <TextAreaField label="Description" value={c.description || ''} rows={5} onChange={(v) => updateContent(key, 'description', v)} />
+          </>
+        )
+
       /* ────────────── cta_dark ────────────── */
       case 'cta_dark':
         return (
           <>
             <TextAreaField label="Titre" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
+            <TextField label="Sous-titre" value={c.subtitle || ''} onChange={(v) => updateContent(key, 'subtitle', v)} />
             <FileUpload label="Image de fond" accept="image/*" folder="site"
               currentUrl={c.image_url || null}
               onUploaded={(url) => updateContent(key, 'image_url', url)}
@@ -866,6 +920,7 @@ export default function LandingAdminPage() {
             <Separator label="Bouton CTA" />
             <TextField label="Libelle du bouton" value={c.button_label || ''} onChange={(v) => updateContent(key, 'button_label', v)} />
             <TextField label="Lien du bouton" value={c.button_href || ''} onChange={(v) => updateContent(key, 'button_href', v)} />
+            <TextField label="Ligne de confiance" value={c.trust_line || ''} onChange={(v) => updateContent(key, 'trust_line', v)} />
           </>
         )
 
@@ -1272,6 +1327,9 @@ export default function LandingAdminPage() {
           </>
         )
 
+      case 'manifeste':
+      case 'pour_qui':
+      case 'garantie':
       case 'pricing':
         return (
           <>
@@ -1353,6 +1411,15 @@ export default function LandingAdminPage() {
         </div>
         <div className="flex items-center gap-3">
           {saved && <span className="text-sm font-medium" style={{ color: '#55EFC4' }}>Sauvegarde !</span>}
+          <button onClick={() => window.open('/', '_blank')}
+            className="px-4 py-3 rounded-xl text-sm font-semibold cursor-pointer flex items-center gap-2"
+            style={{ background: 'rgba(167,139,250,0.15)', color: '#A78BFA', border: '1px solid rgba(167,139,250,0.3)' }}>
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            Previsualiser
+          </button>
           <button onClick={handleSave} disabled={saving}
             className="px-6 py-3 rounded-xl text-sm font-semibold cursor-pointer disabled:opacity-50"
             style={{ background: '#74C0FC', color: '#fff' }}>

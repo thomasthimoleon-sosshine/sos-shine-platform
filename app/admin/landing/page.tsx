@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { LANDING_DEFAULTS } from '@/lib/landing-defaults'
 import type { LandingSectionRow } from '@/lib/landing-defaults'
@@ -120,6 +120,7 @@ export default function LandingAdminPage() {
   const [error, setError] = useState<string | null>(null)
   const [openPanels, setOpenPanels] = useState<Record<string, boolean>>({})
   const [selectedSection, setSelectedSection] = useState<string>('')
+  const didDragRef = useRef(false)
 
   /* ── Load sections ── */
   const loadSections = useCallback(async () => {
@@ -1322,60 +1323,125 @@ export default function LandingAdminPage() {
         </div>
       )}
 
-      {/* ── Section dropdown selector ── */}
-      <div className="rounded-xl p-5 space-y-4" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-          <label className="text-sm font-medium flex-shrink-0" style={{ color: 'var(--text-secondary)' }}>Section a editer</label>
-          <select
-            value={selectedSection}
-            onChange={(e) => setSelectedSection(e.target.value)}
-            className="flex-1 rounded-lg px-4 py-3 text-sm outline-none cursor-pointer appearance-none"
-            style={{ ...inputStyle, backgroundImage: selectBgImage, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px center' }}>
-            <option value="" style={{ background: '#1a1a2e', color: '#F5EDF0' }}>-- Choisir une section --</option>
-            {sections.map((s) => (
-              <option key={s.section_key} value={s.section_key} style={{ background: '#1a1a2e', color: '#F5EDF0' }}>
-                {s.label} {!s.is_visible ? '(masquee)' : ''}
-              </option>
-            ))}
-          </select>
-          <div className="relative flex-shrink-0">
-            <button type="button" onClick={() => setShowSectionTypeMenu(!showSectionTypeMenu)}
-              className="px-4 py-2.5 rounded-lg text-sm font-medium cursor-pointer flex items-center gap-2"
-              style={{ border: '1px dashed rgba(116,192,252,0.4)', color: '#74C0FC', background: 'rgba(116,192,252,0.04)' }}>
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
-              + Nouvelle section
-            </button>
-            {showSectionTypeMenu && (
-              <>
-                <div className="fixed inset-0 z-30" onClick={() => setShowSectionTypeMenu(false)} />
-                <div className="absolute right-0 top-full mt-2 z-40 rounded-xl overflow-hidden shadow-xl w-72"
-                  style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-                  <p className="px-4 pt-3 pb-2 text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
-                    Type de section
-                  </p>
-                  {CUSTOM_SECTION_TYPES.map((st) => (
-                    <button key={st.type} type="button"
-                      onClick={() => addCustomSection(st.type)}
-                      className="w-full text-left px-4 py-3 flex items-center gap-3 cursor-pointer transition-colors"
-                      style={{ borderTop: '1px solid var(--dark-border)' }}
-                      onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = 'rgba(116,192,252,0.08)' }}
-                      onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = 'transparent' }}>
-                      <span className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-mono flex-shrink-0"
-                        style={{ background: 'rgba(116,192,252,0.1)', color: '#74C0FC' }}>
-                        {st.icon}
-                      </span>
-                      <div>
-                        <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{st.label}</p>
-                        <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{st.desc}</p>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </>
-            )}
+      {/* ── Visual section list with drag-and-drop ── */}
+      <div className="rounded-xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <div className="px-4 py-3 flex items-center justify-between" style={{ borderBottom: '1px solid var(--dark-border)' }}>
+          <div className="flex items-center gap-3">
+            <p className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Ordre des sections sur la page</p>
+            <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{sections.length} sections</span>
           </div>
+          <div className="flex items-center gap-2">
+            <p className="text-[10px] hidden sm:block" style={{ color: 'var(--text-muted)' }}>Glissez ou utilisez les fleches pour reorganiser</p>
+            <div className="relative flex-shrink-0">
+              <button type="button" onClick={() => setShowSectionTypeMenu(!showSectionTypeMenu)}
+                className="px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer flex items-center gap-1.5"
+                style={{ border: '1px dashed rgba(116,192,252,0.4)', color: '#74C0FC', background: 'rgba(116,192,252,0.04)' }}>
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                Ajouter
+              </button>
+              {showSectionTypeMenu && (
+                <>
+                  <div className="fixed inset-0 z-30" onClick={() => setShowSectionTypeMenu(false)} />
+                  <div className="absolute right-0 top-full mt-2 z-40 rounded-xl overflow-hidden shadow-xl w-72"
+                    style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                    <p className="px-4 pt-3 pb-2 text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
+                      Type de section
+                    </p>
+                    {CUSTOM_SECTION_TYPES.map((st) => (
+                      <button key={st.type} type="button"
+                        onClick={() => addCustomSection(st.type)}
+                        className="w-full text-left px-4 py-3 flex items-center gap-3 cursor-pointer transition-colors"
+                        style={{ borderTop: '1px solid var(--dark-border)' }}
+                        onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = 'rgba(116,192,252,0.08)' }}
+                        onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = 'transparent' }}>
+                        <span className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-mono flex-shrink-0"
+                          style={{ background: 'rgba(116,192,252,0.1)', color: '#74C0FC' }}>
+                          {st.icon}
+                        </span>
+                        <div>
+                          <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{st.label}</p>
+                          <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{st.desc}</p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="divide-y" style={{ borderColor: 'var(--dark-border)' }}>
+          {sections.map((s, i) => {
+            const isSelected = s.section_key === selectedSection
+            return (
+              <div
+                key={s.section_key}
+                draggable
+                onDragStart={(e) => { didDragRef.current = true; e.dataTransfer.setData('text/plain', String(i)); (e.currentTarget as HTMLElement).style.opacity = '0.4' }}
+                onDragEnd={(e) => { (e.currentTarget as HTMLElement).style.opacity = '1' }}
+                onDragOver={(e) => { e.preventDefault(); (e.currentTarget as HTMLElement).style.background = 'rgba(116,192,252,0.08)' }}
+                onDragLeave={(e) => { (e.currentTarget as HTMLElement).style.background = '' }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  (e.currentTarget as HTMLElement).style.background = ''
+                  const fromIdx = parseInt(e.dataTransfer.getData('text/plain'))
+                  const toIdx = i
+                  if (isNaN(fromIdx) || fromIdx === toIdx) return
+                  setSections((prev) => {
+                    const next = [...prev]
+                    const [moved] = next.splice(fromIdx, 1)
+                    next.splice(toIdx, 0, moved)
+                    return next.map((sec, pos) => ({ ...sec, position: pos }))
+                  })
+                  setSaved(false)
+                }}
+                className="flex items-center gap-2 px-3 py-2.5 cursor-pointer transition-colors"
+                style={{ background: isSelected ? 'rgba(116,192,252,0.08)' : 'transparent' }}
+                onMouseDown={() => { didDragRef.current = false }}
+                onClick={() => { if (!didDragRef.current) setSelectedSection(isSelected ? '' : s.section_key) }}
+              >
+                {/* Drag handle */}
+                <span className="flex-shrink-0 text-xs select-none" style={{ color: 'var(--text-muted)', cursor: 'grab' }} title="Glisser pour deplacer">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                  </svg>
+                </span>
+                {/* Position */}
+                <span className="w-6 text-center text-xs font-bold flex-shrink-0" style={{ color: '#74C0FC' }}>{i + 1}</span>
+                {/* Label */}
+                <span className="flex-1 text-sm truncate" style={{ color: s.is_visible ? 'var(--text-primary)' : 'var(--text-muted)', textDecoration: s.is_visible ? 'none' : 'line-through' }}>
+                  {s.label}
+                </span>
+                {/* Visibility */}
+                <button type="button" onClick={(e) => { e.stopPropagation(); toggleVisibility(s.section_key) }}
+                  className="p-1 rounded cursor-pointer flex-shrink-0" style={{ color: s.is_visible ? '#74C0FC' : 'var(--text-muted)' }}
+                  title={s.is_visible ? 'Visible — cliquer pour masquer' : 'Masquee — cliquer pour afficher'}>
+                  {s.is_visible ? (
+                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                  ) : (
+                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12c1.292 4.338 5.31 7.5 10.066 7.5.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" /></svg>
+                  )}
+                </button>
+                {/* Move up */}
+                <button type="button" onClick={(e) => { e.stopPropagation(); moveSection(i, -1) }} disabled={i === 0}
+                  className="p-1 rounded cursor-pointer disabled:opacity-20 flex-shrink-0" style={{ color: 'var(--text-muted)' }} title="Monter">
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" /></svg>
+                </button>
+                {/* Move down */}
+                <button type="button" onClick={(e) => { e.stopPropagation(); moveSection(i, 1) }} disabled={i === sections.length - 1}
+                  className="p-1 rounded cursor-pointer disabled:opacity-20 flex-shrink-0" style={{ color: 'var(--text-muted)' }} title="Descendre">
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                </button>
+                {/* Delete */}
+                <button type="button" onClick={(e) => { e.stopPropagation(); deleteSection(s.section_key) }}
+                  className="p-1 rounded cursor-pointer flex-shrink-0" style={{ color: '#FF6B6B' }} title="Supprimer">
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+              </div>
+            )
+          })}
         </div>
       </div>
 
@@ -1390,24 +1456,9 @@ export default function LandingAdminPage() {
             <div className="flex items-center justify-between p-5" style={{ borderBottom: '1px solid var(--dark-border)' }}>
               <h2 className="font-semibold text-lg" style={{ color: 'var(--text-primary)' }}>
                 {sec.label}
+                <span className="text-xs font-normal ml-2" style={{ color: 'var(--text-muted)' }}>#{idx + 1}</span>
               </h2>
               <div className="flex items-center gap-2">
-                {/* Reorder */}
-                <button type="button" onClick={() => { moveSection(idx, -1) }} disabled={idx === 0}
-                  className="p-1.5 rounded-lg cursor-pointer disabled:opacity-20"
-                  style={{ color: 'var(--text-muted)' }} title="Monter">
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
-                  </svg>
-                </button>
-                <button type="button" onClick={() => { moveSection(idx, 1) }} disabled={idx === sections.length - 1}
-                  className="p-1.5 rounded-lg cursor-pointer disabled:opacity-20"
-                  style={{ color: 'var(--text-muted)' }} title="Descendre">
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                  </svg>
-                </button>
-
                 {/* Visibility */}
                 <button type="button" onClick={() => toggleVisibility(sec.section_key)}
                   className="p-1.5 rounded-lg cursor-pointer"

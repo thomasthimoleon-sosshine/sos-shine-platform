@@ -315,6 +315,7 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
     }
     return map;
   });
+  const [sectionPositions, setSectionPositions] = useState<Record<string, number>>({});
 
   const loadPrelaunchSettings = useCallback(async () => {
     try {
@@ -392,10 +393,13 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
         if (variantData && variantData.length > 0) {
           const rows = variantData as unknown as LandingSectionDefault[];
           const merged: Record<string, { content: SectionContent; styles: SectionStyles; is_visible: boolean }> = {};
+          const posMap: Record<string, number> = {};
           for (const row of rows) {
             merged[row.section_key] = { content: sanitizeContent(row.content), styles: row.styles, is_visible: row.is_visible };
+            posMap[row.section_key] = row.position;
           }
           setSections(merged);
+          setSectionPositions(posMap);
           return;
         }
       }
@@ -406,18 +410,22 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
         const rows = data as unknown as LandingSectionDefault[];
         const dbMap = buildSectionMap(rows);
         const merged: Record<string, { content: SectionContent; styles: SectionStyles; is_visible: boolean }> = {};
+        const posMap: Record<string, number> = {};
         for (const d of LANDING_DEFAULTS) {
           const row = dbMap[d.section_key];
           merged[d.section_key] = row
             ? { content: sanitizeContent(row.content), styles: row.styles, is_visible: row.is_visible }
             : { content: d.content, styles: d.styles, is_visible: d.is_visible };
+          if (row) posMap[row.section_key] = row.position;
         }
         for (const row of rows) {
           if (!merged[row.section_key]) {
             merged[row.section_key] = { content: sanitizeContent(row.content), styles: row.styles, is_visible: row.is_visible };
           }
+          if (!(row.section_key in posMap)) posMap[row.section_key] = row.position;
         }
         setSections(merged);
+        setSectionPositions(posMap);
       }
     } catch {
       // landing defaults already set
@@ -457,6 +465,16 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
   function sec(key: string): SectionContent { return sections[key]?.content || {}; }
   function sty(key: string): SectionStyles { return sections[key]?.styles || {}; }
   function vis(key: string): boolean { return sections[key]?.is_visible !== false; }
+
+  // Default section order (matches hardcoded JSX order as fallback)
+  const DEFAULT_ORDER: Record<string, number> = {
+    hero: 0, stats: 1, ticker_1: 2, signature_cta: 3, probleme: 4, principe: 5,
+    steps: 6, encyclopedie: 7, produit: 8, ticker_2: 9, communaute: 10,
+    temoignages: 11, histoire: 12, fondateurs: 13, manifeste: 14, pricing: 15,
+    garantie: 16, faq: 17, cta_dark: 18, custom: 19,
+  };
+  const hasDynamicOrder = Object.keys(sectionPositions).length > 0;
+  function ord(key: string): number { return sectionPositions[key] ?? DEFAULT_ORDER[key] ?? 999; }
 
   const g = sty('_global');
   const gold = g.color_primary || '#D4AF37';
@@ -593,6 +611,10 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
           </header>
         )}
 
+      {/* Flex wrapper for dynamic section ordering */}
+      <div style={hasDynamicOrder ? { display: "flex", flexDirection: "column" } : undefined}>
+
+      <div style={{ order: ord("hero") }}>
       {/* ═══ HERO — Word by word reveal ═══ */}
       {vis('hero') && (
         <motion.section ref={heroRef} className="relative min-h-screen flex items-center pt-20 md:pt-24" style={{ opacity: heroOpacity, scale: heroScale }}>
@@ -784,7 +806,9 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
 
         </motion.section>
       )}
+      </div>
 
+      <div style={{ order: ord("stats") }}>
       {/* ═══ SOCIAL PROOF STATS ═══ */}
       {vis('stats') && (() => {
         const statsData = sec('stats');
@@ -812,9 +836,14 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
         );
       })()}
 
+      </div>
+
+      <div style={{ order: ord("ticker_1") }}>
       {/* ═══ TICKER BAND ═══ */}
       <InfiniteTickerBand items={tickerItems} speed={ticker1Speed} />
+      </div>
 
+      <div style={{ order: ord("signature_cta") }}>
       {/* ═══ SIGNATURE EMOTIONNELLE CTA ═══ */}
       {vis('signature_cta') && (() => {
         const sigCta = sec('signature_cta');
@@ -846,6 +875,9 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
         );
       })()}
 
+      </div>
+
+      <div style={{ order: ord("probleme") }}>
       {/* ═══ PROBLÈME & AGITATION (PAS Framework) ═══ */}
       {vis('probleme') && (() => {
         const prob = sec('probleme');
@@ -921,7 +953,9 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
           </section>
         );
       })()}
+      </div>
 
+      <div style={{ order: ord("principe") }}>
       {/* ═══ LE PRINCIPE ═══ */}
       {vis('principe') && (
         <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
@@ -969,7 +1003,9 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
           </div>
         </section>
       )}
+      </div>
 
+      <div style={{ order: ord("steps") }}>
       {/* ═══ LES ETAPES — Glowing Cards ═══ */}
       {vis('steps') && (
         <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
@@ -1004,7 +1040,9 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
           </div>
         </section>
       )}
+      </div>
 
+      <div style={{ order: ord("encyclopedie") }}>
       {/* ═══ L'ENCYCLOPEDIE ═══ */}
       {vis('encyclopedie') && (
         <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
@@ -1073,7 +1111,9 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
           </div>
         </section>
       )}
+      </div>
 
+      <div style={{ order: ord("produit") }}>
       {/* ═══ L'ÉCOSYSTÈME / PRODUIT ═══ */}
       {vis('produit') && (() => {
         const prod = sec('produit');
@@ -1155,10 +1195,14 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
           </section>
         );
       })()}
+      </div>
 
+      <div style={{ order: ord("ticker_2") }}>
       {/* ═══ TICKER BAND 2 ═══ */}
       <InfiniteTickerBand items={ticker2Items} speed={ticker2Speed} />
+      </div>
 
+      <div style={{ order: ord("communaute") }}>
       {/* ═══ COMMUNAUTE ═══ */}
       {vis('communaute') && (
         <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
@@ -1198,7 +1242,9 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
           </div>
         </section>
       )}
+      </div>
 
+      <div style={{ order: ord("temoignages") }}>
       {/* ═══ TEMOIGNAGES ═══ */}
       {vis('temoignages') && (
         <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
@@ -1267,7 +1313,9 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
           </div>
         </section>
       )}
+      </div>
 
+      <div style={{ order: ord("histoire") }}>
       {/* ═══ L'HISTOIRE / LE LIVRE ═══ */}
       {vis('histoire') && (() => {
         const hist = sec('histoire');
@@ -1326,7 +1374,9 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
           </section>
         );
       })()}
+      </div>
 
+      <div style={{ order: ord("fondateurs") }}>
       {/* ═══ FONDATEURS ═══ */}
       {vis('fondateurs') && (() => {
         const fond = sec('fondateurs');
@@ -1378,7 +1428,9 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
           </section>
         );
       })()}
+      </div>
 
+      <div style={{ order: ord("manifeste") }}>
       {/* ═══ MANIFESTE ═══ */}
       {vis('manifeste') && (() => {
         const manif = sec('manifeste');
@@ -1421,7 +1473,9 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
           </section>
         );
       })()}
+      </div>
 
+      <div style={{ order: ord("pricing") }}>
       {/* ═══ OFFRES / PRICING ═══ */}
       {vis('pricing') && (
         <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
@@ -1529,7 +1583,9 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
           </div>
         </section>
       )}
+      </div>
 
+      <div style={{ order: ord("garantie") }}>
       {/* ═══ GARANTIE ═══ */}
       {vis('garantie') && (() => {
         const gar = sec('garantie');
@@ -1563,7 +1619,9 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
           </section>
         );
       })()}
+      </div>
 
+      <div style={{ order: ord("faq") }}>
       {/* ═══ FAQ ═══ */}
       {vis('faq') && (() => {
         const faq = sec('faq');
@@ -1617,7 +1675,9 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
           </section>
         );
       })()}
+      </div>
 
+      <div style={{ order: ord("cta_dark") }}>
       {/* ═══ CTA FINAL DARK ═══ */}
       {vis('cta_dark') && (
         <section className="px-5 md:px-20 py-20 md:py-40 relative overflow-hidden cv-auto">
@@ -1646,6 +1706,9 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
         </section>
       )}
 
+      </div>
+
+      <div style={{ order: ord("custom") }}>
       {/* ═══ CUSTOM SECTIONS (all types) ═══ */}
       {Object.entries(sections).filter(([key, s]) => key.startsWith('custom_') && s.is_visible).map(([key, s]) => {
         const c = s.content
@@ -1815,6 +1878,9 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
           </section>
         )
       })}
+      </div>
+
+      </div>{/* /flex wrapper */}
 
       {/* ═══ FOOTER ═══ */}
       {vis('footer') && (

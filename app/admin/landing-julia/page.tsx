@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { LANDING_DEFAULTS } from '@/lib/landing-defaults'
 import type { LandingSectionRow } from '@/lib/landing-defaults'
@@ -117,6 +117,7 @@ export default function LandingJuliaPage() {
   const [selectedSection, setSelectedSection] = useState<string>('')
   const [variantId, setVariantId] = useState<string | null>(null)
   const [duplicating, setDuplicating] = useState(false)
+  const didDragRef = useRef(false)
 
   /* ── Load sections ── */
   const loadSections = useCallback(async () => {
@@ -743,7 +744,7 @@ export default function LandingJuliaPage() {
                   <div
                     key={s.section_key}
                     draggable
-                    onDragStart={(e) => { e.dataTransfer.setData('text/plain', String(i)); (e.currentTarget as HTMLElement).style.opacity = '0.4' }}
+                    onDragStart={(e) => { didDragRef.current = true; e.dataTransfer.setData('text/plain', String(i)); (e.currentTarget as HTMLElement).style.opacity = '0.4' }}
                     onDragEnd={(e) => { (e.currentTarget as HTMLElement).style.opacity = '1' }}
                     onDragOver={(e) => { e.preventDefault(); (e.currentTarget as HTMLElement).style.background = 'rgba(167,139,250,0.08)' }}
                     onDragLeave={(e) => { (e.currentTarget as HTMLElement).style.background = '' }}
@@ -761,9 +762,10 @@ export default function LandingJuliaPage() {
                       })
                       setSaved(false)
                     }}
-                    className="flex items-center gap-2 px-3 py-2.5 cursor-grab active:cursor-grabbing transition-colors"
+                    className="flex items-center gap-2 px-3 py-2.5 cursor-pointer transition-colors"
                     style={{ background: isSelected ? 'rgba(167,139,250,0.08)' : 'transparent' }}
-                    onClick={() => setSelectedSection(isSelected ? '' : s.section_key)}
+                    onMouseDown={() => { didDragRef.current = false }}
+                    onClick={() => { if (!didDragRef.current) setSelectedSection(isSelected ? '' : s.section_key) }}
                   >
                     {/* Drag handle */}
                     <span className="flex-shrink-0 text-xs select-none" style={{ color: 'var(--text-muted)', cursor: 'grab' }} title="Glisser pour déplacer">

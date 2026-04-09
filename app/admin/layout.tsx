@@ -11,7 +11,7 @@ const adminNav = [
   { href: '/admin/dashboard-edit', label: 'Espace Membre', icon: '🎨' },
   { href: '/admin/messages-encouragement', label: 'Encouragements', icon: '💬' },
   { href: '/admin/landing', label: 'Landing Page A', icon: '🏠' },
-  { href: '/admin/landing-julia', label: 'Landing Page Julia (B)', icon: '🎨' },
+  { href: '/admin/landing-julia', label: 'Landing Page Julia', icon: '✨' },
   { href: '/admin/ab-testing', label: 'A/B Testing', icon: '📊' },
   { href: '/admin/prelaunch', label: 'Pre-lancement', icon: '🚀' },
   { href: '/admin/douleurs', label: 'Challenges', icon: '📘' },

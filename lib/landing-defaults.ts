@@ -38,6 +38,8 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       site_name: 'SOS Shine',
       logo_url: '',
       trial_days: 7,
+      header_login_label: 'Connexion',
+      header_login_href: '/login',
     },
     styles: {
       color_primary: '#D4AF37',
@@ -63,6 +65,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       title: "Comprenez vos schémas.\nReprenez le contrôle\nde vos émotions.",
       subtitle: "200+ protocoles concrets pour décoder vos réactions automatiques, comprendre votre biologie émotionnelle et changer durablement vos comportements. Créés par 3 spécialistes. Accessibles 24/7.",
       video_url: '',
+      video_label: 'Découvrir SOS Shine en 2 minutes',
       image_url: '',
       cta_primary_label: 'Découvrir ma Signature Émotionnelle',
       cta_primary_href: '/signature-emotionnelle',
@@ -176,6 +179,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     content: {
       label: 'La Méthode',
       title: "3 étapes pour chaque\nschéma émotionnel.",
+      step_label: 'Étape',
       items: [
         { num: '01', title: 'Comprendre', subtitle: 'Identifier le schéma', description: "Une vidéo vous explique concrètement d'où vient votre réaction, comment elle s'est installée, et pourquoi elle se répète. Vous mettez des mots clairs sur ce qui était confus.", color: '#55EFC4' },
         { num: '02', title: 'Intégrer', subtitle: 'Changer la biologie', description: "Une séance audio guidée pour modifier votre état émotionnel en temps réel. Respiration, visualisation, ancrage corporel — vous apprenez à réguler votre système nerveux autrement.", color: '#74C0FC' },
@@ -201,6 +205,8 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       image_url: '',
       items: ['Abandon', 'Anxiété', 'Burn-out', 'Confiance en soi', 'Dépendance affective', 'Deuil', 'Intuition', 'Mission de vie', 'Pardon', 'Résilience', 'Relations toxiques', 'Stress', 'Trahison', 'Et plus...'],
       show_max: 15,
+      search_placeholder: 'Rechercher un challenge (ex: burn-out)...',
+      button_label: "Explorer l'encyclopédie",
     },
     styles: {
       title_font: 'Cormorant Garamond',
@@ -494,6 +500,9 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
         { label: 'Confidentialit\u00e9', href: '/confidentialite' },
         { label: 'Contact', href: '/contact' },
       ],
+      social_youtube: 'https://www.youtube.com/@SOS-Shine',
+      social_instagram: 'https://www.instagram.com/julia_laureau_sosshine/',
+      social_facebook: 'https://www.facebook.com/sosshinejulia',
     },
     styles: {},
   },

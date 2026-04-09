@@ -535,11 +535,11 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
   const ticker2Data = sec('ticker_2');
   const tickerItems = (Array.isArray(ticker1Data.items) && ticker1Data.items.length > 0)
     ? ticker1Data.items
-    : [t('ticker.abuse'), t('ticker.self_love'), t('ticker.burnout'), t('ticker.confidence'), t('ticker.dependency'), t('ticker.grief'), t('ticker.breakup')];
+    : ['Abandon', 'Anxiété', 'Burn-out', 'Confiance en soi', 'Dépendance', 'Deuil', 'Trauma', 'Résilience', 'Pardon'];
   const ticker1Speed = ticker1Data.speed || 35;
   const ticker2Items = (Array.isArray(ticker2Data.items) && ticker2Data.items.length > 0)
     ? ticker2Data.items
-    : [t('ticker.support'), t('ticker.community'), t('ticker.protocols'), t('ticker.collective'), t('ticker.dedicated_chat'), t('ticker.live_events'), t('ticker.meditation'), t('ticker.coaching')];
+    : ['Accessible 24/7', 'Communauté bienveillante', '200+ protocoles', 'Sessions collectives', 'Chat dédié', 'Événements live', 'Séances guidées', "Cahiers d'exercices"];
   const ticker2Speed = ticker2Data.speed || 40;
 
   // Show loading while checking prelaunch, then prelaunch page if enabled
@@ -567,14 +567,14 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
               </Link>
               <div className="absolute right-4 md:right-6 flex items-center gap-2">
                 <Link
-                  href="/login"
+                  href={g.header_login_href || '/login'}
                   className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300"
                   style={{
                     background: 'rgba(255,255,255,0.05)',
                     border: '1px solid rgba(255,255,255,0.08)',
                   }}
-                  title="Connexion"
-                  aria-label="Connexion"
+                  title={g.header_login_label || 'Connexion'}
+                  aria-label={g.header_login_label || 'Connexion'}
                 >
                   <svg
                     className="w-4 h-4"
@@ -602,30 +602,16 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
 
           <div className="relative z-10 px-5 md:px-20 py-12 md:py-24 max-w-6xl mx-auto w-full text-center">
             {/* Surtitle / Micro-copy */}
-            {hero.surtitle && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                className="mb-8"
-              >
-                <span className="inline-block px-4 py-1.5 rounded-full text-xs tracking-[0.25em] uppercase font-medium" style={{ background: `rgba(${goldRgb}, 0.08)`, color: gold, border: `1px solid rgba(${goldRgb}, 0.15)` }}>
-                  {hero.surtitle}
-                </span>
-              </motion.div>
-            )}
-            {!hero.surtitle && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                className="mb-8"
-              >
-                <span className="inline-block px-4 py-1.5 rounded-full text-xs tracking-[0.25em] uppercase font-medium" style={{ background: `rgba(${goldRgb}, 0.08)`, color: gold, border: `1px solid rgba(${goldRgb}, 0.15)` }}>
-                  {t('landing.premium_badge')}
-                </span>
-              </motion.div>
-            )}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="mb-8"
+            >
+              <span className="inline-block px-4 py-1.5 rounded-full text-xs tracking-[0.25em] uppercase font-medium" style={{ background: `rgba(${goldRgb}, 0.08)`, color: gold, border: `1px solid rgba(${goldRgb}, 0.15)` }}>
+                {hero.surtitle || 'Espace de soutien premium'}
+              </span>
+            </motion.div>
 
             <h1 className="font-display font-light leading-[1.08] mb-8" style={{ ...tStyle("hero"), perspective: "1000px" }}>
               {(hero.title || '').split("\n").map((line: string, i: number) => {
@@ -760,7 +746,7 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
                           <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
                         </svg>
                       </motion.div>
-                      <p className="text-sm text-[var(--text-secondary)]">{t('landing.discover_video')}</p>
+                      <p className="text-sm text-[var(--text-secondary)]">{hero.video_label || 'Découvrir SOS Shine en 2 minutes'}</p>
                     </div>
                   </div>
                 </div>
@@ -835,16 +821,16 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
               <div className="max-w-3xl mx-auto text-center">
                 <Link href={sigCta.button_href || '/signature-emotionnelle'}>
                   <div className="glow-card p-6 sm:p-8 md:p-12 cursor-pointer group">
-                    <p className="luxury-title text-[10px] sm:text-xs tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{sigCta.label || t('signature.cta_label')}</p>
+                    <p className="luxury-title text-[10px] sm:text-xs tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{sigCta.label || 'Test exclusif'}</p>
                     <h3 className="font-display text-xl sm:text-2xl md:text-4xl font-light mb-3 md:mb-4" style={{ color: gold }}>
-                      {sigCta.title || t('signature.cta_title')}{' '}
-                      <span className="text-shimmer">{sigCta.title_highlight || t('signature.cta_title_highlight')}</span>
+                      {sigCta.title || 'Découvrez votre'}{' '}
+                      <span className="text-shimmer">{sigCta.title_highlight || 'Signature Émotionnelle'}</span>
                     </h3>
                     <p className="text-[var(--text-secondary)] font-light mb-5 md:mb-6 text-sm md:text-[15px]">
-                      {sigCta.description || t('signature.cta_desc')}
+                      {sigCta.description || '15 questions pour révéler votre architecture émotionnelle profonde. Un diagnostic premium et hyper-personnalisé.'}
                     </p>
                     <span className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-semibold tracking-wide group-hover:scale-105 transition-transform" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
-                      {sigCta.button_label || t('signature.cta_button')}
+                      {sigCta.button_label || 'Faire le test gratuit'}
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M5 12h14M12 5l7 7-7 7" />
                       </svg>
@@ -1000,7 +986,7 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
                   <GlowingCard className="p-6 md:p-10 h-full" glowColor={`${step.color}25`}>
                     <div className="mb-4 md:mb-6">
                       <span className="step-number-large font-display text-5xl md:text-6xl font-extralight block mb-2" style={{ color: step.color, opacity: 0.15 }}>{step.num}</span>
-                      <span className="step-number-label luxury-title text-xs tracking-[0.3em] block mb-2 md:mb-3" style={{ color: step.color, opacity: 0.6 }}>{t('landing.step')} {step.num}</span>
+                      <span className="step-number-label luxury-title text-xs tracking-[0.3em] block mb-2 md:mb-3" style={{ color: step.color, opacity: 0.6 }}>{stepsData.step_label || 'Étape'} {step.num}</span>
                       <h3 className="font-display text-xl md:text-2xl font-medium">{step.title}</h3>
                       {step.subtitle && (
                         <p className="text-xs sm:text-sm mt-1 font-light italic" style={{ color: step.color, opacity: 0.7 }}>{step.subtitle}</p>
@@ -1044,7 +1030,7 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
                   type="text"
                   value={encyclopediaSearch}
                   onChange={(e) => setEncyclopediaSearch(e.target.value)}
-                  placeholder={t('landing.search_challenge')}
+                  placeholder={encyclo.search_placeholder || 'Rechercher un challenge (ex: burn-out)...'}
                   className="w-full px-4 md:px-5 py-2.5 md:py-3 rounded-full text-sm font-light"
                   style={{
                     background: 'rgba(255,255,255,0.04)',
@@ -1076,7 +1062,7 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
               <div className="text-center mt-8 md:mt-12">
                 <Link href="/encyclopedie">
                   <button className="magnetic-btn px-6 sm:px-8 py-3 sm:py-3.5 rounded-full text-sm font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.25)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
-                    {t('landing.explore_encyclopedia')}
+                    {encyclo.button_label || "Explorer l'encyclopédie"}
                   </button>
                 </Link>
               </div>
@@ -1438,7 +1424,7 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
         <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
           <div className="max-w-5xl mx-auto">
             <RevealOnScroll>
-              <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{pricing.label || t('landing.pricing_label')}</p>
+              <p className="luxury-title text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{pricing.label || 'Tarification'}</p>
             </RevealOnScroll>
             <RevealOnScroll delay={0.1}>
               <h2 className="font-display font-light text-center mb-3 md:mb-4" style={tStyle("pricing")}>
@@ -1649,7 +1635,7 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
             <RevealOnScroll delay={0.3}>
               <Link href={ctaDark.button_href || '/signup'}>
                 <button className="magnetic-btn pulse-ring px-8 sm:px-10 py-4 sm:py-5 rounded-full text-base sm:text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
-                  {ctaDark.button_label || t('landing.join_cta')}
+                  {ctaDark.button_label || 'Rejoindre SOS Shine'}
                 </button>
               </Link>
             </RevealOnScroll>
@@ -1839,42 +1825,48 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
 
               {/* Social Media Links */}
               <div className="flex items-center gap-4">
-                <a
-                  href="https://www.youtube.com/@SOS-Shine"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="YouTube"
-                  className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
-                  style={{ background: `rgba(${goldRgb}, 0.08)`, border: `1px solid rgba(${goldRgb}, 0.15)` }}
-                >
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill={gold}>
-                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                  </svg>
-                </a>
-                <a
-                  href="https://www.instagram.com/julia_laureau_sosshine/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Instagram"
-                  className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
-                  style={{ background: `rgba(${goldRgb}, 0.08)`, border: `1px solid rgba(${goldRgb}, 0.15)` }}
-                >
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill={gold}>
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
-                  </svg>
-                </a>
-                <a
-                  href="https://www.facebook.com/sosshinejulia"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Facebook"
-                  className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
-                  style={{ background: `rgba(${goldRgb}, 0.08)`, border: `1px solid rgba(${goldRgb}, 0.15)` }}
-                >
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill={gold}>
-                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                  </svg>
-                </a>
+                {foot.social_youtube && (
+                  <a
+                    href={foot.social_youtube}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="YouTube"
+                    className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                    style={{ background: `rgba(${goldRgb}, 0.08)`, border: `1px solid rgba(${goldRgb}, 0.15)` }}
+                  >
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill={gold}>
+                      <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                    </svg>
+                  </a>
+                )}
+                {foot.social_instagram && (
+                  <a
+                    href={foot.social_instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Instagram"
+                    className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                    style={{ background: `rgba(${goldRgb}, 0.08)`, border: `1px solid rgba(${goldRgb}, 0.15)` }}
+                  >
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill={gold}>
+                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+                    </svg>
+                  </a>
+                )}
+                {foot.social_facebook && (
+                  <a
+                    href={foot.social_facebook}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Facebook"
+                    className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                    style={{ background: `rgba(${goldRgb}, 0.08)`, border: `1px solid rgba(${goldRgb}, 0.15)` }}
+                  >
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill={gold}>
+                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                  </a>
+                )}
               </div>
 
               <p className="text-[10px] tracking-[0.15em] sm:tracking-[0.2em] uppercase text-[var(--text-muted)]">

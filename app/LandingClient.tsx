@@ -663,6 +663,9 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
                     muted
                     loop
                     playsInline
+                    controlsList="nodownload noplaybackrate"
+                    disablePictureInPicture
+                    onContextMenu={(e) => e.preventDefault()}
                     className="w-full aspect-video cursor-pointer"
                     onClick={(e) => {
                       const v = e.currentTarget;
@@ -1681,7 +1684,14 @@ export default function LandingClient({ initialSections, initialPrelaunchEnabled
                   )}
                   {c.image_url && <img src={c.image_url} alt="" className="w-full max-w-2xl mx-auto rounded-2xl mb-8 object-cover" />}
                   {c.video_url && (
-                    <video src={c.video_url} controls className="w-full max-w-2xl mx-auto rounded-2xl mb-8" />
+                    <video
+                      src={c.video_url}
+                      controls
+                      controlsList="nodownload noplaybackrate"
+                      disablePictureInPicture
+                      onContextMenu={(e) => e.preventDefault()}
+                      className="w-full max-w-2xl mx-auto rounded-2xl mb-8"
+                    />
                   )}
                   {c.description && <p className="text-base md:text-lg leading-relaxed max-w-3xl mx-auto mb-8" style={{ color: 'var(--text-secondary)' }}>{c.description}</p>}
                   {c.button_label && (

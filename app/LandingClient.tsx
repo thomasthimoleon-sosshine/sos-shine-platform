@@ -1538,8 +1538,16 @@ export default function LandingClient({ initialSections, initialPositions, initi
               <p className="text-[var(--text-secondary)] font-light text-center text-sm md:text-base mb-10 md:mb-20">{pricing.subtitle || ''}</p>
             </RevealOnScroll>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-5xl mx-auto">
-              {(pricing.plans || []).map((plan: { name: string; tagline?: string; price: string; period: string; button_label: string; button_href: string; highlight: boolean; badge: string; features: string[] }, idx: number) => {
+            {(() => {
+              const activePlans = (pricing.plans || []).filter((p: { name: string; price: string; features?: string[] }) =>
+                !p.name.toLowerCase().includes('premium') &&
+                !p.name.toLowerCase().includes('archiv') &&
+                !(p.features && p.features.length === 1 && p.features[0].toLowerCase().includes('archiv'))
+              );
+              const colClass = activePlans.length <= 2 ? 'sm:grid-cols-2' : 'sm:grid-cols-2 lg:grid-cols-3';
+              return (
+            <div className={`grid grid-cols-1 ${colClass} gap-4 md:gap-6 max-w-5xl mx-auto`}>
+              {activePlans.map((plan: { name: string; tagline?: string; price: string; period: string; button_label: string; button_href: string; highlight: boolean; badge: string; features: string[] }, idx: number) => {
                 const tierColors = [
                   { main: '#F0A68C', deep: '#D4825E', rgb: '240,166,140' },
                   { main: '#55EFC4', deep: '#00B894', rgb: '85,239,196' },
@@ -1606,6 +1614,8 @@ export default function LandingClient({ initialSections, initialPositions, initi
                 </RevealOnScroll>
               )})}
             </div>
+              );
+            })()}
 
             <RevealOnScroll delay={0.4}>
               <p className="text-center text-xs text-[var(--text-muted)] mt-6 md:mt-8 font-light italic">{pricing.footer || ''}</p>

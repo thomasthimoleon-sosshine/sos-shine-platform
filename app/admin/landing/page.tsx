@@ -818,6 +818,34 @@ export default function LandingAdminPage() {
           </>
         )
 
+      /* ────────────── transformation (Avant / Après) ────────────── */
+      case 'transformation':
+        return (
+          <>
+            <TextField label="Label de section" value={c.label || ''} onChange={(v) => updateContent(key, 'label', v)} />
+            <TextAreaField label="Titre" value={c.title || ''} onChange={(v) => updateContent(key, 'title', v)} />
+            <TextAreaField label="Description" value={c.description || ''} onChange={(v) => updateContent(key, 'description', v)} />
+            <Separator label="Transformations (Avant / Apres)" />
+            {(c.items || []).map((item: { before: string; after: string; timeframe?: string; challenge?: string }, i: number) => (
+              <div key={i} className="rounded-lg p-4 space-y-3" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Transformation {i + 1}</p>
+                  <button type="button" onClick={() => removeArrayItem(key, 'items', i)}
+                    className="text-xs px-2 py-1 rounded cursor-pointer" style={{ color: '#FF6B6B' }}>Supprimer</button>
+                </div>
+                <TextField label="Challenge" value={item.challenge || ''} onChange={(v) => updateArrayItem(key, 'items', i, 'challenge', v)} />
+                <TextField label="Duree" value={item.timeframe || ''} onChange={(v) => updateArrayItem(key, 'items', i, 'timeframe', v)} />
+                <TextAreaField label="Avant" value={item.before || ''} onChange={(v) => updateArrayItem(key, 'items', i, 'before', v)} />
+                <TextAreaField label="Apres" value={item.after || ''} onChange={(v) => updateArrayItem(key, 'items', i, 'after', v)} />
+              </div>
+            ))}
+            <button type="button" onClick={() => addArrayItem(key, 'items', { before: '', after: '', timeframe: '', challenge: '' })}
+              className="text-sm px-4 py-2 rounded-lg cursor-pointer" style={{ color: '#74C0FC', border: '1px dashed #74C0FC' }}>
+              + Ajouter une transformation
+            </button>
+          </>
+        )
+
       /* ────────────── cta_dark ────────────── */
       case 'cta_dark':
         return (
@@ -1217,6 +1245,16 @@ export default function LandingAdminPage() {
         )
 
       case 'fondateurs':
+        return (
+          <>
+            <Separator label="Style" />
+            <SelectField label="Police du titre" value={st.title_font || ''} options={fontOpts} onChange={(v) => updateStyle(key, 'title_font', v)} />
+            <SelectField label="Taille du titre" value={st.title_size || ''} options={sizeOpts} onChange={(v) => updateStyle(key, 'title_size', v)} />
+            <SelectField label="Alignement du titre" value={st.title_align || ''} options={alignOpts} onChange={(v) => updateStyle(key, 'title_align', v)} />
+          </>
+        )
+
+      case 'transformation':
         return (
           <>
             <Separator label="Style" />

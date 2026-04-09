@@ -471,8 +471,8 @@ export default function LandingClient({ initialSections, initialPositions, initi
   const DEFAULT_ORDER: Record<string, number> = {
     hero: 0, stats: 1, ticker_1: 2, signature_cta: 3, probleme: 4, principe: 5,
     steps: 6, encyclopedie: 7, produit: 8, ticker_2: 9, communaute: 10,
-    temoignages: 11, histoire: 12, fondateurs: 13, manifeste: 14, pricing: 15,
-    garantie: 16, faq: 17, cta_dark: 18, custom: 19,
+    temoignages: 11, histoire: 12, fondateurs: 13, transformation: 14, manifeste: 15,
+    pricing: 16, garantie: 17, faq: 18, cta_dark: 19, cta_light: 20, custom: 21,
   };
   const hasDynamicOrder = Object.keys(sectionPositions).length > 0;
   function ord(key: string): number { return sectionPositions[key] ?? DEFAULT_ORDER[key] ?? 999; }
@@ -1431,6 +1431,51 @@ export default function LandingClient({ initialSections, initialPositions, initi
       })()}
       </div>
 
+      <div style={{ order: ord("transformation") }}>
+      {/* ═══ AVANT / APRÈS (Transformation) ═══ */}
+      {vis('transformation') && (() => {
+        const tr = sec('transformation');
+        const trItems = tr.items || [];
+        if (!tr.title && trItems.length === 0) return null;
+        return (
+          <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
+            <div className="max-w-5xl mx-auto">
+              <RevealOnScroll>
+                <div className="text-center mb-12 md:mb-16">
+                  {tr.label && <p className="text-xs tracking-[0.2em] uppercase mb-4" style={{ color: gold }}>{tr.label}</p>}
+                  {tr.title && (
+                    <h2 className="font-display font-light leading-[1.15] mb-6" style={tStyle("transformation")}>
+                      <WordByWordReveal text={tr.title} />
+                    </h2>
+                  )}
+                  {tr.description && <p className="text-base md:text-lg max-w-3xl mx-auto" style={{ color: 'var(--text-secondary)' }}>{tr.description}</p>}
+                </div>
+              </RevealOnScroll>
+              <div className="space-y-8 md:space-y-12">
+                {trItems.map((item: { before: string; after: string; timeframe?: string; challenge?: string }, i: number) => (
+                  <RevealOnScroll key={i} delay={i * 0.1}>
+                    <div className="rounded-2xl p-6 md:p-8" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                      {item.challenge && <p className="text-xs tracking-[0.15em] uppercase mb-4 font-medium" style={{ color: gold }}>{item.challenge}{item.timeframe ? ` — ${item.timeframe}` : ''}</p>}
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <div>
+                          <p className="text-xs uppercase tracking-wider mb-2 font-semibold" style={{ color: '#FF6B6B' }}>Avant</p>
+                          <p className="text-sm md:text-base leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{item.before}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs uppercase tracking-wider mb-2 font-semibold" style={{ color: '#55EFC4' }}>Après</p>
+                          <p className="text-sm md:text-base leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{item.after}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </RevealOnScroll>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      })()}
+      </div>
+
       <div style={{ order: ord("manifeste") }}>
       {/* ═══ MANIFESTE ═══ */}
       {vis('manifeste') && (() => {
@@ -1707,6 +1752,42 @@ export default function LandingClient({ initialSections, initialPositions, initi
         </section>
       )}
 
+      </div>
+
+      <div style={{ order: ord("cta_light") }}>
+      {/* ═══ CTA LIGHT ═══ */}
+      {vis('cta_light') && (() => {
+        const ctaL = sec('cta_light');
+        return (
+          <section className="px-5 md:px-20 py-20 md:py-32 relative cv-auto" style={{ background: ctaL.bg || '#ffffff' }}>
+            <div className="max-w-3xl mx-auto text-center">
+              <RevealOnScroll>
+                {ctaL.description && (
+                  <p className="text-base md:text-xl leading-relaxed mb-8 md:mb-10" style={{ color: ctaL.muted_color || '#6b7280' }}>
+                    {ctaL.description}
+                  </p>
+                )}
+              </RevealOnScroll>
+              <RevealOnScroll delay={0.2}>
+                {ctaL.button_label && (
+                  <Link href={ctaL.button_href || '/signup'}>
+                    <button className="magnetic-btn px-8 sm:px-10 py-4 sm:py-5 rounded-full text-base sm:text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                      {ctaL.button_label}
+                    </button>
+                  </Link>
+                )}
+                {ctaL.login_text && (
+                  <p className="mt-4 text-sm">
+                    <Link href="/login" className="transition-colors duration-300" style={{ color: ctaL.muted_color || '#6b7280' }}>
+                      {ctaL.login_text}
+                    </Link>
+                  </p>
+                )}
+              </RevealOnScroll>
+            </div>
+          </section>
+        );
+      })()}
       </div>
 
       {/* ═══ CUSTOM SECTIONS (all types) — each wrapped with its own order ═══ */}

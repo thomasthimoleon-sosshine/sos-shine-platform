@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
       // Without service role key, try with anon key (needs RLS INSERT policy)
       const { createClient } = await import('@supabase/supabase-js')
       const supabase = createClient(supabaseUrl, supabaseKey)
-      await supabase.from('site_visits').insert({
+      const { error: anonInsertError } = await supabase.from('site_visits').insert({
         user_id: userId,
         page_path: page_path || '/',
         referrer: referrer || null,
@@ -61,6 +61,10 @@ export async function POST(request: NextRequest) {
         session_id: session_id || null,
         is_authenticated: !!userId,
       })
+      if (anonInsertError) {
+        console.error('[VisitTracker] Anon insert error:', anonInsertError.message, anonInsertError.code)
+        return NextResponse.json({ ok: false, detail: anonInsertError.message })
+      }
       return NextResponse.json({ ok: true })
     }
 

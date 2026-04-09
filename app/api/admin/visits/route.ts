@@ -45,106 +45,190 @@ export async function GET() {
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString()
     const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7).toISOString()
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
+    const thirtyDaysAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 30).toISOString()
 
-    // Run all queries in parallel
-    const [
-      totalRes,
-      todayRes,
-      weekRes,
-      monthRes,
-      uniqueTodayRes,
-      uniqueWeekRes,
-      uniqueMonthRes,
-      authenticatedRes,
-      topPagesRes,
-      deviceRes,
-      dailyRes,
-      hourlyRes,
-    ] = await Promise.all([
-      // Total visits
-      admin.from('site_visits').select('id', { count: 'exact', head: true }),
-      // Today visits
-      admin.from('site_visits').select('id', { count: 'exact', head: true }).gte('created_at', todayStart),
-      // This week visits
-      admin.from('site_visits').select('id', { count: 'exact', head: true }).gte('created_at', weekStart),
-      // This month visits
-      admin.from('site_visits').select('id', { count: 'exact', head: true }).gte('created_at', monthStart),
-      // Unique visitors today (by session_id)
-      admin.from('site_visits').select('session_id').gte('created_at', todayStart),
-      // Unique visitors this week
-      admin.from('site_visits').select('session_id').gte('created_at', weekStart),
-      // Unique visitors this month
-      admin.from('site_visits').select('session_id').gte('created_at', monthStart),
-      // Authenticated visits this month
-      admin.from('site_visits').select('id', { count: 'exact', head: true }).gte('created_at', monthStart).eq('is_authenticated', true),
-      // Top pages this month (get all, aggregate client side)
-      admin.from('site_visits').select('page_path').gte('created_at', monthStart).limit(5000),
-      // Device distribution this month
-      admin.from('site_visits').select('device_type').gte('created_at', monthStart).limit(5000),
-      // Daily visits last 30 days
-      admin.from('site_visits').select('created_at').gte('created_at', new Date(now.getFullYear(), now.getMonth(), now.getDate() - 30).toISOString()).limit(10000),
-      // Hourly distribution today
-      admin.from('site_visits').select('created_at').gte('created_at', todayStart).limit(5000),
-    ])
+    // ── Query site_visits (may not exist yet) ──
+    let siteVisitsOk = true
+    let svTotal = 0, svToday = 0, svWeek = 0, svMonth = 0
+    let svUniqueToday = 0, svUniqueWeek = 0, svUniqueMonth = 0
+    let svAuthMonth = 0
+    let svTopPages: { path: string; count: number }[] = []
+    let svDevices: { type: string; count: number }[] = []
+    let svDailyData: { date: string; count: number }[] = []
+    let svHourlyData: { hour: string; count: number }[] = []
 
-    // Log any query errors
-    if (totalRes.error) console.error('Visit stats - total query error:', totalRes.error.message)
-    if (todayRes.error) console.error('Visit stats - today query error:', todayRes.error.message)
+    try {
+      const [
+        totalRes, todayRes, weekRes, monthRes,
+        uniqueTodayRes, uniqueWeekRes, uniqueMonthRes,
+        authenticatedRes, topPagesRes, deviceRes, dailyRes, hourlyRes,
+      ] = await Promise.all([
+        admin.from('site_visits').select('id', { count: 'exact', head: true }),
+        admin.from('site_visits').select('id', { count: 'exact', head: true }).gte('created_at', todayStart),
+        admin.from('site_visits').select('id', { count: 'exact', head: true }).gte('created_at', weekStart),
+        admin.from('site_visits').select('id', { count: 'exact', head: true }).gte('created_at', monthStart),
+        admin.from('site_visits').select('session_id').gte('created_at', todayStart),
+        admin.from('site_visits').select('session_id').gte('created_at', weekStart),
+        admin.from('site_visits').select('session_id').gte('created_at', monthStart),
+        admin.from('site_visits').select('id', { count: 'exact', head: true }).gte('created_at', monthStart).eq('is_authenticated', true),
+        admin.from('site_visits').select('page_path').gte('created_at', monthStart).limit(5000),
+        admin.from('site_visits').select('device_type').gte('created_at', monthStart).limit(5000),
+        admin.from('site_visits').select('created_at').gte('created_at', thirtyDaysAgo).limit(10000),
+        admin.from('site_visits').select('created_at').gte('created_at', todayStart).limit(5000),
+      ])
 
-    // Count unique sessions
-    const uniqueToday = new Set((uniqueTodayRes.data || []).map(v => v.session_id).filter(Boolean)).size
-    const uniqueWeek = new Set((uniqueWeekRes.data || []).map(v => v.session_id).filter(Boolean)).size
-    const uniqueMonth = new Set((uniqueMonthRes.data || []).map(v => v.session_id).filter(Boolean)).size
+      // Check if site_visits table exists (first query error indicates table missing)
+      if (totalRes.error) {
+        console.error('site_visits query error:', totalRes.error.message)
+        siteVisitsOk = false
+      } else {
+        svTotal = totalRes.count || 0
+        svToday = todayRes.count || 0
+        svWeek = weekRes.count || 0
+        svMonth = monthRes.count || 0
+        svUniqueToday = new Set((uniqueTodayRes.data || []).map(v => v.session_id).filter(Boolean)).size
+        svUniqueWeek = new Set((uniqueWeekRes.data || []).map(v => v.session_id).filter(Boolean)).size
+        svUniqueMonth = new Set((uniqueMonthRes.data || []).map(v => v.session_id).filter(Boolean)).size
+        svAuthMonth = authenticatedRes.count || 0
 
-    // Aggregate top pages
-    const pageCounts: Record<string, number> = {}
-    for (const row of (topPagesRes.data || [])) {
-      pageCounts[row.page_path] = (pageCounts[row.page_path] || 0) + 1
+        // Top pages
+        const pageCounts: Record<string, number> = {}
+        for (const row of (topPagesRes.data || [])) pageCounts[row.page_path] = (pageCounts[row.page_path] || 0) + 1
+        svTopPages = Object.entries(pageCounts).sort((a, b) => b[1] - a[1]).slice(0, 10).map(([path, count]) => ({ path, count }))
+
+        // Devices
+        const deviceCounts: Record<string, number> = {}
+        for (const row of (deviceRes.data || [])) { const dt = row.device_type || 'desktop'; deviceCounts[dt] = (deviceCounts[dt] || 0) + 1 }
+        svDevices = Object.entries(deviceCounts).map(([type, count]) => ({ type, count }))
+
+        // Daily
+        const dailyCounts: Record<string, number> = {}
+        for (const row of (dailyRes.data || [])) { const day = row.created_at.slice(0, 10); dailyCounts[day] = (dailyCounts[day] || 0) + 1 }
+        svDailyData = Object.entries(dailyCounts).sort((a, b) => a[0].localeCompare(b[0])).map(([date, count]) => ({ date, count }))
+
+        // Hourly
+        const hourlyCounts: number[] = Array(24).fill(0)
+        for (const row of (hourlyRes.data || [])) { hourlyCounts[new Date(row.created_at).getHours()]++ }
+        svHourlyData = hourlyCounts.map((count, hour) => ({ hour: `${hour}h`, count }))
+      }
+    } catch (e) {
+      console.error('site_visits queries failed:', e)
+      siteVisitsOk = false
     }
-    const topPages = Object.entries(pageCounts)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 10)
-      .map(([path, count]) => ({ path, count }))
 
-    // Aggregate device types
-    const deviceCounts: Record<string, number> = {}
-    for (const row of (deviceRes.data || [])) {
-      const dt = row.device_type || 'desktop'
-      deviceCounts[dt] = (deviceCounts[dt] || 0) + 1
-    }
-    const devices = Object.entries(deviceCounts).map(([type, count]) => ({ type, count }))
+    // ── Query ab_test_visits (always exists if A/B testing is active) ──
+    let abTotal = 0, abToday = 0, abWeek = 0, abMonth = 0
+    let abUniqueToday = 0, abUniqueWeek = 0, abUniqueMonth = 0
+    let abDevices: { type: string; count: number }[] = []
+    let abDailyData: { date: string; count: number }[] = []
+    let abHourlyData: number[] = Array(24).fill(0)
 
-    // Aggregate daily visits (last 30 days)
-    const dailyCounts: Record<string, number> = {}
-    for (const row of (dailyRes.data || [])) {
-      const day = row.created_at.slice(0, 10)
-      dailyCounts[day] = (dailyCounts[day] || 0) + 1
-    }
-    const dailyData = Object.entries(dailyCounts)
-      .sort((a, b) => a[0].localeCompare(b[0]))
-      .map(([date, count]) => ({ date, count }))
+    try {
+      const [
+        abTotalRes, abTodayRes, abWeekRes, abMonthRes,
+        abUniqueTodayRes, abUniqueWeekRes, abUniqueMonthRes,
+        abDeviceRes, abDailyRes, abHourlyRes,
+      ] = await Promise.all([
+        admin.from('ab_test_visits').select('id', { count: 'exact', head: true }),
+        admin.from('ab_test_visits').select('id', { count: 'exact', head: true }).gte('visited_at', todayStart),
+        admin.from('ab_test_visits').select('id', { count: 'exact', head: true }).gte('visited_at', weekStart),
+        admin.from('ab_test_visits').select('id', { count: 'exact', head: true }).gte('visited_at', monthStart),
+        admin.from('ab_test_visits').select('visitor_ip').gte('visited_at', todayStart),
+        admin.from('ab_test_visits').select('visitor_ip').gte('visited_at', weekStart),
+        admin.from('ab_test_visits').select('visitor_ip').gte('visited_at', monthStart),
+        admin.from('ab_test_visits').select('user_agent').gte('visited_at', monthStart).limit(5000),
+        admin.from('ab_test_visits').select('visited_at').gte('visited_at', thirtyDaysAgo).limit(10000),
+        admin.from('ab_test_visits').select('visited_at').gte('visited_at', todayStart).limit(5000),
+      ])
 
-    // Hourly distribution
-    const hourlyCounts: number[] = Array(24).fill(0)
-    for (const row of (hourlyRes.data || [])) {
-      const hour = new Date(row.created_at).getHours()
-      hourlyCounts[hour]++
+      if (!abTotalRes.error) {
+        abTotal = abTotalRes.count || 0
+        abToday = abTodayRes.count || 0
+        abWeek = abWeekRes.count || 0
+        abMonth = abMonthRes.count || 0
+        abUniqueToday = new Set((abUniqueTodayRes.data || []).map(v => v.visitor_ip).filter(Boolean)).size
+        abUniqueWeek = new Set((abUniqueWeekRes.data || []).map(v => v.visitor_ip).filter(Boolean)).size
+        abUniqueMonth = new Set((abUniqueMonthRes.data || []).map(v => v.visitor_ip).filter(Boolean)).size
+
+        // Devices from user_agent
+        const abDeviceCounts: Record<string, number> = {}
+        for (const row of (abDeviceRes.data || [])) {
+          const ua = (row.user_agent || '') as string
+          const isTablet = /iPad|Tablet/i.test(ua)
+          const isMobile = /Mobile|Android|iPhone/i.test(ua)
+          const dt = isTablet ? 'tablet' : isMobile ? 'mobile' : 'desktop'
+          abDeviceCounts[dt] = (abDeviceCounts[dt] || 0) + 1
+        }
+        abDevices = Object.entries(abDeviceCounts).map(([type, count]) => ({ type, count }))
+
+        // Daily
+        const abDailyCounts: Record<string, number> = {}
+        for (const row of (abDailyRes.data || [])) { const day = (row.visited_at as string).slice(0, 10); abDailyCounts[day] = (abDailyCounts[day] || 0) + 1 }
+        abDailyData = Object.entries(abDailyCounts).sort((a, b) => a[0].localeCompare(b[0])).map(([date, count]) => ({ date, count }))
+
+        // Hourly
+        for (const row of (abHourlyRes.data || [])) { abHourlyData[new Date(row.visited_at as string).getHours()]++ }
+      }
+    } catch (e) {
+      console.error('ab_test_visits queries failed:', e)
     }
-    const hourlyData = hourlyCounts.map((count, hour) => ({ hour: `${hour}h`, count }))
+
+    // ── Merge data from both sources ──
+    const total = svTotal + abTotal
+    const today = svToday + abToday
+    const week = svWeek + abWeek
+    const month = svMonth + abMonth
+    const uniqueToday = svUniqueToday + abUniqueToday
+    const uniqueWeek = svUniqueWeek + abUniqueWeek
+    const uniqueMonth = svUniqueMonth + abUniqueMonth
+
+    // Merge daily data
+    const mergedDailyMap: Record<string, number> = {}
+    for (const d of svDailyData) mergedDailyMap[d.date] = (mergedDailyMap[d.date] || 0) + d.count
+    for (const d of abDailyData) mergedDailyMap[d.date] = (mergedDailyMap[d.date] || 0) + d.count
+    const dailyData = Object.entries(mergedDailyMap).sort((a, b) => a[0].localeCompare(b[0])).map(([date, count]) => ({ date, count }))
+
+    // Merge hourly data
+    const mergedHourly = Array(24).fill(0).map((_, i) => {
+      const svCount = svHourlyData.find(h => h.hour === `${i}h`)?.count || 0
+      return { hour: `${i}h`, count: svCount + abHourlyData[i] }
+    })
+
+    // Merge devices
+    const mergedDeviceMap: Record<string, number> = {}
+    for (const d of svDevices) mergedDeviceMap[d.type] = (mergedDeviceMap[d.type] || 0) + d.count
+    for (const d of abDevices) mergedDeviceMap[d.type] = (mergedDeviceMap[d.type] || 0) + d.count
+    const devices = Object.entries(mergedDeviceMap).map(([type, count]) => ({ type, count }))
+
+    // Top pages: add landing page from ab_test_visits
+    const topPages = [...svTopPages]
+    if (abMonth > 0) {
+      const landingEntry = topPages.find(p => p.path === '/')
+      if (landingEntry) {
+        landingEntry.count += abMonth
+      } else {
+        topPages.push({ path: '/', count: abMonth })
+      }
+      topPages.sort((a, b) => b.count - a.count)
+    }
 
     return NextResponse.json({
-      total: totalRes.count || 0,
-      today: todayRes.count || 0,
-      week: weekRes.count || 0,
-      month: monthRes.count || 0,
+      total,
+      today,
+      week,
+      month,
       uniqueToday,
       uniqueWeek,
       uniqueMonth,
-      authenticatedMonth: authenticatedRes.count || 0,
-      topPages,
+      authenticatedMonth: svAuthMonth,
+      topPages: topPages.slice(0, 10),
       devices,
       dailyData,
-      hourlyData,
+      hourlyData: mergedHourly,
+      _sources: {
+        site_visits: siteVisitsOk ? svTotal : 'table_unavailable',
+        ab_test_visits: abTotal,
+      },
     })
   } catch (e) {
     console.error('Visits stats error:', e)

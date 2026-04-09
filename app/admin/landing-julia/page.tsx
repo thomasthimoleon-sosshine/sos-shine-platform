@@ -695,67 +695,144 @@ export default function LandingJuliaPage() {
         </div>
       )}
 
-      {/* ── Section editor ── */}
+      {/* ── Section list + editor ── */}
       {sections.length > 0 && (
         <>
-          {/* Section selector */}
-          <div className="rounded-xl p-5 space-y-4" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-            <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-              <label className="text-sm font-medium flex-shrink-0" style={{ color: 'var(--text-secondary)' }}>Section</label>
-              <select
-                value={selectedSection}
-                onChange={(e) => setSelectedSection(e.target.value)}
-                className="flex-1 rounded-lg px-4 py-3 text-sm outline-none cursor-pointer appearance-none"
-                style={{ ...inputStyle, backgroundImage: selectBgImage, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px center' }}>
-                <option value="" style={{ background: '#1a1a2e', color: '#F5EDF0' }}>-- Choisir une section --</option>
-                {sections.map((s) => (
-                  <option key={s.section_key} value={s.section_key} style={{ background: '#1a1a2e', color: '#F5EDF0' }}>
-                    {s.label} {!s.is_visible ? '(masquée)' : ''}
-                  </option>
-                ))}
-              </select>
-              <div className="flex gap-2">
-                <div className="relative">
-                  <button type="button" onClick={() => setShowSectionTypeMenu(!showSectionTypeMenu)}
-                    className="px-4 py-2.5 rounded-lg text-sm font-medium cursor-pointer flex items-center gap-2 flex-shrink-0"
-                    style={{ border: '1px dashed rgba(167,139,250,0.4)', color: '#A78BFA', background: 'rgba(167,139,250,0.04)' }}>
-                    + Nouvelle section
-                  </button>
-                  {showSectionTypeMenu && (
-                    <>
-                      <div className="fixed inset-0 z-30" onClick={() => setShowSectionTypeMenu(false)} />
-                      <div className="absolute right-0 top-full mt-2 z-40 rounded-xl overflow-hidden shadow-xl w-72"
-                        style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-                        <p className="px-4 pt-3 pb-2 text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
-                          Type de section
-                        </p>
-                        {CUSTOM_SECTION_TYPES.map((st) => (
-                          <button key={st.type} type="button"
-                            onClick={() => addCustomSection(st.type)}
-                            className="w-full text-left px-4 py-3 flex items-center gap-3 cursor-pointer transition-colors"
-                            style={{ borderTop: '1px solid var(--dark-border)' }}
-                            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = 'rgba(167,139,250,0.08)' }}
-                            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = 'transparent' }}>
-                            <span className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-mono flex-shrink-0"
-                              style={{ background: 'rgba(167,139,250,0.1)', color: '#A78BFA' }}>
-                              {st.icon}
-                            </span>
-                            <div>
-                              <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{st.label}</p>
-                              <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{st.desc}</p>
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    </>
-                  )}
-                </div>
-                <button type="button" onClick={duplicateFromCurrent} disabled={duplicating}
-                  className="px-4 py-2.5 rounded-lg text-sm font-medium cursor-pointer flex items-center gap-2 flex-shrink-0"
-                  style={{ border: '1px dashed rgba(255,107,107,0.4)', color: '#FF6B6B', background: 'rgba(255,107,107,0.04)' }}>
-                  Re-dupliquer
-                </button>
-              </div>
+          {/* Action bar */}
+          <div className="flex items-center gap-2 flex-wrap" style={{}}>
+            <div className="relative">
+              <button type="button" onClick={() => setShowSectionTypeMenu(!showSectionTypeMenu)}
+                className="px-4 py-2.5 rounded-lg text-sm font-medium cursor-pointer flex items-center gap-2"
+                style={{ border: '1px dashed rgba(167,139,250,0.4)', color: '#A78BFA', background: 'rgba(167,139,250,0.04)' }}>
+                + Nouvelle section
+              </button>
+              {showSectionTypeMenu && (
+                <>
+                  <div className="fixed inset-0 z-30" onClick={() => setShowSectionTypeMenu(false)} />
+                  <div className="absolute left-0 top-full mt-2 z-40 rounded-xl overflow-hidden shadow-xl w-72"
+                    style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                    <p className="px-4 pt-3 pb-2 text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
+                      Type de section
+                    </p>
+                    {CUSTOM_SECTION_TYPES.map((st) => (
+                      <button key={st.type} type="button"
+                        onClick={() => addCustomSection(st.type)}
+                        className="w-full text-left px-4 py-3 flex items-center gap-3 cursor-pointer transition-colors"
+                        style={{ borderTop: '1px solid var(--dark-border)' }}
+                        onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = 'rgba(167,139,250,0.08)' }}
+                        onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = 'transparent' }}>
+                        <span className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-mono flex-shrink-0"
+                          style={{ background: 'rgba(167,139,250,0.1)', color: '#A78BFA' }}>
+                          {st.icon}
+                        </span>
+                        <div>
+                          <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{st.label}</p>
+                          <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{st.desc}</p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+            <button type="button" onClick={duplicateFromCurrent} disabled={duplicating}
+              className="px-4 py-2.5 rounded-lg text-sm font-medium cursor-pointer flex items-center gap-2"
+              style={{ border: '1px dashed rgba(255,107,107,0.4)', color: '#FF6B6B', background: 'rgba(255,107,107,0.04)' }}>
+              Re-dupliquer
+            </button>
+            <span className="text-xs ml-auto" style={{ color: 'var(--text-muted)' }}>{sections.length} sections</span>
+          </div>
+
+          {/* Visual section list — order & reorder */}
+          <div className="rounded-xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+            <div className="px-4 py-3 flex items-center justify-between" style={{ borderBottom: '1px solid var(--dark-border)' }}>
+              <p className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Ordre des sections sur la page</p>
+              <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>Glissez ou utilisez les flèches pour réorganiser</p>
+            </div>
+            <div className="divide-y" style={{ borderColor: 'var(--dark-border)' }}>
+              {sections.map((s, i) => {
+                const isSelected = s.section_key === selectedSection
+                return (
+                  <div
+                    key={s.section_key}
+                    draggable
+                    onDragStart={(e) => { e.dataTransfer.setData('text/plain', String(i)); (e.currentTarget as HTMLElement).style.opacity = '0.4' }}
+                    onDragEnd={(e) => { (e.currentTarget as HTMLElement).style.opacity = '1' }}
+                    onDragOver={(e) => { e.preventDefault(); (e.currentTarget as HTMLElement).style.background = 'rgba(167,139,250,0.08)' }}
+                    onDragLeave={(e) => { (e.currentTarget as HTMLElement).style.background = '' }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      (e.currentTarget as HTMLElement).style.background = ''
+                      const fromIdx = parseInt(e.dataTransfer.getData('text/plain'))
+                      const toIdx = i
+                      if (isNaN(fromIdx) || fromIdx === toIdx) return
+                      setSections((prev) => {
+                        const next = [...prev]
+                        const [moved] = next.splice(fromIdx, 1)
+                        next.splice(toIdx, 0, moved)
+                        return next.map((sec, pos) => ({ ...sec, position: pos }))
+                      })
+                      setSaved(false)
+                    }}
+                    className="flex items-center gap-2 px-3 py-2.5 cursor-grab active:cursor-grabbing transition-colors"
+                    style={{ background: isSelected ? 'rgba(167,139,250,0.08)' : 'transparent' }}
+                    onClick={() => setSelectedSection(isSelected ? '' : s.section_key)}
+                  >
+                    {/* Drag handle */}
+                    <span className="flex-shrink-0 text-xs select-none" style={{ color: 'var(--text-muted)', cursor: 'grab' }} title="Glisser pour déplacer">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                      </svg>
+                    </span>
+                    {/* Position */}
+                    <span className="w-6 text-center text-xs font-bold flex-shrink-0" style={{ color: '#A78BFA' }}>{i + 1}</span>
+                    {/* Label */}
+                    <span className="flex-1 text-sm truncate" style={{ color: s.is_visible ? 'var(--text-primary)' : 'var(--text-muted)', textDecoration: s.is_visible ? 'none' : 'line-through' }}>
+                      {s.label}
+                    </span>
+                    {/* Visibility */}
+                    <button type="button" onClick={(e) => { e.stopPropagation(); toggleVisibility(s.section_key) }}
+                      className="p-1 rounded cursor-pointer flex-shrink-0" style={{ color: s.is_visible ? '#A78BFA' : 'var(--text-muted)' }}
+                      title={s.is_visible ? 'Visible — cliquer pour masquer' : 'Masquée — cliquer pour afficher'}>
+                      {s.is_visible ? (
+                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                      ) : (
+                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12c1.292 4.338 5.31 7.5 10.066 7.5.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" /></svg>
+                      )}
+                    </button>
+                    {/* Move up */}
+                    <button type="button" onClick={(e) => { e.stopPropagation(); moveSection(i, -1) }} disabled={i === 0}
+                      className="p-1 rounded cursor-pointer disabled:opacity-20 flex-shrink-0" style={{ color: 'var(--text-muted)' }} title="Monter">
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" /></svg>
+                    </button>
+                    {/* Move down */}
+                    <button type="button" onClick={(e) => { e.stopPropagation(); moveSection(i, 1) }} disabled={i === sections.length - 1}
+                      className="p-1 rounded cursor-pointer disabled:opacity-20 flex-shrink-0" style={{ color: 'var(--text-muted)' }} title="Descendre">
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                    </button>
+                    {/* Move to first */}
+                    <button type="button" onClick={(e) => {
+                      e.stopPropagation()
+                      if (i === 0) return
+                      setSections((prev) => {
+                        const next = [...prev]
+                        const [moved] = next.splice(i, 1)
+                        next.unshift(moved)
+                        return next.map((sec, pos) => ({ ...sec, position: pos }))
+                      })
+                      setSaved(false)
+                    }} disabled={i === 0}
+                      className="p-1 rounded cursor-pointer disabled:opacity-20 flex-shrink-0" style={{ color: 'var(--text-muted)' }} title="Mettre en premier">
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l7.5-7.5 7.5 7.5m-15 6l7.5-7.5 7.5 7.5" /></svg>
+                    </button>
+                    {/* Delete */}
+                    <button type="button" onClick={(e) => { e.stopPropagation(); deleteSection(s.section_key) }}
+                      className="p-1 rounded cursor-pointer flex-shrink-0" style={{ color: '#FF6B6B' }} title="Supprimer">
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                  </div>
+                )
+              })}
             </div>
           </div>
 
@@ -766,45 +843,16 @@ export default function LandingJuliaPage() {
             const sec = sections[idx]
             return (
               <div className="rounded-xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-                {/* Section toolbar */}
                 <div className="flex items-center justify-between p-5" style={{ borderBottom: '1px solid var(--dark-border)' }}>
                   <h2 className="font-semibold text-lg" style={{ color: 'var(--text-primary)' }}>
                     {sec.label}
+                    <span className="text-xs font-normal ml-2" style={{ color: 'var(--text-muted)' }}>#{idx + 1}</span>
                   </h2>
-                  <div className="flex items-center gap-2">
-                    <button type="button" onClick={() => moveSection(idx, -1)} disabled={idx === 0}
-                      className="p-1.5 rounded-lg cursor-pointer disabled:opacity-20" style={{ color: 'var(--text-muted)' }} title="Monter">
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" /></svg>
-                    </button>
-                    <button type="button" onClick={() => moveSection(idx, 1)} disabled={idx === sections.length - 1}
-                      className="p-1.5 rounded-lg cursor-pointer disabled:opacity-20" style={{ color: 'var(--text-muted)' }} title="Descendre">
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
-                    </button>
-                    <button type="button" onClick={() => toggleVisibility(sec.section_key)}
-                      className="p-1.5 rounded-lg cursor-pointer"
-                      style={{ color: sec.is_visible ? '#A78BFA' : 'var(--text-muted)' }}
-                      title={sec.is_visible ? 'Visible' : 'Masquée'}>
-                      {sec.is_visible ? (
-                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                      ) : (
-                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12c1.292 4.338 5.31 7.5 10.066 7.5.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" /></svg>
-                      )}
-                    </button>
-                    <button type="button" onClick={() => deleteSection(sec.section_key)}
-                      className="p-1.5 rounded-lg cursor-pointer" style={{ color: '#FF6B6B' }}
-                      title="Supprimer cette section">
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Section content */}
-                <div className="px-5 pb-5 pt-4 space-y-4">
                   {!sec.is_visible && (
-                    <div className="rounded-lg px-3 py-2 text-xs" style={{ background: 'rgba(255,255,255,0.03)', color: 'var(--text-muted)' }}>
-                      Cette section est actuellement masquée.
-                    </div>
+                    <span className="text-xs px-2 py-1 rounded" style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-muted)' }}>Masquée</span>
                   )}
+                </div>
+                <div className="px-5 pb-5 pt-4 space-y-4">
                   <TextField label="Nom de la section" value={sec.label || ''} onChange={(v) => {
                     setSections((prev) => prev.map((s) => s.section_key === sec.section_key ? { ...s, label: v } : s))
                     setSaved(false)

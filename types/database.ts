@@ -385,6 +385,7 @@ export type SiteSetting = {
 // ── Landing Sections (CMS landing page) ──
 export type LandingSection = {
   id: string
+  page_version: string
   section_key: string
   label: string
   position: number
@@ -394,6 +395,32 @@ export type LandingSection = {
   styles: Record<string, string>
   updated_by: string | null
   updated_at: string
+}
+
+// ── A/B Tests ──
+export type AbTest = {
+  id: string
+  name: string
+  variant_a: string
+  variant_b: string
+  split_ratio: number
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
+// ── A/B Test Events ──
+export type AbTestEvent = {
+  id: string
+  test_id: string
+  variant: string
+  event_type: string
+  session_id: string | null
+  user_agent: string | null
+  referrer: string | null
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  metadata: Record<string, any>
+  created_at: string
 }
 
 // ── Onboarding Responses ──
@@ -459,6 +486,8 @@ export type Database = {
       shine_connections: Table<ShineConnection>
       site_settings: Table<SiteSetting>
       landing_sections: Table<LandingSection>
+      ab_tests: Table<AbTest>
+      ab_test_events: Table<AbTestEvent>
       user_progress: Table<UserProgress>
       user_xp: Table<UserXP>
       challenges: Table<Challenge>

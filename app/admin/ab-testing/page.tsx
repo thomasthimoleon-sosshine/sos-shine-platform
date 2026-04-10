@@ -43,19 +43,21 @@ export default function AbTestingDashboard() {
       .maybeSingle()
 
     if (!configData) { setLoading(false); return }
-    setConfig(configData as AbConfig)
+    const cfg = configData as unknown as AbConfig
+    setConfig(cfg)
 
     // Load visit stats
-    const { data: visits } = await supabase
+    const { data: visitsRaw } = await supabase
       .from('ab_test_visits')
       .select('variant, visitor_ip, converted, visited_at')
       .order('visited_at', { ascending: true })
+    const visits = (visitsRaw || []) as unknown as { variant: string; visitor_ip: string | null; converted: boolean; visited_at: string }[]
 
     const s: Record<string, VariantStats> = {}
     const d: Record<string, DailyRow[]> = {}
 
-    for (const v of [configData.variant_a, configData.variant_b]) {
-      const variantVisits = (visits || []).filter((vis) => vis.variant === v)
+    for (const v of [cfg.variant_a, cfg.variant_b]) {
+      const variantVisits = visits.filter((vis) => vis.variant === v)
       const uniqueIps = new Set(variantVisits.map((vis) => vis.visitor_ip).filter(Boolean))
       const converted = variantVisits.filter((vis) => vis.converted).length
       const total = variantVisits.length

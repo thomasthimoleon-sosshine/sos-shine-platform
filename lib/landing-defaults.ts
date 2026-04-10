@@ -626,6 +626,16 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     },
     styles: {},
   },
+  {
+    section_key: 'landing_v2',
+    label: 'Landing Complète V2',
+    position: 0.5,
+    is_visible: false,
+    content: {
+      enabled: true,
+    },
+    styles: {},
+  },
 ]
 
 /** Get default for a specific section_key */
@@ -698,4 +708,5 @@ export const SECTION_EDITOR_LABELS: Record<string, { label: string; icon: string
   legal_cgv: { label: 'CGV', icon: '📄', description: 'Conditions Générales de Vente' },
   legal_privacy: { label: 'Confidentialité', icon: '🔒', description: 'Politique de confidentialité' },
   legal_contact: { label: 'Contact', icon: '📧', description: 'Page de contact' },
+  landing_v2: { label: 'Landing Complète V2', icon: '🌟', description: 'Les 12 sections du nouveau cahier des charges' },
 }

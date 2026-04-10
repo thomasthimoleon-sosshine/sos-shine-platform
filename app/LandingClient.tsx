@@ -450,6 +450,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
     hero: 0, probleme: 1, histoire: 2, temoignages: 3, encyclopedie: 4,
     steps: 5, communaute: 6, produit: 7, manifeste: 8, pricing: 9,
     pour_qui: 10, cta_dark: 11,
+    landing_v2: 0,
     // Hidden sections
     stats: 50, signature_cta: 51, principe: 52, fondateurs: 53, transformation: 54,
     garantie: 55, cta_light: 56, ticker_1: 57, ticker_2: 58, faq: 59, custom: 99,

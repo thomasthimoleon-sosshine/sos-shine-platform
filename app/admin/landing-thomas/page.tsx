@@ -288,6 +288,10 @@ export default function LandingThomasPage() {
         }
       }
 
+      // Normalize positions to sequential 0,1,2,3... to avoid duplicates
+      const sortedEntries = Object.entries(map).sort(([, a], [, b]) => a.position - b.position)
+      sortedEntries.forEach(([k], i) => { map[k] = { ...map[k], position: i } })
+
       setSections(map)
     } catch {
       setError('Erreur de connexion')

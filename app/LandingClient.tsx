@@ -430,6 +430,17 @@ export default function LandingClient({ initialSections, initialPositions, initi
     }).catch(() => {});
   }, [variant]);
 
+  /** Track A/B conversion when user clicks a signup/rejoindre CTA */
+  function trackConversion(conversionType = 'signup') {
+    const visitorId = typeof localStorage !== 'undefined' ? localStorage.getItem('ab_visitor_id') : null
+    if (!visitorId) return
+    fetch('/api/track/ab-convert', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ visitor_id: visitorId, conversion_type: conversionType }),
+    }).catch(() => {})
+  }
+
   function sec(key: string): SectionContent { return sections[key]?.content || {}; }
   function sty(key: string): SectionStyles { return sections[key]?.styles || {}; }
   function vis(key: string): boolean { return sections[key]?.is_visible !== false; }
@@ -563,6 +574,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                 </Link>
                 <Link
                   href={globalContent.header_cta_href || '/signup'}
+                  onClick={() => trackConversion('signup')}
                   className="hidden sm:inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all duration-300 hover:scale-105"
                   style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}
                 >
@@ -1609,7 +1621,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                       ))}
                     </div>
 
-                    <Link href={plan.button_href || '/signup'}>
+                    <Link href={plan.button_href || '/signup'} onClick={() => trackConversion('signup')}>
                       <button className={`magnetic-btn w-full py-3 sm:py-4 rounded-full text-sm sm:text-base font-semibold tracking-wide ${plan.highlight ? 'pulse-ring' : ''}`} style={{
                         background: `linear-gradient(135deg, ${tc.main}, ${tc.deep})`,
                         color: btnTextColor
@@ -1861,7 +1873,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
               </RevealOnScroll>
             )}
             <RevealOnScroll delay={0.3}>
-              <Link href={ctaDark.button_href || '/signup'}>
+              <Link href={ctaDark.button_href || '/signup'} onClick={() => trackConversion('signup')}>
                 <button className="magnetic-btn pulse-ring px-8 sm:px-10 py-4 sm:py-5 rounded-full text-base sm:text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
                   {ctaDark.button_label || 'Rejoindre SOS Shine'}
                 </button>

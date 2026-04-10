@@ -95,8 +95,8 @@ export default async function Home() {
     const supabase = await createClient()
 
     // Fetch landing sections for the resolved variant
-    const { data } = await supabase
-      .from('landing_sections')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data } = await (supabase.from('landing_sections') as any)
       .select('*')
       .eq('variant', variant)
       .order('position')

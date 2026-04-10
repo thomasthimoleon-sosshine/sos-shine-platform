@@ -243,8 +243,8 @@ export default function LandingJuliaPage() {
       let data = null
       let fetchError = null
 
-      const res = await supabase
-        .from('landing_sections')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const res = await (supabase.from('landing_sections') as any)
         .select('section_key, content, is_visible, position')
         .eq('variant', VARIANT)
         .order('position')
@@ -358,22 +358,11 @@ export default function LandingJuliaPage() {
           updated_at: now,
         }
 
-        const { error: upsertError } = await supabase
-          .from('landing_sections')
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { error: upsertError } = await (supabase.from('landing_sections') as any)
           .upsert(row, { onConflict: 'section_key,variant' })
 
-        if (upsertError && upsertError.message.includes('variant')) {
-          // Column doesn't exist — save without variant
-          const { variant: _v, ...rowNoVariant } = row
-          const { error: fallbackErr } = await supabase
-            .from('landing_sections')
-            .upsert(rowNoVariant, { onConflict: 'section_key' })
-          if (fallbackErr) {
-            setError(`Erreur ${key}: ${fallbackErr.message}`)
-            setSaving(false)
-            return
-          }
-        } else if (upsertError) {
+        if (upsertError) {
           setError(`Erreur ${key}: ${upsertError.message}`)
           setSaving(false)
           return

@@ -59,11 +59,13 @@ async function resolveVariant(cookieStore: Awaited<ReturnType<typeof cookies>>):
   // Check if A/B testing is active
   try {
     const supabase = await createClient()
-    const { data: config } = await supabase
+    const { data: configRaw } = await supabase
       .from('ab_test_config')
       .select('is_active, split_ratio, variant_a, variant_b')
       .eq('test_name', 'landing_page')
       .maybeSingle()
+
+    const config = configRaw as unknown as { is_active: boolean; split_ratio: number; variant_a: string; variant_b: string } | null
 
     if (config?.is_active) {
       // Random split based on ratio

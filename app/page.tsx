@@ -82,9 +82,12 @@ async function resolveVariant(cookieStore: Awaited<ReturnType<typeof cookies>>):
   return 'julia'
 }
 
-export default async function Home() {
+export default async function Home({ searchParams }: { searchParams: Promise<{ preview?: string }> }) {
   const cookieStore = await cookies()
-  const variant = await resolveVariant(cookieStore)
+  const params = await searchParams
+  const variant = params.preview === 'julia' || params.preview === 'thomas'
+    ? params.preview as LandingVariant
+    : await resolveVariant(cookieStore)
 
   let initialSections: SectionMap = {}
   let initialPositions: Record<string, number> = {}

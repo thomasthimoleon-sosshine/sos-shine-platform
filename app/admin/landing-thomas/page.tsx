@@ -238,11 +238,29 @@ export default function LandingThomasPage() {
   const loadSections = useCallback(async () => {
     try {
       const supabase = createClient()
-      const { data, error: fetchError } = await supabase
+
+      // Try with variant filter first, fallback without if column doesn't exist yet
+      let data = null
+      let fetchError = null
+
+      const res = await supabase
         .from('landing_sections')
         .select('section_key, content, is_visible, position')
         .eq('variant', VARIANT)
         .order('position')
+
+      if (res.error && res.error.message.includes('variant')) {
+        // Column doesn't exist yet — load without variant filter
+        const fallback = await supabase
+          .from('landing_sections')
+          .select('section_key, content, is_visible, position')
+          .order('position')
+        data = fallback.data
+        fetchError = fallback.error
+      } else {
+        data = res.data
+        fetchError = res.error
+      }
 
       if (fetchError) {
         setError(`Erreur de chargement: ${fetchError.message}`)
@@ -327,21 +345,35 @@ export default function LandingThomasPage() {
         if (!sec) continue
         const def = LANDING_DEFAULTS.find((d) => d.section_key === key)
 
+        // Try with variant column, fallback without if migration not run yet
+        const row = {
+          section_key: key,
+          variant: VARIANT,
+          label: def?.label || SECTION_LABELS[key]?.label || key,
+          position: sec.position,
+          is_visible: sec.is_visible,
+          content: sec.content,
+          styles: def?.styles || {},
+          updated_by: user?.id || null,
+          updated_at: now,
+        }
+
         const { error: upsertError } = await supabase
           .from('landing_sections')
-          .upsert({
-            section_key: key,
-            variant: VARIANT,
-            label: def?.label || SECTION_LABELS[key]?.label || key,
-            position: sec.position,
-            is_visible: sec.is_visible,
-            content: sec.content,
-            styles: def?.styles || {},
-            updated_by: user?.id || null,
-            updated_at: now,
-          }, { onConflict: 'section_key,variant' })
+          .upsert(row, { onConflict: 'section_key,variant' })
 
-        if (upsertError) {
+        if (upsertError && upsertError.message.includes('variant')) {
+          // Column doesn't exist — save without variant
+          const { variant: _v, ...rowNoVariant } = row
+          const { error: fallbackErr } = await supabase
+            .from('landing_sections')
+            .upsert(rowNoVariant, { onConflict: 'section_key' })
+          if (fallbackErr) {
+            setError(`Erreur ${key}: ${fallbackErr.message}`)
+            setSaving(false)
+            return
+          }
+        } else if (upsertError) {
           setError(`Erreur ${key}: ${upsertError.message}`)
           setSaving(false)
           return

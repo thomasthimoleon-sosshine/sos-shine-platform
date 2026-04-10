@@ -93,7 +93,7 @@ export default function AbTestingDashboard() {
     if (!config) return
     setToggling(true)
     const supabase = createClient()
-    await supabase.from('ab_test_config')
+    await (supabase.from('ab_test_config') as unknown as { update: (v: Record<string, unknown>) => { eq: (k: string, v: string) => Promise<unknown> } })
       .update({ is_active: !config.is_active, updated_at: new Date().toISOString() })
       .eq('test_name', 'landing_page')
     setConfig({ ...config, is_active: !config.is_active })
@@ -103,7 +103,7 @@ export default function AbTestingDashboard() {
   async function updateSplit(ratio: number) {
     if (!config) return
     const supabase = createClient()
-    await supabase.from('ab_test_config')
+    await (supabase.from('ab_test_config') as unknown as { update: (v: Record<string, unknown>) => { eq: (k: string, v: string) => Promise<unknown> } })
       .update({ split_ratio: ratio, updated_at: new Date().toISOString() })
       .eq('test_name', 'landing_page')
     setConfig({ ...config, split_ratio: ratio })

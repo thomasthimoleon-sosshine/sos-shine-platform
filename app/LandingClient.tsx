@@ -343,69 +343,6 @@ export default function LandingClient({ initialSections, initialPositions, initi
     try {
       const supabase = createClient();
 
-      // Preview mode: ?preview=julia force l'affichage de la variante Julia
-      const urlParams = new URLSearchParams(window.location.search);
-      const previewVariant = urlParams.get('preview');
-
-      // A/B Testing: vérifier si le visiteur doit voir la variante B
-      let useVariantB = false;
-      let abVariantId: string | null = null;
-
-      if (previewVariant === 'julia') {
-        // Mode preview: charger directement la variante Julia
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const { data: variant } = await (supabase as any)
-          .from('landing_page_variants')
-          .select('id')
-          .eq('name', 'julia')
-          .single();
-        if (variant) {
-          useVariantB = true;
-          abVariantId = variant.id;
-        }
-      } else {
-        try {
-          const abRes = await fetch('/api/ab-test');
-          if (abRes.ok) {
-            const abData = await abRes.json();
-            // Stocker le variant_id pour le tracking de conversion
-            if (abData.variant_id) {
-              sessionStorage.setItem('ab_variant_id', abData.variant_id);
-              sessionStorage.setItem('ab_variant_name', abData.variant || 'default');
-            }
-            if (abData.variant === 'julia' && abData.variant_id) {
-              useVariantB = true;
-              abVariantId = abData.variant_id;
-            }
-          }
-        } catch {
-          // Pas de A/B test, utiliser la landing par défaut
-        }
-      }
-
-      if (useVariantB && abVariantId) {
-        // Charger les sections de la variante Julia
-        const { data: variantData } = await supabase
-          .from('landing_variant_sections')
-          .select('*')
-          .eq('variant_id', abVariantId)
-          .order('position');
-
-        if (variantData && variantData.length > 0) {
-          const rows = variantData as unknown as LandingSectionDefault[];
-          const merged: Record<string, { content: SectionContent; styles: SectionStyles; is_visible: boolean }> = {};
-          const posMap: Record<string, number> = {};
-          for (const row of rows) {
-            merged[row.section_key] = { content: sanitizeContent(row.content), styles: row.styles, is_visible: row.is_visible };
-            posMap[row.section_key] = row.position;
-          }
-          setSections(merged);
-          setSectionPositions(posMap);
-          return;
-        }
-      }
-
-      // Landing par défaut (variante A)
       const { data } = await supabase.from("landing_sections").select("*").order("position");
       if (data && data.length > 0) {
         const rows = data as unknown as LandingSectionDefault[];

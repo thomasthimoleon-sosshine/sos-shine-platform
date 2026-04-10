@@ -8,18 +8,14 @@ const DEVICES = [
   { key: 'desktop', label: 'Ordinateur', width: 1280, icon: <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25A2.25 2.25 0 015.25 3h13.5A2.25 2.25 0 0121 5.25z" /></svg> },
 ]
 
-interface LandingPreviewProps {
-  variant?: 'julia' | 'default'
-}
-
-export default function LandingPreview({ variant }: LandingPreviewProps) {
+export default function LandingPreview() {
   const [device, setDevice] = useState('desktop')
   const [open, setOpen] = useState(false)
   const [iframeKey, setIframeKey] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
 
   const selected = DEVICES.find(d => d.key === device) || DEVICES[2]
-  const previewUrl = variant === 'julia' ? '/?preview=julia' : '/'
+  const previewUrl = '/'
 
   // Refresh iframe
   function refresh() {

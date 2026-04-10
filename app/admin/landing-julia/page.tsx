@@ -2,40 +2,44 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import type { LandingSectionRow, SectionContent } from '@/lib/landing-defaults'
+import type { SectionContent } from '@/lib/landing-defaults'
 import { LANDING_DEFAULTS } from '@/lib/landing-defaults'
 import FileUpload from '@/components/FileUpload'
 
-/* ─────────────────────────────────────────────
-   Sections que Julia peut modifier
-───────────────────────────────────────────── */
-const JULIA_SECTION_KEYS = [
-  'hero',            // Vidéo + boutons CTA uniquement
-  'ticker_1',        // Bandeau défilant 1
-  'ticker_2',        // Bandeau défilant 2
-  'stats',           // Chiffres clés
-  'cta_dark',        // CTA émotionnel
-  'footer',          // Pied de page
-  'legal_mentions',  // Mentions légales
-  'legal_cgv',       // CGV
-  'legal_privacy',   // Confidentialité
-  'legal_contact',   // Contact
-] as const
+const VARIANT = 'julia'
 
-const SECTION_LABELS: Record<string, { label: string; icon: string; description: string }> = {
-  hero: { label: 'Vidéo & Boutons CTA', icon: '🎬', description: 'La vidéo d\'introduction et les boutons d\'appel à l\'action' },
-  ticker_1: { label: 'Bandeau défilant 1', icon: '📜', description: 'Premier bandeau de mots-clés qui défile' },
-  ticker_2: { label: 'Bandeau défilant 2', icon: '📜', description: 'Second bandeau de mots-clés qui défile' },
-  stats: { label: 'Chiffres clés', icon: '📊', description: 'Les statistiques affichées (social proof)' },
-  cta_dark: { label: 'CTA émotionnel', icon: '💫', description: 'Le bloc d\'appel à l\'action final' },
-  footer: { label: 'Pied de page', icon: '🔗', description: 'Logo, liens, réseaux sociaux, copyright' },
-  legal_mentions: { label: 'Mentions légales', icon: '📄', description: 'Page des mentions légales' },
-  legal_cgv: { label: 'CGV', icon: '📄', description: 'Conditions Générales de Vente' },
-  legal_privacy: { label: 'Confidentialité', icon: '🔒', description: 'Politique de confidentialité' },
-  legal_contact: { label: 'Contact', icon: '📧', description: 'Page de contact' },
+/* ── Toutes les section_keys éditables (landing visible) ── */
+const ALL_SECTION_KEYS = LANDING_DEFAULTS
+  .filter((d) => !d.section_key.startsWith('legal_') && d.section_key !== '_global')
+  .map((d) => d.section_key)
+
+const SECTION_LABELS: Record<string, { label: string; icon: string }> = {
+  hero: { label: 'Hero (en-tête)', icon: '🎬' },
+  probleme: { label: 'La Vérité', icon: '💡' },
+  histoire: { label: 'Julia & le Livre', icon: '📖' },
+  temoignages: { label: 'Témoignages', icon: '💬' },
+  encyclopedie: { label: 'Encyclopédie', icon: '📚' },
+  steps: { label: 'Le Parcours', icon: '🚀' },
+  communaute: { label: 'Communauté', icon: '🤝' },
+  produit: { label: 'Dès Jour 1', icon: '🎁' },
+  manifeste: { label: 'Ce que nous ne sommes pas', icon: '🚫' },
+  pricing: { label: 'Tarification', icon: '💰' },
+  pour_qui: { label: 'Pour qui', icon: '🎯' },
+  cta_dark: { label: 'CTA Final', icon: '💫' },
+  footer: { label: 'Footer', icon: '🔗' },
+  ticker_1: { label: 'Bandeau 1', icon: '📜' },
+  ticker_2: { label: 'Bandeau 2', icon: '📜' },
+  stats: { label: 'Chiffres clés', icon: '📊' },
+  signature_cta: { label: 'CTA Signature', icon: '✨' },
+  principe: { label: 'Le Principe', icon: '⚡' },
+  fondateurs: { label: 'Fondateurs', icon: '👥' },
+  transformation: { label: 'Transformation', icon: '🔄' },
+  garantie: { label: 'Garantie', icon: '🛡️' },
+  cta_light: { label: 'CTA Clair', icon: '☀️' },
+  faq: { label: 'FAQ', icon: '❓' },
 }
 
-/* ── Styles réutilisables ── */
+/* ── Styles ── */
 const inputStyle: React.CSSProperties = {
   background: 'rgba(255,255,255,0.03)',
   border: '1px solid var(--dark-border)',
@@ -49,40 +53,20 @@ function TextField({ label, value, onChange, placeholder = '', type = 'text' }: 
   return (
     <div>
       <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>{label}</label>
-      <input type={type} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder}
-        className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputStyle} />
+      <input type={type} value={value} onChange={(e) => onChange(e.target.value)}
+        className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputStyle} placeholder={placeholder} />
     </div>
   )
 }
 
-function TextAreaField({ label, value, onChange, rows = 4, placeholder = '' }: {
+function TextAreaField({ label, value, onChange, rows = 3, placeholder = '' }: {
   label: string; value: string; onChange: (v: string) => void; rows?: number; placeholder?: string
 }) {
   return (
     <div>
       <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>{label}</label>
-      <textarea value={value} onChange={(e) => onChange(e.target.value)} rows={rows} placeholder={placeholder}
-        className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-y" style={inputStyle} />
-    </div>
-  )
-}
-
-function HtmlEditor({ label, value, onChange }: {
-  label: string; value: string; onChange: (v: string) => void
-}) {
-  return (
-    <div>
-      <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>{label}</label>
-      <textarea value={value} onChange={(e) => onChange(e.target.value)} rows={14}
-        className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-y font-mono" style={inputStyle}
-        placeholder="<h2>Titre</h2>\n<p>Votre contenu ici...</p>" />
-      {value && (
-        <div className="mt-3 rounded-lg p-4" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
-          <p className="text-[10px] font-semibold uppercase tracking-wider mb-2" style={{ color: 'var(--text-muted)' }}>Aperçu</p>
-          <div className="prose prose-invert prose-sm max-w-none" style={{ color: 'var(--text-secondary)' }}
-            dangerouslySetInnerHTML={{ __html: value }} />
-        </div>
-      )}
+      <textarea value={value} onChange={(e) => onChange(e.target.value)}
+        rows={rows} className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-y" style={inputStyle} placeholder={placeholder} />
     </div>
   )
 }
@@ -95,7 +79,7 @@ function ToggleField({ label, checked, onChange }: {
       <label className="text-sm" style={{ color: 'var(--text-secondary)' }}>{label}</label>
       <button type="button" onClick={() => onChange(!checked)}
         className="w-10 h-5 rounded-full relative transition-colors cursor-pointer"
-        style={{ background: checked ? '#74C0FC' : 'rgba(255,255,255,0.1)' }}>
+        style={{ background: checked ? '#A78BFA' : 'rgba(255,255,255,0.1)' }}>
         <span className="absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all"
           style={{ left: checked ? '22px' : '2px' }} />
       </button>
@@ -111,236 +95,130 @@ function SectionDivider({ title }: { title: string }) {
   )
 }
 
-/* ─────────────────────────────────────────────
-   Éditeurs dédiés par section
-───────────────────────────────────────────── */
-
-function HeroEditor({ content, onChange }: { content: SectionContent; onChange: (field: string, value: unknown) => void }) {
-  const buttons = (content.buttons || []) as { label: string; href: string; variant: string }[]
-
-  function updateButton(idx: number, field: string, value: string) {
-    const updated = [...buttons]
-    updated[idx] = { ...updated[idx], [field]: value }
-    onChange('buttons', updated)
-  }
-
-  function addButton() {
-    onChange('buttons', [...buttons, { label: 'Nouveau bouton', href: '/signup', variant: 'outline' }])
-  }
-
-  function removeButton(idx: number) {
-    onChange('buttons', buttons.filter((_, i) => i !== idx))
-  }
+/* ── Éditeur générique par section ── */
+function GenericSectionEditor({ content, sectionKey, onChange }: {
+  content: SectionContent; sectionKey: string; onChange: (field: string, value: unknown) => void
+}) {
+  // Rendu adaptatif : itère sur les champs du contenu
+  const entries = Object.entries(content)
 
   return (
     <div className="space-y-4">
-      <SectionDivider title="Vidéo" />
-      <FileUpload
-        label="URL de la vidéo"
-        accept="video/*"
-        folder="landing"
-        currentUrl={content.video_url || null}
-        onUploaded={(url) => onChange('video_url', url)}
-        onRemoved={() => onChange('video_url', '')}
-      />
-      <TextField label="Texte sous la vidéo" value={content.video_label || ''} onChange={(v) => onChange('video_label', v)} placeholder="Ex: Découvrir SOS Shine en 2 minutes" />
+      {entries.map(([field, value]) => {
+        if (field === 'buttons' || field === 'items' || field === 'plans' || field === 'steps'
+            || field === 'blocks' || field === 'links' || field === 'socials'
+            || field === 'team_members' || field === 'members' || field === 'trust_items'
+            || field === 'symptoms' || field === 'positive' || field === 'negative'
+            || field === 'questions') {
+          // Arrays — text list editor
+          if (Array.isArray(value)) {
+            if (value.length === 0) return null
+            if (typeof value[0] === 'string') {
+              return (
+                <div key={field}>
+                  <TextAreaField
+                    label={field.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())}
+                    value={value.join('\n')}
+                    rows={Math.min(value.length + 2, 10)}
+                    onChange={(v) => onChange(field, v.split('\n').filter((l: string) => l.trim() !== ''))}
+                  />
+                </div>
+              )
+            }
+            // Complex array (objects) — JSON editor
+            return (
+              <div key={field}>
+                <SectionDivider title={field.replace(/_/g, ' ')} />
+                {value.map((item: Record<string, unknown>, i: number) => (
+                  <div key={i} className="rounded-lg p-4 mb-2 space-y-3" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs font-semibold" style={{ color: 'var(--text-muted)' }}>{field} #{i + 1}</p>
+                      <button type="button" onClick={() => {
+                        const arr = [...value]
+                        arr.splice(i, 1)
+                        onChange(field, arr)
+                      }} className="text-xs px-2 py-1 rounded cursor-pointer" style={{ color: '#FF6B6B' }}>Supprimer</button>
+                    </div>
+                    {Object.entries(item).map(([k, v]) => {
+                      if (typeof v === 'string') {
+                        const isLong = v.length > 80
+                        return isLong ? (
+                          <TextAreaField key={k} label={k} value={v} onChange={(val) => {
+                            const arr = [...value]; arr[i] = { ...arr[i], [k]: val }; onChange(field, arr)
+                          }} />
+                        ) : (
+                          <TextField key={k} label={k} value={v} onChange={(val) => {
+                            const arr = [...value]; arr[i] = { ...arr[i], [k]: val }; onChange(field, arr)
+                          }} />
+                        )
+                      }
+                      if (typeof v === 'boolean') {
+                        return (
+                          <ToggleField key={k} label={k} checked={v} onChange={(val) => {
+                            const arr = [...value]; arr[i] = { ...arr[i], [k]: val }; onChange(field, arr)
+                          }} />
+                        )
+                      }
+                      if (Array.isArray(v) && v.every((x) => typeof x === 'string')) {
+                        return (
+                          <TextAreaField key={k} label={k} value={v.join('\n')} rows={3} onChange={(val) => {
+                            const arr = [...value]; arr[i] = { ...arr[i], [k]: val.split('\n').filter((l: string) => l.trim()) }; onChange(field, arr)
+                          }} />
+                        )
+                      }
+                      return null
+                    })}
+                  </div>
+                ))}
+                <button type="button" onClick={() => {
+                  const template: Record<string, unknown> = {}
+                  if (value.length > 0) {
+                    for (const k of Object.keys(value[0])) {
+                      const sample = value[0][k]
+                      template[k] = typeof sample === 'string' ? '' : typeof sample === 'boolean' ? false : Array.isArray(sample) ? [] : ''
+                    }
+                  }
+                  onChange(field, [...value, template])
+                }}
+                  className="text-sm px-4 py-2 rounded-lg cursor-pointer w-full" style={{ color: '#A78BFA', border: '1px dashed #A78BFA' }}>
+                  + Ajouter
+                </button>
+              </div>
+            )
+          }
+          return null
+        }
 
-      <SectionDivider title="Boutons CTA" />
-      <TextField label="Bouton principal — Texte" value={content.cta_primary_label || ''} onChange={(v) => onChange('cta_primary_label', v)} />
-      <TextField label="Bouton principal — Lien" value={content.cta_primary_href || ''} onChange={(v) => onChange('cta_primary_href', v)} />
-      <TextField label="Sous-texte CTA" value={content.cta_primary_subtext || ''} onChange={(v) => onChange('cta_primary_subtext', v)} />
-      <TextField label="Bouton secondaire — Texte" value={content.cta_secondary_label || ''} onChange={(v) => onChange('cta_secondary_label', v)} />
-      <TextField label="Bouton secondaire — Lien" value={content.cta_secondary_href || ''} onChange={(v) => onChange('cta_secondary_href', v)} />
+        // String fields
+        if (typeof value === 'string') {
+          if (field.includes('url') || field.includes('image') || field.includes('video')) {
+            const isVideo = field.includes('video')
+            return (
+              <FileUpload key={field} label={field.replace(/_/g, ' ')} accept={isVideo ? 'video/*' : 'image/*'}
+                folder="landing" currentUrl={value || null}
+                onUploaded={(url) => onChange(field, url)} onRemoved={() => onChange(field, '')} />
+            )
+          }
+          const isLong = value.length > 100 || field.includes('description') || field.includes('paragraph') || field.includes('text') || field.includes('closing') || field.includes('disclaimer')
+          return isLong ? (
+            <TextAreaField key={`${sectionKey}-${field}`} label={field.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())} value={value} rows={4} onChange={(v) => onChange(field, v)} />
+          ) : (
+            <TextField key={`${sectionKey}-${field}`} label={field.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())} value={value} onChange={(v) => onChange(field, v)} />
+          )
+        }
 
-      <SectionDivider title="Boutons personnalisés" />
-      {buttons.map((btn, i) => (
-        <div key={i} className="rounded-lg p-4 space-y-3" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
-          <div className="flex items-center justify-between">
-            <p className="text-xs font-semibold" style={{ color: 'var(--text-muted)' }}>Bouton {i + 1}</p>
-            <button type="button" onClick={() => removeButton(i)} className="text-xs px-2 py-1 rounded cursor-pointer" style={{ color: '#FF6B6B' }}>Supprimer</button>
-          </div>
-          <TextField label="Texte" value={btn.label} onChange={(v) => updateButton(i, 'label', v)} />
-          <TextField label="Lien" value={btn.href} onChange={(v) => updateButton(i, 'href', v)} />
-          <div>
-            <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>Style</label>
-            <select value={btn.variant} onChange={(e) => updateButton(i, 'variant', e.target.value)}
-              className="w-full rounded-lg px-3 py-2 text-sm outline-none cursor-pointer" style={inputStyle}>
-              <option value="primary" style={{ background: '#362038', color: '#F5EDF0' }}>Principal (doré)</option>
-              <option value="outline" style={{ background: '#362038', color: '#F5EDF0' }}>Contour</option>
-            </select>
-          </div>
-        </div>
-      ))}
-      <button type="button" onClick={addButton}
-        className="text-sm px-4 py-2 rounded-lg cursor-pointer w-full" style={{ color: '#A78BFA', border: '1px dashed #A78BFA' }}>
-        + Ajouter un bouton
-      </button>
-    </div>
-  )
-}
+        // Boolean
+        if (typeof value === 'boolean') {
+          return <ToggleField key={field} label={field.replace(/_/g, ' ')} checked={value} onChange={(v) => onChange(field, v)} />
+        }
 
-function TickerEditor({ content, onChange, tickerNumber }: { content: SectionContent; onChange: (field: string, value: unknown) => void; tickerNumber: number }) {
-  const items = (content.items || []) as string[]
-  return (
-    <div className="space-y-4">
-      <TextAreaField
-        label={`Mots du bandeau ${tickerNumber} (un par ligne)`}
-        value={items.join('\n')}
-        onChange={(v) => onChange('items', v.split('\n').filter((s: string) => s.trim() !== ''))}
-        rows={8}
-        placeholder="Abandon\nAnxiété\nBurn-out\nConfiance en soi\n..."
-      />
-      <TextField label="Vitesse de défilement (px/s)" value={String(content.speed || 35)} type="number"
-        onChange={(v) => onChange('speed', parseInt(v) || 35)} />
-    </div>
-  )
-}
+        // Number
+        if (typeof value === 'number') {
+          return <TextField key={field} label={field.replace(/_/g, ' ')} value={String(value)} type="number" onChange={(v) => onChange(field, parseFloat(v) || 0)} />
+        }
 
-function StatsEditor({ content, onChange }: { content: SectionContent; onChange: (field: string, value: unknown) => void }) {
-  const items = (content.items || []) as { value: string; label: string }[]
-
-  function updateItem(idx: number, field: string, value: string) {
-    const updated = [...items]
-    updated[idx] = { ...updated[idx], [field]: value }
-    onChange('items', updated)
-  }
-
-  function addItem() {
-    onChange('items', [...items, { value: '', label: '' }])
-  }
-
-  function removeItem(idx: number) {
-    onChange('items', items.filter((_, i) => i !== idx))
-  }
-
-  return (
-    <div className="space-y-4">
-      {items.map((item, i) => (
-        <div key={i} className="rounded-lg p-4 space-y-3" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
-          <div className="flex items-center justify-between">
-            <p className="text-xs font-semibold" style={{ color: 'var(--text-muted)' }}>Chiffre {i + 1}</p>
-            <button type="button" onClick={() => removeItem(i)} className="text-xs px-2 py-1 rounded cursor-pointer" style={{ color: '#FF6B6B' }}>Supprimer</button>
-          </div>
-          <TextField label="Valeur (ex: 200+, 24/7)" value={item.value} onChange={(v) => updateItem(i, 'value', v)} />
-          <TextField label="Label (ex: PROTOCOLES)" value={item.label} onChange={(v) => updateItem(i, 'label', v)} />
-        </div>
-      ))}
-      <button type="button" onClick={addItem}
-        className="text-sm px-4 py-2 rounded-lg cursor-pointer w-full" style={{ color: '#A78BFA', border: '1px dashed #A78BFA' }}>
-        + Ajouter un chiffre
-      </button>
-    </div>
-  )
-}
-
-function CtaDarkEditor({ content, onChange }: { content: SectionContent; onChange: (field: string, value: unknown) => void }) {
-  return (
-    <div className="space-y-4">
-      <TextField label="Titre" value={content.title || ''} onChange={(v) => onChange('title', v)} placeholder="Rejoignez-nous." />
-      <TextAreaField label="Sous-titre" value={content.subtitle || ''} onChange={(v) => onChange('subtitle', v)}
-        placeholder="Ne soyez plus jamais seul(e) face à vos tempêtes." rows={2} />
-      <FileUpload
-        label="Image de fond (optionnel)"
-        accept="image/*"
-        folder="landing"
-        currentUrl={content.image_url || null}
-        onUploaded={(url) => onChange('image_url', url)}
-        onRemoved={() => onChange('image_url', '')}
-      />
-      <SectionDivider title="Bouton" />
-      <TextField label="Texte du bouton" value={content.button_label || ''} onChange={(v) => onChange('button_label', v)} placeholder="Rejoindre SOS Shine" />
-      <TextField label="Lien du bouton" value={content.button_href || ''} onChange={(v) => onChange('button_href', v)} placeholder="/signup" />
-      <TextField label="Ligne de confiance" value={content.trust_line || ''} onChange={(v) => onChange('trust_line', v)}
-        placeholder="9,90€/mois · Sans engagement · 7 jours gratuits · Tout inclus" />
-    </div>
-  )
-}
-
-function FooterEditor({ content, onChange }: { content: SectionContent; onChange: (field: string, value: unknown) => void }) {
-  const links = (content.links || []) as { label: string; href: string }[]
-
-  function updateLink(idx: number, field: string, value: string) {
-    const updated = [...links]
-    updated[idx] = { ...updated[idx], [field]: value }
-    onChange('links', updated)
-  }
-
-  function addLink() {
-    onChange('links', [...links, { label: '', href: '' }])
-  }
-
-  function removeLink(idx: number) {
-    onChange('links', links.filter((_, i) => i !== idx))
-  }
-
-  return (
-    <div className="space-y-4">
-      <SectionDivider title="Informations" />
-      <TextField label="Nom du site" value={content.name || ''} onChange={(v) => onChange('name', v)} placeholder="SOS Shine®" />
-      <TextField label="Année copyright" value={content.copyright_year || ''} onChange={(v) => onChange('copyright_year', v)} placeholder="2026" />
-      <TextField label="Suffixe copyright" value={content.copyright_suffix || ''} onChange={(v) => onChange('copyright_suffix', v)} placeholder=" — Tous droits réservés" />
-
-      <SectionDivider title="Liens du footer" />
-      {links.map((link, i) => (
-        <div key={i} className="rounded-lg p-3 space-y-2" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
-          <div className="flex items-center justify-between">
-            <p className="text-xs font-semibold" style={{ color: 'var(--text-muted)' }}>Lien {i + 1}</p>
-            <button type="button" onClick={() => removeLink(i)} className="text-xs px-2 py-1 rounded cursor-pointer" style={{ color: '#FF6B6B' }}>Supprimer</button>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            <TextField label="Texte" value={link.label} onChange={(v) => updateLink(i, 'label', v)} />
-            <TextField label="Lien" value={link.href} onChange={(v) => updateLink(i, 'href', v)} />
-          </div>
-        </div>
-      ))}
-      <button type="button" onClick={addLink}
-        className="text-sm px-4 py-2 rounded-lg cursor-pointer w-full" style={{ color: '#A78BFA', border: '1px dashed #A78BFA' }}>
-        + Ajouter un lien
-      </button>
-
-      <SectionDivider title="Réseaux sociaux" />
-      <TextField label="YouTube" value={content.social_youtube || ''} onChange={(v) => onChange('social_youtube', v)} placeholder="https://www.youtube.com/..." />
-      <TextField label="Instagram" value={content.social_instagram || ''} onChange={(v) => onChange('social_instagram', v)} placeholder="https://www.instagram.com/..." />
-      <TextField label="Facebook" value={content.social_facebook || ''} onChange={(v) => onChange('social_facebook', v)} placeholder="https://www.facebook.com/..." />
-    </div>
-  )
-}
-
-function LegalMentionsEditor({ content, onChange }: { content: SectionContent; onChange: (field: string, value: unknown) => void }) {
-  return (
-    <div className="space-y-4">
-      <TextField label="Titre de la page" value={content.title || ''} onChange={(v) => onChange('title', v)} placeholder="Mentions légales" />
-      <HtmlEditor label="Contenu HTML" value={content.html_content || ''} onChange={(v) => onChange('html_content', v)} />
-    </div>
-  )
-}
-
-function LegalCgvEditor({ content, onChange }: { content: SectionContent; onChange: (field: string, value: unknown) => void }) {
-  return (
-    <div className="space-y-4">
-      <TextField label="Titre de la page" value={content.title || ''} onChange={(v) => onChange('title', v)} placeholder="Conditions Générales de Vente" />
-      <HtmlEditor label="Contenu HTML" value={content.html_content || ''} onChange={(v) => onChange('html_content', v)} />
-    </div>
-  )
-}
-
-function LegalPrivacyEditor({ content, onChange }: { content: SectionContent; onChange: (field: string, value: unknown) => void }) {
-  return (
-    <div className="space-y-4">
-      <TextField label="Titre de la page" value={content.title || ''} onChange={(v) => onChange('title', v)} placeholder="Politique de confidentialité" />
-      <HtmlEditor label="Contenu HTML" value={content.html_content || ''} onChange={(v) => onChange('html_content', v)} />
-    </div>
-  )
-}
-
-function LegalContactEditor({ content, onChange }: { content: SectionContent; onChange: (field: string, value: unknown) => void }) {
-  return (
-    <div className="space-y-4">
-      <TextField label="Titre de la page" value={content.title || ''} onChange={(v) => onChange('title', v)} placeholder="Contact" />
-      <TextField label="Email" value={content.email || ''} onChange={(v) => onChange('email', v)} placeholder="julialaureau@sosshine.com" />
-      <TextField label="Téléphone" value={content.phone || ''} onChange={(v) => onChange('phone', v)} placeholder="+33 ..." />
-      <TextField label="Adresse" value={content.address || ''} onChange={(v) => onChange('address', v)} />
-      <HtmlEditor label="Contenu HTML additionnel" value={content.html_content || ''} onChange={(v) => onChange('html_content', v)} />
+        return null
+      })}
     </div>
   )
 }
@@ -349,21 +227,40 @@ function LegalContactEditor({ content, onChange }: { content: SectionContent; on
    Composant principal
 ───────────────────────────────────────────── */
 export default function LandingJuliaPage() {
-  const [sections, setSections] = useState<Record<string, { content: SectionContent; is_visible: boolean }>>({})
+  const [sections, setSections] = useState<Record<string, { content: SectionContent; is_visible: boolean; position: number }>>({})
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [selectedSection, setSelectedSection] = useState<string>('hero')
 
-  /* ── Chargement des sections depuis landing_sections ── */
+  /* ── Chargement ── */
   const loadSections = useCallback(async () => {
     try {
       const supabase = createClient()
-      const { data, error: fetchError } = await supabase
+
+      // Try with variant filter first, fallback without if column doesn't exist yet
+      let data = null
+      let fetchError = null
+
+      const res = await supabase
         .from('landing_sections')
-        .select('section_key, content, is_visible')
-        .in('section_key', JULIA_SECTION_KEYS as unknown as string[])
+        .select('section_key, content, is_visible, position')
+        .eq('variant', VARIANT)
+        .order('position')
+
+      if (res.error && res.error.message.includes('variant')) {
+        // Column doesn't exist yet — load without variant filter
+        const fallback = await supabase
+          .from('landing_sections')
+          .select('section_key, content, is_visible, position')
+          .order('position')
+        data = fallback.data
+        fetchError = fallback.error
+      } else {
+        data = res.data
+        fetchError = res.error
+      }
 
       if (fetchError) {
         setError(`Erreur de chargement: ${fetchError.message}`)
@@ -371,45 +268,39 @@ export default function LandingJuliaPage() {
         return
       }
 
-      const map: Record<string, { content: SectionContent; is_visible: boolean }> = {}
+      const map: Record<string, { content: SectionContent; is_visible: boolean; position: number }> = {}
 
-      // Initialiser avec les defaults
-      for (const key of JULIA_SECTION_KEYS) {
-        const def = LANDING_DEFAULTS.find((d) => d.section_key === key)
-        if (def) {
-          map[key] = { content: { ...def.content }, is_visible: def.is_visible }
-        }
+      // Defaults
+      for (const def of LANDING_DEFAULTS) {
+        if (def.section_key.startsWith('legal_') || def.section_key === '_global') continue
+        map[def.section_key] = { content: { ...def.content }, is_visible: def.is_visible, position: def.position }
       }
 
-      // Écraser avec les données de la BDD
+      // Override from DB
       if (data) {
         for (const row of data) {
-          if (JULIA_SECTION_KEYS.includes(row.section_key as typeof JULIA_SECTION_KEYS[number])) {
-            map[row.section_key] = {
-              content: row.content as SectionContent,
-              is_visible: row.is_visible as boolean,
-            }
+          if (row.section_key.startsWith('legal_') || row.section_key === '_global') continue
+          map[row.section_key] = {
+            content: row.content as SectionContent,
+            is_visible: row.is_visible as boolean,
+            position: row.position as number,
           }
         }
       }
 
       setSections(map)
     } catch {
-      setError('Erreur de connexion à la base de données')
+      setError('Erreur de connexion')
     }
     setLoading(false)
   }, [])
 
   useEffect(() => { loadSections() }, [loadSections])
 
-  /* ── Mise à jour du contenu ── */
   function updateContent(sectionKey: string, field: string, value: unknown) {
     setSections((prev) => ({
       ...prev,
-      [sectionKey]: {
-        ...prev[sectionKey],
-        content: { ...prev[sectionKey].content, [field]: value },
-      },
+      [sectionKey]: { ...prev[sectionKey], content: { ...prev[sectionKey].content, [field]: value } },
     }))
     setSaved(false)
   }
@@ -417,11 +308,26 @@ export default function LandingJuliaPage() {
   function toggleVisibility(sectionKey: string) {
     setSections((prev) => ({
       ...prev,
-      [sectionKey]: {
-        ...prev[sectionKey],
-        is_visible: !prev[sectionKey].is_visible,
-      },
+      [sectionKey]: { ...prev[sectionKey], is_visible: !prev[sectionKey].is_visible },
     }))
+    setSaved(false)
+  }
+
+  function moveSection(key: string, direction: -1 | 1) {
+    const keys = sortedKeys
+    const idx = keys.indexOf(key)
+    const targetIdx = idx + direction
+    if (targetIdx < 0 || targetIdx >= keys.length) return
+
+    setSections((prev) => {
+      const updated = { ...prev }
+      const currentPos = updated[key].position
+      const targetKey = keys[targetIdx]
+      const targetPos = updated[targetKey].position
+      updated[key] = { ...updated[key], position: targetPos }
+      updated[targetKey] = { ...updated[targetKey], position: currentPos }
+      return updated
+    })
     setSaved(false)
   }
 
@@ -434,52 +340,41 @@ export default function LandingJuliaPage() {
       const { data: { user } } = await supabase.auth.getUser()
       const now = new Date().toISOString()
 
-      for (const key of allSectionKeys) {
+      for (const key of Object.keys(sections)) {
         const sec = sections[key]
         if (!sec) continue
-
         const def = LANDING_DEFAULTS.find((d) => d.section_key === key)
 
-        // Pour hero, on ne sauvegarde que les champs vidéo/CTA, on merge avec le reste
-        let contentToSave = sec.content
-        if (key === 'hero') {
-          // Charger le contenu hero actuel complet pour ne pas écraser les autres champs
-          const { data: currentHero } = await supabase
-            .from('landing_sections')
-            .select('content')
-            .eq('section_key', 'hero')
-            .maybeSingle()
-
-          const baseContent = currentHero?.content || def?.content || {}
-          contentToSave = {
-            ...baseContent,
-            // Écraser uniquement les champs vidéo et CTA
-            video_url: sec.content.video_url,
-            video_label: sec.content.video_label,
-            cta_primary_label: sec.content.cta_primary_label,
-            cta_primary_href: sec.content.cta_primary_href,
-            cta_primary_subtext: sec.content.cta_primary_subtext,
-            cta_secondary_label: sec.content.cta_secondary_label,
-            cta_secondary_href: sec.content.cta_secondary_href,
-            buttons: sec.content.buttons,
-          }
+        // Try with variant column, fallback without if migration not run yet
+        const row = {
+          section_key: key,
+          variant: VARIANT,
+          label: def?.label || SECTION_LABELS[key]?.label || key,
+          position: sec.position,
+          is_visible: sec.is_visible,
+          content: sec.content,
+          styles: def?.styles || {},
+          updated_by: user?.id || null,
+          updated_at: now,
         }
 
         const { error: upsertError } = await supabase
           .from('landing_sections')
-          .upsert({
-            section_key: key,
-            label: def?.label || SECTION_LABELS[key]?.label || key,
-            position: def?.position ?? 0,
-            is_visible: sec.is_visible,
-            content: contentToSave,
-            styles: def?.styles || {},
-            updated_by: user?.id || null,
-            updated_at: now,
-          }, { onConflict: 'section_key' })
+          .upsert(row, { onConflict: 'section_key,variant' })
 
-        if (upsertError) {
-          setError(`Erreur sur ${SECTION_LABELS[key]?.label || key}: ${upsertError.message}`)
+        if (upsertError && upsertError.message.includes('variant')) {
+          // Column doesn't exist — save without variant
+          const { variant: _v, ...rowNoVariant } = row
+          const { error: fallbackErr } = await supabase
+            .from('landing_sections')
+            .upsert(rowNoVariant, { onConflict: 'section_key' })
+          if (fallbackErr) {
+            setError(`Erreur ${key}: ${fallbackErr.message}`)
+            setSaving(false)
+            return
+          }
+        } else if (upsertError) {
+          setError(`Erreur ${key}: ${upsertError.message}`)
           setSaving(false)
           return
         }
@@ -494,59 +389,37 @@ export default function LandingJuliaPage() {
     }
   }
 
-  /* ── Rendu de l'éditeur de la section sélectionnée ── */
-  function renderEditor(key: string) {
-    const sec = sections[key]
-    if (!sec) return null
-
-    const onChange = (field: string, value: unknown) => updateContent(key, field, value)
-
-    switch (key) {
-      case 'hero':
-        return <HeroEditor content={sec.content} onChange={onChange} />
-      case 'ticker_1':
-        return <TickerEditor content={sec.content} onChange={onChange} tickerNumber={1} />
-      case 'ticker_2':
-        return <TickerEditor content={sec.content} onChange={onChange} tickerNumber={2} />
-      case 'stats':
-        return <StatsEditor content={sec.content} onChange={onChange} />
-      case 'cta_dark':
-        return <CtaDarkEditor content={sec.content} onChange={onChange} />
-      case 'footer':
-        return <FooterEditor content={sec.content} onChange={onChange} />
-      case 'legal_mentions':
-        return <LegalMentionsEditor content={sec.content} onChange={onChange} />
-      case 'legal_cgv':
-        return <LegalCgvEditor content={sec.content} onChange={onChange} />
-      case 'legal_privacy':
-        return <LegalPrivacyEditor content={sec.content} onChange={onChange} />
-      case 'legal_contact':
-        return <LegalContactEditor content={sec.content} onChange={onChange} />
-      default:
-        return null
-    }
-  }
-
   /* ── Créer une nouvelle section ── */
   const [showNewSection, setShowNewSection] = useState(false)
   const [newSectionName, setNewSectionName] = useState('')
   const [newSectionType, setNewSectionType] = useState<'normal' | 'html'>('normal')
-  const [customKeys, setCustomKeys] = useState<string[]>([])
 
   function createSection() {
     if (!newSectionName.trim()) return
     const key = `custom_julia_${Date.now()}`
+    const maxPos = Math.max(...Object.values(sections).map((s) => s.position), 0) + 1
 
     const content: SectionContent = newSectionType === 'html'
-      ? { title: newSectionName.trim(), html_content: '<h2>Votre titre</h2>\n<p>Votre contenu ici...</p>', is_html: true }
-      : { title: newSectionName.trim(), subtitle: '', description: '', image_url: '', button_label: '', button_href: '', is_html: false }
+      ? {
+          title: newSectionName.trim(),
+          html_content: '<h2>Votre titre</h2>\n<p>Votre contenu ici...</p>',
+          is_html: true,
+        }
+      : {
+          title: newSectionName.trim(),
+          subtitle: '',
+          description: '',
+          image_url: '',
+          button_label: '',
+          button_href: '',
+          is_html: false,
+        }
 
     setSections((prev) => ({
       ...prev,
-      [key]: { content, is_visible: true },
+      [key]: { content, is_visible: true, position: maxPos },
     }))
-    SECTION_LABELS[key] = { label: newSectionName.trim(), icon: newSectionType === 'html' ? '🖥️' : '📄', description: 'Section personnalisée' }
-    setCustomKeys((prev) => [...prev, key])
+    SECTION_LABELS[key] = { label: newSectionName.trim(), icon: newSectionType === 'html' ? '🖥️' : '📄' }
     setSelectedSection(key)
     setNewSectionName('')
     setShowNewSection(false)
@@ -559,14 +432,16 @@ export default function LandingJuliaPage() {
       delete next[key]
       return next
     })
-    setCustomKeys((prev) => prev.filter((k) => k !== key))
-    if (selectedSection === key) setSelectedSection('hero')
+    if (selectedSection === key) {
+      setSelectedSection(sortedKeysRef.current[0] || 'hero')
+    }
     setSaved(false)
   }
 
-  const allSectionKeys = [...JULIA_SECTION_KEYS, ...customKeys]
+  const sortedKeys = Object.keys(sections)
+    .sort((a, b) => (sections[a]?.position ?? 99) - (sections[b]?.position ?? 99))
+  const sortedKeysRef = { current: sortedKeys }
 
-  /* ── Loading ── */
   if (loading) {
     return (
       <div className="flex justify-center py-20">
@@ -575,19 +450,23 @@ export default function LandingJuliaPage() {
     )
   }
 
-  /* ── Rendu principal ── */
   return (
-    <div className="max-w-4xl mx-auto space-y-4">
-      {/* En-tête sticky */}
+    <div className="max-w-5xl mx-auto space-y-4">
+      {/* Header */}
       <div className="flex items-center justify-between sticky top-0 z-20 py-4 -mx-4 px-4" style={{ background: 'var(--dark)' }}>
         <div>
           <h1 className="font-display text-3xl font-semibold" style={{ color: '#A78BFA' }}>Landing Page Julia</h1>
           <p className="mt-1 text-sm" style={{ color: 'var(--text-secondary)' }}>
-            Modifiez la vidéo, les CTAs, bandeaux, footer et pages légales
+            Version Julia — Toutes les sections sont modifiables et réorganisables
           </p>
         </div>
         <div className="flex items-center gap-3">
           {saved && <span className="text-sm font-medium" style={{ color: '#55EFC4' }}>Sauvegardé !</span>}
+          <a href="/?preview=julia" target="_blank" rel="noopener noreferrer"
+            className="px-5 py-3 rounded-xl text-sm font-semibold cursor-pointer"
+            style={{ border: '1px solid var(--dark-border)', color: 'var(--text-secondary)' }}>
+            Prévisualiser
+          </a>
           <button onClick={handleSave} disabled={saving}
             className="px-6 py-3 rounded-xl text-sm font-semibold cursor-pointer disabled:opacity-50"
             style={{ background: '#A78BFA', color: '#fff' }}>
@@ -596,7 +475,6 @@ export default function LandingJuliaPage() {
         </div>
       </div>
 
-      {/* Erreur */}
       {error && (
         <div className="rounded-xl px-4 py-3 text-sm"
           style={{ background: 'rgba(255,107,107,0.1)', border: '1px solid rgba(255,107,107,0.25)', color: '#FF6B6B' }}>
@@ -604,25 +482,35 @@ export default function LandingJuliaPage() {
         </div>
       )}
 
-      {/* Dialog nouvelle section */}
+      {/* ── Dialog nouvelle section ── */}
       {showNewSection && (
-        <div className="rounded-xl p-5 space-y-4" style={{ background: 'var(--dark-card)', border: '1px solid #A78BFA40' }}>
+        <div className="rounded-xl p-5 space-y-4"
+          style={{ background: 'var(--dark-card)', border: '1px solid #A78BFA40' }}>
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-sm" style={{ color: '#A78BFA' }}>Créer une nouvelle section</h3>
-            <button type="button" onClick={() => setShowNewSection(false)} className="text-xs px-2 py-1 rounded cursor-pointer" style={{ color: 'var(--text-muted)' }}>Annuler</button>
+            <button type="button" onClick={() => setShowNewSection(false)}
+              className="text-xs px-2 py-1 rounded cursor-pointer" style={{ color: 'var(--text-muted)' }}>Annuler</button>
           </div>
-          <TextField label="Nom de la section" value={newSectionName} onChange={setNewSectionName} placeholder="Ex: Mes Ressources" />
+          <TextField label="Nom de la section" value={newSectionName} onChange={setNewSectionName} placeholder="Ex: Nos Partenaires" />
           <div>
-            <label className="block text-xs font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>Type</label>
+            <label className="block text-xs font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>Type de section</label>
             <div className="flex gap-3">
-              <button type="button" onClick={() => setNewSectionType('normal')} className="flex-1 rounded-lg p-4 text-center cursor-pointer"
-                style={{ background: newSectionType === 'normal' ? 'rgba(167,139,250,0.1)' : 'rgba(255,255,255,0.02)', border: `1px solid ${newSectionType === 'normal' ? '#A78BFA' : 'var(--dark-border)'}` }}>
+              <button type="button" onClick={() => setNewSectionType('normal')}
+                className="flex-1 rounded-lg p-4 text-center cursor-pointer transition-colors"
+                style={{
+                  background: newSectionType === 'normal' ? 'rgba(116,192,252,0.1)' : 'rgba(255,255,255,0.02)',
+                  border: `1px solid ${newSectionType === 'normal' ? '#A78BFA' : 'var(--dark-border)'}`,
+                }}>
                 <span className="block text-2xl mb-2">📄</span>
                 <span className="block text-sm font-medium" style={{ color: newSectionType === 'normal' ? '#A78BFA' : 'var(--text-primary)' }}>Normal</span>
                 <span className="block text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Titre, texte, image, bouton</span>
               </button>
-              <button type="button" onClick={() => setNewSectionType('html')} className="flex-1 rounded-lg p-4 text-center cursor-pointer"
-                style={{ background: newSectionType === 'html' ? 'rgba(167,139,250,0.1)' : 'rgba(255,255,255,0.02)', border: `1px solid ${newSectionType === 'html' ? '#A78BFA' : 'var(--dark-border)'}` }}>
+              <button type="button" onClick={() => setNewSectionType('html')}
+                className="flex-1 rounded-lg p-4 text-center cursor-pointer transition-colors"
+                style={{
+                  background: newSectionType === 'html' ? 'rgba(116,192,252,0.1)' : 'rgba(255,255,255,0.02)',
+                  border: `1px solid ${newSectionType === 'html' ? '#A78BFA' : 'var(--dark-border)'}`,
+                }}>
                 <span className="block text-2xl mb-2">🖥️</span>
                 <span className="block text-sm font-medium" style={{ color: newSectionType === 'html' ? '#A78BFA' : 'var(--text-primary)' }}>HTML</span>
                 <span className="block text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Code HTML libre</span>
@@ -630,133 +518,159 @@ export default function LandingJuliaPage() {
             </div>
           </div>
           <button type="button" onClick={createSection} disabled={!newSectionName.trim()}
-            className="w-full py-3 rounded-xl text-sm font-semibold cursor-pointer disabled:opacity-30" style={{ background: '#A78BFA', color: '#fff' }}>
+            className="w-full py-3 rounded-xl text-sm font-semibold cursor-pointer disabled:opacity-30"
+            style={{ background: '#A78BFA', color: '#fff' }}>
             Créer la section
           </button>
         </div>
       )}
 
-      {/* Liste des sections + éditeur */}
-      <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-4">
-        {/* Sidebar — liste des sections */}
+      <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-4">
+        {/* Sidebar */}
         <div className="rounded-xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
           <div className="px-4 py-3 flex items-center justify-between" style={{ borderBottom: '1px solid var(--dark-border)' }}>
             <p className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
-              Sections modifiables
+              Sections ({sortedKeys.length})
             </p>
             <button type="button" onClick={() => setShowNewSection(true)}
-              className="text-xs px-2 py-1 rounded cursor-pointer" style={{ color: '#A78BFA', border: '1px solid rgba(167,139,250,0.3)' }}>
+              className="text-xs px-2 py-1 rounded cursor-pointer"
+              style={{ color: '#A78BFA', border: '1px solid rgba(116,192,252,0.3)' }}>
               + Nouvelle
             </button>
           </div>
-          <div>
-            {allSectionKeys.map((key) => {
-              const info = SECTION_LABELS[key]
+          <div className="max-h-[70vh] overflow-y-auto">
+            {sortedKeys.map((key, idx) => {
+              const info = SECTION_LABELS[key] || { label: key, icon: '📄' }
               const sec = sections[key]
               const isSelected = key === selectedSection
-              if (!info) return null
               return (
-                <button key={key} type="button"
-                  onClick={() => setSelectedSection(key)}
-                  className="w-full text-left px-4 py-3 flex items-center gap-3 cursor-pointer transition-colors"
+                <div key={key}
+                  className="flex items-center px-2 py-1.5 gap-1"
                   style={{
-                    background: isSelected ? 'rgba(167,139,250,0.1)' : 'transparent',
+                    background: isSelected ? 'rgba(116,192,252,0.1)' : 'transparent',
                     borderBottom: '1px solid var(--dark-border)',
                     borderLeft: isSelected ? '3px solid #A78BFA' : '3px solid transparent',
                   }}>
-                  <span className="text-lg flex-shrink-0">{info.icon}</span>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate" style={{ color: isSelected ? '#A78BFA' : 'var(--text-primary)' }}>
-                      {info.label}
-                    </p>
-                    <p className="text-[11px] truncate" style={{ color: 'var(--text-muted)' }}>
-                      {info.description}
-                    </p>
+                  {/* Move buttons */}
+                  <div className="flex flex-col gap-0.5">
+                    <button type="button" onClick={() => moveSection(key, -1)} disabled={idx === 0}
+                      className="p-0.5 rounded cursor-pointer disabled:opacity-20" style={{ color: 'var(--text-muted)' }}>
+                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+                      </svg>
+                    </button>
+                    <button type="button" onClick={() => moveSection(key, 1)} disabled={idx === sortedKeys.length - 1}
+                      className="p-0.5 rounded cursor-pointer disabled:opacity-20" style={{ color: 'var(--text-muted)' }}>
+                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                      </svg>
+                    </button>
                   </div>
-                  {sec && (
-                    <span className="w-2 h-2 rounded-full flex-shrink-0"
-                      style={{ background: sec.is_visible ? '#55EFC4' : 'rgba(255,255,255,0.15)' }}
-                      title={sec.is_visible ? 'Visible' : 'Masquée'} />
-                  )}
-                </button>
+
+                  {/* Section label */}
+                  <button type="button" onClick={() => setSelectedSection(key)}
+                    className="flex-1 text-left px-2 py-1.5 flex items-center gap-2 cursor-pointer">
+                    <span className="text-sm flex-shrink-0">{info.icon}</span>
+                    <span className="text-xs font-medium truncate" style={{ color: isSelected ? '#A78BFA' : 'var(--text-primary)' }}>
+                      {info.label}
+                    </span>
+                  </button>
+
+                  {/* Visibility toggle */}
+                  <button type="button" onClick={() => toggleVisibility(key)}
+                    className="p-1.5 rounded cursor-pointer flex-shrink-0"
+                    style={{ color: sec?.is_visible ? '#A78BFA' : 'var(--text-muted)' }}>
+                    {sec?.is_visible ? (
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    ) : (
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12c1.292 4.338 5.31 7.5 10.066 7.5.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
               )
             })}
           </div>
         </div>
 
-        {/* Éditeur de la section sélectionnée */}
-        <div className="rounded-xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-          {(() => {
-            const info = SECTION_LABELS[selectedSection]
-            const sec = sections[selectedSection]
-            if (!info || !sec) return null
-            return (
-              <>
-                <div className="flex items-center justify-between p-5" style={{ borderBottom: '1px solid var(--dark-border)' }}>
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl">{info.icon}</span>
-                    <div>
-                      <h2 className="font-semibold text-lg" style={{ color: 'var(--text-primary)' }}>{info.label}</h2>
-                      <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{info.description}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    {selectedSection.startsWith('custom_') && (
-                      <button type="button" onClick={() => { if (confirm('Supprimer cette section ?')) deleteSection(selectedSection) }}
-                        className="text-xs px-3 py-1.5 rounded-lg cursor-pointer" style={{ color: '#FF6B6B', border: '1px solid rgba(255,107,107,0.3)' }}>
-                        Supprimer
-                      </button>
-                    )}
-                    <ToggleField label={sec.is_visible ? 'Visible' : 'Masquée'} checked={sec.is_visible} onChange={() => toggleVisibility(selectedSection)} />
+        {/* Editor panel */}
+        <div className="rounded-xl p-6" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+          {selectedSection && sections[selectedSection] ? (
+            <>
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">{SECTION_LABELS[selectedSection]?.icon || '📄'}</span>
+                  <div>
+                    <h2 className="font-semibold text-lg" style={{ color: 'var(--text-primary)' }}>
+                      {SECTION_LABELS[selectedSection]?.label || selectedSection}
+                    </h2>
+                    <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                      {sections[selectedSection].is_visible ? 'Visible' : 'Masquée'} · Position {sections[selectedSection].position}
+                      {selectedSection.startsWith('custom_') && ' · Section personnalisée'}
+                    </p>
                   </div>
                 </div>
-                <div className="px-5 pb-5 pt-4 space-y-4">
-                  {sec.content.is_html ? (
-                    <>
-                      <TextField label="Titre de la section" value={sec.content.title || ''} onChange={(v) => updateContent(selectedSection, 'title', v)} />
-                      <div>
-                        <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>Contenu HTML</label>
-                        <textarea
-                          value={sec.content.html_content || ''}
-                          onChange={(e) => updateContent(selectedSection, 'html_content', e.target.value)}
-                          rows={20}
-                          className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-y font-mono"
-                          style={inputStyle}
-                          placeholder="<h2>Titre</h2>\n<p>Votre contenu...</p>"
-                        />
-                      </div>
-                      {sec.content.html_content && (
-                        <div className="rounded-lg p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
-                          <p className="text-[10px] font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>Aperçu</p>
-                          <div className="prose prose-invert prose-sm max-w-none" style={{ color: 'var(--text-secondary)' }}
-                            dangerouslySetInnerHTML={{ __html: sec.content.html_content }} />
-                        </div>
-                      )}
-                    </>
-                  ) : sec.content.is_html === false && selectedSection.startsWith('custom_') ? (
-                    <>
-                      <TextField label="Titre" value={sec.content.title || ''} onChange={(v) => updateContent(selectedSection, 'title', v)} />
-                      <TextField label="Sous-titre" value={sec.content.subtitle || ''} onChange={(v) => updateContent(selectedSection, 'subtitle', v)} />
-                      <TextAreaField label="Description" value={sec.content.description || ''} onChange={(v) => updateContent(selectedSection, 'description', v)} rows={6} />
-                      <FileUpload label="Image" accept="image/*" folder="landing"
-                        currentUrl={sec.content.image_url || null}
-                        onUploaded={(url) => updateContent(selectedSection, 'image_url', url)}
-                        onRemoved={() => updateContent(selectedSection, 'image_url', '')} />
-                      <TextField label="Texte du bouton" value={sec.content.button_label || ''} onChange={(v) => updateContent(selectedSection, 'button_label', v)} />
-                      <TextField label="Lien du bouton" value={sec.content.button_href || ''} onChange={(v) => updateContent(selectedSection, 'button_href', v)} />
-                    </>
-                  ) : (
-                    renderEditor(selectedSection)
+                {selectedSection.startsWith('custom_') && (
+                  <button type="button" onClick={() => { if (confirm('Supprimer cette section ?')) deleteSection(selectedSection) }}
+                    className="text-xs px-3 py-1.5 rounded-lg cursor-pointer"
+                    style={{ color: '#FF6B6B', border: '1px solid rgba(255,107,107,0.3)' }}>
+                    Supprimer
+                  </button>
+                )}
+              </div>
+
+              {/* HTML section: show code editor + preview */}
+              {sections[selectedSection].content.is_html ? (
+                <div className="space-y-4">
+                  <TextField
+                    label="Titre de la section"
+                    value={sections[selectedSection].content.title || ''}
+                    onChange={(v) => updateContent(selectedSection, 'title', v)}
+                  />
+                  <div>
+                    <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>Contenu HTML</label>
+                    <textarea
+                      value={sections[selectedSection].content.html_content || ''}
+                      onChange={(e) => updateContent(selectedSection, 'html_content', e.target.value)}
+                      rows={20}
+                      className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-y font-mono"
+                      style={inputStyle}
+                      placeholder="<h2>Titre</h2>\n<p>Votre contenu...</p>"
+                    />
+                    <p className="text-[10px] mt-1.5" style={{ color: 'var(--text-muted)' }}>
+                      HTML : &lt;h2&gt;, &lt;h3&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;li&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;a&gt;, &lt;img&gt;, &lt;div&gt;, &lt;section&gt;
+                    </p>
+                  </div>
+                  {sections[selectedSection].content.html_content && (
+                    <div className="rounded-lg p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
+                      <p className="text-[10px] font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>Aperçu</p>
+                      <div className="prose prose-invert prose-sm max-w-none" style={{ color: 'var(--text-secondary)' }}
+                        dangerouslySetInnerHTML={{ __html: sections[selectedSection].content.html_content }} />
+                    </div>
                   )}
                 </div>
-              </>
-            )
-          })()}
+              ) : (
+                <GenericSectionEditor
+                  content={sections[selectedSection].content}
+                  sectionKey={selectedSection}
+                  onChange={(field, value) => updateContent(selectedSection, field, value)}
+                />
+              )}
+            </>
+          ) : (
+            <p className="text-sm py-12 text-center" style={{ color: 'var(--text-muted)' }}>
+              Sélectionnez une section à modifier
+            </p>
+          )}
         </div>
       </div>
 
-      {/* Bouton sauvegarder en bas */}
-      <div className="flex justify-end gap-3 pb-8">
+      {/* Bottom save */}
+      <div className="flex justify-end pb-8">
         <button onClick={handleSave} disabled={saving}
           className="px-6 py-3 rounded-xl text-sm font-semibold cursor-pointer disabled:opacity-50"
           style={{ background: '#A78BFA', color: '#fff' }}>

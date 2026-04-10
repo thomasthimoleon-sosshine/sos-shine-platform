@@ -1975,6 +1975,29 @@ export default function LandingClient({ initialSections, initialPositions, initi
               </div>
             </section>
 
+            {/* ── V2 TICKER 1 (après Hero) ── */}
+            <InfiniteTickerBand items={tickerItems} speed={ticker1Speed} />
+
+            {/* ── V2 SOCIAL PROOF / CHIFFRES CLÉS ── */}
+            <section className="px-5 md:px-20 py-10 md:py-16">
+              <div className="max-w-4xl mx-auto">
+                <div className="grid grid-cols-3 gap-4 md:gap-8">
+                  {[
+                    { value: '200+', label: 'PROTOCOLES DE DÉCONDITIONNEMENT' },
+                    { value: '5', label: 'UNIVERS DE CONTENU' },
+                    { value: '24/7', label: 'ACCESSIBLE À TOUT MOMENT' },
+                  ].map((stat, i) => (
+                    <RevealOnScroll key={i} delay={i * 0.1}>
+                      <div className="text-center py-4 md:py-6">
+                        <p className="font-display text-3xl sm:text-4xl md:text-5xl font-light mb-2" style={{ color: gold }}>{stat.value}</p>
+                        <p className="text-[9px] sm:text-[10px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-muted)' }}>{stat.label}</p>
+                      </div>
+                    </RevealOnScroll>
+                  ))}
+                </div>
+              </div>
+            </section>
+
             {/* ── V2 S02: LA VÉRITÉ ── */}
             <section className="px-5 md:px-20 py-16 md:py-28">
               <div className="max-w-3xl mx-auto text-center">
@@ -2161,6 +2184,9 @@ export default function LandingClient({ initialSections, initialPositions, initi
               </div>
             </section>
 
+            {/* ── V2 TICKER 2 (après Communauté) ── */}
+            <InfiniteTickerBand items={ticker2Items} speed={ticker2Speed} />
+
             {/* ── V2 S08: DÈS JOUR 1 ── */}
             <section className="px-5 md:px-20 py-16 md:py-28">
               <div className="max-w-3xl mx-auto text-center">
@@ -2238,7 +2264,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                         )}
                         <h3 className="text-sm font-semibold tracking-wider uppercase mb-4" style={{ color: 'var(--text-muted)' }}>{plan.name}</h3>
                         <div className="flex items-baseline gap-1 mb-2">
-                          <span className="font-display text-4xl md:text-5xl font-light" style={{ color: gold }}>{plan.price}\u20ac</span>
+                          <span className="font-display text-4xl md:text-5xl font-light" style={{ color: gold }}>{plan.price}€</span>
                           <span className="text-sm text-[var(--text-muted)]">{plan.period}</span>
                         </div>
                         <p className="text-sm text-[var(--text-secondary)] mb-6">{plan.description}</p>

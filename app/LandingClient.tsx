@@ -1929,6 +1929,414 @@ export default function LandingClient({ initialSections, initialPositions, initi
       })()}
       </div>
 
+      {/* ═══ LANDING V2 — Complete 12-section landing page ═══ */}
+      {vis('landing_v2') && (() => {
+        const v2 = sec('landing_v2')
+        return (
+          <div style={{ order: ord('landing_v2') }}>
+
+            {/* ── V2 HERO ── */}
+            <section className="relative min-h-screen flex items-center pt-20 md:pt-24">
+              <div className="absolute inset-0 pointer-events-none">
+                <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[300px] h-[300px] md:w-[600px] md:h-[600px] rounded-full opacity-[0.03] blur-[60px] md:blur-[80px]" style={{ background: gold }} />
+              </div>
+              <div className="relative z-10 px-5 md:px-20 py-12 md:py-24 max-w-5xl mx-auto w-full text-center">
+                <RevealOnScroll>
+                  <span className="inline-block px-4 py-1.5 rounded-full text-[10px] tracking-[0.25em] uppercase font-medium mb-8"
+                    style={{ background: `rgba(${goldRgb}, 0.08)`, color: gold, border: `1px solid rgba(${goldRgb}, 0.15)` }}>
+                    {v2.hero_badge || 'PLATEFORME DE DÉCONDITIONNEMENT ÉMOTIONNEL'}
+                  </span>
+                </RevealOnScroll>
+                <RevealOnScroll delay={0.1}>
+                  <h1 className="font-display font-light text-3xl sm:text-4xl md:text-6xl leading-[1.1] mb-6 md:mb-8" style={{ color: gold }}>
+                    {(v2.hero_title || '').split('\n').map((line: string, i: number) => <span key={i} className="block">{line}</span>)}
+                  </h1>
+                </RevealOnScroll>
+                <RevealOnScroll delay={0.2}>
+                  <p className="text-base sm:text-lg md:text-xl text-[var(--text-secondary)] leading-relaxed max-w-2xl mx-auto font-light mb-8 md:mb-12">
+                    {v2.hero_description || ''}
+                  </p>
+                </RevealOnScroll>
+                <RevealOnScroll delay={0.3}>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <Link href={v2.hero_cta_primary_href || '/signup'} onClick={() => trackConversion('signup')}>
+                      <button className="magnetic-btn pulse-ring px-8 py-4 rounded-full text-base font-semibold tracking-wide"
+                        style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                        {v2.hero_cta_primary || 'Rejoindre SOS Shine'}
+                      </button>
+                    </Link>
+                    <Link href={v2.hero_cta_secondary_href || '#parcours-v2'}
+                      className="px-8 py-4 rounded-full text-base font-medium tracking-wide"
+                      style={{ border: `1px solid rgba(${goldRgb},0.3)`, color: gold }}>
+                      {v2.hero_cta_secondary || "Découvrir comment ça fonctionne"}
+                    </Link>
+                  </div>
+                </RevealOnScroll>
+              </div>
+            </section>
+
+            {/* ── V2 S02: LA VÉRITÉ ── */}
+            <section className="px-5 md:px-20 py-16 md:py-28">
+              <div className="max-w-3xl mx-auto text-center">
+                <RevealOnScroll>
+                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-5xl leading-[1.12] mb-8 md:mb-12" style={{ color: gold }}>
+                    {(v2.truth_title || '').split('\n').map((line: string, i: number) => <span key={i} className="block">{line}</span>)}
+                  </h2>
+                </RevealOnScroll>
+                <RevealOnScroll delay={0.1}>
+                  <p className="text-base md:text-lg text-[var(--text-secondary)] leading-relaxed mb-6">{v2.truth_p1 || ''}</p>
+                </RevealOnScroll>
+                <RevealOnScroll delay={0.15}>
+                  <p className="text-base md:text-lg text-[var(--text-secondary)] leading-relaxed mb-10">{v2.truth_p2 || ''}</p>
+                </RevealOnScroll>
+                <RevealOnScroll delay={0.2}>
+                  <p className="font-display text-xl md:text-2xl font-light italic" style={{ color: gold }}>{v2.truth_closing || ''}</p>
+                </RevealOnScroll>
+              </div>
+            </section>
+
+            {/* ── V2 S03: JULIA ET LE LIVRE ── */}
+            <section className="px-5 md:px-20 py-16 md:py-28 relative">
+              <div className="absolute inset-0 pointer-events-none opacity-[0.02]" style={{ background: `radial-gradient(circle at 30% 50%, ${gold}, transparent 60%)` }} />
+              <div className="max-w-4xl mx-auto relative z-10">
+                <RevealOnScroll>
+                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-5xl leading-[1.12] text-center mb-12 md:mb-16" style={{ color: gold }}>
+                    {(v2.julia_title || '').split('\n').map((line: string, i: number) => <span key={i} className="block">{line}</span>)}
+                  </h2>
+                </RevealOnScroll>
+                <div className="space-y-6 text-base md:text-lg text-[var(--text-secondary)] leading-relaxed">
+                  <RevealOnScroll delay={0.05}><p>{v2.julia_p1 || ''}</p></RevealOnScroll>
+                  <RevealOnScroll delay={0.1}><p>{v2.julia_p2 || ''}</p></RevealOnScroll>
+                  <RevealOnScroll delay={0.15}><p>{v2.julia_p3 || ''}</p></RevealOnScroll>
+                  <RevealOnScroll delay={0.2}>
+                    <p className="font-display text-xl md:text-2xl font-light italic pt-4" style={{ color: gold }}>{v2.julia_promise || ''}</p>
+                  </RevealOnScroll>
+                </div>
+                <RevealOnScroll delay={0.25}>
+                  <div className="mt-10 pt-8" style={{ borderTop: `1px solid rgba(${goldRgb}, 0.1)` }}>
+                    <p className="font-display text-lg font-semibold" style={{ color: gold }}>{v2.julia_signature || ''}</p>
+                    <p className="text-sm text-[var(--text-muted)] mt-1">{v2.julia_signature_sub || ''}</p>
+                  </div>
+                </RevealOnScroll>
+                <RevealOnScroll delay={0.3}>
+                  <div className="mt-14 md:mt-20 text-center">
+                    <p className="font-display text-xl md:text-2xl font-light mb-4" style={{ color: gold }}>{v2.julia_team_intro || ''}</p>
+                    <p className="text-base text-[var(--text-secondary)] leading-relaxed max-w-2xl mx-auto">{v2.julia_team_text || ''}</p>
+                  </div>
+                </RevealOnScroll>
+              </div>
+            </section>
+
+            {/* ── V2 S04: TÉMOIGNAGES ── */}
+            <section className="px-5 md:px-20 py-16 md:py-28">
+              <div className="max-w-4xl mx-auto">
+                <RevealOnScroll>
+                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-5xl leading-[1.12] text-center mb-4 md:mb-6" style={{ color: gold }}>
+                    {(v2.temoignages_title || '').split('\n').map((line: string, i: number) => <span key={i} className="block">{line}</span>)}
+                  </h2>
+                </RevealOnScroll>
+                <RevealOnScroll delay={0.05}>
+                  <p className="text-center text-sm text-[var(--text-muted)] mb-10 md:mb-14">{v2.temoignages_subtitle || ''}</p>
+                </RevealOnScroll>
+                <div className="space-y-6">
+                  {(v2.temoignages || []).map((quote: string, i: number) => (
+                    <RevealOnScroll key={i} delay={0.1 + i * 0.08}>
+                      <blockquote className="rounded-2xl p-6 md:p-8" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                        <p className="text-base md:text-lg text-[var(--text-secondary)] leading-relaxed italic font-light">&ldquo;{quote}&rdquo;</p>
+                      </blockquote>
+                    </RevealOnScroll>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            {/* ── V2 S05: ENCYCLOPÉDIE ── */}
+            <section className="px-5 md:px-20 py-16 md:py-28">
+              <div className="max-w-4xl mx-auto text-center">
+                <RevealOnScroll>
+                  <span className="inline-block px-4 py-1.5 rounded-full text-[10px] tracking-[0.25em] uppercase font-medium mb-6"
+                    style={{ background: `rgba(${goldRgb}, 0.08)`, color: gold, border: `1px solid rgba(${goldRgb}, 0.15)` }}>
+                    {v2.encyclo_badge || ''}
+                  </span>
+                </RevealOnScroll>
+                <RevealOnScroll delay={0.05}>
+                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-5xl leading-[1.12] mb-6" style={{ color: gold }}>
+                    {(v2.encyclo_title || '').split('\n').map((line: string, i: number) => <span key={i} className="block">{line}</span>)}
+                  </h2>
+                </RevealOnScroll>
+                <RevealOnScroll delay={0.1}>
+                  <p className="text-base md:text-lg text-[var(--text-secondary)] mb-8">{v2.encyclo_description || ''}</p>
+                </RevealOnScroll>
+                <RevealOnScroll delay={0.15}>
+                  <div className="max-w-xl mx-auto mb-8">
+                    <input type="text" readOnly placeholder={v2.encyclo_search_placeholder || 'Rechercher...'}
+                      className="w-full rounded-full px-6 py-4 text-sm outline-none cursor-pointer"
+                      style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid rgba(${goldRgb}, 0.15)`, color: 'var(--text-secondary)' }}
+                      onClick={() => { window.location.href = v2.encyclo_cta_href || '/encyclopedie' }} />
+                  </div>
+                </RevealOnScroll>
+                <RevealOnScroll delay={0.2}>
+                  <div className="flex flex-wrap justify-center gap-2 mb-10">
+                    {(v2.encyclo_tags || []).map((tag: string, i: number) => (
+                      <span key={i} className="px-3 py-1.5 rounded-full text-xs"
+                        style={{ background: `rgba(${goldRgb}, 0.06)`, color: 'var(--text-secondary)', border: `1px solid rgba(${goldRgb}, 0.1)` }}>
+                        {tag}
+                      </span>
+                    ))}
+                    <span className="px-3 py-1.5 text-xs" style={{ color: 'var(--text-muted)' }}>Et plus...</span>
+                  </div>
+                </RevealOnScroll>
+                <RevealOnScroll delay={0.25}>
+                  <Link href={v2.encyclo_cta_href || '/encyclopedie'}>
+                    <button className="magnetic-btn px-8 py-4 rounded-full text-base font-medium tracking-wide"
+                      style={{ border: `1px solid rgba(${goldRgb},0.3)`, color: gold }}>
+                      {v2.encyclo_cta || "Explorer l'encyclopédie complète"}
+                    </button>
+                  </Link>
+                </RevealOnScroll>
+              </div>
+            </section>
+
+            {/* ── V2 S06: LE PARCOURS ── */}
+            <section id="parcours-v2" className="px-5 md:px-20 py-16 md:py-28">
+              <div className="max-w-5xl mx-auto">
+                <RevealOnScroll>
+                  <span className="block text-center text-[10px] tracking-[0.25em] uppercase font-medium mb-6"
+                    style={{ color: gold }}>
+                    {v2.parcours_badge || ''}
+                  </span>
+                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-5xl leading-[1.12] text-center mb-12 md:mb-16" style={{ color: gold }}>
+                    {(v2.parcours_title || '').split('\n').map((line: string, i: number) => <span key={i} className="block">{line}</span>)}
+                  </h2>
+                </RevealOnScroll>
+                <div className="space-y-8 md:space-y-12">
+                  {(v2.parcours_steps || []).map((step: { num: string; title: string; description: string; color: string }, i: number) => (
+                    <RevealOnScroll key={i} delay={i * 0.1} direction={i % 2 === 0 ? 'left' : 'right'}>
+                      <div className="rounded-2xl p-6 md:p-10" style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${step.color}20` }}>
+                        <div className="flex items-start gap-4 md:gap-6">
+                          <span className="font-display text-4xl md:text-5xl font-light flex-shrink-0" style={{ color: step.color }}>{step.num}</span>
+                          <div>
+                            <h3 className="text-lg md:text-xl font-semibold tracking-wide mb-3" style={{ color: step.color }}>{step.title}</h3>
+                            <p className="text-base text-[var(--text-secondary)] leading-relaxed">{step.description}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </RevealOnScroll>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            {/* ── V2 S07: COMMUNAUTÉ ── */}
+            <section className="px-5 md:px-20 py-16 md:py-28">
+              <div className="max-w-5xl mx-auto">
+                <RevealOnScroll>
+                  <span className="block text-center text-[10px] tracking-[0.25em] uppercase font-medium mb-6" style={{ color: gold }}>
+                    {v2.community_badge || ''}
+                  </span>
+                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-5xl leading-[1.12] text-center mb-6" style={{ color: gold }}>
+                    {(v2.community_title || '').split('\n').map((line: string, i: number) => <span key={i} className="block">{line}</span>)}
+                  </h2>
+                </RevealOnScroll>
+                <RevealOnScroll delay={0.05}>
+                  <p className="text-center text-base md:text-lg text-[var(--text-secondary)] leading-relaxed max-w-3xl mx-auto mb-4">{v2.community_description || ''}</p>
+                </RevealOnScroll>
+                <RevealOnScroll delay={0.1}>
+                  <p className="text-center text-base text-[var(--text-secondary)] mb-4">{v2.community_paragraph || ''}</p>
+                </RevealOnScroll>
+                <RevealOnScroll delay={0.12}>
+                  <p className="text-center font-display text-lg italic mb-12 md:mb-16" style={{ color: gold }}>{v2.community_closing || ''}</p>
+                </RevealOnScroll>
+                <div className="grid sm:grid-cols-2 gap-4 md:gap-6">
+                  {(v2.community_blocks || []).map((block: { icon: string; title: string; description: string }, i: number) => (
+                    <RevealOnScroll key={i} delay={0.15 + i * 0.06}>
+                      <div className="rounded-2xl p-6 md:p-8 h-full" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                        <span className="text-2xl md:text-3xl block mb-3">{block.icon}</span>
+                        <h3 className="font-semibold text-base mb-2" style={{ color: gold }}>{block.title}</h3>
+                        <p className="text-sm text-[var(--text-secondary)] leading-relaxed">{block.description}</p>
+                      </div>
+                    </RevealOnScroll>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            {/* ── V2 S08: DÈS JOUR 1 ── */}
+            <section className="px-5 md:px-20 py-16 md:py-28">
+              <div className="max-w-3xl mx-auto text-center">
+                <RevealOnScroll>
+                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-5xl leading-[1.12] mb-10 md:mb-14" style={{ color: gold }}>
+                    {(v2.day1_title || '').split('\n').map((line: string, i: number) => <span key={i} className="block">{line}</span>)}
+                  </h2>
+                </RevealOnScroll>
+                <ul className="space-y-4 text-left max-w-xl mx-auto">
+                  {(v2.day1_items || []).map((item: string, i: number) => (
+                    <RevealOnScroll key={i} delay={0.05 + i * 0.05}>
+                      <li className="flex items-start gap-3">
+                        <span className="mt-1 text-sm flex-shrink-0" style={{ color: gold }}>&#10022;</span>
+                        <span className="text-base text-[var(--text-secondary)] leading-relaxed">{item}</span>
+                      </li>
+                    </RevealOnScroll>
+                  ))}
+                </ul>
+              </div>
+            </section>
+
+            {/* ── V2 S09: CE QUE NOUS NE SOMMES PAS ── */}
+            <section className="px-5 md:px-20 py-16 md:py-28 relative">
+              <div className="max-w-3xl mx-auto">
+                <RevealOnScroll>
+                  <h2 className="font-display font-light text-xl sm:text-2xl md:text-4xl leading-[1.15] text-center mb-10 md:mb-14" style={{ color: gold }}>
+                    {(v2.notus_title || '').split('\n').map((line: string, i: number) => <span key={i} className="block">{line}</span>)}
+                  </h2>
+                </RevealOnScroll>
+                <RevealOnScroll delay={0.1}>
+                  <blockquote className="rounded-2xl p-6 md:p-10 mb-8 text-center" style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid rgba(${goldRgb}, 0.1)` }}>
+                    {(v2.notus_quote || '').split('\n').map((line: string, i: number) => (
+                      <p key={i} className="text-base md:text-lg text-[var(--text-secondary)] leading-relaxed font-light italic">{line}</p>
+                    ))}
+                    <p className="mt-4 text-sm font-semibold" style={{ color: gold }}>{v2.notus_author || ''}</p>
+                  </blockquote>
+                </RevealOnScroll>
+                <RevealOnScroll delay={0.15}>
+                  <p className="text-xs text-[var(--text-muted)] text-center mb-6">{v2.notus_disclaimer || ''}</p>
+                </RevealOnScroll>
+                <RevealOnScroll delay={0.2}>
+                  <p className="text-base text-[var(--text-secondary)] leading-relaxed text-center mb-6">{v2.notus_description || ''}</p>
+                </RevealOnScroll>
+                <RevealOnScroll delay={0.25}>
+                  <p className="font-display text-lg font-light italic text-center" style={{ color: gold }}>{v2.notus_closing || ''}</p>
+                </RevealOnScroll>
+              </div>
+            </section>
+
+            {/* ── V2 S10: TARIFICATION ── */}
+            <section className="px-5 md:px-20 py-16 md:py-28">
+              <div className="max-w-5xl mx-auto">
+                <RevealOnScroll>
+                  <span className="block text-center text-[10px] tracking-[0.25em] uppercase font-medium mb-4" style={{ color: gold }}>
+                    {v2.pricing_badge || ''}
+                  </span>
+                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-5xl leading-[1.12] text-center mb-2" style={{ color: gold }}>
+                    {v2.pricing_title || ''}
+                  </h2>
+                  <p className="text-center text-sm text-[var(--text-muted)] mb-12 md:mb-16">{v2.pricing_subtitle || ''}</p>
+                </RevealOnScroll>
+                <div className="grid md:grid-cols-2 gap-6 md:gap-8 max-w-3xl mx-auto">
+                  {(v2.pricing_plans || []).map((plan: { name: string; price: string; period: string; description: string; features: string[]; button_label: string; button_href: string; highlight: boolean; badge: string }, i: number) => (
+                    <RevealOnScroll key={i} delay={i * 0.1}>
+                      <div className="rounded-2xl p-6 md:p-8 flex flex-col h-full relative"
+                        style={{
+                          background: plan.highlight ? `rgba(${goldRgb}, 0.04)` : 'rgba(255,255,255,0.02)',
+                          border: `1px solid ${plan.highlight ? `rgba(${goldRgb}, 0.25)` : 'var(--dark-border)'}`,
+                        }}>
+                        {plan.badge && (
+                          <span className="absolute top-4 right-4 px-3 py-1 rounded-full text-[10px] tracking-wider uppercase font-semibold"
+                            style={{ background: `rgba(${goldRgb}, 0.12)`, color: gold }}>
+                            {plan.badge}
+                          </span>
+                        )}
+                        <h3 className="text-sm font-semibold tracking-wider uppercase mb-4" style={{ color: 'var(--text-muted)' }}>{plan.name}</h3>
+                        <div className="flex items-baseline gap-1 mb-2">
+                          <span className="font-display text-4xl md:text-5xl font-light" style={{ color: gold }}>{plan.price}\u20ac</span>
+                          <span className="text-sm text-[var(--text-muted)]">{plan.period}</span>
+                        </div>
+                        <p className="text-sm text-[var(--text-secondary)] mb-6">{plan.description}</p>
+                        <ul className="space-y-3 flex-1 mb-8">
+                          {plan.features.map((f: string, fi: number) => (
+                            <li key={fi} className="flex items-start gap-2">
+                              <span className="mt-0.5 text-xs" style={{ color: gold }}>&#10022;</span>
+                              <span className="text-sm text-[var(--text-secondary)]">{f}</span>
+                            </li>
+                          ))}
+                        </ul>
+                        <Link href={plan.button_href || '/signup'} onClick={() => trackConversion('signup')}>
+                          <button className={`magnetic-btn w-full py-3.5 rounded-full text-sm font-semibold tracking-wide ${plan.highlight ? 'pulse-ring' : ''}`}
+                            style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                            {plan.button_label}
+                          </button>
+                        </Link>
+                      </div>
+                    </RevealOnScroll>
+                  ))}
+                </div>
+                <RevealOnScroll delay={0.3}>
+                  <div className="mt-10 md:mt-14 text-center max-w-2xl mx-auto">
+                    <p className="text-base font-medium text-[var(--text-secondary)] mb-2">{v2.pricing_footer_title || ''}</p>
+                    <p className="text-sm text-[var(--text-muted)] mb-4">{v2.pricing_footer_text || ''}</p>
+                    <p className="text-sm text-[var(--text-muted)] italic leading-relaxed">
+                      {(v2.pricing_footer_quote || '').split('\n').map((line: string, i: number) => <span key={i} className="block">{line}</span>)}
+                    </p>
+                  </div>
+                </RevealOnScroll>
+              </div>
+            </section>
+
+            {/* ── V2 S11: POUR QUI ── */}
+            <section className="px-5 md:px-20 py-16 md:py-28">
+              <div className="max-w-3xl mx-auto">
+                <RevealOnScroll>
+                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-4xl leading-[1.12] text-center mb-10 md:mb-14" style={{ color: gold }}>
+                    {v2.pourqui_title || ''}
+                  </h2>
+                </RevealOnScroll>
+                <div className="grid md:grid-cols-2 gap-8">
+                  <RevealOnScroll delay={0.05}>
+                    <ul className="space-y-4">
+                      {(v2.pourqui_positive || []).map((item: string, i: number) => (
+                        <li key={i} className="flex items-start gap-3">
+                          <span className="mt-0.5 text-sm flex-shrink-0" style={{ color: '#55EFC4' }}>&#10022;</span>
+                          <span className="text-base text-[var(--text-secondary)] leading-relaxed">{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </RevealOnScroll>
+                  <RevealOnScroll delay={0.1}>
+                    <div>
+                      <p className="font-semibold text-sm mb-4" style={{ color: '#FF6B6B' }}>{v2.pourqui_negative_title || ''}</p>
+                      <ul className="space-y-4">
+                        {(v2.pourqui_negative || []).map((item: string, i: number) => (
+                          <li key={i} className="flex items-start gap-3">
+                            <span className="mt-0.5 text-sm flex-shrink-0" style={{ color: '#FF6B6B' }}>&#10007;</span>
+                            <span className="text-base text-[var(--text-secondary)] leading-relaxed">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </RevealOnScroll>
+                </div>
+              </div>
+            </section>
+
+            {/* ── V2 S12: CTA FINAL ── */}
+            <section className="px-5 md:px-20 py-20 md:py-36 relative">
+              <div className="absolute inset-0 pointer-events-none">
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[400px] h-[300px] rounded-full opacity-[0.04] blur-[80px]" style={{ background: gold }} />
+              </div>
+              <div className="relative z-10 max-w-3xl mx-auto text-center">
+                <RevealOnScroll>
+                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-5xl leading-[1.12] mb-8 md:mb-12" style={{ color: gold }}>
+                    {(v2.cta_title || '').split('\n').map((line: string, i: number) => <span key={i} className="block">{line}</span>)}
+                  </h2>
+                </RevealOnScroll>
+                <RevealOnScroll delay={0.1}>
+                  <Link href={v2.cta_button_href || '/signup'} onClick={() => trackConversion('signup')}>
+                    <button className="magnetic-btn pulse-ring px-10 py-5 rounded-full text-lg font-semibold tracking-wide"
+                      style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                      {v2.cta_button || 'Rejoindre SOS Shine'}
+                    </button>
+                  </Link>
+                </RevealOnScroll>
+                <RevealOnScroll delay={0.15}>
+                  <p className="text-sm text-[var(--text-muted)] mt-6 tracking-wide">{v2.cta_details || ''}</p>
+                </RevealOnScroll>
+              </div>
+            </section>
+
+          </div>
+        )
+      })()}
+
       {/* ═══ CUSTOM SECTIONS (all types) — each wrapped with its own order ═══ */}
       {Object.entries(sections).filter(([key, s]) => key.startsWith('custom_') && s.is_visible).map(([key, s]) => {
         const c = s.content

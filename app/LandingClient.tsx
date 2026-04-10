@@ -11,6 +11,7 @@ import PreLaunchPage from "./page-prelaunch";
 import type { PrelaunchSettings } from "./page-prelaunch";
 
 import { useTranslation } from "@/lib/i18n/useTranslation";
+import type { LandingVariant } from "@/lib/landing-defaults";
 
 function matchCase(original: string, replacement: string): string {
   if (original === original.toUpperCase()) return replacement.toUpperCase();
@@ -291,9 +292,10 @@ interface LandingClientProps {
   initialPositions?: Record<string, number>
   initialPrelaunchEnabled?: boolean
   initialPrelaunchSettings?: PrelaunchSettings
+  variant?: LandingVariant
 }
 
-export default function LandingClient({ initialSections, initialPositions, initialPrelaunchEnabled, initialPrelaunchSettings }: LandingClientProps) {
+export default function LandingClient({ initialSections, initialPositions, initialPrelaunchEnabled, initialPrelaunchSettings, variant = 'julia' }: LandingClientProps) {
   const { t } = useTranslation();
   const [headerVisible, setHeaderVisible] = useState(true);
   const [headerScrolled, setHeaderScrolled] = useState(false);
@@ -343,7 +345,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
     try {
       const supabase = createClient();
 
-      const { data } = await supabase.from("landing_sections").select("*").order("position");
+      const { data } = await supabase.from("landing_sections").select("*").eq("variant", variant).order("position");
       if (data && data.length > 0) {
         const rows = data as unknown as LandingSectionDefault[];
         const dbMap = buildSectionMap(rows);
@@ -399,6 +401,34 @@ export default function LandingClient({ initialSections, initialPositions, initi
       document.removeEventListener('visibilitychange', handleVisibility);
     };
   }, [loadSections, loadPrelaunchSettings]);
+
+  // ─── A/B Test Tracking ───
+  useEffect(() => {
+    if (!variant) return;
+
+    // Set cookie so user always sees same variant
+    document.cookie = `ab_variant=${variant};path=/;max-age=${60 * 60 * 24 * 30};SameSite=Lax`;
+
+    // Track the visit
+    const visitorId = (() => {
+      let vid = localStorage.getItem('ab_visitor_id');
+      if (!vid) {
+        vid = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+        localStorage.setItem('ab_visitor_id', vid);
+      }
+      return vid;
+    })();
+
+    fetch('/api/track/ab-visit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        visitor_id: visitorId,
+        variant,
+        referrer: document.referrer || null,
+      }),
+    }).catch(() => {});
+  }, [variant]);
 
   function sec(key: string): SectionContent { return sections[key]?.content || {}; }
   function sty(key: string): SectionStyles { return sections[key]?.styles || {}; }

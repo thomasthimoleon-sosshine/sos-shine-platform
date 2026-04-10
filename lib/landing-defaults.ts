@@ -7,6 +7,8 @@
 export type SectionContent = Record<string, any>
 export type SectionStyles = Record<string, string>
 
+export type LandingVariant = 'julia' | 'thomas'
+
 export interface LandingSectionRow {
   id: string
   section_key: string
@@ -15,6 +17,7 @@ export interface LandingSectionRow {
   is_visible: boolean
   content: SectionContent
   styles: SectionStyles
+  variant: LandingVariant
   updated_by: string | null
   updated_at: string
 }
@@ -637,4 +640,62 @@ export function buildSectionMap<T extends { section_key: string }>(
   const map: Record<string, T> = {}
   for (const s of sections) map[s.section_key] = s
   return map
+}
+
+/** All section keys that are editable in the full landing page editor */
+export const ALL_EDITABLE_SECTION_KEYS = [
+  '_global',
+  'hero',
+  'probleme',
+  'histoire',
+  'temoignages',
+  'encyclopedie',
+  'steps',
+  'communaute',
+  'produit',
+  'manifeste',
+  'pricing',
+  'pour_qui',
+  'cta_dark',
+  'footer',
+  'stats',
+  'signature_cta',
+  'principe',
+  'fondateurs',
+  'ticker_1',
+  'ticker_2',
+  'faq',
+  'legal_mentions',
+  'legal_cgv',
+  'legal_privacy',
+  'legal_contact',
+] as const
+
+/** Section labels with icons for the admin editor */
+export const SECTION_EDITOR_LABELS: Record<string, { label: string; icon: string; description: string }> = {
+  _global: { label: 'Configuration globale', icon: '⚙️', description: 'Couleurs, polices, logo, configuration générale' },
+  hero: { label: 'Hero (En-tête)', icon: '🎬', description: 'Titre principal, sous-titre, vidéo, boutons CTA' },
+  probleme: { label: 'La vérité qui change tout', icon: '💡', description: 'Section sur le conditionnement émotionnel' },
+  histoire: { label: 'Julia et le livre', icon: '📖', description: 'L\'histoire de Julia, le livre, l\'équipe' },
+  temoignages: { label: 'Témoignages', icon: '💬', description: 'Ce que les lecteurs ont écrit' },
+  encyclopedie: { label: 'Encyclopédie', icon: '📘', description: 'Grille des thématiques et barre de recherche' },
+  steps: { label: 'Le Parcours (3 étapes)', icon: '🔄', description: 'Comprendre / Libérer / Agir' },
+  communaute: { label: 'Communauté', icon: '🤝', description: 'Feu de Camp, Rayons, Éclat, Lives' },
+  produit: { label: 'Ce que vous recevez', icon: '🎁', description: 'Checklist des fonctionnalités dès J1' },
+  manifeste: { label: 'Ce que nous ne sommes pas', icon: '✊', description: 'Le disclaimer honnête — bloc le plus important' },
+  pricing: { label: 'Tarification', icon: '💰', description: 'Plans, prix, boutons d\'essai' },
+  pour_qui: { label: 'Pour qui / Pas pour qui', icon: '🎯', description: 'Audience cible et exclusions' },
+  cta_dark: { label: 'CTA Final', icon: '🚀', description: 'Dernier appel à l\'action avant le footer' },
+  footer: { label: 'Pied de page', icon: '🔗', description: 'Logo, liens légaux, réseaux sociaux' },
+  stats: { label: 'Chiffres clés', icon: '📊', description: 'Social proof avec des chiffres' },
+  signature_cta: { label: 'CTA Signature Émotionnelle', icon: '🧪', description: 'Bloc dédié au test Signature' },
+  principe: { label: 'Le Principe', icon: '🧠', description: 'Notre approche — le déconditionnement' },
+  fondateurs: { label: 'Les Fondateurs', icon: '👥', description: 'Photos et rôles de l\'équipe' },
+  ticker_1: { label: 'Bandeau défilant 1', icon: '📜', description: 'Premier bandeau de mots-clés' },
+  ticker_2: { label: 'Bandeau défilant 2', icon: '📜', description: 'Second bandeau de mots-clés' },
+  faq: { label: 'FAQ', icon: '❓', description: 'Questions fréquentes' },
+  legal_mentions: { label: 'Mentions légales', icon: '📄', description: 'Page mentions légales' },
+  legal_cgv: { label: 'CGV', icon: '📄', description: 'Conditions Générales de Vente' },
+  legal_privacy: { label: 'Confidentialité', icon: '🔒', description: 'Politique de confidentialité' },
+  legal_contact: { label: 'Contact', icon: '📧', description: 'Page de contact' },
 }

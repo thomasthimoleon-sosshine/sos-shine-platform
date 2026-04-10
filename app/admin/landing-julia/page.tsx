@@ -434,7 +434,7 @@ export default function LandingJuliaPage() {
       const { data: { user } } = await supabase.auth.getUser()
       const now = new Date().toISOString()
 
-      for (const key of JULIA_SECTION_KEYS) {
+      for (const key of allSectionKeys) {
         const sec = sections[key]
         if (!sec) continue
 
@@ -527,6 +527,45 @@ export default function LandingJuliaPage() {
     }
   }
 
+  /* ── Créer une nouvelle section ── */
+  const [showNewSection, setShowNewSection] = useState(false)
+  const [newSectionName, setNewSectionName] = useState('')
+  const [newSectionType, setNewSectionType] = useState<'normal' | 'html'>('normal')
+  const [customKeys, setCustomKeys] = useState<string[]>([])
+
+  function createSection() {
+    if (!newSectionName.trim()) return
+    const key = `custom_julia_${Date.now()}`
+
+    const content: SectionContent = newSectionType === 'html'
+      ? { title: newSectionName.trim(), html_content: '<h2>Votre titre</h2>\n<p>Votre contenu ici...</p>', is_html: true }
+      : { title: newSectionName.trim(), subtitle: '', description: '', image_url: '', button_label: '', button_href: '', is_html: false }
+
+    setSections((prev) => ({
+      ...prev,
+      [key]: { content, is_visible: true },
+    }))
+    SECTION_LABELS[key] = { label: newSectionName.trim(), icon: newSectionType === 'html' ? '🖥️' : '📄', description: 'Section personnalisée' }
+    setCustomKeys((prev) => [...prev, key])
+    setSelectedSection(key)
+    setNewSectionName('')
+    setShowNewSection(false)
+    setSaved(false)
+  }
+
+  function deleteSection(key: string) {
+    setSections((prev) => {
+      const next = { ...prev }
+      delete next[key]
+      return next
+    })
+    setCustomKeys((prev) => prev.filter((k) => k !== key))
+    if (selectedSection === key) setSelectedSection('hero')
+    setSaved(false)
+  }
+
+  const allSectionKeys = [...JULIA_SECTION_KEYS, ...customKeys]
+
   /* ── Loading ── */
   if (loading) {
     return (
@@ -565,17 +604,53 @@ export default function LandingJuliaPage() {
         </div>
       )}
 
+      {/* Dialog nouvelle section */}
+      {showNewSection && (
+        <div className="rounded-xl p-5 space-y-4" style={{ background: 'var(--dark-card)', border: '1px solid #A78BFA40' }}>
+          <div className="flex items-center justify-between">
+            <h3 className="font-semibold text-sm" style={{ color: '#A78BFA' }}>Créer une nouvelle section</h3>
+            <button type="button" onClick={() => setShowNewSection(false)} className="text-xs px-2 py-1 rounded cursor-pointer" style={{ color: 'var(--text-muted)' }}>Annuler</button>
+          </div>
+          <TextField label="Nom de la section" value={newSectionName} onChange={setNewSectionName} placeholder="Ex: Mes Ressources" />
+          <div>
+            <label className="block text-xs font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>Type</label>
+            <div className="flex gap-3">
+              <button type="button" onClick={() => setNewSectionType('normal')} className="flex-1 rounded-lg p-4 text-center cursor-pointer"
+                style={{ background: newSectionType === 'normal' ? 'rgba(167,139,250,0.1)' : 'rgba(255,255,255,0.02)', border: `1px solid ${newSectionType === 'normal' ? '#A78BFA' : 'var(--dark-border)'}` }}>
+                <span className="block text-2xl mb-2">📄</span>
+                <span className="block text-sm font-medium" style={{ color: newSectionType === 'normal' ? '#A78BFA' : 'var(--text-primary)' }}>Normal</span>
+                <span className="block text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Titre, texte, image, bouton</span>
+              </button>
+              <button type="button" onClick={() => setNewSectionType('html')} className="flex-1 rounded-lg p-4 text-center cursor-pointer"
+                style={{ background: newSectionType === 'html' ? 'rgba(167,139,250,0.1)' : 'rgba(255,255,255,0.02)', border: `1px solid ${newSectionType === 'html' ? '#A78BFA' : 'var(--dark-border)'}` }}>
+                <span className="block text-2xl mb-2">🖥️</span>
+                <span className="block text-sm font-medium" style={{ color: newSectionType === 'html' ? '#A78BFA' : 'var(--text-primary)' }}>HTML</span>
+                <span className="block text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Code HTML libre</span>
+              </button>
+            </div>
+          </div>
+          <button type="button" onClick={createSection} disabled={!newSectionName.trim()}
+            className="w-full py-3 rounded-xl text-sm font-semibold cursor-pointer disabled:opacity-30" style={{ background: '#A78BFA', color: '#fff' }}>
+            Créer la section
+          </button>
+        </div>
+      )}
+
       {/* Liste des sections + éditeur */}
       <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-4">
         {/* Sidebar — liste des sections */}
         <div className="rounded-xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-          <div className="px-4 py-3" style={{ borderBottom: '1px solid var(--dark-border)' }}>
+          <div className="px-4 py-3 flex items-center justify-between" style={{ borderBottom: '1px solid var(--dark-border)' }}>
             <p className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
               Sections modifiables
             </p>
+            <button type="button" onClick={() => setShowNewSection(true)}
+              className="text-xs px-2 py-1 rounded cursor-pointer" style={{ color: '#A78BFA', border: '1px solid rgba(167,139,250,0.3)' }}>
+              + Nouvelle
+            </button>
           </div>
           <div>
-            {JULIA_SECTION_KEYS.map((key) => {
+            {allSectionKeys.map((key) => {
               const info = SECTION_LABELS[key]
               const sec = sections[key]
               const isSelected = key === selectedSection
@@ -625,10 +700,54 @@ export default function LandingJuliaPage() {
                       <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{info.description}</p>
                     </div>
                   </div>
-                  <ToggleField label={sec.is_visible ? 'Visible' : 'Masquée'} checked={sec.is_visible} onChange={() => toggleVisibility(selectedSection)} />
+                  <div className="flex items-center gap-3">
+                    {selectedSection.startsWith('custom_') && (
+                      <button type="button" onClick={() => { if (confirm('Supprimer cette section ?')) deleteSection(selectedSection) }}
+                        className="text-xs px-3 py-1.5 rounded-lg cursor-pointer" style={{ color: '#FF6B6B', border: '1px solid rgba(255,107,107,0.3)' }}>
+                        Supprimer
+                      </button>
+                    )}
+                    <ToggleField label={sec.is_visible ? 'Visible' : 'Masquée'} checked={sec.is_visible} onChange={() => toggleVisibility(selectedSection)} />
+                  </div>
                 </div>
                 <div className="px-5 pb-5 pt-4 space-y-4">
-                  {renderEditor(selectedSection)}
+                  {sec.content.is_html ? (
+                    <>
+                      <TextField label="Titre de la section" value={sec.content.title || ''} onChange={(v) => updateContent(selectedSection, 'title', v)} />
+                      <div>
+                        <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>Contenu HTML</label>
+                        <textarea
+                          value={sec.content.html_content || ''}
+                          onChange={(e) => updateContent(selectedSection, 'html_content', e.target.value)}
+                          rows={20}
+                          className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-y font-mono"
+                          style={inputStyle}
+                          placeholder="<h2>Titre</h2>\n<p>Votre contenu...</p>"
+                        />
+                      </div>
+                      {sec.content.html_content && (
+                        <div className="rounded-lg p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
+                          <p className="text-[10px] font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>Aperçu</p>
+                          <div className="prose prose-invert prose-sm max-w-none" style={{ color: 'var(--text-secondary)' }}
+                            dangerouslySetInnerHTML={{ __html: sec.content.html_content }} />
+                        </div>
+                      )}
+                    </>
+                  ) : sec.content.is_html === false && selectedSection.startsWith('custom_') ? (
+                    <>
+                      <TextField label="Titre" value={sec.content.title || ''} onChange={(v) => updateContent(selectedSection, 'title', v)} />
+                      <TextField label="Sous-titre" value={sec.content.subtitle || ''} onChange={(v) => updateContent(selectedSection, 'subtitle', v)} />
+                      <TextAreaField label="Description" value={sec.content.description || ''} onChange={(v) => updateContent(selectedSection, 'description', v)} rows={6} />
+                      <FileUpload label="Image" accept="image/*" folder="landing"
+                        currentUrl={sec.content.image_url || null}
+                        onUploaded={(url) => updateContent(selectedSection, 'image_url', url)}
+                        onRemoved={() => updateContent(selectedSection, 'image_url', '')} />
+                      <TextField label="Texte du bouton" value={sec.content.button_label || ''} onChange={(v) => updateContent(selectedSection, 'button_label', v)} />
+                      <TextField label="Lien du bouton" value={sec.content.button_href || ''} onChange={(v) => updateContent(selectedSection, 'button_href', v)} />
+                    </>
+                  ) : (
+                    renderEditor(selectedSection)
+                  )}
                 </div>
               </>
             )

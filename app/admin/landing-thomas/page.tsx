@@ -389,9 +389,58 @@ export default function LandingThomasPage() {
     }
   }
 
+  /* ── Créer une nouvelle section ── */
+  const [showNewSection, setShowNewSection] = useState(false)
+  const [newSectionName, setNewSectionName] = useState('')
+  const [newSectionType, setNewSectionType] = useState<'normal' | 'html'>('normal')
+
+  function createSection() {
+    if (!newSectionName.trim()) return
+    const key = `custom_${Date.now()}`
+    const maxPos = Math.max(...Object.values(sections).map((s) => s.position), 0) + 1
+
+    const content: SectionContent = newSectionType === 'html'
+      ? {
+          title: newSectionName.trim(),
+          html_content: '<h2>Votre titre</h2>\n<p>Votre contenu ici...</p>',
+          is_html: true,
+        }
+      : {
+          title: newSectionName.trim(),
+          subtitle: '',
+          description: '',
+          image_url: '',
+          button_label: '',
+          button_href: '',
+          is_html: false,
+        }
+
+    setSections((prev) => ({
+      ...prev,
+      [key]: { content, is_visible: true, position: maxPos },
+    }))
+    SECTION_LABELS[key] = { label: newSectionName.trim(), icon: newSectionType === 'html' ? '🖥️' : '📄' }
+    setSelectedSection(key)
+    setNewSectionName('')
+    setShowNewSection(false)
+    setSaved(false)
+  }
+
+  function deleteSection(key: string) {
+    setSections((prev) => {
+      const next = { ...prev }
+      delete next[key]
+      return next
+    })
+    if (selectedSection === key) {
+      setSelectedSection(sortedKeysRef.current[0] || 'hero')
+    }
+    setSaved(false)
+  }
+
   const sortedKeys = Object.keys(sections)
-    .filter((k) => ALL_SECTION_KEYS.includes(k))
     .sort((a, b) => (sections[a]?.position ?? 99) - (sections[b]?.position ?? 99))
+  const sortedKeysRef = { current: sortedKeys }
 
   if (loading) {
     return (
@@ -433,13 +482,61 @@ export default function LandingThomasPage() {
         </div>
       )}
 
+      {/* ── Dialog nouvelle section ── */}
+      {showNewSection && (
+        <div className="rounded-xl p-5 space-y-4"
+          style={{ background: 'var(--dark-card)', border: '1px solid #74C0FC40' }}>
+          <div className="flex items-center justify-between">
+            <h3 className="font-semibold text-sm" style={{ color: '#74C0FC' }}>Créer une nouvelle section</h3>
+            <button type="button" onClick={() => setShowNewSection(false)}
+              className="text-xs px-2 py-1 rounded cursor-pointer" style={{ color: 'var(--text-muted)' }}>Annuler</button>
+          </div>
+          <TextField label="Nom de la section" value={newSectionName} onChange={setNewSectionName} placeholder="Ex: Nos Partenaires" />
+          <div>
+            <label className="block text-xs font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>Type de section</label>
+            <div className="flex gap-3">
+              <button type="button" onClick={() => setNewSectionType('normal')}
+                className="flex-1 rounded-lg p-4 text-center cursor-pointer transition-colors"
+                style={{
+                  background: newSectionType === 'normal' ? 'rgba(116,192,252,0.1)' : 'rgba(255,255,255,0.02)',
+                  border: `1px solid ${newSectionType === 'normal' ? '#74C0FC' : 'var(--dark-border)'}`,
+                }}>
+                <span className="block text-2xl mb-2">📄</span>
+                <span className="block text-sm font-medium" style={{ color: newSectionType === 'normal' ? '#74C0FC' : 'var(--text-primary)' }}>Normal</span>
+                <span className="block text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Titre, texte, image, bouton</span>
+              </button>
+              <button type="button" onClick={() => setNewSectionType('html')}
+                className="flex-1 rounded-lg p-4 text-center cursor-pointer transition-colors"
+                style={{
+                  background: newSectionType === 'html' ? 'rgba(116,192,252,0.1)' : 'rgba(255,255,255,0.02)',
+                  border: `1px solid ${newSectionType === 'html' ? '#74C0FC' : 'var(--dark-border)'}`,
+                }}>
+                <span className="block text-2xl mb-2">🖥️</span>
+                <span className="block text-sm font-medium" style={{ color: newSectionType === 'html' ? '#74C0FC' : 'var(--text-primary)' }}>HTML</span>
+                <span className="block text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Code HTML libre</span>
+              </button>
+            </div>
+          </div>
+          <button type="button" onClick={createSection} disabled={!newSectionName.trim()}
+            className="w-full py-3 rounded-xl text-sm font-semibold cursor-pointer disabled:opacity-30"
+            style={{ background: '#74C0FC', color: '#fff' }}>
+            Créer la section
+          </button>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-4">
         {/* Sidebar */}
         <div className="rounded-xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-          <div className="px-4 py-3" style={{ borderBottom: '1px solid var(--dark-border)' }}>
+          <div className="px-4 py-3 flex items-center justify-between" style={{ borderBottom: '1px solid var(--dark-border)' }}>
             <p className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
               Sections ({sortedKeys.length})
             </p>
+            <button type="button" onClick={() => setShowNewSection(true)}
+              className="text-xs px-2 py-1 rounded cursor-pointer"
+              style={{ color: '#74C0FC', border: '1px solid rgba(116,192,252,0.3)' }}>
+              + Nouvelle
+            </button>
           </div>
           <div className="max-h-[70vh] overflow-y-auto">
             {sortedKeys.map((key, idx) => {
@@ -513,15 +610,56 @@ export default function LandingThomasPage() {
                     </h2>
                     <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
                       {sections[selectedSection].is_visible ? 'Visible' : 'Masquée'} · Position {sections[selectedSection].position}
+                      {selectedSection.startsWith('custom_') && ' · Section personnalisée'}
                     </p>
                   </div>
                 </div>
+                {selectedSection.startsWith('custom_') && (
+                  <button type="button" onClick={() => { if (confirm('Supprimer cette section ?')) deleteSection(selectedSection) }}
+                    className="text-xs px-3 py-1.5 rounded-lg cursor-pointer"
+                    style={{ color: '#FF6B6B', border: '1px solid rgba(255,107,107,0.3)' }}>
+                    Supprimer
+                  </button>
+                )}
               </div>
-              <GenericSectionEditor
-                content={sections[selectedSection].content}
-                sectionKey={selectedSection}
-                onChange={(field, value) => updateContent(selectedSection, field, value)}
-              />
+
+              {/* HTML section: show code editor + preview */}
+              {sections[selectedSection].content.is_html ? (
+                <div className="space-y-4">
+                  <TextField
+                    label="Titre de la section"
+                    value={sections[selectedSection].content.title || ''}
+                    onChange={(v) => updateContent(selectedSection, 'title', v)}
+                  />
+                  <div>
+                    <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>Contenu HTML</label>
+                    <textarea
+                      value={sections[selectedSection].content.html_content || ''}
+                      onChange={(e) => updateContent(selectedSection, 'html_content', e.target.value)}
+                      rows={20}
+                      className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-y font-mono"
+                      style={inputStyle}
+                      placeholder="<h2>Titre</h2>\n<p>Votre contenu...</p>"
+                    />
+                    <p className="text-[10px] mt-1.5" style={{ color: 'var(--text-muted)' }}>
+                      HTML : &lt;h2&gt;, &lt;h3&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;li&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;a&gt;, &lt;img&gt;, &lt;div&gt;, &lt;section&gt;
+                    </p>
+                  </div>
+                  {sections[selectedSection].content.html_content && (
+                    <div className="rounded-lg p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
+                      <p className="text-[10px] font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>Aperçu</p>
+                      <div className="prose prose-invert prose-sm max-w-none" style={{ color: 'var(--text-secondary)' }}
+                        dangerouslySetInnerHTML={{ __html: sections[selectedSection].content.html_content }} />
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <GenericSectionEditor
+                  content={sections[selectedSection].content}
+                  sectionKey={selectedSection}
+                  onChange={(field, value) => updateContent(selectedSection, field, value)}
+                />
+              )}
             </>
           ) : (
             <p className="text-sm py-12 text-center" style={{ color: 'var(--text-muted)' }}>

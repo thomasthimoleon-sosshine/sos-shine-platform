@@ -816,7 +816,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
 
       <div style={{ order: ord("ticker_1") }}>
       {/* ═══ TICKER BAND ═══ */}
-      <InfiniteTickerBand items={tickerItems} speed={ticker1Speed} />
+      {vis('ticker_1') && <InfiniteTickerBand items={tickerItems} speed={ticker1Speed} />}
       </div>
 
       <div style={{ order: ord("signature_cta") }}>
@@ -1182,7 +1182,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
 
       <div style={{ order: ord("ticker_2") }}>
       {/* ═══ TICKER BAND 2 ═══ */}
-      <InfiniteTickerBand items={ticker2Items} speed={ticker2Speed} />
+      {vis('ticker_2') && <InfiniteTickerBand items={ticker2Items} speed={ticker2Speed} />}
       </div>
 
       <div style={{ order: ord("communaute") }}>

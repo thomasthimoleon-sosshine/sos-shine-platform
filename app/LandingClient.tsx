@@ -304,8 +304,8 @@ export default function LandingClient({ initialSections, initialPositions, initi
   const lastScrollYRef = useRef(0);
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.15], [1, 0.95]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.25], [1, 0.97]);
 
   const [prelaunchEnabled, setPrelaunchEnabled] = useState<boolean | null>(initialPrelaunchEnabled ?? null);
   const [prelaunchSettings, setPrelaunchSettings] = useState<PrelaunchSettings>(initialPrelaunchSettings ?? {});

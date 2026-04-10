@@ -293,12 +293,78 @@ export default function Home() {
     }
   }, []);
 
+  /* ── A/B variant resolution ── */
+  function getAbVariant(): string {
+    // 1. Check URL param ?preview= (admin preview mode)
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const preview = params.get('preview');
+      if (preview === 'julia' || preview === 'standard') return preview;
+    }
+
+    // 2. Check cookie
+    if (typeof document !== 'undefined') {
+      const match = document.cookie.match(/(?:^|;\s*)ab_variant=([^;]+)/);
+      if (match) {
+        const v = match[1];
+        if (v === 'julia' || v === 'standard') return v;
+      }
+    }
+
+    // 3. Random 50/50 split (check for active test ratio later)
+    const variant = Math.random() < 0.5 ? 'julia' : 'standard';
+
+    // 4. Persist in cookie (1 year)
+    if (typeof document !== 'undefined') {
+      document.cookie = `ab_variant=${variant};path=/;max-age=${365 * 24 * 60 * 60};samesite=lax`;
+    }
+
+    return variant;
+  }
+
   const loadSections = useCallback(async () => {
     await loadPrelaunchSettings();
 
     try {
       const supabase = createClient();
-      const { data } = await supabase.from("landing_sections").select("*").order("position");
+
+      // Resolve A/B variant
+      const variant = getAbVariant();
+
+      // Check if there's an active test with custom split ratio
+      const { data: activeTest } = await supabase
+        .from('ab_tests')
+        .select('id, split_ratio, is_active')
+        .eq('is_active', true)
+        .limit(1)
+        .maybeSingle();
+
+      // If test is active and cookie was just set, apply correct split ratio
+      let finalVariant = variant;
+      const isPreview = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('preview');
+      if (!isPreview && activeTest && activeTest.is_active) {
+        // Only re-roll if no existing cookie
+        const hasCookie = typeof document !== 'undefined' && document.cookie.includes('ab_variant=');
+        if (!hasCookie) {
+          finalVariant = Math.random() < activeTest.split_ratio ? 'julia' : 'standard';
+          if (typeof document !== 'undefined') {
+            document.cookie = `ab_variant=${finalVariant};path=/;max-age=${365 * 24 * 60 * 60};samesite=lax`;
+          }
+        }
+      }
+
+      // If test is NOT active, default to julia
+      if (activeTest && !activeTest.is_active && !isPreview) {
+        finalVariant = 'julia';
+      }
+
+      // Load sections for this variant
+      const { data } = await supabase
+        .from("landing_sections")
+        .select("*")
+        .eq("page_version", finalVariant)
+        .order("position");
+
       if (data && data.length > 0) {
         const rows = data as unknown as LandingSectionDefault[];
         const dbMap = buildSectionMap(rows);
@@ -315,6 +381,28 @@ export default function Home() {
           }
         }
         setSections(merged);
+      }
+
+      // Track view event (non-blocking)
+      if (activeTest?.is_active && !isPreview) {
+        const sessionId = typeof sessionStorage !== 'undefined'
+          ? sessionStorage.getItem('ab_session') || (() => {
+              const id = crypto.randomUUID();
+              sessionStorage.setItem('ab_session', id);
+              return id;
+            })()
+          : undefined;
+
+        fetch('/api/ab-test', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            test_id: activeTest.id,
+            variant: finalVariant,
+            event_type: 'view',
+            session_id: sessionId,
+          }),
+        }).catch(() => {/* silent */});
       }
     } catch {
       // landing defaults already set
@@ -350,6 +438,19 @@ export default function Home() {
       document.removeEventListener('visibilitychange', handleVisibility);
     };
   }, [loadSections, loadPrelaunchSettings]);
+
+  /** Track A/B conversion (called when user clicks signup/rejoindre CTA) */
+  function trackConversion() {
+    const match = document.cookie.match(/(?:^|;\s*)ab_variant=([^;]+)/);
+    const variant = match?.[1];
+    if (!variant) return;
+    const sessionId = typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('ab_session') : undefined;
+    fetch('/api/ab-test', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ variant, event_type: 'conversion', session_id: sessionId }),
+    }).catch(() => {/* silent */});
+  }
 
   function sec(key: string): SectionContent { return sections[key]?.content || {}; }
   function sty(key: string): SectionStyles { return sections[key]?.styles || {}; }
@@ -564,7 +665,7 @@ export default function Home() {
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}>
               <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-5 justify-center items-center">
                 {(hero.buttons || []).map((btn: { label: string; href: string; variant: string }, i: number) => (
-                  <Link key={i} href={btn.href === '/signup' || btn.href === '/login' ? '/rejoindre' : btn.href} className="w-full sm:w-auto">
+                  <Link key={i} href={btn.href === '/signup' || btn.href === '/login' ? '/rejoindre' : btn.href} className="w-full sm:w-auto" onClick={() => { if (btn.href === '/rejoindre' || btn.href === '/signup') trackConversion(); }}>
                     {btn.variant === 'primary' ? (
                       <button className="magnetic-btn pulse-ring w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full text-sm sm:text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
                         {btn.label} — {trialDays} {t('landing.trial_days')}
@@ -1024,7 +1125,7 @@ export default function Home() {
                       ))}
                     </div>
 
-                    <Link href="/rejoindre">
+                    <Link href="/rejoindre" onClick={trackConversion}>
                       <button className={`magnetic-btn w-full py-3 sm:py-4 rounded-full text-sm sm:text-base font-semibold tracking-wide ${plan.highlight ? 'pulse-ring' : ''}`} style={{
                         background: `linear-gradient(135deg, ${tc.main}, ${tc.deep})`,
                         color: btnTextColor
@@ -1063,7 +1164,7 @@ export default function Home() {
               </h2>
             </RevealOnScroll>
             <RevealOnScroll delay={0.3}>
-              <Link href="/rejoindre">
+              <Link href="/rejoindre" onClick={trackConversion}>
                 <button className="magnetic-btn pulse-ring px-8 sm:px-10 py-4 sm:py-5 rounded-full text-base sm:text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
                   {t('landing.join_cta')}
                 </button>
@@ -1083,7 +1184,7 @@ export default function Home() {
               </p>
             </RevealOnScroll>
             <RevealOnScroll delay={0.15}>
-              <Link href="/rejoindre">
+              <Link href="/rejoindre" onClick={trackConversion}>
                 <button className="magnetic-btn px-8 sm:px-10 py-4 sm:py-5 rounded-full text-base sm:text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
                   {ctaLight.button_label || t('landing.join_cta')}
                 </button>

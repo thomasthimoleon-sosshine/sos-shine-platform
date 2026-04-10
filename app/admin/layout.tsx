@@ -9,7 +9,9 @@ import type { Profile } from '@/types/database'
 const adminNav = [
   { href: '/admin', label: 'Dashboard', icon: '📊' },
   { href: '/admin/dashboard-edit', label: 'Espace Membre', icon: '🎨' },
-  { href: '/admin/landing', label: 'Landing Page', icon: '🏠' },
+  { href: '/admin/landing', label: 'Landing Julia', icon: '🏠' },
+  { href: '/admin/landing-standard', label: 'Landing Page', icon: '🏠' },
+  { href: '/admin/ab-testing', label: 'A/B Testing', icon: '🔬' },
   { href: '/admin/prelaunch', label: 'Pre-lancement', icon: '🚀' },
   { href: '/admin/douleurs', label: 'Challenges', icon: '📘' },
   { href: '/admin/evenements', label: 'Événements', icon: '📅' },

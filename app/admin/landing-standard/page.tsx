@@ -118,7 +118,7 @@ export default function LandingAdminPage() {
   const [error, setError] = useState<string | null>(null)
   const [openPanels, setOpenPanels] = useState<Record<string, boolean>>({})
 
-  const PAGE_VERSION = 'julia'
+  const PAGE_VERSION = 'standard'
 
   /* ── Load sections ── */
   const loadSections = useCallback(async () => {
@@ -1235,7 +1235,7 @@ export default function LandingAdminPage() {
       {/* ── Sticky header ── */}
       <div className="flex items-center justify-between sticky top-0 z-20 py-4 -mx-4 px-4" style={{ background: 'var(--dark)' }}>
         <div>
-          <h1 className="font-display text-3xl font-semibold" style={{ color: 'var(--text-primary)' }}>Landing Page Julia</h1>
+          <h1 className="font-display text-3xl font-semibold" style={{ color: 'var(--text-primary)' }}>Landing Page (Standard)</h1>
           <p className="mt-1 text-sm" style={{ color: 'var(--text-secondary)' }}>
             Editez le contenu, les medias et les styles de votre page d&apos;accueil.
           </p>

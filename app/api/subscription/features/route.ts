@@ -1,6 +1,15 @@
 import { NextResponse } from 'next/server'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 
+// Features offertes à TOUS les membres inscrits (plan gratuit)
+// La communauté et Shine Audible sont offerts sans abonnement payant
+const FREE_FEATURES = [
+  'communaute',
+  'chat_douleur',
+  'mur',
+  'shine_audible',
+] as const
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
@@ -53,11 +62,25 @@ export async function GET(request: Request) {
       const isActive = sub && (sub.status === 'active' || sub.status === 'trialing')
       const userPlan = isActive ? sub.plan : null
 
+      // Free tier — accès gratuit à la communauté et Shine Audible pour tous les membres inscrits
+      const freeFeatureMap = FREE_FEATURES.reduce(
+        (acc, k) => ({ ...acc, [k]: true }),
+        {} as Record<string, boolean>
+      )
+
       if (!userPlan) {
+        // Si on demande une feature spécifique
+        if (featureKey) {
+          return NextResponse.json({
+            plan: 'free',
+            feature: featureKey,
+            has_access: freeFeatureMap[featureKey] || false,
+          })
+        }
         return NextResponse.json({
-          plan: null,
-          is_active: false,
-          features: {},
+          plan: 'free',
+          is_active: true,
+          features: freeFeatureMap,
         })
       }
 
@@ -70,7 +93,7 @@ export async function GET(request: Request) {
       const featureMap = (features || []).reduce((acc, f) => ({
         ...acc,
         [f.feature_key]: f.is_enabled,
-      }), {} as Record<string, boolean>)
+      }), { ...freeFeatureMap } as Record<string, boolean>)
 
       // Si on demande une feature spécifique
       if (featureKey) {

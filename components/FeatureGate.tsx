@@ -8,16 +8,23 @@ import { createClient } from '@/lib/supabase/client'
 import SubscriptionModal from './SubscriptionModal'
 import type { PlanId } from '@/lib/stripe/config'
 
+// Features GRATUITES — accessibles à tous les membres inscrits (même sans abonnement)
+export const FREE_FEATURES = new Set<string>([
+  'communaute',
+  'chat_douleur',
+  'mur',
+  'shine_audible',
+])
+
 // Plan minimum requis pour chaque feature
-// Essentielle (9,90€) : Encyclopédie + Chat + Communauté
-// Sérénité (49,90€) : + Librairie + Shine TV + Shorts + Audible + Soin collectif + Live hebdo + Événements
+// Gratuit (0€) : Communauté + Chat général + Shine Audible
+// Essentielle (9,90€) : + Encyclopédie complète
+// Sérénité (49,90€) : + Librairie + Shine TV + Shorts + Soin collectif + Live hebdo + Événements
 const FEATURE_MIN_PLAN: Record<string, { plan: PlanId; label: string }> = {
   shine_tv: { plan: 'serenite', label: 'Sérénité' },
   shine_shorts: { plan: 'serenite', label: 'Sérénité' },
-  shine_audible: { plan: 'serenite', label: 'Sérénité' },
   shine_librairie: { plan: 'serenite', label: 'Sérénité' },
   soin_collectif: { plan: 'serenite', label: 'Sérénité' },
-  chat_douleur: { plan: 'essential', label: 'Essentielle' },
   visio: { plan: 'serenite', label: 'Sérénité' },
   live_hebdo: { plan: 'serenite', label: 'Sérénité' },
   evenements_payants: { plan: 'serenite', label: 'Sérénité' },
@@ -76,6 +83,11 @@ export default function FeatureGate({ children, featureKey, loadingText }: Featu
         </div>
       </div>
     )
+  }
+
+  // Free features — always accessible to any authenticated user
+  if (FREE_FEATURES.has(featureKey)) {
+    return <>{children}</>
   }
 
   if (hasFeature(featureKey)) {

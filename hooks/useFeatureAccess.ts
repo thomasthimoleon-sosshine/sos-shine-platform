@@ -3,6 +3,14 @@
 import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
+// Features gratuites — accessibles à tous les membres inscrits sans abonnement payant
+const FREE_FEATURES = new Set<string>([
+  'communaute',
+  'chat_douleur',
+  'mur',
+  'shine_audible',
+])
+
 interface FeatureAccess {
   plan: string | null
   isActive: boolean
@@ -66,6 +74,7 @@ export function useFeatureAccess(): FeatureAccess {
     ...state,
     hasFeature: (key: string) => {
       if (state.isAdmin) return true
+      if (FREE_FEATURES.has(key)) return true
       return state.features[key] ?? false
     },
     refresh,

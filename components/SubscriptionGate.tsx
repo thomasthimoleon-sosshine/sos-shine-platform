@@ -9,14 +9,19 @@ import SubscriptionModal from './SubscriptionModal'
 interface SubscriptionGateProps {
   children: React.ReactNode
   loadingText?: string
+  /** Si true, le contenu est accessible à tout membre connecté (plan gratuit) */
+  allowFree?: boolean
 }
 
 /**
  * Verrouille le contenu pour les non-abonnes.
  * Au clic sur "Choisir mon abonnement" → ouvre le modal Stripe inline.
  * Apres paiement → le contenu se debloque instantanement.
+ *
+ * Avec allowFree=true, le contenu est ouvert à tout utilisateur connecté
+ * (utilisé pour la communauté et Shine Audible qui sont gratuits).
  */
-export default function SubscriptionGate({ children, loadingText }: SubscriptionGateProps) {
+export default function SubscriptionGate({ children, loadingText, allowFree = false }: SubscriptionGateProps) {
   const { loading, isActive, userId, refresh } = useSubscription()
   const [showModal, setShowModal] = useState(false)
   const [userEmail, setUserEmail] = useState('')
@@ -51,7 +56,7 @@ export default function SubscriptionGate({ children, loadingText }: Subscription
     )
   }
 
-  if (isActive) {
+  if (isActive || allowFree) {
     return <>{children}</>
   }
 

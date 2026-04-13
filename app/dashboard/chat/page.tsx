@@ -90,7 +90,7 @@ export default function ChatGeneralPage() {
   }
 
   return (
-    <SubscriptionGate>
+    <SubscriptionGate allowFree>
     <div className="max-w-4xl mx-auto h-[calc(100vh-8rem)] flex flex-col">
       <div className="mb-4">
         <h1 className="font-display text-2xl sm:text-3xl font-semibold" style={{ color: 'var(--text-primary)' }}>

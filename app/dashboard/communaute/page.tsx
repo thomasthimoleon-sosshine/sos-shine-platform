@@ -106,7 +106,7 @@ export default function CommunautePage() {
   }
 
   return (
-    <SubscriptionGate>
+    <SubscriptionGate allowFree>
     <div className="max-w-4xl mx-auto">
       {/* ── Community Stats Bar ── */}
       <CommunityStatsBar />

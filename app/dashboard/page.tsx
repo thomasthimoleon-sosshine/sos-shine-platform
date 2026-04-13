@@ -10,6 +10,7 @@ import { getNextRotatingQuote, type Quote } from '@/lib/quotes'
 import { greetingsData, GREETINGS_PER_SLOT, type TimeSlot } from '@/data/greetingsData'
 import { getDailyForecast, resolveZodiacSign, ZODIAC_INFO } from '@/data/energyWeather'
 import PushNotificationButton from '@/components/PushNotificationButton'
+import NpsWidget from '@/components/NpsWidget'
 import { getLevelForXP, getNextLevel, getLevelProgress, formatXP } from '@/lib/xp'
 import type { UserXP } from '@/types/database'
 import { getAllCategories, getUserBadges, unlockAllBadgesForUser, CATEGORY_ICONS, type CategoryConfig } from '@/lib/badgeService'
@@ -936,6 +937,9 @@ export default function DashboardHome() {
 
       {/* ── Étape 4: Actu - Shine ── */}
       <ActuShineSection />
+
+      {/* ── NPS feedback (after 7 days) ── */}
+      <NpsWidget userId={currentUserId} createdAt={profile?.created_at || null} />
 
       {/* ── Affiliate widget — viral loop ── */}
       <motion.div

@@ -8,6 +8,7 @@ import { createClient } from '@/lib/supabase/client'
 import type { Profile } from '@/types/database'
 import ThemeToggle from '@/components/ThemeToggle'
 import NotificationBell from '@/components/NotificationBell'
+import CrisisButton from '@/components/CrisisButton'
 
 import { useTranslation } from '@/lib/i18n/useTranslation'
 
@@ -406,6 +407,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         {/* Page content */}
         <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">{children}</main>
+
+        {/* Floating crisis button — always accessible */}
+        <CrisisButton />
 
       </div>
 

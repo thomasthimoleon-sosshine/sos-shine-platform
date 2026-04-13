@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import SubscriptionGate from '@/components/SubscriptionGate'
+import { useFeatureAccess } from '@/hooks/useFeatureAccess'
 import type { Douleur, DouleurStep, UserProgress, DouleurQuizQuestion } from '@/types/database'
 import { formatXP } from '@/lib/xp'
 import { getEncyclopediaPotentialXp, awardEncyclopediaXp } from '@/lib/XpEngine'
@@ -66,8 +67,13 @@ function buildSteps(douleur: Douleur, dynamicSteps: DouleurStep[]): StepConfig[]
 export default function DouleurDetailPage() {
   const params = useParams()
   const slug = params.slug as string
+  const { hasFeature } = useFeatureAccess()
   const [douleur, setDouleur] = useState<Douleur | null>(null)
   const [relatedDouleurs, setRelatedDouleurs] = useState<Array<{ id: string; title: string; slug: string; subtitle: string | null }>>([])
+  const [relatedTvVideos, setRelatedTvVideos] = useState<Array<{ id: string; title: string; thumbnail_url: string | null; duration_minutes: number }>>([])
+  const [relatedShorts, setRelatedShorts] = useState<Array<{ id: string; title: string; thumbnail_url: string | null; duration_seconds: number }>>([])
+  const [relatedAudible, setRelatedAudible] = useState<Array<{ id: string; title: string; cover_url: string | null; narrator: string | null; content_type: string }>>([])
+  const [relatedBooks, setRelatedBooks] = useState<Array<{ id: string; title: string; author: string; cover_url: string | null; content_type: string }>>([])
   const [dynamicSteps, setDynamicSteps] = useState<DouleurStep[]>([])
   const [loading, setLoading] = useState(true)
   const [activeStep, setActiveStep] = useState(1)
@@ -188,24 +194,61 @@ export default function DouleurDetailPage() {
   }, [slug])
 
   // Load user progress + quiz for this challenge
-  // Load related douleurs sharing at least one tag
+  // Load related content (other douleurs + TV + Shorts + Audible + Library books)
   useEffect(() => {
     async function loadRelated() {
-      if (!douleur || !Array.isArray(douleur.tags) || douleur.tags.length === 0) {
-        setRelatedDouleurs([])
-        return
-      }
+      if (!douleur) return
       const supabase = createClient()
-      const { data } = await supabase
-        .from('douleurs')
-        .select('id, title, slug, subtitle, tags')
-        .eq('is_published', true)
-        .neq('id', douleur.id)
-        .overlaps('tags', douleur.tags)
-        .limit(8)
-      if (data) {
-        setRelatedDouleurs(data as Array<{ id: string; title: string; slug: string; subtitle: string | null }>)
+
+      // 1. Related douleurs via tags overlap
+      if (Array.isArray(douleur.tags) && douleur.tags.length > 0) {
+        const { data } = await supabase
+          .from('douleurs')
+          .select('id, title, slug, subtitle, tags')
+          .eq('is_published', true)
+          .neq('id', douleur.id)
+          .overlaps('tags', douleur.tags)
+          .limit(8)
+        if (data) setRelatedDouleurs(data as Array<{ id: string; title: string; slug: string; subtitle: string | null }>)
+      } else {
+        setRelatedDouleurs([])
       }
+
+      // 2. Shine TV videos linked to this douleur
+      const { data: tvData } = await supabase
+        .from('shine_tv_videos')
+        .select('id, title, thumbnail_url, duration_minutes')
+        .eq('is_published', true)
+        .eq('douleur_id', douleur.id)
+        .limit(8)
+      setRelatedTvVideos((tvData as Array<{ id: string; title: string; thumbnail_url: string | null; duration_minutes: number }>) || [])
+
+      // 3. Shine Shorts linked to this douleur
+      const { data: shortsData } = await supabase
+        .from('shine_shorts')
+        .select('id, title, thumbnail_url, duration_seconds')
+        .eq('is_published', true)
+        .eq('douleur_id', douleur.id)
+        .limit(8)
+      setRelatedShorts((shortsData as Array<{ id: string; title: string; thumbnail_url: string | null; duration_seconds: number }>) || [])
+
+      // 4. Shine Audible tracks linked to this douleur
+      const { data: audibleData } = await supabase
+        .from('shine_audible_tracks')
+        .select('id, title, cover_url, narrator, content_type')
+        .eq('is_published', true)
+        .eq('douleur_id', douleur.id)
+        .limit(8)
+      setRelatedAudible((audibleData as Array<{ id: string; title: string; cover_url: string | null; narrator: string | null; content_type: string }>) || [])
+
+      // 5. Shine Library books linked to this douleur
+      const { data: booksData } = await supabase
+        .from('shine_library_books')
+        .select('id, title, author, cover_url, content_type')
+        .eq('is_published', true)
+        .eq('douleur_id', douleur.id)
+        .limit(8)
+      setRelatedBooks((booksData as Array<{ id: string; title: string; author: string; cover_url: string | null; content_type: string }>) || [])
     }
     loadRelated()
   }, [douleur])
@@ -952,6 +995,226 @@ export default function DouleurDetailPage() {
           Échangez avec ceux qui traversent la même épreuve que vous.
         </p>
       </Link>
+
+      {/* ═══ CONTENUS LIÉS À CE CHALLENGE ═══ */}
+      {(relatedTvVideos.length > 0 || relatedShorts.length > 0 || relatedAudible.length > 0 || relatedBooks.length > 0) && (
+        <div className="pt-8 mt-4 space-y-10" style={{ borderTop: '1px solid var(--dark-border)' }}>
+          <div>
+            <h3 className="font-display text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+              Contenus liés à ce challenge
+            </h3>
+            <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
+              Retrouvez tout ce qui traite de ce sujet sur la plateforme.
+            </p>
+          </div>
+
+          {/* Shine TV */}
+          {relatedTvVideos.length > 0 && (() => {
+            const unlocked = hasFeature('shine_tv')
+            return (
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="font-semibold text-sm tracking-wide uppercase" style={{ color: 'var(--gold)' }}>
+                    🎬 Shine TV ({relatedTvVideos.length})
+                  </h4>
+                  {!unlocked && (
+                    <span className="text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                      Réservé Sérénité
+                    </span>
+                  )}
+                </div>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {relatedTvVideos.map((v) => (
+                    unlocked ? (
+                      <Link key={v.id} href={`/dashboard/shine-tv?video=${v.id}`}
+                        className="rounded-xl overflow-hidden block transition-all hover:scale-[1.01]"
+                        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                        <div className="aspect-video relative" style={{ background: 'rgba(0,0,0,0.4)' }}>
+                          {v.thumbnail_url && <img src={v.thumbnail_url} alt="" className="absolute inset-0 w-full h-full object-cover" />}
+                        </div>
+                        <div className="p-3">
+                          <p className="font-medium text-sm line-clamp-2" style={{ color: 'var(--text-primary)' }}>{v.title}</p>
+                          <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>{v.duration_minutes} min</p>
+                        </div>
+                      </Link>
+                    ) : (
+                      <div key={v.id} className="rounded-xl overflow-hidden relative cursor-not-allowed"
+                        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                        <div className="aspect-video relative" style={{ background: 'rgba(0,0,0,0.4)' }}>
+                          {v.thumbnail_url && <img src={v.thumbnail_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40" />}
+                          <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.5)' }}>
+                            <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                            </svg>
+                          </div>
+                        </div>
+                        <div className="p-3">
+                          <p className="font-medium text-sm line-clamp-2" style={{ color: 'var(--text-secondary)' }}>{v.title}</p>
+                          <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>{v.duration_minutes} min</p>
+                        </div>
+                      </div>
+                    )
+                  ))}
+                </div>
+              </div>
+            )
+          })()}
+
+          {/* Shine Shorts */}
+          {relatedShorts.length > 0 && (() => {
+            const unlocked = hasFeature('shine_shorts')
+            return (
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="font-semibold text-sm tracking-wide uppercase" style={{ color: 'var(--gold)' }}>
+                    📱 Shine Shorts ({relatedShorts.length})
+                  </h4>
+                  {!unlocked && (
+                    <span className="text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                      Réservé Sérénité
+                    </span>
+                  )}
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                  {relatedShorts.map((s) => (
+                    unlocked ? (
+                      <Link key={s.id} href={`/dashboard/shine-shorts?short=${s.id}`}
+                        className="rounded-xl overflow-hidden block transition-all hover:scale-[1.02]"
+                        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                        <div className="aspect-[9/16] relative" style={{ background: 'rgba(0,0,0,0.4)' }}>
+                          {s.thumbnail_url && <img src={s.thumbnail_url} alt="" className="absolute inset-0 w-full h-full object-cover" />}
+                        </div>
+                        <div className="p-2">
+                          <p className="font-medium text-xs line-clamp-2" style={{ color: 'var(--text-primary)' }}>{s.title}</p>
+                        </div>
+                      </Link>
+                    ) : (
+                      <div key={s.id} className="rounded-xl overflow-hidden relative cursor-not-allowed"
+                        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                        <div className="aspect-[9/16] relative" style={{ background: 'rgba(0,0,0,0.4)' }}>
+                          {s.thumbnail_url && <img src={s.thumbnail_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40" />}
+                          <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.5)' }}>
+                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                            </svg>
+                          </div>
+                        </div>
+                        <div className="p-2">
+                          <p className="font-medium text-xs line-clamp-2" style={{ color: 'var(--text-secondary)' }}>{s.title}</p>
+                        </div>
+                      </div>
+                    )
+                  ))}
+                </div>
+              </div>
+            )
+          })()}
+
+          {/* Shine Audible */}
+          {relatedAudible.length > 0 && (() => {
+            const unlocked = hasFeature('shine_audible')
+            return (
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="font-semibold text-sm tracking-wide uppercase" style={{ color: 'var(--gold)' }}>
+                    🎧 Shine Audible ({relatedAudible.length})
+                  </h4>
+                  {!unlocked && (
+                    <span className="text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                      Réservé Sérénité
+                    </span>
+                  )}
+                </div>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {relatedAudible.map((a) => (
+                    unlocked ? (
+                      <Link key={a.id} href={`/dashboard/shine-audible?track=${a.id}`}
+                        className="rounded-xl overflow-hidden flex gap-3 transition-all hover:scale-[1.01]"
+                        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                        <div className="w-20 aspect-square flex-shrink-0" style={{ background: 'rgba(0,0,0,0.4)' }}>
+                          {a.cover_url && <img src={a.cover_url} alt="" className="w-full h-full object-cover" />}
+                        </div>
+                        <div className="py-2 pr-3 flex-1 min-w-0">
+                          <p className="font-medium text-sm line-clamp-2" style={{ color: 'var(--text-primary)' }}>{a.title}</p>
+                          {a.narrator && <p className="text-xs mt-1 truncate" style={{ color: 'var(--text-muted)' }}>{a.narrator}</p>}
+                        </div>
+                      </Link>
+                    ) : (
+                      <div key={a.id} className="rounded-xl overflow-hidden flex gap-3 cursor-not-allowed"
+                        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                        <div className="w-20 aspect-square flex-shrink-0 relative" style={{ background: 'rgba(0,0,0,0.4)' }}>
+                          {a.cover_url && <img src={a.cover_url} alt="" className="w-full h-full object-cover opacity-40" />}
+                          <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.5)' }}>
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                            </svg>
+                          </div>
+                        </div>
+                        <div className="py-2 pr-3 flex-1 min-w-0">
+                          <p className="font-medium text-sm line-clamp-2" style={{ color: 'var(--text-secondary)' }}>{a.title}</p>
+                          {a.narrator && <p className="text-xs mt-1 truncate" style={{ color: 'var(--text-muted)' }}>{a.narrator}</p>}
+                        </div>
+                      </div>
+                    )
+                  ))}
+                </div>
+              </div>
+            )
+          })()}
+
+          {/* Shine Librairie */}
+          {relatedBooks.length > 0 && (() => {
+            const unlocked = hasFeature('shine_librairie')
+            return (
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="font-semibold text-sm tracking-wide uppercase" style={{ color: 'var(--gold)' }}>
+                    📚 Shine Librairie ({relatedBooks.length})
+                  </h4>
+                  {!unlocked && (
+                    <span className="text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                      Réservé Sérénité
+                    </span>
+                  )}
+                </div>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {relatedBooks.map((b) => (
+                    unlocked ? (
+                      <Link key={b.id} href={`/dashboard/shine-librairie?book=${b.id}`}
+                        className="rounded-xl overflow-hidden flex gap-3 transition-all hover:scale-[1.01]"
+                        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                        <div className="w-16 aspect-[3/4] flex-shrink-0" style={{ background: 'rgba(0,0,0,0.4)' }}>
+                          {b.cover_url && <img src={b.cover_url} alt="" className="w-full h-full object-cover" />}
+                        </div>
+                        <div className="py-2 pr-3 flex-1 min-w-0">
+                          <p className="font-medium text-sm line-clamp-2" style={{ color: 'var(--text-primary)' }}>{b.title}</p>
+                          <p className="text-xs mt-1 truncate" style={{ color: 'var(--text-muted)' }}>{b.author}</p>
+                        </div>
+                      </Link>
+                    ) : (
+                      <div key={b.id} className="rounded-xl overflow-hidden flex gap-3 cursor-not-allowed"
+                        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                        <div className="w-16 aspect-[3/4] flex-shrink-0 relative" style={{ background: 'rgba(0,0,0,0.4)' }}>
+                          {b.cover_url && <img src={b.cover_url} alt="" className="w-full h-full object-cover opacity-40" />}
+                          <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.5)' }}>
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                            </svg>
+                          </div>
+                        </div>
+                        <div className="py-2 pr-3 flex-1 min-w-0">
+                          <p className="font-medium text-sm line-clamp-2" style={{ color: 'var(--text-secondary)' }}>{b.title}</p>
+                          <p className="text-xs mt-1 truncate" style={{ color: 'var(--text-muted)' }}>{b.author}</p>
+                        </div>
+                      </div>
+                    )
+                  ))}
+                </div>
+              </div>
+            )
+          })()}
+        </div>
+      )}
 
       {/* Sujets liés (partagent au moins un tag) */}
       {relatedDouleurs.length > 0 && (

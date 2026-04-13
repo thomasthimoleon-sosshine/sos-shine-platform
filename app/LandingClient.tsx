@@ -1166,7 +1166,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
               {prod.cta_label && (
                 <RevealOnScroll delay={0.5}>
                   <div className="text-center mt-8 md:mt-12">
-                    <Link href={prod.cta_href || '/signup'}>
+                    <Link href={prod.cta_href || '/signup'} onClick={() => trackConversion('produit_cta')}>
                       <button className="magnetic-btn px-6 sm:px-8 py-3 sm:py-3.5 rounded-full text-sm font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.25)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
                         {prod.cta_label}
                       </button>
@@ -1948,7 +1948,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
               </RevealOnScroll>
               <RevealOnScroll delay={0.2}>
                 {ctaL.button_label && (
-                  <Link href={ctaL.button_href || '/signup'}>
+                  <Link href={ctaL.button_href || '/signup'} onClick={() => trackConversion('cta_light')}>
                     <button className="magnetic-btn px-8 sm:px-10 py-4 sm:py-5 rounded-full text-base sm:text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
                       {ctaL.button_label}
                     </button>
@@ -2454,7 +2454,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                   )}
                   {c.description && <p className="text-base md:text-lg leading-relaxed max-w-3xl mx-auto mb-8" style={{ color: 'var(--text-secondary)' }}>{c.description}</p>}
                   {c.button_label && (
-                    <Link href={c.button_href || '/signup'}>
+                    <Link href={c.button_href || '/signup'} onClick={() => trackConversion('custom_cta')}>
                       <button className="magnetic-btn px-8 py-4 rounded-full text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, var(--gold), var(--gold-deep))`, color: '#050505' }}>
                         {c.button_label}
                       </button>

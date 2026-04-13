@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextResponse, type NextRequest } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { PROFILES, type ProfileKey } from '@/lib/signature-test'
 import { generateSignatureResultEmail } from '@/lib/email-templates/signature-result'
@@ -17,9 +17,12 @@ function getSiteUrl(): string {
     || 'https://sosshine.com'
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const { email, firstName, profileKey, profileName } = await request.json()
+    // Read A/B variant from cookie for lead attribution
+    const abVariantRaw = request.cookies.get('ab_variant')?.value
+    const abVariant = (abVariantRaw === 'julia' || abVariantRaw === 'thomas') ? abVariantRaw : null
 
     if (!email || typeof email !== 'string' || !email.includes('@')) {
       return NextResponse.json({ error: 'Email invalide' }, { status: 400 })
@@ -49,12 +52,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
     }
 
-    // Enroll in CRM contacts
+    // Enroll in CRM contacts (with A/B variant attribution)
     try {
-      await supabase.from('crm_contacts').upsert({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (supabase.from('crm_contacts') as any).upsert({
         email: cleanEmail,
         first_name: cleanName,
         source: 'signature_test',
+        ...(abVariant ? { ab_variant: abVariant } : {}),
       }, { onConflict: 'email', ignoreDuplicates: true })
     } catch {}
 

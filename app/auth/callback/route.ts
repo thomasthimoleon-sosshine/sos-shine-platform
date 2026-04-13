@@ -82,6 +82,24 @@ export async function GET(request: Request) {
         }
 
         const isNewUser = user.created_at && (Date.now() - new Date(user.created_at).getTime() < 60000)
+
+        // ─── A/B variant attribution ───
+        // Read ab_variant from cookie (set by LandingClient) and persist it on profile
+        // This allows full funnel tracking: visit → signup → subscription → LTV
+        const abVariantCookie = cookieStore.get('ab_variant')?.value
+        if (abVariantCookie === 'julia' || abVariantCookie === 'thomas') {
+          try {
+            const admin = createAdminClient()
+            if (admin) {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              await (admin.from('profiles') as any)
+                .update({ ab_variant: abVariantCookie })
+                .eq('id', user.id)
+                .is('ab_variant', null) // only set if not already set (first touch wins)
+            }
+          } catch {}
+        }
+
         if (isNewUser) {
           const firstName = user.user_metadata?.prenom
             || user.user_metadata?.full_name?.split(' ')[0]

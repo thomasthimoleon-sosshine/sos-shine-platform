@@ -17,6 +17,10 @@ interface VariantStats {
   unique: number
   converted: number
   rate: number
+  signups: number
+  paidSubs: number
+  signupRate: number
+  paymentRate: number
 }
 
 interface DailyRow {
@@ -53,6 +57,24 @@ export default function AbTestingDashboard() {
       .order('visited_at', { ascending: true })
     const visits = (visitsRaw || []) as unknown as { variant: string; visitor_ip: string | null; converted: boolean; visited_at: string }[]
 
+    // Load REAL signups + paid subs per variant (attribution)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: profilesRaw } = await (supabase.from('profiles') as any)
+      .select('id, ab_variant')
+      .not('ab_variant', 'is', null)
+    const profiles = (profilesRaw || []) as Array<{ id: string; ab_variant: string }>
+
+    // Map profile id -> variant
+    const userVariants: Record<string, string> = {}
+    for (const p of profiles) userVariants[p.id] = p.ab_variant
+
+    // Load active subscriptions
+    const { data: subsRaw } = await supabase
+      .from('subscriptions')
+      .select('user_id, status, plan')
+      .in('status', ['active', 'trialing'])
+    const subs = (subsRaw || []) as Array<{ user_id: string; status: string; plan: string }>
+
     const s: Record<string, VariantStats> = {}
     const d: Record<string, DailyRow[]> = {}
 
@@ -62,11 +84,19 @@ export default function AbTestingDashboard() {
       const converted = variantVisits.filter((vis) => vis.converted).length
       const total = variantVisits.length
 
+      // Real attribution: signups and paid subs with this variant
+      const variantSignups = profiles.filter((p) => p.ab_variant === v).length
+      const variantPaidSubs = subs.filter((sub) => userVariants[sub.user_id] === v).length
+
       s[v] = {
         total,
         unique: uniqueIps.size,
         converted,
         rate: total > 0 ? Math.round((converted / total) * 10000) / 100 : 0,
+        signups: variantSignups,
+        paidSubs: variantPaidSubs,
+        signupRate: total > 0 ? Math.round((variantSignups / total) * 10000) / 100 : 0,
+        paymentRate: variantSignups > 0 ? Math.round((variantPaidSubs / variantSignups) * 10000) / 100 : 0,
       }
 
       // Daily breakdown
@@ -131,7 +161,10 @@ export default function AbTestingDashboard() {
   const sB = stats[config.variant_b] || { total: 0, unique: 0, converted: 0, rate: 0 }
   const totalViews = sA.total + sB.total
   const totalConversions = sA.converted + sB.converted
-  const winner = sA.rate > sB.rate ? config.variant_a : sB.rate > sA.rate ? config.variant_b : null
+  // Winner based on the FULL funnel: visits → paid subs (the only metric that matters)
+  const fullRateA = sA.total > 0 ? (sA.paidSubs / sA.total) : 0
+  const fullRateB = sB.total > 0 ? (sB.paidSubs / sB.total) : 0
+  const winner = fullRateA > fullRateB ? config.variant_a : fullRateB > fullRateA ? config.variant_b : null
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
@@ -220,19 +253,30 @@ export default function AbTestingDashboard() {
               {[
                 { label: 'Vues totales', val: v.s.total },
                 { label: 'Visiteurs uniques', val: v.s.unique },
-                { label: 'Conversions', val: v.s.converted },
+                { label: 'Clicks CTA', val: v.s.converted },
+                { label: 'Inscriptions (attribuées)', val: v.s.signups },
+                { label: 'Abonnés payants', val: v.s.paidSubs },
               ].map((r) => (
                 <div key={r.label} className="flex justify-between items-center">
                   <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{r.label}</span>
                   <span className="font-semibold" style={{ color: 'var(--text-primary)' }}>{r.val}</span>
                 </div>
               ))}
-              <div className="flex justify-between items-center pt-2" style={{ borderTop: '1px solid var(--dark-border)' }}>
-                <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>Taux de conversion</span>
-                <span className="font-display text-xl font-semibold" style={{ color: v.color }}>{v.s.rate}%</span>
-              </div>
-              <div className="w-full h-2 rounded-full" style={{ background: 'rgba(255,255,255,0.05)' }}>
-                <div className="h-2 rounded-full transition-all" style={{ width: `${Math.min(v.s.rate * 3, 100)}%`, background: v.color }} />
+              <div className="pt-3" style={{ borderTop: '1px solid var(--dark-border)' }}>
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-xs" style={{ color: 'var(--text-muted)' }}>Taux signup (visite→compte)</span>
+                  <span className="font-semibold text-sm" style={{ color: v.color }}>{v.s.signupRate}%</span>
+                </div>
+                <div className="w-full h-1.5 rounded-full mb-3" style={{ background: 'rgba(255,255,255,0.05)' }}>
+                  <div className="h-1.5 rounded-full transition-all" style={{ width: `${Math.min(v.s.signupRate * 5, 100)}%`, background: v.color, opacity: 0.6 }} />
+                </div>
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-xs" style={{ color: 'var(--text-muted)' }}>Taux paiement (compte→payant)</span>
+                  <span className="font-semibold text-sm" style={{ color: v.color }}>{v.s.paymentRate}%</span>
+                </div>
+                <div className="w-full h-1.5 rounded-full" style={{ background: 'rgba(255,255,255,0.05)' }}>
+                  <div className="h-1.5 rounded-full transition-all" style={{ width: `${Math.min(v.s.paymentRate * 2, 100)}%`, background: v.color }} />
+                </div>
               </div>
             </div>
 

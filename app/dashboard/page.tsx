@@ -668,6 +668,7 @@ export default function DashboardHome() {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
   const [firstGoal, setFirstGoal] = useState<{ title: string; description: string | null; recommended_slug: string | null; douleur: { title: string; subtitle: string | null; image_url: string | null } | null } | null>(null)
   const [hasStartedAny, setHasStartedAny] = useState(false)
+  const [affiliateStatus, setAffiliateStatus] = useState<{ exists: boolean; approved: boolean; referral_code: string | null; total_referrals: number; pending_earnings: number }>({ exists: false, approved: false, referral_code: null, total_referrals: 0, pending_earnings: 0 })
 
   useEffect(() => {
     setQuote(getNextRotatingQuote())
@@ -755,6 +756,23 @@ export default function DashboardHome() {
           description: goal.description,
           recommended_slug: goal.recommended_slug,
           douleur: (douleur as { title: string; subtitle: string | null; image_url: string | null } | null),
+        })
+      }
+
+      // Affiliate status
+      const { data: aff } = await supabase
+        .from('affiliates')
+        .select('status, referral_code, total_referrals, pending_earnings')
+        .eq('user_id', user.id)
+        .maybeSingle()
+      if (aff) {
+        const a = aff as { status: string; referral_code: string; total_referrals: number; pending_earnings: number }
+        setAffiliateStatus({
+          exists: true,
+          approved: a.status === 'approved',
+          referral_code: a.referral_code,
+          total_referrals: a.total_referrals || 0,
+          pending_earnings: Number(a.pending_earnings) || 0,
         })
       }
     }
@@ -887,6 +905,115 @@ export default function DashboardHome() {
 
       {/* ── Étape 4: Actu - Shine ── */}
       <ActuShineSection />
+
+      {/* ── Affiliate widget — viral loop ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.55, duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
+        className="glass glass-hover relative overflow-hidden"
+        style={{
+          background: 'linear-gradient(135deg, rgba(212,175,55,0.08), rgba(116,192,252,0.04))',
+          border: '1px solid rgba(212,175,55,0.2)',
+        }}
+      >
+        <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full opacity-30 pointer-events-none"
+          style={{ background: 'radial-gradient(circle, rgba(212,175,55,0.15), transparent 70%)' }} />
+
+        <div className="relative p-6 sm:p-8">
+          {affiliateStatus.approved && affiliateStatus.referral_code ? (
+            <>
+              <div className="flex items-start gap-3 mb-4">
+                <span className="text-2xl">💛</span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[11px] font-semibold uppercase tracking-wider mb-1" style={{ color: 'var(--gold)' }}>
+                    Votre lien d&apos;affiliation
+                  </p>
+                  <h2 className="font-display text-xl sm:text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+                    Partagez et gagnez 30%
+                  </h2>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                <div className="rounded-xl p-3 text-center" style={{ background: 'rgba(0,0,0,0.2)' }}>
+                  <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Inscrits</p>
+                  <p className="font-display text-2xl font-semibold" style={{ color: 'var(--gold)' }}>
+                    {affiliateStatus.total_referrals}
+                  </p>
+                </div>
+                <div className="rounded-xl p-3 text-center" style={{ background: 'rgba(0,0,0,0.2)' }}>
+                  <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Gains en attente</p>
+                  <p className="font-display text-2xl font-semibold" style={{ color: '#55EFC4' }}>
+                    {affiliateStatus.pending_earnings.toFixed(2)}€
+                  </p>
+                </div>
+              </div>
+
+              <div className="rounded-xl p-3 mb-4 flex items-center gap-2"
+                style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid var(--dark-border)' }}>
+                <code className="flex-1 text-xs truncate" style={{ color: 'var(--text-secondary)' }}>
+                  sosshine.com/signup?ref={affiliateStatus.referral_code}
+                </code>
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(`https://sosshine.com/signup?ref=${affiliateStatus.referral_code}`)
+                  }}
+                  className="text-[11px] px-3 py-1.5 rounded-lg cursor-pointer flex-shrink-0"
+                  style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}
+                >
+                  Copier
+                </button>
+              </div>
+
+              <Link href="/dashboard/affiliation"
+                className="block text-center py-3 rounded-xl text-sm font-semibold transition-all hover:scale-[1.005]"
+                style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}>
+                Voir mon tableau de bord →
+              </Link>
+            </>
+          ) : (
+            <>
+              <div className="flex items-start gap-3 mb-3">
+                <span className="text-2xl">💛</span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[11px] font-semibold uppercase tracking-wider mb-1" style={{ color: 'var(--gold)' }}>
+                    Programme d&apos;affiliation
+                  </p>
+                  <h2 className="font-display text-xl sm:text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+                    Recommandez, gagnez 30% à vie
+                  </h2>
+                </div>
+              </div>
+              <p className="text-sm mb-5 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                Aidez vos proches à comprendre leurs schémas émotionnels. Pour chaque ami qui s&apos;abonne grâce à vous, vous touchez <strong style={{ color: 'var(--gold)' }}>30% de commission à vie</strong>.
+              </p>
+
+              <div className="grid grid-cols-3 gap-2 mb-5">
+                <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(0,0,0,0.2)' }}>
+                  <p className="font-display text-lg font-semibold" style={{ color: 'var(--gold)' }}>30%</p>
+                  <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>Commission</p>
+                </div>
+                <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(0,0,0,0.2)' }}>
+                  <p className="font-display text-lg font-semibold" style={{ color: 'var(--gold)' }}>À vie</p>
+                  <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>Durée</p>
+                </div>
+                <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(0,0,0,0.2)' }}>
+                  <p className="font-display text-lg font-semibold" style={{ color: 'var(--gold)' }}>0€</p>
+                  <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>À débourser</p>
+                </div>
+              </div>
+
+              <Link href="/dashboard/affiliation"
+                className="block text-center py-3 rounded-xl text-sm font-semibold transition-all hover:scale-[1.005]"
+                style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}>
+                {affiliateStatus.exists ? 'Voir mon espace affilié →' : 'Devenir affilié →'}
+              </Link>
+            </>
+          )}
+        </div>
+      </motion.div>
 
       {/* ── Help footer ── */}
       <motion.div

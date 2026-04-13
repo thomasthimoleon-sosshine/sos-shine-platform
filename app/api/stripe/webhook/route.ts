@@ -98,7 +98,9 @@ export async function POST(request: Request) {
           source: 'webhook',
         })
 
-        console.log(`[Webhook] checkout.session.completed traité: userId=${userId} → ${result.success ? 'OK' : 'ERREUR'}`)
+        if (!result.success) {
+          console.error('[Webhook] checkout.session.completed failed')
+        }
         break
       }
 

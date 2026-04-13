@@ -312,8 +312,8 @@ export default function EmailTemplatesPage() {
                     __html: editingTemplate.html_content
                       .replace(/\{firstName\}/g, 'Julia')
                       .replace(/\{email\}/g, 'julialaureau@sosshine.com')
-                      .replace(/\{planName\}/g, 'Premium')
-                      .replace(/\{planAmount\}/g, '99,90€')
+                      .replace(/\{planName\}/g, 'Sérénité')
+                      .replace(/\{planAmount\}/g, '49,90€')
                       .replace(/\{site_url\}/g, '#')
                       .replace(/\{eventName\}/g, 'Atelier Lumière')
                       .replace(/\{eventDate\}/g, '25 mars 2026')

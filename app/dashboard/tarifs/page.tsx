@@ -29,21 +29,20 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY 
 const PLAN_FEATURES: Record<PlanId, string[]> = {
   essential: [
     'Encyclopédie complète (accès illimité)',
-    'Chat & Communauté',
+    'Chats par challenge émotionnel',
+    'Protocoles guidés en 3 étapes',
+    '+ Tout le plan Gratuit',
   ],
   serenite: [
     'Tout le contenu de l\'Essentielle',
-    'Shine Librairie',
     'Shine TV & Shorts',
-    'Shine Audible',
+    'Shine Librairie complète',
     'Soin collectif mensuel',
-    'Live thématique hebdomadaire',
-    'Événements physiques',
+    'Live thématique hebdomadaire avec Julia',
+    'Accès prioritaire aux événements',
     '7 jours d\'essai gratuit',
   ],
-  premium: [
-    'Plan archivé',
-  ],
+  premium: [],
 }
 
 export default function TarifsPage() {

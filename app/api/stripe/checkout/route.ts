@@ -102,7 +102,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Impossible de créer la session de paiement' }, { status: 500 })
     }
 
-    console.log(`[Checkout] Session créée: ${session.id} — ${trimmedEmail}, ${plan} ${effectiveDuration}`)
     return NextResponse.json({ url: session.url })
   } catch (err: unknown) {
     const e = err as { type?: string; message?: string }

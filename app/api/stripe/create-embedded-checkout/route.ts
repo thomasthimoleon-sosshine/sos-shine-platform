@@ -79,8 +79,6 @@ export async function POST(request: Request) {
     const siteOrigin = getOrigin(request)
     const firstName = prenom?.trim() || 'Membre'
 
-    console.log(`[EmbeddedCheckout] Creating session: ${plan} ${effectiveDuration}, email=${trimmedEmail}, origin=${siteOrigin}, priceId=${priceId}`)
-
     // Vérifier si le plan a un essai gratuit
     const hasTrial = (plan === 'serenite' || plan === 'premium')
 
@@ -116,7 +114,6 @@ export async function POST(request: Request) {
 
     const session = await stripe.checkout.sessions.create(sessionParams)
 
-    console.log(`[EmbeddedCheckout] Session créée: ${session.id} — ${trimmedEmail}, ${plan} ${effectiveDuration}`)
     return NextResponse.json({ clientSecret: session.client_secret })
   } catch (err: unknown) {
     const e = err as { type?: string; message?: string; raw?: { message?: string } }

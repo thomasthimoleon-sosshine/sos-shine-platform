@@ -15,6 +15,20 @@ interface SequenceDef {
 }
 
 const SEQUENCE_DEFINITIONS: SequenceDef[] = [
+  // ── 0. INSCRIPTION GRATUITE → CONVERSION (5 templates) ──
+  // Nouveaux inscrits sans abonnement : nurturing pour les convertir
+  {
+    name: 'Parcours Nouvel Inscrit (Free → Paid)',
+    trigger_type: 'registration',
+    template_keys: [
+      'registration_welcome',
+      'registration_conversion_j1',
+      'registration_conversion_j3',
+      'registration_conversion_j7',
+      'registration_conversion_j14',
+    ],
+  },
+
   // ── 1. LISTE D'ATTENTE (3 templates) ──
   {
     name: 'Parcours Liste d\'attente',

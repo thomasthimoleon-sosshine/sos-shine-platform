@@ -320,13 +320,20 @@ export default function PublicDouleurDetailPage() {
 
               return (
                 <div className="space-y-4">
-                  {/* Video locked preview */}
+                  {/* Video locked preview (shows image as thumbnail if available) */}
                   {currentStep.video && (
                     <div
                       className="rounded-xl overflow-hidden aspect-video relative cursor-pointer group"
                       style={{ background: 'rgba(0,0,0,0.4)' }}
                       onClick={handlePlayClick}
                     >
+                      {currentStep.image && (
+                        <img
+                          src={currentStep.image}
+                          alt=""
+                          className="absolute inset-0 w-full h-full object-cover"
+                        />
+                      )}
                       <div className="absolute inset-0 flex items-center justify-center z-10">
                         <div className="text-center">
                           <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 transition-transform group-hover:scale-110"
@@ -347,8 +354,8 @@ export default function PublicDouleurDetailPage() {
                     </div>
                   )}
 
-                  {/* Image locked preview */}
-                  {currentStep.image && (
+                  {/* Image locked preview (only when no video, otherwise image is used as video thumbnail) */}
+                  {!currentStep.video && currentStep.image && (
                     <div
                       className="rounded-xl overflow-hidden relative cursor-pointer group"
                       style={{ background: 'rgba(0,0,0,0.3)', minHeight: '200px' }}

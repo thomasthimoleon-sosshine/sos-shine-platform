@@ -578,11 +578,18 @@ export default function DouleurDetailPage() {
             <div className="space-y-4">
               {currentStep.video && (
                 <div className="rounded-xl overflow-hidden aspect-video" style={{ background: 'var(--dark)' }}>
-                  <video src={currentStep.video} controls className="w-full h-full" />
+                  <video
+                    src={currentStep.video}
+                    poster={currentStep.image || undefined}
+                    controls
+                    preload="metadata"
+                    className="w-full h-full"
+                  />
                 </div>
               )}
 
-              {currentStep.image && (
+              {/* Image standalone only when there's no video (otherwise it's used as poster) */}
+              {!currentStep.video && currentStep.image && (
                 <div className="rounded-xl overflow-hidden" style={{ background: 'var(--dark)' }}>
                   <img src={currentStep.image} alt={`${douleur?.title} — Étape ${currentStep.num}`} className="w-full h-auto rounded-xl" style={{ maxHeight: '500px', objectFit: 'contain' }} />
                 </div>

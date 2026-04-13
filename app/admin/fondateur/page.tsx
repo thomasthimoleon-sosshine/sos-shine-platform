@@ -268,30 +268,34 @@ export default function FounderDashboard() {
   // Fetch live data from Supabase
   useEffect(() => {
     async function fetchLive() {
-      const supabase = createClient()
+      try {
+        const supabase = createClient()
 
-      const [profiles, subs, affiliates] = await Promise.all([
-        supabase.from('profiles').select('id', { count: 'exact', head: true }),
-        supabase.from('subscriptions').select('plan, status'),
-        supabase.from('affiliates').select('total_earnings, pending_earnings'),
-      ])
+        const [profiles, subs, affiliates] = await Promise.all([
+          supabase.from('profiles').select('id', { count: 'exact', head: true }),
+          supabase.from('subscriptions').select('plan, status'),
+          supabase.from('affiliates').select('total_earnings, pending_earnings'),
+        ])
 
-      const subData = subs.data || []
-      const affData = affiliates.data || []
+        const subData = subs.data || []
+        const affData = affiliates.data || []
 
-      setLiveStats({
-        totalMembers: profiles.count || 0,
-        activeSubscriptions: subData.filter((s: { status: string }) => s.status === 'active' || s.status === 'trialing').length,
-        essentialCount: subData.filter((s: { plan: string; status: string }) => s.plan === 'essential' && (s.status === 'active' || s.status === 'trialing')).length,
-        sereniteCount: subData.filter((s: { plan: string; status: string }) => s.plan === 'serenite' && (s.status === 'active' || s.status === 'trialing')).length,
-        premiumCount: subData.filter((s: { plan: string; status: string }) => s.plan === 'premium' && (s.status === 'active' || s.status === 'trialing')).length,
-        trialingCount: subData.filter((s: { status: string }) => s.status === 'trialing').length,
-        pastDueCount: subData.filter((s: { status: string }) => s.status === 'past_due').length,
-        canceledCount: subData.filter((s: { status: string }) => s.status === 'canceled').length,
-        totalAffiliateEarnings: affData.reduce((sum: number, a: { total_earnings: number }) => sum + (a.total_earnings || 0), 0),
-        totalAffiliates: affData.length,
-        pendingPayouts: affData.reduce((sum: number, a: { pending_earnings: number }) => sum + (a.pending_earnings || 0), 0),
-      })
+        setLiveStats({
+          totalMembers: profiles.count || 0,
+          activeSubscriptions: subData.filter((s: { status: string }) => s.status === 'active' || s.status === 'trialing').length,
+          essentialCount: subData.filter((s: { plan: string; status: string }) => s.plan === 'essential' && (s.status === 'active' || s.status === 'trialing')).length,
+          sereniteCount: subData.filter((s: { plan: string; status: string }) => s.plan === 'serenite' && (s.status === 'active' || s.status === 'trialing')).length,
+          premiumCount: subData.filter((s: { plan: string; status: string }) => s.plan === 'premium' && (s.status === 'active' || s.status === 'trialing')).length,
+          trialingCount: subData.filter((s: { status: string }) => s.status === 'trialing').length,
+          pastDueCount: subData.filter((s: { status: string }) => s.status === 'past_due').length,
+          canceledCount: subData.filter((s: { status: string }) => s.status === 'canceled').length,
+          totalAffiliateEarnings: affData.reduce((sum: number, a: { total_earnings: number }) => sum + (a.total_earnings || 0), 0),
+          totalAffiliates: affData.length,
+          pendingPayouts: affData.reduce((sum: number, a: { pending_earnings: number }) => sum + (a.pending_earnings || 0), 0),
+        })
+      } catch (e) {
+        console.error('Live stats error:', e)
+      }
 
       // Fetch CRM stats
       try {

@@ -215,11 +215,11 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     content: {
       label: "Ce que les lecteurs ont écrit",
       title: "Ils ont cherché une explication.\nIls ont trouvé un chemin.",
-      verified_badge: "",
+      verified_badge: "Avis vérifiés d'abonnés",
       items: [
-        { quote: "Je ne comprenais pas pourquoi je réagissais comme ça. En lisant le premier protocole, j'ai eu l'impression qu'on m'avait enfin expliqué ma propre histoire.", name: '', city: '' },
-        { quote: "J'ai mis des mots sur quelque chose que je portais depuis 10 ans. Juste ça. Et tout a changé.", name: '', city: '' },
-        { quote: "La nuit où tout s'est effondré, il était 2h du matin. J'ai réécouté l'audio de Julia. Ce n'était pas de la magie mais j'étais moins seule.", name: '', city: '' },
+        { quote: "Je ne comprenais pas pourquoi je réagissais comme ça. En lisant le premier protocole, j'ai eu l'impression qu'on m'avait enfin expliqué ma propre histoire.", name: 'Marie, 34 ans', city: 'Lyon', avatar_url: '', video_url: '', verified: true, transformation: "De 'je suis cassée' à 'j'ai un schéma à changer'" },
+        { quote: "J'ai mis des mots sur quelque chose que je portais depuis 10 ans. Juste ça. Et tout a changé.", name: 'Karim, 41 ans', city: 'Bordeaux', avatar_url: '', video_url: '', verified: true, transformation: "10 ans de silence, enfin nommés" },
+        { quote: "La nuit où tout s'est effondré, il était 2h du matin. J'ai réécouté l'audio de Julia. Ce n'était pas de la magie mais j'étais moins seule.", name: 'Sophie, 28 ans', city: 'Paris', avatar_url: '', video_url: '', verified: true, transformation: "Une voix qui comprend, à 2h du matin" },
       ],
     },
     styles: {

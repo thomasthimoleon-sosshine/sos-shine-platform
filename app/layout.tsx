@@ -37,20 +37,33 @@ const siteUrl =
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "SOS Shine — Votre communauté bienveillante",
+  title: "SOS Shine — Plateforme de déconditionnement émotionnel",
   description:
-    "SOS Shine, votre communauté bienveillante. Plateforme premium d'accompagnement pour traverser les épreuves de la vie. Corps, émotion, action.",
+    "Comprenez pourquoi vous répétez les mêmes schémas émotionnels — et sortez-en. 200+ protocoles guidés par Julia Laureau, auteure du Déconditionnement. Test gratuit en 20 questions.",
+  keywords: [
+    "déconditionnement émotionnel",
+    "schémas émotionnels",
+    "dépendance affective",
+    "rupture",
+    "abandon",
+    "burn-out",
+    "Julia Laureau",
+    "signature émotionnelle",
+    "protocoles émotionnels",
+    "SOS Shine",
+  ],
+  authors: [{ name: "Julia Laureau" }],
   openGraph: {
-    title: "SOS Shine — Briller Comme un Diamant",
+    title: "SOS Shine — Comprendre vos schémas. Les transformer.",
     description:
-      "Rejoignez la première communauté bienveillante dédiée à votre transformation. Corps, émotion, action — accompagnement premium pour traverser les épreuves de la vie.",
+      "200+ protocoles guidés pour décoder vos réactions émotionnelles et reprendre les commandes de votre vie. Pas du bien-être. Du déconditionnement. Par Julia Laureau.",
     url: siteUrl,
     images: [
       {
         url: "/api/og",
         width: 1200,
         height: 630,
-        alt: "SOS Shine — Briller Comme un Diamant",
+        alt: "SOS Shine — Plateforme de déconditionnement émotionnel",
         type: "image/png",
       },
     ],
@@ -60,9 +73,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "SOS Shine — Briller Comme un Diamant",
+    title: "SOS Shine — Déconditionnement émotionnel",
     description:
-      "Rejoignez la première communauté bienveillante dédiée à votre transformation. Corps, émotion, action.",
+      "Comprenez pourquoi vous répétez les mêmes schémas. 200+ protocoles par Julia Laureau. Test gratuit.",
     images: ["/api/og"],
   },
   appleWebApp: {
@@ -90,8 +103,13 @@ const jsonLd = {
       '@id': `${siteUrl}/#website`,
       url: siteUrl,
       name: 'SOS Shine',
-      description: 'Plateforme premium d\'accompagnement pour traverser les épreuves de la vie. Corps, émotion, action.',
+      description: 'Plateforme de déconditionnement émotionnel. 200+ protocoles guidés pour comprendre et transformer vos schémas.',
       inLanguage: 'fr-FR',
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: `${siteUrl}/encyclopedie?q={search_term_string}`,
+        'query-input': 'required name=search_term_string',
+      },
     },
     {
       '@type': 'Organization',
@@ -102,8 +120,43 @@ const jsonLd = {
         '@type': 'ImageObject',
         url: `${siteUrl}/images/logo-shine.png`,
       },
-      description: 'Communauté bienveillante dédiée à la transformation personnelle à travers le Corps, l\'Émotion et l\'Action.',
+      description: "Plateforme de déconditionnement émotionnel fondée par Julia Laureau. Décode vos schémas et vous donne les outils pour les transformer.",
+      founder: {
+        '@type': 'Person',
+        name: 'Julia Laureau',
+        jobTitle: 'Fondatrice, Auteure du Déconditionnement',
+      },
       sameAs: [],
+    },
+    {
+      '@type': 'Product',
+      '@id': `${siteUrl}/#product`,
+      name: 'SOS Shine',
+      description: 'Accès à 200+ protocoles de déconditionnement émotionnel, chats communautaires, lives hebdomadaires avec Julia Laureau.',
+      brand: { '@type': 'Brand', name: 'SOS Shine' },
+      offers: [
+        {
+          '@type': 'Offer',
+          name: 'Plan Gratuit',
+          price: '0',
+          priceCurrency: 'EUR',
+          description: 'Communauté + Shine Audible',
+        },
+        {
+          '@type': 'Offer',
+          name: 'Plan Essentielle',
+          price: '9.90',
+          priceCurrency: 'EUR',
+          description: 'Encyclopédie complète + chats par challenge',
+        },
+        {
+          '@type': 'Offer',
+          name: 'Plan Sérénité',
+          price: '49.90',
+          priceCurrency: 'EUR',
+          description: 'Tout inclus — Shine TV, Lives, Événements',
+        },
+      ],
     },
   ],
 }

@@ -1277,26 +1277,65 @@ export default function LandingClient({ initialSections, initialPositions, initi
             )}
 
             <div className="grid md:grid-cols-2 gap-4 md:gap-8">
-              {(temos.items || []).filter((t: { quote: string; name: string; city: string }) => t.quote).map((t: { quote: string; name: string; city: string }, i: number) => (
+              {(temos.items || []).filter((t: { quote: string; name: string; city: string }) => t.quote).map((t: { quote: string; name: string; city: string; avatar_url?: string; video_url?: string; verified?: boolean; transformation?: string }, i: number) => (
                 <RevealOnScroll key={i} delay={i * 0.12} direction={i % 2 === 0 ? "left" : "right"}>
-                  <GlowingCard className="p-5 sm:p-8 md:p-10 h-full flex flex-col justify-between">
-                    <div>
-                      <div className="flex gap-1 mb-4 md:mb-6">
-                        {[1,2,3,4,5].map(s => (
-                          <span key={s} className="text-sm" style={{ color: gold }}>★</span>
-                        ))}
+                  <GlowingCard className="overflow-hidden h-full flex flex-col justify-between">
+                    {/* Video preview (optional) */}
+                    {t.video_url && (
+                      <div className="aspect-video overflow-hidden" style={{ background: 'rgba(0,0,0,0.3)' }}>
+                        <video
+                          src={t.video_url}
+                          controls
+                          preload="metadata"
+                          poster={t.avatar_url || undefined}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
-                      <p className="font-display text-base sm:text-lg italic text-[var(--text-primary)] font-light leading-relaxed mb-6 md:mb-8">
-                        &laquo; {t.quote} &raquo;
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-3 pt-3 md:pt-4" style={{ borderTop: `1px solid rgba(${goldRgb}, 0.08)` }}>
-                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-display text-sm" style={{ background: `linear-gradient(135deg, rgba(${goldRgb},0.15), rgba(${goldRgb},0.05))`, color: gold }}>
-                        {t.name.charAt(0)}
-                      </div>
+                    )}
+                    <div className="p-5 sm:p-8 md:p-10 flex-1 flex flex-col justify-between">
                       <div>
-                        <p className="text-sm font-medium" style={{ color: gold }}>{t.name}</p>
-                        <p className="text-xs text-[var(--text-muted)]">{t.city}</p>
+                        <div className="flex items-center gap-2 mb-4 md:mb-6">
+                          <div className="flex gap-1">
+                            {[1,2,3,4,5].map(s => (
+                              <span key={s} className="text-sm" style={{ color: gold }}>★</span>
+                            ))}
+                          </div>
+                          {t.verified && (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                              style={{ background: 'rgba(85,239,196,0.1)', color: '#55EFC4', border: '1px solid rgba(85,239,196,0.25)' }}>
+                              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                                <path d="M9 12l2 2 4-4" />
+                              </svg>
+                              Vérifié
+                            </span>
+                          )}
+                        </div>
+                        <p className="font-display text-base sm:text-lg italic text-[var(--text-primary)] font-light leading-relaxed mb-6 md:mb-8">
+                          &laquo; {t.quote} &raquo;
+                        </p>
+                        {t.transformation && (
+                          <p className="text-xs italic mb-4" style={{ color: '#55EFC4' }}>
+                            ✦ {t.transformation}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-3 pt-3 md:pt-4" style={{ borderTop: `1px solid rgba(${goldRgb}, 0.08)` }}>
+                        {t.avatar_url ? (
+                          <img
+                            src={t.avatar_url}
+                            alt={t.name}
+                            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover flex-shrink-0"
+                            style={{ border: `1px solid rgba(${goldRgb}, 0.25)` }}
+                          />
+                        ) : (
+                          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-display text-sm flex-shrink-0" style={{ background: `linear-gradient(135deg, rgba(${goldRgb},0.15), rgba(${goldRgb},0.05))`, color: gold }}>
+                            {t.name.charAt(0)}
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium truncate" style={{ color: gold }}>{t.name}</p>
+                          <p className="text-xs truncate text-[var(--text-muted)]">{t.city}</p>
+                        </div>
                       </div>
                     </div>
                   </GlowingCard>

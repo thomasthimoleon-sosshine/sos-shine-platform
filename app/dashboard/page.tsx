@@ -669,6 +669,7 @@ export default function DashboardHome() {
   const [firstGoal, setFirstGoal] = useState<{ title: string; description: string | null; recommended_slug: string | null; douleur: { title: string; subtitle: string | null; image_url: string | null } | null } | null>(null)
   const [hasStartedAny, setHasStartedAny] = useState(false)
   const [affiliateStatus, setAffiliateStatus] = useState<{ exists: boolean; approved: boolean; referral_code: string | null; total_referrals: number; pending_earnings: number }>({ exists: false, approved: false, referral_code: null, total_referrals: 0, pending_earnings: 0 })
+  const [streak, setStreak] = useState<{ current: number; longest: number }>({ current: 0, longest: 0 })
 
   useEffect(() => {
     setQuote(getNextRotatingQuote())
@@ -759,6 +760,16 @@ export default function DashboardHome() {
         })
       }
 
+      // Log today's visit (for streak tracking) + get streak
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (supabase.rpc as any)('log_user_visit', { p_user_id: user.id }).catch(() => {})
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data: streakData } = await (supabase.rpc as any)('get_user_streak', { p_user_id: user.id })
+      if (streakData && Array.isArray(streakData) && streakData.length > 0) {
+        const s = streakData[0] as { current_streak: number; longest_streak: number }
+        setStreak({ current: s.current_streak || 0, longest: s.longest_streak || 0 })
+      }
+
       // Affiliate status
       const { data: aff } = await supabase
         .from('affiliates')
@@ -800,9 +811,29 @@ export default function DashboardHome() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
       >
-        <h1 className="font-display text-xl sm:text-2xl font-semibold tracking-tight" style={{ color: 'var(--text-primary)' }}>
-          {siteSettings.dash_welcome || t('dashboard.welcome')} <span style={{ color: 'var(--gold)' }}>{profile?.prenom || 'Membre'}</span>
-        </h1>
+        <div className="flex items-start justify-between gap-3 flex-wrap">
+          <h1 className="font-display text-xl sm:text-2xl font-semibold tracking-tight" style={{ color: 'var(--text-primary)' }}>
+            {siteSettings.dash_welcome || t('dashboard.welcome')} <span style={{ color: 'var(--gold)' }}>{profile?.prenom || 'Membre'}</span>
+          </h1>
+          {streak.current > 0 && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full"
+              style={{
+                background: 'linear-gradient(135deg, rgba(255,107,53,0.12), rgba(212,175,55,0.08))',
+                border: '1px solid rgba(255,107,53,0.3)',
+              }}
+              title={`Plus longue série : ${streak.longest} jours`}
+            >
+              <span className="text-base">🔥</span>
+              <span className="text-xs font-semibold" style={{ color: '#FF6B35' }}>
+                {streak.current} {streak.current > 1 ? 'jours' : 'jour'}
+              </span>
+            </motion.div>
+          )}
+        </div>
         <p className="mt-3 text-[17px] sm:text-[19px] font-medium leading-relaxed tracking-wide" style={{ color: 'var(--gold)' }}>
           {greeting}
         </p>

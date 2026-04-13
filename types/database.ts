@@ -61,6 +61,7 @@ export type Douleur = {
   exercise_content: string | null
   // Meta
   image_url: string | null
+  tags: string[]
   is_active: boolean
   is_published: boolean
   created_at: string

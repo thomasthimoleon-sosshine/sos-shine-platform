@@ -74,6 +74,7 @@ type ChallengeForm = {
   category: string
   description: string
   image_url: string
+  tags: string
   steps: StepForm[]
 }
 
@@ -84,6 +85,7 @@ const emptyForm: ChallengeForm = {
   category: '',
   description: '',
   image_url: '',
+  tags: '',
   steps: DEFAULT_STEPS.map(s => ({ ...s })),
 }
 
@@ -290,6 +292,7 @@ export default function AdminDouleursPage() {
       category: d.category || '',
       description: d.description || '',
       image_url: d.image_url || '',
+      tags: Array.isArray(d.tags) ? d.tags.join(', ') : '',
       steps,
     })
     setShowForm(true)
@@ -313,6 +316,7 @@ export default function AdminDouleursPage() {
       category: d.category || '',
       description: d.description || '',
       image_url: d.image_url || '',
+      tags: Array.isArray(d.tags) ? d.tags.join(', ') : '',
       steps: steps.map(s => ({ ...s, id: undefined })),
     })
     setShowForm(true)
@@ -378,6 +382,11 @@ export default function AdminDouleursPage() {
     const s2 = form.steps[1] || createEmptyStep(2)
     const s3 = form.steps[2] || createEmptyStep(3)
 
+    const tagsArray = form.tags
+      .split(',')
+      .map(t => t.trim())
+      .filter(t => t.length > 0)
+
     const payload = {
       title: form.title.trim(),
       slug: form.slug,
@@ -385,6 +394,7 @@ export default function AdminDouleursPage() {
       category: form.category || null,
       description: form.description.trim() || null,
       image_url: form.image_url.trim() || null,
+      tags: tagsArray,
       // Legacy columns (first 3 steps mapped for backward compat)
       video_url: s1.video_url.trim() || null,
       step1_audio_url: s1.audio_url.trim() || null,
@@ -695,6 +705,24 @@ export default function AdminDouleursPage() {
             onUploaded={(url) => setForm((prev) => ({ ...prev, image_url: url }))}
             onRemoved={() => setForm((prev) => ({ ...prev, image_url: '' }))}
           />
+
+          {/* Tags pour interconnecter les douleurs */}
+          <div>
+            <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
+              Tags (séparés par des virgules)
+            </label>
+            <input
+              type="text"
+              value={form.tags}
+              onChange={(e) => setForm((prev) => ({ ...prev, tags: e.target.value }))}
+              className="w-full rounded-lg px-3 py-2 text-sm outline-none"
+              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+              placeholder="rupture, abandon, solitude, couple"
+            />
+            <p className="text-[11px] mt-1" style={{ color: 'var(--text-muted)' }}>
+              Ces tags permettent d&apos;interconnecter ce challenge avec d&apos;autres (ex : &quot;rupture&quot; apparaîtra dans toutes les pages qui ont ce tag).
+            </p>
+          </div>
 
           {/* ── DYNAMIC STEPS SECTION ── */}
           <div className="rounded-xl p-4" style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.2)' }}>

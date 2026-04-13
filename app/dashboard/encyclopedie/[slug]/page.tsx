@@ -67,6 +67,7 @@ export default function DouleurDetailPage() {
   const params = useParams()
   const slug = params.slug as string
   const [douleur, setDouleur] = useState<Douleur | null>(null)
+  const [relatedDouleurs, setRelatedDouleurs] = useState<Array<{ id: string; title: string; slug: string; subtitle: string | null }>>([])
   const [dynamicSteps, setDynamicSteps] = useState<DouleurStep[]>([])
   const [loading, setLoading] = useState(true)
   const [activeStep, setActiveStep] = useState(1)
@@ -187,6 +188,28 @@ export default function DouleurDetailPage() {
   }, [slug])
 
   // Load user progress + quiz for this challenge
+  // Load related douleurs sharing at least one tag
+  useEffect(() => {
+    async function loadRelated() {
+      if (!douleur || !Array.isArray(douleur.tags) || douleur.tags.length === 0) {
+        setRelatedDouleurs([])
+        return
+      }
+      const supabase = createClient()
+      const { data } = await supabase
+        .from('douleurs')
+        .select('id, title, slug, subtitle, tags')
+        .eq('is_published', true)
+        .neq('id', douleur.id)
+        .overlaps('tags', douleur.tags)
+        .limit(8)
+      if (data) {
+        setRelatedDouleurs(data as Array<{ id: string; title: string; slug: string; subtitle: string | null }>)
+      }
+    }
+    loadRelated()
+  }, [douleur])
+
   useEffect(() => {
     async function loadProgress() {
       if (!douleur) return
@@ -446,6 +469,18 @@ export default function DouleurDetailPage() {
         <p className="mt-2 text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
           {douleur.description}
         </p>
+
+        {/* Tags */}
+        {Array.isArray(douleur.tags) && douleur.tags.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {douleur.tags.map((tag: string) => (
+              <span key={tag} className="px-2.5 py-1 rounded-full text-[11px] font-medium tracking-wide"
+                style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.15)' }}>
+                #{tag}
+              </span>
+            ))}
+          </div>
+        )}
 
         {/* XP Potential Badge */}
         {hasQuiz && (
@@ -917,6 +952,28 @@ export default function DouleurDetailPage() {
           Échangez avec ceux qui traversent la même épreuve que vous.
         </p>
       </Link>
+
+      {/* Sujets liés (partagent au moins un tag) */}
+      {relatedDouleurs.length > 0 && (
+        <div className="pt-8 mt-4" style={{ borderTop: '1px solid var(--dark-border)' }}>
+          <h3 className="font-display text-xl font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
+            Sujets liés
+          </h3>
+          <p className="text-sm mb-5" style={{ color: 'var(--text-muted)' }}>
+            D&apos;autres challenges partageant les mêmes thématiques.
+          </p>
+          <div className="grid sm:grid-cols-2 gap-3">
+            {relatedDouleurs.map((r) => (
+              <Link key={r.id} href={`/dashboard/encyclopedie/${r.slug}`}
+                className="rounded-xl p-4 transition-all hover:scale-[1.01]"
+                style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                <p className="font-semibold text-sm mb-1" style={{ color: 'var(--gold)' }}>{r.title}</p>
+                {r.subtitle && <p className="text-xs italic" style={{ color: 'var(--text-muted)' }}>{r.subtitle}</p>}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
     </SubscriptionGate>
   )

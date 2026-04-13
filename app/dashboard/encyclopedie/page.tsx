@@ -407,35 +407,7 @@ export default function EncyclopediePage() {
         </p>
       </div>
 
-      {/* Global progress widget */}
-      {publishedCount > 0 && (
-        <div className="rounded-2xl p-5" style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.12)' }}>
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
-              Votre progression globale
-            </span>
-            <span className="text-sm font-semibold" style={{ color: 'var(--gold)' }}>
-              {totalCompleted}/{publishedCount} complétés
-            </span>
-          </div>
-          <div className="h-2.5 rounded-full overflow-hidden" style={{ background: 'var(--dark-border)' }}>
-            <motion.div
-              className="h-full rounded-full"
-              style={{ background: 'linear-gradient(90deg, var(--gold), var(--gold-light))' }}
-              initial={{ width: 0 }}
-              animate={{ width: `${publishedCount > 0 ? (totalCompleted / publishedCount) * 100 : 0}%` }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            />
-          </div>
-          {totalCompleted > 0 && (
-            <p className="text-[11px] mt-1.5" style={{ color: 'var(--text-muted)' }}>
-              {totalCompleted === publishedCount
-                ? 'Bravo ! Vous avez complété tous les challenges disponibles !'
-                : `Continuez votre parcours, chaque étape compte.`}
-            </p>
-          )}
-        </div>
-      )}
+      {/* Global progress widget — removed on request */}
 
       {/* Search */}
       <div className="relative">
@@ -534,15 +506,6 @@ export default function EncyclopediePage() {
             </svg>
             Disponibles ({publishedCount})
           </button>
-          <label className="flex items-center gap-2 cursor-pointer text-[12px] uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
-            <input
-              type="checkbox"
-              checked={onlyOriginal}
-              onChange={(e) => setOnlyOriginal(e.target.checked)}
-              className="accent-[#D4AF37]"
-            />
-            <span>&diams; Liste originale uniquement</span>
-          </label>
         </div>
       </div>
 

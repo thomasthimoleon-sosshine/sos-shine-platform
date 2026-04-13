@@ -666,6 +666,8 @@ export default function DashboardHome() {
   const [siteSettings, setSiteSettings] = useState<Record<string, string>>({})
   const [xpData, setXpData] = useState<UserXP | null>(null)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
+  const [firstGoal, setFirstGoal] = useState<{ title: string; description: string | null; recommended_slug: string | null; douleur: { title: string; subtitle: string | null; image_url: string | null } | null } | null>(null)
+  const [hasStartedAny, setHasStartedAny] = useState(false)
 
   useEffect(() => {
     setQuote(getNextRotatingQuote())
@@ -721,6 +723,40 @@ export default function DashboardHome() {
       // Load XP
       const { data: xp } = await supabase.from('user_xp').select('*').eq('user_id', user.id).maybeSingle()
       if (xp) setXpData(xp as UserXP)
+
+      // Check if user has started any protocol (has user_progress entry)
+      const { count: progressCount } = await supabase
+        .from('user_progress')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+      setHasStartedAny((progressCount || 0) > 0)
+
+      // Load first active goal with its linked douleur (for the "first step" widget)
+      const { data: goal } = await supabase
+        .from('user_goals')
+        .select('title, description, recommended_slug')
+        .eq('user_id', user.id)
+        .eq('status', 'active')
+        .eq('source', 'onboarding')
+        .not('recommended_slug', 'is', null)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+
+      if (goal && goal.recommended_slug) {
+        const { data: douleur } = await supabase
+          .from('douleurs')
+          .select('title, subtitle, image_url')
+          .eq('slug', goal.recommended_slug)
+          .eq('is_published', true)
+          .maybeSingle()
+        setFirstGoal({
+          title: goal.title,
+          description: goal.description,
+          recommended_slug: goal.recommended_slug,
+          douleur: (douleur as { title: string; subtitle: string | null; image_url: string | null } | null),
+        })
+      }
     }
 
     async function loadSettings() {
@@ -756,6 +792,63 @@ export default function DashboardHome() {
           <PushNotificationButton />
         </div>
       </motion.div>
+
+      {/* ── Premier défi (only if user has an onboarding goal and hasn't started any protocol yet) ── */}
+      {firstGoal && firstGoal.douleur && !hasStartedAny && (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
+          className="glass glass-hover relative overflow-hidden"
+          style={{
+            background: 'linear-gradient(135deg, rgba(85,239,196,0.08), rgba(212,175,55,0.04))',
+            border: '1px solid rgba(85,239,196,0.25)',
+          }}
+        >
+          <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full opacity-30 pointer-events-none"
+            style={{ background: 'radial-gradient(circle, rgba(85,239,196,0.15), transparent 70%)' }} />
+          <div className="relative p-6 sm:p-8">
+            <div className="flex items-start gap-3 mb-3">
+              <span className="text-2xl">🚀</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-[11px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#55EFC4' }}>
+                  Votre premier pas
+                </p>
+                <h2 className="font-display text-xl sm:text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+                  {firstGoal.title}
+                </h2>
+              </div>
+            </div>
+            <p className="text-sm mb-5 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+              Vous avez choisi cet objectif au démarrage. Voici le protocole qui vous correspond pour commencer en douceur.
+            </p>
+
+            <Link href={`/dashboard/encyclopedie/${firstGoal.recommended_slug}`}
+              className="block rounded-xl p-4 transition-all hover:scale-[1.005]"
+              style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <div className="flex items-center gap-4">
+                {firstGoal.douleur.image_url && (
+                  <img src={firstGoal.douleur.image_url} alt="" className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-sm" style={{ color: 'var(--gold)' }}>{firstGoal.douleur.title}</p>
+                  {firstGoal.douleur.subtitle && (
+                    <p className="text-xs mt-0.5 truncate" style={{ color: 'var(--text-muted)' }}>{firstGoal.douleur.subtitle}</p>
+                  )}
+                </div>
+                <div className="flex-shrink-0 px-4 py-2 rounded-full text-xs font-semibold"
+                  style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}>
+                  Commencer →
+                </div>
+              </div>
+            </Link>
+
+            <p className="text-[11px] mt-3 text-center" style={{ color: 'var(--text-muted)' }}>
+              3 étapes. Vidéo, audio, exercice. ~25 minutes.
+            </p>
+          </div>
+        </motion.div>
+      )}
 
       {/* ── Météo Énergétique ── */}
       <EnergyWeatherWidget profile={profile} />

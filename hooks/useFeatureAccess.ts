@@ -6,7 +6,6 @@ import { createClient } from '@/lib/supabase/client'
 // Features gratuites — accessibles à tous les membres inscrits sans abonnement payant
 const FREE_FEATURES = new Set<string>([
   'communaute',
-  'chat_douleur',
   'mur',
   'shine_audible',
 ])

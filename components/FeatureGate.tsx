@@ -11,16 +11,16 @@ import type { PlanId } from '@/lib/stripe/config'
 // Features GRATUITES — accessibles à tous les membres inscrits (même sans abonnement)
 export const FREE_FEATURES = new Set<string>([
   'communaute',
-  'chat_douleur',
   'mur',
   'shine_audible',
 ])
 
 // Plan minimum requis pour chaque feature
-// Gratuit (0€) : Communauté + Chat général + Shine Audible
-// Essentielle (9,90€) : + Encyclopédie complète
+// Gratuit (0€) : Communauté (mur + général) + Shine Audible
+// Essentielle (9,90€) : + Encyclopédie complète + Chats par douleur
 // Sérénité (49,90€) : + Librairie + Shine TV + Shorts + Soin collectif + Live hebdo + Événements
 const FEATURE_MIN_PLAN: Record<string, { plan: PlanId; label: string }> = {
+  chat_douleur: { plan: 'essential', label: 'Essentielle' },
   shine_tv: { plan: 'serenite', label: 'Sérénité' },
   shine_shorts: { plan: 'serenite', label: 'Sérénité' },
   shine_librairie: { plan: 'serenite', label: 'Sérénité' },

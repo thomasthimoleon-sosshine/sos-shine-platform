@@ -2,10 +2,10 @@ import { NextResponse } from 'next/server'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 
 // Features offertes à TOUS les membres inscrits (plan gratuit)
-// La communauté et Shine Audible sont offerts sans abonnement payant
+// La communauté (mur + chat général) et Shine Audible sont offerts sans abonnement
+// Les chats par douleur et l'encyclopédie nécessitent Essentielle (9,90€)
 const FREE_FEATURES = [
   'communaute',
-  'chat_douleur',
   'mur',
   'shine_audible',
 ] as const

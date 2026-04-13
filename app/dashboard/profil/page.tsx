@@ -542,13 +542,42 @@ export default function ProfilPage() {
             )}
           </div>
         ) : (
-          <div className="rounded-xl p-5 text-center" style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.12)' }}>
-            <p className="text-sm mb-1" style={{ color: 'var(--text-primary)' }}>{t('dashboard.free_trial')}</p>
-            <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>Gratuit : Communauté + Shine Audible · Essentielle : 9,90€/mois · Sérénité : 49,90€/mois</p>
-            <a href="/dashboard/tarifs" className="inline-block px-6 py-2.5 rounded-full text-sm font-medium transition-all"
-              style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}>
-              Choisir un abonnement
-            </a>
+          <div className="rounded-xl p-5 space-y-4" style={{ background: 'rgba(85,239,196,0.04)', border: '1px solid rgba(85,239,196,0.15)' }}>
+            <div className="flex items-center justify-between">
+              <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>Votre plan actuel</span>
+              <span className="text-sm font-medium flex items-center gap-2" style={{ color: '#55EFC4' }}>
+                <span className="w-2 h-2 rounded-full" style={{ background: '#55EFC4' }} />
+                Plan Gratuit — 0€/mois
+              </span>
+            </div>
+            <div className="text-xs space-y-1.5 pt-3" style={{ color: 'var(--text-secondary)', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+              <p className="font-medium mb-2" style={{ color: 'var(--text-primary)' }}>Inclus dans votre plan :</p>
+              <p>• Communauté (mur + chat général)</p>
+              <p>• Shine Audible complet</p>
+            </div>
+            <div className="pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+              <p className="text-xs mb-3" style={{ color: 'var(--text-muted)' }}>
+                Débloquez plus de contenu avec un abonnement :
+              </p>
+              <div className="space-y-2">
+                <a href="/dashboard/tarifs?plan=essential" className="flex items-center justify-between px-4 py-3 rounded-xl transition-all cursor-pointer"
+                  style={{ background: 'rgba(116,192,252,0.05)', border: '1px solid rgba(116,192,252,0.2)' }}>
+                  <div>
+                    <p className="text-sm font-semibold" style={{ color: '#74C0FC' }}>Essentielle</p>
+                    <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>+ Encyclopédie complète + chats par douleur</p>
+                  </div>
+                  <span className="text-sm font-semibold" style={{ color: '#74C0FC' }}>9,90€/mois</span>
+                </a>
+                <a href="/dashboard/tarifs?plan=serenite" className="flex items-center justify-between px-4 py-3 rounded-xl transition-all cursor-pointer"
+                  style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                  <div>
+                    <p className="text-sm font-semibold" style={{ color: '#D4AF37' }}>Sérénité</p>
+                    <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>+ Shine TV, Shorts, Librairie, lives</p>
+                  </div>
+                  <span className="text-sm font-semibold" style={{ color: '#D4AF37' }}>49,90€/mois</span>
+                </a>
+              </div>
+            </div>
           </div>
         )}
       </div>

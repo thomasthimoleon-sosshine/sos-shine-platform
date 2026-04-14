@@ -20,6 +20,7 @@ type StepConfig = {
   color: string
   description: string
   video: string | null
+  video2: string | null
   audio: string | null
   pdf: string | null
   image: string | null
@@ -37,6 +38,7 @@ function buildSteps(douleur: Douleur, dynamicSteps: DouleurStep[]): StepConfig[]
       color: s.color || '#D4AF37',
       description: s.description || '',
       video: s.video_url,
+      video2: s.video_url_2,
       audio: s.audio_url,
       pdf: s.pdf_url,
       image: s.image_url,
@@ -45,21 +47,23 @@ function buildSteps(douleur: Douleur, dynamicSteps: DouleurStep[]): StepConfig[]
   }
 
   // Legacy fallback (hardcoded 3 steps)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const d = douleur as any
   return [
     {
       num: 1, title: 'Comprendre', subtitle: 'Vidéo, audio & ressources', icon: '🎬', color: '#55EFC4',
       description: 'Analyse émotionnelle. Explication du problème. Apaisement mental. Une approche humaine et directe.',
-      video: douleur.video_url, audio: douleur.step1_audio_url, pdf: douleur.step1_pdf_url, image: douleur.step1_image_url, exercise_content: null,
+      video: douleur.video_url, video2: d.video_url_2 || null, audio: douleur.step1_audio_url, pdf: douleur.step1_pdf_url, image: douleur.step1_image_url, exercise_content: null,
     },
     {
       num: 2, title: 'Libérer & Intégrer', subtitle: 'Audio, vidéo & ressources', icon: '✨', color: '#74C0FC',
       description: 'Activation émotionnelle. Décharge des tensions. Nettoyage des empreintes qui vous bloquent. Stabilisation intérieure et reconnexion à soi.',
-      video: douleur.step2_video_url, audio: douleur.audio_energy_url, pdf: douleur.step2_pdf_url, image: douleur.step2_image_url, exercise_content: null,
+      video: douleur.step2_video_url, video2: d.step2_video_url_2 || null, audio: douleur.audio_energy_url, pdf: douleur.step2_pdf_url, image: douleur.step2_image_url, exercise_content: null,
     },
     {
       num: 3, title: 'Agir', subtitle: 'Exercices, audio & ressources', icon: '⚡', color: '#E17055',
       description: 'PDF d\'exercices pratiques et audio guidé. Passez à l\'action concrète. Reprogrammation émotionnelle. Ancrez vos transformations dans le quotidien.',
-      video: douleur.step3_video_url, audio: douleur.audio_meditation_url, pdf: douleur.pdf_url, image: douleur.step3_image_url, exercise_content: douleur.exercise_content,
+      video: douleur.step3_video_url, video2: d.step3_video_url_2 || null, audio: douleur.audio_meditation_url, pdf: douleur.pdf_url, image: douleur.step3_image_url, exercise_content: douleur.exercise_content,
     },
   ]
 }
@@ -665,7 +669,7 @@ export default function DouleurDetailPage() {
 
         {/* Content area — show ALL available media for this step */}
         {(() => {
-          const hasAnyContent = currentStep.video || currentStep.audio || currentStep.pdf || currentStep.image || currentStep.exercise_content
+          const hasAnyContent = currentStep.video || currentStep.video2 || currentStep.audio || currentStep.pdf || currentStep.image || currentStep.exercise_content
 
           if (!hasAnyContent) {
             return (
@@ -687,6 +691,18 @@ export default function DouleurDetailPage() {
                   <video
                     src={currentStep.video}
                     poster={currentStep.image || undefined}
+                    controls
+                    preload="metadata"
+                    className="w-full h-full"
+                  />
+                </div>
+              )}
+
+              {/* Secondary video (optional) */}
+              {currentStep.video2 && (
+                <div className="rounded-xl overflow-hidden aspect-video" style={{ background: 'var(--dark)' }}>
+                  <video
+                    src={currentStep.video2}
                     controls
                     preload="metadata"
                     className="w-full h-full"

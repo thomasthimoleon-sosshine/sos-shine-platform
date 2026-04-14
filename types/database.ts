@@ -79,6 +79,7 @@ export type DouleurStep = {
   icon: string
   color: string
   video_url: string | null
+  video_url_2: string | null
   audio_url: string | null
   pdf_url: string | null
   image_url: string | null

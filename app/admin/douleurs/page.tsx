@@ -27,6 +27,7 @@ type StepForm = {
   icon: string
   color: string
   video_url: string
+  video_url_2: string
   audio_url: string
   pdf_url: string
   image_url: string
@@ -41,6 +42,7 @@ function createEmptyStep(num: number): StepForm {
     icon: DEFAULT_STEP_ICONS[(num - 1) % DEFAULT_STEP_ICONS.length],
     color: DEFAULT_STEP_COLORS[(num - 1) % DEFAULT_STEP_COLORS.length],
     video_url: '',
+    video_url_2: '',
     audio_url: '',
     pdf_url: '',
     image_url: '',
@@ -49,9 +51,9 @@ function createEmptyStep(num: number): StepForm {
 }
 
 const DEFAULT_STEPS: StepForm[] = [
-  { title: 'Comprendre', subtitle: 'Vidéo, audio & ressources', description: '', icon: '🎬', color: '#55EFC4', video_url: '', audio_url: '', pdf_url: '', image_url: '', exercise_content: '' },
-  { title: 'Libérer & Intégrer', subtitle: 'Audio, vidéo & ressources', description: '', icon: '✨', color: '#74C0FC', video_url: '', audio_url: '', pdf_url: '', image_url: '', exercise_content: '' },
-  { title: 'Agir', subtitle: 'Exercices, audio & ressources', description: '', icon: '⚡', color: '#E17055', video_url: '', audio_url: '', pdf_url: '', image_url: '', exercise_content: '' },
+  { title: 'Comprendre', subtitle: 'Vidéo, audio & ressources', description: '', icon: '🎬', color: '#55EFC4', video_url: '', video_url_2: '', audio_url: '', pdf_url: '', image_url: '', exercise_content: '' },
+  { title: 'Libérer & Intégrer', subtitle: 'Audio, vidéo & ressources', description: '', icon: '✨', color: '#74C0FC', video_url: '', video_url_2: '', audio_url: '', pdf_url: '', image_url: '', exercise_content: '' },
+  { title: 'Agir', subtitle: 'Exercices, audio & ressources', description: '', icon: '⚡', color: '#E17055', video_url: '', video_url_2: '', audio_url: '', pdf_url: '', image_url: '', exercise_content: '' },
 ]
 
 const ENCYCLOPEDIE_CATEGORIES = [
@@ -248,18 +250,20 @@ export default function AdminDouleursPage() {
 
   // Convert legacy douleur columns to StepForm array
   function legacyToSteps(d: Douleur): StepForm[] {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const anyD = d as any
     return [
       {
         title: 'Comprendre', subtitle: 'Vidéo, audio & ressources', description: '', icon: '🎬', color: '#55EFC4',
-        video_url: d.video_url || '', audio_url: d.step1_audio_url || '', pdf_url: d.step1_pdf_url || '', image_url: d.step1_image_url || '', exercise_content: '',
+        video_url: d.video_url || '', video_url_2: anyD.video_url_2 || '', audio_url: d.step1_audio_url || '', pdf_url: d.step1_pdf_url || '', image_url: d.step1_image_url || '', exercise_content: '',
       },
       {
         title: 'Libérer & Intégrer', subtitle: 'Audio, vidéo & ressources', description: '', icon: '✨', color: '#74C0FC',
-        video_url: d.step2_video_url || '', audio_url: d.audio_energy_url || '', pdf_url: d.step2_pdf_url || '', image_url: d.step2_image_url || '', exercise_content: '',
+        video_url: d.step2_video_url || '', video_url_2: anyD.step2_video_url_2 || '', audio_url: d.audio_energy_url || '', pdf_url: d.step2_pdf_url || '', image_url: d.step2_image_url || '', exercise_content: '',
       },
       {
         title: 'Agir', subtitle: 'Exercices, audio & ressources', description: '', icon: '⚡', color: '#E17055',
-        video_url: d.step3_video_url || '', audio_url: d.audio_meditation_url || '', pdf_url: d.pdf_url || '', image_url: d.step3_image_url || '', exercise_content: d.exercise_content || '',
+        video_url: d.step3_video_url || '', video_url_2: anyD.step3_video_url_2 || '', audio_url: d.audio_meditation_url || '', pdf_url: d.pdf_url || '', image_url: d.step3_image_url || '', exercise_content: d.exercise_content || '',
       },
     ]
   }
@@ -273,6 +277,7 @@ export default function AdminDouleursPage() {
       icon: s.icon,
       color: s.color,
       video_url: s.video_url || '',
+      video_url_2: s.video_url_2 || '',
       audio_url: s.audio_url || '',
       pdf_url: s.pdf_url || '',
       image_url: s.image_url || '',
@@ -397,14 +402,17 @@ export default function AdminDouleursPage() {
       tags: tagsArray,
       // Legacy columns (first 3 steps mapped for backward compat)
       video_url: s1.video_url.trim() || null,
+      video_url_2: s1.video_url_2.trim() || null,
       step1_audio_url: s1.audio_url.trim() || null,
       step1_pdf_url: s1.pdf_url.trim() || null,
       step1_image_url: s1.image_url.trim() || null,
       step2_video_url: s2.video_url.trim() || null,
+      step2_video_url_2: s2.video_url_2.trim() || null,
       audio_energy_url: s2.audio_url.trim() || null,
       step2_pdf_url: s2.pdf_url.trim() || null,
       step2_image_url: s2.image_url.trim() || null,
       step3_video_url: s3.video_url.trim() || null,
+      step3_video_url_2: s3.video_url_2.trim() || null,
       audio_meditation_url: s3.audio_url.trim() || null,
       pdf_url: s3.pdf_url.trim() || null,
       step3_image_url: s3.image_url.trim() || null,
@@ -456,6 +464,7 @@ export default function AdminDouleursPage() {
         icon: s.icon || DEFAULT_STEP_ICONS[i % DEFAULT_STEP_ICONS.length],
         color: s.color || DEFAULT_STEP_COLORS[i % DEFAULT_STEP_COLORS.length],
         video_url: s.video_url.trim() || null,
+        video_url_2: s.video_url_2.trim() || null,
         audio_url: s.audio_url.trim() || null,
         pdf_url: s.pdf_url.trim() || null,
         image_url: s.image_url.trim() || null,
@@ -841,13 +850,22 @@ export default function AdminDouleursPage() {
                         {/* Media uploads */}
                         <div className="grid gap-4">
                           <FileUpload
-                            label={`Vidéo — Étape ${i + 1}`}
+                            label={`Vidéo principale — Étape ${i + 1}`}
                             accept="video/*"
                             folder="douleurs"
                             currentUrl={step.video_url || null}
-                            hint="MP4 recommandé, max 500 Mo"
+                            hint="Vidéo principale (obligatoire)"
                             onUploaded={(url) => updateStep(i, 'video_url', url)}
                             onRemoved={() => updateStep(i, 'video_url', '')}
+                          />
+                          <FileUpload
+                            label={`Vidéo secondaire — Étape ${i + 1} (optionnel)`}
+                            accept="video/*"
+                            folder="douleurs"
+                            currentUrl={step.video_url_2 || null}
+                            hint="2ème vidéo : complément, témoignage, variation"
+                            onUploaded={(url) => updateStep(i, 'video_url_2', url)}
+                            onRemoved={() => updateStep(i, 'video_url_2', '')}
                           />
                           <FileUpload
                             label={`Audio — Étape ${i + 1}`}

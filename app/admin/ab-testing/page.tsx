@@ -3,6 +3,48 @@
 import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
+// Categorize a referrer URL into a human-readable traffic source
+function categorizeSource(referrer: string | null | undefined): string {
+  if (!referrer) return 'Direct / App'
+  const r = referrer.toLowerCase()
+  if (r.includes('instagram') || r.includes('l.instagram')) return 'Instagram'
+  if (r.includes('facebook') || r.includes('fb.com') || r.includes('fb.me')) return 'Facebook'
+  if (r.includes('tiktok')) return 'TikTok'
+  if (r.includes('youtube') || r.includes('youtu.be')) return 'YouTube'
+  if (r.includes('linkedin') || r.includes('lnkd.in')) return 'LinkedIn'
+  if (r.includes('twitter') || r.includes('t.co') || r.includes('x.com')) return 'X / Twitter'
+  if (r.includes('pinterest')) return 'Pinterest'
+  if (r.includes('whatsapp') || r.includes('wa.me')) return 'WhatsApp'
+  if (r.includes('google')) return 'Google'
+  if (r.includes('bing.com')) return 'Bing'
+  if (r.includes('duckduckgo')) return 'DuckDuckGo'
+  if (r.includes('yahoo')) return 'Yahoo'
+  if (r.includes('sosshine')) return 'Navigation interne'
+  if (r.includes('vercel.com') || r.includes('vercel.app')) return 'Admin / Preview'
+  // Try to extract domain
+  const match = referrer.match(/https?:\/\/([^/]+)/)
+  return match ? match[1] : 'Autre'
+}
+
+const SOURCE_COLORS: Record<string, string> = {
+  Instagram: '#E4405F',
+  Facebook: '#1877F2',
+  TikTok: '#FE2C55',
+  YouTube: '#FF0000',
+  LinkedIn: '#0A66C2',
+  'X / Twitter': '#000000',
+  Pinterest: '#BD081C',
+  WhatsApp: '#25D366',
+  Google: '#4285F4',
+  Bing: '#008373',
+  DuckDuckGo: '#DE5833',
+  Yahoo: '#6001D2',
+  'Direct / App': '#A78BFA',
+  'Navigation interne': '#55EFC4',
+  'Admin / Preview': '#8E6E7E',
+  Autre: '#D4AF37',
+}
+
 interface AbConfig {
   id: string
   test_name: string
@@ -29,10 +71,18 @@ interface DailyRow {
   conversions: number
 }
 
+interface SourceRow {
+  source: string
+  count: number
+  color: string
+  pct: number
+}
+
 export default function AbTestingDashboard() {
   const [config, setConfig] = useState<AbConfig | null>(null)
   const [stats, setStats] = useState<Record<string, VariantStats>>({})
   const [daily, setDaily] = useState<Record<string, DailyRow[]>>({})
+  const [sources, setSources] = useState<Record<string, SourceRow[]>>({})
   const [loading, setLoading] = useState(true)
   const [toggling, setToggling] = useState(false)
 
@@ -51,11 +101,11 @@ export default function AbTestingDashboard() {
     setConfig(cfg)
 
     // Load visit stats
-    const { data: visitsRaw } = await supabase
-      .from('ab_test_visits')
-      .select('variant, visitor_ip, converted, visited_at')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: visitsRaw } = await (supabase.from('ab_test_visits') as any)
+      .select('variant, visitor_ip, converted, visited_at, referrer')
       .order('visited_at', { ascending: true })
-    const visits = (visitsRaw || []) as unknown as { variant: string; visitor_ip: string | null; converted: boolean; visited_at: string }[]
+    const visits = (visitsRaw || []) as unknown as { variant: string; visitor_ip: string | null; converted: boolean; visited_at: string; referrer: string | null }[]
 
     // Load REAL signups + paid subs per variant (attribution)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -77,6 +127,7 @@ export default function AbTestingDashboard() {
 
     const s: Record<string, VariantStats> = {}
     const d: Record<string, DailyRow[]> = {}
+    const srcByVariant: Record<string, SourceRow[]> = {}
 
     for (const v of [cfg.variant_a, cfg.variant_b]) {
       const variantVisits = visits.filter((vis) => vis.variant === v)
@@ -110,10 +161,26 @@ export default function AbTestingDashboard() {
       d[v] = Object.entries(dayMap)
         .sort(([a], [b]) => a.localeCompare(b))
         .map(([date, val]) => ({ date, ...val }))
+
+      // Sources breakdown (per variant)
+      const sourceMap: Record<string, number> = {}
+      for (const vis of variantVisits) {
+        const src = categorizeSource(vis.referrer)
+        sourceMap[src] = (sourceMap[src] || 0) + 1
+      }
+      srcByVariant[v] = Object.entries(sourceMap)
+        .sort(([, a], [, b]) => b - a)
+        .map(([source, count]) => ({
+          source,
+          count,
+          color: SOURCE_COLORS[source] || '#D4AF37',
+          pct: total > 0 ? Math.round((count / total) * 1000) / 10 : 0,
+        }))
     }
 
     setStats(s)
     setDaily(d)
+    setSources(srcByVariant)
     setLoading(false)
   }, [])
 
@@ -301,6 +368,122 @@ export default function AbTestingDashboard() {
             )}
           </div>
         ))}
+      </div>
+
+      {/* ─── Traffic Sources ─────────────────────────── */}
+      <div className="rounded-xl p-6" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <div className="flex items-start justify-between mb-5 flex-wrap gap-2">
+          <div>
+            <h3 className="font-semibold text-lg" style={{ color: 'var(--text-primary)' }}>
+              Sources de trafic
+            </h3>
+            <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
+              D&apos;où viennent les visiteurs pour chaque variant
+            </p>
+          </div>
+        </div>
+
+        {(() => {
+          // Aggregate global sources (all variants combined)
+          const allRows: SourceRow[] = []
+          const globalMap: Record<string, { count: number; color: string }> = {}
+          for (const v of [config.variant_a, config.variant_b]) {
+            for (const row of sources[v] || []) {
+              if (!globalMap[row.source]) globalMap[row.source] = { count: 0, color: row.color }
+              globalMap[row.source].count += row.count
+            }
+          }
+          const grandTotal = Object.values(globalMap).reduce((acc, r) => acc + r.count, 0)
+          for (const [source, data] of Object.entries(globalMap)) {
+            allRows.push({
+              source,
+              count: data.count,
+              color: data.color,
+              pct: grandTotal > 0 ? Math.round((data.count / grandTotal) * 1000) / 10 : 0,
+            })
+          }
+          allRows.sort((a, b) => b.count - a.count)
+
+          if (allRows.length === 0) {
+            return (
+              <p className="text-sm text-center py-8" style={{ color: 'var(--text-muted)' }}>
+                Aucune visite enregistrée pour le moment. Les sources apparaîtront dès que les premiers visiteurs arriveront sur la landing.
+              </p>
+            )
+          }
+
+          return (
+            <>
+              {/* Global distribution — big bar */}
+              <div className="mb-6">
+                <p className="text-[10px] uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>
+                  Répartition globale ({grandTotal} visites)
+                </p>
+                <div className="flex h-3 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
+                  {allRows.map((r) => (
+                    <div key={r.source} style={{ width: `${r.pct}%`, background: r.color }} title={`${r.source}: ${r.count} (${r.pct}%)`} />
+                  ))}
+                </div>
+                <div className="flex flex-wrap gap-3 mt-3">
+                  {allRows.map((r) => (
+                    <div key={r.source} className="flex items-center gap-1.5 text-xs">
+                      <span className="w-2 h-2 rounded-full" style={{ background: r.color }} />
+                      <span style={{ color: 'var(--text-secondary)' }}>{r.source}</span>
+                      <span style={{ color: 'var(--text-muted)' }}>· {r.count}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Per-variant split */}
+              <div className="grid md:grid-cols-2 gap-4 pt-5" style={{ borderTop: '1px solid var(--dark-border)' }}>
+                {[
+                  { name: 'Julia', variant: config.variant_a, color: '#A78BFA' },
+                  { name: 'Thomas', variant: config.variant_b, color: '#74C0FC' },
+                ].map((v) => {
+                  const rows = sources[v.variant] || []
+                  const total = rows.reduce((acc, r) => acc + r.count, 0)
+                  return (
+                    <div key={v.variant}>
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="font-semibold text-sm" style={{ color: v.color }}>
+                          Version {v.name}
+                        </h4>
+                        <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>
+                          {total} visite{total > 1 ? 's' : ''}
+                        </span>
+                      </div>
+                      {rows.length === 0 ? (
+                        <p className="text-xs italic" style={{ color: 'var(--text-muted)' }}>
+                          Aucune source pour cette version
+                        </p>
+                      ) : (
+                        <div className="space-y-2">
+                          {rows.slice(0, 8).map((r) => (
+                            <div key={r.source}>
+                              <div className="flex items-center justify-between mb-1">
+                                <span className="text-xs flex items-center gap-2" style={{ color: 'var(--text-secondary)' }}>
+                                  <span className="w-2 h-2 rounded-full" style={{ background: r.color }} />
+                                  {r.source}
+                                </span>
+                                <span className="text-xs font-semibold" style={{ color: 'var(--text-primary)' }}>
+                                  {r.count} <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>({r.pct}%)</span>
+                                </span>
+                              </div>
+                              <div className="h-1 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.04)' }}>
+                                <div className="h-full rounded-full" style={{ width: `${r.pct}%`, background: r.color }} />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            </>
+          )
+        })()}
       </div>
 
       {/* Info */}

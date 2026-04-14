@@ -528,6 +528,40 @@ export default function DouleurDetailPage() {
         <span style={{ color: 'var(--text-primary)' }}>{douleur.title}</span>
       </div>
 
+      {/* SOS banner — appears at the top when an SOS meditation is configured */}
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+      {(douleur as any)?.sos_audio_url && (
+        <Link
+          href={`/dashboard/encyclopedie/${douleur.slug}/sos`}
+          className="block rounded-2xl p-5 transition-all hover:scale-[1.005]"
+          style={{
+            background: 'linear-gradient(135deg, rgba(255,107,107,0.12), rgba(225,112,85,0.08))',
+            border: '1px solid rgba(255,107,107,0.4)',
+            boxShadow: '0 4px 20px rgba(255,107,107,0.15)',
+          }}
+        >
+          <div className="flex items-center gap-4">
+            <div className="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center pulse-ring"
+              style={{ background: 'rgba(255,107,107,0.2)', border: '1px solid rgba(255,107,107,0.4)' }}>
+              <span className="text-2xl">🆘</span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] mb-0.5" style={{ color: '#FF6B6B' }}>
+                Vous êtes en crise ?
+              </p>
+              <h3 className="font-display text-lg sm:text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+                Méditation SOS 5 min — accès immédiat
+              </h3>
+            </div>
+            <div className="flex-shrink-0">
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="#FF6B6B" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </div>
+          </div>
+        </Link>
+      )}
+
       {/* Header */}
       <div>
         <div className="flex items-center gap-3">

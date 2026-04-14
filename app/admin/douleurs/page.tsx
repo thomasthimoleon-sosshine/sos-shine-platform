@@ -29,6 +29,7 @@ type StepForm = {
   video_url: string
   video_url_2: string
   audio_url: string
+  audio_url_2: string
   pdf_url: string
   image_url: string
   exercise_content: string
@@ -44,6 +45,7 @@ function createEmptyStep(num: number): StepForm {
     video_url: '',
     video_url_2: '',
     audio_url: '',
+    audio_url_2: '',
     pdf_url: '',
     image_url: '',
     exercise_content: '',
@@ -51,9 +53,9 @@ function createEmptyStep(num: number): StepForm {
 }
 
 const DEFAULT_STEPS: StepForm[] = [
-  { title: 'Comprendre', subtitle: 'Vidéo, audio & ressources', description: '', icon: '🎬', color: '#55EFC4', video_url: '', video_url_2: '', audio_url: '', pdf_url: '', image_url: '', exercise_content: '' },
-  { title: 'Libérer & Intégrer', subtitle: 'Audio, vidéo & ressources', description: '', icon: '✨', color: '#74C0FC', video_url: '', video_url_2: '', audio_url: '', pdf_url: '', image_url: '', exercise_content: '' },
-  { title: 'Agir', subtitle: 'Exercices, audio & ressources', description: '', icon: '⚡', color: '#E17055', video_url: '', video_url_2: '', audio_url: '', pdf_url: '', image_url: '', exercise_content: '' },
+  { title: 'Comprendre', subtitle: 'Vidéo, audio & ressources', description: '', icon: '🎬', color: '#55EFC4', video_url: '', video_url_2: '', audio_url: '', audio_url_2: '', pdf_url: '', image_url: '', exercise_content: '' },
+  { title: 'Libérer & Intégrer', subtitle: 'Audio, vidéo & ressources', description: '', icon: '✨', color: '#74C0FC', video_url: '', video_url_2: '', audio_url: '', audio_url_2: '', pdf_url: '', image_url: '', exercise_content: '' },
+  { title: 'Agir', subtitle: 'Exercices, audio & ressources', description: '', icon: '⚡', color: '#E17055', video_url: '', video_url_2: '', audio_url: '', audio_url_2: '', pdf_url: '', image_url: '', exercise_content: '' },
 ]
 
 const ENCYCLOPEDIE_CATEGORIES = [
@@ -77,6 +79,9 @@ type ChallengeForm = {
   description: string
   image_url: string
   tags: string
+  sos_audio_url: string
+  sos_description: string
+  sos_duration_seconds: string
   steps: StepForm[]
 }
 
@@ -88,6 +93,9 @@ const emptyForm: ChallengeForm = {
   description: '',
   image_url: '',
   tags: '',
+  sos_audio_url: '',
+  sos_description: '',
+  sos_duration_seconds: '300',
   steps: DEFAULT_STEPS.map(s => ({ ...s })),
 }
 
@@ -255,15 +263,21 @@ export default function AdminDouleursPage() {
     return [
       {
         title: 'Comprendre', subtitle: 'Vidéo, audio & ressources', description: '', icon: '🎬', color: '#55EFC4',
-        video_url: d.video_url || '', video_url_2: anyD.video_url_2 || '', audio_url: d.step1_audio_url || '', pdf_url: d.step1_pdf_url || '', image_url: d.step1_image_url || '', exercise_content: '',
+        video_url: d.video_url || '', video_url_2: anyD.video_url_2 || '',
+        audio_url: d.step1_audio_url || '', audio_url_2: '',
+        pdf_url: d.step1_pdf_url || '', image_url: d.step1_image_url || '', exercise_content: '',
       },
       {
         title: 'Libérer & Intégrer', subtitle: 'Audio, vidéo & ressources', description: '', icon: '✨', color: '#74C0FC',
-        video_url: d.step2_video_url || '', video_url_2: anyD.step2_video_url_2 || '', audio_url: d.audio_energy_url || '', pdf_url: d.step2_pdf_url || '', image_url: d.step2_image_url || '', exercise_content: '',
+        video_url: d.step2_video_url || '', video_url_2: '',
+        audio_url: d.audio_energy_url || '', audio_url_2: anyD.audio_energy_url_2 || '',
+        pdf_url: d.step2_pdf_url || '', image_url: d.step2_image_url || '', exercise_content: '',
       },
       {
         title: 'Agir', subtitle: 'Exercices, audio & ressources', description: '', icon: '⚡', color: '#E17055',
-        video_url: d.step3_video_url || '', video_url_2: anyD.step3_video_url_2 || '', audio_url: d.audio_meditation_url || '', pdf_url: d.pdf_url || '', image_url: d.step3_image_url || '', exercise_content: d.exercise_content || '',
+        video_url: d.step3_video_url || '', video_url_2: '',
+        audio_url: d.audio_meditation_url || '', audio_url_2: '',
+        pdf_url: d.pdf_url || '', image_url: d.step3_image_url || '', exercise_content: d.exercise_content || '',
       },
     ]
   }
@@ -279,6 +293,8 @@ export default function AdminDouleursPage() {
       video_url: s.video_url || '',
       video_url_2: s.video_url_2 || '',
       audio_url: s.audio_url || '',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      audio_url_2: (s as any).audio_url_2 || '',
       pdf_url: s.pdf_url || '',
       image_url: s.image_url || '',
       exercise_content: s.exercise_content || '',
@@ -290,6 +306,8 @@ export default function AdminDouleursPage() {
     const steps = d.dynamicSteps && d.dynamicSteps.length > 0
       ? dynamicStepsToForm(d.dynamicSteps)
       : legacyToSteps(d)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const anyD = d as any
     setForm({
       title: d.title,
       slug: d.slug,
@@ -298,6 +316,9 @@ export default function AdminDouleursPage() {
       description: d.description || '',
       image_url: d.image_url || '',
       tags: Array.isArray(d.tags) ? d.tags.join(', ') : '',
+      sos_audio_url: anyD.sos_audio_url || '',
+      sos_description: anyD.sos_description || '',
+      sos_duration_seconds: anyD.sos_duration_seconds ? String(anyD.sos_duration_seconds) : '300',
       steps,
     })
     setShowForm(true)
@@ -314,6 +335,8 @@ export default function AdminDouleursPage() {
     const steps = d.dynamicSteps && d.dynamicSteps.length > 0
       ? dynamicStepsToForm(d.dynamicSteps)
       : legacyToSteps(d)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const anyD = d as any
     setForm({
       title: d.title + ' (copie)',
       slug: generateSlug(d.title + ' copie'),
@@ -322,6 +345,9 @@ export default function AdminDouleursPage() {
       description: d.description || '',
       image_url: d.image_url || '',
       tags: Array.isArray(d.tags) ? d.tags.join(', ') : '',
+      sos_audio_url: anyD.sos_audio_url || '',
+      sos_description: anyD.sos_description || '',
+      sos_duration_seconds: anyD.sos_duration_seconds ? String(anyD.sos_duration_seconds) : '300',
       steps: steps.map(s => ({ ...s, id: undefined })),
     })
     setShowForm(true)
@@ -400,19 +426,22 @@ export default function AdminDouleursPage() {
       description: form.description.trim() || null,
       image_url: form.image_url.trim() || null,
       tags: tagsArray,
+      // SOS emergency meditation (per douleur)
+      sos_audio_url: form.sos_audio_url.trim() || null,
+      sos_description: form.sos_description.trim() || null,
+      sos_duration_seconds: form.sos_duration_seconds ? parseInt(form.sos_duration_seconds, 10) : null,
       // Legacy columns (first 3 steps mapped for backward compat)
       video_url: s1.video_url.trim() || null,
-      video_url_2: s1.video_url_2.trim() || null,
+      video_url_2: s1.video_url_2.trim() || null, // Step 1: 2nd video
       step1_audio_url: s1.audio_url.trim() || null,
       step1_pdf_url: s1.pdf_url.trim() || null,
       step1_image_url: s1.image_url.trim() || null,
       step2_video_url: s2.video_url.trim() || null,
-      step2_video_url_2: s2.video_url_2.trim() || null,
       audio_energy_url: s2.audio_url.trim() || null,
+      audio_energy_url_2: s2.audio_url_2.trim() || null, // Step 2: 2nd audio
       step2_pdf_url: s2.pdf_url.trim() || null,
       step2_image_url: s2.image_url.trim() || null,
       step3_video_url: s3.video_url.trim() || null,
-      step3_video_url_2: s3.video_url_2.trim() || null,
       audio_meditation_url: s3.audio_url.trim() || null,
       pdf_url: s3.pdf_url.trim() || null,
       step3_image_url: s3.image_url.trim() || null,
@@ -466,6 +495,7 @@ export default function AdminDouleursPage() {
         video_url: s.video_url.trim() || null,
         video_url_2: s.video_url_2.trim() || null,
         audio_url: s.audio_url.trim() || null,
+        audio_url_2: s.audio_url_2.trim() || null,
         pdf_url: s.pdf_url.trim() || null,
         image_url: s.image_url.trim() || null,
         exercise_content: s.exercise_content.trim() || null,
@@ -733,6 +763,56 @@ export default function AdminDouleursPage() {
             </p>
           </div>
 
+          {/* ── SOS MEDITATION SECTION ── */}
+          <div className="rounded-xl p-4 space-y-4" style={{ background: 'rgba(255,107,107,0.05)', border: '1px solid rgba(255,107,107,0.25)' }}>
+            <div>
+              <h3 className="text-sm font-semibold flex items-center gap-2" style={{ color: '#FF6B6B' }}>
+                <span>🆘</span> Méditation SOS d&apos;urgence
+              </h3>
+              <p className="text-[11px] mt-1" style={{ color: 'var(--text-muted)' }}>
+                Audio de ~5 min accessible depuis le bouton SOS rouge affiché en haut de cette douleur. Utilisé quand un membre est en crise et a besoin d&apos;aide immédiate.
+              </p>
+            </div>
+            <FileUpload
+              label="Audio de la méditation SOS"
+              accept="audio/*"
+              folder="douleurs"
+              currentUrl={form.sos_audio_url || null}
+              hint="MP3 ou WAV, idéalement 3 à 7 minutes"
+              onUploaded={(url) => setForm((prev) => ({ ...prev, sos_audio_url: url }))}
+              onRemoved={() => setForm((prev) => ({ ...prev, sos_audio_url: '' }))}
+            />
+            <div>
+              <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
+                Description courte (affichée avant de lancer l&apos;audio)
+              </label>
+              <textarea
+                value={form.sos_description}
+                onChange={(e) => setForm((prev) => ({ ...prev, sos_description: e.target.value }))}
+                rows={3}
+                placeholder="Ex: Respirez avec moi. Cette méditation va court-circuiter la panique en 5 minutes. Vous n'êtes pas seul(e)."
+                className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-y"
+                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
+                Durée (en secondes)
+              </label>
+              <input
+                type="number"
+                value={form.sos_duration_seconds}
+                onChange={(e) => setForm((prev) => ({ ...prev, sos_duration_seconds: e.target.value }))}
+                placeholder="300"
+                className="w-full rounded-lg px-3 py-2 text-sm outline-none"
+                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+              />
+              <p className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>
+                300 = 5 minutes. Utilisé pour l&apos;affichage uniquement.
+              </p>
+            </div>
+          </div>
+
           {/* ── DYNAMIC STEPS SECTION ── */}
           <div className="rounded-xl p-4" style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.2)' }}>
             <div className="flex items-center justify-between mb-4">
@@ -850,32 +930,47 @@ export default function AdminDouleursPage() {
                         {/* Media uploads */}
                         <div className="grid gap-4">
                           <FileUpload
-                            label={`Vidéo principale — Étape ${i + 1}`}
+                            label={i === 0 ? `Vidéo principale — Étape ${i + 1}` : `Vidéo — Étape ${i + 1}`}
                             accept="video/*"
                             folder="douleurs"
                             currentUrl={step.video_url || null}
-                            hint="Vidéo principale (obligatoire)"
+                            hint={i === 0 ? 'Vidéo principale' : 'Vidéo de l\'étape'}
                             onUploaded={(url) => updateStep(i, 'video_url', url)}
                             onRemoved={() => updateStep(i, 'video_url', '')}
                           />
+                          {/* 2nd video: only on step 1 (Comprendre) */}
+                          {i === 0 && (
+                            <FileUpload
+                              label={`Vidéo secondaire — Étape ${i + 1} (optionnel)`}
+                              accept="video/*"
+                              folder="douleurs"
+                              currentUrl={step.video_url_2 || null}
+                              hint="2ème vidéo : complément, témoignage, variation"
+                              onUploaded={(url) => updateStep(i, 'video_url_2', url)}
+                              onRemoved={() => updateStep(i, 'video_url_2', '')}
+                            />
+                          )}
                           <FileUpload
-                            label={`Vidéo secondaire — Étape ${i + 1} (optionnel)`}
-                            accept="video/*"
-                            folder="douleurs"
-                            currentUrl={step.video_url_2 || null}
-                            hint="2ème vidéo : complément, témoignage, variation"
-                            onUploaded={(url) => updateStep(i, 'video_url_2', url)}
-                            onRemoved={() => updateStep(i, 'video_url_2', '')}
-                          />
-                          <FileUpload
-                            label={`Audio — Étape ${i + 1}`}
+                            label={i === 1 ? `Audio principal — Étape ${i + 1}` : `Audio — Étape ${i + 1}`}
                             accept="audio/*"
                             folder="douleurs"
                             currentUrl={step.audio_url || null}
-                            hint="MP3 ou WAV, max 500 Mo"
+                            hint={i === 1 ? 'Audio principal de libération' : 'MP3 ou WAV'}
                             onUploaded={(url) => updateStep(i, 'audio_url', url)}
                             onRemoved={() => updateStep(i, 'audio_url', '')}
                           />
+                          {/* 2nd audio: only on step 2 (Libérer) */}
+                          {i === 1 && (
+                            <FileUpload
+                              label={`Audio secondaire — Étape ${i + 1} (optionnel)`}
+                              accept="audio/*"
+                              folder="douleurs"
+                              currentUrl={step.audio_url_2 || null}
+                              hint="2ème audio : version alternative, intégration, ambiance"
+                              onUploaded={(url) => updateStep(i, 'audio_url_2', url)}
+                              onRemoved={() => updateStep(i, 'audio_url_2', '')}
+                            />
+                          )}
                           <FileUpload
                             label={`PDF — Étape ${i + 1}`}
                             accept="application/pdf"

@@ -182,7 +182,20 @@ function MarkdownRenderer({ content }: { content: string }) {
   return <div>{elements}</div>
 }
 
-export default function BlogArticleContent({ article }: { article: BlogArticle }) {
+interface LinkedDouleur {
+  slug: string
+  title: string
+  subtitle: string | null
+  category: string | null
+}
+
+export default function BlogArticleContent({
+  article,
+  linkedDouleur = null,
+}: {
+  article: BlogArticle
+  linkedDouleur?: LinkedDouleur | null
+}) {
   return (
     <main className="grain relative z-0 min-h-screen" style={{ background: 'var(--dark, #050505)' }}>
       <ReadingProgress />
@@ -340,6 +353,47 @@ export default function BlogArticleContent({ article }: { article: BlogArticle }
           </div>
         </div>
       </article>
+
+      {/* Linked Encyclopedia Entry */}
+      {linkedDouleur && (
+        <section className="px-5 md:px-8 py-12 md:py-16" style={{ background: 'rgba(212,175,55,0.03)', borderTop: `1px solid rgba(212,175,55,0.15)`, borderBottom: `1px solid rgba(212,175,55,0.15)` }}>
+          <div className="max-w-3xl mx-auto">
+            <p className="text-[10px] sm:text-xs tracking-[0.25em] uppercase text-center mb-4 font-semibold" style={{ color: gold }}>
+              Approfondir avec un protocole
+            </p>
+            <Link href={`/encyclopedie/${linkedDouleur.slug}`} className="block rounded-2xl p-6 md:p-8 transition-all hover:scale-[1.01]" style={{ background: 'rgba(0,0,0,0.3)', border: `1px solid rgba(212,175,55,0.25)` }}>
+              <div className="flex items-start gap-4 md:gap-6">
+                <div className="flex-shrink-0 w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center" style={{ background: `rgba(212,175,55,0.12)`, border: `1px solid rgba(212,175,55,0.25)` }}>
+                  <svg className="w-6 h-6 md:w-7 md:h-7" fill="none" viewBox="0 0 24 24" stroke={gold} strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                  </svg>
+                </div>
+                <div className="flex-1 min-w-0">
+                  {linkedDouleur.category && (
+                    <p className="text-[10px] uppercase tracking-wider mb-1" style={{ color: 'var(--text-muted)' }}>
+                      {linkedDouleur.category}
+                    </p>
+                  )}
+                  <h3 className="font-display text-xl md:text-2xl font-semibold mb-1 md:mb-2" style={{ color: 'var(--text-primary)' }}>
+                    {linkedDouleur.title}
+                  </h3>
+                  {linkedDouleur.subtitle && (
+                    <p className="text-sm md:text-base italic mb-3 md:mb-4" style={{ color: 'var(--text-secondary)' }}>
+                      {linkedDouleur.subtitle}
+                    </p>
+                  )}
+                  <span className="inline-flex items-center gap-2 text-xs md:text-sm font-semibold" style={{ color: gold }}>
+                    Découvrir le protocole en 3 étapes
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </span>
+                </div>
+              </div>
+            </Link>
+          </div>
+        </section>
+      )}
 
       {/* Footer */}
       <footer className="px-5 md:px-8 py-8 md:py-12 border-t" style={{ borderColor: 'var(--dark-border)', background: 'rgba(0,0,0,0.3)' }}>

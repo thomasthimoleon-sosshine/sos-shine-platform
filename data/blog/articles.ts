@@ -19,6 +19,7 @@ export interface BlogArticle {
   featured: boolean
   content: string
   contentType?: 'markdown' | 'html'
+  douleur_slug?: string | null
 }
 
 export const BLOG_CATEGORIES = [

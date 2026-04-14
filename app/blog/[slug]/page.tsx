@@ -47,11 +47,32 @@ async function findArticle(slug: string): Promise<BlogArticle | undefined> {
       featured: data.featured || false,
       content: data.content || '',
       contentType: data.content_type || 'markdown',
+      douleur_slug: data.douleur_slug || null,
     }
   } catch {
     // DB not available, only static
   }
   return undefined
+}
+
+/** Fetch linked douleur (if any) for a blog article */
+async function findLinkedDouleur(
+  douleurSlug: string | null | undefined
+): Promise<{ slug: string; title: string; subtitle: string | null; category: string | null } | null> {
+  if (!douleurSlug) return null
+  try {
+    const supabase = await createClient()
+    const { data } = await supabase
+      .from('douleurs')
+      .select('slug, title, subtitle, category')
+      .eq('slug', douleurSlug)
+      .eq('is_published', true)
+      .maybeSingle()
+    if (!data) return null
+    return data as { slug: string; title: string; subtitle: string | null; category: string | null }
+  } catch {
+    return null
+  }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -104,6 +125,9 @@ export default async function BlogArticlePage({ params }: Props) {
   const article = await findArticle(slug!)
 
   if (!article) notFound()
+
+  // Fetch linked douleur (encyclopedia entry) if the article has one
+  const linkedDouleur = await findLinkedDouleur(article.douleur_slug)
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sosshine.com'
 
@@ -198,7 +222,7 @@ export default async function BlogArticlePage({ params }: Props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
-      <BlogArticleContent article={article} />
+      <BlogArticleContent article={article} linkedDouleur={linkedDouleur} />
     </>
   )
 }

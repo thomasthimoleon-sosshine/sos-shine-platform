@@ -70,6 +70,7 @@ export default function DouleurDetailPage() {
   const { hasFeature } = useFeatureAccess()
   const [douleur, setDouleur] = useState<Douleur | null>(null)
   const [relatedDouleurs, setRelatedDouleurs] = useState<Array<{ id: string; title: string; slug: string; subtitle: string | null }>>([])
+  const [linkedArticle, setLinkedArticle] = useState<{ slug: string; title: string; excerpt: string | null; cover_image: string | null; read_time: number | null } | null>(null)
   const [relatedTvVideos, setRelatedTvVideos] = useState<Array<{ id: string; title: string; thumbnail_url: string | null; duration_minutes: number }>>([])
   const [relatedShorts, setRelatedShorts] = useState<Array<{ id: string; title: string; thumbnail_url: string | null; duration_seconds: number }>>([])
   const [relatedAudible, setRelatedAudible] = useState<Array<{ id: string; title: string; cover_url: string | null; narrator: string | null; content_type: string }>>([])
@@ -252,6 +253,33 @@ export default function DouleurDetailPage() {
     }
     loadRelated()
   }, [douleur])
+
+  // Load linked blog article (if any) from blog_articles.douleur_slug
+  useEffect(() => {
+    async function loadLinkedArticle() {
+      if (!douleur?.slug) {
+        setLinkedArticle(null)
+        return
+      }
+      const supabase = createClient()
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { data } = await (supabase as any)
+          .from('blog_articles')
+          .select('slug, title, excerpt, cover_image, read_time')
+          .eq('douleur_slug', douleur.slug)
+          .eq('is_published', true)
+          .limit(1)
+          .maybeSingle()
+        if (data) {
+          setLinkedArticle(data as { slug: string; title: string; excerpt: string | null; cover_image: string | null; read_time: number | null })
+        }
+      } catch {
+        // Column may not exist yet — fail silently
+      }
+    }
+    loadLinkedArticle()
+  }, [douleur?.slug])
 
   useEffect(() => {
     async function loadProgress() {
@@ -1213,6 +1241,40 @@ export default function DouleurDetailPage() {
               </div>
             )
           })()}
+        </div>
+      )}
+
+      {/* Linked blog article */}
+      {linkedArticle && (
+        <div className="pt-8 mt-4" style={{ borderTop: '1px solid var(--dark-border)' }}>
+          <p className="text-[10px] uppercase tracking-[0.2em] mb-3 font-semibold" style={{ color: '#74C0FC' }}>
+            Article du blog lié
+          </p>
+          <Link href={`/blog/${linkedArticle.slug}`} className="block rounded-2xl overflow-hidden transition-all hover:scale-[1.005]" style={{ background: 'rgba(116,192,252,0.04)', border: '1px solid rgba(116,192,252,0.2)' }}>
+            <div className="flex flex-col md:flex-row gap-0">
+              {linkedArticle.cover_image && (
+                <div className="md:w-48 h-32 md:h-auto flex-shrink-0" style={{ background: 'rgba(0,0,0,0.3)' }}>
+                  <img src={linkedArticle.cover_image} alt="" className="w-full h-full object-cover" />
+                </div>
+              )}
+              <div className="flex-1 p-5 md:p-6">
+                <h3 className="font-display text-lg md:text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                  {linkedArticle.title}
+                </h3>
+                {linkedArticle.excerpt && (
+                  <p className="text-sm mb-3 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                    {linkedArticle.excerpt}
+                  </p>
+                )}
+                <span className="inline-flex items-center gap-2 text-xs font-semibold" style={{ color: '#74C0FC' }}>
+                  {linkedArticle.read_time ? `${linkedArticle.read_time} min de lecture` : 'Lire l\'article'}
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </Link>
         </div>
       )}
 

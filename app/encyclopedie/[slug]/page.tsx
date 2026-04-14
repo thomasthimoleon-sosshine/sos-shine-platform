@@ -66,6 +66,7 @@ export default function PublicDouleurDetailPage() {
   const slug = params.slug as string
   const [douleur, setDouleur] = useState<Douleur | null>(null)
   const [dynamicSteps, setDynamicSteps] = useState<DouleurStep[]>([])
+  const [linkedArticle, setLinkedArticle] = useState<{ slug: string; title: string; excerpt: string | null; cover_image: string | null; read_time: number | null } | null>(null)
   const [loading, setLoading] = useState(true)
   const [activeStep, setActiveStep] = useState(1)
   const [showModal, setShowModal] = useState(false)
@@ -149,6 +150,30 @@ export default function PublicDouleurDetailPage() {
     }
     load()
   }, [slug])
+
+  // Load linked blog article (if any) once we have the douleur
+  useEffect(() => {
+    if (!douleur?.slug) return
+    async function loadLinkedArticle(douleurSlug: string) {
+      try {
+        const supabase = createClient()
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { data } = await (supabase as any)
+          .from('blog_articles')
+          .select('slug, title, excerpt, cover_image, read_time')
+          .eq('douleur_slug', douleurSlug)
+          .eq('is_published', true)
+          .limit(1)
+          .maybeSingle()
+        if (data) {
+          setLinkedArticle(data as { slug: string; title: string; excerpt: string | null; cover_image: string | null; read_time: number | null })
+        }
+      } catch {
+        // Column may not exist yet — fail silently
+      }
+    }
+    loadLinkedArticle(douleur.slug)
+  }, [douleur?.slug])
 
   const steps = douleur ? buildSteps(douleur, dynamicSteps) : []
   const totalSteps = steps.length
@@ -477,6 +502,38 @@ export default function PublicDouleurDetailPage() {
               </button>
             </div>
           </div>
+        )}
+
+        {/* Linked blog article */}
+        {linkedArticle && (
+          <Link href={`/blog/${linkedArticle.slug}`} className="block rounded-2xl overflow-hidden transition-all hover:scale-[1.005]" style={{ background: 'rgba(116,192,252,0.04)', border: '1px solid rgba(116,192,252,0.2)' }}>
+            <div className="flex flex-col md:flex-row gap-0 md:gap-6">
+              {linkedArticle.cover_image && (
+                <div className="md:w-48 h-32 md:h-auto flex-shrink-0" style={{ background: 'rgba(0,0,0,0.3)' }}>
+                  <img src={linkedArticle.cover_image} alt="" className="w-full h-full object-cover" />
+                </div>
+              )}
+              <div className="flex-1 p-6 md:p-8">
+                <p className="text-[10px] uppercase tracking-[0.2em] mb-2 font-semibold" style={{ color: '#74C0FC' }}>
+                  Article du blog à lire
+                </p>
+                <h3 className="font-display text-xl md:text-2xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                  {linkedArticle.title}
+                </h3>
+                {linkedArticle.excerpt && (
+                  <p className="text-sm leading-relaxed mb-3" style={{ color: 'var(--text-secondary)' }}>
+                    {linkedArticle.excerpt}
+                  </p>
+                )}
+                <span className="inline-flex items-center gap-2 text-xs font-semibold" style={{ color: '#74C0FC' }}>
+                  {linkedArticle.read_time ? `${linkedArticle.read_time} min de lecture` : 'Lire l\'article'}
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </Link>
         )}
 
         {/* CTA - Unlock */}

@@ -478,13 +478,10 @@ export default function AdminDouleursPage() {
       douleurId = (data as { id: string })?.id ?? null
     }
 
-    // Save dynamic steps
+    // Save dynamic steps via UPSERT (safer than DELETE+INSERT:
+    // if save fails, existing data is preserved instead of wiped)
     if (douleurId) {
-      // Delete existing steps
-      await supabase.from('douleur_steps').delete().eq('douleur_id', douleurId)
-
-      // Insert all steps
-      const stepsToInsert = form.steps.map((s, i) => ({
+      const stepsToUpsert = form.steps.map((s, i) => ({
         douleur_id: douleurId!,
         step_number: i + 1,
         title: s.title.trim() || `Étape ${i + 1}`,
@@ -501,11 +498,26 @@ export default function AdminDouleursPage() {
         exercise_content: s.exercise_content.trim() || null,
       }))
 
-      if (stepsToInsert.length > 0) {
-        const { error: stepsError } = await supabase.from('douleur_steps').insert(stepsToInsert)
+      if (stepsToUpsert.length > 0) {
+        const { error: stepsError } = await supabase
+          .from('douleur_steps')
+          .upsert(stepsToUpsert, { onConflict: 'douleur_id,step_number' })
         if (stepsError) {
-          console.warn('Error saving steps:', stepsError.message)
+          console.error('Error saving steps:', stepsError)
+          setError(`Échec de l'enregistrement des étapes : ${stepsError.message}. Vos données existantes sont préservées. Vérifiez la console pour les détails.`)
+          setSaving(false)
+          return
         }
+      }
+
+      // Delete any steps that were removed (e.g., user reduced from 4 to 3 steps)
+      const { error: cleanupError } = await supabase
+        .from('douleur_steps')
+        .delete()
+        .eq('douleur_id', douleurId)
+        .gt('step_number', form.steps.length)
+      if (cleanupError) {
+        console.warn('Non-critical: could not clean up removed steps:', cleanupError.message)
       }
     }
 

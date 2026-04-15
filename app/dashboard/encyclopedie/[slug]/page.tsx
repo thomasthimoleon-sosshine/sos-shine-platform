@@ -575,7 +575,7 @@ export default function DouleurDetailPage() {
             </span>
           )}
         </div>
-        <p className="mt-2 text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+        <p className="mt-2 text-sm md:text-base leading-relaxed whitespace-pre-line" style={{ color: 'var(--text-secondary)' }}>
           {douleur.description}
         </p>
 
@@ -696,7 +696,7 @@ export default function DouleurDetailPage() {
         </div>
 
         {currentStep.description && (
-          <p className="mb-6 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+          <p className="mb-6 text-sm md:text-base leading-relaxed whitespace-pre-line" style={{ color: 'var(--text-secondary)' }}>
             {currentStep.description}
           </p>
         )}

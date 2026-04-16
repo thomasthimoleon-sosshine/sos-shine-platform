@@ -348,7 +348,7 @@ export default function FounderDashboard() {
 
       // Load legacy clients list
       try {
-        const { data: legacyData } = await supabase.from('legacy_clients').select('*').order('created_at', { ascending: false })
+        const { data: legacyData } = await (supabase as any).from('legacy_clients').select('*').order('created_at', { ascending: false })
         if (legacyData) setLegacyClients(legacyData)
       } catch (e) {
         console.error('Legacy clients error:', e)
@@ -1142,7 +1142,7 @@ export default function FounderDashboard() {
                 try {
                   const sb = createClient()
                   const { data: { user } } = await sb.auth.getUser()
-                  const { error } = await sb.from('legacy_clients').insert({
+                  const { error } = await (sb as any).from('legacy_clients').insert({
                     email: legacyForm.email.trim().toLowerCase(),
                     first_name: legacyForm.first_name.trim() || null,
                     last_name: legacyForm.last_name.trim() || null,
@@ -1158,7 +1158,7 @@ export default function FounderDashboard() {
                   } else {
                     setLegacyForm({ email: '', first_name: '', last_name: '', notes: '' })
                     // Reload list
-                    const { data } = await sb.from('legacy_clients').select('*').order('created_at', { ascending: false })
+                    const { data } = await (sb as any).from('legacy_clients').select('*').order('created_at', { ascending: false })
                     if (data) setLegacyClients(data)
                   }
                 } catch (err) {
@@ -1214,7 +1214,7 @@ export default function FounderDashboard() {
                   <button onClick={async () => {
                     setLegacyLoading(true)
                     const sb = createClient()
-                    const { data } = await sb.from('legacy_clients').select('*').order('created_at', { ascending: false })
+                    const { data } = await (sb as any).from('legacy_clients').select('*').order('created_at', { ascending: false })
                     if (data) setLegacyClients(data)
                     setLegacyLoading(false)
                   }} className="text-xs px-3 py-1 rounded" style={{ color: '#D4AF37', background: 'rgba(212,175,55,0.1)' }}>
@@ -1251,7 +1251,7 @@ export default function FounderDashboard() {
                         <button onClick={async () => {
                           if (!confirm(`Supprimer ${client.email} de la liste ?`)) return
                           const sb = createClient()
-                          await sb.from('legacy_clients').delete().eq('id', client.id)
+                          await (sb as any).from('legacy_clients').delete().eq('id', client.id)
                           setLegacyClients(prev => prev.filter(c => c.id !== client.id))
                         }}
                           className="text-xs px-2 py-1 rounded cursor-pointer"

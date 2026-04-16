@@ -344,7 +344,7 @@ export default function DouleurDetailPage() {
       const normalizedSlug = slug.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
       const isDeconditionnement = normalizedSlug === 'deconditionnement' || normalizedSlug === 'conditionnement'
       if (isDeconditionnement && user.email) {
-        const { data: legacyMatch } = await supabase
+        const { data: legacyMatch } = await (supabase as any)
           .from('legacy_clients')
           .select('id')
           .ilike('email', user.email)

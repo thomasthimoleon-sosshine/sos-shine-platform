@@ -86,6 +86,7 @@ export default function DouleurDetailPage() {
   const [notPublished, setNotPublished] = useState(false)
   const [progress, setProgress] = useState<UserProgress | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
+  const [isLegacyAccess, setIsLegacyAccess] = useState(false)
 
   // Quiz state
   const [quizQuestions, setQuizQuestions] = useState<DouleurQuizQuestion[]>([])
@@ -338,6 +339,20 @@ export default function DouleurDetailPage() {
       if (encProgress) {
         setEncyclopediaPrevProgress(encProgress as { best_score_percentage: number; xp_awarded: number })
       }
+
+      // Check legacy client access (free access to "Déconditionnement" for Julia's former clients)
+      const normalizedSlug = slug.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      const isDeconditionnement = normalizedSlug === 'deconditionnement' || normalizedSlug === 'conditionnement'
+      if (isDeconditionnement && user.email) {
+        const { data: legacyMatch } = await supabase
+          .from('legacy_clients')
+          .select('id')
+          .ilike('email', user.email)
+          .maybeSingle()
+        if (legacyMatch) {
+          setIsLegacyAccess(true)
+        }
+      }
     }
     loadProgress()
   }, [douleur])
@@ -512,7 +527,7 @@ export default function DouleurDetailPage() {
   const currentStep = steps[activeStep - 1]
 
   return (
-    <SubscriptionGate>
+    <SubscriptionGate allowFree={isLegacyAccess}>
     <div className="max-w-4xl mx-auto space-y-8">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm">

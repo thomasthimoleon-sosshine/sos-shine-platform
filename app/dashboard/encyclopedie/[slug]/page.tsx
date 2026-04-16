@@ -897,7 +897,7 @@ export default function DouleurDetailPage() {
             Sujets complémentaires
           </h3>
           <p className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>
-            Les membres qui ont consulté ce sujet explorent aussi :
+            L&apos;équipe SOS Shine vous recommande d&apos;explorer ces sujets pour approfondir votre transformation.
           </p>
           <div className="grid sm:grid-cols-2 gap-3">
             {relatedDouleurs.map((r) => (

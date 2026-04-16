@@ -1140,8 +1140,9 @@ export default function FounderDashboard() {
                 if (!legacyForm.email.trim()) { setLegacyError('L\'email est obligatoire.'); return }
                 setLegacySaving(true)
                 try {
-                  const { data: { user } } = await supabase.auth.getUser()
-                  const { error } = await supabase.from('legacy_clients').insert({
+                  const sb = createClient()
+                  const { data: { user } } = await sb.auth.getUser()
+                  const { error } = await sb.from('legacy_clients').insert({
                     email: legacyForm.email.trim().toLowerCase(),
                     first_name: legacyForm.first_name.trim() || null,
                     last_name: legacyForm.last_name.trim() || null,
@@ -1157,7 +1158,7 @@ export default function FounderDashboard() {
                   } else {
                     setLegacyForm({ email: '', first_name: '', last_name: '', notes: '' })
                     // Reload list
-                    const { data } = await supabase.from('legacy_clients').select('*').order('created_at', { ascending: false })
+                    const { data } = await sb.from('legacy_clients').select('*').order('created_at', { ascending: false })
                     if (data) setLegacyClients(data)
                   }
                 } catch (err) {
@@ -1212,7 +1213,8 @@ export default function FounderDashboard() {
                 {legacyClients.length === 0 && !legacyLoading && (
                   <button onClick={async () => {
                     setLegacyLoading(true)
-                    const { data } = await supabase.from('legacy_clients').select('*').order('created_at', { ascending: false })
+                    const sb = createClient()
+                    const { data } = await sb.from('legacy_clients').select('*').order('created_at', { ascending: false })
                     if (data) setLegacyClients(data)
                     setLegacyLoading(false)
                   }} className="text-xs px-3 py-1 rounded" style={{ color: '#D4AF37', background: 'rgba(212,175,55,0.1)' }}>
@@ -1248,7 +1250,8 @@ export default function FounderDashboard() {
                         </span>
                         <button onClick={async () => {
                           if (!confirm(`Supprimer ${client.email} de la liste ?`)) return
-                          await supabase.from('legacy_clients').delete().eq('id', client.id)
+                          const sb = createClient()
+                          await sb.from('legacy_clients').delete().eq('id', client.id)
                           setLegacyClients(prev => prev.filter(c => c.id !== client.id))
                         }}
                           className="text-xs px-2 py-1 rounded cursor-pointer"

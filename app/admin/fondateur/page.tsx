@@ -275,8 +275,8 @@ export default function FounderDashboard() {
   // Fetch live data from Supabase
   useEffect(() => {
     async function fetchLive() {
+      const supabase = createClient()
       try {
-        const supabase = createClient()
 
         const [profiles, subs, affiliates] = await Promise.all([
           supabase.from('profiles').select('id', { count: 'exact', head: true }),

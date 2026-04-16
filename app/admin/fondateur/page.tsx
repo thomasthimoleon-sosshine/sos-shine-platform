@@ -231,14 +231,7 @@ export default function FounderDashboard() {
     pendingPayouts: 0,
   })
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState<'cockpit' | 'tracker' | 'legacy'>('cockpit')
-
-  // Legacy clients state
-  const [legacyClients, setLegacyClients] = useState<Array<{ id: string; email: string; first_name: string | null; last_name: string | null; notes: string | null; created_at: string }>>([])
-  const [legacyForm, setLegacyForm] = useState({ email: '', first_name: '', last_name: '', notes: '' })
-  const [legacyLoading, setLegacyLoading] = useState(false)
-  const [legacySaving, setLegacySaving] = useState(false)
-  const [legacyError, setLegacyError] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState<'cockpit' | 'tracker'>('cockpit')
 
   // Visit tracker stats
   const [visitStats, setVisitStats] = useState<{
@@ -346,14 +339,6 @@ export default function FounderDashboard() {
         console.error('Visit stats error:', e)
       }
 
-      // Load legacy clients list
-      try {
-        const { data: legacyData } = await (supabase as any).from('legacy_clients').select('*').order('created_at', { ascending: false })
-        if (legacyData) setLegacyClients(legacyData)
-      } catch (e) {
-        console.error('Legacy clients error:', e)
-      }
-
       setLoading(false)
     }
     fetchLive()
@@ -428,7 +413,6 @@ export default function FounderDashboard() {
           {([
             { key: 'cockpit' as const, label: 'Cockpit', icon: '📊' },
             { key: 'tracker' as const, label: 'Tracker', icon: '👁️' },
-            { key: 'legacy' as const, label: 'Anciennes clientes Julia', icon: '💎' },
           ]).map((tab) => (
             <button
               key={tab.key}
@@ -1112,161 +1096,6 @@ export default function FounderDashboard() {
           </>
           )}
 
-          {/* ═══════════════════ ANCIENNES CLIENTES JULIA ═══════════════════ */}
-          {activeTab === 'legacy' && (
-          <>
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-sm font-semibold uppercase tracking-wider mb-1" style={{ color: '#D4AF37' }}>
-                Anciennes clientes Julia
-              </h2>
-              <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                Les adresses ajoutées ici ont accès gratuitement au protocole Déconditionnement.
-              </p>
-            </div>
-
-            {legacyError && (
-              <div className="rounded-lg px-4 py-3 text-sm" style={{ background: 'rgba(255,107,107,0.1)', border: '1px solid rgba(255,107,107,0.25)', color: '#FF6B6B' }}>
-                {legacyError}
-              </div>
-            )}
-
-            {/* Formulaire d'ajout */}
-            <div className="rounded-xl p-5" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-              <h3 className="text-sm font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>Ajouter une ancienne cliente</h3>
-              <form onSubmit={async (e) => {
-                e.preventDefault()
-                setLegacyError(null)
-                if (!legacyForm.email.trim()) { setLegacyError('L\'email est obligatoire.'); return }
-                setLegacySaving(true)
-                try {
-                  const sb = createClient()
-                  const { data: { user } } = await sb.auth.getUser()
-                  const { error } = await (sb as any).from('legacy_clients').insert({
-                    email: legacyForm.email.trim().toLowerCase(),
-                    first_name: legacyForm.first_name.trim() || null,
-                    last_name: legacyForm.last_name.trim() || null,
-                    notes: legacyForm.notes.trim() || null,
-                    added_by: user?.id || null,
-                  })
-                  if (error) {
-                    if (error.code === '23505') {
-                      setLegacyError('Cette adresse email est déjà dans la liste.')
-                    } else {
-                      setLegacyError(error.message)
-                    }
-                  } else {
-                    setLegacyForm({ email: '', first_name: '', last_name: '', notes: '' })
-                    // Reload list
-                    const { data } = await (sb as any).from('legacy_clients').select('*').order('created_at', { ascending: false })
-                    if (data) setLegacyClients(data)
-                  }
-                } catch (err) {
-                  setLegacyError(err instanceof Error ? err.message : 'Erreur inattendue')
-                }
-                setLegacySaving(false)
-              }} className="space-y-3">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-medium mb-1" style={{ color: 'var(--text-muted)' }}>Email *</label>
-                    <input type="email" required value={legacyForm.email} onChange={e => setLegacyForm(f => ({ ...f, email: e.target.value }))}
-                      placeholder="cliente@email.com"
-                      className="w-full px-3 py-2 rounded-lg text-sm"
-                      style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }} />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium mb-1" style={{ color: 'var(--text-muted)' }}>Prénom</label>
-                    <input type="text" value={legacyForm.first_name} onChange={e => setLegacyForm(f => ({ ...f, first_name: e.target.value }))}
-                      placeholder="Prénom"
-                      className="w-full px-3 py-2 rounded-lg text-sm"
-                      style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }} />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium mb-1" style={{ color: 'var(--text-muted)' }}>Nom</label>
-                    <input type="text" value={legacyForm.last_name} onChange={e => setLegacyForm(f => ({ ...f, last_name: e.target.value }))}
-                      placeholder="Nom"
-                      className="w-full px-3 py-2 rounded-lg text-sm"
-                      style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }} />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium mb-1" style={{ color: 'var(--text-muted)' }}>Notes (optionnel)</label>
-                    <input type="text" value={legacyForm.notes} onChange={e => setLegacyForm(f => ({ ...f, notes: e.target.value }))}
-                      placeholder="Ex: programme 2024"
-                      className="w-full px-3 py-2 rounded-lg text-sm"
-                      style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }} />
-                  </div>
-                </div>
-                <button type="submit" disabled={legacySaving}
-                  className="px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer"
-                  style={{ background: 'linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.1))', border: '1px solid rgba(212,175,55,0.3)', color: '#D4AF37', opacity: legacySaving ? 0.5 : 1 }}>
-                  {legacySaving ? 'Ajout...' : 'Ajouter la cliente'}
-                </button>
-              </form>
-            </div>
-
-            {/* Liste des clientes */}
-            <div className="rounded-xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-              <div className="px-5 py-3 flex items-center justify-between" style={{ borderBottom: '1px solid var(--dark-border)' }}>
-                <h3 className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
-                  Liste ({legacyClients.length} cliente{legacyClients.length !== 1 ? 's' : ''})
-                </h3>
-                {legacyClients.length === 0 && !legacyLoading && (
-                  <button onClick={async () => {
-                    setLegacyLoading(true)
-                    const sb = createClient()
-                    const { data } = await (sb as any).from('legacy_clients').select('*').order('created_at', { ascending: false })
-                    if (data) setLegacyClients(data)
-                    setLegacyLoading(false)
-                  }} className="text-xs px-3 py-1 rounded" style={{ color: '#D4AF37', background: 'rgba(212,175,55,0.1)' }}>
-                    Charger
-                  </button>
-                )}
-              </div>
-
-              {legacyLoading ? (
-                <div className="flex justify-center py-8">
-                  <div className="w-6 h-6 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin" />
-                </div>
-              ) : legacyClients.length === 0 ? (
-                <div className="px-5 py-8 text-center text-sm" style={{ color: 'var(--text-muted)' }}>
-                  Aucune ancienne cliente ajoutée pour l&apos;instant.
-                </div>
-              ) : (
-                <div className="divide-y" style={{ borderColor: 'var(--dark-border)' }}>
-                  {legacyClients.map(client => (
-                    <div key={client.id} className="px-5 py-3 flex items-center justify-between gap-4">
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm font-medium truncate" style={{ color: 'var(--text-primary)' }}>
-                          {[client.first_name, client.last_name].filter(Boolean).join(' ') || 'Sans nom'}
-                        </p>
-                        <p className="text-xs truncate" style={{ color: 'var(--text-muted)' }}>
-                          {client.email}
-                          {client.notes && <span className="ml-2 opacity-50">— {client.notes}</span>}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-3 flex-shrink-0">
-                        <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>
-                          {new Date(client.created_at).toLocaleDateString('fr-FR')}
-                        </span>
-                        <button onClick={async () => {
-                          if (!confirm(`Supprimer ${client.email} de la liste ?`)) return
-                          const sb = createClient()
-                          await (sb as any).from('legacy_clients').delete().eq('id', client.id)
-                          setLegacyClients(prev => prev.filter(c => c.id !== client.id))
-                        }}
-                          className="text-xs px-2 py-1 rounded cursor-pointer"
-                          style={{ color: '#FF6B6B', background: 'rgba(255,107,107,0.1)' }}>
-                          Retirer
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-          </>
-          )}
         </>
       )}
     </div>

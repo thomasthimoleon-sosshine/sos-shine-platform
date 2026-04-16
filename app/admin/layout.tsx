@@ -33,6 +33,7 @@ const adminNav = [
   { href: '/admin/objectifs-mensuels', label: 'Objectifs', icon: '🎯' },
   { href: '/admin/ressource-edition', label: 'Ressource Édition', icon: '📖' },
   { href: '/admin/blog', label: 'Blog', icon: '✍️' },
+  { href: '/admin/anciennes-clientes', label: 'Anciennes clientes', icon: '💎' },
   { href: '/admin/fondateur', label: 'Fondateur', icon: '👑' },
 ]
 

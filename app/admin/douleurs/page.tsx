@@ -82,6 +82,7 @@ type ChallengeForm = {
   sos_audio_url: string
   sos_description: string
   sos_duration_seconds: string
+  related_slugs: string[]
   steps: StepForm[]
 }
 
@@ -96,6 +97,7 @@ const emptyForm: ChallengeForm = {
   sos_audio_url: '',
   sos_description: '',
   sos_duration_seconds: '300',
+  related_slugs: [],
   steps: DEFAULT_STEPS.map(s => ({ ...s })),
 }
 
@@ -319,6 +321,7 @@ export default function AdminDouleursPage() {
       sos_audio_url: anyD.sos_audio_url || '',
       sos_description: anyD.sos_description || '',
       sos_duration_seconds: anyD.sos_duration_seconds ? String(anyD.sos_duration_seconds) : '300',
+      related_slugs: Array.isArray(anyD.related_slugs) ? anyD.related_slugs : [],
       steps,
     })
     setShowForm(true)
@@ -348,6 +351,7 @@ export default function AdminDouleursPage() {
       sos_audio_url: anyD.sos_audio_url || '',
       sos_description: anyD.sos_description || '',
       sos_duration_seconds: anyD.sos_duration_seconds ? String(anyD.sos_duration_seconds) : '300',
+      related_slugs: Array.isArray(anyD.related_slugs) ? anyD.related_slugs : [],
       steps: steps.map(s => ({ ...s, id: undefined })),
     })
     setShowForm(true)
@@ -430,6 +434,7 @@ export default function AdminDouleursPage() {
       sos_audio_url: form.sos_audio_url.trim() || null,
       sos_description: form.sos_description.trim() || null,
       sos_duration_seconds: form.sos_duration_seconds ? parseInt(form.sos_duration_seconds, 10) : null,
+      related_slugs: form.related_slugs.length > 0 ? form.related_slugs : null,
       // Legacy columns (first 3 steps mapped for backward compat)
       video_url: s1.video_url.trim() || null,
       video_url_2: s1.video_url_2.trim() || null, // Step 1: 2nd video
@@ -773,6 +778,47 @@ export default function AdminDouleursPage() {
             <p className="text-[11px] mt-1" style={{ color: 'var(--text-muted)' }}>
               Ces tags permettent d&apos;interconnecter ce challenge avec d&apos;autres (ex : &quot;rupture&quot; apparaîtra dans toutes les pages qui ont ce tag).
             </p>
+          </div>
+
+          {/* Sujets complémentaires */}
+          <div>
+            <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
+              Sujets complémentaires
+            </label>
+            <p className="text-[11px] mb-2" style={{ color: 'var(--text-muted)' }}>
+              Sélectionnez les modules à recommander à la fin de ce challenge. Ils apparaîtront dans la section &quot;Sujets complémentaires&quot; en bas de la page.
+            </p>
+            <div className="flex flex-wrap gap-2 mb-2">
+              {form.related_slugs.map(slug => {
+                const match = douleurs.find(d => d.slug === slug)
+                return (
+                  <span key={slug} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs"
+                    style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)', color: '#D4AF37' }}>
+                    {match?.title || slug}
+                    <button type="button" onClick={() => setForm(prev => ({ ...prev, related_slugs: prev.related_slugs.filter(s => s !== slug) }))}
+                      className="ml-0.5 hover:opacity-70 cursor-pointer" style={{ color: '#FF6B6B' }}>×</button>
+                  </span>
+                )
+              })}
+            </div>
+            <select
+              value=""
+              onChange={e => {
+                const val = e.target.value
+                if (val && !form.related_slugs.includes(val)) {
+                  setForm(prev => ({ ...prev, related_slugs: [...prev.related_slugs, val] }))
+                }
+              }}
+              className="w-full px-3 py-2 rounded-lg text-sm"
+              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}>
+              <option value="">+ Ajouter un sujet complémentaire...</option>
+              {douleurs
+                .filter(d => d.slug !== form.slug && !form.related_slugs.includes(d.slug))
+                .sort((a, b) => a.title.localeCompare(b.title))
+                .map(d => (
+                  <option key={d.id} value={d.slug}>{d.title}</option>
+                ))}
+            </select>
           </div>
 
           {/* ── SOS MEDITATION SECTION ── */}

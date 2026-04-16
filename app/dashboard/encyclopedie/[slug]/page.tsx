@@ -206,18 +206,53 @@ export default function DouleurDetailPage() {
       if (!douleur) return
       const supabase = createClient()
 
-      // 1. Related douleurs via tags overlap
-      if (Array.isArray(douleur.tags) && douleur.tags.length > 0) {
+      // 1. Related douleurs: manual picks first, then auto (same category + tags)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const manualSlugs: string[] = (douleur as any).related_slugs || []
+      if (manualSlugs.length > 0) {
         const { data } = await supabase
           .from('douleurs')
-          .select('id, title, slug, subtitle, tags')
+          .select('id, title, slug, subtitle')
           .eq('is_published', true)
-          .neq('id', douleur.id)
-          .overlaps('tags', douleur.tags)
-          .limit(8)
+          .in('slug', manualSlugs)
         if (data) setRelatedDouleurs(data as Array<{ id: string; title: string; slug: string; subtitle: string | null }>)
       } else {
-        setRelatedDouleurs([])
+        const related: Array<{ id: string; title: string; slug: string; subtitle: string | null }> = []
+        const seenIds = new Set<string>([douleur.id])
+
+        // Auto: same category
+        if (douleur.category) {
+          const { data: catData } = await supabase
+            .from('douleurs')
+            .select('id, title, slug, subtitle')
+            .eq('is_published', true)
+            .eq('category', douleur.category)
+            .neq('id', douleur.id)
+            .limit(6)
+          if (catData) {
+            for (const d of catData as typeof related) {
+              if (!seenIds.has(d.id)) { related.push(d); seenIds.add(d.id) }
+            }
+          }
+        }
+
+        // Auto: tags overlap (if we have fewer than 6)
+        if (related.length < 6 && Array.isArray(douleur.tags) && douleur.tags.length > 0) {
+          const { data: tagData } = await supabase
+            .from('douleurs')
+            .select('id, title, slug, subtitle')
+            .eq('is_published', true)
+            .neq('id', douleur.id)
+            .overlaps('tags', douleur.tags)
+            .limit(6)
+          if (tagData) {
+            for (const d of tagData as typeof related) {
+              if (!seenIds.has(d.id) && related.length < 6) { related.push(d); seenIds.add(d.id) }
+            }
+          }
+        }
+
+        setRelatedDouleurs(related)
       }
 
       // 2. Shine TV videos linked to this douleur
@@ -1343,14 +1378,14 @@ export default function DouleurDetailPage() {
         </div>
       )}
 
-      {/* Sujets liés (partagent au moins un tag) */}
+      {/* Sujets complémentaires */}
       {relatedDouleurs.length > 0 && (
         <div className="pt-8 mt-4" style={{ borderTop: '1px solid var(--dark-border)' }}>
           <h3 className="font-display text-xl font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
-            Sujets liés
+            Sujets complémentaires
           </h3>
           <p className="text-sm mb-5" style={{ color: 'var(--text-muted)' }}>
-            D&apos;autres challenges partageant les mêmes thématiques.
+            Les membres qui ont consulté ce sujet explorent aussi :
           </p>
           <div className="grid sm:grid-cols-2 gap-3">
             {relatedDouleurs.map((r) => (

@@ -19,6 +19,8 @@ export default function AnciennesClientesPage() {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
   const [form, setForm] = useState({ email: '', first_name: '', last_name: '', notes: '' })
+  const [csvImporting, setCsvImporting] = useState(false)
+  const [csvResult, setCsvResult] = useState<{ added: number; skipped: number; errors: string[] } | null>(null)
 
   useEffect(() => {
     loadClients()
@@ -74,6 +76,90 @@ export default function AnciennesClientesPage() {
       await loadClients()
     }
     setSaving(false)
+  }
+
+  async function handleCsvImport(file: File) {
+    setError(null)
+    setSuccess(null)
+    setCsvResult(null)
+    setCsvImporting(true)
+
+    try {
+      const text = await file.text()
+      const lines = text.split(/\r?\n/).filter(l => l.trim())
+      if (lines.length === 0) {
+        setError('Le fichier CSV est vide.')
+        setCsvImporting(false)
+        return
+      }
+
+      // Detect header row
+      const headerLine = lines[0].toLowerCase()
+      const hasHeader = headerLine.includes('email') || headerLine.includes('mail') || headerLine.includes('prénom') || headerLine.includes('prenom') || headerLine.includes('nom')
+      const dataLines = hasHeader ? lines.slice(1) : lines
+
+      // Detect separator (, or ;)
+      const sep = lines[0].includes(';') ? ';' : ','
+
+      // Parse header to find column indices
+      let emailIdx = 0, firstNameIdx = -1, lastNameIdx = -1
+      if (hasHeader) {
+        const headers = lines[0].split(sep).map(h => h.trim().toLowerCase().replace(/"/g, ''))
+        emailIdx = headers.findIndex(h => h.includes('email') || h.includes('mail'))
+        firstNameIdx = headers.findIndex(h => h.includes('prénom') || h.includes('prenom') || h.includes('first'))
+        lastNameIdx = headers.findIndex(h => h.includes('nom') && !h.includes('prénom') && !h.includes('prenom') && !h.includes('first'))
+        if (emailIdx === -1) emailIdx = 0 // fallback: first column
+      }
+
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+
+      let added = 0
+      let skipped = 0
+      const errors: string[] = []
+
+      for (const line of dataLines) {
+        const cols = line.split(sep).map(c => c.trim().replace(/^"|"$/g, ''))
+        const email = (cols[emailIdx] || '').toLowerCase().trim()
+
+        if (!email || !email.includes('@')) {
+          if (email) errors.push(`"${email}" — email invalide`)
+          continue
+        }
+
+        const firstName = firstNameIdx >= 0 ? cols[firstNameIdx]?.trim() || null : null
+        const lastName = lastNameIdx >= 0 ? cols[lastNameIdx]?.trim() || null : null
+
+        const { error: insertErr } = await (supabase as any).from('legacy_clients').insert({
+          email,
+          first_name: firstName,
+          last_name: lastName,
+          notes: 'Import CSV',
+          added_by: user?.id || null,
+        })
+
+        if (insertErr) {
+          if (insertErr.code === '23505') {
+            skipped++
+          } else {
+            errors.push(`${email} — ${insertErr.message}`)
+          }
+        } else {
+          added++
+        }
+      }
+
+      setCsvResult({ added, skipped, errors })
+      if (added > 0) {
+        setSuccess(`${added} cliente${added > 1 ? 's' : ''} importée${added > 1 ? 's' : ''} avec succès.${skipped > 0 ? ` ${skipped} doublon${skipped > 1 ? 's' : ''} ignoré${skipped > 1 ? 's' : ''}.` : ''}`)
+        await loadClients()
+      } else if (skipped > 0) {
+        setSuccess(`Toutes les ${skipped} adresses étaient déjà dans la liste.`)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erreur lors de la lecture du fichier.')
+    }
+    setCsvImporting(false)
   }
 
   async function handleDelete(client: LegacyClient) {
@@ -158,6 +244,45 @@ export default function AnciennesClientesPage() {
             {saving ? 'Ajout en cours...' : 'Ajouter la cliente'}
           </button>
         </form>
+      </div>
+
+      {/* Import CSV */}
+      <div className="rounded-xl p-5" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <h2 className="text-sm font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+          Importer depuis un fichier CSV
+        </h2>
+        <p className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>
+          Export Systeme.io ou tout CSV avec une colonne email. Les colonnes prénom et nom sont détectées automatiquement. Les doublons sont ignorés.
+        </p>
+        <label
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer"
+          style={{
+            background: 'linear-gradient(135deg, rgba(116,192,252,0.15), rgba(116,192,252,0.05))',
+            border: '1px solid rgba(116,192,252,0.3)',
+            color: '#74C0FC',
+            opacity: csvImporting ? 0.5 : 1,
+          }}>
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+          </svg>
+          {csvImporting ? 'Import en cours...' : 'Choisir un fichier CSV'}
+          <input type="file" accept=".csv,.txt" className="hidden" disabled={csvImporting}
+            onChange={e => {
+              const file = e.target.files?.[0]
+              if (file) handleCsvImport(file)
+              e.target.value = ''
+            }} />
+        </label>
+
+        {csvResult && csvResult.errors.length > 0 && (
+          <div className="mt-3 rounded-lg px-4 py-3 text-xs" style={{ background: 'rgba(255,165,0,0.1)', border: '1px solid rgba(255,165,0,0.25)', color: '#FFA500' }}>
+            <p className="font-medium mb-1">{csvResult.errors.length} erreur{csvResult.errors.length > 1 ? 's' : ''} :</p>
+            {csvResult.errors.slice(0, 10).map((err, i) => (
+              <p key={i}>{err}</p>
+            ))}
+            {csvResult.errors.length > 10 && <p>... et {csvResult.errors.length - 10} autres</p>}
+          </div>
+        )}
       </div>
 
       {/* Liste des clientes */}

@@ -890,6 +890,28 @@ export default function DouleurDetailPage() {
         </div>
       </div>}
 
+      {/* Sujets complémentaires — shown after last step */}
+      {activeStep === totalSteps && relatedDouleurs.length > 0 && (
+        <div className="rounded-xl p-5" style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.15)' }}>
+          <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--gold)' }}>
+            Sujets complémentaires
+          </h3>
+          <p className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>
+            Les membres qui ont consulté ce sujet explorent aussi :
+          </p>
+          <div className="grid sm:grid-cols-2 gap-3">
+            {relatedDouleurs.map((r) => (
+              <Link key={r.id} href={`/dashboard/encyclopedie/${r.slug}`}
+                className="rounded-xl p-4 transition-all hover:scale-[1.01]"
+                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
+                <p className="font-semibold text-sm mb-1" style={{ color: 'var(--gold)' }}>{r.title}</p>
+                {r.subtitle && <p className="text-xs italic" style={{ color: 'var(--text-muted)' }}>{r.subtitle}</p>}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* ── Quiz Section ── */}
       {activeStep === quizStepNum && hasQuiz && (
         <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.15)' }}>
@@ -1378,27 +1400,6 @@ export default function DouleurDetailPage() {
         </div>
       )}
 
-      {/* Sujets complémentaires */}
-      {relatedDouleurs.length > 0 && (
-        <div className="pt-8 mt-4" style={{ borderTop: '1px solid var(--dark-border)' }}>
-          <h3 className="font-display text-xl font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
-            Sujets complémentaires
-          </h3>
-          <p className="text-sm mb-5" style={{ color: 'var(--text-muted)' }}>
-            Les membres qui ont consulté ce sujet explorent aussi :
-          </p>
-          <div className="grid sm:grid-cols-2 gap-3">
-            {relatedDouleurs.map((r) => (
-              <Link key={r.id} href={`/dashboard/encyclopedie/${r.slug}`}
-                className="rounded-xl p-4 transition-all hover:scale-[1.01]"
-                style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
-                <p className="font-semibold text-sm mb-1" style={{ color: 'var(--gold)' }}>{r.title}</p>
-                {r.subtitle && <p className="text-xs italic" style={{ color: 'var(--text-muted)' }}>{r.subtitle}</p>}
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
     </SubscriptionGate>
   )

@@ -30,9 +30,7 @@ CREATE POLICY "Admins can manage legacy_clients" ON public.legacy_clients
 CREATE POLICY "Users can check own legacy status" ON public.legacy_clients
   FOR SELECT
   USING (
-    LOWER(email) = LOWER(
-      (SELECT email FROM auth.users WHERE id = auth.uid())
-    )
+    LOWER(email) = LOWER(auth.jwt() ->> 'email')
   );
 
 -- Force PostgREST to reload

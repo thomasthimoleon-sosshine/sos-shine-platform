@@ -114,6 +114,18 @@ export default function SignupPage() {
     e.preventDefault()
     setError(null)
 
+    // Anti-spam checks
+    const { validateAntiSpam } = await import('@/lib/anti-spam')
+    const spamError = validateAntiSpam(email, prenom)
+    if (spamError) {
+      setError(spamError)
+      return
+    }
+
+    // Honeypot: if filled, it's a bot (field hidden via CSS)
+    const honeypot = (document.getElementById('_hp_name') as HTMLInputElement)?.value
+    if (honeypot) return
+
     if (password !== confirmPassword) {
       setError('Les mots de passe ne correspondent pas.')
       return
@@ -269,6 +281,10 @@ export default function SignupPage() {
           </h1>
 
           <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Honeypot — invisible to users, catches bots */}
+            <div style={{ position: 'absolute', left: '-9999px' }} aria-hidden="true">
+              <input id="_hp_name" type="text" tabIndex={-1} autoComplete="off" />
+            </div>
             <div>
               <label htmlFor="prenom" className="block text-[13px] text-[var(--text-secondary)] mb-2 font-medium">{t('auth.firstname_label')}</label>
               <input id="prenom" type="text" value={prenom} onChange={(e) => setPrenom(e.target.value)} required

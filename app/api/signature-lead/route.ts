@@ -28,6 +28,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Email invalide' }, { status: 400 })
     }
 
+    // Anti-spam validation
+    const { validateAntiSpam } = await import('@/lib/anti-spam')
+    const spamError = validateAntiSpam(email, firstName)
+    if (spamError) {
+      return NextResponse.json({ error: spamError }, { status: 400 })
+    }
+
     const supabase = getAdminClient()
     if (!supabase) {
       return NextResponse.json({ error: 'Configuration serveur manquante' }, { status: 500 })

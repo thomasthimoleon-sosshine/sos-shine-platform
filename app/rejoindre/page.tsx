@@ -96,6 +96,11 @@ function PrelaunchContent() {
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault()
     if (!email || status === 'loading') return
+
+    // Anti-spam client-side check
+    const { validateAntiSpam } = await import('@/lib/anti-spam')
+    if (validateAntiSpam(email, name)) { setStatus('error'); return }
+
     setStatus('loading')
     try {
       const res = await fetch('/api/waitlist', {

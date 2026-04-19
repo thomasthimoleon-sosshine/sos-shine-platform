@@ -17,6 +17,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Email invalide' }, { status: 400 })
     }
 
+    // Anti-spam validation
+    const { validateAntiSpam } = await import('@/lib/anti-spam')
+    const spamError = validateAntiSpam(email, name)
+    if (spamError) {
+      return NextResponse.json({ error: spamError }, { status: 400 })
+    }
+
     const supabase = getSupabase()
     if (!supabase) {
       console.error('Waitlist: Missing SUPABASE_URL or SUPABASE_ANON_KEY')

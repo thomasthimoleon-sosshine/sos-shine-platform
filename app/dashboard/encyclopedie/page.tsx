@@ -660,15 +660,11 @@ export default function EncyclopediePage() {
                     </div>
                   )
 
-                  if (hasDbEntry) {
-                    return (
-                      <Link key={i} href={`/dashboard/encyclopedie/${topic.dbMatch!.slug}`} className="block">
-                        {card}
-                      </Link>
-                    )
-                  }
-
-                  return <div key={i}>{card}</div>
+                  return (
+                    <Link key={i} href={`/dashboard/encyclopedie/${hasDbEntry ? topic.dbMatch!.slug : topic.slug}`} className="block">
+                      {card}
+                    </Link>
+                  )
                 })}
               </div>
             </div>

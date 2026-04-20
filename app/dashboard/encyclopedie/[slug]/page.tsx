@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -847,6 +847,59 @@ export default function DouleurDetailPage() {
             )
           }
 
+          function PreviewVideo({ src, poster, label }: { src: string; poster?: string; label: string }) {
+            const videoRef = React.useRef<HTMLVideoElement>(null)
+            const [locked, setLocked] = React.useState(false)
+
+            React.useEffect(() => {
+              const vid = videoRef.current
+              if (!vid) return
+              const onTime = () => {
+                if (vid.currentTime >= 30) {
+                  vid.pause()
+                  setLocked(true)
+                }
+              }
+              vid.addEventListener('timeupdate', onTime)
+              return () => vid.removeEventListener('timeupdate', onTime)
+            }, [])
+
+            if (locked) {
+              return (
+                <div className="relative rounded-xl overflow-hidden aspect-video" style={{ background: '#000' }}>
+                  {poster && <img src={poster} alt="" className="absolute inset-0 w-full h-full object-cover opacity-30 blur-sm" />}
+                  <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.7)' }}>
+                    <div className="text-center p-6">
+                      <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center"
+                        style={{ background: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.3)' }}>
+                        <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                        </svg>
+                      </div>
+                      <p className="text-base font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                        Vous aimez ce que vous voyez ?
+                      </p>
+                      <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>
+                        Créez votre compte pour accéder au protocole complet
+                      </p>
+                      <Link href="/signup"
+                        className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold transition-all hover:scale-[1.03]"
+                        style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505', boxShadow: '0 4px 20px rgba(212,175,55,0.3)' }}>
+                        Créer mon compte gratuitement
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              )
+            }
+
+            return (
+              <div className="rounded-xl overflow-hidden aspect-video" style={{ background: 'var(--dark)' }}>
+                <video ref={videoRef} src={src} poster={poster} controls preload="metadata" className="w-full h-full" />
+              </div>
+            )
+          }
+
           const lockedOverlay = (label: string) => (
             <div className="relative rounded-xl overflow-hidden aspect-video flex items-center justify-center"
               style={{ background: 'linear-gradient(135deg, rgba(0,0,0,0.8), rgba(212,175,55,0.05))', border: '1px solid rgba(212,175,55,0.15)' }}>
@@ -873,7 +926,9 @@ export default function DouleurDetailPage() {
           return (
             <div className="space-y-4">
               {currentStep.video && (
-                isPreviewMode ? lockedOverlay(`Vidéo — ${currentStep.title}`) : (
+                isPreviewMode
+                  ? <PreviewVideo src={currentStep.video} poster={currentStep.image || undefined} label={currentStep.title} />
+                  : (
                 <div className="rounded-xl overflow-hidden aspect-video" style={{ background: 'var(--dark)' }}>
                   <video
                     src={currentStep.video}
@@ -888,7 +943,9 @@ export default function DouleurDetailPage() {
 
               {/* Secondary video (optional) */}
               {currentStep.video2 && (
-                isPreviewMode ? lockedOverlay(`Vidéo complémentaire — ${currentStep.title}`) : (
+                isPreviewMode
+                  ? <PreviewVideo src={currentStep.video2} label={currentStep.title} />
+                  : (
                 <div className="rounded-xl overflow-hidden aspect-video" style={{ background: 'var(--dark)' }}>
                   <video
                     src={currentStep.video2}
@@ -908,12 +965,50 @@ export default function DouleurDetailPage() {
               )}
 
               {currentStep.audio && (
-                isPreviewMode ? lockedOverlay(`Audio — ${currentStep.title}`) : (
+                isPreviewMode ? (() => {
+                  function PreviewAudio({ src, title }: { src: string; title: string }) {
+                    const audioRef = React.useRef<HTMLAudioElement>(null)
+                    const [audioLocked, setAudioLocked] = React.useState(false)
+
+                    React.useEffect(() => {
+                      const aud = audioRef.current
+                      if (!aud) return
+                      const onTime = () => {
+                        if (aud.currentTime >= 30) { aud.pause(); setAudioLocked(true) }
+                      }
+                      aud.addEventListener('timeupdate', onTime)
+                      return () => aud.removeEventListener('timeupdate', onTime)
+                    }, [])
+
+                    return (
+                      <div className="rounded-xl p-4 space-y-3" style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(212,175,55,0.15)' }}>
+                        <p className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>Audio — {title}</p>
+                        <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.12)' }}>
+                          <span className="text-lg flex-shrink-0 mt-0.5">🎧</span>
+                          <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                            Avant de lancer cet audio, installez-vous confortablement dans un endroit calme et détendu. Mettez votre casque audio, respirez profondément et laissez-vous guider en toute sérénité.
+                          </p>
+                        </div>
+                        {audioLocked ? (
+                          <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                            <p className="text-sm" style={{ color: 'var(--gold)' }}>Vous aimez ? Accédez à la suite</p>
+                            <Link href="/signup" className="px-4 py-2 rounded-full text-xs font-semibold"
+                              style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}>
+                              Créer mon compte
+                            </Link>
+                          </div>
+                        ) : (
+                          <audio ref={audioRef} src={src} controls className="w-full" />
+                        )}
+                      </div>
+                    )
+                  }
+                  return <PreviewAudio src={currentStep.audio!} title={currentStep.title} />
+                })() : (
                 <div className="rounded-xl p-4 space-y-3" style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${currentStep.color}20` }}>
                   <p className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>
                     Audio — {currentStep.title}
                   </p>
-                  {/* Audio relaxation disclaimer */}
                   <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.12)' }}>
                     <span className="text-lg flex-shrink-0 mt-0.5">🎧</span>
                     <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>

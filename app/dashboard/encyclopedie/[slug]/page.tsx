@@ -583,7 +583,7 @@ export default function DouleurDetailPage() {
               En attendant, <strong style={{ color: 'var(--gold)' }}>nous sommes là pour vous</strong>.
               Rejoignez le <Link href="/dashboard/communaute" className="underline font-medium" style={{ color: '#55EFC4' }}>chat communautaire</Link> pour
               échanger avec d&apos;autres membres qui traversent les mêmes épreuves, et participez à
-              nos <Link href="/dashboard/evenements" className="underline font-medium" style={{ color: '#55EFC4' }}>lives hebdomadaires</Link> où
+              nos <Link href="/dashboard/evenements" className="underline font-medium" style={{ color: '#55EFC4' }}>lives</Link> où
               Julia, William et Thomas répondent à vos questions en direct.
             </p>
             <p className="text-sm leading-relaxed mt-3" style={{ color: 'var(--text-secondary)' }}>

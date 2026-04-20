@@ -533,28 +533,83 @@ export default function DouleurDetailPage() {
   }
 
   if (!douleur) {
+    // Fetch release date for unpublished protocols
+    const releaseLabel = (() => {
+      try {
+        const { getReleaseDate } = require('@/lib/release-schedule')
+        return getReleaseDate(slug)
+      } catch { return null }
+    })()
+
+    if (fetchError) {
+      return (
+        <div className="max-w-3xl mx-auto text-center py-20">
+          <h2 className="font-display text-2xl font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
+            Une erreur est survenue
+          </h2>
+          <p className="mb-6" style={{ color: 'var(--text-secondary)' }}>Veuillez réessayer.</p>
+          <button onClick={() => window.location.reload()}
+            className="px-5 py-2.5 rounded-lg text-sm font-medium cursor-pointer"
+            style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}>
+            Réessayer
+          </button>
+        </div>
+      )
+    }
+
     return (
-      <div className="max-w-3xl mx-auto text-center py-20">
-        <h2 className="font-display text-2xl font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
-          {notPublished ? 'Challenge en cours de préparation' : 'Challenge émotionnel non trouvé'}
-        </h2>
-        <p className="mb-6" style={{ color: 'var(--text-secondary)' }}>
-          {fetchError
-            ? `Une erreur est survenue lors du chargement. Veuillez réessayer.`
-            : notPublished
-            ? `Ce challenge émotionnel existe mais n'est pas encore publié. L'administrateur doit le publier depuis le back-office.`
-            : `Ce challenge émotionnel n'est pas encore disponible ou n'existe pas.`}
-        </p>
-        <button
-          onClick={() => window.location.reload()}
-          className="px-5 py-2.5 rounded-lg text-sm font-medium mb-4 cursor-pointer"
-          style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}
-        >
-          Réessayer
-        </button>
-        <Link href="/dashboard/encyclopedie" className="block text-sm font-medium mt-2" style={{ color: 'var(--gold)' }}>
-          Retour à l&apos;encyclopédie
-        </Link>
+      <div className="max-w-2xl mx-auto py-16 px-4">
+        <div className="rounded-2xl p-8 sm:p-10 text-center" style={{
+          background: 'linear-gradient(160deg, var(--dark-card) 0%, rgba(212,175,55,0.04) 100%)',
+          border: '1px solid rgba(212,175,55,0.15)',
+        }}>
+          <div className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center"
+            style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}>
+            <span className="text-3xl">💛</span>
+          </div>
+
+          <h2 className="font-display text-xl sm:text-2xl font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
+            Ce protocole arrive {releaseLabel ? `en ${releaseLabel}` : 'bientôt'}
+          </h2>
+
+          <p className="text-sm sm:text-[15px] leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
+            Nous mettons tout notre cœur à préparer ce contenu pour qu&apos;il soit à la hauteur de ce que vous traversez.
+            Julia, William et Thomas travaillent dessus pour vous offrir un protocole complet — avec la même profondeur
+            et la même bienveillance que tous les autres.
+          </p>
+
+          <div className="rounded-xl p-5 mb-6" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
+            <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+              En attendant, <strong style={{ color: 'var(--gold)' }}>nous sommes là pour vous</strong>.
+              Si vous avez besoin d&apos;aide sur ce sujet dès maintenant, n&apos;hésitez pas
+              à nous écrire. Nous vous guiderons personnellement vers les ressources
+              qui peuvent déjà vous accompagner.
+            </p>
+          </div>
+
+          <a href="mailto:julialaureau@sosshine.com"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold transition-all duration-200 hover:scale-[1.03]"
+            style={{
+              background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))',
+              color: '#050505',
+              boxShadow: '0 4px 20px rgba(212,175,55,0.3)',
+            }}>
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+            </svg>
+            Écrire à Julia
+          </a>
+
+          <p className="text-xs mt-4" style={{ color: 'var(--text-muted)' }}>
+            julialaureau@sosshine.com
+          </p>
+
+          <div className="mt-8 pt-6" style={{ borderTop: '1px solid var(--dark-border)' }}>
+            <Link href="/dashboard/encyclopedie" className="text-sm font-medium transition-colors hover:opacity-80" style={{ color: 'var(--gold)' }}>
+              ← Retour à l&apos;encyclopédie
+            </Link>
+          </div>
+        </div>
       </div>
     )
   }

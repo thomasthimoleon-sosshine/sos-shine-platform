@@ -87,6 +87,7 @@ export default function DouleurDetailPage() {
   const [progress, setProgress] = useState<UserProgress | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
   const [isLegacyAccess, setIsLegacyAccess] = useState(false)
+  const [isPreviewMode, setIsPreviewMode] = useState(false)
 
   // Quiz state
   const [quizQuestions, setQuizQuestions] = useState<DouleurQuizQuestion[]>([])
@@ -326,7 +327,10 @@ export default function DouleurDetailPage() {
       if (!douleur) return
       const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
+      if (!user) {
+        setIsPreviewMode(true)
+        return
+      }
       setUserId(user.id)
 
       const { data } = await supabase
@@ -637,7 +641,7 @@ export default function DouleurDetailPage() {
   const currentStep = steps[activeStep - 1]
 
   return (
-    <SubscriptionGate allowFree={isLegacyAccess}>
+    <SubscriptionGate allowFree={isLegacyAccess || isPreviewMode}>
     <div className="max-w-4xl mx-auto space-y-8">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm">
@@ -843,9 +847,33 @@ export default function DouleurDetailPage() {
             )
           }
 
+          const lockedOverlay = (label: string) => (
+            <div className="relative rounded-xl overflow-hidden aspect-video flex items-center justify-center"
+              style={{ background: 'linear-gradient(135deg, rgba(0,0,0,0.8), rgba(212,175,55,0.05))', border: '1px solid rgba(212,175,55,0.15)' }}>
+              <div className="text-center p-6">
+                <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center"
+                  style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                  <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                  </svg>
+                </div>
+                <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-primary)' }}>{label}</p>
+                <p className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>
+                  Créez votre compte pour accéder à ce contenu
+                </p>
+                <Link href="/signup"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all hover:scale-[1.03]"
+                  style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}>
+                  Créer mon compte
+                </Link>
+              </div>
+            </div>
+          )
+
           return (
             <div className="space-y-4">
               {currentStep.video && (
+                isPreviewMode ? lockedOverlay(`Vidéo — ${currentStep.title}`) : (
                 <div className="rounded-xl overflow-hidden aspect-video" style={{ background: 'var(--dark)' }}>
                   <video
                     src={currentStep.video}
@@ -855,10 +883,12 @@ export default function DouleurDetailPage() {
                     className="w-full h-full"
                   />
                 </div>
+                )
               )}
 
               {/* Secondary video (optional) */}
               {currentStep.video2 && (
+                isPreviewMode ? lockedOverlay(`Vidéo complémentaire — ${currentStep.title}`) : (
                 <div className="rounded-xl overflow-hidden aspect-video" style={{ background: 'var(--dark)' }}>
                   <video
                     src={currentStep.video2}
@@ -867,6 +897,7 @@ export default function DouleurDetailPage() {
                     className="w-full h-full"
                   />
                 </div>
+                )
               )}
 
               {/* Image standalone only when there's no video (otherwise it's used as poster) */}
@@ -877,6 +908,7 @@ export default function DouleurDetailPage() {
               )}
 
               {currentStep.audio && (
+                isPreviewMode ? lockedOverlay(`Audio — ${currentStep.title}`) : (
                 <div className="rounded-xl p-4 space-y-3" style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${currentStep.color}20` }}>
                   <p className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>
                     Audio — {currentStep.title}
@@ -890,9 +922,22 @@ export default function DouleurDetailPage() {
                   </div>
                   <audio src={currentStep.audio} controls className="w-full" />
                 </div>
+                )
               )}
 
               {currentStep.pdf && (
+                isPreviewMode ? (
+                  <div className="flex items-center gap-3 p-4 rounded-xl cursor-pointer" onClick={() => window.location.href = '/signup'}
+                    style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(212,175,55,0.15)' }}>
+                    <svg className="w-8 h-8 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                    </svg>
+                    <div>
+                      <p className="font-medium text-sm" style={{ color: 'var(--gold)' }}>PDF — Exercices & plan d&apos;action</p>
+                      <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Créez votre compte pour télécharger</p>
+                    </div>
+                  </div>
+                ) : (
                 <a href={currentStep.pdf} target="_blank" rel="noopener noreferrer"
                   className="flex items-center gap-3 p-4 rounded-xl transition-all hover:opacity-80"
                   style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${currentStep.color}20` }}>
@@ -904,6 +949,7 @@ export default function DouleurDetailPage() {
                     <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Exercices & plan d&apos;action</p>
                   </div>
                 </a>
+                )
               )}
 
               {currentStep.exercise_content && (

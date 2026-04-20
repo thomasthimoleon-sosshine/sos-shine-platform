@@ -155,7 +155,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const supabase = createClient()
     async function loadUser() {
       const { data: { user } } = await supabase.auth.getUser()
-      if (!user) { router.push('/login'); return }
+      if (!user) {
+        // Allow encyclopedia pages to load in preview mode (no redirect)
+        if (pathname?.startsWith('/dashboard/encyclopedie/')) {
+          setLoading(false)
+          return
+        }
+        router.push('/login')
+        return
+      }
       setCurrentUserId(user.id)
 
       // Charger le logo

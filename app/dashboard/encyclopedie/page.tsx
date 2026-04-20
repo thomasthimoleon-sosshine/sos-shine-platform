@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import { getReleaseDate } from '@/lib/release-schedule'
 import { createClient } from '@/lib/supabase/client'
 import type { Douleur, UserProgress } from '@/types/database'
 import FavoriteButton from '@/components/FavoriteButton'
@@ -652,7 +653,7 @@ export default function EncyclopediePage() {
                           </div>
                         ) : (
                           <span className="text-[10px] px-2 py-0.5 rounded-lg flex-shrink-0" style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--gold)' }}>
-                            Bientôt
+                            {getReleaseDate(topic.slug)}
                           </span>
                         )}
                       </div>

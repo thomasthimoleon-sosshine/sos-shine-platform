@@ -383,7 +383,15 @@ export default function EncyclopediePage() {
 
   const grouped = useMemo(() => {
     const g: Record<string, typeof filtered> = {}
-    filtered.forEach((t) => {
+    // Sort: published (with dbMatch) first, then unpublished
+    const sorted = [...filtered].sort((a, b) => {
+      const aPublished = !!a.dbMatch
+      const bPublished = !!b.dbMatch
+      if (aPublished && !bPublished) return -1
+      if (!aPublished && bPublished) return 1
+      return a.title.localeCompare(b.title)
+    })
+    sorted.forEach((t) => {
       if (!g[t.letter]) g[t.letter] = []
       g[t.letter].push(t)
     })
@@ -549,12 +557,14 @@ export default function EncyclopediePage() {
 
                   const card = (
                     <div
-                      className={`group rounded-xl p-4 transition-all duration-200 ${hasDbEntry ? 'hover:-translate-y-0.5' : ''}`}
+                      className="group rounded-xl p-4 transition-all duration-200 hover:-translate-y-0.5"
                       style={{
-                        background: 'var(--dark-card)',
-                        border: prog?.completed_at ? '1px solid rgba(85,239,196,0.2)' : '1px solid var(--dark-border)',
-                        borderLeft: topic.original ? '2px solid var(--gold)' : '2px solid transparent',
-                        cursor: hasDbEntry ? 'pointer' : 'default',
+                        background: hasDbEntry ? 'rgba(85,239,196,0.03)' : 'var(--dark-card)',
+                        border: hasDbEntry
+                          ? (prog?.completed_at ? '1.5px solid rgba(85,239,196,0.4)' : '1.5px solid rgba(85,239,196,0.2)')
+                          : '1px solid var(--dark-border)',
+                        borderLeft: topic.original ? '2px solid var(--gold)' : hasDbEntry ? '2px solid rgba(85,239,196,0.3)' : '2px solid transparent',
+                        cursor: 'pointer',
                       }}
                     >
                       <div className="flex items-start justify-between gap-3">

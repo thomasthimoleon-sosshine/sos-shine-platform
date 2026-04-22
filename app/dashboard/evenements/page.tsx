@@ -435,6 +435,9 @@ export default function EvenementsPage() {
         <p className="mt-2" style={{ color: 'var(--text-secondary)' }}>
           {t('dashboard.events_subtitle_detail')}
         </p>
+        <p className="mt-2 text-sm" style={{ color: 'var(--text-muted)' }}>
+          Rejoignez-nous le temps d&apos;un événement pour vivre l&apos;expérience SOS Shine en direct, rencontrer Julia, William et Thomas, et découvrir la force d&apos;une communauté qui avance ensemble.
+        </p>
       </div>
 
       {/* World Map — only if events with coordinates exist */}

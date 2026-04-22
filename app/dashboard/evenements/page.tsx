@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { useFeatureAccess } from '@/hooks/useFeatureAccess'
 import type { Event, EventRegistration } from '@/types/database'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 
@@ -297,12 +298,21 @@ function WorldGlobe({ events, selectedEvent, onSelect, dragLabel }: {
 
 export default function EvenementsPage() {
   const { t } = useTranslation()
+  const { plan } = useFeatureAccess()
   const [events, setEvents] = useState<Event[]>([])
   const [registrations, setRegistrations] = useState<EventRegistration[]>([])
   const [loading, setLoading] = useState(true)
   const [userId, setUserId] = useState<string | null>(null)
   const [registering, setRegistering] = useState<string | null>(null)
   const [selectedEvent, setSelectedEvent] = useState<string | null>(null)
+
+  const STRIPE_EVENT_LINK = 'https://buy.stripe.com/bJecMXfCkfZF4AVbgK5ZC0o'
+
+  function getEventPrice(): { label: string; amount: number } {
+    if (plan === 'serenite' || plan === 'premium') return { label: 'Inclus dans votre abonnement', amount: 0 }
+    if (plan === 'essential') return { label: '9,90 €', amount: 990 }
+    return { label: '19,90 €', amount: 1990 }
+  }
 
   useEffect(() => {
     async function init() {
@@ -616,9 +626,14 @@ export default function EvenementsPage() {
 
                     <div className="flex items-center justify-between mt-4">
                       <div className="flex items-center gap-4">
-                        <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                          {event.price === 0 ? t('dashboard.free') : `${event.price}€`}
-                        </span>
+                        {(() => {
+                          const pricing = getEventPrice()
+                          return (
+                            <span className="text-xs font-medium" style={{ color: pricing.amount === 0 ? '#55EFC4' : 'var(--gold)' }}>
+                              {pricing.label}
+                            </span>
+                          )
+                        })()}
                         {event.max_participants && (
                           <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
                             {t('dashboard.max_places', { n: event.max_participants })}
@@ -633,7 +648,7 @@ export default function EvenementsPage() {
                         >
                           {t('dashboard.registered_check')}
                         </span>
-                      ) : (
+                      ) : getEventPrice().amount === 0 ? (
                         <button
                           onClick={() => handleRegister(event.id)}
                           disabled={registering === event.id}
@@ -642,6 +657,16 @@ export default function EvenementsPage() {
                         >
                           {registering === event.id ? t('common.loading') : t('dashboard.register')}
                         </button>
+                      ) : (
+                        <a
+                          href={STRIPE_EVENT_LINK}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs px-4 py-2 rounded-xl font-semibold transition-all duration-200 cursor-pointer inline-flex items-center gap-1.5"
+                          style={{ background: 'var(--gold)', color: 'var(--dark)' }}
+                        >
+                          Réserver — {getEventPrice().label}
+                        </a>
                       )}
                     </div>
                   </div>

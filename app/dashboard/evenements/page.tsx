@@ -310,7 +310,6 @@ export default function EvenementsPage() {
 
   function getEventPrice(): { label: string; amount: number } {
     if (plan === 'serenite' || plan === 'premium') return { label: 'Inclus dans votre abonnement', amount: 0 }
-    if (plan === 'essential') return { label: '9,90 €', amount: 990 }
     return { label: '19,90 €', amount: 1990 }
   }
 

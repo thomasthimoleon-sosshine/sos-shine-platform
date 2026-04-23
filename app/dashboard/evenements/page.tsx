@@ -506,6 +506,13 @@ export default function EvenementsPage() {
                   boxShadow: isSelected ? '0 0 20px rgba(212,175,55,0.08)' : 'none',
                 }}
               >
+                {/* Cover image */}
+                {(event as any).cover_image && (
+                  <div className="rounded-xl overflow-hidden -mx-6 -mt-6 mb-4" style={{ maxHeight: '200px' }}>
+                    <img src={(event as any).cover_image} alt={event.title} className="w-full h-full object-cover" style={{ maxHeight: '200px' }} />
+                  </div>
+                )}
+
                 <div className="flex flex-col sm:flex-row sm:items-start gap-4">
                   {/* Date badge */}
                   <div

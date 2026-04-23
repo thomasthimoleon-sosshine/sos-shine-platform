@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { Event } from '@/types/database'
+import FileUpload from '@/components/FileUpload'
 
 const EVENT_TYPE_LABELS: Record<Event['event_type'], string> = {
   soin_collectif: 'Soin collectif',
@@ -51,6 +52,7 @@ const EMPTY_FORM = {
   live_url: '',
   replay_url: '',
   hosts: [] as string[],
+  cover_image: '',
 }
 
 function formatDateFR(dateStr: string): string {
@@ -153,6 +155,7 @@ export default function AdminEvenements() {
       live_url: event.live_url || '',
       replay_url: event.replay_url || '',
       hosts: event.hosts || [],
+      cover_image: (event as any).cover_image || '',
     })
     setShowForm(true)
     setError(null)
@@ -216,6 +219,7 @@ export default function AdminEvenements() {
         live_url: form.live_url.trim() || null,
         replay_url: form.replay_url.trim() || null,
         hosts: form.hosts.length > 0 ? form.hosts : [],
+        cover_image: form.cover_image.trim() || null,
       }
 
       if (editingId) {
@@ -539,6 +543,17 @@ export default function AdminEvenements() {
               />
             </div>
           </div>
+
+          {/* Image de couverture */}
+          <FileUpload
+            label="Image de couverture"
+            accept="image/*"
+            folder="events"
+            currentUrl={form.cover_image || null}
+            hint="Image affichée sur la carte de l'événement"
+            onUploaded={(url) => setForm({ ...form, cover_image: url })}
+            onRemoved={() => setForm({ ...form, cover_image: '' })}
+          />
 
           {/* Hosts (fondateurs) */}
           <div>

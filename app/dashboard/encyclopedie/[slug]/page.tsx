@@ -957,10 +957,10 @@ export default function DouleurDetailPage() {
                 )
               )}
 
-              {/* Image standalone only when there's no video (otherwise it's used as poster) */}
+              {/* Image: shown as standalone when no video, or as cover above audio */}
               {!currentStep.video && currentStep.image && (
                 <div className="rounded-xl overflow-hidden" style={{ background: 'var(--dark)' }}>
-                  <img src={currentStep.image} alt={`${douleur?.title} — Étape ${currentStep.num}`} className="w-full h-auto rounded-xl" style={{ maxHeight: '500px', objectFit: 'contain' }} />
+                  <img src={currentStep.image} alt={`${douleur?.title} — Étape ${currentStep.num}`} className="w-full h-auto rounded-xl" style={{ maxHeight: '400px', objectFit: 'cover' }} />
                 </div>
               )}
 

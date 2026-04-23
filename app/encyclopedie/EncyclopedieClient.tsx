@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { getReleaseDate } from '@/lib/release-schedule'
 import { createClient } from '@/lib/supabase/client'
 import type { Douleur } from '@/types/database'
 
@@ -396,7 +397,14 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
 
   const grouped = useMemo(() => {
     const g: Record<string, typeof filtered> = {}
-    filtered.forEach((t) => {
+    const sorted = [...filtered].sort((a, b) => {
+      const aPublished = !!a.dbMatch
+      const bPublished = !!b.dbMatch
+      if (aPublished && !bPublished) return -1
+      if (!aPublished && bPublished) return 1
+      return a.title.localeCompare(b.title)
+    })
+    sorted.forEach((t) => {
       if (!g[t.letter]) g[t.letter] = []
       g[t.letter].push(t)
     })
@@ -599,9 +607,11 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
                       <div
                         className="group rounded-lg p-4 transition-all duration-200 hover:-translate-y-0.5"
                         style={{
-                          background: 'var(--dark-card)',
-                          border: '1px solid var(--dark-border)',
-                          borderLeft: topic.original ? '2px solid var(--gold)' : '2px solid transparent',
+                          background: hasDbEntry ? 'rgba(85,239,196,0.03)' : 'var(--dark-card)',
+                          border: hasDbEntry
+                            ? '1.5px solid rgba(85,239,196,0.2)'
+                            : '1px solid var(--dark-border)',
+                          borderLeft: topic.original ? '2px solid var(--gold)' : hasDbEntry ? '2px solid rgba(85,239,196,0.3)' : '2px solid transparent',
                           cursor: 'pointer',
                         }}
                       >
@@ -657,9 +667,15 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
                               })()}
                             </div>
                           </div>
-                          <svg className="w-4 h-4 flex-shrink-0 mt-1 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--text-muted)' }}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                          </svg>
+                          {hasDbEntry ? (
+                            <svg className="w-4 h-4 flex-shrink-0 mt-1 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: '#55EFC4' }}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                            </svg>
+                          ) : (
+                            <span className="text-[10px] px-2 py-0.5 rounded-lg flex-shrink-0" style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--gold)' }}>
+                              {getReleaseDate(topic.slug)}
+                            </span>
+                          )}
                         </div>
                       </div>
                     )

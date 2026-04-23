@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
@@ -203,27 +203,38 @@ export default function PublicDouleurDetailPage() {
             <span className="font-display text-lg font-medium" style={{ color: 'var(--gold)' }}>SOS Shine</span>
           </Link>
         </header>
-        <div className="max-w-3xl mx-auto text-center py-20 px-6">
-          <h2 className="font-display text-2xl font-semibold mb-4">
-            Challenge émotionnel non trouvé
-          </h2>
-          <p className="mb-6" style={{ color: 'var(--text-secondary)' }}>
-            {fetchError
-              ? `Une erreur est survenue lors du chargement. Veuillez réessayer.`
-              : `Ce challenge émotionnel n'est pas encore disponible ou n'existe pas.`}
-          </p>
-          {fetchError && (
-            <button
-              onClick={() => window.location.reload()}
-              className="px-5 py-2.5 rounded-lg text-sm font-medium mb-4 cursor-pointer"
-              style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}
-            >
-              Réessayer
-            </button>
-          )}
-          <Link href="/encyclopedie" className="block text-sm font-medium" style={{ color: 'var(--gold)' }}>
-            Retour à l&apos;encyclopédie
-          </Link>
+        <div className="max-w-2xl mx-auto py-16 px-4">
+          <div className="rounded-2xl p-8 sm:p-10 text-center" style={{
+            background: 'linear-gradient(160deg, var(--dark-card) 0%, rgba(212,175,55,0.04) 100%)',
+            border: '1px solid rgba(212,175,55,0.15)',
+          }}>
+            <div className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center"
+              style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}>
+              <span className="text-3xl">💛</span>
+            </div>
+            <h2 className="font-display text-xl sm:text-2xl font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
+              Ce protocole arrive bientôt
+            </h2>
+            <p className="text-sm sm:text-[15px] leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
+              Nous mettons tout notre cœur à préparer ce contenu pour qu&apos;il soit à la hauteur de ce que vous traversez.
+              Julia, William et Thomas travaillent dessus pour vous offrir un protocole complet.
+            </p>
+            <div className="rounded-xl p-5 mb-6" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
+              <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                Inscrivez-vous pour être prévenu(e) dès sa sortie et accéder aux protocoles déjà disponibles.
+              </p>
+            </div>
+            <Link href="/signup"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold transition-all duration-200 hover:scale-[1.03]"
+              style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505', boxShadow: '0 4px 20px rgba(212,175,55,0.3)' }}>
+              Créer mon compte gratuitement
+            </Link>
+            <div className="mt-8 pt-6" style={{ borderTop: '1px solid var(--dark-border)' }}>
+              <Link href="/encyclopedie" className="text-sm font-medium transition-colors hover:opacity-80" style={{ color: 'var(--gold)' }}>
+                ← Retour à l&apos;encyclopédie
+              </Link>
+            </div>
+          </div>
         </div>
       </main>
     )
@@ -345,39 +356,49 @@ export default function PublicDouleurDetailPage() {
 
               return (
                 <div className="space-y-4">
-                  {/* Video locked preview (shows image as thumbnail if available) */}
-                  {currentStep.video && (
-                    <div
-                      className="rounded-xl overflow-hidden aspect-video relative cursor-pointer group"
-                      style={{ background: 'rgba(0,0,0,0.4)' }}
-                      onClick={handlePlayClick}
-                    >
-                      {currentStep.image && (
-                        <img
-                          src={currentStep.image}
-                          alt=""
-                          className="absolute inset-0 w-full h-full object-cover"
-                        />
-                      )}
-                      <div className="absolute inset-0 flex items-center justify-center z-10">
-                        <div className="text-center">
-                          <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 transition-transform group-hover:scale-110"
-                            style={{ background: `${currentStep.color}20`, border: `2px solid ${currentStep.color}40` }}>
-                            <svg className="w-8 h-8 ml-1" fill="none" viewBox="0 0 24 24" stroke={currentStep.color} strokeWidth={1.5}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
-                            </svg>
+                  {/* Video: 30-second preview then lock */}
+                  {currentStep.video && (() => {
+                    function PreviewVideo30s({ src, poster }: { src: string; poster?: string }) {
+                      const videoRef = React.useRef<HTMLVideoElement>(null)
+                      const [locked, setLocked] = React.useState(false)
+                      React.useEffect(() => {
+                        const vid = videoRef.current
+                        if (!vid) return
+                        const onTime = () => { if (vid.currentTime >= 30) { vid.pause(); setLocked(true) } }
+                        vid.addEventListener('timeupdate', onTime)
+                        return () => vid.removeEventListener('timeupdate', onTime)
+                      }, [])
+                      if (locked) {
+                        return (
+                          <div className="relative rounded-xl overflow-hidden aspect-video" style={{ background: '#000' }}>
+                            {poster && <img src={poster} alt="" className="absolute inset-0 w-full h-full object-cover opacity-30 blur-sm" />}
+                            <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.7)' }}>
+                              <div className="text-center p-6">
+                                <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center"
+                                  style={{ background: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.3)' }}>
+                                  <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                                  </svg>
+                                </div>
+                                <p className="text-base font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>Vous aimez ce que vous voyez ?</p>
+                                <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>Créez votre compte pour accéder au protocole complet</p>
+                                <Link href="/signup" className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold transition-all hover:scale-[1.03]"
+                                  style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505', boxShadow: '0 4px 20px rgba(212,175,55,0.3)' }}>
+                                  Créer mon compte gratuitement
+                                </Link>
+                              </div>
+                            </div>
                           </div>
-                          <div className="flex items-center justify-center gap-2">
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke={currentStep.color} strokeWidth={1.5}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-                            </svg>
-                            <span className="text-sm font-medium" style={{ color: currentStep.color }}>Vidéo réservée aux membres</span>
-                          </div>
+                        )
+                      }
+                      return (
+                        <div className="rounded-xl overflow-hidden aspect-video" style={{ background: 'var(--dark)' }}>
+                          <video ref={videoRef} src={src} poster={poster} controls preload="metadata" className="w-full h-full" />
                         </div>
-                      </div>
-                      <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${currentStep.color}08, rgba(0,0,0,0.5), ${currentStep.color}05)` }} />
-                    </div>
-                  )}
+                      )
+                    }
+                    return <PreviewVideo30s src={currentStep.video!} poster={currentStep.image || undefined} />
+                  })()}
 
                   {/* Image locked preview (only when no video, otherwise image is used as video thumbnail) */}
                   {!currentStep.video && currentStep.image && (
@@ -404,32 +425,43 @@ export default function PublicDouleurDetailPage() {
                     </div>
                   )}
 
-                  {/* Audio locked preview */}
-                  {currentStep.audio && (
-                    <div
-                      className="rounded-xl overflow-hidden p-5 cursor-pointer group"
-                      style={{ background: 'rgba(0,0,0,0.3)', border: `1px solid ${currentStep.color}20` }}
-                      onClick={handlePlayClick}
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110"
-                          style={{ background: `${currentStep.color}20`, border: `1px solid ${currentStep.color}30` }}>
-                          <svg className="w-5 h-5 ml-0.5" fill={currentStep.color} viewBox="0 0 24 24">
-                            <path d="M8 5v14l11-7z" />
-                          </svg>
-                        </div>
-                        <div className="flex-1">
-                          <p className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>Audio disponible</p>
-                          <div className="flex items-center gap-1.5 mt-0.5">
-                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke={currentStep.color} strokeWidth={1.5}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-                            </svg>
-                            <p className="text-xs" style={{ color: currentStep.color }}>Réservé aux membres</p>
+                  {/* Audio: 30-second preview then lock */}
+                  {currentStep.audio && (() => {
+                    function PreviewAudio30s({ src, title }: { src: string; title: string }) {
+                      const audioRef = React.useRef<HTMLAudioElement>(null)
+                      const [audioLocked, setAudioLocked] = React.useState(false)
+                      React.useEffect(() => {
+                        const aud = audioRef.current
+                        if (!aud) return
+                        const onTime = () => { if (aud.currentTime >= 30) { aud.pause(); setAudioLocked(true) } }
+                        aud.addEventListener('timeupdate', onTime)
+                        return () => aud.removeEventListener('timeupdate', onTime)
+                      }, [])
+                      return (
+                        <div className="rounded-xl p-4 space-y-3" style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(212,175,55,0.15)' }}>
+                          <p className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>Audio — {title}</p>
+                          <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.12)' }}>
+                            <span className="text-lg flex-shrink-0 mt-0.5">🎧</span>
+                            <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                              Écoutez un extrait de 30 secondes. Créez votre compte pour accéder à l&apos;intégralité.
+                            </p>
                           </div>
+                          {audioLocked ? (
+                            <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                              <p className="text-sm" style={{ color: 'var(--gold)' }}>Vous aimez ? Accédez à la suite</p>
+                              <Link href="/signup" className="px-4 py-2 rounded-full text-xs font-semibold"
+                                style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}>
+                                Créer mon compte
+                              </Link>
+                            </div>
+                          ) : (
+                            <audio ref={audioRef} src={src} controls className="w-full" />
+                          )}
                         </div>
-                      </div>
-                    </div>
-                  )}
+                      )
+                    }
+                    return <PreviewAudio30s src={currentStep.audio!} title={currentStep.title} />
+                  })()}
 
                   {/* PDF locked preview */}
                   {currentStep.pdf && (

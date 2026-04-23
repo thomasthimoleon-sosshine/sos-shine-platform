@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import type { Douleur, DouleurStep } from '@/types/database'
 
 // Page récapitulative avant paiement
-const SIGNUP_URL = '/rejoindre'
+const SIGNUP_URL = '/signup'
 
 type StepConfig = {
   num: number

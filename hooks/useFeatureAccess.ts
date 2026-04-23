@@ -8,6 +8,18 @@ const FREE_FEATURES = new Set<string>([
   'communaute',
   'mur',
   'shine_audible',
+  'gamification',
+  'badges',
+  'defis',
+  'streaks',
+  'xp',
+])
+
+// Features reserved for Sérénité (49.90€) — not available on Essentielle (9.90€)
+const SERENITE_ONLY = new Set<string>([
+  'shine_tv',
+  'shine_shorts',
+  'shine_librairie',
 ])
 
 interface FeatureAccess {
@@ -74,6 +86,9 @@ export function useFeatureAccess(): FeatureAccess {
     hasFeature: (key: string) => {
       if (state.isAdmin) return true
       if (FREE_FEATURES.has(key)) return true
+      if (SERENITE_ONLY.has(key)) {
+        return state.plan === 'serenite' || state.plan === 'premium'
+      }
       return state.features[key] ?? false
     },
     refresh,

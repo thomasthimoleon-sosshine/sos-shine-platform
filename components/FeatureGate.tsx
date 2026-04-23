@@ -13,6 +13,11 @@ export const FREE_FEATURES = new Set<string>([
   'communaute',
   'mur',
   'shine_audible',
+  'gamification',
+  'badges',
+  'defis',
+  'streaks',
+  'xp',
 ])
 
 // Plan minimum requis pour chaque feature

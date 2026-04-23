@@ -667,7 +667,7 @@ export default function DouleurDetailPage() {
   const previewCtaShort = isFreeUser ? 'Choisir mon abonnement' : 'Créer mon compte'
 
   return (
-    <SubscriptionGate allowFree={isLegacyAccess || isPreviewMode}>
+    <>
     <div className="max-w-4xl mx-auto space-y-8">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm">
@@ -1649,6 +1649,6 @@ export default function DouleurDetailPage() {
       )}
 
     </div>
-    </SubscriptionGate>
+    </>
   )
 }

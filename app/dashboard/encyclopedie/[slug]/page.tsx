@@ -892,28 +892,30 @@ export default function DouleurDetailPage() {
 
             if (locked) {
               return (
-                <div className="relative rounded-xl overflow-hidden aspect-video" style={{ background: '#000' }}>
-                  {poster && <img src={poster} alt="" className="absolute inset-0 w-full h-full object-cover opacity-30 blur-sm" />}
-                  <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.7)' }}>
-                    <div className="text-center p-6">
-                      <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center"
-                        style={{ background: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.3)' }}>
-                        <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-                        </svg>
-                      </div>
-                      <p className="text-base font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
-                        Vous aimez ce que vous voyez ?
-                      </p>
-                      <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>
-                        Créez votre compte pour accéder au protocole complet
-                      </p>
-                      <Link href={previewCtaLink}
-                        className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold transition-all hover:scale-[1.03]"
-                        style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505', boxShadow: '0 4px 20px rgba(212,175,55,0.3)' }}>
-                        {previewCtaText}
-                      </Link>
+                <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(160deg, rgba(0,0,0,0.9), rgba(212,175,55,0.05))', border: '1px solid rgba(212,175,55,0.2)' }}>
+                  <div className="text-center py-10 px-6">
+                    <div className="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center"
+                      style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.25)' }}>
+                      <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+                      </svg>
                     </div>
+                    <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--gold)' }}>
+                      L&apos;extrait est terminé
+                    </h3>
+                    <p className="text-sm mb-6 max-w-xs mx-auto" style={{ color: 'var(--text-secondary)' }}>
+                      {isFreeUser
+                        ? 'Choisissez votre abonnement pour accéder au protocole complet.'
+                        : 'Créez votre compte pour accéder au protocole complet.'}
+                    </p>
+                    <Link href={previewCtaLink}
+                      className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-sm font-semibold transition-all hover:scale-[1.03]"
+                      style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505', boxShadow: '0 4px 20px rgba(212,175,55,0.3)' }}>
+                      {previewCtaText}
+                    </Link>
+                    <p className="text-xs mt-4" style={{ color: 'var(--text-muted)' }}>
+                      Sans engagement. Annulation en un clic.
+                    </p>
                   </div>
                 </div>
               )

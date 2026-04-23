@@ -157,7 +157,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) {
         // Allow encyclopedia pages to load in preview mode (no redirect)
-        if (pathname?.startsWith('/dashboard/encyclopedie/')) {
+        if (pathname?.startsWith('/dashboard/encyclopedie')) {
           setLoading(false)
           return
         }

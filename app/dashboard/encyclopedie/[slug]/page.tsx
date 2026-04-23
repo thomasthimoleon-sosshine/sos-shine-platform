@@ -99,6 +99,7 @@ export default function DouleurDetailPage() {
   const [userId, setUserId] = useState<string | null>(null)
   const [isLegacyAccess, setIsLegacyAccess] = useState(false)
   const [isPreviewMode, setIsPreviewMode] = useState(false)
+  const [isFreeUser, setIsFreeUser] = useState(false)
 
   // Quiz state
   const [quizQuestions, setQuizQuestions] = useState<DouleurQuizQuestion[]>([])
@@ -343,6 +344,16 @@ export default function DouleurDetailPage() {
         return
       }
       setUserId(user.id)
+
+      // Check if user has an active subscription
+      try {
+        const subRes = await fetch(`/api/subscription/features?user_id=${user.id}`)
+        const subData = await subRes.json()
+        if (!subData.is_active && !subData.is_admin) {
+          setIsPreviewMode(true)
+          setIsFreeUser(true)
+        }
+      } catch { /* non-critical */ }
 
       const { data } = await supabase
         .from('user_progress')
@@ -651,6 +662,10 @@ export default function DouleurDetailPage() {
 
   const currentStep = steps[activeStep - 1]
 
+  const previewCtaText = isFreeUser ? 'Choisir mon abonnement' : 'Créer mon compte gratuitement'
+  const previewCtaLink = isFreeUser ? '/dashboard/tarifs' : '/signup'
+  const previewCtaShort = isFreeUser ? 'Choisir mon abonnement' : 'Créer mon compte'
+
   return (
     <SubscriptionGate allowFree={isLegacyAccess || isPreviewMode}>
     <div className="max-w-4xl mx-auto space-y-8">
@@ -893,10 +908,10 @@ export default function DouleurDetailPage() {
                       <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>
                         Créez votre compte pour accéder au protocole complet
                       </p>
-                      <Link href="/signup"
+                      <Link href={previewCtaLink}
                         className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold transition-all hover:scale-[1.03]"
                         style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505', boxShadow: '0 4px 20px rgba(212,175,55,0.3)' }}>
-                        Créer mon compte gratuitement
+                        {previewCtaText}
                       </Link>
                     </div>
                   </div>
@@ -923,12 +938,12 @@ export default function DouleurDetailPage() {
                 </div>
                 <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-primary)' }}>{label}</p>
                 <p className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>
-                  Créez votre compte pour accéder à ce contenu
+                  {isFreeUser ? 'Abonnez-vous pour accéder à ce contenu' : 'Créez votre compte pour accéder à ce contenu'}
                 </p>
-                <Link href="/signup"
+                <Link href={previewCtaLink}
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all hover:scale-[1.03]"
                   style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}>
-                  Créer mon compte
+                  {previewCtaShort}
                 </Link>
               </div>
             </div>
@@ -972,7 +987,7 @@ export default function DouleurDetailPage() {
               {/* Image: shown as standalone when no video, or as cover above audio */}
               {!currentStep.video && currentStep.image && (
                 <div className="rounded-xl overflow-hidden" style={{ background: 'var(--dark)' }}>
-                  <img src={currentStep.image} alt={`${douleur?.title} — Étape ${currentStep.num}`} className="w-full h-auto rounded-xl" style={{ maxHeight: '400px', objectFit: 'cover' }} />
+                  <img src={currentStep.image} alt={`${douleur?.title} — Étape ${currentStep.num}`} className="w-full h-auto rounded-xl" />
                 </div>
               )}
 
@@ -1004,9 +1019,9 @@ export default function DouleurDetailPage() {
                         {audioLocked ? (
                           <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)' }}>
                             <p className="text-sm" style={{ color: 'var(--gold)' }}>Vous aimez ? Accédez à la suite</p>
-                            <Link href="/signup" className="px-4 py-2 rounded-full text-xs font-semibold"
+                            <Link href={previewCtaLink} className="px-4 py-2 rounded-full text-xs font-semibold"
                               style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}>
-                              Créer mon compte
+                              {previewCtaShort}
                             </Link>
                           </div>
                         ) : (
@@ -1019,7 +1034,7 @@ export default function DouleurDetailPage() {
                 })() : (
                 <div className="rounded-xl overflow-hidden" style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${currentStep.color}20` }}>
                   {currentStep.audio_cover && (
-                    <img src={currentStep.audio_cover} alt={`Audio — ${currentStep.title}`} className="w-full object-cover" style={{ maxHeight: '250px' }} />
+                    <img src={currentStep.audio_cover} alt={`Audio — ${currentStep.title}`} className="w-full" />
                   )}
                   <div className="p-4 space-y-3">
                     <p className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>
@@ -1039,14 +1054,14 @@ export default function DouleurDetailPage() {
 
               {currentStep.pdf && (
                 isPreviewMode ? (
-                  <div className="flex items-center gap-3 p-4 rounded-xl cursor-pointer" onClick={() => window.location.href = '/signup'}
+                  <div className="flex items-center gap-3 p-4 rounded-xl cursor-pointer" onClick={() => window.location.href = isFreeUser ? '/dashboard/tarifs' : '/signup'}
                     style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(212,175,55,0.15)' }}>
                     <svg className="w-8 h-8 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                     </svg>
                     <div>
                       <p className="font-medium text-sm" style={{ color: 'var(--gold)' }}>PDF — Exercices & plan d&apos;action</p>
-                      <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Créez votre compte pour télécharger</p>
+                      <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{isFreeUser ? 'Abonnez-vous pour télécharger' : 'Créez votre compte pour télécharger'}</p>
                     </div>
                   </div>
                 ) : (

@@ -508,8 +508,8 @@ export default function EvenementsPage() {
               >
                 {/* Cover image */}
                 {(event as any).cover_image && (
-                  <div className="rounded-xl overflow-hidden -mx-6 -mt-6 mb-4">
-                    <img src={(event as any).cover_image} alt={event.title} className="w-full rounded-t-xl" style={{ maxHeight: '160px', objectFit: 'cover' }} />
+                  <div className="-mx-6 -mt-6 mb-4">
+                    <img src={(event as any).cover_image} alt={event.title} className="w-full rounded-t-2xl" />
                   </div>
                 )}
 

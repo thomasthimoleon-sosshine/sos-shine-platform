@@ -24,6 +24,10 @@ type StepConfig = {
   audio: string | null
   pdf: string | null
   image: string | null
+  video_cover: string | null
+  video2_cover: string | null
+  audio_cover: string | null
+  audio2_cover: string | null
   exercise_content: string | null
 }
 
@@ -42,6 +46,10 @@ function buildSteps(douleur: Douleur, dynamicSteps: DouleurStep[]): StepConfig[]
       audio: s.audio_url,
       pdf: s.pdf_url,
       image: s.image_url,
+      video_cover: (s as any).video_cover || null,
+      video2_cover: (s as any).video2_cover || null,
+      audio_cover: (s as any).audio_cover || null,
+      audio2_cover: (s as any).audio2_cover || null,
       exercise_content: s.exercise_content,
     }))
   }
@@ -53,17 +61,20 @@ function buildSteps(douleur: Douleur, dynamicSteps: DouleurStep[]): StepConfig[]
     {
       num: 1, title: 'Comprendre', subtitle: 'Vidéo, audio & ressources', icon: '🎬', color: '#55EFC4',
       description: 'Analyse émotionnelle. Explication du problème. Apaisement mental. Une approche humaine et directe.',
-      video: douleur.video_url, video2: d.video_url_2 || null, audio: douleur.step1_audio_url, pdf: douleur.step1_pdf_url, image: douleur.step1_image_url, exercise_content: null,
+      video: douleur.video_url, video2: d.video_url_2 || null, audio: douleur.step1_audio_url, pdf: douleur.step1_pdf_url, image: douleur.step1_image_url,
+      video_cover: null, video2_cover: null, audio_cover: null, audio2_cover: null, exercise_content: null,
     },
     {
       num: 2, title: 'Libérer & Intégrer', subtitle: 'Audio, vidéo & ressources', icon: '✨', color: '#74C0FC',
       description: 'Activation émotionnelle. Décharge des tensions. Nettoyage des empreintes qui vous bloquent. Stabilisation intérieure et reconnexion à soi.',
-      video: douleur.step2_video_url, video2: d.step2_video_url_2 || null, audio: douleur.audio_energy_url, pdf: douleur.step2_pdf_url, image: douleur.step2_image_url, exercise_content: null,
+      video: douleur.step2_video_url, video2: d.step2_video_url_2 || null, audio: douleur.audio_energy_url, pdf: douleur.step2_pdf_url, image: douleur.step2_image_url,
+      video_cover: null, video2_cover: null, audio_cover: null, audio2_cover: null, exercise_content: null,
     },
     {
       num: 3, title: 'Agir', subtitle: 'Exercices, audio & ressources', icon: '⚡', color: '#E17055',
       description: 'PDF d\'exercices pratiques et audio guidé. Passez à l\'action concrète. Reprogrammation émotionnelle. Ancrez vos transformations dans le quotidien.',
-      video: douleur.step3_video_url, video2: d.step3_video_url_2 || null, audio: douleur.audio_meditation_url, pdf: douleur.pdf_url, image: douleur.step3_image_url, exercise_content: douleur.exercise_content,
+      video: douleur.step3_video_url, video2: d.step3_video_url_2 || null, audio: douleur.audio_meditation_url, pdf: douleur.pdf_url, image: douleur.step3_image_url,
+      video_cover: null, video2_cover: null, audio_cover: null, audio2_cover: null, exercise_content: douleur.exercise_content,
     },
   ]
 }
@@ -927,12 +938,12 @@ export default function DouleurDetailPage() {
             <div className="space-y-4">
               {currentStep.video && (
                 isPreviewMode
-                  ? <PreviewVideo src={currentStep.video} poster={currentStep.image || undefined} label={currentStep.title} />
+                  ? <PreviewVideo src={currentStep.video} poster={currentStep.video_cover || currentStep.image || undefined} label={currentStep.title} />
                   : (
                 <div className="rounded-xl overflow-hidden aspect-video" style={{ background: 'var(--dark)' }}>
                   <video
                     src={currentStep.video}
-                    poster={currentStep.image || undefined}
+                    poster={currentStep.video_cover || currentStep.image || undefined}
                     controls
                     preload="metadata"
                     className="w-full h-full"
@@ -944,11 +955,12 @@ export default function DouleurDetailPage() {
               {/* Secondary video (optional) */}
               {currentStep.video2 && (
                 isPreviewMode
-                  ? <PreviewVideo src={currentStep.video2} label={currentStep.title} />
+                  ? <PreviewVideo src={currentStep.video2} poster={currentStep.video2_cover || undefined} label={currentStep.title} />
                   : (
                 <div className="rounded-xl overflow-hidden aspect-video" style={{ background: 'var(--dark)' }}>
                   <video
                     src={currentStep.video2}
+                    poster={currentStep.video2_cover || undefined}
                     controls
                     preload="metadata"
                     className="w-full h-full"
@@ -1005,17 +1017,22 @@ export default function DouleurDetailPage() {
                   }
                   return <PreviewAudio src={currentStep.audio!} title={currentStep.title} />
                 })() : (
-                <div className="rounded-xl p-4 space-y-3" style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${currentStep.color}20` }}>
-                  <p className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>
-                    Audio — {currentStep.title}
-                  </p>
-                  <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.12)' }}>
-                    <span className="text-lg flex-shrink-0 mt-0.5">🎧</span>
-                    <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                      Avant de lancer cet audio, installez-vous confortablement dans un endroit calme et détendu. Mettez votre casque audio, respirez profondément et laissez-vous guider en toute sérénité.
+                <div className="rounded-xl overflow-hidden" style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${currentStep.color}20` }}>
+                  {currentStep.audio_cover && (
+                    <img src={currentStep.audio_cover} alt={`Audio — ${currentStep.title}`} className="w-full object-cover" style={{ maxHeight: '250px' }} />
+                  )}
+                  <div className="p-4 space-y-3">
+                    <p className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>
+                      Audio — {currentStep.title}
                     </p>
+                    <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.12)' }}>
+                      <span className="text-lg flex-shrink-0 mt-0.5">🎧</span>
+                      <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                        Avant de lancer cet audio, installez-vous confortablement dans un endroit calme et détendu. Mettez votre casque audio, respirez profondément et laissez-vous guider en toute sérénité.
+                      </p>
+                    </div>
+                    <audio src={currentStep.audio} controls className="w-full" />
                   </div>
-                  <audio src={currentStep.audio} controls className="w-full" />
                 </div>
                 )
               )}

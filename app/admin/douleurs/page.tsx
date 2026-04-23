@@ -32,6 +32,10 @@ type StepForm = {
   audio_url_2: string
   pdf_url: string
   image_url: string
+  video_cover: string
+  video2_cover: string
+  audio_cover: string
+  audio2_cover: string
   exercise_content: string
 }
 
@@ -48,14 +52,18 @@ function createEmptyStep(num: number): StepForm {
     audio_url_2: '',
     pdf_url: '',
     image_url: '',
+    video_cover: '',
+    video2_cover: '',
+    audio_cover: '',
+    audio2_cover: '',
     exercise_content: '',
   }
 }
 
 const DEFAULT_STEPS: StepForm[] = [
-  { title: 'Comprendre', subtitle: 'Vidéo, audio & ressources', description: '', icon: '🎬', color: '#55EFC4', video_url: '', video_url_2: '', audio_url: '', audio_url_2: '', pdf_url: '', image_url: '', exercise_content: '' },
-  { title: 'Libérer & Intégrer', subtitle: 'Audio, vidéo & ressources', description: '', icon: '✨', color: '#74C0FC', video_url: '', video_url_2: '', audio_url: '', audio_url_2: '', pdf_url: '', image_url: '', exercise_content: '' },
-  { title: 'Agir', subtitle: 'Exercices, audio & ressources', description: '', icon: '⚡', color: '#E17055', video_url: '', video_url_2: '', audio_url: '', audio_url_2: '', pdf_url: '', image_url: '', exercise_content: '' },
+  { title: 'Comprendre', subtitle: 'Vidéo, audio & ressources', description: '', icon: '🎬', color: '#55EFC4', video_url: '', video_url_2: '', audio_url: '', audio_url_2: '', pdf_url: '', image_url: '', video_cover: '', video2_cover: '', audio_cover: '', audio2_cover: '', exercise_content: '' },
+  { title: 'Libérer & Intégrer', subtitle: 'Audio, vidéo & ressources', description: '', icon: '✨', color: '#74C0FC', video_url: '', video_url_2: '', audio_url: '', audio_url_2: '', pdf_url: '', image_url: '', video_cover: '', video2_cover: '', audio_cover: '', audio2_cover: '', exercise_content: '' },
+  { title: 'Agir', subtitle: 'Exercices, audio & ressources', description: '', icon: '⚡', color: '#E17055', video_url: '', video_url_2: '', audio_url: '', audio_url_2: '', pdf_url: '', image_url: '', video_cover: '', video2_cover: '', audio_cover: '', audio2_cover: '', exercise_content: '' },
 ]
 
 const ENCYCLOPEDIE_CATEGORIES = [
@@ -299,6 +307,10 @@ export default function AdminDouleursPage() {
       audio_url_2: (s as any).audio_url_2 || '',
       pdf_url: s.pdf_url || '',
       image_url: s.image_url || '',
+      video_cover: (s as any).video_cover || '',
+      video2_cover: (s as any).video2_cover || '',
+      audio_cover: (s as any).audio_cover || '',
+      audio2_cover: (s as any).audio2_cover || '',
       exercise_content: s.exercise_content || '',
     }))
   }
@@ -500,6 +512,10 @@ export default function AdminDouleursPage() {
         audio_url_2: s.audio_url_2.trim() || null,
         pdf_url: s.pdf_url.trim() || null,
         image_url: s.image_url.trim() || null,
+        video_cover: s.video_cover.trim() || null,
+        video2_cover: s.video2_cover.trim() || null,
+        audio_cover: s.audio_cover.trim() || null,
+        audio2_cover: s.audio2_cover.trim() || null,
         exercise_content: s.exercise_content.trim() || null,
       }))
 
@@ -997,7 +1013,17 @@ export default function AdminDouleursPage() {
                             onRemoved={() => updateStep(i, 'video_url', '')}
                           />
                           {/* 2nd video: only on step 1 (Comprendre) */}
+                          <FileUpload
+                            label={`Couverture vidéo — Étape ${i + 1}`}
+                            accept="image/*"
+                            folder="douleurs"
+                            currentUrl={step.video_cover || null}
+                            hint="Image affichée avant la lecture de la vidéo"
+                            onUploaded={(url) => updateStep(i, 'video_cover', url)}
+                            onRemoved={() => updateStep(i, 'video_cover', '')}
+                          />
                           {i === 0 && (
+                            <>
                             <FileUpload
                               label={`Vidéo secondaire — Étape ${i + 1} (optionnel)`}
                               accept="video/*"
@@ -1007,6 +1033,16 @@ export default function AdminDouleursPage() {
                               onUploaded={(url) => updateStep(i, 'video_url_2', url)}
                               onRemoved={() => updateStep(i, 'video_url_2', '')}
                             />
+                            <FileUpload
+                              label={`Couverture vidéo secondaire — Étape ${i + 1}`}
+                              accept="image/*"
+                              folder="douleurs"
+                              currentUrl={step.video2_cover || null}
+                              hint="Image avant lecture de la 2ème vidéo"
+                              onUploaded={(url) => updateStep(i, 'video2_cover', url)}
+                              onRemoved={() => updateStep(i, 'video2_cover', '')}
+                            />
+                            </>
                           )}
                           <FileUpload
                             label={i === 1 ? `Audio principal — Étape ${i + 1}` : `Audio — Étape ${i + 1}`}
@@ -1017,8 +1053,18 @@ export default function AdminDouleursPage() {
                             onUploaded={(url) => updateStep(i, 'audio_url', url)}
                             onRemoved={() => updateStep(i, 'audio_url', '')}
                           />
+                          <FileUpload
+                            label={`Couverture audio — Étape ${i + 1}`}
+                            accept="image/*"
+                            folder="douleurs"
+                            currentUrl={step.audio_cover || null}
+                            hint="Image affichée au-dessus du player audio"
+                            onUploaded={(url) => updateStep(i, 'audio_cover', url)}
+                            onRemoved={() => updateStep(i, 'audio_cover', '')}
+                          />
                           {/* 2nd audio: only on step 2 (Libérer) */}
                           {i === 1 && (
+                            <>
                             <FileUpload
                               label={`Audio secondaire — Étape ${i + 1} (optionnel)`}
                               accept="audio/*"
@@ -1028,6 +1074,16 @@ export default function AdminDouleursPage() {
                               onUploaded={(url) => updateStep(i, 'audio_url_2', url)}
                               onRemoved={() => updateStep(i, 'audio_url_2', '')}
                             />
+                            <FileUpload
+                              label={`Couverture audio secondaire — Étape ${i + 1}`}
+                              accept="image/*"
+                              folder="douleurs"
+                              currentUrl={step.audio2_cover || null}
+                              hint="Image avant lecture du 2ème audio"
+                              onUploaded={(url) => updateStep(i, 'audio2_cover', url)}
+                              onRemoved={() => updateStep(i, 'audio2_cover', '')}
+                            />
+                            </>
                           )}
                           <FileUpload
                             label={`PDF — Étape ${i + 1}`}

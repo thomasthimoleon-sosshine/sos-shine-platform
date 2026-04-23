@@ -275,19 +275,22 @@ export default function AdminDouleursPage() {
         title: 'Comprendre', subtitle: 'Vidéo, audio & ressources', description: '', icon: '🎬', color: '#55EFC4',
         video_url: d.video_url || '', video_url_2: anyD.video_url_2 || '',
         audio_url: d.step1_audio_url || '', audio_url_2: '',
-        pdf_url: d.step1_pdf_url || '', image_url: d.step1_image_url || '', exercise_content: '',
+        pdf_url: d.step1_pdf_url || '', image_url: d.step1_image_url || '',
+        video_cover: '', video2_cover: '', audio_cover: '', audio2_cover: '', exercise_content: '',
       },
       {
         title: 'Libérer & Intégrer', subtitle: 'Audio, vidéo & ressources', description: '', icon: '✨', color: '#74C0FC',
         video_url: d.step2_video_url || '', video_url_2: '',
         audio_url: d.audio_energy_url || '', audio_url_2: anyD.audio_energy_url_2 || '',
-        pdf_url: d.step2_pdf_url || '', image_url: d.step2_image_url || '', exercise_content: '',
+        pdf_url: d.step2_pdf_url || '', image_url: d.step2_image_url || '',
+        video_cover: '', video2_cover: '', audio_cover: '', audio2_cover: '', exercise_content: '',
       },
       {
         title: 'Agir', subtitle: 'Exercices, audio & ressources', description: '', icon: '⚡', color: '#E17055',
         video_url: d.step3_video_url || '', video_url_2: '',
         audio_url: d.audio_meditation_url || '', audio_url_2: '',
-        pdf_url: d.pdf_url || '', image_url: d.step3_image_url || '', exercise_content: d.exercise_content || '',
+        pdf_url: d.pdf_url || '', image_url: d.step3_image_url || '',
+        video_cover: '', video2_cover: '', audio_cover: '', audio2_cover: '', exercise_content: d.exercise_content || '',
       },
     ]
   }

@@ -1,60 +1,95 @@
 'use client'
 
 import React, { useEffect } from 'react'
+import { cva, type VariantProps } from 'class-variance-authority'
 import { motion, AnimatePresence } from 'framer-motion'
+import { X, Check, AlertTriangle, Info } from 'lucide-react'
 
-export type ToastVariant = 'success' | 'error' | 'info'
+const toast = cva(
+  [
+    'fixed top-4 right-4 z-[150]',
+    'flex items-center gap-3 px-4 py-3',
+    'rounded-[var(--radius-lg)] text-sm max-w-sm',
+    'backdrop-blur-xl',
+  ].join(' '),
+  {
+    variants: {
+      variant: {
+        success: [
+          'bg-[var(--success-alpha-weak)]',
+          'border border-[var(--success-alpha-medium)]',
+          'text-[var(--success)]',
+        ].join(' '),
+        error: [
+          'bg-[var(--danger-alpha-weak)]',
+          'border border-[var(--danger-alpha-medium)]',
+          'text-[var(--danger)]',
+        ].join(' '),
+        info: [
+          'bg-[var(--brand-alpha-weak)]',
+          'border border-[var(--brand-alpha-medium)]',
+          'text-[var(--brand)]',
+        ].join(' '),
+      },
+    },
+    defaultVariants: {
+      variant: 'info',
+    },
+  }
+)
 
-export interface ToastProps {
+const iconMap = {
+  success: Check,
+  error: AlertTriangle,
+  info: Info,
+} as const
+
+export interface ToastProps extends VariantProps<typeof toast> {
   message: string
-  variant?: ToastVariant
   isVisible: boolean
   onDismiss: () => void
   duration?: number
 }
 
-const variantConfig: Record<ToastVariant, { icon: string; bg: string; border: string; color: string }> = {
-  success: { icon: '✓', bg: 'rgba(85, 239, 196, 0.08)', border: 'rgba(85, 239, 196, 0.2)', color: '#55EFC4' },
-  error:   { icon: '✕', bg: 'rgba(232, 93, 93, 0.08)',  border: 'rgba(232, 93, 93, 0.2)',  color: '#E85D5D' },
-  info:    { icon: 'ℹ', bg: 'rgba(212, 175, 55, 0.08)', border: 'rgba(212, 175, 55, 0.2)', color: 'var(--gold)' },
-}
+const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
+  ({ message, variant, isVisible, onDismiss, duration = 4000 }, ref) => {
+    useEffect(() => {
+      if (isVisible && duration > 0) {
+        const timer = setTimeout(onDismiss, duration)
+        return () => clearTimeout(timer)
+      }
+    }, [isVisible, duration, onDismiss])
 
-export function Toast({ message, variant = 'info', isVisible, onDismiss, duration = 4000 }: ToastProps) {
-  useEffect(() => {
-    if (isVisible && duration > 0) {
-      const timer = setTimeout(onDismiss, duration)
-      return () => clearTimeout(timer)
-    }
-  }, [isVisible, duration, onDismiss])
+    const v = variant || 'info'
+    const Icon = iconMap[v]
 
-  const config = variantConfig[variant]
+    return (
+      <AnimatePresence>
+        {isVisible && (
+          <motion.div
+            ref={ref}
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+            className={toast({ variant })}
+            role="alert"
+          >
+            <Icon className="w-4 h-4 flex-shrink-0" />
+            <span className="flex-1">{message}</span>
+            <button
+              onClick={onDismiss}
+              className="opacity-60 hover:opacity-100 cursor-pointer flex-shrink-0"
+              aria-label="Fermer"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    )
+  }
+)
+Toast.displayName = 'Toast'
 
-  return (
-    <AnimatePresence>
-      {isVisible && (
-        <motion.div
-          initial={{ opacity: 0, y: -20, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -20, scale: 0.95 }}
-          transition={{ duration: 0.25 }}
-          className="fixed top-4 right-4 flex items-center gap-3 px-4 py-3 rounded-xl text-sm max-w-sm"
-          style={{
-            background: config.bg,
-            border: `1px solid ${config.border}`,
-            color: config.color,
-            zIndex: 150,
-            backdropFilter: 'blur(12px)',
-          }}
-        >
-          <span className="font-bold text-base">{config.icon}</span>
-          <span className="flex-1">{message}</span>
-          <button onClick={onDismiss} className="opacity-60 hover:opacity-100 cursor-pointer" aria-label="Fermer">
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  )
-}
+export { Toast }

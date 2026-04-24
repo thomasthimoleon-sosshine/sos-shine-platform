@@ -1,14 +1,41 @@
+'use client'
+
 import React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 
 const input = cva(
-  'w-full px-4 py-3 rounded-xl text-sm outline-none transition-all placeholder:text-[var(--text-muted)]',
+  [
+    'w-full px-4 py-3 rounded-[var(--radius-lg)] text-sm',
+    'font-[family-name:var(--font-body)]',
+    'outline-none',
+    'transition-all duration-[var(--transition-base)]',
+    'placeholder:text-[var(--text-muted)]',
+    'focus-visible:ring-2 focus-visible:ring-offset-2',
+    'focus-visible:ring-offset-[var(--surface)]',
+    'disabled:opacity-50 disabled:cursor-not-allowed',
+  ].join(' '),
   {
     variants: {
       state: {
-        default: '',
-        error: '',
-        success: '',
+        default: [
+          'bg-[rgba(255,255,255,0.04)]',
+          'border border-[var(--border)]',
+          'text-[var(--text-primary)]',
+          'focus-visible:ring-[var(--brand)]',
+          'focus-visible:border-[var(--brand)]',
+        ].join(' '),
+        error: [
+          'bg-[var(--danger-alpha-weak)]',
+          'border border-[var(--danger-alpha-medium)]',
+          'text-[var(--text-primary)]',
+          'focus-visible:ring-[var(--danger)]',
+        ].join(' '),
+        success: [
+          'bg-[var(--success-alpha-weak)]',
+          'border border-[var(--success-alpha-medium)]',
+          'text-[var(--text-primary)]',
+          'focus-visible:ring-[var(--success)]',
+        ].join(' '),
       },
     },
     defaultVariants: {
@@ -17,26 +44,8 @@ const input = cva(
   }
 )
 
-const stateStyles: Record<string, React.CSSProperties> = {
-  default: {
-    background: 'rgba(255, 255, 255, 0.04)',
-    border: '1px solid rgba(255, 255, 255, 0.08)',
-    color: 'var(--text-primary)',
-  },
-  error: {
-    background: 'rgba(232, 93, 93, 0.04)',
-    border: '1px solid rgba(232, 93, 93, 0.3)',
-    color: 'var(--text-primary)',
-  },
-  success: {
-    background: 'rgba(85, 239, 196, 0.04)',
-    border: '1px solid rgba(85, 239, 196, 0.3)',
-    color: 'var(--text-primary)',
-  },
-}
-
 export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement>,
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>,
     VariantProps<typeof input> {
   label?: string
   hint?: string
@@ -44,26 +53,37 @@ export interface InputProps
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, state, label, hint, error, style, ...props }, ref) => {
-    const s = error ? 'error' : (state || 'default')
+  ({ className, state, label, hint, error, id, ...props }, ref) => {
+    const resolvedState = error ? 'error' : (state || 'default')
+    const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, '-') : undefined)
+
     return (
       <div className="space-y-1.5">
         {label && (
-          <label className="block text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>
+          <label
+            htmlFor={inputId}
+            className="block text-sm font-medium text-[var(--text-secondary)]"
+          >
             {label}
           </label>
         )}
         <input
           ref={ref}
-          className={input({ state: s as 'default' | 'error' | 'success', className })}
-          style={{ ...stateStyles[s], ...style }}
+          id={inputId}
+          className={input({ state: resolvedState as 'default' | 'error' | 'success', className })}
+          aria-invalid={!!error}
+          aria-describedby={error ? `${inputId}-error` : hint ? `${inputId}-hint` : undefined}
           {...props}
         />
         {error && (
-          <p className="text-xs" style={{ color: '#E85D5D' }}>{error}</p>
+          <p id={`${inputId}-error`} className="text-sm text-[var(--danger)]" role="alert">
+            {error}
+          </p>
         )}
         {hint && !error && (
-          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{hint}</p>
+          <p id={`${inputId}-hint`} className="text-sm text-[var(--text-muted)]">
+            {hint}
+          </p>
         )}
       </div>
     )
@@ -71,4 +91,4 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 )
 Input.displayName = 'Input'
 
-export { Input }
+export { Input, input }

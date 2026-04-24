@@ -75,7 +75,7 @@
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
   --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.25);
   --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.35);
-  --shadow-brand: 0 4px 20px rgba(201, 169, 97, 0.3);
+  --shadow-brand: 0 2px 12px rgba(201, 169, 97, 0.15);
   --glow-gold: 0 0 32px rgba(201, 169, 97, 0.12);
   --glow-gold-hover: 0 0 60px rgba(201, 169, 97, 0.2);
 

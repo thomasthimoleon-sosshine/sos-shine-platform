@@ -34,7 +34,8 @@ const button = cva(
         ].join(' '),
         ghost: [
           'text-[var(--text-secondary)]',
-          'hover:bg-white/5',
+          'border border-white/[0.06]',
+          'hover:bg-white/5 hover:border-white/[0.12]',
           'rounded-lg',
           'active:scale-[0.98]',
         ].join(' '),

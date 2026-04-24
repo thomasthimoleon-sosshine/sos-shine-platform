@@ -11,6 +11,7 @@ import {
 import { createClient } from '@/lib/supabase/client'
 import { useSubscription } from '@/hooks/useSubscription'
 import Link from 'next/link'
+import { PromoCountdown, PROMO } from '@/components/PromoCountdown'
 import {
   type PlanId,
   type DurationId,
@@ -405,6 +406,41 @@ export default function TarifsPage() {
 
       {/* Plan cards */}
       <div className="grid md:grid-cols-3 gap-6">
+        {/* Freemium card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="relative rounded-2xl overflow-hidden flex flex-col"
+          style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+        >
+          <div className="p-6 flex-1 flex flex-col">
+            <div className="mb-4">
+              <h3 className="font-display text-lg font-semibold" style={{ color: 'var(--text-secondary)' }}>Gratuit</h3>
+              <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>Découvrir la communauté SOS Shine</p>
+            </div>
+            <div className="mb-6">
+              <div className="flex items-baseline gap-1">
+                <span className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>0€</span>
+                <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/pour toujours</span>
+              </div>
+            </div>
+            <ul className="space-y-2.5 mb-8 flex-1">
+              {['Chat & Communauté', 'Shine Audible (podcasts)', 'Gamification (XP, badges, défis)', 'Quiz Signature Émotionnelle', 'Extraits des protocoles (30s)'].map(f => (
+                <li key={f} className="flex items-start gap-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                  <span className="mt-0.5" style={{ color: 'var(--text-muted)' }}>◆</span>
+                  {f}
+                </li>
+              ))}
+            </ul>
+            <Link href="/signup"
+              className="w-full py-3.5 rounded-full text-sm font-semibold text-center transition-all hover:opacity-90 block"
+              style={{ background: 'rgba(255,255,255,0.06)', color: 'var(--text-secondary)', border: '1px solid var(--dark-border)' }}>
+              Créer mon compte gratuit
+            </Link>
+          </div>
+        </motion.div>
+
         <AnimatePresence mode="wait">
           {plans.map((planId, idx) => {
             const info = PLAN_INFO[planId]
@@ -456,31 +492,59 @@ export default function TarifsPage() {
 
                   {/* Price */}
                   <div className="mb-6">
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>
-                        {formatPrice(monthlyPrice)}
-                      </span>
-                      <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
-                    </div>
-                    {durationMonths > 1 && (
-                      <div className="mt-1 space-y-0.5">
-                        <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
-                          soit {formatPrice(totalPrice)} pour {durationMonths} mois
+                    {planId === 'serenite' && effectiveDuration === 'monthly' ? (
+                      <>
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-lg line-through" style={{ color: 'var(--text-muted)' }}>
+                            {PROMO.originalPrice}{PROMO.currency}
+                          </span>
+                          <span className="text-3xl font-bold" style={{ color: '#55EFC4' }}>
+                            {PROMO.promoPrice}{PROMO.currency}
+                          </span>
+                          <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
+                        </div>
+                        <p className="text-xs mt-1 font-medium" style={{ color: '#55EFC4' }}>
+                          avec le code {PROMO.code}
                         </p>
-                        {originalPrice && (
-                          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                            <span style={{ textDecoration: 'line-through' }}>{formatPrice(originalPrice)}</span>
-                            <span className="ml-1.5 font-semibold" style={{ color: '#55EFC4' }}>
-                              -{savings}%
-                            </span>
+                        <div className="mt-2">
+                          <p className="text-xs mb-1" style={{ color: 'var(--text-muted)' }}>Offre expire dans :</p>
+                          <PromoCountdown />
+                        </div>
+                        {info.hasTrial && (
+                          <p className="text-xs mt-2 font-medium" style={{ color: '#55EFC4' }}>
+                            + 7 jours d&apos;essai gratuit
                           </p>
                         )}
-                      </div>
-                    )}
-                    {info.hasTrial && (
-                      <p className="text-xs mt-2 font-medium" style={{ color: '#55EFC4' }}>
-                        7 jours gratuits
-                      </p>
+                      </>
+                    ) : (
+                      <>
+                        <div className="flex items-baseline gap-1">
+                          <span className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>
+                            {formatPrice(monthlyPrice)}
+                          </span>
+                          <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
+                        </div>
+                        {durationMonths > 1 && (
+                          <div className="mt-1 space-y-0.5">
+                            <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+                              soit {formatPrice(totalPrice)} pour {durationMonths} mois
+                            </p>
+                            {originalPrice && (
+                              <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                                <span style={{ textDecoration: 'line-through' }}>{formatPrice(originalPrice)}</span>
+                                <span className="ml-1.5 font-semibold" style={{ color: '#55EFC4' }}>
+                                  -{savings}%
+                                </span>
+                              </p>
+                            )}
+                          </div>
+                        )}
+                        {info.hasTrial && (
+                          <p className="text-xs mt-2 font-medium" style={{ color: '#55EFC4' }}>
+                            7 jours gratuits
+                          </p>
+                        )}
+                      </>
                     )}
                   </div>
 

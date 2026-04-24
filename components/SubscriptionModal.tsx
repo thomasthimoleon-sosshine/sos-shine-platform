@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { PromoCountdown, PROMO } from '@/components/PromoCountdown'
 import { loadStripe } from '@stripe/stripe-js'
 import {
   EmbeddedCheckoutProvider,
@@ -301,24 +302,46 @@ export default function SubscriptionModal({
 
                           {/* Price */}
                           <div className="mb-4">
-                            <div className="flex items-baseline gap-1">
-                              <span className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
-                                {formatPrice(monthlyPrice)}
-                              </span>
-                              <span className="text-xs" style={{ color: 'var(--text-muted)' }}>/mois</span>
-                            </div>
-                            {durationMonths > 1 && (
-                              <p className="text-[11px] mt-0.5" style={{ color: 'var(--text-secondary)' }}>
-                                {formatPrice(totalPrice)} pour {durationMonths} mois
-                                {originalPrice && (
-                                  <span className="ml-1 font-semibold" style={{ color: '#55EFC4' }}>-{savings}%</span>
+                            {planId === 'serenite' && effectiveDuration === 'monthly' ? (
+                              <>
+                                <div className="flex items-baseline gap-2">
+                                  <span className="text-base line-through" style={{ color: 'var(--text-muted)' }}>
+                                    {PROMO.originalPrice}{PROMO.currency}
+                                  </span>
+                                  <span className="text-2xl font-bold" style={{ color: '#55EFC4' }}>
+                                    {PROMO.promoPrice}{PROMO.currency}
+                                  </span>
+                                  <span className="text-xs" style={{ color: 'var(--text-muted)' }}>/mois</span>
+                                </div>
+                                <p className="text-[11px] mt-1 font-medium" style={{ color: '#55EFC4' }}>
+                                  code {PROMO.code} · + 7 jours gratuits
+                                </p>
+                                <div className="mt-1.5">
+                                  <PromoCountdown className="text-xs" />
+                                </div>
+                              </>
+                            ) : (
+                              <>
+                                <div className="flex items-baseline gap-1">
+                                  <span className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
+                                    {formatPrice(monthlyPrice)}
+                                  </span>
+                                  <span className="text-xs" style={{ color: 'var(--text-muted)' }}>/mois</span>
+                                </div>
+                                {durationMonths > 1 && (
+                                  <p className="text-[11px] mt-0.5" style={{ color: 'var(--text-secondary)' }}>
+                                    {formatPrice(totalPrice)} pour {durationMonths} mois
+                                    {originalPrice && (
+                                      <span className="ml-1 font-semibold" style={{ color: '#55EFC4' }}>-{savings}%</span>
+                                    )}
+                                  </p>
                                 )}
-                              </p>
-                            )}
-                            {info.hasTrial && (
-                              <p className="text-[11px] mt-1 font-medium" style={{ color: '#55EFC4' }}>
-                                7 jours gratuits
-                              </p>
+                                {info.hasTrial && (
+                                  <p className="text-[11px] mt-1 font-medium" style={{ color: '#55EFC4' }}>
+                                    7 jours gratuits
+                                  </p>
+                                )}
+                              </>
                             )}
                           </div>
 

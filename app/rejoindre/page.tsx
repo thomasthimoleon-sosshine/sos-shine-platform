@@ -10,6 +10,7 @@ import { useTranslation } from '@/lib/i18n/useTranslation'
 import { createClient } from '@/lib/supabase/client'
 import { PRICES, TOTAL_PRICES, ORIGINAL_PRICES, DURATIONS, PLAN_INFO, formatPrice } from '@/lib/stripe'
 import type { PlanId, DurationId } from '@/lib/stripe'
+import { PromoCountdown, PROMO } from '@/components/PromoCountdown'
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '')
 
@@ -166,12 +167,14 @@ function PrelaunchContent() {
             <div className="text-center">
               <p className="text-xs tracking-[0.25em] uppercase mb-3" style={{ color: '#55EFC4' }}>S&eacute;r&eacute;nit&eacute;</p>
               <div className="flex items-baseline justify-center gap-1.5 mb-1">
-                <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#55EFC4' }}>49,90&euro;</span>
+                <span className="font-display text-xl line-through" style={{ color: 'var(--text-muted)' }}>{PROMO.originalPrice}&euro;</span>
+                <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#55EFC4' }}>{PROMO.promoPrice}&euro;</span>
                 <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
               </div>
-              <p className="text-[10px] mt-1" style={{ color: '#55EFC4' }}>
-                7 jours d&apos;essai gratuit &mdash; CB requise
+              <p className="text-[10px] mt-1 font-medium" style={{ color: '#55EFC4' }}>
+                code {PROMO.code} &middot; 7 jours d&apos;essai gratuit
               </p>
+              <div className="mt-2 flex justify-center"><PromoCountdown className="text-xs" /></div>
             </div>
             {/* Premium */}
             <div className="text-center">
@@ -645,14 +648,18 @@ function PaymentContent() {
             ) : (
               <>
                 <div className="flex items-baseline justify-center gap-1.5 mb-1">
+                  <span className="font-display text-xl line-through" style={{ color: 'var(--text-muted)' }}>
+                    {PROMO.originalPrice}{PROMO.currency}
+                  </span>
                   <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#55EFC4' }}>
-                    {formatPrice(PRICES.serenite.monthly)}
+                    {PROMO.promoPrice}{PROMO.currency}
                   </span>
                   <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
                 </div>
                 <p className="text-xs mb-1 font-medium" style={{ color: '#55EFC4' }}>
-                  7 jours d&apos;essai gratuit &mdash; CB requise
+                  code {PROMO.code} &middot; 7 jours d&apos;essai gratuit &mdash; CB requise
                 </p>
+                <div className="mb-2 flex justify-center"><PromoCountdown className="text-xs" /></div>
               </>
             )}
             <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>

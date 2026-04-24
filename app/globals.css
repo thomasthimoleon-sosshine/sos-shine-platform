@@ -7,38 +7,87 @@
 
 /* ── 1. Design Tokens ── */
 :root {
-  /* Accents — Gold (identité de marque) */
-  --gold: #D4AF37;
+  /* ── Brand ── */
+  --brand: #C9A961;
+  --brand-light: #E8CC6E;
+  --brand-deep: #B8960F;
+  --brand-alpha-weak: rgba(201, 169, 97, 0.08);
+  --brand-alpha-medium: rgba(201, 169, 97, 0.16);
+  --brand-alpha-strong: rgba(201, 169, 97, 0.32);
+
+  /* ── Legacy alias (existing code references --gold) ── */
+  --gold: #C9A961;
   --gold-light: #E8CC6E;
   --gold-deep: #B8960F;
 
-  /* Dégradé or premium (titres) */
-  --gold-gradient: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+  /* ── Status ── */
+  --success: #55EFC4;
+  --success-alpha-weak: rgba(85, 239, 196, 0.08);
+  --success-alpha-medium: rgba(85, 239, 196, 0.16);
+  --success-alpha-strong: rgba(85, 239, 196, 0.32);
 
-  /* Fond abyssal */
+  --danger: #E85D5D;
+  --danger-alpha-weak: rgba(232, 93, 93, 0.08);
+  --danger-alpha-medium: rgba(232, 93, 93, 0.16);
+  --danger-alpha-strong: rgba(232, 93, 93, 0.32);
+
+  --warning: #E17055;
+
+  /* ── Accents ── */
+  --accent-blue: #74C0FC;
+  --accent-blue-alpha-weak: rgba(116, 192, 252, 0.08);
+  --accent-blue-alpha-medium: rgba(116, 192, 252, 0.16);
+  --accent-blue-alpha-strong: rgba(116, 192, 252, 0.32);
+
+  --accent-purple: #A29BFE;
+
+  /* ── Steps (encyclopedia) ── */
+  --step-1: #6BD9B4;
+  --step-2: #7BA7CC;
+  --step-3: #D4945A;
+
+  /* ── Surfaces ── */
+  --surface: #050505;
+  --surface-card: rgba(255, 255, 255, 0.05);
+  --surface-elevated: rgba(255, 255, 255, 0.06);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(255, 255, 255, 0.12);
+
+  /* Legacy aliases */
   --dark: #050505;
-  --dark-card: rgba(255, 255, 255, 0.03);
+  --dark-card: rgba(255, 255, 255, 0.05);
   --dark-card-hover: rgba(255, 255, 255, 0.055);
-  --dark-border: rgba(255, 255, 255, 0.06);
+  --dark-border: rgba(255, 255, 255, 0.08);
   --dark-border-hover: rgba(255, 255, 255, 0.1);
 
-  /* Surface élevée (modals, dropdowns) */
-  --surface-elevated: rgba(255, 255, 255, 0.06);
-
-  /* Textes */
+  /* ── Text ── */
   --text-primary: #e0e0e0;
   --text-secondary: #a1a1aa;
   --text-muted: #52525b;
-  --text-bold: #c5a059;
+  --text-bold: #ffffff;
 
-  /* Utilitaires */
-  --button-bg: #D4AF37;
-  --radius-lg: 1rem;
-  --radius-xl: 1.25rem;
+  /* ── Shadows ── */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.35);
+  --shadow-brand: 0 4px 20px rgba(201, 169, 97, 0.3);
+  --glow-gold: 0 0 32px rgba(201, 169, 97, 0.12);
+  --glow-gold-hover: 0 0 60px rgba(201, 169, 97, 0.2);
 
-  /* Glow tokens */
-  --glow-gold: 0 0 40px rgba(212, 175, 55, 0.12), 0 0 80px rgba(212, 175, 55, 0.04);
-  --glow-gold-hover: 0 0 60px rgba(212, 175, 55, 0.2), 0 0 120px rgba(212, 175, 55, 0.06);
+  /* ── Radii ── */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  /* ── Transitions ── */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+
+  /* Legacy */
+  --button-bg: #C9A961;
+  --gold-gradient: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
 }
 
 /* ── Light Theme ── */

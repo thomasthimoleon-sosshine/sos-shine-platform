@@ -1,62 +1,55 @@
 /**
  * SOS Shine — Design Tokens
  * Single source of truth for all visual constants.
- * Import this file instead of using hardcoded values.
+ *
+ * IMPORTANT: These values MUST match the CSS variables in /app/globals.css.
+ * Components use var(--xxx) via Tailwind arbitrary values, not these JS values directly.
+ * This file exists for documentation, type-safety, and non-CSS contexts (charts, canvas, etc.)
  */
 
 // ── Colors ──
 
 export const colors = {
-  // Brand
-  brand:       '#D4AF37',
-  brandAlt:    '#C9A961', // or patiné (alternative — choose one)
+  brand:       '#C9A961',
   brandLight:  '#E8CC6E',
   brandDeep:   '#B8960F',
 
-  // Status
   success:     '#55EFC4',
   danger:      '#E85D5D',
   warning:     '#E17055',
 
-  // Accents
   accentBlue:   '#74C0FC',
   accentPurple: '#A29BFE',
 
-  // Surfaces
   surface:     '#050505',
   surfaceCard: 'rgba(255, 255, 255, 0.05)',
   border:      'rgba(255, 255, 255, 0.08)',
 
-  // Text
   textPrimary:   '#e0e0e0',
   textSecondary: '#a1a1aa',
   textMuted:     '#52525b',
   textBold:      '#ffffff',
 
-  // Steps (encyclopedia)
-  step1: '#6BD9B4', // Comprendre — vert-menthe
-  step2: '#7BA7CC', // Libérer — bleu-ardoise
-  step3: '#D4945A', // Agir — ambre-chaud
+  step1: '#6BD9B4',
+  step2: '#7BA7CC',
+  step3: '#D4945A',
 } as const
 
-// ── Alpha variants (3 levels: weak 8%, medium 16%, strong 32%) ──
+// ── Alpha variants (CSS var references) ──
 
-export const alpha = {
-  brandWeak:       'rgba(212, 175, 55, 0.08)',
-  brandMedium:     'rgba(212, 175, 55, 0.16)',
-  brandStrong:     'rgba(212, 175, 55, 0.32)',
-
-  successWeak:     'rgba(85, 239, 196, 0.08)',
-  successMedium:   'rgba(85, 239, 196, 0.16)',
-  successStrong:   'rgba(85, 239, 196, 0.32)',
-
-  dangerWeak:      'rgba(232, 93, 93, 0.08)',
-  dangerMedium:    'rgba(232, 93, 93, 0.16)',
-  dangerStrong:    'rgba(232, 93, 93, 0.32)',
-
-  accentBlueWeak:   'rgba(116, 192, 252, 0.08)',
-  accentBlueMedium: 'rgba(116, 192, 252, 0.16)',
-  accentBlueStrong: 'rgba(116, 192, 252, 0.32)',
+export const alphaVars = {
+  brandWeak:         'var(--brand-alpha-weak)',
+  brandMedium:       'var(--brand-alpha-medium)',
+  brandStrong:       'var(--brand-alpha-strong)',
+  successWeak:       'var(--success-alpha-weak)',
+  successMedium:     'var(--success-alpha-medium)',
+  successStrong:     'var(--success-alpha-strong)',
+  dangerWeak:        'var(--danger-alpha-weak)',
+  dangerMedium:      'var(--danger-alpha-medium)',
+  dangerStrong:      'var(--danger-alpha-strong)',
+  accentBlueWeak:    'var(--accent-blue-alpha-weak)',
+  accentBlueMedium:  'var(--accent-blue-alpha-medium)',
+  accentBlueStrong:  'var(--accent-blue-alpha-strong)',
 } as const
 
 // ── Typography ──
@@ -66,16 +59,15 @@ export const fontFamily = {
   body:    "'DM Sans', sans-serif",
 } as const
 
-// Type scale: base 14px, ratio 1.25 (major third)
 export const fontSize = {
-  xs:   '0.6875rem',  // 11px
-  sm:   '0.875rem',   // 14px (base)
-  base: '1.0625rem',  // 17px
-  lg:   '1.375rem',   // 22px
-  xl:   '1.6875rem',  // 27px
-  '2xl': '2.125rem',  // 34px
-  '3xl': '2.6875rem', // 43px
-  '4xl': '3.3125rem', // 53px
+  xs:   '0.6875rem',   // 11px
+  sm:   '0.875rem',    // 14px (base)
+  base: '1.0625rem',   // 17px
+  lg:   '1.375rem',    // 22px
+  xl:   '1.6875rem',   // 27px
+  '2xl': '2.125rem',   // 34px
+  '3xl': '2.6875rem',  // 43px
+  '4xl': '3.3125rem',  // 53px
 } as const
 
 export const fontWeight = {
@@ -120,18 +112,19 @@ export const radii = {
 // ── Shadows ──
 
 export const shadows = {
-  sm:       '0 2px 8px rgba(0, 0, 0, 0.15)',
-  md:       '0 8px 24px rgba(0, 0, 0, 0.25)',
-  lg:       '0 20px 48px rgba(0, 0, 0, 0.35)',
-  goldGlow: '0 0 32px rgba(212, 175, 55, 0.12)',
+  sm:       'var(--shadow-sm)',
+  md:       'var(--shadow-md)',
+  lg:       'var(--shadow-lg)',
+  brand:    'var(--shadow-brand)',
+  goldGlow: 'var(--glow-gold)',
 } as const
 
 // ── Transitions ──
 
 export const transitions = {
-  fast: '150ms ease',
-  base: '250ms ease',
-  slow: '400ms ease',
+  fast: 'var(--transition-fast)',
+  base: 'var(--transition-base)',
+  slow: 'var(--transition-slow)',
 } as const
 
 // ── Z-Index ──

@@ -1,42 +1,41 @@
 import React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 
-const card = cva('rounded-xl transition-all', {
+const card = cva('rounded-xl transition-all duration-[var(--transition-base)]', {
   variants: {
     variant: {
-      elevated: '',
-      flat: '',
+      elevated: [
+        'bg-[var(--surface-card)]',
+        'border border-[var(--border)]',
+        'shadow-[var(--shadow-sm)]',
+      ].join(' '),
+      flat: [
+        'bg-[rgba(255,255,255,0.03)]',
+        'border border-[rgba(255,255,255,0.06)]',
+      ].join(' '),
+    },
+    padding: {
+      sm: '',
+      md: '',
+      lg: '',
     },
   },
   defaultVariants: {
     variant: 'elevated',
+    padding: 'md',
   },
 })
-
-const variantStyles: Record<string, React.CSSProperties> = {
-  elevated: {
-    background: 'rgba(255, 255, 255, 0.05)',
-    border: '1px solid rgba(255, 255, 255, 0.08)',
-    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
-  },
-  flat: {
-    background: 'rgba(255, 255, 255, 0.03)',
-    border: '1px solid rgba(255, 255, 255, 0.06)',
-  },
-}
 
 export interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof card> {}
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, variant, style, children, ...props }, ref) => {
-    const v = variant || 'elevated'
+  ({ className, variant, padding, children, ...props }, ref) => {
     return (
       <div
         ref={ref}
-        className={card({ variant, className })}
-        style={{ ...variantStyles[v], ...style }}
+        className={card({ variant, padding, className })}
         {...props}
       >
         {children}
@@ -46,18 +45,33 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 )
 Card.displayName = 'Card'
 
-const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
-    <div ref={ref} className={`px-5 py-4 ${className || ''}`} style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }} {...props} />
-  )
-)
+const paddingMap = { sm: 'px-4 py-3', md: 'px-6 py-4', lg: 'px-8 py-6' } as const
+
+const CardHeader = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & { size?: 'sm' | 'md' | 'lg' }
+>(({ className, size = 'md', ...props }, ref) => (
+  <div
+    ref={ref}
+    className={`${paddingMap[size]} border-b border-[var(--border)] ${className || ''}`}
+    {...props}
+  />
+))
 CardHeader.displayName = 'CardHeader'
 
-const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
-    <div ref={ref} className={`p-5 ${className || ''}`} {...props} />
+const CardContent = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & { size?: 'sm' | 'md' | 'lg' }
+>(({ className, size = 'md', ...props }, ref) => {
+  const contentPadding = { sm: 'p-4', md: 'p-6', lg: 'p-8' } as const
+  return (
+    <div
+      ref={ref}
+      className={`${contentPadding[size]} ${className || ''}`}
+      {...props}
+    />
   )
-)
+})
 CardContent.displayName = 'CardContent'
 
 export { Card, CardHeader, CardContent }

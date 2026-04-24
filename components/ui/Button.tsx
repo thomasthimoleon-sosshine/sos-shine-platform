@@ -1,22 +1,53 @@
+'use client'
+
 import React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
+import { Loader2 } from 'lucide-react'
 
 const button = cva(
-  'inline-flex items-center justify-center gap-2 font-medium transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--dark)]',
+  [
+    'inline-flex items-center justify-center gap-2',
+    'font-medium font-[family-name:var(--font-body)]',
+    'transition-all duration-[var(--transition-base)]',
+    'cursor-pointer',
+    'disabled:opacity-50 disabled:cursor-not-allowed',
+    'focus-visible:outline-none focus-visible:ring-2',
+    'focus-visible:ring-[var(--brand)] focus-visible:ring-offset-2',
+    'focus-visible:ring-offset-[var(--surface)]',
+  ].join(' '),
   {
     variants: {
       variant: {
-        primary:
-          'text-[#050505] rounded-full',
-        secondary:
+        primary: [
+          'bg-gradient-to-br from-[var(--brand)] to-[var(--brand-deep)]',
+          'text-[var(--surface)]',
+          'shadow-[var(--shadow-brand)]',
           'rounded-full',
-        ghost:
-          'rounded-lg bg-transparent hover:bg-[rgba(255,255,255,0.05)]',
-        destructive:
+          'hover:brightness-110 active:scale-[0.98]',
+        ].join(' '),
+        secondary: [
+          'bg-[var(--brand-alpha-weak)]',
+          'border border-[var(--brand-alpha-medium)]',
+          'text-[var(--brand)]',
           'rounded-full',
+          'hover:bg-[var(--brand-alpha-medium)] active:scale-[0.98]',
+        ].join(' '),
+        ghost: [
+          'text-[var(--text-secondary)]',
+          'hover:bg-white/5',
+          'rounded-lg',
+          'active:scale-[0.98]',
+        ].join(' '),
+        destructive: [
+          'bg-[var(--danger-alpha-weak)]',
+          'border border-[var(--danger-alpha-medium)]',
+          'text-[var(--danger)]',
+          'rounded-full',
+          'hover:bg-[var(--danger-alpha-medium)] active:scale-[0.98]',
+        ].join(' '),
       },
       size: {
-        sm: 'px-4 py-2 text-xs',
+        sm: 'px-4 py-2 text-sm',
         md: 'px-6 py-3 text-sm',
         lg: 'px-8 py-4 text-base',
       },
@@ -28,42 +59,30 @@ const button = cva(
   }
 )
 
-const variantStyles: Record<string, React.CSSProperties> = {
-  primary: {
-    background: 'linear-gradient(135deg, var(--gold), var(--gold-deep, #B8960F))',
-    boxShadow: '0 4px 20px rgba(212, 175, 55, 0.3)',
-  },
-  secondary: {
-    background: 'rgba(212, 175, 55, 0.08)',
-    border: '1px solid rgba(212, 175, 55, 0.2)',
-    color: 'var(--gold)',
-  },
-  ghost: {
-    color: 'var(--text-secondary)',
-  },
-  destructive: {
-    background: 'rgba(232, 93, 93, 0.08)',
-    border: '1px solid rgba(232, 93, 93, 0.2)',
-    color: '#E85D5D',
-  },
-}
-
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof button> {
-  asChild?: boolean
+  loading?: boolean
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, style, ...props }, ref) => {
-    const v = variant || 'primary'
+  ({ className, variant, size, loading, disabled, children, ...props }, ref) => {
     return (
       <button
         ref={ref}
         className={button({ variant, size, className })}
-        style={{ ...variantStyles[v], ...style }}
+        disabled={disabled || loading}
         {...props}
-      />
+      >
+        {loading ? (
+          <>
+            <Loader2 className="w-4 h-4 animate-spin" />
+            <span className="sr-only">Chargement</span>
+          </>
+        ) : (
+          children
+        )}
+      </button>
     )
   }
 )

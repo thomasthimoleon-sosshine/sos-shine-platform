@@ -44,8 +44,6 @@ const PLAN_FEATURES: Record<PlanId, string[]> = {
     'Soin collectif mensuel avec Julia',
     '7 jours d\'essai gratuit',
   ],
-    '7 jours d\'essai gratuit',
-  ],
   premium: [],
 }
 

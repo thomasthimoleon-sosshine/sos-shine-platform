@@ -21,7 +21,7 @@ export default function CrisisButton() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.8 }}
-        className="fixed bottom-4 left-4 z-40 rounded-full shadow-lg flex items-center gap-2 px-4 py-3 cursor-pointer"
+        className="fixed bottom-4 left-4 lg:left-[18rem] z-[60] rounded-full shadow-lg flex items-center gap-2 px-4 py-3 cursor-pointer"
         style={{
           background: 'linear-gradient(135deg, #FF6B6B, #E17055)',
           color: '#fff',

@@ -14,15 +14,9 @@ const card = cva('rounded-xl transition-all duration-[var(--transition-base)]', 
         'border border-[rgba(255,255,255,0.06)]',
       ].join(' '),
     },
-    padding: {
-      sm: '',
-      md: '',
-      lg: '',
-    },
   },
   defaultVariants: {
     variant: 'elevated',
-    padding: 'md',
   },
 })
 
@@ -31,11 +25,11 @@ export interface CardProps
     VariantProps<typeof card> {}
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, variant, padding, children, ...props }, ref) => {
+  ({ className, variant, children, ...props }, ref) => {
     return (
       <div
         ref={ref}
-        className={card({ variant, padding, className })}
+        className={card({ variant, className })}
         {...props}
       >
         {children}

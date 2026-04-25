@@ -268,22 +268,16 @@ export default function SignatureEmotionnellePage() {
   }, [question?.id])
 
   const handleNext = useCallback(async () => {
-    const rid = await saveResponse(sessionId, responseId, {
-      responses,
-      currentQuestion: question.id,
-    })
-    if (rid) setResponseId(rid)
-
-    trackEvent(sessionId, rid, 'quiz_question_answered', {
-      questionId: question.id,
-      questionType: question.type,
-    })
-
+    // Check email capture FIRST (before any async)
     if (currentQ === 9) {
+      // Save before showing email
+      await saveResponse(sessionId, responseId, { responses, currentQuestion: question.id })
+      trackEvent(sessionId, responseId, 'quiz_question_answered', { questionId: question.id })
       setPhase('email')
       return
     }
 
+    // Check completion
     if (currentQ === 14) {
       const result = processQuizResults(responses)
       setScores(result.scores)
@@ -291,7 +285,7 @@ export default function SignatureEmotionnellePage() {
       setSecondary(result.secondary)
       setQ15Response(responses[15]?.freeText || '')
 
-      await saveResponse(sessionId, rid, {
+      const rid = await saveResponse(sessionId, responseId, {
         responses,
         scores: result.scores,
         dominantDimension: result.dominant,
@@ -325,6 +319,12 @@ export default function SignatureEmotionnellePage() {
       window.scrollTo({ top: 0, behavior: 'smooth' })
       return
     }
+
+    // Normal next question — save in background
+    saveResponse(sessionId, responseId, { responses, currentQuestion: question.id }).then(rid => {
+      if (rid) setResponseId(rid)
+    })
+    trackEvent(sessionId, responseId, 'quiz_question_answered', { questionId: question.id, questionType: question.type })
 
     setCurrentQ(prev => prev + 1)
   }, [currentQ, question, responses, sessionId, responseId, email, firstName])

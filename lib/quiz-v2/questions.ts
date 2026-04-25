@@ -91,7 +91,7 @@ export const QUESTIONS: Question[] = [
       left: 'Jamais. "Ça va" est ma réponse par défaut.',
       right: 'Toujours. Je dis ce que je ressens vraiment.',
     },
-    sliderScoring: (value: number) => {
+    sliderScoring: (value: number): Record<string, number> => {
       if (value <= 3) return { '4': 3, '9': 2 }
       if (value <= 6) return { '6': 2, '9': 1 }
       return {}
@@ -190,7 +190,7 @@ export const QUESTIONS: Question[] = [
       left: '😔 Je ne crois plus que ce soit possible',
       right: '✨ Je sais qu\'elle existe et je veux la retrouver',
     },
-    sliderScoring: () => ({}), // No dimension scoring — stored for Acte 5
+    sliderScoring: (): Record<string, number> => ({}), // No dimension scoring — stored for Acte 5
     hasOther: true,
   },
 

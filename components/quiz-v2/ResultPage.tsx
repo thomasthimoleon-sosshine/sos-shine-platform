@@ -15,6 +15,7 @@ type Protocol = {
   status: string
   release_date: string | null
   dimension_weights: Record<string, number>
+  duration_days: number
 }
 
 type Props = {

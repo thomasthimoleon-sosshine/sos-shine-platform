@@ -174,7 +174,7 @@ function QuestionScreen({
           otherText={response.freeText || ''}
           onToggle={(idx) => {
             const current = response.choiceIndexes || []
-            const next = current.includes(idx) ? current.filter(i => i !== idx) : [...current, idx]
+            const next = current.includes(idx) ? current.filter((i: number) => i !== idx) : [...current, idx]
             onUpdate({ ...response, choiceIndexes: next })
           }}
           onOtherChange={(text) => onUpdate({ ...response, freeText: text })}
@@ -263,7 +263,7 @@ export default function SignatureEmotionnellePage() {
   }, [sessionId])
 
   const handleUpdateResponse = useCallback((r: QuizResponse) => {
-    setResponses(prev => ({ ...prev, [question.id]: r }))
+    setResponses((prev: AllResponses) => ({ ...prev, [question.id]: r }))
   }, [question?.id])
 
   const handleNext = useCallback(async () => {

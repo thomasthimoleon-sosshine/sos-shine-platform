@@ -212,24 +212,31 @@ function QuestionScreen({
         />
       )}
 
-      <div className="flex justify-between items-center mt-10">
-        {canGoBack ? (
-          <button onClick={onPrev} className="text-sm cursor-pointer" style={{ color: 'var(--text-muted)' }}>
-            ← Précédente
-          </button>
-        ) : <span />}
+      {/* Spacer for sticky nav */}
+      <div className="h-24" />
 
-        <button
-          onClick={onNext}
-          disabled={!hasAnswer}
-          className="px-8 py-3 rounded-full text-sm font-semibold transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
-          style={{
-            background: hasAnswer ? 'linear-gradient(135deg, var(--gold), var(--gold-deep, #B8960F))' : 'rgba(255,255,255,0.06)',
-            color: hasAnswer ? '#050505' : 'var(--text-muted)',
-          }}
-        >
-          {isLast ? 'Voir mon résultat' : 'Suivant →'}
-        </button>
+      {/* Sticky bottom navigation — above mobile browser bars */}
+      <div className="fixed bottom-0 left-0 right-0 z-20 px-6 pb-[env(safe-area-inset-bottom,16px)] pt-4"
+        style={{ background: 'linear-gradient(to top, var(--dark, #050505) 60%, transparent)' }}>
+        <div className="max-w-lg mx-auto flex justify-between items-center">
+          {canGoBack ? (
+            <button onClick={onPrev} className="text-sm cursor-pointer" style={{ color: 'var(--text-muted)' }}>
+              ← Précédente
+            </button>
+          ) : <span />}
+
+          <button
+            onClick={onNext}
+            disabled={!hasAnswer}
+            className="px-8 py-3 rounded-full text-sm font-semibold transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+            style={{
+              background: hasAnswer ? 'linear-gradient(135deg, var(--gold), var(--gold-deep, #B8960F))' : 'rgba(255,255,255,0.06)',
+              color: hasAnswer ? '#050505' : 'var(--text-muted)',
+            }}
+          >
+            {isLast ? 'Voir mon résultat' : 'Suivant →'}
+          </button>
+        </div>
       </div>
     </motion.div>
   )

@@ -363,7 +363,7 @@ export default function SignatureEmotionnellePage() {
   }, [phase, sessionId, responseId, dominant])
 
   return (
-    <main className="min-h-screen" style={{ background: 'var(--dark, #050505)' }}>
+    <main className="min-h-screen relative z-10" style={{ background: 'var(--dark, #050505)' }}>
       <AnimatePresence mode="wait">
         {phase === 'intro' && (
           <IntroScreen key="intro" onStart={handleStart} />

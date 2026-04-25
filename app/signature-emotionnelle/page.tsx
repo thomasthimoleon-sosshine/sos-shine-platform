@@ -124,7 +124,7 @@ function QuestionScreen({
   const hasAnswer = (() => {
     if (question.type === 'single') return (response.choiceIndexes?.length || 0) > 0 || (response.freeText?.trim().length || 0) > 0
     if (question.type === 'multi') return (response.choiceIndexes?.length || 0) > 0 || (response.freeText?.trim().length || 0) > 0
-    if (question.type === 'slider') return response.sliderValue !== undefined
+    if (question.type === 'slider') return true // slider always has a value (default 5)
     if (question.type === 'freetext' || question.type === 'freetext_suggestions') return (response.freeText?.trim().length || 0) > 0
     return false
   })()
@@ -187,6 +187,7 @@ function QuestionScreen({
         <SliderInput
           value={response.sliderValue ?? 5}
           onChange={(v) => onUpdate({ ...response, sliderValue: v })}
+          onMount={() => { if (response.sliderValue === undefined) onUpdate({ ...response, sliderValue: 5 }) }}
           labels={question.sliderLabels}
           hasOther={question.hasOther}
           otherText={response.freeText || ''}

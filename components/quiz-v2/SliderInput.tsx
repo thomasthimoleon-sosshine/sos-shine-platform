@@ -1,17 +1,20 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect } from 'react'
 
 type Props = {
   value: number
   onChange: (value: number) => void
+  onMount?: () => void
   labels: { left: string; right: string }
   hasOther?: boolean
   otherText: string
   onOtherChange: (text: string) => void
 }
 
-export function SliderInput({ value, onChange, labels, hasOther, otherText, onOtherChange }: Props) {
+export function SliderInput({ value, onChange, onMount, labels, hasOther, otherText, onOtherChange }: Props) {
+  useEffect(() => { onMount?.() }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <div className="space-y-6">
       <div className="px-2">

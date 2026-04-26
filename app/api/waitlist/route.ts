@@ -11,6 +11,10 @@ function getSupabase() {
 
 export async function POST(request: Request) {
   try {
+    const { rateLimit, getIp } = await import('@/lib/rate-limit')
+    const { allowed } = rateLimit(getIp(request), { maxRequests: 5, windowMs: 60_000 })
+    if (!allowed) return NextResponse.json({ error: 'Trop de requêtes' }, { status: 429 })
+
     const { email, name } = await request.json()
 
     if (!email || typeof email !== 'string' || !email.includes('@')) {

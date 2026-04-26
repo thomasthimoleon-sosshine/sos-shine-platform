@@ -19,6 +19,10 @@ function getSiteUrl(): string {
 
 export async function POST(request: NextRequest) {
   try {
+    const { rateLimit, getIp } = await import('@/lib/rate-limit')
+    const { allowed } = rateLimit(getIp(request), { maxRequests: 10, windowMs: 60_000 })
+    if (!allowed) return NextResponse.json({ error: 'Trop de requêtes' }, { status: 429 })
+
     const { email, firstName, profileKey, profileName } = await request.json()
     // Read A/B variant from cookie for lead attribution
     const abVariantRaw = request.cookies.get('ab_variant')?.value

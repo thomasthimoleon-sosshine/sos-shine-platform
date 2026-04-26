@@ -23,6 +23,12 @@ function getAdminClient() {
   return createClient(url, key, { auth: { autoRefreshToken: false, persistSession: false } })
 }
 
+// Emails that always receive every email (no dedup, for testing)
+const TEST_EMAILS = new Set([
+  'julialaureau@sosshine.com',
+  'ttse335@gmail.com',
+])
+
 // Email schedule: day offset from email_captured_at → email number
 const SCHEDULE: { day: number; emailNum: number; generator: (vars: { firstName: string; email: string; topProtocol?: string }) => { subject: string; html: string } }[] = [
   { day: 1,  emailNum: 3,  generator: (v) => generateEmail03(v) },
@@ -55,16 +61,34 @@ export async function GET() {
     const fourteenDaysAgo = new Date()
     fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 15)
 
-    const { data: responses } = await supabase
+    const { data: allResponses } = await supabase
       .from('quiz_v2_responses')
       .select('id, email, first_name, email_captured_at, scores, dominant_dimension')
       .not('email', 'is', null)
       .not('email_captured_at', 'is', null)
       .gte('email_captured_at', fourteenDaysAgo.toISOString())
+      .order('email_captured_at', { ascending: false })
 
-    if (!responses || responses.length === 0) {
+    if (!allResponses || allResponses.length === 0) {
       return NextResponse.json({ sent: 0, message: 'No leads in sequence window' })
     }
+
+    // For test emails: use only the LATEST response (so sequence restarts)
+    // For regular emails: use only the FIRST response per email (no restart)
+    const seen = new Map<string, boolean>()
+    const responses = allResponses.filter(r => {
+      const emailLower = r.email.toLowerCase()
+      if (TEST_EMAILS.has(emailLower)) {
+        // Test emails: keep only the most recent (first in desc order)
+        if (seen.has(emailLower)) return false
+        seen.set(emailLower, true)
+        return true
+      }
+      // Regular: keep only one per email
+      if (seen.has(emailLower)) return false
+      seen.set(emailLower, true)
+      return true
+    })
 
     const now = new Date()
 
@@ -78,15 +102,17 @@ export async function GET() {
 
       const eventKey = `quiz_v2_email_${String(todayEmail.emailNum).padStart(2, '0')}_sent`
 
-      // Check if already sent
-      const { data: alreadySent } = await supabase
-        .from('crm_campaign_events')
-        .select('id')
-        .eq('contact_email', response.email)
-        .eq('event_type', eventKey)
-        .limit(1)
+      // Check if already sent (skip for test emails — they always receive)
+      if (!TEST_EMAILS.has(response.email.toLowerCase())) {
+        const { data: alreadySent } = await supabase
+          .from('crm_campaign_events')
+          .select('id')
+          .eq('contact_email', response.email)
+          .eq('event_type', eventKey)
+          .limit(1)
 
-      if (alreadySent && alreadySent.length > 0) continue
+        if (alreadySent && alreadySent.length > 0) continue
+      }
 
       // Get top protocol for Email 7
       let topProtocol = 'Confiance en soi'

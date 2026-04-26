@@ -13,8 +13,11 @@ const TEXT_MUTED = '#737373'
 const SERIF = "Georgia, 'Times New Roman', serif"
 const SANS = "'Helvetica Neue', Helvetica, Arial, sans-serif"
 
-export function wrapEmail(content: string, vars: { email?: string } = {}): string {
+export function wrapEmail(content: string, vars: { email?: string; trackingId?: string } = {}): string {
   const unsubUrl = `https://sosshine.com/api/unsubscribe?email=${encodeURIComponent(vars.email || '')}`
+  const trackingPixel = vars.trackingId
+    ? `<img src="https://sosshine.com/api/crm/track/open?cid=${vars.trackingId}&uid=${encodeURIComponent(vars.email || '')}" width="1" height="1" style="display:none" alt="" />`
+    : ''
 
   return `<!DOCTYPE html>
 <html lang="fr" xmlns:v="urn:schemas-microsoft-com:vml">
@@ -81,6 +84,7 @@ Tu reçois cet email parce que tu as fait le test Signature Émotionnelle.<br>
 </td></tr>
 </table>
 
+${trackingPixel}
 </body>
 </html>`
 }
@@ -95,10 +99,15 @@ export function goldDivider(): string {
 </table>`
 }
 
-export function ctaButton(text: string, url: string): string {
+export function trackUrl(url: string, email?: string, label?: string): string {
+  return `https://sosshine.com/api/crm/track/click?url=${encodeURIComponent(url)}&uid=${encodeURIComponent(email || '')}&label=${encodeURIComponent(label || '')}`
+}
+
+export function ctaButton(text: string, url: string, opts?: { email?: string }): string {
+  const trackedUrl = trackUrl(url, opts?.email, text)
   return `<table role="presentation" width="100%" cellspacing="0" cellpadding="0">
 <tr><td align="center" style="padding:28px 0;">
-<a href="${url}" style="display:inline-block;padding:16px 44px;background:linear-gradient(135deg,${BRAND},${BRAND_DEEP});color:${BG};font-size:14px;font-weight:700;text-decoration:none;border-radius:999px;font-family:${SANS};letter-spacing:0.5px;">
+<a href="${trackedUrl}" style="display:inline-block;padding:16px 44px;background:linear-gradient(135deg,${BRAND},${BRAND_DEEP});color:${BG};font-size:14px;font-weight:700;text-decoration:none;border-radius:999px;font-family:${SANS};letter-spacing:0.5px;">
 ${text}
 </a>
 </td></tr>

@@ -169,6 +169,15 @@ export default function CRMDashboardPage() {
               <div className="font-display text-lg" style={{ color: '#50C878' }}>Automatisations</div>
               <div className="text-xs text-[var(--text-muted)] mt-1">Diagnostic, test email & déclencheurs</div>
             </Link>
+            <Link
+              href="/admin/crm/email-log"
+              className="p-6 rounded-xl text-center transition-all hover:scale-[1.02]"
+              style={{ background: 'var(--dark-card)', border: '1px solid rgba(201,169,97,0.3)' }}
+            >
+              <div className="text-3xl mb-2">📋</div>
+              <div className="font-display text-lg" style={{ color: 'var(--gold)' }}>Journal des emails</div>
+              <div className="text-xs text-[var(--text-muted)] mt-1">Tous les envois, ouvertures et clics en temps réel</div>
+            </Link>
           </div>
 
           {campaigns.length > 0 && (

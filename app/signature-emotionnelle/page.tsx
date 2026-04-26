@@ -60,8 +60,8 @@ function IntroScreen({ onStart }: { onStart: (name: string) => void }) {
       <div className="max-w-md w-full text-center space-y-8">
         <Link href="/" className="inline-flex items-center gap-3 mb-8">
           <div className="w-10 h-10 rounded-xl flex items-center justify-center font-display text-lg font-semibold"
-            style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep, #B8960F))', color: '#050505' }}>S</div>
-          <span className="font-display text-lg font-medium" style={{ color: 'var(--gold)' }}>SOS Shine</span>
+            style={{ background: 'linear-gradient(135deg, var(--brand), var(--gold-deep, #B8960F))', color: '#050505' }}>S</div>
+          <span className="font-display text-lg font-medium" style={{ color: 'var(--brand)' }}>SOS Shine</span>
         </Link>
 
         <h1 className="font-display text-2xl sm:text-3xl font-semibold" style={{ color: 'var(--text-primary)' }}>
@@ -79,7 +79,7 @@ function IntroScreen({ onStart }: { onStart: (name: string) => void }) {
             onChange={(e) => setName(e.target.value)}
             placeholder="Ton prénom"
             autoFocus
-            className="w-full px-5 py-4 rounded-xl text-sm text-center outline-none transition-all focus:ring-2 focus:ring-[var(--gold)]"
+            className="w-full px-5 py-4 rounded-xl text-sm text-center outline-none transition-all focus:ring-2 focus:ring-[var(--brand)]"
             style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: 'var(--text-primary)' }}
             onKeyDown={(e) => e.key === 'Enter' && name.trim() && onStart(name.trim())}
           />
@@ -87,7 +87,7 @@ function IntroScreen({ onStart }: { onStart: (name: string) => void }) {
             onClick={() => name.trim() && onStart(name.trim())}
             disabled={!name.trim()}
             className="w-full py-4 rounded-full text-sm font-semibold transition-all cursor-pointer disabled:opacity-30"
-            style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep, #B8960F))', color: '#050505' }}
+            style={{ background: 'linear-gradient(135deg, var(--brand), var(--gold-deep, #B8960F))', color: '#050505' }}
           >
             COMMENCER · 6 MIN
           </button>
@@ -230,7 +230,7 @@ function QuestionScreen({
             disabled={!hasAnswer}
             className="px-8 py-3 rounded-full text-sm font-semibold transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
             style={{
-              background: hasAnswer ? 'linear-gradient(135deg, var(--gold), var(--gold-deep, #B8960F))' : 'rgba(255,255,255,0.06)',
+              background: hasAnswer ? 'linear-gradient(135deg, var(--brand), var(--gold-deep, #B8960F))' : 'rgba(255,255,255,0.06)',
               color: hasAnswer ? '#050505' : 'var(--text-muted)',
             }}
           >

@@ -39,7 +39,7 @@ export function EmailCapture({ onSubmit, loading }: Props) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="ton@email.com"
-          className="w-full px-5 py-4 rounded-xl text-sm text-center outline-none transition-all focus:ring-2 focus:ring-[var(--gold)]"
+          className="w-full px-5 py-4 rounded-xl text-sm text-center outline-none transition-all focus:ring-2 focus:ring-[var(--brand)]"
           style={{
             background: 'rgba(255,255,255,0.04)',
             border: '1px solid rgba(255,255,255,0.08)',
@@ -53,7 +53,7 @@ export function EmailCapture({ onSubmit, loading }: Props) {
           disabled={!isValid || loading}
           className="w-full py-4 rounded-full text-sm font-semibold transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
           style={{
-            background: isValid ? 'linear-gradient(135deg, var(--gold), var(--gold-deep, #B8960F))' : 'rgba(255,255,255,0.06)',
+            background: isValid ? 'linear-gradient(135deg, var(--brand), var(--gold-deep, #B8960F))' : 'rgba(255,255,255,0.06)',
             color: isValid ? '#050505' : 'var(--text-muted)',
           }}
         >

@@ -166,7 +166,7 @@ export default function TarifsPage() {
             href="/dashboard"
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-sm font-semibold tracking-wide transition-all duration-200 hover:scale-[1.03]"
             style={{
-              background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))',
+              background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
               color: '#050505',
               boxShadow: '0 4px 20px rgba(212,175,55,0.3)',
             }}
@@ -198,11 +198,11 @@ export default function TarifsPage() {
         </p>
         <div className="flex gap-3 justify-center">
           <Link href="/dashboard" className="px-6 py-2.5 rounded-full text-sm font-medium"
-            style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}>
+            style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}>
             Retour au dashboard
           </Link>
           <Link href="/dashboard/profil" className="px-6 py-2.5 rounded-full text-sm font-medium"
-            style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)', color: 'var(--gold)' }}>
+            style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)', color: 'var(--brand)' }}>
             Gérer mon abonnement
           </Link>
         </div>
@@ -228,8 +228,8 @@ export default function TarifsPage() {
         <div
           className="rounded-2xl p-8"
           style={{
-            background: 'var(--dark-card)',
-            border: '1px solid var(--dark-border)',
+            background: 'var(--surface-card)',
+            border: '1px solid var(--border)',
           }}
         >
           <h2 className="font-display text-xl font-semibold mb-2 text-center" style={{ color: 'var(--text-primary)' }}>
@@ -253,7 +253,7 @@ export default function TarifsPage() {
                 className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-colors"
                 style={{
                   background: 'var(--dark-bg)',
-                  border: '1px solid var(--dark-border)',
+                  border: '1px solid var(--border)',
                   color: 'var(--text-primary)',
                 }}
               />
@@ -272,7 +272,7 @@ export default function TarifsPage() {
                 className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-colors"
                 style={{
                   background: 'var(--dark-bg)',
-                  border: '1px solid var(--dark-border)',
+                  border: '1px solid var(--border)',
                   color: 'var(--text-primary)',
                 }}
               />
@@ -283,7 +283,7 @@ export default function TarifsPage() {
               disabled={!userPrenom.trim() || !userEmail.trim()}
               className="w-full py-3 rounded-full text-sm font-semibold tracking-wide transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] cursor-pointer mt-2"
               style={{
-                background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))',
+                background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
                 color: '#050505',
                 boxShadow: '0 4px 20px rgba(212,175,55,0.3)',
                 opacity: (!userPrenom.trim() || !userEmail.trim()) ? 0.5 : 1,
@@ -315,11 +315,11 @@ export default function TarifsPage() {
         <div
           className="rounded-2xl overflow-hidden"
           style={{
-            background: 'var(--dark-card)',
-            border: '1px solid var(--dark-border)',
+            background: 'var(--surface-card)',
+            border: '1px solid var(--border)',
           }}
         >
-          <div className="p-6 text-center" style={{ borderBottom: '1px solid var(--dark-border)' }}>
+          <div className="p-6 text-center" style={{ borderBottom: '1px solid var(--border)' }}>
             <h2 className="font-display text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
               {PLAN_INFO[checkoutPlan.plan].name} — {DURATIONS.find(d => d.id === checkoutPlan.duration)?.label}
             </h2>
@@ -378,7 +378,7 @@ export default function TarifsPage() {
       <div className="flex justify-center mb-10">
         <div
           className="inline-flex rounded-xl p-1 gap-1"
-          style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+          style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
         >
           {DURATIONS.map((d) => (
             <button
@@ -387,7 +387,7 @@ export default function TarifsPage() {
               className="relative px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all cursor-pointer"
               style={{
                 background: selectedDuration === d.id ? 'rgba(212,175,55,0.15)' : 'transparent',
-                color: selectedDuration === d.id ? 'var(--gold)' : 'var(--text-secondary)',
+                color: selectedDuration === d.id ? 'var(--brand)' : 'var(--text-secondary)',
                 border: selectedDuration === d.id ? '1px solid rgba(212,175,55,0.3)' : '1px solid transparent',
               }}
             >
@@ -413,7 +413,7 @@ export default function TarifsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
           className="relative rounded-2xl overflow-hidden flex flex-col"
-          style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+          style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
         >
           <div className="p-6 flex-1 flex flex-col">
             <div className="mb-4">
@@ -436,7 +436,7 @@ export default function TarifsPage() {
             </ul>
             <Link href="/signup"
               className="w-full py-3.5 rounded-full text-sm font-semibold text-center transition-all hover:opacity-90 block"
-              style={{ background: 'rgba(255,255,255,0.06)', color: 'var(--text-secondary)', border: '1px solid var(--dark-border)' }}>
+              style={{ background: 'rgba(255,255,255,0.06)', color: 'var(--text-secondary)', border: '1px solid var(--border)' }}>
               Créer mon compte gratuit
             </Link>
           </div>
@@ -462,8 +462,8 @@ export default function TarifsPage() {
                 transition={{ delay: idx * 0.1, duration: 0.4 }}
                 className="relative rounded-2xl overflow-hidden flex flex-col"
                 style={{
-                  background: 'var(--dark-card)',
-                  border: isHighlight ? `2px solid ${color}` : '1px solid var(--dark-border)',
+                  background: 'var(--surface-card)',
+                  border: isHighlight ? `2px solid ${color}` : '1px solid var(--border)',
                   boxShadow: isHighlight ? `0 0 30px rgba(${hexToRgb(color)}, 0.1)` : undefined,
                 }}
               >

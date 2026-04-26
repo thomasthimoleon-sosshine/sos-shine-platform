@@ -93,10 +93,10 @@ export default function AutomationsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <Link href="/admin/crm" className="text-sm text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors">
+          <Link href="/admin/crm" className="text-sm text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors">
             &larr; Retour au CRM
           </Link>
-          <h1 className="font-display text-3xl font-light mt-2" style={{ color: 'var(--gold)' }}>
+          <h1 className="font-display text-3xl font-light mt-2" style={{ color: 'var(--brand)' }}>
             Automatisations & Diagnostic
           </h1>
           <p className="text-[var(--text-muted)] mt-1">
@@ -131,8 +131,8 @@ export default function AutomationsPage() {
           {/* Quick Actions */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Test Email */}
-            <div className="p-6 rounded-xl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-              <h3 className="font-display text-lg mb-3" style={{ color: 'var(--gold)' }}>Tester l&apos;envoi</h3>
+            <div className="p-6 rounded-xl" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
+              <h3 className="font-display text-lg mb-3" style={{ color: 'var(--brand)' }}>Tester l&apos;envoi</h3>
               <p className="text-xs text-[var(--text-muted)] mb-4">Envoie un email de test pour vérifier que Resend fonctionne.</p>
               <div className="flex gap-2">
                 <input
@@ -141,13 +141,13 @@ export default function AutomationsPage() {
                   onChange={(e) => setTestEmail(e.target.value)}
                   placeholder="votre@email.com"
                   className="flex-1 px-3 py-2 rounded-lg text-sm"
-                  style={{ background: 'var(--dark)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                  style={{ background: 'var(--dark)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                 />
                 <button
                   onClick={() => testEmail && doAction('test_email', { email: testEmail })}
                   disabled={!testEmail || actionLoading === 'test_email'}
                   className="px-4 py-2 rounded-lg text-sm font-semibold transition-all disabled:opacity-50"
-                  style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}
+                  style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}
                 >
                   {actionLoading === 'test_email' ? '...' : 'Envoyer'}
                 </button>
@@ -155,8 +155,8 @@ export default function AutomationsPage() {
             </div>
 
             {/* Trigger Cron */}
-            <div className="p-6 rounded-xl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-              <h3 className="font-display text-lg mb-3" style={{ color: 'var(--gold)' }}>Déclencher le cron</h3>
+            <div className="p-6 rounded-xl" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
+              <h3 className="font-display text-lg mb-3" style={{ color: 'var(--brand)' }}>Déclencher le cron</h3>
               <p className="text-xs text-[var(--text-muted)] mb-4">
                 Exécute immédiatement le traitement des emails programmés et séquences.
                 {diagnostic.due_enrollments > 0 && (
@@ -167,15 +167,15 @@ export default function AutomationsPage() {
                 onClick={() => doAction('trigger_cron')}
                 disabled={actionLoading === 'trigger_cron'}
                 className="w-full px-4 py-2 rounded-lg text-sm font-semibold transition-all disabled:opacity-50"
-                style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}
+                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}
               >
                 {actionLoading === 'trigger_cron' ? 'Exécution...' : 'Exécuter maintenant'}
               </button>
             </div>
 
             {/* Retry Failed */}
-            <div className="p-6 rounded-xl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-              <h3 className="font-display text-lg mb-3" style={{ color: 'var(--gold)' }}>Relancer les échecs</h3>
+            <div className="p-6 rounded-xl" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
+              <h3 className="font-display text-lg mb-3" style={{ color: 'var(--brand)' }}>Relancer les échecs</h3>
               <p className="text-xs text-[var(--text-muted)] mb-4">
                 Remet les emails échoués en file d&apos;attente pour un nouvel essai.
                 {diagnostic.scheduled_emails.failed > 0 && (
@@ -194,8 +194,8 @@ export default function AutomationsPage() {
           </div>
 
           {/* Config Health */}
-          <div className="p-6 rounded-xl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-            <h3 className="font-display text-lg mb-4" style={{ color: 'var(--gold)' }}>Configuration</h3>
+          <div className="p-6 rounded-xl" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
+            <h3 className="font-display text-lg mb-4" style={{ color: 'var(--brand)' }}>Configuration</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {Object.entries(diagnostic.config).map(([key, val]) => (
                 <div key={key} className="flex items-center gap-2">
@@ -218,8 +218,8 @@ export default function AutomationsPage() {
 
           {/* Tables & Templates */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-6 rounded-xl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-              <h3 className="font-display text-lg mb-4" style={{ color: 'var(--gold)' }}>Tables Supabase</h3>
+            <div className="p-6 rounded-xl" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
+              <h3 className="font-display text-lg mb-4" style={{ color: 'var(--brand)' }}>Tables Supabase</h3>
               <div className="space-y-2">
                 {Object.entries(diagnostic.tables).map(([table, status]) => (
                   <div key={table} className="flex items-center justify-between text-sm">
@@ -237,8 +237,8 @@ export default function AutomationsPage() {
               )}
             </div>
 
-            <div className="p-6 rounded-xl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-              <h3 className="font-display text-lg mb-4" style={{ color: 'var(--gold)' }}>Emails programmés</h3>
+            <div className="p-6 rounded-xl" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
+              <h3 className="font-display text-lg mb-4" style={{ color: 'var(--brand)' }}>Emails programmés</h3>
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
                   <div className="text-2xl font-display" style={{ color: '#E8A87C' }}>{diagnostic.scheduled_emails.pending}</div>
@@ -253,15 +253,15 @@ export default function AutomationsPage() {
                   <div className="text-xs text-[var(--text-muted)]">Échoués</div>
                 </div>
               </div>
-              <div className="mt-4 pt-4 border-t" style={{ borderColor: 'var(--dark-border)' }}>
+              <div className="mt-4 pt-4 border-t" style={{ borderColor: 'var(--border)' }}>
                 <div className="text-sm text-[var(--text-muted)]">
-                  Templates : <span style={{ color: 'var(--gold)' }}>{diagnostic.templates.active}</span> actifs / {diagnostic.templates.total} total
+                  Templates : <span style={{ color: 'var(--brand)' }}>{diagnostic.templates.active}</span> actifs / {diagnostic.templates.total} total
                 </div>
                 {diagnostic.templates.total === 0 && (
                   <Link
                     href="/api/crm/email-templates/seed"
                     className="mt-2 inline-block text-xs underline"
-                    style={{ color: 'var(--gold)' }}
+                    style={{ color: 'var(--brand)' }}
                   >
                     Initialiser les 23 templates &rarr;
                   </Link>
@@ -271,28 +271,28 @@ export default function AutomationsPage() {
           </div>
 
           {/* Sequences */}
-          <div className="p-6 rounded-xl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+          <div className="p-6 rounded-xl" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-display text-lg" style={{ color: 'var(--gold)' }}>Séquences automatiques</h3>
-              <Link href="/admin/crm/sequences" className="text-xs underline" style={{ color: 'var(--gold)' }}>
+              <h3 className="font-display text-lg" style={{ color: 'var(--brand)' }}>Séquences automatiques</h3>
+              <Link href="/admin/crm/sequences" className="text-xs underline" style={{ color: 'var(--brand)' }}>
                 Gérer &rarr;
               </Link>
             </div>
             {diagnostic.sequences.length === 0 ? (
               <p className="text-sm text-[var(--text-muted)]">
                 Aucune séquence créée.{' '}
-                <Link href="/admin/crm/sequences" className="underline" style={{ color: 'var(--gold)' }}>
+                <Link href="/admin/crm/sequences" className="underline" style={{ color: 'var(--brand)' }}>
                   Créer une séquence
                 </Link>{' '}
                 ou{' '}
-                <Link href="/admin/crm/sequences?seed=true" className="underline" style={{ color: 'var(--gold)' }}>
+                <Link href="/admin/crm/sequences?seed=true" className="underline" style={{ color: 'var(--brand)' }}>
                   initialiser les séquences par défaut
                 </Link>.
               </p>
             ) : (
               <div className="space-y-3">
                 {diagnostic.sequences.map((seq, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'var(--dark)', border: '1px solid var(--dark-border)' }}>
+                  <div key={i} className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'var(--dark)', border: '1px solid var(--border)' }}>
                     <div className="flex items-center gap-3">
                       <span style={{ color: seq.status === 'active' ? '#50C878' : '#a1a1aa', fontSize: 10 }}>●</span>
                       <div>
@@ -330,7 +330,7 @@ export default function AutomationsPage() {
 
           {/* Recent Failures */}
           {diagnostic.recent_failures.length > 0 && (
-            <div className="p-6 rounded-xl" style={{ background: 'var(--dark-card)', border: '1px solid rgba(239,68,68,0.3)' }}>
+            <div className="p-6 rounded-xl" style={{ background: 'var(--surface-card)', border: '1px solid rgba(239,68,68,0.3)' }}>
               <h3 className="font-display text-lg mb-4" style={{ color: '#EF4444' }}>Derniers échecs</h3>
               <div className="space-y-2">
                 {diagnostic.recent_failures.map((f, i) => (
@@ -350,14 +350,14 @@ export default function AutomationsPage() {
           )}
 
           {/* Recent Events */}
-          <div className="p-6 rounded-xl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-            <h3 className="font-display text-lg mb-4" style={{ color: 'var(--gold)' }}>Activité récente</h3>
+          <div className="p-6 rounded-xl" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
+            <h3 className="font-display text-lg mb-4" style={{ color: 'var(--brand)' }}>Activité récente</h3>
             {diagnostic.recent_events.length === 0 ? (
               <p className="text-sm text-[var(--text-muted)]">Aucune activité email récente.</p>
             ) : (
               <div className="space-y-2 max-h-80 overflow-y-auto">
                 {diagnostic.recent_events.map((evt, i) => (
-                  <div key={i} className="flex items-center justify-between p-2 rounded text-sm" style={{ borderBottom: '1px solid var(--dark-border)' }}>
+                  <div key={i} className="flex items-center justify-between p-2 rounded text-sm" style={{ borderBottom: '1px solid var(--border)' }}>
                     <div className="flex items-center gap-2">
                       <span style={{ fontSize: 10, color: evt.event_type.includes('sent') ? '#50C878' : evt.event_type.includes('open') ? '#4A90D9' : '#D4AF37' }}>●</span>
                       <span className="font-mono text-xs" style={{ color: 'var(--text-primary)' }}>{evt.event_type}</span>

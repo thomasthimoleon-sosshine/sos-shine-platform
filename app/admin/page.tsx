@@ -109,7 +109,7 @@ export default function AdminDashboard() {
               ].map((action) => (
                 <a key={action.href} href={action.href}
                   className="rounded-xl p-5 transition-all duration-200 hover:-translate-y-0.5 block"
-                  style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                  style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
                   <span className="text-2xl mb-3 block">{action.icon}</span>
                   <h3 className="font-semibold text-sm mb-1" style={{ color: action.color }}>{action.label}</h3>
                   <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{action.desc}</p>
@@ -119,7 +119,7 @@ export default function AdminDashboard() {
           </div>
 
           {/* Revenue placeholder */}
-          <div className="rounded-xl p-6" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+          <div className="rounded-xl p-6" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
             <h2 className="font-semibold text-lg mb-2" style={{ color: 'var(--text-primary)' }}>Chiffre d&apos;affaires</h2>
             <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
               Les données Stripe seront disponibles une fois l&apos;intégration paiement activée.
@@ -127,7 +127,7 @@ export default function AdminDashboard() {
             <div className="grid sm:grid-cols-3 gap-4">
               <div className="rounded-lg p-4" style={{ background: 'rgba(212,175,55,0.05)' }}>
                 <p className="text-xs mb-1" style={{ color: 'var(--text-muted)' }}>CA ce mois</p>
-                <p className="font-display text-2xl font-semibold" style={{ color: 'var(--gold)' }}>—</p>
+                <p className="font-display text-2xl font-semibold" style={{ color: 'var(--brand)' }}>—</p>
               </div>
               <div className="rounded-lg p-4" style={{ background: 'rgba(85,239,196,0.05)' }}>
                 <p className="text-xs mb-1" style={{ color: 'var(--text-muted)' }}>Abonnements actifs</p>

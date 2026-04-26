@@ -155,22 +155,22 @@ export default function EmailTemplatesPage() {
           <div>
             <button
               onClick={() => setEditingTemplate(null)}
-              className="text-sm text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors mb-2"
+              className="text-sm text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors mb-2"
             >
               &larr; Retour aux templates
             </button>
-            <h1 className="font-display text-2xl font-light" style={{ color: 'var(--gold)' }}>
+            <h1 className="font-display text-2xl font-light" style={{ color: 'var(--brand)' }}>
               Modifier le template
             </h1>
             <p className="text-xs text-[var(--text-muted)] mt-1">
-              Clé : <code style={{ color: 'var(--gold)', opacity: 0.7 }}>{editingTemplate.template_key}</code>
+              Clé : <code style={{ color: 'var(--brand)', opacity: 0.7 }}>{editingTemplate.template_key}</code>
             </p>
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={() => setPreviewTemplate(previewTemplate ? null : editingTemplate)}
               className="px-4 py-2 rounded-full text-sm transition-all"
-              style={{ border: '1px solid var(--dark-border)', color: 'var(--text-secondary)' }}
+              style={{ border: '1px solid var(--border)', color: 'var(--text-secondary)' }}
             >
               {previewTemplate ? 'Fermer aperçu' : 'Aperçu'}
             </button>
@@ -178,7 +178,7 @@ export default function EmailTemplatesPage() {
               onClick={handleSave}
               disabled={saving}
               className="px-6 py-2 rounded-full text-sm font-semibold transition-all disabled:opacity-50"
-              style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}
+              style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}
             >
               {saving ? 'Sauvegarde...' : 'Sauvegarder'}
             </button>
@@ -204,7 +204,7 @@ export default function EmailTemplatesPage() {
                 value={editingTemplate.name}
                 onChange={(e) => setEditingTemplate({ ...editingTemplate, name: e.target.value })}
                 className="w-full p-3 rounded-lg text-sm"
-                style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
               />
             </div>
 
@@ -218,7 +218,7 @@ export default function EmailTemplatesPage() {
                 value={editingTemplate.subject}
                 onChange={(e) => setEditingTemplate({ ...editingTemplate, subject: e.target.value })}
                 className="w-full p-3 rounded-lg text-sm"
-                style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
               />
               <p className="text-xs text-[var(--text-muted)] mt-1">
                 Variables disponibles : {editingTemplate.variables.map(v => `{${v}}`).join(', ')}
@@ -235,7 +235,7 @@ export default function EmailTemplatesPage() {
                 onChange={(e) => setEditingTemplate({ ...editingTemplate, html_content: e.target.value })}
                 rows={18}
                 className="w-full p-3 rounded-lg text-sm font-mono"
-                style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)', resize: 'vertical' }}
+                style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-primary)', resize: 'vertical' }}
               />
             </div>
 
@@ -244,7 +244,7 @@ export default function EmailTemplatesPage() {
               <button
                 onClick={() => setEditingTemplate({ ...editingTemplate, is_active: !editingTemplate.is_active })}
                 className="relative w-12 h-6 rounded-full transition-all"
-                style={{ background: editingTemplate.is_active ? 'var(--gold)' : 'rgba(255,255,255,0.1)' }}
+                style={{ background: editingTemplate.is_active ? 'var(--brand)' : 'rgba(255,255,255,0.1)' }}
               >
                 <span
                   className="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform"
@@ -262,15 +262,15 @@ export default function EmailTemplatesPage() {
               style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.15)' }}
             >
               <div className="text-xs text-[var(--text-muted)]">
-                <strong style={{ color: 'var(--gold)' }}>Déclencheur :</strong>{' '}
+                <strong style={{ color: 'var(--brand)' }}>Déclencheur :</strong>{' '}
                 {getTriggerLabel(editingTemplate.trigger_type, editingTemplate.trigger_delay_days)}
               </div>
               <div className="text-xs text-[var(--text-muted)]">
-                <strong style={{ color: 'var(--gold)' }}>Description :</strong>{' '}
+                <strong style={{ color: 'var(--brand)' }}>Description :</strong>{' '}
                 {editingTemplate.description}
               </div>
               <div className="text-xs text-[var(--text-muted)]">
-                <strong style={{ color: 'var(--gold)' }}>Dernière modification :</strong>{' '}
+                <strong style={{ color: 'var(--brand)' }}>Dernière modification :</strong>{' '}
                 {new Date(editingTemplate.updated_at).toLocaleString('fr-FR')}
               </div>
             </div>
@@ -283,14 +283,14 @@ export default function EmailTemplatesPage() {
             </label>
             <div
               className="rounded-lg overflow-hidden"
-              style={{ border: '1px solid var(--dark-border)', background: '#050505' }}
+              style={{ border: '1px solid var(--border)', background: '#050505' }}
             >
               {/* Mini header preview */}
-              <div className="text-center py-4" style={{ borderBottom: '1px solid var(--dark-border)' }}>
+              <div className="text-center py-4" style={{ borderBottom: '1px solid var(--border)' }}>
                 <span className="text-xs text-[var(--text-muted)]">De :</span>{' '}
-                <span className="text-xs" style={{ color: 'var(--gold)' }}>SOS Shine® &lt;noreply@sosshine.com&gt;</span>
+                <span className="text-xs" style={{ color: 'var(--brand)' }}>SOS Shine® &lt;noreply@sosshine.com&gt;</span>
               </div>
-              <div className="text-center py-2" style={{ borderBottom: '1px solid var(--dark-border)' }}>
+              <div className="text-center py-2" style={{ borderBottom: '1px solid var(--border)' }}>
                 <span className="text-xs text-[var(--text-muted)]">Objet :</span>{' '}
                 <span className="text-xs" style={{ color: 'var(--text-primary)' }}>
                   {editingTemplate.subject.replace(/\{firstName\}/g, 'Julia').replace(/\{planName\}/g, 'Premium')}
@@ -335,12 +335,12 @@ export default function EmailTemplatesPage() {
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-3 mb-1">
-            <Link href="/admin/crm" className="text-sm text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors">
+            <Link href="/admin/crm" className="text-sm text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors">
               CRM
             </Link>
             <span className="text-[var(--text-muted)]">/</span>
           </div>
-          <h1 className="font-display text-3xl font-light" style={{ color: 'var(--gold)' }}>
+          <h1 className="font-display text-3xl font-light" style={{ color: 'var(--brand)' }}>
             Templates Email
           </h1>
           <p className="text-[var(--text-muted)] mt-1">
@@ -351,7 +351,7 @@ export default function EmailTemplatesPage() {
           onClick={handleSeed}
           disabled={seeding}
           className="px-5 py-2.5 rounded-full text-sm font-semibold transition-all disabled:opacity-50"
-          style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}
+          style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}
         >
           {seeding ? 'Initialisation...' : 'Initialiser les templates'}
         </button>
@@ -376,7 +376,7 @@ export default function EmailTemplatesPage() {
             onClick={handleSeed}
             disabled={seeding}
             className="inline-block px-6 py-3 rounded-full text-sm font-semibold disabled:opacity-50"
-            style={{ background: 'var(--gold)', color: '#050505' }}
+            style={{ background: 'var(--brand)', color: '#050505' }}
           >
             {seeding ? 'Initialisation...' : 'Initialiser maintenant'}
           </button>
@@ -389,9 +389,9 @@ export default function EmailTemplatesPage() {
               onClick={() => setActiveCategory('all')}
               className="px-4 py-2 rounded-full text-xs font-medium transition-all"
               style={{
-                background: activeCategory === 'all' ? 'var(--gold)' : 'var(--dark-card)',
+                background: activeCategory === 'all' ? 'var(--brand)' : 'var(--surface-card)',
                 color: activeCategory === 'all' ? '#050505' : 'var(--text-muted)',
-                border: `1px solid ${activeCategory === 'all' ? 'var(--gold)' : 'var(--dark-border)'}`,
+                border: `1px solid ${activeCategory === 'all' ? 'var(--brand)' : 'var(--border)'}`,
               }}
             >
               Tous ({templates.length})
@@ -405,9 +405,9 @@ export default function EmailTemplatesPage() {
                   onClick={() => setActiveCategory(cat.key)}
                   className="px-4 py-2 rounded-full text-xs font-medium transition-all"
                   style={{
-                    background: activeCategory === cat.key ? 'var(--gold)' : 'var(--dark-card)',
+                    background: activeCategory === cat.key ? 'var(--brand)' : 'var(--surface-card)',
                     color: activeCategory === cat.key ? '#050505' : 'var(--text-muted)',
-                    border: `1px solid ${activeCategory === cat.key ? 'var(--gold)' : 'var(--dark-border)'}`,
+                    border: `1px solid ${activeCategory === cat.key ? 'var(--brand)' : 'var(--border)'}`,
                   }}
                 >
                   {cat.icon} {cat.label} ({count})
@@ -418,15 +418,15 @@ export default function EmailTemplatesPage() {
 
           {/* Stats bar */}
           <div className="grid grid-cols-3 gap-4">
-            <div className="p-4 rounded-xl text-center" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-              <div className="text-2xl font-display" style={{ color: 'var(--gold)' }}>{templates.length}</div>
+            <div className="p-4 rounded-xl text-center" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
+              <div className="text-2xl font-display" style={{ color: 'var(--brand)' }}>{templates.length}</div>
               <div className="text-xs text-[var(--text-muted)] uppercase tracking-wider mt-1">Templates</div>
             </div>
-            <div className="p-4 rounded-xl text-center" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+            <div className="p-4 rounded-xl text-center" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
               <div className="text-2xl font-display" style={{ color: '#50C878' }}>{templates.filter(t => t.is_active).length}</div>
               <div className="text-xs text-[var(--text-muted)] uppercase tracking-wider mt-1">Actifs</div>
             </div>
-            <div className="p-4 rounded-xl text-center" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+            <div className="p-4 rounded-xl text-center" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
               <div className="text-2xl font-display" style={{ color: '#E8A87C' }}>{categories.length}</div>
               <div className="text-xs text-[var(--text-muted)] uppercase tracking-wider mt-1">Catégories</div>
             </div>
@@ -440,7 +440,7 @@ export default function EmailTemplatesPage() {
                 <div
                   key={template.id}
                   className="p-5 rounded-xl transition-all hover:scale-[1.002]"
-                  style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+                  style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
@@ -475,7 +475,7 @@ export default function EmailTemplatesPage() {
                         onClick={() => handleToggleActive(template)}
                         className="px-3 py-1.5 rounded-full text-xs transition-all"
                         style={{
-                          border: '1px solid var(--dark-border)',
+                          border: '1px solid var(--border)',
                           color: template.is_active ? '#ef4444' : '#50C878',
                         }}
                       >
@@ -484,14 +484,14 @@ export default function EmailTemplatesPage() {
                       <button
                         onClick={() => setPreviewTemplate(previewTemplate?.id === template.id ? null : template)}
                         className="px-3 py-1.5 rounded-full text-xs transition-all"
-                        style={{ border: '1px solid var(--dark-border)', color: 'var(--text-muted)' }}
+                        style={{ border: '1px solid var(--border)', color: 'var(--text-muted)' }}
                       >
                         {previewTemplate?.id === template.id ? 'Fermer' : 'Aperçu'}
                       </button>
                       <button
                         onClick={() => { setEditingTemplate(template); setPreviewTemplate(null) }}
                         className="px-4 py-1.5 rounded-full text-xs font-semibold transition-all"
-                        style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}
+                        style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}
                       >
                         Modifier
                       </button>
@@ -502,7 +502,7 @@ export default function EmailTemplatesPage() {
                   {previewTemplate?.id === template.id && (
                     <div
                       className="mt-4 p-4 rounded-lg"
-                      style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}
+                      style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}
                     >
                       <h4 className="text-xs uppercase tracking-wider text-[var(--text-muted)] mb-3">Aperçu du contenu</h4>
                       <div

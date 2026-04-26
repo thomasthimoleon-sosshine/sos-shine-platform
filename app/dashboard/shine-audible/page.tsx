@@ -115,7 +115,7 @@ function MiniPlayer({ audio, isPlaying, onToggle, progress, currentTime, duratio
       style={{
         background: 'linear-gradient(to top, rgba(9,9,11,0.98), rgba(9,9,11,0.95))',
         backdropFilter: 'blur(20px)',
-        borderTop: '1px solid var(--dark-border)',
+        borderTop: '1px solid var(--border)',
       }}
     >
       {/* Progress bar at top (clickable for seeking) */}
@@ -128,7 +128,7 @@ function MiniPlayer({ audio, isPlaying, onToggle, progress, currentTime, duratio
           onSeek(Math.max(0, Math.min(100, pct)))
         }}
       >
-        <div className="h-full transition-all duration-300" style={{ width: `${progress}%`, background: 'var(--gold)' }} />
+        <div className="h-full transition-all duration-300" style={{ width: `${progress}%`, background: 'var(--brand)' }} />
       </div>
 
       <div className="flex items-center gap-3 sm:gap-4 px-4 sm:px-6 py-3">
@@ -163,7 +163,7 @@ function MiniPlayer({ audio, isPlaying, onToggle, progress, currentTime, duratio
           <button
             onClick={onToggle}
             className="w-11 h-11 rounded-full flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110"
-            style={{ background: 'var(--gold)', color: '#09090b' }}
+            style={{ background: 'var(--brand)', color: '#09090b' }}
           >
             {isPlaying ? (
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -297,7 +297,7 @@ function AudioRow({ title, icon, audios, onSelect, nowPlayingId }: {
                       {[1, 2, 3].map(bar => (
                         <div key={bar} className="w-[3px] rounded-full animate-pulse"
                           style={{
-                            background: 'var(--gold)',
+                            background: 'var(--brand)',
                             height: `${8 + Math.random() * 8}px`,
                             animationDelay: `${bar * 0.15}s`,
                           }}
@@ -330,7 +330,7 @@ function AudioRow({ title, icon, audios, onSelect, nowPlayingId }: {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                   <div
                     className="w-12 h-12 rounded-full flex items-center justify-center transition-transform duration-200 hover:scale-110"
-                    style={{ background: 'var(--gold)', color: '#09090b' }}
+                    style={{ background: 'var(--brand)', color: '#09090b' }}
                   >
                     <svg className="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M8 5v14l11-7z" />
@@ -392,7 +392,7 @@ function HeroBanner({ audio, onOpen, onPlay }: { audio: ShineAudio; onOpen: () =
 
           <div className="text-center sm:text-left">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold mb-3"
-              style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.3)' }}>
+              style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.3)' }}>
               <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
               </svg>
@@ -402,7 +402,7 @@ function HeroBanner({ audio, onOpen, onPlay }: { audio: ShineAudio; onOpen: () =
               {audio.title}
             </h1>
             <p className="text-[13px] sm:text-[14px] mb-1" style={{ color: 'rgba(255,255,255,0.6)' }}>
-              Narré par <span style={{ color: 'var(--gold)' }}>{audio.narrator}</span>
+              Narré par <span style={{ color: 'var(--brand)' }}>{audio.narrator}</span>
             </p>
             <p className="text-[13px] leading-relaxed mb-5 line-clamp-2" style={{ color: 'rgba(255,255,255,0.5)' }}>
               {audio.description}
@@ -411,7 +411,7 @@ function HeroBanner({ audio, onOpen, onPlay }: { audio: ShineAudio; onOpen: () =
               <button
                 onClick={onPlay}
                 className="flex items-center gap-2.5 px-6 py-3 rounded-xl text-[14px] font-semibold cursor-pointer transition-all duration-200 hover:scale-105"
-                style={{ background: 'var(--gold)', color: '#09090b' }}
+                style={{ background: 'var(--brand)', color: '#09090b' }}
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                 Écouter
@@ -499,7 +499,7 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
         exit={{ opacity: 0, y: 40, scale: 0.95 }}
         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
         className="w-full max-w-3xl rounded-2xl overflow-hidden relative"
-        style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+        style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
@@ -517,7 +517,7 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
         <div className="relative h-56 sm:h-64 overflow-hidden">
           <img src={audio.cover} alt="" className="absolute inset-0 w-full h-full object-cover"
             style={{ filter: 'blur(40px) brightness(0.3)', transform: 'scale(1.3)' }} />
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, transparent, var(--dark-card))' }} />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, transparent, var(--surface-card))' }} />
 
           <div className="absolute inset-0 flex items-center justify-center gap-6 px-6">
             <img src={audio.cover} alt={audio.title}
@@ -545,14 +545,14 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
               </h2>
               <div className="flex items-center gap-3 flex-wrap mb-1">
                 <span className="text-[13px]" style={{ color: 'var(--text-muted)' }}>
-                  Narré par <span style={{ color: 'var(--gold)' }}>{audio.narrator}</span>
+                  Narré par <span style={{ color: 'var(--brand)' }}>{audio.narrator}</span>
                 </span>
               </div>
               <div className="flex items-center gap-3 flex-wrap mb-4">
-                <span className="text-[13px] font-medium" style={{ color: 'var(--gold)' }}>{audio.year}</span>
+                <span className="text-[13px] font-medium" style={{ color: 'var(--brand)' }}>{audio.year}</span>
                 <span className="text-[13px]" style={{ color: 'var(--text-muted)' }}>{audio.duration}</span>
                 <span className="px-2 py-0.5 rounded text-[11px] font-medium uppercase"
-                  style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                  style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
                   {audio.contentType}
                 </span>
               </div>
@@ -563,7 +563,7 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
               <button
                 onClick={() => onPlay(audio)}
                 className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110"
-                style={{ background: 'var(--gold)', color: '#09090b' }}
+                style={{ background: 'var(--brand)', color: '#09090b' }}
               >
                 <svg className="w-5 h-5 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z" />
@@ -597,7 +597,7 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
               onRate={(r) => onRate(audio.id, r)}
             />
             {audio.userRating > 0 && (
-              <span className="text-[13px] font-semibold" style={{ color: 'var(--gold)' }}>
+              <span className="text-[13px] font-semibold" style={{ color: 'var(--brand)' }}>
                 {audio.userRating}/5
               </span>
             )}
@@ -610,7 +610,7 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
               className="flex-1 py-2.5 rounded-lg text-[13px] font-medium cursor-pointer transition-all duration-200"
               style={{
                 background: tab === 'overview' ? 'rgba(212,175,55,0.12)' : 'transparent',
-                color: tab === 'overview' ? 'var(--gold)' : 'var(--text-muted)',
+                color: tab === 'overview' ? 'var(--brand)' : 'var(--text-muted)',
               }}
             >
               Aperçu
@@ -620,7 +620,7 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
               className="flex-1 py-2.5 rounded-lg text-[13px] font-medium cursor-pointer transition-all duration-200"
               style={{
                 background: tab === 'reviews' ? 'rgba(212,175,55,0.12)' : 'transparent',
-                color: tab === 'reviews' ? 'var(--gold)' : 'var(--text-muted)',
+                color: tab === 'reviews' ? 'var(--brand)' : 'var(--text-muted)',
               }}
             >
               Avis ({reviews.length})
@@ -632,7 +632,7 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
               <motion.div key="overview" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }}>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="glass p-4 rounded-xl text-center">
-                    <div className="text-2xl font-display font-semibold" style={{ color: 'var(--gold)' }}>
+                    <div className="text-2xl font-display font-semibold" style={{ color: 'var(--brand)' }}>
                       {audio.rating.toFixed(1)}
                     </div>
                     <div className="flex justify-center mt-1">
@@ -641,7 +641,7 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
                     <p className="text-[11px] mt-1" style={{ color: 'var(--text-muted)' }}>Note moyenne</p>
                   </div>
                   <div className="glass p-4 rounded-xl text-center">
-                    <div className="text-2xl font-display font-semibold" style={{ color: 'var(--gold)' }}>
+                    <div className="text-2xl font-display font-semibold" style={{ color: 'var(--brand)' }}>
                       {audio.reviewCount}
                     </div>
                     <p className="text-[11px] mt-2" style={{ color: 'var(--text-muted)' }}>Avis membres</p>
@@ -665,19 +665,19 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
                     className="w-full rounded-xl p-3 text-[13px] resize-none outline-none transition-all duration-200"
                     style={{
                       background: 'rgba(255,255,255,0.04)',
-                      border: '1px solid var(--dark-border)',
+                      border: '1px solid var(--border)',
                       color: 'var(--text-primary)',
                       minHeight: 80,
                     }}
                     onFocus={(e) => e.target.style.borderColor = 'rgba(212,175,55,0.4)'}
-                    onBlur={(e) => e.target.style.borderColor = 'var(--dark-border)'}
+                    onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
                   />
                   <div className="flex justify-end mt-2">
                     <button
                       onClick={handleSubmitReview}
                       disabled={!newReview.trim() || newRating === 0 || isSubmitting}
                       className="px-5 py-2 rounded-xl text-[13px] font-semibold cursor-pointer transition-all duration-200 hover:scale-105 disabled:opacity-40 disabled:hover:scale-100"
-                      style={{ background: 'var(--gold)', color: '#09090b' }}
+                      style={{ background: 'var(--brand)', color: '#09090b' }}
                     >
                       {isSubmitting ? 'Envoi...' : 'Publier'}
                     </button>
@@ -697,7 +697,7 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
                       <div className="flex items-center gap-3 mb-2">
                         <div
                           className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
-                          style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}
+                          style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}
                         >
                           {review.author.charAt(0)}
                         </div>
@@ -1013,14 +1013,14 @@ export default function ShineAudiblePage() {
         <div className="text-center space-y-4">
           <div className="relative w-16 h-16 mx-auto">
             <div className="absolute inset-0 rounded-2xl animate-pulse"
-              style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))' }} />
+              style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))' }} />
             <div className="absolute inset-0 flex items-center justify-center">
               <svg className="w-8 h-8" fill="#09090b" viewBox="0 0 24 24">
                 <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55C7.79 13 6 14.79 6 17s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
               </svg>
             </div>
           </div>
-          <p className="font-display text-xl font-semibold" style={{ color: 'var(--gold)' }}>Shine Audible</p>
+          <p className="font-display text-xl font-semibold" style={{ color: 'var(--brand)' }}>Shine Audible</p>
           <p className="text-[13px]" style={{ color: 'var(--text-muted)' }}>Chargement de vos contenus audio...</p>
         </div>
       </div>
@@ -1052,11 +1052,11 @@ export default function ShineAudiblePage() {
                 className="w-full pl-11 pr-4 py-3 rounded-xl text-[14px] outline-none transition-all duration-200"
                 style={{
                   background: 'rgba(255,255,255,0.05)',
-                  border: '1px solid var(--dark-border)',
+                  border: '1px solid var(--border)',
                   color: 'var(--text-primary)',
                 }}
                 onFocus={(e) => e.target.style.borderColor = 'rgba(212,175,55,0.4)'}
-                onBlur={(e) => e.target.style.borderColor = 'var(--dark-border)'}
+                onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
               />
               {search && (
                 <button
@@ -1079,9 +1079,9 @@ export default function ShineAudiblePage() {
                   onClick={() => setActiveType(type.id)}
                   className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200"
                   style={{
-                    background: activeType === type.id ? 'var(--gold)' : 'rgba(255,255,255,0.06)',
+                    background: activeType === type.id ? 'var(--brand)' : 'rgba(255,255,255,0.06)',
                     color: activeType === type.id ? '#09090b' : 'var(--text-secondary)',
-                    border: activeType === type.id ? 'none' : '1px solid var(--dark-border)',
+                    border: activeType === type.id ? 'none' : '1px solid var(--border)',
                   }}
                 >
                   {type.icon && <span className="mr-1">{type.icon}</span>}{type.label}
@@ -1097,7 +1097,7 @@ export default function ShineAudiblePage() {
               className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200"
               style={{
                 background: activeFilter === 'all' ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.04)',
-                color: activeFilter === 'all' ? 'var(--gold)' : 'var(--text-secondary)',
+                color: activeFilter === 'all' ? 'var(--brand)' : 'var(--text-secondary)',
                 border: `1px solid ${activeFilter === 'all' ? 'rgba(212,175,55,0.3)' : 'transparent'}`,
               }}
             >
@@ -1109,7 +1109,7 @@ export default function ShineAudiblePage() {
                 className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200 flex items-center gap-1.5"
                 style={{
                   background: activeFilter === 'douleur' ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.04)',
-                  color: activeFilter === 'douleur' ? 'var(--gold)' : 'var(--text-secondary)',
+                  color: activeFilter === 'douleur' ? 'var(--brand)' : 'var(--text-secondary)',
                   border: `1px solid ${activeFilter === 'douleur' ? 'rgba(212,175,55,0.3)' : 'transparent'}`,
                 }}
               >
@@ -1124,7 +1124,7 @@ export default function ShineAudiblePage() {
               className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200 flex items-center gap-1.5"
               style={{
                 background: activeFilter === 'encyclopedie' ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.04)',
-                color: activeFilter === 'encyclopedie' ? 'var(--gold)' : 'var(--text-secondary)',
+                color: activeFilter === 'encyclopedie' ? 'var(--brand)' : 'var(--text-secondary)',
                 border: `1px solid ${activeFilter === 'encyclopedie' ? 'rgba(212,175,55,0.3)' : 'transparent'}`,
               }}
             >
@@ -1138,7 +1138,7 @@ export default function ShineAudiblePage() {
               className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200 flex items-center gap-1.5"
               style={{
                 background: activeFilter === 'favorites' ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.04)',
-                color: activeFilter === 'favorites' ? 'var(--gold)' : 'var(--text-secondary)',
+                color: activeFilter === 'favorites' ? 'var(--brand)' : 'var(--text-secondary)',
                 border: `1px solid ${activeFilter === 'favorites' ? 'rgba(212,175,55,0.3)' : 'transparent'}`,
               }}
             >
@@ -1154,7 +1154,7 @@ export default function ShineAudiblePage() {
                 className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200"
                 style={{
                   background: activeFilter === cat.id ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.04)',
-                  color: activeFilter === cat.id ? 'var(--gold)' : 'var(--text-secondary)',
+                  color: activeFilter === cat.id ? 'var(--brand)' : 'var(--text-secondary)',
                   border: `1px solid ${activeFilter === cat.id ? 'rgba(212,175,55,0.3)' : 'transparent'}`,
                 }}
               >
@@ -1170,7 +1170,7 @@ export default function ShineAudiblePage() {
           <div>
             <p className="text-[13px] mb-4" style={{ color: 'var(--text-muted)' }}>
               {filteredAudios.length} résultat{filteredAudios.length !== 1 ? 's' : ''}
-              {search && <> pour &ldquo;<span style={{ color: 'var(--gold)' }}>{search}</span>&rdquo;</>}
+              {search && <> pour &ldquo;<span style={{ color: 'var(--brand)' }}>{search}</span>&rdquo;</>}
             </p>
             {filteredAudios.length === 0 ? (
               <div className="glass p-12 text-center rounded-xl">
@@ -1211,7 +1211,7 @@ export default function ShineAudiblePage() {
                               style={{ background: 'rgba(0,0,0,0.7)' }}>
                               {[1, 2, 3].map(bar => (
                                 <div key={bar} className="w-[3px] rounded-full animate-pulse"
-                                  style={{ background: 'var(--gold)', height: `${8 + Math.random() * 8}px`, animationDelay: `${bar * 0.15}s` }} />
+                                  style={{ background: 'var(--brand)', height: `${8 + Math.random() * 8}px`, animationDelay: `${bar * 0.15}s` }} />
                               ))}
                             </div>
                           </div>
@@ -1220,7 +1220,7 @@ export default function ShineAudiblePage() {
                           <button
                             onClick={(e) => { e.stopPropagation(); handlePlay(audio) }}
                             className="w-12 h-12 rounded-full flex items-center justify-center cursor-pointer"
-                            style={{ background: 'var(--gold)', color: '#09090b' }}>
+                            style={{ background: 'var(--brand)', color: '#09090b' }}>
                             <svg className="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                           </button>
                         </div>
@@ -1280,7 +1280,7 @@ export default function ShineAudiblePage() {
                           <button
                             onClick={(e) => { e.stopPropagation(); handlePlay(audio) }}
                             className="w-12 h-12 rounded-full flex items-center justify-center cursor-pointer"
-                            style={{ background: 'var(--gold)', color: '#09090b' }}>
+                            style={{ background: 'var(--brand)', color: '#09090b' }}>
                             <svg className="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                           </button>
                         </div>
@@ -1303,7 +1303,7 @@ export default function ShineAudiblePage() {
           // Douleur-filtered view
           <div>
             <h2 className="text-lg font-display font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--gold)' }}>
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--brand)' }}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.331 0 4.476.884 6.084 2.333M12 6.042A8.967 8.967 0 0118 3.75c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18c-2.331 0-4.476.884-6.084 2.333M12 6.042V20.333" />
               </svg>
               {douleurName || 'Contenu lié'}
@@ -1351,7 +1351,7 @@ export default function ShineAudiblePage() {
           // Encyclopédie A-Z view
           <div className="space-y-6">
             <h2 className="text-lg font-display font-semibold flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--gold)' }}>
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--brand)' }}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
               </svg>
               Encyclopédie A — Z
@@ -1376,7 +1376,7 @@ export default function ShineAudiblePage() {
                         key={letter}
                         href={`#letter-audible-${letter}`}
                         className="w-8 h-8 rounded-lg flex items-center justify-center text-[13px] font-semibold transition-colors hover:opacity-80"
-                        style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}
+                        style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)' }}
                       >
                         {letter}
                       </a>
@@ -1386,7 +1386,7 @@ export default function ShineAudiblePage() {
                   {/* Letter groups */}
                   {letters.map(letter => (
                     <div key={letter} id={`letter-audible-${letter}`} className="scroll-mt-24">
-                      <h3 className="font-display text-2xl font-bold mb-3 pb-2" style={{ color: 'var(--gold)', borderBottom: '1px solid var(--dark-border)' }}>
+                      <h3 className="font-display text-2xl font-bold mb-3 pb-2" style={{ color: 'var(--brand)', borderBottom: '1px solid var(--border)' }}>
                         {letter}
                       </h3>
                       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
@@ -1405,7 +1405,7 @@ export default function ShineAudiblePage() {
                                   <img src={audio.cover} alt={audio.title} className="w-full h-full object-contain" loading="lazy" />
                                 ) : (
                                   <div className="w-full h-full flex items-center justify-center" style={{ background: 'rgba(212,175,55,0.05)' }}>
-                                    <svg className="w-12 h-12 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} style={{ color: 'var(--gold)' }}>
+                                    <svg className="w-12 h-12 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} style={{ color: 'var(--brand)' }}>
                                       <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
                                     </svg>
                                   </div>
@@ -1483,7 +1483,7 @@ export default function ShineAudiblePage() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               className="w-full max-w-sm rounded-2xl p-6 space-y-4"
-              style={{ background: 'var(--dark-card)', border: '1px solid rgba(212,175,55,0.2)' }}
+              style={{ background: 'var(--surface-card)', border: '1px solid rgba(212,175,55,0.2)' }}
               onClick={(e) => e.stopPropagation()}
             >
               <div className="text-center">
@@ -1499,14 +1499,14 @@ export default function ShineAudiblePage() {
                 <button
                   onClick={() => setAudioDisclaimer(null)}
                   className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium cursor-pointer transition-all"
-                  style={{ color: 'var(--text-muted)', border: '1px solid var(--dark-border)' }}
+                  style={{ color: 'var(--text-muted)', border: '1px solid var(--border)' }}
                 >
                   Annuler
                 </button>
                 <button
                   onClick={() => { startPlayback(audioDisclaimer); setAudioDisclaimer(null) }}
                   className="flex-1 px-4 py-2.5 rounded-xl text-sm font-semibold cursor-pointer transition-all hover:opacity-90"
-                  style={{ background: 'var(--gold)', color: 'var(--dark)' }}
+                  style={{ background: 'var(--brand)', color: 'var(--dark)' }}
                 >
                   Je suis prêt(e)
                 </button>

@@ -254,7 +254,7 @@ export default function AdminMembres() {
             { label: 'Sans abo', value: stats.inactive, color: '#9A9080' },
             { label: 'R\u00e9duc. fondateur', value: stats.withDiscount, color: '#D4AF37' },
           ].map((s) => (
-            <div key={s.label} className="rounded-xl p-4 text-center" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+            <div key={s.label} className="rounded-xl p-4 text-center" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
               <p className="font-display text-2xl font-light" style={{ color: s.color }}>{s.value}</p>
               <p className="text-[11px] mt-1" style={{ color: 'var(--text-muted)' }}>{s.label}</p>
             </div>
@@ -281,14 +281,14 @@ export default function AdminMembres() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-10 pr-4 py-2.5 rounded-xl text-sm outline-none transition-colors"
-            style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+            style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
           />
         </div>
         <select
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
           className="px-4 py-2.5 rounded-xl text-sm outline-none cursor-pointer"
-          style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+          style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
         >
           <option value="all">Tous</option>
           <option value="active">Abonn&eacute;s actifs</option>
@@ -305,7 +305,7 @@ export default function AdminMembres() {
           <div className="w-8 h-8 border-2 border-[#74C0FC] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-16 rounded-xl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <div className="text-center py-16 rounded-xl" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
             {search.trim() ? 'Aucun membre ne correspond \u00e0 votre recherche.' : 'Aucun membre pour le moment.'}
           </p>
@@ -319,10 +319,10 @@ export default function AdminMembres() {
           )}
 
           {/* Table (desktop) */}
-          <div className="hidden md:block rounded-xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+          <div className="hidden md:block rounded-xl overflow-hidden" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
             <table className="w-full text-sm">
               <thead>
-                <tr style={{ borderBottom: '1px solid var(--dark-border)' }}>
+                <tr style={{ borderBottom: '1px solid var(--border)' }}>
                   {['Membre', 'Email', 'R\u00f4le', 'Plan', 'Statut abo', 'Publication', 'Actif', 'Inscription', ''].map((h) => (
                     <th key={h} className="text-left px-4 py-3 font-medium text-xs uppercase tracking-wide" style={{ color: 'var(--text-muted)' }}>
                       {h}
@@ -338,7 +338,7 @@ export default function AdminMembres() {
                   const isEditingThis = editingRole === member.id
                   const isActive = member.is_active !== false
                   return (
-                    <tr key={member.id} style={{ borderBottom: i < filtered.length - 1 ? '1px solid var(--dark-border)' : 'none' }}>
+                    <tr key={member.id} style={{ borderBottom: i < filtered.length - 1 ? '1px solid var(--border)' : 'none' }}>
                       {/* Name + avatar */}
                       <td className="px-4 py-3.5">
                         <div className="flex items-center gap-3">
@@ -373,7 +373,7 @@ export default function AdminMembres() {
                               onChange={(e) => handleRoleChange(member.id, e.target.value as Profile['role'])}
                               disabled={savingRole === member.id}
                               className="rounded-lg px-2 py-1 text-xs outline-none cursor-pointer"
-                              style={{ background: 'var(--dark)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                              style={{ background: 'var(--dark)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                             >
                               {ROLES.map((r) => <option key={r.value} value={r.value}>{r.label}</option>)}
                             </select>
@@ -436,7 +436,7 @@ export default function AdminMembres() {
                               </button>
                               {banMenuOpen === member.id && (
                                 <div className="absolute z-50 top-full mt-1 left-0 rounded-xl py-1 shadow-lg min-w-[140px]"
-                                  style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                                  style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
                                   <p className="px-3 py-1.5 text-[10px] uppercase tracking-wide" style={{ color: 'var(--text-muted)' }}>Bloquer pour</p>
                                   {[5, 10, 15, 30].map((d) => (
                                     <button key={d}
@@ -527,7 +527,7 @@ export default function AdminMembres() {
               const isEditingThis = editingRole === member.id
               const isActive = member.is_active !== false
               return (
-                <div key={member.id} className="rounded-xl p-4" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                <div key={member.id} className="rounded-xl p-4" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
                   <div className="flex items-center gap-3 mb-3">
                     {member.avatar_url ? (
                       <img src={member.avatar_url} alt="" className="w-9 h-9 rounded-full object-cover shrink-0" />
@@ -564,7 +564,7 @@ export default function AdminMembres() {
                           onChange={(e) => handleRoleChange(member.id, e.target.value as Profile['role'])}
                           disabled={savingRole === member.id}
                           className="rounded-lg px-2 py-1 text-xs outline-none cursor-pointer"
-                          style={{ background: 'var(--dark)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}>
+                          style={{ background: 'var(--dark)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}>
                           {ROLES.map((r) => <option key={r.value} value={r.value}>{r.label}</option>)}
                         </select>
                         <button onClick={() => setEditingRole(null)} className="text-xs cursor-pointer" style={{ color: 'var(--text-muted)' }}>Annuler</button>
@@ -605,7 +605,7 @@ export default function AdminMembres() {
                         </button>
                         {banMenuOpen === member.id && (
                           <div className="absolute z-50 bottom-full mb-1 left-0 rounded-xl py-1 shadow-lg min-w-[140px]"
-                            style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                            style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
                             <p className="px-3 py-1.5 text-[10px] uppercase tracking-wide" style={{ color: 'var(--text-muted)' }}>Bloquer pour</p>
                             {[5, 10, 15, 30].map((d) => (
                               <button key={d}
@@ -628,7 +628,7 @@ export default function AdminMembres() {
                     <span className="ml-auto text-xs" style={{ color: 'var(--text-muted)' }}>{formatDateFR(member.created_at)}</span>
                   </div>
                   {/* Delete button (mobile) */}
-                  <div className="mt-2 pt-2 flex justify-end" style={{ borderTop: '1px solid var(--dark-border)' }}>
+                  <div className="mt-2 pt-2 flex justify-end" style={{ borderTop: '1px solid var(--border)' }}>
                     {confirmDelete === member.id ? (
                       <div className="flex items-center gap-2">
                         <span className="text-xs" style={{ color: 'var(--text-muted)' }}>Supprimer ?</span>

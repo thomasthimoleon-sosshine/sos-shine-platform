@@ -124,7 +124,7 @@ export default function FileUpload({
         className="relative rounded-lg p-4 text-center transition-all duration-200 cursor-pointer hover:border-[rgba(116,192,252,0.4)]"
         style={{
           background: 'rgba(255,255,255,0.02)',
-          border: '1px dashed var(--dark-border)',
+          border: '1px dashed var(--border)',
         }}
       >
         <input

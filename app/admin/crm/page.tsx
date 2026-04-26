@@ -76,7 +76,7 @@ export default function CRMDashboardPage() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-3xl font-light" style={{ color: 'var(--gold)' }}>
+          <h1 className="font-display text-3xl font-light" style={{ color: 'var(--brand)' }}>
             CRM & Campagnes Email
           </h1>
           <p className="text-[var(--text-muted)] mt-1">
@@ -86,7 +86,7 @@ export default function CRMDashboardPage() {
         <Link
           href="/admin/crm/campaigns/new"
           className="px-6 py-3 rounded-full text-sm font-semibold transition-all"
-          style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}
+          style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}
         >
           + Nouvelle campagne
         </Link>
@@ -101,7 +101,7 @@ export default function CRMDashboardPage() {
               <div
                 key={card.label}
                 className="p-5 rounded-xl"
-                style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+                style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
               >
                 <div className="text-2xl mb-2">{card.icon}</div>
                 <div className="text-2xl font-display font-light" style={{ color: card.color }}>
@@ -118,52 +118,52 @@ export default function CRMDashboardPage() {
             <Link
               href="/admin/crm/contacts"
               className="p-6 rounded-xl text-center transition-all hover:scale-[1.02]"
-              style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+              style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
             >
               <div className="text-3xl mb-2">👥</div>
-              <div className="font-display text-lg" style={{ color: 'var(--gold)' }}>Contacts</div>
+              <div className="font-display text-lg" style={{ color: 'var(--brand)' }}>Contacts</div>
               <div className="text-xs text-[var(--text-muted)] mt-1">Voir et synchroniser vos contacts</div>
             </Link>
             <Link
               href="/admin/crm/campaigns"
               className="p-6 rounded-xl text-center transition-all hover:scale-[1.02]"
-              style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+              style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
             >
               <div className="text-3xl mb-2">📧</div>
-              <div className="font-display text-lg" style={{ color: 'var(--gold)' }}>Campagnes</div>
+              <div className="font-display text-lg" style={{ color: 'var(--brand)' }}>Campagnes</div>
               <div className="text-xs text-[var(--text-muted)] mt-1">Créer et planifier vos campagnes</div>
             </Link>
             <Link
               href="/admin/crm/sequences"
               className="p-6 rounded-xl text-center transition-all hover:scale-[1.02]"
-              style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+              style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
             >
               <div className="text-3xl mb-2">🔄</div>
-              <div className="font-display text-lg" style={{ color: 'var(--gold)' }}>Séquences</div>
+              <div className="font-display text-lg" style={{ color: 'var(--brand)' }}>Séquences</div>
               <div className="text-xs text-[var(--text-muted)] mt-1">Emails automatiques par déclencheur</div>
             </Link>
             <Link
               href="/admin/crm/signature-emails"
               className="p-6 rounded-xl text-center transition-all hover:scale-[1.02]"
-              style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+              style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
             >
               <div className="text-3xl mb-2">🧬</div>
-              <div className="font-display text-lg" style={{ color: 'var(--gold)' }}>Emails Signature</div>
+              <div className="font-display text-lg" style={{ color: 'var(--brand)' }}>Emails Signature</div>
               <div className="text-xs text-[var(--text-muted)] mt-1">Résultats envoyés par email</div>
             </Link>
             <Link
               href="/admin/crm/email-templates"
               className="p-6 rounded-xl text-center transition-all hover:scale-[1.02]"
-              style={{ background: 'var(--dark-card)', border: '1px solid rgba(212,175,55,0.3)' }}
+              style={{ background: 'var(--surface-card)', border: '1px solid rgba(212,175,55,0.3)' }}
             >
               <div className="text-3xl mb-2">📬</div>
-              <div className="font-display text-lg" style={{ color: 'var(--gold)' }}>Templates Julia</div>
+              <div className="font-display text-lg" style={{ color: 'var(--brand)' }}>Templates Julia</div>
               <div className="text-xs text-[var(--text-muted)] mt-1">Modifier les emails automatiques</div>
             </Link>
             <Link
               href="/admin/crm/automations"
               className="p-6 rounded-xl text-center transition-all hover:scale-[1.02]"
-              style={{ background: 'var(--dark-card)', border: '1px solid rgba(80,200,120,0.3)' }}
+              style={{ background: 'var(--surface-card)', border: '1px solid rgba(80,200,120,0.3)' }}
             >
               <div className="text-3xl mb-2">⚡</div>
               <div className="font-display text-lg" style={{ color: '#50C878' }}>Automatisations</div>
@@ -172,10 +172,10 @@ export default function CRMDashboardPage() {
             <Link
               href="/admin/crm/email-log"
               className="p-6 rounded-xl text-center transition-all hover:scale-[1.02]"
-              style={{ background: 'var(--dark-card)', border: '1px solid rgba(201,169,97,0.3)' }}
+              style={{ background: 'var(--surface-card)', border: '1px solid rgba(201,169,97,0.3)' }}
             >
               <div className="text-3xl mb-2">📋</div>
-              <div className="font-display text-lg" style={{ color: 'var(--gold)' }}>Journal des emails</div>
+              <div className="font-display text-lg" style={{ color: 'var(--brand)' }}>Journal des emails</div>
               <div className="text-xs text-[var(--text-muted)] mt-1">Tous les envois, ouvertures et clics en temps réel</div>
             </Link>
           </div>
@@ -191,7 +191,7 @@ export default function CRMDashboardPage() {
                     key={camp.id}
                     href={`/admin/crm/campaigns?selected=${camp.id}`}
                     className="block p-4 rounded-xl transition-all hover:scale-[1.005]"
-                    style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+                    style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
                   >
                     <div className="flex items-center justify-between">
                       <div>
@@ -203,7 +203,7 @@ export default function CRMDashboardPage() {
                           className="px-3 py-1 rounded-full text-xs font-medium"
                           style={{
                             background: camp.status === 'sent' ? 'rgba(80,200,120,0.15)' : camp.status === 'scheduled' ? 'rgba(74,144,217,0.15)' : 'rgba(212,175,55,0.15)',
-                            color: camp.status === 'sent' ? '#50C878' : camp.status === 'scheduled' ? '#4A90D9' : 'var(--gold)',
+                            color: camp.status === 'sent' ? '#50C878' : camp.status === 'scheduled' ? '#4A90D9' : 'var(--brand)',
                           }}
                         >
                           {camp.status === 'sent' ? 'Envoyée' : camp.status === 'scheduled' ? 'Planifiée' : 'Brouillon'}

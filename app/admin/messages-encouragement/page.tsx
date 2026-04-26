@@ -171,7 +171,7 @@ export default function MessagesEncouragementPage() {
 
   const inputStyle: React.CSSProperties = {
     background: 'rgba(255,255,255,0.03)',
-    border: '1px solid var(--dark-border)',
+    border: '1px solid var(--border)',
     color: 'var(--text-primary)',
   }
 
@@ -213,7 +213,7 @@ export default function MessagesEncouragementPage() {
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer"
               style={{
                 background: isActive ? 'rgba(116,192,252,0.15)' : 'rgba(255,255,255,0.03)',
-                border: isActive ? '1px solid rgba(116,192,252,0.4)' : '1px solid var(--dark-border)',
+                border: isActive ? '1px solid rgba(116,192,252,0.4)' : '1px solid var(--border)',
                 color: isActive ? '#74C0FC' : 'var(--text-secondary)',
               }}
             >
@@ -231,7 +231,7 @@ export default function MessagesEncouragementPage() {
       </div>
 
       {/* Add message */}
-      <div className="rounded-xl p-4" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+      <div className="rounded-xl p-4" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         <label className="block text-xs font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
           Ajouter un nouveau message
         </label>
@@ -258,7 +258,7 @@ export default function MessagesEncouragementPage() {
 
       {/* Import defaults */}
       {slotMessages.length === 0 && (
-        <div className="rounded-xl p-6 text-center" style={{ background: 'var(--dark-card)', border: '1px dashed var(--dark-border)' }}>
+        <div className="rounded-xl p-6 text-center" style={{ background: 'var(--surface-card)', border: '1px dashed var(--border)' }}>
           <p className="text-sm mb-3" style={{ color: 'var(--text-muted)' }}>
             Aucun message pour ce créneau. Importez les messages par défaut pour commencer.
           </p>
@@ -280,8 +280,8 @@ export default function MessagesEncouragementPage() {
             key={msg.id}
             className="rounded-xl p-4 flex items-start gap-3 group"
             style={{
-              background: msg.is_active ? 'var(--dark-card)' : 'rgba(255,255,255,0.01)',
-              border: '1px solid var(--dark-border)',
+              background: msg.is_active ? 'var(--surface-card)' : 'rgba(255,255,255,0.01)',
+              border: '1px solid var(--border)',
               opacity: msg.is_active ? 1 : 0.5,
             }}
           >
@@ -310,7 +310,7 @@ export default function MessagesEncouragementPage() {
                 </button>
                 <button onClick={() => { setEditingId(null); setEditText('') }}
                   className="px-3 py-1.5 rounded-lg text-xs cursor-pointer"
-                  style={{ color: 'var(--text-muted)', border: '1px solid var(--dark-border)' }}>
+                  style={{ color: 'var(--text-muted)', border: '1px solid var(--border)' }}>
                   Annuler
                 </button>
               </div>
@@ -368,7 +368,7 @@ export default function MessagesEncouragementPage() {
             onClick={handleImportDefaults}
             disabled={importing}
             className="px-4 py-2 rounded-lg text-xs cursor-pointer disabled:opacity-50"
-            style={{ color: 'var(--text-muted)', border: '1px solid var(--dark-border)' }}
+            style={{ color: 'var(--text-muted)', border: '1px solid var(--border)' }}
           >
             {importing ? 'Import...' : 'Importer les messages par défaut'}
           </button>
@@ -437,13 +437,13 @@ function PushNotificationAdmin() {
 
   const inputStyle: React.CSSProperties = {
     background: 'rgba(255,255,255,0.03)',
-    border: '1px solid var(--dark-border)',
+    border: '1px solid var(--border)',
     color: 'var(--text-primary)',
   }
 
   return (
-    <div className="rounded-xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-      <div className="p-5 flex items-center justify-between" style={{ borderBottom: '1px solid var(--dark-border)' }}>
+    <div className="rounded-xl overflow-hidden" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
+      <div className="p-5 flex items-center justify-between" style={{ borderBottom: '1px solid var(--border)' }}>
         <h2 className="font-semibold text-base flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
           Notifications Push
         </h2>

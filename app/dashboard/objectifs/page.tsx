@@ -186,7 +186,7 @@ export default function ObjectifsPage() {
         <button
           onClick={() => setShowModal(true)}
           className="w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-200 hover:scale-105 cursor-pointer"
-          style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#09090b' }}
+          style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#09090b' }}
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -201,7 +201,7 @@ export default function ObjectifsPage() {
         className="grid grid-cols-3 gap-3"
       >
         {[
-          { label: t('goals.total'), value: goals.length, accent: 'var(--gold)' },
+          { label: t('goals.total'), value: goals.length, accent: 'var(--brand)' },
           { label: t('goals.active'), value: activeGoals.length, accent: '#55EFC4' },
           { label: t('goals.completed'), value: completedGoals.length, accent: '#74C0FC' },
         ].map((stat) => (
@@ -232,7 +232,7 @@ export default function ObjectifsPage() {
             <Link
               href="/onboarding"
               className="text-[12px] px-3 py-1.5 rounded-lg transition-colors"
-              style={{ color: 'var(--gold)', background: 'rgba(212,175,55,0.08)' }}
+              style={{ color: 'var(--brand)', background: 'rgba(212,175,55,0.08)' }}
             >
               Modifier
             </Link>
@@ -255,12 +255,12 @@ export default function ObjectifsPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1.5">
                       <span className="inline-block w-2 h-2 rounded-full shrink-0"
-                        style={{ background: og.status === 'completed' ? '#55EFC4' : 'var(--gold)' }} />
+                        style={{ background: og.status === 'completed' ? '#55EFC4' : 'var(--brand)' }} />
                       <span className="text-[11px] font-medium uppercase tracking-wide"
-                        style={{ color: og.status === 'completed' ? '#55EFC4' : 'var(--gold)' }}>
+                        style={{ color: og.status === 'completed' ? '#55EFC4' : 'var(--brand)' }}>
                         {og.status === 'completed' ? 'Complété' : 'En cours'}
                       </span>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)' }}>
                         Onboarding
                       </span>
                     </div>
@@ -280,7 +280,7 @@ export default function ObjectifsPage() {
                       <Link
                         href={`/dashboard/encyclopedie/${og.recommended_slug}`}
                         className="inline-flex items-center gap-1.5 text-[12px] font-medium transition-colors hover:opacity-80"
-                        style={{ color: 'var(--gold)' }}
+                        style={{ color: 'var(--brand)' }}
                       >
                         <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
@@ -336,7 +336,7 @@ export default function ObjectifsPage() {
           <Link
             href="/onboarding"
             className="inline-block px-6 py-2.5 rounded-full text-sm font-medium transition-all hover:opacity-90"
-            style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#09090b' }}
+            style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#09090b' }}
           >
             Commencer le questionnaire
           </Link>
@@ -354,7 +354,7 @@ export default function ObjectifsPage() {
             className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center"
             style={{ background: 'rgba(212, 175, 55, 0.08)' }}
           >
-            <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--gold)' }}>
+            <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--brand)' }}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
             </svg>
           </div>
@@ -383,9 +383,9 @@ export default function ObjectifsPage() {
                     <div className="flex items-center gap-2 mb-2">
                       <span
                         className="inline-block w-2 h-2 rounded-full shrink-0"
-                        style={{ background: goal.status === 'completed' ? '#55EFC4' : 'var(--gold)' }}
+                        style={{ background: goal.status === 'completed' ? '#55EFC4' : 'var(--brand)' }}
                       />
-                      <span className="text-[11px] font-medium uppercase tracking-wide" style={{ color: goal.status === 'completed' ? '#55EFC4' : 'var(--gold)' }}>
+                      <span className="text-[11px] font-medium uppercase tracking-wide" style={{ color: goal.status === 'completed' ? '#55EFC4' : 'var(--brand)' }}>
                         {goal.status === 'completed' ? t('goals.completed') : t('goals.active')}
                       </span>
                     </div>
@@ -489,7 +489,7 @@ export default function ObjectifsPage() {
                     className="w-full px-3.5 py-2.5 rounded-xl text-[14px] outline-none transition-colors"
                     style={{
                       background: 'rgba(255, 255, 255, 0.04)',
-                      border: '1px solid var(--dark-border)',
+                      border: '1px solid var(--border)',
                       color: 'var(--text-primary)',
                     }}
                   />
@@ -504,7 +504,7 @@ export default function ObjectifsPage() {
                     className="w-full px-3.5 py-2.5 rounded-xl text-[14px] outline-none resize-none transition-colors"
                     style={{
                       background: 'rgba(255, 255, 255, 0.04)',
-                      border: '1px solid var(--dark-border)',
+                      border: '1px solid var(--border)',
                       color: 'var(--text-primary)',
                     }}
                   />
@@ -518,7 +518,7 @@ export default function ObjectifsPage() {
                     className="w-full px-3.5 py-2.5 rounded-xl text-[14px] outline-none transition-colors"
                     style={{
                       background: 'rgba(255, 255, 255, 0.04)',
-                      border: '1px solid var(--dark-border)',
+                      border: '1px solid var(--border)',
                       color: 'var(--text-primary)',
                     }}
                   />
@@ -529,7 +529,7 @@ export default function ObjectifsPage() {
                 onClick={handleCreate}
                 disabled={!title.trim()}
                 className="w-full py-2.5 rounded-xl text-[14px] font-medium transition-all duration-200 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
-                style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#09090b' }}
+                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#09090b' }}
               >
                 {t('goals.create')}
               </button>
@@ -562,8 +562,8 @@ export default function ObjectifsPage() {
 
               return (
                 <div key={ch.id} className="rounded-xl p-5" style={{
-                  background: isCompleted ? 'rgba(85,239,196,0.04)' : 'var(--dark-card)',
-                  border: isCompleted ? '1px solid rgba(85,239,196,0.15)' : '1px solid var(--dark-border)',
+                  background: isCompleted ? 'rgba(85,239,196,0.04)' : 'var(--surface-card)',
+                  border: isCompleted ? '1px solid rgba(85,239,196,0.15)' : '1px solid var(--border)',
                 }}>
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
@@ -576,7 +576,7 @@ export default function ObjectifsPage() {
                         )}
                         {hasPhases && (
                           <span className="text-[10px] px-2 py-0.5 rounded-full font-medium"
-                            style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}>
+                            style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)' }}>
                             {phases.length} phase{phases.length > 1 ? 's' : ''}
                           </span>
                         )}
@@ -593,7 +593,7 @@ export default function ObjectifsPage() {
                               <div className="h-full rounded-full transition-all duration-500"
                                 style={{
                                   width: `${phases.length > 0 ? (completedPhases / phases.length) * 100 : 0}%`,
-                                  background: 'linear-gradient(90deg, var(--gold), #55EFC4)',
+                                  background: 'linear-gradient(90deg, var(--brand), #55EFC4)',
                                 }} />
                             </div>
                             <span className="text-[10px] font-medium" style={{ color: 'var(--text-muted)' }}>
@@ -604,7 +604,7 @@ export default function ObjectifsPage() {
                       )}
 
                       <div className="flex flex-wrap items-center gap-3 text-[11px]" style={{ color: 'var(--text-muted)' }}>
-                        <span style={{ color: 'var(--gold)' }}>+{ch.reward_value} XP</span>
+                        <span style={{ color: 'var(--brand)' }}>+{ch.reward_value} XP</span>
                         {ch.reward_detail && <span>{ch.reward_detail}</span>}
                         {daysLeft !== null && daysLeft > 0 && <span>{daysLeft} jours restants</span>}
                         {ch.status === 'completed' && <span style={{ color: '#D4AF37' }}>Défi terminé</span>}
@@ -639,7 +639,7 @@ export default function ObjectifsPage() {
                             }
                           }}
                           className="px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer"
-                          style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
+                          style={{ background: 'var(--brand)', color: 'var(--dark)' }}>
                           Participer
                         </button>
                       ) : isEnrolled && !isCompleted && ch.status === 'active' && !hasPhases ? (
@@ -676,7 +676,7 @@ export default function ObjectifsPage() {
                       {hasPhases && isEnrolled && (
                         <button onClick={() => setExpandedChallenge(isExpanded ? null : ch.id)}
                           className="text-[11px] font-medium cursor-pointer"
-                          style={{ color: 'var(--gold)' }}>
+                          style={{ color: 'var(--brand)' }}>
                           {isExpanded ? 'Masquer les phases' : 'Voir les phases'}
                         </button>
                       )}
@@ -692,7 +692,7 @@ export default function ObjectifsPage() {
 
                   {/* Expanded phases */}
                   {isExpanded && hasPhases && (
-                    <div className="mt-4 pt-4 space-y-2" style={{ borderTop: '1px solid var(--dark-border)' }}>
+                    <div className="mt-4 pt-4 space-y-2" style={{ borderTop: '1px solid var(--border)' }}>
                       {phases.map((phase, i) => {
                         const pp = myProgress.find(p => p.phase_id === phase.id)
                         const phaseStatus = pp?.status || 'pending'
@@ -716,7 +716,7 @@ export default function ObjectifsPage() {
                                 </div>
                               ) : (
                                 <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold"
-                                  style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}>
+                                  style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)' }}>
                                   {i + 1}
                                 </div>
                               )}

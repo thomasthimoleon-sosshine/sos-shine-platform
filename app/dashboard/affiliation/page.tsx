@@ -66,7 +66,7 @@ function AffiliateLanding({ onApply }: { onApply: () => void }) {
         />
         <span
           className="inline-block px-4 py-1.5 rounded-full text-[11px] font-semibold uppercase tracking-widest mb-6"
-          style={{ background: 'rgba(212, 175, 55, 0.1)', color: 'var(--gold)', border: '1px solid rgba(212, 175, 55, 0.15)' }}
+          style={{ background: 'rgba(212, 175, 55, 0.1)', color: 'var(--brand)', border: '1px solid rgba(212, 175, 55, 0.15)' }}
         >
           {t('affiliate.hero_badge')}
         </span>
@@ -83,7 +83,7 @@ function AffiliateLanding({ onApply }: { onApply: () => void }) {
           onClick={onApply}
           className="mt-8 px-8 py-3.5 rounded-xl font-semibold text-[15px] cursor-pointer transition-all duration-300"
           style={{
-            background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))',
+            background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
             color: '#09090b',
             boxShadow: '0 4px 24px rgba(212, 175, 55, 0.25)',
           }}
@@ -269,7 +269,7 @@ function AffiliateLanding({ onApply }: { onApply: () => void }) {
         />
         <h2 className="font-display text-2xl sm:text-3xl font-semibold tracking-tight relative" style={{ color: 'var(--text-primary)' }}>
           {t('affiliate.hero_title')}{' '}
-          <span style={{ color: 'var(--gold)' }}>{t('affiliate.hero_title_highlight')}</span>
+          <span style={{ color: 'var(--brand)' }}>{t('affiliate.hero_title_highlight')}</span>
         </h2>
         <p className="mt-3 text-[14px] max-w-lg mx-auto relative" style={{ color: 'var(--text-secondary)' }}>
           {t('affiliate.hero_desc')}
@@ -280,7 +280,7 @@ function AffiliateLanding({ onApply }: { onApply: () => void }) {
           onClick={onApply}
           className="mt-6 px-8 py-3.5 rounded-xl font-semibold text-[15px] cursor-pointer transition-all duration-300 relative"
           style={{
-            background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))',
+            background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
             color: '#09090b',
             boxShadow: '0 4px 24px rgba(212, 175, 55, 0.25)',
           }}
@@ -370,8 +370,8 @@ function AffiliateApplicationForm({ userId, onSuccess }: { userId: string; onSuc
             minLength={20}
             className="w-full rounded-xl px-4 py-3 text-[14px] resize-none outline-none transition-all duration-200 placeholder:opacity-40"
             style={{
-              background: 'var(--dark-card)',
-              border: '1px solid var(--dark-border)',
+              background: 'var(--surface-card)',
+              border: '1px solid var(--border)',
               color: 'var(--text-primary)',
             }}
           />
@@ -392,8 +392,8 @@ function AffiliateApplicationForm({ userId, onSuccess }: { userId: string; onSuc
             placeholder={t('affiliate.form_audience_placeholder')}
             className="w-full rounded-xl px-4 py-3 text-[14px] outline-none transition-all duration-200 placeholder:opacity-40"
             style={{
-              background: 'var(--dark-card)',
-              border: '1px solid var(--dark-border)',
+              background: 'var(--surface-card)',
+              border: '1px solid var(--border)',
               color: 'var(--text-primary)',
             }}
           />
@@ -412,9 +412,9 @@ function AffiliateApplicationForm({ userId, onSuccess }: { userId: string; onSuc
                 onClick={() => toggleChannel(ch)}
                 className="px-4 py-2 rounded-xl text-[13px] font-medium cursor-pointer transition-all duration-200"
                 style={{
-                  background: channels.includes(ch) ? 'rgba(212, 175, 55, 0.12)' : 'var(--dark-card)',
-                  border: `1px solid ${channels.includes(ch) ? 'rgba(212, 175, 55, 0.3)' : 'var(--dark-border)'}`,
-                  color: channels.includes(ch) ? 'var(--gold)' : 'var(--text-secondary)',
+                  background: channels.includes(ch) ? 'rgba(212, 175, 55, 0.12)' : 'var(--surface-card)',
+                  border: `1px solid ${channels.includes(ch) ? 'rgba(212, 175, 55, 0.3)' : 'var(--border)'}`,
+                  color: channels.includes(ch) ? 'var(--brand)' : 'var(--text-secondary)',
                 }}
               >
                 {t(`affiliate.form_channel_${ch}`)}
@@ -435,8 +435,8 @@ function AffiliateApplicationForm({ userId, onSuccess }: { userId: string; onSuc
             placeholder={t('affiliate.form_social_placeholder')}
             className="w-full rounded-xl px-4 py-3 text-[14px] outline-none transition-all duration-200 placeholder:opacity-40"
             style={{
-              background: 'var(--dark-card)',
-              border: '1px solid var(--dark-border)',
+              background: 'var(--surface-card)',
+              border: '1px solid var(--border)',
               color: 'var(--text-primary)',
             }}
           />
@@ -454,8 +454,8 @@ function AffiliateApplicationForm({ userId, onSuccess }: { userId: string; onSuc
             placeholder={t('affiliate.form_website_placeholder')}
             className="w-full rounded-xl px-4 py-3 text-[14px] outline-none transition-all duration-200 placeholder:opacity-40"
             style={{
-              background: 'var(--dark-card)',
-              border: '1px solid var(--dark-border)',
+              background: 'var(--surface-card)',
+              border: '1px solid var(--border)',
               color: 'var(--text-primary)',
             }}
           />
@@ -472,7 +472,7 @@ function AffiliateApplicationForm({ userId, onSuccess }: { userId: string; onSuc
           disabled={submitting || motivation.trim().length < 20}
           className="w-full py-3.5 rounded-xl font-semibold text-[15px] cursor-pointer transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
           style={{
-            background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))',
+            background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
             color: '#09090b',
             boxShadow: '0 4px 24px rgba(212, 175, 55, 0.25)',
           }}
@@ -501,7 +501,7 @@ function AffiliatePending() {
         className="w-20 h-20 rounded-3xl mx-auto flex items-center justify-center mb-6"
         style={{ background: 'rgba(212, 175, 55, 0.1)' }}
       >
-        <svg className="w-10 h-10" style={{ color: 'var(--gold)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <svg className="w-10 h-10" style={{ color: 'var(--brand)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       </div>
@@ -608,14 +608,14 @@ function WithdrawalModal({ affiliate, onClose, onSuccess }: { affiliate: Affilia
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
         className="w-full max-w-md rounded-2xl p-6 sm:p-8 space-y-6"
-        style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+        style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
       >
         <div>
           <h2 className="font-display text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
             Demander un retrait
           </h2>
           <p className="text-[13px] mt-1" style={{ color: 'var(--text-secondary)' }}>
-            Solde disponible : <span className="font-semibold" style={{ color: 'var(--gold)' }}>{affiliate.pending_earnings.toFixed(2)}€</span>
+            Solde disponible : <span className="font-semibold" style={{ color: 'var(--brand)' }}>{affiliate.pending_earnings.toFixed(2)}€</span>
           </p>
         </div>
 
@@ -630,9 +630,9 @@ function WithdrawalModal({ affiliate, onClose, onSuccess }: { affiliate: Affilia
                 type="number" min={50} max={affiliate.pending_earnings} step={0.01}
                 value={amount} onChange={(e) => setAmount(Number(e.target.value))}
                 className="w-full rounded-xl px-4 py-3 text-[14px] outline-none pr-10"
-                style={{ background: 'var(--dark)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                style={{ background: 'var(--dark)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
               />
-              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[14px] font-semibold" style={{ color: 'var(--gold)' }}>€</span>
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[14px] font-semibold" style={{ color: 'var(--brand)' }}>€</span>
             </div>
           </div>
 
@@ -650,8 +650,8 @@ function WithdrawalModal({ affiliate, onClose, onSuccess }: { affiliate: Affilia
                   className="flex-1 py-3 rounded-xl text-[13px] font-medium cursor-pointer transition-all"
                   style={{
                     background: method === m.key ? 'rgba(212,175,55,0.1)' : 'var(--dark)',
-                    border: `1px solid ${method === m.key ? 'rgba(212,175,55,0.3)' : 'var(--dark-border)'}`,
-                    color: method === m.key ? 'var(--gold)' : 'var(--text-secondary)',
+                    border: `1px solid ${method === m.key ? 'rgba(212,175,55,0.3)' : 'var(--border)'}`,
+                    color: method === m.key ? 'var(--brand)' : 'var(--text-secondary)',
                   }}>
                   {m.icon} {m.label}
                 </button>
@@ -669,7 +669,7 @@ function WithdrawalModal({ affiliate, onClose, onSuccess }: { affiliate: Affilia
                 type="text" value={iban} onChange={(e) => setIban(e.target.value)}
                 placeholder="FR76 1234 5678 9012 3456 7890 123"
                 className="w-full rounded-xl px-4 py-3 text-[14px] font-mono outline-none placeholder:opacity-40"
-                style={{ background: 'var(--dark)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                style={{ background: 'var(--dark)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
               />
             </div>
           ) : (
@@ -681,7 +681,7 @@ function WithdrawalModal({ affiliate, onClose, onSuccess }: { affiliate: Affilia
                 type="email" value={paypalEmail} onChange={(e) => setPaypalEmail(e.target.value)}
                 placeholder="votre@email.com"
                 className="w-full rounded-xl px-4 py-3 text-[14px] outline-none placeholder:opacity-40"
-                style={{ background: 'var(--dark)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                style={{ background: 'var(--dark)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
               />
             </div>
           )}
@@ -693,14 +693,14 @@ function WithdrawalModal({ affiliate, onClose, onSuccess }: { affiliate: Affilia
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose}
               className="flex-1 py-3 rounded-xl text-[13px] font-semibold cursor-pointer transition-all"
-              style={{ background: 'var(--dark)', border: '1px solid var(--dark-border)', color: 'var(--text-secondary)' }}>
+              style={{ background: 'var(--dark)', border: '1px solid var(--border)', color: 'var(--text-secondary)' }}>
               Annuler
             </button>
             <motion.button
               whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
               type="submit" disabled={submitting || amount < 50 || amount > affiliate.pending_earnings}
               className="flex-1 py-3 rounded-xl text-[13px] font-semibold cursor-pointer transition-all disabled:opacity-50"
-              style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#09090b' }}>
+              style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#09090b' }}>
               {submitting ? 'Envoi...' : `Retirer ${amount.toFixed(2)}€`}
             </motion.button>
           </div>
@@ -792,7 +792,7 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
         <div className="flex items-center gap-3">
           <div
             className="flex-1 rounded-xl px-4 py-3 text-[13px] font-mono truncate select-all"
-            style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--gold)' }}
+            style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--brand)' }}
           >
             {referralUrl}
           </div>
@@ -802,7 +802,7 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
             onClick={copyLink}
             className="px-5 py-3 rounded-xl font-semibold text-[13px] cursor-pointer whitespace-nowrap transition-all duration-200"
             style={{
-              background: copied ? 'rgba(85, 239, 196, 0.15)' : 'linear-gradient(135deg, var(--gold), var(--gold-deep))',
+              background: copied ? 'rgba(85, 239, 196, 0.15)' : 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
               color: copied ? '#55EFC4' : '#09090b',
               border: copied ? '1px solid rgba(85, 239, 196, 0.3)' : 'none',
             }}
@@ -864,7 +864,7 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
               {affiliate.total_referrals}/{nextTier.min} filleuls
             </span>
           </div>
-          <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: 'var(--dark-card)' }}>
+          <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: 'var(--surface-card)' }}>
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${progressToNext}%` }}
@@ -887,7 +887,7 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
         </h2>
         {loadingData ? (
           <div className="glass p-8 text-center">
-            <div className="w-6 h-6 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin mx-auto" />
+            <div className="w-6 h-6 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin mx-auto" />
           </div>
         ) : conversions.length === 0 ? (
           <div className="glass p-8 text-center">
@@ -903,7 +903,7 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
             <div className="overflow-x-auto">
               <table className="w-full text-[13px]">
                 <thead>
-                  <tr style={{ borderBottom: '1px solid var(--dark-border)' }}>
+                  <tr style={{ borderBottom: '1px solid var(--border)' }}>
                     <th className="px-5 py-3 text-left font-semibold" style={{ color: 'var(--text-muted)' }}>Date</th>
                     <th className="px-5 py-3 text-left font-semibold" style={{ color: 'var(--text-muted)' }}>Type</th>
                     <th className="px-5 py-3 text-left font-semibold" style={{ color: 'var(--text-muted)' }}>Plan</th>
@@ -913,7 +913,7 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
                 </thead>
                 <tbody>
                   {conversions.map((conv) => (
-                    <tr key={conv.id} style={{ borderBottom: '1px solid var(--dark-border)' }}>
+                    <tr key={conv.id} style={{ borderBottom: '1px solid var(--border)' }}>
                       <td className="px-5 py-3" style={{ color: 'var(--text-secondary)' }}>
                         {new Date(conv.created_at).toLocaleDateString('fr-FR')}
                       </td>
@@ -923,7 +923,7 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
                       <td className="px-5 py-3 capitalize" style={{ color: 'var(--text-secondary)' }}>
                         {conv.plan || '-'}
                       </td>
-                      <td className="px-5 py-3 text-right font-semibold" style={{ color: 'var(--gold)' }}>
+                      <td className="px-5 py-3 text-right font-semibold" style={{ color: 'var(--brand)' }}>
                         {conv.commission_amount.toFixed(2)}€
                       </td>
                       <td className="px-5 py-3 text-right">
@@ -1000,7 +1000,7 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
               className="px-4 py-2 rounded-xl text-[12px] font-semibold cursor-pointer transition-all duration-200"
               style={{
                 background: 'rgba(212, 175, 55, 0.1)',
-                color: 'var(--gold)',
+                color: 'var(--brand)',
                 border: '1px solid rgba(212, 175, 55, 0.2)',
               }}
             >
@@ -1024,7 +1024,7 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
             <div className="overflow-x-auto">
               <table className="w-full text-[13px]">
                 <thead>
-                  <tr style={{ borderBottom: '1px solid var(--dark-border)' }}>
+                  <tr style={{ borderBottom: '1px solid var(--border)' }}>
                     <th className="px-5 py-3 text-left font-semibold" style={{ color: 'var(--text-muted)' }}>Date</th>
                     <th className="px-5 py-3 text-left font-semibold" style={{ color: 'var(--text-muted)' }}>Montant</th>
                     <th className="px-5 py-3 text-left font-semibold" style={{ color: 'var(--text-muted)' }}>Moyen</th>
@@ -1033,11 +1033,11 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
                 </thead>
                 <tbody>
                   {payouts.map((p) => (
-                    <tr key={p.id} style={{ borderBottom: '1px solid var(--dark-border)' }}>
+                    <tr key={p.id} style={{ borderBottom: '1px solid var(--border)' }}>
                       <td className="px-5 py-3" style={{ color: 'var(--text-secondary)' }}>
                         {new Date(p.created_at).toLocaleDateString('fr-FR')}
                       </td>
-                      <td className="px-5 py-3 font-semibold" style={{ color: 'var(--gold)' }}>
+                      <td className="px-5 py-3 font-semibold" style={{ color: 'var(--brand)' }}>
                         {p.amount.toFixed(2)}€
                       </td>
                       <td className="px-5 py-3 capitalize" style={{ color: 'var(--text-secondary)' }}>
@@ -1119,7 +1119,7 @@ function SupportContact() {
         <div className="flex items-center gap-3 mb-4">
           <div className="w-9 h-9 rounded-xl flex items-center justify-center"
             style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.15)' }}>
-            <svg className="w-4 h-4" style={{ color: 'var(--gold)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <svg className="w-4 h-4" style={{ color: 'var(--brand)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
             </svg>
           </div>
@@ -1144,7 +1144,7 @@ function SupportContact() {
               rows={3}
               maxLength={2000}
               className="w-full px-4 py-3 rounded-xl text-sm outline-none resize-none"
-              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
             />
             {error && (
               <p className="text-xs" style={{ color: '#EF4444' }}>{error}</p>
@@ -1155,7 +1155,7 @@ function SupportContact() {
                 onClick={handleSend}
                 disabled={sending || !message.trim()}
                 className="px-5 py-2 rounded-xl text-xs font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}
+                style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.2)' }}
               >
                 {sending ? 'Envoi...' : 'Envoyer'}
               </button>
@@ -1215,7 +1215,7 @@ export default function AffiliationPage() {
       <div className="flex items-center justify-center min-h-[50vh]">
         <div className="text-center space-y-4">
           <div className="w-10 h-10 rounded-2xl mx-auto flex items-center justify-center"
-            style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))' }}>
+            style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))' }}>
             <div className="w-5 h-5 border-2 border-[var(--dark)] border-t-transparent rounded-full animate-spin" />
           </div>
           <p className="text-sm" style={{ color: 'var(--text-muted)' }}>{t('common.loading')}</p>

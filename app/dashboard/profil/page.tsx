@@ -262,12 +262,12 @@ export default function ProfilPage() {
     return map[status] || { label: status, color: 'var(--text-muted)' }
   }
 
-  const inputStyle = { background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }
+  const inputStyle = { background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)' }
 
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -280,14 +280,14 @@ export default function ProfilPage() {
       </div>
 
       {/* Photo de profil */}
-      <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+      <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         <h3 className="font-semibold text-base mb-4" style={{ color: 'var(--text-primary)' }}>{t('dashboard.profile_photo')}</h3>
         <div className="flex items-center gap-5">
           {profile?.avatar_url ? (
             <img src={profile.avatar_url} alt="Avatar" className="w-20 h-20 rounded-2xl object-cover flex-shrink-0" />
           ) : (
             <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-3xl font-display font-semibold flex-shrink-0"
-              style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+              style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
               {profile?.prenom?.charAt(0).toUpperCase() || 'M'}
             </div>
           )}
@@ -295,7 +295,7 @@ export default function ProfilPage() {
             <input ref={avatarRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
             <button onClick={() => avatarRef.current?.click()} disabled={uploadingAvatar}
               className="block px-4 py-2 rounded-xl text-sm font-medium transition-all cursor-pointer disabled:opacity-50"
-              style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
+              style={{ background: 'var(--brand)', color: 'var(--dark)' }}>
               {uploadingAvatar ? t('dashboard.sending') : profile?.avatar_url ? t('dashboard.change_photo') : t('dashboard.add_photo')}
             </button>
             {profile?.avatar_url && (
@@ -314,11 +314,11 @@ export default function ProfilPage() {
       </div>
 
       {/* Informations */}
-      <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+      <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         <div className="flex items-center justify-between mb-5">
           <h3 className="font-semibold text-base" style={{ color: 'var(--text-primary)' }}>{t('dashboard.information')}</h3>
           {!editing && (
-            <button onClick={() => setEditing(true)} className="text-xs font-medium cursor-pointer" style={{ color: 'var(--gold)' }}>
+            <button onClick={() => setEditing(true)} className="text-xs font-medium cursor-pointer" style={{ color: 'var(--brand)' }}>
               {t('common.edit')}
             </button>
           )}
@@ -352,7 +352,7 @@ export default function ProfilPage() {
             <div className="flex gap-2">
               <button onClick={handleSave} disabled={saving || !prenom.trim()}
                 className="px-4 py-2 rounded-xl text-sm font-semibold transition-all cursor-pointer disabled:opacity-50"
-                style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
+                style={{ background: 'var(--brand)', color: 'var(--dark)' }}>
                 {saving ? t('dashboard.saving') : t('common.save')}
               </button>
               <button onClick={() => { setEditing(false); setPrenom(profile?.prenom || ''); setPseudo(profile?.pseudo || ''); setBio(profile?.bio || '') }}
@@ -371,7 +371,7 @@ export default function ProfilPage() {
                 <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>({profile.pseudo})</span>
               )}
               {profile?.role === 'founder' && (
-                <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>{t('dashboard.founder')}</span>
+                <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)' }}>{t('dashboard.founder')}</span>
               )}
             </div>
             <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{profile?.email}</p>
@@ -384,7 +384,7 @@ export default function ProfilPage() {
       </div>
 
       {/* Vidéo de présentation */}
-      <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+      <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         <h3 className="font-semibold text-base mb-4" style={{ color: 'var(--text-primary)' }}>{t('dashboard.presentation_video')}</h3>
         <p className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>{t('dashboard.presentation_video_desc')}</p>
         {profile?.video_url ? (
@@ -393,7 +393,7 @@ export default function ProfilPage() {
             <div className="flex items-center gap-3">
               <input ref={videoRef} type="file" accept="video/*" className="hidden" onChange={handleVideoUpload} />
               <button onClick={() => videoRef.current?.click()} disabled={uploadingVideo}
-                className="text-xs font-medium cursor-pointer disabled:opacity-50" style={{ color: 'var(--gold)' }}>
+                className="text-xs font-medium cursor-pointer disabled:opacity-50" style={{ color: 'var(--brand)' }}>
                 {uploadingVideo ? t('dashboard.sending') : t('dashboard.change_video')}
               </button>
               <button onClick={handleRemoveVideo} className="text-xs cursor-pointer" style={{ color: '#FF6B6B' }}>
@@ -406,7 +406,7 @@ export default function ProfilPage() {
             <input ref={videoRef} type="file" accept="video/*" className="hidden" onChange={handleVideoUpload} />
             <button onClick={() => videoRef.current?.click()} disabled={uploadingVideo}
               className="px-4 py-2.5 rounded-xl text-sm font-medium cursor-pointer disabled:opacity-50"
-              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-secondary)' }}>
+              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-secondary)' }}>
               {uploadingVideo ? t('dashboard.sending_video') : t('dashboard.add_video')}
             </button>
           </div>
@@ -414,7 +414,7 @@ export default function ProfilPage() {
       </div>
 
       {/* Subscription */}
-      <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+      <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         <h3 className="font-semibold text-base mb-4" style={{ color: 'var(--text-primary)' }}>{t('dashboard.subscription')}</h3>
         {subscription ? (
           <div className="space-y-4">
@@ -583,7 +583,7 @@ export default function ProfilPage() {
       </div>
 
       {/* E-mail & Sécurité */}
-      <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+      <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         <h3 className="font-semibold text-base mb-5" style={{ color: 'var(--text-primary)' }}>E-mail & Sécurité</h3>
 
         {/* Changement d'e-mail */}
@@ -592,7 +592,7 @@ export default function ProfilPage() {
             <label className="text-xs font-medium" style={{ color: 'var(--text-muted)' }}>Adresse e-mail</label>
             {!editingEmail && (
               <button onClick={() => { setEditingEmail(true); setNewEmail(profile?.email || ''); setEmailSuccess(null); setEmailError(null) }}
-                className="text-xs font-medium cursor-pointer" style={{ color: 'var(--gold)' }}>
+                className="text-xs font-medium cursor-pointer" style={{ color: 'var(--brand)' }}>
                 Modifier
               </button>
             )}
@@ -605,7 +605,7 @@ export default function ProfilPage() {
               <div className="flex gap-2">
                 <button onClick={handleEmailChange} disabled={emailSaving || !newEmail.trim()}
                   className="px-4 py-2 rounded-xl text-sm font-semibold transition-all cursor-pointer disabled:opacity-50"
-                  style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
+                  style={{ background: 'var(--brand)', color: 'var(--dark)' }}>
                   {emailSaving ? 'Envoi...' : 'Confirmer'}
                 </button>
                 <button onClick={() => { setEditingEmail(false); setNewEmail(''); setEmailError(null) }}
@@ -635,7 +635,7 @@ export default function ProfilPage() {
             <label className="text-xs font-medium" style={{ color: 'var(--text-muted)' }}>Mot de passe</label>
             {!editingPassword && (
               <button onClick={() => { setEditingPassword(true); setPasswordSuccess(null); setPasswordError(null) }}
-                className="text-xs font-medium cursor-pointer" style={{ color: 'var(--gold)' }}>
+                className="text-xs font-medium cursor-pointer" style={{ color: 'var(--brand)' }}>
                 Modifier
               </button>
             )}
@@ -657,7 +657,7 @@ export default function ProfilPage() {
               <div className="flex gap-2">
                 <button onClick={handlePasswordChange} disabled={passwordSaving || !newPassword || !confirmPassword}
                   className="px-4 py-2 rounded-xl text-sm font-semibold transition-all cursor-pointer disabled:opacity-50"
-                  style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
+                  style={{ background: 'var(--brand)', color: 'var(--dark)' }}>
                   {passwordSaving ? 'Enregistrement...' : 'Changer le mot de passe'}
                 </button>
                 <button onClick={() => { setEditingPassword(false); setNewPassword(''); setConfirmPassword(''); setPasswordError(null) }}
@@ -683,7 +683,7 @@ export default function ProfilPage() {
       </div>
 
       {/* Account */}
-      <div className="rounded-2xl p-6" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+      <div className="rounded-2xl p-6" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         <button onClick={handleSignOut}
           className="w-full text-left px-4 py-3 rounded-xl text-sm flex items-center gap-3 transition-colors cursor-pointer"
           style={{ color: 'var(--text-secondary)' }}>

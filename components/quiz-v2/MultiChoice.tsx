@@ -41,7 +41,7 @@ export function MultiChoice({ choices, hasOther, maxSelections, selected, otherT
               {choice.text}
             </span>
             {isSelected && (
-              <span className="text-xs px-2 py-0.5 rounded-full flex-shrink-0" style={{ background: 'rgba(201,169,97,0.2)', color: 'var(--gold)' }}>
+              <span className="text-xs px-2 py-0.5 rounded-full flex-shrink-0" style={{ background: 'rgba(201,169,97,0.2)', color: 'var(--brand)' }}>
                 ✓
               </span>
             )}

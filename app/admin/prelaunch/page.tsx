@@ -208,7 +208,7 @@ export default function PrelaunchEditPage() {
   if (loading) return <div className="flex justify-center py-20"><div className="w-8 h-8 border-2 border-[#74C0FC] border-t-transparent rounded-full animate-spin" /></div>
 
   const isEnabled = values.prelaunch_enabled === 'true'
-  const inputStyle: React.CSSProperties = { background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }
+  const inputStyle: React.CSSProperties = { background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)' }
 
   return (
     <div className="max-w-4xl mx-auto space-y-4">
@@ -231,7 +231,7 @@ export default function PrelaunchEditPage() {
       {/* Status banner */}
       <div className="rounded-xl px-5 py-4 flex items-center justify-between" style={{
         background: isEnabled ? 'rgba(85,239,196,0.08)' : 'rgba(255,255,255,0.03)',
-        border: `1px solid ${isEnabled ? 'rgba(85,239,196,0.25)' : 'var(--dark-border)'}`,
+        border: `1px solid ${isEnabled ? 'rgba(85,239,196,0.25)' : 'var(--border)'}`,
       }}>
         <div className="flex items-center gap-3">
           <div className="w-3 h-3 rounded-full" style={{ background: isEnabled ? '#55EFC4' : 'var(--text-muted)' }} />
@@ -246,7 +246,7 @@ export default function PrelaunchEditPage() {
       {sections.map((section) => {
         const isOpen = openSections[section.title]
         return (
-          <div key={section.title} className="rounded-xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+          <div key={section.title} className="rounded-xl overflow-hidden" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
             <button onClick={() => toggleSection(section.title)} className="w-full flex items-center justify-between p-5 cursor-pointer text-left">
               <h2 className="font-semibold text-base flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
                 <span>{section.icon}</span> {section.title}
@@ -261,7 +261,7 @@ export default function PrelaunchEditPage() {
                 {section.fields.map((field, fi) => (
                   <div key={field.key || `sep-${fi}`}>
                     {field.type === 'separator' ? (
-                      <div className="pt-3 mt-1" style={{ borderTop: '1px solid var(--dark-border)' }}>
+                      <div className="pt-3 mt-1" style={{ borderTop: '1px solid var(--border)' }}>
                         <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>{field.label}</p>
                       </div>
                     ) : field.type === 'toggle' ? (

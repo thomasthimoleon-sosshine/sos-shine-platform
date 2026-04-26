@@ -74,7 +74,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div className="min-h-screen" style={{ background: 'var(--dark)' }}>
       {/* Admin top bar */}
       <header className="flex items-center justify-between px-6 py-4 sticky top-0 z-50"
-        style={{ background: 'var(--dark-card)', borderBottom: '1px solid var(--dark-border)' }}>
+        style={{ background: 'var(--surface-card)', borderBottom: '1px solid var(--border)' }}>
         <div className="flex items-center gap-4">
           <Link href="/admin" className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-semibold"
@@ -106,7 +106,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         <div className="flex items-center gap-3">
           <Link href="/dashboard" className="text-xs px-3 py-1.5 rounded-lg transition-colors"
-            style={{ color: 'var(--text-muted)', border: '1px solid var(--dark-border)' }}>
+            style={{ color: 'var(--text-muted)', border: '1px solid var(--border)' }}>
             Retour au site
           </Link>
           <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"

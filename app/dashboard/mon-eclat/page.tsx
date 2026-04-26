@@ -448,7 +448,7 @@ export default function MonEclatPage() {
     setMenuOpen(null)
   }
 
-  const inputStyle = { background: 'rgba(255,255,255,0.05)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }
+  const inputStyle = { background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', color: 'var(--text-primary)' }
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -457,19 +457,19 @@ export default function MonEclatPage() {
         style={{ background: 'linear-gradient(135deg, rgba(212,175,55,0.08), rgba(212,175,55,0.02))', border: '1px solid rgba(212,175,55,0.15)' }}>
         {/* Decorative glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 rounded-full blur-3xl opacity-20"
-          style={{ background: 'var(--gold)' }} />
+          style={{ background: 'var(--brand)' }} />
 
         {/* Avatar */}
         {currentProfile?.avatar_url ? (
-          <img src={currentProfile.avatar_url} alt="" className="w-20 h-20 rounded-2xl object-cover mx-auto mb-4 ring-2 ring-[var(--gold)]/20" />
+          <img src={currentProfile.avatar_url} alt="" className="w-20 h-20 rounded-2xl object-cover mx-auto mb-4 ring-2 ring-[var(--brand)]/20" />
         ) : (
-          <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl font-display font-semibold ring-2 ring-[var(--gold)]/20"
-            style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+          <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl font-display font-semibold ring-2 ring-[var(--brand)]/20"
+            style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
             {currentProfile?.prenom?.charAt(0).toUpperCase() || '?'}
           </div>
         )}
 
-        <h1 className="font-display text-3xl sm:text-4xl font-semibold relative" style={{ color: 'var(--gold)' }}>
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold relative" style={{ color: 'var(--brand)' }}>
           {t('dashboard.eclat_title')}
         </h1>
         <p className="mt-2 text-sm max-w-md mx-auto relative" style={{ color: 'var(--text-secondary)' }}>
@@ -479,27 +479,27 @@ export default function MonEclatPage() {
         {/* Stats */}
         <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 mt-5 relative">
           <div className="text-center">
-            <p className="text-xl font-semibold" style={{ color: 'var(--gold)' }}>{posts.length}</p>
+            <p className="text-xl font-semibold" style={{ color: 'var(--brand)' }}>{posts.length}</p>
             <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>publications</p>
           </div>
-          <div className="w-px h-8" style={{ background: 'var(--dark-border)' }} />
+          <div className="w-px h-8" style={{ background: 'var(--border)' }} />
           <div className="text-center">
-            <p className="text-xl font-semibold" style={{ color: 'var(--gold)' }}>{shinesGiven}</p>
+            <p className="text-xl font-semibold" style={{ color: 'var(--brand)' }}>{shinesGiven}</p>
             <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>shines transmis</p>
           </div>
-          <div className="w-px h-8" style={{ background: 'var(--dark-border)' }} />
+          <div className="w-px h-8" style={{ background: 'var(--border)' }} />
           <div className="text-center">
-            <p className="text-xl font-semibold" style={{ color: 'var(--gold)' }}>{totalLikes}</p>
+            <p className="text-xl font-semibold" style={{ color: 'var(--brand)' }}>{totalLikes}</p>
             <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>shines reçus</p>
           </div>
-          <div className="w-px h-8" style={{ background: 'var(--dark-border)' }} />
+          <div className="w-px h-8" style={{ background: 'var(--border)' }} />
           <div className="text-center">
-            <p className="text-xl font-semibold" style={{ color: 'var(--gold)' }}>{commentsLeft}</p>
+            <p className="text-xl font-semibold" style={{ color: 'var(--brand)' }}>{commentsLeft}</p>
             <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>commentaires laissés</p>
           </div>
-          <div className="w-px h-8" style={{ background: 'var(--dark-border)' }} />
+          <div className="w-px h-8" style={{ background: 'var(--border)' }} />
           <div className="text-center">
-            <p className="text-xl font-semibold" style={{ color: 'var(--gold)' }}>{totalComments}</p>
+            <p className="text-xl font-semibold" style={{ color: 'var(--brand)' }}>{totalComments}</p>
             <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>commentaires reçus</p>
           </div>
         </div>
@@ -520,8 +520,8 @@ export default function MonEclatPage() {
             onClick={() => setShowCreate(!showCreate)}
             className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer"
             style={{
-              background: showCreate ? 'rgba(212,175,55,0.1)' : 'linear-gradient(135deg, var(--gold), #B8960F)',
-              color: showCreate ? 'var(--gold)' : '#050505',
+              background: showCreate ? 'rgba(212,175,55,0.1)' : 'linear-gradient(135deg, var(--brand), #B8960F)',
+              color: showCreate ? 'var(--brand)' : '#050505',
               border: showCreate ? '1px solid rgba(212,175,55,0.3)' : 'none',
             }}
           >
@@ -546,8 +546,8 @@ export default function MonEclatPage() {
 
       {/* ── Create post form ── */}
       {showCreate && (
-        <div className="rounded-2xl p-6 space-y-5" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-          <h2 className="font-semibold text-lg" style={{ color: 'var(--gold)' }}>Nouvelle publication sur votre Éclat</h2>
+        <div className="rounded-2xl p-6 space-y-5" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
+          <h2 className="font-semibold text-lg" style={{ color: 'var(--brand)' }}>Nouvelle publication sur votre Éclat</h2>
 
           {createError && (
             <div className="rounded-xl p-3 text-xs" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', color: '#EF4444' }}>
@@ -566,7 +566,7 @@ export default function MonEclatPage() {
                   className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all cursor-pointer"
                   style={{
                     background: createCategory === cat.value ? `${cat.color}20` : 'rgba(255,255,255,0.03)',
-                    border: `1px solid ${createCategory === cat.value ? `${cat.color}50` : 'var(--dark-border)'}`,
+                    border: `1px solid ${createCategory === cat.value ? `${cat.color}50` : 'var(--border)'}`,
                     color: createCategory === cat.value ? cat.color : 'var(--text-secondary)',
                   }}
                 >
@@ -592,8 +592,8 @@ export default function MonEclatPage() {
                   className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all cursor-pointer"
                   style={{
                     background: createMediaType === mt.value ? 'rgba(212,175,55,0.12)' : 'rgba(255,255,255,0.03)',
-                    border: `1px solid ${createMediaType === mt.value ? 'rgba(212,175,55,0.3)' : 'var(--dark-border)'}`,
-                    color: createMediaType === mt.value ? 'var(--gold)' : 'var(--text-secondary)',
+                    border: `1px solid ${createMediaType === mt.value ? 'rgba(212,175,55,0.3)' : 'var(--border)'}`,
+                    color: createMediaType === mt.value ? 'var(--brand)' : 'var(--text-secondary)',
                   }}
                 >
                   <span>{mt.icon}</span> {mt.label}
@@ -611,7 +611,7 @@ export default function MonEclatPage() {
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer"
                 style={{
                   background: createVisibility === 'public' ? 'rgba(85,239,196,0.12)' : 'rgba(255,255,255,0.03)',
-                  border: `1px solid ${createVisibility === 'public' ? 'rgba(85,239,196,0.3)' : 'var(--dark-border)'}`,
+                  border: `1px solid ${createVisibility === 'public' ? 'rgba(85,239,196,0.3)' : 'var(--border)'}`,
                   color: createVisibility === 'public' ? '#55EFC4' : 'var(--text-secondary)',
                 }}
               >
@@ -625,8 +625,8 @@ export default function MonEclatPage() {
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer"
                 style={{
                   background: createVisibility === 'rayons_only' ? 'rgba(212,175,55,0.12)' : 'rgba(255,255,255,0.03)',
-                  border: `1px solid ${createVisibility === 'rayons_only' ? 'rgba(212,175,55,0.3)' : 'var(--dark-border)'}`,
-                  color: createVisibility === 'rayons_only' ? 'var(--gold)' : 'var(--text-secondary)',
+                  border: `1px solid ${createVisibility === 'rayons_only' ? 'rgba(212,175,55,0.3)' : 'var(--border)'}`,
+                  color: createVisibility === 'rayons_only' ? 'var(--brand)' : 'var(--text-secondary)',
                 }}
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -690,7 +690,7 @@ export default function MonEclatPage() {
               onClick={handleCreate}
               disabled={creating || !createContent.trim()}
               className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer disabled:opacity-50"
-              style={{ background: 'linear-gradient(135deg, var(--gold), #B8960F)', color: '#050505' }}
+              style={{ background: 'linear-gradient(135deg, var(--brand), #B8960F)', color: '#050505' }}
             >
               {creating ? 'Publication...' : 'Publier sur mon Éclat'}
             </button>
@@ -701,7 +701,7 @@ export default function MonEclatPage() {
       {/* ── Posts list ── */}
       {loading ? (
         <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : posts.length === 0 && !error ? (
         <div className="text-center py-16">
@@ -726,7 +726,7 @@ export default function MonEclatPage() {
             const isCommentsOpen = expandedComments === post.id
 
             return (
-              <article key={post.id} className="rounded-2xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+              <article key={post.id} className="rounded-2xl overflow-hidden" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
                 <div className="p-6">
                   {/* Category badge + actions */}
                   <div className="flex items-center justify-between mb-4">
@@ -737,7 +737,7 @@ export default function MonEclatPage() {
                       </span>
                       {post.visibility === 'rayons_only' && (
                         <span className="text-[10px] font-medium px-2 py-0.5 rounded-full flex items-center gap-1"
-                          style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.15)' }}>
+                          style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.15)' }}>
                           <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
                           </svg>
@@ -760,7 +760,7 @@ export default function MonEclatPage() {
                           </button>
                           {menuOpen === post.id && (
                             <div className="absolute right-0 top-8 rounded-xl py-1 z-20 min-w-[140px] shadow-xl"
-                              style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                              style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
                               <button onClick={() => startEdit(post)}
                                 className="w-full text-left px-4 py-2 text-sm flex items-center gap-2 transition-colors cursor-pointer"
                                 style={{ color: 'var(--text-secondary)' }}
@@ -792,12 +792,12 @@ export default function MonEclatPage() {
                       <div className="flex items-center gap-2 justify-end">
                         <button onClick={() => setEditingPost(null)}
                           className="px-4 py-2 rounded-xl text-xs font-medium cursor-pointer"
-                          style={{ color: 'var(--text-muted)', border: '1px solid var(--dark-border)' }}>
+                          style={{ color: 'var(--text-muted)', border: '1px solid var(--border)' }}>
                           Annuler
                         </button>
                         <button onClick={() => saveEdit(post.id)} disabled={saving}
                           className="px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer disabled:opacity-50"
-                          style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
+                          style={{ background: 'var(--brand)', color: 'var(--dark)' }}>
                           {saving ? '...' : 'Enregistrer'}
                         </button>
                       </div>
@@ -808,7 +808,7 @@ export default function MonEclatPage() {
                         <h3 className="font-semibold text-lg mb-2" style={{ color: 'var(--text-primary)' }}>{post.title}</h3>
                       )}
                       <p className="text-sm leading-relaxed whitespace-pre-line"
-                        style={{ color: post.category === 'citation' ? 'var(--gold)' : 'var(--text-secondary)', fontStyle: post.category === 'citation' ? 'italic' : 'normal' }}>
+                        style={{ color: post.category === 'citation' ? 'var(--brand)' : 'var(--text-secondary)', fontStyle: post.category === 'citation' ? 'italic' : 'normal' }}>
                         {post.content}
                       </p>
 
@@ -834,7 +834,7 @@ export default function MonEclatPage() {
 
                 {/* ── Action bar ── */}
                 {!isEditing && (
-                  <div className="px-6 py-3 flex items-center gap-1" style={{ borderTop: '1px solid var(--dark-border)' }}>
+                  <div className="px-6 py-3 flex items-center gap-1" style={{ borderTop: '1px solid var(--border)' }}>
                     <button onClick={() => toggleShine(post.id)}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
                       style={{ color: post.user_has_liked ? '#D4AF37' : 'var(--text-muted)' }}>
@@ -846,7 +846,7 @@ export default function MonEclatPage() {
 
                     <button onClick={() => toggleComments(post.id)}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
-                      style={{ color: isCommentsOpen ? 'var(--gold)' : 'var(--text-muted)' }}>
+                      style={{ color: isCommentsOpen ? 'var(--brand)' : 'var(--text-muted)' }}>
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" />
                       </svg>
@@ -857,7 +857,7 @@ export default function MonEclatPage() {
 
                 {/* ── Comments section ── */}
                 {isCommentsOpen && (
-                  <div className="px-6 pb-5 space-y-3" style={{ borderTop: '1px solid var(--dark-border)' }}>
+                  <div className="px-6 pb-5 space-y-3" style={{ borderTop: '1px solid var(--border)' }}>
                     <div className="pt-4 space-y-3">
                       {(comments[post.id] || []).map(comment => (
                         <div key={comment.id} className="flex gap-2.5">
@@ -865,13 +865,13 @@ export default function MonEclatPage() {
                             <img src={comment.profiles.avatar_url} alt="" className="w-7 h-7 rounded-full object-cover flex-shrink-0 mt-0.5" />
                           ) : (
                             <div className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-semibold flex-shrink-0 mt-0.5"
-                              style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                              style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
                               {comment.profiles?.prenom?.charAt(0).toUpperCase() || '?'}
                             </div>
                           )}
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
-                              <span className="text-xs font-semibold" style={{ color: comment.profiles?.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)' }}>
+                              <span className="text-xs font-semibold" style={{ color: comment.profiles?.role === 'founder' ? 'var(--brand)' : 'var(--text-primary)' }}>
                                 {comment.profiles?.prenom || 'Membre'}
                               </span>
                               <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{formatDate(comment.created_at)}</span>
@@ -901,7 +901,7 @@ export default function MonEclatPage() {
                           onClick={() => sendComment(post.id)}
                           disabled={sendingComment || !commentText.trim()}
                           className="px-3 py-2 rounded-xl text-xs font-semibold cursor-pointer disabled:opacity-40"
-                          style={{ background: 'var(--gold)', color: 'var(--dark)' }}
+                          style={{ background: 'var(--brand)', color: 'var(--dark)' }}
                         >
                           {sendingComment ? '...' : 'Envoyer'}
                         </button>

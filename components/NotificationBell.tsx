@@ -236,17 +236,17 @@ export default function NotificationBell() {
             style={{
               background: 'rgba(15, 15, 18, 0.95)',
               backdropFilter: 'blur(24px)',
-              border: '1px solid var(--dark-border)',
+              border: '1px solid var(--border)',
               boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
             }}
           >
-            <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: '1px solid var(--dark-border)' }}>
+            <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: '1px solid var(--border)' }}>
               <h3 className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{t('notifications.title')}</h3>
               {unreadCount > 0 && (
                 <button
                   onClick={markAllRead}
                   className="text-[11px] font-medium cursor-pointer transition-colors"
-                  style={{ color: 'var(--gold)' }}
+                  style={{ color: 'var(--brand)' }}
                 >
                   {t('notifications.mark_all')}
                 </button>
@@ -265,7 +265,7 @@ export default function NotificationBell() {
                     className="px-4 py-3 transition-colors cursor-pointer"
                     style={{
                       background: notif.is_read ? 'transparent' : 'rgba(212, 175, 55, 0.04)',
-                      borderBottom: '1px solid var(--dark-border)',
+                      borderBottom: '1px solid var(--border)',
                     }}
                     onClick={() => {
                       if (!notif.is_read) markAsRead(notif.id)
@@ -280,7 +280,7 @@ export default function NotificationBell() {
                             {notif.title}
                           </p>
                           {!notif.is_read && (
-                            <span className="w-2 h-2 rounded-full shrink-0" style={{ background: 'var(--gold)' }} />
+                            <span className="w-2 h-2 rounded-full shrink-0" style={{ background: 'var(--brand)' }} />
                           )}
                         </div>
                         <p className="text-[12px] mt-0.5 line-clamp-2" style={{ color: 'var(--text-secondary)' }}>

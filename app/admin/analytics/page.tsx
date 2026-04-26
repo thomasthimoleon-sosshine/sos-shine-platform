@@ -158,7 +158,7 @@ export default function AdminAnalyticsPage() {
               style={{
                 background: dateRange === r ? 'rgba(116,192,252,0.15)' : 'transparent',
                 color: dateRange === r ? '#74C0FC' : 'var(--text-muted)',
-                border: `1px solid ${dateRange === r ? 'rgba(116,192,252,0.3)' : 'var(--dark-border)'}`,
+                border: `1px solid ${dateRange === r ? 'rgba(116,192,252,0.3)' : 'var(--border)'}`,
               }}
             >
               {r === '7d' ? '7 jours' : r === '30d' ? '30 jours' : '90 jours'}
@@ -178,7 +178,7 @@ export default function AdminAnalyticsPage() {
               { label: 'Taux conversion', value: `${kpis.conversionRate}%`, color: '#A78BFA', hint: 'Inscrits → Payants' },
             ].map(k => (
               <div key={k.label} className="rounded-xl p-5"
-                style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
                 <p className="text-xs mb-2" style={{ color: 'var(--text-muted)' }}>{k.label}</p>
                 <p className="font-display text-2xl md:text-3xl font-semibold" style={{ color: k.color }}>{k.value}</p>
                 <p className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>{k.hint}</p>
@@ -195,7 +195,7 @@ export default function AdminAnalyticsPage() {
               { label: 'ARR projeté', value: `${(kpis.mrr * 12).toFixed(0)}€`, color: '#55EFC4', hint: 'MRR × 12' },
             ].map(k => (
               <div key={k.label} className="rounded-xl p-4"
-                style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
                 <p className="text-[10px] mb-1.5 uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>{k.label}</p>
                 <p className="font-display text-xl font-semibold" style={{ color: k.color }}>{k.value}</p>
                 <p className="text-[10px] mt-0.5" style={{ color: 'var(--text-muted)' }}>{k.hint}</p>
@@ -206,7 +206,7 @@ export default function AdminAnalyticsPage() {
       )}
 
       {/* Daily chart */}
-      <div className="rounded-xl p-6" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+      <div className="rounded-xl p-6" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         <div className="flex items-center justify-between mb-5">
           <h3 className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>
             Inscriptions & Conversions ({dateRange})
@@ -240,7 +240,7 @@ export default function AdminAnalyticsPage() {
       </div>
 
       {/* Plan breakdown */}
-      <div className="rounded-xl p-6" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+      <div className="rounded-xl p-6" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         <h3 className="font-semibold text-sm mb-4" style={{ color: 'var(--text-primary)' }}>
           Répartition du MRR par plan
         </h3>
@@ -271,7 +271,7 @@ export default function AdminAnalyticsPage() {
         <div className="rounded-xl p-6" style={{ background: 'linear-gradient(135deg, rgba(212,175,55,0.08), rgba(116,192,252,0.04))', border: '1px solid rgba(212,175,55,0.2)' }}>
           <div className="flex items-start justify-between mb-3">
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: 'var(--gold)' }}>
+              <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: 'var(--brand)' }}>
                 Objectif 2000 abonnés
               </p>
               <h3 className="font-display text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>
@@ -279,7 +279,7 @@ export default function AdminAnalyticsPage() {
               </h3>
             </div>
             <div className="text-right">
-              <p className="font-display text-2xl font-semibold" style={{ color: 'var(--gold)' }}>
+              <p className="font-display text-2xl font-semibold" style={{ color: 'var(--brand)' }}>
                 {Math.round((kpis.activeSubs / 2000) * 100)}%
               </p>
               <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>complété</p>
@@ -287,11 +287,11 @@ export default function AdminAnalyticsPage() {
           </div>
           <div className="w-full h-3 rounded-full overflow-hidden" style={{ background: 'rgba(0,0,0,0.3)' }}>
             <div className="h-full rounded-full transition-all"
-              style={{ width: `${Math.min((kpis.activeSubs / 2000) * 100, 100)}%`, background: 'linear-gradient(90deg, var(--gold), #74C0FC)' }} />
+              style={{ width: `${Math.min((kpis.activeSubs / 2000) * 100, 100)}%`, background: 'linear-gradient(90deg, var(--brand), #74C0FC)' }} />
           </div>
           <p className="text-xs mt-3" style={{ color: 'var(--text-secondary)' }}>
-            Il manque <strong style={{ color: 'var(--gold)' }}>{Math.max(0, 2000 - kpis.activeSubs)}</strong> abonnés pour atteindre l&apos;objectif.
-            MRR cible : <strong style={{ color: 'var(--gold)' }}>~79 800€</strong>
+            Il manque <strong style={{ color: 'var(--brand)' }}>{Math.max(0, 2000 - kpis.activeSubs)}</strong> abonnés pour atteindre l&apos;objectif.
+            MRR cible : <strong style={{ color: 'var(--brand)' }}>~79 800€</strong>
           </p>
         </div>
       )}

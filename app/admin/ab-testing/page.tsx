@@ -256,7 +256,7 @@ export default function AbTestingDashboard() {
 
       {/* Status bar */}
       <div className="rounded-xl p-4 flex flex-wrap items-center gap-4"
-        style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full" style={{ background: config.is_active ? '#55EFC4' : '#FF6B6B' }} />
           <span className="text-sm font-medium" style={{ color: config.is_active ? '#55EFC4' : '#FF6B6B' }}>
@@ -275,7 +275,7 @@ export default function AbTestingDashboard() {
               style={{
                 background: config.split_ratio === r ? 'rgba(116,192,252,0.15)' : 'transparent',
                 color: config.split_ratio === r ? '#74C0FC' : 'var(--text-muted)',
-                border: `1px solid ${config.split_ratio === r ? 'rgba(116,192,252,0.3)' : 'var(--dark-border)'}`,
+                border: `1px solid ${config.split_ratio === r ? 'rgba(116,192,252,0.3)' : 'var(--border)'}`,
               }}>
               {r === 1 ? '100% Julia' : `${Math.round(r * 100)}/${Math.round((1 - r) * 100)}`}
             </button>
@@ -291,7 +291,7 @@ export default function AbTestingDashboard() {
           { label: 'Taux global', value: totalViews > 0 ? `${Math.round((totalConversions / totalViews) * 10000) / 100}%` : '—', color: '#D4AF37' },
           { label: 'Leader', value: winner ? (winner === 'julia' ? 'Julia' : 'Thomas') : 'Égalité', color: winner ? '#55EFC4' : 'var(--text-muted)' },
         ].map((c) => (
-          <div key={c.label} className="rounded-xl p-5" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+          <div key={c.label} className="rounded-xl p-5" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
             <p className="text-xs mb-2" style={{ color: 'var(--text-muted)' }}>{c.label}</p>
             <p className="font-display text-2xl font-semibold" style={{ color: c.color }}>{c.value}</p>
           </div>
@@ -306,8 +306,8 @@ export default function AbTestingDashboard() {
         ].map((v) => (
           <div key={v.variant} className="rounded-xl p-6"
             style={{
-              background: 'var(--dark-card)',
-              border: `1px solid ${winner === v.variant ? v.color + '40' : 'var(--dark-border)'}`,
+              background: 'var(--surface-card)',
+              border: `1px solid ${winner === v.variant ? v.color + '40' : 'var(--border)'}`,
             }}>
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold text-lg" style={{ color: v.color }}>{v.name}</h3>
@@ -329,7 +329,7 @@ export default function AbTestingDashboard() {
                   <span className="font-semibold" style={{ color: 'var(--text-primary)' }}>{r.val}</span>
                 </div>
               ))}
-              <div className="pt-3" style={{ borderTop: '1px solid var(--dark-border)' }}>
+              <div className="pt-3" style={{ borderTop: '1px solid var(--border)' }}>
                 <div className="flex justify-between items-center mb-1">
                   <span className="text-xs" style={{ color: 'var(--text-muted)' }}>Taux signup (visite→compte)</span>
                   <span className="font-semibold text-sm" style={{ color: v.color }}>{v.s.signupRate}%</span>
@@ -349,7 +349,7 @@ export default function AbTestingDashboard() {
 
             {/* Daily */}
             {(daily[v.variant] || []).length > 0 && (
-              <div className="mt-5 pt-4" style={{ borderTop: '1px solid var(--dark-border)' }}>
+              <div className="mt-5 pt-4" style={{ borderTop: '1px solid var(--border)' }}>
                 <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>
                   7 derniers jours
                 </p>
@@ -371,7 +371,7 @@ export default function AbTestingDashboard() {
       </div>
 
       {/* ─── Traffic Sources ─────────────────────────── */}
-      <div className="rounded-xl p-6" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+      <div className="rounded-xl p-6" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         <div className="flex items-start justify-between mb-5 flex-wrap gap-2">
           <div>
             <h3 className="font-semibold text-lg" style={{ color: 'var(--text-primary)' }}>
@@ -436,7 +436,7 @@ export default function AbTestingDashboard() {
               </div>
 
               {/* Per-variant split */}
-              <div className="grid md:grid-cols-2 gap-4 pt-5" style={{ borderTop: '1px solid var(--dark-border)' }}>
+              <div className="grid md:grid-cols-2 gap-4 pt-5" style={{ borderTop: '1px solid var(--border)' }}>
                 {[
                   { name: 'Julia', variant: config.variant_a, color: '#A78BFA' },
                   { name: 'Thomas', variant: config.variant_b, color: '#74C0FC' },
@@ -487,7 +487,7 @@ export default function AbTestingDashboard() {
       </div>
 
       {/* Info */}
-      <div className="rounded-xl p-6" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+      <div className="rounded-xl p-6" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         <h3 className="font-semibold text-sm mb-3" style={{ color: 'var(--text-primary)' }}>Fonctionnement</h3>
         <div className="space-y-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
           <p>Chaque nouveau visiteur est assigné aléatoirement à une version via un cookie persistant <code className="text-xs px-1 py-0.5 rounded" style={{ background: 'rgba(255,255,255,0.05)' }}>ab_variant</code> (30 jours).</p>

@@ -181,13 +181,13 @@ export default function SubscriptionModal({
             maxWidth: step === 'plans' ? '900px' : '640px',
             maxHeight: '90vh',
             background: 'var(--dark-bg)',
-            border: '1px solid var(--dark-border)',
+            border: '1px solid var(--border)',
             boxShadow: '0 25px 60px rgba(0,0,0,0.5)',
           }}
         >
           {/* Header */}
           <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4"
-            style={{ background: 'var(--dark-bg)', borderBottom: '1px solid var(--dark-border)' }}>
+            style={{ background: 'var(--dark-bg)', borderBottom: '1px solid var(--border)' }}>
             <div>
               {step === 'checkout' && (
                 <button
@@ -215,7 +215,7 @@ export default function SubscriptionModal({
             <button
               onClick={step === 'success' ? handleSuccess : onClose}
               className="w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer"
-              style={{ background: 'var(--dark-card)', color: 'var(--text-secondary)' }}
+              style={{ background: 'var(--surface-card)', color: 'var(--text-secondary)' }}
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -235,7 +235,7 @@ export default function SubscriptionModal({
                 <div className="flex justify-center mb-6">
                   <div
                     className="inline-flex rounded-xl p-1 gap-1"
-                    style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+                    style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
                   >
                     {DURATIONS.map((d) => (
                       <button
@@ -244,7 +244,7 @@ export default function SubscriptionModal({
                         className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
                         style={{
                           background: selectedDuration === d.id ? 'rgba(212,175,55,0.15)' : 'transparent',
-                          color: selectedDuration === d.id ? 'var(--gold)' : 'var(--text-secondary)',
+                          color: selectedDuration === d.id ? 'var(--brand)' : 'var(--text-secondary)',
                           border: selectedDuration === d.id ? '1px solid rgba(212,175,55,0.3)' : '1px solid transparent',
                         }}
                       >
@@ -281,8 +281,8 @@ export default function SubscriptionModal({
                         key={planId}
                         className="relative rounded-xl overflow-hidden flex flex-col"
                         style={{
-                          background: 'var(--dark-card)',
-                          border: (isHighlight || isSuggested) ? `2px solid ${color}` : '1px solid var(--dark-border)',
+                          background: 'var(--surface-card)',
+                          border: (isHighlight || isSuggested) ? `2px solid ${color}` : '1px solid var(--border)',
                         }}
                       >
                         {(isHighlight || isSuggested) && (
@@ -409,7 +409,7 @@ export default function SubscriptionModal({
                     </button>
                   </div>
                 ) : (
-                  <div className="rounded-xl overflow-hidden" style={{ border: '1px solid var(--dark-border)' }}>
+                  <div className="rounded-xl overflow-hidden" style={{ border: '1px solid var(--border)' }}>
                     <EmbeddedCheckoutProvider
                       stripe={stripePromise}
                       options={{ fetchClientSecret }}
@@ -442,7 +442,7 @@ export default function SubscriptionModal({
                   onClick={handleSuccess}
                   className="px-8 py-3 rounded-full text-sm font-semibold transition-all hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
                   style={{
-                    background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))',
+                    background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
                     color: '#050505',
                     boxShadow: '0 4px 20px rgba(212,175,55,0.3)',
                   }}

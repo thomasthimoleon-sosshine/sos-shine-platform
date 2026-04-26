@@ -71,7 +71,7 @@ function MarkdownRenderer({ content }: { content: string }) {
     // Bold
     r = r.replace(/\*\*(.+?)\*\*/g, '<strong style="color: var(--text-primary); font-weight: 600;">$1</strong>')
     // Italic
-    r = r.replace(/\*(.+?)\*/g, '<em class="font-display" style="color: var(--gold);">$1</em>')
+    r = r.replace(/\*(.+?)\*/g, '<em class="font-display" style="color: var(--brand);">$1</em>')
     return r
   }
 
@@ -210,7 +210,7 @@ export default function BlogArticleContent({
             <Link
               href="/blog"
               className="text-xs tracking-[0.15em] uppercase font-medium px-3 py-1.5 rounded-full transition-colors hover:opacity-80"
-              style={{ color: 'var(--text-muted)', background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+              style={{ color: 'var(--text-muted)', background: 'var(--surface-card)', border: '1px solid var(--border)' }}
             >
               &larr; Blog
             </Link>
@@ -229,9 +229,9 @@ export default function BlogArticleContent({
           >
             {/* Breadcrumb */}
             <nav className="flex items-center gap-2 mb-6 md:mb-8 text-[10px] sm:text-xs" style={{ color: 'var(--text-muted)' }}>
-              <Link href="/" className="hover:text-[var(--gold)] transition-colors">Accueil</Link>
+              <Link href="/" className="hover:text-[var(--brand)] transition-colors">Accueil</Link>
               <span>/</span>
-              <Link href="/blog" className="hover:text-[var(--gold)] transition-colors">Blog</Link>
+              <Link href="/blog" className="hover:text-[var(--brand)] transition-colors">Blog</Link>
               <span>/</span>
               <span className="truncate max-w-[200px]" style={{ color: 'var(--text-secondary)' }}>{article.title}</span>
             </nav>
@@ -263,7 +263,7 @@ export default function BlogArticleContent({
             </p>
 
             {/* Author */}
-            <div className="flex items-center gap-4 pb-6 md:pb-10 mb-6 md:mb-10" style={{ borderBottom: '1px solid var(--dark-border)' }}>
+            <div className="flex items-center gap-4 pb-6 md:pb-10 mb-6 md:mb-10" style={{ borderBottom: '1px solid var(--border)' }}>
               <div
                 className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-medium"
                 style={{ background: `rgba(${goldRgb}, 0.1)`, color: gold }}
@@ -296,7 +296,7 @@ export default function BlogArticleContent({
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.5 }}
             className="mt-10 md:mt-16 pt-6 md:pt-8"
-            style={{ borderTop: '1px solid var(--dark-border)' }}
+            style={{ borderTop: '1px solid var(--border)' }}
           >
             <p className="text-[10px] tracking-[0.15em] uppercase font-medium mb-3" style={{ color: 'var(--text-muted)' }}>
               Tags
@@ -306,7 +306,7 @@ export default function BlogArticleContent({
                 <span
                   key={tag}
                   className="px-3 py-1.5 rounded-full text-[10px] sm:text-xs"
-                  style={{ background: 'var(--dark-card)', color: 'var(--text-muted)', border: '1px solid var(--dark-border)' }}
+                  style={{ background: 'var(--surface-card)', color: 'var(--text-muted)', border: '1px solid var(--border)' }}
                 >
                   {tag}
                 </span>
@@ -324,7 +324,7 @@ export default function BlogArticleContent({
             <div
               className="rounded-2xl p-6 sm:p-8 md:p-10 text-center"
               style={{
-                background: 'linear-gradient(135deg, rgba(212,175,55,0.05), var(--dark-card))',
+                background: 'linear-gradient(135deg, rgba(212,175,55,0.05), var(--surface-card))',
                 border: '1px solid rgba(212,175,55,0.12)',
               }}
             >
@@ -396,15 +396,15 @@ export default function BlogArticleContent({
       )}
 
       {/* Footer */}
-      <footer className="px-5 md:px-8 py-8 md:py-12 border-t" style={{ borderColor: 'var(--dark-border)', background: 'rgba(0,0,0,0.3)' }}>
+      <footer className="px-5 md:px-8 py-8 md:py-12 border-t" style={{ borderColor: 'var(--border)', background: 'rgba(0,0,0,0.3)' }}>
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
           <Link href="/">
             <img src="/images/logo-shine.png" alt="SOS Shine" className="h-10 md:h-12 w-auto object-contain" />
           </Link>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
-            <Link href="/" className="text-[10px] tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors">Accueil</Link>
-            <Link href="/blog" className="text-[10px] tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors">Blog</Link>
-            <Link href="/contact" className="text-[10px] tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors">Contact</Link>
+            <Link href="/" className="text-[10px] tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors">Accueil</Link>
+            <Link href="/blog" className="text-[10px] tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors">Blog</Link>
+            <Link href="/contact" className="text-[10px] tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors">Contact</Link>
           </div>
           <p className="text-[10px] tracking-[0.15em] uppercase text-[var(--text-muted)]">&copy; 2026 SOS Shine</p>
         </div>

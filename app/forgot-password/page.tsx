@@ -48,7 +48,7 @@ export default function ForgotPasswordPage() {
         className="max-w-md w-full relative z-10"
       >
         <div className="text-center mb-10">
-          <Link href="/" className="font-display text-2xl text-[var(--gold)] font-medium tracking-tight">SOS Shine</Link>
+          <Link href="/" className="font-display text-2xl text-[var(--brand)] font-medium tracking-tight">SOS Shine</Link>
           <p className="text-[var(--text-muted)] text-[13px] mt-2">{t('auth.forgot_subtitle')}</p>
         </div>
 
@@ -62,7 +62,7 @@ export default function ForgotPasswordPage() {
               <div className="px-4 py-3 rounded-xl text-[13px]" style={{ color: '#34d399', background: 'rgba(52,211,153,0.08)', border: '1px solid rgba(52,211,153,0.15)' }}>
                 {t('auth.forgot_success')}
               </div>
-              <Link href="/login" className="inline-block text-[13px] font-medium transition-colors duration-200 hover:underline" style={{ color: 'var(--gold)' }}>
+              <Link href="/login" className="inline-block text-[13px] font-medium transition-colors duration-200 hover:underline" style={{ color: 'var(--brand)' }}>
                 {t('auth.forgot_back')}
               </Link>
             </div>
@@ -73,9 +73,9 @@ export default function ForgotPasswordPage() {
                 <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
                   placeholder="votre@email.com"
                   className="w-full px-4 py-3 rounded-xl text-sm transition-colors"
-                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)', outline: 'none' }}
+                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)', outline: 'none' }}
                   onFocus={(e) => e.currentTarget.style.borderColor = 'rgba(212,175,55,0.4)'}
-                  onBlur={(e) => e.currentTarget.style.borderColor = 'var(--dark-border)'}
+                  onBlur={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
                 />
               </div>
               {error && (
@@ -89,7 +89,7 @@ export default function ForgotPasswordPage() {
                 {loading ? t('auth.forgot_sending') : t('auth.forgot_send')}
               </button>
               <div className="text-center">
-                <Link href="/login" className="text-[13px] transition-colors duration-200 hover:underline" style={{ color: 'var(--gold)' }}>
+                <Link href="/login" className="text-[13px] transition-colors duration-200 hover:underline" style={{ color: 'var(--brand)' }}>
                   {t('auth.forgot_back')}
                 </Link>
               </div>

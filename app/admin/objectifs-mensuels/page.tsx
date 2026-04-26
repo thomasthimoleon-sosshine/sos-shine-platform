@@ -265,7 +265,7 @@ export default function ObjectifsMensuelsPage() {
       </div>
 
       {/* Month progress bar */}
-      <div className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+      <div className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
         <div className="flex items-center justify-between mb-2">
           <span className="text-[12px] font-medium" style={{ color: 'var(--text-secondary)' }}>
             Progression du mois
@@ -288,7 +288,7 @@ export default function ObjectifsMensuelsPage() {
         <>
           {/* Main gauges */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="rounded-xl p-6 flex justify-center" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+            <div className="rounded-xl p-6 flex justify-center" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
               <ProgressRing
                 value={stats.totalActive}
                 max={currentTarget.cumulActive}
@@ -297,7 +297,7 @@ export default function ObjectifsMensuelsPage() {
                 sublabel={`Objectif : ${fmt(currentTarget.cumulActive)}`}
               />
             </div>
-            <div className="rounded-xl p-6 flex justify-center" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+            <div className="rounded-xl p-6 flex justify-center" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
               <ProgressRing
                 value={stats.newThisMonth}
                 max={currentTarget.newSubs}
@@ -306,7 +306,7 @@ export default function ObjectifsMensuelsPage() {
                 sublabel={`Objectif : ${fmt(currentTarget.newSubs)}`}
               />
             </div>
-            <div className="rounded-xl p-6 flex justify-center" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+            <div className="rounded-xl p-6 flex justify-center" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
               <ProgressRing
                 value={stats.mrr}
                 max={currentTarget.mrr}
@@ -315,7 +315,7 @@ export default function ObjectifsMensuelsPage() {
                 sublabel={`Objectif : ${fmtEur(currentTarget.mrr)}`}
               />
             </div>
-            <div className="rounded-xl p-6 flex justify-center" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+            <div className="rounded-xl p-6 flex justify-center" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
               <ProgressRing
                 value={stats.canceledThisMonth}
                 max={currentTarget.churn}
@@ -329,7 +329,7 @@ export default function ObjectifsMensuelsPage() {
           {/* Detailed progress bars */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* By plan */}
-            <div className="rounded-xl p-6 space-y-5" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+            <div className="rounded-xl p-6 space-y-5" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
               <h2 className="font-display text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
                 Répartition par plan
               </h2>
@@ -347,7 +347,7 @@ export default function ObjectifsMensuelsPage() {
                   />
                 )
               })}
-              <div className="pt-3 mt-3" style={{ borderTop: '1px solid var(--dark-border)' }}>
+              <div className="pt-3 mt-3" style={{ borderTop: '1px solid var(--border)' }}>
                 <div className="grid grid-cols-3 gap-3 text-center">
                   {(['essential', 'serenite', 'premium'] as const).map(plan => {
                     const actual = plan === 'essential' ? stats.essential : plan === 'serenite' ? stats.serenite : stats.premium
@@ -365,7 +365,7 @@ export default function ObjectifsMensuelsPage() {
             </div>
 
             {/* By duration */}
-            <div className="rounded-xl p-6 space-y-5" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+            <div className="rounded-xl p-6 space-y-5" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
               <h2 className="font-display text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
                 Répartition par durée
               </h2>
@@ -387,7 +387,7 @@ export default function ObjectifsMensuelsPage() {
           </div>
 
           {/* Financial KPIs */}
-          <div className="rounded-xl p-6" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+          <div className="rounded-xl p-6" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
             <h2 className="font-display text-lg font-semibold mb-5" style={{ color: 'var(--text-primary)' }}>
               KPIs financiers
             </h2>
@@ -449,14 +449,14 @@ export default function ObjectifsMensuelsPage() {
           </div>
 
           {/* Historical comparison */}
-          <div className="rounded-xl p-6" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+          <div className="rounded-xl p-6" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
             <h2 className="font-display text-lg font-semibold mb-5" style={{ color: 'var(--text-primary)' }}>
               Trajectoire Année 1
             </h2>
             <div className="overflow-x-auto">
               <table className="w-full text-[12px]">
                 <thead>
-                  <tr style={{ borderBottom: '1px solid var(--dark-border)' }}>
+                  <tr style={{ borderBottom: '1px solid var(--border)' }}>
                     <th className="text-left py-3 px-2 font-medium" style={{ color: 'var(--text-muted)' }}>Mois</th>
                     <th className="text-left py-3 px-2 font-medium" style={{ color: 'var(--text-muted)' }}>Phase</th>
                     <th className="text-right py-3 px-2 font-medium" style={{ color: 'var(--text-muted)' }}>Obj. nouveaux</th>
@@ -473,7 +473,7 @@ export default function ObjectifsMensuelsPage() {
                     return (
                       <tr key={t.month}
                         style={{
-                          borderBottom: '1px solid var(--dark-border)',
+                          borderBottom: '1px solid var(--border)',
                           background: isCurrent ? 'rgba(212,175,55,0.06)' : 'transparent',
                         }}>
                         <td className="py-3 px-2 font-medium" style={{ color: isCurrent ? '#D4AF37' : 'var(--text-primary)' }}>
@@ -507,7 +507,7 @@ export default function ObjectifsMensuelsPage() {
           </div>
 
           {/* Milestones */}
-          <div className="rounded-xl p-6" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+          <div className="rounded-xl p-6" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
             <h2 className="font-display text-lg font-semibold mb-5" style={{ color: 'var(--text-primary)' }}>
               Jalons clés
             </h2>

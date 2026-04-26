@@ -42,7 +42,7 @@ function MarkdownRenderer({ content }: { content: string }) {
   function inlineFormat(text: string): string {
     let r = text
     r = r.replace(/\*\*(.+?)\*\*/g, '<strong style="color: var(--text-primary); font-weight: 600;">$1</strong>')
-    r = r.replace(/\*(.+?)\*/g, '<em style="color: var(--gold);">$1</em>')
+    r = r.replace(/\*(.+?)\*/g, '<em style="color: var(--brand);">$1</em>')
     return r
   }
 
@@ -121,7 +121,7 @@ export default function DashboardBlogPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -160,7 +160,7 @@ export default function DashboardBlogPage() {
           <p className="text-sm font-light leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>{selectedArticle.subtitle}</p>
 
           {/* Author */}
-          <div className="flex items-center gap-3 pb-6 mb-6" style={{ borderBottom: '1px solid var(--dark-border)' }}>
+          <div className="flex items-center gap-3 pb-6 mb-6" style={{ borderBottom: '1px solid var(--border)' }}>
             <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium"
               style={{ background: `rgba(${goldRgb}, 0.1)`, color: gold }}>
               {selectedArticle.author.name.split(' ').map(n => n[0]).join('')}
@@ -180,12 +180,12 @@ export default function DashboardBlogPage() {
 
           {/* Tags */}
           {selectedArticle.tags.length > 0 && (
-            <div className="mt-10 pt-6" style={{ borderTop: '1px solid var(--dark-border)' }}>
+            <div className="mt-10 pt-6" style={{ borderTop: '1px solid var(--border)' }}>
               <p className="text-[10px] uppercase tracking-widest font-medium mb-3" style={{ color: 'var(--text-muted)' }}>Tags</p>
               <div className="flex flex-wrap gap-2">
                 {selectedArticle.tags.map(tag => (
                   <span key={tag} className="px-3 py-1.5 rounded-full text-xs"
-                    style={{ background: 'var(--dark-card)', color: 'var(--text-muted)', border: '1px solid var(--dark-border)' }}>
+                    style={{ background: 'var(--surface-card)', color: 'var(--text-muted)', border: '1px solid var(--border)' }}>
                     {tag}
                   </span>
                 ))}
@@ -219,9 +219,9 @@ export default function DashboardBlogPage() {
           onClick={() => setSelectedCategory(null)}
           className="flex-shrink-0 px-4 py-2 rounded-full text-xs tracking-wider uppercase font-medium cursor-pointer transition-all"
           style={{
-            background: !selectedCategory ? `rgba(${goldRgb}, 0.12)` : 'var(--dark-card)',
+            background: !selectedCategory ? `rgba(${goldRgb}, 0.12)` : 'var(--surface-card)',
             color: !selectedCategory ? gold : 'var(--text-muted)',
-            border: `1px solid ${!selectedCategory ? `rgba(${goldRgb}, 0.25)` : 'var(--dark-border)'}`,
+            border: `1px solid ${!selectedCategory ? `rgba(${goldRgb}, 0.25)` : 'var(--border)'}`,
           }}
         >
           Tous
@@ -232,9 +232,9 @@ export default function DashboardBlogPage() {
             onClick={() => setSelectedCategory(selectedCategory === cat.slug ? null : cat.slug)}
             className="flex-shrink-0 px-4 py-2 rounded-full text-xs tracking-wider uppercase font-medium cursor-pointer transition-all"
             style={{
-              background: selectedCategory === cat.slug ? `${cat.color}15` : 'var(--dark-card)',
+              background: selectedCategory === cat.slug ? `${cat.color}15` : 'var(--surface-card)',
               color: selectedCategory === cat.slug ? cat.color : 'var(--text-muted)',
-              border: `1px solid ${selectedCategory === cat.slug ? `${cat.color}40` : 'var(--dark-border)'}`,
+              border: `1px solid ${selectedCategory === cat.slug ? `${cat.color}40` : 'var(--border)'}`,
             }}
           >
             {cat.label}
@@ -256,7 +256,7 @@ export default function DashboardBlogPage() {
             <article
               className="group relative overflow-hidden rounded-2xl p-6 sm:p-8 transition-all duration-300 hover:shadow-xl"
               style={{
-                background: 'linear-gradient(135deg, rgba(212,175,55,0.06), var(--dark-card))',
+                background: 'linear-gradient(135deg, rgba(212,175,55,0.06), var(--surface-card))',
                 border: '1px solid rgba(212,175,55,0.12)',
               }}
             >
@@ -267,7 +267,7 @@ export default function DashboardBlogPage() {
                 </span>
                 <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{featured.readTime} min</span>
               </div>
-              <h2 className="font-display text-xl sm:text-2xl font-light leading-[1.2] mb-3 group-hover:text-[var(--gold)] transition-colors">
+              <h2 className="font-display text-xl sm:text-2xl font-light leading-[1.2] mb-3 group-hover:text-[var(--brand)] transition-colors">
                 {featured.title}
               </h2>
               <p className="text-sm font-light leading-relaxed mb-5 max-w-2xl" style={{ color: 'var(--text-secondary)' }}>
@@ -304,13 +304,13 @@ export default function DashboardBlogPage() {
               >
                 <article
                   className="group rounded-xl p-5 h-full transition-all duration-300 hover:shadow-lg"
-                  style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+                  style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
                 >
                   <span className="text-[10px] tracking-[0.12em] uppercase font-medium"
                     style={{ color: BLOG_CATEGORIES.find(c => c.slug === article.category)?.color || gold }}>
                     {BLOG_CATEGORIES.find(c => c.slug === article.category)?.label || article.category}
                   </span>
-                  <h3 className="font-display text-base font-light mt-2 mb-2 leading-snug group-hover:text-[var(--gold)] transition-colors">
+                  <h3 className="font-display text-base font-light mt-2 mb-2 leading-snug group-hover:text-[var(--brand)] transition-colors">
                     {article.title}
                   </h3>
                   <p className="text-xs font-light leading-relaxed mb-3 line-clamp-2" style={{ color: 'var(--text-secondary)' }}>
@@ -330,7 +330,7 @@ export default function DashboardBlogPage() {
       )}
 
       {filteredArticles.length === 0 && (
-        <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <p className="text-3xl mb-3">📝</p>
           <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Aucun article dans cette cat&eacute;gorie</p>
         </div>

@@ -81,7 +81,7 @@ export default function RessourceEditionPage() {
 
       {pages.map((page) => (
         <div key={page.id} className="rounded-2xl p-6 space-y-5"
-          style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+          style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
 
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
@@ -113,7 +113,7 @@ export default function RessourceEditionPage() {
                 value={page.title}
                 onChange={(e) => updateField(page.id, 'title', e.target.value)}
                 className="w-full px-4 py-2.5 rounded-xl text-sm"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
               />
             </div>
 
@@ -123,7 +123,7 @@ export default function RessourceEditionPage() {
                 value={page.subtitle}
                 onChange={(e) => updateField(page.id, 'subtitle', e.target.value)}
                 className="w-full px-4 py-2.5 rounded-xl text-sm"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
               />
             </div>
 
@@ -134,7 +134,7 @@ export default function RessourceEditionPage() {
                 onChange={(e) => updateField(page.id, 'cover_image', e.target.value)}
                 placeholder="https://exemple.com/image.jpg"
                 className="w-full px-4 py-2.5 rounded-xl text-sm"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
               />
               {page.cover_image && (
                 <img src={page.cover_image} alt="Aperçu" className="mt-2 h-32 rounded-xl object-contain" />
@@ -150,7 +150,7 @@ export default function RessourceEditionPage() {
                 onChange={(e) => updateField(page.id, 'content', e.target.value)}
                 rows={10}
                 className="w-full px-4 py-2.5 rounded-xl text-sm font-mono"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)', resize: 'vertical' }}
+                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)', resize: 'vertical' }}
               />
             </div>
 
@@ -161,7 +161,7 @@ export default function RessourceEditionPage() {
                   value={page.button_label}
                   onChange={(e) => updateField(page.id, 'button_label', e.target.value)}
                   className="w-full px-4 py-2.5 rounded-xl text-sm"
-                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                 />
               </div>
               <div>
@@ -171,7 +171,7 @@ export default function RessourceEditionPage() {
                   onChange={(e) => updateField(page.id, 'button_url', e.target.value)}
                   placeholder="https://..."
                   className="w-full px-4 py-2.5 rounded-xl text-sm"
-                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                 />
               </div>
             </div>

@@ -672,7 +672,7 @@ export default function AdminDouleursPage() {
     width: '100%',
     padding: '10px 14px',
     borderRadius: '8px',
-    border: '1px solid var(--dark-border)',
+    border: '1px solid var(--border)',
     background: 'var(--dark)',
     color: 'var(--text-primary)',
     fontSize: '14px',
@@ -724,7 +724,7 @@ export default function AdminDouleursPage() {
 
       {/* Form */}
       {showForm && (
-        <form onSubmit={handleSave} className="rounded-xl p-6 space-y-5" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <form onSubmit={handleSave} className="rounded-xl p-6 space-y-5" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <h2 className="font-semibold text-lg" style={{ color: '#74C0FC' }}>
             {editingId ? 'Modifier le challenge' : 'Nouveau challenge émotionnel'}
           </h2>
@@ -791,7 +791,7 @@ export default function AdminDouleursPage() {
               value={form.tags}
               onChange={(e) => setForm((prev) => ({ ...prev, tags: e.target.value }))}
               className="w-full rounded-lg px-3 py-2 text-sm outline-none"
-              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
               placeholder="rupture, abandon, solitude, couple"
             />
             <p className="text-[11px] mt-1" style={{ color: 'var(--text-muted)' }}>
@@ -829,7 +829,7 @@ export default function AdminDouleursPage() {
                 }
               }}
               className="w-full px-3 py-2 rounded-lg text-sm"
-              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}>
+              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}>
               <option value="">+ Ajouter un sujet complémentaire...</option>
               {douleurs
                 .filter(d => d.slug !== form.slug && !form.related_slugs.includes(d.slug))
@@ -869,7 +869,7 @@ export default function AdminDouleursPage() {
                 rows={3}
                 placeholder="Ex: Respirez avec moi. Cette méditation va court-circuiter la panique en 5 minutes. Vous n'êtes pas seul(e)."
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-y"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
               />
             </div>
             <div>
@@ -882,7 +882,7 @@ export default function AdminDouleursPage() {
                 onChange={(e) => setForm((prev) => ({ ...prev, sos_duration_seconds: e.target.value }))}
                 placeholder="300"
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
               />
               <p className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>
                 300 = 5 minutes. Utilisé pour l&apos;affichage uniquement.
@@ -894,7 +894,7 @@ export default function AdminDouleursPage() {
           <div className="rounded-xl p-4" style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.2)' }}>
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-sm font-semibold" style={{ color: 'var(--gold)' }}>
+                <h3 className="text-sm font-semibold" style={{ color: 'var(--brand)' }}>
                   Étapes du challenge ({form.steps.length})
                 </h3>
                 <p className="text-[11px] mt-0.5" style={{ color: 'var(--text-muted)' }}>
@@ -903,7 +903,7 @@ export default function AdminDouleursPage() {
               </div>
               <button type="button" onClick={addStep}
                 className="px-3 py-1.5 rounded-lg text-[11px] font-semibold cursor-pointer transition-all"
-                style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.3)' }}>
+                style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.3)' }}>
                 + Ajouter une étape
               </button>
             </div>
@@ -1125,7 +1125,7 @@ export default function AdminDouleursPage() {
             {/* Add step button at bottom */}
             <button type="button" onClick={addStep}
               className="mt-3 w-full py-2.5 rounded-lg text-[11px] font-medium cursor-pointer transition-all"
-              style={{ color: 'var(--gold)', border: '1px dashed rgba(212,175,55,0.3)', background: 'transparent' }}>
+              style={{ color: 'var(--brand)', border: '1px dashed rgba(212,175,55,0.3)', background: 'transparent' }}>
               + Ajouter une autre étape
             </button>
           </div>
@@ -1153,7 +1153,7 @@ export default function AdminDouleursPage() {
               {quizQuestions.length > 0 && (
                 <div className="space-y-2">
                   {quizQuestions.map((q, idx) => (
-                    <div key={q.id} className="rounded-lg p-3" style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid var(--dark-border)' }}>
+                    <div key={q.id} className="rounded-lg p-3" style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid var(--border)' }}>
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
@@ -1223,7 +1223,7 @@ export default function AdminDouleursPage() {
                             className="w-7 h-7 rounded flex items-center justify-center shrink-0 cursor-pointer transition-all"
                             style={{
                               background: quizForm.correct_indices.includes(idx) ? 'rgba(85,239,196,0.2)' : 'rgba(255,255,255,0.05)',
-                              border: quizForm.correct_indices.includes(idx) ? '2px solid #55EFC4' : '2px solid var(--dark-border)',
+                              border: quizForm.correct_indices.includes(idx) ? '2px solid #55EFC4' : '2px solid var(--border)',
                               color: quizForm.correct_indices.includes(idx) ? '#55EFC4' : 'var(--text-muted)',
                               fontSize: '12px',
                             }}>
@@ -1292,7 +1292,7 @@ export default function AdminDouleursPage() {
             </button>
             <button type="button" onClick={cancelForm}
               className="px-5 py-2.5 rounded-lg text-sm transition-colors"
-              style={{ color: 'var(--text-muted)', border: '1px solid var(--dark-border)' }}>
+              style={{ color: 'var(--text-muted)', border: '1px solid var(--border)' }}>
               Annuler
             </button>
           </div>
@@ -1340,7 +1340,7 @@ export default function AdminDouleursPage() {
           <div className="w-8 h-8 border-2 border-[#74C0FC] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : douleurs.length === 0 ? (
-        <div className="rounded-xl p-12 text-center" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <div className="rounded-xl p-12 text-center" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <p style={{ color: 'var(--text-muted)' }}>Aucun challenge émotionnel créé pour le moment.</p>
         </div>
       ) : (
@@ -1356,7 +1356,7 @@ export default function AdminDouleursPage() {
             const totalPossibleMedia = stepCount * 4
             return (
               <div key={d.id} className="rounded-xl overflow-hidden transition-all duration-200"
-                style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
 
                 {/* Header row */}
                 <div className="p-5 pb-3">
@@ -1366,7 +1366,7 @@ export default function AdminDouleursPage() {
                       {d.image_url ? (
                         <img src={d.image_url} alt={d.title}
                           className="w-14 h-14 rounded-lg object-contain flex-shrink-0"
-                          style={{ border: '1px solid var(--dark-border)' }} />
+                          style={{ border: '1px solid var(--border)' }} />
                       ) : (
                         <div className="w-14 h-14 rounded-lg flex-shrink-0 flex items-center justify-center text-xl"
                           style={{ background: 'rgba(116,192,252,0.08)', border: '1px solid rgba(116,192,252,0.15)' }}>
@@ -1465,12 +1465,12 @@ export default function AdminDouleursPage() {
                 </div>
 
                 {/* Step overview grid */}
-                <div className="flex flex-wrap gap-px" style={{ background: 'var(--dark-border)' }}>
+                <div className="flex flex-wrap gap-px" style={{ background: 'var(--border)' }}>
                   {(d.dynamicSteps && d.dynamicSteps.length > 0 ? d.dynamicSteps : []).map((step, i) => {
                     const mediaCount = getStepMediaCount(step)
                     return (
                       <div key={step.id} className="flex-1 min-w-[120px] p-2.5"
-                        style={{ background: mediaCount > 0 ? `${step.color}06` : 'var(--dark-card)' }}>
+                        style={{ background: mediaCount > 0 ? `${step.color}06` : 'var(--surface-card)' }}>
                         <div className="flex items-center justify-between">
                           <span className="text-[10px] font-semibold flex items-center gap-1" style={{ color: mediaCount > 0 ? step.color : 'var(--text-muted)' }}>
                             <span className="text-xs">{step.icon}</span>

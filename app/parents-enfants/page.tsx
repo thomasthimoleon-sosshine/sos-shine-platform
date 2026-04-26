@@ -81,20 +81,20 @@ export default function ParentsEnfantsPage() {
       <div className="watermark" />
 
       {/* Header */}
-      <header className="px-6 md:px-20 py-5 flex items-center justify-between" style={{ borderBottom: '1px solid var(--dark-border)' }}>
+      <header className="px-6 md:px-20 py-5 flex items-center justify-between" style={{ borderBottom: '1px solid var(--border)' }}>
         <Link href="/" className="flex items-center gap-3 group">
           <div className="w-9 h-9 rounded-xl flex items-center justify-center font-display text-base font-semibold"
-            style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: 'var(--dark)' }}>
+            style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: 'var(--dark)' }}>
             S
           </div>
-          <span className="font-display text-lg font-medium" style={{ color: 'var(--gold)' }}>SOS Shine</span>
+          <span className="font-display text-lg font-medium" style={{ color: 'var(--brand)' }}>SOS Shine</span>
         </Link>
         <div className="flex items-center gap-4">
           <ThemeToggle />
           <Link
             href="/signup"
             className="px-5 py-2.5 rounded-full text-sm font-medium transition-all"
-            style={{ background: 'var(--gold)', color: 'var(--dark)' }}
+            style={{ background: 'var(--brand)', color: 'var(--dark)' }}
           >
             Rejoindre
           </Link>
@@ -107,7 +107,7 @@ export default function ParentsEnfantsPage() {
         <div className="max-w-5xl mx-auto px-6 py-20 md:py-32 text-center relative z-10">
           <Reveal>
             <span className="inline-block px-5 py-2 rounded-full text-xs tracking-[0.25em] uppercase font-medium mb-8"
-              style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.15)' }}>
+              style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.15)' }}>
               Espace dédié
             </span>
           </Reveal>
@@ -137,7 +137,7 @@ export default function ParentsEnfantsPage() {
               </Link>
               <Link href="/signature-emotionnelle"
                 className="px-8 py-3.5 rounded-full text-sm font-medium transition-all"
-                style={{ background: 'rgba(255,255,255,0.04)', color: 'var(--text-primary)', border: '1px solid var(--dark-border)' }}>
+                style={{ background: 'rgba(255,255,255,0.04)', color: 'var(--text-primary)', border: '1px solid var(--border)' }}>
                 Faire le test gratuit
               </Link>
             </div>
@@ -149,11 +149,11 @@ export default function ParentsEnfantsPage() {
       <section className="px-6 pb-16">
         <Reveal>
           <div className="max-w-3xl mx-auto text-center py-12 px-8 rounded-3xl"
-            style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+            style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
             <p className="font-display text-xl md:text-2xl font-light italic leading-relaxed mb-4" style={{ color: 'var(--text-primary)' }}>
               &ldquo;Un enfant qui se sent compris n&apos;a plus besoin de crier pour être entendu.&rdquo;
             </p>
-            <p className="text-sm" style={{ color: 'var(--gold)' }}>— Julia Laureau</p>
+            <p className="text-sm" style={{ color: 'var(--brand)' }}>— Julia Laureau</p>
           </div>
         </Reveal>
       </section>
@@ -176,15 +176,15 @@ export default function ParentsEnfantsPage() {
                 <div
                   className="rounded-2xl p-6 sm:p-8 transition-all duration-300 cursor-pointer group"
                   style={{
-                    background: openIdx === i ? 'rgba(212,175,55,0.04)' : 'var(--dark-card)',
-                    border: openIdx === i ? '1px solid rgba(212,175,55,0.15)' : '1px solid var(--dark-border)',
+                    background: openIdx === i ? 'rgba(212,175,55,0.04)' : 'var(--surface-card)',
+                    border: openIdx === i ? '1px solid rgba(212,175,55,0.15)' : '1px solid var(--border)',
                   }}
                   onClick={() => setOpenIdx(openIdx === i ? null : i)}
                 >
                   <div className="flex items-start gap-4">
                     <span className="text-3xl">{s.icon}</span>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-display text-lg font-semibold mb-2 group-hover:text-[var(--gold)] transition-colors" style={{ color: 'var(--text-primary)' }}>
+                      <h3 className="font-display text-lg font-semibold mb-2 group-hover:text-[var(--brand)] transition-colors" style={{ color: 'var(--text-primary)' }}>
                         {s.title}
                       </h3>
                       <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
@@ -199,13 +199,13 @@ export default function ParentsEnfantsPage() {
                         <ul className="mt-4 space-y-2">
                           {s.details.map((d, j) => (
                             <li key={j} className="flex items-start gap-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
-                              <span style={{ color: 'var(--gold)' }} className="mt-0.5">&#x2726;</span>
+                              <span style={{ color: 'var(--brand)' }} className="mt-0.5">&#x2726;</span>
                               {d}
                             </li>
                           ))}
                         </ul>
                       </motion.div>
-                      <button className="mt-3 text-xs font-medium" style={{ color: 'var(--gold)' }}>
+                      <button className="mt-3 text-xs font-medium" style={{ color: 'var(--brand)' }}>
                         {openIdx === i ? 'Réduire' : 'En savoir plus'}
                       </button>
                     </div>
@@ -222,7 +222,7 @@ export default function ParentsEnfantsPage() {
         <div className="max-w-5xl mx-auto">
           <Reveal>
             <h2 className="font-display text-3xl md:text-4xl font-light text-center mb-4" style={{ color: 'var(--text-primary)' }}>
-              Adapté à chaque <span style={{ color: 'var(--gold)' }}>tranche d&apos;âge</span>
+              Adapté à chaque <span style={{ color: 'var(--brand)' }}>tranche d&apos;âge</span>
             </h2>
             <p className="text-center mb-14 max-w-2xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
               Chaque étape du développement a ses défis émotionnels. Nos protocoles s&apos;adaptent à l&apos;âge de votre enfant.
@@ -233,13 +233,13 @@ export default function ParentsEnfantsPage() {
             {AGES.map((a, i) => (
               <Reveal key={i} delay={i * 0.1}>
                 <div className="rounded-2xl p-6 text-center transition-all duration-300 hover:border-[rgba(212,175,55,0.2)]"
-                  style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                  style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
                   <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-sm font-semibold mx-auto mb-4"
-                    style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.12)' }}>
+                    style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.12)' }}>
                     {a.range.split('–')[0].trim()}
                   </div>
                   <h3 className="font-display text-base font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>{a.label}</h3>
-                  <p className="text-xs" style={{ color: 'var(--gold)' }}>{a.range}</p>
+                  <p className="text-xs" style={{ color: 'var(--brand)' }}>{a.range}</p>
                   <p className="text-xs mt-3 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{a.desc}</p>
                 </div>
               </Reveal>
@@ -267,7 +267,7 @@ export default function ParentsEnfantsPage() {
                     style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}>
                     {s.step}
                   </div>
-                  <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--gold)' }}>{s.title}</h3>
+                  <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--brand)' }}>{s.title}</h3>
                   <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{s.desc}</p>
                 </div>
               ))}
@@ -280,7 +280,7 @@ export default function ParentsEnfantsPage() {
       <section className="px-6 pb-20">
         <Reveal>
           <div className="max-w-3xl mx-auto text-center rounded-3xl py-14 px-8"
-            style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+            style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
             <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6"
               style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.12)' }}>
               🚀
@@ -299,7 +299,7 @@ export default function ParentsEnfantsPage() {
                 Rejoindre SOS Shine
               </Link>
               <Link href="/contact"
-                className="text-sm font-medium transition-colors" style={{ color: 'var(--gold)' }}>
+                className="text-sm font-medium transition-colors" style={{ color: 'var(--brand)' }}>
                 Nous contacter
               </Link>
             </div>
@@ -308,14 +308,14 @@ export default function ParentsEnfantsPage() {
       </section>
 
       {/* Footer */}
-      <footer className="px-6 py-8 text-center" style={{ borderTop: '1px solid var(--dark-border)' }}>
+      <footer className="px-6 py-8 text-center" style={{ borderTop: '1px solid var(--border)' }}>
         <div className="flex flex-wrap items-center justify-center gap-6 text-xs" style={{ color: 'var(--text-muted)' }}>
-          <Link href="/" className="hover:text-[var(--gold)] transition-colors">Accueil</Link>
-          <Link href="/encyclopedie" className="hover:text-[var(--gold)] transition-colors">Encyclopédie</Link>
-          <Link href="/signature-emotionnelle" className="hover:text-[var(--gold)] transition-colors">Signature Émotionnelle</Link>
-          <Link href="/contact" className="hover:text-[var(--gold)] transition-colors">Contact</Link>
-          <Link href="/cgv" className="hover:text-[var(--gold)] transition-colors">CGV</Link>
-          <Link href="/confidentialite" className="hover:text-[var(--gold)] transition-colors">Confidentialité</Link>
+          <Link href="/" className="hover:text-[var(--brand)] transition-colors">Accueil</Link>
+          <Link href="/encyclopedie" className="hover:text-[var(--brand)] transition-colors">Encyclopédie</Link>
+          <Link href="/signature-emotionnelle" className="hover:text-[var(--brand)] transition-colors">Signature Émotionnelle</Link>
+          <Link href="/contact" className="hover:text-[var(--brand)] transition-colors">Contact</Link>
+          <Link href="/cgv" className="hover:text-[var(--brand)] transition-colors">CGV</Link>
+          <Link href="/confidentialite" className="hover:text-[var(--brand)] transition-colors">Confidentialité</Link>
         </div>
         <p className="text-xs mt-4" style={{ color: 'var(--text-muted)' }}>&copy; 2026 SOS Shine. Tous droits réservés.</p>
       </footer>

@@ -45,7 +45,7 @@ export default function NotreHistoirePage() {
 
   useEffect(() => { load() }, [load])
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" /></div>
+  if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" /></div>
 
   return (
     <main className="min-h-screen" style={{ background: 'var(--dark)' }}>
@@ -113,7 +113,7 @@ export default function NotreHistoirePage() {
 
       {/* ── Séparation ── */}
       <div className="max-w-5xl mx-auto px-6">
-        <div className="h-[1px]" style={{ background: 'var(--dark-border)' }} />
+        <div className="h-[1px]" style={{ background: 'var(--border)' }} />
       </div>
 
       {/* ── Les Fondateurs / Trinité ── */}
@@ -145,7 +145,7 @@ export default function NotreHistoirePage() {
 
               {/* Julia — Énergie */}
               <div className="group relative">
-                <div className="rounded-2xl border p-6 sm:p-8 md:p-10 text-center h-full flex flex-col items-center" style={{ borderColor: 'var(--dark-border)', background: 'rgba(255,255,255,0.02)' }}>
+                <div className="rounded-2xl border p-6 sm:p-8 md:p-10 text-center h-full flex flex-col items-center" style={{ borderColor: 'var(--border)', background: 'rgba(255,255,255,0.02)' }}>
                   <div className="w-14 h-14 sm:w-16 sm:h-16 mb-5 md:mb-6 relative flex items-center justify-center">
                     <svg viewBox="0 0 60 55" className="w-full h-full" fill="none" stroke={gold} strokeWidth="1.5">
                       <polygon points="30,5 55,50 5,50" />
@@ -164,7 +164,7 @@ export default function NotreHistoirePage() {
 
               {/* William — Corps */}
               <div className="group relative">
-                <div className="rounded-2xl border p-6 sm:p-8 md:p-10 text-center h-full flex flex-col items-center" style={{ borderColor: 'var(--dark-border)', background: 'rgba(255,255,255,0.02)' }}>
+                <div className="rounded-2xl border p-6 sm:p-8 md:p-10 text-center h-full flex flex-col items-center" style={{ borderColor: 'var(--border)', background: 'rgba(255,255,255,0.02)' }}>
                   <div className="w-14 h-14 sm:w-16 sm:h-16 mb-5 md:mb-6 relative flex items-center justify-center">
                     <svg viewBox="0 0 60 55" className="w-full h-full" fill="none" stroke={gold} strokeWidth="1.5">
                       <polygon points="30,5 55,50 5,50" />
@@ -183,7 +183,7 @@ export default function NotreHistoirePage() {
 
               {/* Thomas — Mental */}
               <div className="group relative">
-                <div className="rounded-2xl border p-6 sm:p-8 md:p-10 text-center h-full flex flex-col items-center" style={{ borderColor: 'var(--dark-border)', background: 'rgba(255,255,255,0.02)' }}>
+                <div className="rounded-2xl border p-6 sm:p-8 md:p-10 text-center h-full flex flex-col items-center" style={{ borderColor: 'var(--border)', background: 'rgba(255,255,255,0.02)' }}>
                   <div className="w-14 h-14 sm:w-16 sm:h-16 mb-5 md:mb-6 relative flex items-center justify-center">
                     <svg viewBox="0 0 60 55" className="w-full h-full" fill="none" stroke={gold} strokeWidth="1.5">
                       <polygon points="30,5 55,50 5,50" />
@@ -221,7 +221,7 @@ export default function NotreHistoirePage() {
 
       {/* ── Séparation ── */}
       <div className="max-w-5xl mx-auto px-6">
-        <div className="h-[1px]" style={{ background: 'var(--dark-border)' }} />
+        <div className="h-[1px]" style={{ background: 'var(--border)' }} />
       </div>
 
       {/* ── Manifeste ── */}

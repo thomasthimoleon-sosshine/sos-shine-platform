@@ -171,7 +171,7 @@ export default function AnciennesClientesPage() {
 
   const inputStyle = {
     background: 'rgba(255,255,255,0.04)',
-    border: '1px solid var(--dark-border)',
+    border: '1px solid var(--border)',
     color: 'var(--text-primary)',
   }
 
@@ -179,7 +179,7 @@ export default function AnciennesClientesPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="font-display text-2xl font-semibold" style={{ color: 'var(--gold)' }}>
+        <h1 className="font-display text-2xl font-semibold" style={{ color: 'var(--brand)' }}>
           Anciennes clientes Julia
         </h1>
         <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
@@ -202,7 +202,7 @@ export default function AnciennesClientesPage() {
       )}
 
       {/* Formulaire d'ajout */}
-      <div className="rounded-xl p-5" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+      <div className="rounded-xl p-5" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         <h2 className="text-sm font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
           Ajouter une ancienne cliente
         </h2>
@@ -247,7 +247,7 @@ export default function AnciennesClientesPage() {
       </div>
 
       {/* Import CSV */}
-      <div className="rounded-xl p-5" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+      <div className="rounded-xl p-5" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         <h2 className="text-sm font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
           Importer depuis un fichier CSV
         </h2>
@@ -286,8 +286,8 @@ export default function AnciennesClientesPage() {
       </div>
 
       {/* Liste des clientes */}
-      <div className="rounded-xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-        <div className="px-5 py-3 flex items-center justify-between" style={{ borderBottom: '1px solid var(--dark-border)' }}>
+      <div className="rounded-xl overflow-hidden" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
+        <div className="px-5 py-3 flex items-center justify-between" style={{ borderBottom: '1px solid var(--border)' }}>
           <h2 className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
             {loading ? 'Chargement...' : `${clients.length} cliente${clients.length !== 1 ? 's' : ''} enregistrée${clients.length !== 1 ? 's' : ''}`}
           </h2>
@@ -302,7 +302,7 @@ export default function AnciennesClientesPage() {
             Aucune ancienne cliente ajoutée pour l&apos;instant.
           </div>
         ) : (
-          <div className="divide-y" style={{ borderColor: 'var(--dark-border)' }}>
+          <div className="divide-y" style={{ borderColor: 'var(--border)' }}>
             {clients.map(client => (
               <div key={client.id} className="px-5 py-3 flex items-center justify-between gap-4">
                 <div className="min-w-0 flex-1">

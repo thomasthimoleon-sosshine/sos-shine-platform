@@ -103,7 +103,7 @@ export default function MesRayonsPage() {
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -113,7 +113,7 @@ export default function MesRayonsPage() {
       {/* Toast */}
       {toast && (
         <div className="fixed top-6 right-6 z-50 px-5 py-3 rounded-xl text-sm font-medium animate-slide-in"
-          style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
+          style={{ background: 'var(--brand)', color: 'var(--dark)' }}>
           {toast}
         </div>
       )}
@@ -121,7 +121,7 @@ export default function MesRayonsPage() {
       {/* Header */}
       <div>
         <h1 className="font-display text-2xl sm:text-3xl font-semibold tracking-tight" style={{ color: 'var(--text-primary)' }}>
-          <span style={{ color: 'var(--gold)' }}>&#9728;</span> {t('rayons.title')}
+          <span style={{ color: 'var(--brand)' }}>&#9728;</span> {t('rayons.title')}
         </h1>
         <p className="mt-1 text-sm" style={{ color: 'var(--text-secondary)' }}>
           {t('rayons.subtitle')}
@@ -129,7 +129,7 @@ export default function MesRayonsPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
+      <div className="flex gap-1 p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}>
         {tabs.map(tab => (
           <button
             key={tab.key}
@@ -137,7 +137,7 @@ export default function MesRayonsPage() {
             className="flex-1 px-4 py-2.5 rounded-lg text-[13px] font-medium transition-all cursor-pointer"
             style={{
               background: activeTab === tab.key ? 'rgba(212, 175, 55, 0.1)' : 'transparent',
-              color: activeTab === tab.key ? 'var(--gold)' : 'var(--text-muted)',
+              color: activeTab === tab.key ? 'var(--brand)' : 'var(--text-muted)',
             }}
           >
             {tab.label}
@@ -145,7 +145,7 @@ export default function MesRayonsPage() {
               <span className="ml-1.5 inline-flex items-center justify-center min-w-[18px] h-[18px] rounded-full text-[10px] font-bold"
                 style={{
                   background: tab.key === 'pending' && activeTab !== 'pending' ? '#EF4444' : 'rgba(212,175,55,0.15)',
-                  color: tab.key === 'pending' && activeTab !== 'pending' ? '#fff' : 'var(--gold)',
+                  color: tab.key === 'pending' && activeTab !== 'pending' ? '#fff' : 'var(--brand)',
                 }}>
                 {tab.count}
               </span>
@@ -166,7 +166,7 @@ export default function MesRayonsPage() {
             onChange={e => setSearch(e.target.value)}
             placeholder={t('rayons.search')}
             className="w-full pl-10 pr-4 py-2.5 rounded-xl text-sm outline-none"
-            style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+            style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
           />
         </div>
       )}
@@ -236,13 +236,13 @@ function ConnectionsList({ connections, getPartnerProfile, formatDate, onAction,
         const displayName = p.pseudo || p.prenom
         return (
           <div key={c.id} className="rounded-xl p-4 flex items-center gap-4 group transition-all"
-            style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+            style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
             <Link href={`/dashboard/membre/${p.id}`} className="shrink-0">
               {p.avatar_url ? (
-                <img src={p.avatar_url} alt={displayName} className="w-12 h-12 rounded-full object-cover ring-2 ring-[var(--gold)]/20" />
+                <img src={p.avatar_url} alt={displayName} className="w-12 h-12 rounded-full object-cover ring-2 ring-[var(--brand)]/20" />
               ) : (
                 <div className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-display font-semibold"
-                  style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                  style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
                   {displayName.charAt(0).toUpperCase()}
                 </div>
               )}
@@ -306,13 +306,13 @@ function PendingList({ connections, profiles, onAction, actionLoading, formatDat
         const displayName = p.pseudo || p.prenom
         return (
           <div key={c.id} className="rounded-xl p-4 flex items-center gap-4"
-            style={{ background: 'var(--dark-card)', border: '1px solid rgba(212,175,55,0.15)' }}>
+            style={{ background: 'var(--surface-card)', border: '1px solid rgba(212,175,55,0.15)' }}>
             <Link href={`/dashboard/membre/${p.id}`} className="shrink-0">
               {p.avatar_url ? (
                 <img src={p.avatar_url} alt={displayName} className="w-12 h-12 rounded-full object-cover" />
               ) : (
                 <div className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-display font-semibold"
-                  style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                  style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
                   {displayName.charAt(0).toUpperCase()}
                 </div>
               )}
@@ -330,7 +330,7 @@ function PendingList({ connections, profiles, onAction, actionLoading, formatDat
                 onClick={() => onAction(c.id, 'accept')}
                 disabled={actionLoading === c.id}
                 className="px-4 py-2 rounded-xl text-[13px] font-semibold transition-all cursor-pointer"
-                style={{ background: 'var(--gold)', color: 'var(--dark)' }}
+                style={{ background: 'var(--brand)', color: 'var(--dark)' }}
               >
                 {actionLoading === c.id ? '...' : t('rayons.accept')}
               </button>
@@ -338,7 +338,7 @@ function PendingList({ connections, profiles, onAction, actionLoading, formatDat
                 onClick={() => onAction(c.id, 'decline')}
                 disabled={actionLoading === c.id}
                 className="px-4 py-2 rounded-xl text-[13px] font-medium transition-all cursor-pointer"
-                style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-muted)', border: '1px solid var(--dark-border)' }}
+                style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-muted)', border: '1px solid var(--border)' }}
               >
                 {t('rayons.decline')}
               </button>
@@ -370,13 +370,13 @@ function SentList({ connections, profiles, onAction, actionLoading, formatDate, 
         const displayName = p.pseudo || p.prenom
         return (
           <div key={c.id} className="rounded-xl p-4 flex items-center gap-4"
-            style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+            style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
             <Link href={`/dashboard/membre/${p.id}`} className="shrink-0">
               {p.avatar_url ? (
                 <img src={p.avatar_url} alt={displayName} className="w-12 h-12 rounded-full object-cover" />
               ) : (
                 <div className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-display font-semibold"
-                  style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                  style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
                   {displayName.charAt(0).toUpperCase()}
                 </div>
               )}
@@ -393,7 +393,7 @@ function SentList({ connections, profiles, onAction, actionLoading, formatDate, 
               onClick={() => onAction(c.id, 'cancel')}
               disabled={actionLoading === c.id}
               className="px-4 py-2 rounded-xl text-[13px] font-medium transition-all cursor-pointer"
-              style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-muted)', border: '1px solid var(--dark-border)' }}
+              style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-muted)', border: '1px solid var(--border)' }}
             >
               {actionLoading === c.id ? '...' : t('rayons.cancel_request')}
             </button>
@@ -406,7 +406,7 @@ function SentList({ connections, profiles, onAction, actionLoading, formatDate, 
 
 function EmptyState({ icon, title, desc }: { icon: string; title: string; desc: string }) {
   return (
-    <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+    <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
       <div className="text-4xl mb-4" dangerouslySetInnerHTML={{ __html: icon }} />
       <h3 className="font-semibold text-[15px] mb-2" style={{ color: 'var(--text-primary)' }}>{title}</h3>
       <p className="text-sm max-w-sm mx-auto" style={{ color: 'var(--text-muted)' }}>{desc}</p>

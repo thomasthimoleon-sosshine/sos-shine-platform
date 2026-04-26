@@ -420,7 +420,7 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
       {/* Header bar */}
       <header
         className="px-6 md:px-12 lg:px-20 py-5 flex items-center justify-between"
-        style={{ borderBottom: '1px solid var(--dark-border)' }}
+        style={{ borderBottom: '1px solid var(--border)' }}
       >
         <Link href="/" className="flex items-center gap-3 group">
           <Image
@@ -438,7 +438,7 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
         <Link
           href={STRIPE_URL}
           className="px-5 py-2.5 rounded-full text-sm font-medium transition-all hover:opacity-90"
-          style={{ background: 'var(--gold)', color: 'var(--dark)' }}
+          style={{ background: 'var(--brand)', color: 'var(--dark)' }}
         >
           Rejoindre
         </Link>
@@ -448,14 +448,14 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
       <div
         className="px-6 md:px-12 lg:px-20 pt-10 pb-8"
         style={{
-          borderBottom: '1px solid var(--dark-border)',
+          borderBottom: '1px solid var(--border)',
           background: 'linear-gradient(180deg, rgba(212,175,55,0.03) 0%, transparent 100%)',
         }}
       >
         <div className="max-w-5xl mx-auto">
           <p
             className="text-[11px] tracking-[0.3em] uppercase mb-3"
-            style={{ color: 'var(--gold)' }}
+            style={{ color: 'var(--brand)' }}
           >
             SOS Shine — Encyclopédie Émotionnelle
           </p>
@@ -488,8 +488,8 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
             placeholder="Rechercher un sujet..."
             className="w-full pl-12 pr-4 py-3.5 rounded-xl text-sm outline-none transition-all"
             style={{
-              background: 'var(--dark-card)',
-              border: '1px solid var(--dark-border)',
+              background: 'var(--surface-card)',
+              border: '1px solid var(--border)',
               color: 'var(--text-primary)',
             }}
           />
@@ -502,8 +502,8 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
             className="px-3 py-1.5 rounded-full text-[11px] uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap"
             style={{
               background: activeCat === 'ALL' ? 'rgba(212,175,55,0.12)' : 'transparent',
-              border: `1px solid ${activeCat === 'ALL' ? 'var(--gold)' : 'var(--dark-border)'}`,
-              color: activeCat === 'ALL' ? 'var(--gold)' : 'var(--text-muted)',
+              border: `1px solid ${activeCat === 'ALL' ? 'var(--brand)' : 'var(--border)'}`,
+              color: activeCat === 'ALL' ? 'var(--brand)' : 'var(--text-muted)',
             }}
           >
             Toutes
@@ -515,8 +515,8 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
               className="px-3 py-1.5 rounded-full text-[11px] uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap"
               style={{
                 background: activeCat === c ? 'rgba(212,175,55,0.12)' : 'transparent',
-                border: `1px solid ${activeCat === c ? 'var(--gold)' : 'var(--dark-border)'}`,
-                color: activeCat === c ? 'var(--gold)' : 'var(--text-muted)',
+                border: `1px solid ${activeCat === c ? 'var(--brand)' : 'var(--border)'}`,
+                color: activeCat === c ? 'var(--brand)' : 'var(--text-muted)',
               }}
             >
               {c}
@@ -530,8 +530,8 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
             onClick={() => setActiveLetter('ALL')}
             className="w-10 h-8 rounded-lg text-xs font-medium flex items-center justify-center transition-all cursor-pointer"
             style={{
-              background: activeLetter === 'ALL' ? 'var(--gold)' : 'transparent',
-              border: `1px solid ${activeLetter === 'ALL' ? 'var(--gold)' : 'var(--dark-border)'}`,
+              background: activeLetter === 'ALL' ? 'var(--brand)' : 'transparent',
+              border: `1px solid ${activeLetter === 'ALL' ? 'var(--brand)' : 'var(--border)'}`,
               color: activeLetter === 'ALL' ? 'var(--dark)' : 'var(--text-muted)',
             }}
           >
@@ -543,8 +543,8 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
               onClick={() => setActiveLetter(activeLetter === l ? 'ALL' : l)}
               className="w-8 h-8 rounded-lg text-xs font-medium flex items-center justify-center transition-all cursor-pointer"
               style={{
-                background: activeLetter === l ? 'var(--gold)' : 'transparent',
-                border: `1px solid ${activeLetter === l ? 'var(--gold)' : 'var(--dark-border)'}`,
+                background: activeLetter === l ? 'var(--brand)' : 'transparent',
+                border: `1px solid ${activeLetter === l ? 'var(--brand)' : 'var(--border)'}`,
                 color: activeLetter === l ? 'var(--dark)' : 'var(--text-muted)',
               }}
             >
@@ -572,7 +572,7 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
         {/* Topics list */}
         {loading ? (
           <div className="flex justify-center py-16">
-            <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+            <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-20">
@@ -589,10 +589,10 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
               <div key={letter} id={`letter-${letter}`}>
                 {/* Letter header */}
                 <div className="flex items-baseline gap-4 mb-4">
-                  <h2 className="font-display text-5xl font-light" style={{ color: 'var(--gold)', opacity: 0.8, lineHeight: 1 }}>
+                  <h2 className="font-display text-5xl font-light" style={{ color: 'var(--brand)', opacity: 0.8, lineHeight: 1 }}>
                     {letter}
                   </h2>
-                  <div className="flex-1 h-px" style={{ background: 'var(--dark-border)' }} />
+                  <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
                   <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
                     {grouped[letter].length}
                   </span>
@@ -607,11 +607,11 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
                       <div
                         className="group rounded-lg p-4 transition-all duration-200 hover:-translate-y-0.5"
                         style={{
-                          background: hasDbEntry ? 'rgba(85,239,196,0.03)' : 'var(--dark-card)',
+                          background: hasDbEntry ? 'rgba(85,239,196,0.03)' : 'var(--surface-card)',
                           border: hasDbEntry
                             ? '1.5px solid rgba(85,239,196,0.2)'
-                            : '1px solid var(--dark-border)',
-                          borderLeft: topic.original ? '2px solid var(--gold)' : hasDbEntry ? '2px solid rgba(85,239,196,0.3)' : '2px solid transparent',
+                            : '1px solid var(--border)',
+                          borderLeft: topic.original ? '2px solid var(--brand)' : hasDbEntry ? '2px solid rgba(85,239,196,0.3)' : '2px solid transparent',
                           cursor: 'pointer',
                         }}
                       >
@@ -619,13 +619,13 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
                               <span
-                                className="font-display text-base font-medium transition-colors group-hover:text-[var(--gold)]"
+                                className="font-display text-base font-medium transition-colors group-hover:text-[var(--brand)]"
                                 style={{ color: 'var(--text-primary)', lineHeight: 1.2 }}
                               >
                                 {topic.title}
                               </span>
                               {topic.original && (
-                                <span className="text-[11px]" style={{ color: 'var(--gold)' }}>&diams;</span>
+                                <span className="text-[11px]" style={{ color: 'var(--brand)' }}>&diams;</span>
                               )}
                             </div>
                             <p
@@ -637,7 +637,7 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
                             <div className="flex items-center gap-2 flex-wrap">
                               <span
                                 className="text-[10px] uppercase tracking-wider"
-                                style={{ color: 'var(--gold)', opacity: 0.6 }}
+                                style={{ color: 'var(--brand)', opacity: 0.6 }}
                               >
                                 {topic.cat}
                               </span>
@@ -672,7 +672,7 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
                               <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                             </svg>
                           ) : (
-                            <span className="text-[10px] px-2 py-0.5 rounded-lg flex-shrink-0" style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--gold)' }}>
+                            <span className="text-[10px] px-2 py-0.5 rounded-lg flex-shrink-0" style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--brand)' }}>
                               {getReleaseDate(topic.slug)}
                             </span>
                           )}
@@ -703,7 +703,7 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
           <Link
             href={STRIPE_URL}
             className="inline-block px-8 py-3 rounded-full text-sm font-medium transition-all hover:opacity-90"
-            style={{ background: 'var(--gold)', color: 'var(--dark)' }}
+            style={{ background: 'var(--brand)', color: 'var(--dark)' }}
           >
             Découvrir les offres
           </Link>
@@ -717,11 +717,11 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
           className="rounded-xl p-5 flex flex-wrap gap-x-6 gap-y-3 items-center"
           style={{
             background: 'rgba(212,175,55,0.03)',
-            border: '1px solid var(--dark-border)',
+            border: '1px solid var(--border)',
           }}
         >
           <div className="flex items-center gap-2">
-            <div className="w-4 h-0.5" style={{ background: 'var(--gold)' }} />
+            <div className="w-4 h-0.5" style={{ background: 'var(--brand)' }} />
             <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>&diams; Sujet de la liste originale</span>
           </div>
           <div className="flex items-center gap-2">
@@ -751,7 +751,7 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
             Vous ne trouvez pas votre challenge émotionnel ? Nous ajoutons régulièrement de nouvelles pages.
           </p>
           <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
-            Contactez-nous à <span style={{ color: 'var(--gold)' }}>julialaureau@sosshine.com</span>
+            Contactez-nous à <span style={{ color: 'var(--brand)' }}>julialaureau@sosshine.com</span>
           </p>
         </div>
       </div>

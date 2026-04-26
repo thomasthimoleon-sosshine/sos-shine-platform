@@ -129,12 +129,12 @@ export default function AdminBotsPage() {
         <h2 className="font-display text-lg font-medium">Membres fictifs</h2>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           {BOT_PROFILES.map(bot => (
-            <div key={bot.prenom} className="text-center p-4 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
+            <div key={bot.prenom} className="text-center p-4 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}>
               <img
                 src={bot.avatar_url}
                 alt={bot.prenom}
                 className="w-16 h-16 rounded-full mx-auto mb-3 object-cover"
-                style={{ border: '2px solid var(--gold)' }}
+                style={{ border: '2px solid var(--brand)' }}
               />
               <p className="font-medium text-sm">{bot.prenom}</p>
               <p className="text-xs text-[var(--text-muted)] mt-1">{bot.plan}</p>
@@ -145,7 +145,7 @@ export default function AdminBotsPage() {
           onClick={seedBots}
           disabled={loading}
           className="px-6 py-2.5 rounded-lg text-sm font-medium"
-          style={{ background: 'var(--gold)', color: '#000', opacity: loading ? 0.5 : 1 }}
+          style={{ background: 'var(--brand)', color: '#000', opacity: loading ? 0.5 : 1 }}
         >
           {loading ? 'Création...' : 'Créer les profils dans Supabase'}
         </button>
@@ -160,7 +160,7 @@ export default function AdminBotsPage() {
           onClick={schedulePosts}
           disabled={loading}
           className="px-6 py-2.5 rounded-lg text-sm font-medium"
-          style={{ background: 'rgba(212, 175, 55, 0.15)', border: '1px solid rgba(212, 175, 55, 0.3)', color: 'var(--gold)', opacity: loading ? 0.5 : 1 }}
+          style={{ background: 'rgba(212, 175, 55, 0.15)', border: '1px solid rgba(212, 175, 55, 0.3)', color: 'var(--brand)', opacity: loading ? 0.5 : 1 }}
         >
           {loading ? 'Planification...' : 'Planifier les publications jusqu\'au 22 mars'}
         </button>
@@ -198,7 +198,7 @@ export default function AdminBotsPage() {
             <button
               onClick={startAutoMode}
               className="px-5 py-2.5 rounded-lg text-sm font-medium"
-              style={{ background: 'rgba(212, 175, 55, 0.15)', border: '1px solid rgba(212, 175, 55, 0.3)', color: 'var(--gold)' }}
+              style={{ background: 'rgba(212, 175, 55, 0.15)', border: '1px solid rgba(212, 175, 55, 0.3)', color: 'var(--brand)' }}
             >
               Démarrer le mode auto
             </button>

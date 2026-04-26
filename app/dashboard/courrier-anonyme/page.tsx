@@ -57,7 +57,7 @@ export default function CourrierAnonymePage() {
         <div className="flex items-center gap-3 mb-3">
           <div className="w-10 h-10 rounded-2xl flex items-center justify-center"
             style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.15)' }}>
-            <svg className="w-5 h-5" style={{ color: 'var(--gold)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <svg className="w-5 h-5" style={{ color: 'var(--brand)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
             </svg>
           </div>
@@ -80,13 +80,13 @@ export default function CourrierAnonymePage() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
             className="rounded-2xl p-8 md:p-12 text-center"
-            style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+            style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
           >
             <div className="w-16 h-16 rounded-full flex items-center justify-center text-3xl mx-auto mb-6"
               style={{ background: 'rgba(212,175,55,0.1)' }}>
               ✉️
             </div>
-            <h2 className="font-display text-2xl font-light mb-3" style={{ color: 'var(--gold)' }}>
+            <h2 className="font-display text-2xl font-light mb-3" style={{ color: 'var(--brand)' }}>
               Message envoyé avec succès
             </h2>
             <p className="text-sm leading-relaxed max-w-md mx-auto mb-6" style={{ color: 'var(--text-secondary)' }}>
@@ -144,12 +144,12 @@ export default function CourrierAnonymePage() {
                       onClick={() => setCategory(cat.value)}
                       className="rounded-xl p-3 text-left transition-all"
                       style={{
-                        background: category === cat.value ? 'rgba(212,175,55,0.08)' : 'var(--dark-card)',
-                        border: category === cat.value ? '1px solid rgba(212,175,55,0.25)' : '1px solid var(--dark-border)',
+                        background: category === cat.value ? 'rgba(212,175,55,0.08)' : 'var(--surface-card)',
+                        border: category === cat.value ? '1px solid rgba(212,175,55,0.25)' : '1px solid var(--border)',
                       }}
                     >
                       <span className="text-lg">{cat.icon}</span>
-                      <p className="text-xs font-medium mt-1" style={{ color: category === cat.value ? 'var(--gold)' : 'var(--text-primary)' }}>
+                      <p className="text-xs font-medium mt-1" style={{ color: category === cat.value ? 'var(--brand)' : 'var(--text-primary)' }}>
                         {cat.label}
                       </p>
                     </button>
@@ -173,8 +173,8 @@ export default function CourrierAnonymePage() {
                   maxLength={200}
                   className="w-full px-4 py-3 rounded-xl text-sm transition-all outline-none"
                   style={{
-                    background: 'var(--dark-card)',
-                    border: '1px solid var(--dark-border)',
+                    background: 'var(--surface-card)',
+                    border: '1px solid var(--border)',
                     color: 'var(--text-primary)',
                   }}
                 />
@@ -194,8 +194,8 @@ export default function CourrierAnonymePage() {
                   required
                   className="w-full px-4 py-3 rounded-xl text-sm transition-all outline-none resize-none"
                   style={{
-                    background: 'var(--dark-card)',
-                    border: '1px solid var(--dark-border)',
+                    background: 'var(--surface-card)',
+                    border: '1px solid var(--border)',
                     color: 'var(--text-primary)',
                   }}
                 />
@@ -238,7 +238,7 @@ export default function CourrierAnonymePage() {
 
             {/* Bottom inspiration */}
             <div className="mt-8 rounded-2xl p-5"
-              style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+              style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
               <p className="text-xs font-medium mb-3" style={{ color: 'var(--text-muted)' }}>
                 Quelques idées pour vous inspirer :
               </p>
@@ -256,7 +256,7 @@ export default function CourrierAnonymePage() {
                     className="block w-full text-left text-xs px-3 py-2 rounded-lg transition-all hover:bg-[rgba(212,175,55,0.05)]"
                     style={{ color: 'var(--text-secondary)' }}
                   >
-                    <span style={{ color: 'var(--gold)' }}>&#x2726;</span> {idea}
+                    <span style={{ color: 'var(--brand)' }}>&#x2726;</span> {idea}
                   </button>
                 ))}
               </div>

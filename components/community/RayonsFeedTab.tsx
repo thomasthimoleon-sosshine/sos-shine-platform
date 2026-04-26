@@ -230,14 +230,14 @@ export default function RayonsFeedTab({ onProfileClick }: Props) {
   if (loading) {
     return (
       <div className="flex justify-center py-16">
-        <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
 
   if (posts.length === 0) {
     return (
-      <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+      <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         <div className="text-4xl mb-4">☀️</div>
         <h3 className="font-semibold text-[15px] mb-2" style={{ color: 'var(--text-primary)' }}>
           Aucune publication de vos Rayons
@@ -255,7 +255,7 @@ export default function RayonsFeedTab({ onProfileClick }: Props) {
         const catInfo = getCat(post.category)
         const isCommentsOpen = expandedComments === post.id
         return (
-          <article key={post.id} className="rounded-2xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+          <article key={post.id} className="rounded-2xl overflow-hidden" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
             <div className="p-5">
               {/* Author header */}
               <div className="flex items-center gap-3 mb-3">
@@ -264,7 +264,7 @@ export default function RayonsFeedTab({ onProfileClick }: Props) {
                     <img src={post.author_avatar} alt="" className="w-10 h-10 rounded-full object-cover" />
                   ) : (
                     <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold"
-                      style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                      style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
                       {post.author_prenom.charAt(0).toUpperCase()}
                     </div>
                   )}
@@ -272,7 +272,7 @@ export default function RayonsFeedTab({ onProfileClick }: Props) {
                 <div className="flex-1 min-w-0">
                   <button onClick={() => onProfileClick?.(post.author_id)}
                     className="text-sm font-semibold cursor-pointer hover:underline"
-                    style={{ color: post.author_role === 'founder' ? 'var(--gold)' : 'var(--text-primary)' }}>
+                    style={{ color: post.author_role === 'founder' ? 'var(--brand)' : 'var(--text-primary)' }}>
                     {post.author_prenom}
                   </button>
                   <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{formatDate(post.created_at)}</p>
@@ -293,7 +293,7 @@ export default function RayonsFeedTab({ onProfileClick }: Props) {
             </div>
 
             {/* Actions */}
-            <div className="px-5 py-3 flex items-center gap-1" style={{ borderTop: '1px solid var(--dark-border)' }}>
+            <div className="px-5 py-3 flex items-center gap-1" style={{ borderTop: '1px solid var(--border)' }}>
               <button onClick={() => toggleLike(post.id)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
                 style={{ color: post.user_has_liked ? '#D4AF37' : 'var(--text-muted)' }}>
@@ -304,7 +304,7 @@ export default function RayonsFeedTab({ onProfileClick }: Props) {
               </button>
               <button onClick={() => toggleComments(post.id)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
-                style={{ color: isCommentsOpen ? 'var(--gold)' : 'var(--text-muted)' }}>
+                style={{ color: isCommentsOpen ? 'var(--brand)' : 'var(--text-muted)' }}>
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" />
                 </svg>
@@ -314,7 +314,7 @@ export default function RayonsFeedTab({ onProfileClick }: Props) {
 
             {/* Comments */}
             {isCommentsOpen && (
-              <div className="px-5 pb-4 space-y-3" style={{ borderTop: '1px solid var(--dark-border)' }}>
+              <div className="px-5 pb-4 space-y-3" style={{ borderTop: '1px solid var(--border)' }}>
                 <div className="pt-3 space-y-3">
                   {(comments[post.id] || []).map(comment => (
                     <div key={comment.id} className="flex gap-2.5">
@@ -322,13 +322,13 @@ export default function RayonsFeedTab({ onProfileClick }: Props) {
                         <img src={comment.avatar_url} alt="" className="w-7 h-7 rounded-full object-cover flex-shrink-0 mt-0.5" />
                       ) : (
                         <div className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-semibold flex-shrink-0 mt-0.5"
-                          style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                          style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
                           {comment.prenom.charAt(0).toUpperCase()}
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="text-xs font-semibold" style={{ color: comment.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)' }}>
+                          <span className="text-xs font-semibold" style={{ color: comment.role === 'founder' ? 'var(--brand)' : 'var(--text-primary)' }}>
                             {comment.prenom}
                           </span>
                           <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{formatDate(comment.created_at)}</span>
@@ -345,13 +345,13 @@ export default function RayonsFeedTab({ onProfileClick }: Props) {
                       onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendComment(post.id) } }}
                       placeholder="Écrire un commentaire..."
                       className="flex-1 px-3 py-2 rounded-xl text-xs outline-none"
-                      style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                      style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                     />
                     <button
                       onClick={() => sendComment(post.id)}
                       disabled={sendingComment || !commentText.trim()}
                       className="px-3 py-2 rounded-xl text-xs font-semibold cursor-pointer disabled:opacity-40"
-                      style={{ background: 'var(--gold)', color: 'var(--dark)' }}
+                      style={{ background: 'var(--brand)', color: 'var(--dark)' }}
                     >
                       {sendingComment ? '...' : 'Envoyer'}
                     </button>

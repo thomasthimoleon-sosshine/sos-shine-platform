@@ -474,7 +474,7 @@ export default function EvenementsPage() {
       {/* Events list */}
       {loading ? (
         <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : events.length === 0 ? (
         <div className="text-center py-16">
@@ -501,8 +501,8 @@ export default function EvenementsPage() {
                 id={`event-${event.id}`}
                 className="rounded-2xl p-6 transition-all duration-300"
                 style={{
-                  background: 'var(--dark-card)',
-                  border: isSelected ? '1px solid rgba(212,175,55,0.4)' : '1px solid var(--dark-border)',
+                  background: 'var(--surface-card)',
+                  border: isSelected ? '1px solid rgba(212,175,55,0.4)' : '1px solid var(--border)',
                   boxShadow: isSelected ? '0 0 20px rgba(212,175,55,0.08)' : 'none',
                 }}
               >
@@ -519,10 +519,10 @@ export default function EvenementsPage() {
                     className="w-16 h-16 rounded-xl flex flex-col items-center justify-center flex-shrink-0"
                     style={{ background: 'rgba(212, 168, 67, 0.1)' }}
                   >
-                    <span className="text-lg font-bold" style={{ color: 'var(--gold)' }}>
+                    <span className="text-lg font-bold" style={{ color: 'var(--brand)' }}>
                       {new Date(event.event_date).getDate()}
                     </span>
-                    <span className="text-xs uppercase" style={{ color: 'var(--gold-deep, var(--gold))' }}>
+                    <span className="text-xs uppercase" style={{ color: 'var(--gold-deep, var(--brand))' }}>
                       {new Date(event.event_date).toLocaleDateString('fr-FR', { month: 'short' })}
                     </span>
                   </div>
@@ -578,7 +578,7 @@ export default function EvenementsPage() {
                                 alt={founder.name}
                                 title={founder.name}
                                 className="w-7 h-7 rounded-full object-cover"
-                                style={{ border: '2px solid var(--dark-card)' }}
+                                style={{ border: '2px solid var(--surface-card)' }}
                               />
                             )
                           })}
@@ -622,7 +622,7 @@ export default function EvenementsPage() {
                         className="flex items-center gap-2 mt-4 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:-translate-y-0.5 w-fit"
                         style={{
                           background: 'rgba(212, 175, 55, 0.1)',
-                          color: 'var(--gold)',
+                          color: 'var(--brand)',
                           border: '1px solid rgba(212, 175, 55, 0.25)',
                         }}
                       >
@@ -638,7 +638,7 @@ export default function EvenementsPage() {
                         {(() => {
                           const pricing = getEventPrice()
                           return (
-                            <span className="text-xs font-medium" style={{ color: pricing.amount === 0 ? '#55EFC4' : 'var(--gold)' }}>
+                            <span className="text-xs font-medium" style={{ color: pricing.amount === 0 ? '#55EFC4' : 'var(--brand)' }}>
                               {pricing.label}
                             </span>
                           )
@@ -662,7 +662,7 @@ export default function EvenementsPage() {
                           onClick={() => handleRegister(event.id)}
                           disabled={registering === event.id}
                           className="text-xs px-4 py-2 rounded-xl font-semibold transition-all duration-200 cursor-pointer disabled:opacity-50"
-                          style={{ background: 'var(--gold)', color: 'var(--dark)' }}
+                          style={{ background: 'var(--brand)', color: 'var(--dark)' }}
                         >
                           {registering === event.id ? t('common.loading') : t('dashboard.register')}
                         </button>
@@ -672,7 +672,7 @@ export default function EvenementsPage() {
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-xs px-4 py-2 rounded-xl font-semibold transition-all duration-200 cursor-pointer inline-flex items-center gap-1.5"
-                          style={{ background: 'var(--gold)', color: 'var(--dark)' }}
+                          style={{ background: 'var(--brand)', color: 'var(--dark)' }}
                         >
                           Réserver — {getEventPrice().label}
                         </a>
@@ -700,7 +700,7 @@ export default function EvenementsPage() {
         <p className="text-sm mb-4 max-w-md mx-auto" style={{ color: 'var(--text-secondary)' }}>
           Après 4 mois dans la communauté, vous pouvez organiser vos propres Shine Walks et devenir Éclaireur.
         </p>
-        <span className="text-xs font-medium" style={{ color: 'var(--gold)' }}>
+        <span className="text-xs font-medium" style={{ color: 'var(--brand)' }}>
           Programme Éclaireur — bientôt disponible
         </span>
       </div>

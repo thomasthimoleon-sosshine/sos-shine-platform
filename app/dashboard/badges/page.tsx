@@ -52,7 +52,7 @@ export default function BadgesGalleryPage() {
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -68,7 +68,7 @@ export default function BadgesGalleryPage() {
           <Link
             href="/dashboard"
             className="text-sm font-medium flex items-center gap-1"
-            style={{ color: 'var(--gold)' }}
+            style={{ color: 'var(--brand)' }}
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
@@ -83,10 +83,10 @@ export default function BadgesGalleryPage() {
           {unlockedCount} / {totalBadges} badges débloqués
         </p>
         {/* Global progress bar */}
-        <div className="mt-3 h-2 rounded-full overflow-hidden" style={{ background: 'var(--dark-border)' }}>
+        <div className="mt-3 h-2 rounded-full overflow-hidden" style={{ background: 'var(--border)' }}>
           <motion.div
             className="h-full rounded-full"
-            style={{ background: 'linear-gradient(90deg, var(--gold), var(--gold-light))' }}
+            style={{ background: 'linear-gradient(90deg, var(--brand), var(--brand-light))' }}
             initial={{ width: 0 }}
             animate={{ width: `${totalBadges > 0 ? (unlockedCount / totalBadges) * 100 : 0}%` }}
             transition={{ duration: 0.8, ease: ease as unknown as [number, number, number, number] }}
@@ -119,7 +119,7 @@ export default function BadgesGalleryPage() {
                 </p>
               </div>
               <span className="ml-auto text-[12px] font-medium px-2 py-0.5 rounded-full"
-                style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}>
+                style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)' }}>
                 {catUnlocked}/{category.badges.length}
               </span>
             </div>
@@ -136,7 +136,7 @@ export default function BadgesGalleryPage() {
                     className="relative rounded-xl p-4 text-center transition-all duration-300 block hover:scale-[1.03]"
                     style={{
                       background: isUnlocked ? 'rgba(212,175,55,0.08)' : 'rgba(255,255,255,0.02)',
-                      border: isUnlocked ? '1px solid rgba(212,175,55,0.2)' : '1px solid var(--dark-border)',
+                      border: isUnlocked ? '1px solid rgba(212,175,55,0.2)' : '1px solid var(--border)',
                       opacity: isUnlocked ? 1 : 0.5,
                     }}
                   >
@@ -146,7 +146,7 @@ export default function BadgesGalleryPage() {
                         background: isUnlocked
                           ? 'linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.05))'
                           : 'rgba(255,255,255,0.03)',
-                        border: isUnlocked ? '2px solid var(--gold)' : '2px solid var(--dark-border)',
+                        border: isUnlocked ? '2px solid var(--brand)' : '2px solid var(--border)',
                       }}>
                       <span className="text-lg" style={{ filter: isUnlocked ? 'none' : 'grayscale(1)', opacity: isUnlocked ? 1 : 0.6 }}>
                         {badge.emoji || CATEGORY_ICONS[category.icon] || '🏆'}
@@ -155,13 +155,13 @@ export default function BadgesGalleryPage() {
 
                     {/* Badge info */}
                     <h3 className="font-semibold text-[12px] leading-tight mb-1"
-                      style={{ color: isUnlocked ? 'var(--gold)' : 'var(--text-muted)' }}>
+                      style={{ color: isUnlocked ? 'var(--brand)' : 'var(--text-muted)' }}>
                       {badge.title}
                     </h3>
                     <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>
                       {category.name}
                     </p>
-                    <p className="text-[10px] mt-1 font-mono" style={{ color: isUnlocked ? 'var(--gold)' : 'var(--text-muted)' }}>
+                    <p className="text-[10px] mt-1 font-mono" style={{ color: isUnlocked ? 'var(--brand)' : 'var(--text-muted)' }}>
                       {badge.threshold} {catKey === 'login_streak' ? 'jours' : 'actions'}
                     </p>
                   </Link>

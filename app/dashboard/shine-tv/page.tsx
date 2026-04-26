@@ -201,7 +201,7 @@ function VideoRow({ title, icon, videos, onSelect }: {
                   <div className="flex items-center gap-2">
                     <div
                       className="w-9 h-9 rounded-full flex items-center justify-center"
-                      style={{ background: 'var(--gold)', color: '#09090b' }}
+                      style={{ background: 'var(--brand)', color: '#09090b' }}
                     >
                       <svg className="w-4 h-4 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M8 5v14l11-7z" />
@@ -249,7 +249,7 @@ function HeroBanner({ video, onOpen, onInfo }: { video: ShineVideo; onOpen: () =
           />
           <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(9,9,11,1) 0%, rgba(9,9,11,0.3) 30%, transparent 60%)' }} />
           <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold"
-            style={{ background: 'rgba(9,9,11,0.7)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.3)', backdropFilter: 'blur(8px)' }}>
+            style={{ background: 'rgba(9,9,11,0.7)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.3)', backdropFilter: 'blur(8px)' }}>
             <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" /></svg>
             Recommand&eacute; pour vous
           </span>
@@ -266,7 +266,7 @@ function HeroBanner({ video, onOpen, onInfo }: { video: ShineVideo; onOpen: () =
             <div className="flex items-center gap-3">
               <button onClick={onOpen}
                 className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-semibold cursor-pointer transition-all duration-200 hover:scale-105"
-                style={{ background: 'var(--gold)', color: '#09090b' }}>
+                style={{ background: 'var(--brand)', color: '#09090b' }}>
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                 Regarder
               </button>
@@ -302,7 +302,7 @@ function HeroBanner({ video, onOpen, onInfo }: { video: ShineVideo; onOpen: () =
         <div className="absolute bottom-0 left-0 p-10 max-w-xl z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold mb-4"
-              style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.3)' }}>
+              style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.3)' }}>
               <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" /></svg>
               Recommand&eacute; pour vous
             </span>
@@ -315,7 +315,7 @@ function HeroBanner({ video, onOpen, onInfo }: { video: ShineVideo; onOpen: () =
             <div className="flex items-center gap-3 flex-wrap">
               <button onClick={onOpen}
                 className="flex items-center gap-2.5 px-6 py-3 rounded-xl text-[14px] font-semibold cursor-pointer transition-all duration-200 hover:scale-105"
-                style={{ background: 'var(--gold)', color: '#09090b' }}>
+                style={{ background: 'var(--brand)', color: '#09090b' }}>
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                 Regarder
               </button>
@@ -655,8 +655,8 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
           <div className="flex items-center gap-2">
             <p className="text-white/50 text-[12px]">{video.category} · {video.year}</p>
             {isCasting && (
-              <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold" style={{ background: 'rgba(212,175,55,0.2)', color: 'var(--gold)' }}>
-                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: 'var(--gold)' }} />
+              <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold" style={{ background: 'rgba(212,175,55,0.2)', color: 'var(--brand)' }}>
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: 'var(--brand)' }} />
                 Casting
               </span>
             )}
@@ -709,11 +709,11 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
         >
           <div
             className="h-full rounded-full relative transition-all"
-            style={{ width: `${progress}%`, background: 'var(--gold)' }}
+            style={{ width: `${progress}%`, background: 'var(--brand)' }}
           >
             <div
               className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full opacity-0 group-hover/progress:opacity-100 transition-opacity"
-              style={{ background: 'var(--gold)', boxShadow: '0 0 8px rgba(212,175,55,0.5)' }}
+              style={{ background: 'var(--brand)', boxShadow: '0 0 8px rgba(212,175,55,0.5)' }}
             />
           </div>
         </div>
@@ -780,7 +780,7 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
                   </svg>
                   {subtitlesOn && (
-                    <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full" style={{ background: 'var(--gold)' }} />
+                    <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full" style={{ background: 'var(--brand)' }} />
                   )}
                 </button>
                 {showSubtitleMenu && (
@@ -795,7 +795,7 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
                       className="w-full text-left px-2 py-1.5 rounded text-[13px] flex items-center gap-2 hover:bg-white/10 transition-colors cursor-pointer"
                       style={{ color: !subtitlesOn ? 'white' : 'var(--text-muted)' }}
                     >
-                      {!subtitlesOn && <span style={{ color: 'var(--gold)' }}>&#10003;</span>}
+                      {!subtitlesOn && <span style={{ color: 'var(--brand)' }}>&#10003;</span>}
                       D&eacute;sactiv&eacute;s
                     </button>
                     <button
@@ -803,7 +803,7 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
                       className="w-full text-left px-2 py-1.5 rounded text-[13px] flex items-center gap-2 hover:bg-white/10 transition-colors cursor-pointer"
                       style={{ color: subtitlesOn ? 'white' : 'var(--text-muted)' }}
                     >
-                      {subtitlesOn && <span style={{ color: 'var(--gold)' }}>&#10003;</span>}
+                      {subtitlesOn && <span style={{ color: 'var(--brand)' }}>&#10003;</span>}
                       Fran&ccedil;ais
                     </button>
                   </div>
@@ -819,7 +819,7 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 5h18v12H3z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M7 21l5-5 5 5H7z" fill={isCasting ? 'var(--gold)' : 'none'} stroke={isCasting ? 'var(--gold)' : 'white'} />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M7 21l5-5 5 5H7z" fill={isCasting ? 'var(--brand)' : 'none'} stroke={isCasting ? 'var(--brand)' : 'white'} />
               </svg>
             </button>
 
@@ -829,9 +829,9 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
               className="w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center cursor-pointer hover:scale-110 active:scale-95 transition-transform rounded-full hover:bg-white/10 active:bg-white/20"
               title="Caster sur un appareil"
             >
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke={isCasting ? 'var(--gold)' : 'white'} strokeWidth={1.5}>
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke={isCasting ? 'var(--brand)' : 'white'} strokeWidth={1.5}>
                 <path d="M2 16.1A5 5 0 015.9 20M2 12.05A9 9 0 019.95 20M2 8V6a2 2 0 012-2h16a2 2 0 012 2v12a2 2 0 01-2 2h-6" strokeLinecap="round" strokeLinejoin="round" />
-                <circle cx="2" cy="20" r="1" fill={isCasting ? 'var(--gold)' : 'white'} stroke="none" />
+                <circle cx="2" cy="20" r="1" fill={isCasting ? 'var(--brand)' : 'white'} stroke="none" />
               </svg>
             </button>
 
@@ -913,7 +913,7 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate, onWatch }: {
         exit={{ opacity: 0, y: 40, scale: 0.95 }}
         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
         className="w-full max-w-3xl rounded-2xl overflow-hidden relative"
-        style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+        style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
@@ -930,7 +930,7 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate, onWatch }: {
         {/* Video preview - click to launch full player */}
         <div className="relative aspect-video bg-black cursor-pointer group/preview" onClick={onWatch}>
           <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" />
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, var(--dark-card), transparent 50%)' }} />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, var(--surface-card), transparent 50%)' }} />
           <div className="absolute inset-0 flex items-center justify-center">
             <div
               className="w-20 h-20 rounded-full flex items-center justify-center transition-transform duration-200 group-hover/preview:scale-110"
@@ -955,10 +955,10 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate, onWatch }: {
                 {video.title}
               </h2>
               <div className="flex items-center gap-3 flex-wrap mb-4">
-                <span className="text-[13px] font-medium" style={{ color: 'var(--gold)' }}>{video.year}</span>
+                <span className="text-[13px] font-medium" style={{ color: 'var(--brand)' }}>{video.year}</span>
                 <span className="text-[13px]" style={{ color: 'var(--text-muted)' }}>{video.duration}</span>
                 <span className="px-2 py-0.5 rounded text-[11px] font-medium"
-                  style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                  style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
                   HD
                 </span>
               </div>
@@ -994,7 +994,7 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate, onWatch }: {
               onRate={(r) => onRate(video.id, r)}
             />
             {video.userRating > 0 && (
-              <span className="text-[13px] font-semibold" style={{ color: 'var(--gold)' }}>
+              <span className="text-[13px] font-semibold" style={{ color: 'var(--brand)' }}>
                 {video.userRating}/5
               </span>
             )}
@@ -1007,7 +1007,7 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate, onWatch }: {
               className={`flex-1 py-2.5 rounded-lg text-[13px] font-medium cursor-pointer transition-all duration-200`}
               style={{
                 background: tab === 'overview' ? 'rgba(212,175,55,0.12)' : 'transparent',
-                color: tab === 'overview' ? 'var(--gold)' : 'var(--text-muted)',
+                color: tab === 'overview' ? 'var(--brand)' : 'var(--text-muted)',
               }}
             >
               Aperçu
@@ -1017,7 +1017,7 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate, onWatch }: {
               className={`flex-1 py-2.5 rounded-lg text-[13px] font-medium cursor-pointer transition-all duration-200`}
               style={{
                 background: tab === 'reviews' ? 'rgba(212,175,55,0.12)' : 'transparent',
-                color: tab === 'reviews' ? 'var(--gold)' : 'var(--text-muted)',
+                color: tab === 'reviews' ? 'var(--brand)' : 'var(--text-muted)',
               }}
             >
               Avis ({reviews.length})
@@ -1029,7 +1029,7 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate, onWatch }: {
               <motion.div key="overview" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }}>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="glass p-4 rounded-xl text-center">
-                    <div className="text-2xl font-display font-semibold" style={{ color: 'var(--gold)' }}>
+                    <div className="text-2xl font-display font-semibold" style={{ color: 'var(--brand)' }}>
                       {video.rating.toFixed(1)}
                     </div>
                     <div className="flex justify-center mt-1">
@@ -1038,7 +1038,7 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate, onWatch }: {
                     <p className="text-[11px] mt-1" style={{ color: 'var(--text-muted)' }}>Note moyenne</p>
                   </div>
                   <div className="glass p-4 rounded-xl text-center">
-                    <div className="text-2xl font-display font-semibold" style={{ color: 'var(--gold)' }}>
+                    <div className="text-2xl font-display font-semibold" style={{ color: 'var(--brand)' }}>
                       {video.reviewCount}
                     </div>
                     <p className="text-[11px] mt-2" style={{ color: 'var(--text-muted)' }}>Avis membres</p>
@@ -1062,19 +1062,19 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate, onWatch }: {
                     className="w-full rounded-xl p-3 text-[13px] resize-none outline-none transition-all duration-200"
                     style={{
                       background: 'rgba(255,255,255,0.04)',
-                      border: '1px solid var(--dark-border)',
+                      border: '1px solid var(--border)',
                       color: 'var(--text-primary)',
                       minHeight: 80,
                     }}
                     onFocus={(e) => e.target.style.borderColor = 'rgba(212,175,55,0.4)'}
-                    onBlur={(e) => e.target.style.borderColor = 'var(--dark-border)'}
+                    onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
                   />
                   <div className="flex justify-end mt-2">
                     <button
                       onClick={handleSubmitReview}
                       disabled={!newReview.trim() || newRating === 0 || isSubmitting}
                       className="px-5 py-2 rounded-xl text-[13px] font-semibold cursor-pointer transition-all duration-200 hover:scale-105 disabled:opacity-40 disabled:hover:scale-100"
-                      style={{ background: 'var(--gold)', color: '#09090b' }}
+                      style={{ background: 'var(--brand)', color: '#09090b' }}
                     >
                       {isSubmitting ? 'Envoi...' : 'Publier'}
                     </button>
@@ -1094,7 +1094,7 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate, onWatch }: {
                       <div className="flex items-center gap-3 mb-2">
                         <div
                           className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
-                          style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}
+                          style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}
                         >
                           {review.author.charAt(0)}
                         </div>
@@ -1288,12 +1288,12 @@ export default function ShineTVPage() {
         <div className="text-center space-y-4">
           <div className="relative w-16 h-16 mx-auto">
             <div className="absolute inset-0 rounded-2xl animate-pulse"
-              style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))' }} />
+              style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))' }} />
             <div className="absolute inset-0 flex items-center justify-center">
               <svg className="w-8 h-8" fill="#09090b" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
             </div>
           </div>
-          <p className="font-display text-xl font-semibold" style={{ color: 'var(--gold)' }}>Shine TV</p>
+          <p className="font-display text-xl font-semibold" style={{ color: 'var(--brand)' }}>Shine TV</p>
           <p className="text-[13px]" style={{ color: 'var(--text-muted)' }}>Chargement de vos contenus...</p>
         </div>
       </div>
@@ -1325,11 +1325,11 @@ export default function ShineTVPage() {
               className="w-full pl-11 pr-4 py-3 rounded-xl text-[14px] outline-none transition-all duration-200"
               style={{
                 background: 'rgba(255,255,255,0.05)',
-                border: '1px solid var(--dark-border)',
+                border: '1px solid var(--border)',
                 color: 'var(--text-primary)',
               }}
               onFocus={(e) => e.target.style.borderColor = 'rgba(212,175,55,0.4)'}
-              onBlur={(e) => e.target.style.borderColor = 'var(--dark-border)'}
+              onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
             />
             {search && (
               <button
@@ -1350,9 +1350,9 @@ export default function ShineTVPage() {
               onClick={() => setActiveFilter('all')}
               className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200"
               style={{
-                background: activeFilter === 'all' ? 'var(--gold)' : 'rgba(255,255,255,0.06)',
+                background: activeFilter === 'all' ? 'var(--brand)' : 'rgba(255,255,255,0.06)',
                 color: activeFilter === 'all' ? '#09090b' : 'var(--text-secondary)',
-                border: activeFilter === 'all' ? 'none' : '1px solid var(--dark-border)',
+                border: activeFilter === 'all' ? 'none' : '1px solid var(--border)',
               }}
             >
               Tout
@@ -1362,9 +1362,9 @@ export default function ShineTVPage() {
                 onClick={() => setActiveFilter('douleur')}
                 className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200 flex items-center gap-1.5"
                 style={{
-                  background: activeFilter === 'douleur' ? 'var(--gold)' : 'rgba(255,255,255,0.06)',
+                  background: activeFilter === 'douleur' ? 'var(--brand)' : 'rgba(255,255,255,0.06)',
                   color: activeFilter === 'douleur' ? '#09090b' : 'var(--text-secondary)',
-                  border: activeFilter === 'douleur' ? 'none' : '1px solid var(--dark-border)',
+                  border: activeFilter === 'douleur' ? 'none' : '1px solid var(--border)',
                 }}
               >
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -1377,9 +1377,9 @@ export default function ShineTVPage() {
               onClick={() => setActiveFilter('encyclopedie')}
               className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200 flex items-center gap-1.5"
               style={{
-                background: activeFilter === 'encyclopedie' ? 'var(--gold)' : 'rgba(255,255,255,0.06)',
+                background: activeFilter === 'encyclopedie' ? 'var(--brand)' : 'rgba(255,255,255,0.06)',
                 color: activeFilter === 'encyclopedie' ? '#09090b' : 'var(--text-secondary)',
-                border: activeFilter === 'encyclopedie' ? 'none' : '1px solid var(--dark-border)',
+                border: activeFilter === 'encyclopedie' ? 'none' : '1px solid var(--border)',
               }}
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -1391,9 +1391,9 @@ export default function ShineTVPage() {
               onClick={() => setActiveFilter('favorites')}
               className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200 flex items-center gap-1.5"
               style={{
-                background: activeFilter === 'favorites' ? 'var(--gold)' : 'rgba(255,255,255,0.06)',
+                background: activeFilter === 'favorites' ? 'var(--brand)' : 'rgba(255,255,255,0.06)',
                 color: activeFilter === 'favorites' ? '#09090b' : 'var(--text-secondary)',
-                border: activeFilter === 'favorites' ? 'none' : '1px solid var(--dark-border)',
+                border: activeFilter === 'favorites' ? 'none' : '1px solid var(--border)',
               }}
             >
               <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
@@ -1407,9 +1407,9 @@ export default function ShineTVPage() {
                 onClick={() => setActiveFilter(cat.id)}
                 className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200"
                 style={{
-                  background: activeFilter === cat.id ? 'var(--gold)' : 'rgba(255,255,255,0.06)',
+                  background: activeFilter === cat.id ? 'var(--brand)' : 'rgba(255,255,255,0.06)',
                   color: activeFilter === cat.id ? '#09090b' : 'var(--text-secondary)',
-                  border: activeFilter === cat.id ? 'none' : '1px solid var(--dark-border)',
+                  border: activeFilter === cat.id ? 'none' : '1px solid var(--border)',
                 }}
               >
                 {cat.icon} {cat.label}
@@ -1424,7 +1424,7 @@ export default function ShineTVPage() {
           <div>
             <p className="text-[13px] mb-4" style={{ color: 'var(--text-muted)' }}>
               {filteredVideos.length} résultat{filteredVideos.length !== 1 ? 's' : ''}
-              {search && <> pour &ldquo;<span style={{ color: 'var(--gold)' }}>{search}</span>&rdquo;</>}
+              {search && <> pour &ldquo;<span style={{ color: 'var(--brand)' }}>{search}</span>&rdquo;</>}
             </p>
             {filteredVideos.length === 0 ? (
               <div className="glass p-12 text-center rounded-xl">
@@ -1460,7 +1460,7 @@ export default function ShineTVPage() {
                           </span>
                         )}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                          <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'var(--gold)', color: '#09090b' }}>
+                          <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'var(--brand)', color: '#09090b' }}>
                             <svg className="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                           </div>
                         </div>
@@ -1516,7 +1516,7 @@ export default function ShineTVPage() {
                           {video.duration}
                         </span>
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                          <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'var(--gold)', color: '#09090b' }}>
+                          <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'var(--brand)', color: '#09090b' }}>
                             <svg className="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                           </div>
                         </div>
@@ -1538,7 +1538,7 @@ export default function ShineTVPage() {
           // Douleur-filtered view
           <div>
             <h2 className="text-lg font-display font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--gold)' }}>
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--brand)' }}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.331 0 4.476.884 6.084 2.333M12 6.042A8.967 8.967 0 0118 3.75c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18c-2.331 0-4.476.884-6.084 2.333M12 6.042V20.333" />
               </svg>
               {douleurName || 'Contenu lié'}
@@ -1572,7 +1572,7 @@ export default function ShineTVPage() {
                           {video.duration}
                         </span>
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                          <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'var(--gold)', color: '#09090b' }}>
+                          <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'var(--brand)', color: '#09090b' }}>
                             <svg className="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                           </div>
                         </div>
@@ -1590,7 +1590,7 @@ export default function ShineTVPage() {
           // Encyclopédie A-Z view
           <div className="space-y-6">
             <h2 className="text-lg font-display font-semibold flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--gold)' }}>
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--brand)' }}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
               </svg>
               Encyclopédie A — Z
@@ -1615,7 +1615,7 @@ export default function ShineTVPage() {
                         key={letter}
                         href={`#letter-tv-${letter}`}
                         className="w-8 h-8 rounded-lg flex items-center justify-center text-[13px] font-semibold transition-colors hover:opacity-80"
-                        style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}
+                        style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)' }}
                       >
                         {letter}
                       </a>
@@ -1625,7 +1625,7 @@ export default function ShineTVPage() {
                   {/* Letter groups */}
                   {letters.map(letter => (
                     <div key={letter} id={`letter-tv-${letter}`} className="scroll-mt-24">
-                      <h3 className="font-display text-2xl font-bold mb-3 pb-2" style={{ color: 'var(--gold)', borderBottom: '1px solid var(--dark-border)' }}>
+                      <h3 className="font-display text-2xl font-bold mb-3 pb-2" style={{ color: 'var(--brand)', borderBottom: '1px solid var(--border)' }}>
                         {letter}
                       </h3>
                       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
@@ -1646,7 +1646,7 @@ export default function ShineTVPage() {
                                   {video.duration}
                                 </span>
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                  <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'var(--gold)', color: '#09090b' }}>
+                                  <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'var(--brand)', color: '#09090b' }}>
                                     <svg className="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                                   </div>
                                 </div>

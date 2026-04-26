@@ -113,7 +113,7 @@ export default function CommunautePage() {
 
       {/* ── Top Tab Navigation ── */}
       <div className="mb-6 overflow-x-auto scrollbar-hide">
-        <div className="flex gap-1 p-1 rounded-xl min-w-max" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+        <div className="flex gap-1 p-1 rounded-xl min-w-max" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
           {TABS.map(tab => {
             const isActive = activeTab === tab.id
             return (
@@ -123,7 +123,7 @@ export default function CommunautePage() {
                 className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-[13px] font-medium transition-all cursor-pointer whitespace-nowrap relative"
                 style={{
                   background: isActive ? 'rgba(212,175,55,0.1)' : 'transparent',
-                  color: isActive ? 'var(--gold)' : 'var(--text-muted)',
+                  color: isActive ? 'var(--brand)' : 'var(--text-muted)',
                 }}
               >
                 <span className={isActive ? 'opacity-100' : 'opacity-60'}>{tab.icon}</span>

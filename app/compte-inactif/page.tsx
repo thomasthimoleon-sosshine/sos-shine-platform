@@ -100,8 +100,8 @@ export default function CompteInactifPage() {
             Retour
           </button>
 
-          <div className="rounded-2xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-            <div className="p-6 text-center" style={{ borderBottom: '1px solid var(--dark-border)' }}>
+          <div className="rounded-2xl overflow-hidden" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
+            <div className="p-6 text-center" style={{ borderBottom: '1px solid var(--border)' }}>
               <h2 className="font-display text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
                 {planNames[checkoutPlan.plan] || checkoutPlan.plan}
               </h2>

@@ -29,11 +29,11 @@ export function PreviewVideo({ src, poster, ctaText, ctaLink, subtitleText }: Pr
         <div className="text-center py-10 px-6">
           <div className="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center"
             style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.25)' }}>
-            <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
+            <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="var(--brand)" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
             </svg>
           </div>
-          <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--gold)' }}>
+          <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--brand)' }}>
             L&apos;extrait est terminé
           </h3>
           <p className="text-sm mb-6 max-w-xs mx-auto" style={{ color: 'var(--text-secondary)' }}>
@@ -41,7 +41,7 @@ export function PreviewVideo({ src, poster, ctaText, ctaLink, subtitleText }: Pr
           </p>
           <Link href={ctaLink}
             className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-sm font-semibold transition-all hover:scale-[1.03]"
-            style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep, #B8960F))', color: '#050505', boxShadow: '0 4px 20px rgba(212,175,55,0.3)' }}>
+            style={{ background: 'linear-gradient(135deg, var(--brand), var(--gold-deep, #B8960F))', color: '#050505', boxShadow: '0 4px 20px rgba(212,175,55,0.3)' }}>
             {ctaText}
           </Link>
           <p className="text-xs mt-4" style={{ color: 'var(--text-muted)' }}>
@@ -89,9 +89,9 @@ export function PreviewAudio({ src, title, ctaText, ctaLink }: PreviewAudioProps
       </div>
       {audioLocked ? (
         <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)' }}>
-          <p className="text-sm" style={{ color: 'var(--gold)' }}>Vous aimez ? Accédez à la suite</p>
+          <p className="text-sm" style={{ color: 'var(--brand)' }}>Vous aimez ? Accédez à la suite</p>
           <Link href={ctaLink} className="px-4 py-2 rounded-full text-xs font-semibold"
-            style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep, #B8960F))', color: '#050505' }}>
+            style={{ background: 'linear-gradient(135deg, var(--brand), var(--gold-deep, #B8960F))', color: '#050505' }}>
             {ctaText}
           </Link>
         </div>

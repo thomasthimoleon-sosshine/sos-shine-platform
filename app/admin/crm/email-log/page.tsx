@@ -99,7 +99,7 @@ export default function EmailLogPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-semibold" style={{ color: 'var(--gold)' }}>
+        <h1 className="font-display text-2xl font-semibold" style={{ color: 'var(--brand)' }}>
           Journal des emails
         </h1>
         <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
@@ -115,13 +115,13 @@ export default function EmailLogPage() {
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Rechercher par email..."
           className="flex-1 px-4 py-2.5 rounded-xl text-sm outline-none"
-          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
         />
         <select
           value={filter}
           onChange={(e) => { setFilter(e.target.value); setPage(0) }}
           className="px-4 py-2.5 rounded-xl text-sm cursor-pointer"
-          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
         >
           {filterOptions.map(o => (
             <option key={o.value} value={o.value}>{o.label}</option>
@@ -130,7 +130,7 @@ export default function EmailLogPage() {
         <button
           onClick={() => { setPage(0); loadEvents() }}
           className="px-4 py-2.5 rounded-xl text-sm font-medium cursor-pointer"
-          style={{ background: 'rgba(201,169,97,0.1)', border: '1px solid rgba(201,169,97,0.2)', color: 'var(--gold)' }}
+          style={{ background: 'rgba(201,169,97,0.1)', border: '1px solid rgba(201,169,97,0.2)', color: 'var(--brand)' }}
         >
           Rafraîchir
         </button>
@@ -143,10 +143,10 @@ export default function EmailLogPage() {
       </div>
 
       {/* Table */}
-      <div className="rounded-xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+      <div className="rounded-xl overflow-hidden" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         {loading ? (
           <div className="flex justify-center py-12">
-            <div className="w-6 h-6 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
           </div>
         ) : filteredEvents.length === 0 ? (
           <div className="text-center py-12 text-sm" style={{ color: 'var(--text-muted)' }}>
@@ -156,7 +156,7 @@ export default function EmailLogPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr style={{ borderBottom: '1px solid var(--dark-border)' }}>
+                <tr style={{ borderBottom: '1px solid var(--border)' }}>
                   <th className="text-left px-4 py-3 font-medium text-xs" style={{ color: 'var(--text-muted)' }}>Date</th>
                   <th className="text-left px-4 py-3 font-medium text-xs" style={{ color: 'var(--text-muted)' }}>Destinataire</th>
                   <th className="text-left px-4 py-3 font-medium text-xs" style={{ color: 'var(--text-muted)' }}>Type</th>

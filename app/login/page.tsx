@@ -115,7 +115,7 @@ export default function LoginPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="py-2.5 px-5 rounded-full text-center text-[13px] font-medium transition-all"
-              style={{ border: '1px solid rgba(212,175,55,0.3)', color: 'var(--gold)', background: 'rgba(212,175,55,0.05)' }}
+              style={{ border: '1px solid rgba(212,175,55,0.3)', color: 'var(--brand)', background: 'rgba(212,175,55,0.05)' }}
               onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(212,175,55,0.12)'; e.currentTarget.style.borderColor = 'rgba(212,175,55,0.5)' }}
               onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(212,175,55,0.05)'; e.currentTarget.style.borderColor = 'rgba(212,175,55,0.3)' }}
             >
@@ -136,9 +136,9 @@ export default function LoginPage() {
               <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
                 placeholder="votre@email.com"
                 className="w-full px-4 py-3 rounded-xl text-sm transition-colors"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)', outline: 'none' }}
+                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)', outline: 'none' }}
                 onFocus={(e) => e.currentTarget.style.borderColor = 'rgba(212,175,55,0.4)'}
-                onBlur={(e) => e.currentTarget.style.borderColor = 'var(--dark-border)'}
+                onBlur={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
               />
             </div>
             <div>
@@ -146,13 +146,13 @@ export default function LoginPage() {
               <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required
                 placeholder={t('auth.password_placeholder')}
                 className="w-full px-4 py-3 rounded-xl text-sm transition-colors"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)', outline: 'none' }}
+                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)', outline: 'none' }}
                 onFocus={(e) => e.currentTarget.style.borderColor = 'rgba(212,175,55,0.4)'}
-                onBlur={(e) => e.currentTarget.style.borderColor = 'var(--dark-border)'}
+                onBlur={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
               />
             </div>
             <div className="text-right -mt-1">
-              <Link href="/forgot-password" className="text-[12px] transition-colors duration-200 hover:underline" style={{ color: 'var(--gold)' }}>
+              <Link href="/forgot-password" className="text-[12px] transition-colors duration-200 hover:underline" style={{ color: 'var(--brand)' }}>
                 {t('auth.forgot_password')}
               </Link>
             </div>
@@ -169,16 +169,16 @@ export default function LoginPage() {
           </form>
 
           <div className="flex items-center gap-4 my-6">
-            <span className="flex-1 h-px" style={{ background: 'var(--dark-border)' }} />
+            <span className="flex-1 h-px" style={{ background: 'var(--border)' }} />
             <span className="text-[11px] text-[var(--text-muted)]">{t('auth.or')}</span>
-            <span className="flex-1 h-px" style={{ background: 'var(--dark-border)' }} />
+            <span className="flex-1 h-px" style={{ background: 'var(--border)' }} />
           </div>
 
           <button onClick={handleGoogleSignIn}
             className="w-full py-3.5 rounded-full text-[13px] flex items-center justify-center gap-3 transition-all"
-            style={{ border: '1px solid var(--dark-border)', color: 'var(--text-secondary)', background: 'transparent' }}
+            style={{ border: '1px solid var(--border)', color: 'var(--text-secondary)', background: 'transparent' }}
             onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(212,175,55,0.3)'; e.currentTarget.style.color = 'var(--text-primary)' }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--dark-border)'; e.currentTarget.style.color = 'var(--text-secondary)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-secondary)' }}
           >
             <svg className="w-4.5 h-4.5" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
@@ -192,7 +192,7 @@ export default function LoginPage() {
 
         <p className="text-center text-[13px] text-[var(--text-muted)] mt-8">
           {s('login_signup_text')}{' '}
-          <Link href="/signup" className="gold-underline font-medium" style={{ color: 'var(--gold)' }}>
+          <Link href="/signup" className="gold-underline font-medium" style={{ color: 'var(--brand)' }}>
             {s('login_signup_link_text')}
           </Link>
         </p>

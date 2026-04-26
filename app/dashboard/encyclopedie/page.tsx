@@ -430,8 +430,8 @@ export default function EncyclopediePage() {
           placeholder={t('dashboard.search_challenge')}
           className="w-full pl-12 pr-4 py-3.5 rounded-xl text-sm outline-none transition-all"
           style={{
-            background: 'var(--dark-card)',
-            border: '1px solid var(--dark-border)',
+            background: 'var(--surface-card)',
+            border: '1px solid var(--border)',
             color: 'var(--text-primary)',
           }}
         />
@@ -444,8 +444,8 @@ export default function EncyclopediePage() {
           className="px-3 py-1.5 rounded-full text-[11px] uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap"
           style={{
             background: activeCat === 'ALL' ? 'rgba(212,175,55,0.12)' : 'transparent',
-            border: `1px solid ${activeCat === 'ALL' ? 'var(--gold)' : 'var(--dark-border)'}`,
-            color: activeCat === 'ALL' ? 'var(--gold)' : 'var(--text-muted)',
+            border: `1px solid ${activeCat === 'ALL' ? 'var(--brand)' : 'var(--border)'}`,
+            color: activeCat === 'ALL' ? 'var(--brand)' : 'var(--text-muted)',
           }}
         >
           Toutes
@@ -457,8 +457,8 @@ export default function EncyclopediePage() {
             className="px-3 py-1.5 rounded-full text-[11px] uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap"
             style={{
               background: activeCat === c ? 'rgba(212,175,55,0.12)' : 'transparent',
-              border: `1px solid ${activeCat === c ? 'var(--gold)' : 'var(--dark-border)'}`,
-              color: activeCat === c ? 'var(--gold)' : 'var(--text-muted)',
+              border: `1px solid ${activeCat === c ? 'var(--brand)' : 'var(--border)'}`,
+              color: activeCat === c ? 'var(--brand)' : 'var(--text-muted)',
             }}
           >
             {c}
@@ -472,8 +472,8 @@ export default function EncyclopediePage() {
           onClick={() => setActiveLetter('ALL')}
           className="w-10 h-8 rounded-lg text-xs font-medium flex items-center justify-center transition-all cursor-pointer"
           style={{
-            background: activeLetter === 'ALL' ? 'var(--gold)' : 'transparent',
-            border: `1px solid ${activeLetter === 'ALL' ? 'var(--gold)' : 'var(--dark-border)'}`,
+            background: activeLetter === 'ALL' ? 'var(--brand)' : 'transparent',
+            border: `1px solid ${activeLetter === 'ALL' ? 'var(--brand)' : 'var(--border)'}`,
             color: activeLetter === 'ALL' ? 'var(--dark)' : 'var(--text-muted)',
           }}
         >
@@ -485,8 +485,8 @@ export default function EncyclopediePage() {
             onClick={() => setActiveLetter(activeLetter === l ? 'ALL' : l)}
             className="w-8 h-8 rounded-lg text-xs font-medium flex items-center justify-center transition-all cursor-pointer"
             style={{
-              background: activeLetter === l ? 'var(--gold)' : 'transparent',
-              border: `1px solid ${activeLetter === l ? 'var(--gold)' : 'var(--dark-border)'}`,
+              background: activeLetter === l ? 'var(--brand)' : 'transparent',
+              border: `1px solid ${activeLetter === l ? 'var(--brand)' : 'var(--border)'}`,
               color: activeLetter === l ? 'var(--dark)' : 'var(--text-muted)',
             }}
           >
@@ -506,7 +506,7 @@ export default function EncyclopediePage() {
             className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-[12px] uppercase tracking-wider transition-all cursor-pointer"
             style={{
               background: onlyAvailable ? 'rgba(85,239,196,0.12)' : 'transparent',
-              border: `1px solid ${onlyAvailable ? 'rgba(85,239,196,0.4)' : 'var(--dark-border)'}`,
+              border: `1px solid ${onlyAvailable ? 'rgba(85,239,196,0.4)' : 'var(--border)'}`,
               color: onlyAvailable ? '#55EFC4' : 'var(--text-muted)',
             }}
           >
@@ -521,7 +521,7 @@ export default function EncyclopediePage() {
       {/* Topics list */}
       {loading ? (
         <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-16">
@@ -538,10 +538,10 @@ export default function EncyclopediePage() {
             <div key={letter} id={`letter-${letter}`}>
               {/* Letter header */}
               <div className="flex items-baseline gap-4 mb-4">
-                <h2 className="font-display text-4xl font-light" style={{ color: 'var(--gold)', opacity: 0.8, lineHeight: 1 }}>
+                <h2 className="font-display text-4xl font-light" style={{ color: 'var(--brand)', opacity: 0.8, lineHeight: 1 }}>
                   {letter}
                 </h2>
-                <div className="flex-1 h-px" style={{ background: 'var(--dark-border)' }} />
+                <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
                 <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
                   {grouped[letter].length}
                 </span>
@@ -559,11 +559,11 @@ export default function EncyclopediePage() {
                     <div
                       className="group rounded-xl p-4 transition-all duration-200 hover:-translate-y-0.5"
                       style={{
-                        background: hasDbEntry ? 'rgba(85,239,196,0.03)' : 'var(--dark-card)',
+                        background: hasDbEntry ? 'rgba(85,239,196,0.03)' : 'var(--surface-card)',
                         border: hasDbEntry
                           ? (prog?.completed_at ? '1.5px solid rgba(85,239,196,0.4)' : '1.5px solid rgba(85,239,196,0.2)')
-                          : '1px solid var(--dark-border)',
-                        borderLeft: topic.original ? '2px solid var(--gold)' : hasDbEntry ? '2px solid rgba(85,239,196,0.3)' : '2px solid transparent',
+                          : '1px solid var(--border)',
+                        borderLeft: topic.original ? '2px solid var(--brand)' : hasDbEntry ? '2px solid rgba(85,239,196,0.3)' : '2px solid transparent',
                         cursor: 'pointer',
                       }}
                     >
@@ -571,13 +571,13 @@ export default function EncyclopediePage() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
                             <span
-                              className="font-display text-base font-medium transition-colors group-hover:text-[var(--gold)]"
+                              className="font-display text-base font-medium transition-colors group-hover:text-[var(--brand)]"
                               style={{ color: 'var(--text-primary)', lineHeight: 1.2 }}
                             >
                               {topic.title}
                             </span>
                             {topic.original && (
-                              <span className="text-[11px]" style={{ color: 'var(--gold)' }}>&diams;</span>
+                              <span className="text-[11px]" style={{ color: 'var(--brand)' }}>&diams;</span>
                             )}
                             {prog?.completed_at && (
                               <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="#55EFC4" strokeWidth={2}>
@@ -594,7 +594,7 @@ export default function EncyclopediePage() {
                           <div className="flex items-center gap-2 flex-wrap">
                             <span
                               className="text-[10px] uppercase tracking-wider"
-                              style={{ color: 'var(--gold)', opacity: 0.6 }}
+                              style={{ color: 'var(--brand)', opacity: 0.6 }}
                             >
                               {topic.cat}
                             </span>
@@ -647,8 +647,8 @@ export default function EncyclopediePage() {
                           {/* Progress bar for in-progress challenges */}
                           {hasDbEntry && stepsCompleted > 0 && !prog?.completed_at && (
                             <div className="flex items-center gap-2 mt-2">
-                              <div className="flex-1 h-1 rounded-full overflow-hidden" style={{ background: 'var(--dark-border)' }}>
-                                <div className="h-full rounded-full" style={{ width: `${(stepsCompleted / 3) * 100}%`, background: 'var(--gold)' }} />
+                              <div className="flex-1 h-1 rounded-full overflow-hidden" style={{ background: 'var(--border)' }}>
+                                <div className="h-full rounded-full" style={{ width: `${(stepsCompleted / 3) * 100}%`, background: 'var(--brand)' }} />
                               </div>
                               <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{stepsCompleted}/3</span>
                             </div>
@@ -662,7 +662,7 @@ export default function EncyclopediePage() {
                             </svg>
                           </div>
                         ) : (
-                          <span className="text-[10px] px-2 py-0.5 rounded-lg flex-shrink-0" style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--gold)' }}>
+                          <span className="text-[10px] px-2 py-0.5 rounded-lg flex-shrink-0" style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--brand)' }}>
                             {getReleaseDate(topic.slug)}
                           </span>
                         )}
@@ -687,11 +687,11 @@ export default function EncyclopediePage() {
         className="rounded-xl p-5 flex flex-wrap gap-x-6 gap-y-3 items-center"
         style={{
           background: 'rgba(212,175,55,0.03)',
-          border: '1px solid var(--dark-border)',
+          border: '1px solid var(--border)',
         }}
       >
         <div className="flex items-center gap-2">
-          <div className="w-4 h-0.5" style={{ background: 'var(--gold)' }} />
+          <div className="w-4 h-0.5" style={{ background: 'var(--brand)' }} />
           <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>&diams; Originale</span>
         </div>
         <div className="flex items-center gap-2">
@@ -727,7 +727,7 @@ export default function EncyclopediePage() {
           {t('dashboard.not_found_info')}
         </p>
         <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
-          {t('dashboard.contact_us')} <span style={{ color: 'var(--gold)' }}>julialaureau@sosshine.com</span>
+          {t('dashboard.contact_us')} <span style={{ color: 'var(--brand)' }}>julialaureau@sosshine.com</span>
         </p>
       </div>
     </div>

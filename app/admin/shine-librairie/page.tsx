@@ -224,7 +224,7 @@ export default function AdminShineLibrairiePage() {
 
   const inputStyle: React.CSSProperties = {
     width: '100%', padding: '10px 14px', borderRadius: '8px',
-    border: '1px solid var(--dark-border)', background: 'var(--dark)',
+    border: '1px solid var(--border)', background: 'var(--dark)',
     color: 'var(--text-primary)', fontSize: '14px', outline: 'none',
   }
   const labelStyle: React.CSSProperties = {
@@ -260,7 +260,7 @@ export default function AdminShineLibrairiePage() {
 
       {/* Form */}
       {showForm && (
-        <form onSubmit={handleSave} className="rounded-xl p-6 space-y-5" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <form onSubmit={handleSave} className="rounded-xl p-6 space-y-5" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <h2 className="font-semibold text-lg" style={{ color: '#D4AF37' }}>
             {editingId ? 'Modifier le livre' : 'Nouveau livre / eBook'}
           </h2>
@@ -358,7 +358,7 @@ export default function AdminShineLibrairiePage() {
             </button>
             <button type="button" onClick={cancelForm}
               className="px-5 py-2.5 rounded-lg text-sm transition-colors"
-              style={{ color: 'var(--text-muted)', border: '1px solid var(--dark-border)' }}>
+              style={{ color: 'var(--text-muted)', border: '1px solid var(--border)' }}>
               Annuler
             </button>
           </div>
@@ -373,7 +373,7 @@ export default function AdminShineLibrairiePage() {
             style={{
               background: filterType === 'all' ? 'rgba(212,175,55,0.15)' : 'transparent',
               color: filterType === 'all' ? '#D4AF37' : 'var(--text-muted)',
-              border: `1px solid ${filterType === 'all' ? 'rgba(212,175,55,0.3)' : 'var(--dark-border)'}`,
+              border: `1px solid ${filterType === 'all' ? 'rgba(212,175,55,0.3)' : 'var(--border)'}`,
             }}>
             Tout ({books.length})
           </button>
@@ -386,7 +386,7 @@ export default function AdminShineLibrairiePage() {
                 style={{
                   background: filterType === c.id ? 'rgba(212,175,55,0.15)' : 'transparent',
                   color: filterType === c.id ? '#D4AF37' : 'var(--text-muted)',
-                  border: `1px solid ${filterType === c.id ? 'rgba(212,175,55,0.3)' : 'var(--dark-border)'}`,
+                  border: `1px solid ${filterType === c.id ? 'rgba(212,175,55,0.3)' : 'var(--border)'}`,
                 }}>
                 {c.icon} {c.label} ({count})
               </button>
@@ -419,7 +419,7 @@ export default function AdminShineLibrairiePage() {
           <div className="w-8 h-8 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : filteredBooks.length === 0 ? (
-        <div className="rounded-xl p-12 text-center" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <div className="rounded-xl p-12 text-center" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <p className="text-4xl mb-3">📚</p>
           <p style={{ color: 'var(--text-muted)' }}>Aucun livre pour le moment.</p>
           <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
@@ -430,7 +430,7 @@ export default function AdminShineLibrairiePage() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {filteredBooks.map((b) => (
             <div key={b.id} className="rounded-xl overflow-hidden transition-all duration-200 hover:-translate-y-0.5 flex flex-col"
-              style={{ background: 'var(--dark-card)', border: `1px solid ${b.is_featured ? 'rgba(212,175,55,0.4)' : 'var(--dark-border)'}` }}>
+              style={{ background: 'var(--surface-card)', border: `1px solid ${b.is_featured ? 'rgba(212,175,55,0.4)' : 'var(--border)'}` }}>
               {/* Cover */}
               <div className="relative aspect-[3/4]" style={{ background: 'rgba(212,175,55,0.05)' }}>
                 {b.cover_url ? (

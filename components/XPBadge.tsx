@@ -65,7 +65,7 @@ export default function XPBadge({ userId, size = 'md', showDetails = false }: XP
   }
 
   return (
-    <div className="rounded-2xl p-6" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+    <div className="rounded-2xl p-6" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-semibold text-base" style={{ color: 'var(--text-primary)' }}>Niveau &amp; XP</h3>
         <span className="text-xl">{level.icon}</span>
@@ -74,7 +74,7 @@ export default function XPBadge({ userId, size = 'md', showDetails = false }: XP
       {/* Level name + XP */}
       <div className="flex items-center justify-between mb-3">
         <div>
-          <p className="font-display text-lg font-semibold" style={{ color: 'var(--gold)' }}>
+          <p className="font-display text-lg font-semibold" style={{ color: 'var(--brand)' }}>
             {level.name}
           </p>
           <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Niveau {level.level} / 10</p>
@@ -92,12 +92,12 @@ export default function XPBadge({ userId, size = 'md', showDetails = false }: XP
             <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
               Progression vers {next.icon} {next.name}
             </span>
-            <span className="text-[11px] font-medium" style={{ color: 'var(--gold)' }}>{progress}%</span>
+            <span className="text-[11px] font-medium" style={{ color: 'var(--brand)' }}>{progress}%</span>
           </div>
-          <div className="h-2.5 rounded-full overflow-hidden" style={{ background: 'var(--dark-border)' }}>
+          <div className="h-2.5 rounded-full overflow-hidden" style={{ background: 'var(--border)' }}>
             <motion.div
               className="h-full rounded-full"
-              style={{ background: 'linear-gradient(90deg, var(--gold), var(--gold-light))' }}
+              style={{ background: 'linear-gradient(90deg, var(--brand), var(--brand-light))' }}
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -111,32 +111,32 @@ export default function XPBadge({ userId, size = 'md', showDetails = false }: XP
               {formatXP(next.minXP)} XP
             </p>
           </div>
-          <p className="text-[10px] mt-0.5 text-center" style={{ color: 'var(--gold)', opacity: 0.7 }}>
+          <p className="text-[10px] mt-0.5 text-center" style={{ color: 'var(--brand)', opacity: 0.7 }}>
             Encore {formatXP(next.minXP - xpData.total_xp)} XP pour atteindre {next.name}
           </p>
         </div>
       ) : (
         <div className="mb-4 rounded-xl p-3 text-center" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.15)' }}>
-          <p className="text-sm font-semibold" style={{ color: 'var(--gold)' }}>Rang maximum atteint !</p>
+          <p className="text-sm font-semibold" style={{ color: 'var(--brand)' }}>Rang maximum atteint !</p>
           <p className="text-[11px] mt-0.5" style={{ color: 'var(--text-muted)' }}>1 000 000 XP — Diamant</p>
         </div>
       )}
 
       {/* Shines stats */}
-      <div className="grid grid-cols-2 gap-3 pt-3" style={{ borderTop: '1px solid var(--dark-border)' }}>
+      <div className="grid grid-cols-2 gap-3 pt-3" style={{ borderTop: '1px solid var(--border)' }}>
         <div className="text-center py-2 rounded-xl" style={{ background: 'rgba(212,175,55,0.04)' }}>
-          <p className="text-lg font-semibold" style={{ color: 'var(--gold)' }}>{xpData.shines_given}</p>
+          <p className="text-lg font-semibold" style={{ color: 'var(--brand)' }}>{xpData.shines_given}</p>
           <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>Shines donnés</p>
         </div>
         <div className="text-center py-2 rounded-xl" style={{ background: 'rgba(212,175,55,0.04)' }}>
-          <p className="text-lg font-semibold" style={{ color: 'var(--gold)' }}>{xpData.shines_received}</p>
+          <p className="text-lg font-semibold" style={{ color: 'var(--brand)' }}>{xpData.shines_received}</p>
           <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>Shines reçus</p>
         </div>
       </div>
 
       {/* Level list */}
       {size === 'lg' && (
-        <div className="mt-4 pt-3" style={{ borderTop: '1px solid var(--dark-border)' }}>
+        <div className="mt-4 pt-3" style={{ borderTop: '1px solid var(--border)' }}>
           <p className="text-[11px] font-medium mb-2" style={{ color: 'var(--text-muted)' }}>Tous les niveaux</p>
           <div className="space-y-1.5">
             {LEVEL_THRESHOLDS.map((t) => {
@@ -147,7 +147,7 @@ export default function XPBadge({ userId, size = 'md', showDetails = false }: XP
                   className="flex items-center gap-2 px-3 py-2 rounded-lg text-[11px]"
                   style={{
                     background: isCurrent ? 'rgba(212,175,55,0.1)' : isReached ? 'rgba(212,175,55,0.04)' : 'transparent',
-                    color: isReached ? 'var(--gold)' : 'var(--text-muted)',
+                    color: isReached ? 'var(--brand)' : 'var(--text-muted)',
                     opacity: isReached ? 1 : 0.4,
                     border: isCurrent ? '1px solid rgba(212,175,55,0.2)' : '1px solid transparent',
                   }}>
@@ -156,7 +156,7 @@ export default function XPBadge({ userId, size = 'md', showDetails = false }: XP
                   <span className="ml-auto font-mono">{formatXP(t.minXP)} XP</span>
                   {isCurrent && (
                     <span className="ml-1 px-1.5 py-0.5 rounded text-[9px] font-semibold"
-                      style={{ background: 'var(--gold)', color: '#09090b' }}>
+                      style={{ background: 'var(--brand)', color: '#09090b' }}>
                       ACTUEL
                     </span>
                   )}

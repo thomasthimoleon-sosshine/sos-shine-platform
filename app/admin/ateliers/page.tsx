@@ -83,7 +83,7 @@ export default function AdminAteliersPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-24">
-        <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -92,7 +92,7 @@ export default function AdminAteliersPage() {
     <div className="max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="font-display text-2xl font-bold" style={{ color: 'var(--gold)' }}>
+          <h1 className="font-display text-2xl font-bold" style={{ color: 'var(--brand)' }}>
             Ateliers Premium
           </h1>
           <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
@@ -102,7 +102,7 @@ export default function AdminAteliersPage() {
         {message && (
           <span
             className="px-4 py-2 rounded-full text-xs font-medium"
-            style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}
+            style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)' }}
           >
             {message}
           </span>
@@ -121,9 +121,9 @@ export default function AdminAteliersPage() {
               onClick={() => { setSelectedMonth(monthIndex); setEditingId(null) }}
               className="px-4 py-2 rounded-xl text-xs font-medium transition-all cursor-pointer"
               style={{
-                background: isActive ? 'var(--gold)' : 'var(--dark-card)',
+                background: isActive ? 'var(--brand)' : 'var(--surface-card)',
                 color: isActive ? '#050505' : 'var(--text-secondary)',
-                border: '1px solid ' + (isActive ? 'var(--gold)' : 'var(--dark-border)'),
+                border: '1px solid ' + (isActive ? 'var(--brand)' : 'var(--border)'),
               }}
             >
               {m} ({monthCount})
@@ -141,15 +141,15 @@ export default function AdminAteliersPage() {
               key={atelier.id}
               className="rounded-xl overflow-hidden"
               style={{
-                background: 'var(--dark-card)',
-                border: '1px solid ' + (isEditing ? 'var(--gold)' : 'var(--dark-border)'),
+                background: 'var(--surface-card)',
+                border: '1px solid ' + (isEditing ? 'var(--brand)' : 'var(--border)'),
               }}
             >
               {/* Header row */}
               <div className="flex items-center gap-4 px-5 py-4">
                 <span
                   className="text-sm font-bold shrink-0"
-                  style={{ color: 'var(--gold)' }}
+                  style={{ color: 'var(--brand)' }}
                 >
                   S{atelier.week}
                 </span>
@@ -177,7 +177,7 @@ export default function AdminAteliersPage() {
                     className="px-3 py-1.5 rounded-lg text-[11px] font-medium cursor-pointer transition-colors"
                     style={{
                       background: isEditing ? 'rgba(239,68,68,0.1)' : 'rgba(212,175,55,0.1)',
-                      color: isEditing ? '#EF4444' : 'var(--gold)',
+                      color: isEditing ? '#EF4444' : 'var(--brand)',
                     }}
                   >
                     {isEditing ? 'Annuler' : 'Modifier'}
@@ -187,7 +187,7 @@ export default function AdminAteliersPage() {
 
               {/* Edit Form */}
               {isEditing && (
-                <div className="px-5 pb-5 space-y-4" style={{ borderTop: '1px solid var(--dark-border)' }}>
+                <div className="px-5 pb-5 space-y-4" style={{ borderTop: '1px solid var(--border)' }}>
                   <div className="pt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[11px] font-medium mb-1" style={{ color: 'var(--text-muted)' }}>Titre</label>
@@ -196,7 +196,7 @@ export default function AdminAteliersPage() {
                         value={editForm.title || ''}
                         onChange={e => setEditForm({ ...editForm, title: e.target.value })}
                         className="w-full px-3 py-2 rounded-lg text-sm"
-                        style={{ background: 'var(--dark)', color: 'var(--text-primary)', border: '1px solid var(--dark-border)' }}
+                        style={{ background: 'var(--dark)', color: 'var(--text-primary)', border: '1px solid var(--border)' }}
                       />
                     </div>
                     <div>
@@ -206,7 +206,7 @@ export default function AdminAteliersPage() {
                         value={editForm.month_theme || ''}
                         onChange={e => setEditForm({ ...editForm, month_theme: e.target.value })}
                         className="w-full px-3 py-2 rounded-lg text-sm"
-                        style={{ background: 'var(--dark)', color: 'var(--text-primary)', border: '1px solid var(--dark-border)' }}
+                        style={{ background: 'var(--dark)', color: 'var(--text-primary)', border: '1px solid var(--border)' }}
                       />
                     </div>
                     <div>
@@ -216,7 +216,7 @@ export default function AdminAteliersPage() {
                         value={editForm.month_icon || ''}
                         onChange={e => setEditForm({ ...editForm, month_icon: e.target.value })}
                         className="w-full px-3 py-2 rounded-lg text-sm"
-                        style={{ background: 'var(--dark)', color: 'var(--text-primary)', border: '1px solid var(--dark-border)' }}
+                        style={{ background: 'var(--dark)', color: 'var(--text-primary)', border: '1px solid var(--border)' }}
                       />
                     </div>
                     <div>
@@ -226,7 +226,7 @@ export default function AdminAteliersPage() {
                         value={editForm.arc_label || ''}
                         onChange={e => setEditForm({ ...editForm, arc_label: e.target.value })}
                         className="w-full px-3 py-2 rounded-lg text-sm"
-                        style={{ background: 'var(--dark)', color: 'var(--text-primary)', border: '1px solid var(--dark-border)' }}
+                        style={{ background: 'var(--dark)', color: 'var(--text-primary)', border: '1px solid var(--border)' }}
                       />
                     </div>
                     <div className="sm:col-span-2">
@@ -236,7 +236,7 @@ export default function AdminAteliersPage() {
                         onChange={e => setEditForm({ ...editForm, description: e.target.value })}
                         rows={3}
                         className="w-full px-3 py-2 rounded-lg text-sm"
-                        style={{ background: 'var(--dark)', color: 'var(--text-primary)', border: '1px solid var(--dark-border)' }}
+                        style={{ background: 'var(--dark)', color: 'var(--text-primary)', border: '1px solid var(--border)' }}
                       />
                     </div>
                     <div>
@@ -247,7 +247,7 @@ export default function AdminAteliersPage() {
                         onChange={e => setEditForm({ ...editForm, video_url: e.target.value })}
                         placeholder="https://..."
                         className="w-full px-3 py-2 rounded-lg text-sm"
-                        style={{ background: 'var(--dark)', color: 'var(--text-primary)', border: '1px solid var(--dark-border)' }}
+                        style={{ background: 'var(--dark)', color: 'var(--text-primary)', border: '1px solid var(--border)' }}
                       />
                     </div>
                     <div>
@@ -258,7 +258,7 @@ export default function AdminAteliersPage() {
                         onChange={e => setEditForm({ ...editForm, live_url: e.target.value })}
                         placeholder="https://..."
                         className="w-full px-3 py-2 rounded-lg text-sm"
-                        style={{ background: 'var(--dark)', color: 'var(--text-primary)', border: '1px solid var(--dark-border)' }}
+                        style={{ background: 'var(--dark)', color: 'var(--text-primary)', border: '1px solid var(--border)' }}
                       />
                     </div>
                     <div>
@@ -269,7 +269,7 @@ export default function AdminAteliersPage() {
                         onChange={e => setEditForm({ ...editForm, replay_url: e.target.value })}
                         placeholder="https://..."
                         className="w-full px-3 py-2 rounded-lg text-sm"
-                        style={{ background: 'var(--dark)', color: 'var(--text-primary)', border: '1px solid var(--dark-border)' }}
+                        style={{ background: 'var(--dark)', color: 'var(--text-primary)', border: '1px solid var(--border)' }}
                       />
                     </div>
                     <div className="flex items-center gap-6">
@@ -278,7 +278,7 @@ export default function AdminAteliersPage() {
                           type="checkbox"
                           checked={editForm.is_live || false}
                           onChange={e => setEditForm({ ...editForm, is_live: e.target.checked })}
-                          className="accent-[var(--gold)]"
+                          className="accent-[var(--brand)]"
                         />
                         <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Live</span>
                       </label>
@@ -287,7 +287,7 @@ export default function AdminAteliersPage() {
                           type="checkbox"
                           checked={editForm.is_active !== false}
                           onChange={e => setEditForm({ ...editForm, is_active: e.target.checked })}
-                          className="accent-[var(--gold)]"
+                          className="accent-[var(--brand)]"
                         />
                         <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Actif</span>
                       </label>
@@ -300,7 +300,7 @@ export default function AdminAteliersPage() {
                       disabled={saving === atelier.id}
                       className="px-6 py-2.5 rounded-full text-xs font-semibold cursor-pointer transition-all hover:scale-[1.03]"
                       style={{
-                        background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))',
+                        background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
                         color: '#050505',
                         opacity: saving === atelier.id ? 0.6 : 1,
                       }}

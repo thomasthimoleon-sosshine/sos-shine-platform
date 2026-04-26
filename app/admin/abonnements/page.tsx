@@ -173,7 +173,7 @@ export default function AdminAbonnementsPage() {
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -182,7 +182,7 @@ export default function AdminAbonnementsPage() {
     <div className="max-w-6xl mx-auto space-y-6">
       {/* Header */}
       <div>
-        <h1 className="font-display text-3xl font-light" style={{ color: 'var(--gold)' }}>
+        <h1 className="font-display text-3xl font-light" style={{ color: 'var(--brand)' }}>
           Gestion des abonnements
         </h1>
         <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
@@ -191,7 +191,7 @@ export default function AdminAbonnementsPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 p-1 rounded-xl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+      <div className="flex gap-1 p-1 rounded-xl" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         {[
           { id: 'overview' as const, label: 'Vue d\'ensemble' },
           { id: 'list' as const, label: 'Liste des abonnés' },
@@ -203,7 +203,7 @@ export default function AdminAbonnementsPage() {
             className="flex-1 py-2.5 rounded-lg text-sm font-medium transition-all cursor-pointer"
             style={{
               background: tab === t.id ? 'rgba(212,175,55,0.12)' : 'transparent',
-              color: tab === t.id ? 'var(--gold)' : 'var(--text-muted)',
+              color: tab === t.id ? 'var(--brand)' : 'var(--text-muted)',
             }}
           >
             {t.label}
@@ -223,7 +223,7 @@ export default function AdminAbonnementsPage() {
               { label: 'Annulés', value: stats.canceled, color: '#ef4444' },
             ].map(kpi => (
               <div key={kpi.label} className="p-5 rounded-xl text-center"
-                style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
                 <p className="font-display text-3xl font-light" style={{ color: kpi.color }}>{kpi.value}</p>
                 <p className="text-xs mt-1 uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>{kpi.label}</p>
               </div>
@@ -237,7 +237,7 @@ export default function AdminAbonnementsPage() {
               const count = stats[p === 'essential' ? 'essential' : p === 'serenite' ? 'serenite' : 'premium']
               return (
                 <div key={p} className="p-5 rounded-xl"
-                  style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                  style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
                   <p className="text-sm font-medium" style={{ color: cfg.color }}>{cfg.label}</p>
                   <p className="font-display text-2xl font-light mt-2" style={{ color: 'var(--text-primary)' }}>{count}</p>
                   <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>abonné{count > 1 ? 's' : ''} actif{count > 1 ? 's' : ''}</p>
@@ -254,7 +254,7 @@ export default function AdminAbonnementsPage() {
               { label: 'Réduction fondateur', value: stats.with_discount, color: '#74C0FC', desc: 'bénéficient de -10€/mois' },
             ].map(a => (
               <div key={a.label} className="p-4 rounded-xl"
-                style={{ background: 'var(--dark-card)', border: `1px solid ${a.color}25` }}>
+                style={{ background: 'var(--surface-card)', border: `1px solid ${a.color}25` }}>
                 <div className="flex items-center justify-between">
                   <p className="text-sm" style={{ color: a.color }}>{a.label}</p>
                   <p className="font-display text-xl" style={{ color: a.color }}>{a.value}</p>
@@ -272,7 +272,7 @@ export default function AdminAbonnementsPage() {
                 const evt = eventLabels[log.event_type] || { label: log.event_type, color: '#9A9080' }
                 return (
                   <div key={log.id} className="flex items-center gap-3 px-4 py-3 rounded-xl"
-                    style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                    style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
                     <span className="w-2 h-2 rounded-full shrink-0" style={{ background: evt.color }} />
                     <span className="text-sm flex-1" style={{ color: 'var(--text-primary)' }}>
                       <span style={{ color: evt.color }}>{evt.label}</span>
@@ -310,12 +310,12 @@ export default function AdminAbonnementsPage() {
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 className="w-full pl-10 pr-4 py-2.5 rounded-xl text-sm outline-none"
-                style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
               />
             </div>
             <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)}
               className="px-4 py-2.5 rounded-xl text-sm outline-none cursor-pointer"
-              style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}>
+              style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}>
               <option value="all">Tous les statuts</option>
               <option value="active">Actifs</option>
               <option value="trialing">En essai</option>
@@ -325,7 +325,7 @@ export default function AdminAbonnementsPage() {
             </select>
             <select value={filterPlan} onChange={e => setFilterPlan(e.target.value)}
               className="px-4 py-2.5 rounded-xl text-sm outline-none cursor-pointer"
-              style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}>
+              style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}>
               <option value="all">Tous les plans</option>
               <option value="essential">Essentielle</option>
               <option value="serenite">Sérénité</option>
@@ -336,11 +336,11 @@ export default function AdminAbonnementsPage() {
           <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{filtered.length} abonnement{filtered.length > 1 ? 's' : ''}</p>
 
           {/* Table */}
-          <div className="rounded-xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+          <div className="rounded-xl overflow-hidden" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr style={{ borderBottom: '1px solid var(--dark-border)' }}>
+                  <tr style={{ borderBottom: '1px solid var(--border)' }}>
                     {['Membre', 'Plan', 'Statut', 'Fin de période', 'Rappels', 'Grâce', 'Actions'].map(h => (
                       <th key={h} className="text-left px-4 py-3 font-medium text-xs uppercase tracking-wide" style={{ color: 'var(--text-muted)' }}>{h}</th>
                     ))}
@@ -356,7 +356,7 @@ export default function AdminAbonnementsPage() {
                     const isInGrace = sub.grace_period_end && new Date(sub.grace_period_end) > new Date()
 
                     return (
-                      <tr key={sub.id} style={{ borderBottom: i < filtered.length - 1 ? '1px solid var(--dark-border)' : 'none' }}>
+                      <tr key={sub.id} style={{ borderBottom: i < filtered.length - 1 ? '1px solid var(--border)' : 'none' }}>
                         <td className="px-4 py-3.5">
                           <div className="flex items-center gap-2">
                             {sub.profiles?.avatar_url ? (
@@ -447,7 +447,7 @@ export default function AdminAbonnementsPage() {
             const evt = eventLabels[log.event_type] || { label: log.event_type, color: '#9A9080' }
             return (
               <div key={log.id} className="flex items-start gap-3 px-4 py-3 rounded-xl"
-                style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
                 <span className="w-2 h-2 rounded-full shrink-0 mt-1.5" style={{ background: evt.color }} />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm" style={{ color: 'var(--text-primary)' }}>

@@ -611,7 +611,7 @@ export default function MurPage() {
     m.prenom.toLowerCase().includes(shareSearch.toLowerCase())
   )
 
-  const inputStyle = { background: 'rgba(255,255,255,0.05)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }
+  const inputStyle = { background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', color: 'var(--text-primary)' }
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -630,8 +630,8 @@ export default function MurPage() {
             onClick={() => setShowCreate(!showCreate)}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all shrink-0 cursor-pointer"
             style={{
-              background: showCreate ? 'rgba(212,175,55,0.1)' : 'linear-gradient(135deg, var(--gold), #B8960F)',
-              color: showCreate ? 'var(--gold)' : '#050505',
+              background: showCreate ? 'rgba(212,175,55,0.1)' : 'linear-gradient(135deg, var(--brand), #B8960F)',
+              color: showCreate ? 'var(--brand)' : '#050505',
               border: showCreate ? '1px solid rgba(212,175,55,0.3)' : 'none',
             }}
           >
@@ -657,8 +657,8 @@ export default function MurPage() {
 
       {/* ── Create post form ── */}
       {showCreate && (
-        <div className="rounded-2xl p-6 space-y-5" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-          <h2 className="font-semibold text-lg" style={{ color: 'var(--gold)' }}>Nouvelle publication</h2>
+        <div className="rounded-2xl p-6 space-y-5" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
+          <h2 className="font-semibold text-lg" style={{ color: 'var(--brand)' }}>Nouvelle publication</h2>
 
           {createError && (
             <div className="rounded-xl p-3 text-xs" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', color: '#EF4444' }}>
@@ -677,7 +677,7 @@ export default function MurPage() {
                   className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all cursor-pointer"
                   style={{
                     background: createCategory === cat.value ? `${cat.color}20` : 'rgba(255,255,255,0.03)',
-                    border: `1px solid ${createCategory === cat.value ? `${cat.color}50` : 'var(--dark-border)'}`,
+                    border: `1px solid ${createCategory === cat.value ? `${cat.color}50` : 'var(--border)'}`,
                     color: createCategory === cat.value ? cat.color : 'var(--text-secondary)',
                   }}
                 >
@@ -703,8 +703,8 @@ export default function MurPage() {
                   className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all cursor-pointer"
                   style={{
                     background: createMediaType === mt.value ? 'rgba(212,175,55,0.12)' : 'rgba(255,255,255,0.03)',
-                    border: `1px solid ${createMediaType === mt.value ? 'rgba(212,175,55,0.3)' : 'var(--dark-border)'}`,
-                    color: createMediaType === mt.value ? 'var(--gold)' : 'var(--text-secondary)',
+                    border: `1px solid ${createMediaType === mt.value ? 'rgba(212,175,55,0.3)' : 'var(--border)'}`,
+                    color: createMediaType === mt.value ? 'var(--brand)' : 'var(--text-secondary)',
                   }}
                 >
                   <span>{mt.icon}</span> {mt.label}
@@ -783,7 +783,7 @@ export default function MurPage() {
               onClick={handleCreate}
               disabled={creating || !createContent.trim()}
               className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer disabled:opacity-50"
-              style={{ background: 'linear-gradient(135deg, var(--gold), #B8960F)', color: '#050505' }}
+              style={{ background: 'linear-gradient(135deg, var(--brand), #B8960F)', color: '#050505' }}
             >
               {creating ? 'Publication...' : 'Publier'}
             </button>
@@ -797,7 +797,7 @@ export default function MurPage() {
           <button
             onClick={() => setFilterOpen(!filterOpen)}
             className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm transition-all cursor-pointer"
-            style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+            style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
           >
             <span className="flex items-center gap-2">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--text-muted)' }}>
@@ -812,11 +812,11 @@ export default function MurPage() {
 
           {filterOpen && (
             <div className="absolute top-full left-0 right-0 mt-1 rounded-xl py-1 z-30 shadow-xl"
-              style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+              style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
               <button
                 onClick={() => { setFilterCategory('all'); setFilterOpen(false) }}
                 className="w-full text-left px-4 py-2.5 text-sm flex items-center gap-2 transition-colors cursor-pointer"
-                style={{ color: filterCategory === 'all' ? 'var(--gold)' : 'var(--text-secondary)', background: filterCategory === 'all' ? 'rgba(212,175,55,0.08)' : 'transparent' }}
+                style={{ color: filterCategory === 'all' ? 'var(--brand)' : 'var(--text-secondary)', background: filterCategory === 'all' ? 'rgba(212,175,55,0.08)' : 'transparent' }}
               >
                 Toutes les catégories
               </button>
@@ -838,7 +838,7 @@ export default function MurPage() {
       {/* ── Posts list ── */}
       {loading ? (
         <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : posts.length === 0 && !error ? (
         <div className="text-center py-16">
@@ -863,7 +863,7 @@ export default function MurPage() {
             const isCommentsOpen = expandedComments === post.id
 
             return (
-              <article key={post.id} className="rounded-2xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+              <article key={post.id} className="rounded-2xl overflow-hidden" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
                 <div className="p-6">
                   {/* Post type/category badge + actions */}
                   <div className="flex items-center justify-between mb-4">
@@ -888,7 +888,7 @@ export default function MurPage() {
                           </button>
                           {menuOpen === post.id && (
                             <div className="absolute right-0 top-8 rounded-xl py-1 z-20 min-w-[140px] shadow-xl"
-                              style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                              style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
                               <button onClick={() => startEdit(post)}
                                 className="w-full text-left px-4 py-2 text-sm flex items-center gap-2 transition-colors cursor-pointer"
                                 style={{ color: 'var(--text-secondary)' }}
@@ -929,7 +929,7 @@ export default function MurPage() {
                         <img src={post.profiles.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
                       ) : (
                         <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
-                          style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                          style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
                           {post.profiles?.prenom?.charAt(0).toUpperCase() || 'S'}
                         </div>
                       )}
@@ -938,11 +938,11 @@ export default function MurPage() {
                       <div className="flex items-center gap-1.5">
                         <button onClick={() => setProfileDrawerUserId(post.author_id)}
                           className="text-sm font-semibold cursor-pointer hover:underline"
-                          style={{ color: post.profiles?.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)' }}>
+                          style={{ color: post.profiles?.role === 'founder' ? 'var(--brand)' : 'var(--text-primary)' }}>
                           {post.profiles?.prenom || 'Membre SOS Shine'}
                         </button>
                         {post.profiles?.role === 'founder' && (
-                          <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>
+                          <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)' }}>
                             Fondateur
                           </span>
                         )}
@@ -952,14 +952,14 @@ export default function MurPage() {
                             onClick={() => sendQuickRayon(post.author_id)}
                             disabled={sendingRayon === post.author_id}
                             className="w-5 h-5 rounded-full flex items-center justify-center text-xs cursor-pointer transition-all opacity-60 hover:opacity-100"
-                            style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}
+                            style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.2)' }}
                             title="Envoyer un Rayon"
                           >
                             {sendingRayon === post.author_id ? '·' : '+'}
                           </button>
                         )}
                         {rayonPending.has(post.author_id) && (
-                          <span className="text-[9px] px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--gold)' }}>
+                          <span className="text-[9px] px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--brand)' }}>
                             Envoyé
                           </span>
                         )}
@@ -985,12 +985,12 @@ export default function MurPage() {
                       <div className="flex items-center gap-2 justify-end">
                         <button onClick={() => setEditingPost(null)}
                           className="px-4 py-2 rounded-xl text-xs font-medium cursor-pointer"
-                          style={{ color: 'var(--text-muted)', border: '1px solid var(--dark-border)' }}>
+                          style={{ color: 'var(--text-muted)', border: '1px solid var(--border)' }}>
                           Annuler
                         </button>
                         <button onClick={() => saveEdit(post.id)} disabled={saving}
                           className="px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer disabled:opacity-50"
-                          style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
+                          style={{ background: 'var(--brand)', color: 'var(--dark)' }}>
                           {saving ? '...' : 'Enregistrer'}
                         </button>
                       </div>
@@ -1003,7 +1003,7 @@ export default function MurPage() {
                       {post.title && post.post_type === 'community' && post.title !== getCategoryInfo(post.category).label && (
                         <h3 className="font-semibold text-lg mb-2" style={{ color: 'var(--text-primary)' }}>{post.title}</h3>
                       )}
-                      <p className="text-sm leading-relaxed whitespace-pre-line" style={{ color: post.category === 'citation' ? 'var(--gold)' : 'var(--text-secondary)', fontStyle: post.category === 'citation' ? 'italic' : 'normal' }}>
+                      <p className="text-sm leading-relaxed whitespace-pre-line" style={{ color: post.category === 'citation' ? 'var(--brand)' : 'var(--text-secondary)', fontStyle: post.category === 'citation' ? 'italic' : 'normal' }}>
                         {post.content}
                       </p>
 
@@ -1029,7 +1029,7 @@ export default function MurPage() {
 
                 {/* ── Action bar: Like, Comment, Share DM, Share Social ── */}
                 {!isEditing && (
-                  <div className="px-6 py-3 flex items-center gap-1" style={{ borderTop: '1px solid var(--dark-border)' }}>
+                  <div className="px-6 py-3 flex items-center gap-1" style={{ borderTop: '1px solid var(--border)' }}>
                     {/* Shine */}
                     <button onClick={() => toggleShine(post.id)}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
@@ -1043,7 +1043,7 @@ export default function MurPage() {
                     {/* Comment */}
                     <button onClick={() => toggleComments(post.id)}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
-                      style={{ color: isCommentsOpen ? 'var(--gold)' : 'var(--text-muted)' }}>
+                      style={{ color: isCommentsOpen ? 'var(--brand)' : 'var(--text-muted)' }}>
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" />
                       </svg>
@@ -1063,7 +1063,7 @@ export default function MurPage() {
                     {/* Bookmark */}
                     <button onClick={() => toggleBookmark(post.id)}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
-                      style={{ color: bookmarkedPosts.has(post.id) ? 'var(--gold)' : 'var(--text-muted)' }}>
+                      style={{ color: bookmarkedPosts.has(post.id) ? 'var(--brand)' : 'var(--text-muted)' }}>
                       <svg className="w-4 h-4" fill={bookmarkedPosts.has(post.id) ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
                       </svg>
@@ -1082,7 +1082,7 @@ export default function MurPage() {
 
                       {socialShareId === post.id && (
                         <div className="absolute right-0 bottom-full mb-2 rounded-xl py-2 px-1 z-30 shadow-xl min-w-[160px]"
-                          style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                          style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
                           <a
                             href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(getPostUrl(post.id))}`}
                             target="_blank" rel="noopener noreferrer"
@@ -1130,7 +1130,7 @@ export default function MurPage() {
 
                 {/* ── Comments section ── */}
                 {isCommentsOpen && (
-                  <div className="px-6 pb-5 space-y-3" style={{ borderTop: '1px solid var(--dark-border)' }}>
+                  <div className="px-6 pb-5 space-y-3" style={{ borderTop: '1px solid var(--border)' }}>
                     <div className="pt-4 space-y-3">
                       {(comments[post.id] || []).map(comment => (
                         <div key={comment.id} className="flex gap-2.5">
@@ -1138,13 +1138,13 @@ export default function MurPage() {
                             <img src={comment.profiles.avatar_url} alt="" className="w-7 h-7 rounded-full object-cover flex-shrink-0 mt-0.5" />
                           ) : (
                             <div className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-semibold flex-shrink-0 mt-0.5"
-                              style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                              style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
                               {comment.profiles?.prenom?.charAt(0).toUpperCase() || '?'}
                             </div>
                           )}
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
-                              <span className="text-xs font-semibold" style={{ color: comment.profiles?.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)' }}>
+                              <span className="text-xs font-semibold" style={{ color: comment.profiles?.role === 'founder' ? 'var(--brand)' : 'var(--text-primary)' }}>
                                 {comment.profiles?.prenom || 'Membre'}
                               </span>
                               <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{formatDate(comment.created_at)}</span>
@@ -1175,7 +1175,7 @@ export default function MurPage() {
                           onClick={() => sendComment(post.id)}
                           disabled={sendingComment || !commentText.trim()}
                           className="px-3 py-2 rounded-xl text-xs font-semibold cursor-pointer disabled:opacity-40"
-                          style={{ background: 'var(--gold)', color: 'var(--dark)' }}
+                          style={{ background: 'var(--brand)', color: 'var(--dark)' }}
                         >
                           {sendingComment ? '...' : 'Envoyer'}
                         </button>
@@ -1192,7 +1192,7 @@ export default function MurPage() {
       {/* ── Share DM Modal ── */}
       {sharePostId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
-          <div className="w-full max-w-sm rounded-2xl p-6 space-y-4" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+          <div className="w-full max-w-sm rounded-2xl p-6 space-y-4" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
             <div className="flex items-center justify-between">
               <h3 className="font-semibold" style={{ color: 'var(--text-primary)' }}>Envoyer en message privé</h3>
               <button onClick={() => setSharePostId(null)} className="p-1 cursor-pointer" style={{ color: 'var(--text-muted)' }}>
@@ -1226,13 +1226,13 @@ export default function MurPage() {
                     <img src={member.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover" />
                   ) : (
                     <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
-                      style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                      style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
                       {member.prenom?.charAt(0).toUpperCase() || '?'}
                     </div>
                   )}
                   <span className="flex-1 text-left">{member.prenom}</span>
                   {shareSending === member.id ? (
-                    <div className="w-4 h-4 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+                    <div className="w-4 h-4 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
                   ) : (
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--text-muted)' }}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />

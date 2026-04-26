@@ -44,10 +44,10 @@ function PdfReaderModal({ url, title, onClose }: { url: string; title: string; o
     >
       {/* Header bar */}
       <div className="flex items-center justify-between px-4 sm:px-6 py-3 shrink-0"
-        style={{ background: 'var(--dark-card)', borderBottom: '1px solid var(--dark-border)' }}>
+        style={{ background: 'var(--surface-card)', borderBottom: '1px solid var(--border)' }}>
         <div className="flex items-center gap-3 min-w-0">
           <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
-            style={{ color: 'var(--gold)' }}>
+            style={{ color: 'var(--brand)' }}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
           </svg>
           <h2 className="font-display text-[15px] font-semibold truncate" style={{ color: 'var(--text-primary)' }}>
@@ -80,7 +80,7 @@ function PdfReaderModal({ url, title, onClose }: { url: string; title: string; o
 
       {/* Bottom info bar */}
       <div className="flex items-center justify-center px-4 py-2 shrink-0"
-        style={{ background: 'var(--dark-card)', borderTop: '1px solid var(--dark-border)' }}>
+        style={{ background: 'var(--surface-card)', borderTop: '1px solid var(--border)' }}>
         <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
           Lecture en ligne uniquement — Téléchargement non autorisé
         </p>
@@ -316,7 +316,7 @@ function BookRow({ title, icon, books, onSelect }: {
                   <div className="flex items-center gap-2">
                     <div
                       className="w-9 h-9 rounded-full flex items-center justify-center"
-                      style={{ background: 'var(--gold)', color: '#09090b' }}
+                      style={{ background: 'var(--brand)', color: '#09090b' }}
                     >
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
@@ -374,7 +374,7 @@ function HeroBanner({ book, onOpen }: { book: ShineBook; onOpen: () => void }) {
           transition={{ duration: 0.6 }}
         >
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold mb-4"
-            style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.3)' }}>
+            style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.3)' }}>
             <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" /></svg>
             Recommandé pour vous
           </span>
@@ -389,7 +389,7 @@ function HeroBanner({ book, onOpen }: { book: ShineBook; onOpen: () => void }) {
             <button
               onClick={onOpen}
               className="flex items-center gap-2.5 px-6 py-3 rounded-xl text-[14px] font-semibold cursor-pointer transition-all duration-200 hover:scale-105"
-              style={{ background: 'var(--gold)', color: '#09090b' }}
+              style={{ background: 'var(--brand)', color: '#09090b' }}
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
@@ -479,7 +479,7 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
         exit={{ opacity: 0, y: 40, scale: 0.95 }}
         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
         className="w-full max-w-3xl rounded-2xl overflow-hidden relative"
-        style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+        style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
@@ -534,7 +534,7 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
 
             <div className="flex items-center gap-2 flex-wrap mb-4">
               <span className="px-2.5 py-1 rounded-full text-[11px] font-medium"
-                style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
                 {typeLabels[book.contentType] || book.contentType}
               </span>
               <span className="text-[13px]" style={{ color: 'var(--text-muted)' }}>{book.year}</span>
@@ -552,7 +552,7 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
               <button
                 onClick={() => onRead(book)}
                 className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl text-[14px] font-semibold transition-all duration-200 hover:scale-105 cursor-pointer"
-                style={{ background: 'var(--gold)', color: '#09090b' }}
+                style={{ background: 'var(--brand)', color: '#09090b' }}
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
@@ -572,7 +572,7 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
                 onRate={(r) => onRate(book.id, r)}
               />
               {book.userRating > 0 && (
-                <span className="text-[13px] font-semibold" style={{ color: 'var(--gold)' }}>
+                <span className="text-[13px] font-semibold" style={{ color: 'var(--brand)' }}>
                   {book.userRating}/5
                 </span>
               )}
@@ -588,7 +588,7 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
               className="flex-1 py-2.5 rounded-lg text-[13px] font-medium cursor-pointer transition-all duration-200"
               style={{
                 background: tab === 'overview' ? 'rgba(212,175,55,0.12)' : 'transparent',
-                color: tab === 'overview' ? 'var(--gold)' : 'var(--text-muted)',
+                color: tab === 'overview' ? 'var(--brand)' : 'var(--text-muted)',
               }}
             >
               Aperçu
@@ -598,7 +598,7 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
               className="flex-1 py-2.5 rounded-lg text-[13px] font-medium cursor-pointer transition-all duration-200"
               style={{
                 background: tab === 'reviews' ? 'rgba(212,175,55,0.12)' : 'transparent',
-                color: tab === 'reviews' ? 'var(--gold)' : 'var(--text-muted)',
+                color: tab === 'reviews' ? 'var(--brand)' : 'var(--text-muted)',
               }}
             >
               Avis ({reviews.length})
@@ -611,7 +611,7 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
                 <motion.div key="overview" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }}>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="glass p-4 rounded-xl text-center">
-                      <div className="text-2xl font-display font-semibold" style={{ color: 'var(--gold)' }}>
+                      <div className="text-2xl font-display font-semibold" style={{ color: 'var(--brand)' }}>
                         {book.rating.toFixed(1)}
                       </div>
                       <div className="flex justify-center mt-1">
@@ -620,7 +620,7 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
                       <p className="text-[11px] mt-1" style={{ color: 'var(--text-muted)' }}>Note moyenne</p>
                     </div>
                     <div className="glass p-4 rounded-xl text-center">
-                      <div className="text-2xl font-display font-semibold" style={{ color: 'var(--gold)' }}>
+                      <div className="text-2xl font-display font-semibold" style={{ color: 'var(--brand)' }}>
                         {book.reviewCount}
                       </div>
                       <p className="text-[11px] mt-2" style={{ color: 'var(--text-muted)' }}>Avis membres</p>
@@ -642,19 +642,19 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
                       className="w-full rounded-xl p-3 text-[13px] resize-none outline-none transition-all duration-200"
                       style={{
                         background: 'rgba(255,255,255,0.04)',
-                        border: '1px solid var(--dark-border)',
+                        border: '1px solid var(--border)',
                         color: 'var(--text-primary)',
                         minHeight: 80,
                       }}
                       onFocus={(e) => e.target.style.borderColor = 'rgba(212,175,55,0.4)'}
-                      onBlur={(e) => e.target.style.borderColor = 'var(--dark-border)'}
+                      onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
                     />
                     <div className="flex justify-end mt-2">
                       <button
                         onClick={handleSubmitReview}
                         disabled={!newReview.trim() || newRating === 0 || isSubmitting}
                         className="px-5 py-2 rounded-xl text-[13px] font-semibold cursor-pointer transition-all duration-200 hover:scale-105 disabled:opacity-40 disabled:hover:scale-100"
-                        style={{ background: 'var(--gold)', color: '#09090b' }}
+                        style={{ background: 'var(--brand)', color: '#09090b' }}
                       >
                         {isSubmitting ? 'Envoi...' : 'Publier'}
                       </button>
@@ -674,7 +674,7 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
                         <div className="flex items-center gap-3 mb-2">
                           <div
                             className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
-                            style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}
+                            style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}
                           >
                             {review.author.charAt(0)}
                           </div>
@@ -878,14 +878,14 @@ export default function ShineLibrairiePage() {
         <div className="text-center space-y-4">
           <div className="relative w-16 h-16 mx-auto">
             <div className="absolute inset-0 rounded-2xl animate-pulse"
-              style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))' }} />
+              style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))' }} />
             <div className="absolute inset-0 flex items-center justify-center">
               <svg className="w-8 h-8" fill="#09090b" viewBox="0 0 24 24" stroke="none">
                 <path d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
               </svg>
             </div>
           </div>
-          <p className="font-display text-xl font-semibold" style={{ color: 'var(--gold)' }}>Shine Librairie</p>
+          <p className="font-display text-xl font-semibold" style={{ color: 'var(--brand)' }}>Shine Librairie</p>
           <p className="text-[13px]" style={{ color: 'var(--text-muted)' }}>Chargement de vos livres...</p>
         </div>
       </div>
@@ -932,11 +932,11 @@ export default function ShineLibrairiePage() {
                 className="w-full pl-11 pr-4 py-3 rounded-xl text-[14px] outline-none transition-all duration-200"
                 style={{
                   background: 'rgba(255,255,255,0.05)',
-                  border: '1px solid var(--dark-border)',
+                  border: '1px solid var(--border)',
                   color: 'var(--text-primary)',
                 }}
                 onFocus={(e) => e.target.style.borderColor = 'rgba(212,175,55,0.4)'}
-                onBlur={(e) => e.target.style.borderColor = 'var(--dark-border)'}
+                onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
               />
               {search && (
                 <button
@@ -959,9 +959,9 @@ export default function ShineLibrairiePage() {
                   onClick={() => setActiveType(ct.id)}
                   className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200"
                   style={{
-                    background: activeType === ct.id ? 'var(--gold)' : 'rgba(255,255,255,0.06)',
+                    background: activeType === ct.id ? 'var(--brand)' : 'rgba(255,255,255,0.06)',
                     color: activeType === ct.id ? '#09090b' : 'var(--text-secondary)',
-                    border: activeType === ct.id ? 'none' : '1px solid var(--dark-border)',
+                    border: activeType === ct.id ? 'none' : '1px solid var(--border)',
                   }}
                 >
                   {ct.icon} {ct.label}
@@ -976,9 +976,9 @@ export default function ShineLibrairiePage() {
               onClick={() => setActiveFilter('all')}
               className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200"
               style={{
-                background: activeFilter === 'all' ? 'var(--gold)' : 'rgba(255,255,255,0.06)',
+                background: activeFilter === 'all' ? 'var(--brand)' : 'rgba(255,255,255,0.06)',
                 color: activeFilter === 'all' ? '#09090b' : 'var(--text-secondary)',
-                border: activeFilter === 'all' ? 'none' : '1px solid var(--dark-border)',
+                border: activeFilter === 'all' ? 'none' : '1px solid var(--border)',
               }}
             >
               Tout
@@ -988,9 +988,9 @@ export default function ShineLibrairiePage() {
                 onClick={() => setActiveFilter('douleur')}
                 className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200 flex items-center gap-1.5"
                 style={{
-                  background: activeFilter === 'douleur' ? 'var(--gold)' : 'rgba(255,255,255,0.06)',
+                  background: activeFilter === 'douleur' ? 'var(--brand)' : 'rgba(255,255,255,0.06)',
                   color: activeFilter === 'douleur' ? '#09090b' : 'var(--text-secondary)',
-                  border: activeFilter === 'douleur' ? 'none' : '1px solid var(--dark-border)',
+                  border: activeFilter === 'douleur' ? 'none' : '1px solid var(--border)',
                 }}
               >
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -1003,9 +1003,9 @@ export default function ShineLibrairiePage() {
               onClick={() => setActiveFilter('encyclopedie')}
               className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200 flex items-center gap-1.5"
               style={{
-                background: activeFilter === 'encyclopedie' ? 'var(--gold)' : 'rgba(255,255,255,0.06)',
+                background: activeFilter === 'encyclopedie' ? 'var(--brand)' : 'rgba(255,255,255,0.06)',
                 color: activeFilter === 'encyclopedie' ? '#09090b' : 'var(--text-secondary)',
-                border: activeFilter === 'encyclopedie' ? 'none' : '1px solid var(--dark-border)',
+                border: activeFilter === 'encyclopedie' ? 'none' : '1px solid var(--border)',
               }}
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -1017,9 +1017,9 @@ export default function ShineLibrairiePage() {
               onClick={() => setActiveFilter('favorites')}
               className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200 flex items-center gap-1.5"
               style={{
-                background: activeFilter === 'favorites' ? 'var(--gold)' : 'rgba(255,255,255,0.06)',
+                background: activeFilter === 'favorites' ? 'var(--brand)' : 'rgba(255,255,255,0.06)',
                 color: activeFilter === 'favorites' ? '#09090b' : 'var(--text-secondary)',
-                border: activeFilter === 'favorites' ? 'none' : '1px solid var(--dark-border)',
+                border: activeFilter === 'favorites' ? 'none' : '1px solid var(--border)',
               }}
             >
               <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
@@ -1033,9 +1033,9 @@ export default function ShineLibrairiePage() {
                 onClick={() => setActiveFilter(cat.id)}
                 className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200"
                 style={{
-                  background: activeFilter === cat.id ? 'var(--gold)' : 'rgba(255,255,255,0.06)',
+                  background: activeFilter === cat.id ? 'var(--brand)' : 'rgba(255,255,255,0.06)',
                   color: activeFilter === cat.id ? '#09090b' : 'var(--text-secondary)',
-                  border: activeFilter === cat.id ? 'none' : '1px solid var(--dark-border)',
+                  border: activeFilter === cat.id ? 'none' : '1px solid var(--border)',
                 }}
               >
                 {cat.icon} {cat.label}
@@ -1050,7 +1050,7 @@ export default function ShineLibrairiePage() {
           <div>
             <p className="text-[13px] mb-4" style={{ color: 'var(--text-muted)' }}>
               {filteredBooks.length} résultat{filteredBooks.length !== 1 ? 's' : ''}
-              {search && <> pour &ldquo;<span style={{ color: 'var(--gold)' }}>{search}</span>&rdquo;</>}
+              {search && <> pour &ldquo;<span style={{ color: 'var(--brand)' }}>{search}</span>&rdquo;</>}
             </p>
             {filteredBooks.length === 0 ? (
               <div className="glass p-12 text-center rounded-xl">
@@ -1092,7 +1092,7 @@ export default function ShineLibrairiePage() {
                           </span>
                         )}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                          <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'var(--gold)', color: '#09090b' }}>
+                          <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'var(--brand)', color: '#09090b' }}>
                             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                               <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
                             </svg>
@@ -1165,7 +1165,7 @@ export default function ShineLibrairiePage() {
           // Douleur-filtered view
           <div>
             <h2 className="text-lg font-display font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--gold)' }}>
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--brand)' }}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.331 0 4.476.884 6.084 2.333M12 6.042A8.967 8.967 0 0118 3.75c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18c-2.331 0-4.476.884-6.084 2.333M12 6.042V20.333" />
               </svg>
               {douleurName || 'Contenu lié'}
@@ -1209,7 +1209,7 @@ export default function ShineLibrairiePage() {
           // Encyclopédie A-Z view
           <div className="space-y-6">
             <h2 className="text-lg font-display font-semibold flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--gold)' }}>
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--brand)' }}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
               </svg>
               Encyclopédie A — Z
@@ -1234,7 +1234,7 @@ export default function ShineLibrairiePage() {
                         key={letter}
                         href={`#letter-lib-${letter}`}
                         className="w-8 h-8 rounded-lg flex items-center justify-center text-[13px] font-semibold transition-colors hover:opacity-80"
-                        style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}
+                        style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)' }}
                       >
                         {letter}
                       </a>
@@ -1244,7 +1244,7 @@ export default function ShineLibrairiePage() {
                   {/* Letter groups */}
                   {letters.map(letter => (
                     <div key={letter} id={`letter-lib-${letter}`} className="scroll-mt-24">
-                      <h3 className="font-display text-2xl font-bold mb-3 pb-2" style={{ color: 'var(--gold)', borderBottom: '1px solid var(--dark-border)' }}>
+                      <h3 className="font-display text-2xl font-bold mb-3 pb-2" style={{ color: 'var(--brand)', borderBottom: '1px solid var(--border)' }}>
                         {letter}
                       </h3>
                       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4">

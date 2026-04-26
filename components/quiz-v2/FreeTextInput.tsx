@@ -20,7 +20,7 @@ export function FreeTextInput({ value, onChange, maxChars = 200, suggestions, pl
         maxLength={maxChars}
         rows={3}
         autoFocus
-        className="w-full px-4 py-3 rounded-xl text-sm outline-none resize-none transition-all focus:ring-2 focus:ring-[var(--gold)]"
+        className="w-full px-4 py-3 rounded-xl text-sm outline-none resize-none transition-all focus:ring-2 focus:ring-[var(--brand)]"
         style={{
           background: 'rgba(255,255,255,0.04)',
           border: '1px solid rgba(255,255,255,0.08)',
@@ -29,7 +29,7 @@ export function FreeTextInput({ value, onChange, maxChars = 200, suggestions, pl
       />
       <div className="flex justify-between">
         <span />
-        <span className="text-xs" style={{ color: value.length > maxChars * 0.8 ? 'var(--gold)' : 'var(--text-muted)' }}>
+        <span className="text-xs" style={{ color: value.length > maxChars * 0.8 ? 'var(--brand)' : 'var(--text-muted)' }}>
           {value.length}/{maxChars}
         </span>
       </div>

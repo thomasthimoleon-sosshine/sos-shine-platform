@@ -12,18 +12,18 @@ export default function IncomingCallModal({ call, onAccept, onReject }: Incoming
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}>
       <div className="rounded-3xl p-8 max-w-sm w-full mx-4 text-center animate-fade-in"
-        style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
 
         {/* Avatar animé */}
         <div className="relative mx-auto mb-6 w-24 h-24">
-          <div className="absolute inset-0 rounded-full animate-ping opacity-20" style={{ background: 'var(--gold)' }} />
-          <div className="absolute inset-0 rounded-full animate-pulse-slow opacity-30" style={{ background: 'var(--gold)' }} />
+          <div className="absolute inset-0 rounded-full animate-ping opacity-20" style={{ background: 'var(--brand)' }} />
+          <div className="absolute inset-0 rounded-full animate-pulse-slow opacity-30" style={{ background: 'var(--brand)' }} />
           {call.callerAvatar ? (
             <img src={call.callerAvatar} alt={call.callerName}
-              className="relative w-24 h-24 rounded-full object-cover" style={{ border: '3px solid var(--gold)' }} />
+              className="relative w-24 h-24 rounded-full object-cover" style={{ border: '3px solid var(--brand)' }} />
           ) : (
             <div className="relative w-24 h-24 rounded-full flex items-center justify-center text-2xl font-bold"
-              style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)', border: '3px solid var(--gold)' }}>
+              style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)', border: '3px solid var(--brand)' }}>
               {call.callerName.charAt(0).toUpperCase()}
             </div>
           )}
@@ -33,7 +33,7 @@ export default function IncomingCallModal({ call, onAccept, onReject }: Incoming
         <h2 className="font-display text-xl font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
           {call.call_type === 'video' ? 'Appel vidéo entrant' : 'Appel audio entrant'}
         </h2>
-        <p className="text-base mb-2" style={{ color: 'var(--gold)' }}>
+        <p className="text-base mb-2" style={{ color: 'var(--brand)' }}>
           {call.callerName}
         </p>
         <div className="flex items-center justify-center gap-1.5 mb-6">

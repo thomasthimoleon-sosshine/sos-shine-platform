@@ -252,18 +252,18 @@ export default function MessagesTab({ onProfileClick }: { onProfileClick?: (user
               <img src={activePartner.avatar_url} alt={partnerName} className="w-10 h-10 rounded-full object-cover" />
             ) : (
               <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold"
-                style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
                 {partnerName.charAt(0).toUpperCase()}
               </div>
             )}
-            <h3 className="font-semibold text-sm truncate" style={{ color: activePartner.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)' }}>
+            <h3 className="font-semibold text-sm truncate" style={{ color: activePartner.role === 'founder' ? 'var(--brand)' : 'var(--text-primary)' }}>
               {partnerName}
             </h3>
           </button>
           <div className="flex-1 min-w-0">
             {isRequest && (
               <span className="text-[10px] font-medium px-2 py-0.5 rounded-full"
-                style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}>
+                style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)' }}>
                 Demande de message
               </span>
             )}
@@ -279,14 +279,14 @@ export default function MessagesTab({ onProfileClick }: { onProfileClick?: (user
             <button
               onClick={() => acceptRequest(activePartnerId)}
               className="px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer"
-              style={{ background: 'var(--gold)', color: 'var(--dark)' }}
+              style={{ background: 'var(--brand)', color: 'var(--dark)' }}
             >
               Accepter
             </button>
             <button
               onClick={() => { ignoreRequest(activePartnerId); goBack() }}
               className="px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer"
-              style={{ color: 'var(--text-muted)', border: '1px solid var(--dark-border)' }}
+              style={{ color: 'var(--text-muted)', border: '1px solid var(--border)' }}
             >
               Ignorer
             </button>
@@ -295,16 +295,16 @@ export default function MessagesTab({ onProfileClick }: { onProfileClick?: (user
 
         {/* Messages area */}
         <div className="flex-1 rounded-2xl overflow-hidden flex flex-col min-h-0"
-          style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+          style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <div className="flex-1 overflow-y-auto p-4 space-y-1">
             {loadingMessages ? (
               <div className="flex justify-center py-12">
-                <div className="w-6 h-6 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+                <div className="w-6 h-6 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
               </div>
             ) : messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 text-center">
                 <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4" style={{ background: 'rgba(212,175,55,0.1)' }}>
-                  <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} style={{ color: 'var(--gold)' }}>
+                  <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} style={{ color: 'var(--brand)' }}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75" />
                   </svg>
                 </div>
@@ -330,10 +330,10 @@ export default function MessagesTab({ onProfileClick }: { onProfileClick?: (user
                       <div className={`max-w-[75%] px-4 py-2.5 rounded-2xl ${isMine ? 'rounded-br-md' : 'rounded-bl-md'}`}
                         style={{
                           background: isMine ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.04)',
-                          border: isMine ? 'none' : '1px solid var(--dark-border)',
+                          border: isMine ? 'none' : '1px solid var(--border)',
                         }}>
                         {msg.message_type === 'audio' && msg.audio_url ? (
-                          <AudioPlayer src={msg.audio_url} accentColor={isMine ? 'var(--gold)' : 'var(--text-secondary)'} />
+                          <AudioPlayer src={msg.audio_url} accentColor={isMine ? 'var(--brand)' : 'var(--text-secondary)'} />
                         ) : (
                           <p className="text-sm leading-relaxed break-words" style={{ color: 'var(--text-primary)' }}>
                             {msg.content}
@@ -345,7 +345,7 @@ export default function MessagesTab({ onProfileClick }: { onProfileClick?: (user
                           </span>
                           {isMine && (
                             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
-                              style={{ color: msg.is_read ? 'var(--gold)' : 'var(--text-muted)' }}>
+                              style={{ color: msg.is_read ? 'var(--brand)' : 'var(--text-muted)' }}>
                               <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                             </svg>
                           )}
@@ -360,9 +360,9 @@ export default function MessagesTab({ onProfileClick }: { onProfileClick?: (user
           </div>
 
           {/* Input */}
-          <div className="p-4" style={{ borderTop: '1px solid var(--dark-border)' }}>
+          <div className="p-4" style={{ borderTop: '1px solid var(--border)' }}>
             <form onSubmit={sendMessageHandler} className="flex items-center gap-2 rounded-xl px-4 py-2"
-              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
+              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}>
               <input
                 type="text"
                 value={newMessage}
@@ -374,7 +374,7 @@ export default function MessagesTab({ onProfileClick }: { onProfileClick?: (user
               />
               {newMessage.trim() ? (
                 <button type="submit" disabled={sending}
-                  className="p-2 rounded-lg transition-all cursor-pointer disabled:opacity-30" style={{ color: 'var(--gold)' }}>
+                  className="p-2 rounded-lg transition-all cursor-pointer disabled:opacity-30" style={{ color: 'var(--brand)' }}>
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
                   </svg>
@@ -398,19 +398,19 @@ export default function MessagesTab({ onProfileClick }: { onProfileClick?: (user
   return (
     <div className="space-y-4">
       {/* Sub-tabs */}
-      <div className="flex gap-1 p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
+      <div className="flex gap-1 p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}>
         <button
           onClick={() => setActiveSubTab('inbox')}
           className="flex-1 px-4 py-2.5 rounded-lg text-[13px] font-medium transition-all cursor-pointer"
           style={{
             background: activeSubTab === 'inbox' ? 'rgba(212,175,55,0.1)' : 'transparent',
-            color: activeSubTab === 'inbox' ? 'var(--gold)' : 'var(--text-muted)',
+            color: activeSubTab === 'inbox' ? 'var(--brand)' : 'var(--text-muted)',
           }}
         >
           Boîte de réception
           {inbox.length > 0 && (
             <span className="ml-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full"
-              style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>
+              style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)' }}>
               {inbox.length}
             </span>
           )}
@@ -420,7 +420,7 @@ export default function MessagesTab({ onProfileClick }: { onProfileClick?: (user
           className="flex-1 px-4 py-2.5 rounded-lg text-[13px] font-medium transition-all cursor-pointer"
           style={{
             background: activeSubTab === 'requests' ? 'rgba(212,175,55,0.1)' : 'transparent',
-            color: activeSubTab === 'requests' ? 'var(--gold)' : 'var(--text-muted)',
+            color: activeSubTab === 'requests' ? 'var(--brand)' : 'var(--text-muted)',
           }}
         >
           Demandes
@@ -436,12 +436,12 @@ export default function MessagesTab({ onProfileClick }: { onProfileClick?: (user
       {/* Conversation list */}
       {loading ? (
         <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : currentList.length === 0 ? (
-        <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(212,175,55,0.08)' }}>
-            <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} style={{ color: 'var(--gold)' }}>
+            <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} style={{ color: 'var(--brand)' }}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75" />
             </svg>
           </div>
@@ -455,7 +455,7 @@ export default function MessagesTab({ onProfileClick }: { onProfileClick?: (user
           </p>
         </div>
       ) : (
-        <div className="rounded-2xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <div className="rounded-2xl overflow-hidden" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           {currentList.map((convo, i) => {
             const name = convo.partner.pseudo || convo.partner.prenom
             const isOwn = convo.lastMessage.sender_id === userId
@@ -467,7 +467,7 @@ export default function MessagesTab({ onProfileClick }: { onProfileClick?: (user
                 onClick={() => openConversation(convo.partner.id)}
                 className="w-full flex items-center gap-4 px-5 py-4 transition-all text-left cursor-pointer"
                 style={{
-                  borderBottom: i < currentList.length - 1 ? '1px solid var(--dark-border)' : 'none',
+                  borderBottom: i < currentList.length - 1 ? '1px solid var(--border)' : 'none',
                   background: convo.unreadCount > 0 ? 'rgba(212,175,55,0.04)' : 'transparent',
                 }}
               >
@@ -475,13 +475,13 @@ export default function MessagesTab({ onProfileClick }: { onProfileClick?: (user
                   <img src={convo.partner.avatar_url} alt={name} className="w-12 h-12 rounded-full object-cover flex-shrink-0" />
                 ) : (
                   <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 text-lg font-semibold"
-                    style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                    style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
                     {name.charAt(0).toUpperCase()}
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-0.5">
-                    <span className="text-sm font-semibold truncate" style={{ color: convo.partner.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)' }}>
+                    <span className="text-sm font-semibold truncate" style={{ color: convo.partner.role === 'founder' ? 'var(--brand)' : 'var(--text-primary)' }}>
                       {name}
                     </span>
                     <span className="text-xs flex-shrink-0 ml-2" style={{ color: 'var(--text-muted)' }}>
@@ -497,7 +497,7 @@ export default function MessagesTab({ onProfileClick }: { onProfileClick?: (user
                     </p>
                     {convo.unreadCount > 0 && (
                       <span className="flex-shrink-0 ml-2 w-5 h-5 rounded-full flex items-center justify-center text-xs font-semibold"
-                        style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
+                        style={{ background: 'var(--brand)', color: 'var(--dark)' }}>
                         {convo.unreadCount > 9 ? '9+' : convo.unreadCount}
                       </span>
                     )}

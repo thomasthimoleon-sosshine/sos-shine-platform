@@ -10,7 +10,7 @@ interface VoiceRecorderProps {
   disabled?: boolean
 }
 
-export default function VoiceRecorder({ userId, onSend, accentColor = 'var(--gold)', disabled }: VoiceRecorderProps) {
+export default function VoiceRecorder({ userId, onSend, accentColor = 'var(--brand)', disabled }: VoiceRecorderProps) {
   const [recording, setRecording] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [elapsed, setElapsed] = useState(0)

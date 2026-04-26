@@ -140,7 +140,7 @@ export default function AdminCandidatures() {
             { label: 'Approuvées', value: stats.approved, color: '#55EFC4' },
             { label: 'Refusées', value: stats.rejected, color: '#ef4444' },
           ].map(s => (
-            <div key={s.label} className="rounded-xl p-4 text-center" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+            <div key={s.label} className="rounded-xl p-4 text-center" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
               <p className="font-display text-2xl font-light" style={{ color: s.color }}>{s.value}</p>
               <p className="text-[11px] mt-1" style={{ color: 'var(--text-muted)' }}>{s.label}</p>
             </div>
@@ -164,12 +164,12 @@ export default function AdminCandidatures() {
             type="text" placeholder="Rechercher par nom, email ou motivation..."
             value={search} onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-10 pr-4 py-2.5 rounded-xl text-sm outline-none"
-            style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+            style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
           />
         </div>
         <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}
           className="px-4 py-2.5 rounded-xl text-sm outline-none cursor-pointer"
-          style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}>
+          style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}>
           <option value="all">Toutes</option>
           <option value="pending">En attente</option>
           <option value="approved">Approuvées</option>
@@ -183,7 +183,7 @@ export default function AdminCandidatures() {
           <div className="w-8 h-8 border-2 border-[#74C0FC] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-16 rounded-xl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <div className="text-center py-16 rounded-xl" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
             {search.trim() ? 'Aucune candidature ne correspond.' : 'Aucune candidature pour le moment.'}
           </p>
@@ -195,7 +195,7 @@ export default function AdminCandidatures() {
             const isExpanded = expandedId === c.id
             return (
               <div key={c.id} className="rounded-xl overflow-hidden transition-all"
-                style={{ background: 'var(--dark-card)', border: `1px solid ${c.status === 'pending' ? 'rgba(212,175,55,0.2)' : 'var(--dark-border)'}` }}>
+                style={{ background: 'var(--surface-card)', border: `1px solid ${c.status === 'pending' ? 'rgba(212,175,55,0.2)' : 'var(--border)'}` }}>
                 {/* Header row */}
                 <div className="flex items-center gap-3 p-4 cursor-pointer" onClick={() => setExpandedId(isExpanded ? null : c.id)}>
                   {c.profiles?.avatar_url ? (
@@ -234,7 +234,7 @@ export default function AdminCandidatures() {
 
                 {/* Expanded detail */}
                 {isExpanded && (
-                  <div className="px-4 pb-4 space-y-4" style={{ borderTop: '1px solid var(--dark-border)' }}>
+                  <div className="px-4 pb-4 space-y-4" style={{ borderTop: '1px solid var(--border)' }}>
                     {/* Motivation */}
                     <div className="pt-4">
                       <p className="text-[11px] font-semibold uppercase tracking-wider mb-1.5" style={{ color: 'var(--text-muted)' }}>Motivation</p>
@@ -269,7 +269,7 @@ export default function AdminCandidatures() {
                       )}
                       <div>
                         <p className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Code parrainage</p>
-                        <p className="text-sm font-mono" style={{ color: 'var(--gold)' }}>{c.referral_code}</p>
+                        <p className="text-sm font-mono" style={{ color: 'var(--brand)' }}>{c.referral_code}</p>
                       </div>
                     </div>
 
@@ -315,7 +315,7 @@ export default function AdminCandidatures() {
                               type="text" placeholder="Motif du refus (optionnel)"
                               value={rejectReason} onChange={e => setRejectReason(e.target.value)}
                               className="flex-1 px-3 py-2 rounded-lg text-sm outline-none"
-                              style={{ background: 'var(--dark)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                              style={{ background: 'var(--dark)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                             />
                             <button onClick={() => handleAction(c.id, 'reject', rejectReason)}
                               disabled={processing === c.id}

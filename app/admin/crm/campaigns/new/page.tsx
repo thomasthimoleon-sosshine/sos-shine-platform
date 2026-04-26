@@ -106,7 +106,7 @@ export default function NewCampaignPage() {
     <div className="space-y-6 max-w-4xl">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-3xl font-light" style={{ color: 'var(--gold)' }}>
+          <h1 className="font-display text-3xl font-light" style={{ color: 'var(--brand)' }}>
             Nouvelle Campagne
           </h1>
           <p className="text-[var(--text-muted)] mt-1">
@@ -115,7 +115,7 @@ export default function NewCampaignPage() {
         </div>
         <button
           onClick={() => router.push('/admin/crm/campaigns')}
-          className="text-sm text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors"
+          className="text-sm text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors"
         >
           ← Retour aux campagnes
         </button>
@@ -133,7 +133,7 @@ export default function NewCampaignPage() {
               onChange={(e) => setName(e.target.value)}
               placeholder="Ex: Newsletter Février 2026"
               className="w-full px-4 py-3 rounded-xl text-sm outline-none"
-              style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+              style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
             />
           </div>
           <div>
@@ -144,7 +144,7 @@ export default function NewCampaignPage() {
               value={segment}
               onChange={(e) => setSegment(e.target.value)}
               className="w-full px-4 py-3 rounded-xl text-sm outline-none cursor-pointer"
-              style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+              style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
             >
               {segments.map((s) => (
                 <option key={s.value} value={s.value}>{s.label}</option>
@@ -163,7 +163,7 @@ export default function NewCampaignPage() {
               value={scheduledAt}
               onChange={(e) => setScheduledAt(e.target.value)}
               className="px-4 py-3 rounded-xl text-sm outline-none flex-1"
-              style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+              style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
             />
             {scheduledAt && (
               <button
@@ -196,7 +196,7 @@ export default function NewCampaignPage() {
             onChange={(e) => setSubject(e.target.value)}
             placeholder="Ex: {firstName}, découvrez nos nouveautés ✨"
             className="w-full px-4 py-3 rounded-xl text-sm outline-none"
-            style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+            style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
           />
         </div>
 
@@ -212,7 +212,7 @@ export default function NewCampaignPage() {
                     key={btn.variable}
                     onClick={() => insertVariable(btn.variable)}
                     className="px-2 py-1 rounded text-xs transition-all"
-                    style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}
+                    style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.2)' }}
                     title={btn.tooltip}
                   >
                     {btn.label}
@@ -221,7 +221,7 @@ export default function NewCampaignPage() {
               </div>
               <button
                 onClick={() => setUseRichEditor(!useRichEditor)}
-                className="text-xs text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors"
+                className="text-xs text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors"
               >
                 {useRichEditor ? '< > HTML' : '✎ Éditeur visuel'}
               </button>
@@ -232,16 +232,16 @@ export default function NewCampaignPage() {
             <div>
               <div
                 className="flex flex-wrap gap-1 p-2 rounded-t-xl"
-                style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid var(--dark-border)', borderBottom: 'none' }}
+                style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid var(--border)', borderBottom: 'none' }}
               >
                 <button onClick={() => execCommand('bold')} className="px-2 py-1 rounded text-xs font-bold text-[var(--text-secondary)] hover:bg-white/10">B</button>
                 <button onClick={() => execCommand('italic')} className="px-2 py-1 rounded text-xs italic text-[var(--text-secondary)] hover:bg-white/10">I</button>
                 <button onClick={() => execCommand('underline')} className="px-2 py-1 rounded text-xs underline text-[var(--text-secondary)] hover:bg-white/10">U</button>
-                <span className="w-px bg-[var(--dark-border)] mx-1" />
+                <span className="w-px bg-[var(--border)] mx-1" />
                 <button onClick={() => execCommand('formatBlock', 'h2')} className="px-2 py-1 rounded text-xs text-[var(--text-secondary)] hover:bg-white/10">H2</button>
                 <button onClick={() => execCommand('formatBlock', 'h3')} className="px-2 py-1 rounded text-xs text-[var(--text-secondary)] hover:bg-white/10">H3</button>
                 <button onClick={() => execCommand('formatBlock', 'p')} className="px-2 py-1 rounded text-xs text-[var(--text-secondary)] hover:bg-white/10">¶</button>
-                <span className="w-px bg-[var(--dark-border)] mx-1" />
+                <span className="w-px bg-[var(--border)] mx-1" />
                 <button onClick={() => execCommand('insertUnorderedList')} className="px-2 py-1 rounded text-xs text-[var(--text-secondary)] hover:bg-white/10">• Liste</button>
                 <button onClick={() => {
                   const url = prompt('URL du lien :')
@@ -254,8 +254,8 @@ export default function NewCampaignPage() {
                 contentEditable
                 className="w-full min-h-[300px] px-6 py-4 rounded-b-xl text-sm outline-none focus:ring-1"
                 style={{
-                  background: 'var(--dark-card)',
-                  border: '1px solid var(--dark-border)',
+                  background: 'var(--surface-card)',
+                  border: '1px solid var(--border)',
                   color: 'var(--text-primary)',
                   lineHeight: '1.8',
                 }}
@@ -269,7 +269,7 @@ export default function NewCampaignPage() {
               placeholder="<h2>Bonjour {firstName},</h2><p>Votre contenu ici...</p>"
               rows={15}
               className="w-full px-4 py-3 rounded-xl text-sm font-mono outline-none resize-y"
-              style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+              style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
             />
           )}
         </div>
@@ -285,11 +285,11 @@ export default function NewCampaignPage() {
         )}
       </div>
 
-      <div className="flex items-center justify-between pt-4" style={{ borderTop: '1px solid var(--dark-border)' }}>
+      <div className="flex items-center justify-between pt-4" style={{ borderTop: '1px solid var(--border)' }}>
         <button
           onClick={() => setPreview(!preview)}
           className="px-5 py-2.5 rounded-full text-sm transition-all"
-          style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}
+          style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.2)' }}
         >
           {preview ? '✕ Fermer l\'aperçu' : '👁 Aperçu'}
         </button>
@@ -299,7 +299,7 @@ export default function NewCampaignPage() {
               onClick={() => handleSave(false)}
               disabled={saving}
               className="px-6 py-2.5 rounded-full text-sm font-medium transition-all disabled:opacity-50"
-              style={{ background: 'var(--dark-card)', color: 'var(--text-primary)', border: '1px solid var(--dark-border)' }}
+              style={{ background: 'var(--surface-card)', color: 'var(--text-primary)', border: '1px solid var(--border)' }}
             >
               {saving ? 'Sauvegarde...' : 'Sauvegarder en brouillon'}
             </button>
@@ -308,7 +308,7 @@ export default function NewCampaignPage() {
             onClick={() => handleSave(!scheduledAt)}
             disabled={saving}
             className="px-6 py-2.5 rounded-full text-sm font-semibold transition-all disabled:opacity-50"
-            style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}
+            style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}
           >
             {saving ? 'Sauvegarde...' : scheduledAt ? 'Planifier l\'envoi' : 'Sauvegarder & Envoyer'}
           </button>

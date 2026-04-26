@@ -126,14 +126,14 @@ export default function SavedPostsTab({ onProfileClick }: Props) {
   if (loading) {
     return (
       <div className="flex justify-center py-16">
-        <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+      <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         <div className="text-4xl mb-4">📌</div>
         <p className="text-sm" style={{ color: 'var(--text-muted)' }}>{error}</p>
       </div>
@@ -151,8 +151,8 @@ export default function SavedPostsTab({ onProfileClick }: Props) {
             className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-all cursor-pointer"
             style={{
               background: activeFilter === f.id ? 'rgba(212,175,55,0.12)' : 'rgba(255,255,255,0.03)',
-              border: `1px solid ${activeFilter === f.id ? 'rgba(212,175,55,0.3)' : 'var(--dark-border)'}`,
-              color: activeFilter === f.id ? 'var(--gold)' : 'var(--text-muted)',
+              border: `1px solid ${activeFilter === f.id ? 'rgba(212,175,55,0.3)' : 'var(--border)'}`,
+              color: activeFilter === f.id ? 'var(--brand)' : 'var(--text-muted)',
             }}
           >
             <span>{f.icon}</span> {f.label}
@@ -162,7 +162,7 @@ export default function SavedPostsTab({ onProfileClick }: Props) {
 
       {/* Posts */}
       {filteredPosts.length === 0 ? (
-        <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <div className="text-4xl mb-4">📌</div>
           <h3 className="font-semibold text-[15px] mb-2" style={{ color: 'var(--text-primary)' }}>
             {activeFilter === 'all' ? 'Aucun post enregistré' : 'Aucun résultat pour ce filtre'}
@@ -174,7 +174,7 @@ export default function SavedPostsTab({ onProfileClick }: Props) {
       ) : (
         <div className="space-y-3">
           {filteredPosts.map(saved => (
-            <div key={saved.id} className="rounded-2xl p-5 group" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+            <div key={saved.id} className="rounded-2xl p-5 group" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
               {/* Author */}
               <div className="flex items-center gap-3 mb-3">
                 <button onClick={() => onProfileClick?.(saved.post.author_prenom)} className="shrink-0 cursor-pointer">
@@ -182,7 +182,7 @@ export default function SavedPostsTab({ onProfileClick }: Props) {
                     <img src={saved.post.author_avatar} alt="" className="w-8 h-8 rounded-full object-cover" />
                   ) : (
                     <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
-                      style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                      style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
                       {saved.post.author_prenom.charAt(0).toUpperCase()}
                     </div>
                   )}

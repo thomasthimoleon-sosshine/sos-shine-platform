@@ -129,7 +129,7 @@ export default function MembreProfilPage() {
 
   function getRoleLabel(role: string) {
     const map: Record<string, { label: string; color: string }> = {
-      founder: { label: 'Fondateur', color: 'var(--gold)' },
+      founder: { label: 'Fondateur', color: 'var(--brand)' },
       admin_content: { label: 'Admin Contenu', color: '#74C0FC' },
       admin_support: { label: 'Admin Support', color: '#74C0FC' },
       member: { label: 'Membre', color: 'var(--text-secondary)' },
@@ -220,7 +220,7 @@ export default function MembreProfilPage() {
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -233,7 +233,7 @@ export default function MembreProfilPage() {
         </div>
         <h2 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>Membre introuvable</h2>
         <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>Ce profil n&apos;existe pas ou a été supprimé.</p>
-        <Link href="/dashboard" className="px-5 py-2.5 rounded-xl text-sm font-medium" style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
+        <Link href="/dashboard" className="px-5 py-2.5 rounded-xl text-sm font-medium" style={{ background: 'var(--brand)', color: 'var(--dark)' }}>
           Retour à l&apos;accueil
         </Link>
       </div>
@@ -254,13 +254,13 @@ export default function MembreProfilPage() {
       </button>
 
       {/* Profile card */}
-      <div className="rounded-2xl p-6 sm:p-8 text-center" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+      <div className="rounded-2xl p-6 sm:p-8 text-center" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         {/* Avatar */}
         {profile.avatar_url ? (
           <img src={profile.avatar_url} alt={displayName} className="w-24 h-24 rounded-2xl object-cover mx-auto mb-5" />
         ) : (
           <div className="w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-5 text-4xl font-display font-semibold"
-            style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+            style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
             {displayName.charAt(0).toUpperCase()}
           </div>
         )}
@@ -290,7 +290,7 @@ export default function MembreProfilPage() {
                 onClick={handleSendRayon}
                 disabled={rayonLoading}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer"
-                style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: 'var(--dark)' }}
+                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: 'var(--dark)' }}
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
@@ -304,7 +304,7 @@ export default function MembreProfilPage() {
                 onClick={handleCancelRayon}
                 disabled={rayonLoading}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-medium transition-all cursor-pointer"
-                style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}
+                style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.2)' }}
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -318,7 +318,7 @@ export default function MembreProfilPage() {
                 onClick={handleAcceptRayon}
                 disabled={rayonLoading}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer"
-                style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: 'var(--dark)' }}
+                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: 'var(--dark)' }}
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
@@ -351,7 +351,7 @@ export default function MembreProfilPage() {
             {/* Bouton Message */}
             <Link href={`/dashboard/messages/${id}`}
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold transition-all"
-              style={{ background: connectionStatus === 'none' ? 'var(--gold)' : 'rgba(255,255,255,0.05)', color: connectionStatus === 'none' ? 'var(--dark)' : 'var(--text-primary)', border: connectionStatus === 'none' ? 'none' : '1px solid var(--dark-border)' }}>
+              style={{ background: connectionStatus === 'none' ? 'var(--brand)' : 'rgba(255,255,255,0.05)', color: connectionStatus === 'none' ? 'var(--dark)' : 'var(--text-primary)', border: connectionStatus === 'none' ? 'none' : '1px solid var(--border)' }}>
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
               </svg>
@@ -363,7 +363,7 @@ export default function MembreProfilPage() {
 
       {/* Bio */}
       {profile.bio && (
-        <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <h3 className="font-semibold text-sm mb-3 flex items-center gap-2" style={{ color: 'var(--text-muted)' }}>
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
@@ -376,7 +376,7 @@ export default function MembreProfilPage() {
 
       {/* Video */}
       {profile.video_url && (
-        <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <h3 className="font-semibold text-sm mb-3 flex items-center gap-2" style={{ color: 'var(--text-muted)' }}>
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
@@ -388,15 +388,15 @@ export default function MembreProfilPage() {
       )}
 
       {/* Éclat — Personal Wall */}
-      <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-        <h3 className="font-display text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--gold)' }}>
+      <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
+        <h3 className="font-display text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--brand)' }}>
           <span className="text-xl">✨</span>
           Éclat de {displayName}
         </h3>
 
         {eclatLoading ? (
           <div className="flex justify-center py-8">
-            <div className="w-6 h-6 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
           </div>
         ) : eclatPosts.length === 0 ? (
           <p className="text-sm text-center py-6" style={{ color: 'var(--text-muted)' }}>
@@ -407,7 +407,7 @@ export default function MembreProfilPage() {
             {eclatPosts.map(post => {
               const cat = ECLAT_CATEGORIES[post.category] || ECLAT_CATEGORIES.partage
               return (
-                <div key={post.id} className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                <div key={post.id} className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
                   <div className="flex items-center gap-2 mb-3">
                     <span className="text-sm">{cat.icon}</span>
                     <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ background: `${cat.color}15`, color: cat.color }}>
@@ -422,7 +422,7 @@ export default function MembreProfilPage() {
                     <h4 className="font-semibold text-sm mb-1" style={{ color: 'var(--text-primary)' }}>{post.title}</h4>
                   )}
                   <p className="text-sm leading-relaxed whitespace-pre-line"
-                    style={{ color: post.category === 'citation' ? 'var(--gold)' : 'var(--text-secondary)', fontStyle: post.category === 'citation' ? 'italic' : 'normal' }}>
+                    style={{ color: post.category === 'citation' ? 'var(--brand)' : 'var(--text-secondary)', fontStyle: post.category === 'citation' ? 'italic' : 'normal' }}>
                     {post.content}
                   </p>
 

@@ -43,7 +43,7 @@ function LevelXPSection({ xpData }: { xpData: UserXP | null }) {
       transition={{ delay: 0.05, duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
       className="glass relative overflow-hidden"
       style={{
-        background: 'linear-gradient(135deg, rgba(212,175,55,0.06), var(--dark-card))',
+        background: 'linear-gradient(135deg, rgba(212,175,55,0.06), var(--surface-card))',
         borderColor: 'rgba(212,175,55,0.15)',
       }}
     >
@@ -51,7 +51,7 @@ function LevelXPSection({ xpData }: { xpData: UserXP | null }) {
         {/* Title row */}
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-[11px] font-semibold uppercase tracking-widest flex items-center gap-2" style={{ color: 'var(--text-muted)' }}>
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--gold)' }}>
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--brand)' }}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
             </svg>
             MA LÉGENDE
@@ -62,7 +62,7 @@ function LevelXPSection({ xpData }: { xpData: UserXP | null }) {
         {/* Rank name + XP total */}
         <div className="flex items-center justify-between mb-1">
           <div>
-            <p className="font-display text-2xl font-semibold" style={{ color: 'var(--gold)' }}>
+            <p className="font-display text-2xl font-semibold" style={{ color: 'var(--brand)' }}>
               {level.name}
             </p>
             <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>Rang</p>
@@ -72,10 +72,10 @@ function LevelXPSection({ xpData }: { xpData: UserXP | null }) {
         {/* Progress bar */}
         {next ? (
           <div className="mt-3">
-            <div className="h-3 rounded-full overflow-hidden" style={{ background: 'var(--dark-border)' }}>
+            <div className="h-3 rounded-full overflow-hidden" style={{ background: 'var(--border)' }}>
               <motion.div
                 className="h-full rounded-full"
-                style={{ background: 'linear-gradient(90deg, var(--gold), var(--gold-light))' }}
+                style={{ background: 'linear-gradient(90deg, var(--brand), var(--brand-light))' }}
                 initial={{ width: 0 }}
                 animate={{ width: `${progress}%` }}
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -85,14 +85,14 @@ function LevelXPSection({ xpData }: { xpData: UserXP | null }) {
               <p className="text-[11px] font-medium" style={{ color: 'var(--text-primary)' }}>
                 XP: {formatXP(xpData.total_xp)} / {formatXP(next.minXP)} XP
               </p>
-              <p className="text-[11px]" style={{ color: 'var(--gold)', opacity: 0.8 }}>
+              <p className="text-[11px]" style={{ color: 'var(--brand)', opacity: 0.8 }}>
                 Encore {formatXP(next.minXP - xpData.total_xp)} XP
               </p>
             </div>
           </div>
         ) : (
           <div className="mt-3 rounded-xl p-3 text-center" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.15)' }}>
-            <p className="text-sm font-semibold" style={{ color: 'var(--gold)' }}>Rang maximum atteint !</p>
+            <p className="text-sm font-semibold" style={{ color: 'var(--brand)' }}>Rang maximum atteint !</p>
           </div>
         )}
 
@@ -119,7 +119,7 @@ function EnergyWeatherWidget({ profile }: { profile: Profile | null }) {
       transition={{ delay: 0.08, duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
       className="glass relative overflow-hidden"
       style={{
-        background: `linear-gradient(135deg, ${forecast.color}08, var(--dark-card))`,
+        background: `linear-gradient(135deg, ${forecast.color}08, var(--surface-card))`,
         borderColor: `${forecast.color}20`,
       }}
     >
@@ -265,7 +265,7 @@ function ContributionsSection({ xpData }: { xpData: UserXP | null }) {
       {/* Section header */}
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-[11px] font-semibold uppercase tracking-widest flex items-center gap-2" style={{ color: 'var(--text-muted)' }}>
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--gold)' }}>
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--brand)' }}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
           </svg>
           PUBLIÉ
@@ -273,7 +273,7 @@ function ContributionsSection({ xpData }: { xpData: UserXP | null }) {
         <button
           onClick={loadActivityLog}
           className="text-[12px] font-medium flex items-center gap-1 cursor-pointer transition-colors hover:opacity-80"
-          style={{ color: 'var(--gold)' }}
+          style={{ color: 'var(--brand)' }}
         >
           Afficher les détails
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -294,7 +294,7 @@ function ContributionsSection({ xpData }: { xpData: UserXP | null }) {
               variants={fadeUp}
               className="text-center"
             >
-              <p className="text-2xl sm:text-3xl font-semibold" style={{ color: 'var(--gold)' }}>
+              <p className="text-2xl sm:text-3xl font-semibold" style={{ color: 'var(--brand)' }}>
                 {c.value}
               </p>
               <p className="text-[10px] sm:text-[11px] mt-1 whitespace-pre-line leading-tight" style={{ color: 'var(--text-muted)' }}>
@@ -318,7 +318,7 @@ function ContributionsSection({ xpData }: { xpData: UserXP | null }) {
           </h3>
           {logLoading ? (
             <div className="flex justify-center py-4">
-              <div className="w-5 h-5 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+              <div className="w-5 h-5 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
             </div>
           ) : activityLog.length === 0 ? (
             <p className="text-[13px] text-center py-4" style={{ color: 'var(--text-muted)' }}>
@@ -327,8 +327,8 @@ function ContributionsSection({ xpData }: { xpData: UserXP | null }) {
           ) : (
             <div className="space-y-2">
               {activityLog.map((entry) => (
-                <div key={entry.id} className="flex items-start gap-3 py-2" style={{ borderBottom: '1px solid var(--dark-border)' }}>
-                  <div className="w-2 h-2 rounded-full mt-1.5 shrink-0" style={{ background: 'var(--gold)' }} />
+                <div key={entry.id} className="flex items-start gap-3 py-2" style={{ borderBottom: '1px solid var(--border)' }}>
+                  <div className="w-2 h-2 rounded-full mt-1.5 shrink-0" style={{ background: 'var(--brand)' }} />
                   <div className="flex-1 min-w-0">
                     <p className="text-[12px]" style={{ color: 'var(--text-primary)' }}>{entry.detail}</p>
                     <p className="text-[10px] mt-0.5" style={{ color: 'var(--text-muted)' }}>
@@ -336,7 +336,7 @@ function ContributionsSection({ xpData }: { xpData: UserXP | null }) {
                     </p>
                   </div>
                   <span className="text-[10px] px-1.5 py-0.5 rounded-full shrink-0"
-                    style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}>
+                    style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)' }}>
                     {entry.action}
                   </span>
                 </div>
@@ -392,7 +392,7 @@ function BadgesSection({ userId, role }: { userId: string | null; role?: string 
     >
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-[11px] font-semibold uppercase tracking-widest flex items-center gap-2" style={{ color: 'var(--text-muted)' }}>
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--gold)' }}>
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--brand)' }}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M18.75 4.236c.982.143 1.954.317 2.916.52A6.003 6.003 0 0016.27 9.728M18.75 4.236V4.5c0 2.108-.966 3.99-2.48 5.228m0 0a6.023 6.023 0 01-3.52 1.14 6.023 6.023 0 01-3.52-1.14" />
           </svg>
           BADGES
@@ -400,7 +400,7 @@ function BadgesSection({ userId, role }: { userId: string | null; role?: string 
         <Link
           href="/dashboard/badges"
           className="text-[12px] font-medium flex items-center gap-1 transition-colors hover:opacity-80"
-          style={{ color: 'var(--gold)' }}
+          style={{ color: 'var(--brand)' }}
         >
           Voir tout
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -411,7 +411,7 @@ function BadgesSection({ userId, role }: { userId: string | null; role?: string 
 
       {loading ? (
         <div className="flex justify-center py-6">
-          <div className="w-5 h-5 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+          <div className="w-5 h-5 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : (
         <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide" style={{ scrollbarWidth: 'none' }}>
@@ -421,7 +421,7 @@ function BadgesSection({ userId, role }: { userId: string | null; role?: string 
               className="shrink-0 w-28 rounded-xl p-3 text-center"
               style={{
                 background: badge.isUnlocked ? 'rgba(212,175,55,0.06)' : 'rgba(255,255,255,0.02)',
-                border: badge.isUnlocked ? '1px solid rgba(212,175,55,0.15)' : '1px solid var(--dark-border)',
+                border: badge.isUnlocked ? '1px solid rgba(212,175,55,0.15)' : '1px solid var(--border)',
                 opacity: badge.isUnlocked ? 1 : 0.4,
                 filter: badge.isUnlocked ? 'none' : 'grayscale(1)',
               }}
@@ -431,12 +431,12 @@ function BadgesSection({ userId, role }: { userId: string | null; role?: string 
                   background: badge.isUnlocked
                     ? 'linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.05))'
                     : 'rgba(255,255,255,0.03)',
-                  border: badge.isUnlocked ? '2px solid var(--gold)' : '2px solid var(--dark-border)',
+                  border: badge.isUnlocked ? '2px solid var(--brand)' : '2px solid var(--border)',
                 }}>
                 <span className="text-lg">{badge.emoji || CATEGORY_ICONS[badge.categoryIcon] || '🏆'}</span>
               </div>
               <h3 className="font-semibold text-[10px] leading-tight"
-                style={{ color: badge.isUnlocked ? 'var(--gold)' : 'var(--text-muted)' }}>
+                style={{ color: badge.isUnlocked ? 'var(--brand)' : 'var(--text-muted)' }}>
                 {badge.title}
               </h3>
               <p className="text-[9px] mt-0.5" style={{ color: 'var(--text-muted)' }}>
@@ -568,7 +568,7 @@ function ActuShineSection() {
       transition={{ delay: 0.3, duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
     >
       <h2 className="text-[11px] font-semibold uppercase tracking-widest flex items-center gap-2 mb-4" style={{ color: 'var(--text-muted)' }}>
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--gold)' }}>
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--brand)' }}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M9.348 14.651a3.75 3.75 0 010-5.303m5.304 0a3.75 3.75 0 010 5.303m-7.425 2.122a6.75 6.75 0 010-9.546m9.546 0a6.75 6.75 0 010 9.546M5.106 18.894c-3.808-3.808-3.808-9.98 0-13.789m13.788 0c3.808 3.808 3.808 9.981 0 13.79M12 12h.008v.007H12V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
         </svg>
         ACTU - SHINE
@@ -576,7 +576,7 @@ function ActuShineSection() {
 
       {loading ? (
         <div className="flex justify-center py-8">
-          <div className="w-6 h-6 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+          <div className="w-6 h-6 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : (
         <div className="flex gap-3 overflow-x-auto pb-3 -mx-4 px-4 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-5 sm:overflow-visible snap-x snap-mandatory scrollbar-hide" style={{ WebkitOverflowScrolling: 'touch' }}>
@@ -586,7 +586,7 @@ function ActuShineSection() {
               href={pillar.href}
               className="group block overflow-hidden rounded-2xl transition-all duration-300 hover:scale-[1.03] hover:shadow-lg min-w-[130px] max-w-[160px] snap-start flex-shrink-0 sm:min-w-0 sm:max-w-none sm:flex-shrink"
               style={{
-                background: pillar.image ? 'var(--dark-card)' : pillar.gradient,
+                background: pillar.image ? 'var(--surface-card)' : pillar.gradient,
                 border: `1px solid rgba(${pillar.accentColor === '#D4AF37' ? '212,175,55' : pillar.accentColor === '#74C0FC' ? '116,192,252' : pillar.accentColor === '#A29BFE' ? '162,155,254' : pillar.accentColor === '#55EFC4' ? '85,239,196' : '253,203,110'},0.15)`,
               }}
             >
@@ -814,7 +814,7 @@ export default function DashboardHome() {
       >
         <div className="flex items-start justify-between gap-3 flex-wrap">
           <h1 className="font-display text-xl sm:text-2xl font-semibold tracking-tight" style={{ color: 'var(--text-primary)' }}>
-            {siteSettings.dash_welcome || t('dashboard.welcome')} <span style={{ color: 'var(--gold)' }}>{profile?.prenom || 'Membre'}</span>
+            {siteSettings.dash_welcome || t('dashboard.welcome')} <span style={{ color: 'var(--brand)' }}>{profile?.prenom || 'Membre'}</span>
           </h1>
           {streak.current > 0 && (
             <motion.div
@@ -835,7 +835,7 @@ export default function DashboardHome() {
             </motion.div>
           )}
         </div>
-        <p className="mt-3 text-[17px] sm:text-[19px] font-medium leading-relaxed tracking-wide" style={{ color: 'var(--gold)' }}>
+        <p className="mt-3 text-[17px] sm:text-[19px] font-medium leading-relaxed tracking-wide" style={{ color: 'var(--brand)' }}>
           {greeting}
         </p>
         <div className="mt-4">
@@ -881,13 +881,13 @@ export default function DashboardHome() {
                   <img src={firstGoal.douleur.image_url} alt="" className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-sm" style={{ color: 'var(--gold)' }}>{firstGoal.douleur.title}</p>
+                  <p className="font-semibold text-sm" style={{ color: 'var(--brand)' }}>{firstGoal.douleur.title}</p>
                   {firstGoal.douleur.subtitle && (
                     <p className="text-xs mt-0.5 truncate" style={{ color: 'var(--text-muted)' }}>{firstGoal.douleur.subtitle}</p>
                   )}
                 </div>
                 <div className="flex-shrink-0 px-4 py-2 rounded-full text-xs font-semibold"
-                  style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}>
+                  style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}>
                   Commencer →
                 </div>
               </div>
@@ -910,7 +910,7 @@ export default function DashboardHome() {
         transition={{ delay: 0.1, duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
         className="glass glass-hover relative overflow-hidden p-6 sm:p-8"
         style={{
-          background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.05), var(--dark-card))',
+          background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.05), var(--surface-card))',
           borderColor: 'rgba(212, 175, 55, 0.1)',
         }}
       >
@@ -921,7 +921,7 @@ export default function DashboardHome() {
         <p className="font-display text-xl sm:text-2xl italic leading-relaxed relative" style={{ color: 'var(--text-primary)' }}>
           &ldquo;{siteSettings.dash_custom_quote || (quote ? quote.text.fr : t('quote.text'))}&rdquo;
         </p>
-        <p className="mt-4 text-[13px] font-medium relative" style={{ color: 'var(--gold)' }}>
+        <p className="mt-4 text-[13px] font-medium relative" style={{ color: 'var(--brand)' }}>
           — {siteSettings.dash_custom_quote_author || (quote ? quote.author.fr : t('quote.author'))}
         </p>
       </motion.div>
@@ -961,7 +961,7 @@ export default function DashboardHome() {
               <div className="flex items-start gap-3 mb-4">
                 <span className="text-2xl">💛</span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[11px] font-semibold uppercase tracking-wider mb-1" style={{ color: 'var(--gold)' }}>
+                  <p className="text-[11px] font-semibold uppercase tracking-wider mb-1" style={{ color: 'var(--brand)' }}>
                     Votre lien d&apos;affiliation
                   </p>
                   <h2 className="font-display text-xl sm:text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>
@@ -973,7 +973,7 @@ export default function DashboardHome() {
               <div className="grid grid-cols-2 gap-3 mb-4">
                 <div className="rounded-xl p-3 text-center" style={{ background: 'rgba(0,0,0,0.2)' }}>
                   <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Inscrits</p>
-                  <p className="font-display text-2xl font-semibold" style={{ color: 'var(--gold)' }}>
+                  <p className="font-display text-2xl font-semibold" style={{ color: 'var(--brand)' }}>
                     {affiliateStatus.total_referrals}
                   </p>
                 </div>
@@ -986,7 +986,7 @@ export default function DashboardHome() {
               </div>
 
               <div className="rounded-xl p-3 mb-4 flex items-center gap-2"
-                style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid var(--dark-border)' }}>
+                style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border)' }}>
                 <code className="flex-1 text-xs truncate" style={{ color: 'var(--text-secondary)' }}>
                   sosshine.com/signup?ref={affiliateStatus.referral_code}
                 </code>
@@ -996,7 +996,7 @@ export default function DashboardHome() {
                     navigator.clipboard.writeText(`https://sosshine.com/signup?ref=${affiliateStatus.referral_code}`)
                   }}
                   className="text-[11px] px-3 py-1.5 rounded-lg cursor-pointer flex-shrink-0"
-                  style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}
+                  style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)' }}
                 >
                   Copier
                 </button>
@@ -1004,7 +1004,7 @@ export default function DashboardHome() {
 
               <Link href="/dashboard/affiliation"
                 className="block text-center py-3 rounded-xl text-sm font-semibold transition-all hover:scale-[1.005]"
-                style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}>
+                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}>
                 Voir mon tableau de bord →
               </Link>
             </>
@@ -1013,7 +1013,7 @@ export default function DashboardHome() {
               <div className="flex items-start gap-3 mb-3">
                 <span className="text-2xl">💛</span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[11px] font-semibold uppercase tracking-wider mb-1" style={{ color: 'var(--gold)' }}>
+                  <p className="text-[11px] font-semibold uppercase tracking-wider mb-1" style={{ color: 'var(--brand)' }}>
                     Programme d&apos;affiliation
                   </p>
                   <h2 className="font-display text-xl sm:text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>
@@ -1022,27 +1022,27 @@ export default function DashboardHome() {
                 </div>
               </div>
               <p className="text-sm mb-5 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                Aidez vos proches à comprendre leurs schémas émotionnels. Pour chaque ami qui s&apos;abonne grâce à vous, vous touchez <strong style={{ color: 'var(--gold)' }}>30% de commission à vie</strong>.
+                Aidez vos proches à comprendre leurs schémas émotionnels. Pour chaque ami qui s&apos;abonne grâce à vous, vous touchez <strong style={{ color: 'var(--brand)' }}>30% de commission à vie</strong>.
               </p>
 
               <div className="grid grid-cols-3 gap-2 mb-5">
                 <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(0,0,0,0.2)' }}>
-                  <p className="font-display text-lg font-semibold" style={{ color: 'var(--gold)' }}>30%</p>
+                  <p className="font-display text-lg font-semibold" style={{ color: 'var(--brand)' }}>30%</p>
                   <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>Commission</p>
                 </div>
                 <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(0,0,0,0.2)' }}>
-                  <p className="font-display text-lg font-semibold" style={{ color: 'var(--gold)' }}>À vie</p>
+                  <p className="font-display text-lg font-semibold" style={{ color: 'var(--brand)' }}>À vie</p>
                   <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>Durée</p>
                 </div>
                 <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(0,0,0,0.2)' }}>
-                  <p className="font-display text-lg font-semibold" style={{ color: 'var(--gold)' }}>0€</p>
+                  <p className="font-display text-lg font-semibold" style={{ color: 'var(--brand)' }}>0€</p>
                   <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>À débourser</p>
                 </div>
               </div>
 
               <Link href="/dashboard/affiliation"
                 className="block text-center py-3 rounded-xl text-sm font-semibold transition-all hover:scale-[1.005]"
-                style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}>
+                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}>
                 {affiliateStatus.exists ? 'Voir mon espace affilié →' : 'Devenir affilié →'}
               </Link>
             </>
@@ -1059,7 +1059,7 @@ export default function DashboardHome() {
       >
         <p className="text-[13px]" style={{ color: 'var(--text-muted)' }}>
           {siteSettings.dash_help_text || t('dashboard.help')}{' '}
-          <a href={`mailto:${siteSettings.dash_help_email || 'julialaureau@sosshine.com'}`} className="gold-underline font-medium" style={{ color: 'var(--gold)' }}>
+          <a href={`mailto:${siteSettings.dash_help_email || 'julialaureau@sosshine.com'}`} className="gold-underline font-medium" style={{ color: 'var(--brand)' }}>
             {siteSettings.dash_help_email || 'julialaureau@sosshine.com'}
           </a>
         </p>

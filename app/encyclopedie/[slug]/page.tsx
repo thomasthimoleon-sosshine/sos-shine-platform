@@ -188,7 +188,7 @@ export default function PublicDouleurDetailPage() {
   if (loading) {
     return (
       <main className="min-h-screen flex justify-center items-center" style={{ background: 'var(--dark)' }}>
-        <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
       </main>
     )
   }
@@ -196,16 +196,16 @@ export default function PublicDouleurDetailPage() {
   if (!douleur) {
     return (
       <main className="min-h-screen" style={{ background: 'var(--dark)' }}>
-        <header className="px-6 md:px-20 py-5 flex items-center justify-between" style={{ borderBottom: '1px solid var(--dark-border)' }}>
+        <header className="px-6 md:px-20 py-5 flex items-center justify-between" style={{ borderBottom: '1px solid var(--border)' }}>
           <Link href="/" className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl flex items-center justify-center font-display text-base font-semibold"
-              style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: 'var(--dark)' }}>S</div>
-            <span className="font-display text-lg font-medium" style={{ color: 'var(--gold)' }}>SOS Shine</span>
+              style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: 'var(--dark)' }}>S</div>
+            <span className="font-display text-lg font-medium" style={{ color: 'var(--brand)' }}>SOS Shine</span>
           </Link>
         </header>
         <div className="max-w-2xl mx-auto py-16 px-4">
           <div className="rounded-2xl p-8 sm:p-10 text-center" style={{
-            background: 'linear-gradient(160deg, var(--dark-card) 0%, rgba(212,175,55,0.04) 100%)',
+            background: 'linear-gradient(160deg, var(--surface-card) 0%, rgba(212,175,55,0.04) 100%)',
             border: '1px solid rgba(212,175,55,0.15)',
           }}>
             <div className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center"
@@ -219,18 +219,18 @@ export default function PublicDouleurDetailPage() {
               Nous mettons tout notre cœur à préparer ce contenu pour qu&apos;il soit à la hauteur de ce que vous traversez.
               Julia, William et Thomas travaillent dessus pour vous offrir un protocole complet.
             </p>
-            <div className="rounded-xl p-5 mb-6" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
+            <div className="rounded-xl p-5 mb-6" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}>
               <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
                 Inscrivez-vous pour être prévenu(e) dès sa sortie et accéder aux protocoles déjà disponibles.
               </p>
             </div>
             <Link href="/signup"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold transition-all duration-200 hover:scale-[1.03]"
-              style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505', boxShadow: '0 4px 20px rgba(212,175,55,0.3)' }}>
+              style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505', boxShadow: '0 4px 20px rgba(212,175,55,0.3)' }}>
               Créer mon compte gratuitement
             </Link>
-            <div className="mt-8 pt-6" style={{ borderTop: '1px solid var(--dark-border)' }}>
-              <Link href="/encyclopedie" className="text-sm font-medium transition-colors hover:opacity-80" style={{ color: 'var(--gold)' }}>
+            <div className="mt-8 pt-6" style={{ borderTop: '1px solid var(--border)' }}>
+              <Link href="/encyclopedie" className="text-sm font-medium transition-colors hover:opacity-80" style={{ color: 'var(--brand)' }}>
                 ← Retour à l&apos;encyclopédie
               </Link>
             </div>
@@ -249,18 +249,18 @@ export default function PublicDouleurDetailPage() {
   return (
     <main className="min-h-screen" style={{ background: 'var(--dark)' }}>
       {/* Header bar */}
-      <header className="px-6 md:px-20 py-5 flex items-center justify-between" style={{ borderBottom: '1px solid var(--dark-border)' }}>
+      <header className="px-6 md:px-20 py-5 flex items-center justify-between" style={{ borderBottom: '1px solid var(--border)' }}>
         <Link href="/" className="flex items-center gap-3 group">
           <div className="w-9 h-9 rounded-xl flex items-center justify-center font-display text-base font-semibold"
-            style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: 'var(--dark)' }}>
+            style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: 'var(--dark)' }}>
             S
           </div>
-          <span className="font-display text-lg font-medium" style={{ color: 'var(--gold)' }}>SOS Shine</span>
+          <span className="font-display text-lg font-medium" style={{ color: 'var(--brand)' }}>SOS Shine</span>
         </Link>
         <Link
           href={SIGNUP_URL}
           className="px-5 py-2.5 rounded-full text-sm font-medium transition-all"
-          style={{ background: 'var(--gold)', color: 'var(--dark)' }}
+          style={{ background: 'var(--brand)', color: 'var(--dark)' }}
         >
           Rejoindre
         </Link>
@@ -270,7 +270,7 @@ export default function PublicDouleurDetailPage() {
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm">
           <Link href="/encyclopedie" className="transition-colors" style={{ color: 'var(--text-muted)' }}
-            onMouseEnter={(e) => e.currentTarget.style.color = 'var(--gold)'}
+            onMouseEnter={(e) => e.currentTarget.style.color = 'var(--brand)'}
             onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
           >
             Encyclopédie
@@ -299,8 +299,8 @@ export default function PublicDouleurDetailPage() {
               onClick={() => setActiveStep(step.num)}
               className="flex items-center gap-2.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer whitespace-nowrap flex-shrink-0"
               style={{
-                background: activeStep === step.num ? `${step.color}15` : 'var(--dark-card)',
-                border: activeStep === step.num ? `1px solid ${step.color}40` : '1px solid var(--dark-border)',
+                background: activeStep === step.num ? `${step.color}15` : 'var(--surface-card)',
+                border: activeStep === step.num ? `1px solid ${step.color}40` : '1px solid var(--border)',
                 color: activeStep === step.num ? step.color : 'var(--text-secondary)',
               }}
             >
@@ -374,11 +374,11 @@ export default function PublicDouleurDetailPage() {
                             <div className="text-center py-10 px-6">
                               <div className="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center"
                                 style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.25)' }}>
-                                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
+                                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="var(--brand)" strokeWidth={1.5}>
                                   <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
                                 </svg>
                               </div>
-                              <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--gold)' }}>
+                              <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--brand)' }}>
                                 L&apos;extrait est terminé
                               </h3>
                               <p className="text-sm mb-6 max-w-xs mx-auto" style={{ color: 'var(--text-secondary)' }}>
@@ -386,7 +386,7 @@ export default function PublicDouleurDetailPage() {
                               </p>
                               <Link href="/signup"
                                 className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-sm font-semibold transition-all hover:scale-[1.03]"
-                                style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505', boxShadow: '0 4px 20px rgba(212,175,55,0.3)' }}>
+                                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505', boxShadow: '0 4px 20px rgba(212,175,55,0.3)' }}>
                                 Créer mon compte gratuitement
                               </Link>
                               <p className="text-xs mt-4" style={{ color: 'var(--text-muted)' }}>
@@ -453,9 +453,9 @@ export default function PublicDouleurDetailPage() {
                           </div>
                           {audioLocked ? (
                             <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)' }}>
-                              <p className="text-sm" style={{ color: 'var(--gold)' }}>Vous aimez ? Accédez à la suite</p>
+                              <p className="text-sm" style={{ color: 'var(--brand)' }}>Vous aimez ? Accédez à la suite</p>
                               <Link href="/signup" className="px-4 py-2 rounded-full text-xs font-semibold"
-                                style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}>
+                                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}>
                                 Créer mon compte
                               </Link>
                             </div>
@@ -576,7 +576,7 @@ export default function PublicDouleurDetailPage() {
         {/* CTA - Unlock */}
         <div className="rounded-2xl p-8 text-center" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.15)' }}>
           <div className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(212,175,55,0.12)' }}>
-            <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
+            <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="var(--brand)" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
             </svg>
           </div>
@@ -589,7 +589,7 @@ export default function PublicDouleurDetailPage() {
           <Link
             href={SIGNUP_URL}
             className="inline-block px-8 py-3 rounded-full text-sm font-medium transition-all hover:opacity-90"
-            style={{ background: 'var(--gold)', color: 'var(--dark)' }}
+            style={{ background: 'var(--brand)', color: 'var(--dark)' }}
           >
             Rejoindre SOS Shine
           </Link>
@@ -602,12 +602,12 @@ export default function PublicDouleurDetailPage() {
       {/* Modal - Redirect to signup */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}>
-          <div className="max-w-md w-full rounded-2xl p-8 text-center relative overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-            <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ background: 'radial-gradient(circle at center, var(--gold), transparent)' }} />
+          <div className="max-w-md w-full rounded-2xl p-8 text-center relative overflow-hidden" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
+            <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ background: 'radial-gradient(circle at center, var(--brand), transparent)' }} />
 
             <div className="relative z-10">
               <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" style={{ background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.2)' }}>
-                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="var(--brand)" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                 </svg>
               </div>
@@ -624,7 +624,7 @@ export default function PublicDouleurDetailPage() {
                 <Link
                   href="/signup"
                   className="block w-full py-3.5 rounded-full font-medium transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center"
-                  style={{ background: 'var(--gold)', color: 'var(--dark)' }}
+                  style={{ background: 'var(--brand)', color: 'var(--dark)' }}
                 >
                   Découvrir les avantages
                 </Link>
@@ -632,14 +632,14 @@ export default function PublicDouleurDetailPage() {
                 <button
                   onClick={() => setShowModal(false)}
                   className="block w-full py-3.5 rounded-full text-sm font-medium transition-colors w-full"
-                  style={{ border: '1px solid var(--dark-border)', color: 'var(--text-secondary)' }}
+                  style={{ border: '1px solid var(--border)', color: 'var(--text-secondary)' }}
                 >
                   Continuer l&apos;exploration
                 </button>
               </div>
 
               <p className="text-[11px] mt-6" style={{ color: 'var(--text-muted)' }}>
-                Déjà membre ? <Link href="/login" className="gold-underline" style={{ color: 'var(--gold)' }}>Se connecter</Link>
+                Déjà membre ? <Link href="/login" className="gold-underline" style={{ color: 'var(--brand)' }}>Se connecter</Link>
               </p>
             </div>
           </div>

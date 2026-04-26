@@ -286,7 +286,7 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate }: {
         exit={{ opacity: 0, y: 40, scale: 0.95 }}
         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
         className="w-full max-w-lg rounded-2xl overflow-hidden relative"
-        style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+        style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
@@ -461,12 +461,12 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate }: {
                     className="w-full rounded-xl p-3 text-[13px] resize-none outline-none transition-all duration-200"
                     style={{
                       background: 'rgba(255,255,255,0.04)',
-                      border: '1px solid var(--dark-border)',
+                      border: '1px solid var(--border)',
                       color: 'var(--text-primary)',
                       minHeight: 80,
                     }}
                     onFocus={(e) => e.target.style.borderColor = 'rgba(162,155,254,0.4)'}
-                    onBlur={(e) => e.target.style.borderColor = 'var(--dark-border)'}
+                    onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
                   />
                   <div className="flex justify-end mt-2">
                     <button
@@ -748,11 +748,11 @@ export default function ShineShortsPage() {
               className="w-full pl-11 pr-4 py-3 rounded-xl text-[14px] outline-none transition-all duration-200"
               style={{
                 background: 'rgba(255,255,255,0.05)',
-                border: '1px solid var(--dark-border)',
+                border: '1px solid var(--border)',
                 color: 'var(--text-primary)',
               }}
               onFocus={(e) => e.target.style.borderColor = 'rgba(162,155,254,0.4)'}
-              onBlur={(e) => e.target.style.borderColor = 'var(--dark-border)'}
+              onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
             />
             {search && (
               <button
@@ -775,7 +775,7 @@ export default function ShineShortsPage() {
               style={{
                 background: activeFilter === 'all' ? '#A29BFE' : 'rgba(255,255,255,0.06)',
                 color: activeFilter === 'all' ? '#09090b' : 'var(--text-secondary)',
-                border: activeFilter === 'all' ? 'none' : '1px solid var(--dark-border)',
+                border: activeFilter === 'all' ? 'none' : '1px solid var(--border)',
               }}
             >
               Tout
@@ -787,7 +787,7 @@ export default function ShineShortsPage() {
                 style={{
                   background: activeFilter === 'douleur' ? '#A29BFE' : 'rgba(255,255,255,0.06)',
                   color: activeFilter === 'douleur' ? '#09090b' : 'var(--text-secondary)',
-                  border: activeFilter === 'douleur' ? 'none' : '1px solid var(--dark-border)',
+                  border: activeFilter === 'douleur' ? 'none' : '1px solid var(--border)',
                 }}
               >
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -802,7 +802,7 @@ export default function ShineShortsPage() {
               style={{
                 background: activeFilter === 'encyclopedie' ? '#A29BFE' : 'rgba(255,255,255,0.06)',
                 color: activeFilter === 'encyclopedie' ? '#09090b' : 'var(--text-secondary)',
-                border: activeFilter === 'encyclopedie' ? 'none' : '1px solid var(--dark-border)',
+                border: activeFilter === 'encyclopedie' ? 'none' : '1px solid var(--border)',
               }}
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -816,7 +816,7 @@ export default function ShineShortsPage() {
               style={{
                 background: activeFilter === 'favorites' ? '#A29BFE' : 'rgba(255,255,255,0.06)',
                 color: activeFilter === 'favorites' ? '#09090b' : 'var(--text-secondary)',
-                border: activeFilter === 'favorites' ? 'none' : '1px solid var(--dark-border)',
+                border: activeFilter === 'favorites' ? 'none' : '1px solid var(--border)',
               }}
             >
               <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
@@ -832,7 +832,7 @@ export default function ShineShortsPage() {
                 style={{
                   background: activeFilter === cat.id ? '#A29BFE' : 'rgba(255,255,255,0.06)',
                   color: activeFilter === cat.id ? '#09090b' : 'var(--text-secondary)',
-                  border: activeFilter === cat.id ? 'none' : '1px solid var(--dark-border)',
+                  border: activeFilter === cat.id ? 'none' : '1px solid var(--border)',
                 }}
               >
                 {cat.icon} {cat.label}
@@ -1041,7 +1041,7 @@ export default function ShineShortsPage() {
                   {/* Letter groups */}
                   {letters.map(letter => (
                     <div key={letter} id={`letter-shorts-${letter}`} className="scroll-mt-24">
-                      <h3 className="font-display text-2xl font-bold mb-3 pb-2" style={{ color: '#A29BFE', borderBottom: '1px solid var(--dark-border)' }}>
+                      <h3 className="font-display text-2xl font-bold mb-3 pb-2" style={{ color: '#A29BFE', borderBottom: '1px solid var(--border)' }}>
                         {letter}
                       </h3>
                       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">

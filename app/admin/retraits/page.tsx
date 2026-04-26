@@ -143,7 +143,7 @@ export default function AdminRetraits() {
             { label: 'Effectues', value: stats.completed, sub: `${stats.completedAmount.toFixed(2)}\u20AC`, color: '#55EFC4' },
             { label: 'Total', value: stats.total, sub: '', color: 'var(--text-primary)' },
           ].map(s => (
-            <div key={s.label} className="rounded-xl p-4 text-center" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+            <div key={s.label} className="rounded-xl p-4 text-center" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
               <p className="font-display text-2xl font-light" style={{ color: s.color }}>{s.value}</p>
               <p className="text-[11px] mt-0.5" style={{ color: 'var(--text-muted)' }}>{s.label}</p>
               {s.sub && <p className="text-xs mt-0.5 font-medium" style={{ color: s.color }}>{s.sub}</p>}
@@ -167,12 +167,12 @@ export default function AdminRetraits() {
           <input type="text" placeholder="Rechercher par nom ou email..."
             value={search} onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-10 pr-4 py-2.5 rounded-xl text-sm outline-none"
-            style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+            style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
           />
         </div>
         <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}
           className="px-4 py-2.5 rounded-xl text-sm outline-none cursor-pointer"
-          style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}>
+          style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}>
           <option value="all">Toutes</option>
           <option value="pending">En attente</option>
           <option value="processing">En cours</option>
@@ -187,7 +187,7 @@ export default function AdminRetraits() {
           <div className="w-8 h-8 border-2 border-[#74C0FC] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-16 rounded-xl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <div className="text-center py-16 rounded-xl" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
             {search.trim() ? 'Aucune demande ne correspond.' : 'Aucune demande de retrait pour le moment.'}
           </p>
@@ -199,8 +199,8 @@ export default function AdminRetraits() {
             return (
               <div key={w.id} className="rounded-xl p-5"
                 style={{
-                  background: 'var(--dark-card)',
-                  border: `1px solid ${w.status === 'pending' ? 'rgba(212,175,55,0.2)' : w.status === 'processing' ? 'rgba(116,192,252,0.2)' : 'var(--dark-border)'}`,
+                  background: 'var(--surface-card)',
+                  border: `1px solid ${w.status === 'pending' ? 'rgba(212,175,55,0.2)' : w.status === 'processing' ? 'rgba(116,192,252,0.2)' : 'var(--border)'}`,
                 }}>
                 {/* Top row */}
                 <div className="flex items-start gap-3 mb-4">
@@ -277,7 +277,7 @@ export default function AdminRetraits() {
 
                 {/* Actions for pending/processing */}
                 {(w.status === 'pending' || w.status === 'processing') && (
-                  <div className="space-y-3 pt-2" style={{ borderTop: '1px solid var(--dark-border)' }}>
+                  <div className="space-y-3 pt-2" style={{ borderTop: '1px solid var(--border)' }}>
                     <div className="pt-3">
                       <input
                         type="text"
@@ -285,7 +285,7 @@ export default function AdminRetraits() {
                         value={noteInput[w.id] || ''}
                         onChange={e => setNoteInput(prev => ({ ...prev, [w.id]: e.target.value }))}
                         className="w-full px-3 py-2 rounded-lg text-sm outline-none"
-                        style={{ background: 'var(--dark)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                        style={{ background: 'var(--dark)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                       />
                     </div>
                     <div className="flex items-center gap-3">

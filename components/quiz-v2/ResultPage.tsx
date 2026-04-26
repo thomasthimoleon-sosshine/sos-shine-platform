@@ -122,7 +122,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
       {texts && (
         <Acte>
           <div className="space-y-6">
-            <h2 className="font-display text-lg sm:text-xl font-semibold tracking-wide uppercase" style={{ color: 'var(--gold)' }}>
+            <h2 className="font-display text-lg sm:text-xl font-semibold tracking-wide uppercase" style={{ color: 'var(--brand)' }}>
               Il y a un pattern dans tes réponses.
             </h2>
             <div className="whitespace-pre-line text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
@@ -136,7 +136,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
       {texts && (
         <Acte>
           <div className="space-y-6">
-            <h2 className="font-display text-lg sm:text-xl font-semibold tracking-wide uppercase" style={{ color: 'var(--gold)' }}>
+            <h2 className="font-display text-lg sm:text-xl font-semibold tracking-wide uppercase" style={{ color: 'var(--brand)' }}>
               D&apos;où ça vient ?
             </h2>
             <div className="whitespace-pre-line text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
@@ -149,7 +149,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
       {/* ══════════ ACTE 4 — LE COÛT ══════════ */}
       <Acte>
         <div className="space-y-6">
-          <h2 className="font-display text-lg sm:text-xl font-semibold tracking-wide uppercase" style={{ color: 'var(--gold)' }}>
+          <h2 className="font-display text-lg sm:text-xl font-semibold tracking-wide uppercase" style={{ color: 'var(--brand)' }}>
             Ce qui va se passer si rien ne change.
           </h2>
           <div className="whitespace-pre-line text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
@@ -161,7 +161,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
       {/* ══════════ ACTE 5 — LA PROMESSE ══════════ */}
       <Acte>
         <div className="space-y-6">
-          <h2 className="font-display text-lg sm:text-xl font-semibold tracking-wide uppercase" style={{ color: 'var(--gold)' }}>
+          <h2 className="font-display text-lg sm:text-xl font-semibold tracking-wide uppercase" style={{ color: 'var(--brand)' }}>
             Mais tu peux changer.
           </h2>
 
@@ -172,7 +172,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
               </p>
               <blockquote
                 className="font-display text-xl sm:text-2xl italic text-center py-6 px-4"
-                style={{ color: 'var(--gold)' }}
+                style={{ color: 'var(--brand)' }}
               >
                 &laquo;&nbsp;{q15Response}&nbsp;&raquo;
               </blockquote>
@@ -194,7 +194,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
       <Acte>
         <div className="space-y-8">
           <div>
-            <h2 className="font-display text-lg sm:text-xl font-semibold tracking-wide uppercase" style={{ color: 'var(--gold)' }}>
+            <h2 className="font-display text-lg sm:text-xl font-semibold tracking-wide uppercase" style={{ color: 'var(--brand)' }}>
               Voici ton chemin.
             </h2>
             <p className="text-sm mt-2" style={{ color: 'var(--text-muted)' }}>
@@ -234,7 +234,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
                   style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.15)' }}>
                   <div>
                     <p className="text-sm font-semibold flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-                      <span style={{ color: 'var(--gold)' }}>⏳</span> {p.title}
+                      <span style={{ color: 'var(--brand)' }}>⏳</span> {p.title}
                     </p>
                     <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
                       Disponible en {p.release_date ? new Date(p.release_date).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) : 'bientôt'} · Match : {p.matchScore}%
@@ -242,7 +242,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
                   </div>
                   <button onClick={() => handleNotify(p.id)}
                     className="text-xs px-4 py-2 rounded-full font-medium flex-shrink-0 cursor-pointer"
-                    style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--gold)' }}>
+                    style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)' }}>
                     Être notifié(e)
                   </button>
                 </div>
@@ -261,7 +261,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
         <div className="rounded-2xl p-8 text-center space-y-6"
           style={{ background: 'linear-gradient(160deg, rgba(201,169,97,0.08), rgba(201,169,97,0.02))', border: '1px solid rgba(201,169,97,0.2)' }}>
 
-          <h2 className="font-display text-xl font-semibold" style={{ color: 'var(--gold)' }}>
+          <h2 className="font-display text-xl font-semibold" style={{ color: 'var(--brand)' }}>
             Rejoindre SOS Shine
           </h2>
           <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
@@ -270,7 +270,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
 
           <a href={STRIPE_SERENITE}
             className="block w-full py-4 rounded-full text-sm font-semibold transition-all hover:brightness-110"
-            style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep, #B8960F))', color: '#050505' }}>
+            style={{ background: 'linear-gradient(135deg, var(--brand), var(--gold-deep, #B8960F))', color: '#050505' }}>
             COMMENCER SÉRÉNITÉ · 🎁 7 jours offerts
           </a>
 
@@ -283,6 +283,40 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
           <p className="text-xs flex items-center justify-center gap-1.5" style={{ color: 'var(--text-muted)' }}>
             💾 Ton résultat complet a été envoyé à ton email.
           </p>
+        </div>
+      </Acte>
+
+      {/* ══════════ PARTAGE SOCIAL ══════════ */}
+      <Acte>
+        <div className="text-center space-y-4">
+          <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+            Partage ton résultat avec quelqu&apos;un qui en a besoin :
+          </p>
+          <div className="flex justify-center gap-3">
+            <button
+              onClick={() => {
+                const text = `Je viens de découvrir ma Signature Émotionnelle sur SOS Shine. Et toi, c'est quoi ton pattern ? 👉 https://sosshine.com/signature-emotionnelle`
+                if (navigator.share) {
+                  navigator.share({ title: 'Ma Signature Émotionnelle', text, url: 'https://sosshine.com/signature-emotionnelle' }).catch(() => {})
+                } else {
+                  navigator.clipboard.writeText(text).then(() => alert('Lien copié !'))
+                }
+              }}
+              className="px-5 py-2.5 rounded-full text-sm font-medium cursor-pointer transition-all hover:scale-[1.03]"
+              style={{ background: 'rgba(201,169,97,0.08)', border: '1px solid rgba(201,169,97,0.2)', color: 'var(--brand)' }}
+            >
+              📤 Partager
+            </button>
+            <a
+              href={`https://wa.me/?text=${encodeURIComponent("Je viens de découvrir ma Signature Émotionnelle sur SOS Shine 🔥 Teste-toi aussi → https://sosshine.com/signature-emotionnelle")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-5 py-2.5 rounded-full text-sm font-medium transition-all hover:scale-[1.03]"
+              style={{ background: 'rgba(37,211,102,0.08)', border: '1px solid rgba(37,211,102,0.2)', color: '#25D366' }}
+            >
+              💬 WhatsApp
+            </a>
+          </div>
         </div>
       </Acte>
     </div>

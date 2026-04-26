@@ -147,13 +147,13 @@ export default function ConversationPage() {
               <img src={partner.avatar_url} alt={partnerName} className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
             ) : (
               <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-semibold"
-                style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
                 {partnerName.charAt(0).toUpperCase()}
               </div>
             )}
             <div className="min-w-0">
               <h1 className="font-display text-lg font-semibold truncate" style={{
-                color: partner.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)',
+                color: partner.role === 'founder' ? 'var(--brand)' : 'var(--text-primary)',
               }}>
                 {partnerName}
               </h1>
@@ -166,16 +166,16 @@ export default function ConversationPage() {
 
       {/* Messages */}
       <div className="flex-1 rounded-2xl overflow-hidden flex flex-col min-h-0"
-        style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         <div className="flex-1 overflow-y-auto p-4 space-y-1">
           {loading ? (
             <div className="flex justify-center py-12">
-              <div className="w-6 h-6 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+              <div className="w-6 h-6 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
             </div>
           ) : messages.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center py-16 text-center">
               <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4" style={{ background: 'rgba(212,175,55,0.1)' }}>
-                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} style={{ color: 'var(--gold)' }}>
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} style={{ color: 'var(--brand)' }}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
                 </svg>
               </div>
@@ -203,10 +203,10 @@ export default function ConversationPage() {
                     <div className={`max-w-[75%] px-4 py-2.5 rounded-2xl ${isMine ? 'rounded-br-md' : 'rounded-bl-md'}`}
                       style={{
                         background: isMine ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.04)',
-                        border: isMine ? 'none' : '1px solid var(--dark-border)',
+                        border: isMine ? 'none' : '1px solid var(--border)',
                       }}>
                       {msg.message_type === 'audio' && msg.audio_url ? (
-                        <AudioPlayer src={msg.audio_url} accentColor={isMine ? 'var(--gold)' : 'var(--text-secondary)'} />
+                        <AudioPlayer src={msg.audio_url} accentColor={isMine ? 'var(--brand)' : 'var(--text-secondary)'} />
                       ) : (
                         <p className="text-sm leading-relaxed break-words" style={{ color: 'var(--text-primary)' }}>
                           {msg.content}
@@ -218,7 +218,7 @@ export default function ConversationPage() {
                         </span>
                         {isMine && (
                           <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
-                            style={{ color: msg.is_read ? 'var(--gold)' : 'var(--text-muted)' }}>
+                            style={{ color: msg.is_read ? 'var(--brand)' : 'var(--text-muted)' }}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                           </svg>
                         )}
@@ -233,15 +233,15 @@ export default function ConversationPage() {
         </div>
 
         {/* Input */}
-        <div className="p-4" style={{ borderTop: '1px solid var(--dark-border)' }}>
+        <div className="p-4" style={{ borderTop: '1px solid var(--border)' }}>
           <form onSubmit={sendMessage} className="flex items-center gap-2 rounded-xl px-4 py-2"
-            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
+            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}>
             <input type="text" value={newMessage} onChange={(e) => setNewMessage(e.target.value)}
               placeholder={`Écrire à ${partnerName}...`}
               className="flex-1 bg-transparent text-sm outline-none" style={{ color: 'var(--text-primary)' }} maxLength={2000} />
             {newMessage.trim() ? (
               <button type="submit" disabled={sending}
-                className="p-2 rounded-lg transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed" style={{ color: 'var(--gold)' }}>
+                className="p-2 rounded-lg transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed" style={{ color: 'var(--brand)' }}>
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
                 </svg>

@@ -74,7 +74,7 @@ export default function CRMCampaignsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-3xl font-light" style={{ color: 'var(--gold)' }}>
+          <h1 className="font-display text-3xl font-light" style={{ color: 'var(--brand)' }}>
             Campagnes Email
           </h1>
           <p className="text-[var(--text-muted)] mt-1">
@@ -84,7 +84,7 @@ export default function CRMCampaignsPage() {
         <Link
           href="/admin/crm/campaigns/new"
           className="px-6 py-3 rounded-full text-sm font-semibold transition-all"
-          style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}
+          style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}
         >
           + Nouvelle campagne
         </Link>
@@ -99,7 +99,7 @@ export default function CRMCampaignsPage() {
           <Link
             href="/admin/crm/campaigns/new"
             className="inline-block px-6 py-3 rounded-full text-sm font-semibold"
-            style={{ background: 'var(--gold)', color: '#050505' }}
+            style={{ background: 'var(--brand)', color: '#050505' }}
           >
             Créer ma première campagne
           </Link>
@@ -114,7 +114,7 @@ export default function CRMCampaignsPage() {
               <div
                 key={camp.id}
                 className="p-5 rounded-xl"
-                style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+                style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
@@ -126,7 +126,7 @@ export default function CRMCampaignsPage() {
                         className="px-3 py-0.5 rounded-full text-xs font-medium"
                         style={{
                           background: camp.status === 'sent' ? 'rgba(80,200,120,0.15)' : camp.status === 'scheduled' ? 'rgba(74,144,217,0.15)' : 'rgba(212,175,55,0.15)',
-                          color: camp.status === 'sent' ? '#50C878' : camp.status === 'scheduled' ? '#4A90D9' : 'var(--gold)',
+                          color: camp.status === 'sent' ? '#50C878' : camp.status === 'scheduled' ? '#4A90D9' : 'var(--brand)',
                         }}
                       >
                         {camp.status === 'sent' ? '✓ Envoyée' : camp.status === 'scheduled' ? '⏰ Planifiée' : '✎ Brouillon'}
@@ -149,7 +149,7 @@ export default function CRMCampaignsPage() {
                             onClick={() => handleSend(camp.id)}
                             disabled={sending === camp.id}
                             className="px-4 py-2 rounded-full text-xs font-semibold transition-all disabled:opacity-50"
-                            style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}
+                            style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}
                           >
                             {sending === camp.id ? '⏳ Envoi...' : '🚀 Envoyer'}
                           </button>
@@ -164,7 +164,7 @@ export default function CRMCampaignsPage() {
                     )}
                     <button
                       onClick={() => setSelectedCampaign(selectedCampaign?.id === camp.id ? null : camp)}
-                      className="px-3 py-2 rounded-full text-xs text-[var(--text-muted)] hover:text-[var(--gold)] transition-all"
+                      className="px-3 py-2 rounded-full text-xs text-[var(--text-muted)] hover:text-[var(--brand)] transition-all"
                     >
                       {selectedCampaign?.id === camp.id ? '▲ Fermer' : '▼ Détails'}
                     </button>
@@ -195,7 +195,7 @@ export default function CRMCampaignsPage() {
                 {selectedCampaign?.id === camp.id && (
                   <div
                     className="mt-4 p-4 rounded-lg"
-                    style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}
+                    style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}
                   >
                     <h4 className="text-xs uppercase tracking-wider text-[var(--text-muted)] mb-3">Aperçu du contenu</h4>
                     <div

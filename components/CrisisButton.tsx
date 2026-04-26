@@ -53,7 +53,7 @@ export default function CrisisButton() {
               onClick={(e) => e.stopPropagation()}
               className="relative max-w-md w-full rounded-2xl overflow-hidden"
               style={{
-                background: 'linear-gradient(160deg, var(--dark-card), rgba(255,107,107,0.05))',
+                background: 'linear-gradient(160deg, var(--surface-card), rgba(255,107,107,0.05))',
                 border: '1px solid rgba(255,107,107,0.25)',
               }}
             >
@@ -110,7 +110,7 @@ export default function CrisisButton() {
                     <div className="flex items-start gap-3">
                       <span className="text-xl flex-shrink-0">🔥</span>
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-sm" style={{ color: 'var(--gold)' }}>Le Feu de Camp</p>
+                        <p className="font-semibold text-sm" style={{ color: 'var(--brand)' }}>Le Feu de Camp</p>
                         <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>
                           Parlez avec quelqu&apos;un qui comprend, maintenant. 24/7.
                         </p>

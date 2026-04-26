@@ -169,7 +169,7 @@ export default function OnboardingPage() {
   if (checkingAuth) {
     return (
       <main className="min-h-screen flex items-center justify-center" style={{ background: 'var(--dark)' }}>
-        <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
       </main>
     )
   }
@@ -211,7 +211,7 @@ export default function OnboardingPage() {
               <button
                 onClick={() => setStep(1)}
                 className="px-8 py-3.5 rounded-full text-sm font-medium transition-all hover:opacity-90 cursor-pointer"
-                style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#09090b' }}
+                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#09090b' }}
               >
                 Commencer
               </button>
@@ -231,12 +231,12 @@ export default function OnboardingPage() {
               <div className="mb-8">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-[12px] font-medium" style={{ color: 'var(--text-muted)' }}>Étape 1 sur 1</span>
-                  <span className="text-[12px]" style={{ color: 'var(--gold)' }}>{selectedGoals.length} sélectionné{selectedGoals.length > 1 ? 's' : ''}</span>
+                  <span className="text-[12px]" style={{ color: 'var(--brand)' }}>{selectedGoals.length} sélectionné{selectedGoals.length > 1 ? 's' : ''}</span>
                 </div>
-                <div className="h-1 rounded-full overflow-hidden" style={{ background: 'var(--dark-border)' }}>
+                <div className="h-1 rounded-full overflow-hidden" style={{ background: 'var(--border)' }}>
                   <motion.div
                     className="h-full rounded-full"
-                    style={{ background: 'var(--gold)' }}
+                    style={{ background: 'var(--brand)' }}
                     animate={{ width: selectedGoals.length > 0 ? '100%' : '10%' }}
                     transition={{ duration: 0.4 }}
                   />
@@ -262,8 +262,8 @@ export default function OnboardingPage() {
                       onClick={() => toggleGoal(option.key)}
                       className="text-left p-4 rounded-xl transition-all duration-200 cursor-pointer group"
                       style={{
-                        background: isSelected ? 'rgba(212,175,55,0.08)' : 'var(--dark-card)',
-                        border: isSelected ? '1px solid rgba(212,175,55,0.3)' : '1px solid var(--dark-border)',
+                        background: isSelected ? 'rgba(212,175,55,0.08)' : 'var(--surface-card)',
+                        border: isSelected ? '1px solid rgba(212,175,55,0.3)' : '1px solid var(--border)',
                       }}
                     >
                       <div className="flex items-start gap-3">
@@ -271,15 +271,15 @@ export default function OnboardingPage() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between gap-2">
                             <h3 className="font-semibold text-[14px]" style={{
-                              color: isSelected ? 'var(--gold)' : 'var(--text-primary)',
+                              color: isSelected ? 'var(--brand)' : 'var(--text-primary)',
                             }}>
                               {option.label}
                             </h3>
                             <div
                               className="w-5 h-5 rounded-full shrink-0 flex items-center justify-center transition-all"
                               style={{
-                                border: isSelected ? 'none' : '1.5px solid var(--dark-border)',
-                                background: isSelected ? 'var(--gold)' : 'transparent',
+                                border: isSelected ? 'none' : '1.5px solid var(--border)',
+                                background: isSelected ? 'var(--brand)' : 'transparent',
                               }}
                             >
                               {isSelected && (
@@ -311,7 +311,7 @@ export default function OnboardingPage() {
                   onClick={handleSubmit}
                   disabled={selectedGoals.length === 0 || loading}
                   className="px-6 py-3 rounded-full text-sm font-medium transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
-                  style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#09090b' }}
+                  style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#09090b' }}
                 >
                   {loading ? 'Enregistrement...' : 'Valider mes objectifs'}
                 </button>
@@ -348,7 +348,7 @@ export default function OnboardingPage() {
                     <div className="flex items-start gap-3">
                       <span className="text-lg">{option.icon}</span>
                       <div className="flex-1">
-                        <h3 className="font-semibold text-[14px]" style={{ color: 'var(--gold)' }}>
+                        <h3 className="font-semibold text-[14px]" style={{ color: 'var(--brand)' }}>
                           {option.goalTitle}
                         </h3>
                         <p className="text-[12px] mt-0.5" style={{ color: 'var(--text-muted)' }}>
@@ -357,7 +357,7 @@ export default function OnboardingPage() {
                         <div className="flex flex-wrap gap-1.5 mt-2">
                           {option.slugs.map((slug) => (
                             <span key={slug} className="text-[11px] px-2 py-0.5 rounded-md" style={{
-                              background: 'rgba(212,175,55,0.1)', color: 'var(--gold)',
+                              background: 'rgba(212,175,55,0.1)', color: 'var(--brand)',
                             }}>
                               {slug.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
                             </span>
@@ -373,14 +373,14 @@ export default function OnboardingPage() {
                 <button
                   onClick={() => router.push('/dashboard')}
                   className="px-8 py-3.5 rounded-full text-sm font-medium transition-all hover:opacity-90 cursor-pointer"
-                  style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#09090b' }}
+                  style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#09090b' }}
                 >
                   Accéder à mon espace
                 </button>
                 <button
                   onClick={() => router.push('/dashboard/encyclopedie')}
                   className="text-[13px] cursor-pointer"
-                  style={{ color: 'var(--gold)' }}
+                  style={{ color: 'var(--brand)' }}
                 >
                   Explorer l&apos;encyclopédie
                 </button>

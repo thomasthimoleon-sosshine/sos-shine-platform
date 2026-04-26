@@ -59,12 +59,12 @@ export default function SignatureEmailsPage() {
           <div className="flex items-center gap-3 mb-1">
             <Link
               href="/admin/crm"
-              className="text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors"
+              className="text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors"
             >
               ← CRM
             </Link>
           </div>
-          <h1 className="font-display text-3xl font-light" style={{ color: 'var(--gold)' }}>
+          <h1 className="font-display text-3xl font-light" style={{ color: 'var(--brand)' }}>
             Emails Signature Emotionnelle
           </h1>
           <p className="text-[var(--text-muted)] mt-1">
@@ -73,7 +73,7 @@ export default function SignatureEmailsPage() {
         </div>
         <div
           className="px-6 py-3 rounded-full text-sm font-semibold"
-          style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}
+          style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.2)' }}
         >
           {total} emails envoyes
         </div>
@@ -96,10 +96,10 @@ export default function SignatureEmailsPage() {
                     <div
                       key={key}
                       className="p-4 rounded-xl text-center"
-                      style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+                      style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
                     >
                       <div className="text-2xl mb-1">{PROFILE_ICONS[key] || '❓'}</div>
-                      <div className="text-lg font-display" style={{ color: PROFILE_COLORS[key] || 'var(--gold)' }}>
+                      <div className="text-lg font-display" style={{ color: PROFILE_COLORS[key] || 'var(--brand)' }}>
                         {count}
                       </div>
                       <div className="text-xs text-[var(--text-muted)] uppercase tracking-wider">{key}</div>
@@ -117,7 +117,7 @@ export default function SignatureEmailsPage() {
             {emails.length === 0 ? (
               <div
                 className="p-8 rounded-xl text-center"
-                style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+                style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
               >
                 <div className="text-3xl mb-3">📭</div>
                 <p className="text-[var(--text-muted)]">
@@ -129,7 +129,7 @@ export default function SignatureEmailsPage() {
               <div className="space-y-2">
                 {emails.map((em) => {
                   const meta = em.metadata || {} as SignatureEmail['metadata']
-                  const profileColor = PROFILE_COLORS[meta.profile_key] || 'var(--gold)'
+                  const profileColor = PROFILE_COLORS[meta.profile_key] || 'var(--brand)'
                   const profileIcon = PROFILE_ICONS[meta.profile_key] || '❓'
                   const date = new Date(em.created_at).toLocaleDateString('fr-FR', {
                     day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit',
@@ -139,7 +139,7 @@ export default function SignatureEmailsPage() {
                     <div
                       key={em.id}
                       className="p-4 rounded-xl flex items-center justify-between"
-                      style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+                      style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
                     >
                       <div className="flex items-center gap-4">
                         <span className="text-2xl">{profileIcon}</span>

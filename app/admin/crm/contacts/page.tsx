@@ -84,7 +84,7 @@ export default function CRMContactsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-3xl font-light" style={{ color: 'var(--gold)' }}>
+          <h1 className="font-display text-3xl font-light" style={{ color: 'var(--brand)' }}>
             Contacts ({total})
           </h1>
           <p className="text-[var(--text-muted)] mt-1">
@@ -95,7 +95,7 @@ export default function CRMContactsPage() {
           onClick={handleSync}
           disabled={syncing}
           className="px-5 py-2.5 rounded-full text-sm font-medium transition-all disabled:opacity-50"
-          style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.3)' }}
+          style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.3)' }}
         >
           {syncing ? 'Synchronisation...' : '🔄 Synchroniser les contacts'}
         </button>
@@ -109,13 +109,13 @@ export default function CRMContactsPage() {
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
           placeholder="Rechercher par email ou prénom..."
           className="flex-1 px-4 py-2.5 rounded-xl text-sm outline-none"
-          style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+          style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
         />
         <select
           value={source}
           onChange={(e) => handleSourceChange(e.target.value)}
           className="px-4 py-2.5 rounded-xl text-sm outline-none cursor-pointer"
-          style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+          style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
         >
           {Object.entries(sourceLabels).map(([val, label]) => (
             <option key={val} value={val}>{label}</option>
@@ -124,7 +124,7 @@ export default function CRMContactsPage() {
         <button
           onClick={handleSearch}
           className="px-5 py-2.5 rounded-xl text-sm font-medium"
-          style={{ background: 'var(--gold)', color: '#050505' }}
+          style={{ background: 'var(--brand)', color: '#050505' }}
         >
           Rechercher
         </button>
@@ -139,7 +139,7 @@ export default function CRMContactsPage() {
         </div>
       ) : (
         <>
-          <div className="rounded-xl overflow-hidden" style={{ border: '1px solid var(--dark-border)' }}>
+          <div className="rounded-xl overflow-hidden" style={{ border: '1px solid var(--border)' }}>
             <table className="w-full">
               <thead>
                 <tr style={{ background: 'rgba(212,175,55,0.05)' }}>
@@ -152,7 +152,7 @@ export default function CRMContactsPage() {
               </thead>
               <tbody>
                 {contacts.map((c) => (
-                  <tr key={c.id} className="border-t" style={{ borderColor: 'var(--dark-border)' }}>
+                  <tr key={c.id} className="border-t" style={{ borderColor: 'var(--border)' }}>
                     <td className="px-4 py-3 text-sm" style={{ color: 'var(--text-primary)' }}>{c.email}</td>
                     <td className="px-4 py-3 text-sm text-[var(--text-secondary)]">{c.first_name || '—'}</td>
                     <td className="px-4 py-3">
@@ -160,7 +160,7 @@ export default function CRMContactsPage() {
                         className="px-2 py-1 rounded-full text-xs"
                         style={{
                           background: c.source === 'member' ? 'rgba(80,200,120,0.15)' : c.source === 'signature_test' ? 'rgba(212,175,55,0.15)' : 'rgba(74,144,217,0.15)',
-                          color: c.source === 'member' ? '#50C878' : c.source === 'signature_test' ? 'var(--gold)' : '#4A90D9',
+                          color: c.source === 'member' ? '#50C878' : c.source === 'signature_test' ? 'var(--brand)' : '#4A90D9',
                         }}
                       >
                         {sourceLabels[c.source] || c.source}
@@ -186,7 +186,7 @@ export default function CRMContactsPage() {
                 onClick={() => { setPage(page - 1); loadContacts(page - 1, search, source) }}
                 disabled={page <= 1}
                 className="px-4 py-2 rounded-lg text-sm disabled:opacity-30"
-                style={{ background: 'var(--dark-card)', color: 'var(--text-primary)', border: '1px solid var(--dark-border)' }}
+                style={{ background: 'var(--surface-card)', color: 'var(--text-primary)', border: '1px solid var(--border)' }}
               >
                 ← Précédent
               </button>
@@ -197,7 +197,7 @@ export default function CRMContactsPage() {
                 onClick={() => { setPage(page + 1); loadContacts(page + 1, search, source) }}
                 disabled={page >= totalPages}
                 className="px-4 py-2 rounded-lg text-sm disabled:opacity-30"
-                style={{ background: 'var(--dark-card)', color: 'var(--text-primary)', border: '1px solid var(--dark-border)' }}
+                style={{ background: 'var(--surface-card)', color: 'var(--text-primary)', border: '1px solid var(--border)' }}
               >
                 Suivant →
               </button>

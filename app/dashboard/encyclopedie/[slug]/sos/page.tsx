@@ -79,7 +79,7 @@ export default function DouleurSosPage() {
         <p className="text-xl" style={{ color: 'var(--text-secondary)' }}>
           {error || 'Introuvable'}
         </p>
-        <Link href="/dashboard/encyclopedie" className="inline-block text-sm font-medium" style={{ color: 'var(--gold)' }}>
+        <Link href="/dashboard/encyclopedie" className="inline-block text-sm font-medium" style={{ color: 'var(--brand)' }}>
           Retour à l&apos;encyclopédie
         </Link>
       </div>
@@ -99,10 +99,10 @@ export default function DouleurSosPage() {
           Revenez sur la page du protocole pour accéder aux 3 étapes complètes.
         </p>
         <Link href={`/dashboard/encyclopedie/${data.slug}`} className="inline-block px-6 py-3 rounded-full text-sm font-medium transition-all"
-          style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
+          style={{ background: 'var(--brand)', color: 'var(--dark)' }}>
           Retour au protocole
         </Link>
-        <div className="pt-8 border-t border-[var(--dark-border)] text-xs" style={{ color: 'var(--text-muted)' }}>
+        <div className="pt-8 border-t border-[var(--border)] text-xs" style={{ color: 'var(--text-muted)' }}>
           Si vous êtes en danger immédiat, appelez le <strong style={{ color: '#FF6B6B' }}>3114</strong> (prévention du suicide, gratuit 24/7).
         </div>
       </div>

@@ -132,7 +132,7 @@ export default function BlogListClient({ initialArticles }: BlogListClientProps)
               <span
                 key={cat.slug}
                 className="flex-shrink-0 px-4 py-2 rounded-full text-xs tracking-wider uppercase font-medium cursor-pointer transition-all hover:opacity-80"
-                style={{ background: 'var(--dark-card)', color: 'var(--text-muted)', border: '1px solid var(--dark-border)' }}
+                style={{ background: 'var(--surface-card)', color: 'var(--text-muted)', border: '1px solid var(--border)' }}
               >
                 {cat.label}
               </span>
@@ -154,7 +154,7 @@ export default function BlogListClient({ initialArticles }: BlogListClientProps)
                 <article
                   className="group relative overflow-hidden rounded-2xl md:rounded-3xl p-6 sm:p-8 md:p-12 transition-all duration-500 hover:shadow-2xl cursor-pointer"
                   style={{
-                    background: 'linear-gradient(135deg, rgba(212,175,55,0.06), var(--dark-card))',
+                    background: 'linear-gradient(135deg, rgba(212,175,55,0.06), var(--surface-card))',
                     border: '1px solid rgba(212,175,55,0.12)',
                   }}
                 >
@@ -173,7 +173,7 @@ export default function BlogListClient({ initialArticles }: BlogListClientProps)
                       </span>
                     </div>
 
-                    <h2 className="font-display text-xl sm:text-2xl md:text-4xl font-light leading-[1.15] mb-3 md:mb-5 group-hover:text-[var(--gold)] transition-colors duration-300">
+                    <h2 className="font-display text-xl sm:text-2xl md:text-4xl font-light leading-[1.15] mb-3 md:mb-5 group-hover:text-[var(--brand)] transition-colors duration-300">
                       {featured.title}
                     </h2>
 
@@ -227,12 +227,12 @@ export default function BlogListClient({ initialArticles }: BlogListClientProps)
                   <Link href={`/blog/${article.slug}`}>
                     <article
                       className="group rounded-2xl p-5 md:p-6 h-full transition-all duration-300 hover:shadow-lg cursor-pointer"
-                      style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+                      style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
                     >
                       <span className="text-[10px] tracking-[0.15em] uppercase font-medium" style={{ color: BLOG_CATEGORIES.find(c => c.slug === article.category)?.color || gold }}>
                         {BLOG_CATEGORIES.find(c => c.slug === article.category)?.label || article.category}
                       </span>
-                      <h3 className="font-display text-lg md:text-xl font-light mt-2 mb-3 leading-snug group-hover:text-[var(--gold)] transition-colors">
+                      <h3 className="font-display text-lg md:text-xl font-light mt-2 mb-3 leading-snug group-hover:text-[var(--brand)] transition-colors">
                         {article.title}
                       </h3>
                       <p className="text-xs font-light leading-relaxed mb-4" style={{ color: 'var(--text-secondary)' }}>
@@ -259,7 +259,7 @@ export default function BlogListClient({ initialArticles }: BlogListClientProps)
           <div
             className="rounded-2xl md:rounded-3xl p-6 sm:p-8 md:p-12"
             style={{
-              background: 'linear-gradient(135deg, rgba(212,175,55,0.04), var(--dark-card))',
+              background: 'linear-gradient(135deg, rgba(212,175,55,0.04), var(--surface-card))',
               border: '1px solid rgba(212,175,55,0.1)',
             }}
           >
@@ -283,16 +283,16 @@ export default function BlogListClient({ initialArticles }: BlogListClientProps)
       </section>
 
       {/* Footer */}
-      <footer className="px-5 md:px-8 py-8 md:py-12 border-t" style={{ borderColor: 'var(--dark-border)', background: 'rgba(0,0,0,0.3)' }}>
+      <footer className="px-5 md:px-8 py-8 md:py-12 border-t" style={{ borderColor: 'var(--border)', background: 'rgba(0,0,0,0.3)' }}>
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
           <Link href="/">
             <img src="/images/logo-shine.png" alt="SOS Shine" className="h-10 md:h-12 w-auto object-contain" />
           </Link>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
-            <Link href="/" className="text-[10px] tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors">Accueil</Link>
-            <Link href="/encyclopedie" className="text-[10px] tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors">Encyclopedie</Link>
-            <Link href="/blog" className="text-[10px] tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors">Blog</Link>
-            <Link href="/contact" className="text-[10px] tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors">Contact</Link>
+            <Link href="/" className="text-[10px] tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors">Accueil</Link>
+            <Link href="/encyclopedie" className="text-[10px] tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors">Encyclopedie</Link>
+            <Link href="/blog" className="text-[10px] tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors">Blog</Link>
+            <Link href="/contact" className="text-[10px] tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors">Contact</Link>
           </div>
           <p className="text-[10px] tracking-[0.15em] uppercase text-[var(--text-muted)]">&copy; 2026 SOS Shine</p>
         </div>

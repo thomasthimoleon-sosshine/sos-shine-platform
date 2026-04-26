@@ -255,7 +255,7 @@ export default function AdminBlog() {
         <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
           La table <code className="px-2 py-0.5 rounded" style={{ background: 'rgba(116,192,252,0.1)', color: '#74C0FC' }}>blog_articles</code> n&apos;existe pas encore dans votre base de donn&eacute;es Supabase.
         </p>
-        <div className="rounded-xl p-6 text-left" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <div className="rounded-xl p-6 text-left" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <p className="text-sm font-medium mb-3" style={{ color: 'var(--text-primary)' }}>
             Ex&eacute;cutez ce SQL dans l&apos;&eacute;diteur SQL de Supabase :
           </p>
@@ -345,7 +345,7 @@ END $$;`}</pre>
       {/* Article list */}
       <div className="space-y-3">
         {articles.length === 0 && (
-          <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+          <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
             <p className="text-4xl mb-4">✍️</p>
             <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Aucun article pour le moment</p>
             <button onClick={openNew} className="mt-4 text-sm font-medium cursor-pointer" style={{ color: '#74C0FC' }}>
@@ -360,7 +360,7 @@ END $$;`}</pre>
             <div
               key={article.id}
               className="flex items-start gap-4 p-4 rounded-xl transition-all"
-              style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+              style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
             >
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
@@ -417,7 +417,7 @@ END $$;`}</pre>
                   style={{
                     background: article.featured ? 'rgba(212,175,55,0.1)' : 'rgba(255,255,255,0.03)',
                     color: article.featured ? '#D4AF37' : 'var(--text-muted)',
-                    border: `1px solid ${article.featured ? 'rgba(212,175,55,0.2)' : 'var(--dark-border)'}`,
+                    border: `1px solid ${article.featured ? 'rgba(212,175,55,0.2)' : 'var(--border)'}`,
                   }}
                   title="Mettre en vedette"
                 >
@@ -453,7 +453,7 @@ END $$;`}</pre>
         >
           <div
             className="w-full max-w-4xl rounded-2xl p-6 space-y-5"
-            style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+            style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
@@ -461,7 +461,7 @@ END $$;`}</pre>
                 {editingId ? 'Modifier l\u2019article' : 'Nouvel article'}
               </h2>
               {/* Content type toggle */}
-              <div className="flex items-center gap-1 p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--dark-border)' }}>
+              <div className="flex items-center gap-1 p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)' }}>
                 <button
                   onClick={() => setForm({ ...form, content_type: 'markdown' })}
                   className="px-4 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer"
@@ -493,7 +493,7 @@ END $$;`}</pre>
                   value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value, slug: form.slug || slugify(e.target.value) })}
                   className="w-full rounded-lg px-3 py-2.5 text-sm outline-none"
-                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                   placeholder="Titre de l'article"
                 />
               </div>
@@ -505,7 +505,7 @@ END $$;`}</pre>
                   value={form.slug}
                   onChange={(e) => setForm({ ...form, slug: e.target.value })}
                   className="w-full rounded-lg px-3 py-2.5 text-sm outline-none"
-                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                   placeholder="mon-article"
                 />
               </div>
@@ -517,7 +517,7 @@ END $$;`}</pre>
                   value={form.subtitle}
                   onChange={(e) => setForm({ ...form, subtitle: e.target.value })}
                   className="w-full rounded-lg px-3 py-2.5 text-sm outline-none"
-                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                   placeholder="Sous-titre"
                 />
               </div>
@@ -530,7 +530,7 @@ END $$;`}</pre>
                   onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
                   rows={2}
                   className="w-full rounded-lg px-3 py-2.5 text-sm outline-none resize-none"
-                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                   placeholder="Court r&eacute;sum&eacute; de l'article..."
                 />
               </div>
@@ -542,7 +542,7 @@ END $$;`}</pre>
                   value={form.category}
                   onChange={(e) => setForm({ ...form, category: e.target.value })}
                   className="w-full rounded-lg px-3 py-2.5 text-sm outline-none cursor-pointer"
-                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                 >
                   {BLOG_CATEGORIES.map((cat) => (
                     <option key={cat.slug} value={cat.slug} style={{ background: '#0a0a0a' }}>{cat.label}</option>
@@ -557,7 +557,7 @@ END $$;`}</pre>
                   value={form.author_name}
                   onChange={(e) => setForm({ ...form, author_name: e.target.value })}
                   className="w-full rounded-lg px-3 py-2.5 text-sm outline-none"
-                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                   placeholder="Nom de l'auteur"
                 />
               </div>
@@ -569,7 +569,7 @@ END $$;`}</pre>
                   value={form.author_role}
                   onChange={(e) => setForm({ ...form, author_role: e.target.value })}
                   className="w-full rounded-lg px-3 py-2.5 text-sm outline-none"
-                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                   placeholder="Ex: Co-fondateur SOS Shine"
                 />
               </div>
@@ -582,7 +582,7 @@ END $$;`}</pre>
                   value={form.published_at}
                   onChange={(e) => setForm({ ...form, published_at: e.target.value })}
                   className="w-full rounded-lg px-3 py-2.5 text-sm outline-none"
-                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                 />
               </div>
 
@@ -594,7 +594,7 @@ END $$;`}</pre>
                   value={form.read_time}
                   onChange={(e) => setForm({ ...form, read_time: parseInt(e.target.value) || 5 })}
                   className="w-full rounded-lg px-3 py-2.5 text-sm outline-none"
-                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                   min={1}
                 />
               </div>
@@ -606,7 +606,7 @@ END $$;`}</pre>
                   value={form.tags}
                   onChange={(e) => setForm({ ...form, tags: e.target.value })}
                   className="w-full rounded-lg px-3 py-2.5 text-sm outline-none"
-                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                   placeholder="tag1, tag2, tag3"
                 />
               </div>
@@ -618,7 +618,7 @@ END $$;`}</pre>
                   value={form.cover_image}
                   onChange={(e) => setForm({ ...form, cover_image: e.target.value })}
                   className="w-full rounded-lg px-3 py-2.5 text-sm outline-none"
-                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                   placeholder="https://..."
                 />
               </div>
@@ -630,7 +630,7 @@ END $$;`}</pre>
                   value={form.meta_title}
                   onChange={(e) => setForm({ ...form, meta_title: e.target.value })}
                   className="w-full rounded-lg px-3 py-2.5 text-sm outline-none"
-                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                   placeholder="Titre pour le SEO"
                 />
               </div>
@@ -641,7 +641,7 @@ END $$;`}</pre>
                   value={form.meta_description}
                   onChange={(e) => setForm({ ...form, meta_description: e.target.value })}
                   className="w-full rounded-lg px-3 py-2.5 text-sm outline-none"
-                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                   placeholder="Description pour le SEO"
                 />
               </div>
@@ -680,7 +680,7 @@ END $$;`}</pre>
                     style={{
                       background: showPreview ? 'rgba(85,239,196,0.15)' : 'rgba(255,255,255,0.05)',
                       color: showPreview ? '#55EFC4' : 'var(--text-muted)',
-                      border: `1px solid ${showPreview ? 'rgba(85,239,196,0.2)' : 'var(--dark-border)'}`,
+                      border: `1px solid ${showPreview ? 'rgba(85,239,196,0.2)' : 'var(--border)'}`,
                     }}
                   >
                     {showPreview ? 'Fermer l\u2019aper\u00e7u' : 'Aper\u00e7u'}
@@ -689,7 +689,7 @@ END $$;`}</pre>
 
                 {/* HTML Toolbar */}
                 {form.content_type === 'html' && (
-                  <div className="flex flex-wrap items-center gap-1 mb-2 p-2 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
+                  <div className="flex flex-wrap items-center gap-1 mb-2 p-2 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}>
                     <button onClick={() => insertHtmlTag('h2')} className="px-2 py-1 rounded text-[11px] font-bold cursor-pointer" style={{ color: '#74C0FC', background: 'rgba(116,192,252,0.1)' }} title="Titre H2">H2</button>
                     <button onClick={() => insertHtmlTag('h3')} className="px-2 py-1 rounded text-[11px] font-bold cursor-pointer" style={{ color: '#74C0FC', background: 'rgba(116,192,252,0.1)' }} title="Titre H3">H3</button>
                     <button onClick={() => insertHtmlTag('p')} className="px-2 py-1 rounded text-[11px] cursor-pointer" style={{ color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)' }} title="Paragraphe">P</button>
@@ -715,13 +715,13 @@ END $$;`}</pre>
                       onChange={(e) => setForm({ ...form, content: e.target.value })}
                       rows={20}
                       className="w-full rounded-lg px-3 py-2.5 text-sm outline-none resize-y font-mono"
-                      style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                      style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                     />
                     <div
                       className="rounded-lg px-4 py-3 text-sm overflow-y-auto prose-sm"
                       style={{
                         background: 'rgba(255,255,255,0.03)',
-                        border: '1px solid var(--dark-border)',
+                        border: '1px solid var(--border)',
                         color: 'var(--text-secondary)',
                         maxHeight: '500px',
                       }}
@@ -741,7 +741,7 @@ END $$;`}</pre>
                     onChange={(e) => setForm({ ...form, content: e.target.value })}
                     rows={15}
                     className="w-full rounded-lg px-3 py-2.5 text-sm outline-none resize-y font-mono"
-                    style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                    style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                     placeholder={form.content_type === 'html'
                       ? '<h2>Mon titre</h2>\n<p>Votre contenu en HTML...</p>'
                       : '## Mon titre\n\nVotre contenu en markdown...'
@@ -762,7 +762,7 @@ END $$;`}</pre>
               <button
                 onClick={() => setShowForm(false)}
                 className="px-5 py-2.5 rounded-xl text-sm cursor-pointer"
-                style={{ color: 'var(--text-muted)', border: '1px solid var(--dark-border)' }}
+                style={{ color: 'var(--text-muted)', border: '1px solid var(--border)' }}
               >
                 Annuler
               </button>

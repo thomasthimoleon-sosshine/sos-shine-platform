@@ -203,7 +203,7 @@ export default function SignupPage() {
           <div className="glass p-10">
             <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-6"
               style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.15)' }}>
-              <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
+              <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="var(--brand)" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </div>
@@ -213,10 +213,10 @@ export default function SignupPage() {
             </h1>
             <p className="text-[var(--text-secondary)] text-[13px] leading-relaxed">
               {s('signup_confirm_text').replace('envoyé.', `envoyé à `)}
-              {s('signup_confirm_text').includes('envoyé.') && <span className="text-[var(--gold)]"> {email}</span>}
+              {s('signup_confirm_text').includes('envoyé.') && <span className="text-[var(--brand)]"> {email}</span>}
               {!s('signup_confirm_text').includes('envoyé.') && (
                 <>
-                  {' '}<span className="text-[var(--gold)]">{email}</span>.
+                  {' '}<span className="text-[var(--brand)]">{email}</span>.
                 </>
               )}
             </p>
@@ -224,7 +224,7 @@ export default function SignupPage() {
 
           <p className="text-[11px] text-[var(--text-muted)] mt-6">
             {t('auth.email_not_received')}{' '}
-            <button onClick={() => setSuccess(false)} className="gold-underline font-medium" style={{ color: 'var(--gold)' }}>
+            <button onClick={() => setSuccess(false)} className="gold-underline font-medium" style={{ color: 'var(--brand)' }}>
               {t('auth.retry')}
             </button>
           </p>
@@ -234,11 +234,11 @@ export default function SignupPage() {
   }
 
   const inputStyle: React.CSSProperties = {
-    background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)',
+    background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)',
     color: 'var(--text-primary)', outline: 'none',
   }
   const focusIn = (e: React.FocusEvent<HTMLInputElement>) => e.currentTarget.style.borderColor = 'rgba(212,175,55,0.4)'
-  const focusOut = (e: React.FocusEvent<HTMLInputElement>) => e.currentTarget.style.borderColor = 'var(--dark-border)'
+  const focusOut = (e: React.FocusEvent<HTMLInputElement>) => e.currentTarget.style.borderColor = 'var(--border)'
 
   const EyeIcon = () => (
     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="var(--text-muted)" strokeWidth={1.5}>
@@ -371,11 +371,11 @@ export default function SignupPage() {
                 style={{ accentColor: '#D4AF37' }} />
               <label htmlFor="acceptCgv" className="text-[12px] text-[var(--text-muted)] leading-relaxed cursor-pointer">
                 J&apos;accepte les{' '}
-                <Link href="/cgv" target="_blank" className="gold-underline font-medium" style={{ color: 'var(--gold)' }}>
+                <Link href="/cgv" target="_blank" className="gold-underline font-medium" style={{ color: 'var(--brand)' }}>
                   conditions générales de vente
                 </Link>
                 {' '}et la{' '}
-                <Link href="/confidentialite" target="_blank" className="gold-underline font-medium" style={{ color: 'var(--gold)' }}>
+                <Link href="/confidentialite" target="_blank" className="gold-underline font-medium" style={{ color: 'var(--brand)' }}>
                   politique de confidentialité
                 </Link>
               </label>
@@ -394,16 +394,16 @@ export default function SignupPage() {
           </form>
 
           <div className="flex items-center gap-4 my-6">
-            <span className="flex-1 h-px" style={{ background: 'var(--dark-border)' }} />
+            <span className="flex-1 h-px" style={{ background: 'var(--border)' }} />
             <span className="text-[11px] text-[var(--text-muted)]">{t('auth.or')}</span>
-            <span className="flex-1 h-px" style={{ background: 'var(--dark-border)' }} />
+            <span className="flex-1 h-px" style={{ background: 'var(--border)' }} />
           </div>
 
           <button onClick={handleGoogleSignIn}
             className="w-full py-3.5 rounded-full text-[13px] flex items-center justify-center gap-3 transition-all"
-            style={{ border: '1px solid var(--dark-border)', color: 'var(--text-secondary)', background: 'transparent' }}
+            style={{ border: '1px solid var(--border)', color: 'var(--text-secondary)', background: 'transparent' }}
             onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(212,175,55,0.3)'; e.currentTarget.style.color = 'var(--text-primary)' }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--dark-border)'; e.currentTarget.style.color = 'var(--text-secondary)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-secondary)' }}
           >
             <svg className="w-4.5 h-4.5" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
@@ -417,7 +417,7 @@ export default function SignupPage() {
 
         <p className="text-center text-[13px] text-[var(--text-muted)] mt-8">
           {s('signup_login_text')}{' '}
-          <Link href="/login" className="gold-underline font-medium" style={{ color: 'var(--gold)' }}>
+          <Link href="/login" className="gold-underline font-medium" style={{ color: 'var(--brand)' }}>
             {s('signup_login_link_text')}
           </Link>
         </p>

@@ -188,7 +188,7 @@ export default function AdminShineTVPage() {
 
   const inputStyle: React.CSSProperties = {
     width: '100%', padding: '10px 14px', borderRadius: '8px',
-    border: '1px solid var(--dark-border)', background: 'var(--dark)',
+    border: '1px solid var(--border)', background: 'var(--dark)',
     color: 'var(--text-primary)', fontSize: '14px', outline: 'none',
   }
   const labelStyle: React.CSSProperties = {
@@ -224,7 +224,7 @@ export default function AdminShineTVPage() {
 
       {/* Form */}
       {showForm && (
-        <form onSubmit={handleSave} className="rounded-xl p-6 space-y-5" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <form onSubmit={handleSave} className="rounded-xl p-6 space-y-5" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <h2 className="font-semibold text-lg" style={{ color: '#E17055' }}>
             {editingId ? 'Modifier la vidéo' : 'Nouvelle vidéo'}
           </h2>
@@ -309,7 +309,7 @@ export default function AdminShineTVPage() {
             </button>
             <button type="button" onClick={cancelForm}
               className="px-5 py-2.5 rounded-lg text-sm transition-colors"
-              style={{ color: 'var(--text-muted)', border: '1px solid var(--dark-border)' }}>
+              style={{ color: 'var(--text-muted)', border: '1px solid var(--border)' }}>
               Annuler
             </button>
           </div>
@@ -324,7 +324,7 @@ export default function AdminShineTVPage() {
             style={{
               background: filterCategory === 'all' ? 'rgba(225,112,85,0.15)' : 'transparent',
               color: filterCategory === 'all' ? '#E17055' : 'var(--text-muted)',
-              border: `1px solid ${filterCategory === 'all' ? 'rgba(225,112,85,0.3)' : 'var(--dark-border)'}`,
+              border: `1px solid ${filterCategory === 'all' ? 'rgba(225,112,85,0.3)' : 'var(--border)'}`,
             }}>
             Tout ({videos.length})
           </button>
@@ -337,7 +337,7 @@ export default function AdminShineTVPage() {
                 style={{
                   background: filterCategory === c.id ? 'rgba(225,112,85,0.15)' : 'transparent',
                   color: filterCategory === c.id ? '#E17055' : 'var(--text-muted)',
-                  border: `1px solid ${filterCategory === c.id ? 'rgba(225,112,85,0.3)' : 'var(--dark-border)'}`,
+                  border: `1px solid ${filterCategory === c.id ? 'rgba(225,112,85,0.3)' : 'var(--border)'}`,
                 }}>
                 {c.icon} {c.label} ({count})
               </button>
@@ -352,7 +352,7 @@ export default function AdminShineTVPage() {
           <div className="w-8 h-8 border-2 border-[#E17055] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : filteredVideos.length === 0 ? (
-        <div className="rounded-xl p-12 text-center" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <div className="rounded-xl p-12 text-center" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <p className="text-4xl mb-3">🎬</p>
           <p style={{ color: 'var(--text-muted)' }}>Aucune vidéo pour le moment.</p>
         </div>
@@ -360,7 +360,7 @@ export default function AdminShineTVPage() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredVideos.map((v) => (
             <div key={v.id} className="rounded-xl overflow-hidden transition-all duration-200 hover:-translate-y-0.5"
-              style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+              style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
               {/* Thumbnail */}
               <div className="relative aspect-video" style={{ background: 'rgba(225,112,85,0.08)' }}>
                 {v.thumbnail_url ? (

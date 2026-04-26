@@ -204,7 +204,7 @@ function StatCard({ label, value, sub, color, icon }: { label: string; value: st
 // ─── Section wrapper ───
 function Section({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-xl p-6" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+    <div className="rounded-xl p-6" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
       <h2 className="font-semibold text-lg mb-1" style={{ color: 'var(--text-primary)' }}>{title}</h2>
       {subtitle && <p className="text-xs mb-5" style={{ color: 'var(--text-secondary)' }}>{subtitle}</p>}
       {!subtitle && <div className="mb-5" />}
@@ -424,7 +424,7 @@ export default function FounderDashboard() {
                   : 'rgba(255,255,255,0.02)',
                 border: activeTab === tab.key
                   ? '1px solid rgba(212,175,55,0.4)'
-                  : '1px solid var(--dark-border)',
+                  : '1px solid var(--border)',
                 color: activeTab === tab.key ? '#D4AF37' : 'var(--text-muted)',
               }}
             >
@@ -539,7 +539,7 @@ export default function FounderDashboard() {
                 {recentCampaigns.map((camp) => (
                   <Link key={camp.id} href={`/admin/crm/campaigns?selected=${camp.id}`}
                     className="block p-3 rounded-lg transition-all hover:scale-[1.005]"
-                    style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                    style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{camp.name}</div>
@@ -714,7 +714,7 @@ export default function FounderDashboard() {
                     <span className="ml-auto font-semibold" style={{ color: 'var(--text-primary)' }}>{fmtEur(c.value)}</span>
                   </div>
                 ))}
-                <div className="col-span-2 mt-2 pt-2" style={{ borderTop: '1px solid var(--dark-border)' }}>
+                <div className="col-span-2 mt-2 pt-2" style={{ borderTop: '1px solid var(--border)' }}>
                   <div className="flex items-center justify-between text-sm font-semibold">
                     <span style={{ color: 'var(--text-secondary)' }}>Total mensuel</span>
                     <span style={{ color: '#D4AF37' }}>{fmtEur(costBreakdown5k.total)}</span>
@@ -838,7 +838,7 @@ export default function FounderDashboard() {
                 { label: 'Net distribuable aux associés', value: yearlyDistributable, color: '#D4AF37', icon: '✨', bold: true },
               ].map((row) => (
                 <div key={row.label} className="flex items-center justify-between py-2 px-3 rounded-lg"
-                  style={{ background: row.bold ? 'rgba(212,175,55,0.05)' : 'transparent', borderBottom: '1px solid var(--dark-border)' }}>
+                  style={{ background: row.bold ? 'rgba(212,175,55,0.05)' : 'transparent', borderBottom: '1px solid var(--border)' }}>
                   <div className="flex items-center gap-2">
                     <span className="text-sm">{row.icon}</span>
                     <span className={`text-xs ${row.bold ? 'font-semibold' : ''}`} style={{ color: 'var(--text-secondary)' }}>{row.label}</span>
@@ -851,7 +851,7 @@ export default function FounderDashboard() {
               ))}
 
               {/* Partner split */}
-              <div className="mt-4 pt-4" style={{ borderTop: '2px solid var(--dark-border)' }}>
+              <div className="mt-4 pt-4" style={{ borderTop: '2px solid var(--border)' }}>
                 <div className="grid grid-cols-3 gap-4">
                   {['Associé 1', 'Associé 2', 'Associé 3'].map((name, i) => (
                     <div key={i} className="rounded-xl p-5 text-center"
@@ -915,7 +915,7 @@ export default function FounderDashboard() {
             <div className="overflow-x-auto">
               <table className="w-full text-xs" style={{ minWidth: 900 }}>
                 <thead>
-                  <tr style={{ borderBottom: '2px solid var(--dark-border)' }}>
+                  <tr style={{ borderBottom: '2px solid var(--border)' }}>
                     {['Mois', 'Abonnés', 'Nouveaux', 'Churn', 'MRR', 'Fondation', 'Événem.', 'Coûts opé.', 'Stripe', 'Affiliation', 'IS', 'Profit net', 'Par associé'].map((h) => (
                       <th key={h} className="py-2 px-2 text-left font-semibold" style={{ color: 'var(--text-muted)' }}>{h}</th>
                     ))}
@@ -923,7 +923,7 @@ export default function FounderDashboard() {
                 </thead>
                 <tbody>
                   {projection.map((m, i) => (
-                    <tr key={i} className="transition-colors" style={{ borderBottom: '1px solid var(--dark-border)' }}
+                    <tr key={i} className="transition-colors" style={{ borderBottom: '1px solid var(--border)' }}
                       onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(212,175,55,0.03)'}
                       onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
                       <td className="py-2 px-2 font-semibold" style={{ color: '#D4AF37' }}>{m.month}</td>

@@ -292,7 +292,7 @@ export default function AdminEvenements() {
   // ── Input style helpers ──
   const inputStyle: React.CSSProperties = {
     background: 'rgba(255,255,255,0.03)',
-    border: '1px solid var(--dark-border)',
+    border: '1px solid var(--border)',
     color: 'var(--text-primary)',
     borderRadius: '0.5rem',
     padding: '0.5rem 0.75rem',
@@ -350,7 +350,7 @@ export default function AdminEvenements() {
       {showForm && (
         <div
           className="rounded-xl p-6 space-y-5"
-          style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+          style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
         >
           <h2 className="font-semibold text-lg" style={{ color: '#74C0FC' }}>
             {editingId ? 'Modifier l\u2019événement' : 'Nouvel événement'}
@@ -416,7 +416,7 @@ export default function AdminEvenements() {
                 style={{
                   background: form.is_online ? 'rgba(85,239,196,0.15)' : 'rgba(255,255,255,0.03)',
                   color: form.is_online ? '#55EFC4' : 'var(--text-muted)',
-                  border: form.is_online ? '1px solid rgba(85,239,196,0.3)' : '1px solid var(--dark-border)',
+                  border: form.is_online ? '1px solid rgba(85,239,196,0.3)' : '1px solid var(--border)',
                 }}
               >
                 En ligne
@@ -428,7 +428,7 @@ export default function AdminEvenements() {
                 style={{
                   background: !form.is_online ? 'rgba(116,192,252,0.15)' : 'rgba(255,255,255,0.03)',
                   color: !form.is_online ? '#74C0FC' : 'var(--text-muted)',
-                  border: !form.is_online ? '1px solid rgba(116,192,252,0.3)' : '1px solid var(--dark-border)',
+                  border: !form.is_online ? '1px solid rgba(116,192,252,0.3)' : '1px solid var(--border)',
                 }}
               >
                 Sur place
@@ -576,8 +576,8 @@ export default function AdminEvenements() {
                     className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer"
                     style={{
                       background: selected ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.03)',
-                      border: selected ? '1px solid rgba(212,175,55,0.4)' : '1px solid var(--dark-border)',
-                      color: selected ? 'var(--gold)' : 'var(--text-muted)',
+                      border: selected ? '1px solid rgba(212,175,55,0.4)' : '1px solid var(--border)',
+                      color: selected ? 'var(--brand)' : 'var(--text-muted)',
                     }}
                   >
                     <img
@@ -585,7 +585,7 @@ export default function AdminEvenements() {
                       alt={f.name}
                       className="w-7 h-7 rounded-full object-cover"
                       style={{
-                        border: selected ? '2px solid var(--gold)' : '2px solid transparent',
+                        border: selected ? '2px solid var(--brand)' : '2px solid transparent',
                         opacity: selected ? 1 : 0.5,
                       }}
                     />
@@ -612,7 +612,7 @@ export default function AdminEvenements() {
             <button
               onClick={cancelForm}
               className="px-5 py-2.5 rounded-xl text-sm transition-colors"
-              style={{ color: 'var(--text-muted)', border: '1px solid var(--dark-border)' }}
+              style={{ color: 'var(--text-muted)', border: '1px solid var(--border)' }}
             >
               Annuler
             </button>
@@ -628,7 +628,7 @@ export default function AdminEvenements() {
       ) : events.length === 0 ? (
         <div
           className="rounded-xl p-12 text-center"
-          style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+          style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
         >
           <p className="text-4xl mb-3">📅</p>
           <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>Aucun événement</p>
@@ -647,8 +647,8 @@ export default function AdminEvenements() {
                 key={event.id}
                 className="rounded-xl p-5 transition-all duration-200"
                 style={{
-                  background: 'var(--dark-card)',
-                  border: '1px solid var(--dark-border)',
+                  background: 'var(--surface-card)',
+                  border: '1px solid var(--border)',
                   opacity: event.is_active ? 1 : 0.55,
                 }}
               >
@@ -706,7 +706,7 @@ export default function AdminEvenements() {
                         <span style={{ color: '#55EFC4' }}>En ligne</span>
                       )}
                       {event.price > 0 && (
-                        <span style={{ color: 'var(--gold)' }}>{event.price.toFixed(2)} EUR</span>
+                        <span style={{ color: 'var(--brand)' }}>{event.price.toFixed(2)} EUR</span>
                       )}
                       {event.price === 0 && (
                         <span style={{ color: '#55EFC4' }}>Gratuit</span>
@@ -731,7 +731,7 @@ export default function AdminEvenements() {
                                 alt={founder.name}
                                 title={founder.name}
                                 className="w-6 h-6 rounded-full object-cover"
-                                style={{ border: '2px solid var(--dark-card)' }}
+                                style={{ border: '2px solid var(--surface-card)' }}
                               />
                             )
                           })}

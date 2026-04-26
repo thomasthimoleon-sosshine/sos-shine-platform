@@ -42,7 +42,7 @@ const SECTION_LABELS: Record<string, { label: string; icon: string }> = {
 /* ── Styles ── */
 const inputStyle: React.CSSProperties = {
   background: 'rgba(255,255,255,0.03)',
-  border: '1px solid var(--dark-border)',
+  border: '1px solid var(--border)',
   color: 'var(--text-primary)',
 }
 
@@ -89,7 +89,7 @@ function ToggleField({ label, checked, onChange }: {
 
 function SectionDivider({ title }: { title: string }) {
   return (
-    <div className="pt-4 mt-2" style={{ borderTop: '1px solid var(--dark-border)' }}>
+    <div className="pt-4 mt-2" style={{ borderTop: '1px solid var(--border)' }}>
       <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: '#74C0FC' }}>{title}</p>
     </div>
   )
@@ -130,7 +130,7 @@ function GenericSectionEditor({ content, sectionKey, onChange }: {
               <div key={field}>
                 <SectionDivider title={field.replace(/_/g, ' ')} />
                 {value.map((item: Record<string, unknown>, i: number) => (
-                  <div key={i} className="rounded-lg p-4 mb-2 space-y-3" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                  <div key={i} className="rounded-lg p-4 mb-2 space-y-3" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
                     <div className="flex items-center justify-between">
                       <p className="text-xs font-semibold" style={{ color: 'var(--text-muted)' }}>{field} #{i + 1}</p>
                       <button type="button" onClick={() => {
@@ -457,7 +457,7 @@ export default function LandingThomasPage() {
           {saved && <span className="text-sm font-medium" style={{ color: '#55EFC4' }}>Sauvegardé !</span>}
           <a href="/?preview=thomas" target="_blank" rel="noopener noreferrer"
             className="px-5 py-3 rounded-xl text-sm font-semibold cursor-pointer"
-            style={{ border: '1px solid var(--dark-border)', color: 'var(--text-secondary)' }}>
+            style={{ border: '1px solid var(--border)', color: 'var(--text-secondary)' }}>
             Prévisualiser
           </a>
           <button onClick={handleSave} disabled={saving}
@@ -478,7 +478,7 @@ export default function LandingThomasPage() {
       {/* ── Dialog nouvelle section ── */}
       {showNewSection && (
         <div className="rounded-xl p-5 space-y-4"
-          style={{ background: 'var(--dark-card)', border: '1px solid #74C0FC40' }}>
+          style={{ background: 'var(--surface-card)', border: '1px solid #74C0FC40' }}>
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-sm" style={{ color: '#74C0FC' }}>Créer une nouvelle section</h3>
             <button type="button" onClick={() => setShowNewSection(false)}
@@ -492,7 +492,7 @@ export default function LandingThomasPage() {
                 className="flex-1 rounded-lg p-4 text-center cursor-pointer transition-colors"
                 style={{
                   background: newSectionType === 'normal' ? 'rgba(116,192,252,0.1)' : 'rgba(255,255,255,0.02)',
-                  border: `1px solid ${newSectionType === 'normal' ? '#74C0FC' : 'var(--dark-border)'}`,
+                  border: `1px solid ${newSectionType === 'normal' ? '#74C0FC' : 'var(--border)'}`,
                 }}>
                 <span className="block text-2xl mb-2">📄</span>
                 <span className="block text-sm font-medium" style={{ color: newSectionType === 'normal' ? '#74C0FC' : 'var(--text-primary)' }}>Normal</span>
@@ -502,7 +502,7 @@ export default function LandingThomasPage() {
                 className="flex-1 rounded-lg p-4 text-center cursor-pointer transition-colors"
                 style={{
                   background: newSectionType === 'html' ? 'rgba(116,192,252,0.1)' : 'rgba(255,255,255,0.02)',
-                  border: `1px solid ${newSectionType === 'html' ? '#74C0FC' : 'var(--dark-border)'}`,
+                  border: `1px solid ${newSectionType === 'html' ? '#74C0FC' : 'var(--border)'}`,
                 }}>
                 <span className="block text-2xl mb-2">🖥️</span>
                 <span className="block text-sm font-medium" style={{ color: newSectionType === 'html' ? '#74C0FC' : 'var(--text-primary)' }}>HTML</span>
@@ -520,8 +520,8 @@ export default function LandingThomasPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-4">
         {/* Sidebar */}
-        <div className="rounded-xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-          <div className="px-4 py-3 flex items-center justify-between" style={{ borderBottom: '1px solid var(--dark-border)' }}>
+        <div className="rounded-xl overflow-hidden" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
+          <div className="px-4 py-3 flex items-center justify-between" style={{ borderBottom: '1px solid var(--border)' }}>
             <p className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
               Sections ({sortedKeys.length})
             </p>
@@ -541,7 +541,7 @@ export default function LandingThomasPage() {
                   className="flex items-center px-2 py-1.5 gap-1"
                   style={{
                     background: isSelected ? 'rgba(116,192,252,0.1)' : 'transparent',
-                    borderBottom: '1px solid var(--dark-border)',
+                    borderBottom: '1px solid var(--border)',
                     borderLeft: isSelected ? '3px solid #74C0FC' : '3px solid transparent',
                   }}>
                   {/* Move buttons */}
@@ -591,7 +591,7 @@ export default function LandingThomasPage() {
         </div>
 
         {/* Editor panel */}
-        <div className="rounded-xl p-6" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <div className="rounded-xl p-6" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           {selectedSection && sections[selectedSection] ? (
             <>
               <div className="flex items-center justify-between mb-6">
@@ -639,7 +639,7 @@ export default function LandingThomasPage() {
                     </p>
                   </div>
                   {sections[selectedSection].content.html_content && (
-                    <div className="rounded-lg p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
+                    <div className="rounded-lg p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}>
                       <p className="text-[10px] font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>Aperçu</p>
                       <div className="prose prose-invert prose-sm max-w-none" style={{ color: 'var(--text-secondary)' }}
                         dangerouslySetInnerHTML={{ __html: sections[selectedSection].content.html_content }} />

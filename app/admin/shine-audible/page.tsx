@@ -207,7 +207,7 @@ export default function AdminShineAudiblePage() {
 
   const inputStyle: React.CSSProperties = {
     width: '100%', padding: '10px 14px', borderRadius: '8px',
-    border: '1px solid var(--dark-border)', background: 'var(--dark)',
+    border: '1px solid var(--border)', background: 'var(--dark)',
     color: 'var(--text-primary)', fontSize: '14px', outline: 'none',
   }
   const labelStyle: React.CSSProperties = {
@@ -243,7 +243,7 @@ export default function AdminShineAudiblePage() {
 
       {/* Form */}
       {showForm && (
-        <form onSubmit={handleSave} className="rounded-xl p-6 space-y-5" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <form onSubmit={handleSave} className="rounded-xl p-6 space-y-5" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <h2 className="font-semibold text-lg" style={{ color: '#9B59B6' }}>
             {editingId ? 'Modifier le contenu audio' : 'Nouveau contenu audio'}
           </h2>
@@ -333,7 +333,7 @@ export default function AdminShineAudiblePage() {
             </button>
             <button type="button" onClick={cancelForm}
               className="px-5 py-2.5 rounded-lg text-sm transition-colors"
-              style={{ color: 'var(--text-muted)', border: '1px solid var(--dark-border)' }}>
+              style={{ color: 'var(--text-muted)', border: '1px solid var(--border)' }}>
               Annuler
             </button>
           </div>
@@ -348,7 +348,7 @@ export default function AdminShineAudiblePage() {
             style={{
               background: filterType === 'all' ? 'rgba(155,89,182,0.15)' : 'transparent',
               color: filterType === 'all' ? '#9B59B6' : 'var(--text-muted)',
-              border: `1px solid ${filterType === 'all' ? 'rgba(155,89,182,0.3)' : 'var(--dark-border)'}`,
+              border: `1px solid ${filterType === 'all' ? 'rgba(155,89,182,0.3)' : 'var(--border)'}`,
             }}>
             Tout ({tracks.length})
           </button>
@@ -361,7 +361,7 @@ export default function AdminShineAudiblePage() {
                 style={{
                   background: filterType === c.id ? 'rgba(155,89,182,0.15)' : 'transparent',
                   color: filterType === c.id ? '#9B59B6' : 'var(--text-muted)',
-                  border: `1px solid ${filterType === c.id ? 'rgba(155,89,182,0.3)' : 'var(--dark-border)'}`,
+                  border: `1px solid ${filterType === c.id ? 'rgba(155,89,182,0.3)' : 'var(--border)'}`,
                 }}>
                 {c.icon} {c.label} ({count})
               </button>
@@ -376,7 +376,7 @@ export default function AdminShineAudiblePage() {
           <div className="w-8 h-8 border-2 border-[#9B59B6] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : filteredTracks.length === 0 ? (
-        <div className="rounded-xl p-12 text-center" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <div className="rounded-xl p-12 text-center" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <p className="text-4xl mb-3">🎧</p>
           <p style={{ color: 'var(--text-muted)' }}>Aucun contenu audio pour le moment.</p>
         </div>
@@ -384,7 +384,7 @@ export default function AdminShineAudiblePage() {
         <div className="space-y-3">
           {filteredTracks.map((t) => (
             <div key={t.id} className="rounded-xl overflow-hidden transition-all duration-200"
-              style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+              style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
               <div className="flex items-center gap-4 p-4">
                 {/* Cover */}
                 <div className="w-16 h-16 rounded-lg flex-shrink-0 overflow-hidden" style={{ background: 'rgba(155,89,182,0.08)' }}>

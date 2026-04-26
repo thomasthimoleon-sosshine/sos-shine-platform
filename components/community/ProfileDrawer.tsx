@@ -95,18 +95,18 @@ export default function ProfileDrawer({ userId, onClose }: Props) {
       {/* Panel - Bottom sheet on mobile, side panel on desktop */}
       <div
         className="fixed z-[61] bottom-0 inset-x-0 max-h-[75vh] rounded-t-2xl lg:inset-x-auto lg:top-0 lg:right-0 lg:bottom-0 lg:w-[380px] lg:max-h-full lg:rounded-none lg:rounded-l-2xl overflow-y-auto"
-        style={{ background: 'var(--dark-card)', borderTop: '1px solid var(--dark-border)', borderLeft: '1px solid var(--dark-border)' }}
+        style={{ background: 'var(--surface-card)', borderTop: '1px solid var(--border)', borderLeft: '1px solid var(--border)' }}
       >
         {/* Toast */}
         {toast && (
           <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 px-4 py-2 rounded-xl text-sm font-medium"
-            style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
+            style={{ background: 'var(--brand)', color: 'var(--dark)' }}>
             {toast}
           </div>
         )}
 
         {/* Header */}
-        <div className="flex justify-between items-center p-4" style={{ borderBottom: '1px solid var(--dark-border)' }}>
+        <div className="flex justify-between items-center p-4" style={{ borderBottom: '1px solid var(--border)' }}>
           <span className="text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Profil</span>
           <button onClick={onClose} className="p-2 rounded-lg cursor-pointer" style={{ color: 'var(--text-muted)' }}>
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -117,24 +117,24 @@ export default function ProfileDrawer({ userId, onClose }: Props) {
 
         {loading ? (
           <div className="flex justify-center py-16">
-            <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+            <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
           </div>
         ) : profile ? (
           <div className="p-6 text-center">
             {/* Avatar */}
             {profile.avatar_url ? (
               <img src={profile.avatar_url} alt={displayName}
-                className="w-24 h-24 rounded-2xl object-cover mx-auto mb-4 ring-2 ring-[var(--gold)]/20" />
+                className="w-24 h-24 rounded-2xl object-cover mx-auto mb-4 ring-2 ring-[var(--brand)]/20" />
             ) : (
               <div className="w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl font-display font-semibold"
-                style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
                 {displayName.charAt(0).toUpperCase()}
               </div>
             )}
 
             {/* Name */}
             <h2 className="font-display text-xl font-semibold"
-              style={{ color: profile.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)' }}>
+              style={{ color: profile.role === 'founder' ? 'var(--brand)' : 'var(--text-primary)' }}>
               {displayName}
             </h2>
 
@@ -164,7 +164,7 @@ export default function ProfileDrawer({ userId, onClose }: Props) {
                     onClick={sendRayonRequest}
                     disabled={sendingRayon}
                     className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer disabled:opacity-50"
-                    style={{ background: 'linear-gradient(135deg, var(--gold), #B8960F)', color: '#050505' }}
+                    style={{ background: 'linear-gradient(135deg, var(--brand), #B8960F)', color: '#050505' }}
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
@@ -175,7 +175,7 @@ export default function ProfileDrawer({ userId, onClose }: Props) {
 
                 {connectionStatus === 'pending_sent' && (
                   <div className="w-full px-5 py-3 rounded-xl text-sm font-medium text-center"
-                    style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.15)' }}>
+                    style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.15)' }}>
                     Demande de Rayon envoyée
                   </div>
                 )}
@@ -184,7 +184,7 @@ export default function ProfileDrawer({ userId, onClose }: Props) {
                   href={`/dashboard/messages/${userId}`}
                   onClick={onClose}
                   className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-medium transition-all"
-                  style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-primary)', border: '1px solid var(--dark-border)' }}
+                  style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-primary)', border: '1px solid var(--border)' }}
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />

@@ -183,7 +183,7 @@ export default function AdminShineShortsPage() {
 
   const inputStyle: React.CSSProperties = {
     width: '100%', padding: '10px 14px', borderRadius: '8px',
-    border: '1px solid var(--dark-border)', background: 'var(--dark)',
+    border: '1px solid var(--border)', background: 'var(--dark)',
     color: 'var(--text-primary)', fontSize: '14px', outline: 'none',
   }
   const labelStyle: React.CSSProperties = {
@@ -219,7 +219,7 @@ export default function AdminShineShortsPage() {
 
       {/* Form */}
       {showForm && (
-        <form onSubmit={handleSave} className="rounded-xl p-6 space-y-5" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <form onSubmit={handleSave} className="rounded-xl p-6 space-y-5" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <h2 className="font-semibold text-lg" style={{ color: '#A29BFE' }}>
             {editingId ? 'Modifier le short' : 'Nouveau short'}
           </h2>
@@ -288,7 +288,7 @@ export default function AdminShineShortsPage() {
             </button>
             <button type="button" onClick={cancelForm}
               className="px-5 py-2.5 rounded-lg text-sm transition-colors"
-              style={{ color: 'var(--text-muted)', border: '1px solid var(--dark-border)' }}>
+              style={{ color: 'var(--text-muted)', border: '1px solid var(--border)' }}>
               Annuler
             </button>
           </div>
@@ -303,7 +303,7 @@ export default function AdminShineShortsPage() {
             style={{
               background: filterCategory === 'all' ? 'rgba(162,155,254,0.15)' : 'transparent',
               color: filterCategory === 'all' ? '#A29BFE' : 'var(--text-muted)',
-              border: `1px solid ${filterCategory === 'all' ? 'rgba(162,155,254,0.3)' : 'var(--dark-border)'}`,
+              border: `1px solid ${filterCategory === 'all' ? 'rgba(162,155,254,0.3)' : 'var(--border)'}`,
             }}>
             Tout ({shorts.length})
           </button>
@@ -316,7 +316,7 @@ export default function AdminShineShortsPage() {
                 style={{
                   background: filterCategory === c.id ? 'rgba(162,155,254,0.15)' : 'transparent',
                   color: filterCategory === c.id ? '#A29BFE' : 'var(--text-muted)',
-                  border: `1px solid ${filterCategory === c.id ? 'rgba(162,155,254,0.3)' : 'var(--dark-border)'}`,
+                  border: `1px solid ${filterCategory === c.id ? 'rgba(162,155,254,0.3)' : 'var(--border)'}`,
                 }}>
                 {c.icon} {c.label} ({count})
               </button>
@@ -331,7 +331,7 @@ export default function AdminShineShortsPage() {
           <div className="w-8 h-8 border-2 border-[#A29BFE] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : filteredShorts.length === 0 ? (
-        <div className="rounded-xl p-12 text-center" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <div className="rounded-xl p-12 text-center" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <p className="text-4xl mb-3">📱</p>
           <p style={{ color: 'var(--text-muted)' }}>Aucun short pour le moment.</p>
         </div>
@@ -339,7 +339,7 @@ export default function AdminShineShortsPage() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredShorts.map((s) => (
             <div key={s.id} className="rounded-xl overflow-hidden transition-all duration-200 hover:-translate-y-0.5"
-              style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+              style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
               {/* Thumbnail */}
               <div className="relative aspect-[9/16] max-h-64" style={{ background: 'rgba(162,155,254,0.08)' }}>
                 {s.thumbnail_url ? (

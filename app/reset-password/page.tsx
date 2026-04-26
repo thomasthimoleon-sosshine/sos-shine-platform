@@ -87,14 +87,14 @@ export default function ResetPasswordPage() {
   if (checking) {
     return (
       <main className="min-h-screen flex items-center justify-center" style={{ background: 'var(--dark)' }}>
-        <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
       </main>
     )
   }
 
   const inputStyle: React.CSSProperties = {
     background: 'rgba(255,255,255,0.03)',
-    border: '1px solid var(--dark-border)',
+    border: '1px solid var(--border)',
     color: 'var(--text-primary)',
     outline: 'none',
   }
@@ -112,7 +112,7 @@ export default function ResetPasswordPage() {
         className="max-w-md w-full relative z-10"
       >
         <div className="text-center mb-10">
-          <Link href="/" className="font-display text-2xl text-[var(--gold)] font-medium tracking-tight">SOS Shine</Link>
+          <Link href="/" className="font-display text-2xl text-[var(--brand)] font-medium tracking-tight">SOS Shine</Link>
           <p className="text-[var(--text-muted)] text-[13px] mt-2">Sécurisez votre compte</p>
         </div>
 
@@ -159,7 +159,7 @@ export default function ResetPasswordPage() {
                     className="w-full px-4 py-3 rounded-xl text-sm transition-colors"
                     style={inputStyle}
                     onFocus={(e) => e.currentTarget.style.borderColor = 'rgba(212,175,55,0.4)'}
-                    onBlur={(e) => e.currentTarget.style.borderColor = 'var(--dark-border)'}
+                    onBlur={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
                   />
                 </div>
                 <div>
@@ -177,7 +177,7 @@ export default function ResetPasswordPage() {
                     className="w-full px-4 py-3 rounded-xl text-sm transition-colors"
                     style={inputStyle}
                     onFocus={(e) => e.currentTarget.style.borderColor = 'rgba(212,175,55,0.4)'}
-                    onBlur={(e) => e.currentTarget.style.borderColor = 'var(--dark-border)'}
+                    onBlur={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
                   />
                 </div>
                 {error && (
@@ -199,7 +199,7 @@ export default function ResetPasswordPage() {
         </div>
 
         <p className="text-center text-[13px] text-[var(--text-muted)] mt-8">
-          <Link href="/login" className="gold-underline font-medium" style={{ color: 'var(--gold)' }}>
+          <Link href="/login" className="gold-underline font-medium" style={{ color: 'var(--brand)' }}>
             Retour à la connexion
           </Link>
         </p>

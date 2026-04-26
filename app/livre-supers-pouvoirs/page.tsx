@@ -35,7 +35,7 @@ export default function LivreSupersPouvoirsPage() {
   if (loading) {
     return (
       <main className="min-h-screen flex items-center justify-center" style={{ background: 'var(--dark)' }}>
-        <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
       </main>
     )
   }
@@ -44,7 +44,7 @@ export default function LivreSupersPouvoirsPage() {
     return (
       <main className="min-h-screen flex flex-col items-center justify-center gap-4 px-6" style={{ background: 'var(--dark)' }}>
         <p className="text-[var(--text-muted)]">Cette page n&apos;est pas disponible pour le moment.</p>
-        <Link href="/login" className="text-sm underline" style={{ color: 'var(--gold)' }}>Retour à la connexion</Link>
+        <Link href="/login" className="text-sm underline" style={{ color: 'var(--brand)' }}>Retour à la connexion</Link>
       </main>
     )
   }
@@ -53,7 +53,7 @@ export default function LivreSupersPouvoirsPage() {
     <main className="min-h-screen px-6 py-12" style={{ background: 'var(--dark)' }}>
       <div className="max-w-3xl mx-auto">
         {/* Back link */}
-        <Link href="/login" className="inline-flex items-center gap-2 text-sm mb-8 transition-colors hover:underline" style={{ color: 'var(--gold)' }}>
+        <Link href="/login" className="inline-flex items-center gap-2 text-sm mb-8 transition-colors hover:underline" style={{ color: 'var(--brand)' }}>
           &larr; Retour à la connexion
         </Link>
 
@@ -72,7 +72,7 @@ export default function LivreSupersPouvoirsPage() {
 
           {/* Title */}
           <div className="text-center space-y-3">
-            <h1 className="font-display text-3xl md:text-4xl font-bold" style={{ color: 'var(--gold)' }}>
+            <h1 className="font-display text-3xl md:text-4xl font-bold" style={{ color: 'var(--brand)' }}>
               {page.title}
             </h1>
             {page.subtitle && (

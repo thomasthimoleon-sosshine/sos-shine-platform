@@ -134,26 +134,26 @@ export default function ChatDouleurPage() {
       {/* Quick nav */}
       <div className="mb-4 flex items-center gap-2">
         <Link href="/dashboard/chat" className="px-3 py-1.5 rounded-lg text-xs flex-shrink-0 transition-colors"
-          style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-secondary)' }}>
+          style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-secondary)' }}>
           Chat Général
         </Link>
         <Link href={`/dashboard/encyclopedie/${slug}`} className="px-3 py-1.5 rounded-lg text-xs flex-shrink-0 transition-colors"
-          style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-secondary)' }}>
+          style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-secondary)' }}>
           Retour aux 3 étapes
         </Link>
       </div>
 
       {/* Messages */}
       <div className="flex-1 rounded-2xl overflow-hidden flex flex-col min-h-0"
-        style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-        <div className="px-5 py-3" style={{ borderBottom: '1px solid var(--dark-border)' }}>
+        style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
+        <div className="px-5 py-3" style={{ borderBottom: '1px solid var(--border)' }}>
           <span className="text-sm font-medium" style={{ color: '#FF6B35' }}>🔥 {displayTitle}</span>
         </div>
 
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {loading ? (
             <div className="flex justify-center py-12">
-              <div className="w-6 h-6 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+              <div className="w-6 h-6 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
             </div>
           ) : messages.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center py-16 text-center">
@@ -177,7 +177,7 @@ export default function ChatDouleurPage() {
                 <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-semibold"
                   style={{
                     background: isAnon ? 'rgba(142,110,126,0.15)' : msg.user_id === userId ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.05)',
-                    color: isAnon ? 'var(--text-muted)' : msg.user_id === userId ? 'var(--gold)' : 'var(--text-secondary)',
+                    color: isAnon ? 'var(--text-muted)' : msg.user_id === userId ? 'var(--brand)' : 'var(--text-secondary)',
                   }}>
                   {getDisplayInitial(msg)}
                 </div>
@@ -194,20 +194,20 @@ export default function ChatDouleurPage() {
                     <div className="flex items-baseline gap-2 mb-0.5">
                       {canClickProfile ? (
                         <Link href={`/dashboard/membre/${msg.user_id}`} className="text-sm font-semibold hover:underline" style={{
-                          color: msg.profiles?.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)',
+                          color: msg.profiles?.role === 'founder' ? 'var(--brand)' : 'var(--text-primary)',
                         }}>
                           {getDisplayName(msg)}
                         </Link>
                       ) : (
                         <span className="text-sm font-semibold" style={{
-                          color: isAnon ? 'var(--text-muted)' : msg.profiles?.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)',
+                          color: isAnon ? 'var(--text-muted)' : msg.profiles?.role === 'founder' ? 'var(--brand)' : 'var(--text-primary)',
                           fontStyle: isAnon ? 'italic' : 'normal',
                         }}>
                           {getDisplayName(msg)}
                         </span>
                       )}
                       {!isAnon && msg.profiles?.role === 'founder' && (
-                        <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>Fondateur</span>
+                        <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)' }}>Fondateur</span>
                       )}
                       {msg.is_anonymous && msg.user_id === userId && (
                         <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(142,110,126,0.15)', color: 'var(--text-muted)' }}>Anonyme</span>
@@ -227,14 +227,14 @@ export default function ChatDouleurPage() {
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="p-4" style={{ borderTop: '1px solid var(--dark-border)' }}>
+        <div className="p-4" style={{ borderTop: '1px solid var(--border)' }}>
           {/* Anonymous toggle */}
           <div className="flex items-center gap-2 mb-2">
             <button type="button" onClick={() => setIsAnonymous(!isAnonymous)}
               className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer"
               style={{
                 background: isAnonymous ? 'rgba(142,110,126,0.2)' : 'transparent',
-                border: `1px solid ${isAnonymous ? 'var(--text-muted)' : 'var(--dark-border)'}`,
+                border: `1px solid ${isAnonymous ? 'var(--text-muted)' : 'var(--border)'}`,
                 color: isAnonymous ? 'var(--text-primary)' : 'var(--text-muted)',
               }}>
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -248,7 +248,7 @@ export default function ChatDouleurPage() {
             </button>
           </div>
           <form onSubmit={sendMessage} className="flex items-center gap-2 rounded-xl px-4 py-2"
-            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
+            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}>
             <input type="text" value={newMessage} onChange={(e) => setNewMessage(e.target.value)}
               placeholder={isAnonymous ? 'Message anonyme...' : `Message en tant que ${userPrenom}...`}
               className="flex-1 bg-transparent text-sm outline-none" style={{ color: 'var(--text-primary)' }} maxLength={500} />

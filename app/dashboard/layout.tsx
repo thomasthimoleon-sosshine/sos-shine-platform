@@ -236,7 +236,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--dark)' }}>
         <div className="text-center space-y-4">
           <div className="w-10 h-10 rounded-2xl mx-auto flex items-center justify-center"
-            style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))' }}>
+            style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))' }}>
             <div className="w-5 h-5 border-2 border-[var(--dark)] border-t-transparent rounded-full animate-spin" />
           </div>
           <p className="text-sm" style={{ color: 'var(--text-muted)' }}>{t('common.loading')}</p>
@@ -260,18 +260,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <aside
         className={`fixed lg:static inset-y-0 left-0 z-50 w-[17rem] flex flex-col transition-transform duration-300 ease-out lg:translate-x-0 glass-dense ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
         style={{
-          borderRight: '1px solid var(--dark-border)',
+          borderRight: '1px solid var(--border)',
         }}
       >
         {/* Logo */}
-        <div className="px-5 py-5 flex items-center gap-3" style={{ borderBottom: '1px solid var(--dark-border)' }}>
+        <div className="px-5 py-5 flex items-center gap-3" style={{ borderBottom: '1px solid var(--border)' }}>
           <Link href="/dashboard" className="flex items-center gap-3 group" onClick={() => setSidebarOpen(false)}>
             {logoUrl ? (
               <img src={logoUrl} alt="SOS Shine" className="w-9 h-9 rounded-xl object-contain" />
             ) : (
               <div
                 className="w-9 h-9 rounded-xl flex items-center justify-center font-display text-base font-semibold"
-                style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#09090b' }}
+                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#09090b' }}
               >
                 S
               </div>
@@ -297,13 +297,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 className="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium relative group"
                 style={{
                   background: isActive ? 'rgba(212, 175, 55, 0.08)' : 'transparent',
-                  color: isActive ? 'var(--gold)' : 'var(--text-secondary)',
+                  color: isActive ? 'var(--brand)' : 'var(--text-secondary)',
                 }}
               >
                 {isActive && (
                   <span
                     className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-full"
-                    style={{ background: 'var(--gold)' }}
+                    style={{ background: 'var(--brand)' }}
                   />
                 )}
                 <span className="opacity-70 group-hover:opacity-100 transition-opacity">{item.icon}</span>
@@ -347,11 +347,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </nav>
 
         {/* ── User section ── */}
-        <div className="px-3 py-4" style={{ borderTop: '1px solid var(--dark-border)' }}>
-          <div className="flex items-center gap-3 px-3 py-2 rounded-xl mb-2" style={{ background: 'var(--dark-card)' }}>
+        <div className="px-3 py-4" style={{ borderTop: '1px solid var(--border)' }}>
+          <div className="flex items-center gap-3 px-3 py-2 rounded-xl mb-2" style={{ background: 'var(--surface-card)' }}>
             <div
               className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 ring-1 ring-white/10"
-              style={{ background: 'rgba(212, 175, 55, 0.12)', color: 'var(--gold)' }}
+              style={{ background: 'rgba(212, 175, 55, 0.12)', color: 'var(--brand)' }}
             >
               {profile?.prenom?.charAt(0).toUpperCase() || 'M'}
             </div>
@@ -387,7 +387,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <header
           className="lg:hidden flex items-center justify-between px-4 py-3 sticky top-0 z-30 glass-dense"
           style={{
-            borderBottom: '1px solid var(--dark-border)',
+            borderBottom: '1px solid var(--border)',
           }}
         >
           <button
@@ -402,7 +402,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {logoUrl ? (
             <img src={logoUrl} alt="SOS Shine" className="h-7 object-contain" />
           ) : (
-            <span className="font-display text-base font-semibold tracking-tight" style={{ color: 'var(--gold)' }}>
+            <span className="font-display text-base font-semibold tracking-tight" style={{ color: 'var(--brand)' }}>
               SOS Shine
             </span>
           )}
@@ -440,14 +440,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               transition={{ type: 'spring', damping: 22, stiffness: 260 }}
               className="w-full max-w-md rounded-2xl overflow-hidden text-center relative"
               style={{
-                background: 'linear-gradient(160deg, var(--dark-card) 0%, rgba(212,175,55,0.06) 100%)',
+                background: 'linear-gradient(160deg, var(--surface-card) 0%, rgba(212,175,55,0.06) 100%)',
                 border: '1px solid rgba(212,175,55,0.2)',
                 boxShadow: '0 25px 60px rgba(0,0,0,0.5), 0 0 40px rgba(212,175,55,0.08)',
               }}
               onClick={(e) => e.stopPropagation()}
             >
               {/* Glow */}
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 rounded-full opacity-20 blur-[60px]" style={{ background: 'var(--gold)' }} />
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 rounded-full opacity-20 blur-[60px]" style={{ background: 'var(--brand)' }} />
 
               <div className="relative z-10 px-6 sm:px-8 py-8 sm:py-10">
                 {/* Diamond icon */}
@@ -458,7 +458,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   <span className="text-3xl">✨</span>
                 </div>
 
-                <h2 className="font-display text-xl sm:text-2xl font-semibold mb-3" style={{ color: 'var(--gold)' }}>
+                <h2 className="font-display text-xl sm:text-2xl font-semibold mb-3" style={{ color: 'var(--brand)' }}>
                   Félicitations Shiner !
                 </h2>
 
@@ -470,7 +470,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   onClick={dismissWelcomePopup}
                   className="w-full sm:w-auto px-8 py-3.5 rounded-full text-sm font-semibold tracking-wide cursor-pointer transition-all duration-200 hover:scale-[1.03] active:scale-[0.98]"
                   style={{
-                    background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))',
+                    background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
                     color: '#050505',
                     boxShadow: '0 4px 20px rgba(212,175,55,0.3)',
                   }}

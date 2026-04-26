@@ -26,12 +26,12 @@ export function SliderInput({ value, onChange, onMount, labels, hasOther, otherT
           onChange={(e) => onChange(parseInt(e.target.value))}
           className="w-full h-2 rounded-full appearance-none cursor-pointer"
           style={{
-            background: `linear-gradient(to right, var(--gold) 0%, var(--gold) ${((value - 1) / 9) * 100}%, rgba(255,255,255,0.08) ${((value - 1) / 9) * 100}%, rgba(255,255,255,0.08) 100%)`,
+            background: `linear-gradient(to right, var(--brand) 0%, var(--brand) ${((value - 1) / 9) * 100}%, rgba(255,255,255,0.08) ${((value - 1) / 9) * 100}%, rgba(255,255,255,0.08) 100%)`,
           }}
         />
         <div className="flex justify-between mt-3">
           <p className="text-xs max-w-[45%]" style={{ color: 'var(--text-muted)' }}>{labels.left}</p>
-          <span className="text-2xl font-bold" style={{ color: 'var(--gold)' }}>{value}</span>
+          <span className="text-2xl font-bold" style={{ color: 'var(--brand)' }}>{value}</span>
           <p className="text-xs max-w-[45%] text-right" style={{ color: 'var(--text-muted)' }}>{labels.right}</p>
         </div>
       </div>

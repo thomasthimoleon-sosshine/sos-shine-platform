@@ -299,7 +299,7 @@ export default function AdminDefisPage() {
     await loadChallenges()
   }
 
-  const inputStyle = { background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }
+  const inputStyle = { background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)' }
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
@@ -312,13 +312,13 @@ export default function AdminDefisPage() {
           {challenges.length > 0 && (
             <button onClick={duplicateLast}
               className="px-5 py-2.5 rounded-xl text-sm font-semibold cursor-pointer transition-all"
-              style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.3)' }}>
+              style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.3)' }}>
               Dupliquer le dernier
             </button>
           )}
           <button onClick={openCreate}
             className="px-5 py-2.5 rounded-xl text-sm font-semibold cursor-pointer transition-all"
-            style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
+            style={{ background: 'var(--brand)', color: 'var(--dark)' }}>
             + Nouveau défi
           </button>
         </div>
@@ -326,7 +326,7 @@ export default function AdminDefisPage() {
 
       {/* Create/Edit Form */}
       {showForm && (
-        <div className="rounded-2xl p-6" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <div className="rounded-2xl p-6" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <h3 className="font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
             {editingId ? 'Modifier le défi' : 'Créer un défi'}
           </h3>
@@ -374,7 +374,7 @@ export default function AdminDefisPage() {
             <div className="rounded-xl p-4" style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.2)' }}>
               <div className="flex items-center justify-between mb-3">
                 <div>
-                  <h4 className="text-sm font-semibold" style={{ color: 'var(--gold)' }}>
+                  <h4 className="text-sm font-semibold" style={{ color: 'var(--brand)' }}>
                     Phases du défi
                   </h4>
                   <p className="text-[11px] mt-0.5" style={{ color: 'var(--text-muted)' }}>
@@ -383,13 +383,13 @@ export default function AdminDefisPage() {
                 </div>
                 <button onClick={addPhase}
                   className="px-3 py-1.5 rounded-lg text-[11px] font-semibold cursor-pointer transition-all"
-                  style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.3)' }}>
+                  style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.3)' }}>
                   + Ajouter une phase
                 </button>
               </div>
 
               {form.phases.length === 0 ? (
-                <div className="text-center py-6 rounded-xl" style={{ background: 'rgba(255,255,255,0.02)', border: '1px dashed var(--dark-border)' }}>
+                <div className="text-center py-6 rounded-xl" style={{ background: 'rgba(255,255,255,0.02)', border: '1px dashed var(--border)' }}>
                   <p className="text-2xl mb-1">📋</p>
                   <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
                     Aucune phase ajoutée. Cliquez sur &quot;+ Ajouter une phase&quot; pour structurer votre défi.
@@ -398,10 +398,10 @@ export default function AdminDefisPage() {
               ) : (
                 <div className="space-y-3">
                   {form.phases.map((phase, i) => (
-                    <div key={i} className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                    <div key={i} className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
                       <div className="flex items-center justify-between mb-3">
                         <span className="text-xs font-bold px-2.5 py-1 rounded-full"
-                          style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>
+                          style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)' }}>
                           Phase {i + 1}
                         </span>
                         <div className="flex items-center gap-1">
@@ -444,7 +444,7 @@ export default function AdminDefisPage() {
               {form.phases.length > 0 && (
                 <button onClick={addPhase}
                   className="mt-3 w-full py-2 rounded-lg text-[11px] font-medium cursor-pointer transition-all"
-                  style={{ color: 'var(--gold)', border: '1px dashed rgba(212,175,55,0.3)', background: 'transparent' }}>
+                  style={{ color: 'var(--brand)', border: '1px dashed rgba(212,175,55,0.3)', background: 'transparent' }}>
                   + Ajouter une autre phase
                 </button>
               )}
@@ -453,7 +453,7 @@ export default function AdminDefisPage() {
             <div className="flex gap-2">
               <button onClick={handleSave} disabled={saving || !form.title.trim()}
                 className="px-5 py-2.5 rounded-xl text-sm font-semibold cursor-pointer disabled:opacity-50"
-                style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
+                style={{ background: 'var(--brand)', color: 'var(--dark)' }}>
                 {saving ? 'Enregistrement...' : editingId ? 'Mettre à jour' : 'Créer le défi'}
               </button>
               <button onClick={() => setShowForm(false)}
@@ -468,10 +468,10 @@ export default function AdminDefisPage() {
       {/* Challenges list */}
       {loading ? (
         <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : challenges.length === 0 ? (
-        <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <p className="text-4xl mb-4">🏆</p>
           <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>Aucun défi créé</p>
           <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>Créez votre premier défi communautaire.</p>
@@ -484,7 +484,7 @@ export default function AdminDefisPage() {
             const phaseCount = ch.phases?.length || 0
             const isExpanded = expandedPhases === ch.id
             return (
-              <div key={ch.id} className="rounded-xl p-5" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+              <div key={ch.id} className="rounded-xl p-5" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
@@ -495,7 +495,7 @@ export default function AdminDefisPage() {
                       </span>
                       {phaseCount > 0 && (
                         <span className="text-[10px] px-2 py-0.5 rounded-full font-medium flex-shrink-0"
-                          style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}>
+                          style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)' }}>
                           {phaseCount} phase{phaseCount > 1 ? 's' : ''}
                         </span>
                       )}
@@ -516,7 +516,7 @@ export default function AdminDefisPage() {
                     {phaseCount > 0 && (
                       <button onClick={() => setExpandedPhases(isExpanded ? null : ch.id)}
                         className="px-3 py-1.5 rounded-lg text-[11px] font-medium cursor-pointer"
-                        style={{ color: 'var(--gold)', background: 'rgba(212,175,55,0.1)' }}>
+                        style={{ color: 'var(--brand)', background: 'rgba(212,175,55,0.1)' }}>
                         {isExpanded ? 'Masquer phases' : 'Voir phases'}
                       </button>
                     )}
@@ -549,16 +549,16 @@ export default function AdminDefisPage() {
 
                 {/* Expanded phases view */}
                 {isExpanded && ch.phases && ch.phases.length > 0 && (
-                  <div className="mt-4 pt-4" style={{ borderTop: '1px solid var(--dark-border)' }}>
+                  <div className="mt-4 pt-4" style={{ borderTop: '1px solid var(--border)' }}>
                     <div className="flex items-center gap-2 mb-3">
-                      <span className="text-xs font-semibold" style={{ color: 'var(--gold)' }}>Phases du défi</span>
+                      <span className="text-xs font-semibold" style={{ color: 'var(--brand)' }}>Phases du défi</span>
                     </div>
                     <div className="space-y-2">
                       {ch.phases.map((phase, i) => (
                         <div key={phase.id} className="flex items-start gap-3 rounded-lg p-3"
                           style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
                           <span className="text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 mt-0.5"
-                            style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>
+                            style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)' }}>
                             {i + 1}
                           </span>
                           <div className="flex-1 min-w-0">

@@ -109,14 +109,14 @@ function WordByWordReveal({ text, className = "", style = {} }: { text: string; 
 function InfiniteTickerBand({ items, speed = 30 }: { items: string[]; speed?: number }) {
   const doubled = [...items, ...items];
   return (
-    <div className="overflow-hidden py-6 border-y border-[var(--dark-border)]" style={{ background: "rgba(212, 175, 55, 0.02)" }}>
+    <div className="overflow-hidden py-6 border-y border-[var(--border)]" style={{ background: "rgba(212, 175, 55, 0.02)" }}>
       <div className="ticker-track" style={{ animationDuration: `${speed}s` }}>
         {doubled.map((item, i) => (
           <span key={i} className="flex items-center gap-6 px-6 whitespace-nowrap">
             <span className="text-sm md:text-base tracking-[0.15em] uppercase font-light" style={{ color: "var(--text-secondary)" }}>
               {item}
             </span>
-            <span className="block w-1.5 h-1.5 rotate-45" style={{ background: "var(--gold)", opacity: 0.4 }} />
+            <span className="block w-1.5 h-1.5 rotate-45" style={{ background: "var(--brand)", opacity: 0.4 }} />
           </span>
         ))}
       </div>
@@ -578,7 +578,7 @@ export default function Home() {
 
             {principe.image_url && (
               <RevealOnScroll delay={0.1} direction="scale">
-                <img src={principe.image_url} alt="" className="w-full rounded-2xl object-cover max-h-72 mb-10" style={{ border: '1px solid var(--dark-border)' }} />
+                <img src={principe.image_url} alt="" className="w-full rounded-2xl object-cover max-h-72 mb-10" style={{ border: '1px solid var(--border)' }} />
               </RevealOnScroll>
             )}
 
@@ -688,7 +688,7 @@ export default function Home() {
               {(encyclo.items || []).filter((d: string) => !encyclopediaSearch || d.toLowerCase().includes(encyclopediaSearch.toLowerCase())).map((d: string, i: number) => (
                 <RevealOnScroll key={d} delay={i * 0.05} direction="scale">
                   <GlowingCard className="px-5 py-4 text-center cursor-pointer group">
-                    <span className="encyclo-item text-sm font-light transition-colors duration-300 group-hover:text-[var(--gold)]" style={{
+                    <span className="encyclo-item text-sm font-light transition-colors duration-300 group-hover:text-[var(--brand)]" style={{
                       color: i === (encyclo.items || []).length - 1 ? gold : 'var(--text-secondary)',
                     }}>
                       {d}
@@ -809,7 +809,7 @@ export default function Home() {
                 <p className="luxury-title text-center text-sm tracking-[0.4em] text-[var(--text-muted)] mb-4">{hist.label || "L'Histoire"}</p>
               </RevealOnScroll>
               <RevealOnScroll delay={0.1}>
-                <h2 className="font-display font-light text-center text-3xl md:text-5xl mb-6" style={{ color: 'var(--gold)' }}>
+                <h2 className="font-display font-light text-center text-3xl md:text-5xl mb-6" style={{ color: 'var(--brand)' }}>
                   <WordByWordReveal text={hist.title || ''} />
                 </h2>
               </RevealOnScroll>
@@ -817,14 +817,14 @@ export default function Home() {
                 <RevealOnScroll delay={0.15}>
                   <div className="flex-shrink-0 group">
                     <a href={hist.book_url || '#'} target="_blank" rel="noopener noreferrer" className="block relative">
-                      <div className="w-56 md:w-64 rounded-lg overflow-hidden border border-[var(--gold)]/20 group-hover:border-[var(--gold)]/60 transition-all duration-500 shadow-lg group-hover:shadow-[0_0_30px_rgba(212,175,55,0.2)]">
+                      <div className="w-56 md:w-64 rounded-lg overflow-hidden border border-[var(--brand)]/20 group-hover:border-[var(--brand)]/60 transition-all duration-500 shadow-lg group-hover:shadow-[0_0_30px_rgba(212,175,55,0.2)]">
                         <img
                           src={hist.book_image || '/images/book-cover.jpeg'}
                           alt="SOS Shine — Briller Comme un Diamant"
                           className="w-full aspect-[3/4] object-cover"
                         />
                       </div>
-                      <div className="absolute -inset-2 rounded-xl bg-[var(--gold)]/5 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+                      <div className="absolute -inset-2 rounded-xl bg-[var(--brand)]/5 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
                     </a>
                   </div>
                 </RevealOnScroll>
@@ -845,7 +845,7 @@ export default function Home() {
                       href={hist.book_url || '#'}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-6 py-3 border border-[var(--gold)]/40 rounded-full text-[var(--gold)] text-sm tracking-[0.15em] uppercase hover:bg-[var(--gold)]/10 hover:border-[var(--gold)] transition-all duration-300"
+                      className="inline-flex items-center gap-2 px-6 py-3 border border-[var(--brand)]/40 rounded-full text-[var(--brand)] text-sm tracking-[0.15em] uppercase hover:bg-[var(--brand)]/10 hover:border-[var(--brand)] transition-all duration-300"
                     >
                       {hist.button_label || 'Découvrir le livre'}
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
@@ -869,7 +869,7 @@ export default function Home() {
                 <p className="luxury-title text-center text-sm tracking-[0.4em] text-[var(--text-muted)] mb-4">{fond.label || 'Les Fondateurs'}</p>
               </RevealOnScroll>
               <RevealOnScroll delay={0.1}>
-                <h2 className="font-display font-light text-center text-3xl md:text-5xl mb-6" style={{ color: 'var(--gold)' }}>
+                <h2 className="font-display font-light text-center text-3xl md:text-5xl mb-6" style={{ color: 'var(--brand)' }}>
                   <WordByWordReveal text={fond.title || ''} />
                 </h2>
               </RevealOnScroll>
@@ -885,7 +885,7 @@ export default function Home() {
                   <RevealOnScroll key={founder.name || i} delay={0.2 + i * 0.15}>
                     <div className="flex flex-col items-center group">
                       <div className="relative mb-6">
-                        <div className="w-44 h-44 md:w-52 md:h-52 rounded-full overflow-hidden border-2 border-[var(--gold)]/30 group-hover:border-[var(--gold)] transition-all duration-500 relative">
+                        <div className="w-44 h-44 md:w-52 md:h-52 rounded-full overflow-hidden border-2 border-[var(--brand)]/30 group-hover:border-[var(--brand)] transition-all duration-500 relative">
                           {founder.image && (
                             <img
                               src={founder.image}
@@ -894,9 +894,9 @@ export default function Home() {
                             />
                           )}
                         </div>
-                        <div className="absolute -inset-1 rounded-full bg-[var(--gold)]/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+                        <div className="absolute -inset-1 rounded-full bg-[var(--brand)]/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
                       </div>
-                      <h3 className="font-display text-2xl text-[var(--gold)] mb-1">{founder.name}</h3>
+                      <h3 className="font-display text-2xl text-[var(--brand)] mb-1">{founder.name}</h3>
                       <p className="text-sm tracking-[0.2em] uppercase text-[var(--text-muted)]">{founder.role}</p>
                     </div>
                   </RevealOnScroll>
@@ -1017,7 +1017,7 @@ export default function Home() {
 
       {/* ═══ FOOTER ═══ */}
       {vis('footer') && (
-        <footer className="px-6 md:px-20 py-16 border-t border-[var(--dark-border)] relative" style={{ background: "rgba(0,0,0,0.3)" }}>
+        <footer className="px-6 md:px-20 py-16 border-t border-[var(--border)] relative" style={{ background: "rgba(0,0,0,0.3)" }}>
           <div className="max-w-6xl mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-center gap-10">
               <div className="flex items-center gap-3">
@@ -1026,7 +1026,7 @@ export default function Home() {
 
               <div className="flex flex-wrap justify-center gap-x-8 gap-y-4">
                 {(foot.links || []).map((link: { label: string; href: string }) => (
-                  <Link key={link.label} href={link.href} className="text-xs tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors duration-300 gold-underline">
+                  <Link key={link.label} href={link.href} className="text-xs tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors duration-300 gold-underline">
                     {link.label}
                   </Link>
                 ))}

@@ -380,7 +380,7 @@ export default function AdminPublications() {
     return new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
   }
 
-  const inputStyle = { background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }
+  const inputStyle = { background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)' }
 
   return (
     <div className="max-w-6xl mx-auto space-y-8">
@@ -440,19 +440,19 @@ export default function AdminPublications() {
             className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
             style={{
               background: filterType === f.value ? `${f.color}20` : 'rgba(255,255,255,0.03)',
-              border: `1px solid ${filterType === f.value ? `${f.color}50` : 'var(--dark-border)'}`,
+              border: `1px solid ${filterType === f.value ? `${f.color}50` : 'var(--border)'}`,
               color: filterType === f.value ? f.color : 'var(--text-muted)',
             }}>
             {f.label}
           </button>
         ))}
-        <span className="mx-1" style={{ color: 'var(--dark-border)' }}>|</span>
+        <span className="mx-1" style={{ color: 'var(--border)' }}>|</span>
         {Object.entries(CATEGORY_CONFIG).map(([key, cat]) => (
           <button key={key} onClick={() => setFilterType(key)}
             className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
             style={{
               background: filterType === key ? `${cat.color}20` : 'rgba(255,255,255,0.03)',
-              border: `1px solid ${filterType === key ? `${cat.color}50` : 'var(--dark-border)'}`,
+              border: `1px solid ${filterType === key ? `${cat.color}50` : 'var(--border)'}`,
               color: filterType === key ? cat.color : 'var(--text-muted)',
             }}>
             {cat.icon} {cat.label}
@@ -462,7 +462,7 @@ export default function AdminPublications() {
 
       {/* Form */}
       {showForm && (
-        <form onSubmit={handleCreate} className="rounded-xl p-6 space-y-5" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <form onSubmit={handleCreate} className="rounded-xl p-6 space-y-5" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <h2 className="font-semibold text-lg" style={{ color: '#74C0FC' }}>Nouvelle publication</h2>
           <div>
             <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>Titre</label>
@@ -499,7 +499,7 @@ export default function AdminPublications() {
                     className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
                     style={{
                       background: form.category === key ? `${cat.color}20` : 'rgba(255,255,255,0.03)',
-                      border: `1px solid ${form.category === key ? `${cat.color}50` : 'var(--dark-border)'}`,
+                      border: `1px solid ${form.category === key ? `${cat.color}50` : 'var(--border)'}`,
                       color: form.category === key ? cat.color : 'var(--text-muted)',
                     }}>
                     {cat.icon} {cat.label}
@@ -524,7 +524,7 @@ export default function AdminPublications() {
           <div className="w-8 h-8 border-2 border-[#74C0FC] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : posts.length === 0 ? (
-        <div className="text-center py-16 rounded-xl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <div className="text-center py-16 rounded-xl" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <p className="text-4xl mb-3">📢</p>
           <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>Aucune publication</p>
           <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
@@ -541,7 +541,7 @@ export default function AdminPublications() {
 
             return (
               <div key={post.id} className="rounded-xl p-5 transition-all duration-200"
-                style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
 
                 {/* Author row with avatar */}
                 <div className="flex items-center gap-3 mb-3">
@@ -549,17 +549,17 @@ export default function AdminPublications() {
                     <img src={post.profiles.avatar_url} alt="" className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
                   ) : (
                     <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0"
-                      style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                      style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
                       {post.profiles?.prenom?.charAt(0).toUpperCase() || '?'}
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold truncate" style={{ color: post.profiles?.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)' }}>
+                      <span className="text-sm font-semibold truncate" style={{ color: post.profiles?.role === 'founder' ? 'var(--brand)' : 'var(--text-primary)' }}>
                         {post.profiles?.prenom || 'Inconnu'}
                       </span>
                       {post.profiles?.role === 'founder' && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>Fondateur</span>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)' }}>Fondateur</span>
                       )}
                     </div>
                     <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{formatDate(post.created_at)}</span>
@@ -628,7 +628,7 @@ export default function AdminPublications() {
                   {commentCount > 0 && (
                     <button onClick={() => openComments(post.id)}
                       className="text-[11px] flex items-center gap-1 cursor-pointer underline"
-                      style={{ color: 'var(--gold)' }}>
+                      style={{ color: 'var(--brand)' }}>
                       💬 {commentCount} commentaire{commentCount > 1 ? 's' : ''}
                     </button>
                   )}
@@ -646,7 +646,7 @@ export default function AdminPublications() {
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center gap-2 pt-2 flex-wrap" style={{ borderTop: '1px solid var(--dark-border)' }}>
+                <div className="flex items-center gap-2 pt-2 flex-wrap" style={{ borderTop: '1px solid var(--border)' }}>
                   <button onClick={() => togglePublish(post)} disabled={togglingId === post.id}
                     className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all disabled:opacity-50 cursor-pointer"
                     style={{
@@ -664,7 +664,7 @@ export default function AdminPublications() {
                       style={{
                         background: post.delete_locked ? 'rgba(245,158,11,0.1)' : 'rgba(255,255,255,0.03)',
                         color: post.delete_locked ? '#F59E0B' : 'var(--text-muted)',
-                        border: `1px solid ${post.delete_locked ? 'rgba(245,158,11,0.25)' : 'var(--dark-border)'}`,
+                        border: `1px solid ${post.delete_locked ? 'rgba(245,158,11,0.25)' : 'var(--border)'}`,
                       }}
                       title={post.delete_locked ? 'Deverrouiller la suppression' : 'Verrouiller la suppression (empecher le membre de supprimer)'}>
                       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -681,7 +681,7 @@ export default function AdminPublications() {
                   {commentCount > 0 && (
                     <button onClick={() => openComments(post.id)}
                       className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
-                      style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                      style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.2)' }}>
                       Moderer les commentaires
                     </button>
                   )}
@@ -709,7 +709,7 @@ export default function AdminPublications() {
       {/* ── Comments moderation modal ── */}
       {commentsPostId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
-          <div className="w-full max-w-lg rounded-2xl p-6 space-y-4 max-h-[80vh] overflow-y-auto" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+          <div className="w-full max-w-lg rounded-2xl p-6 space-y-4 max-h-[80vh] overflow-y-auto" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
             <div className="flex items-center justify-between">
               <h3 className="font-semibold text-lg" style={{ color: 'var(--text-primary)' }}>Moderation des commentaires</h3>
               <button onClick={() => setCommentsPostId(null)} className="p-1 cursor-pointer" style={{ color: 'var(--text-muted)' }}>
@@ -721,26 +721,26 @@ export default function AdminPublications() {
 
             {loadingComments ? (
               <div className="flex justify-center py-8">
-                <div className="w-6 h-6 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+                <div className="w-6 h-6 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
               </div>
             ) : comments.length === 0 ? (
               <p className="text-center text-sm py-6" style={{ color: 'var(--text-muted)' }}>Aucun commentaire</p>
             ) : (
               <div className="space-y-3">
                 {comments.map(comment => (
-                  <div key={comment.id} className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
+                  <div key={comment.id} className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}>
                     <div className="flex items-start gap-3">
                       {comment.profiles?.avatar_url ? (
                         <img src={comment.profiles.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
                       ) : (
                         <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0"
-                          style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                          style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
                           {comment.profiles?.prenom?.charAt(0).toUpperCase() || '?'}
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="text-xs font-semibold" style={{ color: comment.profiles?.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)' }}>
+                          <span className="text-xs font-semibold" style={{ color: comment.profiles?.role === 'founder' ? 'var(--brand)' : 'var(--text-primary)' }}>
                             {comment.profiles?.prenom || 'Membre'}
                           </span>
                           <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{formatDate(comment.created_at)}</span>
@@ -767,7 +767,7 @@ export default function AdminPublications() {
       {/* ── Ban modal ── */}
       {banUserId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
-          <div className="w-full max-w-sm rounded-2xl p-6 space-y-5" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+          <div className="w-full max-w-sm rounded-2xl p-6 space-y-5" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
             <div className="flex items-center justify-between">
               <h3 className="font-semibold text-lg" style={{ color: 'var(--text-primary)' }}>Bloquer {banUserName}</h3>
               <button onClick={() => setBanUserId(null)} className="p-1 cursor-pointer" style={{ color: 'var(--text-muted)' }}>
@@ -812,7 +812,7 @@ export default function AdminPublications() {
       {/* ── Warning modal ── */}
       {warningUserId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
-          <div className="w-full max-w-md rounded-2xl p-6 space-y-5" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+          <div className="w-full max-w-md rounded-2xl p-6 space-y-5" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
             <div className="flex items-center justify-between">
               <h3 className="font-semibold text-lg flex items-center gap-2" style={{ color: '#F59E0B' }}>
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -847,7 +847,7 @@ export default function AdminPublications() {
               <button
                 onClick={() => { setWarningUserId(null); setWarningMessage('') }}
                 className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-muted)' }}
+                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-muted)' }}
               >
                 Annuler
               </button>

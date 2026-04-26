@@ -73,7 +73,7 @@ export default function CRMSequencesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-3xl font-light" style={{ color: 'var(--gold)' }}>
+          <h1 className="font-display text-3xl font-light" style={{ color: 'var(--brand)' }}>
             Séquences Automatiques
           </h1>
           <p className="text-[var(--text-muted)] mt-1">
@@ -83,7 +83,7 @@ export default function CRMSequencesPage() {
         <Link
           href="/admin/crm/sequences/new"
           className="px-6 py-3 rounded-full text-sm font-semibold transition-all"
-          style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}
+          style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}
         >
           + Nouvelle séquence
         </Link>
@@ -117,14 +117,14 @@ export default function CRMSequencesPage() {
               }}
               disabled={seeding}
               className="px-6 py-3 rounded-full text-sm font-semibold transition-all disabled:opacity-50"
-              style={{ background: 'var(--gold)', color: '#050505' }}
+              style={{ background: 'var(--brand)', color: '#050505' }}
             >
               {seeding ? 'Initialisation...' : 'Initialiser les séquences par défaut'}
             </button>
             <Link
               href="/admin/crm/sequences/new"
               className="inline-block px-6 py-3 rounded-full text-sm font-semibold"
-              style={{ border: '1px solid var(--gold)', color: 'var(--gold)' }}
+              style={{ border: '1px solid var(--brand)', color: 'var(--brand)' }}
             >
               Créer une séquence personnalisée
             </Link>
@@ -138,7 +138,7 @@ export default function CRMSequencesPage() {
               <div
                 key={seq.id}
                 className="p-5 rounded-xl"
-                style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+                style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -150,7 +150,7 @@ export default function CRMSequencesPage() {
                         className="px-3 py-0.5 rounded-full text-xs font-medium"
                         style={{
                           background: seq.status === 'active' ? 'rgba(80,200,120,0.15)' : 'rgba(212,175,55,0.15)',
-                          color: seq.status === 'active' ? '#50C878' : 'var(--gold)',
+                          color: seq.status === 'active' ? '#50C878' : 'var(--brand)',
                         }}
                       >
                         {seq.status === 'active' ? '● Active' : '⏸ En pause'}
@@ -173,7 +173,7 @@ export default function CRMSequencesPage() {
                       className="px-4 py-2 rounded-full text-xs font-medium transition-all"
                       style={{
                         background: seq.status === 'active' ? 'rgba(212,175,55,0.1)' : 'rgba(80,200,120,0.1)',
-                        color: seq.status === 'active' ? 'var(--gold)' : '#50C878',
+                        color: seq.status === 'active' ? 'var(--brand)' : '#50C878',
                         border: `1px solid ${seq.status === 'active' ? 'rgba(212,175,55,0.2)' : 'rgba(80,200,120,0.2)'}`,
                       }}
                     >

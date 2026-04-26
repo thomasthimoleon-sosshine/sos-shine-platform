@@ -127,7 +127,7 @@ export default function NpsWidget({ userId, createdAt }: { userId: string | null
                     style={{
                       background: score === i ? '#A78BFA' : 'rgba(255,255,255,0.04)',
                       color: score === i ? '#fff' : 'var(--text-secondary)',
-                      border: `1px solid ${score === i ? '#A78BFA' : 'var(--dark-border)'}`,
+                      border: `1px solid ${score === i ? '#A78BFA' : 'var(--border)'}`,
                     }}
                   >
                     {i}
@@ -148,7 +148,7 @@ export default function NpsWidget({ userId, createdAt }: { userId: string | null
                     rows={3}
                     placeholder="Dites-nous pourquoi (optionnel)"
                     className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-y mb-3"
-                    style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                    style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                   />
                   <button
                     type="button"

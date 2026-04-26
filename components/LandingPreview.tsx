@@ -52,9 +52,9 @@ export default function LandingPreview() {
   }
 
   return (
-    <div className="rounded-xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+    <div className="rounded-xl overflow-hidden" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
       {/* Toolbar */}
-      <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: '1px solid var(--dark-border)' }}>
+      <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: '1px solid var(--border)' }}>
         <div className="flex items-center gap-1">
           {DEVICES.map(d => (
             <button
@@ -104,9 +104,9 @@ export default function LandingPreview() {
             transformOrigin: 'top center',
           }}
         >
-          <div className="rounded-xl overflow-hidden shadow-2xl h-full" style={{ border: '2px solid var(--dark-border)' }}>
+          <div className="rounded-xl overflow-hidden shadow-2xl h-full" style={{ border: '2px solid var(--border)' }}>
             {/* Device frame header */}
-            <div className="flex items-center gap-1.5 px-3 py-2" style={{ background: 'rgba(255,255,255,0.05)', borderBottom: '1px solid var(--dark-border)' }}>
+            <div className="flex items-center gap-1.5 px-3 py-2" style={{ background: 'rgba(255,255,255,0.05)', borderBottom: '1px solid var(--border)' }}>
               <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FF5F57' }} />
               <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FFBD2E' }} />
               <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#28C840' }} />

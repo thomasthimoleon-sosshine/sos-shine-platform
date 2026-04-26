@@ -553,7 +553,7 @@ export default function DouleurDetailPage() {
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -576,7 +576,7 @@ export default function DouleurDetailPage() {
           <p className="mb-6" style={{ color: 'var(--text-secondary)' }}>Veuillez réessayer.</p>
           <button onClick={() => window.location.reload()}
             className="px-5 py-2.5 rounded-lg text-sm font-medium cursor-pointer"
-            style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}>
+            style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.2)' }}>
             Réessayer
           </button>
         </div>
@@ -586,7 +586,7 @@ export default function DouleurDetailPage() {
     return (
       <div className="max-w-2xl mx-auto py-16 px-4">
         <div className="rounded-2xl p-8 sm:p-10 text-center" style={{
-          background: 'linear-gradient(160deg, var(--dark-card) 0%, rgba(212,175,55,0.04) 100%)',
+          background: 'linear-gradient(160deg, var(--surface-card) 0%, rgba(212,175,55,0.04) 100%)',
           border: '1px solid rgba(212,175,55,0.15)',
         }}>
           <div className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center"
@@ -604,9 +604,9 @@ export default function DouleurDetailPage() {
             et la même bienveillance que tous les autres.
           </p>
 
-          <div className="rounded-xl p-5 mb-6" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
+          <div className="rounded-xl p-5 mb-6" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}>
             <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-              En attendant, <strong style={{ color: 'var(--gold)' }}>nous sommes là pour vous</strong>.
+              En attendant, <strong style={{ color: 'var(--brand)' }}>nous sommes là pour vous</strong>.
               Rejoignez le <Link href="/dashboard/communaute" className="underline font-medium" style={{ color: '#55EFC4' }}>chat communautaire</Link> pour
               échanger avec d&apos;autres membres qui traversent les mêmes épreuves, et participez à
               nos <Link href="/dashboard/evenements" className="underline font-medium" style={{ color: '#55EFC4' }}>lives</Link> où
@@ -635,7 +635,7 @@ export default function DouleurDetailPage() {
             <a href="mailto:julialaureau@sosshine.com"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 hover:scale-[1.03]"
               style={{
-                background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))',
+                background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
                 color: '#050505',
                 boxShadow: '0 4px 20px rgba(212,175,55,0.3)',
               }}>
@@ -650,8 +650,8 @@ export default function DouleurDetailPage() {
             julialaureau@sosshine.com
           </p>
 
-          <div className="mt-8 pt-6" style={{ borderTop: '1px solid var(--dark-border)' }}>
-            <Link href="/dashboard/encyclopedie" className="text-sm font-medium transition-colors hover:opacity-80" style={{ color: 'var(--gold)' }}>
+          <div className="mt-8 pt-6" style={{ borderTop: '1px solid var(--border)' }}>
+            <Link href="/dashboard/encyclopedie" className="text-sm font-medium transition-colors hover:opacity-80" style={{ color: 'var(--brand)' }}>
               ← Retour à l&apos;encyclopédie
             </Link>
           </div>
@@ -672,7 +672,7 @@ export default function DouleurDetailPage() {
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm">
         <Link href="/dashboard/encyclopedie" className="transition-colors" style={{ color: 'var(--text-muted)' }}
-          onMouseEnter={(e) => e.currentTarget.style.color = 'var(--gold)'}
+          onMouseEnter={(e) => e.currentTarget.style.color = 'var(--brand)'}
           onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
         >
           Encyclopédie
@@ -739,7 +739,7 @@ export default function DouleurDetailPage() {
           <div className="mt-3 flex flex-wrap gap-2">
             {douleur.tags.map((tag: string) => (
               <span key={tag} className="px-2.5 py-1 rounded-full text-[11px] font-medium tracking-wide"
-                style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.15)' }}>
+                style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.15)' }}>
                 #{tag}
               </span>
             ))}
@@ -769,12 +769,12 @@ export default function DouleurDetailPage() {
         <div className="mt-4">
           <div className="flex items-center justify-between mb-1.5">
             <span className="text-xs" style={{ color: 'var(--text-muted)' }}>Progression</span>
-            <span className="text-xs font-medium" style={{ color: 'var(--gold)' }}>{completedSteps}/{totalSteps} étapes</span>
+            <span className="text-xs font-medium" style={{ color: 'var(--brand)' }}>{completedSteps}/{totalSteps} étapes</span>
           </div>
-          <div className="h-2 rounded-full overflow-hidden" style={{ background: 'var(--dark-border)' }}>
+          <div className="h-2 rounded-full overflow-hidden" style={{ background: 'var(--border)' }}>
             <motion.div
               className="h-full rounded-full"
-              style={{ background: 'linear-gradient(90deg, var(--gold), var(--gold-light))' }}
+              style={{ background: 'linear-gradient(90deg, var(--brand), var(--brand-light))' }}
               initial={{ width: 0 }}
               animate={{ width: `${(completedSteps / totalSteps) * 100}%` }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
@@ -793,8 +793,8 @@ export default function DouleurDetailPage() {
               onClick={() => setActiveStep(step.num)}
               className="flex items-center gap-2.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer whitespace-nowrap flex-shrink-0"
               style={{
-                background: activeStep === step.num ? `${step.color}15` : 'var(--dark-card)',
-                border: activeStep === step.num ? `1px solid ${step.color}40` : '1px solid var(--dark-border)',
+                background: activeStep === step.num ? `${step.color}15` : 'var(--surface-card)',
+                border: activeStep === step.num ? `1px solid ${step.color}40` : '1px solid var(--border)',
                 color: activeStep === step.num ? step.color : 'var(--text-secondary)',
               }}
             >
@@ -815,8 +815,8 @@ export default function DouleurDetailPage() {
             onClick={() => setActiveStep(quizStepNum)}
             className="flex items-center gap-2.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer whitespace-nowrap flex-shrink-0"
             style={{
-              background: activeStep === quizStepNum ? 'rgba(212,175,55,0.15)' : 'var(--dark-card)',
-              border: activeStep === quizStepNum ? '1px solid rgba(212,175,55,0.4)' : '1px solid var(--dark-border)',
+              background: activeStep === quizStepNum ? 'rgba(212,175,55,0.15)' : 'var(--surface-card)',
+              border: activeStep === quizStepNum ? '1px solid rgba(212,175,55,0.4)' : '1px solid var(--border)',
               color: activeStep === quizStepNum ? '#D4AF37' : 'var(--text-secondary)',
               opacity: allStepsCompleted ? 1 : 0.5,
             }}
@@ -896,11 +896,11 @@ export default function DouleurDetailPage() {
                   <div className="text-center py-10 px-6">
                     <div className="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center"
                       style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.25)' }}>
-                      <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
+                      <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="var(--brand)" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
                       </svg>
                     </div>
-                    <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--gold)' }}>
+                    <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--brand)' }}>
                       L&apos;extrait est terminé
                     </h3>
                     <p className="text-sm mb-6 max-w-xs mx-auto" style={{ color: 'var(--text-secondary)' }}>
@@ -910,7 +910,7 @@ export default function DouleurDetailPage() {
                     </p>
                     <Link href={previewCtaLink}
                       className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-sm font-semibold transition-all hover:scale-[1.03]"
-                      style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505', boxShadow: '0 4px 20px rgba(212,175,55,0.3)' }}>
+                      style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505', boxShadow: '0 4px 20px rgba(212,175,55,0.3)' }}>
                       {previewCtaText}
                     </Link>
                     <p className="text-xs mt-4" style={{ color: 'var(--text-muted)' }}>
@@ -934,7 +934,7 @@ export default function DouleurDetailPage() {
               <div className="text-center p-6">
                 <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center"
                   style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}>
-                  <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
+                  <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="var(--brand)" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                   </svg>
                 </div>
@@ -944,7 +944,7 @@ export default function DouleurDetailPage() {
                 </p>
                 <Link href={previewCtaLink}
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all hover:scale-[1.03]"
-                  style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}>
+                  style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}>
                   {previewCtaShort}
                 </Link>
               </div>
@@ -1020,9 +1020,9 @@ export default function DouleurDetailPage() {
                         </div>
                         {audioLocked ? (
                           <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)' }}>
-                            <p className="text-sm" style={{ color: 'var(--gold)' }}>Vous aimez ? Accédez à la suite</p>
+                            <p className="text-sm" style={{ color: 'var(--brand)' }}>Vous aimez ? Accédez à la suite</p>
                             <Link href={previewCtaLink} className="px-4 py-2 rounded-full text-xs font-semibold"
-                              style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}>
+                              style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}>
                               {previewCtaShort}
                             </Link>
                           </div>
@@ -1058,11 +1058,11 @@ export default function DouleurDetailPage() {
                 isPreviewMode ? (
                   <div className="flex items-center gap-3 p-4 rounded-xl cursor-pointer" onClick={() => window.location.href = isFreeUser ? '/dashboard/tarifs' : '/signup'}
                     style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(212,175,55,0.15)' }}>
-                    <svg className="w-8 h-8 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
+                    <svg className="w-8 h-8 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="var(--brand)" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                     </svg>
                     <div>
-                      <p className="font-medium text-sm" style={{ color: 'var(--gold)' }}>PDF — Exercices & plan d&apos;action</p>
+                      <p className="font-medium text-sm" style={{ color: 'var(--brand)' }}>PDF — Exercices & plan d&apos;action</p>
                       <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{isFreeUser ? 'Abonnez-vous pour télécharger' : 'Créez votre compte pour télécharger'}</p>
                     </div>
                   </div>
@@ -1143,7 +1143,7 @@ export default function DouleurDetailPage() {
       {/* Sujets complémentaires — shown after last step */}
       {activeStep === totalSteps && relatedDouleurs.length > 0 && (
         <div className="rounded-xl p-5" style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.15)' }}>
-          <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--gold)' }}>
+          <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--brand)' }}>
             Sujets complémentaires
           </h3>
           <p className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>
@@ -1153,8 +1153,8 @@ export default function DouleurDetailPage() {
             {relatedDouleurs.map((r) => (
               <Link key={r.id} href={`/dashboard/encyclopedie/${r.slug}`}
                 className="rounded-xl p-4 transition-all hover:scale-[1.01]"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
-                <p className="font-semibold text-sm mb-1" style={{ color: 'var(--gold)' }}>{r.title}</p>
+                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}>
+                <p className="font-semibold text-sm mb-1" style={{ color: 'var(--brand)' }}>{r.title}</p>
                 {r.subtitle && <p className="text-xs italic" style={{ color: 'var(--text-muted)' }}>{r.subtitle}</p>}
               </Link>
             ))}
@@ -1233,7 +1233,7 @@ export default function DouleurDetailPage() {
                       : 'rgba(0,0,0,0.2)',
                     border: quizSubmitted
                       ? isCorrectAnswer ? '1px solid rgba(85,239,196,0.2)' : '1px solid rgba(255,107,107,0.2)'
-                      : '1px solid var(--dark-border)',
+                      : '1px solid var(--border)',
                   }}>
                     <p className="text-sm font-medium mb-3" style={{ color: 'var(--text-primary)' }}>
                       <span className="font-mono text-xs mr-2" style={{ color: '#D4AF37' }}>Q{qIdx + 1}</span>
@@ -1245,7 +1245,7 @@ export default function DouleurDetailPage() {
                         const isCorrectOpt = correct.includes(oIdx)
                         let optStyle: React.CSSProperties = {
                           background: isSelected ? 'rgba(212,175,55,0.12)' : 'rgba(255,255,255,0.03)',
-                          border: isSelected ? '2px solid rgba(212,175,55,0.5)' : '2px solid var(--dark-border)',
+                          border: isSelected ? '2px solid rgba(212,175,55,0.5)' : '2px solid var(--border)',
                           color: isSelected ? '#D4AF37' : 'var(--text-secondary)',
                         }
                         if (quizSubmitted) {
@@ -1398,7 +1398,7 @@ export default function DouleurDetailPage() {
 
       {/* ═══ CONTENUS LIÉS À CE CHALLENGE ═══ */}
       {(relatedTvVideos.length > 0 || relatedShorts.length > 0 || relatedAudible.length > 0 || relatedBooks.length > 0) && (
-        <div className="pt-8 mt-4 space-y-10" style={{ borderTop: '1px solid var(--dark-border)' }}>
+        <div className="pt-8 mt-4 space-y-10" style={{ borderTop: '1px solid var(--border)' }}>
           <div>
             <h3 className="font-display text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
               Contenus liés à ce challenge
@@ -1414,11 +1414,11 @@ export default function DouleurDetailPage() {
             return (
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <h4 className="font-semibold text-sm tracking-wide uppercase" style={{ color: 'var(--gold)' }}>
+                  <h4 className="font-semibold text-sm tracking-wide uppercase" style={{ color: 'var(--brand)' }}>
                     🎬 Shine TV ({relatedTvVideos.length})
                   </h4>
                   {!unlocked && (
-                    <span className="text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                    <span className="text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.2)' }}>
                       Réservé Sérénité
                     </span>
                   )}
@@ -1428,7 +1428,7 @@ export default function DouleurDetailPage() {
                     unlocked ? (
                       <Link key={v.id} href={`/dashboard/shine-tv?video=${v.id}`}
                         className="rounded-xl overflow-hidden block transition-all hover:scale-[1.01]"
-                        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
                         <div className="aspect-video relative" style={{ background: 'rgba(0,0,0,0.4)' }}>
                           {v.thumbnail_url && <img src={v.thumbnail_url} alt="" className="absolute inset-0 w-full h-full object-cover" />}
                         </div>
@@ -1439,11 +1439,11 @@ export default function DouleurDetailPage() {
                       </Link>
                     ) : (
                       <div key={v.id} className="rounded-xl overflow-hidden relative cursor-not-allowed"
-                        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
                         <div className="aspect-video relative" style={{ background: 'rgba(0,0,0,0.4)' }}>
                           {v.thumbnail_url && <img src={v.thumbnail_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40" />}
                           <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.5)' }}>
-                            <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
+                            <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="var(--brand)" strokeWidth={1.5}>
                               <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                             </svg>
                           </div>
@@ -1466,11 +1466,11 @@ export default function DouleurDetailPage() {
             return (
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <h4 className="font-semibold text-sm tracking-wide uppercase" style={{ color: 'var(--gold)' }}>
+                  <h4 className="font-semibold text-sm tracking-wide uppercase" style={{ color: 'var(--brand)' }}>
                     📱 Shine Shorts ({relatedShorts.length})
                   </h4>
                   {!unlocked && (
-                    <span className="text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                    <span className="text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.2)' }}>
                       Réservé Sérénité
                     </span>
                   )}
@@ -1480,7 +1480,7 @@ export default function DouleurDetailPage() {
                     unlocked ? (
                       <Link key={s.id} href={`/dashboard/shine-shorts?short=${s.id}`}
                         className="rounded-xl overflow-hidden block transition-all hover:scale-[1.02]"
-                        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
                         <div className="aspect-[9/16] relative" style={{ background: 'rgba(0,0,0,0.4)' }}>
                           {s.thumbnail_url && <img src={s.thumbnail_url} alt="" className="absolute inset-0 w-full h-full object-cover" />}
                         </div>
@@ -1490,11 +1490,11 @@ export default function DouleurDetailPage() {
                       </Link>
                     ) : (
                       <div key={s.id} className="rounded-xl overflow-hidden relative cursor-not-allowed"
-                        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
                         <div className="aspect-[9/16] relative" style={{ background: 'rgba(0,0,0,0.4)' }}>
                           {s.thumbnail_url && <img src={s.thumbnail_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40" />}
                           <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.5)' }}>
-                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
+                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="var(--brand)" strokeWidth={1.5}>
                               <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                             </svg>
                           </div>
@@ -1516,11 +1516,11 @@ export default function DouleurDetailPage() {
             return (
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <h4 className="font-semibold text-sm tracking-wide uppercase" style={{ color: 'var(--gold)' }}>
+                  <h4 className="font-semibold text-sm tracking-wide uppercase" style={{ color: 'var(--brand)' }}>
                     🎧 Shine Audible ({relatedAudible.length})
                   </h4>
                   {!unlocked && (
-                    <span className="text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                    <span className="text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.2)' }}>
                       Réservé Sérénité
                     </span>
                   )}
@@ -1530,7 +1530,7 @@ export default function DouleurDetailPage() {
                     unlocked ? (
                       <Link key={a.id} href={`/dashboard/shine-audible?track=${a.id}`}
                         className="rounded-xl overflow-hidden flex gap-3 transition-all hover:scale-[1.01]"
-                        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
                         <div className="w-20 aspect-square flex-shrink-0" style={{ background: 'rgba(0,0,0,0.4)' }}>
                           {a.cover_url && <img src={a.cover_url} alt="" className="w-full h-full object-cover" />}
                         </div>
@@ -1541,11 +1541,11 @@ export default function DouleurDetailPage() {
                       </Link>
                     ) : (
                       <div key={a.id} className="rounded-xl overflow-hidden flex gap-3 cursor-not-allowed"
-                        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
                         <div className="w-20 aspect-square flex-shrink-0 relative" style={{ background: 'rgba(0,0,0,0.4)' }}>
                           {a.cover_url && <img src={a.cover_url} alt="" className="w-full h-full object-cover opacity-40" />}
                           <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.5)' }}>
-                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="var(--brand)" strokeWidth={1.5}>
                               <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                             </svg>
                           </div>
@@ -1568,11 +1568,11 @@ export default function DouleurDetailPage() {
             return (
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <h4 className="font-semibold text-sm tracking-wide uppercase" style={{ color: 'var(--gold)' }}>
+                  <h4 className="font-semibold text-sm tracking-wide uppercase" style={{ color: 'var(--brand)' }}>
                     📚 Shine Librairie ({relatedBooks.length})
                   </h4>
                   {!unlocked && (
-                    <span className="text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                    <span className="text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.2)' }}>
                       Réservé Sérénité
                     </span>
                   )}
@@ -1582,7 +1582,7 @@ export default function DouleurDetailPage() {
                     unlocked ? (
                       <Link key={b.id} href={`/dashboard/shine-librairie?book=${b.id}`}
                         className="rounded-xl overflow-hidden flex gap-3 transition-all hover:scale-[1.01]"
-                        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
                         <div className="w-16 aspect-[3/4] flex-shrink-0" style={{ background: 'rgba(0,0,0,0.4)' }}>
                           {b.cover_url && <img src={b.cover_url} alt="" className="w-full h-full object-cover" />}
                         </div>
@@ -1593,11 +1593,11 @@ export default function DouleurDetailPage() {
                       </Link>
                     ) : (
                       <div key={b.id} className="rounded-xl overflow-hidden flex gap-3 cursor-not-allowed"
-                        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
                         <div className="w-16 aspect-[3/4] flex-shrink-0 relative" style={{ background: 'rgba(0,0,0,0.4)' }}>
                           {b.cover_url && <img src={b.cover_url} alt="" className="w-full h-full object-cover opacity-40" />}
                           <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.5)' }}>
-                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="var(--brand)" strokeWidth={1.5}>
                               <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                             </svg>
                           </div>
@@ -1618,7 +1618,7 @@ export default function DouleurDetailPage() {
 
       {/* Linked blog article */}
       {linkedArticle && (
-        <div className="pt-8 mt-4" style={{ borderTop: '1px solid var(--dark-border)' }}>
+        <div className="pt-8 mt-4" style={{ borderTop: '1px solid var(--border)' }}>
           <p className="text-[10px] uppercase tracking-[0.2em] mb-3 font-semibold" style={{ color: '#74C0FC' }}>
             Article du blog lié
           </p>

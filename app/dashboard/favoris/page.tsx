@@ -68,7 +68,7 @@ export default function FavorisPage() {
 
       {loading ? (
         <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : favoriteDouleurs.length === 0 ? (
         <div className="text-center py-16 glass rounded-2xl">
@@ -82,7 +82,7 @@ export default function FavorisPage() {
           <Link
             href="/dashboard/encyclopedie"
             className="inline-block mt-6 px-6 py-2.5 rounded-xl text-sm font-medium transition-all"
-            style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}
+            style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.2)' }}
           >
             {t('favorites.explore')}
           </Link>
@@ -102,13 +102,13 @@ export default function FavorisPage() {
                   href={hasId ? `/dashboard/encyclopedie/${d.slug}` : '#'}
                   className="group block rounded-xl p-5 transition-all duration-300 hover:-translate-y-0.5"
                   style={{
-                    background: 'var(--dark-card)',
-                    border: '1px solid var(--dark-border)',
+                    background: 'var(--surface-card)',
+                    border: '1px solid var(--border)',
                   }}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-base mb-1 group-hover:text-[var(--gold)] transition-colors" style={{ color: 'var(--text-primary)' }}>
+                      <h3 className="font-semibold text-base mb-1 group-hover:text-[var(--brand)] transition-colors" style={{ color: 'var(--text-primary)' }}>
                         {d.title}
                       </h3>
                       <p className="text-sm leading-relaxed line-clamp-2" style={{ color: 'var(--text-secondary)' }}>

@@ -130,7 +130,7 @@ export default function JournalPage() {
         <button
           onClick={() => setShowModal(true)}
           className="px-4 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-200 hover:scale-105 cursor-pointer flex items-center gap-2"
-          style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#09090b' }}
+          style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#09090b' }}
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -152,7 +152,7 @@ export default function JournalPage() {
             className="px-3 py-1.5 rounded-lg text-[12px] font-medium transition-all cursor-pointer"
             style={{
               background: filterMood === 'all' ? 'rgba(212, 175, 55, 0.15)' : 'rgba(255,255,255,0.04)',
-              color: filterMood === 'all' ? 'var(--gold)' : 'var(--text-muted)',
+              color: filterMood === 'all' ? 'var(--brand)' : 'var(--text-muted)',
               border: `1px solid ${filterMood === 'all' ? 'rgba(212, 175, 55, 0.2)' : 'transparent'}`,
             }}
           >
@@ -182,7 +182,7 @@ export default function JournalPage() {
         transition={{ delay: 0.1, duration: 0.5 }}
         className="glass p-3 flex items-center gap-2"
       >
-        <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--gold)' }}>
+        <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--brand)' }}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
         </svg>
         <p className="text-[12px]" style={{ color: 'var(--text-muted)' }}>
@@ -201,7 +201,7 @@ export default function JournalPage() {
             className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center"
             style={{ background: 'rgba(212, 175, 55, 0.08)' }}
           >
-            <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--gold)' }}>
+            <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--brand)' }}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
             </svg>
           </div>
@@ -321,7 +321,7 @@ export default function JournalPage() {
                       className="flex-1 py-2.5 rounded-xl text-center transition-all cursor-pointer"
                       style={{
                         background: selectedMood === mood.value ? `${mood.color}15` : 'rgba(255,255,255,0.04)',
-                        border: `1px solid ${selectedMood === mood.value ? `${mood.color}40` : 'var(--dark-border)'}`,
+                        border: `1px solid ${selectedMood === mood.value ? `${mood.color}40` : 'var(--border)'}`,
                       }}
                     >
                       <span className="text-xl block">{mood.emoji}</span>
@@ -349,7 +349,7 @@ export default function JournalPage() {
                   className="w-full px-3.5 py-2.5 rounded-xl text-[14px] outline-none resize-none transition-colors leading-relaxed"
                   style={{
                     background: 'rgba(255, 255, 255, 0.04)',
-                    border: '1px solid var(--dark-border)',
+                    border: '1px solid var(--border)',
                     color: 'var(--text-primary)',
                   }}
                 />
@@ -359,7 +359,7 @@ export default function JournalPage() {
                 onClick={handleCreate}
                 disabled={!content.trim()}
                 className="w-full py-2.5 rounded-xl text-[14px] font-medium transition-all duration-200 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
-                style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#09090b' }}
+                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#09090b' }}
               >
                 {t('journal.save')}
               </button>

@@ -61,7 +61,7 @@ function AteliersContent() {
       <div className="flex items-center justify-center py-24">
         <div className="text-center space-y-4">
           <div className="w-10 h-10 rounded-2xl mx-auto flex items-center justify-center"
-            style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))' }}>
+            style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))' }}>
             <div className="w-5 h-5 border-2 border-[var(--dark)] border-t-transparent rounded-full animate-spin" />
           </div>
           <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Chargement des ateliers...</p>
@@ -76,7 +76,7 @@ function AteliersContent() {
       <div className="text-center mb-10">
         <h1
           className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold tracking-wider uppercase mb-2"
-          style={{ color: 'var(--gold)' }}
+          style={{ color: 'var(--brand)' }}
         >
           SOS Shine<span className="text-sm align-super">&#174;</span> Premium &middot; 48 Ateliers
         </h1>
@@ -100,7 +100,7 @@ function AteliersContent() {
               className="px-4 py-2 rounded-full text-xs sm:text-sm font-semibold tracking-wider uppercase transition-all duration-200 cursor-pointer"
               style={{
                 background: isActive
-                  ? 'linear-gradient(135deg, var(--gold), var(--gold-deep))'
+                  ? 'linear-gradient(135deg, var(--brand), var(--brand-deep))'
                   : 'rgba(212,175,55,0.08)',
                 color: isActive ? '#050505' : 'var(--text-secondary)',
                 border: isActive ? 'none' : '1px solid rgba(212,175,55,0.15)',
@@ -132,7 +132,7 @@ function AteliersContent() {
               </h2>
               <p
                 className="text-xs sm:text-sm tracking-[0.15em] uppercase font-medium"
-                style={{ color: 'var(--gold)' }}
+                style={{ color: 'var(--brand)' }}
               >
                 {monthInfo.month} {monthInfo.year} &middot; Arc {ARC_NUMERALS[currentTheme.arc_number - 1]} &mdash; {currentTheme.arc_label}
               </p>
@@ -154,7 +154,7 @@ function AteliersContent() {
                     style={{
                       background: expandedWeek === atelier.week
                         ? 'rgba(212,175,55,0.06)'
-                        : 'var(--dark-card)',
+                        : 'var(--surface-card)',
                       border: '1px solid rgba(212,175,55,0.15)',
                     }}
                   >
@@ -167,7 +167,7 @@ function AteliersContent() {
                       <div className="shrink-0">
                         <span
                           className="text-base sm:text-lg font-display font-bold"
-                          style={{ color: 'var(--gold)' }}
+                          style={{ color: 'var(--brand)' }}
                         >
                           Semaine {atelier.week}
                         </span>
@@ -207,7 +207,7 @@ function AteliersContent() {
                         >
                           <svg
                             className="w-4 h-4 ml-0.5"
-                            fill="var(--gold)"
+                            fill="var(--brand)"
                             viewBox="0 0 24 24"
                           >
                             <path d="M8 5v14l11-7z" />
@@ -247,7 +247,7 @@ function AteliersContent() {
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 hover:scale-[1.03]"
                                 style={{
-                                  background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))',
+                                  background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
                                   color: '#050505',
                                 }}
                               >
@@ -281,7 +281,7 @@ function AteliersContent() {
                                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 hover:scale-[1.03]"
                                 style={{
                                   background: 'rgba(212,175,55,0.08)',
-                                  color: 'var(--gold)',
+                                  color: 'var(--brand)',
                                   border: '1px solid rgba(212,175,55,0.2)',
                                 }}
                               >
@@ -319,7 +319,7 @@ function AteliersContent() {
                     style={{
                       width: currentTheme.arc_number === arc ? '3rem' : '1.5rem',
                       background: currentTheme.arc_number >= arc
-                        ? 'var(--gold)'
+                        ? 'var(--brand)'
                         : 'rgba(212,175,55,0.15)',
                     }}
                   />

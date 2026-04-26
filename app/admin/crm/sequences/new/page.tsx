@@ -93,7 +93,7 @@ export default function NewSequencePage() {
     <div className="space-y-6 max-w-4xl">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-3xl font-light" style={{ color: 'var(--gold)' }}>
+          <h1 className="font-display text-3xl font-light" style={{ color: 'var(--brand)' }}>
             Nouvelle Séquence
           </h1>
           <p className="text-[var(--text-muted)] mt-1">
@@ -102,7 +102,7 @@ export default function NewSequencePage() {
         </div>
         <button
           onClick={() => router.push('/admin/crm/sequences')}
-          className="text-sm text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors"
+          className="text-sm text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors"
         >
           ← Retour aux séquences
         </button>
@@ -120,7 +120,7 @@ export default function NewSequencePage() {
               onChange={(e) => setName(e.target.value)}
               placeholder="Ex: Bienvenue nouveaux membres"
               className="w-full px-4 py-3 rounded-xl text-sm outline-none"
-              style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+              style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
             />
           </div>
           <div>
@@ -131,7 +131,7 @@ export default function NewSequencePage() {
               value={triggerType}
               onChange={(e) => setTriggerType(e.target.value)}
               className="w-full px-4 py-3 rounded-xl text-sm outline-none cursor-pointer"
-              style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+              style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
             >
               {triggers.map((t) => (
                 <option key={t.value} value={t.value}>{t.label}</option>
@@ -147,13 +147,13 @@ export default function NewSequencePage() {
           className="p-4 rounded-xl flex items-center gap-4"
           style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.1)' }}
         >
-          <div className="text-sm" style={{ color: 'var(--gold)' }}>Timeline :</div>
+          <div className="text-sm" style={{ color: 'var(--brand)' }}>Timeline :</div>
           <div className="flex items-center gap-2 flex-wrap">
             {timeline.map((t, i) => (
               <div key={i} className="flex items-center gap-2">
                 <span
                   className="px-3 py-1 rounded-full text-xs font-medium"
-                  style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}
+                  style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)' }}
                 >
                   {t} — Email {i + 1}
                 </span>
@@ -173,7 +173,7 @@ export default function NewSequencePage() {
             <button
               onClick={addStep}
               className="px-4 py-2 rounded-full text-xs font-medium transition-all"
-              style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}
+              style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.2)' }}
             >
               + Ajouter un email
             </button>
@@ -183,13 +183,13 @@ export default function NewSequencePage() {
             <div
               key={index}
               className="p-5 rounded-xl space-y-4"
-              style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+              style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div
                     className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold"
-                    style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}
+                    style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)' }}
                   >
                     {index + 1}
                   </div>
@@ -203,7 +203,7 @@ export default function NewSequencePage() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setPreviewStep(previewStep === index ? null : index)}
-                    className="text-xs text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors"
+                    className="text-xs text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors"
                   >
                     {previewStep === index ? '✕ Fermer' : '👁 Aperçu'}
                   </button>
@@ -227,7 +227,7 @@ export default function NewSequencePage() {
                     value={step.delay_days}
                     onChange={(e) => updateStep(index, 'delay_days', parseInt(e.target.value) || 0)}
                     className="w-full px-3 py-2 rounded-lg text-sm outline-none"
-                    style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                    style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                   />
                   <p className="text-xs text-[var(--text-muted)] mt-1">
                     {index === 0 ? 'Après le déclencheur' : `Après le déclencheur`}
@@ -241,7 +241,7 @@ export default function NewSequencePage() {
                     onChange={(e) => updateStep(index, 'subject', e.target.value)}
                     placeholder="Ex: Bienvenue {firstName} !"
                     className="w-full px-3 py-2 rounded-lg text-sm outline-none"
-                    style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                    style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                   />
                 </div>
               </div>
@@ -255,7 +255,7 @@ export default function NewSequencePage() {
                         key={v}
                         onClick={() => updateStep(index, 'html_content', step.html_content + v)}
                         className="px-2 py-0.5 rounded text-xs"
-                        style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}
+                        style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.2)' }}
                       >
                         {v}
                       </button>
@@ -268,7 +268,7 @@ export default function NewSequencePage() {
                   placeholder="<h2>Bonjour {firstName},</h2><p>Bienvenue dans la communauté SOS Shine...</p>"
                   rows={6}
                   className="w-full px-4 py-3 rounded-lg text-sm font-mono outline-none resize-y"
-                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                 />
               </div>
 
@@ -290,12 +290,12 @@ export default function NewSequencePage() {
         </div>
       </div>
 
-      <div className="flex items-center justify-end gap-3 pt-4" style={{ borderTop: '1px solid var(--dark-border)' }}>
+      <div className="flex items-center justify-end gap-3 pt-4" style={{ borderTop: '1px solid var(--border)' }}>
         <button
           onClick={handleSave}
           disabled={saving}
           className="px-8 py-3 rounded-full text-sm font-semibold transition-all disabled:opacity-50"
-          style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}
+          style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}
         >
           {saving ? 'Sauvegarde...' : '✓ Créer la séquence'}
         </button>

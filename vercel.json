@@ -15,6 +15,10 @@
     {
       "path": "/api/cron/emails",
       "schedule": "15 */1 * * *"
+    },
+    {
+      "path": "/api/cron/quiz-emails",
+      "schedule": "0 14 * * *"
     }
   ]
 }

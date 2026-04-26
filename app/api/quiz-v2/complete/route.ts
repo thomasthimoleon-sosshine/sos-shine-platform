@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { getResendClient } from '@/lib/crm/resend'
+import { generateEmail02 } from '@/lib/email-templates/quiz-v2/email-02-result'
 
 function getAdminClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -17,17 +19,20 @@ export async function POST(request: NextRequest) {
     const supabase = getAdminClient()
     if (!supabase) return NextResponse.json({ ok: true })
 
+    const cleanEmail = email.toLowerCase().trim()
+    const cleanName = firstName?.trim() || null
+
     // Update signature_leads with profile info
     await supabase.from('signature_leads').upsert({
-      email: email.toLowerCase().trim(),
-      first_name: firstName || null,
+      email: cleanEmail,
+      first_name: cleanName,
       profile_key: `dim_${dominant}`,
       quiz_version: 'v2',
     }, { onConflict: 'email' })
 
     // Log completion event
     await supabase.from('crm_campaign_events').insert({
-      contact_email: email.toLowerCase().trim(),
+      contact_email: cleanEmail,
       event_type: 'signature_v2_completed',
       metadata: {
         session_id: sessionId,
@@ -39,10 +44,33 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    // TODO: Send result email (Phase 3 — Email sequence)
-    // For now, just log. Email templates will be implemented in Phase 3.
+    // Send Email 2 (résultat complet)
+    try {
+      const { subject, html } = generateEmail02({
+        firstName: cleanName || '',
+        email: cleanEmail,
+        dominant: dominant || '1',
+        q15Response: q15Response || '',
+      })
+      const { client: resend, fromEmail } = await getResendClient()
+      await resend.emails.send({
+        from: `Julia Laureau <${fromEmail}>`,
+        to: cleanEmail,
+        subject,
+        html,
+      })
 
-    return NextResponse.json({ ok: true })
+      // Log send event
+      await supabase.from('crm_campaign_events').insert({
+        contact_email: cleanEmail,
+        event_type: 'quiz_v2_email_02_sent',
+        metadata: { sessionId, responseId, dominant },
+      })
+    } catch (e) {
+      console.error('Email 02 send error:', e)
+    }
+
+    return NextResponse.json({ ok: true, emailSent: true })
   } catch (e) {
     console.error('Quiz V2 complete error:', e)
     return NextResponse.json({ ok: true })

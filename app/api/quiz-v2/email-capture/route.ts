@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { getResendClient } from '@/lib/crm/resend'
+import { generateEmail01 } from '@/lib/email-templates/quiz-v2/email-01-capture'
 
 function getAdminClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -23,11 +25,12 @@ export async function POST(request: NextRequest) {
     if (!supabase) return NextResponse.json({ ok: true })
 
     const cleanEmail = email.toLowerCase().trim()
+    const cleanName = firstName?.trim() || null
 
     // Upsert into signature_leads (with quiz_version = v2)
     await supabase.from('signature_leads').upsert({
       email: cleanEmail,
-      first_name: firstName || null,
+      first_name: cleanName,
       profile_key: null,
       quiz_version: 'v2',
     }, { onConflict: 'email' })
@@ -37,25 +40,38 @@ export async function POST(request: NextRequest) {
     try {
       await (supabase as any).from('crm_contacts').upsert({
         email: cleanEmail,
-        first_name: firstName || null,
+        first_name: cleanName,
         source: 'signature_test_v2',
         ...(abVariant === 'julia' || abVariant === 'thomas' ? { ab_variant: abVariant } : {}),
       }, { onConflict: 'email', ignoreDuplicates: true })
     } catch { /* non-critical */ }
 
-    // Enroll in CRM sequence for quiz v2
+    // Send Email 1 (capture — quiz not finished yet)
     try {
       const siteUrl = getSiteUrl()
-      await fetch(`${siteUrl}/api/crm/sequences/enroll`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          trigger_type: 'signature_test_v2',
-          email: cleanEmail,
-          first_name: firstName || null,
-        }),
+      const resumeUrl = `${siteUrl}/signature-emotionnelle`
+      const { subject, html } = generateEmail01({
+        firstName: cleanName || '',
+        email: cleanEmail,
+        resumeUrl,
       })
-    } catch { /* non-critical */ }
+      const { client: resend, fromEmail } = await getResendClient()
+      await resend.emails.send({
+        from: `Julia Laureau <${fromEmail}>`,
+        to: cleanEmail,
+        subject,
+        html,
+      })
+
+      // Log send event
+      await supabase.from('crm_campaign_events').insert({
+        contact_email: cleanEmail,
+        event_type: 'quiz_v2_email_01_sent',
+        metadata: { sessionId, responseId },
+      })
+    } catch (e) {
+      console.error('Email 01 send error:', e)
+    }
 
     return NextResponse.json({ ok: true })
   } catch (e) {

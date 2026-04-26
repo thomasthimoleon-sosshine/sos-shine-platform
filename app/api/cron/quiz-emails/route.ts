@@ -1,20 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { getResendClient } from '@/lib/crm/resend'
-import { generateEmail03 } from '@/lib/email-templates/quiz-v2/email-03-question'
-import { generateEmail04 } from '@/lib/email-templates/quiz-v2/email-04-pourquoi'
-import { generateEmail05 } from '@/lib/email-templates/quiz-v2/email-05-histoire'
-import { generateEmail06 } from '@/lib/email-templates/quiz-v2/email-06-temoignage'
-import { generateEmail07 } from '@/lib/email-templates/quiz-v2/email-07-pratique'
-import { generateEmail08 } from '@/lib/email-templates/quiz-v2/email-08-temps'
-import { generateEmail09 } from '@/lib/email-templates/quiz-v2/email-09-argent'
-import { generateEmail10 } from '@/lib/email-templates/quiz-v2/email-10-repos'
-import { generateEmail11 } from '@/lib/email-templates/quiz-v2/email-11-bascule'
-import { generateEmail12 } from '@/lib/email-templates/quiz-v2/email-12-dedans'
-import { generateEmail13 } from '@/lib/email-templates/quiz-v2/email-13-doute'
-import { generateEmail14 } from '@/lib/email-templates/quiz-v2/email-14-raisons'
-import { generateEmail15 } from '@/lib/email-templates/quiz-v2/email-15-avant-dernier'
-import { generateEmail16 } from '@/lib/email-templates/quiz-v2/email-16-dernier'
 
 function getAdminClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -29,23 +15,16 @@ const TEST_EMAILS = new Set([
   'ttse335@gmail.com',
 ])
 
-// Email schedule: day offset from email_captured_at → email number
-const SCHEDULE: { day: number; emailNum: number; generator: (vars: { firstName: string; email: string; topProtocol?: string }) => { subject: string; html: string } }[] = [
-  { day: 1,  emailNum: 3,  generator: (v) => generateEmail03(v) },
-  { day: 2,  emailNum: 4,  generator: (v) => generateEmail04(v) },
-  { day: 3,  emailNum: 5,  generator: (v) => generateEmail05(v) },
-  { day: 4,  emailNum: 6,  generator: (v) => generateEmail06(v) },
-  { day: 5,  emailNum: 7,  generator: (v) => generateEmail07({ ...v, topProtocol: v.topProtocol || 'Confiance en soi' }) },
-  { day: 6,  emailNum: 8,  generator: (v) => generateEmail08(v) },
-  { day: 7,  emailNum: 9,  generator: (v) => generateEmail09(v) },
-  { day: 8,  emailNum: 10, generator: (v) => generateEmail10(v) },
-  { day: 9,  emailNum: 11, generator: (v) => generateEmail11(v) },
-  { day: 10, emailNum: 12, generator: (v) => generateEmail12(v) },
-  { day: 11, emailNum: 13, generator: (v) => generateEmail13(v) },
-  { day: 12, emailNum: 14, generator: (v) => generateEmail14(v) },
-  { day: 13, emailNum: 15, generator: (v) => generateEmail15(v) },
-  { day: 14, emailNum: 16, generator: (v) => generateEmail16(v) },
-]
+/**
+ * Replace template variables in subject and HTML
+ */
+function replaceVars(text: string, vars: Record<string, string>): string {
+  let result = text
+  for (const [key, value] of Object.entries(vars)) {
+    result = result.replace(new RegExp(`\\{${key}\\}`, 'g'), value)
+  }
+  return result
+}
 
 export async function GET() {
   const supabase = getAdminClient()
@@ -57,34 +36,51 @@ export async function GET() {
   try {
     const { client: resend, fromEmail } = await getResendClient()
 
-    // Get all quiz responses with email captured (within 14 days)
-    const fourteenDaysAgo = new Date()
-    fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 15)
+    // 1. Find the active quiz v2 sequence
+    const { data: sequences } = await supabase
+      .from('crm_sequences')
+      .select('id')
+      .eq('trigger_type', 'signature_test_v2')
+      .eq('status', 'active')
+      .limit(1)
+
+    if (!sequences || sequences.length === 0) {
+      return NextResponse.json({ sent: 0, message: 'No active signature_test_v2 sequence' })
+    }
+
+    const sequenceId = sequences[0].id
+
+    // 2. Load all steps for this sequence (from DB — editable by admin)
+    const { data: steps } = await supabase
+      .from('crm_sequence_steps')
+      .select('step_order, delay_days, subject, html_content')
+      .eq('sequence_id', sequenceId)
+      .order('step_order', { ascending: true })
+
+    if (!steps || steps.length === 0) {
+      return NextResponse.json({ sent: 0, message: 'No steps in sequence. Run seed first.' })
+    }
+
+    // 3. Get quiz responses with email (within 15 days)
+    const fifteenDaysAgo = new Date()
+    fifteenDaysAgo.setDate(fifteenDaysAgo.getDate() - 16)
 
     const { data: allResponses } = await supabase
       .from('quiz_v2_responses')
       .select('id, email, first_name, email_captured_at, scores, dominant_dimension')
       .not('email', 'is', null)
       .not('email_captured_at', 'is', null)
-      .gte('email_captured_at', fourteenDaysAgo.toISOString())
+      .gte('email_captured_at', fifteenDaysAgo.toISOString())
       .order('email_captured_at', { ascending: false })
 
     if (!allResponses || allResponses.length === 0) {
       return NextResponse.json({ sent: 0, message: 'No leads in sequence window' })
     }
 
-    // For test emails: use only the LATEST response (so sequence restarts)
-    // For regular emails: use only the FIRST response per email (no restart)
+    // 4. Deduplicate: one response per email (latest for test emails)
     const seen = new Map<string, boolean>()
     const responses = allResponses.filter(r => {
       const emailLower = r.email.toLowerCase()
-      if (TEST_EMAILS.has(emailLower)) {
-        // Test emails: keep only the most recent (first in desc order)
-        if (seen.has(emailLower)) return false
-        seen.set(emailLower, true)
-        return true
-      }
-      // Regular: keep only one per email
       if (seen.has(emailLower)) return false
       seen.set(emailLower, true)
       return true
@@ -92,17 +88,30 @@ export async function GET() {
 
     const now = new Date()
 
+    // 5. Get top protocol names for variable injection
+    let protocolNames: Record<string, string> = {}
+    try {
+      const { data: protocols } = await (supabase as any).from('protocols').select('title, dimension_weights').eq('status', 'available')
+      if (protocols) {
+        protocolNames = protocols.reduce((acc: Record<string, string>, p: { title: string }) => {
+          acc[p.title] = p.title
+          return acc
+        }, {})
+      }
+    } catch { /* non-critical */ }
+
     for (const response of responses) {
       const capturedAt = new Date(response.email_captured_at)
       const daysSinceCapture = Math.floor((now.getTime() - capturedAt.getTime()) / (1000 * 60 * 60 * 24))
 
-      // Find which email should be sent today
-      const todayEmail = SCHEDULE.find(s => s.day === daysSinceCapture)
-      if (!todayEmail) continue
+      // Find step matching this day (delay_days === daysSinceCapture)
+      // Skip steps with delay_days 0 (those are sent immediately by capture/complete APIs)
+      const step = steps.find(s => s.delay_days === daysSinceCapture && s.delay_days > 0)
+      if (!step) continue
 
-      const eventKey = `quiz_v2_email_${String(todayEmail.emailNum).padStart(2, '0')}_sent`
+      const eventKey = `quiz_v2_email_${String(step.step_order).padStart(2, '0')}_sent`
 
-      // Check if already sent (skip for test emails — they always receive)
+      // Check dedup (skip for test emails)
       if (!TEST_EMAILS.has(response.email.toLowerCase())) {
         const { data: alreadySent } = await supabase
           .from('crm_campaign_events')
@@ -114,12 +123,12 @@ export async function GET() {
         if (alreadySent && alreadySent.length > 0) continue
       }
 
-      // Get top protocol for Email 7
+      // Calculate top protocol for variable injection
       let topProtocol = 'Confiance en soi'
-      if (todayEmail.emailNum === 7 && response.scores) {
+      if (response.scores) {
         try {
           const { data: protocols } = await (supabase as any).from('protocols').select('title, dimension_weights').eq('status', 'available')
-          if (protocols && protocols.length > 0) {
+          if (protocols) {
             let bestMatch = 0
             for (const proto of protocols) {
               let match = 0, total = 0
@@ -134,14 +143,20 @@ export async function GET() {
         } catch { /* use default */ }
       }
 
-      // Generate and send
-      try {
-        const { subject, html } = todayEmail.generator({
-          firstName: response.first_name || '',
-          email: response.email,
-          topProtocol,
-        })
+      // Replace variables in subject and HTML from DB
+      const vars: Record<string, string> = {
+        firstName: response.first_name || '',
+        email: response.email,
+        topProtocol,
+        q15Response: '',
+        resumeUrl: 'https://sosshine.com/signature-emotionnelle',
+      }
 
+      const subject = replaceVars(step.subject, vars)
+      const html = replaceVars(step.html_content, vars)
+
+      // Send
+      try {
         await resend.emails.send({
           from: `Julia Laureau <${fromEmail}>`,
           to: response.email,
@@ -152,12 +167,12 @@ export async function GET() {
         await supabase.from('crm_campaign_events').insert({
           contact_email: response.email,
           event_type: eventKey,
-          metadata: { quiz_response_id: response.id, day: todayEmail.day },
+          metadata: { quiz_response_id: response.id, step_order: step.step_order, delay_days: step.delay_days },
         })
 
         sent++
       } catch (e) {
-        console.error(`Email ${todayEmail.emailNum} send error for ${response.email}:`, e)
+        console.error(`Email step ${step.step_order} send error for ${response.email}:`, e)
         errors++
       }
     }

@@ -108,7 +108,7 @@ export async function POST(request: Request) {
     console.error('[Checkout] Erreur:', e.type, e.message)
 
     if (e.type === 'StripeInvalidRequestError') {
-      return NextResponse.json({ error: `Erreur de configuration: ${e.message}` }, { status: 400 })
+      return NextResponse.json({ error: "Erreur de configuration" }, { status: 400 })
     }
     if (e.type === 'StripeAuthenticationError') {
       return NextResponse.json({ error: "Erreur d'authentification Stripe" }, { status: 500 })
@@ -117,6 +117,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Impossible de contacter Stripe. Réessayez.' }, { status: 502 })
     }
 
-    return NextResponse.json({ error: `Erreur: ${e.message || 'inconnue'}` }, { status: 500 })
+    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

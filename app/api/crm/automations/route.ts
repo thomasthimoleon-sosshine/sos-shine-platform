@@ -155,7 +155,7 @@ export async function POST(request: NextRequest) {
         if (error) {
           return NextResponse.json({
             success: false,
-            error: error.message || String(error),
+            error: 'Erreur serveur',
             conseil: (error as any).message?.includes('not a verified')
               ? 'Le domaine sosshine.com doit être vérifié dans Resend (resend.com/domains). Ajoutez les records DNS SPF, DKIM et DMARC.'
               : (error as any).message?.includes('API key')
@@ -166,7 +166,7 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json({ success: true, resend_id: data?.id, from: fromEmail, to: email })
       } catch (err: any) {
-        return NextResponse.json({ success: false, error: err.message || String(err) })
+        return NextResponse.json({ success: false, error: 'Erreur serveur' })
       }
     }
 

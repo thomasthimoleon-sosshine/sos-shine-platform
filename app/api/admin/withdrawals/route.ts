@@ -50,7 +50,7 @@ export async function GET() {
       .order('created_at', { ascending: false })
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+      return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
     }
 
     return NextResponse.json({ withdrawals: data || [] })
@@ -97,7 +97,7 @@ export async function PATCH(request: Request) {
         })
         .eq('id', withdrawalId)
 
-      if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+      if (error) return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
       return NextResponse.json({ success: true, status: 'processing' })
     }
 
@@ -113,7 +113,7 @@ export async function PATCH(request: Request) {
         })
         .eq('id', withdrawalId)
 
-      if (updateError) return NextResponse.json({ error: updateError.message }, { status: 500 })
+      if (updateError) return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
 
       // Deduct from pending_earnings and add to paid_earnings
       const { data: affiliate } = await admin
@@ -170,7 +170,7 @@ export async function PATCH(request: Request) {
         })
         .eq('id', withdrawalId)
 
-      if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+      if (error) return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
       return NextResponse.json({ success: true, status: 'rejected' })
     }
 
@@ -268,7 +268,7 @@ export async function POST(request: Request) {
       .single()
 
     if (insertError) {
-      return NextResponse.json({ error: insertError.message }, { status: 500 })
+      return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
     }
 
     return NextResponse.json({ success: true, withdrawal: newRequest })

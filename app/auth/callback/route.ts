@@ -126,9 +126,9 @@ export async function GET(request: Request) {
           } catch {}
         }
 
-        // New users without subscription → redirect to pricing page
-        if (isNewUser && nextParam === '/dashboard') {
-          next = '/dashboard/tarifs'
+        // New users → onboarding first, then pricing
+        if (isNewUser) {
+          next = '/onboarding'
         }
       }
 

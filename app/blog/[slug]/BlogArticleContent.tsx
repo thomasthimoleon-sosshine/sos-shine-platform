@@ -6,8 +6,8 @@ import { useEffect, useState } from 'react'
 import ThemeToggle from '@/components/ThemeToggle'
 import type { BlogArticle } from '@/data/blog/articles'
 
-const gold = '#D4AF37'
-const goldRgb = '212,175,55'
+const gold = 'var(--gold, #C9A961)'
+const goldRgb = '201,169,97'
 
 function formatDate(dateStr: string) {
   try {

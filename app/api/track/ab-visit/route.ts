@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error('[AB Visit] Insert error:', error.message)
-      return NextResponse.json({ ok: false, error: error.message })
+      return NextResponse.json({ ok: false, error: "Erreur serveur" })
     }
 
     // Set cookie in response so variant persists

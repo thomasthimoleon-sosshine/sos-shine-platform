@@ -53,7 +53,7 @@ export async function POST(request: Request) {
       if (regError.code === '23505') {
         return NextResponse.json({ error: 'Déjà inscrit' }, { status: 409 })
       }
-      return NextResponse.json({ error: regError.message }, { status: 500 })
+      return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
     }
 
     // Fetch event details + user profile for the email

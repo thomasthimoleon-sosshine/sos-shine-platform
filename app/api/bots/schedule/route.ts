@@ -148,7 +148,7 @@ export async function POST(req: Request) {
       const { error } = await admin.from('posts').insert(batch)
       if (error) {
         return NextResponse.json({
-          error: error.message,
+          error: "Erreur serveur",
           inserted,
           total: allPosts.length,
         }, { status: 500 })

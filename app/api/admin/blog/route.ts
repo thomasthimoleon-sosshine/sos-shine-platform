@@ -60,7 +60,7 @@ export async function GET() {
     .select('*')
     .order('published_at', { ascending: false })
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
   return NextResponse.json(data)
 }
 
@@ -97,7 +97,7 @@ export async function POST(req: NextRequest) {
     .select()
     .single()
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
   return NextResponse.json(data)
 }
 
@@ -120,7 +120,7 @@ export async function PUT(req: NextRequest) {
     .select()
     .single()
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
   return NextResponse.json(data)
 }
 
@@ -138,6 +138,6 @@ export async function DELETE(req: NextRequest) {
   const supabase = await getSupabase()
   const { error } = await blogTable(supabase).delete().eq('id', id)
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
   return NextResponse.json({ success: true })
 }

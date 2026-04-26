@@ -55,7 +55,7 @@ export async function GET() {
       .order('created_at', { ascending: false })
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+      return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
     }
 
     // Fetch subscriptions for all users
@@ -110,7 +110,7 @@ export async function PUT(request: Request) {
       .eq('id', memberId)
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+      return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
     }
 
     return NextResponse.json({ success: true })
@@ -145,7 +145,7 @@ export async function POST(request: Request) {
         .eq('id', memberId)
 
       if (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 })
+        return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
       }
       return NextResponse.json({ success: true, publish_banned_until: until.toISOString() })
     }
@@ -157,7 +157,7 @@ export async function POST(request: Request) {
         .eq('id', memberId)
 
       if (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 })
+        return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
       }
       return NextResponse.json({ success: true, publish_banned_until: null })
     }
@@ -232,7 +232,7 @@ export async function PATCH(request: Request) {
       .eq('id', memberId)
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+      return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
     }
 
     return NextResponse.json({ success: true })

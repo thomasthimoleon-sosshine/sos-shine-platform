@@ -101,6 +101,21 @@ export async function GET() {
       }
     } catch { /* non-critical */ }
 
+    // 6. Transfer leads at J+15 to newsletter weekly
+    for (const response of allResponses) {
+      const capturedAt = new Date(response.email_captured_at)
+      const daysSince = Math.floor((now.getTime() - capturedAt.getTime()) / (1000 * 60 * 60 * 24))
+      if (daysSince >= 15 && response.email) {
+        try {
+          await (supabase as any).from('newsletter_weekly_subscribers').upsert({
+            email: response.email.toLowerCase(),
+            first_name: response.first_name || null,
+            source: 'quiz_v2_sequence',
+          }, { onConflict: 'email' })
+        } catch { /* non-critical */ }
+      }
+    }
+
     for (const response of responses) {
       const capturedAt = new Date(response.email_captured_at)
       const daysSinceCapture = Math.floor((now.getTime() - capturedAt.getTime()) / (1000 * 60 * 60 * 24))

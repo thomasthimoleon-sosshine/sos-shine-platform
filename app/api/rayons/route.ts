@@ -157,7 +157,7 @@ export async function PATCH(req: NextRequest) {
       .from('shine_connections')
       .delete()
       .eq('id', connection_id)
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    if (error) return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
     return NextResponse.json({ success: true })
   }
 
@@ -168,7 +168,7 @@ export async function PATCH(req: NextRequest) {
     .eq('id', connection_id)
     .eq('receiver_id', user.id)
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
 
   // Si accepté, notifier l'envoyeur
   if (action === 'accept') {

@@ -122,6 +122,6 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ sent, failed, expired: expiredEndpoints.length })
   } catch (err) {
-    return NextResponse.json({ error: err instanceof Error ? err.message : 'Erreur' }, { status: 500 })
+    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

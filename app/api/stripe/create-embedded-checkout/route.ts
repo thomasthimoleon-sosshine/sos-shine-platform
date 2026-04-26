@@ -120,11 +120,11 @@ export async function POST(request: Request) {
     console.error('[EmbeddedCheckout] Erreur:', e.type, e.message, e.raw?.message)
 
     if (e.type === 'StripeInvalidRequestError') {
-      return NextResponse.json({ error: `Erreur Stripe: ${e.message}` }, { status: 400 })
+      return NextResponse.json({ error: "Erreur de paiement" }, { status: 400 })
     }
     if (e.type === 'StripeAuthenticationError') {
       return NextResponse.json({ error: 'Clé API Stripe invalide. Vérifiez STRIPE_SECRET_KEY.' }, { status: 500 })
     }
-    return NextResponse.json({ error: `Erreur: ${e.message || 'inconnue'}` }, { status: 500 })
+    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

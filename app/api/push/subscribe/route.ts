@@ -26,12 +26,12 @@ export async function POST(request: Request) {
       }, { onConflict: 'user_id,endpoint' })
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+      return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
     }
 
     return NextResponse.json({ success: true })
   } catch (err) {
-    return NextResponse.json({ error: err instanceof Error ? err.message : 'Erreur' }, { status: 500 })
+    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
 
@@ -53,6 +53,6 @@ export async function DELETE(request: Request) {
 
     return NextResponse.json({ success: true })
   } catch (err) {
-    return NextResponse.json({ error: err instanceof Error ? err.message : 'Erreur' }, { status: 500 })
+    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

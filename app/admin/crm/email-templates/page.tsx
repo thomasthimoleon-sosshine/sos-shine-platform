@@ -172,7 +172,7 @@ export default function EmailTemplatesPage() {
               className="px-4 py-2 rounded-full text-sm transition-all"
               style={{ border: '1px solid var(--dark-border)', color: 'var(--text-secondary)' }}
             >
-              {previewTemplate ? 'Fermer apercu' : 'Apercu'}
+              {previewTemplate ? 'Fermer aperçu' : 'Aperçu'}
             </button>
             <button
               onClick={handleSave}
@@ -279,7 +279,7 @@ export default function EmailTemplatesPage() {
           {/* Right: Preview */}
           <div>
             <label className="block text-xs uppercase tracking-wider text-[var(--text-muted)] mb-2">
-              Apercu de l&apos;email
+              Aperçu de l&apos;email
             </label>
             <div
               className="rounded-lg overflow-hidden"
@@ -486,7 +486,7 @@ export default function EmailTemplatesPage() {
                         className="px-3 py-1.5 rounded-full text-xs transition-all"
                         style={{ border: '1px solid var(--dark-border)', color: 'var(--text-muted)' }}
                       >
-                        {previewTemplate?.id === template.id ? 'Fermer' : 'Apercu'}
+                        {previewTemplate?.id === template.id ? 'Fermer' : 'Aperçu'}
                       </button>
                       <button
                         onClick={() => { setEditingTemplate(template); setPreviewTemplate(null) }}
@@ -504,7 +504,7 @@ export default function EmailTemplatesPage() {
                       className="mt-4 p-4 rounded-lg"
                       style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}
                     >
-                      <h4 className="text-xs uppercase tracking-wider text-[var(--text-muted)] mb-3">Apercu du contenu</h4>
+                      <h4 className="text-xs uppercase tracking-wider text-[var(--text-muted)] mb-3">Aperçu du contenu</h4>
                       <div
                         className="prose prose-sm max-w-none"
                         dangerouslySetInnerHTML={{

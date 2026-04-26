@@ -15,13 +15,14 @@ const TEST_EMAILS = new Set([
   'ttse335@gmail.com',
 ])
 
-/**
- * Replace template variables in subject and HTML
- */
+function escapeHtml(str: string): string {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+}
+
 function replaceVars(text: string, vars: Record<string, string>): string {
   let result = text
   for (const [key, value] of Object.entries(vars)) {
-    result = result.replace(new RegExp(`\\{${key}\\}`, 'g'), value)
+    result = result.replace(new RegExp(`\\{${key}\\}`, 'g'), escapeHtml(value))
   }
   return result
 }

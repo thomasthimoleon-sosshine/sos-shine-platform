@@ -246,14 +246,30 @@ function QuestionScreen({
 // MAIN PAGE
 // ═══════════════════════════════════════════
 export default function SignatureEmotionnellePage() {
-  const [phase, setPhase] = useState<Phase>('intro')
-  const [firstName, setFirstName] = useState('')
-  const [currentQ, setCurrentQ] = useState(0)
-  const [responses, setResponses] = useState<AllResponses>({})
-  const [sessionId] = useState(generateSessionId)
-  const [responseId, setResponseId] = useState<string | null>(null)
-  const [email, setEmail] = useState('')
+  // Restore progress from sessionStorage if available
+  const saved = typeof window !== 'undefined' ? sessionStorage.getItem('quiz_v2_progress') : null
+  const savedData = saved ? JSON.parse(saved) : null
+
+  const [phase, setPhase] = useState<Phase>(savedData?.phase || 'intro')
+  const [firstName, setFirstName] = useState(savedData?.firstName || '')
+  const [currentQ, setCurrentQ] = useState(savedData?.currentQ || 0)
+  const [responses, setResponses] = useState<AllResponses>(savedData?.responses || {})
+  const [sessionId] = useState(savedData?.sessionId || generateSessionId)
+  const [responseId, setResponseId] = useState<string | null>(savedData?.responseId || null)
+  const [email, setEmail] = useState(savedData?.email || '')
   const [emailLoading, setEmailLoading] = useState(false)
+
+  // Save progress to sessionStorage on every change
+  useEffect(() => {
+    if (phase !== 'intro' && phase !== 'result') {
+      sessionStorage.setItem('quiz_v2_progress', JSON.stringify({
+        phase, firstName, currentQ, responses, sessionId, responseId, email,
+      }))
+    }
+    if (phase === 'result') {
+      sessionStorage.removeItem('quiz_v2_progress')
+    }
+  }, [phase, firstName, currentQ, responses, sessionId, responseId, email])
 
   const [scores, setScores] = useState<DimensionScores>({})
   const [dominant, setDominant] = useState('1')
@@ -333,11 +349,11 @@ export default function SignatureEmotionnellePage() {
     })
     trackEvent(sessionId, responseId, 'quiz_question_answered', { questionId: question.id, questionType: question.type })
 
-    setCurrentQ(prev => prev + 1)
+    setCurrentQ((prev: number) => prev + 1)
   }, [currentQ, question, responses, sessionId, responseId, email, firstName])
 
   const handlePrev = useCallback(() => {
-    if (currentQ > 0) setCurrentQ(prev => prev - 1)
+    if (currentQ > 0) setCurrentQ((prev: number) => prev - 1)
   }, [currentQ])
 
   const handleEmailSubmit = useCallback(async (capturedEmail: string) => {

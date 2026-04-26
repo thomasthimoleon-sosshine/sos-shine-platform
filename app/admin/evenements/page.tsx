@@ -170,8 +170,8 @@ export default function AdminEvenements() {
   }
 
   async function handleSave() {
-    if (!form.title.trim()) { setError('Le titre est requis.'); return }
-    if (!form.event_date) { setError('La date est requise.'); return }
+    if (!form.title.trim()) { setError('Le titre est obligatoire.'); return }
+    if (!form.event_date) { setError('La date est obligatoire.'); return }
 
     setSaving(true)
     setError(null)

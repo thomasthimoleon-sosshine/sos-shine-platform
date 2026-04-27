@@ -197,10 +197,8 @@ export default function PublicDouleurDetailPage() {
     return (
       <main className="min-h-screen" style={{ background: 'var(--dark)' }}>
         <header className="px-6 md:px-20 py-5 flex items-center justify-between" style={{ borderBottom: '1px solid var(--border)' }}>
-          <Link href="/" className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center font-display text-base font-semibold"
-              style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: 'var(--dark)' }}>S</div>
-            <span className="font-display text-lg font-medium" style={{ color: 'var(--brand)' }}>SOS Shine</span>
+          <Link href="/" className="flex items-center">
+            <img src="/images/logo-shine.png" alt="SOS Shine" className="h-10" />
           </Link>
         </header>
         <div className="max-w-2xl mx-auto py-16 px-4">

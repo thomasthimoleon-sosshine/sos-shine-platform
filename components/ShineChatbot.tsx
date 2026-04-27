@@ -117,13 +117,13 @@ export default function ShineChatbot() {
             style={{
               background: 'linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 100%)',
               border: '1px solid rgba(212, 175, 55, 0.3)',
-              boxShadow: '0 20px 60px rgba(0,0,0,0.6), 0 0 30px rgba(212,175,55,0.1)',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.6), 0 0 30px rgba(201,169,97,0.1)',
             }}
           >
-            <div className="px-5 py-4 flex items-center gap-3" style={{ background: 'linear-gradient(135deg, rgba(212,175,55,0.15) 0%, rgba(212,175,55,0.05) 100%)', borderBottom: '1px solid rgba(212,175,55,0.2)' }}>
-              <img src="/images/shine-avatar.jpeg" alt="Shine" className="w-10 h-10 rounded-full object-cover" style={{ border: '2px solid #D4AF37', boxShadow: '0 0 12px rgba(212,175,55,0.4)' }} />
+            <div className="px-5 py-4 flex items-center gap-3" style={{ background: 'linear-gradient(135deg, rgba(201,169,97,0.15) 0%, rgba(201,169,97,0.05) 100%)', borderBottom: '1px solid rgba(201,169,97,0.2)' }}>
+              <img src="/images/shine-avatar.jpeg" alt="Shine" className="w-10 h-10 rounded-full object-cover" style={{ border: '2px solid #C9A961', boxShadow: '0 0 12px rgba(201,169,97,0.4)' }} />
               <div className="flex-1">
-                <p className="text-sm font-semibold" style={{ color: '#D4AF37' }}>Shine</p>
+                <p className="text-sm font-semibold" style={{ color: '#C9A961' }}>Shine</p>
                 <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>Votre assistant</p>
               </div>
               <button onClick={() => setOpen(false)} className="text-white/40 hover:text-white/80 transition-colors p-1">
@@ -140,13 +140,13 @@ export default function ShineChatbot() {
                   className={`flex ${msg.from === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   {msg.from === 'bot' && (
-                    <img src="/images/shine-avatar.jpeg" alt="Shine" className="w-7 h-7 rounded-full object-cover mr-2 mt-1 flex-shrink-0" style={{ border: '1.5px solid #D4AF37' }} />
+                    <img src="/images/shine-avatar.jpeg" alt="Shine" className="w-7 h-7 rounded-full object-cover mr-2 mt-1 flex-shrink-0" style={{ border: '1.5px solid #C9A961' }} />
                   )}
                   <div
                     className="max-w-[80%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed"
                     style={
                       msg.from === 'user'
-                        ? { background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#0a0a0a', borderBottomRightRadius: '4px' }
+                        ? { background: 'linear-gradient(135deg, #C9A961, #B8960F)', color: '#0a0a0a', borderBottomRightRadius: '4px' }
                         : { background: 'rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.85)', borderBottomLeftRadius: '4px' }
                     }
                   >
@@ -156,12 +156,12 @@ export default function ShineChatbot() {
               ))}
               {typing && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
-                  <img src="/images/shine-avatar.jpeg" alt="Shine" className="w-7 h-7 rounded-full object-cover mr-2 mt-1 flex-shrink-0" style={{ border: '1.5px solid #D4AF37' }} />
+                  <img src="/images/shine-avatar.jpeg" alt="Shine" className="w-7 h-7 rounded-full object-cover mr-2 mt-1 flex-shrink-0" style={{ border: '1.5px solid #C9A961' }} />
                   <div className="px-4 py-3 rounded-2xl" style={{ background: 'rgba(255,255,255,0.07)' }}>
                     <div className="flex gap-1.5">
-                      <span className="w-2 h-2 rounded-full animate-bounce" style={{ background: '#D4AF37', animationDelay: '0ms' }} />
-                      <span className="w-2 h-2 rounded-full animate-bounce" style={{ background: '#D4AF37', animationDelay: '150ms' }} />
-                      <span className="w-2 h-2 rounded-full animate-bounce" style={{ background: '#D4AF37', animationDelay: '300ms' }} />
+                      <span className="w-2 h-2 rounded-full animate-bounce" style={{ background: '#C9A961', animationDelay: '0ms' }} />
+                      <span className="w-2 h-2 rounded-full animate-bounce" style={{ background: '#C9A961', animationDelay: '150ms' }} />
+                      <span className="w-2 h-2 rounded-full animate-bounce" style={{ background: '#C9A961', animationDelay: '300ms' }} />
                     </div>
                   </div>
                 </motion.div>
@@ -180,16 +180,16 @@ export default function ShineChatbot() {
                   className="flex-1 px-4 py-2.5 rounded-xl text-sm outline-none transition-all"
                   style={{
                     background: 'rgba(255,255,255,0.06)',
-                    border: '1px solid rgba(212,175,55,0.15)',
+                    border: '1px solid rgba(201,169,97,0.15)',
                     color: 'rgba(255,255,255,0.9)',
                   }}
-                  onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(212,175,55,0.5)'; }}
-                  onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(212,175,55,0.15)'; }}
+                  onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(201,169,97,0.5)'; }}
+                  onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(201,169,97,0.15)'; }}
                 />
                 <button
                   type="submit"
                   className="w-10 h-10 rounded-xl flex items-center justify-center transition-all hover:scale-105"
-                  style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)' }}
+                  style={{ background: 'linear-gradient(135deg, #C9A961, #B8960F)' }}
                 >
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                 </button>
@@ -203,8 +203,8 @@ export default function ShineChatbot() {
         onClick={() => setOpen(!open)}
         className="fixed bottom-6 right-6 z-[9998] w-16 h-16 rounded-full flex items-center justify-center cursor-pointer"
         style={{
-          background: 'linear-gradient(135deg, #D4AF37, #B8960F)',
-          boxShadow: '0 4px 20px rgba(212,175,55,0.4), 0 0 40px rgba(212,175,55,0.15)',
+          background: 'linear-gradient(135deg, #C9A961, #B8960F)',
+          boxShadow: '0 4px 20px rgba(201,169,97,0.4), 0 0 40px rgba(201,169,97,0.15)',
         }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}

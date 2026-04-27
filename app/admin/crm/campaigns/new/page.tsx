@@ -212,7 +212,7 @@ export default function NewCampaignPage() {
                     key={btn.variable}
                     onClick={() => insertVariable(btn.variable)}
                     className="px-2 py-1 rounded text-xs transition-all"
-                    style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}
+                    style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--gold)', border: '1px solid rgba(201,169,97,0.2)' }}
                     title={btn.tooltip}
                   >
                     {btn.label}
@@ -232,7 +232,7 @@ export default function NewCampaignPage() {
             <div>
               <div
                 className="flex flex-wrap gap-1 p-2 rounded-t-xl"
-                style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid var(--dark-border)', borderBottom: 'none' }}
+                style={{ background: 'rgba(201,169,97,0.05)', border: '1px solid var(--dark-border)', borderBottom: 'none' }}
               >
                 <button onClick={() => execCommand('bold')} className="px-2 py-1 rounded text-xs font-bold text-[var(--text-secondary)] hover:bg-white/10">B</button>
                 <button onClick={() => execCommand('italic')} className="px-2 py-1 rounded text-xs italic text-[var(--text-secondary)] hover:bg-white/10">I</button>
@@ -289,7 +289,7 @@ export default function NewCampaignPage() {
         <button
           onClick={() => setPreview(!preview)}
           className="px-5 py-2.5 rounded-full text-sm transition-all"
-          style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}
+          style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--gold)', border: '1px solid rgba(201,169,97,0.2)' }}
         >
           {preview ? '✕ Fermer l\'aperçu' : '👁 Aperçu'}
         </button>
@@ -308,7 +308,7 @@ export default function NewCampaignPage() {
             onClick={() => handleSave(!scheduledAt)}
             disabled={saving}
             className="px-6 py-2.5 rounded-full text-sm font-semibold transition-all disabled:opacity-50"
-            style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}
+            style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#000000' }}
           >
             {saving ? 'Sauvegarde...' : scheduledAt ? 'Planifier l\'envoi' : 'Sauvegarder & Envoyer'}
           </button>

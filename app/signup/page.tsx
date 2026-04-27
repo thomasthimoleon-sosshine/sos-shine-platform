@@ -132,7 +132,7 @@ export default function SignupPage() {
 
           <div className="glass p-10">
             <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-6"
-              style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.15)' }}>
+              style={{ background: 'rgba(201,169,97,0.1)', border: '1px solid rgba(201,169,97,0.15)' }}>
               <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
@@ -167,7 +167,7 @@ export default function SignupPage() {
     background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)',
     color: 'var(--text-primary)', outline: 'none',
   }
-  const focusIn = (e: React.FocusEvent<HTMLInputElement>) => e.currentTarget.style.borderColor = 'rgba(212,175,55,0.4)'
+  const focusIn = (e: React.FocusEvent<HTMLInputElement>) => e.currentTarget.style.borderColor = 'rgba(201,169,97,0.4)'
   const focusOut = (e: React.FocusEvent<HTMLInputElement>) => e.currentTarget.style.borderColor = 'var(--dark-border)'
 
   return (
@@ -247,7 +247,7 @@ export default function SignupPage() {
           <button onClick={handleGoogleSignIn}
             className="w-full py-3.5 rounded-full text-[13px] flex items-center justify-center gap-3 transition-all"
             style={{ border: '1px solid var(--dark-border)', color: 'var(--text-secondary)', background: 'transparent' }}
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(212,175,55,0.3)'; e.currentTarget.style.color = 'var(--text-primary)' }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(201,169,97,0.3)'; e.currentTarget.style.color = 'var(--text-primary)' }}
             onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--dark-border)'; e.currentTarget.style.color = 'var(--text-secondary)' }}
           >
             <svg className="w-4.5 h-4.5" viewBox="0 0 24 24">

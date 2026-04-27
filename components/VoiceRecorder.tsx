@@ -119,7 +119,7 @@ export default function VoiceRecorder({ userId, onSend, accentColor = 'var(--gol
 
   if (uploading) {
     return (
-      <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg" style={{ background: `rgba(212,175,55,0.08)` }}>
+      <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg" style={{ background: `rgba(201,169,97,0.08)` }}>
         <div className="w-4 h-4 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: accentColor, borderTopColor: 'transparent' }} />
         <span className="text-xs" style={{ color: 'var(--text-muted)' }}>Envoi...</span>
       </div>

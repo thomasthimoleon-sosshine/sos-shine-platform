@@ -110,7 +110,7 @@ export default function MessagesPage() {
         </div>
       ) : conversations.length === 0 ? (
         <div className="text-center py-16">
-          <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-5 text-3xl" style={{ background: 'rgba(212,175,55,0.08)' }}>
+          <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-5 text-3xl" style={{ background: 'rgba(201,169,97,0.08)' }}>
             <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" style={{ color: 'var(--gold)' }} />
             </svg>
@@ -134,14 +134,14 @@ export default function MessagesPage() {
                 className="flex items-center gap-4 px-5 py-4 transition-all"
                 style={{
                   borderBottom: i < conversations.length - 1 ? '1px solid var(--dark-border)' : 'none',
-                  background: convo.unreadCount > 0 ? 'rgba(212,175,55,0.04)' : 'transparent',
+                  background: convo.unreadCount > 0 ? 'rgba(201,169,97,0.04)' : 'transparent',
                 }}>
                 {/* Avatar */}
                 {convo.partner.avatar_url ? (
                   <img src={convo.partner.avatar_url} alt={name} className="w-12 h-12 rounded-full object-cover flex-shrink-0" />
                 ) : (
                   <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 text-lg font-semibold"
-                    style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                    style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--gold)' }}>
                     {name.charAt(0).toUpperCase()}
                   </div>
                 )}

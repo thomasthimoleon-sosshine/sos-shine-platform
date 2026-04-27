@@ -120,7 +120,7 @@ export default function PublicEncyclopediePage() {
               }}
               className="w-8 h-8 rounded-lg text-xs font-semibold flex items-center justify-center transition-all cursor-pointer"
               style={{
-                background: activeLetters.has(letter) ? 'rgba(212,175,55,0.1)' : 'transparent',
+                background: activeLetters.has(letter) ? 'rgba(201,169,97,0.1)' : 'transparent',
                 color: activeLetters.has(letter) ? 'var(--gold)' : 'var(--text-muted)',
                 opacity: activeLetters.has(letter) ? 1 : 0.3,
               }}
@@ -207,7 +207,7 @@ export default function PublicEncyclopediePage() {
                               <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                             </svg>
                           ) : (
-                            <span className="text-xs px-2 py-1 rounded-lg flex-shrink-0" style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}>
+                            <span className="text-xs px-2 py-1 rounded-lg flex-shrink-0" style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--gold)' }}>
                               Bientôt
                             </span>
                           )}
@@ -222,7 +222,7 @@ export default function PublicEncyclopediePage() {
         )}
 
         {/* CTA Banner */}
-        <div className="rounded-2xl p-8 text-center" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.15)' }}>
+        <div className="rounded-2xl p-8 text-center" style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.15)' }}>
           <h3 className="font-display text-xl font-semibold mb-2">
             Accédez à tous les protocoles
           </h3>
@@ -242,7 +242,7 @@ export default function PublicEncyclopediePage() {
         </div>
 
         {/* Info */}
-        <div className="rounded-xl p-5 text-center" style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.1)' }}>
+        <div className="rounded-xl p-5 text-center" style={{ background: 'rgba(201,169,97,0.04)', border: '1px solid rgba(201,169,97,0.1)' }}>
           <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
             Vous ne trouvez pas votre challenge émotionnel ? Nous ajoutons régulièrement de nouvelles pages.
           </p>

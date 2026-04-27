@@ -104,8 +104,8 @@ export default function CompteInactifPage() {
       >
         {/* Icon */}
         <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-8"
-          style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.15)' }}>
-          <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="#D4AF37" strokeWidth={1.5}>
+          style={{ background: 'rgba(201,169,97,0.08)', border: '1px solid rgba(201,169,97,0.15)' }}>
+          <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="#C9A961" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
           </svg>
         </div>
@@ -139,7 +139,7 @@ export default function CompteInactifPage() {
               onClick={handleManageSubscription}
               disabled={loadingPortal}
               className="w-full py-4 rounded-full font-semibold tracking-wide transition-all text-sm disabled:opacity-50"
-              style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}
+              style={{ background: 'linear-gradient(135deg, #C9A961, #B8960F)', color: '#000000' }}
             >
               {loadingPortal ? 'Redirection...' : 'Mettre \u00e0 jour le paiement'}
             </button>
@@ -149,7 +149,7 @@ export default function CompteInactifPage() {
             onClick={() => handleResubscribe('essential')}
             disabled={loading}
             className="w-full py-4 rounded-full font-semibold tracking-wide transition-all text-sm disabled:opacity-50"
-            style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.25)' }}
+            style={{ background: 'rgba(201,169,97,0.15)', color: '#C9A961', border: '1px solid rgba(201,169,97,0.25)' }}
           >
             {loading ? 'Redirection...' : 'S\u2019abonner Essentielle \u2014 9,90\u20ac/mois'}
           </button>
@@ -158,7 +158,7 @@ export default function CompteInactifPage() {
             onClick={() => handleResubscribe('serenite')}
             disabled={loading}
             className="w-full py-4 rounded-full font-semibold tracking-wide transition-all text-sm disabled:opacity-50"
-            style={{ background: 'linear-gradient(135deg, #55EFC4, #00B894)', color: '#050505' }}
+            style={{ background: 'linear-gradient(135deg, #55EFC4, #00B894)', color: '#000000' }}
           >
             {loading ? 'Redirection...' : 'S\u2019abonner S\u00e9r\u00e9nit\u00e9 \u2014 49,90\u20ac/mois'}
           </button>
@@ -167,7 +167,7 @@ export default function CompteInactifPage() {
             onClick={() => handleResubscribe('premium')}
             disabled={loading}
             className="w-full py-4 rounded-full font-medium tracking-wide transition-all text-sm disabled:opacity-50"
-            style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}
+            style={{ background: 'linear-gradient(135deg, #C9A961, #B8960F)', color: '#000000' }}
           >
             {loading ? 'Redirection...' : 'S\u2019abonner Premium \u2014 99,90\u20ac/mois'}
           </button>

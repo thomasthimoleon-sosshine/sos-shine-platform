@@ -144,7 +144,7 @@ export default function MesRayonsPage() {
             {tab.count > 0 && (
               <span className="ml-1.5 inline-flex items-center justify-center min-w-[18px] h-[18px] rounded-full text-[10px] font-bold"
                 style={{
-                  background: tab.key === 'pending' && activeTab !== 'pending' ? '#EF4444' : 'rgba(212,175,55,0.15)',
+                  background: tab.key === 'pending' && activeTab !== 'pending' ? '#EF4444' : 'rgba(201,169,97,0.15)',
                   color: tab.key === 'pending' && activeTab !== 'pending' ? '#fff' : 'var(--gold)',
                 }}>
                 {tab.count}
@@ -242,7 +242,7 @@ function ConnectionsList({ connections, getPartnerProfile, formatDate, onAction,
                 <img src={p.avatar_url} alt={displayName} className="w-12 h-12 rounded-full object-cover ring-2 ring-[var(--gold)]/20" />
               ) : (
                 <div className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-display font-semibold"
-                  style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                  style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--gold)' }}>
                   {displayName.charAt(0).toUpperCase()}
                 </div>
               )}
@@ -306,13 +306,13 @@ function PendingList({ connections, profiles, onAction, actionLoading, formatDat
         const displayName = p.pseudo || p.prenom
         return (
           <div key={c.id} className="rounded-xl p-4 flex items-center gap-4"
-            style={{ background: 'var(--dark-card)', border: '1px solid rgba(212,175,55,0.15)' }}>
+            style={{ background: 'var(--dark-card)', border: '1px solid rgba(201,169,97,0.15)' }}>
             <Link href={`/dashboard/membre/${p.id}`} className="shrink-0">
               {p.avatar_url ? (
                 <img src={p.avatar_url} alt={displayName} className="w-12 h-12 rounded-full object-cover" />
               ) : (
                 <div className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-display font-semibold"
-                  style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                  style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--gold)' }}>
                   {displayName.charAt(0).toUpperCase()}
                 </div>
               )}
@@ -376,7 +376,7 @@ function SentList({ connections, profiles, onAction, actionLoading, formatDate, 
                 <img src={p.avatar_url} alt={displayName} className="w-12 h-12 rounded-full object-cover" />
               ) : (
                 <div className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-display font-semibold"
-                  style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                  style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--gold)' }}>
                   {displayName.charAt(0).toUpperCase()}
                 </div>
               )}

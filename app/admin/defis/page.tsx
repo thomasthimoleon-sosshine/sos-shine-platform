@@ -14,7 +14,7 @@ const REWARD_TYPES = [
 const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
   draft: { label: 'Brouillon', color: 'var(--text-muted)' },
   active: { label: 'Actif', color: '#55EFC4' },
-  completed: { label: 'Terminé', color: '#D4AF37' },
+  completed: { label: 'Terminé', color: '#C9A961' },
   archived: { label: 'Archivé', color: '#EF4444' },
 }
 
@@ -285,7 +285,7 @@ export default function AdminDefisPage() {
                       <span>👥 {ch.participant_count || 0} participants</span>
                       {ch.start_date && <span>📅 {new Date(ch.start_date).toLocaleDateString('fr-FR')}</span>}
                       {ch.end_date && <span>→ {new Date(ch.end_date).toLocaleDateString('fr-FR')}</span>}
-                      {ch.winner_id && <span style={{ color: '#D4AF37' }}>🏆 Vainqueur désigné</span>}
+                      {ch.winner_id && <span style={{ color: '#C9A961' }}>🏆 Vainqueur désigné</span>}
                     </div>
                   </div>
 
@@ -300,7 +300,7 @@ export default function AdminDefisPage() {
                     {ch.status === 'active' && !ch.winner_id && (
                       <button onClick={() => selectWinner(ch.id)}
                         className="px-3 py-1.5 rounded-lg text-[11px] font-medium cursor-pointer"
-                        style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37' }}>
+                        style={{ background: 'rgba(201,169,97,0.1)', color: '#C9A961' }}>
                         Désigner vainqueur
                       </button>
                     )}

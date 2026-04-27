@@ -41,7 +41,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       trial_days: 7,
     },
     styles: {
-      color_primary: '#D4AF37',
+      color_primary: '#C9A961',
       color_secondary: '#74C0FC',
       color_bg: '#362038',
       color_card: '#442B40',
@@ -49,7 +49,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       color_text: '#F5EDF0',
       color_text_secondary: '#C8A8B8',
       color_text_muted: '#8E6E7E',
-      color_button: '#D4AF37',
+      color_button: '#C9A961',
       font_display: 'Cormorant Garamond',
       font_body: 'DM Sans',
     },

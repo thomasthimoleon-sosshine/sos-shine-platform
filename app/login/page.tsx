@@ -129,7 +129,7 @@ export default function LoginPage() {
                 placeholder="votre@email.com"
                 className="w-full px-4 py-3 rounded-xl text-sm transition-colors"
                 style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)', outline: 'none' }}
-                onFocus={(e) => e.currentTarget.style.borderColor = 'rgba(212,175,55,0.4)'}
+                onFocus={(e) => e.currentTarget.style.borderColor = 'rgba(201,169,97,0.4)'}
                 onBlur={(e) => e.currentTarget.style.borderColor = 'var(--dark-border)'}
               />
             </div>
@@ -139,7 +139,7 @@ export default function LoginPage() {
                 placeholder={t('auth.password_placeholder')}
                 className="w-full px-4 py-3 rounded-xl text-sm transition-colors"
                 style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)', outline: 'none' }}
-                onFocus={(e) => e.currentTarget.style.borderColor = 'rgba(212,175,55,0.4)'}
+                onFocus={(e) => e.currentTarget.style.borderColor = 'rgba(201,169,97,0.4)'}
                 onBlur={(e) => e.currentTarget.style.borderColor = 'var(--dark-border)'}
               />
             </div>
@@ -164,7 +164,7 @@ export default function LoginPage() {
           <button onClick={handleGoogleSignIn}
             className="w-full py-3.5 rounded-full text-[13px] flex items-center justify-center gap-3 transition-all"
             style={{ border: '1px solid var(--dark-border)', color: 'var(--text-secondary)', background: 'transparent' }}
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(212,175,55,0.3)'; e.currentTarget.style.color = 'var(--text-primary)' }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(201,169,97,0.3)'; e.currentTarget.style.color = 'var(--text-primary)' }}
             onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--dark-border)'; e.currentTarget.style.color = 'var(--text-secondary)' }}
           >
             <svg className="w-4.5 h-4.5" viewBox="0 0 24 24">

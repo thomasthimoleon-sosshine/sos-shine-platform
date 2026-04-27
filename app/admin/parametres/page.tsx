@@ -48,7 +48,7 @@ const sections: SectionDef[] = [
   {
     title: 'Apparence générale', icon: '🎨',
     fields: [
-      { label: 'Couleur principale (or)', key: 'color_primary', type: 'color', default: '#D4AF37' },
+      { label: 'Couleur principale (or)', key: 'color_primary', type: 'color', default: '#C9A961' },
       { label: 'Couleur secondaire (bleu)', key: 'color_secondary', type: 'color', default: '#74C0FC' },
       { label: 'Couleur de fond', key: 'color_bg', type: 'color', default: '#362038' },
       { label: 'Couleur des cartes', key: 'color_card', type: 'color', default: '#442B40' },
@@ -56,7 +56,7 @@ const sections: SectionDef[] = [
       { label: 'Couleur du texte principal', key: 'color_text', type: 'color', default: '#F5EDF0' },
       { label: 'Couleur du texte secondaire', key: 'color_text_secondary', type: 'color', default: '#C8A8B8' },
       { label: 'Couleur du texte discret', key: 'color_text_muted', type: 'color', default: '#8E6E7E' },
-      { label: 'Couleur des boutons', key: 'color_button', type: 'color', default: '#D4AF37' },
+      { label: 'Couleur des boutons', key: 'color_button', type: 'color', default: '#C9A961' },
       { label: 'Logo du site', key: 'logo_url', type: 'upload', accept: 'image/*', folder: 'site', hint: 'PNG ou SVG, 512x512px', default: '' },
       { label: 'Image de fond hero', key: 'hero_bg_url', type: 'upload', accept: 'image/*', folder: 'site', hint: '1920x1080px', default: '' },
     ],
@@ -389,11 +389,11 @@ export default function ParametresPage() {
                   <div className="rounded-xl p-4 space-y-3" style={{ background: values.color_bg || '#362038', border: `1px solid ${values.color_border || '#5E3E52'}` }}>
                     <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: values.color_text_muted || '#8E6E7E' }}>Preview</p>
                     <div className="rounded-lg p-4" style={{ background: values.color_card || '#442B40', border: `1px solid ${values.color_border || '#5E3E52'}` }}>
-                      <h3 className="font-display text-lg font-semibold mb-1" style={{ color: values.color_primary || '#D4AF37' }}>Titre</h3>
+                      <h3 className="font-display text-lg font-semibold mb-1" style={{ color: values.color_primary || '#C9A961' }}>Titre</h3>
                       <p className="text-sm mb-1" style={{ color: values.color_text || '#F5EDF0' }}>Texte principal</p>
                       <p className="text-xs mb-3" style={{ color: values.color_text_secondary || '#C8A8B8' }}>Texte secondaire</p>
                       <div className="flex gap-2">
-                        <span className="px-3 py-1.5 rounded-lg text-xs font-semibold" style={{ background: values.color_button || '#D4AF37', color: values.color_bg || '#362038' }}>Bouton</span>
+                        <span className="px-3 py-1.5 rounded-lg text-xs font-semibold" style={{ background: values.color_button || '#C9A961', color: values.color_bg || '#362038' }}>Bouton</span>
                         <span className="px-3 py-1.5 rounded-lg text-xs font-semibold" style={{ background: values.color_secondary || '#74C0FC', color: '#fff' }}>Secondaire</span>
                       </div>
                     </div>

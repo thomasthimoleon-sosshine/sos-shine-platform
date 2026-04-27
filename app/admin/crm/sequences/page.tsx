@@ -77,7 +77,7 @@ export default function CRMSequencesPage() {
         <Link
           href="/admin/crm/sequences/new"
           className="px-6 py-3 rounded-full text-sm font-semibold transition-all"
-          style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}
+          style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#000000' }}
         >
           + Nouvelle séquence
         </Link>
@@ -95,7 +95,7 @@ export default function CRMSequencesPage() {
           <Link
             href="/admin/crm/sequences/new"
             className="inline-block px-6 py-3 rounded-full text-sm font-semibold"
-            style={{ background: 'var(--gold)', color: '#050505' }}
+            style={{ background: 'var(--gold)', color: '#000000' }}
           >
             Créer ma première séquence
           </Link>
@@ -119,7 +119,7 @@ export default function CRMSequencesPage() {
                       <span
                         className="px-3 py-0.5 rounded-full text-xs font-medium"
                         style={{
-                          background: seq.status === 'active' ? 'rgba(80,200,120,0.15)' : 'rgba(212,175,55,0.15)',
+                          background: seq.status === 'active' ? 'rgba(80,200,120,0.15)' : 'rgba(201,169,97,0.15)',
                           color: seq.status === 'active' ? '#50C878' : 'var(--gold)',
                         }}
                       >
@@ -142,9 +142,9 @@ export default function CRMSequencesPage() {
                       onClick={() => toggleStatus(seq)}
                       className="px-4 py-2 rounded-full text-xs font-medium transition-all"
                       style={{
-                        background: seq.status === 'active' ? 'rgba(212,175,55,0.1)' : 'rgba(80,200,120,0.1)',
+                        background: seq.status === 'active' ? 'rgba(201,169,97,0.1)' : 'rgba(80,200,120,0.1)',
                         color: seq.status === 'active' ? 'var(--gold)' : '#50C878',
-                        border: `1px solid ${seq.status === 'active' ? 'rgba(212,175,55,0.2)' : 'rgba(80,200,120,0.2)'}`,
+                        border: `1px solid ${seq.status === 'active' ? 'rgba(201,169,97,0.2)' : 'rgba(80,200,120,0.2)'}`,
                       }}
                     >
                       {seq.status === 'active' ? '⏸ Mettre en pause' : '▶ Activer'}

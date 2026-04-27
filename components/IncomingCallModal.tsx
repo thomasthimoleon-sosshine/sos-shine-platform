@@ -23,7 +23,7 @@ export default function IncomingCallModal({ call, onAccept, onReject }: Incoming
               className="relative w-24 h-24 rounded-full object-cover" style={{ border: '3px solid var(--gold)' }} />
           ) : (
             <div className="relative w-24 h-24 rounded-full flex items-center justify-center text-2xl font-bold"
-              style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)', border: '3px solid var(--gold)' }}>
+              style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--gold)', border: '3px solid var(--gold)' }}>
               {call.callerName.charAt(0).toUpperCase()}
             </div>
           )}

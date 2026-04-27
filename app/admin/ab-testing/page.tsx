@@ -189,7 +189,7 @@ export default function AbTestingDashboard() {
         {[
           { label: 'Vues totales', value: totalViews, color: '#74C0FC' },
           { label: 'Conversions totales', value: totalConversions, color: '#55EFC4' },
-          { label: 'Taux global', value: totalViews > 0 ? `${Math.round((totalConversions / totalViews) * 10000) / 100}%` : '0%', color: '#D4AF37' },
+          { label: 'Taux global', value: totalViews > 0 ? `${Math.round((totalConversions / totalViews) * 10000) / 100}%` : '0%', color: '#C9A961' },
           { label: 'Leader', value: winner ? (winner === variantA ? 'Julia' : 'Standard') : 'Egalite', color: winner ? '#55EFC4' : 'var(--text-muted)' },
         ].map((c) => (
           <div key={c.label} className="rounded-xl p-5"
@@ -203,7 +203,7 @@ export default function AbTestingDashboard() {
       {/* Variant comparison */}
       <div className="grid md:grid-cols-2 gap-4">
         {[
-          { name: 'Version Julia', variant: variantA, stats: statsA, color: '#D4AF37' },
+          { name: 'Version Julia', variant: variantA, stats: statsA, color: '#C9A961' },
           { name: 'Version Standard', variant: variantB, stats: statsB, color: '#74C0FC' },
         ].map((v) => (
           <div key={v.variant} className="rounded-xl p-6"

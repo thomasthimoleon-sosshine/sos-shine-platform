@@ -212,7 +212,7 @@ const DIAMONDS = [
 const DiamondSvg = memo(function DiamondSvg({ size }: { size: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <circle cx="12" cy="12" r="4" fill="#D4AF37" opacity="0.4" />
+      <circle cx="12" cy="12" r="4" fill="#C9A961" opacity="0.4" />
       <circle cx="12" cy="12" r="2" fill="#FFFBE6" opacity="0.9" />
     </svg>
   );
@@ -457,7 +457,7 @@ export default function Home() {
   function vis(key: string): boolean { return sections[key]?.is_visible !== false; }
 
   const g = sty('_global');
-  const gold = g.color_primary || '#D4AF37';
+  const gold = g.color_primary || '#C9A961';
   const accent = g.color_secondary || '#74C0FC';
   const bg = g.color_bg || '#362038';
   const buttonBg = g.color_button || gold;
@@ -543,7 +543,7 @@ export default function Home() {
 
   // Show loading while checking prelaunch, then prelaunch page if enabled
   if (prelaunchEnabled === null) {
-    return <div className="min-h-screen" style={{ background: 'var(--dark, #0A0A0A)' }} />;
+    return <div className="min-h-screen" style={{ background: 'var(--dark, #000000)' }} />;
   }
   if (prelaunchEnabled) {
     return <PreLaunchPage settings={prelaunchSettings} />;
@@ -667,7 +667,7 @@ export default function Home() {
                 {(hero.buttons || []).map((btn: { label: string; href: string; variant: string }, i: number) => (
                   <Link key={i} href={btn.href === '/signup' || btn.href === '/login' ? '/rejoindre' : btn.href} className="w-full sm:w-auto" onClick={() => { if (btn.href === '/rejoindre' || btn.href === '/signup') trackConversion(); }}>
                     {btn.variant === 'primary' ? (
-                      <button className="magnetic-btn pulse-ring w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full text-sm sm:text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                      <button className="magnetic-btn pulse-ring w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full text-sm sm:text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}>
                         {btn.label} — {trialDays} {t('landing.trial_days')}
                       </button>
                     ) : (
@@ -701,7 +701,7 @@ export default function Home() {
                 <p className="text-[var(--text-secondary)] font-light mb-5 md:mb-6 text-sm md:text-[15px]">
                   {t('signature.cta_desc')}
                 </p>
-                <span className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-semibold tracking-wide group-hover:scale-105 transition-transform" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                <span className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-semibold tracking-wide group-hover:scale-105 transition-transform" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}>
                   {t('signature.cta_button')}
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M5 12h14M12 5l7 7-7 7" />
@@ -968,7 +968,7 @@ export default function Home() {
                 <RevealOnScroll delay={0.15}>
                   <div className="flex-shrink-0 group">
                     <a href={hist.book_url || '#'} target="_blank" rel="noopener noreferrer" className="block relative">
-                      <div className="w-44 sm:w-56 md:w-64 rounded-lg overflow-hidden border border-[var(--gold)]/20 group-hover:border-[var(--gold)]/60 transition-all duration-500 shadow-lg group-hover:shadow-[0_0_30px_rgba(212,175,55,0.2)]">
+                      <div className="w-44 sm:w-56 md:w-64 rounded-lg overflow-hidden border border-[var(--gold)]/20 group-hover:border-[var(--gold)]/60 transition-all duration-500 shadow-lg group-hover:shadow-[0_0_30px_rgba(201,169,97,0.2)]">
                         <img
                           src={hist.book_image || '/images/book-cover.jpeg'}
                           alt="SOS Shine — Briller Comme un Diamant"
@@ -1082,7 +1082,7 @@ export default function Home() {
                   { main: '#A78BFA', deep: '#7C3AED', rgb: '167,139,250' },
                 ] as const
                 const tc = tierColors[idx] || tierColors[0]
-                const btnTextColor = idx === 2 ? '#fff' : '#050505'
+                const btnTextColor = idx === 2 ? '#fff' : '#000000'
 
                 return (
                 <RevealOnScroll key={plan.name} delay={(idx + 1) * 0.15} direction={(["left", "up", "scale", "right"] as const)[idx % 4]}>
@@ -1165,7 +1165,7 @@ export default function Home() {
             </RevealOnScroll>
             <RevealOnScroll delay={0.3}>
               <Link href="/rejoindre" onClick={trackConversion}>
-                <button className="magnetic-btn pulse-ring px-8 sm:px-10 py-4 sm:py-5 rounded-full text-base sm:text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                <button className="magnetic-btn pulse-ring px-8 sm:px-10 py-4 sm:py-5 rounded-full text-base sm:text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}>
                   {t('landing.join_cta')}
                 </button>
               </Link>
@@ -1185,7 +1185,7 @@ export default function Home() {
             </RevealOnScroll>
             <RevealOnScroll delay={0.15}>
               <Link href="/rejoindre" onClick={trackConversion}>
-                <button className="magnetic-btn px-8 sm:px-10 py-4 sm:py-5 rounded-full text-base sm:text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                <button className="magnetic-btn px-8 sm:px-10 py-4 sm:py-5 rounded-full text-base sm:text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}>
                   {ctaLight.button_label || t('landing.join_cta')}
                 </button>
               </Link>

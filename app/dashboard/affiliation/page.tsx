@@ -12,7 +12,7 @@ const easeArr = ease as unknown as [number, number, number, number]
 const TIERS = [
   { key: 'bronze', rate: 10, min: 0, max: 10, color: '#CD7F32', gradient: 'linear-gradient(135deg, #CD7F32, #A0522D)' },
   { key: 'silver', rate: 15, min: 11, max: 50, color: '#C0C0C0', gradient: 'linear-gradient(135deg, #C0C0C0, #A8A8A8)' },
-  { key: 'gold', rate: 20, min: 51, max: 100, color: '#D4AF37', gradient: 'linear-gradient(135deg, #D4AF37, #B8960F)' },
+  { key: 'gold', rate: 20, min: 51, max: 100, color: '#C9A961', gradient: 'linear-gradient(135deg, #C9A961, #B8960F)' },
   { key: 'diamond', rate: 25, min: 101, max: Infinity, color: '#B9F2FF', gradient: 'linear-gradient(135deg, #B9F2FF, #7EC8E3)' },
 ] as const
 
@@ -38,7 +38,7 @@ function AffiliateLanding({ onApply }: { onApply: () => void }) {
     { icon: '↻', title: t('affiliate.benefit1_title'), desc: t('affiliate.benefit1_desc'), accent: '#55EFC4' },
     { icon: '◎', title: t('affiliate.benefit2_title'), desc: t('affiliate.benefit2_desc'), accent: '#74C0FC' },
     { icon: '▣', title: t('affiliate.benefit3_title'), desc: t('affiliate.benefit3_desc'), accent: '#E17055' },
-    { icon: '◈', title: t('affiliate.benefit4_title'), desc: t('affiliate.benefit4_desc'), accent: '#D4AF37' },
+    { icon: '◈', title: t('affiliate.benefit4_title'), desc: t('affiliate.benefit4_desc'), accent: '#C9A961' },
     { icon: '☎', title: t('affiliate.benefit5_title'), desc: t('affiliate.benefit5_desc'), accent: '#A29BFE' },
     { icon: '♡', title: t('affiliate.benefit6_title'), desc: t('affiliate.benefit6_desc'), accent: '#FD79A8' },
   ]
@@ -105,7 +105,7 @@ function AffiliateLanding({ onApply }: { onApply: () => void }) {
           {[
             { num: '01', title: t('affiliate.step1_title'), desc: t('affiliate.step1_desc'), accent: '#55EFC4' },
             { num: '02', title: t('affiliate.step2_title'), desc: t('affiliate.step2_desc'), accent: '#74C0FC' },
-            { num: '03', title: t('affiliate.step3_title'), desc: t('affiliate.step3_desc'), accent: '#D4AF37' },
+            { num: '03', title: t('affiliate.step3_title'), desc: t('affiliate.step3_desc'), accent: '#C9A961' },
           ].map((step, i) => (
             <motion.div
               key={step.num}
@@ -649,8 +649,8 @@ function WithdrawalModal({ affiliate, onClose, onSuccess }: { affiliate: Affilia
                 <button key={m.key} type="button" onClick={() => setMethod(m.key)}
                   className="flex-1 py-3 rounded-xl text-[13px] font-medium cursor-pointer transition-all"
                   style={{
-                    background: method === m.key ? 'rgba(212,175,55,0.1)' : 'var(--dark)',
-                    border: `1px solid ${method === m.key ? 'rgba(212,175,55,0.3)' : 'var(--dark-border)'}`,
+                    background: method === m.key ? 'rgba(201,169,97,0.1)' : 'var(--dark)',
+                    border: `1px solid ${method === m.key ? 'rgba(201,169,97,0.3)' : 'var(--dark-border)'}`,
                     color: method === m.key ? 'var(--gold)' : 'var(--text-secondary)',
                   }}>
                   {m.icon} {m.label}
@@ -826,7 +826,7 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
             { label: t('affiliate.stat_clicks'), value: affiliate.total_clicks.toLocaleString(), accent: '#74C0FC' },
             { label: t('affiliate.stat_conversions'), value: affiliate.total_referrals.toLocaleString(), accent: '#55EFC4' },
             { label: t('affiliate.stat_rate'), value: `${conversionRate}%`, accent: '#A29BFE' },
-            { label: t('affiliate.stat_earnings'), value: `${affiliate.total_earnings.toFixed(2)}€`, accent: '#D4AF37' },
+            { label: t('affiliate.stat_earnings'), value: `${affiliate.total_earnings.toFixed(2)}€`, accent: '#C9A961' },
             { label: t('affiliate.stat_pending'), value: `${affiliate.pending_earnings.toFixed(2)}€`, accent: '#E17055' },
             { label: t('affiliate.stat_paid'), value: `${affiliate.paid_earnings.toFixed(2)}€`, accent: '#55EFC4' },
           ].map((stat, i) => (
@@ -935,7 +935,7 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
                               conv.status === 'cancelled' ? 'rgba(239, 68, 68, 0.12)' :
                               'rgba(255, 255, 255, 0.06)',
                             color: conv.status === 'confirmed' ? '#55EFC4' :
-                              conv.status === 'paid' ? '#D4AF37' :
+                              conv.status === 'paid' ? '#C9A961' :
                               conv.status === 'cancelled' ? '#EF4444' :
                               'var(--text-muted)',
                           }}

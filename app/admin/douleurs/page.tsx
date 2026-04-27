@@ -592,8 +592,8 @@ export default function AdminDouleursPage() {
                           </span>
                           <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full"
                             style={{
-                              background: mediaCount === 4 ? 'rgba(85,239,196,0.15)' : mediaCount > 0 ? 'rgba(212,175,55,0.15)' : 'rgba(90,83,71,0.2)',
-                              color: mediaCount === 4 ? '#55EFC4' : mediaCount > 0 ? '#D4AF37' : 'var(--text-muted)',
+                              background: mediaCount === 4 ? 'rgba(85,239,196,0.15)' : mediaCount > 0 ? 'rgba(201,169,97,0.15)' : 'rgba(90,83,71,0.2)',
+                              color: mediaCount === 4 ? '#55EFC4' : mediaCount > 0 ? '#C9A961' : 'var(--text-muted)',
                             }}>
                             {mediaCount}/4
                           </span>

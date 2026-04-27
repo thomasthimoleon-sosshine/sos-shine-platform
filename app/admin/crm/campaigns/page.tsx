@@ -84,7 +84,7 @@ export default function CRMCampaignsPage() {
         <Link
           href="/admin/crm/campaigns/new"
           className="px-6 py-3 rounded-full text-sm font-semibold transition-all"
-          style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}
+          style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#000000' }}
         >
           + Nouvelle campagne
         </Link>
@@ -99,7 +99,7 @@ export default function CRMCampaignsPage() {
           <Link
             href="/admin/crm/campaigns/new"
             className="inline-block px-6 py-3 rounded-full text-sm font-semibold"
-            style={{ background: 'var(--gold)', color: '#050505' }}
+            style={{ background: 'var(--gold)', color: '#000000' }}
           >
             Créer ma première campagne
           </Link>
@@ -125,7 +125,7 @@ export default function CRMCampaignsPage() {
                       <span
                         className="px-3 py-0.5 rounded-full text-xs font-medium"
                         style={{
-                          background: camp.status === 'sent' ? 'rgba(80,200,120,0.15)' : camp.status === 'scheduled' ? 'rgba(74,144,217,0.15)' : 'rgba(212,175,55,0.15)',
+                          background: camp.status === 'sent' ? 'rgba(80,200,120,0.15)' : camp.status === 'scheduled' ? 'rgba(74,144,217,0.15)' : 'rgba(201,169,97,0.15)',
                           color: camp.status === 'sent' ? '#50C878' : camp.status === 'scheduled' ? '#4A90D9' : 'var(--gold)',
                         }}
                       >
@@ -149,7 +149,7 @@ export default function CRMCampaignsPage() {
                             onClick={() => handleSend(camp.id)}
                             disabled={sending === camp.id}
                             className="px-4 py-2 rounded-full text-xs font-semibold transition-all disabled:opacity-50"
-                            style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#050505' }}
+                            style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#000000' }}
                           >
                             {sending === camp.id ? '⏳ Envoi...' : '🚀 Envoyer'}
                           </button>

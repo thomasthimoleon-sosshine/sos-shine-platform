@@ -56,7 +56,7 @@ export default function XPBadge({ userId, size = 'md', showDetails = false }: XP
     return (
       <span
         className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-medium ${sizeClasses[size]}`}
-        style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.15)' }}
+        style={{ background: 'rgba(201,169,97,0.1)', color: '#C9A961', border: '1px solid rgba(201,169,97,0.15)' }}
       >
         <span>{level.icon}</span>
         <span>Niv. {level.level}</span>
@@ -109,11 +109,11 @@ export default function XPBadge({ userId, size = 'md', showDetails = false }: XP
 
       {/* Shines stats */}
       <div className="grid grid-cols-2 gap-3 pt-3" style={{ borderTop: '1px solid var(--dark-border)' }}>
-        <div className="text-center py-2 rounded-xl" style={{ background: 'rgba(212,175,55,0.04)' }}>
+        <div className="text-center py-2 rounded-xl" style={{ background: 'rgba(201,169,97,0.04)' }}>
           <p className="text-lg font-semibold" style={{ color: 'var(--gold)' }}>{xpData.shines_given}</p>
           <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>Shines donnés</p>
         </div>
-        <div className="text-center py-2 rounded-xl" style={{ background: 'rgba(212,175,55,0.04)' }}>
+        <div className="text-center py-2 rounded-xl" style={{ background: 'rgba(201,169,97,0.04)' }}>
           <p className="text-lg font-semibold" style={{ color: 'var(--gold)' }}>{xpData.shines_received}</p>
           <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>Shines reçus</p>
         </div>
@@ -128,7 +128,7 @@ export default function XPBadge({ userId, size = 'md', showDetails = false }: XP
               <div key={t.level}
                 className="flex items-center gap-2 px-2 py-1.5 rounded-lg text-[11px]"
                 style={{
-                  background: t.level <= level.level ? 'rgba(212,175,55,0.06)' : 'transparent',
+                  background: t.level <= level.level ? 'rgba(201,169,97,0.06)' : 'transparent',
                   color: t.level <= level.level ? 'var(--gold)' : 'var(--text-muted)',
                   opacity: t.level <= level.level ? 1 : 0.5,
                 }}>

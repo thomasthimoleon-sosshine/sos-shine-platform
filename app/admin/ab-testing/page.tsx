@@ -42,7 +42,7 @@ const SOURCE_COLORS: Record<string, string> = {
   'Direct / App': '#A78BFA',
   'Navigation interne': '#55EFC4',
   'Admin / Preview': '#8E6E7E',
-  Autre: '#D4AF37',
+  Autre: '#C9A961',
 }
 
 interface AbConfig {
@@ -173,7 +173,7 @@ export default function AbTestingDashboard() {
         .map(([source, count]) => ({
           source,
           count,
-          color: SOURCE_COLORS[source] || '#D4AF37',
+          color: SOURCE_COLORS[source] || '#C9A961',
           pct: total > 0 ? Math.round((count / total) * 1000) / 10 : 0,
         }))
     }
@@ -288,7 +288,7 @@ export default function AbTestingDashboard() {
         {[
           { label: 'Vues totales', value: totalViews, color: '#74C0FC' },
           { label: 'Conversions', value: totalConversions, color: '#55EFC4' },
-          { label: 'Taux global', value: totalViews > 0 ? `${Math.round((totalConversions / totalViews) * 10000) / 100}%` : '—', color: '#D4AF37' },
+          { label: 'Taux global', value: totalViews > 0 ? `${Math.round((totalConversions / totalViews) * 10000) / 100}%` : '—', color: '#C9A961' },
           { label: 'Leader', value: winner ? (winner === 'julia' ? 'Julia' : 'Thomas') : 'Égalité', color: winner ? '#55EFC4' : 'var(--text-muted)' },
         ].map((c) => (
           <div key={c.label} className="rounded-xl p-5" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>

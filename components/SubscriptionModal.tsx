@@ -243,9 +243,9 @@ export default function SubscriptionModal({
                         onClick={() => setSelectedDuration(d.id)}
                         className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
                         style={{
-                          background: selectedDuration === d.id ? 'rgba(212,175,55,0.15)' : 'transparent',
+                          background: selectedDuration === d.id ? 'rgba(201,169,97,0.15)' : 'transparent',
                           color: selectedDuration === d.id ? 'var(--brand)' : 'var(--text-secondary)',
-                          border: selectedDuration === d.id ? '1px solid rgba(212,175,55,0.3)' : '1px solid transparent',
+                          border: selectedDuration === d.id ? '1px solid rgba(201,169,97,0.3)' : '1px solid transparent',
                         }}
                       >
                         {d.label}
@@ -288,7 +288,7 @@ export default function SubscriptionModal({
                         {(isHighlight || isSuggested) && (
                           <div
                             className="text-center py-1 text-[10px] font-semibold tracking-wide uppercase"
-                            style={{ background: color, color: '#050505' }}
+                            style={{ background: color, color: '#000000' }}
                           >
                             {isSuggested ? 'Recommandé' : 'Le plus choisi'}
                           </div>
@@ -367,7 +367,7 @@ export default function SubscriptionModal({
                               background: (isHighlight || isSuggested)
                                 ? `linear-gradient(135deg, ${color}, ${color}dd)`
                                 : 'transparent',
-                              color: (isHighlight || isSuggested) ? '#050505' : color,
+                              color: (isHighlight || isSuggested) ? '#000000' : color,
                               border: (isHighlight || isSuggested) ? 'none' : `1px solid ${color}`,
                             }}
                           >
@@ -403,7 +403,7 @@ export default function SubscriptionModal({
                     <button
                       onClick={() => { setCheckoutError(null); setStep('plans'); setCheckoutPlan(null) }}
                       className="px-6 py-2.5 rounded-full text-sm font-medium cursor-pointer"
-                      style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.25)' }}
+                      style={{ background: 'rgba(201,169,97,0.15)', color: '#C9A961', border: '1px solid rgba(201,169,97,0.25)' }}
                     >
                       Retour aux plans
                     </button>
@@ -443,8 +443,8 @@ export default function SubscriptionModal({
                   className="px-8 py-3 rounded-full text-sm font-semibold transition-all hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
                   style={{
                     background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
-                    color: '#050505',
-                    boxShadow: '0 4px 20px rgba(212,175,55,0.3)',
+                    color: '#000000',
+                    boxShadow: '0 4px 20px rgba(201,169,97,0.3)',
                   }}
                 >
                   C&apos;est parti !

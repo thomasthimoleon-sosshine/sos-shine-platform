@@ -178,7 +178,7 @@ export default function EmailTemplatesPage() {
               onClick={handleSave}
               disabled={saving}
               className="px-6 py-2 rounded-full text-sm font-semibold transition-all disabled:opacity-50"
-              style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}
+              style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000' }}
             >
               {saving ? 'Sauvegarde...' : 'Sauvegarder'}
             </button>
@@ -259,7 +259,7 @@ export default function EmailTemplatesPage() {
             {/* Info */}
             <div
               className="p-4 rounded-lg space-y-2"
-              style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.15)' }}
+              style={{ background: 'rgba(201,169,97,0.05)', border: '1px solid rgba(201,169,97,0.15)' }}
             >
               <div className="text-xs text-[var(--text-muted)]">
                 <strong style={{ color: 'var(--brand)' }}>Déclencheur :</strong>{' '}
@@ -283,7 +283,7 @@ export default function EmailTemplatesPage() {
             </label>
             <div
               className="rounded-lg overflow-hidden"
-              style={{ border: '1px solid var(--border)', background: '#050505' }}
+              style={{ border: '1px solid var(--border)', background: '#000000' }}
             >
               {/* Mini header preview */}
               <div className="text-center py-4" style={{ borderBottom: '1px solid var(--border)' }}>
@@ -302,7 +302,7 @@ export default function EmailTemplatesPage() {
                 style={{ maxHeight: '500px', overflow: 'auto' }}
               >
                 <div className="text-center mb-6">
-                  <span style={{ fontSize: '20px', fontWeight: 300, letterSpacing: '0.15em', color: '#D4AF37', fontFamily: 'Georgia, serif' }}>
+                  <span style={{ fontSize: '20px', fontWeight: 300, letterSpacing: '0.15em', color: '#C9A961', fontFamily: 'Georgia, serif' }}>
                     SOS SHINE®
                   </span>
                 </div>
@@ -351,7 +351,7 @@ export default function EmailTemplatesPage() {
           onClick={handleSeed}
           disabled={seeding}
           className="px-5 py-2.5 rounded-full text-sm font-semibold transition-all disabled:opacity-50"
-          style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}
+          style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000' }}
         >
           {seeding ? 'Initialisation...' : 'Initialiser les templates'}
         </button>
@@ -376,7 +376,7 @@ export default function EmailTemplatesPage() {
             onClick={handleSeed}
             disabled={seeding}
             className="inline-block px-6 py-3 rounded-full text-sm font-semibold disabled:opacity-50"
-            style={{ background: 'var(--brand)', color: '#050505' }}
+            style={{ background: 'var(--brand)', color: '#000000' }}
           >
             {seeding ? 'Initialisation...' : 'Initialiser maintenant'}
           </button>
@@ -390,7 +390,7 @@ export default function EmailTemplatesPage() {
               className="px-4 py-2 rounded-full text-xs font-medium transition-all"
               style={{
                 background: activeCategory === 'all' ? 'var(--brand)' : 'var(--surface-card)',
-                color: activeCategory === 'all' ? '#050505' : 'var(--text-muted)',
+                color: activeCategory === 'all' ? '#000000' : 'var(--text-muted)',
                 border: `1px solid ${activeCategory === 'all' ? 'var(--brand)' : 'var(--border)'}`,
               }}
             >
@@ -406,7 +406,7 @@ export default function EmailTemplatesPage() {
                   className="px-4 py-2 rounded-full text-xs font-medium transition-all"
                   style={{
                     background: activeCategory === cat.key ? 'var(--brand)' : 'var(--surface-card)',
-                    color: activeCategory === cat.key ? '#050505' : 'var(--text-muted)',
+                    color: activeCategory === cat.key ? '#000000' : 'var(--text-muted)',
                     border: `1px solid ${activeCategory === cat.key ? 'var(--brand)' : 'var(--border)'}`,
                   }}
                 >
@@ -491,7 +491,7 @@ export default function EmailTemplatesPage() {
                       <button
                         onClick={() => { setEditingTemplate(template); setPreviewTemplate(null) }}
                         className="px-4 py-1.5 rounded-full text-xs font-semibold transition-all"
-                        style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}
+                        style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000' }}
                       >
                         Modifier
                       </button>

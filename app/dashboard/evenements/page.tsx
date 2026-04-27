@@ -94,23 +94,23 @@ function WorldGlobe({ events, selectedEvent, onSelect, dragLabel }: {
 
       // Globe background sphere
       const sphereGrad = ctx.createRadialGradient(cx - R * 0.3, cy - R * 0.3, R * 0.1, cx, cy, R)
-      sphereGrad.addColorStop(0, 'rgba(212,175,55,0.06)')
-      sphereGrad.addColorStop(0.7, 'rgba(212,175,55,0.02)')
-      sphereGrad.addColorStop(1, 'rgba(212,175,55,0)')
+      sphereGrad.addColorStop(0, 'rgba(201,169,97,0.06)')
+      sphereGrad.addColorStop(0.7, 'rgba(201,169,97,0.02)')
+      sphereGrad.addColorStop(1, 'rgba(201,169,97,0)')
       ctx.fillStyle = sphereGrad
       ctx.beginPath()
       ctx.arc(cx, cy, R, 0, Math.PI * 2)
       ctx.fill()
 
       // Globe outline
-      ctx.strokeStyle = 'rgba(212,175,55,0.15)'
+      ctx.strokeStyle = 'rgba(201,169,97,0.15)'
       ctx.lineWidth = 1
       ctx.beginPath()
       ctx.arc(cx, cy, R, 0, Math.PI * 2)
       ctx.stroke()
 
       // Latitude lines
-      ctx.strokeStyle = 'rgba(212,175,55,0.04)'
+      ctx.strokeStyle = 'rgba(201,169,97,0.04)'
       ctx.lineWidth = 0.5
       for (let lat = -60; lat <= 60; lat += 30) {
         ctx.beginPath()
@@ -155,9 +155,9 @@ function WorldGlobe({ events, selectedEvent, onSelect, dragLabel }: {
         })
         if (visiblePoints.length > 2) {
           ctx.closePath()
-          ctx.fillStyle = 'rgba(212,175,55,0.12)'
+          ctx.fillStyle = 'rgba(201,169,97,0.12)'
           ctx.fill()
-          ctx.strokeStyle = 'rgba(212,175,55,0.25)'
+          ctx.strokeStyle = 'rgba(201,169,97,0.25)'
           ctx.lineWidth = 0.8
           ctx.stroke()
         }
@@ -182,8 +182,8 @@ function WorldGlobe({ events, selectedEvent, onSelect, dragLabel }: {
         // Glow
         const glowR = size + 10 + pulse * 8
         const glow = ctx.createRadialGradient(x, y, 0, x, y, glowR)
-        glow.addColorStop(0, `rgba(212,175,55,${(isSelected ? 0.5 : 0.3) * depthFade})`)
-        glow.addColorStop(1, 'rgba(212,175,55,0)')
+        glow.addColorStop(0, `rgba(201,169,97,${(isSelected ? 0.5 : 0.3) * depthFade})`)
+        glow.addColorStop(1, 'rgba(201,169,97,0)')
         ctx.fillStyle = glow
         ctx.beginPath()
         ctx.arc(x, y, glowR, 0, Math.PI * 2)
@@ -195,7 +195,7 @@ function WorldGlobe({ events, selectedEvent, onSelect, dragLabel }: {
         ctx.rotate(Math.PI / 4)
         const s = size + (isSelected ? Math.sin(time * 3) * 2 : 0)
 
-        ctx.fillStyle = isSelected ? '#D4AF37' : `rgba(212,175,55,${(0.7 + pulse * 0.3) * depthFade})`
+        ctx.fillStyle = isSelected ? '#C9A961' : `rgba(201,169,97,${(0.7 + pulse * 0.3) * depthFade})`
         ctx.fillRect(-s / 2, -s / 2, s, s)
 
         ctx.strokeStyle = `rgba(255,255,255,${(0.4 + pulse * 0.4) * depthFade})`
@@ -214,16 +214,16 @@ function WorldGlobe({ events, selectedEvent, onSelect, dragLabel }: {
           ctx.textAlign = 'center'
           ctx.fillStyle = 'rgba(0,0,0,0.5)'
           ctx.fillText(event.location_name, x + 1, y - size - 9)
-          ctx.fillStyle = '#D4AF37'
+          ctx.fillStyle = '#C9A961'
           ctx.fillText(event.location_name, x, y - size - 10)
         }
       })
 
       // Atmosphere edge glow
       const atmoGrad = ctx.createRadialGradient(cx, cy, R * 0.95, cx, cy, R * 1.15)
-      atmoGrad.addColorStop(0, 'rgba(212,175,55,0.05)')
-      atmoGrad.addColorStop(0.5, 'rgba(212,175,55,0.02)')
-      atmoGrad.addColorStop(1, 'rgba(212,175,55,0)')
+      atmoGrad.addColorStop(0, 'rgba(201,169,97,0.05)')
+      atmoGrad.addColorStop(0.5, 'rgba(201,169,97,0.02)')
+      atmoGrad.addColorStop(1, 'rgba(201,169,97,0)')
       ctx.fillStyle = atmoGrad
       ctx.beginPath()
       ctx.arc(cx, cy, R * 1.15, 0, Math.PI * 2)
@@ -278,7 +278,7 @@ function WorldGlobe({ events, selectedEvent, onSelect, dragLabel }: {
   }
 
   return (
-    <div ref={containerRef} className="relative w-full rounded-2xl overflow-hidden" style={{ height: 380, background: 'radial-gradient(ellipse at center, rgba(212,175,55,0.03) 0%, transparent 70%)', border: '1px solid rgba(212,175,55,0.1)' }}>
+    <div ref={containerRef} className="relative w-full rounded-2xl overflow-hidden" style={{ height: 380, background: 'radial-gradient(ellipse at center, rgba(201,169,97,0.03) 0%, transparent 70%)', border: '1px solid rgba(201,169,97,0.1)' }}>
       <canvas
         ref={canvasRef}
         className="w-full h-full cursor-grab active:cursor-grabbing"
@@ -289,7 +289,7 @@ function WorldGlobe({ events, selectedEvent, onSelect, dragLabel }: {
         onPointerCancel={onPointerUp}
       />
       <div className="absolute bottom-3 left-3 flex items-center gap-2">
-        <span className="w-2 h-2 rotate-45 inline-block" style={{ background: '#D4AF37' }} />
+        <span className="w-2 h-2 rotate-45 inline-block" style={{ background: '#C9A961' }} />
         <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{dragLabel}</span>
       </div>
     </div>
@@ -478,7 +478,7 @@ export default function EvenementsPage() {
         </div>
       ) : events.length === 0 ? (
         <div className="text-center py-16">
-          <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-5 text-3xl" style={{ background: 'rgba(212,175,55,0.08)' }}>
+          <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-5 text-3xl" style={{ background: 'rgba(201,169,97,0.08)' }}>
             📅
           </div>
           <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
@@ -502,8 +502,8 @@ export default function EvenementsPage() {
                 className="rounded-2xl p-6 transition-all duration-300"
                 style={{
                   background: 'var(--surface-card)',
-                  border: isSelected ? '1px solid rgba(212,175,55,0.4)' : '1px solid var(--border)',
-                  boxShadow: isSelected ? '0 0 20px rgba(212,175,55,0.08)' : 'none',
+                  border: isSelected ? '1px solid rgba(201,169,97,0.4)' : '1px solid var(--border)',
+                  boxShadow: isSelected ? '0 0 20px rgba(201,169,97,0.08)' : 'none',
                 }}
               >
                 {/* Cover image */}

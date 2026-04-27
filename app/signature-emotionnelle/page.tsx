@@ -85,7 +85,7 @@ function IntroScreen({ onStart }: { onStart: (name: string) => void }) {
             onClick={() => name.trim() && onStart(name.trim())}
             disabled={!name.trim()}
             className="w-full py-4 rounded-full text-sm font-semibold transition-all cursor-pointer disabled:opacity-30"
-            style={{ background: 'linear-gradient(135deg, var(--brand), var(--gold-deep, #B8960F))', color: '#050505' }}
+            style={{ background: 'linear-gradient(135deg, var(--brand), var(--gold-deep, #B8960F))', color: '#000000' }}
           >
             COMMENCER · 6 MIN
           </button>
@@ -215,7 +215,7 @@ function QuestionScreen({
 
       {/* Sticky bottom navigation — above mobile browser bars */}
       <div className="fixed bottom-0 left-0 right-0 z-20 px-6 pb-[env(safe-area-inset-bottom,16px)] pt-4"
-        style={{ background: 'linear-gradient(to top, var(--dark, #050505) 60%, transparent)' }}>
+        style={{ background: 'linear-gradient(to top, var(--dark, #000000) 60%, transparent)' }}>
         <div className="max-w-lg mx-auto flex justify-between items-center">
           {canGoBack ? (
             <button onClick={onPrev} className="text-sm cursor-pointer" style={{ color: 'var(--text-muted)' }}>
@@ -229,7 +229,7 @@ function QuestionScreen({
             className="px-8 py-3 rounded-full text-sm font-semibold transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
             style={{
               background: hasAnswer ? 'linear-gradient(135deg, var(--brand), var(--gold-deep, #B8960F))' : 'rgba(255,255,255,0.06)',
-              color: hasAnswer ? '#050505' : 'var(--text-muted)',
+              color: hasAnswer ? '#000000' : 'var(--text-muted)',
             }}
           >
             {isLast ? 'Voir mon résultat' : 'Suivant →'}
@@ -385,7 +385,7 @@ export default function SignatureEmotionnellePage() {
   }, [phase, sessionId, responseId, dominant])
 
   return (
-    <main className="min-h-screen relative z-10" style={{ background: 'var(--dark, #050505)' }}>
+    <main className="min-h-screen relative z-10" style={{ background: 'var(--dark, #000000)' }}>
       <AnimatePresence mode="wait">
         {phase === 'intro' && (
           <IntroScreen key="intro" onStart={handleStart} />
@@ -393,7 +393,7 @@ export default function SignatureEmotionnellePage() {
 
         {phase === 'quiz' && question && (
           <div key="quiz">
-            <div className="sticky top-0 z-10 px-6 py-4" style={{ background: 'var(--dark, #050505)' }}>
+            <div className="sticky top-0 z-10 px-6 py-4" style={{ background: 'var(--dark, #000000)' }}>
               <QuizProgress current={currentQ + 1} total={15} />
             </div>
             <AnimatePresence mode="wait">

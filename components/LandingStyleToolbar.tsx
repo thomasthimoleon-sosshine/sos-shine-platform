@@ -141,7 +141,7 @@ export default function LandingStyleToolbar({ styles, onChange, previewText }: S
           <div className="flex items-center gap-1.5">
             <input
               type="color"
-              value={titleColor || '#D4AF37'}
+              value={titleColor || '#C9A961'}
               onChange={e => onChange('title_color', e.target.value)}
               className="w-10 h-10 rounded-lg cursor-pointer border-0"
               style={{ background: 'transparent' }}
@@ -211,7 +211,7 @@ export default function LandingStyleToolbar({ styles, onChange, previewText }: S
             <h3 style={{
               fontFamily: titleFont,
               fontSize: sizeObj.px,
-              color: titleColor || '#D4AF37',
+              color: titleColor || '#C9A961',
               lineHeight: 1.1,
               fontWeight: 300,
               marginBottom: '12px',

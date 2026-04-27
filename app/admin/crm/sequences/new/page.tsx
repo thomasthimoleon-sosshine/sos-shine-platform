@@ -145,7 +145,7 @@ export default function NewSequencePage() {
 
         <div
           className="p-4 rounded-xl flex items-center gap-4"
-          style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.1)' }}
+          style={{ background: 'rgba(201,169,97,0.05)', border: '1px solid rgba(201,169,97,0.1)' }}
         >
           <div className="text-sm" style={{ color: 'var(--brand)' }}>Timeline :</div>
           <div className="flex items-center gap-2 flex-wrap">
@@ -153,7 +153,7 @@ export default function NewSequencePage() {
               <div key={i} className="flex items-center gap-2">
                 <span
                   className="px-3 py-1 rounded-full text-xs font-medium"
-                  style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)' }}
+                  style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)' }}
                 >
                   {t} — Email {i + 1}
                 </span>
@@ -173,7 +173,7 @@ export default function NewSequencePage() {
             <button
               onClick={addStep}
               className="px-4 py-2 rounded-full text-xs font-medium transition-all"
-              style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.2)' }}
+              style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.2)' }}
             >
               + Ajouter un email
             </button>
@@ -189,7 +189,7 @@ export default function NewSequencePage() {
                 <div className="flex items-center gap-3">
                   <div
                     className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold"
-                    style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)' }}
+                    style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)' }}
                   >
                     {index + 1}
                   </div>
@@ -255,7 +255,7 @@ export default function NewSequencePage() {
                         key={v}
                         onClick={() => updateStep(index, 'html_content', step.html_content + v)}
                         className="px-2 py-0.5 rounded text-xs"
-                        style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.2)' }}
+                        style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.2)' }}
                       >
                         {v}
                       </button>
@@ -295,7 +295,7 @@ export default function NewSequencePage() {
           onClick={handleSave}
           disabled={saving}
           className="px-8 py-3 rounded-full text-sm font-semibold transition-all disabled:opacity-50"
-          style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}
+          style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000' }}
         >
           {saving ? 'Sauvegarde...' : '✓ Créer la séquence'}
         </button>

@@ -61,8 +61,8 @@ export default function FavoriteButton({ slug, size = 'md' }: { slug: string; si
       whileTap={{ scale: 0.85 }}
       className={`${btnSize} rounded-xl flex items-center justify-center transition-all duration-300 cursor-pointer`}
       style={{
-        background: isFav ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.05)',
-        border: `1px solid ${isFav ? 'rgba(212,175,55,0.3)' : 'rgba(255,255,255,0.08)'}`,
+        background: isFav ? 'rgba(201,169,97,0.15)' : 'rgba(255,255,255,0.05)',
+        border: `1px solid ${isFav ? 'rgba(201,169,97,0.3)' : 'rgba(255,255,255,0.08)'}`,
       }}
       title={isFav ? t('favorites.remove') : t('favorites.add')}
       aria-label={isFav ? t('favorites.remove') : t('favorites.add')}

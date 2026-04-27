@@ -544,7 +544,7 @@ export default function Home() {
                 {(hero.buttons || []).map((btn: { label: string; href: string; variant: string }, i: number) => (
                   <Link key={i} href={btn.href === '/signup' || btn.href === '/login' ? '/signup' : btn.href}>
                     {btn.variant === 'primary' ? (
-                      <button className="magnetic-btn pulse-ring px-8 py-4 rounded-full text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                      <button className="magnetic-btn pulse-ring px-8 py-4 rounded-full text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}>
                         {btn.label} — {trialDays} jours d&apos;essai
                       </button>
                     ) : (
@@ -930,7 +930,7 @@ export default function Home() {
                     {plan.badge && (
                       <motion.div
                         className="absolute -top-3 left-1/2 -translate-x-1/2 z-20 px-5 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase"
-                        style={{ background: `linear-gradient(135deg, ${accent}, rgba(${accentRgb},0.7))`, color: '#050505' }}
+                        style={{ background: `linear-gradient(135deg, ${accent}, rgba(${accentRgb},0.7))`, color: '#000000' }}
                         initial={{ y: -10, opacity: 0 }}
                         whileInView={{ y: 0, opacity: 1 }}
                         viewport={{ once: true }}
@@ -968,7 +968,7 @@ export default function Home() {
                     <Link href="/signup">
                       <button className={`magnetic-btn w-full py-4 rounded-full text-base font-semibold tracking-wide ${plan.highlight ? 'pulse-ring' : ''}`} style={{
                         background: plan.highlight ? `linear-gradient(135deg, ${accent}, rgba(${accentRgb},0.7))` : `linear-gradient(135deg, ${gold}, ${goldDeep})`,
-                        color: '#050505'
+                        color: '#000000'
                       }}>
                         {plan.button_label}
                       </button>
@@ -1005,7 +1005,7 @@ export default function Home() {
             </RevealOnScroll>
             <RevealOnScroll delay={0.3}>
               <Link href="/signup">
-                <button className="magnetic-btn pulse-ring px-10 py-5 rounded-full text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                <button className="magnetic-btn pulse-ring px-10 py-5 rounded-full text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}>
                   Rejoindre SOS Shine
                 </button>
               </Link>

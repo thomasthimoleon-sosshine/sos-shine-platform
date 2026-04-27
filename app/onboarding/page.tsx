@@ -194,7 +194,7 @@ export default function OnboardingPage() {
               className="text-center"
             >
               <div className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center"
-                style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.15)' }}>
+                style={{ background: 'rgba(201,169,97,0.1)', border: '1px solid rgba(201,169,97,0.15)' }}>
                 <span className="text-3xl">✨</span>
               </div>
 
@@ -262,8 +262,8 @@ export default function OnboardingPage() {
                       onClick={() => toggleGoal(option.key)}
                       className="text-left p-4 rounded-xl transition-all duration-200 cursor-pointer group"
                       style={{
-                        background: isSelected ? 'rgba(212,175,55,0.08)' : 'var(--surface-card)',
-                        border: isSelected ? '1px solid rgba(212,175,55,0.3)' : '1px solid var(--border)',
+                        background: isSelected ? 'rgba(201,169,97,0.08)' : 'var(--surface-card)',
+                        border: isSelected ? '1px solid rgba(201,169,97,0.3)' : '1px solid var(--border)',
                       }}
                     >
                       <div className="flex items-start gap-3">
@@ -357,7 +357,7 @@ export default function OnboardingPage() {
                         <div className="flex flex-wrap gap-1.5 mt-2">
                           {option.slugs.map((slug) => (
                             <span key={slug} className="text-[11px] px-2 py-0.5 rounded-md" style={{
-                              background: 'rgba(212,175,55,0.1)', color: 'var(--brand)',
+                              background: 'rgba(201,169,97,0.1)', color: 'var(--brand)',
                             }}>
                               {slug.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
                             </span>

@@ -121,14 +121,14 @@ export default function FeatureGate({ children, featureKey, loadingText }: Featu
             <div
               className="relative z-10 rounded-2xl overflow-hidden p-8 sm:p-10"
               style={{
-                background: 'linear-gradient(160deg, var(--surface-card) 0%, rgba(212,175,55,0.06) 100%)',
-                border: '1px solid rgba(212,175,55,0.2)',
-                boxShadow: '0 25px 60px rgba(0,0,0,0.4), 0 0 40px rgba(212,175,55,0.06)',
+                background: 'linear-gradient(160deg, var(--surface-card) 0%, rgba(201,169,97,0.06) 100%)',
+                border: '1px solid rgba(201,169,97,0.2)',
+                boxShadow: '0 25px 60px rgba(0,0,0,0.4), 0 0 40px rgba(201,169,97,0.06)',
               }}
             >
               <div
                 className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center"
-                style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}
+                style={{ background: 'rgba(201,169,97,0.1)', border: '1px solid rgba(201,169,97,0.2)' }}
               >
                 <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="var(--brand)" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" />
@@ -149,8 +149,8 @@ export default function FeatureGate({ children, featureKey, loadingText }: Featu
                 className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-sm font-semibold tracking-wide transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
                 style={{
                   background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
-                  color: '#050505',
-                  boxShadow: '0 4px 20px rgba(212,175,55,0.3)',
+                  color: '#000000',
+                  boxShadow: '0 4px 20px rgba(201,169,97,0.3)',
                 }}
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -198,14 +198,14 @@ export default function FeatureGate({ children, featureKey, loadingText }: Featu
           <div
             className="relative z-10 rounded-2xl overflow-hidden p-8 sm:p-10"
             style={{
-              background: 'linear-gradient(160deg, var(--surface-card) 0%, rgba(212,175,55,0.06) 100%)',
-              border: '1px solid rgba(212,175,55,0.2)',
-              boxShadow: '0 25px 60px rgba(0,0,0,0.4), 0 0 40px rgba(212,175,55,0.06)',
+              background: 'linear-gradient(160deg, var(--surface-card) 0%, rgba(201,169,97,0.06) 100%)',
+              border: '1px solid rgba(201,169,97,0.2)',
+              boxShadow: '0 25px 60px rgba(0,0,0,0.4), 0 0 40px rgba(201,169,97,0.06)',
             }}
           >
             <div
               className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center"
-              style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}
+              style={{ background: 'rgba(201,169,97,0.1)', border: '1px solid rgba(201,169,97,0.2)' }}
             >
               <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="var(--brand)" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
@@ -226,8 +226,8 @@ export default function FeatureGate({ children, featureKey, loadingText }: Featu
               className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-sm font-semibold tracking-wide transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
               style={{
                 background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
-                color: '#050505',
-                boxShadow: '0 4px 20px rgba(212,175,55,0.3)',
+                color: '#000000',
+                boxShadow: '0 4px 20px rgba(201,169,97,0.3)',
               }}
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

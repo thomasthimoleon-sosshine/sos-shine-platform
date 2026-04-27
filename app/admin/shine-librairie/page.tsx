@@ -246,7 +246,7 @@ export default function AdminShineLibrairiePage() {
         {!showForm && (
           <button onClick={() => { setEditingId(null); setForm(emptyForm); setShowForm(true); setError(null) }}
             className="px-5 py-2.5 rounded-lg text-sm font-semibold transition-all hover:opacity-90 self-start sm:self-auto"
-            style={{ background: '#D4AF37', color: '#fff' }}>
+            style={{ background: '#C9A961', color: '#fff' }}>
             Ajouter un livre
           </button>
         )}
@@ -261,7 +261,7 @@ export default function AdminShineLibrairiePage() {
       {/* Form */}
       {showForm && (
         <form onSubmit={handleSave} className="rounded-xl p-6 space-y-5" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
-          <h2 className="font-semibold text-lg" style={{ color: '#D4AF37' }}>
+          <h2 className="font-semibold text-lg" style={{ color: '#C9A961' }}>
             {editingId ? 'Modifier le livre' : 'Nouveau livre / eBook'}
           </h2>
 
@@ -353,7 +353,7 @@ export default function AdminShineLibrairiePage() {
           <div className="flex items-center gap-3 pt-2">
             <button type="submit" disabled={saving || !form.title.trim()}
               className="px-6 py-2.5 rounded-lg text-sm font-semibold transition-all disabled:opacity-40"
-              style={{ background: '#D4AF37', color: '#fff' }}>
+              style={{ background: '#C9A961', color: '#fff' }}>
               {saving ? 'Enregistrement...' : editingId ? 'Mettre à jour' : 'Enregistrer'}
             </button>
             <button type="button" onClick={cancelForm}
@@ -371,9 +371,9 @@ export default function AdminShineLibrairiePage() {
           <button onClick={() => setFilterType('all')}
             className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
             style={{
-              background: filterType === 'all' ? 'rgba(212,175,55,0.15)' : 'transparent',
-              color: filterType === 'all' ? '#D4AF37' : 'var(--text-muted)',
-              border: `1px solid ${filterType === 'all' ? 'rgba(212,175,55,0.3)' : 'var(--border)'}`,
+              background: filterType === 'all' ? 'rgba(201,169,97,0.15)' : 'transparent',
+              color: filterType === 'all' ? '#C9A961' : 'var(--text-muted)',
+              border: `1px solid ${filterType === 'all' ? 'rgba(201,169,97,0.3)' : 'var(--border)'}`,
             }}>
             Tout ({books.length})
           </button>
@@ -384,9 +384,9 @@ export default function AdminShineLibrairiePage() {
               <button key={c.id} onClick={() => setFilterType(c.id)}
                 className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
                 style={{
-                  background: filterType === c.id ? 'rgba(212,175,55,0.15)' : 'transparent',
-                  color: filterType === c.id ? '#D4AF37' : 'var(--text-muted)',
-                  border: `1px solid ${filterType === c.id ? 'rgba(212,175,55,0.3)' : 'var(--border)'}`,
+                  background: filterType === c.id ? 'rgba(201,169,97,0.15)' : 'transparent',
+                  color: filterType === c.id ? '#C9A961' : 'var(--text-muted)',
+                  border: `1px solid ${filterType === c.id ? 'rgba(201,169,97,0.3)' : 'var(--border)'}`,
                 }}>
                 {c.icon} {c.label} ({count})
               </button>
@@ -399,7 +399,7 @@ export default function AdminShineLibrairiePage() {
       {!showForm && !loading && books.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
-            { label: 'Total livres', value: books.length, color: '#D4AF37' },
+            { label: 'Total livres', value: books.length, color: '#C9A961' },
             { label: 'Publiés', value: books.filter((b) => b.is_published).length, color: '#55EFC4' },
             { label: 'Brouillons', value: books.filter((b) => !b.is_published).length, color: '#FF6B35' },
             { label: 'En vedette', value: books.filter((b) => b.is_featured).length, color: '#74C0FC' },
@@ -416,7 +416,7 @@ export default function AdminShineLibrairiePage() {
       {/* List */}
       {loading ? (
         <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-[#C9A961] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : filteredBooks.length === 0 ? (
         <div className="rounded-xl p-12 text-center" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
@@ -430,9 +430,9 @@ export default function AdminShineLibrairiePage() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {filteredBooks.map((b) => (
             <div key={b.id} className="rounded-xl overflow-hidden transition-all duration-200 hover:-translate-y-0.5 flex flex-col"
-              style={{ background: 'var(--surface-card)', border: `1px solid ${b.is_featured ? 'rgba(212,175,55,0.4)' : 'var(--border)'}` }}>
+              style={{ background: 'var(--surface-card)', border: `1px solid ${b.is_featured ? 'rgba(201,169,97,0.4)' : 'var(--border)'}` }}>
               {/* Cover */}
-              <div className="relative aspect-[3/4]" style={{ background: 'rgba(212,175,55,0.05)' }}>
+              <div className="relative aspect-[3/4]" style={{ background: 'rgba(201,169,97,0.05)' }}>
                 {b.cover_url ? (
                   <img src={b.cover_url} alt={b.title} className="w-full h-full object-contain" />
                 ) : (
@@ -452,7 +452,7 @@ export default function AdminShineLibrairiePage() {
                   </span>
                   {b.is_featured && (
                     <span className="px-2 py-0.5 rounded text-[10px] font-medium"
-                      style={{ background: 'rgba(212,175,55,0.9)', color: '#fff' }}>
+                      style={{ background: 'rgba(201,169,97,0.9)', color: '#fff' }}>
                       En vedette
                     </span>
                   )}
@@ -472,7 +472,7 @@ export default function AdminShineLibrairiePage() {
                 <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>par {b.author}</p>
                 <div className="flex flex-wrap items-center gap-1.5">
                   <span className="text-[10px] px-2 py-0.5 rounded-full"
-                    style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37' }}>
+                    style={{ background: 'rgba(201,169,97,0.1)', color: '#C9A961' }}>
                     {getTypeIcon(b.content_type)} {getTypeLabel(b.content_type)}
                   </span>
                   <span className="text-[10px] px-2 py-0.5 rounded-full"
@@ -510,9 +510,9 @@ export default function AdminShineLibrairiePage() {
                   <button onClick={() => toggleFeatured(b)}
                     className="px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all hover:opacity-80"
                     style={{
-                      background: b.is_featured ? 'rgba(212,175,55,0.15)' : 'rgba(212,175,55,0.05)',
-                      color: '#D4AF37',
-                      border: `1px solid rgba(212,175,55,${b.is_featured ? '0.3' : '0.15'})`,
+                      background: b.is_featured ? 'rgba(201,169,97,0.15)' : 'rgba(201,169,97,0.05)',
+                      color: '#C9A961',
+                      border: `1px solid rgba(201,169,97,${b.is_featured ? '0.3' : '0.15'})`,
                     }}>
                     {b.is_featured ? 'Retirer vedette' : 'Mettre en vedette'}
                   </button>

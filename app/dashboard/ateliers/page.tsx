@@ -101,9 +101,9 @@ function AteliersContent() {
               style={{
                 background: isActive
                   ? 'linear-gradient(135deg, var(--brand), var(--brand-deep))'
-                  : 'rgba(212,175,55,0.08)',
-                color: isActive ? '#050505' : 'var(--text-secondary)',
-                border: isActive ? 'none' : '1px solid rgba(212,175,55,0.15)',
+                  : 'rgba(201,169,97,0.08)',
+                color: isActive ? '#000000' : 'var(--text-secondary)',
+                border: isActive ? 'none' : '1px solid rgba(201,169,97,0.15)',
               }}
             >
               {m.label}
@@ -153,9 +153,9 @@ function AteliersContent() {
                     className="rounded-2xl overflow-hidden transition-all duration-200"
                     style={{
                       background: expandedWeek === atelier.week
-                        ? 'rgba(212,175,55,0.06)'
+                        ? 'rgba(201,169,97,0.06)'
                         : 'var(--surface-card)',
-                      border: '1px solid rgba(212,175,55,0.15)',
+                      border: '1px solid rgba(201,169,97,0.15)',
                     }}
                   >
                     {/* Card Header */}
@@ -201,8 +201,8 @@ function AteliersContent() {
                         <div
                           className="w-10 h-10 rounded-full flex items-center justify-center transition-transform duration-200 group-hover:scale-110"
                           style={{
-                            background: 'rgba(212,175,55,0.1)',
-                            border: '1px solid rgba(212,175,55,0.2)',
+                            background: 'rgba(201,169,97,0.1)',
+                            border: '1px solid rgba(201,169,97,0.2)',
                           }}
                         >
                           <svg
@@ -227,7 +227,7 @@ function AteliersContent() {
                       >
                         <div
                           className="pt-4"
-                          style={{ borderTop: '1px solid rgba(212,175,55,0.1)' }}
+                          style={{ borderTop: '1px solid rgba(201,169,97,0.1)' }}
                         >
                           {atelier.description && (
                             <p
@@ -248,7 +248,7 @@ function AteliersContent() {
                                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 hover:scale-[1.03]"
                                 style={{
                                   background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
-                                  color: '#050505',
+                                  color: '#000000',
                                 }}
                               >
                                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -280,9 +280,9 @@ function AteliersContent() {
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 hover:scale-[1.03]"
                                 style={{
-                                  background: 'rgba(212,175,55,0.08)',
+                                  background: 'rgba(201,169,97,0.08)',
                                   color: 'var(--brand)',
-                                  border: '1px solid rgba(212,175,55,0.2)',
+                                  border: '1px solid rgba(201,169,97,0.2)',
                                 }}
                               >
                                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -320,7 +320,7 @@ function AteliersContent() {
                       width: currentTheme.arc_number === arc ? '3rem' : '1.5rem',
                       background: currentTheme.arc_number >= arc
                         ? 'var(--brand)'
-                        : 'rgba(212,175,55,0.15)',
+                        : 'rgba(201,169,97,0.15)',
                     }}
                   />
                   {arc < 4 && <div className="w-1" />}

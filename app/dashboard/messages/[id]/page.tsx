@@ -147,7 +147,7 @@ export default function ConversationPage() {
               <img src={partner.avatar_url} alt={partnerName} className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
             ) : (
               <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-semibold"
-                style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
+                style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}>
                 {partnerName.charAt(0).toUpperCase()}
               </div>
             )}
@@ -174,7 +174,7 @@ export default function ConversationPage() {
             </div>
           ) : messages.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center py-16 text-center">
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4" style={{ background: 'rgba(212,175,55,0.1)' }}>
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4" style={{ background: 'rgba(201,169,97,0.1)' }}>
                 <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} style={{ color: 'var(--brand)' }}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
                 </svg>
@@ -202,7 +202,7 @@ export default function ConversationPage() {
                   <div className={`flex ${isMine ? 'justify-end' : 'justify-start'} mb-1`}>
                     <div className={`max-w-[75%] px-4 py-2.5 rounded-2xl ${isMine ? 'rounded-br-md' : 'rounded-bl-md'}`}
                       style={{
-                        background: isMine ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.04)',
+                        background: isMine ? 'rgba(201,169,97,0.15)' : 'rgba(255,255,255,0.04)',
                         border: isMine ? 'none' : '1px solid var(--border)',
                       }}>
                       {msg.message_type === 'audio' && msg.audio_url ? (

@@ -74,7 +74,7 @@ export default function ForgotPasswordPage() {
                   placeholder="votre@email.com"
                   className="w-full px-4 py-3 rounded-xl text-sm transition-colors"
                   style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)', outline: 'none' }}
-                  onFocus={(e) => e.currentTarget.style.borderColor = 'rgba(212,175,55,0.4)'}
+                  onFocus={(e) => e.currentTarget.style.borderColor = 'rgba(201,169,97,0.4)'}
                   onBlur={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
                 />
               </div>

@@ -37,7 +37,7 @@ const MILESTONES = [
 const PHASE_COLORS: Record<string, string> = {
   'Lancement': '#74C0FC',
   'Croissance': '#55EFC4',
-  'Accélération': '#D4AF37',
+  'Accélération': '#C9A961',
   'Consolidation': '#A29BFE',
 }
 
@@ -282,7 +282,7 @@ export default function ObjectifsMensuelsPage() {
 
       {loading ? (
         <div className="flex justify-center py-20">
-          <div className="w-10 h-10 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin" />
+          <div className="w-10 h-10 border-2 border-[#C9A961] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : stats && (
         <>
@@ -292,7 +292,7 @@ export default function ObjectifsMensuelsPage() {
               <ProgressRing
                 value={stats.totalActive}
                 max={currentTarget.cumulActive}
-                color="#D4AF37"
+                color="#C9A961"
                 label="Abonnés actifs"
                 sublabel={`Objectif : ${fmt(currentTarget.cumulActive)}`}
               />
@@ -373,7 +373,7 @@ export default function ObjectifsMensuelsPage() {
                 { key: 'monthly', label: 'Mensuel', actual: stats.monthlyCount, ratio: DURATION_RATIOS.monthly, color: '#E17055' },
                 { key: 'quarterly', label: 'Trimestriel (-10%)', actual: stats.quarterlyCount, ratio: DURATION_RATIOS.quarterly, color: '#74C0FC' },
                 { key: 'semiannual', label: 'Semestriel (-20%)', actual: stats.semiannualCount, ratio: DURATION_RATIOS.semiannual, color: '#55EFC4' },
-                { key: 'annual', label: 'Annuel (-30%)', actual: stats.annualCount, ratio: DURATION_RATIOS.annual, color: '#D4AF37' },
+                { key: 'annual', label: 'Annuel (-30%)', actual: stats.annualCount, ratio: DURATION_RATIOS.annual, color: '#C9A961' },
               ]).map(d => {
                 const target = Math.round(currentTarget.cumulActive * d.ratio)
                 return (
@@ -393,12 +393,12 @@ export default function ObjectifsMensuelsPage() {
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
               {[
-                { label: 'MRR actuel', value: fmtEur(stats.mrr), target: fmtEur(currentTarget.mrr), color: '#D4AF37', icon: '💰' },
+                { label: 'MRR actuel', value: fmtEur(stats.mrr), target: fmtEur(currentTarget.mrr), color: '#C9A961', icon: '💰' },
                 { label: 'ARR projeté', value: fmtEur(stats.mrr * 12), target: fmtEur(currentTarget.mrr * 12), color: '#55EFC4', icon: '📊' },
                 { label: 'ARPU', value: stats.totalActive > 0 ? fmtEur(stats.mrr / stats.totalActive) : '—', target: '~37€', color: '#74C0FC', icon: '👤' },
                 { label: 'En essai', value: fmt(stats.trialingCount), target: '', color: '#A29BFE', icon: '⏳' },
                 { label: 'Impayés', value: fmt(stats.pastDueCount), target: '', color: stats.pastDueCount > 0 ? '#EF4444' : '#55EFC4', icon: '⚠️' },
-                { label: 'Early adopters', value: fmt(stats.waitlistDiscountCount), target: '-10€/mois', color: '#D4AF37', icon: '⭐' },
+                { label: 'Early adopters', value: fmt(stats.waitlistDiscountCount), target: '-10€/mois', color: '#C9A961', icon: '⭐' },
               ].map(kpi => (
                 <div key={kpi.label} className="rounded-lg p-4" style={{ background: `${kpi.color}08`, border: `1px solid ${kpi.color}15` }}>
                   <span className="text-lg">{kpi.icon}</span>
@@ -411,7 +411,7 @@ export default function ObjectifsMensuelsPage() {
           </div>
 
           {/* Projections */}
-          <div className="rounded-xl p-6" style={{ background: 'rgba(212,175,55,0.03)', border: '1px solid rgba(212,175,55,0.12)' }}>
+          <div className="rounded-xl p-6" style={{ background: 'rgba(201,169,97,0.03)', border: '1px solid rgba(201,169,97,0.12)' }}>
             <h2 className="font-display text-lg font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
               Projection fin de mois (extrapolation linéaire)
             </h2>
@@ -474,9 +474,9 @@ export default function ObjectifsMensuelsPage() {
                       <tr key={t.month}
                         style={{
                           borderBottom: '1px solid var(--border)',
-                          background: isCurrent ? 'rgba(212,175,55,0.06)' : 'transparent',
+                          background: isCurrent ? 'rgba(201,169,97,0.06)' : 'transparent',
                         }}>
-                        <td className="py-3 px-2 font-medium" style={{ color: isCurrent ? '#D4AF37' : 'var(--text-primary)' }}>
+                        <td className="py-3 px-2 font-medium" style={{ color: isCurrent ? '#C9A961' : 'var(--text-primary)' }}>
                           {isCurrent && '▸ '}{t.month}
                         </td>
                         <td className="py-3 px-2">
@@ -487,11 +487,11 @@ export default function ObjectifsMensuelsPage() {
                         </td>
                         <td className="py-3 px-2 text-right" style={{ color: 'var(--text-secondary)' }}>+{fmt(t.newSubs)}</td>
                         <td className="py-3 px-2 text-right font-semibold" style={{ color: 'var(--text-primary)' }}>{fmt(t.cumulActive)}</td>
-                        <td className="py-3 px-2 text-right" style={{ color: '#D4AF37' }}>{fmtEur(t.mrr)}</td>
+                        <td className="py-3 px-2 text-right" style={{ color: '#C9A961' }}>{fmtEur(t.mrr)}</td>
                         <td className="py-3 px-2 text-right" style={{ color: 'var(--text-muted)' }}>~{fmt(t.churn)}</td>
                         <td className="py-3 px-2 text-center">
                           {isCurrent ? (
-                            <span className="inline-block w-2 h-2 rounded-full animate-pulse" style={{ background: '#D4AF37' }} />
+                            <span className="inline-block w-2 h-2 rounded-full animate-pulse" style={{ background: '#C9A961' }} />
                           ) : isPast ? (
                             <span style={{ color: '#55EFC4' }}>✓</span>
                           ) : (
@@ -566,7 +566,7 @@ export default function ObjectifsMensuelsPage() {
               ].map((l, i) => (
                 <div key={i} className="flex items-start gap-3 rounded-lg p-3" style={{ background: 'rgba(255,255,255,0.02)' }}>
                   <span className="text-[10px] px-2 py-0.5 rounded-full font-bold mt-0.5"
-                    style={{ background: l.priority === 'Haute' ? 'rgba(239,68,68,0.15)' : 'rgba(212,175,55,0.15)', color: l.priority === 'Haute' ? '#EF4444' : '#D4AF37' }}>
+                    style={{ background: l.priority === 'Haute' ? 'rgba(239,68,68,0.15)' : 'rgba(201,169,97,0.15)', color: l.priority === 'Haute' ? '#EF4444' : '#C9A961' }}>
                     {l.priority}
                   </span>
                   <p className="text-[13px]" style={{ color: 'var(--text-secondary)' }}>{l.text}</p>
@@ -579,7 +579,7 @@ export default function ObjectifsMensuelsPage() {
               ].map((l, i) => (
                 <div key={i} className="flex items-start gap-3 rounded-lg p-3" style={{ background: 'rgba(255,255,255,0.02)' }}>
                   <span className="text-[10px] px-2 py-0.5 rounded-full font-bold mt-0.5"
-                    style={{ background: l.priority === 'Haute' ? 'rgba(239,68,68,0.15)' : 'rgba(212,175,55,0.15)', color: l.priority === 'Haute' ? '#EF4444' : '#D4AF37' }}>
+                    style={{ background: l.priority === 'Haute' ? 'rgba(239,68,68,0.15)' : 'rgba(201,169,97,0.15)', color: l.priority === 'Haute' ? '#EF4444' : '#C9A961' }}>
                     {l.priority}
                   </span>
                   <p className="text-[13px]" style={{ color: 'var(--text-secondary)' }}>{l.text}</p>
@@ -592,7 +592,7 @@ export default function ObjectifsMensuelsPage() {
               ].map((l, i) => (
                 <div key={i} className="flex items-start gap-3 rounded-lg p-3" style={{ background: 'rgba(255,255,255,0.02)' }}>
                   <span className="text-[10px] px-2 py-0.5 rounded-full font-bold mt-0.5"
-                    style={{ background: l.priority === 'Haute' ? 'rgba(239,68,68,0.15)' : 'rgba(212,175,55,0.15)', color: l.priority === 'Haute' ? '#EF4444' : '#D4AF37' }}>
+                    style={{ background: l.priority === 'Haute' ? 'rgba(239,68,68,0.15)' : 'rgba(201,169,97,0.15)', color: l.priority === 'Haute' ? '#EF4444' : '#C9A961' }}>
                     {l.priority}
                   </span>
                   <p className="text-[13px]" style={{ color: 'var(--text-secondary)' }}>{l.text}</p>
@@ -605,7 +605,7 @@ export default function ObjectifsMensuelsPage() {
               ].map((l, i) => (
                 <div key={i} className="flex items-start gap-3 rounded-lg p-3" style={{ background: 'rgba(255,255,255,0.02)' }}>
                   <span className="text-[10px] px-2 py-0.5 rounded-full font-bold mt-0.5"
-                    style={{ background: l.priority === 'Haute' ? 'rgba(239,68,68,0.15)' : 'rgba(212,175,55,0.15)', color: l.priority === 'Haute' ? '#EF4444' : '#D4AF37' }}>
+                    style={{ background: l.priority === 'Haute' ? 'rgba(239,68,68,0.15)' : 'rgba(201,169,97,0.15)', color: l.priority === 'Haute' ? '#EF4444' : '#C9A961' }}>
                     {l.priority}
                   </span>
                   <p className="text-[13px]" style={{ color: 'var(--text-secondary)' }}>{l.text}</p>

@@ -540,11 +540,11 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
                 type="submit"
                 disabled={status === "loading"}
                 className="magnetic-btn pulse-ring w-full py-4 rounded-full text-sm font-semibold tracking-wide transition-all disabled:opacity-50"
-                style={{ background: "linear-gradient(135deg, #D4AF37, #B8960F)", color: "#050505" }}
+                style={{ background: "linear-gradient(135deg, #D4AF37, #B8960F)", color: "#000000" }}
               >
                 {status === "loading" ? (
                   <span className="flex items-center justify-center gap-2">
-                    <span className="w-4 h-4 border-2 border-[#050505] border-t-transparent rounded-full animate-spin" />
+                    <span className="w-4 h-4 border-2 border-[#000000] border-t-transparent rounded-full animate-spin" />
                     {s(settings, 'prelaunch_form_loading', 'Inscription...')}
                   </span>
                 ) : (

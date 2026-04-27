@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 
 export default function NotreHistoirePage() {
   const [logoUrl, setLogoUrl] = useState('')
-  const [gold, setGold] = useState('#D4AF37')
+  const [gold, setGold] = useState('#C9A961')
   const [loading, setLoading] = useState(true)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [hist, setHist] = useState<Record<string, any>>({})

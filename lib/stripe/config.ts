@@ -133,7 +133,7 @@ export const PLAN_NAMES: Record<PlanId, string> = {
 export const PLAN_COLORS: Record<PlanId, string> = {
   essential: '#74C0FC',
   serenite: '#55EFC4',
-  premium: '#D4AF37',
+  premium: '#C9A961',
 }
 
 export const PLAN_PRICES_EUR: Record<PlanId, number> = {

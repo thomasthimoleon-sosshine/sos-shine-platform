@@ -56,7 +56,7 @@ export default function CourrierAnonymePage() {
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-3">
           <div className="w-10 h-10 rounded-2xl flex items-center justify-center"
-            style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.15)' }}>
+            style={{ background: 'rgba(201,169,97,0.1)', border: '1px solid rgba(201,169,97,0.15)' }}>
             <svg className="w-5 h-5" style={{ color: 'var(--brand)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
             </svg>
@@ -83,7 +83,7 @@ export default function CourrierAnonymePage() {
             style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
           >
             <div className="w-16 h-16 rounded-full flex items-center justify-center text-3xl mx-auto mb-6"
-              style={{ background: 'rgba(212,175,55,0.1)' }}>
+              style={{ background: 'rgba(201,169,97,0.1)' }}>
               ✉️
             </div>
             <h2 className="font-display text-2xl font-light mb-3" style={{ color: 'var(--brand)' }}>
@@ -98,7 +98,7 @@ export default function CourrierAnonymePage() {
               <button
                 onClick={() => setSent(false)}
                 className="px-6 py-3 rounded-full text-sm font-medium transition-all"
-                style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}
+                style={{ background: 'linear-gradient(135deg, #C9A961, #B8960F)', color: '#000000' }}
               >
                 Envoyer un autre message
               </button>
@@ -113,7 +113,7 @@ export default function CourrierAnonymePage() {
           >
             {/* Explanation card */}
             <div className="rounded-2xl p-5 mb-6"
-              style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.1)' }}>
+              style={{ background: 'rgba(201,169,97,0.04)', border: '1px solid rgba(201,169,97,0.1)' }}>
               <div className="flex items-start gap-3">
                 <span className="text-lg mt-0.5">🔒</span>
                 <div>
@@ -144,8 +144,8 @@ export default function CourrierAnonymePage() {
                       onClick={() => setCategory(cat.value)}
                       className="rounded-xl p-3 text-left transition-all"
                       style={{
-                        background: category === cat.value ? 'rgba(212,175,55,0.08)' : 'var(--surface-card)',
-                        border: category === cat.value ? '1px solid rgba(212,175,55,0.25)' : '1px solid var(--border)',
+                        background: category === cat.value ? 'rgba(201,169,97,0.08)' : 'var(--surface-card)',
+                        border: category === cat.value ? '1px solid rgba(201,169,97,0.25)' : '1px solid var(--border)',
                       }}
                     >
                       <span className="text-lg">{cat.icon}</span>
@@ -220,7 +220,7 @@ export default function CourrierAnonymePage() {
                 type="submit"
                 disabled={sending || !content.trim()}
                 className="w-full py-3.5 rounded-full text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}
+                style={{ background: 'linear-gradient(135deg, #C9A961, #B8960F)', color: '#000000' }}
               >
                 {sending ? (
                   <span className="flex items-center justify-center gap-2">
@@ -253,7 +253,7 @@ export default function CourrierAnonymePage() {
                     key={i}
                     type="button"
                     onClick={() => { setContent(idea); setCategory(i < 2 ? 'question' : i === 2 ? 'recommandation' : 'suggestion') }}
-                    className="block w-full text-left text-xs px-3 py-2 rounded-lg transition-all hover:bg-[rgba(212,175,55,0.05)]"
+                    className="block w-full text-left text-xs px-3 py-2 rounded-lg transition-all hover:bg-[rgba(201,169,97,0.05)]"
                     style={{ color: 'var(--text-secondary)' }}
                   >
                     <span style={{ color: 'var(--brand)' }}>&#x2726;</span> {idea}

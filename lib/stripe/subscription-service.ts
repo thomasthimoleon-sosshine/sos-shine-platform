@@ -173,14 +173,14 @@ export async function sendWelcomeEmail(
   if (!result.success) {
     // Fallback : email brut
     const html = `
-      <h2 style="color:#D4AF37;font-family:Georgia,'Times New Roman',serif;font-weight:300;font-size:24px;margin:0 0 24px;">
+      <h2 style="color:#C9A961;font-family:Georgia,'Times New Roman',serif;font-weight:300;font-size:24px;margin:0 0 24px;">
         Bienvenue dans SOS Shine, ${firstName} !
       </h2>
       <p style="color:#E0E0E0;font-size:15px;line-height:1.7;margin:0 0 16px;">
-        Votre paiement a bien &eacute;t&eacute; confirm&eacute; pour l'offre <strong style="color:#D4AF37;">${planName}</strong>.
+        Votre paiement a bien &eacute;t&eacute; confirm&eacute; pour l'offre <strong style="color:#C9A961;">${planName}</strong>.
       </p>
       <div style="text-align:center;margin:32px 0;">
-        <a href="${siteUrl}/login" style="display:inline-block;background:linear-gradient(135deg,#D4AF37,#B8960F);color:#050505;padding:14px 40px;border-radius:50px;text-decoration:none;font-weight:600;font-size:15px;">
+        <a href="${siteUrl}/login" style="display:inline-block;background:linear-gradient(135deg,#C9A961,#B8960F);color:#050505;padding:14px 40px;border-radius:50px;text-decoration:none;font-weight:600;font-size:15px;">
           Acc&eacute;der &agrave; mon espace
         </a>
       </div>

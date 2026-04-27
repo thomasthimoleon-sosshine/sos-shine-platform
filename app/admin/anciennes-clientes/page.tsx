@@ -236,9 +236,9 @@ export default function AnciennesClientesPage() {
           <button type="submit" disabled={saving}
             className="px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer"
             style={{
-              background: 'linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.1))',
-              border: '1px solid rgba(212,175,55,0.3)',
-              color: '#D4AF37',
+              background: 'linear-gradient(135deg, rgba(201,169,97,0.2), rgba(201,169,97,0.1))',
+              border: '1px solid rgba(201,169,97,0.3)',
+              color: '#C9A961',
               opacity: saving ? 0.5 : 1,
             }}>
             {saving ? 'Ajout en cours...' : 'Ajouter la cliente'}
@@ -295,7 +295,7 @@ export default function AnciennesClientesPage() {
 
         {loading ? (
           <div className="flex justify-center py-8">
-            <div className="w-6 h-6 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-[#C9A961] border-t-transparent rounded-full animate-spin" />
           </div>
         ) : clients.length === 0 ? (
           <div className="px-5 py-8 text-center text-sm" style={{ color: 'var(--text-muted)' }}>

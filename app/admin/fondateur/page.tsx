@@ -161,7 +161,7 @@ function generateProjection(targetSubscribers: number = 5000) {
 const TRAFFIC_SOURCES = [
   { name: 'Instagram / TikTok', value: 32, color: '#E17055' },
   { name: 'Bouche à oreille', value: 25, color: '#55EFC4' },
-  { name: 'Affiliation', value: 20, color: '#D4AF37' },
+  { name: 'Affiliation', value: 20, color: '#C9A961' },
   { name: 'Google (SEO)', value: 12, color: '#74C0FC' },
   { name: 'YouTube', value: 7, color: '#A29BFE' },
   { name: 'Facebook Ads', value: 4, color: '#FF6B35' },
@@ -175,8 +175,8 @@ const fmtEur = (n: number) => new Intl.NumberFormat('fr-FR', { style: 'currency'
 function CustomTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ name: string; value: number; color: string }>; label?: string }) {
   if (!active || !payload?.length) return null
   return (
-    <div className="rounded-xl px-4 py-3 text-xs" style={{ background: 'rgba(10,10,10,0.95)', border: '1px solid rgba(212,175,55,0.2)' }}>
-      <p className="font-semibold mb-1.5" style={{ color: '#D4AF37' }}>{label}</p>
+    <div className="rounded-xl px-4 py-3 text-xs" style={{ background: 'rgba(10,10,10,0.95)', border: '1px solid rgba(201,169,97,0.2)' }}>
+      <p className="font-semibold mb-1.5" style={{ color: '#C9A961' }}>{label}</p>
       {payload.map((entry, i) => (
         <p key={i} style={{ color: entry.color || '#e0e0e0' }}>
           {entry.name}: <span className="font-semibold">{typeof entry.value === 'number' && entry.value > 100 ? fmtEur(entry.value) : entry.value}</span>
@@ -359,7 +359,7 @@ export default function FounderDashboard() {
     { name: 'CDN / Vidéo Hosting', value: costBreakdown5k.videoHosting, color: '#A29BFE' },
     { name: 'Production Contenu', value: costBreakdown5k.contentProduction, color: '#E17055' },
     { name: 'Marketing', value: costBreakdown5k.marketing, color: '#55EFC4' },
-    { name: 'Email / CRM', value: costBreakdown5k.emailCrm, color: '#D4AF37' },
+    { name: 'Email / CRM', value: costBreakdown5k.emailCrm, color: '#C9A961' },
     { name: 'Support / Tools', value: costBreakdown5k.support, color: '#FF6B35' },
     { name: 'Compta / Juridique', value: costBreakdown5k.legalAccounting, color: '#9B59B6' },
     { name: 'Assurances', value: costBreakdown5k.insurance, color: '#636e72' },
@@ -387,7 +387,7 @@ export default function FounderDashboard() {
   // Health score (0-100)
   const marginPct = month12.mrr > 0 ? (month12.netProfit / month12.mrr) * 100 : 0
   const healthScore = Math.min(100, Math.max(0, Math.round(marginPct * 1.5)))
-  const healthData = [{ name: 'Santé', value: healthScore, fill: healthScore > 70 ? '#55EFC4' : healthScore > 40 ? '#D4AF37' : '#E17055' }]
+  const healthData = [{ name: 'Santé', value: healthScore, fill: healthScore > 70 ? '#55EFC4' : healthScore > 40 ? '#C9A961' : '#E17055' }]
 
   return (
     <div className="max-w-7xl mx-auto space-y-8 pb-12">
@@ -395,7 +395,7 @@ export default function FounderDashboard() {
       <div>
         <div className="flex items-center gap-3 mb-2">
           <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg"
-            style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}>
+            style={{ background: 'linear-gradient(135deg, #C9A961, #B8960F)', color: '#000000' }}>
             F
           </div>
           <div>
@@ -420,12 +420,12 @@ export default function FounderDashboard() {
               className="px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
               style={{
                 background: activeTab === tab.key
-                  ? 'linear-gradient(135deg, rgba(212,175,55,0.15), rgba(212,175,55,0.05))'
+                  ? 'linear-gradient(135deg, rgba(201,169,97,0.15), rgba(201,169,97,0.05))'
                   : 'rgba(255,255,255,0.02)',
                 border: activeTab === tab.key
-                  ? '1px solid rgba(212,175,55,0.4)'
+                  ? '1px solid rgba(201,169,97,0.4)'
                   : '1px solid var(--border)',
-                color: activeTab === tab.key ? '#D4AF37' : 'var(--text-muted)',
+                color: activeTab === tab.key ? '#C9A961' : 'var(--text-muted)',
               }}
             >
               <span className="mr-2">{tab.icon}</span>
@@ -437,7 +437,7 @@ export default function FounderDashboard() {
 
       {loading ? (
         <div className="flex justify-center py-20">
-          <div className="w-10 h-10 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin" />
+          <div className="w-10 h-10 border-2 border-[#C9A961] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : (
         <>
@@ -445,13 +445,13 @@ export default function FounderDashboard() {
           <>
           {/* ═══════════════════ SECTION 1: LIVE STATS ═══════════════════ */}
           <div>
-            <h2 className="text-sm font-semibold uppercase tracking-wider mb-4" style={{ color: '#D4AF37' }}>
+            <h2 className="text-sm font-semibold uppercase tracking-wider mb-4" style={{ color: '#C9A961' }}>
               Situation actuelle (live)
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
               <StatCard icon="👥" label="Membres inscrits" value={fmt(liveStats.totalMembers)} color="#74C0FC" />
               <StatCard icon="💳" label="Abonnements actifs" value={fmt(liveStats.activeSubscriptions)} color="#55EFC4" />
-              <StatCard icon="💰" label="MRR actuel" value={fmtEur(liveMRR)} sub={`ARR: ${fmtEur(liveMRR * 12)}`} color="#D4AF37" />
+              <StatCard icon="💰" label="MRR actuel" value={fmtEur(liveMRR)} sub={`ARR: ${fmtEur(liveMRR * 12)}`} color="#C9A961" />
               <StatCard icon="⏳" label="En période d'essai" value={fmt(liveStats.trialingCount)} color="#A29BFE" />
               <StatCard icon="⚠️" label="Paiement en retard" value={fmt(liveStats.pastDueCount)} color="#E17055" />
               <StatCard icon="🤝" label="Affiliés actifs" value={fmt(liveStats.totalAffiliates)} sub={`En attente: ${fmtEur(liveStats.pendingPayouts / 100)}`} color="#FF6B35" />
@@ -481,7 +481,7 @@ export default function FounderDashboard() {
 
           {/* ═══════════════════ CRM — VUE FONDATEUR ═══════════════════ */}
           <div>
-            <h2 className="text-sm font-semibold uppercase tracking-wider mb-1" style={{ color: '#D4AF37' }}>
+            <h2 className="text-sm font-semibold uppercase tracking-wider mb-1" style={{ color: '#C9A961' }}>
               CRM & Campagnes Email
             </h2>
             <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>
@@ -519,9 +519,9 @@ export default function FounderDashboard() {
               <div className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Emails automatiques</div>
             </Link>
             <Link href="/admin/crm/email-templates" className="rounded-xl p-4 text-center transition-all hover:scale-[1.02]"
-              style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.15)' }}>
+              style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.15)' }}>
               <div className="text-2xl mb-2">📬</div>
-              <div className="text-sm font-medium" style={{ color: '#D4AF37' }}>Templates</div>
+              <div className="text-sm font-medium" style={{ color: '#C9A961' }}>Templates</div>
               <div className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Modifier les emails</div>
             </Link>
             <Link href="/admin/crm/signature-emails" className="rounded-xl p-4 text-center transition-all hover:scale-[1.02]"
@@ -548,8 +548,8 @@ export default function FounderDashboard() {
                       <div className="flex items-center gap-3">
                         <span className="px-2 py-0.5 rounded-full text-[10px] font-medium"
                           style={{
-                            background: camp.status === 'sent' ? 'rgba(80,200,120,0.15)' : camp.status === 'scheduled' ? 'rgba(74,144,217,0.15)' : 'rgba(212,175,55,0.15)',
-                            color: camp.status === 'sent' ? '#50C878' : camp.status === 'scheduled' ? '#4A90D9' : '#D4AF37',
+                            background: camp.status === 'sent' ? 'rgba(80,200,120,0.15)' : camp.status === 'scheduled' ? 'rgba(74,144,217,0.15)' : 'rgba(201,169,97,0.15)',
+                            color: camp.status === 'sent' ? '#50C878' : camp.status === 'scheduled' ? '#4A90D9' : '#C9A961',
                           }}>
                           {camp.status === 'sent' ? 'Envoyée' : camp.status === 'scheduled' ? 'Planifiée' : 'Brouillon'}
                         </span>
@@ -574,7 +574,7 @@ export default function FounderDashboard() {
 
           {/* ═══════════════════ SECTION 2: PROJECTION 12 MOIS ═══════════════════ */}
           <div>
-            <h2 className="text-sm font-semibold uppercase tracking-wider mb-1" style={{ color: '#D4AF37' }}>
+            <h2 className="text-sm font-semibold uppercase tracking-wider mb-1" style={{ color: '#C9A961' }}>
               Projection 12 mois — Objectif 5 000 abonnés
             </h2>
             <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>
@@ -585,11 +585,11 @@ export default function FounderDashboard() {
           {/* ─── KPI Cards projection ─── */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
             <StatCard icon="🎯" label="Abonnés à M12" value={fmt(month12.subscribers)} sub={`dont ${month12.churned} churn/mois`} color="#74C0FC" />
-            <StatCard icon="📈" label="MRR à M12" value={fmtEur(month12.mrr)} sub={`ARR: ${fmtEur(month12.arr)}`} color="#D4AF37" />
+            <StatCard icon="📈" label="MRR à M12" value={fmtEur(month12.mrr)} sub={`ARR: ${fmtEur(month12.arr)}`} color="#C9A961" />
             <StatCard icon="💵" label="CA cumulé (12 mois)" value={fmtEur(yearlyRevenue)} color="#55EFC4" />
             <StatCard icon="🏛️" label="IS Chypre (12.5%)" value={fmtEur(yearlyTax)} sub="Impôt sur les sociétés" color="#E17055" />
             <StatCard icon="✨" label="Net distribuable" value={fmtEur(yearlyDistributable)} sub="Après IS + prélèvements" color="#A29BFE" />
-            <StatCard icon="👤" label="Par associé / an" value={fmtEur(yearlyPerPartner)} sub={`~${fmtEur(yearlyPerPartner / 12)}/mois`} color="#D4AF37" />
+            <StatCard icon="👤" label="Par associé / an" value={fmtEur(yearlyPerPartner)} sub={`~${fmtEur(yearlyPerPartner / 12)}/mois`} color="#C9A961" />
           </div>
 
           {/* ─── Revenue + Subscribers Growth ─── */}
@@ -599,11 +599,11 @@ export default function FounderDashboard() {
                 <ComposedChart data={projection}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
                   <XAxis dataKey="month" stroke="var(--text-muted)" tick={{ fontSize: 11 }} />
-                  <YAxis yAxisId="left" stroke="#D4AF37" tick={{ fontSize: 11 }} tickFormatter={(v: number) => `${(v / 1000).toFixed(0)}k€`} />
+                  <YAxis yAxisId="left" stroke="#C9A961" tick={{ fontSize: 11 }} tickFormatter={(v: number) => `${(v / 1000).toFixed(0)}k€`} />
                   <YAxis yAxisId="right" orientation="right" stroke="#74C0FC" tick={{ fontSize: 11 }} />
                   <Tooltip content={<CustomTooltip />} />
                   <Legend wrapperStyle={{ fontSize: 11, color: 'var(--text-secondary)' }} />
-                  <Area yAxisId="left" type="monotone" dataKey="mrr" name="MRR (€)" stroke="#D4AF37" fill="rgba(212,175,55,0.1)" strokeWidth={2} />
+                  <Area yAxisId="left" type="monotone" dataKey="mrr" name="MRR (€)" stroke="#C9A961" fill="rgba(201,169,97,0.1)" strokeWidth={2} />
                   <Line yAxisId="right" type="monotone" dataKey="subscribers" name="Abonnés" stroke="#74C0FC" strokeWidth={2} dot={{ r: 3 }} />
                 </ComposedChart>
               </ResponsiveContainer>
@@ -662,7 +662,7 @@ export default function FounderDashboard() {
             <div style={{ height: 350 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={[
-                  { name: 'CA Brut', value: month12.mrr, color: '#D4AF37' },
+                  { name: 'CA Brut', value: month12.mrr, color: '#C9A961' },
                   { name: 'Frais Stripe', value: -month12.stripeFees, color: '#E17055' },
                   { name: 'Commissions Aff.', value: -month12.affiliateCommissions, color: '#FF6B35' },
                   { name: 'Fondation 5%', value: -month12.fondationContrib, color: '#E84393' },
@@ -670,7 +670,7 @@ export default function FounderDashboard() {
                   { name: 'Coûts Opé.', value: -month12.operatingCosts, color: '#74C0FC' },
                   { name: 'IS Chypre 12.5%', value: -month12.corporateTax, color: '#A29BFE' },
                   { name: 'Profit Net', value: month12.netProfit, color: '#55EFC4' },
-                  { name: 'Par Associé', value: month12.perPartner, color: '#D4AF37' },
+                  { name: 'Par Associé', value: month12.perPartner, color: '#C9A961' },
                 ]}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
                   <XAxis dataKey="name" stroke="var(--text-muted)" tick={{ fontSize: 10 }} />
@@ -678,9 +678,9 @@ export default function FounderDashboard() {
                   <Tooltip content={<CustomTooltip />} />
                   <Bar dataKey="value" radius={[6, 6, 0, 0]}>
                     {[
-                      { color: '#D4AF37' }, { color: '#E17055' }, { color: '#FF6B35' },
+                      { color: '#C9A961' }, { color: '#E17055' }, { color: '#FF6B35' },
                       { color: '#E84393' }, { color: '#00CEC9' },
-                      { color: '#74C0FC' }, { color: '#A29BFE' }, { color: '#55EFC4' }, { color: '#D4AF37' },
+                      { color: '#74C0FC' }, { color: '#A29BFE' }, { color: '#55EFC4' }, { color: '#C9A961' },
                     ].map((entry, i) => (
                       <Cell key={i} fill={entry.color} opacity={0.85} />
                     ))}
@@ -717,7 +717,7 @@ export default function FounderDashboard() {
                 <div className="col-span-2 mt-2 pt-2" style={{ borderTop: '1px solid var(--border)' }}>
                   <div className="flex items-center justify-between text-sm font-semibold">
                     <span style={{ color: 'var(--text-secondary)' }}>Total mensuel</span>
-                    <span style={{ color: '#D4AF37' }}>{fmtEur(costBreakdown5k.total)}</span>
+                    <span style={{ color: '#C9A961' }}>{fmtEur(costBreakdown5k.total)}</span>
                   </div>
                 </div>
               </div>
@@ -764,7 +764,7 @@ export default function FounderDashboard() {
                   <YAxis stroke="var(--text-muted)" tick={{ fontSize: 11 }} tickFormatter={(v: number) => `${(v / 1000).toFixed(0)}k€`} />
                   <Tooltip content={<CustomTooltip />} />
                   <Legend wrapperStyle={{ fontSize: 11 }} />
-                  <Area type="monotone" dataKey="mrr" name="Revenus (MRR)" stroke="#D4AF37" fill="rgba(212,175,55,0.08)" strokeWidth={2} />
+                  <Area type="monotone" dataKey="mrr" name="Revenus (MRR)" stroke="#C9A961" fill="rgba(201,169,97,0.08)" strokeWidth={2} />
                   <Area type="monotone" dataKey="totalCosts" name="Coûts totaux" stroke="#E17055" fill="rgba(225,112,85,0.08)" strokeWidth={2} />
                   <Area type="monotone" dataKey="netProfit" name="Profit net" stroke="#55EFC4" fill="rgba(85,239,196,0.08)" strokeWidth={2} />
                 </AreaChart>
@@ -813,7 +813,7 @@ export default function FounderDashboard() {
 
           {/* ═══════════════════ SECTION 3: FISCALITÉ CHYPRE ═══════════════════ */}
           <div>
-            <h2 className="text-sm font-semibold uppercase tracking-wider mb-1" style={{ color: '#D4AF37' }}>
+            <h2 className="text-sm font-semibold uppercase tracking-wider mb-1" style={{ color: '#C9A961' }}>
               Fiscalité Chypre — Simulation détaillée
             </h2>
             <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>
@@ -824,7 +824,7 @@ export default function FounderDashboard() {
           <Section title="Cascade fiscale annuelle (12 mois)" subtitle="Du CA brut au revenu net par associé">
             <div className="space-y-3">
               {[
-                { label: 'Chiffre d\'affaires brut cumulé', value: yearlyRevenue, color: '#D4AF37', icon: '💰' },
+                { label: 'Chiffre d\'affaires brut cumulé', value: yearlyRevenue, color: '#C9A961', icon: '💰' },
                 { label: 'Frais Stripe (2.5% moy.)', value: -yearlyStripe, color: '#E17055', icon: '💳' },
                 { label: 'Commissions affiliation (10% × 30%)', value: -yearlyAffiliate, color: '#FF6B35', icon: '🤝' },
                 { label: 'Fondation humanitaire (5% du CA)', value: -yearlyFondation, color: '#E84393', icon: '❤️' },
@@ -835,10 +835,10 @@ export default function FounderDashboard() {
                 { label: 'Résultat net après IS', value: yearlyNetProfit, color: '#55EFC4', icon: '✅' },
                 { label: 'Contribution défense (17%)', value: -(yearlyNetProfit * CYPRUS.defenceContribDividend), color: '#A29BFE', icon: '🛡️' },
                 { label: 'GHS / Santé (2.65%)', value: -(yearlyNetProfit * CYPRUS.ghsDividend), color: '#9B59B6', icon: '🏥' },
-                { label: 'Net distribuable aux associés', value: yearlyDistributable, color: '#D4AF37', icon: '✨', bold: true },
+                { label: 'Net distribuable aux associés', value: yearlyDistributable, color: '#C9A961', icon: '✨', bold: true },
               ].map((row) => (
                 <div key={row.label} className="flex items-center justify-between py-2 px-3 rounded-lg"
-                  style={{ background: row.bold ? 'rgba(212,175,55,0.05)' : 'transparent', borderBottom: '1px solid var(--border)' }}>
+                  style={{ background: row.bold ? 'rgba(201,169,97,0.05)' : 'transparent', borderBottom: '1px solid var(--border)' }}>
                   <div className="flex items-center gap-2">
                     <span className="text-sm">{row.icon}</span>
                     <span className={`text-xs ${row.bold ? 'font-semibold' : ''}`} style={{ color: 'var(--text-secondary)' }}>{row.label}</span>
@@ -855,13 +855,13 @@ export default function FounderDashboard() {
                 <div className="grid grid-cols-3 gap-4">
                   {['Associé 1', 'Associé 2', 'Associé 3'].map((name, i) => (
                     <div key={i} className="rounded-xl p-5 text-center"
-                      style={{ background: 'linear-gradient(135deg, rgba(212,175,55,0.05), rgba(212,175,55,0.02))', border: '1px solid rgba(212,175,55,0.15)' }}>
+                      style={{ background: 'linear-gradient(135deg, rgba(201,169,97,0.05), rgba(201,169,97,0.02))', border: '1px solid rgba(201,169,97,0.15)' }}>
                       <div className="w-10 h-10 mx-auto rounded-full flex items-center justify-center text-sm font-bold mb-3"
-                        style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37' }}>
+                        style={{ background: 'rgba(201,169,97,0.15)', color: '#C9A961' }}>
                         {i + 1}
                       </div>
                       <p className="text-xs mb-1" style={{ color: 'var(--text-muted)' }}>{name}</p>
-                      <p className="font-display text-2xl font-bold" style={{ color: '#D4AF37' }}>{fmtEur(yearlyPerPartner)}</p>
+                      <p className="font-display text-2xl font-bold" style={{ color: '#C9A961' }}>{fmtEur(yearlyPerPartner)}</p>
                       <p className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>soit ~{fmtEur(yearlyPerPartner / 12)}/mois net</p>
                     </div>
                   ))}
@@ -879,11 +879,11 @@ export default function FounderDashboard() {
                   <XAxis dataKey="month" stroke="var(--text-muted)" tick={{ fontSize: 11 }} />
                   <YAxis stroke="var(--text-muted)" tick={{ fontSize: 11 }} tickFormatter={(v: number) => `${(v / 1000).toFixed(1)}k€`} />
                   <Tooltip content={<CustomTooltip />} />
-                  <Area type="monotone" dataKey="perPartner" name="Net / associé (€)" stroke="#D4AF37" fill="url(#goldGradient)" strokeWidth={2.5} />
+                  <Area type="monotone" dataKey="perPartner" name="Net / associé (€)" stroke="#C9A961" fill="url(#goldGradient)" strokeWidth={2.5} />
                   <defs>
                     <linearGradient id="goldGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#D4AF37" stopOpacity={0.3} />
-                      <stop offset="100%" stopColor="#D4AF37" stopOpacity={0.02} />
+                      <stop offset="0%" stopColor="#C9A961" stopOpacity={0.3} />
+                      <stop offset="100%" stopColor="#C9A961" stopOpacity={0.02} />
                     </linearGradient>
                   </defs>
                 </AreaChart>
@@ -924,13 +924,13 @@ export default function FounderDashboard() {
                 <tbody>
                   {projection.map((m, i) => (
                     <tr key={i} className="transition-colors" style={{ borderBottom: '1px solid var(--border)' }}
-                      onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(212,175,55,0.03)'}
+                      onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(201,169,97,0.03)'}
                       onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
-                      <td className="py-2 px-2 font-semibold" style={{ color: '#D4AF37' }}>{m.month}</td>
+                      <td className="py-2 px-2 font-semibold" style={{ color: '#C9A961' }}>{m.month}</td>
                       <td className="py-2 px-2" style={{ color: '#74C0FC' }}>{fmt(m.subscribers)}</td>
                       <td className="py-2 px-2" style={{ color: '#55EFC4' }}>+{fmt(m.newSubscribers)}</td>
                       <td className="py-2 px-2" style={{ color: '#E17055' }}>-{fmt(m.churned)}</td>
-                      <td className="py-2 px-2 font-semibold" style={{ color: '#D4AF37' }}>{fmtEur(m.mrr)}</td>
+                      <td className="py-2 px-2 font-semibold" style={{ color: '#C9A961' }}>{fmtEur(m.mrr)}</td>
                       <td className="py-2 px-2" style={{ color: '#E84393' }}>{fmtEur(m.fondationContrib)}</td>
                       <td className="py-2 px-2" style={{ color: '#00CEC9' }}>{fmtEur(m.eventOrganization)}</td>
                       <td className="py-2 px-2" style={{ color: 'var(--text-secondary)' }}>{fmtEur(m.operatingCosts)}</td>
@@ -938,17 +938,17 @@ export default function FounderDashboard() {
                       <td className="py-2 px-2" style={{ color: '#FF6B35' }}>{fmtEur(m.affiliateCommissions)}</td>
                       <td className="py-2 px-2" style={{ color: '#A29BFE' }}>{fmtEur(m.corporateTax)}</td>
                       <td className="py-2 px-2 font-semibold" style={{ color: m.netProfit >= 0 ? '#55EFC4' : '#E17055' }}>{fmtEur(m.netProfit)}</td>
-                      <td className="py-2 px-2 font-semibold" style={{ color: m.perPartner >= 0 ? '#D4AF37' : '#E17055' }}>{fmtEur(m.perPartner)}</td>
+                      <td className="py-2 px-2 font-semibold" style={{ color: m.perPartner >= 0 ? '#C9A961' : '#E17055' }}>{fmtEur(m.perPartner)}</td>
                     </tr>
                   ))}
                 </tbody>
                 <tfoot>
-                  <tr style={{ borderTop: '2px solid rgba(212,175,55,0.3)' }}>
-                    <td className="py-3 px-2 font-bold" style={{ color: '#D4AF37' }}>TOTAL</td>
+                  <tr style={{ borderTop: '2px solid rgba(201,169,97,0.3)' }}>
+                    <td className="py-3 px-2 font-bold" style={{ color: '#C9A961' }}>TOTAL</td>
                     <td className="py-3 px-2" />
                     <td className="py-3 px-2" />
                     <td className="py-3 px-2" />
-                    <td className="py-3 px-2 font-bold" style={{ color: '#D4AF37' }}>{fmtEur(yearlyRevenue)}</td>
+                    <td className="py-3 px-2 font-bold" style={{ color: '#C9A961' }}>{fmtEur(yearlyRevenue)}</td>
                     <td className="py-3 px-2 font-semibold" style={{ color: '#E84393' }}>{fmtEur(yearlyFondation)}</td>
                     <td className="py-3 px-2 font-semibold" style={{ color: '#00CEC9' }}>{fmtEur(yearlyEvents)}</td>
                     <td className="py-3 px-2 font-semibold" style={{ color: 'var(--text-secondary)' }}>{fmtEur(yearlyCosts)}</td>
@@ -956,7 +956,7 @@ export default function FounderDashboard() {
                     <td className="py-3 px-2 font-semibold" style={{ color: '#FF6B35' }}>{fmtEur(yearlyAffiliate)}</td>
                     <td className="py-3 px-2 font-semibold" style={{ color: '#A29BFE' }}>{fmtEur(yearlyTax)}</td>
                     <td className="py-3 px-2 font-bold" style={{ color: '#55EFC4' }}>{fmtEur(yearlyNetProfit)}</td>
-                    <td className="py-3 px-2 font-bold" style={{ color: '#D4AF37' }}>{fmtEur(yearlyPerPartner)}</td>
+                    <td className="py-3 px-2 font-bold" style={{ color: '#C9A961' }}>{fmtEur(yearlyPerPartner)}</td>
                   </tr>
                 </tfoot>
               </table>
@@ -964,8 +964,8 @@ export default function FounderDashboard() {
           </Section>
 
           {/* ─── Methodology note ─── */}
-          <div className="rounded-xl p-5" style={{ background: 'rgba(212,175,55,0.03)', border: '1px solid rgba(212,175,55,0.1)' }}>
-            <h3 className="text-sm font-semibold mb-2" style={{ color: '#D4AF37' }}>Méthodologie & hypothèses</h3>
+          <div className="rounded-xl p-5" style={{ background: 'rgba(201,169,97,0.03)', border: '1px solid rgba(201,169,97,0.1)' }}>
+            <h3 className="text-sm font-semibold mb-2" style={{ color: '#C9A961' }}>Méthodologie & hypothèses</h3>
             <div className="grid sm:grid-cols-2 gap-x-8 gap-y-1 text-xs" style={{ color: 'var(--text-secondary)' }}>
               <p>Croissance en courbe S (sigmoïde) vers 5 000 abonnés</p>
               <p>Distribution: 55% Essentielle, 30% Sérénité, 15% Premium</p>
@@ -988,7 +988,7 @@ export default function FounderDashboard() {
           {activeTab === 'tracker' && (
           <>
           <div>
-            <h2 className="text-sm font-semibold uppercase tracking-wider mb-1" style={{ color: '#D4AF37' }}>
+            <h2 className="text-sm font-semibold uppercase tracking-wider mb-1" style={{ color: '#C9A961' }}>
               Traqueur de connexions
             </h2>
             <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>
@@ -1001,7 +1001,7 @@ export default function FounderDashboard() {
             <StatCard icon="👤" label="Visiteurs uniques (jour)" value={fmt(visitStats.uniqueToday)} color="#55EFC4" />
             <StatCard icon="📅" label="Visites (7 jours)" value={fmt(visitStats.week)} color="#A29BFE" />
             <StatCard icon="👥" label="Uniques (7 jours)" value={fmt(visitStats.uniqueWeek)} color="#E8A87C" />
-            <StatCard icon="📊" label="Visites ce mois" value={fmt(visitStats.month)} color="#D4AF37" />
+            <StatCard icon="📊" label="Visites ce mois" value={fmt(visitStats.month)} color="#C9A961" />
             <StatCard icon="🌟" label="Uniques ce mois" value={fmt(visitStats.uniqueMonth)} color="#FF6B35" />
             <StatCard icon="🔐" label="Connectés ce mois" value={fmt(visitStats.authenticatedMonth)} color="#E84393" />
             <StatCard icon="🌍" label="Total depuis le début" value={fmt(visitStats.total)} color="#00CEC9" />
@@ -1018,7 +1018,7 @@ export default function FounderDashboard() {
                       tickFormatter={(d: string) => { const p = d.split('-'); return `${p[2]}/${p[1]}` }} />
                     <YAxis stroke="var(--text-muted)" tick={{ fontSize: 11 }} />
                     <Tooltip content={<CustomTooltip />} />
-                    <Area type="monotone" dataKey="count" name="Visites" stroke="#D4AF37" fill="rgba(212,175,55,0.15)" strokeWidth={2} />
+                    <Area type="monotone" dataKey="count" name="Visites" stroke="#C9A961" fill="rgba(201,169,97,0.15)" strokeWidth={2} />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -1077,14 +1077,14 @@ export default function FounderDashboard() {
                   const pct = (page.count / maxCount) * 100
                   return (
                     <div key={page.path} className="flex items-center gap-3">
-                      <span className="text-xs font-semibold w-5 text-right" style={{ color: '#D4AF37' }}>{i + 1}</span>
+                      <span className="text-xs font-semibold w-5 text-right" style={{ color: '#C9A961' }}>{i + 1}</span>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between mb-1">
                           <span className="text-xs truncate" style={{ color: 'var(--text-primary)' }}>{page.path}</span>
                           <span className="text-xs font-semibold ml-2" style={{ color: '#74C0FC' }}>{fmt(page.count)}</span>
                         </div>
                         <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
-                          <div className="h-full rounded-full" style={{ width: `${pct}%`, background: 'linear-gradient(90deg, #D4AF37, #74C0FC)' }} />
+                          <div className="h-full rounded-full" style={{ width: `${pct}%`, background: 'linear-gradient(90deg, #C9A961, #74C0FC)' }} />
                         </div>
                       </div>
                     </div>

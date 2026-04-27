@@ -213,7 +213,7 @@ const DIAMONDS = [
 const DiamondSvg = memo(function DiamondSvg({ size }: { size: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <circle cx="12" cy="12" r="4" fill="#D4AF37" opacity="0.4" />
+      <circle cx="12" cy="12" r="4" fill="#C9A961" opacity="0.4" />
       <circle cx="12" cy="12" r="2" fill="#FFFBE6" opacity="0.9" />
     </svg>
   );
@@ -459,7 +459,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
   function ord(key: string): number { return sectionPositions[key] ?? DEFAULT_ORDER[key] ?? 999; }
 
   const g = sty('_global');
-  const gold = g.color_primary || '#D4AF37';
+  const gold = g.color_primary || '#C9A961';
   const accent = g.color_secondary || '#74C0FC';
   const bg = g.color_bg || '#362038';
   const buttonBg = g.color_button || gold;
@@ -544,7 +544,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
 
   // Show loading while checking prelaunch, then prelaunch page if enabled
   if (prelaunchEnabled === null) {
-    return <div className="min-h-screen" style={{ background: 'var(--dark, #0A0A0A)' }} />;
+    return <div className="min-h-screen" style={{ background: 'var(--dark, #000000)' }} />;
   }
   if (prelaunchEnabled) {
     return <PreLaunchPage settings={prelaunchSettings} />;
@@ -577,7 +577,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                   href={globalContent.header_cta_href || '/signup'}
                   onClick={() => trackConversion('signup')}
                   className="hidden sm:inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all duration-300 hover:scale-105"
-                  style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}
+                  style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}
                 >
                   {globalContent.header_cta_label || 'Commencer gratuitement'}
                 </Link>
@@ -758,7 +758,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
               <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-5 justify-center items-center">
                 {/* Primary CTA — Signature Émotionnelle */}
                 <Link href={hero.cta_primary_href || '/signature-emotionnelle'} className="w-full sm:w-auto">
-                  <button className="magnetic-btn pulse-ring w-full sm:w-auto px-6 sm:px-10 py-3.5 sm:py-4.5 rounded-full text-sm sm:text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                  <button className="magnetic-btn pulse-ring w-full sm:w-auto px-6 sm:px-10 py-3.5 sm:py-4.5 rounded-full text-sm sm:text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}>
                     {hero.cta_primary_label || 'Découvrir ma Signature Émotionnelle'}
                   </button>
                 </Link>
@@ -837,7 +837,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                     <p className="text-[var(--text-secondary)] font-light mb-5 md:mb-6 text-sm md:text-[15px]">
                       {sigCta.description || '15 questions pour révéler votre architecture émotionnelle profonde. Un diagnostic premium et hyper-personnalisé.'}
                     </p>
-                    <span className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-semibold tracking-wide group-hover:scale-105 transition-transform" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                    <span className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-semibold tracking-wide group-hover:scale-105 transition-transform" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}>
                       {sigCta.button_label || 'Faire le test gratuit'}
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M5 12h14M12 5l7 7-7 7" />
@@ -1614,7 +1614,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                   { main: '#A78BFA', deep: '#7C3AED', rgb: '167,139,250' },
                 ] as const
                 const tc = tierColors[idx] || tierColors[0]
-                const btnTextColor = idx === 2 ? '#fff' : '#050505'
+                const btnTextColor = idx === 2 ? '#fff' : '#000000'
 
                 return (
                 <RevealOnScroll key={plan.name} delay={(idx + 1) * 0.15} direction={(["left", "up", "scale", "right"] as const)[idx % 4]}>
@@ -1914,7 +1914,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
             )}
             <RevealOnScroll delay={0.3}>
               <Link href={ctaDark.button_href || '/signup'} onClick={() => trackConversion('signup')}>
-                <button className="magnetic-btn pulse-ring px-8 sm:px-10 py-4 sm:py-5 rounded-full text-base sm:text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                <button className="magnetic-btn pulse-ring px-8 sm:px-10 py-4 sm:py-5 rounded-full text-base sm:text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}>
                   {ctaDark.button_label || 'Rejoindre SOS Shine'}
                 </button>
               </Link>
@@ -1949,7 +1949,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
               <RevealOnScroll delay={0.2}>
                 {ctaL.button_label && (
                   <Link href={ctaL.button_href || '/signup'} onClick={() => trackConversion('cta_light')}>
-                    <button className="magnetic-btn px-8 sm:px-10 py-4 sm:py-5 rounded-full text-base sm:text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                    <button className="magnetic-btn px-8 sm:px-10 py-4 sm:py-5 rounded-full text-base sm:text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}>
                       {ctaL.button_label}
                     </button>
                   </Link>
@@ -2000,7 +2000,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                   <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                     <Link href={v2.hero_cta_primary_href || '/signup'} onClick={() => trackConversion('signup')}>
                       <button className="magnetic-btn pulse-ring px-8 py-4 rounded-full text-base font-semibold tracking-wide"
-                        style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                        style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}>
                         {v2.hero_cta_primary || 'Rejoindre SOS Shine'}
                       </button>
                     </Link>
@@ -2317,7 +2317,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                         </ul>
                         <Link href={plan.button_href || '/signup'} onClick={() => trackConversion('signup')}>
                           <button className={`magnetic-btn w-full py-3.5 rounded-full text-sm font-semibold tracking-wide ${plan.highlight ? 'pulse-ring' : ''}`}
-                            style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                            style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}>
                             {plan.button_label}
                           </button>
                         </Link>
@@ -2387,7 +2387,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                 <RevealOnScroll delay={0.1}>
                   <Link href={v2.cta_button_href || '/signup'} onClick={() => trackConversion('signup')}>
                     <button className="magnetic-btn pulse-ring px-10 py-5 rounded-full text-lg font-semibold tracking-wide"
-                      style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                      style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}>
                       {v2.cta_button || 'Rejoindre SOS Shine'}
                     </button>
                   </Link>
@@ -2455,7 +2455,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                   {c.description && <p className="text-base md:text-lg leading-relaxed max-w-3xl mx-auto mb-8" style={{ color: 'var(--text-secondary)' }}>{c.description}</p>}
                   {c.button_label && (
                     <Link href={c.button_href || '/signup'} onClick={() => trackConversion('custom_cta')}>
-                      <button className="magnetic-btn px-8 py-4 rounded-full text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, var(--brand), var(--brand-deep))`, color: '#050505' }}>
+                      <button className="magnetic-btn px-8 py-4 rounded-full text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, var(--brand), var(--brand-deep))`, color: '#000000' }}>
                         {c.button_label}
                       </button>
                     </Link>
@@ -2518,7 +2518,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                   {c.description && <p className="text-base md:text-lg leading-relaxed mb-10" style={{ color: 'var(--text-secondary)' }}>{c.description}</p>}
                   {c.button_label && (
                     <Link href={c.button_href || '/signup'}>
-                      <button className="magnetic-btn pulse-ring px-10 py-5 rounded-full text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, var(--brand), var(--brand-deep))`, color: '#050505' }}>
+                      <button className="magnetic-btn pulse-ring px-10 py-5 rounded-full text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, var(--brand), var(--brand-deep))`, color: '#000000' }}>
                         {c.button_label}
                       </button>
                     </Link>

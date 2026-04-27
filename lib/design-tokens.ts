@@ -21,7 +21,7 @@ export const colors = {
   accentBlue:   '#74C0FC',
   accentPurple: '#A29BFE',
 
-  surface:     '#050505',
+  surface:     '#000000',
   surfaceCard: 'rgba(255, 255, 255, 0.05)',
   border:      'rgba(255, 255, 255, 0.08)',
 

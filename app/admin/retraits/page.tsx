@@ -25,7 +25,7 @@ type Withdrawal = {
 }
 
 const statusStyles: Record<string, { bg: string; color: string; label: string }> = {
-  pending:    { bg: 'rgba(212,175,55,0.12)',  color: '#D4AF37', label: 'En attente' },
+  pending:    { bg: 'rgba(201,169,97,0.12)',  color: '#C9A961', label: 'En attente' },
   processing: { bg: 'rgba(116,192,252,0.12)', color: '#74C0FC', label: 'En cours' },
   completed:  { bg: 'rgba(85,239,196,0.12)',  color: '#55EFC4', label: 'Effectue' },
   rejected:   { bg: 'rgba(239,68,68,0.12)',   color: '#ef4444', label: 'Refuse' },
@@ -138,7 +138,7 @@ export default function AdminRetraits() {
       {!loading && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
-            { label: 'En attente', value: stats.pending, sub: `${stats.pendingAmount.toFixed(2)}\u20AC`, color: '#D4AF37' },
+            { label: 'En attente', value: stats.pending, sub: `${stats.pendingAmount.toFixed(2)}\u20AC`, color: '#C9A961' },
             { label: 'En cours', value: stats.processing, sub: `${stats.processingAmount.toFixed(2)}\u20AC`, color: '#74C0FC' },
             { label: 'Effectues', value: stats.completed, sub: `${stats.completedAmount.toFixed(2)}\u20AC`, color: '#55EFC4' },
             { label: 'Total', value: stats.total, sub: '', color: 'var(--text-primary)' },
@@ -200,7 +200,7 @@ export default function AdminRetraits() {
               <div key={w.id} className="rounded-xl p-5"
                 style={{
                   background: 'var(--surface-card)',
-                  border: `1px solid ${w.status === 'pending' ? 'rgba(212,175,55,0.2)' : w.status === 'processing' ? 'rgba(116,192,252,0.2)' : 'var(--border)'}`,
+                  border: `1px solid ${w.status === 'pending' ? 'rgba(201,169,97,0.2)' : w.status === 'processing' ? 'rgba(116,192,252,0.2)' : 'var(--border)'}`,
                 }}>
                 {/* Top row */}
                 <div className="flex items-start gap-3 mb-4">
@@ -208,7 +208,7 @@ export default function AdminRetraits() {
                     <img src={w.profiles.avatar_url} alt="" className="w-10 h-10 rounded-full object-cover shrink-0" />
                   ) : (
                     <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold shrink-0"
-                      style={{ background: 'rgba(212,175,55,0.12)', color: '#D4AF37' }}>
+                      style={{ background: 'rgba(201,169,97,0.12)', color: '#C9A961' }}>
                       {w.profiles?.prenom?.charAt(0).toUpperCase() || '?'}
                     </div>
                   )}
@@ -225,7 +225,7 @@ export default function AdminRetraits() {
                     <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>{w.profiles?.email}</p>
                   </div>
                   <div className="text-right shrink-0">
-                    <p className="font-display text-2xl font-semibold" style={{ color: '#D4AF37' }}>
+                    <p className="font-display text-2xl font-semibold" style={{ color: '#C9A961' }}>
                       {w.amount.toFixed(2)}&#8364;
                     </p>
                     <p className="text-[10px] mt-0.5" style={{ color: 'var(--text-muted)' }}>

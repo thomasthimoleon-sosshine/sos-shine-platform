@@ -29,7 +29,7 @@ type Candidature = {
 }
 
 const statusStyles: Record<string, { bg: string; color: string; label: string }> = {
-  pending:   { bg: 'rgba(212,175,55,0.12)',  color: '#D4AF37', label: 'En attente' },
+  pending:   { bg: 'rgba(201,169,97,0.12)',  color: '#C9A961', label: 'En attente' },
   approved:  { bg: 'rgba(85,239,196,0.12)',  color: '#55EFC4', label: 'Approuvée' },
   rejected:  { bg: 'rgba(239,68,68,0.12)',   color: '#ef4444', label: 'Refusée' },
   suspended: { bg: 'rgba(225,112,85,0.12)',  color: '#E17055', label: 'Suspendue' },
@@ -136,7 +136,7 @@ export default function AdminCandidatures() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
             { label: 'Total', value: stats.total, color: 'var(--text-primary)' },
-            { label: 'En attente', value: stats.pending, color: '#D4AF37' },
+            { label: 'En attente', value: stats.pending, color: '#C9A961' },
             { label: 'Approuvées', value: stats.approved, color: '#55EFC4' },
             { label: 'Refusées', value: stats.rejected, color: '#ef4444' },
           ].map(s => (
@@ -195,14 +195,14 @@ export default function AdminCandidatures() {
             const isExpanded = expandedId === c.id
             return (
               <div key={c.id} className="rounded-xl overflow-hidden transition-all"
-                style={{ background: 'var(--surface-card)', border: `1px solid ${c.status === 'pending' ? 'rgba(212,175,55,0.2)' : 'var(--border)'}` }}>
+                style={{ background: 'var(--surface-card)', border: `1px solid ${c.status === 'pending' ? 'rgba(201,169,97,0.2)' : 'var(--border)'}` }}>
                 {/* Header row */}
                 <div className="flex items-center gap-3 p-4 cursor-pointer" onClick={() => setExpandedId(isExpanded ? null : c.id)}>
                   {c.profiles?.avatar_url ? (
                     <img src={c.profiles.avatar_url} alt="" className="w-10 h-10 rounded-full object-cover shrink-0" />
                   ) : (
                     <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold shrink-0"
-                      style={{ background: 'rgba(212,175,55,0.12)', color: '#D4AF37' }}>
+                      style={{ background: 'rgba(201,169,97,0.12)', color: '#C9A961' }}>
                       {c.profiles?.prenom?.charAt(0).toUpperCase() || '?'}
                     </div>
                   )}
@@ -280,8 +280,8 @@ export default function AdminCandidatures() {
                           <p className="font-display text-lg font-light" style={{ color: '#55EFC4' }}>{c.total_referrals}</p>
                           <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>Filleuls</p>
                         </div>
-                        <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(212,175,55,0.05)' }}>
-                          <p className="font-display text-lg font-light" style={{ color: '#D4AF37' }}>{c.total_earnings.toFixed(2)}&#8364;</p>
+                        <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(201,169,97,0.05)' }}>
+                          <p className="font-display text-lg font-light" style={{ color: '#C9A961' }}>{c.total_earnings.toFixed(2)}&#8364;</p>
                           <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>Gains totaux</p>
                         </div>
                         <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(116,192,252,0.05)' }}>

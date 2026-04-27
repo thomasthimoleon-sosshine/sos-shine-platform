@@ -8,7 +8,7 @@ import type { BlogArticle } from '@/data/blog/articles'
 import ThemeToggle from '@/components/ThemeToggle'
 import { createClient } from '@/lib/supabase/client'
 
-const gold = '#D4AF37'
+const gold = '#C9A961'
 const goldRgb = '212,175,55'
 
 interface BlogListClientProps {
@@ -62,7 +62,7 @@ export default function BlogListClient({ initialArticles }: BlogListClientProps)
   const others = allArticles.filter((a) => !a.featured)
 
   return (
-    <main className="grain relative z-0 min-h-screen" style={{ background: 'var(--dark, #050505)' }}>
+    <main className="grain relative z-0 min-h-screen" style={{ background: 'var(--dark, #000000)' }}>
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 py-3 md:py-4 header-animate header-scrolled">
         <div className="flex items-center justify-between px-4 md:px-8 max-w-7xl mx-auto">
@@ -154,8 +154,8 @@ export default function BlogListClient({ initialArticles }: BlogListClientProps)
                 <article
                   className="group relative overflow-hidden rounded-2xl md:rounded-3xl p-6 sm:p-8 md:p-12 transition-all duration-500 hover:shadow-2xl cursor-pointer"
                   style={{
-                    background: 'linear-gradient(135deg, rgba(212,175,55,0.06), var(--surface-card))',
-                    border: '1px solid rgba(212,175,55,0.12)',
+                    background: 'linear-gradient(135deg, rgba(201,169,97,0.06), var(--surface-card))',
+                    border: '1px solid rgba(201,169,97,0.12)',
                   }}
                 >
                   <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: `radial-gradient(ellipse at center, rgba(${goldRgb}, 0.04) 0%, transparent 70%)` }} />
@@ -193,7 +193,7 @@ export default function BlogListClient({ initialArticles }: BlogListClientProps)
                       </div>
                       <span
                         className="inline-flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold tracking-wide group-hover:scale-105 transition-transform"
-                        style={{ background: `linear-gradient(135deg, ${gold}, #B8960F)`, color: '#050505' }}
+                        style={{ background: `linear-gradient(135deg, ${gold}, #B8960F)`, color: '#000000' }}
                       >
                         Lire l&apos;article
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -259,8 +259,8 @@ export default function BlogListClient({ initialArticles }: BlogListClientProps)
           <div
             className="rounded-2xl md:rounded-3xl p-6 sm:p-8 md:p-12"
             style={{
-              background: 'linear-gradient(135deg, rgba(212,175,55,0.04), var(--surface-card))',
-              border: '1px solid rgba(212,175,55,0.1)',
+              background: 'linear-gradient(135deg, rgba(201,169,97,0.04), var(--surface-card))',
+              border: '1px solid rgba(201,169,97,0.1)',
             }}
           >
             <h2 className="font-display text-xl sm:text-2xl md:text-3xl font-light mb-3 md:mb-4" style={{ color: gold }}>
@@ -273,7 +273,7 @@ export default function BlogListClient({ initialArticles }: BlogListClientProps)
             <Link href="/signature-emotionnelle">
               <button
                 className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-full text-sm font-semibold tracking-wide hover:scale-105 transition-transform"
-                style={{ background: `linear-gradient(135deg, ${gold}, #B8960F)`, color: '#050505' }}
+                style={{ background: `linear-gradient(135deg, ${gold}, #B8960F)`, color: '#000000' }}
               >
                 Faire le test gratuit &rarr;
               </button>

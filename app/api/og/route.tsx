@@ -41,7 +41,7 @@ export async function GET(req: NextRequest) {
             height: '800px',
             borderRadius: '50%',
             background:
-              'radial-gradient(circle, rgba(212,175,55,0.08) 0%, rgba(212,175,55,0.02) 50%, transparent 70%)',
+              'radial-gradient(circle, rgba(201,169,97,0.08) 0%, rgba(201,169,97,0.02) 50%, transparent 70%)',
             display: 'flex',
           }}
         />
@@ -112,14 +112,14 @@ export async function GET(req: NextRequest) {
             style={{
               width: '40px',
               height: '1px',
-              background: 'rgba(212,175,55,0.4)',
+              background: 'rgba(201,169,97,0.4)',
               display: 'flex',
             }}
           />
           <div
             style={{
               fontSize: '14px',
-              color: 'rgba(212,175,55,0.6)',
+              color: 'rgba(201,169,97,0.6)',
               letterSpacing: '0.15em',
               textTransform: 'uppercase',
               display: 'flex',
@@ -131,7 +131,7 @@ export async function GET(req: NextRequest) {
             style={{
               width: '40px',
               height: '1px',
-              background: 'rgba(212,175,55,0.4)',
+              background: 'rgba(201,169,97,0.4)',
               display: 'flex',
             }}
           />

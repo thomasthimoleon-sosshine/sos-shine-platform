@@ -48,7 +48,7 @@ export default function StripeSetupPage() {
 
   return (
     <div style={{ maxWidth: 800, margin: '40px auto', padding: '0 20px', fontFamily: 'system-ui, sans-serif' }}>
-      <h1 style={{ fontSize: 28, marginBottom: 8, color: '#D4AF37' }}>
+      <h1 style={{ fontSize: 28, marginBottom: 8, color: '#C9A961' }}>
         Configuration Stripe — SOS Shine
       </h1>
       <p style={{ color: '#aaa', marginBottom: 32 }}>
@@ -72,7 +72,7 @@ export default function StripeSetupPage() {
             onClick={handleSetup}
             disabled={loading}
             style={{
-              background: loading ? '#555' : '#D4AF37',
+              background: loading ? '#555' : '#C9A961',
               color: '#000',
               border: 'none',
               borderRadius: 8,
@@ -139,7 +139,7 @@ export default function StripeSetupPage() {
           </div>
 
           <div style={{ background: '#1a1a2e', border: '1px solid #333', borderRadius: 12, padding: 24 }}>
-            <h3 style={{ color: '#D4AF37', marginBottom: 16 }}>Détails des prix créés</h3>
+            <h3 style={{ color: '#C9A961', marginBottom: 16 }}>Détails des prix créés</h3>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid #333' }}>
@@ -160,8 +160,8 @@ export default function StripeSetupPage() {
             </table>
           </div>
 
-          <div style={{ background: '#2e2a1a', border: '1px solid #D4AF37', borderRadius: 12, padding: 24, marginTop: 24 }}>
-            <h3 style={{ color: '#D4AF37', marginBottom: 8 }}>Prochaines étapes</h3>
+          <div style={{ background: '#2e2a1a', border: '1px solid #C9A961', borderRadius: 12, padding: 24, marginTop: 24 }}>
+            <h3 style={{ color: '#C9A961', marginBottom: 8 }}>Prochaines étapes</h3>
             <ol style={{ color: '#ccc', lineHeight: 2, paddingLeft: 20 }}>
               <li>Copiez les variables ci-dessus</li>
               <li>Allez dans <strong>Vercel → Settings → Environment Variables</strong></li>

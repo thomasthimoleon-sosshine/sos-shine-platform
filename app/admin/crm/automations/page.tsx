@@ -147,7 +147,7 @@ export default function AutomationsPage() {
                   onClick={() => testEmail && doAction('test_email', { email: testEmail })}
                   disabled={!testEmail || actionLoading === 'test_email'}
                   className="px-4 py-2 rounded-lg text-sm font-semibold transition-all disabled:opacity-50"
-                  style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}
+                  style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000' }}
                 >
                   {actionLoading === 'test_email' ? '...' : 'Envoyer'}
                 </button>
@@ -167,7 +167,7 @@ export default function AutomationsPage() {
                 onClick={() => doAction('trigger_cron')}
                 disabled={actionLoading === 'trigger_cron'}
                 className="w-full px-4 py-2 rounded-lg text-sm font-semibold transition-all disabled:opacity-50"
-                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}
+                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000' }}
               >
                 {actionLoading === 'trigger_cron' ? 'Exécution...' : 'Exécuter maintenant'}
               </button>
@@ -359,7 +359,7 @@ export default function AutomationsPage() {
                 {diagnostic.recent_events.map((evt, i) => (
                   <div key={i} className="flex items-center justify-between p-2 rounded text-sm" style={{ borderBottom: '1px solid var(--border)' }}>
                     <div className="flex items-center gap-2">
-                      <span style={{ fontSize: 10, color: evt.event_type.includes('sent') ? '#50C878' : evt.event_type.includes('open') ? '#4A90D9' : '#D4AF37' }}>●</span>
+                      <span style={{ fontSize: 10, color: evt.event_type.includes('sent') ? '#50C878' : evt.event_type.includes('open') ? '#4A90D9' : '#C9A961' }}>●</span>
                       <span className="font-mono text-xs" style={{ color: 'var(--text-primary)' }}>{evt.event_type}</span>
                       {(evt.metadata as any)?.recipient && (
                         <span className="text-xs text-[var(--text-muted)]">→ {(evt.metadata as any).recipient}</span>

@@ -150,8 +150,8 @@ export default function SavedPostsTab({ onProfileClick }: Props) {
             onClick={() => setActiveFilter(f.id)}
             className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-all cursor-pointer"
             style={{
-              background: activeFilter === f.id ? 'rgba(212,175,55,0.12)' : 'rgba(255,255,255,0.03)',
-              border: `1px solid ${activeFilter === f.id ? 'rgba(212,175,55,0.3)' : 'var(--border)'}`,
+              background: activeFilter === f.id ? 'rgba(201,169,97,0.12)' : 'rgba(255,255,255,0.03)',
+              border: `1px solid ${activeFilter === f.id ? 'rgba(201,169,97,0.3)' : 'var(--border)'}`,
               color: activeFilter === f.id ? 'var(--brand)' : 'var(--text-muted)',
             }}
           >
@@ -182,7 +182,7 @@ export default function SavedPostsTab({ onProfileClick }: Props) {
                     <img src={saved.post.author_avatar} alt="" className="w-8 h-8 rounded-full object-cover" />
                   ) : (
                     <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
-                      style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
+                      style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}>
                       {saved.post.author_prenom.charAt(0).toUpperCase()}
                     </div>
                   )}

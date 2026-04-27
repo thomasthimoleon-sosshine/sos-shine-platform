@@ -270,7 +270,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
 
           <a href={STRIPE_SERENITE}
             className="block w-full py-4 rounded-full text-sm font-semibold transition-all hover:brightness-110"
-            style={{ background: 'linear-gradient(135deg, var(--brand), var(--gold-deep, #B8960F))', color: '#050505' }}>
+            style={{ background: 'linear-gradient(135deg, var(--brand), var(--gold-deep, #B8960F))', color: '#000000' }}>
             COMMENCER SÉRÉNITÉ · 🎁 7 jours offerts
           </a>
 

@@ -73,7 +73,7 @@ export default function SignatureEmailsPage() {
         </div>
         <div
           className="px-6 py-3 rounded-full text-sm font-semibold"
-          style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.2)' }}
+          style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.2)' }}
         >
           {total} emails envoyes
         </div>

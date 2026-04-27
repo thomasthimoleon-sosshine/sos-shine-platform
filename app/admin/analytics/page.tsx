@@ -84,7 +84,7 @@ export default function AdminAnalyticsPage() {
 
     setPlanBreakdown([
       { plan: 'Essentielle', count: essential, mrr: essential * 9.90, color: '#74C0FC' },
-      { plan: 'Sérénité', count: serenite, mrr: serenite * 49.90, color: '#D4AF37' },
+      { plan: 'Sérénité', count: serenite, mrr: serenite * 49.90, color: '#C9A961' },
     ])
 
     // ── Daily signups + conversions ──
@@ -172,7 +172,7 @@ export default function AdminAnalyticsPage() {
         <>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { label: 'MRR', value: `${kpis.mrr.toFixed(2)}€`, color: '#D4AF37', hint: 'Revenu mensuel récurrent' },
+              { label: 'MRR', value: `${kpis.mrr.toFixed(2)}€`, color: '#C9A961', hint: 'Revenu mensuel récurrent' },
               { label: 'Membres total', value: kpis.totalMembers, color: '#74C0FC', hint: `+${kpis.newThisMonth} ce mois` },
               { label: 'Abonnés actifs', value: kpis.activeSubs, color: '#55EFC4', hint: `${kpis.trialingSubs} en essai` },
               { label: 'Taux conversion', value: `${kpis.conversionRate}%`, color: '#A78BFA', hint: 'Inscrits → Payants' },
@@ -191,7 +191,7 @@ export default function AdminAnalyticsPage() {
             {[
               { label: 'Churn 30j', value: `${kpis.churnRate}%`, color: '#FF6B6B', hint: `${kpis.canceledLast30} annulations` },
               { label: 'Plan Essentielle', value: kpis.essentialSubs, color: '#74C0FC', hint: '9,90€/mois' },
-              { label: 'Plan Sérénité', value: kpis.sereniteSubs, color: '#D4AF37', hint: '49,90€/mois' },
+              { label: 'Plan Sérénité', value: kpis.sereniteSubs, color: '#C9A961', hint: '49,90€/mois' },
               { label: 'ARR projeté', value: `${(kpis.mrr * 12).toFixed(0)}€`, color: '#55EFC4', hint: 'MRR × 12' },
             ].map(k => (
               <div key={k.label} className="rounded-xl p-4"
@@ -216,7 +216,7 @@ export default function AdminAnalyticsPage() {
               <span className="w-2 h-2 rounded-full" style={{ background: '#74C0FC' }} /> Inscrits
             </span>
             <span className="flex items-center gap-1.5" style={{ color: 'var(--text-secondary)' }}>
-              <span className="w-2 h-2 rounded-full" style={{ background: '#D4AF37' }} /> Payants
+              <span className="w-2 h-2 rounded-full" style={{ background: '#C9A961' }} /> Payants
             </span>
           </div>
         </div>
@@ -227,7 +227,7 @@ export default function AdminAnalyticsPage() {
                 <div className="w-full rounded-t transition-all"
                   style={{ height: `${(d.signups / maxDaily) * 100}%`, background: '#74C0FC', minHeight: d.signups > 0 ? '2px' : '0' }} />
                 <div className="w-full rounded-t transition-all absolute bottom-0 opacity-80"
-                  style={{ height: `${(d.conversions / maxDaily) * 100}%`, background: '#D4AF37', minHeight: d.conversions > 0 ? '2px' : '0', width: '50%', left: '25%' }} />
+                  style={{ height: `${(d.conversions / maxDaily) * 100}%`, background: '#C9A961', minHeight: d.conversions > 0 ? '2px' : '0', width: '50%', left: '25%' }} />
               </div>
             </div>
           ))}
@@ -268,7 +268,7 @@ export default function AdminAnalyticsPage() {
 
       {/* Goal progress 2000 subs */}
       {kpis && (
-        <div className="rounded-xl p-6" style={{ background: 'linear-gradient(135deg, rgba(212,175,55,0.08), rgba(116,192,252,0.04))', border: '1px solid rgba(212,175,55,0.2)' }}>
+        <div className="rounded-xl p-6" style={{ background: 'linear-gradient(135deg, rgba(201,169,97,0.08), rgba(116,192,252,0.04))', border: '1px solid rgba(201,169,97,0.2)' }}>
           <div className="flex items-start justify-between mb-3">
             <div>
               <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: 'var(--brand)' }}>

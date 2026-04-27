@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export default function NotFound() {
   return (
-    <main className="min-h-screen flex items-center justify-center px-6" style={{ background: 'var(--dark, #050505)' }}>
+    <main className="min-h-screen flex items-center justify-center px-6" style={{ background: 'var(--dark, #000000)' }}>
       <div className="max-w-md text-center space-y-6">
         <div className="w-20 h-20 rounded-2xl mx-auto flex items-center justify-center" style={{ background: 'rgba(201,169,97,0.1)', border: '1px solid rgba(201,169,97,0.2)' }}>
           <span className="text-4xl">✨</span>
@@ -16,7 +16,7 @@ export default function NotFound() {
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link href="/"
             className="px-6 py-3 rounded-full text-sm font-semibold transition-all hover:brightness-110"
-            style={{ background: 'linear-gradient(135deg, var(--gold, #C9A961), var(--gold-deep, #B8960F))', color: '#050505' }}>
+            style={{ background: 'linear-gradient(135deg, var(--gold, #C9A961), var(--gold-deep, #B8960F))', color: '#000000' }}>
             Retour à l&apos;accueil
           </Link>
           <Link href="/dashboard/encyclopedie"

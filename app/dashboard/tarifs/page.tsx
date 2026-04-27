@@ -167,8 +167,8 @@ export default function TarifsPage() {
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-sm font-semibold tracking-wide transition-all duration-200 hover:scale-[1.03]"
             style={{
               background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
-              color: '#050505',
-              boxShadow: '0 4px 20px rgba(212,175,55,0.3)',
+              color: '#000000',
+              boxShadow: '0 4px 20px rgba(201,169,97,0.3)',
             }}
           >
             Explorer la plateforme
@@ -202,7 +202,7 @@ export default function TarifsPage() {
             Retour au dashboard
           </Link>
           <Link href="/dashboard/profil" className="px-6 py-2.5 rounded-full text-sm font-medium"
-            style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)', color: 'var(--brand)' }}>
+            style={{ background: 'rgba(201,169,97,0.1)', border: '1px solid rgba(201,169,97,0.2)', color: 'var(--brand)' }}>
             Gérer mon abonnement
           </Link>
         </div>
@@ -284,8 +284,8 @@ export default function TarifsPage() {
               className="w-full py-3 rounded-full text-sm font-semibold tracking-wide transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] cursor-pointer mt-2"
               style={{
                 background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
-                color: '#050505',
-                boxShadow: '0 4px 20px rgba(212,175,55,0.3)',
+                color: '#000000',
+                boxShadow: '0 4px 20px rgba(201,169,97,0.3)',
                 opacity: (!userPrenom.trim() || !userEmail.trim()) ? 0.5 : 1,
               }}
             >
@@ -334,7 +334,7 @@ export default function TarifsPage() {
               <button
                 onClick={() => { setCheckoutError(null); setCheckoutPlan(null) }}
                 className="px-6 py-2.5 rounded-full text-sm font-medium"
-                style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.25)' }}
+                style={{ background: 'rgba(201,169,97,0.15)', color: '#C9A961', border: '1px solid rgba(201,169,97,0.25)' }}
               >
                 Retour aux tarifs
               </button>
@@ -386,9 +386,9 @@ export default function TarifsPage() {
               onClick={() => setSelectedDuration(d.id)}
               className="relative px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all cursor-pointer"
               style={{
-                background: selectedDuration === d.id ? 'rgba(212,175,55,0.15)' : 'transparent',
+                background: selectedDuration === d.id ? 'rgba(201,169,97,0.15)' : 'transparent',
                 color: selectedDuration === d.id ? 'var(--brand)' : 'var(--text-secondary)',
-                border: selectedDuration === d.id ? '1px solid rgba(212,175,55,0.3)' : '1px solid transparent',
+                border: selectedDuration === d.id ? '1px solid rgba(201,169,97,0.3)' : '1px solid transparent',
               }}
             >
               {d.label}
@@ -471,7 +471,7 @@ export default function TarifsPage() {
                 {isHighlight && (
                   <div
                     className="text-center py-1.5 text-[11px] font-semibold tracking-wide uppercase"
-                    style={{ background: color, color: '#050505' }}
+                    style={{ background: color, color: '#000000' }}
                   >
                     Le plus choisi
                   </div>
@@ -569,7 +569,7 @@ export default function TarifsPage() {
                       background: isHighlight
                         ? `linear-gradient(135deg, ${color}, ${color}dd)`
                         : 'transparent',
-                      color: isHighlight ? '#050505' : color,
+                      color: isHighlight ? '#000000' : color,
                       border: isHighlight ? 'none' : `1px solid ${color}`,
                       boxShadow: isHighlight ? `0 4px 20px rgba(${hexToRgb(color)}, 0.25)` : undefined,
                     }}

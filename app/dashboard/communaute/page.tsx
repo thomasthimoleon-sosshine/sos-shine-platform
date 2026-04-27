@@ -122,7 +122,7 @@ export default function CommunautePage() {
                 onClick={() => handleTabChange(tab.id)}
                 className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-[13px] font-medium transition-all cursor-pointer whitespace-nowrap relative"
                 style={{
-                  background: isActive ? 'rgba(212,175,55,0.1)' : 'transparent',
+                  background: isActive ? 'rgba(201,169,97,0.1)' : 'transparent',
                   color: isActive ? 'var(--brand)' : 'var(--text-muted)',
                 }}
               >

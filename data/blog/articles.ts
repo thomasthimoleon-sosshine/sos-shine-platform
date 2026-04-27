@@ -23,7 +23,7 @@ export interface BlogArticle {
 }
 
 export const BLOG_CATEGORIES = [
-  { slug: 'transformation', label: 'Transformation', color: '#D4AF37' },
+  { slug: 'transformation', label: 'Transformation', color: '#C9A961' },
   { slug: 'emotions', label: 'Intelligence Emotionnelle', color: '#74C0FC' },
   { slug: 'relations', label: 'Relations', color: '#A29BFE' },
   { slug: 'bien-etre', label: 'Bien-etre', color: '#55EFC4' },

@@ -54,7 +54,7 @@ export function EmailCapture({ onSubmit, loading }: Props) {
           className="w-full py-4 rounded-full text-sm font-semibold transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
           style={{
             background: isValid ? 'linear-gradient(135deg, var(--brand), var(--gold-deep, #B8960F))' : 'rgba(255,255,255,0.06)',
-            color: isValid ? '#050505' : 'var(--text-muted)',
+            color: isValid ? '#000000' : 'var(--text-muted)',
           }}
         >
           {loading ? 'Envoi...' : 'CONTINUER · 5 MIN →'}

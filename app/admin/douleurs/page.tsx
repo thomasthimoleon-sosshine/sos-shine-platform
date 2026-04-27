@@ -812,7 +812,7 @@ export default function AdminDouleursPage() {
                 const match = douleurs.find(d => d.slug === slug)
                 return (
                   <span key={slug} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs"
-                    style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)', color: '#D4AF37' }}>
+                    style={{ background: 'rgba(201,169,97,0.1)', border: '1px solid rgba(201,169,97,0.2)', color: '#C9A961' }}>
                     {match?.title || slug}
                     <button type="button" onClick={() => setForm(prev => ({ ...prev, related_slugs: prev.related_slugs.filter(s => s !== slug) }))}
                       className="ml-0.5 hover:opacity-70 cursor-pointer" style={{ color: '#FF6B6B' }}>×</button>
@@ -891,7 +891,7 @@ export default function AdminDouleursPage() {
           </div>
 
           {/* ── DYNAMIC STEPS SECTION ── */}
-          <div className="rounded-xl p-4" style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.2)' }}>
+          <div className="rounded-xl p-4" style={{ background: 'rgba(201,169,97,0.05)', border: '1px solid rgba(201,169,97,0.2)' }}>
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h3 className="text-sm font-semibold" style={{ color: 'var(--brand)' }}>
@@ -903,7 +903,7 @@ export default function AdminDouleursPage() {
               </div>
               <button type="button" onClick={addStep}
                 className="px-3 py-1.5 rounded-lg text-[11px] font-semibold cursor-pointer transition-all"
-                style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.3)' }}>
+                style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.3)' }}>
                 + Ajouter une étape
               </button>
             </div>
@@ -1125,22 +1125,22 @@ export default function AdminDouleursPage() {
             {/* Add step button at bottom */}
             <button type="button" onClick={addStep}
               className="mt-3 w-full py-2.5 rounded-lg text-[11px] font-medium cursor-pointer transition-all"
-              style={{ color: 'var(--brand)', border: '1px dashed rgba(212,175,55,0.3)', background: 'transparent' }}>
+              style={{ color: 'var(--brand)', border: '1px dashed rgba(201,169,97,0.3)', background: 'transparent' }}>
               + Ajouter une autre étape
             </button>
           </div>
 
           {/* ── Quiz QCM Section (only when editing) ── */}
           {editingId && (
-            <div className="rounded-lg p-4 space-y-4" style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.15)' }}>
+            <div className="rounded-lg p-4 space-y-4" style={{ background: 'rgba(201,169,97,0.04)', border: '1px solid rgba(201,169,97,0.15)' }}>
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold flex items-center gap-2" style={{ color: '#D4AF37' }}>
+                <h3 className="text-sm font-semibold flex items-center gap-2" style={{ color: '#C9A961' }}>
                   <span className="text-lg">📝</span>
                   Quiz de validation ({quizQuestions.length} question{quizQuestions.length !== 1 ? 's' : ''})
                 </h3>
                 <button type="button" onClick={() => { setShowQuizForm(true); setEditingQuizId(null); setQuizForm(emptyQuizQuestion) }}
                   className="px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer"
-                  style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.3)' }}>
+                  style={{ background: 'rgba(201,169,97,0.15)', color: '#C9A961', border: '1px solid rgba(201,169,97,0.3)' }}>
                   + Ajouter une question
                 </button>
               </div>
@@ -1157,7 +1157,7 @@ export default function AdminDouleursPage() {
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
-                            <span className="text-xs font-mono mr-2" style={{ color: '#D4AF37' }}>Q{idx + 1}</span>
+                            <span className="text-xs font-mono mr-2" style={{ color: '#C9A961' }}>Q{idx + 1}</span>
                             {q.question}
                           </p>
                           <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-1">
@@ -1193,8 +1193,8 @@ export default function AdminDouleursPage() {
 
               {/* Add/Edit question form */}
               {showQuizForm && (
-                <div className="rounded-lg p-4 space-y-3" style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(212,175,55,0.2)' }}>
-                  <h4 className="text-xs font-semibold" style={{ color: '#D4AF37' }}>
+                <div className="rounded-lg p-4 space-y-3" style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(201,169,97,0.2)' }}>
+                  <h4 className="text-xs font-semibold" style={{ color: '#C9A961' }}>
                     {editingQuizId ? 'Modifier la question' : 'Nouvelle question'}
                   </h4>
 
@@ -1256,7 +1256,7 @@ export default function AdminDouleursPage() {
                       <button type="button"
                         onClick={() => setQuizForm(prev => ({ ...prev, options: [...prev.options, ''] }))}
                         className="mt-2 text-xs font-medium cursor-pointer"
-                        style={{ color: '#D4AF37' }}>
+                        style={{ color: '#C9A961' }}>
                         + Ajouter une réponse
                       </button>
                     )}
@@ -1269,7 +1269,7 @@ export default function AdminDouleursPage() {
                   <div className="flex gap-2 pt-1">
                     <button type="button" onClick={() => saveQuizQuestion(editingId!)} disabled={savingQuiz || !quizForm.question.trim() || quizForm.correct_indices.length === 0 || quizForm.options.filter(o => o.trim()).length < 2}
                       className="px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer disabled:opacity-40"
-                      style={{ background: '#D4AF37', color: '#09090b' }}>
+                      style={{ background: '#C9A961', color: '#09090b' }}>
                       {savingQuiz ? 'Enregistrement...' : editingQuizId ? 'Mettre à jour' : 'Ajouter la question'}
                     </button>
                     <button type="button" onClick={() => { setShowQuizForm(false); setEditingQuizId(null); setQuizForm(emptyQuizQuestion) }}
@@ -1396,18 +1396,18 @@ export default function AdminDouleursPage() {
                           </span>
                           {d.is_original && (
                             <span className="text-[11px] px-2 py-0.5 rounded-full font-medium"
-                              style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.25)' }}>
+                              style={{ background: 'rgba(201,169,97,0.15)', color: '#C9A961', border: '1px solid rgba(201,169,97,0.25)' }}>
                               &diams; Original
                             </span>
                           )}
                           <span className="text-[11px] px-2 py-0.5 rounded-full font-medium"
-                            style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37' }}>
+                            style={{ background: 'rgba(201,169,97,0.1)', color: '#C9A961' }}>
                             {stepCount} étape{stepCount > 1 ? 's' : ''}
                           </span>
                           <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
                             {totalMedia}/{totalPossibleMedia} médias
                           </span>
-                          <span className="text-[11px]" style={{ color: quizCounts[d.id] ? '#D4AF37' : 'var(--text-muted)' }}>
+                          <span className="text-[11px]" style={{ color: quizCounts[d.id] ? '#C9A961' : 'var(--text-muted)' }}>
                             📝 {quizCounts[d.id] || 0} quiz
                           </span>
                           <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
@@ -1422,7 +1422,7 @@ export default function AdminDouleursPage() {
                         )}
                         {d.category && (
                           <span className="inline-block text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full"
-                            style={{ background: 'rgba(212,175,55,0.08)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.15)' }}>
+                            style={{ background: 'rgba(201,169,97,0.08)', color: '#C9A961', border: '1px solid rgba(201,169,97,0.15)' }}>
                             {d.category}
                           </span>
                         )}
@@ -1478,8 +1478,8 @@ export default function AdminDouleursPage() {
                           </span>
                           <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full"
                             style={{
-                              background: mediaCount === 4 ? 'rgba(85,239,196,0.15)' : mediaCount > 0 ? 'rgba(212,175,55,0.15)' : 'rgba(90,83,71,0.2)',
-                              color: mediaCount === 4 ? '#55EFC4' : mediaCount > 0 ? '#D4AF37' : 'var(--text-muted)',
+                              background: mediaCount === 4 ? 'rgba(85,239,196,0.15)' : mediaCount > 0 ? 'rgba(201,169,97,0.15)' : 'rgba(90,83,71,0.2)',
+                              color: mediaCount === 4 ? '#55EFC4' : mediaCount > 0 ? '#C9A961' : 'var(--text-muted)',
                             }}>
                             {mediaCount}/4
                           </span>

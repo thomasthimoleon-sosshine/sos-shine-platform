@@ -130,15 +130,15 @@ export async function POST(request: NextRequest) {
           subject: 'Test email SOS Shine - Diagnostic CRM',
           html: `<!DOCTYPE html>
 <html lang="fr"><head><meta charset="UTF-8"/></head>
-<body style="margin:0;padding:0;background:#050505;font-family:sans-serif;color:#E0E0E0;">
-<table width="100%" cellpadding="0" cellspacing="0" style="background:#050505;">
+<body style="margin:0;padding:0;background:#000000;font-family:sans-serif;color:#E0E0E0;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#000000;">
 <tr><td align="center" style="padding:40px 16px;">
 <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
 <tr><td align="center" style="padding-bottom:32px;">
-<span style="font-size:28px;font-weight:300;letter-spacing:0.15em;color:#D4AF37;font-family:Georgia,serif;">SOS SHINE<sup style="font-size:14px;">®</sup></span>
+<span style="font-size:28px;font-weight:300;letter-spacing:0.15em;color:#C9A961;font-family:Georgia,serif;">SOS SHINE<sup style="font-size:14px;">®</sup></span>
 </td></tr>
 <tr><td style="background:#0A0A0A;border:1px solid #1a1a1a;border-radius:16px;padding:40px 32px;">
-<h2 style="color:#D4AF37;margin:0 0 16px;">Test réussi !</h2>
+<h2 style="color:#C9A961;margin:0 0 16px;">Test réussi !</h2>
 <p style="color:#E0E0E0;line-height:1.6;">Si vous lisez ceci, votre configuration email fonctionne correctement.</p>
 <table style="margin:24px 0;width:100%;font-size:14px;color:#a1a1aa;">
 <tr><td style="padding:8px 0;border-bottom:1px solid #1a1a1a;"><strong style="color:#E0E0E0;">From</strong></td><td style="padding:8px 0;border-bottom:1px solid #1a1a1a;">${fromEmail}</td></tr>

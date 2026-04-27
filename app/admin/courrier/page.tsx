@@ -7,7 +7,7 @@ import type { CourrierAnonyme, CourrierAnonymeStatus, CourrierAnonymeCategory } 
 const STATUS_CONFIG: Record<CourrierAnonymeStatus, { label: string; color: string; bg: string }> = {
   new: { label: 'Nouveau', color: '#55EFC4', bg: 'rgba(85,239,196,0.1)' },
   read: { label: 'Lu', color: '#74C0FC', bg: 'rgba(116,192,252,0.1)' },
-  planned: { label: 'Planifié', color: '#D4AF37', bg: 'rgba(212,175,55,0.1)' },
+  planned: { label: 'Planifié', color: '#C9A961', bg: 'rgba(201,169,97,0.1)' },
   answered: { label: 'Répondu', color: '#A29BFE', bg: 'rgba(162,155,254,0.1)' },
   archived: { label: 'Archivé', color: 'var(--text-muted)', bg: 'rgba(255,255,255,0.03)' },
 }
@@ -137,7 +137,7 @@ export default function AdminCourrierPage() {
         {[
           { label: 'Total', value: stats.total, color: 'var(--text-primary)' },
           { label: 'Nouveaux', value: stats.new, color: '#55EFC4' },
-          { label: 'Planifiés', value: stats.planned, color: '#D4AF37' },
+          { label: 'Planifiés', value: stats.planned, color: '#C9A961' },
           { label: 'Répondus', value: stats.answered, color: '#A29BFE' },
         ].map((s, i) => (
           <div key={i} className="rounded-xl p-4 text-center" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
@@ -241,7 +241,7 @@ export default function AdminCourrierPage() {
                 <div className="flex items-center gap-2">
                   <button onClick={() => togglePin(selected.id, selected.is_pinned)}
                     className="text-xs px-3 py-1.5 rounded-lg transition-all"
-                    style={{ background: selected.is_pinned ? 'rgba(212,175,55,0.1)' : 'var(--dark)', border: '1px solid var(--border)', color: selected.is_pinned ? '#D4AF37' : 'var(--text-muted)' }}>
+                    style={{ background: selected.is_pinned ? 'rgba(201,169,97,0.1)' : 'var(--dark)', border: '1px solid var(--border)', color: selected.is_pinned ? '#C9A961' : 'var(--text-muted)' }}>
                     📌 {selected.is_pinned ? 'Désépingler' : 'Épingler'}
                   </button>
                 </div>

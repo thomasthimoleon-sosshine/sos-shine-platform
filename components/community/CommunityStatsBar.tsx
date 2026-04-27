@@ -57,12 +57,12 @@ export default function CommunityStatsBar() {
   const total = stats.totalShinesGiven + stats.totalShinesReceived + stats.totalComments + stats.totalParcoursCompleted
 
   return (
-    <div className="mb-6 rounded-2xl overflow-hidden" style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.12)' }}>
+    <div className="mb-6 rounded-2xl overflow-hidden" style={{ background: 'rgba(201,169,97,0.04)', border: '1px solid rgba(201,169,97,0.12)' }}>
       {/* Progress bar */}
       <div className="h-1.5 w-full flex">
         {items.map((item, i) => {
           const pct = total > 0 ? (item.value / total) * 100 : 25
-          const colors = ['#D4AF37', '#FFD700', '#74C0FC', '#55EFC4']
+          const colors = ['#C9A961', '#FFD700', '#74C0FC', '#55EFC4']
           return (
             <div
               key={i}
@@ -73,7 +73,7 @@ export default function CommunityStatsBar() {
         })}
       </div>
       {/* Stats grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-px" style={{ background: 'rgba(212,175,55,0.06)' }}>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-px" style={{ background: 'rgba(201,169,97,0.06)' }}>
         {items.map((item, i) => (
           <div key={i} className="flex flex-col items-center py-4 px-2" style={{ background: 'var(--dark)' }}>
             <span className="text-lg mb-1">{item.icon}</span>

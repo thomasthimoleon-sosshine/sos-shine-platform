@@ -197,7 +197,7 @@ export default function BlogArticleContent({
   linkedDouleur?: LinkedDouleur | null
 }) {
   return (
-    <main className="grain relative z-0 min-h-screen" style={{ background: 'var(--dark, #050505)' }}>
+    <main className="grain relative z-0 min-h-screen" style={{ background: 'var(--dark, #000000)' }}>
       <ReadingProgress />
 
       {/* Header */}
@@ -324,8 +324,8 @@ export default function BlogArticleContent({
             <div
               className="rounded-2xl p-6 sm:p-8 md:p-10 text-center"
               style={{
-                background: 'linear-gradient(135deg, rgba(212,175,55,0.05), var(--surface-card))',
-                border: '1px solid rgba(212,175,55,0.12)',
+                background: 'linear-gradient(135deg, rgba(201,169,97,0.05), var(--surface-card))',
+                border: '1px solid rgba(201,169,97,0.12)',
               }}
             >
               <h3 className="font-display text-lg sm:text-xl md:text-2xl font-light mb-2 md:mb-3" style={{ color: gold }}>
@@ -337,7 +337,7 @@ export default function BlogArticleContent({
               <Link href="/signature-emotionnelle">
                 <button
                   className="px-6 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-semibold tracking-wide hover:scale-105 transition-transform"
-                  style={{ background: `linear-gradient(135deg, ${gold}, #B8960F)`, color: '#050505' }}
+                  style={{ background: `linear-gradient(135deg, ${gold}, #B8960F)`, color: '#000000' }}
                 >
                   Faire le test gratuit &rarr;
                 </button>
@@ -356,14 +356,14 @@ export default function BlogArticleContent({
 
       {/* Linked Encyclopedia Entry */}
       {linkedDouleur && (
-        <section className="px-5 md:px-8 py-12 md:py-16" style={{ background: 'rgba(212,175,55,0.03)', borderTop: `1px solid rgba(212,175,55,0.15)`, borderBottom: `1px solid rgba(212,175,55,0.15)` }}>
+        <section className="px-5 md:px-8 py-12 md:py-16" style={{ background: 'rgba(201,169,97,0.03)', borderTop: `1px solid rgba(201,169,97,0.15)`, borderBottom: `1px solid rgba(201,169,97,0.15)` }}>
           <div className="max-w-3xl mx-auto">
             <p className="text-[10px] sm:text-xs tracking-[0.25em] uppercase text-center mb-4 font-semibold" style={{ color: gold }}>
               Approfondir avec un protocole
             </p>
-            <Link href={`/encyclopedie/${linkedDouleur.slug}`} className="block rounded-2xl p-6 md:p-8 transition-all hover:scale-[1.01]" style={{ background: 'rgba(0,0,0,0.3)', border: `1px solid rgba(212,175,55,0.25)` }}>
+            <Link href={`/encyclopedie/${linkedDouleur.slug}`} className="block rounded-2xl p-6 md:p-8 transition-all hover:scale-[1.01]" style={{ background: 'rgba(0,0,0,0.3)', border: `1px solid rgba(201,169,97,0.25)` }}>
               <div className="flex items-start gap-4 md:gap-6">
-                <div className="flex-shrink-0 w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center" style={{ background: `rgba(212,175,55,0.12)`, border: `1px solid rgba(212,175,55,0.25)` }}>
+                <div className="flex-shrink-0 w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center" style={{ background: `rgba(201,169,97,0.12)`, border: `1px solid rgba(201,169,97,0.25)` }}>
                   <svg className="w-6 h-6 md:w-7 md:h-7" fill="none" viewBox="0 0 24 24" stroke={gold} strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
                   </svg>

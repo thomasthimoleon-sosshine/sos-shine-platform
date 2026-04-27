@@ -82,7 +82,7 @@ export default function FavorisPage() {
           <Link
             href="/dashboard/encyclopedie"
             className="inline-block mt-6 px-6 py-2.5 rounded-xl text-sm font-medium transition-all"
-            style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.2)' }}
+            style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.2)' }}
           >
             {t('favorites.explore')}
           </Link>

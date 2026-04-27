@@ -127,7 +127,7 @@ export default function ProfileDrawer({ userId, onClose }: Props) {
                 className="w-24 h-24 rounded-2xl object-cover mx-auto mb-4 ring-2 ring-[var(--brand)]/20" />
             ) : (
               <div className="w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl font-display font-semibold"
-                style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
+                style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}>
                 {displayName.charAt(0).toUpperCase()}
               </div>
             )}
@@ -164,7 +164,7 @@ export default function ProfileDrawer({ userId, onClose }: Props) {
                     onClick={sendRayonRequest}
                     disabled={sendingRayon}
                     className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer disabled:opacity-50"
-                    style={{ background: 'linear-gradient(135deg, var(--brand), #B8960F)', color: '#050505' }}
+                    style={{ background: 'linear-gradient(135deg, var(--brand), #B8960F)', color: '#000000' }}
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
@@ -175,7 +175,7 @@ export default function ProfileDrawer({ userId, onClose }: Props) {
 
                 {connectionStatus === 'pending_sent' && (
                   <div className="w-full px-5 py-3 rounded-xl text-sm font-medium text-center"
-                    style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.15)' }}>
+                    style={{ background: 'rgba(201,169,97,0.08)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.15)' }}>
                     Demande de Rayon envoyée
                   </div>
                 )}

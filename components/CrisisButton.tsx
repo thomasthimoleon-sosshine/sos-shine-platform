@@ -105,7 +105,7 @@ export default function CrisisButton() {
                     href="/dashboard/chat"
                     onClick={() => setOpen(false)}
                     className="block rounded-xl p-4 transition-all hover:scale-[1.005]"
-                    style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.2)' }}
+                    style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.2)' }}
                   >
                     <div className="flex items-start gap-3">
                       <span className="text-xl flex-shrink-0">🔥</span>

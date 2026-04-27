@@ -14,9 +14,9 @@ export function generateSignatureResultEmail(
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Votre Signature Émotionnelle - SOS Shine</title>
 </head>
-<body style="margin:0;padding:0;background-color:#050505;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#e0e0e0;">
+<body style="margin:0;padding:0;background-color:#000000;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#e0e0e0;">
   <!-- Wrapper -->
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#050505;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#000000;">
     <tr>
       <td align="center" style="padding:40px 16px;">
         <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
@@ -26,19 +26,19 @@ export function generateSignatureResultEmail(
             <td align="center" style="padding-bottom:32px;">
               <table role="presentation" cellpadding="0" cellspacing="0">
                 <tr>
-                  <td style="font-size:28px;font-weight:300;letter-spacing:0.15em;color:#D4AF37;font-family:Georgia,'Times New Roman',serif;">
+                  <td style="font-size:28px;font-weight:300;letter-spacing:0.15em;color:#C9A961;font-family:Georgia,'Times New Roman',serif;">
                     SOS SHINE
                   </td>
                 </tr>
               </table>
-              <div style="width:60px;height:1px;background:linear-gradient(90deg,transparent,#D4AF37,transparent);margin:16px auto 0;"></div>
+              <div style="width:60px;height:1px;background:linear-gradient(90deg,transparent,#C9A961,transparent);margin:16px auto 0;"></div>
             </td>
           </tr>
 
           <!-- Badge -->
           <tr>
             <td align="center" style="padding-bottom:24px;">
-              <span style="display:inline-block;padding:8px 20px;border-radius:50px;font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:#D4AF37;border:1px solid rgba(212,175,55,0.2);background:rgba(212,175,55,0.06);">
+              <span style="display:inline-block;padding:8px 20px;border-radius:50px;font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:#C9A961;border:1px solid rgba(201,169,97,0.2);background:rgba(201,169,97,0.06);">
                 Votre Signature Émotionnelle
               </span>
             </td>
@@ -94,11 +94,11 @@ export function generateSignatureResultEmail(
           <!-- CTA -->
           <tr>
             <td align="center" style="padding:40px 0 32px;">
-              <div style="width:60px;height:1px;background:linear-gradient(90deg,transparent,#D4AF37,transparent);margin-bottom:32px;"></div>
-              <p style="margin:0 0 24px;font-size:18px;color:#D4AF37;font-weight:300;font-family:Georgia,'Times New Roman',serif;">
+              <div style="width:60px;height:1px;background:linear-gradient(90deg,transparent,#C9A961,transparent);margin-bottom:32px;"></div>
+              <p style="margin:0 0 24px;font-size:18px;color:#C9A961;font-weight:300;font-family:Georgia,'Times New Roman',serif;">
                 Prêt(e) à transformer votre signature émotionnelle en force&nbsp;?
               </p>
-              <a href="${siteUrl}/rejoindre" style="display:inline-block;padding:16px 40px;border-radius:50px;font-size:14px;font-weight:600;letter-spacing:0.05em;text-decoration:none;color:#050505;background:linear-gradient(135deg,#D4AF37,#B8960F);">
+              <a href="${siteUrl}/rejoindre" style="display:inline-block;padding:16px 40px;border-radius:50px;font-size:14px;font-weight:600;letter-spacing:0.05em;text-decoration:none;color:#000000;background:linear-gradient(135deg,#C9A961,#B8960F);">
                 Rejoindre SOS Shine
               </a>
             </td>
@@ -122,7 +122,7 @@ export function generateSignatureResultEmail(
           </tr>
           <tr>
             <td align="center" style="padding-bottom:16px;">
-              <a href="${siteUrl}" style="font-size:12px;color:#D4AF37;text-decoration:none;letter-spacing:0.1em;">
+              <a href="${siteUrl}" style="font-size:12px;color:#C9A961;text-decoration:none;letter-spacing:0.1em;">
                 sosshine.com
               </a>
             </td>

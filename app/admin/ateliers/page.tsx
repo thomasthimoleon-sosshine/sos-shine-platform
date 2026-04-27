@@ -102,7 +102,7 @@ export default function AdminAteliersPage() {
         {message && (
           <span
             className="px-4 py-2 rounded-full text-xs font-medium"
-            style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)' }}
+            style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--brand)' }}
           >
             {message}
           </span>
@@ -122,7 +122,7 @@ export default function AdminAteliersPage() {
               className="px-4 py-2 rounded-xl text-xs font-medium transition-all cursor-pointer"
               style={{
                 background: isActive ? 'var(--brand)' : 'var(--surface-card)',
-                color: isActive ? '#050505' : 'var(--text-secondary)',
+                color: isActive ? '#000000' : 'var(--text-secondary)',
                 border: '1px solid ' + (isActive ? 'var(--brand)' : 'var(--border)'),
               }}
             >
@@ -176,7 +176,7 @@ export default function AdminAteliersPage() {
                     onClick={() => isEditing ? setEditingId(null) : startEdit(atelier)}
                     className="px-3 py-1.5 rounded-lg text-[11px] font-medium cursor-pointer transition-colors"
                     style={{
-                      background: isEditing ? 'rgba(239,68,68,0.1)' : 'rgba(212,175,55,0.1)',
+                      background: isEditing ? 'rgba(239,68,68,0.1)' : 'rgba(201,169,97,0.1)',
                       color: isEditing ? '#EF4444' : 'var(--brand)',
                     }}
                   >
@@ -301,7 +301,7 @@ export default function AdminAteliersPage() {
                       className="px-6 py-2.5 rounded-full text-xs font-semibold cursor-pointer transition-all hover:scale-[1.03]"
                       style={{
                         background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
-                        color: '#050505',
+                        color: '#000000',
                         opacity: saving === atelier.id ? 0.6 : 1,
                       }}
                     >

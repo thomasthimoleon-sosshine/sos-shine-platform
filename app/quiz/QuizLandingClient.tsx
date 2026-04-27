@@ -38,7 +38,7 @@ function CtaButton({ position, label = 'DÉCOUVRIR MA SIGNATURE →', large = fa
       href={QUIZ_URL}
       onClick={() => trackCta(position)}
       className={`inline-block text-center font-semibold rounded-lg transition-all hover:brightness-110 hover:scale-[1.02] active:scale-[0.98] ${large ? 'w-full sm:w-auto px-10 py-5 text-base' : 'px-8 py-4 text-sm'}`}
-      style={{ background: 'var(--brand, #C9A961)', color: '#0A0A0A' }}
+      style={{ background: 'var(--brand, #C9A961)', color: '#000000' }}
     >
       {label}
     </Link>
@@ -77,7 +77,7 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
 // ═══════════════════════════════════════════
 export default function QuizLandingClient() {
   return (
-    <main className="min-h-screen" style={{ background: '#0A0A0A', color: '#e0e0e0' }}>
+    <main className="min-h-screen" style={{ background: '#000000', color: '#e0e0e0' }}>
 
       {/* ══════════ SECTION 1 — HERO ══════════ */}
       <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden">

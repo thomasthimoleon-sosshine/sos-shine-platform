@@ -167,9 +167,9 @@ function StarRating({ rating, onRate, size = 'md', interactive = false }: {
         >
           <svg
             className={sizes[size]}
-            fill={(hover || rating) >= star ? '#D4AF37' : 'none'}
+            fill={(hover || rating) >= star ? '#C9A961' : 'none'}
             viewBox="0 0 24 24"
-            stroke={(hover || rating) >= star ? '#D4AF37' : 'rgba(255,255,255,0.2)'}
+            stroke={(hover || rating) >= star ? '#C9A961' : 'rgba(255,255,255,0.2)'}
             strokeWidth={1.5}
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
@@ -272,7 +272,7 @@ function BookRow({ title, icon, books, onSelect }: {
           >
             <div className="relative overflow-hidden rounded-lg transition-all duration-300 group-hover/card:scale-105 group-hover/card:z-10 group-hover/card:shadow-2xl group-hover/card:shadow-black/60">
               {/* Cover */}
-              <div className="relative aspect-[3/4]" style={{ background: 'rgba(212,175,55,0.05)' }}>
+              <div className="relative aspect-[3/4]" style={{ background: 'rgba(201,169,97,0.05)' }}>
                 {book.cover ? (
                   <img
                     src={book.cover}
@@ -282,7 +282,7 @@ function BookRow({ title, icon, books, onSelect }: {
                   />
                 ) : (
                   <div className="w-full h-full flex flex-col items-center justify-center p-3 gap-1"
-                    style={{ background: 'linear-gradient(135deg, rgba(212,175,55,0.08), rgba(212,175,55,0.02))' }}>
+                    style={{ background: 'linear-gradient(135deg, rgba(201,169,97,0.08), rgba(201,169,97,0.02))' }}>
                     <span className="text-4xl opacity-20">📖</span>
                     <span className="text-[10px] text-center font-medium opacity-30" style={{ color: 'var(--text-muted)' }}>{book.title}</span>
                   </div>
@@ -299,7 +299,7 @@ function BookRow({ title, icon, books, onSelect }: {
                 {/* Favorite heart */}
                 {book.isFavorite && (
                   <span className="absolute top-2 right-2">
-                    <svg className="w-4 h-4" fill="#D4AF37" viewBox="0 0 24 24" stroke="none">
+                    <svg className="w-4 h-4" fill="#C9A961" viewBox="0 0 24 24" stroke="none">
                       <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                     </svg>
                   </span>
@@ -307,7 +307,7 @@ function BookRow({ title, icon, books, onSelect }: {
                 {/* Featured badge */}
                 {book.isFeatured && (
                   <span className="absolute top-2 left-2 text-[9px] font-bold px-1.5 py-0.5 rounded"
-                    style={{ background: 'rgba(212,175,55,0.9)', color: '#fff' }}>
+                    style={{ background: 'rgba(201,169,97,0.9)', color: '#fff' }}>
                     VEDETTE
                   </span>
                 )}
@@ -356,7 +356,7 @@ function HeroBanner({ book, onOpen }: { book: ShineBook; onOpen: () => void }) {
       {book.cover ? (
         <img src={book.cover} alt={book.title} className="absolute inset-0 w-full h-full object-cover" style={{ filter: 'blur(20px) brightness(0.4)', transform: 'scale(1.1)' }} />
       ) : (
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(212,175,55,0.15), rgba(9,9,11,1))' }} />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(201,169,97,0.15), rgba(9,9,11,1))' }} />
       )}
       <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(9,9,11,0.95) 30%, rgba(9,9,11,0.6) 60%, rgba(9,9,11,0.3))' }} />
       <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(9,9,11,1) 0%, transparent 40%)' }} />
@@ -364,7 +364,7 @@ function HeroBanner({ book, onOpen }: { book: ShineBook; onOpen: () => void }) {
       <div className="absolute bottom-0 left-0 p-6 sm:p-10 max-w-2xl z-10 flex gap-6 items-end">
         {/* Book cover */}
         {book.cover && (
-          <div className="hidden sm:block shrink-0 w-40 rounded-lg overflow-hidden shadow-2xl shadow-black/60" style={{ border: '1px solid rgba(212,175,55,0.3)' }}>
+          <div className="hidden sm:block shrink-0 w-40 rounded-lg overflow-hidden shadow-2xl shadow-black/60" style={{ border: '1px solid rgba(201,169,97,0.3)' }}>
             <img src={book.cover} alt={book.title} className="w-full aspect-[3/4] object-cover" />
           </div>
         )}
@@ -374,7 +374,7 @@ function HeroBanner({ book, onOpen }: { book: ShineBook; onOpen: () => void }) {
           transition={{ duration: 0.6 }}
         >
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold mb-4"
-            style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.3)' }}>
+            style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.3)' }}>
             <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" /></svg>
             Recommandé pour vous
           </span>
@@ -498,12 +498,12 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
           {/* Cover */}
           <div className="shrink-0 w-48 mx-auto sm:mx-0">
             <div className="relative aspect-[3/4] rounded-lg overflow-hidden shadow-2xl shadow-black/60"
-              style={{ border: '1px solid rgba(212,175,55,0.2)' }}>
+              style={{ border: '1px solid rgba(201,169,97,0.2)' }}>
               {book.cover ? (
                 <img src={book.cover} alt={book.title} className="w-full h-full object-cover" />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-5xl opacity-20"
-                  style={{ background: 'linear-gradient(135deg, rgba(212,175,55,0.1), rgba(212,175,55,0.02))' }}>
+                  style={{ background: 'linear-gradient(135deg, rgba(201,169,97,0.1), rgba(201,169,97,0.02))' }}>
                   📖
                 </div>
               )}
@@ -525,8 +525,8 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
                 className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 shrink-0"
                 style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)' }}
               >
-                <svg className="w-5 h-5" fill={book.isFavorite ? '#D4AF37' : 'none'} viewBox="0 0 24 24"
-                  stroke={book.isFavorite ? '#D4AF37' : 'white'} strokeWidth={1.5}>
+                <svg className="w-5 h-5" fill={book.isFavorite ? '#C9A961' : 'none'} viewBox="0 0 24 24"
+                  stroke={book.isFavorite ? '#C9A961' : 'white'} strokeWidth={1.5}>
                   <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                 </svg>
               </button>
@@ -534,7 +534,7 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
 
             <div className="flex items-center gap-2 flex-wrap mb-4">
               <span className="px-2.5 py-1 rounded-full text-[11px] font-medium"
-                style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
+                style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}>
                 {typeLabels[book.contentType] || book.contentType}
               </span>
               <span className="text-[13px]" style={{ color: 'var(--text-muted)' }}>{book.year}</span>
@@ -563,7 +563,7 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
 
             {/* Your rating */}
             <div className="glass p-4 rounded-xl mt-5 flex items-center gap-4 flex-wrap"
-              style={{ borderColor: 'rgba(212,175,55,0.1)' }}>
+              style={{ borderColor: 'rgba(201,169,97,0.1)' }}>
               <span className="text-[13px] font-medium" style={{ color: 'var(--text-muted)' }}>Votre note :</span>
               <StarRating
                 rating={book.userRating}
@@ -587,7 +587,7 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
               onClick={() => setTab('overview')}
               className="flex-1 py-2.5 rounded-lg text-[13px] font-medium cursor-pointer transition-all duration-200"
               style={{
-                background: tab === 'overview' ? 'rgba(212,175,55,0.12)' : 'transparent',
+                background: tab === 'overview' ? 'rgba(201,169,97,0.12)' : 'transparent',
                 color: tab === 'overview' ? 'var(--brand)' : 'var(--text-muted)',
               }}
             >
@@ -597,7 +597,7 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
               onClick={() => setTab('reviews')}
               className="flex-1 py-2.5 rounded-lg text-[13px] font-medium cursor-pointer transition-all duration-200"
               style={{
-                background: tab === 'reviews' ? 'rgba(212,175,55,0.12)' : 'transparent',
+                background: tab === 'reviews' ? 'rgba(201,169,97,0.12)' : 'transparent',
                 color: tab === 'reviews' ? 'var(--brand)' : 'var(--text-muted)',
               }}
             >
@@ -630,7 +630,7 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
               ) : (
                 <motion.div key="reviews" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }}>
                   {/* Write review */}
-                  <div className="glass p-4 rounded-xl mb-4" style={{ borderColor: 'rgba(212,175,55,0.1)' }}>
+                  <div className="glass p-4 rounded-xl mb-4" style={{ borderColor: 'rgba(201,169,97,0.1)' }}>
                     <div className="flex items-center gap-3 mb-3">
                       <span className="text-[13px] font-medium" style={{ color: 'var(--text-secondary)' }}>Votre avis :</span>
                       <StarRating rating={newRating} size="md" interactive onRate={setNewRating} />
@@ -646,7 +646,7 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
                         color: 'var(--text-primary)',
                         minHeight: 80,
                       }}
-                      onFocus={(e) => e.target.style.borderColor = 'rgba(212,175,55,0.4)'}
+                      onFocus={(e) => e.target.style.borderColor = 'rgba(201,169,97,0.4)'}
                       onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
                     />
                     <div className="flex justify-end mt-2">
@@ -674,7 +674,7 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
                         <div className="flex items-center gap-3 mb-2">
                           <div
                             className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
-                            style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}
+                            style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}
                           >
                             {review.author.charAt(0)}
                           </div>
@@ -935,7 +935,7 @@ export default function ShineLibrairiePage() {
                   border: '1px solid var(--border)',
                   color: 'var(--text-primary)',
                 }}
-                onFocus={(e) => e.target.style.borderColor = 'rgba(212,175,55,0.4)'}
+                onFocus={(e) => e.target.style.borderColor = 'rgba(201,169,97,0.4)'}
                 onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
               />
               {search && (
@@ -1074,7 +1074,7 @@ export default function ShineLibrairiePage() {
                     onClick={() => setSelectedBook(book)}
                   >
                     <div className="relative overflow-hidden rounded-lg transition-all duration-300 group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-black/50">
-                      <div className="relative aspect-[3/4]" style={{ background: 'rgba(212,175,55,0.05)' }}>
+                      <div className="relative aspect-[3/4]" style={{ background: 'rgba(201,169,97,0.05)' }}>
                         {book.cover ? (
                           <img src={book.cover} alt={book.title} className="w-full h-full object-cover" loading="lazy" />
                         ) : (
@@ -1088,7 +1088,7 @@ export default function ShineLibrairiePage() {
                         )}
                         {book.isFavorite && (
                           <span className="absolute top-2 right-2">
-                            <svg className="w-4 h-4" fill="#D4AF37" viewBox="0 0 24 24"><path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
+                            <svg className="w-4 h-4" fill="#C9A961" viewBox="0 0 24 24"><path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
                           </span>
                         )}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
@@ -1117,7 +1117,7 @@ export default function ShineLibrairiePage() {
           // Favorites view
           <div>
             <h2 className="text-lg font-display font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-              <svg className="w-5 h-5" fill="#D4AF37" viewBox="0 0 24 24">
+              <svg className="w-5 h-5" fill="#C9A961" viewBox="0 0 24 24">
                 <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
               </svg>
               Mes Favoris
@@ -1144,7 +1144,7 @@ export default function ShineLibrairiePage() {
                     onClick={() => setSelectedBook(book)}
                   >
                     <div className="relative overflow-hidden rounded-lg transition-all duration-300 group-hover:scale-105">
-                      <div className="relative aspect-[3/4]" style={{ background: 'rgba(212,175,55,0.05)' }}>
+                      <div className="relative aspect-[3/4]" style={{ background: 'rgba(201,169,97,0.05)' }}>
                         {book.cover ? (
                           <img src={book.cover} alt={book.title} className="w-full h-full object-cover" loading="lazy" />
                         ) : (
@@ -1234,7 +1234,7 @@ export default function ShineLibrairiePage() {
                         key={letter}
                         href={`#letter-lib-${letter}`}
                         className="w-8 h-8 rounded-lg flex items-center justify-center text-[13px] font-semibold transition-colors hover:opacity-80"
-                        style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)' }}
+                        style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--brand)' }}
                       >
                         {letter}
                       </a>
@@ -1258,7 +1258,7 @@ export default function ShineLibrairiePage() {
                             onClick={() => setSelectedBook(book)}
                           >
                             <div className="relative overflow-hidden rounded-lg transition-all duration-300 group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-black/50">
-                              <div className="relative aspect-[3/4]" style={{ background: 'rgba(212,175,55,0.05)' }}>
+                              <div className="relative aspect-[3/4]" style={{ background: 'rgba(201,169,97,0.05)' }}>
                                 {book.cover ? (
                                   <img src={book.cover} alt={book.title} className="w-full h-full object-cover" loading="lazy" />
                                 ) : (

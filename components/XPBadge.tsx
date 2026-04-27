@@ -56,7 +56,7 @@ export default function XPBadge({ userId, size = 'md', showDetails = false }: XP
     return (
       <span
         className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-medium ${sizeClasses[size]}`}
-        style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.15)' }}
+        style={{ background: 'rgba(201,169,97,0.1)', color: '#C9A961', border: '1px solid rgba(201,169,97,0.15)' }}
       >
         <span>{level.icon}</span>
         <span>{level.name}</span>
@@ -116,7 +116,7 @@ export default function XPBadge({ userId, size = 'md', showDetails = false }: XP
           </p>
         </div>
       ) : (
-        <div className="mb-4 rounded-xl p-3 text-center" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.15)' }}>
+        <div className="mb-4 rounded-xl p-3 text-center" style={{ background: 'rgba(201,169,97,0.08)', border: '1px solid rgba(201,169,97,0.15)' }}>
           <p className="text-sm font-semibold" style={{ color: 'var(--brand)' }}>Rang maximum atteint !</p>
           <p className="text-[11px] mt-0.5" style={{ color: 'var(--text-muted)' }}>1 000 000 XP — Diamant</p>
         </div>
@@ -124,11 +124,11 @@ export default function XPBadge({ userId, size = 'md', showDetails = false }: XP
 
       {/* Shines stats */}
       <div className="grid grid-cols-2 gap-3 pt-3" style={{ borderTop: '1px solid var(--border)' }}>
-        <div className="text-center py-2 rounded-xl" style={{ background: 'rgba(212,175,55,0.04)' }}>
+        <div className="text-center py-2 rounded-xl" style={{ background: 'rgba(201,169,97,0.04)' }}>
           <p className="text-lg font-semibold" style={{ color: 'var(--brand)' }}>{xpData.shines_given}</p>
           <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>Shines donnés</p>
         </div>
-        <div className="text-center py-2 rounded-xl" style={{ background: 'rgba(212,175,55,0.04)' }}>
+        <div className="text-center py-2 rounded-xl" style={{ background: 'rgba(201,169,97,0.04)' }}>
           <p className="text-lg font-semibold" style={{ color: 'var(--brand)' }}>{xpData.shines_received}</p>
           <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>Shines reçus</p>
         </div>
@@ -146,10 +146,10 @@ export default function XPBadge({ userId, size = 'md', showDetails = false }: XP
                 <div key={t.level}
                   className="flex items-center gap-2 px-3 py-2 rounded-lg text-[11px]"
                   style={{
-                    background: isCurrent ? 'rgba(212,175,55,0.1)' : isReached ? 'rgba(212,175,55,0.04)' : 'transparent',
+                    background: isCurrent ? 'rgba(201,169,97,0.1)' : isReached ? 'rgba(201,169,97,0.04)' : 'transparent',
                     color: isReached ? 'var(--brand)' : 'var(--text-muted)',
                     opacity: isReached ? 1 : 0.4,
-                    border: isCurrent ? '1px solid rgba(212,175,55,0.2)' : '1px solid transparent',
+                    border: isCurrent ? '1px solid rgba(201,169,97,0.2)' : '1px solid transparent',
                   }}>
                   <span className="text-sm">{t.icon}</span>
                   <span className="font-medium">{t.name}</span>

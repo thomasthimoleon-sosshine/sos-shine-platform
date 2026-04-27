@@ -14,16 +14,16 @@ export default function CancelPage() {
       >
         <div
           className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-8"
-          style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)' }}
+          style={{ background: 'rgba(201,169,97,0.08)', border: '1px solid rgba(201,169,97,0.2)' }}
         >
-          <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="#D4AF37" strokeWidth={1.5}>
+          <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="#C9A961" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </div>
 
         <h1
           className="font-display text-3xl sm:text-4xl font-light mb-4"
-          style={{ color: '#D4AF37' }}
+          style={{ color: '#C9A961' }}
         >
           Paiement annul&eacute;
         </h1>
@@ -37,7 +37,7 @@ export default function CancelPage() {
           <Link
             href="/dashboard/tarifs"
             className="inline-flex items-center justify-center px-8 py-3.5 rounded-full font-medium text-sm tracking-wide transition-all"
-            style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}
+            style={{ background: 'linear-gradient(135deg, #C9A961, #B8960F)', color: '#000000' }}
           >
             Reprendre l&apos;inscription
           </Link>
@@ -53,7 +53,7 @@ export default function CancelPage() {
         <div className="mt-8 p-4 rounded-xl text-center" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}>
           <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
             Une question ?{' '}
-            <a href="mailto:hello@sosshine.com" style={{ color: '#D4AF37', textDecoration: 'underline' }}>hello@sosshine.com</a>
+            <a href="mailto:hello@sosshine.com" style={{ color: '#C9A961', textDecoration: 'underline' }}>hello@sosshine.com</a>
           </p>
         </div>
       </motion.div>

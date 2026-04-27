@@ -313,7 +313,7 @@ END $$;`}</pre>
           onClick={createTable}
           disabled={creatingTable}
           className="px-6 py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer"
-          style={{ background: '#74C0FC', color: '#050505' }}
+          style={{ background: '#74C0FC', color: '#000000' }}
         >
           {creatingTable ? 'V\u00e9rification...' : 'V\u00e9rifier \u00e0 nouveau'}
         </button>
@@ -336,7 +336,7 @@ END $$;`}</pre>
         <button
           onClick={openNew}
           className="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer hover:scale-[1.02]"
-          style={{ background: '#74C0FC', color: '#050505' }}
+          style={{ background: '#74C0FC', color: '#000000' }}
         >
           + Nouvel article
         </button>
@@ -370,7 +370,7 @@ END $$;`}</pre>
                     </span>
                   )}
                   {article.featured && (
-                    <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold" style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37' }}>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold" style={{ background: 'rgba(201,169,97,0.15)', color: '#C9A961' }}>
                       En vedette
                     </span>
                   )}
@@ -415,9 +415,9 @@ END $$;`}</pre>
                   onClick={() => toggleFeatured(article)}
                   className="text-xs px-3 py-1.5 rounded-lg cursor-pointer transition-colors"
                   style={{
-                    background: article.featured ? 'rgba(212,175,55,0.1)' : 'rgba(255,255,255,0.03)',
-                    color: article.featured ? '#D4AF37' : 'var(--text-muted)',
-                    border: `1px solid ${article.featured ? 'rgba(212,175,55,0.2)' : 'var(--border)'}`,
+                    background: article.featured ? 'rgba(201,169,97,0.1)' : 'rgba(255,255,255,0.03)',
+                    color: article.featured ? '#C9A961' : 'var(--text-muted)',
+                    border: `1px solid ${article.featured ? 'rgba(201,169,97,0.2)' : 'var(--border)'}`,
                   }}
                   title="Mettre en vedette"
                 >
@@ -698,9 +698,9 @@ END $$;`}</pre>
                     <button onClick={() => insertHtmlTag('ul')} className="px-2 py-1 rounded text-[11px] cursor-pointer" style={{ color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)' }} title="Liste">UL</button>
                     <button onClick={() => insertHtmlTag('li')} className="px-2 py-1 rounded text-[11px] cursor-pointer" style={{ color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)' }} title="Item liste">LI</button>
                     <button onClick={() => insertHtmlTag('blockquote')} className="px-2 py-1 rounded text-[11px] cursor-pointer" style={{ color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)' }} title="Citation">Quote</button>
-                    <button onClick={() => insertHtmlTag('a', 'href=""')} className="px-2 py-1 rounded text-[11px] cursor-pointer" style={{ color: '#D4AF37', background: 'rgba(212,175,55,0.1)' }} title="Lien">Link</button>
+                    <button onClick={() => insertHtmlTag('a', 'href=""')} className="px-2 py-1 rounded text-[11px] cursor-pointer" style={{ color: '#C9A961', background: 'rgba(201,169,97,0.1)' }} title="Lien">Link</button>
                     <button onClick={() => insertHtmlTag('div', 'class="my-section"')} className="px-2 py-1 rounded text-[11px] cursor-pointer" style={{ color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)' }} title="Div">Div</button>
-                    <button onClick={() => insertHtmlTag('span', 'style="color: #D4AF37;"')} className="px-2 py-1 rounded text-[11px] cursor-pointer" style={{ color: '#D4AF37', background: 'rgba(212,175,55,0.1)' }} title="Span color&eacute;">Color</button>
+                    <button onClick={() => insertHtmlTag('span', 'style="color: #C9A961;"')} className="px-2 py-1 rounded text-[11px] cursor-pointer" style={{ color: '#C9A961', background: 'rgba(201,169,97,0.1)' }} title="Span color&eacute;">Color</button>
                     <button onClick={() => insertHtmlSelfClosing('br')} className="px-2 py-1 rounded text-[11px] cursor-pointer" style={{ color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)' }} title="Saut de ligne">BR</button>
                     <button onClick={() => insertHtmlSelfClosing('hr')} className="px-2 py-1 rounded text-[11px] cursor-pointer" style={{ color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)' }} title="Ligne horizontale">HR</button>
                     <button onClick={() => insertHtmlTag('img', 'src="" alt="" style="max-width:100%;border-radius:12px;"')} className="px-2 py-1 rounded text-[11px] cursor-pointer" style={{ color: '#55EFC4', background: 'rgba(85,239,196,0.1)' }} title="Image">IMG</button>
@@ -770,7 +770,7 @@ END $$;`}</pre>
                 onClick={handleSave}
                 disabled={saving || !form.title.trim() || !form.content.trim()}
                 className="px-5 py-2.5 rounded-xl text-sm font-semibold cursor-pointer transition-all hover:scale-[1.02] disabled:opacity-50"
-                style={{ background: '#74C0FC', color: '#050505' }}
+                style={{ background: '#74C0FC', color: '#000000' }}
               >
                 {saving ? 'Enregistrement...' : editingId ? 'Mettre \u00e0 jour' : 'Publier'}
               </button>

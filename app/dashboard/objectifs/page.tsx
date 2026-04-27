@@ -232,7 +232,7 @@ export default function ObjectifsPage() {
             <Link
               href="/onboarding"
               className="text-[12px] px-3 py-1.5 rounded-lg transition-colors"
-              style={{ color: 'var(--brand)', background: 'rgba(212,175,55,0.08)' }}
+              style={{ color: 'var(--brand)', background: 'rgba(201,169,97,0.08)' }}
             >
               Modifier
             </Link>
@@ -247,8 +247,8 @@ export default function ObjectifsPage() {
                 transition={{ delay: 0.1 + i * 0.04, duration: 0.4, ease }}
                 className="rounded-xl p-5 group"
                 style={{
-                  background: og.status === 'completed' ? 'rgba(85,239,196,0.04)' : 'rgba(212,175,55,0.04)',
-                  border: og.status === 'completed' ? '1px solid rgba(85,239,196,0.15)' : '1px solid rgba(212,175,55,0.12)',
+                  background: og.status === 'completed' ? 'rgba(85,239,196,0.04)' : 'rgba(201,169,97,0.04)',
+                  border: og.status === 'completed' ? '1px solid rgba(85,239,196,0.15)' : '1px solid rgba(201,169,97,0.12)',
                 }}
               >
                 <div className="flex items-start justify-between gap-3">
@@ -260,7 +260,7 @@ export default function ObjectifsPage() {
                         style={{ color: og.status === 'completed' ? '#55EFC4' : 'var(--brand)' }}>
                         {og.status === 'completed' ? 'Complété' : 'En cours'}
                       </span>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)' }}>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--brand)' }}>
                         Onboarding
                       </span>
                     </div>
@@ -321,10 +321,10 @@ export default function ObjectifsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.5, ease }}
           className="rounded-xl p-6 text-center"
-          style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.12)' }}
+          style={{ background: 'rgba(201,169,97,0.04)', border: '1px solid rgba(201,169,97,0.12)' }}
         >
           <div className="w-12 h-12 rounded-2xl mx-auto mb-3 flex items-center justify-center"
-            style={{ background: 'rgba(212,175,55,0.1)' }}>
+            style={{ background: 'rgba(201,169,97,0.1)' }}>
             <span className="text-2xl">✨</span>
           </div>
           <h3 className="font-display text-lg font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
@@ -576,7 +576,7 @@ export default function ObjectifsPage() {
                         )}
                         {hasPhases && (
                           <span className="text-[10px] px-2 py-0.5 rounded-full font-medium"
-                            style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)' }}>
+                            style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--brand)' }}>
                             {phases.length} phase{phases.length > 1 ? 's' : ''}
                           </span>
                         )}
@@ -607,7 +607,7 @@ export default function ObjectifsPage() {
                         <span style={{ color: 'var(--brand)' }}>+{ch.reward_value} XP</span>
                         {ch.reward_detail && <span>{ch.reward_detail}</span>}
                         {daysLeft !== null && daysLeft > 0 && <span>{daysLeft} jours restants</span>}
-                        {ch.status === 'completed' && <span style={{ color: '#D4AF37' }}>Défi terminé</span>}
+                        {ch.status === 'completed' && <span style={{ color: '#C9A961' }}>Défi terminé</span>}
                       </div>
                     </div>
 
@@ -716,7 +716,7 @@ export default function ObjectifsPage() {
                                 </div>
                               ) : (
                                 <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold"
-                                  style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)' }}>
+                                  style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--brand)' }}>
                                   {i + 1}
                                 </div>
                               )}

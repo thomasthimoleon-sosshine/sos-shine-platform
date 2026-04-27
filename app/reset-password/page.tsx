@@ -158,7 +158,7 @@ export default function ResetPasswordPage() {
                     placeholder="Minimum 6 caractères"
                     className="w-full px-4 py-3 rounded-xl text-sm transition-colors"
                     style={inputStyle}
-                    onFocus={(e) => e.currentTarget.style.borderColor = 'rgba(212,175,55,0.4)'}
+                    onFocus={(e) => e.currentTarget.style.borderColor = 'rgba(201,169,97,0.4)'}
                     onBlur={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
                   />
                 </div>
@@ -176,7 +176,7 @@ export default function ResetPasswordPage() {
                     placeholder="Retapez votre mot de passe"
                     className="w-full px-4 py-3 rounded-xl text-sm transition-colors"
                     style={inputStyle}
-                    onFocus={(e) => e.currentTarget.style.borderColor = 'rgba(212,175,55,0.4)'}
+                    onFocus={(e) => e.currentTarget.style.borderColor = 'rgba(201,169,97,0.4)'}
                     onBlur={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
                   />
                 </div>

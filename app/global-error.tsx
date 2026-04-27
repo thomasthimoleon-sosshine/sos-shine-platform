@@ -12,7 +12,7 @@ export default function GlobalError({
       <body style={{ background: '#09090b', color: '#e4e4e7', fontFamily: 'system-ui, sans-serif' }}>
         <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ textAlign: 'center', maxWidth: '400px', padding: '2rem' }}>
-            <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#D4AF37' }}>
+            <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#C9A961' }}>
               Une erreur est survenue
             </h2>
             <p style={{ marginBottom: '1.5rem', color: '#a1a1aa' }}>
@@ -21,7 +21,7 @@ export default function GlobalError({
             <button
               onClick={() => reset()}
               style={{
-                background: '#D4AF37',
+                background: '#C9A961',
                 color: '#09090b',
                 border: 'none',
                 padding: '0.75rem 1.5rem',

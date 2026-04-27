@@ -9,7 +9,7 @@ import type { Douleur } from '@/types/database'
 
 /* ─── Catégories & couleurs ─── */
 const CATEGORIES: Record<string, string> = {
-  "Émotions & Psychologie": "#D4AF37",
+  "Émotions & Psychologie": "#C9A961",
   "Relations & Liens": "#C9A96E",
   "Blessures & Traumatismes": "#B8860B",
   "Développement Personnel": "#DAA520",
@@ -17,7 +17,7 @@ const CATEGORIES: Record<string, string> = {
   "Spiritualité & Énergie": "#FFD700",
   "Soins & Thérapies": "#F0C040",
   "Identité & Mission": "#E8C870",
-  "Vie & Expériences": "#D4AF37",
+  "Vie & Expériences": "#C9A961",
   "Pratiques & Outils": "#C8A951",
 }
 
@@ -449,7 +449,7 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
         className="px-6 md:px-12 lg:px-20 pt-10 pb-8"
         style={{
           borderBottom: '1px solid var(--border)',
-          background: 'linear-gradient(180deg, rgba(212,175,55,0.03) 0%, transparent 100%)',
+          background: 'linear-gradient(180deg, rgba(201,169,97,0.03) 0%, transparent 100%)',
         }}
       >
         <div className="max-w-5xl mx-auto">
@@ -501,7 +501,7 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
             onClick={() => setActiveCat('ALL')}
             className="px-3 py-1.5 rounded-full text-[11px] uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap"
             style={{
-              background: activeCat === 'ALL' ? 'rgba(212,175,55,0.12)' : 'transparent',
+              background: activeCat === 'ALL' ? 'rgba(201,169,97,0.12)' : 'transparent',
               border: `1px solid ${activeCat === 'ALL' ? 'var(--brand)' : 'var(--border)'}`,
               color: activeCat === 'ALL' ? 'var(--brand)' : 'var(--text-muted)',
             }}
@@ -514,7 +514,7 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
               onClick={() => setActiveCat(activeCat === c ? 'ALL' : c)}
               className="px-3 py-1.5 rounded-full text-[11px] uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap"
               style={{
-                background: activeCat === c ? 'rgba(212,175,55,0.12)' : 'transparent',
+                background: activeCat === c ? 'rgba(201,169,97,0.12)' : 'transparent',
                 border: `1px solid ${activeCat === c ? 'var(--brand)' : 'var(--border)'}`,
                 color: activeCat === c ? 'var(--brand)' : 'var(--text-muted)',
               }}
@@ -563,7 +563,7 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
               type="checkbox"
               checked={onlyOriginal}
               onChange={(e) => setOnlyOriginal(e.target.checked)}
-              className="accent-[#D4AF37]"
+              className="accent-[#C9A961]"
             />
             <span>&diams; Liste originale uniquement</span>
           </label>
@@ -659,8 +659,8 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
                                       <svg className="w-3 h-3" fill={avail?.hasShort ? '#A29BFE' : 'rgba(255,255,255,0.15)'} viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z" /></svg>
                                     </span>
                                     {/* Shine Librairie */}
-                                    <span title="Shine Librairie" className="inline-flex items-center justify-center w-5 h-5 rounded" style={{ background: avail?.hasLibrary ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.03)' }}>
-                                      <svg className="w-3 h-3" fill={avail?.hasLibrary ? '#D4AF37' : 'rgba(255,255,255,0.15)'} viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" /></svg>
+                                    <span title="Shine Librairie" className="inline-flex items-center justify-center w-5 h-5 rounded" style={{ background: avail?.hasLibrary ? 'rgba(201,169,97,0.15)' : 'rgba(255,255,255,0.03)' }}>
+                                      <svg className="w-3 h-3" fill={avail?.hasLibrary ? '#C9A961' : 'rgba(255,255,255,0.15)'} viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" /></svg>
                                     </span>
                                   </div>
                                 )
@@ -672,7 +672,7 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
                               <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                             </svg>
                           ) : (
-                            <span className="text-[10px] px-2 py-0.5 rounded-lg flex-shrink-0" style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--brand)' }}>
+                            <span className="text-[10px] px-2 py-0.5 rounded-lg flex-shrink-0" style={{ background: 'rgba(201,169,97,0.08)', color: 'var(--brand)' }}>
                               {getReleaseDate(topic.slug)}
                             </span>
                           )}
@@ -693,7 +693,7 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
         )}
 
         {/* CTA Banner */}
-        <div className="rounded-2xl p-8 text-center mt-12" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.15)' }}>
+        <div className="rounded-2xl p-8 text-center mt-12" style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.15)' }}>
           <h3 className="font-display text-xl font-semibold mb-2">
             Accédez à tous les protocoles
           </h3>
@@ -716,7 +716,7 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
         <div
           className="rounded-xl p-5 flex flex-wrap gap-x-6 gap-y-3 items-center"
           style={{
-            background: 'rgba(212,175,55,0.03)',
+            background: 'rgba(201,169,97,0.03)',
             border: '1px solid var(--border)',
           }}
         >
@@ -737,7 +737,7 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
             <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Shine Short</span>
           </div>
           <div className="flex items-center gap-2">
-            <svg className="w-3 h-3" fill="#D4AF37" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" /></svg>
+            <svg className="w-3 h-3" fill="#C9A961" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" /></svg>
             <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Shine Librairie</span>
           </div>
           <span className="text-xs ml-auto" style={{ color: 'var(--text-muted)' }}>
@@ -746,7 +746,7 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
         </div>
 
         {/* Contact info */}
-        <div className="rounded-xl p-5 text-center" style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.1)' }}>
+        <div className="rounded-xl p-5 text-center" style={{ background: 'rgba(201,169,97,0.04)', border: '1px solid rgba(201,169,97,0.1)' }}>
           <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
             Vous ne trouvez pas votre challenge émotionnel ? Nous ajoutons régulièrement de nouvelles pages.
           </p>

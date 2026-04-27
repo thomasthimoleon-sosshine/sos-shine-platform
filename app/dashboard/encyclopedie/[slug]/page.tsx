@@ -39,7 +39,7 @@ function buildSteps(douleur: Douleur, dynamicSteps: DouleurStep[]): StepConfig[]
       title: s.title,
       subtitle: s.subtitle || 'Vidéo, audio & ressources',
       icon: s.icon || '📋',
-      color: s.color || '#D4AF37',
+      color: s.color || '#C9A961',
       description: s.description || '',
       video: s.video_url,
       video2: s.video_url_2,
@@ -576,7 +576,7 @@ export default function DouleurDetailPage() {
           <p className="mb-6" style={{ color: 'var(--text-secondary)' }}>Veuillez réessayer.</p>
           <button onClick={() => window.location.reload()}
             className="px-5 py-2.5 rounded-lg text-sm font-medium cursor-pointer"
-            style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.2)' }}>
+            style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.2)' }}>
             Réessayer
           </button>
         </div>
@@ -586,11 +586,11 @@ export default function DouleurDetailPage() {
     return (
       <div className="max-w-2xl mx-auto py-16 px-4">
         <div className="rounded-2xl p-8 sm:p-10 text-center" style={{
-          background: 'linear-gradient(160deg, var(--surface-card) 0%, rgba(212,175,55,0.04) 100%)',
-          border: '1px solid rgba(212,175,55,0.15)',
+          background: 'linear-gradient(160deg, var(--surface-card) 0%, rgba(201,169,97,0.04) 100%)',
+          border: '1px solid rgba(201,169,97,0.15)',
         }}>
           <div className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center"
-            style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}>
+            style={{ background: 'rgba(201,169,97,0.1)', border: '1px solid rgba(201,169,97,0.2)' }}>
             <span className="text-3xl">💛</span>
           </div>
 
@@ -636,8 +636,8 @@ export default function DouleurDetailPage() {
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 hover:scale-[1.03]"
               style={{
                 background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
-                color: '#050505',
-                boxShadow: '0 4px 20px rgba(212,175,55,0.3)',
+                color: '#000000',
+                boxShadow: '0 4px 20px rgba(201,169,97,0.3)',
               }}>
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
@@ -739,7 +739,7 @@ export default function DouleurDetailPage() {
           <div className="mt-3 flex flex-wrap gap-2">
             {douleur.tags.map((tag: string) => (
               <span key={tag} className="px-2.5 py-1 rounded-full text-[11px] font-medium tracking-wide"
-                style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.15)' }}>
+                style={{ background: 'rgba(201,169,97,0.08)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.15)' }}>
                 #{tag}
               </span>
             ))}
@@ -750,7 +750,7 @@ export default function DouleurDetailPage() {
         {hasQuiz && (
           <div className="mt-3 flex items-center gap-3 flex-wrap">
             <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold"
-              style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.2)' }}>
+              style={{ background: 'rgba(201,169,97,0.1)', color: '#C9A961', border: '1px solid rgba(201,169,97,0.2)' }}>
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
               </svg>
@@ -815,9 +815,9 @@ export default function DouleurDetailPage() {
             onClick={() => setActiveStep(quizStepNum)}
             className="flex items-center gap-2.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer whitespace-nowrap flex-shrink-0"
             style={{
-              background: activeStep === quizStepNum ? 'rgba(212,175,55,0.15)' : 'var(--surface-card)',
-              border: activeStep === quizStepNum ? '1px solid rgba(212,175,55,0.4)' : '1px solid var(--border)',
-              color: activeStep === quizStepNum ? '#D4AF37' : 'var(--text-secondary)',
+              background: activeStep === quizStepNum ? 'rgba(201,169,97,0.15)' : 'var(--surface-card)',
+              border: activeStep === quizStepNum ? '1px solid rgba(201,169,97,0.4)' : '1px solid var(--border)',
+              color: activeStep === quizStepNum ? '#C9A961' : 'var(--text-secondary)',
               opacity: allStepsCompleted ? 1 : 0.5,
             }}
           >
@@ -892,10 +892,10 @@ export default function DouleurDetailPage() {
 
             if (locked) {
               return (
-                <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(160deg, rgba(0,0,0,0.9), rgba(212,175,55,0.05))', border: '1px solid rgba(212,175,55,0.2)' }}>
+                <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(160deg, rgba(0,0,0,0.9), rgba(201,169,97,0.05))', border: '1px solid rgba(201,169,97,0.2)' }}>
                   <div className="text-center py-10 px-6">
                     <div className="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center"
-                      style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.25)' }}>
+                      style={{ background: 'rgba(201,169,97,0.1)', border: '1px solid rgba(201,169,97,0.25)' }}>
                       <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="var(--brand)" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
                       </svg>
@@ -910,7 +910,7 @@ export default function DouleurDetailPage() {
                     </p>
                     <Link href={previewCtaLink}
                       className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-sm font-semibold transition-all hover:scale-[1.03]"
-                      style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505', boxShadow: '0 4px 20px rgba(212,175,55,0.3)' }}>
+                      style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000', boxShadow: '0 4px 20px rgba(201,169,97,0.3)' }}>
                       {previewCtaText}
                     </Link>
                     <p className="text-xs mt-4" style={{ color: 'var(--text-muted)' }}>
@@ -930,10 +930,10 @@ export default function DouleurDetailPage() {
 
           const lockedOverlay = (label: string) => (
             <div className="relative rounded-xl overflow-hidden aspect-video flex items-center justify-center"
-              style={{ background: 'linear-gradient(135deg, rgba(0,0,0,0.8), rgba(212,175,55,0.05))', border: '1px solid rgba(212,175,55,0.15)' }}>
+              style={{ background: 'linear-gradient(135deg, rgba(0,0,0,0.8), rgba(201,169,97,0.05))', border: '1px solid rgba(201,169,97,0.15)' }}>
               <div className="text-center p-6">
                 <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center"
-                  style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                  style={{ background: 'rgba(201,169,97,0.1)', border: '1px solid rgba(201,169,97,0.2)' }}>
                   <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="var(--brand)" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                   </svg>
@@ -944,7 +944,7 @@ export default function DouleurDetailPage() {
                 </p>
                 <Link href={previewCtaLink}
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all hover:scale-[1.03]"
-                  style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}>
+                  style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000' }}>
                   {previewCtaShort}
                 </Link>
               </div>
@@ -1010,19 +1010,19 @@ export default function DouleurDetailPage() {
                     }, [])
 
                     return (
-                      <div className="rounded-xl p-4 space-y-3" style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(212,175,55,0.15)' }}>
+                      <div className="rounded-xl p-4 space-y-3" style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(201,169,97,0.15)' }}>
                         <p className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>Audio — {title}</p>
-                        <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.12)' }}>
+                        <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.12)' }}>
                           <span className="text-lg flex-shrink-0 mt-0.5">🎧</span>
                           <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
                             Avant de lancer cet audio, installez-vous confortablement dans un endroit calme et détendu. Mettez votre casque audio, respirez profondément et laissez-vous guider en toute sérénité.
                           </p>
                         </div>
                         {audioLocked ? (
-                          <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                          <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'rgba(201,169,97,0.08)', border: '1px solid rgba(201,169,97,0.2)' }}>
                             <p className="text-sm" style={{ color: 'var(--brand)' }}>Vous aimez ? Accédez à la suite</p>
                             <Link href={previewCtaLink} className="px-4 py-2 rounded-full text-xs font-semibold"
-                              style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}>
+                              style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000' }}>
                               {previewCtaShort}
                             </Link>
                           </div>
@@ -1042,7 +1042,7 @@ export default function DouleurDetailPage() {
                     <p className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>
                       Audio — {currentStep.title}
                     </p>
-                    <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.12)' }}>
+                    <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.12)' }}>
                       <span className="text-lg flex-shrink-0 mt-0.5">🎧</span>
                       <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
                         Avant de lancer cet audio, installez-vous confortablement dans un endroit calme et détendu. Mettez votre casque audio, respirez profondément et laissez-vous guider en toute sérénité.
@@ -1057,7 +1057,7 @@ export default function DouleurDetailPage() {
               {currentStep.pdf && (
                 isPreviewMode ? (
                   <div className="flex items-center gap-3 p-4 rounded-xl cursor-pointer" onClick={() => window.location.href = isFreeUser ? '/dashboard/tarifs' : '/signup'}
-                    style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(212,175,55,0.15)' }}>
+                    style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(201,169,97,0.15)' }}>
                     <svg className="w-8 h-8 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="var(--brand)" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                     </svg>
@@ -1142,7 +1142,7 @@ export default function DouleurDetailPage() {
 
       {/* Sujets complémentaires — shown after last step */}
       {activeStep === totalSteps && relatedDouleurs.length > 0 && (
-        <div className="rounded-xl p-5" style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.15)' }}>
+        <div className="rounded-xl p-5" style={{ background: 'rgba(201,169,97,0.04)', border: '1px solid rgba(201,169,97,0.15)' }}>
           <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--brand)' }}>
             Sujets complémentaires
           </h3>
@@ -1164,16 +1164,16 @@ export default function DouleurDetailPage() {
 
       {/* ── Quiz Section ── */}
       {activeStep === quizStepNum && hasQuiz && (
-        <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.15)' }}>
+        <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'rgba(201,169,97,0.04)', border: '1px solid rgba(201,169,97,0.15)' }}>
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl" style={{ background: 'rgba(212,175,55,0.12)' }}>
+            <div className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl" style={{ background: 'rgba(201,169,97,0.12)' }}>
               📝
             </div>
             <div>
-              <span className="text-xs font-medium block" style={{ color: '#D4AF37', opacity: 0.7 }}>
+              <span className="text-xs font-medium block" style={{ color: '#C9A961', opacity: 0.7 }}>
                 Validation
               </span>
-              <h2 className="font-display text-xl font-semibold" style={{ color: '#D4AF37' }}>
+              <h2 className="font-display text-xl font-semibold" style={{ color: '#C9A961' }}>
                 Quiz de compréhension
               </h2>
               <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
@@ -1183,7 +1183,7 @@ export default function DouleurDetailPage() {
           </div>
 
           {!allStepsCompleted ? (
-            <div className="rounded-xl p-8 text-center" style={{ background: 'rgba(0,0,0,0.2)', border: '1px dashed rgba(212,175,55,0.3)' }}>
+            <div className="rounded-xl p-8 text-center" style={{ background: 'rgba(0,0,0,0.2)', border: '1px dashed rgba(201,169,97,0.3)' }}>
               <div className="text-4xl mb-3">🔒</div>
               <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
                 Terminez les {totalSteps} étapes d&apos;abord
@@ -1208,7 +1208,7 @@ export default function DouleurDetailPage() {
               </div>
               <button onClick={resetQuiz}
                 className="w-full py-3 rounded-xl text-sm font-medium cursor-pointer transition-all"
-                style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.2)' }}>
+                style={{ background: 'rgba(201,169,97,0.1)', color: '#C9A961', border: '1px solid rgba(201,169,97,0.2)' }}>
                 Repasser le quiz
               </button>
             </div>
@@ -1236,7 +1236,7 @@ export default function DouleurDetailPage() {
                       : '1px solid var(--border)',
                   }}>
                     <p className="text-sm font-medium mb-3" style={{ color: 'var(--text-primary)' }}>
-                      <span className="font-mono text-xs mr-2" style={{ color: '#D4AF37' }}>Q{qIdx + 1}</span>
+                      <span className="font-mono text-xs mr-2" style={{ color: '#C9A961' }}>Q{qIdx + 1}</span>
                       {q.question}
                     </p>
                     <div className="space-y-2">
@@ -1244,9 +1244,9 @@ export default function DouleurDetailPage() {
                         const isSelected = userSelected.includes(oIdx)
                         const isCorrectOpt = correct.includes(oIdx)
                         let optStyle: React.CSSProperties = {
-                          background: isSelected ? 'rgba(212,175,55,0.12)' : 'rgba(255,255,255,0.03)',
-                          border: isSelected ? '2px solid rgba(212,175,55,0.5)' : '2px solid var(--border)',
-                          color: isSelected ? '#D4AF37' : 'var(--text-secondary)',
+                          background: isSelected ? 'rgba(201,169,97,0.12)' : 'rgba(255,255,255,0.03)',
+                          border: isSelected ? '2px solid rgba(201,169,97,0.5)' : '2px solid var(--border)',
+                          color: isSelected ? '#C9A961' : 'var(--text-secondary)',
                         }
                         if (quizSubmitted) {
                           if (isCorrectOpt) {
@@ -1274,7 +1274,7 @@ export default function DouleurDetailPage() {
                                 background: isSelected || (quizSubmitted && isCorrectOpt) ? 'currentColor' : 'transparent',
                                 border: isSelected || (quizSubmitted && isCorrectOpt) ? 'none' : '2px solid currentColor',
                                 color: isSelected || (quizSubmitted && isCorrectOpt)
-                                  ? (quizSubmitted && isCorrectOpt ? '#55EFC4' : quizSubmitted && !isCorrectOpt ? '#FF6B6B' : '#D4AF37')
+                                  ? (quizSubmitted && isCorrectOpt ? '#55EFC4' : quizSubmitted && !isCorrectOpt ? '#FF6B6B' : '#C9A961')
                                   : 'var(--text-muted)',
                               }}>
                               {(isSelected || (quizSubmitted && isCorrectOpt)) && (
@@ -1308,9 +1308,9 @@ export default function DouleurDetailPage() {
                     {/* XP Result Display */}
                     {encXpResult && (
                       <div className="rounded-lg px-4 py-3 mt-2 space-y-1"
-                        style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.15)' }}>
+                        style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.15)' }}>
                         {encXpResult.xpDeltaAwarded > 0 ? (
-                          <p className="text-sm font-semibold" style={{ color: '#D4AF37' }}>
+                          <p className="text-sm font-semibold" style={{ color: '#C9A961' }}>
                             +{formatXP(encXpResult.xpDeltaAwarded)} XP gagné !
                           </p>
                         ) : (
@@ -1321,7 +1321,7 @@ export default function DouleurDetailPage() {
                         <div className="flex items-center justify-between text-[11px]" style={{ color: 'var(--text-muted)' }}>
                           <span>XP Obtenu : {formatXP(encXpResult.xpEarned)} / {formatXP(encXpResult.potentialXp)}</span>
                           {encXpResult.xpRemaining > 0 && (
-                            <span style={{ color: '#D4AF37' }}>Restant à débloquer : {formatXP(encXpResult.xpRemaining)}</span>
+                            <span style={{ color: '#C9A961' }}>Restant à débloquer : {formatXP(encXpResult.xpRemaining)}</span>
                           )}
                         </div>
                       </div>
@@ -1344,9 +1344,9 @@ export default function DouleurDetailPage() {
                   <button onClick={resetQuiz}
                     className="w-full py-3 rounded-xl text-sm font-semibold cursor-pointer transition-all"
                     style={{
-                      background: quizPassed ? 'rgba(85,239,196,0.1)' : 'rgba(212,175,55,0.15)',
-                      color: quizPassed ? '#55EFC4' : '#D4AF37',
-                      border: quizPassed ? '1px solid rgba(85,239,196,0.2)' : '1px solid rgba(212,175,55,0.3)',
+                      background: quizPassed ? 'rgba(85,239,196,0.1)' : 'rgba(201,169,97,0.15)',
+                      color: quizPassed ? '#55EFC4' : '#C9A961',
+                      border: quizPassed ? '1px solid rgba(85,239,196,0.2)' : '1px solid rgba(201,169,97,0.3)',
                     }}>
                     {quizPassed ? 'Repasser le quiz' : 'Réessayer le quiz'}
                   </button>
@@ -1355,7 +1355,7 @@ export default function DouleurDetailPage() {
                 <button onClick={submitQuiz}
                   disabled={submittingQuiz || Object.keys(quizAnswers).length < quizQuestions.length}
                   className="w-full py-3.5 rounded-xl text-sm font-semibold cursor-pointer transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-                  style={{ background: '#D4AF37', color: '#09090b' }}>
+                  style={{ background: '#C9A961', color: '#09090b' }}>
                   {submittingQuiz ? 'Validation en cours...' : `Valider mes réponses (${Object.keys(quizAnswers).length}/${quizQuestions.length})`}
                 </button>
               )}
@@ -1418,7 +1418,7 @@ export default function DouleurDetailPage() {
                     🎬 Shine TV ({relatedTvVideos.length})
                   </h4>
                   {!unlocked && (
-                    <span className="text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                    <span className="text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(201,169,97,0.08)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.2)' }}>
                       Réservé Sérénité
                     </span>
                   )}
@@ -1470,7 +1470,7 @@ export default function DouleurDetailPage() {
                     📱 Shine Shorts ({relatedShorts.length})
                   </h4>
                   {!unlocked && (
-                    <span className="text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                    <span className="text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(201,169,97,0.08)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.2)' }}>
                       Réservé Sérénité
                     </span>
                   )}
@@ -1520,7 +1520,7 @@ export default function DouleurDetailPage() {
                     🎧 Shine Audible ({relatedAudible.length})
                   </h4>
                   {!unlocked && (
-                    <span className="text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                    <span className="text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(201,169,97,0.08)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.2)' }}>
                       Réservé Sérénité
                     </span>
                   )}
@@ -1572,7 +1572,7 @@ export default function DouleurDetailPage() {
                     📚 Shine Librairie ({relatedBooks.length})
                   </h4>
                   {!unlocked && (
-                    <span className="text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                    <span className="text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(201,169,97,0.08)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.2)' }}>
                       Réservé Sérénité
                     </span>
                   )}

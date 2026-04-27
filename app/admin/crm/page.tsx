@@ -65,7 +65,7 @@ export default function CRMDashboardPage() {
   }, [])
 
   const statCards = [
-    { label: 'Contacts', value: stats.totalContacts, icon: '👥', color: '#D4AF37' },
+    { label: 'Contacts', value: stats.totalContacts, icon: '👥', color: '#C9A961' },
     { label: 'Campagnes', value: stats.totalCampaigns, icon: '📧', color: '#4A90D9' },
     { label: 'Emails envoyés', value: stats.totalSent, icon: '✉️', color: '#50C878' },
     { label: 'Taux d\'ouverture', value: `${stats.avgOpenRate}%`, icon: '📊', color: '#E8A87C' },
@@ -86,7 +86,7 @@ export default function CRMDashboardPage() {
         <Link
           href="/admin/crm/campaigns/new"
           className="px-6 py-3 rounded-full text-sm font-semibold transition-all"
-          style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}
+          style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000' }}
         >
           + Nouvelle campagne
         </Link>
@@ -154,7 +154,7 @@ export default function CRMDashboardPage() {
             <Link
               href="/admin/crm/email-templates"
               className="p-6 rounded-xl text-center transition-all hover:scale-[1.02]"
-              style={{ background: 'var(--surface-card)', border: '1px solid rgba(212,175,55,0.3)' }}
+              style={{ background: 'var(--surface-card)', border: '1px solid rgba(201,169,97,0.3)' }}
             >
               <div className="text-3xl mb-2">📬</div>
               <div className="font-display text-lg" style={{ color: 'var(--brand)' }}>Templates Julia</div>
@@ -202,7 +202,7 @@ export default function CRMDashboardPage() {
                         <span
                           className="px-3 py-1 rounded-full text-xs font-medium"
                           style={{
-                            background: camp.status === 'sent' ? 'rgba(80,200,120,0.15)' : camp.status === 'scheduled' ? 'rgba(74,144,217,0.15)' : 'rgba(212,175,55,0.15)',
+                            background: camp.status === 'sent' ? 'rgba(80,200,120,0.15)' : camp.status === 'scheduled' ? 'rgba(74,144,217,0.15)' : 'rgba(201,169,97,0.15)',
                             color: camp.status === 'sent' ? '#50C878' : camp.status === 'scheduled' ? '#4A90D9' : 'var(--brand)',
                           }}
                         >

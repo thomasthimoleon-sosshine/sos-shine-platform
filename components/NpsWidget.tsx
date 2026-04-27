@@ -78,7 +78,7 @@ export default function NpsWidget({ userId, createdAt }: { userId: string | null
         exit={{ opacity: 0, y: 20 }}
         className="rounded-2xl overflow-hidden"
         style={{
-          background: 'linear-gradient(135deg, rgba(167,139,250,0.08), rgba(212,175,55,0.04))',
+          background: 'linear-gradient(135deg, rgba(167,139,250,0.08), rgba(201,169,97,0.04))',
           border: '1px solid rgba(167,139,250,0.25)',
         }}
       >

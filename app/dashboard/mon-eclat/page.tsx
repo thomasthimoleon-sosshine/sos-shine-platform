@@ -43,7 +43,7 @@ type CommentRow = {
 
 /* ── Category config ── */
 const CATEGORIES: { value: PostCategory; label: string; icon: string; color: string }[] = [
-  { value: 'temoignage', label: 'Pensée', icon: '💭', color: '#D4AF37' },
+  { value: 'temoignage', label: 'Pensée', icon: '💭', color: '#C9A961' },
   { value: 'partage', label: 'Partage', icon: '💫', color: '#74C0FC' },
   { value: 'gratitude', label: 'Gratitude', icon: '✨', color: '#FFEAA7' },
   { value: 'citation', label: 'Citation', icon: '💬', color: '#FD79A8' },
@@ -454,7 +454,7 @@ export default function MonEclatPage() {
     <div className="max-w-3xl mx-auto space-y-6">
       {/* ── Header with shine theme ── */}
       <div className="rounded-2xl p-6 sm:p-8 text-center relative overflow-hidden"
-        style={{ background: 'linear-gradient(135deg, rgba(212,175,55,0.08), rgba(212,175,55,0.02))', border: '1px solid rgba(212,175,55,0.15)' }}>
+        style={{ background: 'linear-gradient(135deg, rgba(201,169,97,0.08), rgba(201,169,97,0.02))', border: '1px solid rgba(201,169,97,0.15)' }}>
         {/* Decorative glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 rounded-full blur-3xl opacity-20"
           style={{ background: 'var(--brand)' }} />
@@ -464,7 +464,7 @@ export default function MonEclatPage() {
           <img src={currentProfile.avatar_url} alt="" className="w-20 h-20 rounded-2xl object-cover mx-auto mb-4 ring-2 ring-[var(--brand)]/20" />
         ) : (
           <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl font-display font-semibold ring-2 ring-[var(--brand)]/20"
-            style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
+            style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}>
             {currentProfile?.prenom?.charAt(0).toUpperCase() || '?'}
           </div>
         )}
@@ -520,9 +520,9 @@ export default function MonEclatPage() {
             onClick={() => setShowCreate(!showCreate)}
             className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer"
             style={{
-              background: showCreate ? 'rgba(212,175,55,0.1)' : 'linear-gradient(135deg, var(--brand), #B8960F)',
-              color: showCreate ? 'var(--brand)' : '#050505',
-              border: showCreate ? '1px solid rgba(212,175,55,0.3)' : 'none',
+              background: showCreate ? 'rgba(201,169,97,0.1)' : 'linear-gradient(135deg, var(--brand), #B8960F)',
+              color: showCreate ? 'var(--brand)' : '#000000',
+              border: showCreate ? '1px solid rgba(201,169,97,0.3)' : 'none',
             }}
           >
             {showCreate ? 'Annuler' : '+ Faire briller'}
@@ -591,8 +591,8 @@ export default function MonEclatPage() {
                   onClick={() => setCreateMediaType(mt.value)}
                   className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all cursor-pointer"
                   style={{
-                    background: createMediaType === mt.value ? 'rgba(212,175,55,0.12)' : 'rgba(255,255,255,0.03)',
-                    border: `1px solid ${createMediaType === mt.value ? 'rgba(212,175,55,0.3)' : 'var(--border)'}`,
+                    background: createMediaType === mt.value ? 'rgba(201,169,97,0.12)' : 'rgba(255,255,255,0.03)',
+                    border: `1px solid ${createMediaType === mt.value ? 'rgba(201,169,97,0.3)' : 'var(--border)'}`,
                     color: createMediaType === mt.value ? 'var(--brand)' : 'var(--text-secondary)',
                   }}
                 >
@@ -624,8 +624,8 @@ export default function MonEclatPage() {
                 onClick={() => setCreateVisibility('rayons_only')}
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer"
                 style={{
-                  background: createVisibility === 'rayons_only' ? 'rgba(212,175,55,0.12)' : 'rgba(255,255,255,0.03)',
-                  border: `1px solid ${createVisibility === 'rayons_only' ? 'rgba(212,175,55,0.3)' : 'var(--border)'}`,
+                  background: createVisibility === 'rayons_only' ? 'rgba(201,169,97,0.12)' : 'rgba(255,255,255,0.03)',
+                  border: `1px solid ${createVisibility === 'rayons_only' ? 'rgba(201,169,97,0.3)' : 'var(--border)'}`,
                   color: createVisibility === 'rayons_only' ? 'var(--brand)' : 'var(--text-secondary)',
                 }}
               >
@@ -690,7 +690,7 @@ export default function MonEclatPage() {
               onClick={handleCreate}
               disabled={creating || !createContent.trim()}
               className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer disabled:opacity-50"
-              style={{ background: 'linear-gradient(135deg, var(--brand), #B8960F)', color: '#050505' }}
+              style={{ background: 'linear-gradient(135deg, var(--brand), #B8960F)', color: '#000000' }}
             >
               {creating ? 'Publication...' : 'Publier sur mon Éclat'}
             </button>
@@ -706,7 +706,7 @@ export default function MonEclatPage() {
       ) : posts.length === 0 && !error ? (
         <div className="text-center py-16">
           <div className="w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-5 text-4xl"
-            style={{ background: 'rgba(212,175,55,0.08)' }}>
+            style={{ background: 'rgba(201,169,97,0.08)' }}>
             ✨
           </div>
           <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
@@ -737,7 +737,7 @@ export default function MonEclatPage() {
                       </span>
                       {post.visibility === 'rayons_only' && (
                         <span className="text-[10px] font-medium px-2 py-0.5 rounded-full flex items-center gap-1"
-                          style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.15)' }}>
+                          style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.15)' }}>
                           <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
                           </svg>
@@ -837,7 +837,7 @@ export default function MonEclatPage() {
                   <div className="px-6 py-3 flex items-center gap-1" style={{ borderTop: '1px solid var(--border)' }}>
                     <button onClick={() => toggleShine(post.id)}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
-                      style={{ color: post.user_has_liked ? '#D4AF37' : 'var(--text-muted)' }}>
+                      style={{ color: post.user_has_liked ? '#C9A961' : 'var(--text-muted)' }}>
                       <svg className="w-4 h-4" fill={post.user_has_liked ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
                       </svg>
@@ -865,7 +865,7 @@ export default function MonEclatPage() {
                             <img src={comment.profiles.avatar_url} alt="" className="w-7 h-7 rounded-full object-cover flex-shrink-0 mt-0.5" />
                           ) : (
                             <div className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-semibold flex-shrink-0 mt-0.5"
-                              style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
+                              style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}>
                               {comment.profiles?.prenom?.charAt(0).toUpperCase() || '?'}
                             </div>
                           )}

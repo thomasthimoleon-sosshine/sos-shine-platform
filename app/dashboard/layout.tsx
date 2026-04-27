@@ -440,9 +440,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               transition={{ type: 'spring', damping: 22, stiffness: 260 }}
               className="w-full max-w-md rounded-2xl overflow-hidden text-center relative"
               style={{
-                background: 'linear-gradient(160deg, var(--surface-card) 0%, rgba(212,175,55,0.06) 100%)',
-                border: '1px solid rgba(212,175,55,0.2)',
-                boxShadow: '0 25px 60px rgba(0,0,0,0.5), 0 0 40px rgba(212,175,55,0.08)',
+                background: 'linear-gradient(160deg, var(--surface-card) 0%, rgba(201,169,97,0.06) 100%)',
+                border: '1px solid rgba(201,169,97,0.2)',
+                boxShadow: '0 25px 60px rgba(0,0,0,0.5), 0 0 40px rgba(201,169,97,0.08)',
               }}
               onClick={(e) => e.stopPropagation()}
             >
@@ -453,7 +453,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 {/* Diamond icon */}
                 <div
                   className="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center"
-                  style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}
+                  style={{ background: 'rgba(201,169,97,0.1)', border: '1px solid rgba(201,169,97,0.2)' }}
                 >
                   <span className="text-3xl">✨</span>
                 </div>
@@ -471,8 +471,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   className="w-full sm:w-auto px-8 py-3.5 rounded-full text-sm font-semibold tracking-wide cursor-pointer transition-all duration-200 hover:scale-[1.03] active:scale-[0.98]"
                   style={{
                     background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
-                    color: '#050505',
-                    boxShadow: '0 4px 20px rgba(212,175,55,0.3)',
+                    color: '#000000',
+                    boxShadow: '0 4px 20px rgba(201,169,97,0.3)',
                   }}
                 >
                   Continuer à façonner mon diamant 💎

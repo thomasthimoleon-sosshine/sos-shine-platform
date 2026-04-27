@@ -252,7 +252,7 @@ export default function MessagesTab({ onProfileClick }: { onProfileClick?: (user
               <img src={activePartner.avatar_url} alt={partnerName} className="w-10 h-10 rounded-full object-cover" />
             ) : (
               <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold"
-                style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
+                style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}>
                 {partnerName.charAt(0).toUpperCase()}
               </div>
             )}
@@ -263,7 +263,7 @@ export default function MessagesTab({ onProfileClick }: { onProfileClick?: (user
           <div className="flex-1 min-w-0">
             {isRequest && (
               <span className="text-[10px] font-medium px-2 py-0.5 rounded-full"
-                style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)' }}>
+                style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--brand)' }}>
                 Demande de message
               </span>
             )}
@@ -272,7 +272,7 @@ export default function MessagesTab({ onProfileClick }: { onProfileClick?: (user
 
         {/* Request action bar */}
         {isRequest && (
-          <div className="flex items-center gap-2 mb-3 p-3 rounded-xl" style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.15)' }}>
+          <div className="flex items-center gap-2 mb-3 p-3 rounded-xl" style={{ background: 'rgba(201,169,97,0.05)', border: '1px solid rgba(201,169,97,0.15)' }}>
             <p className="flex-1 text-xs" style={{ color: 'var(--text-secondary)' }}>
               Ce membre n&apos;est pas dans vos Rayons. Accepter pour déplacer vers votre boîte principale.
             </p>
@@ -303,7 +303,7 @@ export default function MessagesTab({ onProfileClick }: { onProfileClick?: (user
               </div>
             ) : messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 text-center">
-                <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4" style={{ background: 'rgba(212,175,55,0.1)' }}>
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4" style={{ background: 'rgba(201,169,97,0.1)' }}>
                   <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} style={{ color: 'var(--brand)' }}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75" />
                   </svg>
@@ -329,7 +329,7 @@ export default function MessagesTab({ onProfileClick }: { onProfileClick?: (user
                     <div className={`flex ${isMine ? 'justify-end' : 'justify-start'} mb-1`}>
                       <div className={`max-w-[75%] px-4 py-2.5 rounded-2xl ${isMine ? 'rounded-br-md' : 'rounded-bl-md'}`}
                         style={{
-                          background: isMine ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.04)',
+                          background: isMine ? 'rgba(201,169,97,0.15)' : 'rgba(255,255,255,0.04)',
                           border: isMine ? 'none' : '1px solid var(--border)',
                         }}>
                         {msg.message_type === 'audio' && msg.audio_url ? (
@@ -403,14 +403,14 @@ export default function MessagesTab({ onProfileClick }: { onProfileClick?: (user
           onClick={() => setActiveSubTab('inbox')}
           className="flex-1 px-4 py-2.5 rounded-lg text-[13px] font-medium transition-all cursor-pointer"
           style={{
-            background: activeSubTab === 'inbox' ? 'rgba(212,175,55,0.1)' : 'transparent',
+            background: activeSubTab === 'inbox' ? 'rgba(201,169,97,0.1)' : 'transparent',
             color: activeSubTab === 'inbox' ? 'var(--brand)' : 'var(--text-muted)',
           }}
         >
           Boîte de réception
           {inbox.length > 0 && (
             <span className="ml-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full"
-              style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)' }}>
+              style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)' }}>
               {inbox.length}
             </span>
           )}
@@ -419,7 +419,7 @@ export default function MessagesTab({ onProfileClick }: { onProfileClick?: (user
           onClick={() => setActiveSubTab('requests')}
           className="flex-1 px-4 py-2.5 rounded-lg text-[13px] font-medium transition-all cursor-pointer"
           style={{
-            background: activeSubTab === 'requests' ? 'rgba(212,175,55,0.1)' : 'transparent',
+            background: activeSubTab === 'requests' ? 'rgba(201,169,97,0.1)' : 'transparent',
             color: activeSubTab === 'requests' ? 'var(--brand)' : 'var(--text-muted)',
           }}
         >
@@ -440,7 +440,7 @@ export default function MessagesTab({ onProfileClick }: { onProfileClick?: (user
         </div>
       ) : currentList.length === 0 ? (
         <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
-          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(212,175,55,0.08)' }}>
+          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(201,169,97,0.08)' }}>
             <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} style={{ color: 'var(--brand)' }}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75" />
             </svg>
@@ -468,14 +468,14 @@ export default function MessagesTab({ onProfileClick }: { onProfileClick?: (user
                 className="w-full flex items-center gap-4 px-5 py-4 transition-all text-left cursor-pointer"
                 style={{
                   borderBottom: i < currentList.length - 1 ? '1px solid var(--border)' : 'none',
-                  background: convo.unreadCount > 0 ? 'rgba(212,175,55,0.04)' : 'transparent',
+                  background: convo.unreadCount > 0 ? 'rgba(201,169,97,0.04)' : 'transparent',
                 }}
               >
                 {convo.partner.avatar_url ? (
                   <img src={convo.partner.avatar_url} alt={name} className="w-12 h-12 rounded-full object-cover flex-shrink-0" />
                 ) : (
                   <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 text-lg font-semibold"
-                    style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
+                    style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}>
                     {name.charAt(0).toUpperCase()}
                   </div>
                 )}

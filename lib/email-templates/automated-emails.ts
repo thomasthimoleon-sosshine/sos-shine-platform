@@ -30,22 +30,22 @@ export function wrapInEmailLayout(bodyContent: string): string {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
-<body style="margin:0;padding:0;background-color:#050505;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#E0E0E0;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#050505;">
+<body style="margin:0;padding:0;background-color:#000000;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#E0E0E0;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#000000;">
     <tr>
       <td align="center" style="padding:40px 16px;">
         <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
           <!-- Header -->
           <tr>
             <td align="center" style="padding-bottom:32px;">
-              <span style="font-size:28px;font-weight:300;letter-spacing:0.15em;color:#D4AF37;font-family:Georgia,'Times New Roman',serif;">
+              <span style="font-size:28px;font-weight:300;letter-spacing:0.15em;color:#C9A961;font-family:Georgia,'Times New Roman',serif;">
                 SOS SHINE<span style="font-size:14px;vertical-align:super;">®</span>
               </span>
             </td>
           </tr>
           <!-- Content -->
           <tr>
-            <td style="background:#0A0A0A;border:1px solid #1a1a1a;border-radius:16px;padding:40px 32px;">
+            <td style="background:#000000;border:1px solid #1a1a1a;border-radius:16px;padding:40px 32px;">
               ${bodyContent}
             </td>
           </tr>
@@ -54,7 +54,7 @@ export function wrapInEmailLayout(bodyContent: string): string {
             <td align="center" style="padding-top:32px;color:#666;font-size:12px;line-height:1.6;">
               <p style="margin:0;">SOS Shine® · hello@sosshine.com</p>
               <p style="margin:4px 0 0;">La première encyclopédie mondiale du bien-être émotionnel</p>
-              <p style="margin:12px 0 0;"><a href="${getSiteUrl()}/unsubscribe" style="color:#D4AF37;text-decoration:underline;">Se désinscrire</a></p>
+              <p style="margin:12px 0 0;"><a href="${getSiteUrl()}/unsubscribe" style="color:#C9A961;text-decoration:underline;">Se désinscrire</a></p>
             </td>
           </tr>
         </table>

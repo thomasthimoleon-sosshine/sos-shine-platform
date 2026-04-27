@@ -43,8 +43,8 @@ function LevelXPSection({ xpData }: { xpData: UserXP | null }) {
       transition={{ delay: 0.05, duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
       className="glass relative overflow-hidden"
       style={{
-        background: 'linear-gradient(135deg, rgba(212,175,55,0.06), var(--surface-card))',
-        borderColor: 'rgba(212,175,55,0.15)',
+        background: 'linear-gradient(135deg, rgba(201,169,97,0.06), var(--surface-card))',
+        borderColor: 'rgba(201,169,97,0.15)',
       }}
     >
       <div className="p-5 sm:p-6">
@@ -91,7 +91,7 @@ function LevelXPSection({ xpData }: { xpData: UserXP | null }) {
             </div>
           </div>
         ) : (
-          <div className="mt-3 rounded-xl p-3 text-center" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.15)' }}>
+          <div className="mt-3 rounded-xl p-3 text-center" style={{ background: 'rgba(201,169,97,0.08)', border: '1px solid rgba(201,169,97,0.15)' }}>
             <p className="text-sm font-semibold" style={{ color: 'var(--brand)' }}>Rang maximum atteint !</p>
           </div>
         )}
@@ -336,7 +336,7 @@ function ContributionsSection({ xpData }: { xpData: UserXP | null }) {
                     </p>
                   </div>
                   <span className="text-[10px] px-1.5 py-0.5 rounded-full shrink-0"
-                    style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)' }}>
+                    style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--brand)' }}>
                     {entry.action}
                   </span>
                 </div>
@@ -420,8 +420,8 @@ function BadgesSection({ userId, role }: { userId: string | null; role?: string 
               key={badge.id}
               className="shrink-0 w-28 rounded-xl p-3 text-center"
               style={{
-                background: badge.isUnlocked ? 'rgba(212,175,55,0.06)' : 'rgba(255,255,255,0.02)',
-                border: badge.isUnlocked ? '1px solid rgba(212,175,55,0.15)' : '1px solid var(--border)',
+                background: badge.isUnlocked ? 'rgba(201,169,97,0.06)' : 'rgba(255,255,255,0.02)',
+                border: badge.isUnlocked ? '1px solid rgba(201,169,97,0.15)' : '1px solid var(--border)',
                 opacity: badge.isUnlocked ? 1 : 0.4,
                 filter: badge.isUnlocked ? 'none' : 'grayscale(1)',
               }}
@@ -429,7 +429,7 @@ function BadgesSection({ userId, role }: { userId: string | null; role?: string 
               <div className="w-12 h-12 mx-auto rounded-full flex items-center justify-center mb-2"
                 style={{
                   background: badge.isUnlocked
-                    ? 'linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.05))'
+                    ? 'linear-gradient(135deg, rgba(201,169,97,0.2), rgba(201,169,97,0.05))'
                     : 'rgba(255,255,255,0.03)',
                   border: badge.isUnlocked ? '2px solid var(--brand)' : '2px solid var(--border)',
                 }}>
@@ -500,8 +500,8 @@ function ActuShineSection() {
       href: '/dashboard/encyclopedie',
       data: latestContent.encyclopedia,
       image: latestContent.encyclopedia?.image_url,
-      gradient: 'linear-gradient(135deg, rgba(212,175,55,0.15), rgba(180,130,20,0.05))',
-      accentColor: '#D4AF37',
+      gradient: 'linear-gradient(135deg, rgba(201,169,97,0.15), rgba(180,130,20,0.05))',
+      accentColor: '#C9A961',
     },
     {
       key: 'shineTV',
@@ -587,7 +587,7 @@ function ActuShineSection() {
               className="group block overflow-hidden rounded-2xl transition-all duration-300 hover:scale-[1.03] hover:shadow-lg min-w-[130px] max-w-[160px] snap-start flex-shrink-0 sm:min-w-0 sm:max-w-none sm:flex-shrink"
               style={{
                 background: pillar.image ? 'var(--surface-card)' : pillar.gradient,
-                border: `1px solid rgba(${pillar.accentColor === '#D4AF37' ? '212,175,55' : pillar.accentColor === '#74C0FC' ? '116,192,252' : pillar.accentColor === '#A29BFE' ? '162,155,254' : pillar.accentColor === '#55EFC4' ? '85,239,196' : '253,203,110'},0.15)`,
+                border: `1px solid rgba(${pillar.accentColor === '#C9A961' ? '212,175,55' : pillar.accentColor === '#74C0FC' ? '116,192,252' : pillar.accentColor === '#A29BFE' ? '162,155,254' : pillar.accentColor === '#55EFC4' ? '85,239,196' : '253,203,110'},0.15)`,
               }}
             >
               {/* Thumbnail */}
@@ -823,7 +823,7 @@ export default function DashboardHome() {
               transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
               className="flex items-center gap-2 px-3 py-1.5 rounded-full"
               style={{
-                background: 'linear-gradient(135deg, rgba(255,107,53,0.12), rgba(212,175,55,0.08))',
+                background: 'linear-gradient(135deg, rgba(255,107,53,0.12), rgba(201,169,97,0.08))',
                 border: '1px solid rgba(255,107,53,0.3)',
               }}
               title={`Plus longue série : ${streak.longest} jours`}
@@ -851,7 +851,7 @@ export default function DashboardHome() {
           transition={{ delay: 0.1, duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
           className="glass glass-hover relative overflow-hidden"
           style={{
-            background: 'linear-gradient(135deg, rgba(85,239,196,0.08), rgba(212,175,55,0.04))',
+            background: 'linear-gradient(135deg, rgba(85,239,196,0.08), rgba(201,169,97,0.04))',
             border: '1px solid rgba(85,239,196,0.25)',
           }}
         >
@@ -887,7 +887,7 @@ export default function DashboardHome() {
                   )}
                 </div>
                 <div className="flex-shrink-0 px-4 py-2 rounded-full text-xs font-semibold"
-                  style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}>
+                  style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000' }}>
                   Commencer →
                 </div>
               </div>
@@ -948,12 +948,12 @@ export default function DashboardHome() {
         transition={{ delay: 0.55, duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
         className="glass glass-hover relative overflow-hidden"
         style={{
-          background: 'linear-gradient(135deg, rgba(212,175,55,0.08), rgba(116,192,252,0.04))',
-          border: '1px solid rgba(212,175,55,0.2)',
+          background: 'linear-gradient(135deg, rgba(201,169,97,0.08), rgba(116,192,252,0.04))',
+          border: '1px solid rgba(201,169,97,0.2)',
         }}
       >
         <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full opacity-30 pointer-events-none"
-          style={{ background: 'radial-gradient(circle, rgba(212,175,55,0.15), transparent 70%)' }} />
+          style={{ background: 'radial-gradient(circle, rgba(201,169,97,0.15), transparent 70%)' }} />
 
         <div className="relative p-6 sm:p-8">
           {affiliateStatus.approved && affiliateStatus.referral_code ? (
@@ -996,7 +996,7 @@ export default function DashboardHome() {
                     navigator.clipboard.writeText(`https://sosshine.com/signup?ref=${affiliateStatus.referral_code}`)
                   }}
                   className="text-[11px] px-3 py-1.5 rounded-lg cursor-pointer flex-shrink-0"
-                  style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)' }}
+                  style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)' }}
                 >
                   Copier
                 </button>
@@ -1004,7 +1004,7 @@ export default function DashboardHome() {
 
               <Link href="/dashboard/affiliation"
                 className="block text-center py-3 rounded-xl text-sm font-semibold transition-all hover:scale-[1.005]"
-                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}>
+                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000' }}>
                 Voir mon tableau de bord →
               </Link>
             </>
@@ -1042,7 +1042,7 @@ export default function DashboardHome() {
 
               <Link href="/dashboard/affiliation"
                 className="block text-center py-3 rounded-xl text-sm font-semibold transition-all hover:scale-[1.005]"
-                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}>
+                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000' }}>
                 {affiliateStatus.exists ? 'Voir mon espace affilié →' : 'Devenir affilié →'}
               </Link>
             </>

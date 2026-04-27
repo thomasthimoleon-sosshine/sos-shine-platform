@@ -30,7 +30,7 @@ function buildSteps(douleur: Douleur, dynamicSteps: DouleurStep[]): StepConfig[]
       title: s.title,
       subtitle: s.subtitle || 'Vidéo, audio & ressources',
       icon: s.icon || '📋',
-      color: s.color || '#D4AF37',
+      color: s.color || '#C9A961',
       description: s.description || '',
       video: s.video_url,
       audio: s.audio_url,
@@ -203,11 +203,11 @@ export default function PublicDouleurDetailPage() {
         </header>
         <div className="max-w-2xl mx-auto py-16 px-4">
           <div className="rounded-2xl p-8 sm:p-10 text-center" style={{
-            background: 'linear-gradient(160deg, var(--surface-card) 0%, rgba(212,175,55,0.04) 100%)',
-            border: '1px solid rgba(212,175,55,0.15)',
+            background: 'linear-gradient(160deg, var(--surface-card) 0%, rgba(201,169,97,0.04) 100%)',
+            border: '1px solid rgba(201,169,97,0.15)',
           }}>
             <div className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center"
-              style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}>
+              style={{ background: 'rgba(201,169,97,0.1)', border: '1px solid rgba(201,169,97,0.2)' }}>
               <span className="text-3xl">💛</span>
             </div>
             <h2 className="font-display text-xl sm:text-2xl font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
@@ -224,7 +224,7 @@ export default function PublicDouleurDetailPage() {
             </div>
             <Link href="/signup"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold transition-all duration-200 hover:scale-[1.03]"
-              style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505', boxShadow: '0 4px 20px rgba(212,175,55,0.3)' }}>
+              style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000', boxShadow: '0 4px 20px rgba(201,169,97,0.3)' }}>
               Créer mon compte gratuitement
             </Link>
             <div className="mt-8 pt-6" style={{ borderTop: '1px solid var(--border)' }}>
@@ -368,10 +368,10 @@ export default function PublicDouleurDetailPage() {
                       }, [])
                       if (locked) {
                         return (
-                          <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(160deg, rgba(0,0,0,0.9), rgba(212,175,55,0.05))', border: '1px solid rgba(212,175,55,0.2)' }}>
+                          <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(160deg, rgba(0,0,0,0.9), rgba(201,169,97,0.05))', border: '1px solid rgba(201,169,97,0.2)' }}>
                             <div className="text-center py-10 px-6">
                               <div className="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center"
-                                style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.25)' }}>
+                                style={{ background: 'rgba(201,169,97,0.1)', border: '1px solid rgba(201,169,97,0.25)' }}>
                                 <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="var(--brand)" strokeWidth={1.5}>
                                   <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
                                 </svg>
@@ -384,7 +384,7 @@ export default function PublicDouleurDetailPage() {
                               </p>
                               <Link href="/signup"
                                 className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-sm font-semibold transition-all hover:scale-[1.03]"
-                                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505', boxShadow: '0 4px 20px rgba(212,175,55,0.3)' }}>
+                                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000', boxShadow: '0 4px 20px rgba(201,169,97,0.3)' }}>
                                 Créer mon compte gratuitement
                               </Link>
                               <p className="text-xs mt-4" style={{ color: 'var(--text-muted)' }}>
@@ -441,19 +441,19 @@ export default function PublicDouleurDetailPage() {
                         return () => aud.removeEventListener('timeupdate', onTime)
                       }, [])
                       return (
-                        <div className="rounded-xl p-4 space-y-3" style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(212,175,55,0.15)' }}>
+                        <div className="rounded-xl p-4 space-y-3" style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(201,169,97,0.15)' }}>
                           <p className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>Audio — {title}</p>
-                          <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.12)' }}>
+                          <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.12)' }}>
                             <span className="text-lg flex-shrink-0 mt-0.5">🎧</span>
                             <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
                               Écoutez un extrait de 30 secondes. Créez votre compte pour accéder à l&apos;intégralité.
                             </p>
                           </div>
                           {audioLocked ? (
-                            <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                            <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'rgba(201,169,97,0.08)', border: '1px solid rgba(201,169,97,0.2)' }}>
                               <p className="text-sm" style={{ color: 'var(--brand)' }}>Vous aimez ? Accédez à la suite</p>
                               <Link href="/signup" className="px-4 py-2 rounded-full text-xs font-semibold"
-                                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#050505' }}>
+                                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000' }}>
                                 Créer mon compte
                               </Link>
                             </div>
@@ -572,8 +572,8 @@ export default function PublicDouleurDetailPage() {
         )}
 
         {/* CTA - Unlock */}
-        <div className="rounded-2xl p-8 text-center" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.15)' }}>
-          <div className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(212,175,55,0.12)' }}>
+        <div className="rounded-2xl p-8 text-center" style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.15)' }}>
+          <div className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(201,169,97,0.12)' }}>
             <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="var(--brand)" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
             </svg>
@@ -604,7 +604,7 @@ export default function PublicDouleurDetailPage() {
             <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ background: 'radial-gradient(circle at center, var(--brand), transparent)' }} />
 
             <div className="relative z-10">
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" style={{ background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.2)' }}>
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" style={{ background: 'rgba(201,169,97,0.12)', border: '1px solid rgba(201,169,97,0.2)' }}>
                 <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="var(--brand)" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                 </svg>

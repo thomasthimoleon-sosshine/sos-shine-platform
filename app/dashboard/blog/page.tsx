@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { blogArticles as staticArticles, BLOG_CATEGORIES } from '@/data/blog/articles'
 import type { BlogArticle } from '@/data/blog/articles'
 
-const gold = '#D4AF37'
+const gold = '#C9A961'
 const goldRgb = '212,175,55'
 
 function formatDate(dateStr: string) {
@@ -256,8 +256,8 @@ export default function DashboardBlogPage() {
             <article
               className="group relative overflow-hidden rounded-2xl p-6 sm:p-8 transition-all duration-300 hover:shadow-xl"
               style={{
-                background: 'linear-gradient(135deg, rgba(212,175,55,0.06), var(--surface-card))',
-                border: '1px solid rgba(212,175,55,0.12)',
+                background: 'linear-gradient(135deg, rgba(201,169,97,0.06), var(--surface-card))',
+                border: '1px solid rgba(201,169,97,0.12)',
               }}
             >
               <div className="flex flex-wrap items-center gap-3 mb-4">

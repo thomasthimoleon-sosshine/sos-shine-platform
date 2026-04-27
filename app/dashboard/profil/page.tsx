@@ -287,7 +287,7 @@ export default function ProfilPage() {
             <img src={profile.avatar_url} alt="Avatar" className="w-20 h-20 rounded-2xl object-cover flex-shrink-0" />
           ) : (
             <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-3xl font-display font-semibold flex-shrink-0"
-              style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
+              style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}>
               {profile?.prenom?.charAt(0).toUpperCase() || 'M'}
             </div>
           )}
@@ -371,7 +371,7 @@ export default function ProfilPage() {
                 <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>({profile.pseudo})</span>
               )}
               {profile?.role === 'founder' && (
-                <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)' }}>{t('dashboard.founder')}</span>
+                <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)' }}>{t('dashboard.founder')}</span>
               )}
             </div>
             <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{profile?.email}</p>
@@ -430,7 +430,7 @@ export default function ProfilPage() {
               <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
                 {subscription.plan === 'serenite' ? 'Sérénité — 49,90€/mois' : 'Essentielle — 9,90€/mois'}
                 {subscription.waitlist_discount && (
-                  <span className="ml-2 text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37' }}>
+                  <span className="ml-2 text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(201,169,97,0.1)', color: '#C9A961' }}>
                     -10€ fondateur
                   </span>
                 )}
@@ -451,8 +451,8 @@ export default function ProfilPage() {
             )}
             {/* Change plan (upgrade or downgrade) */}
             {(subscription.status === 'active' || subscription.status === 'trialing') && (
-              <div className="rounded-xl p-4" style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.12)' }}>
-                <p className="text-xs font-medium mb-3" style={{ color: '#D4AF37' }}>Changer de forfait</p>
+              <div className="rounded-xl p-4" style={{ background: 'rgba(201,169,97,0.04)', border: '1px solid rgba(201,169,97,0.12)' }}>
+                <p className="text-xs font-medium mb-3" style={{ color: '#C9A961' }}>Changer de forfait</p>
                 <div className="flex flex-col gap-2">
                   {(['essential', 'serenite'] as PlanId[])
                     .filter(p => p !== subscription.plan)
@@ -535,7 +535,7 @@ export default function ProfilPage() {
                 }}
                 disabled={portalLoading}
                 className="block w-full mt-2 py-3 rounded-xl text-sm font-medium text-center transition-colors cursor-pointer disabled:opacity-50"
-                style={{ background: 'rgba(212,175,55,0.08)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.15)' }}
+                style={{ background: 'rgba(201,169,97,0.08)', color: '#C9A961', border: '1px solid rgba(201,169,97,0.15)' }}
               >
                 {portalLoading ? 'Chargement...' : 'Gérer mon abonnement'}
               </button>
@@ -569,12 +569,12 @@ export default function ProfilPage() {
                   <span className="text-sm font-semibold" style={{ color: '#74C0FC' }}>9,90€/mois</span>
                 </a>
                 <a href="/dashboard/tarifs?plan=serenite" className="flex items-center justify-between px-4 py-3 rounded-xl transition-all cursor-pointer"
-                  style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                  style={{ background: 'rgba(201,169,97,0.05)', border: '1px solid rgba(201,169,97,0.2)' }}>
                   <div>
-                    <p className="text-sm font-semibold" style={{ color: '#D4AF37' }}>Sérénité</p>
+                    <p className="text-sm font-semibold" style={{ color: '#C9A961' }}>Sérénité</p>
                     <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>+ Shine TV, Shorts, Librairie, lives</p>
                   </div>
-                  <span className="text-sm font-semibold" style={{ color: '#D4AF37' }}>49,90€/mois</span>
+                  <span className="text-sm font-semibold" style={{ color: '#C9A961' }}>49,90€/mois</span>
                 </a>
               </div>
             </div>

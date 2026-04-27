@@ -66,7 +66,7 @@ const statusConfig: Record<string, { label: string; color: string; bg: string }>
 }
 
 const planConfig: Record<string, { label: string; color: string; bg: string }> = {
-  essential: { label: 'Essentielle', color: '#D4AF37', bg: 'rgba(212,175,55,0.12)' },
+  essential: { label: 'Essentielle', color: '#C9A961', bg: 'rgba(201,169,97,0.12)' },
   serenite:  { label: 'Sérénité',    color: '#55EFC4', bg: 'rgba(85,239,196,0.12)' },
   premium:   { label: 'Premium',     color: '#74C0FC', bg: 'rgba(116,192,252,0.12)' },
 }
@@ -75,14 +75,14 @@ const eventLabels: Record<string, { label: string; color: string }> = {
   payment_succeeded:       { label: 'Paiement réussi',      color: '#55EFC4' },
   payment_failed:          { label: 'Paiement échoué',      color: '#E17055' },
   subscription_created:    { label: 'Abonnement créé',      color: '#74C0FC' },
-  subscription_updated:    { label: 'Abonnement modifié',   color: '#D4AF37' },
+  subscription_updated:    { label: 'Abonnement modifié',   color: '#C9A961' },
   subscription_canceled:   { label: 'Abonnement annulé',    color: '#ef4444' },
   subscription_reactivated:{ label: 'Réactivation',         color: '#55EFC4' },
   plan_upgraded:           { label: 'Upgrade',              color: '#74C0FC' },
   plan_downgraded:         { label: 'Downgrade',            color: '#E17055' },
   trial_started:           { label: 'Essai démarré',        color: '#74C0FC' },
   trial_ended:             { label: 'Essai terminé',        color: '#9A9080' },
-  reminder_sent:           { label: 'Rappel envoyé',        color: '#D4AF37' },
+  reminder_sent:           { label: 'Rappel envoyé',        color: '#C9A961' },
   access_blocked:          { label: 'Accès bloqué',         color: '#ef4444' },
   access_restored:         { label: 'Accès restauré',       color: '#55EFC4' },
   grace_period_started:    { label: 'Période de grâce',     color: '#E17055' },
@@ -202,7 +202,7 @@ export default function AdminAbonnementsPage() {
             onClick={() => setTab(t.id)}
             className="flex-1 py-2.5 rounded-lg text-sm font-medium transition-all cursor-pointer"
             style={{
-              background: tab === t.id ? 'rgba(212,175,55,0.12)' : 'transparent',
+              background: tab === t.id ? 'rgba(201,169,97,0.12)' : 'transparent',
               color: tab === t.id ? 'var(--brand)' : 'var(--text-muted)',
             }}
           >
@@ -217,7 +217,7 @@ export default function AdminAbonnementsPage() {
           {/* KPIs principaux */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { label: 'MRR', value: `${(mrr / 100).toFixed(0)}€`, color: '#D4AF37' },
+              { label: 'MRR', value: `${(mrr / 100).toFixed(0)}€`, color: '#C9A961' },
               { label: 'Actifs', value: stats.active + stats.trialing, color: '#55EFC4' },
               { label: 'Impayés', value: stats.past_due, color: '#E17055' },
               { label: 'Annulés', value: stats.canceled, color: '#ef4444' },
@@ -250,7 +250,7 @@ export default function AdminAbonnementsPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
               { label: 'Annulations en cours', value: stats.canceling_soon, color: '#E17055', desc: 'vont annuler en fin de période' },
-              { label: 'Expirent cette semaine', value: stats.expiring_week, color: '#D4AF37', desc: 'périodes se terminent sous 7j' },
+              { label: 'Expirent cette semaine', value: stats.expiring_week, color: '#C9A961', desc: 'périodes se terminent sous 7j' },
               { label: 'Réduction fondateur', value: stats.with_discount, color: '#74C0FC', desc: 'bénéficient de -10€/mois' },
             ].map(a => (
               <div key={a.label} className="p-4 rounded-xl"
@@ -423,7 +423,7 @@ export default function AdminAbonnementsPage() {
                         </td>
                         <td className="px-4 py-3.5">
                           {sub.waitlist_discount && (
-                            <span className="text-[10px] px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37' }}>-10€</span>
+                            <span className="text-[10px] px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(201,169,97,0.1)', color: '#C9A961' }}>-10€</span>
                           )}
                         </td>
                       </tr>

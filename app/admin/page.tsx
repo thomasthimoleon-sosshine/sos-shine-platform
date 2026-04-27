@@ -51,12 +51,12 @@ export default function AdminDashboard() {
   }, [])
 
   const cards = [
-    { label: 'Membres total', value: stats.totalMembers, color: '#D4AF37', icon: '👥' },
+    { label: 'Membres total', value: stats.totalMembers, color: '#C9A961', icon: '👥' },
     { label: 'Nouveaux ce mois', value: stats.newThisMonth, color: '#55EFC4', icon: '📈' },
     { label: 'Challenges publiés', value: stats.totalDouleurs, color: '#74C0FC', icon: '📘' },
     { label: 'Vidéos Shine TV', value: stats.totalVideos, color: '#E17055', icon: '🎬' },
     { label: 'Audios Audible', value: stats.totalTracks, color: '#9B59B6', icon: '🎧' },
-    { label: 'Livres Librairie', value: stats.totalBooks, color: '#D4AF37', icon: '📚' },
+    { label: 'Livres Librairie', value: stats.totalBooks, color: '#C9A961', icon: '📚' },
     { label: 'Événements', value: stats.totalEvents, color: '#55EFC4', icon: '📅' },
     { label: 'Messages chat', value: stats.totalMessages, color: '#FF6B35', icon: '💬' },
   ]
@@ -103,7 +103,7 @@ export default function AdminDashboard() {
                 { href: '/admin/shine-tv', label: 'Publier une vidéo', desc: 'Ajouter du contenu sur Shine TV', icon: '🎬', color: '#E17055' },
                 { href: '/admin/shine-shorts', label: 'Publier un short', desc: 'Ajouter un cours ou vidéo courte', icon: '📱', color: '#A29BFE' },
                 { href: '/admin/shine-audible', label: 'Publier un audio', desc: 'Ajouter un podcast, méditation ou livre audio', icon: '🎧', color: '#9B59B6' },
-                { href: '/admin/shine-librairie', label: 'Publier un livre', desc: 'Ajouter un eBook ou guide à la librairie', icon: '📚', color: '#D4AF37' },
+                { href: '/admin/shine-librairie', label: 'Publier un livre', desc: 'Ajouter un eBook ou guide à la librairie', icon: '📚', color: '#C9A961' },
                 { href: '/admin/evenements', label: 'Créer un événement', desc: 'Planifier un soin collectif ou une Shine Walk', icon: '📅', color: '#55EFC4' },
                 { href: '/admin/publications', label: 'Publier sur le mur', desc: 'Annoncer une nouvelle à la communauté', icon: '📢', color: '#FF6B35' },
               ].map((action) => (
@@ -125,7 +125,7 @@ export default function AdminDashboard() {
               Les données Stripe seront disponibles une fois l&apos;intégration paiement activée.
             </p>
             <div className="grid sm:grid-cols-3 gap-4">
-              <div className="rounded-lg p-4" style={{ background: 'rgba(212,175,55,0.05)' }}>
+              <div className="rounded-lg p-4" style={{ background: 'rgba(201,169,97,0.05)' }}>
                 <p className="text-xs mb-1" style={{ color: 'var(--text-muted)' }}>CA ce mois</p>
                 <p className="font-display text-2xl font-semibold" style={{ color: 'var(--brand)' }}>—</p>
               </div>

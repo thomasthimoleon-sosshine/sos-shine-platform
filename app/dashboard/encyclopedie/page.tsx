@@ -11,7 +11,7 @@ import { useTranslation } from '@/lib/i18n/useTranslation'
 
 /* ─── Catégories & couleurs ─── */
 const CATEGORIES: Record<string, string> = {
-  "Émotions & Psychologie": "#D4AF37",
+  "Émotions & Psychologie": "#C9A961",
   "Relations & Liens": "#C9A96E",
   "Blessures & Traumatismes": "#B8860B",
   "Développement Personnel": "#DAA520",
@@ -19,7 +19,7 @@ const CATEGORIES: Record<string, string> = {
   "Spiritualité & Énergie": "#FFD700",
   "Soins & Thérapies": "#F0C040",
   "Identité & Mission": "#E8C870",
-  "Vie & Expériences": "#D4AF37",
+  "Vie & Expériences": "#C9A961",
   "Pratiques & Outils": "#C8A951",
 }
 
@@ -443,7 +443,7 @@ export default function EncyclopediePage() {
           onClick={() => setActiveCat('ALL')}
           className="px-3 py-1.5 rounded-full text-[11px] uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap"
           style={{
-            background: activeCat === 'ALL' ? 'rgba(212,175,55,0.12)' : 'transparent',
+            background: activeCat === 'ALL' ? 'rgba(201,169,97,0.12)' : 'transparent',
             border: `1px solid ${activeCat === 'ALL' ? 'var(--brand)' : 'var(--border)'}`,
             color: activeCat === 'ALL' ? 'var(--brand)' : 'var(--text-muted)',
           }}
@@ -456,7 +456,7 @@ export default function EncyclopediePage() {
             onClick={() => setActiveCat(activeCat === c ? 'ALL' : c)}
             className="px-3 py-1.5 rounded-full text-[11px] uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap"
             style={{
-              background: activeCat === c ? 'rgba(212,175,55,0.12)' : 'transparent',
+              background: activeCat === c ? 'rgba(201,169,97,0.12)' : 'transparent',
               border: `1px solid ${activeCat === c ? 'var(--brand)' : 'var(--border)'}`,
               color: activeCat === c ? 'var(--brand)' : 'var(--text-muted)',
             }}
@@ -632,8 +632,8 @@ export default function EncyclopediePage() {
                                     </span>
                                   )}
                                   {avail?.hasLibrary ? (
-                                    <Link href={`/dashboard/shine-librairie?douleur=${douleurId}`} title="Shine Librairie" className="inline-flex items-center justify-center w-5 h-5 rounded hover:scale-110 transition-transform" style={{ background: 'rgba(212,175,55,0.15)' }} onClick={(e) => e.stopPropagation()}>
-                                      <svg className="w-3 h-3" fill="#D4AF37" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" /></svg>
+                                    <Link href={`/dashboard/shine-librairie?douleur=${douleurId}`} title="Shine Librairie" className="inline-flex items-center justify-center w-5 h-5 rounded hover:scale-110 transition-transform" style={{ background: 'rgba(201,169,97,0.15)' }} onClick={(e) => e.stopPropagation()}>
+                                      <svg className="w-3 h-3" fill="#C9A961" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" /></svg>
                                     </Link>
                                   ) : (
                                     <span title="Shine Librairie" className="inline-flex items-center justify-center w-5 h-5 rounded" style={{ background: 'rgba(255,255,255,0.03)' }}>
@@ -662,7 +662,7 @@ export default function EncyclopediePage() {
                             </svg>
                           </div>
                         ) : (
-                          <span className="text-[10px] px-2 py-0.5 rounded-lg flex-shrink-0" style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--brand)' }}>
+                          <span className="text-[10px] px-2 py-0.5 rounded-lg flex-shrink-0" style={{ background: 'rgba(201,169,97,0.08)', color: 'var(--brand)' }}>
                             {getReleaseDate(topic.slug)}
                           </span>
                         )}
@@ -686,7 +686,7 @@ export default function EncyclopediePage() {
       <div
         className="rounded-xl p-5 flex flex-wrap gap-x-6 gap-y-3 items-center"
         style={{
-          background: 'rgba(212,175,55,0.03)',
+          background: 'rgba(201,169,97,0.03)',
           border: '1px solid var(--border)',
         }}
       >
@@ -713,7 +713,7 @@ export default function EncyclopediePage() {
           <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Short</span>
         </div>
         <div className="flex items-center gap-2">
-          <svg className="w-3 h-3" fill="#D4AF37" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" /></svg>
+          <svg className="w-3 h-3" fill="#C9A961" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" /></svg>
           <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Librairie</span>
         </div>
         <span className="text-xs ml-auto" style={{ color: 'var(--text-muted)' }}>
@@ -722,7 +722,7 @@ export default function EncyclopediePage() {
       </div>
 
       {/* Info */}
-      <div className="rounded-xl p-5 text-center" style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.1)' }}>
+      <div className="rounded-xl p-5 text-center" style={{ background: 'rgba(201,169,97,0.04)', border: '1px solid rgba(201,169,97,0.1)' }}>
         <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
           {t('dashboard.not_found_info')}
         </p>

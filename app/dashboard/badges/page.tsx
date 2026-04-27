@@ -119,7 +119,7 @@ export default function BadgesGalleryPage() {
                 </p>
               </div>
               <span className="ml-auto text-[12px] font-medium px-2 py-0.5 rounded-full"
-                style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)' }}>
+                style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--brand)' }}>
                 {catUnlocked}/{category.badges.length}
               </span>
             </div>
@@ -135,8 +135,8 @@ export default function BadgesGalleryPage() {
                     href={route}
                     className="relative rounded-xl p-4 text-center transition-all duration-300 block hover:scale-[1.03]"
                     style={{
-                      background: isUnlocked ? 'rgba(212,175,55,0.08)' : 'rgba(255,255,255,0.02)',
-                      border: isUnlocked ? '1px solid rgba(212,175,55,0.2)' : '1px solid var(--border)',
+                      background: isUnlocked ? 'rgba(201,169,97,0.08)' : 'rgba(255,255,255,0.02)',
+                      border: isUnlocked ? '1px solid rgba(201,169,97,0.2)' : '1px solid var(--border)',
                       opacity: isUnlocked ? 1 : 0.5,
                     }}
                   >
@@ -144,7 +144,7 @@ export default function BadgesGalleryPage() {
                     <div className="w-12 h-12 mx-auto rounded-full flex items-center justify-center mb-2"
                       style={{
                         background: isUnlocked
-                          ? 'linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.05))'
+                          ? 'linear-gradient(135deg, rgba(201,169,97,0.2), rgba(201,169,97,0.05))'
                           : 'rgba(255,255,255,0.03)',
                         border: isUnlocked ? '2px solid var(--brand)' : '2px solid var(--border)',
                       }}>

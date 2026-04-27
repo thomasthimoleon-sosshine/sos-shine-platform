@@ -81,9 +81,9 @@ function StarRating({ rating, onRate, size = 'md', interactive = false }: {
         >
           <svg
             className={sizes[size]}
-            fill={(hover || rating) >= star ? '#D4AF37' : 'none'}
+            fill={(hover || rating) >= star ? '#C9A961' : 'none'}
             viewBox="0 0 24 24"
-            stroke={(hover || rating) >= star ? '#D4AF37' : 'rgba(255,255,255,0.2)'}
+            stroke={(hover || rating) >= star ? '#C9A961' : 'rgba(255,255,255,0.2)'}
             strokeWidth={1.5}
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
@@ -316,14 +316,14 @@ function AudioRow({ title, icon, audios, onSelect, nowPlayingId }: {
                 {/* Favorite heart */}
                 {audio.isFavorite && (
                   <span className="absolute top-2 right-2">
-                    <svg className="w-4 h-4" fill="#D4AF37" viewBox="0 0 24 24" stroke="none">
+                    <svg className="w-4 h-4" fill="#C9A961" viewBox="0 0 24 24" stroke="none">
                       <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                     </svg>
                   </span>
                 )}
                 {/* Content type badge */}
                 <span className="absolute top-2 left-2 text-[9px] font-bold uppercase px-1.5 py-0.5 rounded"
-                  style={{ background: 'rgba(212,175,55,0.9)', color: '#09090b' }}>
+                  style={{ background: 'rgba(201,169,97,0.9)', color: '#09090b' }}>
                   {audio.contentType === 'podcast' ? '🎙️' : audio.contentType === 'audiobook' ? '📚' : audio.contentType === 'meditation' ? '🧘' : audio.contentType === 'hypnosis' ? '🌀' : '🎵'}
                 </span>
                 {/* Hover overlay */}
@@ -392,7 +392,7 @@ function HeroBanner({ audio, onOpen, onPlay }: { audio: ShineAudio; onOpen: () =
 
           <div className="text-center sm:text-left">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold mb-3"
-              style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.3)' }}>
+              style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.3)' }}>
               <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
               </svg>
@@ -527,7 +527,7 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
             <button
               onClick={() => onPlay(audio)}
               className="absolute w-16 h-16 rounded-full flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110"
-              style={{ background: 'rgba(212,175,55,0.9)', color: '#09090b' }}
+              style={{ background: 'rgba(201,169,97,0.9)', color: '#09090b' }}
             >
               <svg className="w-8 h-8 ml-1" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M8 5v14l11-7z" />
@@ -552,7 +552,7 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
                 <span className="text-[13px] font-medium" style={{ color: 'var(--brand)' }}>{audio.year}</span>
                 <span className="text-[13px]" style={{ color: 'var(--text-muted)' }}>{audio.duration}</span>
                 <span className="px-2 py-0.5 rounded text-[11px] font-medium uppercase"
-                  style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
+                  style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}>
                   {audio.contentType}
                 </span>
               </div>
@@ -574,8 +574,8 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
                 className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110"
                 style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)' }}
               >
-                <svg className="w-5 h-5" fill={audio.isFavorite ? '#D4AF37' : 'none'} viewBox="0 0 24 24"
-                  stroke={audio.isFavorite ? '#D4AF37' : 'white'} strokeWidth={1.5}>
+                <svg className="w-5 h-5" fill={audio.isFavorite ? '#C9A961' : 'none'} viewBox="0 0 24 24"
+                  stroke={audio.isFavorite ? '#C9A961' : 'white'} strokeWidth={1.5}>
                   <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                 </svg>
               </button>
@@ -588,7 +588,7 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
 
           {/* Your rating */}
           <div className="glass p-4 rounded-xl mb-6 flex items-center gap-4 flex-wrap"
-            style={{ borderColor: 'rgba(212,175,55,0.1)' }}>
+            style={{ borderColor: 'rgba(201,169,97,0.1)' }}>
             <span className="text-[13px] font-medium" style={{ color: 'var(--text-muted)' }}>Votre note :</span>
             <StarRating
               rating={audio.userRating}
@@ -609,7 +609,7 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
               onClick={() => setTab('overview')}
               className="flex-1 py-2.5 rounded-lg text-[13px] font-medium cursor-pointer transition-all duration-200"
               style={{
-                background: tab === 'overview' ? 'rgba(212,175,55,0.12)' : 'transparent',
+                background: tab === 'overview' ? 'rgba(201,169,97,0.12)' : 'transparent',
                 color: tab === 'overview' ? 'var(--brand)' : 'var(--text-muted)',
               }}
             >
@@ -619,7 +619,7 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
               onClick={() => setTab('reviews')}
               className="flex-1 py-2.5 rounded-lg text-[13px] font-medium cursor-pointer transition-all duration-200"
               style={{
-                background: tab === 'reviews' ? 'rgba(212,175,55,0.12)' : 'transparent',
+                background: tab === 'reviews' ? 'rgba(201,169,97,0.12)' : 'transparent',
                 color: tab === 'reviews' ? 'var(--brand)' : 'var(--text-muted)',
               }}
             >
@@ -653,7 +653,7 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
             ) : (
               <motion.div key="reviews" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }}>
                 {/* Write review */}
-                <div className="glass p-4 rounded-xl mb-4" style={{ borderColor: 'rgba(212,175,55,0.1)' }}>
+                <div className="glass p-4 rounded-xl mb-4" style={{ borderColor: 'rgba(201,169,97,0.1)' }}>
                   <div className="flex items-center gap-3 mb-3">
                     <span className="text-[13px] font-medium" style={{ color: 'var(--text-secondary)' }}>Votre avis :</span>
                     <StarRating rating={newRating} size="md" interactive onRate={setNewRating} />
@@ -669,7 +669,7 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
                       color: 'var(--text-primary)',
                       minHeight: 80,
                     }}
-                    onFocus={(e) => e.target.style.borderColor = 'rgba(212,175,55,0.4)'}
+                    onFocus={(e) => e.target.style.borderColor = 'rgba(201,169,97,0.4)'}
                     onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
                   />
                   <div className="flex justify-end mt-2">
@@ -697,7 +697,7 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
                       <div className="flex items-center gap-3 mb-2">
                         <div
                           className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
-                          style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}
+                          style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}
                         >
                           {review.author.charAt(0)}
                         </div>
@@ -1055,7 +1055,7 @@ export default function ShineAudiblePage() {
                   border: '1px solid var(--border)',
                   color: 'var(--text-primary)',
                 }}
-                onFocus={(e) => e.target.style.borderColor = 'rgba(212,175,55,0.4)'}
+                onFocus={(e) => e.target.style.borderColor = 'rgba(201,169,97,0.4)'}
                 onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
               />
               {search && (
@@ -1096,9 +1096,9 @@ export default function ShineAudiblePage() {
               onClick={() => setActiveFilter('all')}
               className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200"
               style={{
-                background: activeFilter === 'all' ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.04)',
+                background: activeFilter === 'all' ? 'rgba(201,169,97,0.15)' : 'rgba(255,255,255,0.04)',
                 color: activeFilter === 'all' ? 'var(--brand)' : 'var(--text-secondary)',
-                border: `1px solid ${activeFilter === 'all' ? 'rgba(212,175,55,0.3)' : 'transparent'}`,
+                border: `1px solid ${activeFilter === 'all' ? 'rgba(201,169,97,0.3)' : 'transparent'}`,
               }}
             >
               Tout
@@ -1108,9 +1108,9 @@ export default function ShineAudiblePage() {
                 onClick={() => setActiveFilter('douleur')}
                 className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200 flex items-center gap-1.5"
                 style={{
-                  background: activeFilter === 'douleur' ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.04)',
+                  background: activeFilter === 'douleur' ? 'rgba(201,169,97,0.15)' : 'rgba(255,255,255,0.04)',
                   color: activeFilter === 'douleur' ? 'var(--brand)' : 'var(--text-secondary)',
-                  border: `1px solid ${activeFilter === 'douleur' ? 'rgba(212,175,55,0.3)' : 'transparent'}`,
+                  border: `1px solid ${activeFilter === 'douleur' ? 'rgba(201,169,97,0.3)' : 'transparent'}`,
                 }}
               >
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -1123,9 +1123,9 @@ export default function ShineAudiblePage() {
               onClick={() => setActiveFilter('encyclopedie')}
               className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200 flex items-center gap-1.5"
               style={{
-                background: activeFilter === 'encyclopedie' ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.04)',
+                background: activeFilter === 'encyclopedie' ? 'rgba(201,169,97,0.15)' : 'rgba(255,255,255,0.04)',
                 color: activeFilter === 'encyclopedie' ? 'var(--brand)' : 'var(--text-secondary)',
-                border: `1px solid ${activeFilter === 'encyclopedie' ? 'rgba(212,175,55,0.3)' : 'transparent'}`,
+                border: `1px solid ${activeFilter === 'encyclopedie' ? 'rgba(201,169,97,0.3)' : 'transparent'}`,
               }}
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -1137,9 +1137,9 @@ export default function ShineAudiblePage() {
               onClick={() => setActiveFilter('favorites')}
               className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200 flex items-center gap-1.5"
               style={{
-                background: activeFilter === 'favorites' ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.04)',
+                background: activeFilter === 'favorites' ? 'rgba(201,169,97,0.15)' : 'rgba(255,255,255,0.04)',
                 color: activeFilter === 'favorites' ? 'var(--brand)' : 'var(--text-secondary)',
-                border: `1px solid ${activeFilter === 'favorites' ? 'rgba(212,175,55,0.3)' : 'transparent'}`,
+                border: `1px solid ${activeFilter === 'favorites' ? 'rgba(201,169,97,0.3)' : 'transparent'}`,
               }}
             >
               <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
@@ -1153,9 +1153,9 @@ export default function ShineAudiblePage() {
                 onClick={() => setActiveFilter(cat.id)}
                 className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200"
                 style={{
-                  background: activeFilter === cat.id ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.04)',
+                  background: activeFilter === cat.id ? 'rgba(201,169,97,0.15)' : 'rgba(255,255,255,0.04)',
                   color: activeFilter === cat.id ? 'var(--brand)' : 'var(--text-secondary)',
-                  border: `1px solid ${activeFilter === cat.id ? 'rgba(212,175,55,0.3)' : 'transparent'}`,
+                  border: `1px solid ${activeFilter === cat.id ? 'rgba(201,169,97,0.3)' : 'transparent'}`,
                 }}
               >
                 {cat.icon} {cat.label}
@@ -1202,7 +1202,7 @@ export default function ShineAudiblePage() {
                         </span>
                         {audio.isFavorite && (
                           <span className="absolute top-2 right-2">
-                            <svg className="w-4 h-4" fill="#D4AF37" viewBox="0 0 24 24"><path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
+                            <svg className="w-4 h-4" fill="#C9A961" viewBox="0 0 24 24"><path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
                           </span>
                         )}
                         {nowPlaying?.id === audio.id && (
@@ -1243,7 +1243,7 @@ export default function ShineAudiblePage() {
           // Favorites view
           <div>
             <h2 className="text-lg font-display font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-              <svg className="w-5 h-5" fill="#D4AF37" viewBox="0 0 24 24">
+              <svg className="w-5 h-5" fill="#C9A961" viewBox="0 0 24 24">
                 <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
               </svg>
               Mes Favoris Audio
@@ -1376,7 +1376,7 @@ export default function ShineAudiblePage() {
                         key={letter}
                         href={`#letter-audible-${letter}`}
                         className="w-8 h-8 rounded-lg flex items-center justify-center text-[13px] font-semibold transition-colors hover:opacity-80"
-                        style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)' }}
+                        style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--brand)' }}
                       >
                         {letter}
                       </a>
@@ -1404,7 +1404,7 @@ export default function ShineAudiblePage() {
                                 {audio.cover ? (
                                   <img src={audio.cover} alt={audio.title} className="w-full h-full object-contain" loading="lazy" />
                                 ) : (
-                                  <div className="w-full h-full flex items-center justify-center" style={{ background: 'rgba(212,175,55,0.05)' }}>
+                                  <div className="w-full h-full flex items-center justify-center" style={{ background: 'rgba(201,169,97,0.05)' }}>
                                     <svg className="w-12 h-12 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} style={{ color: 'var(--brand)' }}>
                                       <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
                                     </svg>
@@ -1483,7 +1483,7 @@ export default function ShineAudiblePage() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               className="w-full max-w-sm rounded-2xl p-6 space-y-4"
-              style={{ background: 'var(--surface-card)', border: '1px solid rgba(212,175,55,0.2)' }}
+              style={{ background: 'var(--surface-card)', border: '1px solid rgba(201,169,97,0.2)' }}
               onClick={(e) => e.stopPropagation()}
             >
               <div className="text-center">

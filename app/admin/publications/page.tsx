@@ -12,7 +12,7 @@ type PostWithProfile = Post & {
 }
 
 const POST_TYPE_CONFIG: Record<string, { label: string; color: string; icon: string }> = {
-  announcement: { label: 'Annonce', color: '#D4AF37', icon: '📢' },
+  announcement: { label: 'Annonce', color: '#C9A961', icon: '📢' },
   douleur_published: { label: 'Challenge publié', color: '#55EFC4', icon: '📘' },
   event_published: { label: 'Événement publié', color: '#74C0FC', icon: '📅' },
   general: { label: 'Général', color: '#9A9080', icon: '💬' },
@@ -20,7 +20,7 @@ const POST_TYPE_CONFIG: Record<string, { label: string; color: string; icon: str
 }
 
 const CATEGORY_CONFIG: Record<string, { label: string; color: string; icon: string }> = {
-  temoignage: { label: 'Témoignage', color: '#D4AF37', icon: '🗣️' },
+  temoignage: { label: 'Témoignage', color: '#C9A961', icon: '🗣️' },
   partage: { label: "Partage d'exp.", color: '#74C0FC', icon: '💫' },
   question: { label: 'Question', color: '#A29BFE', icon: '❓' },
   remerciements: { label: 'Remerciements', color: '#55EFC4', icon: '🙏' },
@@ -433,7 +433,7 @@ export default function AdminPublications() {
         {[
           { value: 'all', label: 'Tout', color: 'var(--text-secondary)' },
           { value: 'community', label: 'Communauté', color: '#A29BFE' },
-          { value: 'announcement', label: 'Annonces', color: '#D4AF37' },
+          { value: 'announcement', label: 'Annonces', color: '#C9A961' },
           { value: 'general', label: 'General', color: '#9A9080' },
         ].map(f => (
           <button key={f.value} onClick={() => setFilterType(f.value)}
@@ -549,7 +549,7 @@ export default function AdminPublications() {
                     <img src={post.profiles.avatar_url} alt="" className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
                   ) : (
                     <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0"
-                      style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
+                      style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}>
                       {post.profiles?.prenom?.charAt(0).toUpperCase() || '?'}
                     </div>
                   )}
@@ -559,7 +559,7 @@ export default function AdminPublications() {
                         {post.profiles?.prenom || 'Inconnu'}
                       </span>
                       {post.profiles?.role === 'founder' && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)' }}>Fondateur</span>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)' }}>Fondateur</span>
                       )}
                     </div>
                     <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{formatDate(post.created_at)}</span>
@@ -621,7 +621,7 @@ export default function AdminPublications() {
                   )}
                   {/* Stats */}
                   {likeCount > 0 && (
-                    <span className="text-[11px] flex items-center gap-1" style={{ color: '#D4AF37' }}>
+                    <span className="text-[11px] flex items-center gap-1" style={{ color: '#C9A961' }}>
                       ⭐ {likeCount} Shines
                     </span>
                   )}
@@ -681,7 +681,7 @@ export default function AdminPublications() {
                   {commentCount > 0 && (
                     <button onClick={() => openComments(post.id)}
                       className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
-                      style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                      style={{ background: 'rgba(201,169,97,0.08)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.2)' }}>
                       Moderer les commentaires
                     </button>
                   )}
@@ -734,7 +734,7 @@ export default function AdminPublications() {
                         <img src={comment.profiles.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
                       ) : (
                         <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0"
-                          style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--brand)' }}>
+                          style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}>
                           {comment.profiles?.prenom?.charAt(0).toUpperCase() || '?'}
                         </div>
                       )}

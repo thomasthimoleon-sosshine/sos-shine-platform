@@ -14,7 +14,7 @@ const REWARD_TYPES = [
 const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
   draft: { label: 'Brouillon', color: 'var(--text-muted)' },
   active: { label: 'Actif', color: '#55EFC4' },
-  completed: { label: 'Terminé', color: '#D4AF37' },
+  completed: { label: 'Terminé', color: '#C9A961' },
   archived: { label: 'Archivé', color: '#EF4444' },
 }
 
@@ -312,7 +312,7 @@ export default function AdminDefisPage() {
           {challenges.length > 0 && (
             <button onClick={duplicateLast}
               className="px-5 py-2.5 rounded-xl text-sm font-semibold cursor-pointer transition-all"
-              style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.3)' }}>
+              style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.3)' }}>
               Dupliquer le dernier
             </button>
           )}
@@ -371,7 +371,7 @@ export default function AdminDefisPage() {
               className="w-full rounded-xl px-4 py-3 text-sm outline-none" style={inputStyle} />
 
             {/* ── PHASES SECTION ── */}
-            <div className="rounded-xl p-4" style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.2)' }}>
+            <div className="rounded-xl p-4" style={{ background: 'rgba(201,169,97,0.05)', border: '1px solid rgba(201,169,97,0.2)' }}>
               <div className="flex items-center justify-between mb-3">
                 <div>
                   <h4 className="text-sm font-semibold" style={{ color: 'var(--brand)' }}>
@@ -383,7 +383,7 @@ export default function AdminDefisPage() {
                 </div>
                 <button onClick={addPhase}
                   className="px-3 py-1.5 rounded-lg text-[11px] font-semibold cursor-pointer transition-all"
-                  style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)', border: '1px solid rgba(212,175,55,0.3)' }}>
+                  style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.3)' }}>
                   + Ajouter une phase
                 </button>
               </div>
@@ -401,7 +401,7 @@ export default function AdminDefisPage() {
                     <div key={i} className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
                       <div className="flex items-center justify-between mb-3">
                         <span className="text-xs font-bold px-2.5 py-1 rounded-full"
-                          style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)' }}>
+                          style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)' }}>
                           Phase {i + 1}
                         </span>
                         <div className="flex items-center gap-1">
@@ -444,7 +444,7 @@ export default function AdminDefisPage() {
               {form.phases.length > 0 && (
                 <button onClick={addPhase}
                   className="mt-3 w-full py-2 rounded-lg text-[11px] font-medium cursor-pointer transition-all"
-                  style={{ color: 'var(--brand)', border: '1px dashed rgba(212,175,55,0.3)', background: 'transparent' }}>
+                  style={{ color: 'var(--brand)', border: '1px dashed rgba(201,169,97,0.3)', background: 'transparent' }}>
                   + Ajouter une autre phase
                 </button>
               )}
@@ -495,7 +495,7 @@ export default function AdminDefisPage() {
                       </span>
                       {phaseCount > 0 && (
                         <span className="text-[10px] px-2 py-0.5 rounded-full font-medium flex-shrink-0"
-                          style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--brand)' }}>
+                          style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--brand)' }}>
                           {phaseCount} phase{phaseCount > 1 ? 's' : ''}
                         </span>
                       )}
@@ -508,7 +508,7 @@ export default function AdminDefisPage() {
                       <span>👥 {ch.participant_count || 0} participants</span>
                       {ch.start_date && <span>📅 {new Date(ch.start_date).toLocaleDateString('fr-FR')}</span>}
                       {ch.end_date && <span>→ {new Date(ch.end_date).toLocaleDateString('fr-FR')}</span>}
-                      {ch.winner_id && <span style={{ color: '#D4AF37' }}>🏆 Vainqueur désigné</span>}
+                      {ch.winner_id && <span style={{ color: '#C9A961' }}>🏆 Vainqueur désigné</span>}
                     </div>
                   </div>
 
@@ -516,7 +516,7 @@ export default function AdminDefisPage() {
                     {phaseCount > 0 && (
                       <button onClick={() => setExpandedPhases(isExpanded ? null : ch.id)}
                         className="px-3 py-1.5 rounded-lg text-[11px] font-medium cursor-pointer"
-                        style={{ color: 'var(--brand)', background: 'rgba(212,175,55,0.1)' }}>
+                        style={{ color: 'var(--brand)', background: 'rgba(201,169,97,0.1)' }}>
                         {isExpanded ? 'Masquer phases' : 'Voir phases'}
                       </button>
                     )}
@@ -530,7 +530,7 @@ export default function AdminDefisPage() {
                     {ch.status === 'active' && !ch.winner_id && (
                       <button onClick={() => selectWinner(ch.id)}
                         className="px-3 py-1.5 rounded-lg text-[11px] font-medium cursor-pointer"
-                        style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37' }}>
+                        style={{ background: 'rgba(201,169,97,0.1)', color: '#C9A961' }}>
                         Désigner vainqueur
                       </button>
                     )}
@@ -558,7 +558,7 @@ export default function AdminDefisPage() {
                         <div key={phase.id} className="flex items-start gap-3 rounded-lg p-3"
                           style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
                           <span className="text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 mt-0.5"
-                            style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--brand)' }}>
+                            style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)' }}>
                             {i + 1}
                           </span>
                           <div className="flex-1 min-w-0">

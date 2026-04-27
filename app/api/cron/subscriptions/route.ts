@@ -320,14 +320,14 @@ function getEmailContent(
     max-width: 560px;
     margin: 0 auto;
     background: #141414;
-    border: 1px solid rgba(212,175,55,0.15);
+    border: 1px solid rgba(201,169,97,0.15);
     border-radius: 16px;
     padding: 40px;
   `
   const buttonStyle = `
     display: inline-block;
     padding: 14px 32px;
-    background: linear-gradient(135deg, #D4AF37, #B8960F);
+    background: linear-gradient(135deg, #C9A961, #B8960F);
     color: #050505;
     text-decoration: none;
     border-radius: 50px;
@@ -340,7 +340,7 @@ function getEmailContent(
     payment_failed_1: {
       subject: `⚠️ ${name}, votre paiement SOS Shine n'a pas abouti`,
       html: `<div style="${baseStyle}"><div style="${cardStyle}">
-        <h1 style="color: #D4AF37; font-size: 24px; margin-bottom: 16px;">Paiement non abouti</h1>
+        <h1 style="color: #C9A961; font-size: 24px; margin-bottom: 16px;">Paiement non abouti</h1>
         <p>Bonjour ${name},</p>
         <p>Nous n'avons pas pu traiter le paiement de votre abonnement <strong>${planLabel}</strong>.</p>
         <p>Pas de panique ! Vous avez <strong>7 jours</strong> pour mettre à jour vos informations de paiement et conserver votre accès à la plateforme.</p>
@@ -374,7 +374,7 @@ function getEmailContent(
     expiring_soon: {
       subject: `💎 Votre abonnement SOS Shine expire bientôt`,
       html: `<div style="${baseStyle}"><div style="${cardStyle}">
-        <h1 style="color: #D4AF37; font-size: 24px; margin-bottom: 16px;">Abonnement bientôt terminé</h1>
+        <h1 style="color: #C9A961; font-size: 24px; margin-bottom: 16px;">Abonnement bientôt terminé</h1>
         <p>Bonjour ${name},</p>
         <p>Votre abonnement <strong>${planLabel}</strong> arrive à son terme dans quelques jours.</p>
         <p>Si vous souhaitez continuer à profiter de la communauté SOS Shine, pensez à renouveler votre abonnement.</p>

@@ -27,9 +27,15 @@ function getAdminClient() {
 // Use {firstName} and {email} as placeholders — replaced at send time
 const PLACEHOLDER = { firstName: '{firstName}', email: '{email}', resumeUrl: '{resumeUrl}', topProtocol: '{topProtocol}', dominant: '3', q15Response: '{q15Response}' }
 
+const SAMPLE_SCORES: Record<string, number> = { '1': 40, '2': 20, '3': 100, '4': 60, '5': 30, '6': 50, '7': 35, '8': 25, '9': 80, '10': 45 }
+const SAMPLE_PROTOCOLS = [
+  { title: 'Déconditionnement Émotionnel', matchScore: 92, status: 'available', duration_days: 30 },
+  { title: 'Confiance & Estime', matchScore: 85, status: 'coming_soon', duration_days: 21 },
+]
+
 const EMAILS = [
   { order: 1,  delay: 0,  label: 'Capture (quiz pas fini)', gen: () => generateEmail01({ ...PLACEHOLDER, resumeUrl: 'https://sosshine.com/signature-emotionnelle' }) },
-  { order: 2,  delay: 0,  label: 'Résultat complet', gen: () => generateEmail02({ ...PLACEHOLDER, dominant: '3', q15Response: '{q15Response}' }) },
+  { order: 2,  delay: 0,  label: 'Résultat complet', gen: () => generateEmail02({ ...PLACEHOLDER, dominant: '3', secondary: '9', scores: SAMPLE_SCORES, q15Response: '{q15Response}', protocols: SAMPLE_PROTOCOLS }) },
   { order: 3,  delay: 1,  label: 'La question qui touche', gen: () => generateEmail03(PLACEHOLDER) },
   { order: 4,  delay: 2,  label: 'Pourquoi maintenant', gen: () => generateEmail04(PLACEHOLDER) },
   { order: 5,  delay: 3,  label: "L'histoire de Julia", gen: () => generateEmail05(PLACEHOLDER) },

@@ -212,7 +212,7 @@ const DIAMONDS = [
 const DiamondSvg = memo(function DiamondSvg({ size }: { size: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <circle cx="12" cy="12" r="4" fill="#D4AF37" opacity="0.4" />
+      <circle cx="12" cy="12" r="4" fill="#C9A961" opacity="0.4" />
       <circle cx="12" cy="12" r="2" fill="#FFFBE6" opacity="0.9" />
     </svg>
   );
@@ -293,12 +293,78 @@ export default function Home() {
     }
   }, []);
 
+  /* ── A/B variant resolution ── */
+  function getAbVariant(): string {
+    // 1. Check URL param ?preview= (admin preview mode)
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const preview = params.get('preview');
+      if (preview === 'julia' || preview === 'standard') return preview;
+    }
+
+    // 2. Check cookie
+    if (typeof document !== 'undefined') {
+      const match = document.cookie.match(/(?:^|;\s*)ab_variant=([^;]+)/);
+      if (match) {
+        const v = match[1];
+        if (v === 'julia' || v === 'standard') return v;
+      }
+    }
+
+    // 3. Random 50/50 split (check for active test ratio later)
+    const variant = Math.random() < 0.5 ? 'julia' : 'standard';
+
+    // 4. Persist in cookie (1 year)
+    if (typeof document !== 'undefined') {
+      document.cookie = `ab_variant=${variant};path=/;max-age=${365 * 24 * 60 * 60};samesite=lax`;
+    }
+
+    return variant;
+  }
+
   const loadSections = useCallback(async () => {
     await loadPrelaunchSettings();
 
     try {
       const supabase = createClient();
-      const { data } = await supabase.from("landing_sections").select("*").order("position");
+
+      // Resolve A/B variant
+      const variant = getAbVariant();
+
+      // Check if there's an active test with custom split ratio
+      const { data: activeTest } = await supabase
+        .from('ab_tests')
+        .select('id, split_ratio, is_active')
+        .eq('is_active', true)
+        .limit(1)
+        .maybeSingle();
+
+      // If test is active and cookie was just set, apply correct split ratio
+      let finalVariant = variant;
+      const isPreview = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('preview');
+      if (!isPreview && activeTest && activeTest.is_active) {
+        // Only re-roll if no existing cookie
+        const hasCookie = typeof document !== 'undefined' && document.cookie.includes('ab_variant=');
+        if (!hasCookie) {
+          finalVariant = Math.random() < activeTest.split_ratio ? 'julia' : 'standard';
+          if (typeof document !== 'undefined') {
+            document.cookie = `ab_variant=${finalVariant};path=/;max-age=${365 * 24 * 60 * 60};samesite=lax`;
+          }
+        }
+      }
+
+      // If test is NOT active, default to julia
+      if (activeTest && !activeTest.is_active && !isPreview) {
+        finalVariant = 'julia';
+      }
+
+      // Load sections for this variant
+      const { data } = await supabase
+        .from("landing_sections")
+        .select("*")
+        .eq("page_version", finalVariant)
+        .order("position");
+
       if (data && data.length > 0) {
         const rows = data as unknown as LandingSectionDefault[];
         const dbMap = buildSectionMap(rows);
@@ -315,6 +381,28 @@ export default function Home() {
           }
         }
         setSections(merged);
+      }
+
+      // Track view event (non-blocking)
+      if (activeTest?.is_active && !isPreview) {
+        const sessionId = typeof sessionStorage !== 'undefined'
+          ? sessionStorage.getItem('ab_session') || (() => {
+              const id = crypto.randomUUID();
+              sessionStorage.setItem('ab_session', id);
+              return id;
+            })()
+          : undefined;
+
+        fetch('/api/ab-test', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            test_id: activeTest.id,
+            variant: finalVariant,
+            event_type: 'view',
+            session_id: sessionId,
+          }),
+        }).catch(() => {/* silent */});
       }
     } catch {
       // landing defaults already set
@@ -351,12 +439,25 @@ export default function Home() {
     };
   }, [loadSections, loadPrelaunchSettings]);
 
+  /** Track A/B conversion (called when user clicks signup/rejoindre CTA) */
+  function trackConversion() {
+    const match = document.cookie.match(/(?:^|;\s*)ab_variant=([^;]+)/);
+    const variant = match?.[1];
+    if (!variant) return;
+    const sessionId = typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('ab_session') : undefined;
+    fetch('/api/ab-test', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ variant, event_type: 'conversion', session_id: sessionId }),
+    }).catch(() => {/* silent */});
+  }
+
   function sec(key: string): SectionContent { return sections[key]?.content || {}; }
   function sty(key: string): SectionStyles { return sections[key]?.styles || {}; }
   function vis(key: string): boolean { return sections[key]?.is_visible !== false; }
 
   const g = sty('_global');
-  const gold = g.color_primary || '#D4AF37';
+  const gold = g.color_primary || '#C9A961';
   const accent = g.color_secondary || '#74C0FC';
   const bg = g.color_bg || '#362038';
   const buttonBg = g.color_button || gold;
@@ -442,7 +543,7 @@ export default function Home() {
 
   // Show loading while checking prelaunch, then prelaunch page if enabled
   if (prelaunchEnabled === null) {
-    return <div className="min-h-screen" style={{ background: 'var(--dark, #0A0A0A)' }} />;
+    return <div className="min-h-screen" style={{ background: 'var(--dark, #000000)' }} />;
   }
   if (prelaunchEnabled) {
     return <PreLaunchPage settings={prelaunchSettings} />;
@@ -564,9 +665,9 @@ export default function Home() {
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}>
               <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-5 justify-center items-center">
                 {(hero.buttons || []).map((btn: { label: string; href: string; variant: string }, i: number) => (
-                  <Link key={i} href={btn.href === '/signup' || btn.href === '/login' ? '/rejoindre' : btn.href} className="w-full sm:w-auto">
+                  <Link key={i} href={btn.href === '/signup' || btn.href === '/login' ? '/rejoindre' : btn.href} className="w-full sm:w-auto" onClick={() => { if (btn.href === '/rejoindre' || btn.href === '/signup') trackConversion(); }}>
                     {btn.variant === 'primary' ? (
-                      <button className="magnetic-btn pulse-ring w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full text-sm sm:text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                      <button className="magnetic-btn pulse-ring w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full text-sm sm:text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}>
                         {btn.label} — {trialDays} {t('landing.trial_days')}
                       </button>
                     ) : (
@@ -600,7 +701,7 @@ export default function Home() {
                 <p className="text-[var(--text-secondary)] font-light mb-5 md:mb-6 text-sm md:text-[15px]">
                   {t('signature.cta_desc')}
                 </p>
-                <span className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-semibold tracking-wide group-hover:scale-105 transition-transform" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+                <span className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-semibold tracking-wide group-hover:scale-105 transition-transform" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}>
                   {t('signature.cta_button')}
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M5 12h14M12 5l7 7-7 7" />
@@ -867,7 +968,7 @@ export default function Home() {
                 <RevealOnScroll delay={0.15}>
                   <div className="flex-shrink-0 group">
                     <a href={hist.book_url || '#'} target="_blank" rel="noopener noreferrer" className="block relative">
-                      <div className="w-44 sm:w-56 md:w-64 rounded-lg overflow-hidden border border-[var(--gold)]/20 group-hover:border-[var(--gold)]/60 transition-all duration-500 shadow-lg group-hover:shadow-[0_0_30px_rgba(212,175,55,0.2)]">
+                      <div className="w-44 sm:w-56 md:w-64 rounded-lg overflow-hidden border border-[var(--gold)]/20 group-hover:border-[var(--gold)]/60 transition-all duration-500 shadow-lg group-hover:shadow-[0_0_30px_rgba(201,169,97,0.2)]">
                         <img
                           src={hist.book_image || '/images/book-cover.jpeg'}
                           alt="SOS Shine — Briller Comme un Diamant"
@@ -981,7 +1082,7 @@ export default function Home() {
                   { main: '#A78BFA', deep: '#7C3AED', rgb: '167,139,250' },
                 ] as const
                 const tc = tierColors[idx] || tierColors[0]
-                const btnTextColor = idx === 2 ? '#fff' : '#050505'
+                const btnTextColor = idx === 2 ? '#fff' : '#000000'
 
                 return (
                 <RevealOnScroll key={plan.name} delay={(idx + 1) * 0.15} direction={(["left", "up", "scale", "right"] as const)[idx % 4]}>
@@ -1024,7 +1125,7 @@ export default function Home() {
                       ))}
                     </div>
 
-                    <Link href="/rejoindre">
+                    <Link href="/rejoindre" onClick={trackConversion}>
                       <button className={`magnetic-btn w-full py-3 sm:py-4 rounded-full text-sm sm:text-base font-semibold tracking-wide ${plan.highlight ? 'pulse-ring' : ''}`} style={{
                         background: `linear-gradient(135deg, ${tc.main}, ${tc.deep})`,
                         color: btnTextColor
@@ -1063,8 +1164,8 @@ export default function Home() {
               </h2>
             </RevealOnScroll>
             <RevealOnScroll delay={0.3}>
-              <Link href="/rejoindre">
-                <button className="magnetic-btn pulse-ring px-8 sm:px-10 py-4 sm:py-5 rounded-full text-base sm:text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+              <Link href="/rejoindre" onClick={trackConversion}>
+                <button className="magnetic-btn pulse-ring px-8 sm:px-10 py-4 sm:py-5 rounded-full text-base sm:text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}>
                   {t('landing.join_cta')}
                 </button>
               </Link>
@@ -1083,8 +1184,8 @@ export default function Home() {
               </p>
             </RevealOnScroll>
             <RevealOnScroll delay={0.15}>
-              <Link href="/rejoindre">
-                <button className="magnetic-btn px-8 sm:px-10 py-4 sm:py-5 rounded-full text-base sm:text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+              <Link href="/rejoindre" onClick={trackConversion}>
+                <button className="magnetic-btn px-8 sm:px-10 py-4 sm:py-5 rounded-full text-base sm:text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}>
                   {ctaLight.button_label || t('landing.join_cta')}
                 </button>
               </Link>

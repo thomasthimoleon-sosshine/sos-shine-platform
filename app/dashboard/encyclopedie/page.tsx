@@ -97,7 +97,7 @@ export default function EncyclopediePage() {
 
       {/* Global progress widget */}
       {douleurs.length > 0 && (
-        <div className="rounded-2xl p-5" style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.12)' }}>
+        <div className="rounded-2xl p-5" style={{ background: 'rgba(201,169,97,0.04)', border: '1px solid rgba(201,169,97,0.12)' }}>
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
               Votre progression globale
@@ -156,7 +156,7 @@ export default function EncyclopediePage() {
             }}
             className="w-8 h-8 rounded-lg text-xs font-semibold flex items-center justify-center transition-all cursor-pointer"
             style={{
-              background: activeLetters.has(letter) ? 'rgba(212,175,55,0.1)' : 'transparent',
+              background: activeLetters.has(letter) ? 'rgba(201,169,97,0.1)' : 'transparent',
               color: activeLetters.has(letter) ? 'var(--gold)' : 'var(--text-muted)',
               opacity: activeLetters.has(letter) ? 1 : 0.3,
             }}
@@ -242,7 +242,7 @@ export default function EncyclopediePage() {
                             </svg>
                           </div>
                         ) : (
-                          <span className="text-xs px-2 py-1 rounded-lg flex-shrink-0" style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}>
+                          <span className="text-xs px-2 py-1 rounded-lg flex-shrink-0" style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--gold)' }}>
                             {t('dashboard.coming_soon')}
                           </span>
                         )}
@@ -257,7 +257,7 @@ export default function EncyclopediePage() {
       )}
 
       {/* Info */}
-      <div className="rounded-xl p-5 text-center" style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.1)' }}>
+      <div className="rounded-xl p-5 text-center" style={{ background: 'rgba(201,169,97,0.04)', border: '1px solid rgba(201,169,97,0.1)' }}>
         <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
           {t('dashboard.not_found_info')}
         </p>

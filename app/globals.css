@@ -8,7 +8,7 @@
 /* ── 1. Design Tokens ── */
 :root {
   /* Accents — Gold (identité de marque) */
-  --gold: #D4AF37;
+  --gold: #C9A961;
   --gold-light: #E8CC6E;
   --gold-deep: #B8960F;
 
@@ -16,7 +16,7 @@
   --gold-gradient: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
 
   /* Fond abyssal */
-  --dark: #050505;
+  --dark: #000000;
   --dark-card: rgba(255, 255, 255, 0.03);
   --dark-card-hover: rgba(255, 255, 255, 0.055);
   --dark-border: rgba(255, 255, 255, 0.06);
@@ -32,7 +32,7 @@
   --text-bold: #c5a059;
 
   /* Utilitaires */
-  --button-bg: #D4AF37;
+  --button-bg: #C9A961;
   --radius-lg: 1rem;
   --radius-xl: 1.25rem;
 
@@ -247,7 +247,7 @@ html.founder-mode * {
 }
 
 body {
-  background: #050505;
+  background: #000000;
   color: #e0e0e0;
   font-family: var(--font-dm-sans), \'DM Sans\', system-ui, sans-serif;
   font-weight: 300;
@@ -304,8 +304,8 @@ strong, b {
 /* Titres Premium - Or en mode sombre, Noir en mode clair */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-cormorant), 'Cormorant Garamond', serif !important;
-  color: #D4AF37 !important;
-  -webkit-text-fill-color: #D4AF37 !important;
+  color: #C9A961 !important;
+  -webkit-text-fill-color: #C9A961 !important;
 }
 
 /* Fix spécifique pour le mode clair */

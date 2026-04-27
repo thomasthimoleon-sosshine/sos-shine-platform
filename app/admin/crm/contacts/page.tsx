@@ -95,7 +95,7 @@ export default function CRMContactsPage() {
           onClick={handleSync}
           disabled={syncing}
           className="px-5 py-2.5 rounded-full text-sm font-medium transition-all disabled:opacity-50"
-          style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.3)' }}
+          style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--gold)', border: '1px solid rgba(201,169,97,0.3)' }}
         >
           {syncing ? 'Synchronisation...' : '🔄 Synchroniser les contacts'}
         </button>
@@ -124,7 +124,7 @@ export default function CRMContactsPage() {
         <button
           onClick={handleSearch}
           className="px-5 py-2.5 rounded-xl text-sm font-medium"
-          style={{ background: 'var(--gold)', color: '#050505' }}
+          style={{ background: 'var(--gold)', color: '#000000' }}
         >
           Rechercher
         </button>
@@ -142,7 +142,7 @@ export default function CRMContactsPage() {
           <div className="rounded-xl overflow-hidden" style={{ border: '1px solid var(--dark-border)' }}>
             <table className="w-full">
               <thead>
-                <tr style={{ background: 'rgba(212,175,55,0.05)' }}>
+                <tr style={{ background: 'rgba(201,169,97,0.05)' }}>
                   <th className="text-left px-4 py-3 text-xs uppercase tracking-wider text-[var(--text-muted)]">Email</th>
                   <th className="text-left px-4 py-3 text-xs uppercase tracking-wider text-[var(--text-muted)]">Prénom</th>
                   <th className="text-left px-4 py-3 text-xs uppercase tracking-wider text-[var(--text-muted)]">Source</th>
@@ -159,7 +159,7 @@ export default function CRMContactsPage() {
                       <span
                         className="px-2 py-1 rounded-full text-xs"
                         style={{
-                          background: c.source === 'member' ? 'rgba(80,200,120,0.15)' : c.source === 'signature_test' ? 'rgba(212,175,55,0.15)' : 'rgba(74,144,217,0.15)',
+                          background: c.source === 'member' ? 'rgba(80,200,120,0.15)' : c.source === 'signature_test' ? 'rgba(201,169,97,0.15)' : 'rgba(74,144,217,0.15)',
                           color: c.source === 'member' ? '#50C878' : c.source === 'signature_test' ? 'var(--gold)' : '#4A90D9',
                         }}
                       >

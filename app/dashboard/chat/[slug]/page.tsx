@@ -174,7 +174,7 @@ export default function ChatDouleurPage() {
               ) : (
                 <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-semibold"
                   style={{
-                    background: isAnon ? 'rgba(142,110,126,0.15)' : msg.user_id === userId ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.05)',
+                    background: isAnon ? 'rgba(142,110,126,0.15)' : msg.user_id === userId ? 'rgba(201,169,97,0.15)' : 'rgba(255,255,255,0.05)',
                     color: isAnon ? 'var(--text-muted)' : msg.user_id === userId ? 'var(--gold)' : 'var(--text-secondary)',
                   }}>
                   {getDisplayInitial(msg)}
@@ -205,7 +205,7 @@ export default function ChatDouleurPage() {
                         </span>
                       )}
                       {!isAnon && msg.profiles?.role === 'founder' && (
-                        <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>Fondateur</span>
+                        <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--gold)' }}>Fondateur</span>
                       )}
                       {msg.is_anonymous && msg.user_id === userId && (
                         <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(142,110,126,0.15)', color: 'var(--text-muted)' }}>Anonyme</span>

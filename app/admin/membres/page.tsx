@@ -24,7 +24,7 @@ const ROLES: { value: Profile['role']; label: string }[] = [
 ]
 
 const roleBadgeStyles: Record<Profile['role'], { bg: string; color: string; label: string }> = {
-  founder:       { bg: 'rgba(212,175,55,0.12)',  color: '#D4AF37', label: 'Fondateur' },
+  founder:       { bg: 'rgba(201,169,97,0.12)',  color: '#C9A961', label: 'Fondateur' },
   admin_content: { bg: 'rgba(116,192,252,0.12)', color: '#74C0FC', label: 'Admin Contenu' },
   admin_support: { bg: 'rgba(116,185,255,0.12)', color: '#74B9FF', label: 'Admin Support' },
   member:        { bg: 'rgba(154,144,128,0.12)', color: '#9A9080', label: 'Membre' },
@@ -33,7 +33,7 @@ const roleBadgeStyles: Record<Profile['role'], { bg: string; color: string; labe
 function getPlanBadge(plan: Profile['plan']) {
   if (plan === 'premium')   return { bg: 'rgba(116,192,252,0.12)', color: '#74C0FC', label: 'Premium' }
   if (plan === 'serenite')  return { bg: 'rgba(85,239,196,0.12)',  color: '#55EFC4', label: 'Sérénité' }
-  if (plan === 'essential') return { bg: 'rgba(212,175,55,0.12)',  color: '#D4AF37', label: 'Essentielle' }
+  if (plan === 'essential') return { bg: 'rgba(201,169,97,0.12)',  color: '#C9A961', label: 'Essentielle' }
   return { bg: 'rgba(90,83,71,0.12)', color: '#5A5347', label: 'Aucun' }
 }
 
@@ -228,7 +228,7 @@ export default function AdminMembres() {
             { label: 'Abonn\u00e9s actifs', value: stats.active, color: '#55EFC4' },
             { label: 'Impay\u00e9s', value: stats.pastDue, color: '#E17055' },
             { label: 'Sans abo', value: stats.inactive, color: '#9A9080' },
-            { label: 'R\u00e9duc. fondateur', value: stats.withDiscount, color: '#D4AF37' },
+            { label: 'R\u00e9duc. fondateur', value: stats.withDiscount, color: '#C9A961' },
           ].map((s) => (
             <div key={s.label} className="rounded-xl p-4 text-center" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
               <p className="font-display text-2xl font-light" style={{ color: s.color }}>{s.value}</p>
@@ -329,7 +329,7 @@ export default function AdminMembres() {
                           <div>
                             <span style={{ color: 'var(--text-primary)' }}>{member.prenom || '\u2014'}</span>
                             {member.subscription?.waitlist_discount && (
-                              <span className="ml-1.5 text-[9px] px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37' }}>
+                              <span className="ml-1.5 text-[9px] px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(201,169,97,0.1)', color: '#C9A961' }}>
                                 -10&euro;
                               </span>
                             )}
@@ -484,7 +484,7 @@ export default function AdminMembres() {
                       <div className="flex items-center gap-2">
                         <p className="font-medium text-sm truncate" style={{ color: 'var(--text-primary)' }}>{member.prenom || '\u2014'}</p>
                         {member.subscription?.waitlist_discount && (
-                          <span className="text-[9px] px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37' }}>-10&euro;</span>
+                          <span className="text-[9px] px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(201,169,97,0.1)', color: '#C9A961' }}>-10&euro;</span>
                         )}
                       </div>
                       <p className="text-xs truncate" style={{ color: 'var(--text-secondary)' }}>{member.email}</p>

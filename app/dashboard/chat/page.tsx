@@ -103,7 +103,7 @@ export default function ChatGeneralPage() {
       <div className="mb-4 flex items-center gap-2 overflow-x-auto pb-2">
         <span className="text-xs flex-shrink-0" style={{ color: 'var(--text-muted)' }}>{t('dashboard.channels')}</span>
         <Link href="/dashboard/chat" className="px-3 py-1.5 rounded-lg text-xs font-medium flex-shrink-0"
-          style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>
+          style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--gold)' }}>
           {t('dashboard.general')}
         </Link>
         <Link href="/dashboard/encyclopedie" className="px-3 py-1.5 rounded-lg text-xs flex-shrink-0 transition-colors"
@@ -122,7 +122,7 @@ export default function ChatGeneralPage() {
             </div>
           ) : messages.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center py-16 text-center">
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 text-2xl" style={{ background: 'rgba(212,175,55,0.1)' }}>
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 text-2xl" style={{ background: 'rgba(201,169,97,0.1)' }}>
                 💬
               </div>
               <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
@@ -141,7 +141,7 @@ export default function ChatGeneralPage() {
               ) : (
                 <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-semibold"
                   style={{
-                    background: isAnon ? 'rgba(142,110,126,0.15)' : msg.user_id === userId ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.05)',
+                    background: isAnon ? 'rgba(142,110,126,0.15)' : msg.user_id === userId ? 'rgba(201,169,97,0.15)' : 'rgba(255,255,255,0.05)',
                     color: isAnon ? 'var(--text-muted)' : msg.user_id === userId ? 'var(--gold)' : 'var(--text-secondary)',
                   }}>
                   {getDisplayInitial(msg)}
@@ -172,7 +172,7 @@ export default function ChatGeneralPage() {
                         </span>
                       )}
                       {!isAnon && msg.profiles?.role === 'founder' && (
-                        <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>{t('dashboard.founder')}</span>
+                        <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--gold)' }}>{t('dashboard.founder')}</span>
                       )}
                       {msg.is_anonymous && msg.user_id === userId && (
                         <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(142,110,126,0.15)', color: 'var(--text-muted)' }}>{t('dashboard.anonymous')}</span>

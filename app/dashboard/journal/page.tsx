@@ -18,7 +18,7 @@ const STORAGE_KEY = 'sos-shine-journal'
 const MOODS: { value: Mood; emoji: string; label: string; color: string }[] = [
   { value: 'great', emoji: '\u2728', label: 'Excellent', color: '#55EFC4' },
   { value: 'good', emoji: '\u2600\uFE0F', label: 'Bien', color: '#74C0FC' },
-  { value: 'neutral', emoji: '\u2601\uFE0F', label: 'Neutre', color: '#D4AF37' },
+  { value: 'neutral', emoji: '\u2601\uFE0F', label: 'Neutre', color: '#C9A961' },
   { value: 'difficult', emoji: '\uD83C\uDF27\uFE0F', label: 'Difficile', color: '#E17055' },
   { value: 'tough', emoji: '\u26A1', label: 'Dur', color: '#EF4444' },
 ]

@@ -64,7 +64,7 @@ function VideoTile({
       ) : (
         <div className="w-full h-full flex items-center justify-center">
           <div className="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-display font-semibold"
-            style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>
+            style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--gold)' }}>
             {initials}
           </div>
         </div>
@@ -78,7 +78,7 @@ function VideoTile({
         </span>
         {isFounder && (
           <span className="text-[10px] px-1.5 py-0.5 rounded-full font-medium"
-            style={{ background: 'rgba(212,175,55,0.3)', color: 'var(--gold)' }}>
+            style={{ background: 'rgba(201,169,97,0.3)', color: 'var(--gold)' }}>
             Fondateur
           </span>
         )}
@@ -146,7 +146,7 @@ export default function ConferenceRoom({ roomId, userId, userName, userRole, cal
               {/* Avatar local */}
               <div className="flex flex-col items-center gap-2">
                 <div className={`w-20 h-20 rounded-full flex items-center justify-center text-2xl font-display font-semibold ${isAudioEnabled ? 'ring-2 ring-green-400 ring-offset-2 ring-offset-[#0a0a0a]' : ''}`}
-                  style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>
+                  style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--gold)' }}>
                   {userName.charAt(0).toUpperCase()}
                 </div>
                 <span className="text-xs font-medium" style={{ color: 'var(--text-primary)' }}>Vous</span>
@@ -159,7 +159,7 @@ export default function ConferenceRoom({ roomId, userId, userName, userRole, cal
               {peers.map((peer) => (
                 <div key={peer.peerId} className="flex flex-col items-center gap-2">
                   <div className={`w-20 h-20 rounded-full flex items-center justify-center text-2xl font-display font-semibold ${peer.audioEnabled ? 'ring-2 ring-green-400 ring-offset-2 ring-offset-[#0a0a0a]' : ''}`}
-                    style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>
+                    style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--gold)' }}>
                     {peer.peerName.charAt(0).toUpperCase()}
                   </div>
                   <span className="text-xs font-medium" style={{ color: 'var(--text-primary)' }}>{peer.peerName}</span>
@@ -226,7 +226,7 @@ export default function ConferenceRoom({ roomId, userId, userName, userRole, cal
                 style={{ background: 'rgba(255,255,255,0.02)' }}>
                 <div className="flex items-center gap-2 min-w-0">
                   <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-semibold flex-shrink-0"
-                    style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>
+                    style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--gold)' }}>
                     {peer.peerName.charAt(0).toUpperCase()}
                   </div>
                   <span className="text-sm truncate" style={{ color: 'var(--text-primary)' }}>
@@ -327,7 +327,7 @@ export default function ConferenceRoom({ roomId, userId, userName, userRole, cal
           <button onClick={() => setShowModeration(!showModeration)}
             className="w-12 h-12 rounded-full flex items-center justify-center cursor-pointer transition-all"
             style={{
-              background: showModeration ? 'rgba(212,175,55,0.2)' : 'rgba(255,255,255,0.08)',
+              background: showModeration ? 'rgba(201,169,97,0.2)' : 'rgba(255,255,255,0.08)',
               color: showModeration ? 'var(--gold)' : 'var(--text-primary)',
             }}>
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>

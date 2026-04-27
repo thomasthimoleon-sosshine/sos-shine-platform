@@ -147,13 +147,13 @@ function PendingRayonsWidget() {
           const displayName = p.pseudo || p.prenom
           return (
             <div key={req.id} className="glass glass-hover p-4 flex items-center gap-3"
-              style={{ borderColor: 'rgba(212,175,55,0.15)' }}>
+              style={{ borderColor: 'rgba(201,169,97,0.15)' }}>
               <Link href={`/dashboard/membre/${p.id}`} className="shrink-0">
                 {p.avatar_url ? (
                   <img src={p.avatar_url} alt={displayName} className="w-10 h-10 rounded-full object-cover" />
                 ) : (
                   <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-display font-semibold"
-                    style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                    style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--gold)' }}>
                     {displayName.charAt(0).toUpperCase()}
                   </div>
                 )}
@@ -194,7 +194,7 @@ function PendingRayonsWidget() {
 }
 
 const ECLAT_CATEGORIES: Record<string, { label: string; icon: string; color: string }> = {
-  temoignage: { label: 'Pensée', icon: '💭', color: '#D4AF37' },
+  temoignage: { label: 'Pensée', icon: '💭', color: '#C9A961' },
   partage: { label: 'Partage', icon: '💫', color: '#74C0FC' },
   gratitude: { label: 'Gratitude', icon: '✨', color: '#FFEAA7' },
   citation: { label: 'Citation', icon: '💬', color: '#FD79A8' },
@@ -311,7 +311,7 @@ function FeedWidget() {
                     <img src={author.avatar_url} alt={displayName} className="w-10 h-10 rounded-full object-cover ring-1 ring-white/10" />
                   ) : (
                     <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-display font-semibold"
-                      style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                      style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--gold)' }}>
                       {displayName.charAt(0).toUpperCase()}
                     </div>
                   )}
@@ -364,7 +364,7 @@ function FeedWidget() {
               <div className="flex items-center gap-4 mt-3 pt-3" style={{ borderTop: '1px solid var(--dark-border)' }}>
                 <span className="flex items-center gap-1.5 text-[12px]" style={{ color: 'var(--text-muted)' }}>
                   <svg className="w-4 h-4" fill={post.user_has_liked ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}
-                    style={{ color: post.user_has_liked ? '#D4AF37' : 'var(--text-muted)' }}>
+                    style={{ color: post.user_has_liked ? '#C9A961' : 'var(--text-muted)' }}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
                   </svg>
                   {post.likes_count}
@@ -449,7 +449,7 @@ export default function DashboardHome() {
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
         </svg>
       ),
-      accent: '#D4AF37',
+      accent: '#C9A961',
       span: 'sm:col-span-2',
     },
     {

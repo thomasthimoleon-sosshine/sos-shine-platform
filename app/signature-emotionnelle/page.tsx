@@ -57,7 +57,7 @@ function IntroScreen({ onStart }: { onStart: (name: string) => void }) {
         transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
         className="mb-6"
       >
-        <span className="inline-block px-5 py-2 rounded-full text-xs tracking-[0.25em] uppercase font-medium" style={{ background: "rgba(212,175,55,0.08)", color: "var(--gold)", border: "1px solid rgba(212,175,55,0.15)" }}>
+        <span className="inline-block px-5 py-2 rounded-full text-xs tracking-[0.25em] uppercase font-medium" style={{ background: "rgba(201,169,97,0.08)", color: "var(--gold)", border: "1px solid rgba(201,169,97,0.15)" }}>
           {t('signature.badge')}
         </span>
       </motion.div>
@@ -120,7 +120,7 @@ function IntroScreen({ onStart }: { onStart: (name: string) => void }) {
           className="magnetic-btn w-full mt-5 py-4 rounded-full text-base font-semibold tracking-wide transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed"
           style={{
             background: name.trim() ? "linear-gradient(135deg, var(--gold), var(--gold-deep))" : "var(--dark-card)",
-            color: name.trim() ? "#050505" : "var(--text-muted)",
+            color: name.trim() ? "#000000" : "var(--text-muted)",
           }}
         >
           {t('signature.start')}
@@ -220,14 +220,14 @@ function QuizScreen({ onComplete }: { onComplete: (answers: Record<number, numbe
                   className="w-full text-left p-5 rounded-xl transition-all duration-300 group relative overflow-hidden"
                   style={{
                     background: isSelected
-                      ? "rgba(212,175,55,0.12)"
+                      ? "rgba(201,169,97,0.12)"
                       : isPrevAnswer
-                      ? "rgba(212,175,55,0.06)"
+                      ? "rgba(201,169,97,0.06)"
                       : "var(--dark-card)",
                     border: isSelected
-                      ? "1px solid rgba(212,175,55,0.4)"
+                      ? "1px solid rgba(201,169,97,0.4)"
                       : isPrevAnswer
-                      ? "1px solid rgba(212,175,55,0.15)"
+                      ? "1px solid rgba(201,169,97,0.15)"
                       : "1px solid var(--dark-border)",
                   }}
                 >
@@ -236,7 +236,7 @@ function QuizScreen({ onComplete }: { onComplete: (answers: Record<number, numbe
                       className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium mt-0.5 transition-all duration-300"
                       style={{
                         background: isSelected ? "var(--gold)" : "var(--dark-card)",
-                        color: isSelected ? "#050505" : "var(--text-muted)",
+                        color: isSelected ? "#000000" : "var(--text-muted)",
                         border: isSelected ? "none" : "1px solid var(--dark-border)",
                       }}
                     >
@@ -319,7 +319,7 @@ function LoadingScreen() {
               animate={{ scale: 1 }}
               transition={{ delay: 0.8 + i * 0.6, type: "spring" }}
               className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
-              style={{ background: "rgba(212,175,55,0.15)" }}
+              style={{ background: "rgba(201,169,97,0.15)" }}
             >
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="3" strokeLinecap="round">
                 <polyline points="20 6 9 17 4 12" />
@@ -368,7 +368,7 @@ function EmailScreen({ onSubmit, firstName }: { onSubmit: (email: string) => voi
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.6, type: "spring" }}
         className="w-20 h-20 rounded-full mx-auto mb-8 flex items-center justify-center"
-        style={{ background: "rgba(212,175,55,0.1)", border: "2px solid rgba(212,175,55,0.25)" }}
+        style={{ background: "rgba(201,169,97,0.1)", border: "2px solid rgba(201,169,97,0.25)" }}
       >
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
@@ -427,7 +427,7 @@ function EmailScreen({ onSubmit, firstName }: { onSubmit: (email: string) => voi
           className="magnetic-btn w-full mt-5 py-4 rounded-full text-base font-semibold tracking-wide transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed"
           style={{
             background: email.trim() ? "linear-gradient(135deg, var(--gold), var(--gold-deep))" : "var(--dark-card)",
-            color: email.trim() ? "#050505" : "var(--text-muted)",
+            color: email.trim() ? "#000000" : "var(--text-muted)",
           }}
         >
           {saving ? t("signature.email_saving") : t("signature.email_submit")}
@@ -475,7 +475,7 @@ function ResultScreen({ profileKey, firstName }: { profileKey: ProfileKey; first
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <span className="inline-block px-5 py-2 rounded-full text-xs tracking-[0.25em] uppercase font-medium mb-6" style={{ background: "rgba(212,175,55,0.08)", color: "var(--gold)", border: "1px solid rgba(212,175,55,0.15)" }}>
+          <span className="inline-block px-5 py-2 rounded-full text-xs tracking-[0.25em] uppercase font-medium mb-6" style={{ background: "rgba(201,169,97,0.08)", color: "var(--gold)", border: "1px solid rgba(201,169,97,0.15)" }}>
             {t('signature.result_badge')}
           </span>
 
@@ -540,7 +540,7 @@ function ResultScreen({ profileKey, firstName }: { profileKey: ProfileKey; first
           <Link href="/rejoindre">
             <button
               className="magnetic-btn pulse-ring px-10 py-5 rounded-full text-base font-semibold tracking-wide"
-              style={{ background: "linear-gradient(135deg, var(--gold), var(--gold-deep))", color: "#050505" }}
+              style={{ background: "linear-gradient(135deg, var(--gold), var(--gold-deep))", color: "#000000" }}
             >
               {t('signature.join_cta')}
             </button>

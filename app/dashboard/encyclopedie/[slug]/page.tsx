@@ -261,7 +261,7 @@ export default function DouleurDetailPage() {
         <button
           onClick={() => window.location.reload()}
           className="px-5 py-2.5 rounded-lg text-sm font-medium mb-4 cursor-pointer"
-          style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}
+          style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--gold)', border: '1px solid rgba(201,169,97,0.2)' }}
         >
           Réessayer
         </button>

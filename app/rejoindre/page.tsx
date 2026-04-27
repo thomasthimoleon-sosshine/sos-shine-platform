@@ -44,8 +44,8 @@ function CountdownUnit({ value, label }: { value: number; label: string }) {
         className="relative w-[60px] h-[72px] sm:w-[72px] sm:h-[88px] flex items-center justify-center rounded-2xl overflow-hidden"
         style={{
           background: 'rgba(255,255,255,0.03)',
-          border: '1px solid rgba(212,175,55,0.12)',
-          boxShadow: '0 0 40px rgba(212,175,55,0.04), inset 0 1px 0 rgba(255,255,255,0.04)',
+          border: '1px solid rgba(201,169,97,0.12)',
+          boxShadow: '0 0 40px rgba(201,169,97,0.04), inset 0 1px 0 rgba(255,255,255,0.04)',
         }}
       >
         <AnimatePresence mode="popLayout">
@@ -56,7 +56,7 @@ function CountdownUnit({ value, label }: { value: number; label: string }) {
             exit={{ y: 20, opacity: 0 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="font-display text-3xl sm:text-4xl font-light tabular-nums"
-            style={{ color: '#D4AF37' }}
+            style={{ color: '#C9A961' }}
           >
             {String(value).padStart(2, '0')}
           </motion.span>
@@ -116,11 +116,11 @@ function PrelaunchContent() {
           {!time.launched ? (
             <div className="flex items-center gap-2 sm:gap-4 justify-center">
               <CountdownUnit value={time.days} label="Jours" />
-              <span className="font-display text-xl font-light mt-[-24px]" style={{ color: 'rgba(212,175,55,0.25)' }}>:</span>
+              <span className="font-display text-xl font-light mt-[-24px]" style={{ color: 'rgba(201,169,97,0.25)' }}>:</span>
               <CountdownUnit value={time.hours} label="Heures" />
-              <span className="font-display text-xl font-light mt-[-24px]" style={{ color: 'rgba(212,175,55,0.25)' }}>:</span>
+              <span className="font-display text-xl font-light mt-[-24px]" style={{ color: 'rgba(201,169,97,0.25)' }}>:</span>
               <CountdownUnit value={time.minutes} label="Minutes" />
-              <span className="font-display text-xl font-light mt-[-24px]" style={{ color: 'rgba(212,175,55,0.25)' }}>:</span>
+              <span className="font-display text-xl font-light mt-[-24px]" style={{ color: 'rgba(201,169,97,0.25)' }}>:</span>
               <CountdownUnit value={time.seconds} label="Secondes" />
             </div>
           ) : (
@@ -131,8 +131,8 @@ function PrelaunchContent() {
 
       {/* Pricing preview — 3 tiers */}
       <Reveal delay={0.4}>
-        <div className="glass p-8 sm:p-10 text-center mb-10" style={{ borderColor: 'rgba(212,175,55,0.12)' }}>
-          <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(212,175,55,0.3), transparent)' }} />
+        <div className="glass p-8 sm:p-10 text-center mb-10" style={{ borderColor: 'rgba(201,169,97,0.12)' }}>
+          <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(201,169,97,0.3), transparent)' }} />
           <p className="text-[11px] tracking-[0.35em] uppercase mb-2 font-medium" style={{ color: 'var(--text-muted)' }}>
             D&eacute;couvrez nos 3 offres
           </p>
@@ -177,7 +177,7 @@ function PrelaunchContent() {
           </div>
 
           <p className="text-xs mb-2 font-light" style={{ color: 'var(--text-secondary)' }}>
-            R&eacute;ductions jusqu&apos;&agrave; <span style={{ color: '#D4AF37' }}>-30%</span> sur les engagements 3 mois, 6 mois et 1 an
+            R&eacute;ductions jusqu&apos;&agrave; <span style={{ color: '#C9A961' }}>-30%</span> sur les engagements 3 mois, 6 mois et 1 an
           </p>
           <p className="text-sm font-light" style={{ color: 'var(--text-secondary)' }}>
             Sans engagement &mdash; Annulable &agrave; tout instant
@@ -190,14 +190,14 @@ function PrelaunchContent() {
         <div className="max-w-lg mx-auto mb-10">
           {status === 'success' ? (
             <motion.div className="glass p-8 text-center" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-              style={{ borderColor: 'rgba(212,175,55,0.15)' }}>
+              style={{ borderColor: 'rgba(201,169,97,0.15)' }}>
               <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5"
-                style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}>
-                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="#D4AF37" strokeWidth={1.5}>
+                style={{ background: 'rgba(201,169,97,0.1)', border: '1px solid rgba(201,169,97,0.2)' }}>
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="#C9A961" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                 </svg>
               </div>
-              <div className="font-display text-2xl font-light mb-3" style={{ color: '#D4AF37' }}>
+              <div className="font-display text-2xl font-light mb-3" style={{ color: '#C9A961' }}>
                 Bienvenue parmi les fondateurs
               </div>
               <p className="text-sm font-light leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
@@ -214,7 +214,7 @@ function PrelaunchContent() {
                   onChange={(e) => setName(e.target.value)}
                   className="flex-1 px-5 py-4 rounded-xl text-sm font-light outline-none transition-all duration-300"
                   style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: 'var(--text-primary)' }}
-                  onFocus={(e) => (e.target.style.borderColor = 'rgba(212,175,55,0.3)')}
+                  onFocus={(e) => (e.target.style.borderColor = 'rgba(201,169,97,0.3)')}
                   onBlur={(e) => (e.target.style.borderColor = 'rgba(255,255,255,0.08)')}
                 />
                 <input
@@ -225,7 +225,7 @@ function PrelaunchContent() {
                   onChange={(e) => setEmail(e.target.value)}
                   className="flex-[1.5] px-5 py-4 rounded-xl text-sm font-light outline-none transition-all duration-300"
                   style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: 'var(--text-primary)' }}
-                  onFocus={(e) => (e.target.style.borderColor = 'rgba(212,175,55,0.3)')}
+                  onFocus={(e) => (e.target.style.borderColor = 'rgba(201,169,97,0.3)')}
                   onBlur={(e) => (e.target.style.borderColor = 'rgba(255,255,255,0.08)')}
                 />
               </div>
@@ -233,11 +233,11 @@ function PrelaunchContent() {
                 type="submit"
                 disabled={status === 'loading'}
                 className="magnetic-btn pulse-ring w-full py-4 rounded-full text-sm font-semibold tracking-wide transition-all disabled:opacity-50"
-                style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}
+                style={{ background: 'linear-gradient(135deg, #C9A961, #B8960F)', color: '#000000' }}
               >
                 {status === 'loading' ? (
                   <span className="flex items-center justify-center gap-2">
-                    <span className="w-4 h-4 border-2 border-[#050505] border-t-transparent rounded-full animate-spin" />
+                    <span className="w-4 h-4 border-2 border-[#000000] border-t-transparent rounded-full animate-spin" />
                     Inscription...
                   </span>
                 ) : (
@@ -246,7 +246,7 @@ function PrelaunchContent() {
               </button>
               {status === 'already' && (
                 <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }}
-                  className="text-center text-sm font-light" style={{ color: '#D4AF37' }}>
+                  className="text-center text-sm font-light" style={{ color: '#C9A961' }}>
                   Vous &ecirc;tes d&eacute;j&agrave; inscrit(e). Nous vous contacterons le 22 mars.
                 </motion.p>
               )}
@@ -261,7 +261,7 @@ function PrelaunchContent() {
           {waitlistCount > 0 && (
             <motion.p className="text-center mt-4 text-xs font-light" style={{ color: 'var(--text-muted)' }}
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
-              <span style={{ color: '#D4AF37' }}>{waitlistCount}</span> personne{waitlistCount > 1 ? 's' : ''} sur la liste d&apos;attente
+              <span style={{ color: '#C9A961' }}>{waitlistCount}</span> personne{waitlistCount > 1 ? 's' : ''} sur la liste d&apos;attente
             </motion.p>
           )}
         </div>
@@ -281,14 +281,14 @@ function DurationSelector({ selected, onChange }: { selected: DurationId; onChan
           onClick={() => onChange(d.id)}
           className="relative px-3 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-medium transition-all cursor-pointer"
           style={{
-            background: selected === d.id ? 'linear-gradient(135deg, #D4AF37, #B8960F)' : 'transparent',
-            color: selected === d.id ? '#050505' : 'var(--text-muted)',
+            background: selected === d.id ? 'linear-gradient(135deg, #C9A961, #B8960F)' : 'transparent',
+            color: selected === d.id ? '#000000' : 'var(--text-muted)',
           }}
         >
           {d.label}
           {d.discount && (
             <span className="absolute -top-2 -right-1 text-[9px] font-bold px-1.5 py-0.5 rounded-full"
-              style={{ background: '#55EFC4', color: '#050505' }}>
+              style={{ background: '#55EFC4', color: '#000000' }}>
               {d.discount}
             </span>
           )}
@@ -398,11 +398,11 @@ function PaymentContent() {
               onClick={() => handleCheckout('essential')}
               disabled={loadingPlan !== null}
               className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm disabled:opacity-50"
-              style={{ background: 'linear-gradient(135deg, #F0A68C, #D4825E)', color: '#050505' }}
+              style={{ background: 'linear-gradient(135deg, #F0A68C, #D4825E)', color: '#000000' }}
             >
               {loadingPlan === 'essential' ? (
                 <span className="flex items-center justify-center gap-2">
-                  <span className="w-4 h-4 border-2 border-[#050505] border-t-transparent rounded-full animate-spin" />
+                  <span className="w-4 h-4 border-2 border-[#000000] border-t-transparent rounded-full animate-spin" />
                   Redirection...
                 </span>
               ) : (
@@ -461,11 +461,11 @@ function PaymentContent() {
               onClick={() => handleCheckout('serenite')}
               disabled={loadingPlan !== null}
               className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm disabled:opacity-50"
-              style={{ background: 'linear-gradient(135deg, #55EFC4, #00B894)', color: '#050505' }}
+              style={{ background: 'linear-gradient(135deg, #55EFC4, #00B894)', color: '#000000' }}
             >
               {loadingPlan === 'serenite' ? (
                 <span className="flex items-center justify-center gap-2">
-                  <span className="w-4 h-4 border-2 border-[#050505] border-t-transparent rounded-full animate-spin" />
+                  <span className="w-4 h-4 border-2 border-[#000000] border-t-transparent rounded-full animate-spin" />
                   Redirection...
                 </span>
               ) : (
@@ -544,8 +544,8 @@ function PaymentContent() {
       {/* Savings highlight for non-monthly */}
       {selectedDuration !== 'monthly' && (
         <Reveal delay={0.7}>
-          <div className="glass p-4 text-center mb-6" style={{ borderColor: 'rgba(212,175,55,0.2)', background: 'rgba(212,175,55,0.03)' }}>
-            <p className="text-sm font-medium" style={{ color: '#D4AF37' }}>
+          <div className="glass p-4 text-center mb-6" style={{ borderColor: 'rgba(201,169,97,0.2)', background: 'rgba(201,169,97,0.03)' }}>
+            <p className="text-sm font-medium" style={{ color: '#C9A961' }}>
               Vous &eacute;conomisez jusqu&apos;&agrave; {DURATIONS.find(d => d.id === selectedDuration)?.discount} avec l&apos;engagement {durationInfo.label}
             </p>
           </div>
@@ -560,7 +560,7 @@ function FeaturesGrid() {
   const { t } = useTranslation()
 
   const features = [
-    { icon: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /></svg>, title: t('join.feature_encyclopedia'), description: t('join.feature_encyclopedia_desc'), color: '#D4AF37' },
+    { icon: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /></svg>, title: t('join.feature_encyclopedia'), description: t('join.feature_encyclopedia_desc'), color: '#C9A961' },
     { icon: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" /></svg>, title: t('join.feature_coaching'), description: t('join.feature_coaching_desc'), color: '#55EFC4' },
     { icon: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" /></svg>, title: t('join.feature_energy'), description: t('join.feature_energy_desc'), color: '#74C0FC' },
     { icon: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" /></svg>, title: t('join.feature_meditation'), description: t('join.feature_meditation_desc'), color: '#E17055' },
@@ -619,7 +619,7 @@ export default function RejoindrePage() {
         <Reveal>
           <div className="text-center mb-16">
             <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6"
-              style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.15)' }}>
+              style={{ background: 'rgba(201,169,97,0.1)', border: '1px solid rgba(201,169,97,0.15)' }}>
               <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
               </svg>

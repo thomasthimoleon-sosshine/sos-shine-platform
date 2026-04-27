@@ -103,11 +103,11 @@ export default function ParentsEnfantsPage() {
 
       {/* Hero */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(212,175,55,0.06), transparent)' }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(201,169,97,0.06), transparent)' }} />
         <div className="max-w-5xl mx-auto px-6 py-20 md:py-32 text-center relative z-10">
           <Reveal>
             <span className="inline-block px-5 py-2 rounded-full text-xs tracking-[0.25em] uppercase font-medium mb-8"
-              style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.15)' }}>
+              style={{ background: 'rgba(201,169,97,0.08)', color: 'var(--gold)', border: '1px solid rgba(201,169,97,0.15)' }}>
               Espace dédié
             </span>
           </Reveal>
@@ -132,7 +132,7 @@ export default function ParentsEnfantsPage() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/rejoindre"
                 className="px-8 py-3.5 rounded-full text-sm font-semibold transition-all"
-                style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}>
+                style={{ background: 'linear-gradient(135deg, #C9A961, #B8960F)', color: '#000000' }}>
                 Rejoindre la communauté
               </Link>
               <Link href="/signature-emotionnelle"
@@ -176,8 +176,8 @@ export default function ParentsEnfantsPage() {
                 <div
                   className="rounded-2xl p-6 sm:p-8 transition-all duration-300 cursor-pointer group"
                   style={{
-                    background: openIdx === i ? 'rgba(212,175,55,0.04)' : 'var(--dark-card)',
-                    border: openIdx === i ? '1px solid rgba(212,175,55,0.15)' : '1px solid var(--dark-border)',
+                    background: openIdx === i ? 'rgba(201,169,97,0.04)' : 'var(--dark-card)',
+                    border: openIdx === i ? '1px solid rgba(201,169,97,0.15)' : '1px solid var(--dark-border)',
                   }}
                   onClick={() => setOpenIdx(openIdx === i ? null : i)}
                 >
@@ -232,10 +232,10 @@ export default function ParentsEnfantsPage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {AGES.map((a, i) => (
               <Reveal key={i} delay={i * 0.1}>
-                <div className="rounded-2xl p-6 text-center transition-all duration-300 hover:border-[rgba(212,175,55,0.2)]"
+                <div className="rounded-2xl p-6 text-center transition-all duration-300 hover:border-[rgba(201,169,97,0.2)]"
                   style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
                   <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-sm font-semibold mx-auto mb-4"
-                    style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.12)' }}>
+                    style={{ background: 'rgba(201,169,97,0.08)', color: 'var(--gold)', border: '1px solid rgba(201,169,97,0.12)' }}>
                     {a.range.split('–')[0].trim()}
                   </div>
                   <h3 className="font-display text-base font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>{a.label}</h3>
@@ -252,7 +252,7 @@ export default function ParentsEnfantsPage() {
       <section className="px-6 pb-20">
         <Reveal>
           <div className="max-w-4xl mx-auto rounded-3xl p-8 md:p-12"
-            style={{ background: 'rgba(212,175,55,0.03)', border: '1px solid rgba(212,175,55,0.1)' }}>
+            style={{ background: 'rgba(201,169,97,0.03)', border: '1px solid rgba(201,169,97,0.1)' }}>
             <h2 className="font-display text-2xl md:text-3xl font-light mb-6 text-center" style={{ color: 'var(--text-primary)' }}>
               L&apos;approche SOS Shine pour les familles
             </h2>
@@ -264,7 +264,7 @@ export default function ParentsEnfantsPage() {
               ].map((s, i) => (
                 <div key={i}>
                   <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold mx-auto mb-3"
-                    style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}>
+                    style={{ background: 'linear-gradient(135deg, #C9A961, #B8960F)', color: '#000000' }}>
                     {s.step}
                   </div>
                   <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--gold)' }}>{s.title}</h3>
@@ -282,7 +282,7 @@ export default function ParentsEnfantsPage() {
           <div className="max-w-3xl mx-auto text-center rounded-3xl py-14 px-8"
             style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
             <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6"
-              style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.12)' }}>
+              style={{ background: 'rgba(201,169,97,0.08)', border: '1px solid rgba(201,169,97,0.12)' }}>
               🚀
             </div>
             <h2 className="font-display text-2xl md:text-3xl font-light mb-4" style={{ color: 'var(--text-primary)' }}>
@@ -295,7 +295,7 @@ export default function ParentsEnfantsPage() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/rejoindre"
                 className="px-8 py-3.5 rounded-full text-sm font-semibold transition-all"
-                style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}>
+                style={{ background: 'linear-gradient(135deg, #C9A961, #B8960F)', color: '#000000' }}>
                 Rejoindre SOS Shine
               </Link>
               <Link href="/contact"

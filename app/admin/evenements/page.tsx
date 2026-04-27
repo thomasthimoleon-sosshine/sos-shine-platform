@@ -16,7 +16,7 @@ const EVENT_TYPE_COLORS: Record<Event['event_type'], string> = {
   soin_collectif: '#74C0FC',
   atelier: '#55EFC4',
   live: '#E17055',
-  rencontre: '#D4AF37',
+  rencontre: '#C9A961',
   shine_walk: '#FF6B35',
 }
 
@@ -560,8 +560,8 @@ export default function AdminEvenements() {
                     }}
                     className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer"
                     style={{
-                      background: selected ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.03)',
-                      border: selected ? '1px solid rgba(212,175,55,0.4)' : '1px solid var(--dark-border)',
+                      background: selected ? 'rgba(201,169,97,0.15)' : 'rgba(255,255,255,0.03)',
+                      border: selected ? '1px solid rgba(201,169,97,0.4)' : '1px solid var(--dark-border)',
                       color: selected ? 'var(--gold)' : 'var(--text-muted)',
                     }}
                   >

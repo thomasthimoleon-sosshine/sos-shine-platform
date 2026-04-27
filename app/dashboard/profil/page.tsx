@@ -173,7 +173,7 @@ export default function ProfilPage() {
             <img src={profile.avatar_url} alt="Avatar" className="w-20 h-20 rounded-2xl object-cover flex-shrink-0" />
           ) : (
             <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-3xl font-display font-semibold flex-shrink-0"
-              style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+              style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--gold)' }}>
               {profile?.prenom?.charAt(0).toUpperCase() || 'M'}
             </div>
           )}
@@ -257,7 +257,7 @@ export default function ProfilPage() {
                 <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>({profile.pseudo})</span>
               )}
               {profile?.role === 'founder' && (
-                <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>{t('dashboard.founder')}</span>
+                <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--gold)' }}>{t('dashboard.founder')}</span>
               )}
             </div>
             <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{profile?.email}</p>
@@ -319,7 +319,7 @@ export default function ProfilPage() {
               <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
                 {subscription.plan === 'premium' ? 'Premium — 99,90€/mois' : subscription.plan === 'serenite' ? 'Sérénité — 49,90€/mois' : 'Essentielle — 9,90€/mois'}
                 {subscription.waitlist_discount && (
-                  <span className="ml-2 text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37' }}>
+                  <span className="ml-2 text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(201,169,97,0.1)', color: '#C9A961' }}>
                     -10€ fondateur
                   </span>
                 )}
@@ -353,18 +353,18 @@ export default function ProfilPage() {
                   } catch {}
                 }}
                 className="w-full mt-2 py-3 rounded-xl text-sm font-medium cursor-pointer transition-colors"
-                style={{ background: 'rgba(212,175,55,0.08)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.15)' }}
+                style={{ background: 'rgba(201,169,97,0.08)', color: '#C9A961', border: '1px solid rgba(201,169,97,0.15)' }}
               >
                 G&eacute;rer mon abonnement
               </button>
             )}
           </div>
         ) : (
-          <div className="rounded-xl p-5 text-center" style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.12)' }}>
+          <div className="rounded-xl p-5 text-center" style={{ background: 'rgba(201,169,97,0.05)', border: '1px solid rgba(201,169,97,0.12)' }}>
             <p className="text-sm mb-1" style={{ color: 'var(--text-primary)' }}>{t('dashboard.free_trial')}</p>
             <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>Essentiel : 29,90€/mois · Premium : 99,90€/mois</p>
             <a href="/rejoindre" className="inline-block px-6 py-2.5 rounded-full text-sm font-medium transition-all"
-              style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}>
+              style={{ background: 'linear-gradient(135deg, #C9A961, #B8960F)', color: '#000000' }}>
               Choisir un abonnement
             </a>
           </div>

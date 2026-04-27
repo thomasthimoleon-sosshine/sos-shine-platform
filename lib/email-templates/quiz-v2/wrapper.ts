@@ -49,8 +49,8 @@ export function wrapEmail(content: string, vars: { email?: string; trackingId?: 
 <tr><td align="center" style="padding:0 0 32px 0;">
 <table role="presentation" cellspacing="0" cellpadding="0">
 <tr>
-<td style="width:36px;height:36px;background:linear-gradient(135deg,${BRAND},${BRAND_DEEP});border-radius:10px;text-align:center;vertical-align:middle;">
-<span style="color:${BG};font-size:18px;font-weight:700;font-family:${SERIF};">S</span>
+<td style="text-align:center;vertical-align:middle;">
+<img src="https://sosshine.com/images/logo-shine-transparent.png" alt="SOS Shine" width="120" style="display:block;margin:0 auto;" />
 </td>
 <td style="padding-left:12px;">
 <span style="font-family:${SERIF};font-size:18px;color:${BRAND};letter-spacing:1px;">SOS Shine</span>
@@ -172,9 +172,7 @@ export function signature(): string {
   return `<table role="presentation" cellspacing="0" cellpadding="0" style="margin-top:24px;">
 <tr>
 <td style="padding-right:12px;vertical-align:top;">
-<div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,${BRAND},${BRAND_DEEP});text-align:center;line-height:40px;">
-<span style="color:${BG};font-size:16px;font-weight:700;font-family:${SERIF};">J</span>
-</div>
+<img src="https://sosshine.com/images/julia.jpeg" alt="Julia" width="40" height="40" style="border-radius:50%;display:block;object-fit:cover;" />
 </td>
 <td style="vertical-align:top;">
 <p style="margin:0;font-size:14px;color:#e0e0e0;font-weight:600;">Julia</p>

@@ -89,10 +89,8 @@ export default function QuizLandingClient() {
         <div className="relative z-10 max-w-lg text-center space-y-8">
           {/* Logo */}
           <Reveal>
-            <div className="flex items-center justify-center gap-2.5 mb-4">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center font-display text-base font-semibold"
-                style={{ background: 'linear-gradient(135deg, var(--brand, #C9A961), #B8960F)', color: '#0A0A0A' }}>S</div>
-              <span className="font-display text-lg" style={{ color: 'var(--brand, #C9A961)' }}>SOS Shine</span>
+            <div className="flex items-center justify-center mb-4">
+              <img src="/images/logo-shine-transparent.png" alt="SOS Shine" className="h-12" />
             </div>
           </Reveal>
 
@@ -258,9 +256,7 @@ export default function QuizLandingClient() {
 
           <Reveal delay={0.1}>
             <div className="flex flex-col sm:flex-row items-center gap-8 text-center sm:text-left">
-              <div className="w-24 h-24 rounded-full flex-shrink-0 flex items-center justify-center" style={{ background: 'linear-gradient(135deg, var(--brand, #C9A961), #B8960F)' }}>
-                <span className="font-display text-3xl font-semibold" style={{ color: '#0A0A0A' }}>J</span>
-              </div>
+              <img src="/images/julia.jpeg" alt="Julia Laureau" className="w-24 h-24 rounded-full object-cover flex-shrink-0" />
               <div className="space-y-3">
                 <p className="text-sm leading-relaxed" style={{ color: '#a1a1aa' }}>
                   Auteure du livre fondateur <strong style={{ color: '#e0e0e0' }}>&laquo;&nbsp;SOS Shine — Briller Comme un Diamant&nbsp;&raquo;</strong>.
@@ -329,10 +325,8 @@ export default function QuizLandingClient() {
 
       {/* ══════════ FOOTER ══════════ */}
       <footer className="px-6 py-10 text-center" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-        <div className="flex items-center justify-center gap-2 mb-4">
-          <div className="w-6 h-6 rounded-md flex items-center justify-center text-xs font-semibold"
-            style={{ background: 'linear-gradient(135deg, var(--brand, #C9A961), #B8960F)', color: '#0A0A0A' }}>S</div>
-          <span className="text-sm" style={{ color: '#737373' }}>SOS Shine®</span>
+        <div className="flex items-center justify-center mb-4">
+          <img src="/images/logo-shine-transparent.png" alt="SOS Shine" className="h-8 opacity-50" />
         </div>
         <div className="flex items-center justify-center gap-4 text-xs" style={{ color: '#525252' }}>
           <Link href="/mentions-legales" className="hover:underline">Mentions légales</Link>

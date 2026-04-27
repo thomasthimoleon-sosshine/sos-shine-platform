@@ -90,7 +90,7 @@ export default function QuizLandingClient() {
           {/* Logo */}
           <Reveal>
             <div className="flex items-center justify-center mb-4">
-              <img src="/images/logo-shine-transparent.png" alt="SOS Shine" className="h-12" />
+              <img src="/images/logo-shine.png" alt="SOS Shine" className="h-12" />
             </div>
           </Reveal>
 
@@ -326,7 +326,7 @@ export default function QuizLandingClient() {
       {/* ══════════ FOOTER ══════════ */}
       <footer className="px-6 py-10 text-center" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
         <div className="flex items-center justify-center mb-4">
-          <img src="/images/logo-shine-transparent.png" alt="SOS Shine" className="h-8 opacity-50" />
+          <img src="/images/logo-shine.png" alt="SOS Shine" className="h-8 opacity-50" />
         </div>
         <div className="flex items-center justify-center gap-4 text-xs" style={{ color: '#525252' }}>
           <Link href="/mentions-legales" className="hover:underline">Mentions légales</Link>

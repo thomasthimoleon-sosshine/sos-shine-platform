@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, Suspense } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { loadStripe } from '@stripe/stripe-js'
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from '@stripe/react-stripe-js'
@@ -397,8 +397,8 @@ function EmbeddedCheckoutModal({ plan, duration, email, prenom, onClose }: { pla
 }
 
 /* ─── EMAIL COLLECTION MODAL (step 1: collect email, step 2: embedded checkout) ─── */
-function EmailModal({ plan, duration, onClose }: { plan: PlanId; duration: DurationId; onClose: () => void }) {
-  const [email, setEmail] = useState('')
+function EmailModal({ plan, duration, onClose, initialEmail = '' }: { plan: PlanId; duration: DurationId; onClose: () => void; initialEmail?: string }) {
+  const [email, setEmail] = useState(initialEmail)
   const [prenom, setPrenom] = useState('')
   const [showCheckout, setShowCheckout] = useState(false)
   const [error, setError] = useState('')
@@ -506,10 +506,15 @@ function EmailModal({ plan, duration, onClose }: { plan: PlanId; duration: Durat
 /* ─── POST-LAUNCH PAYMENT SECTION ─── */
 function PaymentContent() {
   const { t } = useTranslation()
+  const searchParams = useSearchParams()
+  const quizEmail = searchParams.get('email') || ''
+  const quizSource = searchParams.get('source')
+  const quizPlan = searchParams.get('plan') as PlanId | null
   const [selectedDuration, setSelectedDuration] = useState<DurationId>('monthly')
   const [checkoutModal, setCheckoutModal] = useState<{ plan: PlanId } | null>(null)
   const [embeddedCheckout, setEmbeddedCheckout] = useState<{ plan: PlanId; duration: DurationId; email: string; prenom: string } | null>(null)
   const [loggedInUser, setLoggedInUser] = useState<{ email: string; prenom: string } | null>(null)
+  const [autoOpened, setAutoOpened] = useState(false)
 
   useEffect(() => {
     const supabase = createClient()
@@ -522,6 +527,15 @@ function PaymentContent() {
       }
     })
   }, [])
+
+  useEffect(() => {
+    if (autoOpened) return
+    if (quizSource === 'quiz' && quizEmail) {
+      setAutoOpened(true)
+      const plan: PlanId = quizPlan === 'essential' ? 'essential' : 'serenite'
+      setCheckoutModal({ plan })
+    }
+  }, [quizSource, quizEmail, quizPlan, autoOpened])
 
   const handleCheckout = async (plan: PlanId) => {
     // Essential only has monthly pricing — force monthly regardless of selected duration
@@ -551,6 +565,7 @@ function PaymentContent() {
             plan={checkoutModal.plan}
             duration={selectedDuration}
             onClose={() => setCheckoutModal(null)}
+            initialEmail={quizEmail}
           />
         )}
       </AnimatePresence>
@@ -812,7 +827,7 @@ export default function RejoindrePage() {
         <FeaturesGrid />
 
         {/* Conditional: Prelaunch OR Payment */}
-        {isPrelaunch ? <PrelaunchContent /> : <PaymentContent />}
+        {isPrelaunch ? <PrelaunchContent /> : <Suspense><PaymentContent /></Suspense>}
 
         {/* Links & secure badge */}
         {/* Logged-in user banner */}

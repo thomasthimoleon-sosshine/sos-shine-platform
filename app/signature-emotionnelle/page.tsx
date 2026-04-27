@@ -58,10 +58,8 @@ function IntroScreen({ onStart }: { onStart: (name: string) => void }) {
       className="min-h-screen flex items-center justify-center px-6"
     >
       <div className="max-w-md w-full text-center space-y-8">
-        <Link href="/" className="inline-flex items-center gap-3 mb-8">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center font-display text-lg font-semibold"
-            style={{ background: 'linear-gradient(135deg, var(--brand), var(--gold-deep, #B8960F))', color: '#050505' }}>S</div>
-          <span className="font-display text-lg font-medium" style={{ color: 'var(--brand)' }}>SOS Shine</span>
+        <Link href="/" className="inline-flex items-center justify-center mb-8">
+          <img src="/images/logo-shine.png" alt="SOS Shine" className="h-12" />
         </Link>
 
         <h1 className="font-display text-2xl sm:text-3xl font-semibold" style={{ color: 'var(--text-primary)' }}>

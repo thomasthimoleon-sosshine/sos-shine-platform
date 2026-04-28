@@ -37,9 +37,7 @@ export default function ForgotPasswordPage() {
 
   return (
     <main className="min-h-screen flex items-center justify-center px-6 relative">
-      <div className="absolute inset-0 pointer-events-none" style={{
-        background: 'radial-gradient(ellipse 50% 40% at 50% 30%, rgba(212, 175, 55, 0.04), transparent)',
-      }} />
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_50%_40%_at_50%_30%,var(--brand-alpha-weak),transparent)]" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -52,17 +50,17 @@ export default function ForgotPasswordPage() {
           <p className="text-[var(--text-muted)] text-[13px] mt-2">{t('auth.forgot_subtitle')}</p>
         </div>
 
-        <div className="glass p-8 md:p-10">
-          <h1 className="font-display text-[var(--text-primary)] mb-8 text-center" style={{ fontSize: '1.875rem' }}>
+        <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-8 md:p-10">
+          <h1 className="font-display text-[var(--text-primary)] mb-8 text-center text-[1.875rem]">
             {t('auth.forgot_title')}
           </h1>
 
           {success ? (
             <div className="text-center space-y-4">
-              <div className="px-4 py-3 rounded-xl text-[13px]" style={{ color: '#34d399', background: 'rgba(52,211,153,0.08)', border: '1px solid rgba(52,211,153,0.15)' }}>
+              <div className="px-4 py-3 rounded-xl text-[13px] text-[var(--success)] bg-[rgba(107,207,160,0.08)] border border-[rgba(107,207,160,0.15)]">
                 {t('auth.forgot_success')}
               </div>
-              <Link href="/login" className="inline-block text-[13px] font-medium transition-colors duration-200 hover:underline" style={{ color: 'var(--brand)' }}>
+              <Link href="/login" className="inline-block text-[13px] font-medium transition-colors duration-200 hover:underline text-[var(--brand)]">
                 {t('auth.forgot_back')}
               </Link>
             </div>
@@ -72,24 +70,20 @@ export default function ForgotPasswordPage() {
                 <label htmlFor="email" className="block text-[13px] text-[var(--text-secondary)] mb-2 font-medium">Email</label>
                 <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
                   placeholder="votre@email.com"
-                  className="w-full px-4 py-3 rounded-xl text-sm transition-colors"
-                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)', outline: 'none' }}
-                  onFocus={(e) => e.currentTarget.style.borderColor = 'rgba(201,169,97,0.4)'}
-                  onBlur={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
+                  className="w-full px-4 py-3 rounded-xl text-sm transition-colors bg-[var(--border-subtle)] border border-[var(--border)] text-[var(--text-primary)] outline-none focus:border-[var(--brand-alpha-strong)]"
                 />
               </div>
               {error && (
-                <p className="text-[13px] px-4 py-3 rounded-xl" style={{ color: '#f87171', background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.15)' }}>
+                <p className="text-[13px] px-4 py-3 rounded-xl text-[var(--danger)] bg-[rgba(212,106,106,0.08)] border border-[rgba(212,106,106,0.15)]">
                   {error}
                 </p>
               )}
               <button type="submit" disabled={loading}
-                className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-                style={{ background: 'var(--button-bg)', color: 'var(--dark)' }}>
+                className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm bg-[linear-gradient(135deg,var(--brand),var(--brand-deep))] text-[var(--text-inverse)]">
                 {loading ? t('auth.forgot_sending') : t('auth.forgot_send')}
               </button>
               <div className="text-center">
-                <Link href="/login" className="text-[13px] transition-colors duration-200 hover:underline" style={{ color: 'var(--brand)' }}>
+                <Link href="/login" className="text-[13px] transition-colors duration-200 hover:underline text-[var(--brand)]">
                   {t('auth.forgot_back')}
                 </Link>
               </div>

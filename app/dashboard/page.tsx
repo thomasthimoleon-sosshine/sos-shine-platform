@@ -50,8 +50,8 @@ function LevelXPSection({ xpData }: { xpData: UserXP | null }) {
       <div className="p-5 sm:p-6">
         {/* Title row */}
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-[11px] font-semibold uppercase tracking-widest flex items-center gap-2" style={{ color: 'var(--text-muted)' }}>
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--brand)' }}>
+          <h2 className="text-[11px] font-semibold uppercase tracking-widest flex items-center gap-2 text-[var(--text-muted)]">
+            <svg className="w-4 h-4 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
             </svg>
             MA LÉGENDE
@@ -62,17 +62,17 @@ function LevelXPSection({ xpData }: { xpData: UserXP | null }) {
         {/* Rank name + XP total */}
         <div className="flex items-center justify-between mb-1">
           <div>
-            <p className="font-display text-2xl font-semibold" style={{ color: 'var(--brand)' }}>
+            <p className="font-display text-2xl font-semibold text-[var(--brand)]">
               {level.name}
             </p>
-            <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>Rang</p>
+            <p className="text-[11px] text-[var(--text-muted)]">Rang</p>
           </div>
         </div>
 
         {/* Progress bar */}
         {next ? (
           <div className="mt-3">
-            <div className="h-3 rounded-full overflow-hidden" style={{ background: 'var(--border)' }}>
+            <div className="h-3 rounded-full overflow-hidden bg-[var(--border)]">
               <motion.div
                 className="h-full rounded-full"
                 style={{ background: 'linear-gradient(90deg, var(--brand), var(--brand-light))' }}
@@ -82,17 +82,17 @@ function LevelXPSection({ xpData }: { xpData: UserXP | null }) {
               />
             </div>
             <div className="flex items-center justify-between mt-1.5">
-              <p className="text-[11px] font-medium" style={{ color: 'var(--text-primary)' }}>
+              <p className="text-[11px] font-medium text-[var(--text-primary)]">
                 XP: {formatXP(xpData.total_xp)} / {formatXP(next.minXP)} XP
               </p>
-              <p className="text-[11px]" style={{ color: 'var(--brand)', opacity: 0.8 }}>
+              <p className="text-[11px] text-[var(--brand)] opacity-80">
                 Encore {formatXP(next.minXP - xpData.total_xp)} XP
               </p>
             </div>
           </div>
         ) : (
-          <div className="mt-3 rounded-xl p-3 text-center" style={{ background: 'rgba(201,169,97,0.08)', border: '1px solid rgba(201,169,97,0.15)' }}>
-            <p className="text-sm font-semibold" style={{ color: 'var(--brand)' }}>Rang maximum atteint !</p>
+          <div className="mt-3 rounded-xl p-3 text-center bg-[var(--brand-alpha-weak)] border border-[var(--border-medium)]">
+            <p className="text-sm font-semibold text-[var(--brand)]">Rang maximum atteint !</p>
           </div>
         )}
 
@@ -129,7 +129,7 @@ function EnergyWeatherWidget({ profile }: { profile: Profile | null }) {
       <div className="p-5 sm:p-6 relative">
         <div className="flex items-center gap-2 mb-4">
           <span className="text-2xl">{info.symbol}</span>
-          <h2 className="text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>
+          <h2 className="text-[11px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">
             Météo Énergétique du jour
           </h2>
         </div>
@@ -141,7 +141,7 @@ function EnergyWeatherWidget({ profile }: { profile: Profile | null }) {
               {forecast.element}
             </div>
             <div>
-              <p className="font-display text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>{info.label}</p>
+              <p className="font-display text-lg font-semibold text-[var(--text-primary)]">{info.label}</p>
               <div className="flex items-center gap-2 mt-0.5">
                 <span className="inline-block w-2 h-2 rounded-full animate-pulse" style={{ background: forecast.color }} />
                 <span className="text-[13px] font-medium" style={{ color: forecast.color }}>Énergie {forecast.energy}</span>
@@ -151,20 +151,20 @@ function EnergyWeatherWidget({ profile }: { profile: Profile | null }) {
 
           <div className="flex-1 space-y-2">
             <div className="flex items-center gap-2">
-              <span className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Ambiance</span>
-              <span className="text-[13px] font-medium" style={{ color: 'var(--text-primary)' }}>{forecast.mood}</span>
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">Ambiance</span>
+              <span className="text-[13px] font-medium text-[var(--text-primary)]">{forecast.mood}</span>
             </div>
-            <p className="text-[14px] leading-relaxed italic" style={{ color: 'var(--text-secondary)' }}>
+            <p className="text-[14px] leading-relaxed italic text-[var(--text-secondary)]">
               &ldquo;{forecast.advice}&rdquo;
             </p>
             <div className="flex items-center gap-4 pt-1">
-              <span className="text-[11px] flex items-center gap-1" style={{ color: 'var(--text-muted)' }}>
+              <span className="text-[11px] flex items-center gap-1 text-[var(--text-muted)]">
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                Heure favorable : <span className="font-medium" style={{ color: 'var(--text-primary)' }}>{forecast.luckyHour}</span>
+                Heure favorable : <span className="font-medium text-[var(--text-primary)]">{forecast.luckyHour}</span>
               </span>
-              <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{info.dates}</span>
+              <span className="text-[11px] text-[var(--text-muted)]">{info.dates}</span>
             </div>
           </div>
         </div>
@@ -264,16 +264,15 @@ function ContributionsSection({ xpData }: { xpData: UserXP | null }) {
     >
       {/* Section header */}
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-[11px] font-semibold uppercase tracking-widest flex items-center gap-2" style={{ color: 'var(--text-muted)' }}>
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--brand)' }}>
+        <h2 className="text-[11px] font-semibold uppercase tracking-widest flex items-center gap-2 text-[var(--text-muted)]">
+          <svg className="w-4 h-4 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
           </svg>
           PUBLIÉ
         </h2>
         <button
           onClick={loadActivityLog}
-          className="text-[12px] font-medium flex items-center gap-1 cursor-pointer transition-colors hover:opacity-80"
-          style={{ color: 'var(--brand)' }}
+          className="text-[12px] font-medium flex items-center gap-1 cursor-pointer transition-colors hover:opacity-80 text-[var(--brand)]"
         >
           Afficher les détails
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -294,10 +293,10 @@ function ContributionsSection({ xpData }: { xpData: UserXP | null }) {
               variants={fadeUp}
               className="text-center"
             >
-              <p className="text-2xl sm:text-3xl font-semibold" style={{ color: 'var(--brand)' }}>
+              <p className="text-2xl sm:text-3xl font-semibold text-[var(--brand)]">
                 {c.value}
               </p>
-              <p className="text-[10px] sm:text-[11px] mt-1 whitespace-pre-line leading-tight" style={{ color: 'var(--text-muted)' }}>
+              <p className="text-[10px] sm:text-[11px] mt-1 whitespace-pre-line leading-tight text-[var(--text-muted)]">
                 {c.label}
               </p>
             </motion.div>
@@ -313,7 +312,7 @@ function ContributionsSection({ xpData }: { xpData: UserXP | null }) {
           transition={{ duration: 0.3 }}
           className="glass mt-3 p-4 max-h-80 overflow-y-auto"
         >
-          <h3 className="text-[11px] font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>
+          <h3 className="text-[11px] font-semibold uppercase tracking-wider mb-3 text-[var(--text-muted)]">
             Journal d&apos;activité
           </h3>
           {logLoading ? (
@@ -321,22 +320,21 @@ function ContributionsSection({ xpData }: { xpData: UserXP | null }) {
               <div className="w-5 h-5 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
             </div>
           ) : activityLog.length === 0 ? (
-            <p className="text-[13px] text-center py-4" style={{ color: 'var(--text-muted)' }}>
+            <p className="text-[13px] text-center py-4 text-[var(--text-muted)]">
               Aucune activité récente
             </p>
           ) : (
             <div className="space-y-2">
               {activityLog.map((entry) => (
-                <div key={entry.id} className="flex items-start gap-3 py-2" style={{ borderBottom: '1px solid var(--border)' }}>
-                  <div className="w-2 h-2 rounded-full mt-1.5 shrink-0" style={{ background: 'var(--brand)' }} />
+                <div key={entry.id} className="flex items-start gap-3 py-2 border-b border-[var(--border)]">
+                  <div className="w-2 h-2 rounded-full mt-1.5 shrink-0 bg-[var(--brand)]" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-[12px]" style={{ color: 'var(--text-primary)' }}>{entry.detail}</p>
-                    <p className="text-[10px] mt-0.5" style={{ color: 'var(--text-muted)' }}>
+                    <p className="text-[12px] text-[var(--text-primary)]">{entry.detail}</p>
+                    <p className="text-[10px] mt-0.5 text-[var(--text-muted)]">
                       {new Date(entry.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
-                  <span className="text-[10px] px-1.5 py-0.5 rounded-full shrink-0"
-                    style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--brand)' }}>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded-full shrink-0 bg-[var(--brand-alpha-medium)] text-[var(--brand)]">
                     {entry.action}
                   </span>
                 </div>
@@ -391,16 +389,15 @@ function BadgesSection({ userId, role }: { userId: string | null; role?: string 
       transition={{ delay: 0.25, duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
     >
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-[11px] font-semibold uppercase tracking-widest flex items-center gap-2" style={{ color: 'var(--text-muted)' }}>
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--brand)' }}>
+        <h2 className="text-[11px] font-semibold uppercase tracking-widest flex items-center gap-2 text-[var(--text-muted)]">
+          <svg className="w-4 h-4 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M18.75 4.236c.982.143 1.954.317 2.916.52A6.003 6.003 0 0016.27 9.728M18.75 4.236V4.5c0 2.108-.966 3.99-2.48 5.228m0 0a6.023 6.023 0 01-3.52 1.14 6.023 6.023 0 01-3.52-1.14" />
           </svg>
           BADGES
         </h2>
         <Link
           href="/dashboard/badges"
-          className="text-[12px] font-medium flex items-center gap-1 transition-colors hover:opacity-80"
-          style={{ color: 'var(--brand)' }}
+          className="text-[12px] font-medium flex items-center gap-1 transition-colors hover:opacity-80 text-[var(--brand)]"
         >
           Voir tout
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -439,7 +436,7 @@ function BadgesSection({ userId, role }: { userId: string | null; role?: string 
                 style={{ color: badge.isUnlocked ? 'var(--brand)' : 'var(--text-muted)' }}>
                 {badge.title}
               </h3>
-              <p className="text-[9px] mt-0.5" style={{ color: 'var(--text-muted)' }}>
+              <p className="text-[9px] mt-0.5 text-[var(--text-muted)]">
                 {badge.categoryName}
               </p>
             </div>
@@ -567,8 +564,8 @@ function ActuShineSection() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3, duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
     >
-      <h2 className="text-[11px] font-semibold uppercase tracking-widest flex items-center gap-2 mb-4" style={{ color: 'var(--text-muted)' }}>
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--brand)' }}>
+      <h2 className="text-[11px] font-semibold uppercase tracking-widest flex items-center gap-2 mb-4 text-[var(--text-muted)]">
+        <svg className="w-4 h-4 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M9.348 14.651a3.75 3.75 0 010-5.303m5.304 0a3.75 3.75 0 010 5.303m-7.425 2.122a6.75 6.75 0 010-9.546m9.546 0a6.75 6.75 0 010 9.546M5.106 18.894c-3.808-3.808-3.808-9.98 0-13.789m13.788 0c3.808 3.808 3.808 9.981 0 13.79M12 12h.008v.007H12V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
         </svg>
         ACTU - SHINE
@@ -635,7 +632,7 @@ function ActuShineSection() {
                   </h3>
                 </div>
                 {pillar.data && (
-                  <p className="text-[10px] mt-1 truncate leading-snug" style={{ color: 'var(--text-muted)' }}>
+                  <p className="text-[10px] mt-1 truncate leading-snug text-[var(--text-muted)]">
                     {pillar.data.title}
                   </p>
                 )}
@@ -813,8 +810,8 @@ export default function DashboardHome() {
         transition={{ duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
       >
         <div className="flex items-start justify-between gap-3 flex-wrap">
-          <h1 className="font-display text-xl sm:text-2xl font-semibold tracking-tight" style={{ color: 'var(--text-primary)' }}>
-            {siteSettings.dash_welcome || t('dashboard.welcome')} <span style={{ color: 'var(--brand)' }}>{profile?.prenom || 'Membre'}</span>
+          <h1 className="font-display text-xl sm:text-2xl font-semibold tracking-tight text-[var(--text-primary)]">
+            {siteSettings.dash_welcome || t('dashboard.welcome')} <span className="text-[var(--brand)]">{profile?.prenom || 'Membre'}</span>
           </h1>
           {streak.current > 0 && (
             <motion.div
@@ -835,7 +832,7 @@ export default function DashboardHome() {
             </motion.div>
           )}
         </div>
-        <p className="mt-3 text-[17px] sm:text-[19px] font-medium leading-relaxed tracking-wide" style={{ color: 'var(--brand)' }}>
+        <p className="mt-3 text-[17px] sm:text-[19px] font-medium leading-relaxed tracking-wide text-[var(--brand)]">
           {greeting}
         </p>
         <div className="mt-4">
@@ -861,15 +858,15 @@ export default function DashboardHome() {
             <div className="flex items-start gap-3 mb-3">
               <span className="text-2xl">🚀</span>
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#55EFC4' }}>
+                <p className="text-[11px] font-semibold uppercase tracking-wider mb-1 text-[var(--success)]">
                   Votre premier pas
                 </p>
-                <h2 className="font-display text-xl sm:text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+                <h2 className="font-display text-xl sm:text-2xl font-semibold text-[var(--text-primary)]">
                   {firstGoal.title}
                 </h2>
               </div>
             </div>
-            <p className="text-sm mb-5 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+            <p className="text-sm mb-5 leading-relaxed text-[var(--text-secondary)]">
               Vous avez choisi cet objectif au démarrage. Voici le protocole qui vous correspond pour commencer en douceur.
             </p>
 
@@ -881,9 +878,9 @@ export default function DashboardHome() {
                   <img src={firstGoal.douleur.image_url} alt="" className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-sm" style={{ color: 'var(--brand)' }}>{firstGoal.douleur.title}</p>
+                  <p className="font-semibold text-sm text-[var(--brand)]">{firstGoal.douleur.title}</p>
                   {firstGoal.douleur.subtitle && (
-                    <p className="text-xs mt-0.5 truncate" style={{ color: 'var(--text-muted)' }}>{firstGoal.douleur.subtitle}</p>
+                    <p className="text-xs mt-0.5 truncate text-[var(--text-muted)]">{firstGoal.douleur.subtitle}</p>
                   )}
                 </div>
                 <div className="flex-shrink-0 px-4 py-2 rounded-full text-xs font-semibold"
@@ -893,7 +890,7 @@ export default function DashboardHome() {
               </div>
             </Link>
 
-            <p className="text-[11px] mt-3 text-center" style={{ color: 'var(--text-muted)' }}>
+            <p className="text-[11px] mt-3 text-center text-[var(--text-muted)]">
               3 étapes. Vidéo, audio, exercice. ~25 minutes.
             </p>
           </div>
@@ -918,10 +915,10 @@ export default function DashboardHome() {
           className="absolute -top-20 -right-20 w-60 h-60 rounded-full opacity-30 pointer-events-none"
           style={{ background: 'radial-gradient(circle, rgba(212, 175, 55, 0.08), transparent 70%)' }}
         />
-        <p className="font-display text-xl sm:text-2xl italic leading-relaxed relative" style={{ color: 'var(--text-primary)' }}>
+        <p className="font-display text-xl sm:text-2xl italic leading-relaxed relative text-[var(--text-primary)]">
           &ldquo;{siteSettings.dash_custom_quote || (quote ? quote.text.fr : t('quote.text'))}&rdquo;
         </p>
-        <p className="mt-4 text-[13px] font-medium relative" style={{ color: 'var(--brand)' }}>
+        <p className="mt-4 text-[13px] font-medium relative text-[var(--brand)]">
           — {siteSettings.dash_custom_quote_author || (quote ? quote.author.fr : t('quote.author'))}
         </p>
       </motion.div>
@@ -961,10 +958,10 @@ export default function DashboardHome() {
               <div className="flex items-start gap-3 mb-4">
                 <span className="text-2xl">💛</span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[11px] font-semibold uppercase tracking-wider mb-1" style={{ color: 'var(--brand)' }}>
+                  <p className="text-[11px] font-semibold uppercase tracking-wider mb-1 text-[var(--brand)]">
                     Votre lien d&apos;affiliation
                   </p>
-                  <h2 className="font-display text-xl sm:text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+                  <h2 className="font-display text-xl sm:text-2xl font-semibold text-[var(--text-primary)]">
                     Partagez et gagnez 30%
                   </h2>
                 </div>
@@ -972,14 +969,14 @@ export default function DashboardHome() {
 
               <div className="grid grid-cols-2 gap-3 mb-4">
                 <div className="rounded-xl p-3 text-center" style={{ background: 'rgba(0,0,0,0.2)' }}>
-                  <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Inscrits</p>
-                  <p className="font-display text-2xl font-semibold" style={{ color: 'var(--brand)' }}>
+                  <p className="text-xs text-[var(--text-muted)]">Inscrits</p>
+                  <p className="font-display text-2xl font-semibold text-[var(--brand)]">
                     {affiliateStatus.total_referrals}
                   </p>
                 </div>
                 <div className="rounded-xl p-3 text-center" style={{ background: 'rgba(0,0,0,0.2)' }}>
-                  <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Gains en attente</p>
-                  <p className="font-display text-2xl font-semibold" style={{ color: '#55EFC4' }}>
+                  <p className="text-xs text-[var(--text-muted)]">Gains en attente</p>
+                  <p className="font-display text-2xl font-semibold text-[var(--success)]">
                     {affiliateStatus.pending_earnings.toFixed(2)}€
                   </p>
                 </div>
@@ -987,7 +984,7 @@ export default function DashboardHome() {
 
               <div className="rounded-xl p-3 mb-4 flex items-center gap-2"
                 style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border)' }}>
-                <code className="flex-1 text-xs truncate" style={{ color: 'var(--text-secondary)' }}>
+                <code className="flex-1 text-xs truncate text-[var(--text-secondary)]">
                   sosshine.com/signup?ref={affiliateStatus.referral_code}
                 </code>
                 <button
@@ -1013,30 +1010,30 @@ export default function DashboardHome() {
               <div className="flex items-start gap-3 mb-3">
                 <span className="text-2xl">💛</span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[11px] font-semibold uppercase tracking-wider mb-1" style={{ color: 'var(--brand)' }}>
+                  <p className="text-[11px] font-semibold uppercase tracking-wider mb-1 text-[var(--brand)]">
                     Programme d&apos;affiliation
                   </p>
-                  <h2 className="font-display text-xl sm:text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+                  <h2 className="font-display text-xl sm:text-2xl font-semibold text-[var(--text-primary)]">
                     Recommandez, gagnez 30% à vie
                   </h2>
                 </div>
               </div>
-              <p className="text-sm mb-5 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                Aidez vos proches à comprendre leurs schémas émotionnels. Pour chaque ami qui s&apos;abonne grâce à vous, vous touchez <strong style={{ color: 'var(--brand)' }}>30% de commission à vie</strong>.
+              <p className="text-sm mb-5 leading-relaxed text-[var(--text-secondary)]">
+                Aidez vos proches à comprendre leurs schémas émotionnels. Pour chaque ami qui s&apos;abonne grâce à vous, vous touchez <strong className="text-[var(--brand)]">30% de commission à vie</strong>.
               </p>
 
               <div className="grid grid-cols-3 gap-2 mb-5">
                 <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(0,0,0,0.2)' }}>
-                  <p className="font-display text-lg font-semibold" style={{ color: 'var(--brand)' }}>30%</p>
-                  <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>Commission</p>
+                  <p className="font-display text-lg font-semibold text-[var(--brand)]">30%</p>
+                  <p className="text-[10px] text-[var(--text-muted)]">Commission</p>
                 </div>
                 <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(0,0,0,0.2)' }}>
-                  <p className="font-display text-lg font-semibold" style={{ color: 'var(--brand)' }}>À vie</p>
-                  <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>Durée</p>
+                  <p className="font-display text-lg font-semibold text-[var(--brand)]">À vie</p>
+                  <p className="text-[10px] text-[var(--text-muted)]">Durée</p>
                 </div>
                 <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(0,0,0,0.2)' }}>
-                  <p className="font-display text-lg font-semibold" style={{ color: 'var(--brand)' }}>0€</p>
-                  <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>À débourser</p>
+                  <p className="font-display text-lg font-semibold text-[var(--brand)]">0€</p>
+                  <p className="text-[10px] text-[var(--text-muted)]">À débourser</p>
                 </div>
               </div>
 
@@ -1057,9 +1054,9 @@ export default function DashboardHome() {
         transition={{ delay: 0.6, duration: 0.5 }}
         className="glass p-5 text-center"
       >
-        <p className="text-[13px]" style={{ color: 'var(--text-muted)' }}>
+        <p className="text-[13px] text-[var(--text-muted)]">
           {siteSettings.dash_help_text || t('dashboard.help')}{' '}
-          <a href={`mailto:${siteSettings.dash_help_email || 'julialaureau@sosshine.com'}`} className="gold-underline font-medium" style={{ color: 'var(--brand)' }}>
+          <a href={`mailto:${siteSettings.dash_help_email || 'julialaureau@sosshine.com'}`} className="gold-underline font-medium text-[var(--brand)]">
             {siteSettings.dash_help_email || 'julialaureau@sosshine.com'}
           </a>
         </p>

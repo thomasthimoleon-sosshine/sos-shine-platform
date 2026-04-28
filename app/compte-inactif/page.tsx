@@ -77,8 +77,8 @@ export default function CompteInactifPage() {
 
   const statusLabels: Record<string, { label: string; color: string }> = {
     past_due: { label: 'Paiement en retard', color: '#E17055' },
-    canceled: { label: 'Annulé', color: '#ef4444' },
-    inactive: { label: 'Inactif', color: '#9A9080' },
+    canceled: { label: 'Annulé', color: 'var(--danger)' },
+    inactive: { label: 'Inactif', color: 'var(--text-muted)' },
   }
 
   const statusInfo = subStatus ? statusLabels[subStatus] || statusLabels.inactive : statusLabels.inactive
@@ -87,12 +87,11 @@ export default function CompteInactifPage() {
   if (checkoutPlan) {
     const planNames: Record<string, string> = { essential: 'Essentielle', serenite: 'Sérénité', premium: 'Premium' }
     return (
-      <main className="min-h-screen flex items-center justify-center p-6" style={{ background: 'var(--dark)' }}>
+      <main className="min-h-screen flex items-center justify-center p-6 bg-[var(--surface)]">
         <div className="w-full max-w-2xl">
           <button
             onClick={() => setCheckoutPlan(null)}
-            className="flex items-center gap-2 mb-6 text-sm font-medium transition-colors cursor-pointer"
-            style={{ color: 'var(--text-secondary)' }}
+            className="flex items-center gap-2 mb-6 text-sm font-medium transition-colors cursor-pointer text-[var(--text-secondary)]"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
@@ -100,12 +99,12 @@ export default function CompteInactifPage() {
             Retour
           </button>
 
-          <div className="rounded-2xl overflow-hidden" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
-            <div className="p-6 text-center" style={{ borderBottom: '1px solid var(--border)' }}>
-              <h2 className="font-display text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+          <div className="rounded-2xl overflow-hidden bg-[var(--surface-card)] border border-[var(--border)]">
+            <div className="p-6 text-center border-b border-[var(--border)]">
+              <h2 className="font-display text-xl font-semibold text-[var(--text-primary)]">
                 {planNames[checkoutPlan.plan] || checkoutPlan.plan}
               </h2>
-              <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+              <p className="text-sm mt-1 text-[var(--text-secondary)]">
                 Paiement sécurisé
               </p>
             </div>
@@ -121,7 +120,7 @@ export default function CompteInactifPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-6" style={{ background: 'var(--dark)' }}>
+    <main className="min-h-screen flex items-center justify-center p-6 bg-[var(--surface)]">
       <motion.div
         className="max-w-md w-full text-center"
         initial={{ opacity: 0, y: 20 }}
@@ -129,14 +128,13 @@ export default function CompteInactifPage() {
         transition={{ duration: 0.6 }}
       >
         {/* Icon */}
-        <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-8"
-          style={{ background: 'rgba(201,169,97,0.08)', border: '1px solid rgba(201,169,97,0.15)' }}>
-          <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="#C9A961" strokeWidth={1.5}>
+        <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-8 bg-[var(--brand-alpha-weak)] border border-[var(--border-medium)]">
+          <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="var(--brand)" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
           </svg>
         </div>
 
-        <h1 className="font-display text-2xl sm:text-3xl font-light mb-4" style={{ color: 'var(--text-primary)' }}>
+        <h1 className="font-display text-2xl sm:text-3xl font-light mb-4 text-[var(--text-primary)]">
           Accès suspendu
         </h1>
 
@@ -151,13 +149,13 @@ export default function CompteInactifPage() {
           )}
         </AnimatePresence>
 
-        <p className="text-base leading-relaxed mb-8" style={{ color: 'var(--text-secondary)' }}>
+        <p className="text-base leading-relaxed mb-8 text-[var(--text-secondary)]">
           {subStatus === 'past_due' ? (
-            "Votre dernier paiement n\u2019a pas pu \u00eatre trait\u00e9. Veuillez mettre \u00e0 jour vos informations de paiement pour retrouver l\u2019acc\u00e8s \u00e0 la plateforme."
+            "Votre dernier paiement n’a pas pu être traité. Veuillez mettre à jour vos informations de paiement pour retrouver l’accès à la plateforme."
           ) : subStatus === 'canceled' ? (
-            "Votre abonnement a \u00e9t\u00e9 annul\u00e9. R\u00e9abonnez-vous pour retrouver l\u2019acc\u00e8s \u00e0 tout votre contenu."
+            "Votre abonnement a été annulé. Réabonnez-vous pour retrouver l’accès à tout votre contenu."
           ) : (
-            "Votre compte n\u2019a pas d\u2019abonnement actif. Choisissez un plan pour acc\u00e9der \u00e0 la plateforme."
+            "Votre compte n’a pas d’abonnement actif. Choisissez un plan pour accéder à la plateforme."
           )}
         </p>
 
@@ -166,8 +164,7 @@ export default function CompteInactifPage() {
           {hasSubscription && subStatus === 'past_due' && (
             <button
               onClick={() => handleResubscribe('serenite')}
-              className="w-full py-4 rounded-full font-semibold tracking-wide transition-all text-sm"
-              style={{ background: 'linear-gradient(135deg, #C9A961, #B8960F)', color: '#000000' }}
+              className="w-full py-4 rounded-full font-semibold tracking-wide transition-all text-sm bg-[linear-gradient(135deg,var(--brand),var(--brand-deep))] text-[var(--text-inverse)]"
             >
               Mettre à jour le paiement
             </button>
@@ -175,37 +172,34 @@ export default function CompteInactifPage() {
 
           <button
             onClick={() => handleResubscribe('essential')}
-            className="w-full py-4 rounded-full font-semibold tracking-wide transition-all text-sm"
-            style={{ background: 'rgba(201,169,97,0.15)', color: '#C9A961', border: '1px solid rgba(201,169,97,0.25)' }}
+            className="w-full py-4 rounded-full font-semibold tracking-wide transition-all text-sm bg-[var(--brand-alpha-medium)] text-[var(--brand)] border border-[var(--brand-alpha-strong)]"
           >
             S&apos;abonner Essentielle — 9,90€/mois
           </button>
 
           <button
             onClick={() => handleResubscribe('serenite')}
-            className="w-full py-4 rounded-full font-semibold tracking-wide transition-all text-sm"
-            style={{ background: 'linear-gradient(135deg, #55EFC4, #00B894)', color: '#000000' }}
+            className="w-full py-4 rounded-full font-semibold tracking-wide transition-all text-sm bg-[linear-gradient(135deg,var(--success),#00B894)] text-[var(--text-inverse)]"
           >
             S&apos;abonner Sérénité — 49,90€/mois
           </button>
 
           <button
             onClick={() => handleResubscribe('premium')}
-            className="w-full py-4 rounded-full font-medium tracking-wide transition-all text-sm"
-            style={{ background: 'linear-gradient(135deg, #C9A961, #B8960F)', color: '#000000' }}
+            className="w-full py-4 rounded-full font-medium tracking-wide transition-all text-sm bg-[linear-gradient(135deg,var(--brand),var(--brand-deep))] text-[var(--text-inverse)]"
           >
             S&apos;abonner Premium — 99,90€/mois
           </button>
         </div>
 
         <div className="flex items-center justify-center gap-6">
-          <Link href="/" className="text-xs transition-colors" style={{ color: 'var(--text-muted)' }}>
+          <Link href="/" className="text-xs transition-colors text-[var(--text-muted)]">
             Retour à l&apos;accueil
           </Link>
-          <button onClick={handleSignOut} className="text-xs transition-colors cursor-pointer" style={{ color: 'var(--text-muted)' }}>
+          <button onClick={handleSignOut} className="text-xs transition-colors cursor-pointer text-[var(--text-muted)]">
             Se déconnecter
           </button>
-          <Link href="/contact" className="text-xs transition-colors" style={{ color: 'var(--text-muted)' }}>
+          <Link href="/contact" className="text-xs transition-colors text-[var(--text-muted)]">
             Contacter le support
           </Link>
         </div>

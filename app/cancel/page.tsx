@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 
 export default function CancelPage() {
   return (
-    <main className="min-h-screen flex items-center justify-center px-6" style={{ background: 'var(--dark)' }}>
+    <main className="min-h-screen flex items-center justify-center px-6 bg-[var(--surface)]">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -13,22 +13,20 @@ export default function CancelPage() {
         className="max-w-lg w-full text-center"
       >
         <div
-          className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-8"
-          style={{ background: 'rgba(201,169,97,0.08)', border: '1px solid rgba(201,169,97,0.2)' }}
+          className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-8 bg-[var(--brand-alpha-weak)] border border-[var(--border-medium)]"
         >
-          <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="#C9A961" strokeWidth={1.5}>
+          <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="var(--brand)" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </div>
 
         <h1
-          className="font-display text-3xl sm:text-4xl font-light mb-4"
-          style={{ color: '#C9A961' }}
+          className="font-display text-3xl sm:text-4xl font-light mb-4 text-[var(--brand)]"
         >
           Paiement annul&eacute;
         </h1>
 
-        <p className="text-base leading-relaxed mb-8" style={{ color: 'var(--text-secondary)' }}>
+        <p className="text-base leading-relaxed mb-8 text-[var(--text-secondary)]">
           Votre paiement a &eacute;t&eacute; annul&eacute;. Aucun montant n&apos;a &eacute;t&eacute; d&eacute;bit&eacute;.
           Vous pouvez reprendre votre inscription &agrave; tout moment.
         </p>
@@ -36,24 +34,22 @@ export default function CancelPage() {
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
             href="/dashboard/tarifs"
-            className="inline-flex items-center justify-center px-8 py-3.5 rounded-full font-medium text-sm tracking-wide transition-all"
-            style={{ background: 'linear-gradient(135deg, #C9A961, #B8960F)', color: '#000000' }}
+            className="inline-flex items-center justify-center px-8 py-3.5 rounded-full font-medium text-sm tracking-wide transition-all bg-[linear-gradient(135deg,var(--brand),var(--brand-deep))] text-[var(--text-inverse)]"
           >
             Reprendre l&apos;inscription
           </Link>
           <Link
             href="/"
-            className="inline-flex items-center justify-center px-8 py-3.5 rounded-full font-medium text-sm tracking-wide transition-all"
-            style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)' }}
+            className="inline-flex items-center justify-center px-8 py-3.5 rounded-full font-medium text-sm tracking-wide transition-all bg-[var(--border-subtle)] text-[var(--text-secondary)] border border-[var(--border)]"
           >
             Retour &agrave; l&apos;accueil
           </Link>
         </div>
 
-        <div className="mt-8 p-4 rounded-xl text-center" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}>
-          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+        <div className="mt-8 p-4 rounded-xl text-center bg-[var(--border-subtle)] border border-[var(--border)]">
+          <p className="text-xs text-[var(--text-muted)]">
             Une question ?{' '}
-            <a href="mailto:hello@sosshine.com" style={{ color: '#C9A961', textDecoration: 'underline' }}>hello@sosshine.com</a>
+            <a href="mailto:hello@sosshine.com" className="text-[var(--brand)] underline">hello@sosshine.com</a>
           </p>
         </div>
       </motion.div>

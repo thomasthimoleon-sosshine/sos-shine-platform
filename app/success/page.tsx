@@ -40,7 +40,7 @@ function SuccessContent() {
 
   if (status === 'error') {
     return (
-      <main className="min-h-screen flex items-center justify-center px-6" style={{ background: 'var(--dark)' }}>
+      <main className="min-h-screen flex items-center justify-center px-6 bg-[var(--surface)]">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -48,31 +48,28 @@ function SuccessContent() {
           className="max-w-lg w-full text-center"
         >
           <div
-            className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-8"
-            style={{ background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.25)' }}
+            className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-8 bg-[rgba(212,106,106,0.1)] border border-[rgba(212,106,106,0.25)]"
           >
-            <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="#f87171" strokeWidth={1.5}>
+            <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="var(--danger)" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
             </svg>
           </div>
-          <h1 className="font-display text-3xl sm:text-4xl font-light mb-4" style={{ color: '#C9A961' }}>
+          <h1 className="font-display text-3xl sm:text-4xl font-light mb-4 text-[var(--brand)]">
             Vérification en cours
           </h1>
-          <p className="text-base leading-relaxed mb-8" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-base leading-relaxed mb-8 text-[var(--text-secondary)]">
             Nous n&apos;avons pas pu vérifier votre paiement immédiatement. Pas d&apos;inquiétude, votre accès sera activé sous quelques minutes.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               href="/login"
-              className="inline-flex items-center justify-center px-8 py-3.5 rounded-full font-medium text-sm tracking-wide transition-all"
-              style={{ background: 'linear-gradient(135deg, #C9A961, #B8960F)', color: '#000000' }}
+              className="inline-flex items-center justify-center px-8 py-3.5 rounded-full font-medium text-sm tracking-wide transition-all bg-[linear-gradient(135deg,var(--brand),var(--brand-deep))] text-[var(--text-inverse)]"
             >
               Se connecter
             </Link>
             <Link
               href="/"
-              className="inline-flex items-center justify-center px-8 py-3.5 rounded-full font-medium text-sm tracking-wide transition-all"
-              style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)' }}
+              className="inline-flex items-center justify-center px-8 py-3.5 rounded-full font-medium text-sm tracking-wide transition-all bg-[var(--border-subtle)] text-[var(--text-secondary)] border border-[var(--border)]"
             >
               Retour &agrave; l&apos;accueil
             </Link>
@@ -84,17 +81,16 @@ function SuccessContent() {
 
   if (status === 'loading') {
     return (
-      <main className="min-h-screen flex items-center justify-center px-6" style={{ background: 'var(--dark)' }}>
+      <main className="min-h-screen flex items-center justify-center px-6 bg-[var(--surface)]">
         <div className="text-center">
           <div
-            className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse"
-            style={{ background: 'rgba(201,169,97,0.1)', border: '1px solid rgba(201,169,97,0.25)' }}
+            className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse bg-[var(--brand-alpha-medium)] border border-[var(--brand-alpha-strong)]"
           >
-            <svg className="w-8 h-8 animate-spin" fill="none" viewBox="0 0 24 24" stroke="#C9A961" strokeWidth={1.5}>
+            <svg className="w-8 h-8 animate-spin" fill="none" viewBox="0 0 24 24" stroke="var(--brand)" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182" />
             </svg>
           </div>
-          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-sm text-[var(--text-secondary)]">
             Vérification de votre paiement...
           </p>
         </div>
@@ -103,7 +99,7 @@ function SuccessContent() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-6" style={{ background: 'var(--dark)' }}>
+    <main className="min-h-screen flex items-center justify-center px-6 bg-[var(--surface)]">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -111,42 +107,38 @@ function SuccessContent() {
         className="max-w-lg w-full text-center"
       >
         <div
-          className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-8"
-          style={{ background: 'rgba(85,239,196,0.1)', border: '1px solid rgba(85,239,196,0.25)' }}
+          className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-8 bg-[rgba(107,207,160,0.1)] border border-[rgba(107,207,160,0.25)]"
         >
-          <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="#55EFC4" strokeWidth={1.5}>
+          <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="var(--success)" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
           </svg>
         </div>
 
         <h1
-          className="font-display text-3xl sm:text-4xl font-light mb-4"
-          style={{ color: '#C9A961' }}
+          className="font-display text-3xl sm:text-4xl font-light mb-4 text-[var(--brand)]"
         >
           Paiement confirm&eacute; !
         </h1>
 
         <div
-          className="glass p-8 mb-8 text-left"
-          style={{ borderColor: 'rgba(201,169,97,0.15)' }}
+          className="bg-[var(--surface-raised)] border border-[var(--border-medium)] rounded-[var(--radius-xl)] p-8 mb-8 text-left"
         >
-          <p className="text-base leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
-            Votre paiement a bien &eacute;t&eacute; re&ccedil;u. Votre compte <strong style={{ color: '#C9A961' }}>SOS Shine</strong> est pr&ecirc;t.
+          <p className="text-base leading-relaxed mb-6 text-[var(--text-secondary)]">
+            Votre paiement a bien &eacute;t&eacute; re&ccedil;u. Votre compte <strong className="text-[var(--brand)]">SOS Shine</strong> est pr&ecirc;t.
           </p>
 
           <div
-            className="p-5 rounded-xl mb-6"
-            style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.15)' }}
+            className="p-5 rounded-xl mb-6 bg-[var(--brand-alpha-weak)] border border-[var(--border-medium)]"
           >
             <div className="flex items-start gap-3">
-              <svg className="w-6 h-6 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="#C9A961" strokeWidth={1.5}>
+              <svg className="w-6 h-6 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="var(--brand)" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
               </svg>
               <div>
-                <p className="font-semibold text-sm mb-1" style={{ color: '#C9A961' }}>
+                <p className="font-semibold text-sm mb-1 text-[var(--brand)]">
                   Vérifiez votre boîte mail
                 </p>
-                <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                <p className="text-sm leading-relaxed text-[var(--text-secondary)]">
                   {isNewAccount
                     ? <>Vous avez reçu un email avec vos <strong>identifiants de connexion</strong> (email + mot de passe temporaire). Pensez à vérifier vos spams si vous ne le voyez pas.</>
                     : <>Un email de confirmation vous a été envoyé. Pensez à vérifier vos spams si vous ne le voyez pas.</>
@@ -158,23 +150,20 @@ function SuccessContent() {
 
           <div className="space-y-3">
             <div className="flex items-start gap-3">
-              <span className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold"
-                style={{ background: 'rgba(201,169,97,0.15)', color: '#C9A961' }}>1</span>
-              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+              <span className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold bg-[var(--brand-alpha-medium)] text-[var(--brand)]">1</span>
+              <p className="text-sm text-[var(--text-secondary)]">
                 Ouvrez l&apos;email de SOS Shine
               </p>
             </div>
             <div className="flex items-start gap-3">
-              <span className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold"
-                style={{ background: 'rgba(201,169,97,0.15)', color: '#C9A961' }}>2</span>
-              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+              <span className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold bg-[var(--brand-alpha-medium)] text-[var(--brand)]">2</span>
+              <p className="text-sm text-[var(--text-secondary)]">
                 Connectez-vous avec votre mot de passe temporaire
               </p>
             </div>
             <div className="flex items-start gap-3">
-              <span className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold"
-                style={{ background: 'rgba(201,169,97,0.15)', color: '#C9A961' }}>3</span>
-              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+              <span className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold bg-[var(--brand-alpha-medium)] text-[var(--brand)]">3</span>
+              <p className="text-sm text-[var(--text-secondary)]">
                 Changez votre mot de passe pour s&eacute;curiser votre compte
               </p>
             </div>
@@ -184,29 +173,27 @@ function SuccessContent() {
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
             href="/login"
-            className="inline-flex items-center justify-center px-8 py-3.5 rounded-full font-medium text-sm tracking-wide transition-all"
-            style={{ background: 'linear-gradient(135deg, #C9A961, #B8960F)', color: '#000000' }}
+            className="inline-flex items-center justify-center px-8 py-3.5 rounded-full font-medium text-sm tracking-wide transition-all bg-[linear-gradient(135deg,var(--brand),var(--brand-deep))] text-[var(--text-inverse)]"
           >
             Se connecter
           </Link>
           <Link
             href="/"
-            className="inline-flex items-center justify-center px-8 py-3.5 rounded-full font-medium text-sm tracking-wide transition-all"
-            style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)' }}
+            className="inline-flex items-center justify-center px-8 py-3.5 rounded-full font-medium text-sm tracking-wide transition-all bg-[var(--border-subtle)] text-[var(--text-secondary)] border border-[var(--border)]"
           >
             Retour &agrave; l&apos;accueil
           </Link>
         </div>
 
-        <div className="mt-8 p-4 rounded-xl text-center" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}>
-          <p className="text-xs mb-2" style={{ color: 'var(--text-muted)' }}>
+        <div className="mt-8 p-4 rounded-xl text-center bg-[var(--border-subtle)] border border-[var(--border)]">
+          <p className="text-xs mb-2 text-[var(--text-muted)]">
             Vous n&apos;avez pas re&ccedil;u l&apos;email ? Attendez quelques minutes puis v&eacute;rifiez vos spams.
           </p>
-          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+          <p className="text-xs text-[var(--text-muted)]">
             Toujours rien ?{' '}
-            <a href="mailto:hello@sosshine.com" style={{ color: '#C9A961', textDecoration: 'underline' }}>hello@sosshine.com</a>
+            <a href="mailto:hello@sosshine.com" className="text-[var(--brand)] underline">hello@sosshine.com</a>
             {' '}ou essayez de{' '}
-            <Link href="/forgot-password" style={{ color: '#C9A961', textDecoration: 'underline' }}>
+            <Link href="/forgot-password" className="text-[var(--brand)] underline">
               cr&eacute;er un mot de passe
             </Link>
             {' '}avec l&apos;email utilis&eacute; lors de l&apos;inscription.
@@ -220,9 +207,9 @@ function SuccessContent() {
 export default function SuccessPage() {
   return (
     <Suspense fallback={
-      <main className="min-h-screen flex items-center justify-center px-6" style={{ background: 'var(--dark)' }}>
+      <main className="min-h-screen flex items-center justify-center px-6 bg-[var(--surface)]">
         <div className="text-center">
-          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Chargement...</p>
+          <p className="text-sm text-[var(--text-secondary)]">Chargement...</p>
         </div>
       </main>
     }>

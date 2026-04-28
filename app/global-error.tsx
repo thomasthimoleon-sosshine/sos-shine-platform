@@ -9,26 +9,18 @@ export default function GlobalError({
 }) {
   return (
     <html lang="fr">
-      <body style={{ background: '#09090b', color: '#e4e4e7', fontFamily: 'system-ui, sans-serif' }}>
-        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ textAlign: 'center', maxWidth: '400px', padding: '2rem' }}>
-            <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#C9A961' }}>
+      <body className="bg-[var(--surface)] text-[var(--text-primary)] font-[system-ui,sans-serif]">
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center max-w-[400px] p-8">
+            <h2 className="text-2xl mb-4 text-[var(--brand)]">
               Une erreur est survenue
             </h2>
-            <p style={{ marginBottom: '1.5rem', color: '#a1a1aa' }}>
+            <p className="mb-6 text-[var(--text-secondary)]">
               Nous sommes désolés, quelque chose s&apos;est mal passé.
             </p>
             <button
               onClick={() => reset()}
-              style={{
-                background: '#C9A961',
-                color: '#09090b',
-                border: 'none',
-                padding: '0.75rem 1.5rem',
-                borderRadius: '0.75rem',
-                cursor: 'pointer',
-                fontWeight: 600,
-              }}
+              className="bg-[var(--brand)] text-[var(--text-inverse)] border-none px-6 py-3 rounded-xl cursor-pointer font-semibold"
             >
               Réessayer
             </button>

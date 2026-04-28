@@ -168,18 +168,16 @@ export default function OnboardingPage() {
 
   if (checkingAuth) {
     return (
-      <main className="min-h-screen flex items-center justify-center" style={{ background: 'var(--dark)' }}>
+      <main className="min-h-screen flex items-center justify-center bg-[var(--surface)]">
         <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
       </main>
     )
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-4 py-12 relative" style={{ background: 'var(--dark)' }}>
+    <main className="min-h-screen flex items-center justify-center px-4 py-12 relative bg-[var(--surface)]">
       {/* Ambient glow */}
-      <div className="absolute inset-0 pointer-events-none" style={{
-        background: 'radial-gradient(ellipse 50% 40% at 50% 30%, rgba(212, 175, 55, 0.04), transparent)',
-      }} />
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_50%_40%_at_50%_30%,var(--brand-alpha-weak),transparent)]" />
 
       <div className="max-w-2xl w-full relative z-10">
         <AnimatePresence mode="wait">
@@ -193,25 +191,23 @@ export default function OnboardingPage() {
               transition={{ duration: 0.5, ease }}
               className="text-center"
             >
-              <div className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center"
-                style={{ background: 'rgba(201,169,97,0.1)', border: '1px solid rgba(201,169,97,0.15)' }}>
+              <div className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center bg-[var(--brand-alpha-medium)] border border-[var(--border-medium)]">
                 <span className="text-3xl">✨</span>
               </div>
 
-              <h1 className="font-display text-3xl sm:text-4xl font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>
+              <h1 className="font-display text-3xl sm:text-4xl font-semibold mb-3 text-[var(--text-primary)]">
                 Bienvenue {prenom}
               </h1>
-              <p className="text-[15px] mb-2" style={{ color: 'var(--text-secondary)' }}>
+              <p className="text-[15px] mb-2 text-[var(--text-secondary)]">
                 Avant de commencer votre parcours, aidez-nous à mieux vous accompagner.
               </p>
-              <p className="text-[13px] mb-8" style={{ color: 'var(--text-muted)' }}>
+              <p className="text-[13px] mb-8 text-[var(--text-muted)]">
                 Quelques questions pour personnaliser votre expérience SOS Shine.
               </p>
 
               <button
                 onClick={() => setStep(1)}
-                className="px-8 py-3.5 rounded-full text-sm font-medium transition-all hover:opacity-90 cursor-pointer"
-                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#09090b' }}
+                className="px-8 py-3.5 rounded-full text-sm font-medium transition-all hover:opacity-90 cursor-pointer bg-[linear-gradient(135deg,var(--brand),var(--brand-deep))] text-[var(--text-inverse)]"
               >
                 Commencer
               </button>
@@ -230,23 +226,22 @@ export default function OnboardingPage() {
               {/* Progress bar */}
               <div className="mb-8">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[12px] font-medium" style={{ color: 'var(--text-muted)' }}>Étape 1 sur 1</span>
-                  <span className="text-[12px]" style={{ color: 'var(--brand)' }}>{selectedGoals.length} sélectionné{selectedGoals.length > 1 ? 's' : ''}</span>
+                  <span className="text-[12px] font-medium text-[var(--text-muted)]">Étape 1 sur 1</span>
+                  <span className="text-[12px] text-[var(--brand)]">{selectedGoals.length} sélectionné{selectedGoals.length > 1 ? 's' : ''}</span>
                 </div>
-                <div className="h-1 rounded-full overflow-hidden" style={{ background: 'var(--border)' }}>
+                <div className="h-1 rounded-full overflow-hidden bg-[var(--border)]">
                   <motion.div
-                    className="h-full rounded-full"
-                    style={{ background: 'var(--brand)' }}
+                    className="h-full rounded-full bg-[var(--brand)]"
                     animate={{ width: selectedGoals.length > 0 ? '100%' : '10%' }}
                     transition={{ duration: 0.4 }}
                   />
                 </div>
               </div>
 
-              <h2 className="font-display text-2xl sm:text-3xl font-semibold mb-2 text-center" style={{ color: 'var(--text-primary)' }}>
+              <h2 className="font-display text-2xl sm:text-3xl font-semibold mb-2 text-center text-[var(--text-primary)]">
                 Qu&apos;est-ce qui vous amène ici ?
               </h2>
-              <p className="text-[14px] text-center mb-8" style={{ color: 'var(--text-secondary)' }}>
+              <p className="text-[14px] text-center mb-8 text-[var(--text-secondary)]">
                 Sélectionnez un ou plusieurs objectifs. Nous vous guiderons vers les challenges les plus adaptés.
               </p>
 
@@ -260,36 +255,36 @@ export default function OnboardingPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.05, duration: 0.4, ease }}
                       onClick={() => toggleGoal(option.key)}
-                      className="text-left p-4 rounded-xl transition-all duration-200 cursor-pointer group"
-                      style={{
-                        background: isSelected ? 'rgba(201,169,97,0.08)' : 'var(--surface-card)',
-                        border: isSelected ? '1px solid rgba(201,169,97,0.3)' : '1px solid var(--border)',
-                      }}
+                      className={`text-left p-4 rounded-xl transition-all duration-200 cursor-pointer group border ${
+                        isSelected
+                          ? 'bg-[var(--brand-alpha-weak)] border-[var(--brand-alpha-strong)]'
+                          : 'bg-[var(--surface-card)] border-[var(--border)]'
+                      }`}
                     >
                       <div className="flex items-start gap-3">
                         <span className="text-xl mt-0.5 shrink-0">{option.icon}</span>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between gap-2">
-                            <h3 className="font-semibold text-[14px]" style={{
-                              color: isSelected ? 'var(--brand)' : 'var(--text-primary)',
-                            }}>
+                            <h3 className={`font-semibold text-[14px] ${
+                              isSelected ? 'text-[var(--brand)]' : 'text-[var(--text-primary)]'
+                            }`}>
                               {option.label}
                             </h3>
                             <div
-                              className="w-5 h-5 rounded-full shrink-0 flex items-center justify-center transition-all"
-                              style={{
-                                border: isSelected ? 'none' : '1.5px solid var(--border)',
-                                background: isSelected ? 'var(--brand)' : 'transparent',
-                              }}
+                              className={`w-5 h-5 rounded-full shrink-0 flex items-center justify-center transition-all ${
+                                isSelected
+                                  ? 'bg-[var(--brand)]'
+                                  : 'border-[1.5px] border-[var(--border)] bg-transparent'
+                              }`}
                             >
                               {isSelected && (
-                                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="#09090b" strokeWidth={3}>
+                                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="var(--text-inverse)" strokeWidth={3}>
                                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                                 </svg>
                               )}
                             </div>
                           </div>
-                          <p className="text-[12px] mt-1 leading-relaxed" style={{ color: 'var(--text-muted)' }}>
+                          <p className="text-[12px] mt-1 leading-relaxed text-[var(--text-muted)]">
                             {option.description}
                           </p>
                         </div>
@@ -302,16 +297,14 @@ export default function OnboardingPage() {
               <div className="flex items-center justify-between mt-8 gap-4">
                 <button
                   onClick={() => router.push('/dashboard')}
-                  className="text-[13px] cursor-pointer"
-                  style={{ color: 'var(--text-muted)' }}
+                  className="text-[13px] cursor-pointer text-[var(--text-muted)]"
                 >
                   Passer cette étape
                 </button>
                 <button
                   onClick={handleSubmit}
                   disabled={selectedGoals.length === 0 || loading}
-                  className="px-6 py-3 rounded-full text-sm font-medium transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
-                  style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#09090b' }}
+                  className="px-6 py-3 rounded-full text-sm font-medium transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed bg-[linear-gradient(135deg,var(--brand),var(--brand-deep))] text-[var(--text-inverse)]"
                 >
                   {loading ? 'Enregistrement...' : 'Valider mes objectifs'}
                 </button>
@@ -328,37 +321,34 @@ export default function OnboardingPage() {
               transition={{ duration: 0.5, ease }}
               className="text-center"
             >
-              <div className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center"
-                style={{ background: 'rgba(85,239,196,0.1)', border: '1px solid rgba(85,239,196,0.15)' }}>
-                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="#55EFC4" strokeWidth={2}>
+              <div className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center bg-[rgba(107,207,160,0.1)] border border-[rgba(107,207,160,0.15)]">
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="var(--success)" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
 
-              <h2 className="font-display text-2xl sm:text-3xl font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>
+              <h2 className="font-display text-2xl sm:text-3xl font-semibold mb-3 text-[var(--text-primary)]">
                 Votre parcours est prêt !
               </h2>
-              <p className="text-[14px] mb-8" style={{ color: 'var(--text-secondary)' }}>
+              <p className="text-[14px] mb-8 text-[var(--text-secondary)]">
                 Voici les challenges que nous vous recommandons en fonction de vos objectifs :
               </p>
 
               <div className="space-y-3 mb-8">
                 {getSelectedOptions().map((option) => (
-                  <div key={option.key} className="glass p-4 text-left">
+                  <div key={option.key} className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-4 text-left">
                     <div className="flex items-start gap-3">
                       <span className="text-lg">{option.icon}</span>
                       <div className="flex-1">
-                        <h3 className="font-semibold text-[14px]" style={{ color: 'var(--brand)' }}>
+                        <h3 className="font-semibold text-[14px] text-[var(--brand)]">
                           {option.goalTitle}
                         </h3>
-                        <p className="text-[12px] mt-0.5" style={{ color: 'var(--text-muted)' }}>
+                        <p className="text-[12px] mt-0.5 text-[var(--text-muted)]">
                           {option.goalDescription}
                         </p>
                         <div className="flex flex-wrap gap-1.5 mt-2">
                           {option.slugs.map((slug) => (
-                            <span key={slug} className="text-[11px] px-2 py-0.5 rounded-md" style={{
-                              background: 'rgba(201,169,97,0.1)', color: 'var(--brand)',
-                            }}>
+                            <span key={slug} className="text-[11px] px-2 py-0.5 rounded-md bg-[var(--brand-alpha-medium)] text-[var(--brand)]">
                               {slug.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
                             </span>
                           ))}
@@ -372,15 +362,13 @@ export default function OnboardingPage() {
               <div className="flex flex-col items-center gap-3">
                 <button
                   onClick={() => router.push('/dashboard')}
-                  className="px-8 py-3.5 rounded-full text-sm font-medium transition-all hover:opacity-90 cursor-pointer"
-                  style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#09090b' }}
+                  className="px-8 py-3.5 rounded-full text-sm font-medium transition-all hover:opacity-90 cursor-pointer bg-[linear-gradient(135deg,var(--brand),var(--brand-deep))] text-[var(--text-inverse)]"
                 >
                   Accéder à mon espace
                 </button>
                 <button
                   onClick={() => router.push('/dashboard/encyclopedie')}
-                  className="text-[13px] cursor-pointer"
-                  style={{ color: 'var(--brand)' }}
+                  className="text-[13px] cursor-pointer text-[var(--brand)]"
                 >
                   Explorer l&apos;encyclopédie
                 </button>

@@ -86,24 +86,15 @@ export default function ResetPasswordPage() {
 
   if (checking) {
     return (
-      <main className="min-h-screen flex items-center justify-center" style={{ background: 'var(--dark)' }}>
+      <main className="min-h-screen flex items-center justify-center bg-[var(--surface)]">
         <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
       </main>
     )
   }
 
-  const inputStyle: React.CSSProperties = {
-    background: 'rgba(255,255,255,0.03)',
-    border: '1px solid var(--border)',
-    color: 'var(--text-primary)',
-    outline: 'none',
-  }
-
   return (
     <main className="min-h-screen flex items-center justify-center px-6 relative">
-      <div className="absolute inset-0 pointer-events-none" style={{
-        background: 'radial-gradient(ellipse 50% 40% at 50% 30%, rgba(212, 175, 55, 0.04), transparent)',
-      }} />
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_50%_40%_at_50%_30%,var(--brand-alpha-weak),transparent)]" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -116,30 +107,29 @@ export default function ResetPasswordPage() {
           <p className="text-[var(--text-muted)] text-[13px] mt-2">Sécurisez votre compte</p>
         </div>
 
-        <div className="glass p-8 md:p-10">
+        <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-8 md:p-10">
           {success ? (
             <motion.div
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
               className="text-center space-y-4"
             >
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
-                style={{ background: 'rgba(85,239,196,0.1)', border: '1px solid rgba(85,239,196,0.15)' }}>
-                <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="#55EFC4" strokeWidth={2}>
+              <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 bg-[rgba(107,207,160,0.1)] border border-[rgba(107,207,160,0.15)]">
+                <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="var(--success)" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                 </svg>
               </div>
               <h2 className="font-display text-xl text-[var(--text-primary)]">Mot de passe mis à jour</h2>
-              <p className="text-[13px]" style={{ color: 'var(--text-secondary)' }}>
+              <p className="text-[13px] text-[var(--text-secondary)]">
                 Redirection vers votre tableau de bord...
               </p>
             </motion.div>
           ) : (
             <>
-              <h1 className="font-display text-[var(--text-primary)] mb-2 text-center" style={{ fontSize: '1.875rem' }}>
+              <h1 className="font-display text-[var(--text-primary)] mb-2 text-center text-[1.875rem]">
                 Nouveau mot de passe
               </h1>
-              <p className="text-[13px] text-center mb-8" style={{ color: 'var(--text-muted)' }}>
+              <p className="text-[13px] text-center mb-8 text-[var(--text-muted)]">
                 Choisissez un mot de passe sécurisé pour votre compte.
               </p>
 
@@ -156,10 +146,7 @@ export default function ResetPasswordPage() {
                     required
                     minLength={6}
                     placeholder="Minimum 6 caractères"
-                    className="w-full px-4 py-3 rounded-xl text-sm transition-colors"
-                    style={inputStyle}
-                    onFocus={(e) => e.currentTarget.style.borderColor = 'rgba(201,169,97,0.4)'}
-                    onBlur={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
+                    className="w-full px-4 py-3 rounded-xl text-sm transition-colors bg-[var(--border-subtle)] border border-[var(--border)] text-[var(--text-primary)] outline-none focus:border-[var(--brand-alpha-strong)]"
                   />
                 </div>
                 <div>
@@ -174,22 +161,18 @@ export default function ResetPasswordPage() {
                     required
                     minLength={6}
                     placeholder="Retapez votre mot de passe"
-                    className="w-full px-4 py-3 rounded-xl text-sm transition-colors"
-                    style={inputStyle}
-                    onFocus={(e) => e.currentTarget.style.borderColor = 'rgba(201,169,97,0.4)'}
-                    onBlur={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
+                    className="w-full px-4 py-3 rounded-xl text-sm transition-colors bg-[var(--border-subtle)] border border-[var(--border)] text-[var(--text-primary)] outline-none focus:border-[var(--brand-alpha-strong)]"
                   />
                 </div>
                 {error && (
-                  <p className="text-[13px] px-4 py-3 rounded-xl" style={{ color: '#f87171', background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.15)' }}>
+                  <p className="text-[13px] px-4 py-3 rounded-xl text-[var(--danger)] bg-[rgba(212,106,106,0.08)] border border-[rgba(212,106,106,0.15)]">
                     {error}
                   </p>
                 )}
                 <button
                   type="submit"
                   disabled={loading}
-                  className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-                  style={{ background: 'var(--button-bg)', color: 'var(--dark)' }}
+                  className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm bg-[linear-gradient(135deg,var(--brand),var(--brand-deep))] text-[var(--text-inverse)]"
                 >
                   {loading ? 'Mise à jour...' : 'Mettre à jour mon mot de passe'}
                 </button>
@@ -199,7 +182,7 @@ export default function ResetPasswordPage() {
         </div>
 
         <p className="text-center text-[13px] text-[var(--text-muted)] mt-8">
-          <Link href="/login" className="gold-underline font-medium" style={{ color: 'var(--brand)' }}>
+          <Link href="/login" className="gold-underline font-medium text-[var(--brand)]">
             Retour à la connexion
           </Link>
         </p>

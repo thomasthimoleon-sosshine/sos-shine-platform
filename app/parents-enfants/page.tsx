@@ -77,17 +77,17 @@ export default function ParentsEnfantsPage() {
   const [openIdx, setOpenIdx] = useState<number | null>(null)
 
   return (
-    <main className="min-h-screen watermark-container" style={{ background: 'var(--dark)' }}>
+    <main className="min-h-screen watermark-container bg-[var(--surface)]">
       <div className="watermark" />
 
       {/* Header */}
-      <header className="px-6 md:px-20 py-5 flex items-center justify-between" style={{ borderBottom: '1px solid var(--border)' }}>
+      <header className="px-6 md:px-20 py-5 flex items-center justify-between border-b border-[var(--border)]">
         <Link href="/" className="flex items-center gap-3 group">
           <div className="w-9 h-9 rounded-xl flex items-center justify-center font-display text-base font-semibold"
             style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: 'var(--dark)' }}>
             S
           </div>
-          <span className="font-display text-lg font-medium" style={{ color: 'var(--brand)' }}>SOS Shine</span>
+          <span className="font-display text-lg font-medium text-[var(--brand)]">SOS Shine</span>
         </Link>
         <div className="flex items-center gap-4">
           <ThemeToggle />
@@ -112,19 +112,19 @@ export default function ParentsEnfantsPage() {
             </span>
           </Reveal>
           <Reveal delay={0.1}>
-            <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-light leading-tight mb-6" style={{ color: 'var(--text-primary)' }}>
+            <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-light leading-tight mb-6 text-[var(--text-primary)]">
               Parents{' '}
               <span className="text-shimmer">&amp; Enfants</span>
             </h1>
           </Reveal>
           <Reveal delay={0.2}>
-            <p className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed mb-4" style={{ color: 'var(--text-secondary)' }}>
+            <p className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed mb-4 text-[var(--text-secondary)]">
               Accompagnez vos enfants dans leurs émotions avec bienveillance et justesse.
               Un espace pensé pour les familles, par Julia Laureau.
             </p>
           </Reveal>
           <Reveal delay={0.3}>
-            <p className="text-sm max-w-2xl mx-auto mb-10" style={{ color: 'var(--text-muted)' }}>
+            <p className="text-sm max-w-2xl mx-auto mb-10 text-[var(--text-muted)]">
               Parce que le bien-être émotionnel se construit dès l&apos;enfance, et que les parents méritent aussi d&apos;être accompagnés.
             </p>
           </Reveal>
@@ -132,7 +132,7 @@ export default function ParentsEnfantsPage() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/signup"
                 className="px-8 py-3.5 rounded-full text-sm font-semibold transition-all"
-                style={{ background: 'linear-gradient(135deg, #C9A961, #B8960F)', color: '#000000' }}>
+                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000' }}>
                 Rejoindre la communauté
               </Link>
               <Link href="/signature-emotionnelle"
@@ -150,10 +150,10 @@ export default function ParentsEnfantsPage() {
         <Reveal>
           <div className="max-w-3xl mx-auto text-center py-12 px-8 rounded-3xl"
             style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
-            <p className="font-display text-xl md:text-2xl font-light italic leading-relaxed mb-4" style={{ color: 'var(--text-primary)' }}>
+            <p className="font-display text-xl md:text-2xl font-light italic leading-relaxed mb-4 text-[var(--text-primary)]">
               &ldquo;Un enfant qui se sent compris n&apos;a plus besoin de crier pour être entendu.&rdquo;
             </p>
-            <p className="text-sm" style={{ color: 'var(--brand)' }}>— Julia Laureau</p>
+            <p className="text-sm text-[var(--brand)]">— Julia Laureau</p>
           </div>
         </Reveal>
       </section>
@@ -162,10 +162,10 @@ export default function ParentsEnfantsPage() {
       <section className="px-6 pb-20">
         <div className="max-w-5xl mx-auto">
           <Reveal>
-            <h2 className="font-display text-3xl md:text-4xl font-light text-center mb-4" style={{ color: 'var(--text-primary)' }}>
+            <h2 className="font-display text-3xl md:text-4xl font-light text-center mb-4 text-[var(--text-primary)]">
               Ce que vous trouverez ici
             </h2>
-            <p className="text-center mb-14 max-w-2xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
+            <p className="text-center mb-14 max-w-2xl mx-auto text-[var(--text-secondary)]">
               Des ressources concrètes pour traverser les défis parentaux avec conscience et douceur.
             </p>
           </Reveal>
@@ -184,10 +184,10 @@ export default function ParentsEnfantsPage() {
                   <div className="flex items-start gap-4">
                     <span className="text-3xl">{s.icon}</span>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-display text-lg font-semibold mb-2 group-hover:text-[var(--brand)] transition-colors" style={{ color: 'var(--text-primary)' }}>
+                      <h3 className="font-display text-lg font-semibold mb-2 group-hover:text-[var(--brand)] transition-colors text-[var(--text-primary)]">
                         {s.title}
                       </h3>
-                      <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                      <p className="text-sm leading-relaxed text-[var(--text-secondary)]">
                         {s.desc}
                       </p>
                       <motion.div
@@ -198,14 +198,14 @@ export default function ParentsEnfantsPage() {
                       >
                         <ul className="mt-4 space-y-2">
                           {s.details.map((d, j) => (
-                            <li key={j} className="flex items-start gap-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
-                              <span style={{ color: 'var(--brand)' }} className="mt-0.5">&#x2726;</span>
+                            <li key={j} className="flex items-start gap-2 text-sm text-[var(--text-secondary)]">
+                              <span className="text-[var(--brand)] mt-0.5">&#x2726;</span>
                               {d}
                             </li>
                           ))}
                         </ul>
                       </motion.div>
-                      <button className="mt-3 text-xs font-medium" style={{ color: 'var(--brand)' }}>
+                      <button className="mt-3 text-xs font-medium text-[var(--brand)]">
                         {openIdx === i ? 'Réduire' : 'En savoir plus'}
                       </button>
                     </div>
@@ -221,10 +221,10 @@ export default function ParentsEnfantsPage() {
       <section className="px-6 pb-20">
         <div className="max-w-5xl mx-auto">
           <Reveal>
-            <h2 className="font-display text-3xl md:text-4xl font-light text-center mb-4" style={{ color: 'var(--text-primary)' }}>
-              Adapté à chaque <span style={{ color: 'var(--brand)' }}>tranche d&apos;âge</span>
+            <h2 className="font-display text-3xl md:text-4xl font-light text-center mb-4 text-[var(--text-primary)]">
+              Adapté à chaque <span className="text-[var(--brand)]">tranche d&apos;âge</span>
             </h2>
-            <p className="text-center mb-14 max-w-2xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
+            <p className="text-center mb-14 max-w-2xl mx-auto text-[var(--text-secondary)]">
               Chaque étape du développement a ses défis émotionnels. Nos protocoles s&apos;adaptent à l&apos;âge de votre enfant.
             </p>
           </Reveal>
@@ -238,9 +238,9 @@ export default function ParentsEnfantsPage() {
                     style={{ background: 'rgba(201,169,97,0.08)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.12)' }}>
                     {a.range.split('–')[0].trim()}
                   </div>
-                  <h3 className="font-display text-base font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>{a.label}</h3>
-                  <p className="text-xs" style={{ color: 'var(--brand)' }}>{a.range}</p>
-                  <p className="text-xs mt-3 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{a.desc}</p>
+                  <h3 className="font-display text-base font-semibold mb-1 text-[var(--text-primary)]">{a.label}</h3>
+                  <p className="text-xs text-[var(--brand)]">{a.range}</p>
+                  <p className="text-xs mt-3 leading-relaxed text-[var(--text-secondary)]">{a.desc}</p>
                 </div>
               </Reveal>
             ))}
@@ -253,7 +253,7 @@ export default function ParentsEnfantsPage() {
         <Reveal>
           <div className="max-w-4xl mx-auto rounded-3xl p-8 md:p-12"
             style={{ background: 'rgba(201,169,97,0.03)', border: '1px solid rgba(201,169,97,0.1)' }}>
-            <h2 className="font-display text-2xl md:text-3xl font-light mb-6 text-center" style={{ color: 'var(--text-primary)' }}>
+            <h2 className="font-display text-2xl md:text-3xl font-light mb-6 text-center text-[var(--text-primary)]">
               L&apos;approche SOS Shine pour les familles
             </h2>
             <div className="grid md:grid-cols-3 gap-8 text-center">
@@ -264,11 +264,11 @@ export default function ParentsEnfantsPage() {
               ].map((s, i) => (
                 <div key={i}>
                   <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold mx-auto mb-3"
-                    style={{ background: 'linear-gradient(135deg, #C9A961, #B8960F)', color: '#000000' }}>
+                    style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000' }}>
                     {s.step}
                   </div>
-                  <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--brand)' }}>{s.title}</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{s.desc}</p>
+                  <h3 className="font-display text-lg font-semibold mb-2 text-[var(--brand)]">{s.title}</h3>
+                  <p className="text-sm leading-relaxed text-[var(--text-secondary)]">{s.desc}</p>
                 </div>
               ))}
             </div>
@@ -285,21 +285,21 @@ export default function ParentsEnfantsPage() {
               style={{ background: 'rgba(201,169,97,0.08)', border: '1px solid rgba(201,169,97,0.12)' }}>
               🚀
             </div>
-            <h2 className="font-display text-2xl md:text-3xl font-light mb-4" style={{ color: 'var(--text-primary)' }}>
+            <h2 className="font-display text-2xl md:text-3xl font-light mb-4 text-[var(--text-primary)]">
               Bientôt disponible
             </h2>
-            <p className="text-sm leading-relaxed max-w-lg mx-auto mb-8" style={{ color: 'var(--text-secondary)' }}>
+            <p className="text-sm leading-relaxed max-w-lg mx-auto mb-8 text-[var(--text-secondary)]">
               La section Parents &amp; Enfants est en cours de développement. Rejoignez SOS Shine dès maintenant pour être
               parmi les premiers à y accéder et bénéficier du tarif fondateur.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/signup"
                 className="px-8 py-3.5 rounded-full text-sm font-semibold transition-all"
-                style={{ background: 'linear-gradient(135deg, #C9A961, #B8960F)', color: '#000000' }}>
+                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000' }}>
                 Rejoindre SOS Shine
               </Link>
               <Link href="/contact"
-                className="text-sm font-medium transition-colors" style={{ color: 'var(--brand)' }}>
+                className="text-sm font-medium transition-colors text-[var(--brand)]">
                 Nous contacter
               </Link>
             </div>
@@ -309,7 +309,7 @@ export default function ParentsEnfantsPage() {
 
       {/* Footer */}
       <footer className="px-6 py-8 text-center" style={{ borderTop: '1px solid var(--border)' }}>
-        <div className="flex flex-wrap items-center justify-center gap-6 text-xs" style={{ color: 'var(--text-muted)' }}>
+        <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-[var(--text-muted)]">
           <Link href="/" className="hover:text-[var(--brand)] transition-colors">Accueil</Link>
           <Link href="/encyclopedie" className="hover:text-[var(--brand)] transition-colors">Encyclopédie</Link>
           <Link href="/signature-emotionnelle" className="hover:text-[var(--brand)] transition-colors">Signature Émotionnelle</Link>
@@ -317,7 +317,7 @@ export default function ParentsEnfantsPage() {
           <Link href="/cgv" className="hover:text-[var(--brand)] transition-colors">CGV</Link>
           <Link href="/confidentialite" className="hover:text-[var(--brand)] transition-colors">Confidentialité</Link>
         </div>
-        <p className="text-xs mt-4" style={{ color: 'var(--text-muted)' }}>&copy; 2026 SOS Shine. Tous droits réservés.</p>
+        <p className="text-xs mt-4 text-[var(--text-muted)]">&copy; 2026 SOS Shine. Tous droits réservés.</p>
       </footer>
     </main>
   )

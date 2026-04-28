@@ -30,7 +30,7 @@ function buildSteps(douleur: Douleur, dynamicSteps: DouleurStep[]): StepConfig[]
       title: s.title,
       subtitle: s.subtitle || 'Vidéo, audio & ressources',
       icon: s.icon || '📋',
-      color: s.color || '#C9A961',
+      color: s.color || 'var(--brand)',
       description: s.description || '',
       video: s.video_url,
       audio: s.audio_url,
@@ -187,7 +187,7 @@ export default function PublicDouleurDetailPage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen flex justify-center items-center" style={{ background: 'var(--dark)' }}>
+      <main className="min-h-screen flex justify-center items-center bg-[var(--surface)]">
         <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
       </main>
     )
@@ -195,8 +195,8 @@ export default function PublicDouleurDetailPage() {
 
   if (!douleur) {
     return (
-      <main className="min-h-screen" style={{ background: 'var(--dark)' }}>
-        <header className="px-6 md:px-20 py-5 flex items-center justify-between" style={{ borderBottom: '1px solid var(--border)' }}>
+      <main className="min-h-screen bg-[var(--surface)]">
+        <header className="px-6 md:px-20 py-5 flex items-center justify-between border-b border-[var(--border)]">
           <Link href="/" className="flex items-center">
             <img src="/images/logo-shine.png" alt="SOS Shine" className="h-10" />
           </Link>
@@ -210,15 +210,15 @@ export default function PublicDouleurDetailPage() {
               style={{ background: 'rgba(201,169,97,0.1)', border: '1px solid rgba(201,169,97,0.2)' }}>
               <span className="text-3xl">💛</span>
             </div>
-            <h2 className="font-display text-xl sm:text-2xl font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
+            <h2 className="font-display text-xl sm:text-2xl font-semibold mb-4 text-[var(--text-primary)]">
               Ce protocole arrive bientôt
             </h2>
-            <p className="text-sm sm:text-[15px] leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
+            <p className="text-sm sm:text-[15px] leading-relaxed mb-6 text-[var(--text-secondary)]">
               Nous mettons tout notre cœur à préparer ce contenu pour qu&apos;il soit à la hauteur de ce que vous traversez.
               Julia, William et Thomas travaillent dessus pour vous offrir un protocole complet.
             </p>
             <div className="rounded-xl p-5 mb-6" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}>
-              <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+              <p className="text-sm leading-relaxed text-[var(--text-secondary)]">
                 Inscrivez-vous pour être prévenu(e) dès sa sortie et accéder aux protocoles déjà disponibles.
               </p>
             </div>
@@ -228,7 +228,7 @@ export default function PublicDouleurDetailPage() {
               Créer mon compte gratuitement
             </Link>
             <div className="mt-8 pt-6" style={{ borderTop: '1px solid var(--border)' }}>
-              <Link href="/encyclopedie" className="text-sm font-medium transition-colors hover:opacity-80" style={{ color: 'var(--brand)' }}>
+              <Link href="/encyclopedie" className="text-sm font-medium transition-colors hover:opacity-80 text-[var(--brand)]">
                 ← Retour à l&apos;encyclopédie
               </Link>
             </div>
@@ -245,15 +245,15 @@ export default function PublicDouleurDetailPage() {
   }
 
   return (
-    <main className="min-h-screen" style={{ background: 'var(--dark)' }}>
+    <main className="min-h-screen bg-[var(--surface)]">
       {/* Header bar */}
-      <header className="px-6 md:px-20 py-5 flex items-center justify-between" style={{ borderBottom: '1px solid var(--border)' }}>
+      <header className="px-6 md:px-20 py-5 flex items-center justify-between border-b border-[var(--border)]">
         <Link href="/" className="flex items-center gap-3 group">
           <div className="w-9 h-9 rounded-xl flex items-center justify-center font-display text-base font-semibold"
             style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: 'var(--dark)' }}>
             S
           </div>
-          <span className="font-display text-lg font-medium" style={{ color: 'var(--brand)' }}>SOS Shine</span>
+          <span className="font-display text-lg font-medium text-[var(--brand)]">SOS Shine</span>
         </Link>
         <Link
           href={SIGNUP_URL}
@@ -267,16 +267,16 @@ export default function PublicDouleurDetailPage() {
       <div className="max-w-4xl mx-auto px-6 md:px-8 py-12 space-y-8">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm">
-          <Link href="/encyclopedie" className="transition-colors" style={{ color: 'var(--text-muted)' }}
+          <Link href="/encyclopedie" className="transition-colors text-[var(--text-muted)]"
             onMouseEnter={(e) => e.currentTarget.style.color = 'var(--brand)'}
             onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
           >
             Encyclopédie
           </Link>
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--text-muted)' }}>
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} className="text-[var(--text-muted)]">
             <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
           </svg>
-          <span style={{ color: 'var(--text-primary)' }}>{douleur.title}</span>
+          <span className="text-[var(--text-primary)]">{douleur.title}</span>
         </div>
 
         {/* Header */}
@@ -284,7 +284,7 @@ export default function PublicDouleurDetailPage() {
           <h1 className="font-display text-3xl sm:text-4xl font-semibold">
             {douleur.title}
           </h1>
-          <p className="mt-2 text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+          <p className="mt-2 text-lg leading-relaxed text-[var(--text-secondary)]">
             {douleur.description}
           </p>
         </div>
@@ -325,12 +325,12 @@ export default function PublicDouleurDetailPage() {
                 <h2 className="font-display text-xl font-semibold">
                   {currentStep.title}
                 </h2>
-                <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{currentStep.subtitle}</p>
+                <p className="text-xs text-[var(--text-muted)]">{currentStep.subtitle}</p>
               </div>
             </div>
 
             {currentStep.description && (
-              <p className="mb-6 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+              <p className="mb-6 leading-relaxed text-[var(--text-secondary)]">
                 {currentStep.description}
               </p>
             )}
@@ -346,7 +346,7 @@ export default function PublicDouleurDetailPage() {
                       <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3" style={{ background: `${currentStep.color}15` }}>
                         <span className="text-2xl">{currentStep.icon}</span>
                       </div>
-                      <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Contenu bientôt disponible</p>
+                      <p className="text-sm text-[var(--text-muted)]">Contenu bientôt disponible</p>
                     </div>
                   </div>
                 )
@@ -376,10 +376,10 @@ export default function PublicDouleurDetailPage() {
                                   <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
                                 </svg>
                               </div>
-                              <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--brand)' }}>
+                              <h3 className="font-display text-lg font-semibold mb-2 text-[var(--brand)]">
                                 L&apos;extrait est terminé
                               </h3>
-                              <p className="text-sm mb-6 max-w-xs mx-auto" style={{ color: 'var(--text-secondary)' }}>
+                              <p className="text-sm mb-6 max-w-xs mx-auto text-[var(--text-secondary)]">
                                 Vous venez de voir 30 secondes. Le protocole complet vous attend à l&apos;intérieur.
                               </p>
                               <Link href="/signup"
@@ -387,7 +387,7 @@ export default function PublicDouleurDetailPage() {
                                 style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000', boxShadow: '0 4px 20px rgba(201,169,97,0.3)' }}>
                                 Créer mon compte gratuitement
                               </Link>
-                              <p className="text-xs mt-4" style={{ color: 'var(--text-muted)' }}>
+                              <p className="text-xs mt-4 text-[var(--text-muted)]">
                                 Sans engagement. Annulation en un clic.
                               </p>
                             </div>
@@ -395,7 +395,7 @@ export default function PublicDouleurDetailPage() {
                         )
                       }
                       return (
-                        <div className="rounded-xl overflow-hidden aspect-video" style={{ background: 'var(--dark)' }}>
+                        <div className="rounded-xl overflow-hidden aspect-video bg-[var(--surface)]">
                           <video ref={videoRef} src={src} poster={poster} controls preload="metadata" className="w-full h-full" />
                         </div>
                       )
@@ -442,16 +442,16 @@ export default function PublicDouleurDetailPage() {
                       }, [])
                       return (
                         <div className="rounded-xl p-4 space-y-3" style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(201,169,97,0.15)' }}>
-                          <p className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>Audio — {title}</p>
+                          <p className="font-medium text-sm text-[var(--text-primary)]">Audio — {title}</p>
                           <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.12)' }}>
                             <span className="text-lg flex-shrink-0 mt-0.5">🎧</span>
-                            <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                            <p className="text-xs leading-relaxed text-[var(--text-secondary)]">
                               Écoutez un extrait de 30 secondes. Créez votre compte pour accéder à l&apos;intégralité.
                             </p>
                           </div>
                           {audioLocked ? (
                             <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'rgba(201,169,97,0.08)', border: '1px solid rgba(201,169,97,0.2)' }}>
-                              <p className="text-sm" style={{ color: 'var(--brand)' }}>Vous aimez ? Accédez à la suite</p>
+                              <p className="text-sm text-[var(--brand)]">Vous aimez ? Accédez à la suite</p>
                               <Link href="/signup" className="px-4 py-2 rounded-full text-xs font-semibold"
                                 style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000' }}>
                                 Créer mon compte
@@ -477,7 +477,7 @@ export default function PublicDouleurDetailPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m.75 12l3 3m0 0l3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                       </svg>
                       <div className="flex-1">
-                        <p className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>PDF disponible</p>
+                        <p className="font-medium text-sm text-[var(--text-primary)]">PDF disponible</p>
                         <div className="flex items-center gap-1.5 mt-0.5">
                           <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke={currentStep.color} strokeWidth={1.5}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
@@ -492,7 +492,7 @@ export default function PublicDouleurDetailPage() {
                   {currentStep.exercise_content && (
                     <div className="p-5 rounded-xl relative overflow-hidden" style={{ background: 'rgba(0,0,0,0.2)' }}>
                       <h4 className="font-semibold text-sm mb-3" style={{ color: currentStep.color }}>Exercice</h4>
-                      <p className="text-sm leading-relaxed line-clamp-3" style={{ color: 'var(--text-secondary)' }}>
+                      <p className="text-sm leading-relaxed line-clamp-3 text-[var(--text-secondary)]">
                         {currentStep.exercise_content}
                       </p>
                       <div className="absolute inset-x-0 bottom-0 h-24 flex items-end justify-center pb-4"
@@ -516,8 +516,7 @@ export default function PublicDouleurDetailPage() {
               <button
                 onClick={() => setActiveStep(Math.max(1, activeStep - 1))}
                 disabled={activeStep === 1}
-                className="flex items-center gap-2 text-sm transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
-                style={{ color: 'var(--text-secondary)' }}
+                className="flex items-center gap-2 text-sm transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed text-[var(--text-secondary)]"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
@@ -552,11 +551,11 @@ export default function PublicDouleurDetailPage() {
                 <p className="text-[10px] uppercase tracking-[0.2em] mb-2 font-semibold" style={{ color: '#74C0FC' }}>
                   Article du blog à lire
                 </p>
-                <h3 className="font-display text-xl md:text-2xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                <h3 className="font-display text-xl md:text-2xl font-semibold mb-2 text-[var(--text-primary)]">
                   {linkedArticle.title}
                 </h3>
                 {linkedArticle.excerpt && (
-                  <p className="text-sm leading-relaxed mb-3" style={{ color: 'var(--text-secondary)' }}>
+                  <p className="text-sm leading-relaxed mb-3 text-[var(--text-secondary)]">
                     {linkedArticle.excerpt}
                   </p>
                 )}
@@ -581,7 +580,7 @@ export default function PublicDouleurDetailPage() {
           <h3 className="font-display text-xl font-semibold mb-2">
             Débloquez le protocole complet
           </h3>
-          <p className="text-sm mb-5 max-w-md mx-auto" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-sm mb-5 max-w-md mx-auto text-[var(--text-secondary)]">
             Accédez aux vidéos, aux PDF d&apos;exercices et aux audios guidés pour &quot;{douleur.title}&quot;.
           </p>
           <Link
@@ -591,7 +590,7 @@ export default function PublicDouleurDetailPage() {
           >
             Rejoindre SOS Shine
           </Link>
-          <p className="text-xs mt-3" style={{ color: 'var(--text-muted)' }}>
+          <p className="text-xs mt-3 text-[var(--text-muted)]">
             Accès illimité à toute l&apos;encyclopédie et la communauté
           </p>
         </div>
@@ -610,11 +609,11 @@ export default function PublicDouleurDetailPage() {
                 </svg>
               </div>
 
-              <h3 className="font-display text-2xl font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>
+              <h3 className="font-display text-2xl font-semibold mb-3 text-[var(--text-primary)]">
                 Accès réservé
               </h3>
 
-              <p className="text-sm mb-8 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+              <p className="text-sm mb-8 leading-relaxed text-[var(--text-secondary)]">
                 Pour accéder aux protocoles de libération (vidéos, soins, méditations et PDF), vous devez faire partie du sanctuaire SOS Shine.
               </p>
 
@@ -636,8 +635,8 @@ export default function PublicDouleurDetailPage() {
                 </button>
               </div>
 
-              <p className="text-[11px] mt-6" style={{ color: 'var(--text-muted)' }}>
-                Déjà membre ? <Link href="/login" className="gold-underline" style={{ color: 'var(--brand)' }}>Se connecter</Link>
+              <p className="text-[11px] mt-6 text-[var(--text-muted)]">
+                Déjà membre ? <Link href="/login" className="gold-underline text-[var(--brand)]">Se connecter</Link>
               </p>
             </div>
           </div>

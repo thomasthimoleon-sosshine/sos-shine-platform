@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import ThemeToggle from '@/components/ThemeToggle'
 import type { BlogArticle } from '@/data/blog/articles'
 
-const gold = 'var(--gold, #C9A961)'
+const gold = 'var(--gold, var(--brand))'
 const goldRgb = '201,169,97'
 
 function formatDate(dateStr: string) {
@@ -54,7 +54,7 @@ function MarkdownRenderer({ content }: { content: string }) {
       elements.push(
         <ul key={key++} className="space-y-2 my-4 md:my-6">
           {listItems.map((item, i) => (
-            <li key={i} className="flex gap-3 text-sm md:text-[15.5px] leading-relaxed font-light" style={{ color: 'var(--text-secondary)' }}>
+            <li key={i} className="flex gap-3 text-sm md:text-[15.5px] leading-relaxed font-light text-[var(--text-secondary)]">
               <span className="mt-2 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: gold }} />
               <span dangerouslySetInnerHTML={{ __html: inlineFormat(item) }} />
             </li>
@@ -91,8 +91,7 @@ function MarkdownRenderer({ content }: { content: string }) {
       elements.push(
         <h2
           key={key++}
-          className="font-display text-xl sm:text-2xl md:text-3xl font-light mt-10 md:mt-16 mb-4 md:mb-6 leading-[1.2]"
-          style={{ color: 'var(--text-primary)' }}
+          className="font-display text-xl sm:text-2xl md:text-3xl font-light mt-10 md:mt-16 mb-4 md:mb-6 leading-[1.2] text-[var(--text-primary)]"
           id={text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}
         >
           {text}
@@ -142,8 +141,7 @@ function MarkdownRenderer({ content }: { content: string }) {
           style={{ borderLeft: `2px solid ${gold}` }}
         >
           <p
-            className="font-display text-base md:text-lg italic font-light leading-relaxed"
-            style={{ color: 'var(--text-primary)' }}
+            className="font-display text-base md:text-lg italic font-light leading-relaxed text-[var(--text-primary)]"
             dangerouslySetInnerHTML={{ __html: inlineFormat(text) }}
           />
         </blockquote>
@@ -170,8 +168,7 @@ function MarkdownRenderer({ content }: { content: string }) {
     elements.push(
       <p
         key={key++}
-        className="text-sm md:text-[15.5px] leading-[1.85] font-light my-3 md:my-5"
-        style={{ color: 'var(--text-secondary)' }}
+        className="text-sm md:text-[15.5px] leading-[1.85] font-light my-3 md:my-5 text-[var(--text-secondary)]"
         dangerouslySetInnerHTML={{ __html: inlineFormat(trimmed) }}
       />
     )
@@ -228,12 +225,12 @@ export default function BlogArticleContent({
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
             {/* Breadcrumb */}
-            <nav className="flex items-center gap-2 mb-6 md:mb-8 text-[10px] sm:text-xs" style={{ color: 'var(--text-muted)' }}>
+            <nav className="flex items-center gap-2 mb-6 md:mb-8 text-[10px] sm:text-xs text-[var(--text-muted)]">
               <Link href="/" className="hover:text-[var(--brand)] transition-colors">Accueil</Link>
               <span>/</span>
               <Link href="/blog" className="hover:text-[var(--brand)] transition-colors">Blog</Link>
               <span>/</span>
-              <span className="truncate max-w-[200px]" style={{ color: 'var(--text-secondary)' }}>{article.title}</span>
+              <span className="truncate max-w-[200px] text-[var(--text-secondary)]">{article.title}</span>
             </nav>
 
             {/* Meta */}
@@ -244,10 +241,10 @@ export default function BlogArticleContent({
               >
                 {article.category}
               </span>
-              <span className="text-[10px] sm:text-xs" style={{ color: 'var(--text-muted)' }}>
+              <span className="text-[10px] sm:text-xs text-[var(--text-muted)]">
                 {formatDate(article.publishedAt)}
               </span>
-              <span className="text-[10px] sm:text-xs" style={{ color: 'var(--text-muted)' }}>
+              <span className="text-[10px] sm:text-xs text-[var(--text-muted)]">
                 {article.readTime} min de lecture
               </span>
             </div>
@@ -258,12 +255,12 @@ export default function BlogArticleContent({
             </h1>
 
             {/* Subtitle */}
-            <p className="text-sm sm:text-base md:text-lg font-light leading-relaxed mb-6 md:mb-8" style={{ color: 'var(--text-secondary)' }}>
+            <p className="text-sm sm:text-base md:text-lg font-light leading-relaxed mb-6 md:mb-8 text-[var(--text-secondary)]">
               {article.subtitle}
             </p>
 
             {/* Author */}
-            <div className="flex items-center gap-4 pb-6 md:pb-10 mb-6 md:mb-10" style={{ borderBottom: '1px solid var(--border)' }}>
+            <div className="flex items-center gap-4 pb-6 md:pb-10 mb-6 md:mb-10 border-b border-[var(--border)]">
               <div
                 className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-medium"
                 style={{ background: `rgba(${goldRgb}, 0.1)`, color: gold }}
@@ -272,7 +269,7 @@ export default function BlogArticleContent({
               </div>
               <div>
                 <p className="text-sm font-medium">{article.author.name}</p>
-                <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{article.author.role}</p>
+                <p className="text-xs text-[var(--text-muted)]">{article.author.role}</p>
               </div>
             </div>
           </motion.div>
@@ -298,7 +295,7 @@ export default function BlogArticleContent({
             className="mt-10 md:mt-16 pt-6 md:pt-8"
             style={{ borderTop: '1px solid var(--border)' }}
           >
-            <p className="text-[10px] tracking-[0.15em] uppercase font-medium mb-3" style={{ color: 'var(--text-muted)' }}>
+            <p className="text-[10px] tracking-[0.15em] uppercase font-medium mb-3 text-[var(--text-muted)]">
               Tags
             </p>
             <div className="flex flex-wrap gap-2">
@@ -331,13 +328,13 @@ export default function BlogArticleContent({
               <h3 className="font-display text-lg sm:text-xl md:text-2xl font-light mb-2 md:mb-3" style={{ color: gold }}>
                 Pret(e) a decouvrir votre Signature Emotionnelle ?
               </h3>
-              <p className="text-xs sm:text-sm font-light mb-4 md:mb-5 max-w-md mx-auto" style={{ color: 'var(--text-secondary)' }}>
+              <p className="text-xs sm:text-sm font-light mb-4 md:mb-5 max-w-md mx-auto text-[var(--text-secondary)]">
                 15 questions pour reveler votre architecture emotionnelle profonde. Gratuit et confidentiel.
               </p>
               <Link href="/signature-emotionnelle">
                 <button
                   className="px-6 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-semibold tracking-wide hover:scale-105 transition-transform"
-                  style={{ background: `linear-gradient(135deg, ${gold}, #B8960F)`, color: '#000000' }}
+                  style={{ background: `linear-gradient(135deg, ${gold}, var(--brand-deep))`, color: '#000000' }}
                 >
                   Faire le test gratuit &rarr;
                 </button>
@@ -370,15 +367,15 @@ export default function BlogArticleContent({
                 </div>
                 <div className="flex-1 min-w-0">
                   {linkedDouleur.category && (
-                    <p className="text-[10px] uppercase tracking-wider mb-1" style={{ color: 'var(--text-muted)' }}>
+                    <p className="text-[10px] uppercase tracking-wider mb-1 text-[var(--text-muted)]">
                       {linkedDouleur.category}
                     </p>
                   )}
-                  <h3 className="font-display text-xl md:text-2xl font-semibold mb-1 md:mb-2" style={{ color: 'var(--text-primary)' }}>
+                  <h3 className="font-display text-xl md:text-2xl font-semibold mb-1 md:mb-2 text-[var(--text-primary)]">
                     {linkedDouleur.title}
                   </h3>
                   {linkedDouleur.subtitle && (
-                    <p className="text-sm md:text-base italic mb-3 md:mb-4" style={{ color: 'var(--text-secondary)' }}>
+                    <p className="text-sm md:text-base italic mb-3 md:mb-4 text-[var(--text-secondary)]">
                       {linkedDouleur.subtitle}
                     </p>
                   )}

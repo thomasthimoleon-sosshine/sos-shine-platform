@@ -38,7 +38,7 @@ function CtaButton({ position, label = 'DÉCOUVRIR MA SIGNATURE →', large = fa
       href={QUIZ_URL}
       onClick={() => trackCta(position)}
       className={`inline-block text-center font-semibold rounded-lg transition-all hover:brightness-110 hover:scale-[1.02] active:scale-[0.98] ${large ? 'w-full sm:w-auto px-10 py-5 text-base' : 'px-8 py-4 text-sm'}`}
-      style={{ background: 'var(--brand, #C9A961)', color: '#000000' }}
+      style={{ background: 'var(--brand, var(--brand))', color: '#000000' }}
     >
       {label}
     </Link>
@@ -57,7 +57,7 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
         className="w-full flex items-center justify-between py-5 text-left cursor-pointer"
       >
         <span className="text-sm font-medium pr-4" style={{ color: 'var(--text-primary, #e0e0e0)' }}>{question}</span>
-        <span className="text-lg flex-shrink-0 transition-transform" style={{ color: 'var(--brand, #C9A961)', transform: open ? 'rotate(45deg)' : 'rotate(0)' }}>+</span>
+        <span className="text-lg flex-shrink-0 transition-transform" style={{ color: 'var(--brand, var(--brand))', transform: open ? 'rotate(45deg)' : 'rotate(0)' }}>+</span>
       </button>
       {open && (
         <motion.div
@@ -83,7 +83,7 @@ export default function QuizLandingClient() {
       <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden">
         {/* Background gradient */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full opacity-[0.06] blur-[100px]" style={{ background: 'var(--brand, #C9A961)' }} />
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full opacity-[0.06] blur-[100px]" style={{ background: 'var(--brand, var(--brand))' }} />
         </div>
 
         <div className="relative z-10 max-w-lg text-center space-y-8">
@@ -127,7 +127,7 @@ export default function QuizLandingClient() {
 
           <Reveal delay={0.6}>
             <div className="pt-4">
-              <p className="text-sm" style={{ color: 'var(--brand, #C9A961)' }}>⭐⭐⭐⭐⭐</p>
+              <p className="text-sm" style={{ color: 'var(--brand, var(--brand))' }}>⭐⭐⭐⭐⭐</p>
               <p className="text-xs italic mt-1" style={{ color: '#737373' }}>&laquo; Une révélation. &raquo;</p>
             </div>
           </Reveal>
@@ -138,7 +138,7 @@ export default function QuizLandingClient() {
       <section className="px-6 py-20 sm:py-28">
         <div className="max-w-lg mx-auto text-center space-y-8">
           <Reveal>
-            <p className="text-xs tracking-[0.3em] uppercase font-medium" style={{ color: 'var(--brand, #C9A961)' }}>
+            <p className="text-xs tracking-[0.3em] uppercase font-medium" style={{ color: 'var(--brand, var(--brand))' }}>
               Pourquoi ce test est différent
             </p>
           </Reveal>
@@ -158,7 +158,7 @@ export default function QuizLandingClient() {
           </Reveal>
 
           <Reveal delay={0.2}>
-            <div className="w-12 h-px mx-auto" style={{ background: 'var(--brand, #C9A961)' }} />
+            <div className="w-12 h-px mx-auto" style={{ background: 'var(--brand, var(--brand))' }} />
           </Reveal>
 
           <Reveal delay={0.3}>
@@ -185,7 +185,7 @@ export default function QuizLandingClient() {
       <section className="px-6 py-20 sm:py-28" style={{ background: 'rgba(255,255,255,0.015)' }}>
         <div className="max-w-2xl mx-auto space-y-12">
           <Reveal>
-            <p className="text-xs tracking-[0.3em] uppercase font-medium text-center" style={{ color: 'var(--brand, #C9A961)' }}>
+            <p className="text-xs tracking-[0.3em] uppercase font-medium text-center" style={{ color: 'var(--brand, var(--brand))' }}>
               En 3 étapes
             </p>
           </Reveal>
@@ -197,7 +197,7 @@ export default function QuizLandingClient() {
           ].map((step, i) => (
             <Reveal key={step.num} delay={i * 0.1}>
               <div className="flex gap-6 items-start">
-                <span className="font-display text-3xl font-light flex-shrink-0" style={{ color: 'var(--brand, #C9A961)', opacity: 0.6 }}>
+                <span className="font-display text-3xl font-light flex-shrink-0" style={{ color: 'var(--brand, var(--brand))', opacity: 0.6 }}>
                   {step.num}
                 </span>
                 <div>
@@ -214,7 +214,7 @@ export default function QuizLandingClient() {
       <section className="px-6 py-20 sm:py-28">
         <div className="max-w-2xl mx-auto space-y-10">
           <Reveal>
-            <p className="text-xs tracking-[0.3em] uppercase font-medium text-center" style={{ color: 'var(--brand, #C9A961)' }}>
+            <p className="text-xs tracking-[0.3em] uppercase font-medium text-center" style={{ color: 'var(--brand, var(--brand))' }}>
               Elles ont fait le test
             </p>
           </Reveal>
@@ -249,7 +249,7 @@ export default function QuizLandingClient() {
       <section className="px-6 py-20 sm:py-28" style={{ background: 'rgba(255,255,255,0.015)' }}>
         <div className="max-w-2xl mx-auto">
           <Reveal>
-            <p className="text-xs tracking-[0.3em] uppercase font-medium text-center mb-10" style={{ color: 'var(--brand, #C9A961)' }}>
+            <p className="text-xs tracking-[0.3em] uppercase font-medium text-center mb-10" style={{ color: 'var(--brand, var(--brand))' }}>
               Créé par Julia Laureau
             </p>
           </Reveal>
@@ -264,7 +264,7 @@ export default function QuizLandingClient() {
                 <p className="text-sm leading-relaxed" style={{ color: '#a1a1aa' }}>
                   Ce test est l&apos;aboutissement de plusieurs années d&apos;accompagnements.
                 </p>
-                <p className="text-sm" style={{ color: 'var(--brand, #C9A961)' }}>⭐⭐⭐⭐⭐ Sur Amazon</p>
+                <p className="text-sm" style={{ color: 'var(--brand, var(--brand))' }}>⭐⭐⭐⭐⭐ Sur Amazon</p>
               </div>
             </div>
           </Reveal>
@@ -275,7 +275,7 @@ export default function QuizLandingClient() {
       <section className="px-6 py-20 sm:py-28">
         <div className="max-w-lg mx-auto space-y-8">
           <Reveal>
-            <p className="text-xs tracking-[0.3em] uppercase font-medium text-center" style={{ color: 'var(--brand, #C9A961)' }}>
+            <p className="text-xs tracking-[0.3em] uppercase font-medium text-center" style={{ color: 'var(--brand, var(--brand))' }}>
               Questions fréquentes
             </p>
           </Reveal>
@@ -295,7 +295,7 @@ export default function QuizLandingClient() {
       {/* ══════════ SECTION 7 — CTA FINAL ══════════ */}
       <section className="relative px-6 py-24 sm:py-32 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full opacity-[0.04] blur-[120px]" style={{ background: 'var(--brand, #C9A961)' }} />
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full opacity-[0.04] blur-[120px]" style={{ background: 'var(--brand, var(--brand))' }} />
         </div>
 
         <div className="relative z-10 max-w-lg mx-auto text-center space-y-8">

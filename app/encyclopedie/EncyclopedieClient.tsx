@@ -9,7 +9,7 @@ import type { Douleur } from '@/types/database'
 
 /* ─── Catégories & couleurs ─── */
 const CATEGORIES: Record<string, string> = {
-  "Émotions & Psychologie": "#C9A961",
+  "Émotions & Psychologie": "var(--brand)",
   "Relations & Liens": "#C9A96E",
   "Blessures & Traumatismes": "#B8860B",
   "Développement Personnel": "#DAA520",
@@ -17,7 +17,7 @@ const CATEGORIES: Record<string, string> = {
   "Spiritualité & Énergie": "#FFD700",
   "Soins & Thérapies": "#F0C040",
   "Identité & Mission": "#E8C870",
-  "Vie & Expériences": "#C9A961",
+  "Vie & Expériences": "var(--brand)",
   "Pratiques & Outils": "#C8A951",
 }
 
@@ -414,13 +414,12 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
   const originalCount = topics.filter(t => t.original).length
 
   return (
-    <main className="min-h-screen watermark-container" style={{ background: 'var(--dark)' }}>
+    <main className="min-h-screen watermark-container bg-[var(--surface)]">
       <div className="watermark" />
 
       {/* Header bar */}
       <header
-        className="px-6 md:px-12 lg:px-20 py-5 flex items-center justify-between"
-        style={{ borderBottom: '1px solid var(--border)' }}
+        className="px-6 md:px-12 lg:px-20 py-5 flex items-center justify-between border-b border-[var(--border)]"
       >
         <Link href="/" className="flex items-center gap-3 group">
           <Image
@@ -431,7 +430,7 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
             className="w-9 h-9 rounded-full object-cover ring-1 ring-white/10"
             priority
           />
-          <span className="font-display text-base font-semibold tracking-tight" style={{ color: 'var(--text-primary)' }}>
+          <span className="font-display text-base font-semibold tracking-tight text-[var(--text-primary)]">
             SOS Shine
           </span>
         </Link>
@@ -454,15 +453,14 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
       >
         <div className="max-w-5xl mx-auto">
           <p
-            className="text-[11px] tracking-[0.3em] uppercase mb-3"
-            style={{ color: 'var(--brand)' }}
+            className="text-[11px] tracking-[0.3em] uppercase mb-3 text-[var(--brand)]"
           >
             SOS Shine — Encyclopédie Émotionnelle
           </p>
           <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-light mb-2" style={{ color: 'var(--text-primary)', lineHeight: 1.1 }}>
             Cartographie Universelle
           </h1>
-          <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+          <p className="text-sm text-[var(--text-muted)]">
             {topics.length} sujets &middot; {originalCount} originaux &diams; &middot; {Object.keys(CATEGORIES).length} catégories
           </p>
         </div>
@@ -477,7 +475,7 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
             viewBox="0 0 24 24"
             stroke="currentColor"
             strokeWidth={1.5}
-            style={{ color: 'var(--text-muted)' }}
+            className="text-[var(--text-muted)]"
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
           </svg>
@@ -555,15 +553,15 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
 
         {/* Count & original toggle */}
         <div className="flex justify-between items-center">
-          <p className="text-[13px]" style={{ color: 'var(--text-muted)' }}>
+          <p className="text-[13px] text-[var(--text-muted)]">
             {filtered.length} sujet{filtered.length > 1 ? 's' : ''} affiché{filtered.length > 1 ? 's' : ''}
           </p>
-          <label className="flex items-center gap-2 cursor-pointer text-[12px] uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
+          <label className="flex items-center gap-2 cursor-pointer text-[12px] uppercase tracking-wider text-[var(--text-muted)]">
             <input
               type="checkbox"
               checked={onlyOriginal}
               onChange={(e) => setOnlyOriginal(e.target.checked)}
-              className="accent-[#C9A961]"
+              className="accent-[var(--brand)]"
             />
             <span>&diams; Liste originale uniquement</span>
           </label>
@@ -576,10 +574,10 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-20">
-            <p className="font-display text-2xl mb-2" style={{ color: 'var(--text-secondary)' }}>
+            <p className="font-display text-2xl mb-2 text-[var(--text-secondary)]">
               Aucun résultat
             </p>
-            <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+            <p className="text-sm text-[var(--text-muted)]">
               Modifie ta recherche ou réinitialise les filtres
             </p>
           </div>
@@ -592,8 +590,8 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
                   <h2 className="font-display text-5xl font-light" style={{ color: 'var(--brand)', opacity: 0.8, lineHeight: 1 }}>
                     {letter}
                   </h2>
-                  <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
-                  <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                  <div className="flex-1 h-px bg-[var(--border)]" />
+                  <span className="text-xs text-[var(--text-muted)]">
                     {grouped[letter].length}
                   </span>
                 </div>
@@ -625,12 +623,11 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
                                 {topic.title}
                               </span>
                               {topic.original && (
-                                <span className="text-[11px]" style={{ color: 'var(--brand)' }}>&diams;</span>
+                                <span className="text-[11px] text-[var(--brand)]">&diams;</span>
                               )}
                             </div>
                             <p
-                              className="text-[12px] leading-relaxed mb-2 italic"
-                              style={{ color: 'var(--text-secondary)' }}
+                              className="text-[12px] leading-relaxed mb-2 italic text-[var(--text-secondary)]"
                             >
                               {topic.subtitle}
                             </p>
@@ -660,7 +657,7 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
                                     </span>
                                     {/* Shine Librairie */}
                                     <span title="Shine Librairie" className="inline-flex items-center justify-center w-5 h-5 rounded" style={{ background: avail?.hasLibrary ? 'rgba(201,169,97,0.15)' : 'rgba(255,255,255,0.03)' }}>
-                                      <svg className="w-3 h-3" fill={avail?.hasLibrary ? '#C9A961' : 'rgba(255,255,255,0.15)'} viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" /></svg>
+                                      <svg className="w-3 h-3" fill={avail?.hasLibrary ? 'var(--brand)' : 'rgba(255,255,255,0.15)'} viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" /></svg>
                                     </span>
                                   </div>
                                 )
@@ -668,7 +665,7 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
                             </div>
                           </div>
                           {hasDbEntry ? (
-                            <svg className="w-4 h-4 flex-shrink-0 mt-1 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: '#55EFC4' }}>
+                            <svg className="w-4 h-4 flex-shrink-0 mt-1 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} className="text-[var(--success)]">
                               <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                             </svg>
                           ) : (
@@ -697,7 +694,7 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
           <h3 className="font-display text-xl font-semibold mb-2">
             Accédez à tous les protocoles
           </h3>
-          <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-sm mb-5 text-[var(--text-secondary)]">
             Vidéos de coaching, soins énergétiques, méditations guidées et exercices pratiques pour chaque challenge émotionnel.
           </p>
           <Link
@@ -707,7 +704,7 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
           >
             Découvrir les offres
           </Link>
-          <p className="text-xs mt-3" style={{ color: 'var(--text-muted)' }}>
+          <p className="text-xs mt-3 text-[var(--text-muted)]">
             Accès illimité à toute l&apos;encyclopédie et la communauté
           </p>
         </div>
@@ -722,36 +719,36 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
         >
           <div className="flex items-center gap-2">
             <div className="w-4 h-0.5" style={{ background: 'var(--brand)' }} />
-            <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>&diams; Sujet de la liste originale</span>
+            <span className="text-xs text-[var(--text-secondary)]">&diams; Sujet de la liste originale</span>
           </div>
           <div className="flex items-center gap-2">
             <svg className="w-3 h-3" fill="#55EFC4" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-            <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Shine TV</span>
+            <span className="text-xs text-[var(--text-secondary)]">Shine TV</span>
           </div>
           <div className="flex items-center gap-2">
             <svg className="w-3 h-3" fill="#74C0FC" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" /></svg>
-            <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Shine Audible</span>
+            <span className="text-xs text-[var(--text-secondary)]">Shine Audible</span>
           </div>
           <div className="flex items-center gap-2">
             <svg className="w-3 h-3" fill="#A29BFE" viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z" /></svg>
-            <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Shine Short</span>
+            <span className="text-xs text-[var(--text-secondary)]">Shine Short</span>
           </div>
           <div className="flex items-center gap-2">
-            <svg className="w-3 h-3" fill="#C9A961" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" /></svg>
-            <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Shine Librairie</span>
+            <svg className="w-3 h-3" fill="var(--brand)" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" /></svg>
+            <span className="text-xs text-[var(--text-secondary)]">Shine Librairie</span>
           </div>
-          <span className="text-xs ml-auto" style={{ color: 'var(--text-muted)' }}>
+          <span className="text-xs ml-auto text-[var(--text-muted)]">
             {topics.length} sujets au total
           </span>
         </div>
 
         {/* Contact info */}
         <div className="rounded-xl p-5 text-center" style={{ background: 'rgba(201,169,97,0.04)', border: '1px solid rgba(201,169,97,0.1)' }}>
-          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-sm text-[var(--text-secondary)]">
             Vous ne trouvez pas votre challenge émotionnel ? Nous ajoutons régulièrement de nouvelles pages.
           </p>
-          <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
-            Contactez-nous à <span style={{ color: 'var(--brand)' }}>julialaureau@sosshine.com</span>
+          <p className="text-xs mt-1 text-[var(--text-muted)]">
+            Contactez-nous à <span className="text-[var(--brand)]">julialaureau@sosshine.com</span>
           </p>
         </div>
       </div>

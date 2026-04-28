@@ -8,7 +8,7 @@ import type { BlogArticle } from '@/data/blog/articles'
 import ThemeToggle from '@/components/ThemeToggle'
 import { createClient } from '@/lib/supabase/client'
 
-const gold = '#C9A961'
+const gold = 'var(--brand)'
 const goldRgb = '212,175,55'
 
 interface BlogListClientProps {
@@ -110,7 +110,7 @@ export default function BlogListClient({ initialArticles }: BlogListClientProps)
               Comprendre vos emotions.{' '}
               <span className="text-shimmer">Transformer votre vie.</span>
             </h1>
-            <p className="text-sm sm:text-base md:text-lg font-light max-w-2xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
+            <p className="text-sm sm:text-base md:text-lg font-light max-w-2xl mx-auto text-[var(--text-secondary)]">
               Articles experts, guides pratiques et decouvertes scientifiques pour une relation
               nouvelle avec vos emotions. Par les fondateurs de SOS Shine.
             </p>
@@ -168,7 +168,7 @@ export default function BlogListClient({ initialArticles }: BlogListClientProps)
                       >
                         Article vedette
                       </span>
-                      <span className="text-[10px] sm:text-xs tracking-wider uppercase" style={{ color: 'var(--text-muted)' }}>
+                      <span className="text-[10px] sm:text-xs tracking-wider uppercase text-[var(--text-muted)]">
                         {featured.readTime} min de lecture
                       </span>
                     </div>
@@ -177,7 +177,7 @@ export default function BlogListClient({ initialArticles }: BlogListClientProps)
                       {featured.title}
                     </h2>
 
-                    <p className="text-sm md:text-base font-light leading-relaxed mb-6 md:mb-8 max-w-3xl" style={{ color: 'var(--text-secondary)' }}>
+                    <p className="text-sm md:text-base font-light leading-relaxed mb-6 md:mb-8 max-w-3xl text-[var(--text-secondary)]">
                       {featured.excerpt}
                     </p>
 
@@ -188,12 +188,12 @@ export default function BlogListClient({ initialArticles }: BlogListClientProps)
                         </div>
                         <div>
                           <p className="text-xs sm:text-sm font-medium">{featured.author.name}</p>
-                          <p className="text-[10px] sm:text-xs" style={{ color: 'var(--text-muted)' }}>{featured.author.role}</p>
+                          <p className="text-[10px] sm:text-xs text-[var(--text-muted)]">{featured.author.role}</p>
                         </div>
                       </div>
                       <span
                         className="inline-flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold tracking-wide group-hover:scale-105 transition-transform"
-                        style={{ background: `linear-gradient(135deg, ${gold}, #B8960F)`, color: '#000000' }}
+                        style={{ background: `linear-gradient(135deg, ${gold}, var(--brand-deep))`, color: '#000000' }}
                       >
                         Lire l&apos;article
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -213,7 +213,7 @@ export default function BlogListClient({ initialArticles }: BlogListClientProps)
       {others.length > 0 && (
         <section className="px-5 md:px-8 mb-16 md:mb-24">
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-[11px] font-semibold uppercase tracking-widest mb-6 md:mb-8" style={{ color: 'var(--text-muted)' }}>
+            <h2 className="text-[11px] font-semibold uppercase tracking-widest mb-6 md:mb-8 text-[var(--text-muted)]">
               Derniers articles
             </h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
@@ -235,11 +235,11 @@ export default function BlogListClient({ initialArticles }: BlogListClientProps)
                       <h3 className="font-display text-lg md:text-xl font-light mt-2 mb-3 leading-snug group-hover:text-[var(--brand)] transition-colors">
                         {article.title}
                       </h3>
-                      <p className="text-xs font-light leading-relaxed mb-4" style={{ color: 'var(--text-secondary)' }}>
+                      <p className="text-xs font-light leading-relaxed mb-4 text-[var(--text-secondary)]">
                         {article.excerpt.slice(0, 140)}...
                       </p>
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{article.readTime} min</span>
+                        <span className="text-[10px] text-[var(--text-muted)]">{article.readTime} min</span>
                         <span className="text-xs font-medium" style={{ color: gold }}>
                           Lire &rarr;
                         </span>
@@ -266,14 +266,14 @@ export default function BlogListClient({ initialArticles }: BlogListClientProps)
             <h2 className="font-display text-xl sm:text-2xl md:text-3xl font-light mb-3 md:mb-4" style={{ color: gold }}>
               Decouvrez votre Signature Emotionnelle
             </h2>
-            <p className="text-xs sm:text-sm font-light mb-5 md:mb-6 max-w-lg mx-auto" style={{ color: 'var(--text-secondary)' }}>
+            <p className="text-xs sm:text-sm font-light mb-5 md:mb-6 max-w-lg mx-auto text-[var(--text-secondary)]">
               15 questions pour reveler votre architecture emotionnelle profonde.
               Un diagnostic premium et hyper-personnalise. Gratuit.
             </p>
             <Link href="/signature-emotionnelle">
               <button
                 className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-full text-sm font-semibold tracking-wide hover:scale-105 transition-transform"
-                style={{ background: `linear-gradient(135deg, ${gold}, #B8960F)`, color: '#000000' }}
+                style={{ background: `linear-gradient(135deg, ${gold}, var(--brand-deep))`, color: '#000000' }}
               >
                 Faire le test gratuit &rarr;
               </button>

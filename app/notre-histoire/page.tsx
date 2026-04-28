@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 
 export default function NotreHistoirePage() {
   const [logoUrl, setLogoUrl] = useState('')
-  const [gold, setGold] = useState('#C9A961')
+  const [gold, setGold] = useState('var(--brand)')
   const [loading, setLoading] = useState(true)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [hist, setHist] = useState<Record<string, any>>({})
@@ -48,11 +48,11 @@ export default function NotreHistoirePage() {
   if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" /></div>
 
   return (
-    <main className="min-h-screen" style={{ background: 'var(--dark)' }}>
+    <main className="min-h-screen bg-[var(--surface)]">
 
       {/* ── Header / Navigation ── */}
       <div className="px-6 pt-10 pb-4 max-w-5xl mx-auto">
-        <Link href="/" className="inline-flex items-center gap-2 text-sm transition-colors" style={{ color: 'var(--text-muted)' }}>
+        <Link href="/" className="inline-flex items-center gap-2 text-sm transition-colors text-[var(--text-muted)]">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
           Retour à l&apos;accueil
         </Link>
@@ -62,7 +62,7 @@ export default function NotreHistoirePage() {
       {/* ── L'Histoire / Le Livre ── */}
       <section className="px-6 md:px-20 py-12 md:py-20">
         <div className="max-w-5xl mx-auto">
-          <p className="text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] uppercase mb-3 md:mb-4" style={{ color: 'var(--text-muted)' }}>
+          <p className="text-center text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] uppercase mb-3 md:mb-4 text-[var(--text-muted)]">
             {hist.label || "L'Histoire"}
           </p>
           <h1 className="font-display font-light text-center text-2xl sm:text-3xl md:text-5xl mb-6 md:mb-8" style={{ color: gold }}>
@@ -85,14 +85,14 @@ export default function NotreHistoirePage() {
 
             {/* Text content */}
             <div className="flex-1 text-center md:text-left">
-              <p className="text-base md:text-xl leading-relaxed mb-4 md:mb-6" style={{ color: 'var(--text-secondary)' }}>
+              <p className="text-base md:text-xl leading-relaxed mb-4 md:mb-6 text-[var(--text-secondary)]">
                 {hist.paragraph1 || "Tout a commencé avec un livre. Julia Laureau, thérapeute holistique, a créé \"SOS Shine — Briller Comme un Diamant\" — bien plus qu'un ouvrage de développement personnel, une véritable bible de transformation qui combine coaching vidéo, méditations guidées et séances énergétiques."}
               </p>
-              <p className="text-base md:text-xl leading-relaxed mb-4 md:mb-6" style={{ color: 'var(--text-secondary)' }}>
+              <p className="text-base md:text-xl leading-relaxed mb-4 md:mb-6 text-[var(--text-secondary)]">
                 {hist.paragraph2 || "Ce programme interactif a déjà aidé des dizaines de personnes à se libérer de leurs blocages et à accéder à leur véritable potentiel. Face à cet élan, la plateforme SOS Shine est née — la continuité naturelle du livre, transformée en une communauté vivante d'accompagnement et de reconstruction."}
               </p>
               {(hist.quote) && (
-                <p className="text-sm md:text-base leading-relaxed mb-6 md:mb-8 italic" style={{ color: 'var(--text-muted)' }}>
+                <p className="text-sm md:text-base leading-relaxed mb-6 md:mb-8 italic text-[var(--text-muted)]">
                   &ldquo;{hist.quote}&rdquo;
                 </p>
               )}
@@ -113,19 +113,19 @@ export default function NotreHistoirePage() {
 
       {/* ── Séparation ── */}
       <div className="max-w-5xl mx-auto px-6">
-        <div className="h-[1px]" style={{ background: 'var(--border)' }} />
+        <div className="h-[1px] bg-[var(--border)]" />
       </div>
 
       {/* ── Les Fondateurs / Trinité ── */}
       <section className="px-6 md:px-20 py-12 md:py-20">
         <div className="max-w-5xl mx-auto">
-          <p className="text-center text-[10px] sm:text-xs tracking-[0.4em] sm:tracking-[0.5em] uppercase mb-3 md:mb-4" style={{ color: 'var(--text-muted)' }}>
+          <p className="text-center text-[10px] sm:text-xs tracking-[0.4em] sm:tracking-[0.5em] uppercase mb-3 md:mb-4 text-[var(--text-muted)]">
             Notre Histoire
           </p>
           <h2 className="font-display font-light text-center text-2xl sm:text-3xl md:text-5xl mb-6 md:mb-8" style={{ color: gold }}>
             {hist.trinite_title || 'Trois forces. Une seule mission.'}
           </h2>
-          <p className="text-center max-w-3xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed font-light mb-12 md:mb-20" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-center max-w-3xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed font-light mb-12 md:mb-20 text-[var(--text-secondary)]">
             {hist.trinite_intro || "Tout a commencé par un livre. Julia, portée par une conviction profonde, a écrit pour libérer ceux qui se sentaient prisonniers d\u2019eux-mêmes. Puis William et Thomas l\u2019ont rejointe. Trois visions. Trois piliers. Une trinité indissociable pour déconditionner l\u2019être humain dans sa totalité."}
           </p>
 
@@ -154,9 +154,9 @@ export default function NotreHistoirePage() {
                   </div>
                   <p className="text-[10px] sm:text-xs tracking-[0.3em] uppercase mb-2 opacity-70" style={{ color: gold }}>Fondatrice</p>
                   <h3 className="font-display text-xl sm:text-2xl md:text-3xl mb-2" style={{ color: gold }}>Julia</h3>
-                  <p className="text-[10px] sm:text-xs tracking-[0.25em] uppercase mb-4 md:mb-5" style={{ color: 'var(--text-muted)' }}>{hist.julia_pilier || 'Le Pilier Énergétique'}</p>
+                  <p className="text-[10px] sm:text-xs tracking-[0.25em] uppercase mb-4 md:mb-5 text-[var(--text-muted)]">{hist.julia_pilier || 'Le Pilier Énergétique'}</p>
                   <div className="w-8 h-[1px] mx-auto mb-4 md:mb-5" style={{ background: `linear-gradient(90deg, transparent, ${gold}, transparent)` }} />
-                  <p className="text-xs sm:text-sm leading-relaxed font-light" style={{ color: 'var(--text-secondary)' }}>
+                  <p className="text-xs sm:text-sm leading-relaxed font-light text-[var(--text-secondary)]">
                     {hist.julia_desc || "Auteure du livre fondateur de SOS Shine, Julia canalise l\u2019énergie invisible qui nous traverse. Sa vision : reconnecter chaque individu à sa vibration authentique, celle qu\u2019il a oubliée sous des couches de conditionnements."}
                   </p>
                 </div>
@@ -173,9 +173,9 @@ export default function NotreHistoirePage() {
                   </div>
                   <p className="text-[10px] sm:text-xs tracking-[0.3em] uppercase mb-2 opacity-70" style={{ color: gold }}>Cofondateur</p>
                   <h3 className="font-display text-xl sm:text-2xl md:text-3xl mb-2" style={{ color: gold }}>William</h3>
-                  <p className="text-[10px] sm:text-xs tracking-[0.25em] uppercase mb-4 md:mb-5" style={{ color: 'var(--text-muted)' }}>{hist.william_pilier || 'Le Pilier Corporel'}</p>
+                  <p className="text-[10px] sm:text-xs tracking-[0.25em] uppercase mb-4 md:mb-5 text-[var(--text-muted)]">{hist.william_pilier || 'Le Pilier Corporel'}</p>
                   <div className="w-8 h-[1px] mx-auto mb-4 md:mb-5" style={{ background: `linear-gradient(90deg, transparent, ${gold}, transparent)` }} />
-                  <p className="text-xs sm:text-sm leading-relaxed font-light" style={{ color: 'var(--text-secondary)' }}>
+                  <p className="text-xs sm:text-sm leading-relaxed font-light text-[var(--text-secondary)]">
                     {hist.william_desc || "Spécialiste en hypnose et diplômé en médecine chinoise internationale, William apporte les solutions physiques concrètes pour déconstruire les croyances et les blocages ancrés dans le corps. Sa maîtrise du lien corps-esprit permet de libérer ce que les mots seuls ne peuvent atteindre."}
                   </p>
                 </div>
@@ -192,9 +192,9 @@ export default function NotreHistoirePage() {
                   </div>
                   <p className="text-[10px] sm:text-xs tracking-[0.3em] uppercase mb-2 opacity-70" style={{ color: gold }}>Cofondateur</p>
                   <h3 className="font-display text-xl sm:text-2xl md:text-3xl mb-2" style={{ color: gold }}>Thomas</h3>
-                  <p className="text-[10px] sm:text-xs tracking-[0.25em] uppercase mb-4 md:mb-5" style={{ color: 'var(--text-muted)' }}>{hist.thomas_pilier || 'Le Pilier Pratique'}</p>
+                  <p className="text-[10px] sm:text-xs tracking-[0.25em] uppercase mb-4 md:mb-5 text-[var(--text-muted)]">{hist.thomas_pilier || 'Le Pilier Pratique'}</p>
                   <div className="w-8 h-[1px] mx-auto mb-4 md:mb-5" style={{ background: `linear-gradient(90deg, transparent, ${gold}, transparent)` }} />
-                  <p className="text-xs sm:text-sm leading-relaxed font-light" style={{ color: 'var(--text-secondary)' }}>
+                  <p className="text-xs sm:text-sm leading-relaxed font-light text-[var(--text-secondary)]">
                     {hist.thomas_desc || "Thomas intervient sur le côté pratique et concret du déconditionnement. À travers des cahiers d\u2019exercices et des protocoles d\u2019action, il transforme la prise de conscience en résultats tangibles. Son approche : vous donner les outils pour devenir l\u2019architecte de votre propre transformation."}
                   </p>
                 </div>
@@ -206,12 +206,12 @@ export default function NotreHistoirePage() {
             <div className="mt-10 md:mt-16 text-center">
               <div className="inline-flex items-center gap-3 sm:gap-4 md:gap-6">
                 <div className="w-8 sm:w-12 md:w-16 h-[1px]" style={{ background: `linear-gradient(90deg, transparent, ${gold})` }} />
-                <p className="text-[10px] sm:text-xs tracking-[0.3em] sm:tracking-[0.4em] uppercase" style={{ color: 'var(--text-muted)' }}>
+                <p className="text-[10px] sm:text-xs tracking-[0.3em] sm:tracking-[0.4em] uppercase text-[var(--text-muted)]">
                   {hist.trinite_tagline || 'Âme \u00b7 Corps \u00b7 Esprit'}
                 </p>
                 <div className="w-8 sm:w-12 md:w-16 h-[1px]" style={{ background: `linear-gradient(90deg, ${gold}, transparent)` }} />
               </div>
-              <p className="max-w-2xl mx-auto mt-4 md:mt-6 text-xs sm:text-sm md:text-base leading-relaxed font-light" style={{ color: 'var(--text-secondary)' }}>
+              <p className="max-w-2xl mx-auto mt-4 md:mt-6 text-xs sm:text-sm md:text-base leading-relaxed font-light text-[var(--text-secondary)]">
                 {hist.trinite_conclusion || "Trois triangles à côtés égaux. Trois dimensions de l\u2019être. Un seul objectif : vous aider à devenir la personne que vous auriez toujours dû être. Le déconditionnement total commence ici."}
               </p>
             </div>
@@ -221,7 +221,7 @@ export default function NotreHistoirePage() {
 
       {/* ── Séparation ── */}
       <div className="max-w-5xl mx-auto px-6">
-        <div className="h-[1px]" style={{ background: 'var(--border)' }} />
+        <div className="h-[1px] bg-[var(--border)]" />
       </div>
 
       {/* ── Manifeste ── */}
@@ -232,7 +232,7 @@ export default function NotreHistoirePage() {
               &ldquo;{hist.manifeste || "Nous ne guérissons pas. Nous révélons. Ce que vous cherchez est déjà en vous — enfoui sous des années de conditionnements. Notre mission est de vous aider à le retrouver."}&rdquo;
             </p>
             <footer className="mt-6 md:mt-8">
-              <p className="text-[10px] sm:text-xs tracking-[0.3em] uppercase" style={{ color: 'var(--text-muted)' }}>— Julia, William & Thomas</p>
+              <p className="text-[10px] sm:text-xs tracking-[0.3em] uppercase text-[var(--text-muted)]">— Julia, William & Thomas</p>
             </footer>
           </blockquote>
         </div>

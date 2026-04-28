@@ -174,7 +174,7 @@ function PrelaunchContent() {
               <p className="text-[10px] mt-1 font-medium" style={{ color: '#55EFC4' }}>
                 code {PROMO.code} &middot; 7 jours d&apos;essai gratuit
               </p>
-              <div className="mt-2 flex justify-center"><PromoCountdown className="text-xs" /></div>
+ <div className="mt-2 flex justify-center text-xs" ><PromoCountdown /></div>
             </div>
             {/* Premium */}
             <div className="text-center">
@@ -674,7 +674,7 @@ function PaymentContent() {
                 <p className="text-xs mb-1 font-medium" style={{ color: '#55EFC4' }}>
                   code {PROMO.code} &middot; 7 jours d&apos;essai gratuit &mdash; CB requise
                 </p>
-                <div className="mb-2 flex justify-center"><PromoCountdown className="text-xs" /></div>
+ <div className="mb-2 flex justify-center text-xs" ><PromoCountdown /></div>
               </>
             )}
             <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>

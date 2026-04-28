@@ -420,15 +420,15 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
               <div className="space-y-1.5 text-left">
                 <div className="flex justify-between text-[11px]" style={{ color: "var(--text-secondary)" }}>
                   <span>3 mois <span style={{ color: "#D4AF37" }}>-10%</span></span>
-                  <span><span className="font-medium" style={{ color: "#D4AF37" }}>{formatPrice(TOTAL_PRICES.serenite.quarterly)}</span> <span className="line-through opacity-50">{formatPrice(ORIGINAL_PRICES.serenite.quarterly)}</span></span>
+ <span className="font-medium line-through opacity-50"><span style={{ color: "#D4AF37" }}>{formatPrice(TOTAL_PRICES.serenite.quarterly)}</span> <span >{formatPrice(ORIGINAL_PRICES.serenite.quarterly)}</span></span>
                 </div>
                 <div className="flex justify-between text-[11px]" style={{ color: "var(--text-secondary)" }}>
                   <span>6 mois <span style={{ color: "#D4AF37" }}>-20%</span></span>
-                  <span><span className="font-medium" style={{ color: "#D4AF37" }}>{formatPrice(TOTAL_PRICES.serenite.semiannual)}</span> <span className="line-through opacity-50">{formatPrice(ORIGINAL_PRICES.serenite.semiannual)}</span></span>
+ <span className="font-medium line-through opacity-50"><span style={{ color: "#D4AF37" }}>{formatPrice(TOTAL_PRICES.serenite.semiannual)}</span> <span >{formatPrice(ORIGINAL_PRICES.serenite.semiannual)}</span></span>
                 </div>
                 <div className="flex justify-between text-[11px]" style={{ color: "var(--text-secondary)" }}>
                   <span>12 mois <span style={{ color: "#D4AF37" }}>-30%</span></span>
-                  <span><span className="font-medium" style={{ color: "#D4AF37" }}>{formatPrice(TOTAL_PRICES.serenite.annual)}</span> <span className="line-through opacity-50">{formatPrice(ORIGINAL_PRICES.serenite.annual)}</span></span>
+ <span className="font-medium line-through opacity-50"><span style={{ color: "#D4AF37" }}>{formatPrice(TOTAL_PRICES.serenite.annual)}</span> <span >{formatPrice(ORIGINAL_PRICES.serenite.annual)}</span></span>
                 </div>
               </div>
             </div>
@@ -453,15 +453,15 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
               <div className="space-y-1.5 text-left">
                 <div className="flex justify-between text-[11px]" style={{ color: "var(--text-secondary)" }}>
                   <span>3 mois <span style={{ color: "#D4AF37" }}>-10%</span></span>
-                  <span><span className="font-medium" style={{ color: "#D4AF37" }}>{formatPrice(TOTAL_PRICES.premium.quarterly)}</span> <span className="line-through opacity-50">{formatPrice(ORIGINAL_PRICES.premium.quarterly)}</span></span>
+ <span className="font-medium line-through opacity-50"><span style={{ color: "#D4AF37" }}>{formatPrice(TOTAL_PRICES.premium.quarterly)}</span> <span >{formatPrice(ORIGINAL_PRICES.premium.quarterly)}</span></span>
                 </div>
                 <div className="flex justify-between text-[11px]" style={{ color: "var(--text-secondary)" }}>
                   <span>6 mois <span style={{ color: "#D4AF37" }}>-20%</span></span>
-                  <span><span className="font-medium" style={{ color: "#D4AF37" }}>{formatPrice(TOTAL_PRICES.premium.semiannual)}</span> <span className="line-through opacity-50">{formatPrice(ORIGINAL_PRICES.premium.semiannual)}</span></span>
+ <span className="font-medium line-through opacity-50"><span style={{ color: "#D4AF37" }}>{formatPrice(TOTAL_PRICES.premium.semiannual)}</span> <span >{formatPrice(ORIGINAL_PRICES.premium.semiannual)}</span></span>
                 </div>
                 <div className="flex justify-between text-[11px]" style={{ color: "var(--text-secondary)" }}>
                   <span>12 mois <span style={{ color: "#D4AF37" }}>-30%</span></span>
-                  <span><span className="font-medium" style={{ color: "#D4AF37" }}>{formatPrice(TOTAL_PRICES.premium.annual)}</span> <span className="line-through opacity-50">{formatPrice(ORIGINAL_PRICES.premium.annual)}</span></span>
+ <span className="font-medium line-through opacity-50"><span style={{ color: "#D4AF37" }}>{formatPrice(TOTAL_PRICES.premium.annual)}</span> <span >{formatPrice(ORIGINAL_PRICES.premium.annual)}</span></span>
                 </div>
               </div>
             </div>

@@ -1301,7 +1301,7 @@ export default function ShineAudiblePage() {
           // Douleur-filtered view
           <div>
             <h2 className="text-lg font-display font-semibold mb-4 flex items-center gap-2 text-[var(--text-primary)]">
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} className="text-[var(--brand)]">
+ <svg className="w-5 h-5 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.331 0 4.476.884 6.084 2.333M12 6.042A8.967 8.967 0 0118 3.75c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18c-2.331 0-4.476.884-6.084 2.333M12 6.042V20.333" />
               </svg>
               {douleurName || 'Contenu lié'}
@@ -1349,7 +1349,7 @@ export default function ShineAudiblePage() {
           // Encyclopédie A-Z view
           <div className="space-y-6">
             <h2 className="text-lg font-display font-semibold flex items-center gap-2 text-[var(--text-primary)]">
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} className="text-[var(--brand)]">
+ <svg className="w-5 h-5 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
               </svg>
               Encyclopédie A — Z
@@ -1403,7 +1403,7 @@ export default function ShineAudiblePage() {
                                   <img src={audio.cover} alt={audio.title} className="w-full h-full object-contain" loading="lazy" />
                                 ) : (
                                   <div className="w-full h-full flex items-center justify-center" style={{ background: 'rgba(201,169,97,0.05)' }}>
-                                    <svg className="w-12 h-12 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} className="text-[var(--brand)]">
+ <svg className="w-12 h-12 opacity-20 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} >
                                       <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
                                     </svg>
                                   </div>

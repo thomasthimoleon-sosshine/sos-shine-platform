@@ -1538,7 +1538,7 @@ export default function ShineTVPage() {
           // Douleur-filtered view
           <div>
             <h2 className="text-lg font-display font-semibold mb-4 flex items-center gap-2 text-[var(--text-primary)]">
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} className="text-[var(--brand)]">
+ <svg className="w-5 h-5 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.331 0 4.476.884 6.084 2.333M12 6.042A8.967 8.967 0 0118 3.75c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18c-2.331 0-4.476.884-6.084 2.333M12 6.042V20.333" />
               </svg>
               {douleurName || 'Contenu lié'}
@@ -1590,7 +1590,7 @@ export default function ShineTVPage() {
           // Encyclopédie A-Z view
           <div className="space-y-6">
             <h2 className="text-lg font-display font-semibold flex items-center gap-2 text-[var(--text-primary)]">
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} className="text-[var(--brand)]">
+ <svg className="w-5 h-5 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
               </svg>
               Encyclopédie A — Z

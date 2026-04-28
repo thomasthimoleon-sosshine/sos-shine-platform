@@ -52,7 +52,7 @@ function MarkdownRenderer({ content }: { content: string }) {
     if (trimmed.startsWith('## ')) { flushList(); elements.push(<h2 key={key++} className="font-display text-xl font-light mt-8 mb-3 text-[var(--text-primary)]">{trimmed.slice(3)}</h2>); continue }
     if (trimmed.startsWith('### ')) { flushList(); elements.push(<h3 key={key++} className="font-display text-lg font-light mt-6 mb-2" style={{ color: gold }}>{trimmed.slice(4)}</h3>); continue }
     if (trimmed === '---') { flushList(); elements.push(<hr key={key++} className="my-8 border-0 h-px" style={{ background: `rgba(${goldRgb}, 0.2)` }} />); continue }
-    if (trimmed.startsWith('> ')) { flushList(); elements.push(<blockquote key={key++} className="my-6 pl-5 py-3" style={{ borderLeft: `2px solid ${gold}` }}><p className="font-display text-base italic font-light text-[var(--text-primary)]" dangerouslySetInnerHTML={{ __html: inlineFormat(trimmed.slice(2)) }} /></blockquote>); continue }
+ if (trimmed.startsWith('> ')) { flushList(); elements.push(<blockquote className="my-6 pl-5 py-3 font-display text-base italic font-light text-[var(--text-primary)]" key={key++} style={{ borderLeft: `2px solid ${gold}` }}><p dangerouslySetInnerHTML={{ __html: inlineFormat(trimmed.slice(2)) }} /></blockquote>); continue }
     if (trimmed.startsWith('- ') || /^\d+\.\s/.test(trimmed)) { inList = true; listItems.push(trimmed.replace(/^[-\d]+[.\s]+/, '')); continue }
     flushList()
     elements.push(<p key={key++} className="text-sm leading-[1.8] font-light my-3 text-[var(--text-secondary)]" dangerouslySetInnerHTML={{ __html: inlineFormat(trimmed) }} />)

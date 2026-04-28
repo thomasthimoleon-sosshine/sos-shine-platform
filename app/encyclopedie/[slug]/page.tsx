@@ -273,7 +273,7 @@ export default function PublicDouleurDetailPage() {
           >
             Encyclopédie
           </Link>
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} className="text-[var(--text-muted)]">
+ <svg className="w-4 h-4 text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} >
             <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
           </svg>
           <span className="text-[var(--text-primary)]">{douleur.title}</span>

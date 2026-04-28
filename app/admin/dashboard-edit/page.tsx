@@ -168,7 +168,7 @@ export default function DashboardEditPage() {
     }
   }
 
-  if (loading) return <div className="flex justify-center py-20"><div className="w-8 h-8 border-2 border-[#74C0FC] border-t-transparent rounded-full animate-spin" /></div>
+ if (loading) return <div className="flex justify-center py-20 w-8 h-8 border-2 border-[#74C0FC] border-t-transparent rounded-full animate-spin" ><div /></div>
 
   const inputStyle: React.CSSProperties = { background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)' }
 

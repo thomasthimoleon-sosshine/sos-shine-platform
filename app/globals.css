@@ -1,98 +1,112 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════════
-   SOS SHINE — Design System v3 (Abyssal Premium — Cinzel / Montserrat)
-   Standard : Linear / Framer / LeClub10
+   SOS SHINE — Design System v4 (Sanctuary Premium)
+   Références : Apple · Calm · Linear · MasterClass
+   Palette : Noir profond · Bleu nuit · Ivoire · Or subtil
 ═══════════════════════════════════════════════════════════════ */
 
 /* ── 1. Design Tokens ── */
 :root {
-  /* ── Brand ── */
-  --brand: #C9A961;
-  --brand-light: #E8CC6E;
-  --brand-deep: #B8960F;
-  --brand-alpha-weak: rgba(201, 169, 97, 0.08);
-  --brand-alpha-medium: rgba(201, 169, 97, 0.16);
-  --brand-alpha-strong: rgba(201, 169, 97, 0.32);
+  /* ── Brand — Or subtil, patiné, vécu ── */
+  --brand: #B8A472;
+  --brand-light: #D4C99A;
+  --brand-deep: #96845A;
+  --brand-muted: #A69768;
+  --brand-alpha-weak: rgba(184, 164, 114, 0.06);
+  --brand-alpha-medium: rgba(184, 164, 114, 0.12);
+  --brand-alpha-strong: rgba(184, 164, 114, 0.24);
 
-  /* ═══════════════════════════════════════════════
-     ⚠️ LEGACY ALIASES — À SUPPRIMER EN PHASE 3
-     Ces variables existent UNIQUEMENT pour ne pas
-     casser le code legacy. Ne PAS les utiliser dans
-     de nouveaux composants. Voir PHASE_3_MIGRATION.md
-  ═══════════════════════════════════════════════ */
-  --gold: #C9A961;
-  --gold-light: #E8CC6E;
-  --gold-deep: #B8960F;
+  /* ── Surfaces — Noir profond + Bleu nuit ── */
+  --surface: #08090A;
+  --surface-raised: #0F1624;
+  --surface-card: #131A2B;
+  --surface-elevated: #1A2540;
+  --surface-overlay: rgba(8, 9, 10, 0.85);
+
+  /* ── Borders ── */
+  --border: rgba(184, 164, 114, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.04);
+  --border-medium: rgba(184, 164, 114, 0.15);
+  --border-strong: rgba(184, 164, 114, 0.25);
+  --border-hover: rgba(184, 164, 114, 0.20);
+
+  /* ── Text — Ivoire + nuances ── */
+  --text-primary: #F5F0E8;
+  --text-secondary: #A8A29E;
+  --text-muted: #64605A;
+  --text-bold: #FAFAF8;
+  --text-inverse: #08090A;
 
   /* ── Status ── */
-  --success: #55EFC4;
-  --success-alpha-weak: rgba(85, 239, 196, 0.08);
-  --success-alpha-medium: rgba(85, 239, 196, 0.16);
-  --success-alpha-strong: rgba(85, 239, 196, 0.32);
+  --success: #6BCFA0;
+  --success-alpha-weak: rgba(107, 207, 160, 0.08);
+  --success-alpha-medium: rgba(107, 207, 160, 0.16);
+  --success-alpha-strong: rgba(107, 207, 160, 0.32);
 
-  --danger: #E85D5D;
-  --danger-alpha-weak: rgba(232, 93, 93, 0.08);
-  --danger-alpha-medium: rgba(232, 93, 93, 0.16);
-  --danger-alpha-strong: rgba(232, 93, 93, 0.32);
+  --danger: #D46A6A;
+  --danger-alpha-weak: rgba(212, 106, 106, 0.08);
+  --danger-alpha-medium: rgba(212, 106, 106, 0.16);
+  --danger-alpha-strong: rgba(212, 106, 106, 0.32);
 
-  --warning: #E17055;
+  --warning: #D4A054;
+  --info: #6B9FD4;
 
   /* ── Accents ── */
-  --accent-blue: #74C0FC;
-  --accent-blue-alpha-weak: rgba(116, 192, 252, 0.08);
-  --accent-blue-alpha-medium: rgba(116, 192, 252, 0.16);
-  --accent-blue-alpha-strong: rgba(116, 192, 252, 0.32);
+  --accent-blue: #6B9FD4;
+  --accent-blue-alpha-weak: rgba(107, 159, 212, 0.08);
+  --accent-blue-alpha-medium: rgba(107, 159, 212, 0.16);
+  --accent-blue-alpha-strong: rgba(107, 159, 212, 0.32);
 
-  --accent-purple: #A29BFE;
+  --accent-purple: #9B8FD4;
+  --accent-teal: #6BBFB5;
+  --accent-rose: #D48FA0;
 
-  /* ── Steps (encyclopedia) ── */
-  --step-1: #6BD9B4;
-  --step-2: #7BA7CC;
-  --step-3: #D4945A;
-
-  /* ── Surfaces ── */
-  --surface: #000000;
-  --surface-card: rgba(255, 255, 255, 0.05);
-  --surface-elevated: rgba(255, 255, 255, 0.06);
-  --border: rgba(255, 255, 255, 0.08);
-  --border-hover: rgba(255, 255, 255, 0.12);
-
-  /* ⚠️ LEGACY — voir bloc en haut */
-  --dark: #000000;
-  --dark-card: rgba(255, 255, 255, 0.05);
-  --dark-card-hover: rgba(255, 255, 255, 0.055);
-  --dark-border: rgba(255, 255, 255, 0.08);
-  --dark-border-hover: rgba(255, 255, 255, 0.1);
-
-  /* ── Text ── */
-  --text-primary: #e0e0e0;
-  --text-secondary: #a1a1aa;
-  --text-muted: #52525b;
-  --text-bold: #ffffff;
+  /* ── Steps (encyclopédie) ── */
+  --step-1: #6BCFA0;
+  --step-2: #6B9FD4;
+  --step-3: #D4A054;
 
   /* ── Shadows ── */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.25);
-  --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.35);
-  --shadow-brand: 0 2px 12px rgba(201, 169, 97, 0.15);
-  --glow-gold: 0 0 32px rgba(201, 169, 97, 0.12);
-  --glow-gold-hover: 0 0 60px rgba(201, 169, 97, 0.2);
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.35);
+  --shadow-brand: 0 2px 12px rgba(184, 164, 114, 0.10);
+  --glow-gold: 0 0 24px rgba(184, 164, 114, 0.08);
+  --glow-gold-hover: 0 0 40px rgba(184, 164, 114, 0.12);
 
   /* ── Radii ── */
   --radius-sm: 6px;
   --radius-md: 10px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-2xl: 28px;
 
   /* ── Transitions ── */
-  --transition-fast: 150ms ease;
-  --transition-base: 250ms ease;
-  --transition-slow: 400ms ease;
+  --ease-default: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-fast: 120ms var(--ease-default);
+  --transition-base: 220ms var(--ease-default);
+  --transition-slow: 400ms var(--ease-default);
+  --transition-slower: 600ms var(--ease-smooth);
 
-  /* ⚠️ LEGACY — voir bloc en haut */
-  --button-bg: #C9A961;
-  --gold-gradient: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+  /* ═══════════════════════════════════════════════
+     LEGACY ALIASES — rétrocompatibilité
+     Utilisés par le code existant, seront migrés
+  ═══════════════════════════════════════════════ */
+  --gold: var(--brand);
+  --gold-light: var(--brand-light);
+  --gold-deep: var(--brand-deep);
+  --dark: var(--surface);
+  --dark-card: var(--surface-card);
+  --dark-card-hover: var(--surface-elevated);
+  --dark-border: var(--border);
+  --dark-border-hover: var(--border-hover);
+  --button-bg: var(--brand);
+  --gold-gradient: linear-gradient(135deg, var(--brand), var(--brand-deep));
 }
 
 /* ── Light Theme ── */
@@ -332,10 +346,10 @@
 
 /* ── 2. Tailwind v4 Theme ── */
 @theme inline {
-  --color-background: var(--dark);
+  --color-background: var(--surface);
   --color-foreground: var(--text-primary);
-  --font-sans: var(--font-dm-sans), \'DM Sans\', system-ui, sans-serif;
-  --font-display: var(--font-cormorant), \'Cormorant Garamond\', serif;
+  --font-sans: var(--font-dm-sans), 'DM Sans', system-ui, sans-serif;
+  --font-display: var(--font-cormorant), 'Cormorant Garamond', serif;
 }
 
 /* ── 3. Base Resets ── */
@@ -352,10 +366,11 @@ html.founder-mode * {
 }
 
 body {
-  background: #000000;
-  color: #e0e0e0;
-  font-family: var(--font-dm-sans), \'DM Sans\', system-ui, sans-serif;
+  background: var(--surface);
+  color: var(--text-primary);
+  font-family: var(--font-dm-sans), 'DM Sans', system-ui, sans-serif;
   font-weight: 300;
+  letter-spacing: 0.01em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -396,21 +411,21 @@ body {
   transform: rotate(-45deg);
 }
 
-/* Textes en gras → or cuivré */
+/* Textes en gras */
 strong, b {
-  color: #c5a059;
+  color: var(--brand);
 }
 
-/* Police d\'affichage (titres) */
+/* Police d'affichage (titres) */
 .font-display {
-  font-family: var(--font-cormorant), \'Cormorant Garamond\', serif;
+  font-family: var(--font-cormorant), 'Cormorant Garamond', serif;
 }
 
-/* Titres Premium - Or en mode sombre, Noir en mode clair */
+/* Titres Premium */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-cormorant), 'Cormorant Garamond', serif !important;
-  color: #C9A961 !important;
-  -webkit-text-fill-color: #C9A961 !important;
+  color: var(--brand) !important;
+  -webkit-text-fill-color: var(--brand) !important;
 }
 
 /* Fix spécifique pour le mode clair */

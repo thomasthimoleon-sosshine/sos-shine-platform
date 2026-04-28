@@ -522,7 +522,7 @@ export default function EvenementsPage() {
                     <span className="text-lg font-bold text-[var(--brand)]">
                       {new Date(event.event_date).getDate()}
                     </span>
-                    <span className="text-xs uppercase" style={{ color: 'var(--gold-deep, var(--brand))' }}>
+                    <span className="text-xs uppercase" style={{ color: 'var(--brand-deep, var(--brand))' }}>
                       {new Date(event.event_date).toLocaleDateString('fr-FR', { month: 'short' })}
                     </span>
                   </div>

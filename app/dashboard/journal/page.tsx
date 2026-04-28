@@ -299,8 +299,8 @@ export default function JournalPage() {
                 </h2>
                 <button
                   onClick={() => setShowModal(false)}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center cursor-pointer"
-                  style={{ color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)' }}
+                  className="w-8 h-8 rounded-lg flex items-center justify-center cursor-pointer text-[var(--text-muted)]"
+                  style={{ background: 'rgba(255,255,255,0.05)' }}
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />

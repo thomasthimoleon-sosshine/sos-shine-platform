@@ -549,7 +549,7 @@ export default function ProfilPage() {
                 Plan Gratuit — 0€/mois
               </span>
             </div>
-            <div className="text-xs space-y-1.5 pt-3" style={{ color: 'var(--text-secondary)', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+            <div className="text-xs space-y-1.5 pt-3 text-[var(--text-secondary)]" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
               <p className="font-medium mb-2 text-[var(--text-primary)]">Inclus dans votre plan :</p>
               <p>• Communauté (mur + chat général)</p>
               <p>• Shine Audible complet</p>

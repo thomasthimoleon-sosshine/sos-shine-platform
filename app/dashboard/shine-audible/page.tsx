@@ -1496,8 +1496,7 @@ export default function ShineAudiblePage() {
               <div className="flex gap-3">
                 <button
                   onClick={() => setAudioDisclaimer(null)}
-                  className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium cursor-pointer transition-all"
-                  style={{ color: 'var(--text-muted)', border: '1px solid var(--border)' }}
+                  className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium cursor-pointer transition-all text-[var(--text-muted)] border border-[var(--border)]"
                 >
                   Annuler
                 </button>

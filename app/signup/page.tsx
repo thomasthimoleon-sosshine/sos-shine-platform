@@ -200,9 +200,8 @@ export default function SignupPage() {
             <Link href="/"><img src={s('signup_header_image') || s('logo_url') || '/images/logo-shine.png'} alt="SOS Shine" className="h-16 mx-auto mb-3 object-contain" /></Link>
           </div>
 
-          <div className="glass p-10">
-            <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-6"
-              style={{ background: 'rgba(201,169,97,0.1)', border: '1px solid rgba(201,169,97,0.15)' }}>
+          <div className="rounded-[var(--radius-2xl)] p-10 bg-[var(--surface-raised)] border border-[var(--border-subtle)] shadow-[var(--shadow-lg)]">
+            <div className="w-14 h-14 rounded-[var(--radius-xl)] flex items-center justify-center mx-auto mb-6 bg-[var(--brand-alpha-weak)] border border-[var(--border-medium)]">
               <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="var(--brand)" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
@@ -224,7 +223,7 @@ export default function SignupPage() {
 
           <p className="text-[11px] text-[var(--text-muted)] mt-6">
             {t('auth.email_not_received')}{' '}
-            <button onClick={() => setSuccess(false)} className="gold-underline font-medium" style={{ color: 'var(--brand)' }}>
+            <button onClick={() => setSuccess(false)} className="font-medium text-[var(--brand)] hover:underline">
               {t('auth.retry')}
             </button>
           </p>
@@ -275,7 +274,7 @@ export default function SignupPage() {
         </div>
 
         {/* Card — glass */}
-        <div className="glass p-8 md:p-10">
+        <div className="rounded-[var(--radius-2xl)] p-8 md:p-10 bg-[var(--surface-raised)] border border-[var(--border-subtle)] shadow-[var(--shadow-lg)]">
           <h1 className="font-display text-[var(--text-primary)] mb-8" style={titleStyle}>
             {s('signup_title')}
           </h1>
@@ -289,31 +288,31 @@ export default function SignupPage() {
               <label htmlFor="prenom" className="block text-[13px] text-[var(--text-secondary)] mb-2 font-medium">{t('auth.firstname_label')}</label>
               <input id="prenom" type="text" value={prenom} onChange={(e) => setPrenom(e.target.value)} required
                 placeholder={t('auth.firstname_placeholder')}
-                className="w-full px-4 py-3 rounded-xl text-sm transition-colors"
-                style={inputStyle} onFocus={focusIn} onBlur={focusOut} />
+                className="w-full px-4 py-3 rounded-[var(--radius-lg)] text-sm transition-all duration-[var(--transition-base)] bg-[var(--surface-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] outline-none focus:border-[var(--brand-alpha-strong)] focus:shadow-[0_0_0_3px_var(--brand-alpha-weak)] placeholder:text-[var(--text-muted)]"
+                 />
             </div>
             <div>
               <label htmlFor="email" className="block text-[13px] text-[var(--text-secondary)] mb-2 font-medium">Email</label>
               <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
                 placeholder="votre@email.com"
-                className="w-full px-4 py-3 rounded-xl text-sm transition-colors"
-                style={inputStyle} onFocus={focusIn} onBlur={focusOut} />
+                className="w-full px-4 py-3 rounded-[var(--radius-lg)] text-sm transition-all duration-[var(--transition-base)] bg-[var(--surface-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] outline-none focus:border-[var(--brand-alpha-strong)] focus:shadow-[0_0_0_3px_var(--brand-alpha-weak)] placeholder:text-[var(--text-muted)]"
+                 />
             </div>
             <div>
               <label htmlFor="birthDate" className="block text-[13px] text-[var(--text-secondary)] mb-2 font-medium">
                 Date de naissance <span className="text-[11px] text-[var(--text-muted)] font-normal">(optionnel — pour votre météo énergétique)</span>
               </label>
               <input id="birthDate" type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl text-sm transition-colors"
-                style={inputStyle} onFocus={focusIn} onBlur={focusOut} />
+                className="w-full px-4 py-3 rounded-[var(--radius-lg)] text-sm transition-all duration-[var(--transition-base)] bg-[var(--surface-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] outline-none focus:border-[var(--brand-alpha-strong)] focus:shadow-[0_0_0_3px_var(--brand-alpha-weak)] placeholder:text-[var(--text-muted)]"
+                 />
             </div>
             <div>
               <label htmlFor="password" className="block text-[13px] text-[var(--text-secondary)] mb-2 font-medium">{t('auth.password_label')}</label>
               <div className="relative">
                 <input id="password" type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} required
                   minLength={6} placeholder={t('auth.min_chars')}
-                  className="w-full px-4 py-3 pr-12 rounded-xl text-sm transition-colors"
-                  style={inputStyle} onFocus={focusIn} onBlur={focusOut} />
+                  className="w-full px-4 py-3 pr-12 rounded-[var(--radius-lg)] text-sm transition-all duration-[var(--transition-base)] bg-[var(--surface-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] outline-none focus:border-[var(--brand-alpha-strong)] focus:shadow-[0_0_0_3px_var(--brand-alpha-weak)] placeholder:text-[var(--text-muted)]"
+                   />
                 <button type="button" onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-lg transition-colors"
                   style={{ background: 'transparent' }}
@@ -343,8 +342,8 @@ export default function SignupPage() {
                 <input id="confirmPassword" type={showConfirmPassword ? 'text' : 'password'} value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)} required minLength={6}
                   placeholder="Retapez votre mot de passe"
-                  className="w-full px-4 py-3 pr-12 rounded-xl text-sm transition-colors"
-                  style={inputStyle} onFocus={focusIn} onBlur={focusOut} />
+                  className="w-full px-4 py-3 pr-12 rounded-[var(--radius-lg)] text-sm transition-all duration-[var(--transition-base)] bg-[var(--surface-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] outline-none focus:border-[var(--brand-alpha-strong)] focus:shadow-[0_0_0_3px_var(--brand-alpha-weak)] placeholder:text-[var(--text-muted)]"
+                   />
                 <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-lg transition-colors"
                   style={{ background: 'transparent' }}
@@ -353,12 +352,12 @@ export default function SignupPage() {
                 </button>
               </div>
               {confirmPassword && password !== confirmPassword && (
-                <p className="text-[11px] mt-1.5" style={{ color: '#f87171' }}>
+                <p className="text-[11px] mt-1.5 text-[var(--danger)]">
                   Les mots de passe ne correspondent pas
                 </p>
               )}
               {confirmPassword && password === confirmPassword && confirmPassword.length >= 6 && (
-                <p className="text-[11px] mt-1.5" style={{ color: '#55EFC4' }}>
+                <p className="text-[11px] mt-1.5 text-[var(--success)]">
                   Les mots de passe correspondent
                 </p>
               )}
@@ -367,43 +366,41 @@ export default function SignupPage() {
             {/* CGV acceptance */}
             <div className="flex items-start gap-3">
               <input id="acceptCgv" type="checkbox" checked={acceptCgv} onChange={(e) => setAcceptCgv(e.target.checked)}
-                className="mt-0.5 w-4 h-4 rounded border-2 cursor-pointer accent-[#C9A961]"
-                style={{ accentColor: '#C9A961' }} />
+                className="mt-0.5 w-4 h-4 rounded border-2 cursor-pointer accent-[var(--brand)]"
+                 />
               <label htmlFor="acceptCgv" className="text-[12px] text-[var(--text-muted)] leading-relaxed cursor-pointer">
                 J&apos;accepte les{' '}
-                <Link href="/cgv" target="_blank" className="gold-underline font-medium" style={{ color: 'var(--brand)' }}>
+                <Link href="/cgv" target="_blank" className="font-medium text-[var(--brand)] hover:underline">
                   conditions générales de vente
                 </Link>
                 {' '}et la{' '}
-                <Link href="/confidentialite" target="_blank" className="gold-underline font-medium" style={{ color: 'var(--brand)' }}>
+                <Link href="/confidentialite" target="_blank" className="font-medium text-[var(--brand)] hover:underline">
                   politique de confidentialité
                 </Link>
               </label>
             </div>
 
             {error && (
-              <p className="text-[13px] px-4 py-3 rounded-xl" style={{ color: '#f87171', background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.15)' }}>
+              <p className="text-[13px] px-4 py-3 rounded-[var(--radius-lg)] text-[var(--danger)] bg-[var(--danger-alpha-weak)] border border-[var(--danger-alpha-medium)]" >
                 {error}
               </p>
             )}
             <button type="submit" disabled={loading || !acceptCgv}
-              className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-              style={{ background: 'var(--button-bg)', color: 'var(--dark)' }}>
+              className="w-full py-3.5 rounded-full font-medium tracking-wide transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)] disabled:opacity-40 disabled:cursor-not-allowed text-sm bg-[var(--brand)] text-[var(--text-inverse)] shadow-[var(--glow-gold)] hover:shadow-[var(--glow-gold-hover)] hover:brightness-110 active:scale-[0.98] cursor-pointer"
+              >
               {loading ? t('auth.creating') : s('signup_button_text')}
             </button>
           </form>
 
           <div className="flex items-center gap-4 my-6">
-            <span className="flex-1 h-px" style={{ background: 'var(--border)' }} />
+            <span className="flex-1 h-px bg-[var(--border-subtle)]" />
             <span className="text-[11px] text-[var(--text-muted)]">{t('auth.or')}</span>
-            <span className="flex-1 h-px" style={{ background: 'var(--border)' }} />
+            <span className="flex-1 h-px bg-[var(--border-subtle)]" />
           </div>
 
           <button onClick={handleGoogleSignIn}
-            className="w-full py-3.5 rounded-full text-[13px] flex items-center justify-center gap-3 transition-all"
-            style={{ border: '1px solid var(--border)', color: 'var(--text-secondary)', background: 'transparent' }}
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(201,169,97,0.3)'; e.currentTarget.style.color = 'var(--text-primary)' }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-secondary)' }}
+            className="w-full py-3.5 rounded-full text-[13px] flex items-center justify-center gap-3 transition-all duration-[var(--transition-base)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:border-[var(--border-medium)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-card)] cursor-pointer"
+            
           >
             <svg className="w-4.5 h-4.5" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
@@ -417,7 +414,7 @@ export default function SignupPage() {
 
         <p className="text-center text-[13px] text-[var(--text-muted)] mt-8">
           {s('signup_login_text')}{' '}
-          <Link href="/login" className="gold-underline font-medium" style={{ color: 'var(--brand)' }}>
+          <Link href="/login" className="font-medium text-[var(--brand)] hover:underline">
             {s('signup_login_link_text')}
           </Link>
         </p>

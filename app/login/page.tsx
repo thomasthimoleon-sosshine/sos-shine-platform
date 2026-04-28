@@ -89,96 +89,85 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-6 relative" style={{
-      backgroundImage: s('login_bg_image') ? `url(${s('login_bg_image')})` : undefined,
-      backgroundSize: 'cover', backgroundPosition: 'center',
-    }}>
+    <main
+      className="min-h-screen flex items-center justify-center px-6 relative bg-[var(--surface)]"
+      style={{
+        backgroundImage: s('login_bg_image') ? `url(${s('login_bg_image')})` : undefined,
+        backgroundSize: 'cover', backgroundPosition: 'center',
+      }}
+    >
       {/* Ambient glow */}
-      <div className="absolute inset-0 pointer-events-none" style={{
-        background: 'radial-gradient(ellipse 50% 40% at 50% 30%, rgba(212, 175, 55, 0.04), transparent)',
-      }} />
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_50%_40%_at_50%_30%,rgba(184,164,114,0.03),transparent)]" />
 
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] as unknown as [number, number, number, number] }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         className="max-w-md w-full relative z-10"
       >
         {/* Logo */}
         <div className="text-center mb-10">
-          <Link href="/"><img src={s('login_header_image') || s('logo_url') || '/images/logo-shine.png'} alt="SOS Shine" className="h-16 mx-auto mb-3 object-contain" /></Link>
+          <Link href="/">
+            <img src={s('login_header_image') || s('logo_url') || '/images/logo-shine.png'} alt="SOS Shine" className="h-16 mx-auto mb-3 object-contain" />
+          </Link>
           <p className="text-[var(--text-muted)] text-[13px] mt-2">{s('login_subtitle')}</p>
 
-          {/* Bouton SOS Shine Kids - accessible sans connexion */}
           <div className="flex mt-4 justify-center">
             <a href="https://sosshine.fr"
               target="_blank"
               rel="noopener noreferrer"
-              className="py-2.5 px-5 rounded-full text-center text-[13px] font-medium transition-all"
-              style={{ border: '1px solid rgba(201,169,97,0.3)', color: 'var(--brand)', background: 'rgba(201,169,97,0.05)' }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(201,169,97,0.12)'; e.currentTarget.style.borderColor = 'rgba(201,169,97,0.5)' }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(201,169,97,0.05)'; e.currentTarget.style.borderColor = 'rgba(201,169,97,0.3)' }}
+              className="py-2.5 px-5 rounded-full text-center text-[13px] font-medium transition-all duration-[var(--transition-base)] border border-[var(--border-medium)] text-[var(--brand)] bg-[var(--brand-alpha-weak)] hover:bg-[var(--brand-alpha-medium)] hover:border-[var(--border-strong)]"
             >
-              Accès à SOS Shine® Kids
+              Acc&egrave;s &agrave; SOS Shine&reg; Kids
             </a>
           </div>
         </div>
 
-        {/* Card — glass */}
-        <div className="glass p-8 md:p-10">
+        {/* Card */}
+        <div className="rounded-[var(--radius-2xl)] p-8 md:p-10 bg-[var(--surface-raised)] border border-[var(--border-subtle)] shadow-[var(--shadow-lg)]">
           <h1 className="font-display text-[var(--text-primary)] mb-8" style={titleStyle}>
             {s('login_title')}
           </h1>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label htmlFor="email" className="block text-[13px] text-[var(--text-secondary)] mb-2 font-medium">Email</label>
+              <label htmlFor="email" className="block text-[13px] text-[var(--text-secondary)] mb-2 font-medium tracking-wide">Email</label>
               <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
                 placeholder="votre@email.com"
-                className="w-full px-4 py-3 rounded-xl text-sm transition-colors"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)', outline: 'none' }}
-                onFocus={(e) => e.currentTarget.style.borderColor = 'rgba(201,169,97,0.4)'}
-                onBlur={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
+                className="w-full px-4 py-3 rounded-[var(--radius-lg)] text-sm transition-all duration-[var(--transition-base)] bg-[var(--surface-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] outline-none focus:border-[var(--brand-alpha-strong)] focus:shadow-[0_0_0_3px_var(--brand-alpha-weak)] placeholder:text-[var(--text-muted)]"
               />
             </div>
             <div>
-              <label htmlFor="password" className="block text-[13px] text-[var(--text-secondary)] mb-2 font-medium">{t('auth.password_label')}</label>
+              <label htmlFor="password" className="block text-[13px] text-[var(--text-secondary)] mb-2 font-medium tracking-wide">{t('auth.password_label')}</label>
               <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required
                 placeholder={t('auth.password_placeholder')}
-                className="w-full px-4 py-3 rounded-xl text-sm transition-colors"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)', outline: 'none' }}
-                onFocus={(e) => e.currentTarget.style.borderColor = 'rgba(201,169,97,0.4)'}
-                onBlur={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
+                className="w-full px-4 py-3 rounded-[var(--radius-lg)] text-sm transition-all duration-[var(--transition-base)] bg-[var(--surface-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] outline-none focus:border-[var(--brand-alpha-strong)] focus:shadow-[0_0_0_3px_var(--brand-alpha-weak)] placeholder:text-[var(--text-muted)]"
               />
             </div>
             <div className="text-right -mt-1">
-              <Link href="/forgot-password" className="text-[12px] transition-colors duration-200 hover:underline" style={{ color: 'var(--brand)' }}>
+              <Link href="/forgot-password" className="text-[12px] text-[var(--brand)] transition-colors hover:underline">
                 {t('auth.forgot_password')}
               </Link>
             </div>
             {error && (
-              <p className="text-[13px] px-4 py-3 rounded-xl" style={{ color: '#f87171', background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.15)' }}>
+              <p className="text-[13px] px-4 py-3 rounded-[var(--radius-lg)] text-[var(--danger)] bg-[var(--danger-alpha-weak)] border border-[var(--danger-alpha-medium)]">
                 {error}
               </p>
             )}
             <button type="submit" disabled={loading}
-              className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-              style={{ background: 'var(--button-bg)', color: 'var(--dark)' }}>
+              className="w-full py-3.5 rounded-full font-medium tracking-wide transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)] disabled:opacity-40 disabled:cursor-not-allowed text-sm bg-[var(--brand)] text-[var(--text-inverse)] shadow-[var(--glow-gold)] hover:shadow-[var(--glow-gold-hover)] hover:brightness-110 active:scale-[0.98] cursor-pointer">
               {loading ? t('auth.connecting') : s('login_button_text')}
             </button>
           </form>
 
           <div className="flex items-center gap-4 my-6">
-            <span className="flex-1 h-px" style={{ background: 'var(--border)' }} />
+            <span className="flex-1 h-px bg-[var(--border-subtle)]" />
             <span className="text-[11px] text-[var(--text-muted)]">{t('auth.or')}</span>
-            <span className="flex-1 h-px" style={{ background: 'var(--border)' }} />
+            <span className="flex-1 h-px bg-[var(--border-subtle)]" />
           </div>
 
           <button onClick={handleGoogleSignIn}
-            className="w-full py-3.5 rounded-full text-[13px] flex items-center justify-center gap-3 transition-all"
-            style={{ border: '1px solid var(--border)', color: 'var(--text-secondary)', background: 'transparent' }}
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(201,169,97,0.3)'; e.currentTarget.style.color = 'var(--text-primary)' }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-secondary)' }}
+            className="w-full py-3.5 rounded-full text-[13px] flex items-center justify-center gap-3 transition-all duration-[var(--transition-base)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:border-[var(--border-medium)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-card)] cursor-pointer"
           >
             <svg className="w-4.5 h-4.5" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
@@ -192,7 +181,7 @@ export default function LoginPage() {
 
         <p className="text-center text-[13px] text-[var(--text-muted)] mt-8">
           {s('login_signup_text')}{' '}
-          <Link href="/signup" className="gold-underline font-medium" style={{ color: 'var(--brand)' }}>
+          <Link href="/signup" className="font-medium text-[var(--brand)] hover:underline">
             {s('login_signup_link_text')}
           </Link>
         </p>

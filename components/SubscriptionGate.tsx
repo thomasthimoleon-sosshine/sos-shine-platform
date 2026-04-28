@@ -49,7 +49,7 @@ export default function SubscriptionGate({ children, loadingText, allowFree = fa
             <div className="w-5 h-5 border-2 border-[var(--dark)] border-t-transparent rounded-full animate-spin" />
           </div>
           {loadingText && (
-            <p className="text-sm" style={{ color: 'var(--text-muted)' }}>{loadingText}</p>
+            <p className="text-sm text-[var(--text-muted)]">{loadingText}</p>
           )}
         </div>
       </div>
@@ -92,15 +92,13 @@ export default function SubscriptionGate({ children, loadingText, allowFree = fa
             </div>
 
             <h2
-              className="font-display text-xl sm:text-2xl font-semibold mb-3"
-              style={{ color: 'var(--text-primary)' }}
+              className="font-display text-xl sm:text-2xl font-semibold mb-3 text-[var(--text-primary)]"
             >
               Contenu réservé aux membres abonnés
             </h2>
 
             <p
-              className="text-sm sm:text-[15px] leading-relaxed mb-8"
-              style={{ color: 'var(--text-secondary)' }}
+              className="text-sm sm:text-[15px] leading-relaxed mb-8 text-[var(--text-secondary)]"
             >
               Ce contenu est accessible uniquement avec un abonnement actif.
               Découvrez nos formules et commencez votre transformation dès aujourd&apos;hui.
@@ -121,7 +119,7 @@ export default function SubscriptionGate({ children, loadingText, allowFree = fa
               Choisir mon abonnement
             </button>
 
-            <p className="mt-5 text-xs" style={{ color: 'var(--text-muted)' }}>
+            <p className="mt-5 text-xs text-[var(--text-muted)]">
               Sans engagement. Annulation en un clic.
             </p>
           </div>

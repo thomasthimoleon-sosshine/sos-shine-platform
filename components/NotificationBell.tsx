@@ -210,7 +210,7 @@ export default function NotificationBell() {
         }}
         aria-label={t('notifications.title')}
       >
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--text-secondary)' }}>
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} className="text-[var(--text-secondary)]">
           <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
         </svg>
         {unreadCount > 0 && (
@@ -218,7 +218,7 @@ export default function NotificationBell() {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             className="absolute -top-1 -right-1 min-w-[18px] h-[18px] rounded-full flex items-center justify-center text-[10px] font-bold"
-            style={{ background: '#EF4444', color: '#fff' }}
+            style={{ background: 'var(--danger)', color: '#fff' }}
           >
             {unreadCount > 9 ? '9+' : unreadCount}
           </motion.span>
@@ -241,12 +241,11 @@ export default function NotificationBell() {
             }}
           >
             <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: '1px solid var(--border)' }}>
-              <h3 className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{t('notifications.title')}</h3>
+              <h3 className="text-sm font-semibold text-[var(--text-primary)]">{t('notifications.title')}</h3>
               {unreadCount > 0 && (
                 <button
                   onClick={markAllRead}
-                  className="text-[11px] font-medium cursor-pointer transition-colors"
-                  style={{ color: 'var(--brand)' }}
+                  className="text-[11px] font-medium cursor-pointer transition-colors text-[var(--brand)]"
                 >
                   {t('notifications.mark_all')}
                 </button>
@@ -256,7 +255,7 @@ export default function NotificationBell() {
             <div className="overflow-y-auto max-h-[calc(70vh-48px)]">
               {notifications.length === 0 ? (
                 <div className="px-4 py-8 text-center">
-                  <p className="text-sm" style={{ color: 'var(--text-muted)' }}>{t('notifications.empty')}</p>
+                  <p className="text-sm text-[var(--text-muted)]">{t('notifications.empty')}</p>
                 </div>
               ) : (
                 notifications.map((notif) => (
@@ -276,17 +275,17 @@ export default function NotificationBell() {
                       <span className="text-lg mt-0.5">{typeIcons[notif.notification_type] || '🔔'}</span>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <p className="text-[13px] font-medium truncate" style={{ color: 'var(--text-primary)' }}>
+                          <p className="text-[13px] font-medium truncate text-[var(--text-primary)]">
                             {notif.title}
                           </p>
                           {!notif.is_read && (
                             <span className="w-2 h-2 rounded-full shrink-0" style={{ background: 'var(--brand)' }} />
                           )}
                         </div>
-                        <p className="text-[12px] mt-0.5 line-clamp-2" style={{ color: 'var(--text-secondary)' }}>
+                        <p className="text-[12px] mt-0.5 line-clamp-2 text-[var(--text-secondary)]">
                           {notif.body}
                         </p>
-                        <p className="text-[11px] mt-1" style={{ color: 'var(--text-muted)' }}>
+                        <p className="text-[11px] mt-1 text-[var(--text-muted)]">
                           {formatTime(notif.created_at)}
                         </p>
                       </div>

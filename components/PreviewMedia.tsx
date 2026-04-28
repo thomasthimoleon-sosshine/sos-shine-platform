@@ -33,18 +33,18 @@ export function PreviewVideo({ src, poster, ctaText, ctaLink, subtitleText }: Pr
               <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
             </svg>
           </div>
-          <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--brand)' }}>
+          <h3 className="font-display text-lg font-semibold mb-2 text-[var(--brand)]">
             L&apos;extrait est terminé
           </h3>
-          <p className="text-sm mb-6 max-w-xs mx-auto" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-sm mb-6 max-w-xs mx-auto text-[var(--text-secondary)]">
             {subtitleText}
           </p>
           <Link href={ctaLink}
             className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-sm font-semibold transition-all hover:scale-[1.03]"
-            style={{ background: 'linear-gradient(135deg, var(--brand), var(--gold-deep, #B8960F))', color: '#000000', boxShadow: '0 4px 20px rgba(201,169,97,0.3)' }}>
+            style={{ background: 'linear-gradient(135deg, var(--brand), var(--gold-deep, var(--brand-deep)))', color: '#000000', boxShadow: '0 4px 20px rgba(201,169,97,0.3)' }}>
             {ctaText}
           </Link>
-          <p className="text-xs mt-4" style={{ color: 'var(--text-muted)' }}>
+          <p className="text-xs mt-4 text-[var(--text-muted)]">
             Sans engagement. Annulation en un clic.
           </p>
         </div>
@@ -53,7 +53,7 @@ export function PreviewVideo({ src, poster, ctaText, ctaLink, subtitleText }: Pr
   }
 
   return (
-    <div className="rounded-xl overflow-hidden aspect-video" style={{ background: 'var(--dark)' }}>
+    <div className="rounded-xl overflow-hidden aspect-video bg-[var(--surface)]">
       <video ref={videoRef} src={src} poster={poster} controls preload="metadata" className="w-full h-full" />
     </div>
   )
@@ -80,18 +80,18 @@ export function PreviewAudio({ src, title, ctaText, ctaLink }: PreviewAudioProps
 
   return (
     <div className="rounded-xl p-4 space-y-3" style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(201,169,97,0.15)' }}>
-      <p className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>Audio — {title}</p>
+      <p className="font-medium text-sm text-[var(--text-primary)]">Audio — {title}</p>
       <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.12)' }}>
         <span className="text-lg flex-shrink-0 mt-0.5">🎧</span>
-        <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+        <p className="text-xs leading-relaxed text-[var(--text-secondary)]">
           {audioLocked ? 'Extrait de 30 secondes terminé.' : 'Écoutez un extrait de 30 secondes.'}
         </p>
       </div>
       {audioLocked ? (
         <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'rgba(201,169,97,0.08)', border: '1px solid rgba(201,169,97,0.2)' }}>
-          <p className="text-sm" style={{ color: 'var(--brand)' }}>Vous aimez ? Accédez à la suite</p>
+          <p className="text-sm text-[var(--brand)]">Vous aimez ? Accédez à la suite</p>
           <Link href={ctaLink} className="px-4 py-2 rounded-full text-xs font-semibold"
-            style={{ background: 'linear-gradient(135deg, var(--brand), var(--gold-deep, #B8960F))', color: '#000000' }}>
+            style={{ background: 'linear-gradient(135deg, var(--brand), var(--gold-deep, var(--brand-deep)))', color: '#000000' }}>
             {ctaText}
           </Link>
         </div>

@@ -23,7 +23,7 @@ export default function CrisisButton() {
         transition={{ delay: 0.8 }}
         className="fixed bottom-4 left-4 lg:left-[18rem] z-[60] rounded-full shadow-lg flex items-center gap-2 px-4 py-3 cursor-pointer"
         style={{
-          background: 'linear-gradient(135deg, #FF6B6B, #E17055)',
+          background: 'linear-gradient(135deg, var(--danger), #E17055)',
           color: '#fff',
           boxShadow: '0 4px 20px rgba(255,107,107,0.35)',
         }}
@@ -73,10 +73,10 @@ export default function CrisisButton() {
                     style={{ background: 'rgba(255,107,107,0.12)', border: '1px solid rgba(255,107,107,0.25)' }}>
                     <span className="text-2xl">🫂</span>
                   </div>
-                  <h2 className="font-display text-xl sm:text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+                  <h2 className="font-display text-xl sm:text-2xl font-semibold text-[var(--text-primary)]">
                     Vous n&apos;êtes pas seul(e).
                   </h2>
-                  <p className="text-sm mt-2" style={{ color: 'var(--text-secondary)' }}>
+                  <p className="text-sm mt-2 text-[var(--text-secondary)]">
                     Respirez. Voici trois options pour tenir dans les 10 prochaines minutes.
                   </p>
                 </div>
@@ -92,8 +92,8 @@ export default function CrisisButton() {
                     <div className="flex items-start gap-3">
                       <span className="text-xl flex-shrink-0">🚨</span>
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-sm" style={{ color: '#FF6B6B' }}>Protocole d&apos;urgence</p>
-                        <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>
+                        <p className="font-semibold text-sm" style={{ color: 'var(--danger)' }}>Protocole d&apos;urgence</p>
+                        <p className="text-xs mt-0.5 text-[var(--text-secondary)]">
                           Une libération immédiate en 5 minutes. Pas de méditation. Du concret.
                         </p>
                       </div>
@@ -110,8 +110,8 @@ export default function CrisisButton() {
                     <div className="flex items-start gap-3">
                       <span className="text-xl flex-shrink-0">🔥</span>
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-sm" style={{ color: 'var(--brand)' }}>Le Feu de Camp</p>
-                        <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>
+                        <p className="font-semibold text-sm text-[var(--brand)]">Le Feu de Camp</p>
+                        <p className="text-xs mt-0.5 text-[var(--text-secondary)]">
                           Parlez avec quelqu&apos;un qui comprend, maintenant. 24/7.
                         </p>
                       </div>
@@ -128,8 +128,8 @@ export default function CrisisButton() {
                     <div className="flex items-start gap-3">
                       <span className="text-xl flex-shrink-0">🎧</span>
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-sm" style={{ color: '#74C0FC' }}>Audio apaisant</p>
-                        <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>
+                        <p className="font-semibold text-sm text-[var(--accent-blue)]">Audio apaisant</p>
+                        <p className="text-xs mt-0.5 text-[var(--text-secondary)]">
                           Méditation, hypnose, ambiance. Choisissez ce qui vous calme.
                         </p>
                       </div>
@@ -138,8 +138,8 @@ export default function CrisisButton() {
                 </div>
 
                 <div className="mt-6 pt-5" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                  <p className="text-xs text-center leading-relaxed" style={{ color: 'var(--text-muted)' }}>
-                    Si vous êtes en danger immédiat, appelez le <strong style={{ color: '#FF6B6B' }}>3114</strong> (numéro national de prévention du suicide, gratuit 24/7).
+                  <p className="text-xs text-center leading-relaxed text-[var(--text-muted)]">
+                    Si vous êtes en danger immédiat, appelez le <strong style={{ color: 'var(--danger)' }}>3114</strong> (numéro national de prévention du suicide, gratuit 24/7).
                   </p>
                 </div>
               </div>

@@ -143,9 +143,9 @@ export default function ShineChatbot() {
             }}
           >
             <div className="px-4 py-3 flex items-center gap-3" style={{ background: 'linear-gradient(135deg, rgba(201,169,97,0.15) 0%, rgba(201,169,97,0.05) 100%)', borderBottom: '1px solid rgba(201,169,97,0.2)' }}>
-              <img src="/images/shine-avatar.jpeg" alt="Shine" className="w-8 h-8 rounded-full object-cover" style={{ border: '2px solid #C9A961', boxShadow: '0 0 12px rgba(201,169,97,0.4)' }} />
+              <img src="/images/shine-avatar.jpeg" alt="Shine" className="w-8 h-8 rounded-full object-cover" style={{ border: '2px solid var(--brand)', boxShadow: '0 0 12px rgba(201,169,97,0.4)' }} />
               <div className="flex-1">
-                <p className="text-sm font-semibold" style={{ color: '#C9A961' }}>Shine</p>
+                <p className="text-sm font-semibold text-[var(--brand)]">Shine</p>
                 <p className="text-[11px]" style={{ color: 'rgba(255,255,255,0.5)' }}>Votre assistant</p>
               </div>
               <button onClick={() => setOpen(false)} className="text-white/40 hover:text-white/80 transition-colors p-1">
@@ -162,13 +162,13 @@ export default function ShineChatbot() {
                   className={`flex ${msg.from === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   {msg.from === 'bot' && (
-                    <img src="/images/shine-avatar.jpeg" alt="Shine" className="w-6 h-6 rounded-full object-cover mr-2 mt-1 flex-shrink-0" style={{ border: '1.5px solid #C9A961' }} />
+                    <img src="/images/shine-avatar.jpeg" alt="Shine" className="w-6 h-6 rounded-full object-cover mr-2 mt-1 flex-shrink-0" style={{ border: '1.5px solid var(--brand)' }} />
                   )}
                   <div
                     className="max-w-[80%] px-3 py-2 rounded-2xl text-sm leading-relaxed"
                     style={
                       msg.from === 'user'
-                        ? { background: 'linear-gradient(135deg, #C9A961, #B8960F)', color: '#0a0a0a', borderBottomRightRadius: '4px' }
+                        ? { background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#0a0a0a', borderBottomRightRadius: '4px' }
                         : { background: 'rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.85)', borderBottomLeftRadius: '4px' }
                     }
                   >
@@ -178,12 +178,12 @@ export default function ShineChatbot() {
               ))}
               {typing && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
-                  <img src="/images/shine-avatar.jpeg" alt="Shine" className="w-6 h-6 rounded-full object-cover mr-2 mt-1 flex-shrink-0" style={{ border: '1.5px solid #C9A961' }} />
+                  <img src="/images/shine-avatar.jpeg" alt="Shine" className="w-6 h-6 rounded-full object-cover mr-2 mt-1 flex-shrink-0" style={{ border: '1.5px solid var(--brand)' }} />
                   <div className="px-4 py-3 rounded-2xl" style={{ background: 'rgba(255,255,255,0.07)' }}>
                     <div className="flex gap-1.5">
-                      <span className="w-2 h-2 rounded-full animate-bounce" style={{ background: '#C9A961', animationDelay: '0ms' }} />
-                      <span className="w-2 h-2 rounded-full animate-bounce" style={{ background: '#C9A961', animationDelay: '150ms' }} />
-                      <span className="w-2 h-2 rounded-full animate-bounce" style={{ background: '#C9A961', animationDelay: '300ms' }} />
+                      <span className="w-2 h-2 rounded-full animate-bounce" style={{ background: 'var(--brand)', animationDelay: '0ms' }} />
+                      <span className="w-2 h-2 rounded-full animate-bounce" style={{ background: 'var(--brand)', animationDelay: '150ms' }} />
+                      <span className="w-2 h-2 rounded-full animate-bounce" style={{ background: 'var(--brand)', animationDelay: '300ms' }} />
                     </div>
                   </div>
                 </motion.div>
@@ -211,7 +211,7 @@ export default function ShineChatbot() {
                 <button
                   type="submit"
                   className="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:scale-105"
-                  style={{ background: 'linear-gradient(135deg, #C9A961, #B8960F)' }}
+                  style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))' }}
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                 </button>
@@ -234,7 +234,7 @@ export default function ShineChatbot() {
       >
         {open ? (
           <div className="w-full h-full rounded-full flex items-center justify-center" style={{ background: 'rgba(212, 175, 55, 0.15)' }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C9A961" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--brand)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </div>
         ) : (
           <img src="/images/shine-avatar.jpeg" alt="Shine" className="w-full h-full rounded-full object-cover" />

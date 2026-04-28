@@ -56,7 +56,7 @@ export default function XPBadge({ userId, size = 'md', showDetails = false }: XP
     return (
       <span
         className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-medium ${sizeClasses[size]}`}
-        style={{ background: 'rgba(201,169,97,0.1)', color: '#C9A961', border: '1px solid rgba(201,169,97,0.15)' }}
+        style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.15)' }}
       >
         <span>{level.icon}</span>
         <span>{level.name}</span>
@@ -67,21 +67,21 @@ export default function XPBadge({ userId, size = 'md', showDetails = false }: XP
   return (
     <div className="rounded-2xl p-6" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold text-base" style={{ color: 'var(--text-primary)' }}>Niveau &amp; XP</h3>
+        <h3 className="font-semibold text-base text-[var(--text-primary)]">Niveau &amp; XP</h3>
         <span className="text-xl">{level.icon}</span>
       </div>
 
       {/* Level name + XP */}
       <div className="flex items-center justify-between mb-3">
         <div>
-          <p className="font-display text-lg font-semibold" style={{ color: 'var(--brand)' }}>
+          <p className="font-display text-lg font-semibold text-[var(--brand)]">
             {level.name}
           </p>
-          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Niveau {level.level} / 10</p>
+          <p className="text-xs text-[var(--text-muted)]">Niveau {level.level} / 10</p>
         </div>
         <div className="text-right">
-          <p className="text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>{formatXP(xpData.total_xp)}</p>
-          <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>XP total</p>
+          <p className="text-xl font-semibold text-[var(--text-primary)]">{formatXP(xpData.total_xp)}</p>
+          <p className="text-[11px] text-[var(--text-muted)]">XP total</p>
         </div>
       </div>
 
@@ -89,12 +89,12 @@ export default function XPBadge({ userId, size = 'md', showDetails = false }: XP
       {next ? (
         <div className="mb-4">
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
+            <span className="text-[11px] text-[var(--text-muted)]">
               Progression vers {next.icon} {next.name}
             </span>
-            <span className="text-[11px] font-medium" style={{ color: 'var(--brand)' }}>{progress}%</span>
+            <span className="text-[11px] font-medium text-[var(--brand)]">{progress}%</span>
           </div>
-          <div className="h-2.5 rounded-full overflow-hidden" style={{ background: 'var(--border)' }}>
+          <div className="h-2.5 rounded-full overflow-hidden bg-[var(--border)]">
             <motion.div
               className="h-full rounded-full"
               style={{ background: 'linear-gradient(90deg, var(--brand), var(--brand-light))' }}
@@ -104,10 +104,10 @@ export default function XPBadge({ userId, size = 'md', showDetails = false }: XP
             />
           </div>
           <div className="flex items-center justify-between mt-1">
-            <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>
+            <p className="text-[10px] text-[var(--text-muted)]">
               {formatXP(xpData.total_xp)} XP
             </p>
-            <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>
+            <p className="text-[10px] text-[var(--text-muted)]">
               {formatXP(next.minXP)} XP
             </p>
           </div>
@@ -117,27 +117,27 @@ export default function XPBadge({ userId, size = 'md', showDetails = false }: XP
         </div>
       ) : (
         <div className="mb-4 rounded-xl p-3 text-center" style={{ background: 'rgba(201,169,97,0.08)', border: '1px solid rgba(201,169,97,0.15)' }}>
-          <p className="text-sm font-semibold" style={{ color: 'var(--brand)' }}>Rang maximum atteint !</p>
-          <p className="text-[11px] mt-0.5" style={{ color: 'var(--text-muted)' }}>1 000 000 XP — Diamant</p>
+          <p className="text-sm font-semibold text-[var(--brand)]">Rang maximum atteint !</p>
+          <p className="text-[11px] mt-0.5 text-[var(--text-muted)]">1 000 000 XP — Diamant</p>
         </div>
       )}
 
       {/* Shines stats */}
       <div className="grid grid-cols-2 gap-3 pt-3" style={{ borderTop: '1px solid var(--border)' }}>
         <div className="text-center py-2 rounded-xl" style={{ background: 'rgba(201,169,97,0.04)' }}>
-          <p className="text-lg font-semibold" style={{ color: 'var(--brand)' }}>{xpData.shines_given}</p>
-          <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>Shines donnés</p>
+          <p className="text-lg font-semibold text-[var(--brand)]">{xpData.shines_given}</p>
+          <p className="text-[10px] text-[var(--text-muted)]">Shines donnés</p>
         </div>
         <div className="text-center py-2 rounded-xl" style={{ background: 'rgba(201,169,97,0.04)' }}>
-          <p className="text-lg font-semibold" style={{ color: 'var(--brand)' }}>{xpData.shines_received}</p>
-          <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>Shines reçus</p>
+          <p className="text-lg font-semibold text-[var(--brand)]">{xpData.shines_received}</p>
+          <p className="text-[10px] text-[var(--text-muted)]">Shines reçus</p>
         </div>
       </div>
 
       {/* Level list */}
       {size === 'lg' && (
         <div className="mt-4 pt-3" style={{ borderTop: '1px solid var(--border)' }}>
-          <p className="text-[11px] font-medium mb-2" style={{ color: 'var(--text-muted)' }}>Tous les niveaux</p>
+          <p className="text-[11px] font-medium mb-2 text-[var(--text-muted)]">Tous les niveaux</p>
           <div className="space-y-1.5">
             {LEVEL_THRESHOLDS.map((t) => {
               const isReached = xpData.total_xp >= t.minXP

@@ -83,7 +83,7 @@ export default function FeatureGate({ children, featureKey, loadingText }: Featu
             <div className="w-5 h-5 border-2 border-[var(--dark)] border-t-transparent rounded-full animate-spin" />
           </div>
           {loadingText && (
-            <p className="text-sm" style={{ color: 'var(--text-muted)' }}>{loadingText}</p>
+            <p className="text-sm text-[var(--text-muted)]">{loadingText}</p>
           )}
         </div>
       </div>
@@ -135,12 +135,12 @@ export default function FeatureGate({ children, featureKey, loadingText }: Featu
                 </svg>
               </div>
 
-              <h2 className="font-display text-xl sm:text-2xl font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>
+              <h2 className="font-display text-xl sm:text-2xl font-semibold mb-3 text-[var(--text-primary)]">
                 Disponible avec l&apos;offre {requiredPlanLabel}
               </h2>
 
-              <p className="text-sm sm:text-[15px] leading-relaxed mb-8" style={{ color: 'var(--text-secondary)' }}>
-                Cette fonctionnalité est incluse à partir de l&apos;offre <strong style={{ color: 'var(--brand)' }}>{requiredPlanLabel}</strong>.
+              <p className="text-sm sm:text-[15px] leading-relaxed mb-8 text-[var(--text-secondary)]">
+                Cette fonctionnalité est incluse à partir de l&apos;offre <strong className="text-[var(--brand)]">{requiredPlanLabel}</strong>.
                 Passez à l&apos;offre supérieure pour y accéder.
               </p>
 
@@ -159,7 +159,7 @@ export default function FeatureGate({ children, featureKey, loadingText }: Featu
                 Passer à l&apos;offre {requiredPlanLabel}
               </button>
 
-              <p className="mt-5 text-xs" style={{ color: 'var(--text-muted)' }}>
+              <p className="mt-5 text-xs text-[var(--text-muted)]">
                 Mise à niveau immédiate avec prorata.
               </p>
             </div>
@@ -212,11 +212,11 @@ export default function FeatureGate({ children, featureKey, loadingText }: Featu
               </svg>
             </div>
 
-            <h2 className="font-display text-xl sm:text-2xl font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>
+            <h2 className="font-display text-xl sm:text-2xl font-semibold mb-3 text-[var(--text-primary)]">
               Contenu réservé aux membres abonnés
             </h2>
 
-            <p className="text-sm sm:text-[15px] leading-relaxed mb-8" style={{ color: 'var(--text-secondary)' }}>
+            <p className="text-sm sm:text-[15px] leading-relaxed mb-8 text-[var(--text-secondary)]">
               Ce contenu est accessible uniquement avec un abonnement actif.
               Découvrez nos formules et commencez votre transformation dès aujourd&apos;hui.
             </p>
@@ -236,7 +236,7 @@ export default function FeatureGate({ children, featureKey, loadingText }: Featu
               Choisir mon abonnement
             </button>
 
-            <p className="mt-5 text-xs" style={{ color: 'var(--text-muted)' }}>
+            <p className="mt-5 text-xs text-[var(--text-muted)]">
               Sans engagement. Annulation en un clic.
             </p>
           </div>

@@ -192,8 +192,7 @@ export default function SubscriptionModal({
               {step === 'checkout' && (
                 <button
                   onClick={() => { setStep('plans'); setCheckoutPlan(null); setCheckoutError(null) }}
-                  className="flex items-center gap-1.5 text-sm font-medium transition-colors cursor-pointer"
-                  style={{ color: 'var(--text-secondary)' }}
+                  className="flex items-center gap-1.5 text-sm font-medium transition-colors cursor-pointer text-[var(--text-secondary)]"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
@@ -202,12 +201,12 @@ export default function SubscriptionModal({
                 </button>
               )}
               {step === 'plans' && (
-                <h2 className="font-display text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
+                <h2 className="font-display text-lg font-semibold text-[var(--text-primary)]">
                   Choisissez votre abonnement
                 </h2>
               )}
               {step === 'success' && (
-                <h2 className="font-display text-lg font-semibold" style={{ color: '#55EFC4' }}>
+                <h2 className="font-display text-lg font-semibold text-[var(--success)]">
                   Bienvenue !
                 </h2>
               )}
@@ -227,7 +226,7 @@ export default function SubscriptionModal({
             {/* ── ETAPE 1 : Choix du plan ── */}
             {step === 'plans' && (
               <>
-                <p className="text-sm text-center mb-6" style={{ color: 'var(--text-secondary)' }}>
+                <p className="text-sm text-center mb-6 text-[var(--text-secondary)]">
                   Sans engagement. Annulation en un clic.
                 </p>
 
@@ -252,7 +251,7 @@ export default function SubscriptionModal({
                         {d.discount && (
                           <span
                             className="ml-1 text-[10px] px-1 py-0.5 rounded-full font-semibold"
-                            style={{ background: 'rgba(85,239,196,0.15)', color: '#55EFC4' }}
+                            style={{ background: 'rgba(85,239,196,0.15)', color: 'var(--success)' }}
                           >
                             {d.discount}
                           </span>
@@ -298,7 +297,7 @@ export default function SubscriptionModal({
                           <h3 className="font-display text-base font-semibold" style={{ color }}>
                             {info.name}
                           </h3>
-                          <p className="text-[11px] mt-0.5 mb-3" style={{ color: 'var(--text-muted)' }}>
+                          <p className="text-[11px] mt-0.5 mb-3 text-[var(--text-muted)]">
                             {info.tagline}
                           </p>
 
@@ -307,15 +306,15 @@ export default function SubscriptionModal({
                             {planId === 'serenite' && effectiveDuration === 'monthly' ? (
                               <>
                                 <div className="flex items-baseline gap-2">
-                                  <span className="text-base line-through" style={{ color: 'var(--text-muted)' }}>
+                                  <span className="text-base line-through text-[var(--text-muted)]">
                                     {PROMO.originalPrice}{PROMO.currency}
                                   </span>
-                                  <span className="text-2xl font-bold" style={{ color: '#55EFC4' }}>
+                                  <span className="text-2xl font-bold text-[var(--success)]">
                                     {PROMO.promoPrice}{PROMO.currency}
                                   </span>
-                                  <span className="text-xs" style={{ color: 'var(--text-muted)' }}>/mois</span>
+                                  <span className="text-xs text-[var(--text-muted)]">/mois</span>
                                 </div>
-                                <p className="text-[11px] mt-1 font-medium" style={{ color: '#55EFC4' }}>
+                                <p className="text-[11px] mt-1 font-medium text-[var(--success)]">
                                   code {PROMO.code} · + 7 jours gratuits
                                 </p>
                                 <div className="mt-1.5">
@@ -325,21 +324,21 @@ export default function SubscriptionModal({
                             ) : (
                               <>
                                 <div className="flex items-baseline gap-1">
-                                  <span className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
+                                  <span className="text-2xl font-bold text-[var(--text-primary)]">
                                     {formatPrice(monthlyPrice)}
                                   </span>
-                                  <span className="text-xs" style={{ color: 'var(--text-muted)' }}>/mois</span>
+                                  <span className="text-xs text-[var(--text-muted)]">/mois</span>
                                 </div>
                                 {durationMonths > 1 && (
-                                  <p className="text-[11px] mt-0.5" style={{ color: 'var(--text-secondary)' }}>
+                                  <p className="text-[11px] mt-0.5 text-[var(--text-secondary)]">
                                     {formatPrice(totalPrice)} pour {durationMonths} mois
                                     {originalPrice && (
-                                      <span className="ml-1 font-semibold" style={{ color: '#55EFC4' }}>-{savings}%</span>
+                                      <span className="ml-1 font-semibold text-[var(--success)]">-{savings}%</span>
                                     )}
                                   </p>
                                 )}
                                 {info.hasTrial && (
-                                  <p className="text-[11px] mt-1 font-medium" style={{ color: '#55EFC4' }}>
+                                  <p className="text-[11px] mt-1 font-medium text-[var(--success)]">
                                     7 jours gratuits
                                   </p>
                                 )}
@@ -350,7 +349,7 @@ export default function SubscriptionModal({
                           {/* Features */}
                           <ul className="space-y-1.5 mb-4 flex-1">
                             {PLAN_FEATURES[planId].map((feature, i) => (
-                              <li key={i} className="flex items-start gap-2 text-[12px]" style={{ color: 'var(--text-secondary)' }}>
+                              <li key={i} className="flex items-start gap-2 text-[12px] text-[var(--text-secondary)]">
                                 <svg className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke={color} strokeWidth={2}>
                                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                                 </svg>
@@ -379,7 +378,7 @@ export default function SubscriptionModal({
                   })}
                 </div>
 
-                <p className="text-center text-[11px] mt-4" style={{ color: 'var(--text-muted)' }}>
+                <p className="text-center text-[11px] mt-4 text-[var(--text-muted)]">
                   Si on doit vous retenir par un contrat, c&apos;est qu&apos;on n&apos;a pas fait notre travail.
                 </p>
               </>
@@ -389,10 +388,10 @@ export default function SubscriptionModal({
             {step === 'checkout' && checkoutPlan && (
               <>
                 <div className="text-center mb-4">
-                  <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+                  <p className="text-sm font-medium text-[var(--text-primary)]">
                     {PLAN_INFO[checkoutPlan.plan].name} — {DURATIONS.find(d => d.id === checkoutPlan.duration)?.label}
                   </p>
-                  <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>
+                  <p className="text-xs mt-0.5 text-[var(--text-secondary)]">
                     {formatPrice(PRICES[checkoutPlan.plan][checkoutPlan.duration])}/mois
                   </p>
                 </div>
@@ -403,7 +402,7 @@ export default function SubscriptionModal({
                     <button
                       onClick={() => { setCheckoutError(null); setStep('plans'); setCheckoutPlan(null) }}
                       className="px-6 py-2.5 rounded-full text-sm font-medium cursor-pointer"
-                      style={{ background: 'rgba(201,169,97,0.15)', color: '#C9A961', border: '1px solid rgba(201,169,97,0.25)' }}
+                      style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.25)' }}
                     >
                       Retour aux plans
                     </button>
@@ -428,14 +427,14 @@ export default function SubscriptionModal({
                   className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center"
                   style={{ background: 'rgba(85,239,196,0.1)', border: '1px solid rgba(85,239,196,0.2)' }}
                 >
-                  <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="#55EFC4" strokeWidth={2}>
+                  <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="var(--success)" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
                   Bienvenue dans la communauté !
                 </h3>
-                <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
+                <p className="text-sm mb-6 text-[var(--text-secondary)]">
                   Votre abonnement est actif. Le contenu est maintenant débloqué.
                 </p>
                 <button

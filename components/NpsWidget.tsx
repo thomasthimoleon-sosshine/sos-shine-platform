@@ -87,8 +87,7 @@ export default function NpsWidget({ userId, createdAt }: { userId: string | null
             <button
               type="button"
               onClick={dismiss}
-              className="absolute top-3 right-3 text-xs cursor-pointer"
-              style={{ color: 'var(--text-muted)' }}
+              className="absolute top-3 right-3 text-xs cursor-pointer text-[var(--text-muted)]"
               title="Plus tard"
             >
               ✕
@@ -99,7 +98,7 @@ export default function NpsWidget({ userId, createdAt }: { userId: string | null
             <div className="text-center py-4">
               <span className="text-3xl">💛</span>
               <p className="font-display text-xl mt-2" style={{ color: '#A78BFA' }}>Merci pour votre retour !</p>
-              <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
+              <p className="text-xs mt-1 text-[var(--text-muted)]">
                 Chaque avis nous aide à faire mieux.
               </p>
             </div>
@@ -111,7 +110,7 @@ export default function NpsWidget({ userId, createdAt }: { userId: string | null
                   <p className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: '#A78BFA' }}>
                     Votre avis compte
                   </p>
-                  <h3 className="font-display text-lg sm:text-xl font-semibold mt-1" style={{ color: 'var(--text-primary)' }}>
+                  <h3 className="font-display text-lg sm:text-xl font-semibold mt-1 text-[var(--text-primary)]">
                     Recommanderiez-vous SOS Shine à un proche ?
                   </h3>
                 </div>
@@ -135,7 +134,7 @@ export default function NpsWidget({ userId, createdAt }: { userId: string | null
                 ))}
               </div>
 
-              <div className="flex justify-between text-[10px] mb-4" style={{ color: 'var(--text-muted)' }}>
+              <div className="flex justify-between text-[10px] mb-4 text-[var(--text-muted)]">
                 <span>Pas du tout</span>
                 <span>Absolument</span>
               </div>

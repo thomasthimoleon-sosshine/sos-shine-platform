@@ -94,7 +94,7 @@ export default function DesignSystemPage() {
             <CardHeader>Elevated — Header md</CardHeader>
             <CardContent>Contenu avec padding md (24px)</CardContent>
           </Card>
-          <Card variant="flat">
+          <Card variant="ghost">
             <CardHeader size="sm">Flat — Header sm</CardHeader>
             <CardContent size="sm">Contenu avec padding sm (16px)</CardContent>
           </Card>
@@ -102,7 +102,7 @@ export default function DesignSystemPage() {
             <CardHeader size="lg">Elevated — Header lg</CardHeader>
             <CardContent size="lg">Contenu avec padding lg (32px)</CardContent>
           </Card>
-          <Card variant="flat" className="p-6">
+          <Card variant="ghost" className="p-6">
             <p className="text-sm text-[var(--text-secondary)]">Flat — sans header, padding libre</p>
           </Card>
         </div>
@@ -190,7 +190,7 @@ export default function DesignSystemPage() {
           activeTab={activeTab}
           onChange={setActiveTab}
         />
-        <Card variant="flat" className="p-6">
+        <Card variant="ghost" className="p-6">
           <p className="text-sm text-[var(--text-secondary)]">
             Onglet actif : <strong className="text-[var(--brand)]">{activeTab}</strong>
           </p>

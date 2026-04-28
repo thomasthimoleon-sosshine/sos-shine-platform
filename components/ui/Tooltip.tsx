@@ -2,17 +2,18 @@
 
 import React, { useState } from 'react'
 import { cva } from 'class-variance-authority'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const tooltipBubble = cva(
   [
     'absolute left-1/2 -translate-x-1/2',
     'px-3 py-1.5 rounded-[var(--radius-md)]',
-    'text-sm whitespace-nowrap pointer-events-none',
-    'bg-[rgba(255,255,255,0.1)]',
+    'text-[12px] whitespace-nowrap pointer-events-none',
+    'bg-[var(--surface-card)]',
     'border border-[var(--border)]',
     'text-[var(--text-primary)]',
-    'backdrop-blur-xl',
-    'z-[200]',
+    'shadow-[var(--shadow-md)]',
+    'z-[100]',
   ].join(' '),
   {
     variants: {
@@ -47,11 +48,20 @@ const Tooltip = React.forwardRef<HTMLDivElement, TooltipProps>(
         onBlur={() => setShow(false)}
       >
         {children}
-        {show && (
-          <div className={tooltipBubble({ position })} role="tooltip">
-            {content}
-          </div>
-        )}
+        <AnimatePresence>
+          {show && (
+            <motion.div
+              initial={{ opacity: 0, y: position === 'top' ? 4 : -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: position === 'top' ? 4 : -4 }}
+              transition={{ duration: 0.15, ease: [0.25, 0.1, 0.25, 1] }}
+              className={tooltipBubble({ position })}
+              role="tooltip"
+            >
+              {content}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     )
   }

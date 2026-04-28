@@ -8,23 +8,24 @@ import FocusTrap from 'focus-trap-react'
 
 const overlay = cva([
   'fixed inset-0',
-  'bg-[rgba(0,0,0,0.7)] backdrop-blur-sm',
+  'bg-[var(--surface-overlay)] backdrop-blur-md',
 ].join(' '))
 
 const panel = cva(
   [
-    'relative rounded-[var(--radius-xl)] overflow-hidden w-full',
-    'bg-[var(--surface)]',
+    'relative overflow-hidden w-full',
+    'bg-[var(--surface-raised)]',
     'border border-[var(--border)]',
-    'shadow-[var(--shadow-lg)]',
+    'shadow-[var(--shadow-xl)]',
   ].join(' '),
   {
     variants: {
       size: {
-        sm: 'max-w-sm',
-        md: 'max-w-md',
-        lg: 'max-w-lg',
-        xl: 'max-w-xl',
+        sm: 'max-w-sm rounded-[var(--radius-xl)]',
+        md: 'max-w-md rounded-[var(--radius-xl)]',
+        lg: 'max-w-lg rounded-[var(--radius-2xl)]',
+        xl: 'max-w-xl rounded-[var(--radius-2xl)]',
+        full: 'max-w-3xl rounded-[var(--radius-2xl)]',
       },
     },
     defaultVariants: {
@@ -70,33 +71,30 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
           >
             <div
               ref={ref}
-              className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+              className="fixed inset-0 z-[80] flex items-center justify-center p-4"
               role="dialog"
               aria-modal="true"
               aria-label={title}
             >
-              {/* Overlay */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.15 }}
+                transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
                 className={overlay()}
                 onClick={onClose}
                 aria-hidden="true"
               />
 
-              {/* Panel */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: 8 }}
+                initial={{ opacity: 0, scale: 0.96, y: 12 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: 8 }}
-                transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+                exit={{ opacity: 0, scale: 0.96, y: 12 }}
+                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                 className={panel({ size })}
               >
-                {/* Header */}
                 {title && (
-                  <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border)]">
+                  <div className="flex items-center justify-between px-6 py-5 border-b border-[var(--border-subtle)]">
                     <h2 className="font-display text-lg font-semibold text-[var(--text-primary)]">
                       {title}
                     </h2>
@@ -105,8 +103,8 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
                       className={[
                         'w-8 h-8 rounded-[var(--radius-md)] flex items-center justify-center',
                         'text-[var(--text-muted)]',
-                        'transition-colors duration-[var(--transition-fast)]',
-                        'hover:bg-[rgba(255,255,255,0.05)] hover:text-[var(--text-secondary)]',
+                        'transition-all duration-[var(--transition-fast)]',
+                        'hover:bg-[var(--surface-card)] hover:text-[var(--text-secondary)]',
                         'cursor-pointer',
                         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)]',
                       ].join(' ')}
@@ -117,7 +115,6 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
                   </div>
                 )}
 
-                {/* Body */}
                 <div className="p-6">{children}</div>
               </motion.div>
             </div>

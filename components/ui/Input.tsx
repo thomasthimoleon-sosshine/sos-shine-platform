@@ -5,36 +5,35 @@ import { cva, type VariantProps } from 'class-variance-authority'
 
 const input = cva(
   [
-    'w-full px-4 py-3 rounded-[var(--radius-lg)] text-sm',
-    'font-[family-name:var(--font-body)]',
+    'w-full px-4 py-3 text-sm',
+    'rounded-[var(--radius-lg)]',
     'outline-none',
-    'transition-all duration-[var(--transition-base)]',
+    'transition-all duration-[220ms] ease-[cubic-bezier(0.25,0.1,0.25,1)]',
     'placeholder:text-[var(--text-muted)]',
-    'focus-visible:ring-2 focus-visible:ring-offset-2',
-    'focus-visible:ring-offset-[var(--surface)]',
-    'disabled:opacity-50 disabled:cursor-not-allowed',
+    'disabled:opacity-40 disabled:cursor-not-allowed',
   ].join(' '),
   {
     variants: {
       state: {
         default: [
-          'bg-[rgba(255,255,255,0.04)]',
-          'border border-[var(--border)]',
+          'bg-[var(--surface-raised)]',
+          'border border-[var(--border-subtle)]',
           'text-[var(--text-primary)]',
-          'focus-visible:ring-[var(--brand)]',
-          'focus-visible:border-[var(--brand)]',
+          'focus:border-[var(--brand-alpha-strong)]',
+          'focus:bg-[var(--surface-card)]',
+          'focus:shadow-[0_0_0_3px_var(--brand-alpha-weak)]',
         ].join(' '),
         error: [
           'bg-[var(--danger-alpha-weak)]',
           'border border-[var(--danger-alpha-medium)]',
           'text-[var(--text-primary)]',
-          'focus-visible:ring-[var(--danger)]',
+          'focus:shadow-[0_0_0_3px_var(--danger-alpha-weak)]',
         ].join(' '),
         success: [
           'bg-[var(--success-alpha-weak)]',
           'border border-[var(--success-alpha-medium)]',
           'text-[var(--text-primary)]',
-          'focus-visible:ring-[var(--success)]',
+          'focus:shadow-[0_0_0_3px_var(--success-alpha-weak)]',
         ].join(' '),
       },
     },
@@ -58,11 +57,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, '-') : undefined)
 
     return (
-      <div className="space-y-1.5">
+      <div className="space-y-2">
         {label && (
           <label
             htmlFor={inputId}
-            className="block text-sm font-medium text-[var(--text-secondary)]"
+            className="block text-[13px] font-medium text-[var(--text-secondary)] tracking-wide"
           >
             {label}
           </label>
@@ -76,12 +75,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           {...props}
         />
         {error && (
-          <p id={`${inputId}-error`} className="text-sm text-[var(--danger)]" role="alert">
+          <p id={`${inputId}-error`} className="text-[13px] text-[var(--danger)] mt-1" role="alert">
             {error}
           </p>
         )}
         {hint && !error && (
-          <p id={`${inputId}-hint`} className="text-sm text-[var(--text-muted)]">
+          <p id={`${inputId}-hint`} className="text-[13px] text-[var(--text-muted)] mt-1">
             {hint}
           </p>
         )}

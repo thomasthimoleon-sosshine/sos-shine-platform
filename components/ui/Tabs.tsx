@@ -5,7 +5,7 @@ import { cva } from 'class-variance-authority'
 
 const tabButton = cva(
   [
-    'px-6 py-3 rounded-[var(--radius-lg)] text-sm font-medium',
+    'px-5 py-2.5 rounded-[var(--radius-md)] text-[13px] font-medium',
     'transition-all duration-[var(--transition-base)]',
     'cursor-pointer',
     'focus-visible:outline-none focus-visible:ring-2',
@@ -17,15 +17,12 @@ const tabButton = cva(
       active: {
         true: [
           'bg-[var(--brand-alpha-medium)]',
-          'border border-[var(--brand-alpha-strong)]',
           'text-[var(--brand)]',
         ].join(' '),
         false: [
-          'bg-[rgba(255,255,255,0.02)]',
-          'border border-[var(--border)]',
           'text-[var(--text-muted)]',
           'hover:text-[var(--text-secondary)]',
-          'hover:bg-[rgba(255,255,255,0.04)]',
+          'hover:bg-[var(--surface-raised)]',
         ].join(' '),
       },
     },
@@ -51,7 +48,11 @@ export interface TabsProps {
 const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
   ({ tabs, activeTab, onChange, className }, ref) => {
     return (
-      <div ref={ref} className={`flex gap-2 ${className || ''}`} role="tablist">
+      <div
+        ref={ref}
+        className={`flex gap-1 p-1 rounded-[var(--radius-lg)] bg-[var(--surface-raised)] ${className || ''}`}
+        role="tablist"
+      >
         {tabs.map((tab) => (
           <button
             key={tab.key}
@@ -60,7 +61,7 @@ const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
             onClick={() => onChange(tab.key)}
             className={tabButton({ active: activeTab === tab.key })}
           >
-            {tab.icon && <span className="mr-2">{tab.icon}</span>}
+            {tab.icon && <span className="mr-1.5">{tab.icon}</span>}
             {tab.label}
           </button>
         ))}

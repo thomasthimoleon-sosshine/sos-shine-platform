@@ -1,24 +1,50 @@
 import React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 
-const card = cva('rounded-xl transition-all duration-[var(--transition-base)]', {
-  variants: {
-    variant: {
-      elevated: [
-        'bg-[var(--surface-card)]',
-        'border border-[var(--border)]',
-        'shadow-[var(--shadow-sm)]',
-      ].join(' '),
-      flat: [
-        'bg-[rgba(255,255,255,0.03)]',
-        'border border-[rgba(255,255,255,0.06)]',
-      ].join(' '),
+const card = cva(
+  [
+    'rounded-[var(--radius-xl)]',
+    'transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)]',
+  ].join(' '),
+  {
+    variants: {
+      variant: {
+        elevated: [
+          'bg-[var(--surface-card)]',
+          'border border-[var(--border)]',
+          'shadow-[var(--shadow-sm)]',
+        ].join(' '),
+        raised: [
+          'bg-[var(--surface-raised)]',
+          'border border-[var(--border-subtle)]',
+        ].join(' '),
+        ghost: [
+          'bg-transparent',
+          'border border-[var(--border-subtle)]',
+        ].join(' '),
+        glow: [
+          'bg-[var(--surface-card)]',
+          'border border-[var(--border)]',
+          'shadow-[var(--shadow-sm)]',
+          'hover:border-[var(--border-medium)]',
+          'hover:shadow-[var(--glow-gold)]',
+        ].join(' '),
+        interactive: [
+          'bg-[var(--surface-card)]',
+          'border border-[var(--border)]',
+          'shadow-[var(--shadow-xs)]',
+          'hover:bg-[var(--surface-elevated)]',
+          'hover:border-[var(--border-medium)]',
+          'hover:shadow-[var(--shadow-md)]',
+          'cursor-pointer',
+        ].join(' '),
+      },
     },
-  },
-  defaultVariants: {
-    variant: 'elevated',
-  },
-})
+    defaultVariants: {
+      variant: 'elevated',
+    },
+  }
+)
 
 export interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
@@ -39,7 +65,11 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 )
 Card.displayName = 'Card'
 
-const paddingMap = { sm: 'px-4 py-3', md: 'px-6 py-4', lg: 'px-8 py-6' } as const
+const paddingMap = {
+  sm: 'px-4 py-3',
+  md: 'px-6 py-4',
+  lg: 'px-8 py-6',
+} as const
 
 const CardHeader = React.forwardRef<
   HTMLDivElement,
@@ -47,7 +77,7 @@ const CardHeader = React.forwardRef<
 >(({ className, size = 'md', ...props }, ref) => (
   <div
     ref={ref}
-    className={`${paddingMap[size]} border-b border-[var(--border)] ${className || ''}`}
+    className={`${paddingMap[size]} border-b border-[var(--border-subtle)] ${className || ''}`}
     {...props}
   />
 ))
@@ -68,4 +98,16 @@ const CardContent = React.forwardRef<
 })
 CardContent.displayName = 'CardContent'
 
-export { Card, CardHeader, CardContent }
+const CardFooter = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & { size?: 'sm' | 'md' | 'lg' }
+>(({ className, size = 'md', ...props }, ref) => (
+  <div
+    ref={ref}
+    className={`${paddingMap[size]} border-t border-[var(--border-subtle)] ${className || ''}`}
+    {...props}
+  />
+))
+CardFooter.displayName = 'CardFooter'
+
+export { Card, CardHeader, CardContent, CardFooter }

@@ -5,11 +5,13 @@ const avatar = cva(
   [
     'rounded-full flex items-center justify-center',
     'font-medium overflow-hidden flex-shrink-0',
+    'ring-1 ring-[var(--border-subtle)]',
   ].join(' '),
   {
     variants: {
       size: {
-        sm: 'w-8 h-8 text-sm',
+        xs: 'w-6 h-6 text-[10px]',
+        sm: 'w-8 h-8 text-xs',
         md: 'w-10 h-10 text-sm',
         lg: 'w-14 h-14 text-base',
         xl: 'w-20 h-20 text-lg',
@@ -47,7 +49,7 @@ const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
             className="w-full h-full object-cover"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[var(--brand)] to-[var(--brand-deep)] text-[var(--surface)]">
+          <div className="w-full h-full flex items-center justify-center bg-[var(--surface-card)] text-[var(--brand)]">
             {initials}
           </div>
         )}

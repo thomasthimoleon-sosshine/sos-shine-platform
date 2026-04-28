@@ -97,7 +97,7 @@ export default function CourrierAnonymePage() {
               <button
                 onClick={() => setSent(false)}
                 className="px-6 py-3 rounded-full text-sm font-medium transition-all"
-                style={{ background: 'linear-gradient(135deg, #C9A961, #B8960F)', color: '#000000' }}
+                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000' }}
               >
                 Envoyer un autre message
               </button>
@@ -219,7 +219,7 @@ export default function CourrierAnonymePage() {
                 type="submit"
                 disabled={sending || !content.trim()}
                 className="w-full py-3.5 rounded-full text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                style={{ background: 'linear-gradient(135deg, #C9A961, #B8960F)', color: '#000000' }}
+                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000' }}
               >
                 {sending ? (
                   <span className="flex items-center justify-center gap-2">

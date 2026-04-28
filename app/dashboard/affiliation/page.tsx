@@ -12,7 +12,7 @@ const easeArr = ease as unknown as [number, number, number, number]
 const TIERS = [
   { key: 'bronze', rate: 10, min: 0, max: 10, color: '#CD7F32', gradient: 'linear-gradient(135deg, #CD7F32, #A0522D)' },
   { key: 'silver', rate: 15, min: 11, max: 50, color: '#C0C0C0', gradient: 'linear-gradient(135deg, #C0C0C0, #A8A8A8)' },
-  { key: 'gold', rate: 20, min: 51, max: 100, color: 'var(--brand)', gradient: 'linear-gradient(135deg, #C9A961, #B8960F)' },
+  { key: 'gold', rate: 20, min: 51, max: 100, color: 'var(--brand)', gradient: 'linear-gradient(135deg, var(--brand), var(--brand-deep))' },
   { key: 'diamond', rate: 25, min: 101, max: Infinity, color: '#B9F2FF', gradient: 'linear-gradient(135deg, #B9F2FF, #7EC8E3)' },
 ] as const
 

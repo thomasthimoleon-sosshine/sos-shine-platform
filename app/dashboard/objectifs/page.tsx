@@ -592,7 +592,7 @@ export default function ObjectifsPage() {
                               <div className="h-full rounded-full transition-all duration-500"
                                 style={{
                                   width: `${phases.length > 0 ? (completedPhases / phases.length) * 100 : 0}%`,
-                                  background: 'linear-gradient(90deg, var(--brand), #55EFC4)',
+                                  background: 'linear-gradient(90deg, var(--brand), var(--success))',
                                 }} />
                             </div>
                             <span className="text-[10px] font-medium text-[var(--text-muted)]">

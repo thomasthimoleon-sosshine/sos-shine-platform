@@ -113,17 +113,17 @@ export default function MesRayonsPage() {
       {/* Toast */}
       {toast && (
         <div className="fixed top-6 right-6 z-50 px-5 py-3 rounded-xl text-sm font-medium animate-slide-in"
-          style={{ background: 'var(--brand)', color: 'var(--dark)' }}>
+          style={{ background: 'var(--brand)', color: 'var(--surface)' }}>
           {toast}
         </div>
       )}
 
       {/* Header */}
       <div>
-        <h1 className="font-display text-2xl sm:text-3xl font-semibold tracking-tight" style={{ color: 'var(--text-primary)' }}>
-          <span style={{ color: 'var(--brand)' }}>&#9728;</span> {t('rayons.title')}
+        <h1 className="font-display text-2xl sm:text-3xl font-semibold tracking-tight text-[var(--text-primary)]">
+          <span className="text-[var(--brand)]">&#9728;</span> {t('rayons.title')}
         </h1>
-        <p className="mt-1 text-sm" style={{ color: 'var(--text-secondary)' }}>
+        <p className="mt-1 text-sm text-[var(--text-secondary)]">
           {t('rayons.subtitle')}
         </p>
       </div>
@@ -144,7 +144,7 @@ export default function MesRayonsPage() {
             {tab.count > 0 && (
               <span className="ml-1.5 inline-flex items-center justify-center min-w-[18px] h-[18px] rounded-full text-[10px] font-bold"
                 style={{
-                  background: tab.key === 'pending' && activeTab !== 'pending' ? '#EF4444' : 'rgba(201,169,97,0.15)',
+                  background: tab.key === 'pending' && activeTab !== 'pending' ? 'var(--danger)' : 'rgba(201,169,97,0.15)',
                   color: tab.key === 'pending' && activeTab !== 'pending' ? '#fff' : 'var(--brand)',
                 }}>
                 {tab.count}
@@ -157,7 +157,7 @@ export default function MesRayonsPage() {
       {/* Search */}
       {(activeTab === 'connections' && connections.length > 3) && (
         <div className="relative">
-          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--text-muted)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
           </svg>
           <input
@@ -235,8 +235,7 @@ function ConnectionsList({ connections, getPartnerProfile, formatDate, onAction,
         if (!p) return null
         const displayName = p.pseudo || p.prenom
         return (
-          <div key={c.id} className="rounded-xl p-4 flex items-center gap-4 group transition-all"
-            style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
+          <div key={c.id} className="rounded-xl p-4 flex items-center gap-4 group transition-all bg-[var(--surface-card)] border border-[var(--border)]">
             <Link href={`/dashboard/membre/${p.id}`} className="shrink-0">
               {p.avatar_url ? (
                 <img src={p.avatar_url} alt={displayName} className="w-12 h-12 rounded-full object-cover ring-2 ring-[var(--brand)]/20" />
@@ -248,20 +247,19 @@ function ConnectionsList({ connections, getPartnerProfile, formatDate, onAction,
               )}
             </Link>
             <div className="flex-1 min-w-0">
-              <Link href={`/dashboard/membre/${p.id}`} className="font-semibold text-[15px] hover:underline" style={{ color: 'var(--text-primary)' }}>
+              <Link href={`/dashboard/membre/${p.id}`} className="font-semibold text-[15px] hover:underline text-[var(--text-primary)]">
                 {displayName}
               </Link>
               {p.bio && (
-                <p className="text-[12px] truncate mt-0.5" style={{ color: 'var(--text-muted)' }}>{p.bio}</p>
+                <p className="text-[12px] truncate mt-0.5 text-[var(--text-muted)]">{p.bio}</p>
               )}
-              <p className="text-[11px] mt-0.5" style={{ color: 'var(--text-muted)' }}>
+              <p className="text-[11px] mt-0.5 text-[var(--text-muted)]">
                 {t('rayons.connected_since', { date: formatDate(c.updated_at) })}
               </p>
             </div>
             <div className="flex items-center gap-2 shrink-0">
               <Link href={`/dashboard/messages/${p.id}`}
-                className="p-2 rounded-lg transition-colors"
-                style={{ color: 'var(--text-muted)' }}
+                className="p-2 rounded-lg transition-colors text-[var(--text-muted)]"
                 title="Message">
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
@@ -270,8 +268,7 @@ function ConnectionsList({ connections, getPartnerProfile, formatDate, onAction,
               <button
                 onClick={() => { if (confirm(t('rayons.remove_confirm'))) onAction(c.id, 'remove') }}
                 disabled={actionLoading === c.id}
-                className="p-2 rounded-lg transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
-                style={{ color: '#EF4444' }}
+                className="p-2 rounded-lg transition-colors opacity-0 group-hover:opacity-100 cursor-pointer text-[var(--danger)]"
                 title={t('rayons.remove')}
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -318,10 +315,10 @@ function PendingList({ connections, profiles, onAction, actionLoading, formatDat
               )}
             </Link>
             <div className="flex-1 min-w-0">
-              <Link href={`/dashboard/membre/${p.id}`} className="font-semibold text-[15px] hover:underline" style={{ color: 'var(--text-primary)' }}>
+              <Link href={`/dashboard/membre/${p.id}`} className="font-semibold text-[15px] hover:underline text-[var(--text-primary)]">
                 {displayName}
               </Link>
-              <p className="text-[11px] mt-0.5" style={{ color: 'var(--text-muted)' }}>
+              <p className="text-[11px] mt-0.5 text-[var(--text-muted)]">
                 {formatDate(c.created_at)}
               </p>
             </div>
@@ -330,7 +327,7 @@ function PendingList({ connections, profiles, onAction, actionLoading, formatDat
                 onClick={() => onAction(c.id, 'accept')}
                 disabled={actionLoading === c.id}
                 className="px-4 py-2 rounded-xl text-[13px] font-semibold transition-all cursor-pointer"
-                style={{ background: 'var(--brand)', color: 'var(--dark)' }}
+                style={{ background: 'var(--brand)', color: 'var(--surface)' }}
               >
                 {actionLoading === c.id ? '...' : t('rayons.accept')}
               </button>
@@ -369,8 +366,7 @@ function SentList({ connections, profiles, onAction, actionLoading, formatDate, 
         if (!p) return null
         const displayName = p.pseudo || p.prenom
         return (
-          <div key={c.id} className="rounded-xl p-4 flex items-center gap-4"
-            style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
+          <div key={c.id} className="rounded-xl p-4 flex items-center gap-4 bg-[var(--surface-card)] border border-[var(--border)]">
             <Link href={`/dashboard/membre/${p.id}`} className="shrink-0">
               {p.avatar_url ? (
                 <img src={p.avatar_url} alt={displayName} className="w-12 h-12 rounded-full object-cover" />
@@ -382,10 +378,10 @@ function SentList({ connections, profiles, onAction, actionLoading, formatDate, 
               )}
             </Link>
             <div className="flex-1 min-w-0">
-              <Link href={`/dashboard/membre/${p.id}`} className="font-semibold text-[15px] hover:underline" style={{ color: 'var(--text-primary)' }}>
+              <Link href={`/dashboard/membre/${p.id}`} className="font-semibold text-[15px] hover:underline text-[var(--text-primary)]">
                 {displayName}
               </Link>
-              <p className="text-[11px] mt-0.5" style={{ color: 'var(--text-muted)' }}>
+              <p className="text-[11px] mt-0.5 text-[var(--text-muted)]">
                 {t('rayons.sent')} &middot; {formatDate(c.created_at)}
               </p>
             </div>
@@ -406,10 +402,10 @@ function SentList({ connections, profiles, onAction, actionLoading, formatDate, 
 
 function EmptyState({ icon, title, desc }: { icon: string; title: string; desc: string }) {
   return (
-    <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
+    <div className="text-center py-16 rounded-2xl bg-[var(--surface-card)] border border-[var(--border)]">
       <div className="text-4xl mb-4" dangerouslySetInnerHTML={{ __html: icon }} />
-      <h3 className="font-semibold text-[15px] mb-2" style={{ color: 'var(--text-primary)' }}>{title}</h3>
-      <p className="text-sm max-w-sm mx-auto" style={{ color: 'var(--text-muted)' }}>{desc}</p>
+      <h3 className="font-semibold text-[15px] mb-2 text-[var(--text-primary)]">{title}</h3>
+      <p className="text-sm max-w-sm mx-auto text-[var(--text-muted)]">{desc}</p>
     </div>
   )
 }

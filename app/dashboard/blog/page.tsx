@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { blogArticles as staticArticles, BLOG_CATEGORIES } from '@/data/blog/articles'
 import type { BlogArticle } from '@/data/blog/articles'
 
-const gold = '#C9A961'
+const gold = 'var(--brand)'
 const goldRgb = '212,175,55'
 
 function formatDate(dateStr: string) {
@@ -27,7 +27,7 @@ function MarkdownRenderer({ content }: { content: string }) {
       elements.push(
         <ul key={key++} className="space-y-2 my-4">
           {listItems.map((item, i) => (
-            <li key={i} className="flex gap-3 text-sm leading-relaxed font-light" style={{ color: 'var(--text-secondary)' }}>
+            <li key={i} className="flex gap-3 text-sm leading-relaxed font-light text-[var(--text-secondary)]">
               <span className="mt-2 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: gold }} />
               <span dangerouslySetInnerHTML={{ __html: inlineFormat(item) }} />
             </li>
@@ -49,13 +49,13 @@ function MarkdownRenderer({ content }: { content: string }) {
   for (let i = 0; i < lines.length; i++) {
     const trimmed = lines[i].trim()
     if (!trimmed) { flushList(); continue }
-    if (trimmed.startsWith('## ')) { flushList(); elements.push(<h2 key={key++} className="font-display text-xl font-light mt-8 mb-3" style={{ color: 'var(--text-primary)' }}>{trimmed.slice(3)}</h2>); continue }
+    if (trimmed.startsWith('## ')) { flushList(); elements.push(<h2 key={key++} className="font-display text-xl font-light mt-8 mb-3 text-[var(--text-primary)]">{trimmed.slice(3)}</h2>); continue }
     if (trimmed.startsWith('### ')) { flushList(); elements.push(<h3 key={key++} className="font-display text-lg font-light mt-6 mb-2" style={{ color: gold }}>{trimmed.slice(4)}</h3>); continue }
     if (trimmed === '---') { flushList(); elements.push(<hr key={key++} className="my-8 border-0 h-px" style={{ background: `rgba(${goldRgb}, 0.2)` }} />); continue }
-    if (trimmed.startsWith('> ')) { flushList(); elements.push(<blockquote key={key++} className="my-6 pl-5 py-3" style={{ borderLeft: `2px solid ${gold}` }}><p className="font-display text-base italic font-light" style={{ color: 'var(--text-primary)' }} dangerouslySetInnerHTML={{ __html: inlineFormat(trimmed.slice(2)) }} /></blockquote>); continue }
+    if (trimmed.startsWith('> ')) { flushList(); elements.push(<blockquote key={key++} className="my-6 pl-5 py-3" style={{ borderLeft: `2px solid ${gold}` }}><p className="font-display text-base italic font-light text-[var(--text-primary)]" dangerouslySetInnerHTML={{ __html: inlineFormat(trimmed.slice(2)) }} /></blockquote>); continue }
     if (trimmed.startsWith('- ') || /^\d+\.\s/.test(trimmed)) { inList = true; listItems.push(trimmed.replace(/^[-\d]+[.\s]+/, '')); continue }
     flushList()
-    elements.push(<p key={key++} className="text-sm leading-[1.8] font-light my-3" style={{ color: 'var(--text-secondary)' }} dangerouslySetInnerHTML={{ __html: inlineFormat(trimmed) }} />)
+    elements.push(<p key={key++} className="text-sm leading-[1.8] font-light my-3 text-[var(--text-secondary)]" dangerouslySetInnerHTML={{ __html: inlineFormat(trimmed) }} />)
   }
   flushList()
   return <div>{elements}</div>
@@ -152,22 +152,22 @@ export default function DashboardBlogPage() {
               style={{ background: `rgba(${goldRgb}, 0.1)`, color: gold }}>
               {BLOG_CATEGORIES.find(c => c.slug === selectedArticle.category)?.label || selectedArticle.category}
             </span>
-            <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{formatDate(selectedArticle.publishedAt)}</span>
-            <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{selectedArticle.readTime} min de lecture</span>
+            <span className="text-xs text-[var(--text-muted)]">{formatDate(selectedArticle.publishedAt)}</span>
+            <span className="text-xs text-[var(--text-muted)]">{selectedArticle.readTime} min de lecture</span>
           </div>
 
           <h1 className="font-display text-2xl sm:text-3xl font-light leading-[1.15] mb-3">{selectedArticle.title}</h1>
-          <p className="text-sm font-light leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>{selectedArticle.subtitle}</p>
+          <p className="text-sm font-light leading-relaxed mb-6 text-[var(--text-secondary)]">{selectedArticle.subtitle}</p>
 
           {/* Author */}
-          <div className="flex items-center gap-3 pb-6 mb-6" style={{ borderBottom: '1px solid var(--border)' }}>
+          <div className="flex items-center gap-3 pb-6 mb-6 border-b border-[var(--border)]">
             <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium"
               style={{ background: `rgba(${goldRgb}, 0.1)`, color: gold }}>
               {selectedArticle.author.name.split(' ').map(n => n[0]).join('')}
             </div>
             <div>
               <p className="text-sm font-medium">{selectedArticle.author.name}</p>
-              <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{selectedArticle.author.role}</p>
+              <p className="text-xs text-[var(--text-muted)]">{selectedArticle.author.role}</p>
             </div>
           </div>
 
@@ -181,7 +181,7 @@ export default function DashboardBlogPage() {
           {/* Tags */}
           {selectedArticle.tags.length > 0 && (
             <div className="mt-10 pt-6" style={{ borderTop: '1px solid var(--border)' }}>
-              <p className="text-[10px] uppercase tracking-widest font-medium mb-3" style={{ color: 'var(--text-muted)' }}>Tags</p>
+              <p className="text-[10px] uppercase tracking-widest font-medium mb-3 text-[var(--text-muted)]">Tags</p>
               <div className="flex flex-wrap gap-2">
                 {selectedArticle.tags.map(tag => (
                   <span key={tag} className="px-3 py-1.5 rounded-full text-xs"
@@ -208,7 +208,7 @@ export default function DashboardBlogPage() {
         <h1 className="font-display text-2xl sm:text-3xl font-light mb-2">
           Blog <span style={{ color: gold }}>SOS Shine</span>
         </h1>
-        <p className="text-sm font-light" style={{ color: 'var(--text-secondary)' }}>
+        <p className="text-sm font-light text-[var(--text-secondary)]">
           Articles, guides et conseils pour transformer votre relation aux &eacute;motions.
         </p>
       </motion.div>
@@ -265,12 +265,12 @@ export default function DashboardBlogPage() {
                   style={{ background: `rgba(${goldRgb}, 0.1)`, color: gold }}>
                   Article vedette
                 </span>
-                <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{featured.readTime} min</span>
+                <span className="text-xs text-[var(--text-muted)]">{featured.readTime} min</span>
               </div>
               <h2 className="font-display text-xl sm:text-2xl font-light leading-[1.2] mb-3 group-hover:text-[var(--brand)] transition-colors">
                 {featured.title}
               </h2>
-              <p className="text-sm font-light leading-relaxed mb-5 max-w-2xl" style={{ color: 'var(--text-secondary)' }}>
+              <p className="text-sm font-light leading-relaxed mb-5 max-w-2xl text-[var(--text-secondary)]">
                 {featured.excerpt}
               </p>
               <div className="flex items-center gap-3">
@@ -280,7 +280,7 @@ export default function DashboardBlogPage() {
                 </div>
                 <div>
                   <p className="text-xs font-medium">{featured.author.name}</p>
-                  <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{featured.author.role}</p>
+                  <p className="text-[10px] text-[var(--text-muted)]">{featured.author.role}</p>
                 </div>
               </div>
             </article>
@@ -313,11 +313,11 @@ export default function DashboardBlogPage() {
                   <h3 className="font-display text-base font-light mt-2 mb-2 leading-snug group-hover:text-[var(--brand)] transition-colors">
                     {article.title}
                   </h3>
-                  <p className="text-xs font-light leading-relaxed mb-3 line-clamp-2" style={{ color: 'var(--text-secondary)' }}>
+                  <p className="text-xs font-light leading-relaxed mb-3 line-clamp-2 text-[var(--text-secondary)]">
                     {article.excerpt.slice(0, 120)}...
                   </p>
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>
+                    <span className="text-[10px] text-[var(--text-muted)]">
                       {article.author.name} &middot; {article.readTime} min
                     </span>
                     <span className="text-xs font-medium" style={{ color: gold }}>Lire</span>
@@ -332,7 +332,7 @@ export default function DashboardBlogPage() {
       {filteredArticles.length === 0 && (
         <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <p className="text-3xl mb-3">📝</p>
-          <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Aucun article dans cette cat&eacute;gorie</p>
+          <p className="text-sm text-[var(--text-muted)]">Aucun article dans cette cat&eacute;gorie</p>
         </div>
       )}
     </div>

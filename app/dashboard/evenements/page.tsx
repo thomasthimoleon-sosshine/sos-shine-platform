@@ -195,7 +195,7 @@ function WorldGlobe({ events, selectedEvent, onSelect, dragLabel }: {
         ctx.rotate(Math.PI / 4)
         const s = size + (isSelected ? Math.sin(time * 3) * 2 : 0)
 
-        ctx.fillStyle = isSelected ? '#C9A961' : `rgba(201,169,97,${(0.7 + pulse * 0.3) * depthFade})`
+        ctx.fillStyle = isSelected ? 'var(--brand)' : `rgba(201,169,97,${(0.7 + pulse * 0.3) * depthFade})`
         ctx.fillRect(-s / 2, -s / 2, s, s)
 
         ctx.strokeStyle = `rgba(255,255,255,${(0.4 + pulse * 0.4) * depthFade})`
@@ -214,7 +214,7 @@ function WorldGlobe({ events, selectedEvent, onSelect, dragLabel }: {
           ctx.textAlign = 'center'
           ctx.fillStyle = 'rgba(0,0,0,0.5)'
           ctx.fillText(event.location_name, x + 1, y - size - 9)
-          ctx.fillStyle = '#C9A961'
+          ctx.fillStyle = 'var(--brand)'
           ctx.fillText(event.location_name, x, y - size - 10)
         }
       })
@@ -289,8 +289,8 @@ function WorldGlobe({ events, selectedEvent, onSelect, dragLabel }: {
         onPointerCancel={onPointerUp}
       />
       <div className="absolute bottom-3 left-3 flex items-center gap-2">
-        <span className="w-2 h-2 rotate-45 inline-block" style={{ background: '#C9A961' }} />
-        <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{dragLabel}</span>
+        <span className="w-2 h-2 rotate-45 inline-block" style={{ background: 'var(--brand)' }} />
+        <span className="text-[10px] text-[var(--text-muted)]">{dragLabel}</span>
       </div>
     </div>
   )
@@ -409,11 +409,11 @@ export default function EvenementsPage() {
 
   function getEventTypeInfo(type: string) {
     const map: Record<string, { label: string; color: string }> = {
-      shine_walk: { label: 'Shine Walk', color: '#55EFC4' },
-      rencontre: { label: 'Rencontre', color: '#74C0FC' },
+      shine_walk: { label: 'Shine Walk', color: 'var(--success)' },
+      rencontre: { label: 'Rencontre', color: 'var(--accent-blue)' },
       atelier: { label: 'Atelier', color: '#FFEAA7' },
       soin_collectif: { label: 'Soin Collectif', color: '#DDA0DD' },
-      live: { label: 'Live', color: '#E17055' },
+      live: { label: 'Live', color: 'var(--warning)' },
     }
     return map[type] || { label: type, color: 'var(--text-secondary)' }
   }
@@ -428,13 +428,13 @@ export default function EvenementsPage() {
     <div className="max-w-5xl mx-auto space-y-8">
       {/* Header */}
       <div>
-        <h1 className="font-display text-3xl sm:text-4xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold text-[var(--text-primary)]">
           {t('dashboard.events_title')}
         </h1>
-        <p className="mt-2" style={{ color: 'var(--text-secondary)' }}>
+        <p className="mt-2 text-[var(--text-secondary)]">
           {t('dashboard.events_subtitle_detail')}
         </p>
-        <p className="mt-2 text-sm" style={{ color: 'var(--text-muted)' }}>
+        <p className="mt-2 text-sm text-[var(--text-muted)]">
           Rejoignez-nous le temps d&apos;un événement pour vivre l&apos;expérience SOS Shine en direct, rencontrer Julia, William et Thomas, et découvrir la force d&apos;une communauté qui avance ensemble.
         </p>
       </div>
@@ -454,7 +454,7 @@ export default function EvenementsPage() {
       >
         <div
           className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-          style={{ background: 'rgba(85, 239, 196, 0.12)', color: '#55EFC4' }}
+          style={{ background: 'rgba(85, 239, 196, 0.12)', color: 'var(--success)' }}
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -462,10 +462,10 @@ export default function EvenementsPage() {
           </svg>
         </div>
         <div>
-          <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+          <p className="text-sm font-medium text-[var(--text-primary)]">
             {t('dashboard.real_meetings')}
           </p>
-          <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-sm mt-1 text-[var(--text-secondary)]">
             {t('dashboard.events_free_desc')}
           </p>
         </div>
@@ -481,10 +481,10 @@ export default function EvenementsPage() {
           <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-5 text-3xl" style={{ background: 'rgba(201,169,97,0.08)' }}>
             📅
           </div>
-          <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+          <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
             {t('dashboard.events_empty_title')}
           </h3>
-          <p className="text-sm max-w-sm mx-auto" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-sm max-w-sm mx-auto text-[var(--text-secondary)]">
             {t('dashboard.events_empty_desc')}
           </p>
         </div>
@@ -519,7 +519,7 @@ export default function EvenementsPage() {
                     className="w-16 h-16 rounded-xl flex flex-col items-center justify-center flex-shrink-0"
                     style={{ background: 'rgba(212, 168, 67, 0.1)' }}
                   >
-                    <span className="text-lg font-bold" style={{ color: 'var(--brand)' }}>
+                    <span className="text-lg font-bold text-[var(--brand)]">
                       {new Date(event.event_date).getDate()}
                     </span>
                     <span className="text-xs uppercase" style={{ color: 'var(--gold-deep, var(--brand))' }}>
@@ -532,7 +532,7 @@ export default function EvenementsPage() {
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-semibold text-base" style={{ color: 'var(--text-primary)' }}>
+                          <h3 className="font-semibold text-base text-[var(--text-primary)]">
                             {event.title}
                           </h3>
                           <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: `${typeInfo.color}15`, color: typeInfo.color }}>
@@ -541,7 +541,7 @@ export default function EvenementsPage() {
                         </div>
                         <div className="flex flex-wrap items-center gap-3 mt-1">
                           {event.location_name && (
-                            <span className="text-xs flex items-center gap-1" style={{ color: 'var(--text-muted)' }}>
+                            <span className="text-xs flex items-center gap-1 text-[var(--text-muted)]">
                               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
@@ -549,7 +549,7 @@ export default function EvenementsPage() {
                               {event.location_name}
                             </span>
                           )}
-                          <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                          <span className="text-xs text-[var(--text-muted)]">
                             {formatDate(event.event_date)} à {formatTime(event.event_date)}
                           </span>
                         </div>
@@ -557,7 +557,7 @@ export default function EvenementsPage() {
 
                       <span
                         className="text-xs px-2.5 py-1 rounded-full flex-shrink-0"
-                        style={{ background: 'rgba(85, 239, 196, 0.1)', color: '#55EFC4' }}
+                        style={{ background: 'rgba(85, 239, 196, 0.1)', color: 'var(--success)' }}
                       >
                         {daysUntil(event.event_date)}
                       </span>
@@ -566,7 +566,7 @@ export default function EvenementsPage() {
                     {/* Hosts avatars */}
                     {event.hosts && event.hosts.length > 0 && (
                       <div className="flex items-center gap-2 mt-2">
-                        <span className="text-xs" style={{ color: 'var(--text-muted)' }}>Avec</span>
+                        <span className="text-xs text-[var(--text-muted)]">Avec</span>
                         <div className="flex -space-x-2">
                           {event.hosts.map((h: string) => {
                             const founder = FOUNDERS_MAP[h]
@@ -583,14 +583,14 @@ export default function EvenementsPage() {
                             )
                           })}
                         </div>
-                        <span className="text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>
+                        <span className="text-xs font-medium text-[var(--text-secondary)]">
                           {event.hosts.map((h: string) => FOUNDERS_MAP[h]?.name).filter(Boolean).join(' & ')}
                         </span>
                       </div>
                     )}
 
                     {event.description && (
-                      <p className="text-sm mt-3 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                      <p className="text-sm mt-3 leading-relaxed text-[var(--text-secondary)]">
                         {event.description}
                       </p>
                     )}
@@ -638,13 +638,13 @@ export default function EvenementsPage() {
                         {(() => {
                           const pricing = getEventPrice()
                           return (
-                            <span className="text-xs font-medium" style={{ color: pricing.amount === 0 ? '#55EFC4' : 'var(--brand)' }}>
+                            <span className="text-xs font-medium" style={{ color: pricing.amount === 0 ? 'var(--success)' : 'var(--brand)' }}>
                               {pricing.label}
                             </span>
                           )
                         })()}
                         {event.max_participants && (
-                          <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                          <span className="text-xs text-[var(--text-muted)]">
                             {t('dashboard.max_places', { n: event.max_participants })}
                           </span>
                         )}
@@ -653,7 +653,7 @@ export default function EvenementsPage() {
                       {registered ? (
                         <span
                           className="text-xs px-4 py-2 rounded-xl font-medium"
-                          style={{ background: 'rgba(85, 239, 196, 0.1)', color: '#55EFC4' }}
+                          style={{ background: 'rgba(85, 239, 196, 0.1)', color: 'var(--success)' }}
                         >
                           {t('dashboard.registered_check')}
                         </span>
@@ -662,7 +662,7 @@ export default function EvenementsPage() {
                           onClick={() => handleRegister(event.id)}
                           disabled={registering === event.id}
                           className="text-xs px-4 py-2 rounded-xl font-semibold transition-all duration-200 cursor-pointer disabled:opacity-50"
-                          style={{ background: 'var(--brand)', color: 'var(--dark)' }}
+                          style={{ background: 'var(--brand)', color: 'var(--surface)' }}
                         >
                           {registering === event.id ? t('common.loading') : t('dashboard.register')}
                         </button>
@@ -672,7 +672,7 @@ export default function EvenementsPage() {
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-xs px-4 py-2 rounded-xl font-semibold transition-all duration-200 cursor-pointer inline-flex items-center gap-1.5"
-                          style={{ background: 'var(--brand)', color: 'var(--dark)' }}
+                          style={{ background: 'var(--brand)', color: 'var(--surface)' }}
                         >
                           Réserver — {getEventPrice().label}
                         </a>
@@ -694,13 +694,13 @@ export default function EvenementsPage() {
           border: '1px solid rgba(212, 168, 67, 0.12)',
         }}
       >
-        <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+        <h3 className="font-display text-lg font-semibold mb-2 text-[var(--text-primary)]">
           Devenez hôte certifié
         </h3>
-        <p className="text-sm mb-4 max-w-md mx-auto" style={{ color: 'var(--text-secondary)' }}>
+        <p className="text-sm mb-4 max-w-md mx-auto text-[var(--text-secondary)]">
           Après 4 mois dans la communauté, vous pouvez organiser vos propres Shine Walks et devenir Éclaireur.
         </p>
-        <span className="text-xs font-medium" style={{ color: 'var(--brand)' }}>
+        <span className="text-xs font-medium text-[var(--brand)]">
           Programme Éclaireur — bientôt disponible
         </span>
       </div>

@@ -93,17 +93,17 @@ export default function ChatGeneralPage() {
     <SubscriptionGate allowFree>
     <div className="max-w-4xl mx-auto h-[calc(100vh-8rem)] flex flex-col">
       <div className="mb-4">
-        <h1 className="font-display text-2xl sm:text-3xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+        <h1 className="font-display text-2xl sm:text-3xl font-semibold text-[var(--text-primary)]">
           {t('dashboard.chat_title')}
         </h1>
-        <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+        <p className="text-sm mt-1 text-[var(--text-secondary)]">
           {t('dashboard.chat_general_subtitle')}
         </p>
       </div>
 
       {/* Quick links to challenge chats */}
       <div className="mb-4 flex items-center gap-2 overflow-x-auto pb-2">
-        <span className="text-xs flex-shrink-0" style={{ color: 'var(--text-muted)' }}>{t('dashboard.channels')}</span>
+        <span className="text-xs flex-shrink-0 text-[var(--text-muted)]">{t('dashboard.channels')}</span>
         <Link href="/dashboard/chat" className="px-3 py-1.5 rounded-lg text-xs font-medium flex-shrink-0"
           style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)' }}>
           {t('dashboard.general')}
@@ -115,8 +115,7 @@ export default function ChatGeneralPage() {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 rounded-2xl overflow-hidden flex flex-col min-h-0"
-        style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
+      <div className="flex-1 rounded-2xl overflow-hidden flex flex-col min-h-0 bg-[var(--surface-card)] border border-[var(--border)]">
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {loading ? (
             <div className="flex justify-center py-12">
@@ -127,10 +126,10 @@ export default function ChatGeneralPage() {
               <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 text-2xl" style={{ background: 'rgba(201,169,97,0.1)' }}>
                 💬
               </div>
-              <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+              <h3 className="font-display text-lg font-semibold mb-2 text-[var(--text-primary)]">
                 {t('dashboard.chat_empty_title')}
               </h3>
-              <p className="text-sm max-w-xs" style={{ color: 'var(--text-secondary)' }}>
+              <p className="text-sm max-w-xs text-[var(--text-secondary)]">
                 {t('dashboard.chat_empty_desc')}
               </p>
             </div>
@@ -179,12 +178,12 @@ export default function ChatGeneralPage() {
                       {msg.is_anonymous && msg.user_id === userId && (
                         <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(142,110,126,0.15)', color: 'var(--text-muted)' }}>{t('dashboard.anonymous')}</span>
                       )}
-                      <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{formatTime(msg.created_at)}</span>
+                      <span className="text-xs text-[var(--text-muted)]">{formatTime(msg.created_at)}</span>
                     </div>
                     {msg.message_type === 'audio' && msg.audio_url ? (
                       <AudioPlayer src={msg.audio_url} />
                     ) : (
-                      <p className="text-sm leading-relaxed break-words" style={{ color: 'var(--text-secondary)' }}>{msg.content}</p>
+                      <p className="text-sm leading-relaxed break-words text-[var(--text-secondary)]">{msg.content}</p>
                     )}
                   </div>
                 </div>
@@ -195,7 +194,7 @@ export default function ChatGeneralPage() {
         </div>
 
         {/* Input */}
-        <div className="p-4" style={{ borderTop: '1px solid var(--border)' }}>
+        <div className="p-4 border-t border-[var(--border)]">
           {/* Anonymous toggle */}
           <div className="flex items-center gap-2 mb-2">
             <button type="button" onClick={() => setIsAnonymous(!isAnonymous)}
@@ -219,10 +218,10 @@ export default function ChatGeneralPage() {
             style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}>
             <input type="text" value={newMessage} onChange={(e) => setNewMessage(e.target.value)}
               placeholder={isAnonymous ? t('dashboard.anonymous_message') : t('dashboard.message_as', { name: userPrenom })}
-              className="flex-1 bg-transparent text-sm outline-none" style={{ color: 'var(--text-primary)' }} maxLength={500} />
+              className="flex-1 bg-transparent text-sm outline-none text-[var(--text-primary)]" maxLength={500} />
             {newMessage.trim() ? (
               <button type="submit" disabled={sending}
-                className="p-2 rounded-lg transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed" style={{ color: 'var(--brand)' }}>
+                className="p-2 rounded-lg transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed text-[var(--brand)]">
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
                 </svg>

@@ -96,10 +96,10 @@ export default function MessagesPage() {
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <div>
-        <h1 className="font-display text-3xl sm:text-4xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold text-[var(--text-primary)]">
           {t('dashboard.messages_title')}
         </h1>
-        <p className="mt-2" style={{ color: 'var(--text-secondary)' }}>
+        <p className="mt-2 text-[var(--text-secondary)]">
           {t('dashboard.messages_subtitle')}
         </p>
       </div>
@@ -115,15 +115,15 @@ export default function MessagesPage() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" style={{ color: 'var(--brand)' }} />
             </svg>
           </div>
-          <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+          <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
             {t('dashboard.no_conversations')}
           </h3>
-          <p className="text-sm max-w-sm mx-auto" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-sm max-w-sm mx-auto text-[var(--text-secondary)]">
             {t('dashboard.no_conversations_desc')}
           </p>
         </div>
       ) : (
-        <div className="rounded-2xl overflow-hidden" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
+        <div className="rounded-2xl overflow-hidden bg-[var(--surface-card)] border border-[var(--border)]">
           {conversations.map((convo, i) => {
             const name = convo.partner?.pseudo || convo.partner?.prenom || 'Utilisateur'
             const isOwnMessage = convo.lastMessage.sender_id === userId
@@ -154,7 +154,7 @@ export default function MessagesPage() {
                     }}>
                       {name}
                     </span>
-                    <span className="text-xs flex-shrink-0 ml-2" style={{ color: 'var(--text-muted)' }}>
+                    <span className="text-xs flex-shrink-0 ml-2 text-[var(--text-muted)]">
                       {formatTime(convo.lastMessage.created_at)}
                     </span>
                   </div>
@@ -167,7 +167,7 @@ export default function MessagesPage() {
                     </p>
                     {convo.unreadCount > 0 && (
                       <span className="flex-shrink-0 ml-2 w-5 h-5 rounded-full flex items-center justify-center text-xs font-semibold"
-                        style={{ background: 'var(--brand)', color: 'var(--dark)' }}>
+                        style={{ background: 'var(--brand)', color: 'var(--surface)' }}>
                         {convo.unreadCount > 9 ? '9+' : convo.unreadCount}
                       </span>
                     )}

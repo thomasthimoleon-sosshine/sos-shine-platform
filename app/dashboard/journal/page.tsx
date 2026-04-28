@@ -16,10 +16,10 @@ interface JournalEntry {
 const STORAGE_KEY = 'sos-shine-journal'
 
 const MOODS: { value: Mood; emoji: string; label: string; color: string }[] = [
-  { value: 'great', emoji: '\u2728', label: 'Excellent', color: '#55EFC4' },
-  { value: 'good', emoji: '\u2600\uFE0F', label: 'Bien', color: '#74C0FC' },
-  { value: 'neutral', emoji: '\u2601\uFE0F', label: 'Neutre', color: '#C9A961' },
-  { value: 'difficult', emoji: '\uD83C\uDF27\uFE0F', label: 'Difficile', color: '#E17055' },
+  { value: 'great', emoji: '\u2728', label: 'Excellent', color: 'var(--success)' },
+  { value: 'good', emoji: '\u2600\uFE0F', label: 'Bien', color: 'var(--accent-blue)' },
+  { value: 'neutral', emoji: '\u2601\uFE0F', label: 'Neutre', color: 'var(--brand)' },
+  { value: 'difficult', emoji: '\uD83C\uDF27\uFE0F', label: 'Difficile', color: 'var(--warning)' },
   { value: 'tough', emoji: '\u26A1', label: 'Dur', color: '#EF4444' },
 ]
 
@@ -120,10 +120,10 @@ export default function JournalPage() {
         className="flex items-center justify-between"
       >
         <div>
-          <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight" style={{ color: 'var(--text-primary)' }}>
+          <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight text-[var(--text-primary)]">
             {t('journal.title')}
           </h1>
-          <p className="mt-1 text-[14px]" style={{ color: 'var(--text-secondary)' }}>
+          <p className="mt-1 text-[14px] text-[var(--text-secondary)]">
             {t('journal.subtitle')}
           </p>
         </div>
@@ -143,10 +143,10 @@ export default function JournalPage() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.05, duration: 0.5, ease }}
-        className="glass p-4"
+        className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-4"
       >
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-[12px] font-medium mr-1" style={{ color: 'var(--text-muted)' }}>Filtrer :</span>
+          <span className="text-[12px] font-medium mr-1 text-[var(--text-muted)]">Filtrer :</span>
           <button
             onClick={() => setFilterMood('all')}
             className="px-3 py-1.5 rounded-lg text-[12px] font-medium transition-all cursor-pointer"
@@ -180,12 +180,12 @@ export default function JournalPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.1, duration: 0.5 }}
-        className="glass p-3 flex items-center gap-2"
+        className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-3 flex items-center gap-2"
       >
-        <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--brand)' }}>
+        <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} className="text-[var(--brand)]">
           <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
         </svg>
-        <p className="text-[12px]" style={{ color: 'var(--text-muted)' }}>
+        <p className="text-[12px] text-[var(--text-muted)]">
           {t('journal.privacy')}
         </p>
       </motion.div>
@@ -195,20 +195,20 @@ export default function JournalPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.15, duration: 0.5 }}
-          className="glass p-12 text-center"
+          className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-12 text-center"
         >
           <div
             className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center"
             style={{ background: 'rgba(212, 175, 55, 0.08)' }}
           >
-            <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--brand)' }}>
+            <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} className="text-[var(--brand)]">
               <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
             </svg>
           </div>
-          <p className="text-[15px] font-medium" style={{ color: 'var(--text-primary)' }}>
+          <p className="text-[15px] font-medium text-[var(--text-primary)]">
             {filterMood !== 'all' ? 'Aucune entrée avec cet état' : t('journal.empty')}
           </p>
-          <p className="text-[13px] mt-1" style={{ color: 'var(--text-muted)' }}>
+          <p className="text-[13px] mt-1 text-[var(--text-muted)]">
             {filterMood !== 'all' ? 'Essayez un autre filtre' : t('journal.empty_desc')}
           </p>
         </motion.div>
@@ -217,8 +217,7 @@ export default function JournalPage() {
           {Object.entries(groupedEntries).map(([month, monthEntries]) => (
             <div key={month}>
               <h3
-                className="text-[11px] font-semibold uppercase tracking-widest mb-3 capitalize"
-                style={{ color: 'var(--text-muted)' }}
+                className="text-[11px] font-semibold uppercase tracking-widest mb-3 capitalize text-[var(--text-muted)]"
               >
                 {month}
               </h3>
@@ -233,7 +232,7 @@ export default function JournalPage() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95 }}
                         transition={{ delay: i * 0.03, duration: 0.4, ease }}
-                        className="glass glass-hover p-5 group relative"
+                        className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-5 group relative"
                       >
                         <div className="flex items-start justify-between gap-3">
                           <div className="flex-1 min-w-0">
@@ -244,14 +243,14 @@ export default function JournalPage() {
                               >
                                 {moodInfo.emoji} {moodInfo.label}
                               </span>
-                              <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
+                              <span className="text-[11px] text-[var(--text-muted)]">
                                 {formatDate(entry.created_at)}
                               </span>
                             </div>
-                            <p className="text-[14px] leading-relaxed whitespace-pre-wrap" style={{ color: 'var(--text-primary)' }}>
+                            <p className="text-[14px] leading-relaxed whitespace-pre-wrap text-[var(--text-primary)]">
                               {entry.content}
                             </p>
-                            <p className="text-[11px] mt-2" style={{ color: 'var(--text-muted)' }}>
+                            <p className="text-[11px] mt-2 text-[var(--text-muted)]">
                               {entry.content.length} {t('journal.characters')}
                             </p>
                           </div>
@@ -291,11 +290,11 @@ export default function JournalPage() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.3, ease }}
-              className="glass w-full max-w-lg p-6 space-y-5"
+              className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] w-full max-w-lg p-6 space-y-5"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between">
-                <h2 className="font-display text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+                <h2 className="font-display text-xl font-semibold text-[var(--text-primary)]">
                   {t('journal.new_entry')}
                 </h2>
                 <button
@@ -310,7 +309,7 @@ export default function JournalPage() {
               </div>
 
               <div>
-                <label className="block text-[12px] font-medium mb-2" style={{ color: 'var(--text-muted)' }}>
+                <label className="block text-[12px] font-medium mb-2 text-[var(--text-muted)]">
                   {t('journal.mood')}
                 </label>
                 <div className="flex items-center gap-2">
@@ -338,8 +337,8 @@ export default function JournalPage() {
 
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-[12px] font-medium" style={{ color: 'var(--text-muted)' }}>{t('journal.write')}</label>
-                  <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{content.length} {t('journal.characters')}</span>
+                  <label className="text-[12px] font-medium text-[var(--text-muted)]">{t('journal.write')}</label>
+                  <span className="text-[11px] text-[var(--text-muted)]">{content.length} {t('journal.characters')}</span>
                 </div>
                 <textarea
                   value={content}

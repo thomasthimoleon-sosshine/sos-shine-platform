@@ -11,7 +11,7 @@ import { useTranslation } from '@/lib/i18n/useTranslation'
 
 /* ─── Catégories & couleurs ─── */
 const CATEGORIES: Record<string, string> = {
-  "Émotions & Psychologie": "#C9A961",
+  "Émotions & Psychologie": "var(--brand)",
   "Relations & Liens": "#C9A96E",
   "Blessures & Traumatismes": "#B8860B",
   "Développement Personnel": "#DAA520",
@@ -19,7 +19,7 @@ const CATEGORIES: Record<string, string> = {
   "Spiritualité & Énergie": "#FFD700",
   "Soins & Thérapies": "#F0C040",
   "Identité & Mission": "#E8C870",
-  "Vie & Expériences": "#C9A961",
+  "Vie & Expériences": "var(--brand)",
   "Pratiques & Outils": "#C8A951",
 }
 
@@ -405,13 +405,13 @@ export default function EncyclopediePage() {
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Header */}
       <div>
-        <h1 className="font-display text-3xl sm:text-4xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold text-[var(--text-primary)]">
           {t('dashboard.encyclopedia_title')}
         </h1>
-        <p className="mt-2" style={{ color: 'var(--text-secondary)' }}>
+        <p className="mt-2 text-[var(--text-secondary)]">
           {t('dashboard.encyclopedia_subtitle')}
         </p>
-        <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
+        <p className="text-sm mt-1 text-[var(--text-muted)]">
           {topics.length} sujets &middot; {originalCount} originaux &diams; &middot; {Object.keys(CATEGORIES).length} catégories &middot; {publishedCount} disponible{publishedCount > 1 ? 's' : ''}
         </p>
       </div>
@@ -420,7 +420,7 @@ export default function EncyclopediePage() {
 
       {/* Search */}
       <div className="relative">
-        <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--text-muted)' }}>
+        <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} className="text-[var(--text-muted)]">
           <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
         </svg>
         <input
@@ -474,7 +474,7 @@ export default function EncyclopediePage() {
           style={{
             background: activeLetter === 'ALL' ? 'var(--brand)' : 'transparent',
             border: `1px solid ${activeLetter === 'ALL' ? 'var(--brand)' : 'var(--border)'}`,
-            color: activeLetter === 'ALL' ? 'var(--dark)' : 'var(--text-muted)',
+            color: activeLetter === 'ALL' ? 'var(--surface)' : 'var(--text-muted)',
           }}
         >
           Tout
@@ -487,7 +487,7 @@ export default function EncyclopediePage() {
             style={{
               background: activeLetter === l ? 'var(--brand)' : 'transparent',
               border: `1px solid ${activeLetter === l ? 'var(--brand)' : 'var(--border)'}`,
-              color: activeLetter === l ? 'var(--dark)' : 'var(--text-muted)',
+              color: activeLetter === l ? 'var(--surface)' : 'var(--text-muted)',
             }}
           >
             {l}
@@ -497,7 +497,7 @@ export default function EncyclopediePage() {
 
       {/* Count & filter toggles */}
       <div className="flex flex-wrap justify-between items-center gap-3">
-        <p className="text-[13px]" style={{ color: 'var(--text-muted)' }}>
+        <p className="text-[13px] text-[var(--text-muted)]">
           {filtered.length} sujet{filtered.length > 1 ? 's' : ''} affiché{filtered.length > 1 ? 's' : ''}
         </p>
         <div className="flex items-center gap-4">
@@ -507,7 +507,7 @@ export default function EncyclopediePage() {
             style={{
               background: onlyAvailable ? 'rgba(85,239,196,0.12)' : 'transparent',
               border: `1px solid ${onlyAvailable ? 'rgba(85,239,196,0.4)' : 'var(--border)'}`,
-              color: onlyAvailable ? '#55EFC4' : 'var(--text-muted)',
+              color: onlyAvailable ? 'var(--success)' : 'var(--text-muted)',
             }}
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -525,10 +525,10 @@ export default function EncyclopediePage() {
         </div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-16">
-          <p className="font-display text-2xl mb-2" style={{ color: 'var(--text-secondary)' }}>
+          <p className="font-display text-2xl mb-2 text-[var(--text-secondary)]">
             Aucun résultat
           </p>
-          <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+          <p className="text-sm text-[var(--text-muted)]">
             Modifie ta recherche ou réinitialise les filtres
           </p>
         </div>
@@ -538,11 +538,11 @@ export default function EncyclopediePage() {
             <div key={letter} id={`letter-${letter}`}>
               {/* Letter header */}
               <div className="flex items-baseline gap-4 mb-4">
-                <h2 className="font-display text-4xl font-light" style={{ color: 'var(--brand)', opacity: 0.8, lineHeight: 1 }}>
+                <h2 className="font-display text-4xl font-light text-[var(--brand)]" style={{ opacity: 0.8, lineHeight: 1 }}>
                   {letter}
                 </h2>
                 <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
-                <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                <span className="text-xs text-[var(--text-muted)]">
                   {grouped[letter].length}
                 </span>
               </div>
@@ -571,30 +571,29 @@ export default function EncyclopediePage() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
                             <span
-                              className="font-display text-base font-medium transition-colors group-hover:text-[var(--brand)]"
-                              style={{ color: 'var(--text-primary)', lineHeight: 1.2 }}
+                              className="font-display text-base font-medium transition-colors group-hover:text-[var(--brand)] text-[var(--text-primary)]"
+                              style={{ lineHeight: 1.2 }}
                             >
                               {topic.title}
                             </span>
                             {topic.original && (
-                              <span className="text-[11px]" style={{ color: 'var(--brand)' }}>&diams;</span>
+                              <span className="text-[11px] text-[var(--brand)]">&diams;</span>
                             )}
                             {prog?.completed_at && (
-                              <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="#55EFC4" strokeWidth={2}>
+                              <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="var(--success)" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                               </svg>
                             )}
                           </div>
                           <p
-                            className="text-[12px] leading-relaxed mb-2 italic"
-                            style={{ color: 'var(--text-secondary)' }}
+                            className="text-[12px] leading-relaxed mb-2 italic text-[var(--text-secondary)]"
                           >
                             {topic.subtitle}
                           </p>
                           <div className="flex items-center gap-2 flex-wrap">
                             <span
-                              className="text-[10px] uppercase tracking-wider"
-                              style={{ color: 'var(--brand)', opacity: 0.6 }}
+                              className="text-[10px] uppercase tracking-wider text-[var(--brand)]"
+                              style={{ opacity: 0.6 }}
                             >
                               {topic.cat}
                             </span>
@@ -606,7 +605,7 @@ export default function EncyclopediePage() {
                                 <div className="flex items-center gap-1.5 ml-auto" onClick={(e) => e.preventDefault()}>
                                   {avail?.hasTV ? (
                                     <Link href={`/dashboard/shine-tv?douleur=${douleurId}`} title="Shine TV" className="inline-flex items-center justify-center w-5 h-5 rounded hover:scale-110 transition-transform" style={{ background: 'rgba(85,239,196,0.15)' }} onClick={(e) => e.stopPropagation()}>
-                                      <svg className="w-3 h-3" fill="#55EFC4" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                                      <svg className="w-3 h-3" fill="var(--success)" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                                     </Link>
                                   ) : (
                                     <span title="Shine TV" className="inline-flex items-center justify-center w-5 h-5 rounded" style={{ background: 'rgba(255,255,255,0.03)' }}>
@@ -615,7 +614,7 @@ export default function EncyclopediePage() {
                                   )}
                                   {avail?.hasAudible ? (
                                     <Link href={`/dashboard/shine-audible?douleur=${douleurId}`} title="Shine Audible" className="inline-flex items-center justify-center w-5 h-5 rounded hover:scale-110 transition-transform" style={{ background: 'rgba(116,192,252,0.15)' }} onClick={(e) => e.stopPropagation()}>
-                                      <svg className="w-3 h-3" fill="#74C0FC" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" /></svg>
+                                      <svg className="w-3 h-3" fill="var(--accent-blue)" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" /></svg>
                                     </Link>
                                   ) : (
                                     <span title="Shine Audible" className="inline-flex items-center justify-center w-5 h-5 rounded" style={{ background: 'rgba(255,255,255,0.03)' }}>
@@ -624,7 +623,7 @@ export default function EncyclopediePage() {
                                   )}
                                   {avail?.hasShort ? (
                                     <Link href={`/dashboard/shine-shorts?douleur=${douleurId}`} title="Shine Short" className="inline-flex items-center justify-center w-5 h-5 rounded hover:scale-110 transition-transform" style={{ background: 'rgba(162,155,254,0.15)' }} onClick={(e) => e.stopPropagation()}>
-                                      <svg className="w-3 h-3" fill="#A29BFE" viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z" /></svg>
+                                      <svg className="w-3 h-3" fill="var(--accent-purple)" viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z" /></svg>
                                     </Link>
                                   ) : (
                                     <span title="Shine Short" className="inline-flex items-center justify-center w-5 h-5 rounded" style={{ background: 'rgba(255,255,255,0.03)' }}>
@@ -633,7 +632,7 @@ export default function EncyclopediePage() {
                                   )}
                                   {avail?.hasLibrary ? (
                                     <Link href={`/dashboard/shine-librairie?douleur=${douleurId}`} title="Shine Librairie" className="inline-flex items-center justify-center w-5 h-5 rounded hover:scale-110 transition-transform" style={{ background: 'rgba(201,169,97,0.15)' }} onClick={(e) => e.stopPropagation()}>
-                                      <svg className="w-3 h-3" fill="#C9A961" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" /></svg>
+                                      <svg className="w-3 h-3" fill="var(--brand)" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" /></svg>
                                     </Link>
                                   ) : (
                                     <span title="Shine Librairie" className="inline-flex items-center justify-center w-5 h-5 rounded" style={{ background: 'rgba(255,255,255,0.03)' }}>
@@ -650,14 +649,14 @@ export default function EncyclopediePage() {
                               <div className="flex-1 h-1 rounded-full overflow-hidden" style={{ background: 'var(--border)' }}>
                                 <div className="h-full rounded-full" style={{ width: `${(stepsCompleted / 3) * 100}%`, background: 'var(--brand)' }} />
                               </div>
-                              <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{stepsCompleted}/3</span>
+                              <span className="text-[10px] text-[var(--text-muted)]">{stepsCompleted}/3</span>
                             </div>
                           )}
                         </div>
                         {hasDbEntry ? (
                           <div className="flex items-center gap-1.5 flex-shrink-0">
                             <FavoriteButton slug={topic.slug!} size="sm" />
-                            <svg className="w-4 h-4 mt-1 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--text-muted)' }}>
+                            <svg className="w-4 h-4 mt-1 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} className="text-[var(--text-muted)]">
                               <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                             </svg>
                           </div>
@@ -692,42 +691,42 @@ export default function EncyclopediePage() {
       >
         <div className="flex items-center gap-2">
           <div className="w-4 h-0.5" style={{ background: 'var(--brand)' }} />
-          <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>&diams; Originale</span>
+          <span className="text-xs text-[var(--text-secondary)]">&diams; Originale</span>
         </div>
         <div className="flex items-center gap-2">
-          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="#55EFC4" strokeWidth={2}>
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="var(--success)" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Complété</span>
+          <span className="text-xs text-[var(--text-secondary)]">Complété</span>
         </div>
         <div className="flex items-center gap-2">
-          <svg className="w-3 h-3" fill="#55EFC4" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-          <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Shine TV</span>
+          <svg className="w-3 h-3" fill="var(--success)" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+          <span className="text-xs text-[var(--text-secondary)]">Shine TV</span>
         </div>
         <div className="flex items-center gap-2">
-          <svg className="w-3 h-3" fill="#74C0FC" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" /></svg>
-          <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Audible</span>
+          <svg className="w-3 h-3" fill="var(--accent-blue)" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" /></svg>
+          <span className="text-xs text-[var(--text-secondary)]">Audible</span>
         </div>
         <div className="flex items-center gap-2">
-          <svg className="w-3 h-3" fill="#A29BFE" viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z" /></svg>
-          <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Short</span>
+          <svg className="w-3 h-3" fill="var(--accent-purple)" viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z" /></svg>
+          <span className="text-xs text-[var(--text-secondary)]">Short</span>
         </div>
         <div className="flex items-center gap-2">
-          <svg className="w-3 h-3" fill="#C9A961" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" /></svg>
-          <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Librairie</span>
+          <svg className="w-3 h-3" fill="var(--brand)" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" /></svg>
+          <span className="text-xs text-[var(--text-secondary)]">Librairie</span>
         </div>
-        <span className="text-xs ml-auto" style={{ color: 'var(--text-muted)' }}>
+        <span className="text-xs ml-auto text-[var(--text-muted)]">
           {topics.length} sujets au total
         </span>
       </div>
 
       {/* Info */}
       <div className="rounded-xl p-5 text-center" style={{ background: 'rgba(201,169,97,0.04)', border: '1px solid rgba(201,169,97,0.1)' }}>
-        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+        <p className="text-sm text-[var(--text-secondary)]">
           {t('dashboard.not_found_info')}
         </p>
-        <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
-          {t('dashboard.contact_us')} <span style={{ color: 'var(--brand)' }}>julialaureau@sosshine.com</span>
+        <p className="text-xs mt-1 text-[var(--text-muted)]">
+          {t('dashboard.contact_us')} <span className="text-[var(--brand)]">julialaureau@sosshine.com</span>
         </p>
       </div>
     </div>

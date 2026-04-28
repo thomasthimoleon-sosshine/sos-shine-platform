@@ -43,14 +43,13 @@ function PdfReaderModal({ url, title, onClose }: { url: string; title: string; o
       style={{ background: '#09090b' }}
     >
       {/* Header bar */}
-      <div className="flex items-center justify-between px-4 sm:px-6 py-3 shrink-0"
-        style={{ background: 'var(--surface-card)', borderBottom: '1px solid var(--border)' }}>
+      <div className="flex items-center justify-between px-4 sm:px-6 py-3 shrink-0 bg-[var(--surface-card)] border-b border-[var(--border)]">
         <div className="flex items-center gap-3 min-w-0">
           <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
-            style={{ color: 'var(--brand)' }}>
+            className="text-[var(--brand)]">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
           </svg>
-          <h2 className="font-display text-[15px] font-semibold truncate" style={{ color: 'var(--text-primary)' }}>
+          <h2 className="font-display text-[15px] font-semibold truncate text-[var(--text-primary)]">
             {title}
           </h2>
         </div>
@@ -79,9 +78,8 @@ function PdfReaderModal({ url, title, onClose }: { url: string; title: string; o
       </div>
 
       {/* Bottom info bar */}
-      <div className="flex items-center justify-center px-4 py-2 shrink-0"
-        style={{ background: 'var(--surface-card)', borderTop: '1px solid var(--border)' }}>
-        <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
+      <div className="flex items-center justify-center px-4 py-2 shrink-0 bg-[var(--surface-card)] border-t border-[var(--border)]">
+        <p className="text-[11px] text-[var(--text-muted)]">
           Lecture en ligne uniquement — Téléchargement non autorisé
         </p>
       </div>
@@ -167,9 +165,9 @@ function StarRating({ rating, onRate, size = 'md', interactive = false }: {
         >
           <svg
             className={sizes[size]}
-            fill={(hover || rating) >= star ? '#C9A961' : 'none'}
+            fill={(hover || rating) >= star ? 'var(--brand)' : 'none'}
             viewBox="0 0 24 24"
-            stroke={(hover || rating) >= star ? '#C9A961' : 'rgba(255,255,255,0.2)'}
+            stroke={(hover || rating) >= star ? 'var(--brand)' : 'rgba(255,255,255,0.2)'}
             strokeWidth={1.5}
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
@@ -214,7 +212,7 @@ function BookRow({ title, icon, books, onSelect }: {
 
   return (
     <div className="relative group/row">
-      <h2 className="text-lg font-display font-semibold mb-3 px-1 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
+      <h2 className="text-lg font-display font-semibold mb-3 px-1 flex items-center gap-2 text-[var(--text-primary)]">
         <span className="text-xl">{icon}</span> {title}
       </h2>
 
@@ -284,7 +282,7 @@ function BookRow({ title, icon, books, onSelect }: {
                   <div className="w-full h-full flex flex-col items-center justify-center p-3 gap-1"
                     style={{ background: 'linear-gradient(135deg, rgba(201,169,97,0.08), rgba(201,169,97,0.02))' }}>
                     <span className="text-4xl opacity-20">📖</span>
-                    <span className="text-[10px] text-center font-medium opacity-30" style={{ color: 'var(--text-muted)' }}>{book.title}</span>
+                    <span className="text-[10px] text-center font-medium opacity-30 text-[var(--text-muted)]">{book.title}</span>
                   </div>
                 )}
                 {/* Page count badge */}
@@ -299,7 +297,7 @@ function BookRow({ title, icon, books, onSelect }: {
                 {/* Favorite heart */}
                 {book.isFavorite && (
                   <span className="absolute top-2 right-2">
-                    <svg className="w-4 h-4" fill="#C9A961" viewBox="0 0 24 24" stroke="none">
+                    <svg className="w-4 h-4" fill="var(--brand)" viewBox="0 0 24 24" stroke="none">
                       <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                     </svg>
                   </span>
@@ -329,15 +327,15 @@ function BookRow({ title, icon, books, onSelect }: {
             </div>
             {/* Title + author below card */}
             <div className="mt-2 px-0.5">
-              <h3 className="text-[13px] font-medium truncate" style={{ color: 'var(--text-primary)' }}>
+              <h3 className="text-[13px] font-medium truncate text-[var(--text-primary)]">
                 {book.title}
               </h3>
-              <p className="text-[11px] truncate" style={{ color: 'var(--text-muted)' }}>
+              <p className="text-[11px] truncate text-[var(--text-muted)]">
                 {book.author}
               </p>
               <div className="flex items-center gap-2 mt-1">
                 <StarRating rating={Math.round(book.rating)} size="sm" />
-                <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
+                <span className="text-[11px] text-[var(--text-muted)]">
                   {book.rating.toFixed(1)}
                 </span>
               </div>
@@ -478,8 +476,7 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: 40, scale: 0.95 }}
         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-        className="w-full max-w-3xl rounded-2xl overflow-hidden relative"
-        style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
+        className="w-full max-w-3xl rounded-2xl overflow-hidden relative bg-[var(--surface-card)] border border-[var(--border)]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
@@ -514,10 +511,10 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <h2 className="font-display text-2xl sm:text-3xl font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
+                <h2 className="font-display text-2xl sm:text-3xl font-semibold mb-1 text-[var(--text-primary)]">
                   {book.title}
                 </h2>
-                <p className="text-[14px] mb-3" style={{ color: 'var(--text-muted)' }}>par {book.author}</p>
+                <p className="text-[14px] mb-3 text-[var(--text-muted)]">par {book.author}</p>
               </div>
               {/* Favorite */}
               <button
@@ -525,8 +522,8 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
                 className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 shrink-0"
                 style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)' }}
               >
-                <svg className="w-5 h-5" fill={book.isFavorite ? '#C9A961' : 'none'} viewBox="0 0 24 24"
-                  stroke={book.isFavorite ? '#C9A961' : 'white'} strokeWidth={1.5}>
+                <svg className="w-5 h-5" fill={book.isFavorite ? 'var(--brand)' : 'none'} viewBox="0 0 24 24"
+                  stroke={book.isFavorite ? 'var(--brand)' : 'white'} strokeWidth={1.5}>
                   <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                 </svg>
               </button>
@@ -537,13 +534,13 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
                 style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}>
                 {typeLabels[book.contentType] || book.contentType}
               </span>
-              <span className="text-[13px]" style={{ color: 'var(--text-muted)' }}>{book.year}</span>
+              <span className="text-[13px] text-[var(--text-muted)]">{book.year}</span>
               {book.pageCount > 0 && (
-                <span className="text-[13px]" style={{ color: 'var(--text-muted)' }}>{book.pageCount} pages</span>
+                <span className="text-[13px] text-[var(--text-muted)]">{book.pageCount} pages</span>
               )}
             </div>
 
-            <p className="text-[14px] leading-relaxed mb-5" style={{ color: 'var(--text-secondary)' }}>
+            <p className="text-[14px] leading-relaxed mb-5 text-[var(--text-secondary)]">
               {book.description}
             </p>
 
@@ -564,7 +561,7 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
             {/* Your rating */}
             <div className="glass p-4 rounded-xl mt-5 flex items-center gap-4 flex-wrap"
               style={{ borderColor: 'rgba(201,169,97,0.1)' }}>
-              <span className="text-[13px] font-medium" style={{ color: 'var(--text-muted)' }}>Votre note :</span>
+              <span className="text-[13px] font-medium text-[var(--text-muted)]">Votre note :</span>
               <StarRating
                 rating={book.userRating}
                 size="lg"
@@ -572,7 +569,7 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
                 onRate={(r) => onRate(book.id, r)}
               />
               {book.userRating > 0 && (
-                <span className="text-[13px] font-semibold" style={{ color: 'var(--brand)' }}>
+                <span className="text-[13px] font-semibold text-[var(--brand)]">
                   {book.userRating}/5
                 </span>
               )}
@@ -611,19 +608,19 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
                 <motion.div key="overview" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }}>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="glass p-4 rounded-xl text-center">
-                      <div className="text-2xl font-display font-semibold" style={{ color: 'var(--brand)' }}>
+                      <div className="text-2xl font-display font-semibold text-[var(--brand)]">
                         {book.rating.toFixed(1)}
                       </div>
                       <div className="flex justify-center mt-1">
                         <StarRating rating={Math.round(book.rating)} size="sm" />
                       </div>
-                      <p className="text-[11px] mt-1" style={{ color: 'var(--text-muted)' }}>Note moyenne</p>
+                      <p className="text-[11px] mt-1 text-[var(--text-muted)]">Note moyenne</p>
                     </div>
                     <div className="glass p-4 rounded-xl text-center">
-                      <div className="text-2xl font-display font-semibold" style={{ color: 'var(--brand)' }}>
+                      <div className="text-2xl font-display font-semibold text-[var(--brand)]">
                         {book.reviewCount}
                       </div>
-                      <p className="text-[11px] mt-2" style={{ color: 'var(--text-muted)' }}>Avis membres</p>
+                      <p className="text-[11px] mt-2 text-[var(--text-muted)]">Avis membres</p>
                     </div>
                   </div>
                 </motion.div>
@@ -632,7 +629,7 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
                   {/* Write review */}
                   <div className="glass p-4 rounded-xl mb-4" style={{ borderColor: 'rgba(201,169,97,0.1)' }}>
                     <div className="flex items-center gap-3 mb-3">
-                      <span className="text-[13px] font-medium" style={{ color: 'var(--text-secondary)' }}>Votre avis :</span>
+                      <span className="text-[13px] font-medium text-[var(--text-secondary)]">Votre avis :</span>
                       <StarRating rating={newRating} size="md" interactive onRate={setNewRating} />
                     </div>
                     <textarea
@@ -680,13 +677,13 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
                           </div>
                           <div className="flex-1">
                             <div className="flex items-center gap-2">
-                              <span className="text-[13px] font-medium" style={{ color: 'var(--text-primary)' }}>{review.author}</span>
+                              <span className="text-[13px] font-medium text-[var(--text-primary)]">{review.author}</span>
                               <StarRating rating={review.rating} size="sm" />
                             </div>
-                            <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{review.date}</span>
+                            <span className="text-[11px] text-[var(--text-muted)]">{review.date}</span>
                           </div>
                         </div>
-                        <p className="text-[13px] leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                        <p className="text-[13px] leading-relaxed text-[var(--text-secondary)]">
                           {review.text}
                         </p>
                       </motion.div>
@@ -885,8 +882,8 @@ export default function ShineLibrairiePage() {
               </svg>
             </div>
           </div>
-          <p className="font-display text-xl font-semibold" style={{ color: 'var(--brand)' }}>Shine Librairie</p>
-          <p className="text-[13px]" style={{ color: 'var(--text-muted)' }}>Chargement de vos livres...</p>
+          <p className="font-display text-xl font-semibold text-[var(--brand)]">Shine Librairie</p>
+          <p className="text-[13px] text-[var(--text-muted)]">Chargement de vos livres...</p>
         </div>
       </div>
     )
@@ -897,8 +894,8 @@ export default function ShineLibrairiePage() {
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="text-center space-y-4 max-w-md">
           <div className="text-6xl">📚</div>
-          <h2 className="font-display text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>Shine Librairie</h2>
-          <p className="text-[14px] leading-relaxed" style={{ color: 'var(--text-muted)' }}>
+          <h2 className="font-display text-2xl font-semibold text-[var(--text-primary)]">Shine Librairie</h2>
+          <p className="text-[14px] leading-relaxed text-[var(--text-muted)]">
             La librairie arrive bientôt ! Nos eBooks, guides pratiques et protocoles de soin seront disponibles ici.
           </p>
         </div>
@@ -1048,17 +1045,17 @@ export default function ShineLibrairiePage() {
         {search || (activeFilter !== 'all' && activeFilter !== 'favorites' && activeFilter !== 'encyclopedie' && activeFilter !== 'douleur') || activeType !== 'all' ? (
           // Grid view for search/filter
           <div>
-            <p className="text-[13px] mb-4" style={{ color: 'var(--text-muted)' }}>
+            <p className="text-[13px] mb-4 text-[var(--text-muted)]">
               {filteredBooks.length} résultat{filteredBooks.length !== 1 ? 's' : ''}
-              {search && <> pour &ldquo;<span style={{ color: 'var(--brand)' }}>{search}</span>&rdquo;</>}
+              {search && <> pour &ldquo;<span className="text-[var(--brand)]">{search}</span>&rdquo;</>}
             </p>
             {filteredBooks.length === 0 ? (
               <div className="glass p-12 text-center rounded-xl">
                 <div className="text-4xl mb-3">🔍</div>
-                <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
                   Aucun résultat
                 </h3>
-                <p className="text-[14px]" style={{ color: 'var(--text-muted)' }}>
+                <p className="text-[14px] text-[var(--text-muted)]">
                   Essayez un autre terme de recherche ou explorez nos catégories.
                 </p>
               </div>
@@ -1088,7 +1085,7 @@ export default function ShineLibrairiePage() {
                         )}
                         {book.isFavorite && (
                           <span className="absolute top-2 right-2">
-                            <svg className="w-4 h-4" fill="#C9A961" viewBox="0 0 24 24"><path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
+                            <svg className="w-4 h-4" fill="var(--brand)" viewBox="0 0 24 24"><path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
                           </span>
                         )}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
@@ -1101,11 +1098,11 @@ export default function ShineLibrairiePage() {
                       </div>
                     </div>
                     <div className="mt-2">
-                      <h3 className="text-[13px] font-medium truncate" style={{ color: 'var(--text-primary)' }}>{book.title}</h3>
-                      <p className="text-[11px] truncate" style={{ color: 'var(--text-muted)' }}>{book.author}</p>
+                      <h3 className="text-[13px] font-medium truncate text-[var(--text-primary)]">{book.title}</h3>
+                      <p className="text-[11px] truncate text-[var(--text-muted)]">{book.author}</p>
                       <div className="flex items-center gap-2 mt-1">
                         <StarRating rating={Math.round(book.rating)} size="sm" />
-                        <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{book.rating > 0 ? book.rating.toFixed(1) : '—'}</span>
+                        <span className="text-[11px] text-[var(--text-muted)]">{book.rating > 0 ? book.rating.toFixed(1) : '—'}</span>
                       </div>
                     </div>
                   </motion.div>
@@ -1116,8 +1113,8 @@ export default function ShineLibrairiePage() {
         ) : activeFilter === 'favorites' ? (
           // Favorites view
           <div>
-            <h2 className="text-lg font-display font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-              <svg className="w-5 h-5" fill="#C9A961" viewBox="0 0 24 24">
+            <h2 className="text-lg font-display font-semibold mb-4 flex items-center gap-2 text-[var(--text-primary)]">
+              <svg className="w-5 h-5" fill="var(--brand)" viewBox="0 0 24 24">
                 <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
               </svg>
               Mes Favoris
@@ -1125,10 +1122,10 @@ export default function ShineLibrairiePage() {
             {filteredBooks.length === 0 ? (
               <div className="glass p-12 text-center rounded-xl">
                 <div className="text-4xl mb-3">💛</div>
-                <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
                   Aucun favori
                 </h3>
-                <p className="text-[14px]" style={{ color: 'var(--text-muted)' }}>
+                <p className="text-[14px] text-[var(--text-muted)]">
                   Ajoutez des livres à vos favoris pour les retrouver ici.
                 </p>
               </div>
@@ -1153,8 +1150,8 @@ export default function ShineLibrairiePage() {
                       </div>
                     </div>
                     <div className="mt-2">
-                      <h3 className="text-[13px] font-medium truncate" style={{ color: 'var(--text-primary)' }}>{book.title}</h3>
-                      <p className="text-[11px] truncate" style={{ color: 'var(--text-muted)' }}>{book.author}</p>
+                      <h3 className="text-[13px] font-medium truncate text-[var(--text-primary)]">{book.title}</h3>
+                      <p className="text-[11px] truncate text-[var(--text-muted)]">{book.author}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -1164,8 +1161,8 @@ export default function ShineLibrairiePage() {
         ) : activeFilter === 'douleur' ? (
           // Douleur-filtered view
           <div>
-            <h2 className="text-lg font-display font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--brand)' }}>
+            <h2 className="text-lg font-display font-semibold mb-4 flex items-center gap-2 text-[var(--text-primary)]">
+              <svg className="w-5 h-5 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.331 0 4.476.884 6.084 2.333M12 6.042A8.967 8.967 0 0118 3.75c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18c-2.331 0-4.476.884-6.084 2.333M12 6.042V20.333" />
               </svg>
               {douleurName || 'Contenu lié'}
@@ -1173,10 +1170,10 @@ export default function ShineLibrairiePage() {
             {filteredBooks.length === 0 ? (
               <div className="glass p-12 text-center rounded-xl">
                 <div className="text-4xl mb-3">📚</div>
-                <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
                   Aucun livre lié
                 </h3>
-                <p className="text-[14px]" style={{ color: 'var(--text-muted)' }}>
+                <p className="text-[14px] text-[var(--text-muted)]">
                   Aucun livre n&apos;est associé à cette douleur pour le moment.
                 </p>
               </div>
@@ -1197,8 +1194,8 @@ export default function ShineLibrairiePage() {
                       </div>
                     </div>
                     <div className="mt-2">
-                      <h3 className="text-[13px] font-medium truncate" style={{ color: 'var(--text-primary)' }}>{book.title}</h3>
-                      <p className="text-[11px] truncate" style={{ color: 'var(--text-muted)' }}>{book.author}</p>
+                      <h3 className="text-[13px] font-medium truncate text-[var(--text-primary)]">{book.title}</h3>
+                      <p className="text-[11px] truncate text-[var(--text-muted)]">{book.author}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -1208,8 +1205,8 @@ export default function ShineLibrairiePage() {
         ) : activeFilter === 'encyclopedie' ? (
           // Encyclopédie A-Z view
           <div className="space-y-6">
-            <h2 className="text-lg font-display font-semibold flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--brand)' }}>
+            <h2 className="text-lg font-display font-semibold flex items-center gap-2 text-[var(--text-primary)]">
+              <svg className="w-5 h-5 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
               </svg>
               Encyclopédie A — Z
@@ -1267,8 +1264,8 @@ export default function ShineLibrairiePage() {
                               </div>
                             </div>
                             <div className="mt-2">
-                              <h3 className="text-[13px] font-medium truncate" style={{ color: 'var(--text-primary)' }}>{book.title}</h3>
-                              <p className="text-[11px] truncate" style={{ color: 'var(--text-muted)' }}>{book.author}</p>
+                              <h3 className="text-[13px] font-medium truncate text-[var(--text-primary)]">{book.title}</h3>
+                              <p className="text-[11px] truncate text-[var(--text-muted)]">{book.author}</p>
                             </div>
                           </motion.div>
                         ))}

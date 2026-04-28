@@ -131,8 +131,7 @@ export default function CommunautePage() {
                 <span className="sm:hidden">{tab.mobileLabel}</span>
                 {/* Unread badge for messages */}
                 {tab.id === 'messages' && unreadMessages > 0 && (
-                  <span className="min-w-[18px] h-[18px] rounded-full flex items-center justify-center text-[10px] font-bold animate-pulse"
-                    style={{ background: '#EF4444', color: '#fff' }}>
+                  <span className="min-w-[18px] h-[18px] rounded-full flex items-center justify-center text-[10px] font-bold animate-pulse bg-[var(--danger)] text-white">
                     {unreadMessages > 9 ? '9+' : unreadMessages}
                   </span>
                 )}

@@ -152,14 +152,14 @@ export default function TarifsPage() {
             className="w-20 h-20 rounded-2xl mx-auto mb-6 flex items-center justify-center"
             style={{ background: 'rgba(85,239,196,0.1)', border: '1px solid rgba(85,239,196,0.2)' }}
           >
-            <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="#55EFC4" strokeWidth={2}>
+            <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="var(--success)" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h1 className="font-display text-2xl sm:text-3xl font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>
+          <h1 className="font-display text-2xl sm:text-3xl font-semibold mb-3 text-[var(--text-primary)]">
             Bienvenue dans la communauté !
           </h1>
-          <p className="text-[15px] leading-relaxed mb-8" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-[15px] leading-relaxed mb-8 text-[var(--text-secondary)]">
             Votre abonnement est maintenant actif. Vous avez accès à tout le contenu de la plateforme.
           </p>
           <Link
@@ -186,14 +186,14 @@ export default function TarifsPage() {
           className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center"
           style={{ background: 'rgba(85,239,196,0.1)', border: '1px solid rgba(85,239,196,0.2)' }}
         >
-          <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="#55EFC4" strokeWidth={1.5}>
+          <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="var(--success)" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
-        <h1 className="font-display text-2xl font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>
+        <h1 className="font-display text-2xl font-semibold mb-3 text-[var(--text-primary)]">
           Vous êtes déjà abonné(e) !
         </h1>
-        <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
+        <p className="text-sm mb-6 text-[var(--text-secondary)]">
           Votre abonnement est actif. Profitez de tout le contenu.
         </p>
         <div className="flex gap-3 justify-center">
@@ -216,8 +216,7 @@ export default function TarifsPage() {
       <div className="max-w-md mx-auto py-16">
         <button
           onClick={() => { setShowInfoForm(false); setPendingPlan(null) }}
-          className="flex items-center gap-2 mb-6 text-sm font-medium transition-colors cursor-pointer"
-          style={{ color: 'var(--text-secondary)' }}
+          className="flex items-center gap-2 mb-6 text-sm font-medium transition-colors cursor-pointer text-[var(--text-secondary)]"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
@@ -232,16 +231,16 @@ export default function TarifsPage() {
             border: '1px solid var(--border)',
           }}
         >
-          <h2 className="font-display text-xl font-semibold mb-2 text-center" style={{ color: 'var(--text-primary)' }}>
+          <h2 className="font-display text-xl font-semibold mb-2 text-center text-[var(--text-primary)]">
             Vos informations
           </h2>
-          <p className="text-sm mb-6 text-center" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-sm mb-6 text-center text-[var(--text-secondary)]">
             Pour personnaliser votre expérience et créer votre compte.
           </p>
 
           <form onSubmit={handleInfoFormSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
+              <label className="block text-xs font-medium mb-1.5 text-[var(--text-secondary)]">
                 Prénom
               </label>
               <input
@@ -260,7 +259,7 @@ export default function TarifsPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
+              <label className="block text-xs font-medium mb-1.5 text-[var(--text-secondary)]">
                 Email
               </label>
               <input
@@ -303,8 +302,7 @@ export default function TarifsPage() {
       <div className="max-w-3xl mx-auto py-8">
         <button
           onClick={() => setCheckoutPlan(null)}
-          className="flex items-center gap-2 mb-6 text-sm font-medium transition-colors cursor-pointer"
-          style={{ color: 'var(--text-secondary)' }}
+          className="flex items-center gap-2 mb-6 text-sm font-medium transition-colors cursor-pointer text-[var(--text-secondary)]"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
@@ -319,11 +317,11 @@ export default function TarifsPage() {
             border: '1px solid var(--border)',
           }}
         >
-          <div className="p-6 text-center" style={{ borderBottom: '1px solid var(--border)' }}>
-            <h2 className="font-display text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+          <div className="p-6 text-center border-b border-[var(--border)]">
+            <h2 className="font-display text-xl font-semibold text-[var(--text-primary)]">
               {PLAN_INFO[checkoutPlan.plan].name} — {DURATIONS.find(d => d.id === checkoutPlan.duration)?.label}
             </h2>
-            <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+            <p className="text-sm mt-1 text-[var(--text-secondary)]">
               {formatPrice(PRICES[checkoutPlan.plan][checkoutPlan.duration])}/mois
             </p>
           </div>
@@ -334,7 +332,7 @@ export default function TarifsPage() {
               <button
                 onClick={() => { setCheckoutError(null); setCheckoutPlan(null) }}
                 className="px-6 py-2.5 rounded-full text-sm font-medium"
-                style={{ background: 'rgba(201,169,97,0.15)', color: '#C9A961', border: '1px solid rgba(201,169,97,0.25)' }}
+                style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.25)' }}
               >
                 Retour aux tarifs
               </button>
@@ -364,12 +362,11 @@ export default function TarifsPage() {
         <motion.h1
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold mb-3"
-          style={{ color: 'var(--text-primary)' }}
+          className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold mb-3 text-[var(--text-primary)]"
         >
           Choisissez votre abonnement
         </motion.h1>
-        <p className="text-sm sm:text-[15px]" style={{ color: 'var(--text-secondary)' }}>
+        <p className="text-sm sm:text-[15px] text-[var(--text-secondary)]">
           Sans engagement. Annulation en un clic. 7 jours gratuits sur Sérénité et Premium.
         </p>
       </div>
@@ -395,7 +392,7 @@ export default function TarifsPage() {
               {d.discount && (
                 <span
                   className="ml-1.5 text-[10px] px-1.5 py-0.5 rounded-full font-semibold"
-                  style={{ background: 'rgba(85,239,196,0.15)', color: '#55EFC4' }}
+                  style={{ background: 'rgba(85,239,196,0.15)', color: 'var(--success)' }}
                 >
                   {d.discount}
                 </span>
@@ -417,19 +414,19 @@ export default function TarifsPage() {
         >
           <div className="p-6 flex-1 flex flex-col">
             <div className="mb-4">
-              <h3 className="font-display text-lg font-semibold" style={{ color: 'var(--text-secondary)' }}>Gratuit</h3>
-              <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>Découvrir la communauté SOS Shine</p>
+              <h3 className="font-display text-lg font-semibold text-[var(--text-secondary)]">Gratuit</h3>
+              <p className="text-xs mt-0.5 text-[var(--text-muted)]">Découvrir la communauté SOS Shine</p>
             </div>
             <div className="mb-6">
               <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>0€</span>
-                <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/pour toujours</span>
+                <span className="text-3xl font-bold text-[var(--text-primary)]">0€</span>
+                <span className="text-sm text-[var(--text-muted)]">/pour toujours</span>
               </div>
             </div>
             <ul className="space-y-2.5 mb-8 flex-1">
               {['Chat & Communauté', 'Shine Audible (podcasts)', 'Gamification (XP, badges, défis)', 'Quiz Signature Émotionnelle', 'Extraits des protocoles (30s)'].map(f => (
-                <li key={f} className="flex items-start gap-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
-                  <span className="mt-0.5" style={{ color: 'var(--text-muted)' }}>◆</span>
+                <li key={f} className="flex items-start gap-2 text-sm text-[var(--text-secondary)]">
+                  <span className="mt-0.5 text-[var(--text-muted)]">◆</span>
                   {f}
                 </li>
               ))}
@@ -486,7 +483,7 @@ export default function TarifsPage() {
                     >
                       {info.name}
                     </h3>
-                    <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>
+                    <p className="text-xs mt-0.5 text-[var(--text-muted)]">
                       {info.tagline}
                     </p>
                   </div>
@@ -496,23 +493,23 @@ export default function TarifsPage() {
                     {planId === 'serenite' && effectiveDuration === 'monthly' ? (
                       <>
                         <div className="flex items-baseline gap-2">
-                          <span className="text-lg line-through" style={{ color: 'var(--text-muted)' }}>
+                          <span className="text-lg line-through text-[var(--text-muted)]">
                             {PROMO.originalPrice}{PROMO.currency}
                           </span>
-                          <span className="text-3xl font-bold" style={{ color: '#55EFC4' }}>
+                          <span className="text-3xl font-bold" style={{ color: 'var(--success)' }}>
                             {PROMO.promoPrice}{PROMO.currency}
                           </span>
-                          <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
+                          <span className="text-sm text-[var(--text-muted)]">/mois</span>
                         </div>
-                        <p className="text-xs mt-1 font-medium" style={{ color: '#55EFC4' }}>
+                        <p className="text-xs mt-1 font-medium" style={{ color: 'var(--success)' }}>
                           avec le code {PROMO.code}
                         </p>
                         <div className="mt-2">
-                          <p className="text-xs mb-1" style={{ color: 'var(--text-muted)' }}>Offre expire dans :</p>
+                          <p className="text-xs mb-1 text-[var(--text-muted)]">Offre expire dans :</p>
                           <PromoCountdown />
                         </div>
                         {info.hasTrial && (
-                          <p className="text-xs mt-2 font-medium" style={{ color: '#55EFC4' }}>
+                          <p className="text-xs mt-2 font-medium" style={{ color: 'var(--success)' }}>
                             + 7 jours d&apos;essai gratuit
                           </p>
                         )}
@@ -520,20 +517,20 @@ export default function TarifsPage() {
                     ) : (
                       <>
                         <div className="flex items-baseline gap-1">
-                          <span className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>
+                          <span className="text-3xl font-bold text-[var(--text-primary)]">
                             {formatPrice(monthlyPrice)}
                           </span>
-                          <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
+                          <span className="text-sm text-[var(--text-muted)]">/mois</span>
                         </div>
                         {durationMonths > 1 && (
                           <div className="mt-1 space-y-0.5">
-                            <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+                            <p className="text-xs text-[var(--text-secondary)]">
                               soit {formatPrice(totalPrice)} pour {durationMonths} mois
                             </p>
                             {originalPrice && (
-                              <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                              <p className="text-xs text-[var(--text-muted)]">
                                 <span style={{ textDecoration: 'line-through' }}>{formatPrice(originalPrice)}</span>
-                                <span className="ml-1.5 font-semibold" style={{ color: '#55EFC4' }}>
+                                <span className="ml-1.5 font-semibold" style={{ color: 'var(--success)' }}>
                                   -{savings}%
                                 </span>
                               </p>
@@ -541,7 +538,7 @@ export default function TarifsPage() {
                           </div>
                         )}
                         {info.hasTrial && (
-                          <p className="text-xs mt-2 font-medium" style={{ color: '#55EFC4' }}>
+                          <p className="text-xs mt-2 font-medium" style={{ color: 'var(--success)' }}>
                             7 jours gratuits
                           </p>
                         )}
@@ -552,7 +549,7 @@ export default function TarifsPage() {
                   {/* Features */}
                   <ul className="space-y-2.5 mb-8 flex-1">
                     {PLAN_FEATURES[planId].map((feature, i) => (
-                      <li key={i} className="flex items-start gap-2.5 text-[13px]" style={{ color: 'var(--text-secondary)' }}>
+                      <li key={i} className="flex items-start gap-2.5 text-[13px] text-[var(--text-secondary)]">
                         <svg className="w-4 h-4 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke={color} strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                         </svg>
@@ -584,7 +581,7 @@ export default function TarifsPage() {
       </div>
 
       {/* Footer */}
-      <p className="text-center text-xs mt-10" style={{ color: 'var(--text-muted)' }}>
+      <p className="text-center text-xs mt-10 text-[var(--text-muted)]">
         Si on doit vous retenir par un contrat, c&apos;est qu&apos;on n&apos;a pas fait notre travail.
       </p>
     </div>

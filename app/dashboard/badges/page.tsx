@@ -67,8 +67,7 @@ export default function BadgesGalleryPage() {
         <div className="flex items-center gap-3 mb-2">
           <Link
             href="/dashboard"
-            className="text-sm font-medium flex items-center gap-1"
-            style={{ color: 'var(--brand)' }}
+            className="text-sm font-medium flex items-center gap-1 text-[var(--brand)]"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
@@ -76,14 +75,14 @@ export default function BadgesGalleryPage() {
             Ma Légende
           </Link>
         </div>
-        <h1 className="font-display text-3xl sm:text-4xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold text-[var(--text-primary)]">
           Galerie de Badges
         </h1>
-        <p className="mt-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+        <p className="mt-2 text-sm text-[var(--text-secondary)]">
           {unlockedCount} / {totalBadges} badges débloqués
         </p>
         {/* Global progress bar */}
-        <div className="mt-3 h-2 rounded-full overflow-hidden" style={{ background: 'var(--border)' }}>
+        <div className="mt-3 h-2 rounded-full overflow-hidden bg-[var(--border)]">
           <motion.div
             className="h-full rounded-full"
             style={{ background: 'linear-gradient(90deg, var(--brand), var(--brand-light))' }}
@@ -111,10 +110,10 @@ export default function BadgesGalleryPage() {
             <div className="flex items-center gap-3 mb-2">
               <span className="text-2xl">{CATEGORY_ICONS[category.icon] || '🏆'}</span>
               <div>
-                <h2 className="font-display text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
+                <h2 className="font-display text-lg font-semibold text-[var(--text-primary)]">
                   {category.name}
                 </h2>
-                <p className="text-[12px]" style={{ color: 'var(--text-muted)' }}>
+                <p className="text-[12px] text-[var(--text-muted)]">
                   {category.description}
                 </p>
               </div>
@@ -158,7 +157,7 @@ export default function BadgesGalleryPage() {
                       style={{ color: isUnlocked ? 'var(--brand)' : 'var(--text-muted)' }}>
                       {badge.title}
                     </h3>
-                    <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>
+                    <p className="text-[10px] text-[var(--text-muted)]">
                       {category.name}
                     </p>
                     <p className="text-[10px] mt-1 font-mono" style={{ color: isUnlocked ? 'var(--brand)' : 'var(--text-muted)' }}>

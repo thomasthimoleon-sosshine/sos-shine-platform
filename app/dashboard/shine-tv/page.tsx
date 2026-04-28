@@ -69,9 +69,9 @@ function StarRating({ rating, onRate, size = 'md', interactive = false }: {
         >
           <svg
             className={sizes[size]}
-            fill={(hover || rating) >= star ? '#C9A961' : 'none'}
+            fill={(hover || rating) >= star ? 'var(--brand)' : 'none'}
             viewBox="0 0 24 24"
-            stroke={(hover || rating) >= star ? '#C9A961' : 'rgba(255,255,255,0.2)'}
+            stroke={(hover || rating) >= star ? 'var(--brand)' : 'rgba(255,255,255,0.2)'}
             strokeWidth={1.5}
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
@@ -116,7 +116,7 @@ function VideoRow({ title, icon, videos, onSelect }: {
 
   return (
     <div className="relative group/row">
-      <h2 className="text-lg font-display font-semibold mb-3 px-1 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
+      <h2 className="text-lg font-display font-semibold mb-3 px-1 flex items-center gap-2 text-[var(--text-primary)]">
         <span className="text-xl">{icon}</span> {title}
       </h2>
 
@@ -191,7 +191,7 @@ function VideoRow({ title, icon, videos, onSelect }: {
                 {/* Favorite heart */}
                 {video.isFavorite && (
                   <span className="absolute top-2 right-2">
-                    <svg className="w-4 h-4" fill="#C9A961" viewBox="0 0 24 24" stroke="none">
+                    <svg className="w-4 h-4" fill="var(--brand)" viewBox="0 0 24 24" stroke="none">
                       <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                     </svg>
                   </span>
@@ -214,15 +214,15 @@ function VideoRow({ title, icon, videos, onSelect }: {
             </div>
             {/* Title + rating below card */}
             <div className="mt-2 px-0.5">
-              <h3 className="text-[13px] font-medium truncate" style={{ color: 'var(--text-primary)' }}>
+              <h3 className="text-[13px] font-medium truncate text-[var(--text-primary)]">
                 {video.title}
               </h3>
               <div className="flex items-center gap-2 mt-1">
                 <StarRating rating={Math.round(video.rating)} size="sm" />
-                <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
+                <span className="text-[11px] text-[var(--text-muted)]">
                   {video.rating.toFixed(1)}
                 </span>
-                <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>
+                <span className="text-[10px] text-[var(--text-muted)]">
                   {video.year}
                 </span>
               </div>
@@ -789,13 +789,13 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
                     style={{ background: 'rgba(20,20,20,0.95)', border: '1px solid rgba(255,255,255,0.15)' }}
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <p className="text-[11px] font-semibold px-2 py-1 mb-1" style={{ color: 'var(--text-muted)' }}>Sous-titres</p>
+                    <p className="text-[11px] font-semibold px-2 py-1 mb-1 text-[var(--text-muted)]">Sous-titres</p>
                     <button
                       onClick={toggleSubtitles}
                       className="w-full text-left px-2 py-1.5 rounded text-[13px] flex items-center gap-2 hover:bg-white/10 transition-colors cursor-pointer"
                       style={{ color: !subtitlesOn ? 'white' : 'var(--text-muted)' }}
                     >
-                      {!subtitlesOn && <span style={{ color: 'var(--brand)' }}>&#10003;</span>}
+                      {!subtitlesOn && <span className="text-[var(--brand)]">&#10003;</span>}
                       D&eacute;sactiv&eacute;s
                     </button>
                     <button
@@ -803,7 +803,7 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
                       className="w-full text-left px-2 py-1.5 rounded text-[13px] flex items-center gap-2 hover:bg-white/10 transition-colors cursor-pointer"
                       style={{ color: subtitlesOn ? 'white' : 'var(--text-muted)' }}
                     >
-                      {subtitlesOn && <span style={{ color: 'var(--brand)' }}>&#10003;</span>}
+                      {subtitlesOn && <span className="text-[var(--brand)]">&#10003;</span>}
                       Fran&ccedil;ais
                     </button>
                   </div>
@@ -951,12 +951,12 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate, onWatch }: {
         <div className="p-6 sm:p-8 -mt-12 relative z-10">
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div className="flex-1 min-w-0">
-              <h2 className="font-display text-2xl sm:text-3xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+              <h2 className="font-display text-2xl sm:text-3xl font-semibold mb-2 text-[var(--text-primary)]">
                 {video.title}
               </h2>
               <div className="flex items-center gap-3 flex-wrap mb-4">
-                <span className="text-[13px] font-medium" style={{ color: 'var(--brand)' }}>{video.year}</span>
-                <span className="text-[13px]" style={{ color: 'var(--text-muted)' }}>{video.duration}</span>
+                <span className="text-[13px] font-medium text-[var(--brand)]">{video.year}</span>
+                <span className="text-[13px] text-[var(--text-muted)]">{video.duration}</span>
                 <span className="px-2 py-0.5 rounded text-[11px] font-medium"
                   style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}>
                   HD
@@ -971,22 +971,22 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate, onWatch }: {
                 className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110"
                 style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)' }}
               >
-                <svg className="w-5 h-5" fill={video.isFavorite ? '#C9A961' : 'none'} viewBox="0 0 24 24"
-                  stroke={video.isFavorite ? '#C9A961' : 'white'} strokeWidth={1.5}>
+                <svg className="w-5 h-5" fill={video.isFavorite ? 'var(--brand)' : 'none'} viewBox="0 0 24 24"
+                  stroke={video.isFavorite ? 'var(--brand)' : 'white'} strokeWidth={1.5}>
                   <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                 </svg>
               </button>
             </div>
           </div>
 
-          <p className="text-[14px] leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-[14px] leading-relaxed mb-6 text-[var(--text-secondary)]">
             {video.description}
           </p>
 
           {/* Your rating */}
-          <div className="glass p-4 rounded-xl mb-6 flex items-center gap-4 flex-wrap"
+          <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-4 rounded-xl mb-6 flex items-center gap-4 flex-wrap"
             style={{ borderColor: 'rgba(201,169,97,0.1)' }}>
-            <span className="text-[13px] font-medium" style={{ color: 'var(--text-muted)' }}>Votre note :</span>
+            <span className="text-[13px] font-medium text-[var(--text-muted)]">Votre note :</span>
             <StarRating
               rating={video.userRating}
               size="lg"
@@ -994,7 +994,7 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate, onWatch }: {
               onRate={(r) => onRate(video.id, r)}
             />
             {video.userRating > 0 && (
-              <span className="text-[13px] font-semibold" style={{ color: 'var(--brand)' }}>
+              <span className="text-[13px] font-semibold text-[var(--brand)]">
                 {video.userRating}/5
               </span>
             )}
@@ -1028,20 +1028,20 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate, onWatch }: {
             {tab === 'overview' ? (
               <motion.div key="overview" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }}>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="glass p-4 rounded-xl text-center">
-                    <div className="text-2xl font-display font-semibold" style={{ color: 'var(--brand)' }}>
+                  <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-4 rounded-xl text-center">
+                    <div className="text-2xl font-display font-semibold text-[var(--brand)]">
                       {video.rating.toFixed(1)}
                     </div>
                     <div className="flex justify-center mt-1">
                       <StarRating rating={Math.round(video.rating)} size="sm" />
                     </div>
-                    <p className="text-[11px] mt-1" style={{ color: 'var(--text-muted)' }}>Note moyenne</p>
+                    <p className="text-[11px] mt-1 text-[var(--text-muted)]">Note moyenne</p>
                   </div>
-                  <div className="glass p-4 rounded-xl text-center">
-                    <div className="text-2xl font-display font-semibold" style={{ color: 'var(--brand)' }}>
+                  <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-4 rounded-xl text-center">
+                    <div className="text-2xl font-display font-semibold text-[var(--brand)]">
                       {video.reviewCount}
                     </div>
-                    <p className="text-[11px] mt-2" style={{ color: 'var(--text-muted)' }}>Avis membres</p>
+                    <p className="text-[11px] mt-2 text-[var(--text-muted)]">Avis membres</p>
                   </div>
                 </div>
 
@@ -1050,9 +1050,9 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate, onWatch }: {
             ) : (
               <motion.div key="reviews" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }}>
                 {/* Write review */}
-                <div className="glass p-4 rounded-xl mb-4" style={{ borderColor: 'rgba(201,169,97,0.1)' }}>
+                <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-4 rounded-xl mb-4" style={{ borderColor: 'rgba(201,169,97,0.1)' }}>
                   <div className="flex items-center gap-3 mb-3">
-                    <span className="text-[13px] font-medium" style={{ color: 'var(--text-secondary)' }}>Votre avis :</span>
+                    <span className="text-[13px] font-medium text-[var(--text-secondary)]">Votre avis :</span>
                     <StarRating rating={newRating} size="md" interactive onRate={setNewRating} />
                   </div>
                   <textarea
@@ -1089,7 +1089,7 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate, onWatch }: {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: idx * 0.05 }}
-                      className="glass p-4 rounded-xl"
+                      className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-4 rounded-xl"
                     >
                       <div className="flex items-center gap-3 mb-2">
                         <div
@@ -1100,13 +1100,13 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate, onWatch }: {
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
-                            <span className="text-[13px] font-medium" style={{ color: 'var(--text-primary)' }}>{review.author}</span>
+                            <span className="text-[13px] font-medium text-[var(--text-primary)]">{review.author}</span>
                             <StarRating rating={review.rating} size="sm" />
                           </div>
-                          <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{review.date}</span>
+                          <span className="text-[11px] text-[var(--text-muted)]">{review.date}</span>
                         </div>
                       </div>
-                      <p className="text-[13px] leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                      <p className="text-[13px] leading-relaxed text-[var(--text-secondary)]">
                         {review.text}
                       </p>
                     </motion.div>
@@ -1293,8 +1293,8 @@ export default function ShineTVPage() {
               <svg className="w-8 h-8" fill="#09090b" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
             </div>
           </div>
-          <p className="font-display text-xl font-semibold" style={{ color: 'var(--brand)' }}>Shine TV</p>
-          <p className="text-[13px]" style={{ color: 'var(--text-muted)' }}>Chargement de vos contenus...</p>
+          <p className="font-display text-xl font-semibold text-[var(--brand)]">Shine TV</p>
+          <p className="text-[13px] text-[var(--text-muted)]">Chargement de vos contenus...</p>
         </div>
       </div>
     )
@@ -1422,17 +1422,17 @@ export default function ShineTVPage() {
         {search || (activeFilter !== 'all' && activeFilter !== 'favorites' && activeFilter !== 'encyclopedie' && activeFilter !== 'douleur') ? (
           // Grid view for search/filter
           <div>
-            <p className="text-[13px] mb-4" style={{ color: 'var(--text-muted)' }}>
+            <p className="text-[13px] mb-4 text-[var(--text-muted)]">
               {filteredVideos.length} résultat{filteredVideos.length !== 1 ? 's' : ''}
-              {search && <> pour &ldquo;<span style={{ color: 'var(--brand)' }}>{search}</span>&rdquo;</>}
+              {search && <> pour &ldquo;<span className="text-[var(--brand)]">{search}</span>&rdquo;</>}
             </p>
             {filteredVideos.length === 0 ? (
-              <div className="glass p-12 text-center rounded-xl">
+              <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-12 text-center rounded-xl">
                 <div className="text-4xl mb-3">🔍</div>
-                <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
                   Aucun résultat
                 </h3>
-                <p className="text-[14px]" style={{ color: 'var(--text-muted)' }}>
+                <p className="text-[14px] text-[var(--text-muted)]">
                   Essayez un autre terme de recherche ou explorez nos catégories.
                 </p>
               </div>
@@ -1456,7 +1456,7 @@ export default function ShineTVPage() {
                         </span>
                         {video.isFavorite && (
                           <span className="absolute top-2 right-2">
-                            <svg className="w-4 h-4" fill="#C9A961" viewBox="0 0 24 24"><path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
+                            <svg className="w-4 h-4" fill="var(--brand)" viewBox="0 0 24 24"><path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
                           </span>
                         )}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
@@ -1467,10 +1467,10 @@ export default function ShineTVPage() {
                       </div>
                     </div>
                     <div className="mt-2">
-                      <h3 className="text-[13px] font-medium truncate" style={{ color: 'var(--text-primary)' }}>{video.title}</h3>
+                      <h3 className="text-[13px] font-medium truncate text-[var(--text-primary)]">{video.title}</h3>
                       <div className="flex items-center gap-2 mt-1">
                         <StarRating rating={Math.round(video.rating)} size="sm" />
-                        <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{video.rating.toFixed(1)}</span>
+                        <span className="text-[11px] text-[var(--text-muted)]">{video.rating.toFixed(1)}</span>
                       </div>
                     </div>
                   </motion.div>
@@ -1481,19 +1481,19 @@ export default function ShineTVPage() {
         ) : activeFilter === 'favorites' ? (
           // Favorites view
           <div>
-            <h2 className="text-lg font-display font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-              <svg className="w-5 h-5" fill="#C9A961" viewBox="0 0 24 24">
+            <h2 className="text-lg font-display font-semibold mb-4 flex items-center gap-2 text-[var(--text-primary)]">
+              <svg className="w-5 h-5" fill="var(--brand)" viewBox="0 0 24 24">
                 <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
               </svg>
               Mes Favoris
             </h2>
             {filteredVideos.length === 0 ? (
-              <div className="glass p-12 text-center rounded-xl">
+              <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-12 text-center rounded-xl">
                 <div className="text-4xl mb-3">💛</div>
-                <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
                   Aucun favori
                 </h3>
-                <p className="text-[14px]" style={{ color: 'var(--text-muted)' }}>
+                <p className="text-[14px] text-[var(--text-muted)]">
                   Ajoutez des vidéos à vos favoris pour les retrouver ici.
                 </p>
               </div>
@@ -1523,10 +1523,10 @@ export default function ShineTVPage() {
                       </div>
                     </div>
                     <div className="mt-2">
-                      <h3 className="text-[13px] font-medium truncate" style={{ color: 'var(--text-primary)' }}>{video.title}</h3>
+                      <h3 className="text-[13px] font-medium truncate text-[var(--text-primary)]">{video.title}</h3>
                       <div className="flex items-center gap-2 mt-1">
                         <StarRating rating={Math.round(video.rating)} size="sm" />
-                        <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{video.rating.toFixed(1)}</span>
+                        <span className="text-[11px] text-[var(--text-muted)]">{video.rating.toFixed(1)}</span>
                       </div>
                     </div>
                   </motion.div>
@@ -1537,19 +1537,19 @@ export default function ShineTVPage() {
         ) : activeFilter === 'douleur' ? (
           // Douleur-filtered view
           <div>
-            <h2 className="text-lg font-display font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--brand)' }}>
+            <h2 className="text-lg font-display font-semibold mb-4 flex items-center gap-2 text-[var(--text-primary)]">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} className="text-[var(--brand)]">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.331 0 4.476.884 6.084 2.333M12 6.042A8.967 8.967 0 0118 3.75c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18c-2.331 0-4.476.884-6.084 2.333M12 6.042V20.333" />
               </svg>
               {douleurName || 'Contenu lié'}
             </h2>
             {filteredVideos.length === 0 ? (
-              <div className="glass p-12 text-center rounded-xl">
+              <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-12 text-center rounded-xl">
                 <div className="text-4xl mb-3">📺</div>
-                <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
                   Aucune vidéo liée
                 </h3>
-                <p className="text-[14px]" style={{ color: 'var(--text-muted)' }}>
+                <p className="text-[14px] text-[var(--text-muted)]">
                   Aucune vidéo n&apos;est associée à cette douleur pour le moment.
                 </p>
               </div>
@@ -1579,7 +1579,7 @@ export default function ShineTVPage() {
                       </div>
                     </div>
                     <div className="mt-2">
-                      <h3 className="text-[13px] font-medium truncate" style={{ color: 'var(--text-primary)' }}>{video.title}</h3>
+                      <h3 className="text-[13px] font-medium truncate text-[var(--text-primary)]">{video.title}</h3>
                     </div>
                   </motion.div>
                 ))}
@@ -1589,8 +1589,8 @@ export default function ShineTVPage() {
         ) : activeFilter === 'encyclopedie' ? (
           // Encyclopédie A-Z view
           <div className="space-y-6">
-            <h2 className="text-lg font-display font-semibold flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--brand)' }}>
+            <h2 className="text-lg font-display font-semibold flex items-center gap-2 text-[var(--text-primary)]">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} className="text-[var(--brand)]">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
               </svg>
               Encyclopédie A — Z
@@ -1625,7 +1625,7 @@ export default function ShineTVPage() {
                   {/* Letter groups */}
                   {letters.map(letter => (
                     <div key={letter} id={`letter-tv-${letter}`} className="scroll-mt-24">
-                      <h3 className="font-display text-2xl font-bold mb-3 pb-2" style={{ color: 'var(--brand)', borderBottom: '1px solid var(--border)' }}>
+                      <h3 className="font-display text-2xl font-bold mb-3 pb-2 text-[var(--brand)] border-b border-[var(--border)]">
                         {letter}
                       </h3>
                       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
@@ -1653,7 +1653,7 @@ export default function ShineTVPage() {
                               </div>
                             </div>
                             <div className="mt-2">
-                              <h3 className="text-[13px] font-medium truncate" style={{ color: 'var(--text-primary)' }}>{video.title}</h3>
+                              <h3 className="text-[13px] font-medium truncate text-[var(--text-primary)]">{video.title}</h3>
                             </div>
                           </motion.div>
                         ))}

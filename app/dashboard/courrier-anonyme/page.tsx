@@ -57,15 +57,15 @@ export default function CourrierAnonymePage() {
         <div className="flex items-center gap-3 mb-3">
           <div className="w-10 h-10 rounded-2xl flex items-center justify-center"
             style={{ background: 'rgba(201,169,97,0.1)', border: '1px solid rgba(201,169,97,0.15)' }}>
-            <svg className="w-5 h-5" style={{ color: 'var(--brand)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <svg className="w-5 h-5 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
             </svg>
           </div>
           <div>
-            <h1 className="font-display text-2xl font-light" style={{ color: 'var(--text-primary)' }}>
+            <h1 className="font-display text-2xl font-light text-[var(--text-primary)]">
               Courrier Anonyme
             </h1>
-            <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+            <p className="text-sm text-[var(--text-muted)]">
               Votre voix compte, en toute confidentialité
             </p>
           </div>
@@ -79,17 +79,16 @@ export default function CourrierAnonymePage() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
-            className="rounded-2xl p-8 md:p-12 text-center"
-            style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
+            className="rounded-2xl p-8 md:p-12 text-center bg-[var(--surface-card)] border border-[var(--border)]"
           >
             <div className="w-16 h-16 rounded-full flex items-center justify-center text-3xl mx-auto mb-6"
               style={{ background: 'rgba(201,169,97,0.1)' }}>
               ✉️
             </div>
-            <h2 className="font-display text-2xl font-light mb-3" style={{ color: 'var(--brand)' }}>
+            <h2 className="font-display text-2xl font-light mb-3 text-[var(--brand)]">
               Message envoyé avec succès
             </h2>
-            <p className="text-sm leading-relaxed max-w-md mx-auto mb-6" style={{ color: 'var(--text-secondary)' }}>
+            <p className="text-sm leading-relaxed max-w-md mx-auto mb-6 text-[var(--text-secondary)]">
               Votre courrier a bien été reçu. L&apos;équipe fondatrice le lira avec attention.
               Si votre message inspire un sujet, il pourra être traité dans un épisode
               de Shine TV ou du podcast — toujours dans le respect de votre anonymat.
@@ -117,10 +116,10 @@ export default function CourrierAnonymePage() {
               <div className="flex items-start gap-3">
                 <span className="text-lg mt-0.5">🔒</span>
                 <div>
-                  <p className="text-sm font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
+                  <p className="text-sm font-medium mb-1 text-[var(--text-primary)]">
                     100% anonyme et confidentiel
                   </p>
-                  <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                  <p className="text-xs leading-relaxed text-[var(--text-secondary)]">
                     Cet espace vous permet d&apos;écrire librement ce que vous avez sur le cœur.
                     Vos messages sont transmis directement à l&apos;équipe fondatrice (Julia, William & Thomas)
                     qui pourront y répondre en vidéo sur Shine TV, en podcast, ou dans un article —
@@ -133,7 +132,7 @@ export default function CourrierAnonymePage() {
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* Category selection */}
               <div>
-                <label className="text-xs font-medium uppercase tracking-wider mb-3 block" style={{ color: 'var(--text-muted)' }}>
+                <label className="text-xs font-medium uppercase tracking-wider mb-3 block text-[var(--text-muted)]">
                   Type de message
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -155,14 +154,14 @@ export default function CourrierAnonymePage() {
                     </button>
                   ))}
                 </div>
-                <p className="text-xs mt-2" style={{ color: 'var(--text-muted)' }}>
+                <p className="text-xs mt-2 text-[var(--text-muted)]">
                   {CATEGORIES.find(c => c.value === category)?.desc}
                 </p>
               </div>
 
               {/* Subject (optional) */}
               <div>
-                <label className="text-xs font-medium uppercase tracking-wider mb-2 block" style={{ color: 'var(--text-muted)' }}>
+                <label className="text-xs font-medium uppercase tracking-wider mb-2 block text-[var(--text-muted)]">
                   Sujet <span className="normal-case tracking-normal font-normal">(optionnel)</span>
                 </label>
                 <input
@@ -182,7 +181,7 @@ export default function CourrierAnonymePage() {
 
               {/* Content */}
               <div>
-                <label className="text-xs font-medium uppercase tracking-wider mb-2 block" style={{ color: 'var(--text-muted)' }}>
+                <label className="text-xs font-medium uppercase tracking-wider mb-2 block text-[var(--text-muted)]">
                   Votre message
                 </label>
                 <textarea
@@ -200,17 +199,17 @@ export default function CourrierAnonymePage() {
                   }}
                 />
                 <div className="flex justify-between items-center mt-1">
-                  <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
+                  <p className="text-[11px] text-[var(--text-muted)]">
                     Votre identité ne sera jamais révélée
                   </p>
-                  <p className="text-[11px]" style={{ color: content.length > 1800 ? '#EF4444' : 'var(--text-muted)' }}>
+                  <p className="text-[11px]" style={{ color: content.length > 1800 ? 'var(--danger)' : 'var(--text-muted)' }}>
                     {content.length}/2000
                   </p>
                 </div>
               </div>
 
               {error && (
-                <div className="rounded-xl px-4 py-3 text-sm" style={{ background: 'rgba(239,68,68,0.1)', color: '#EF4444', border: '1px solid rgba(239,68,68,0.2)' }}>
+                <div className="rounded-xl px-4 py-3 text-sm" style={{ background: 'rgba(239,68,68,0.1)', color: 'var(--danger)', border: '1px solid rgba(239,68,68,0.2)' }}>
                   {error}
                 </div>
               )}
@@ -237,9 +236,8 @@ export default function CourrierAnonymePage() {
             </form>
 
             {/* Bottom inspiration */}
-            <div className="mt-8 rounded-2xl p-5"
-              style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
-              <p className="text-xs font-medium mb-3" style={{ color: 'var(--text-muted)' }}>
+            <div className="mt-8 rounded-2xl p-5 bg-[var(--surface-card)] border border-[var(--border)]">
+              <p className="text-xs font-medium mb-3 text-[var(--text-muted)]">
                 Quelques idées pour vous inspirer :
               </p>
               <div className="space-y-2">
@@ -253,10 +251,9 @@ export default function CourrierAnonymePage() {
                     key={i}
                     type="button"
                     onClick={() => { setContent(idea); setCategory(i < 2 ? 'question' : i === 2 ? 'recommandation' : 'suggestion') }}
-                    className="block w-full text-left text-xs px-3 py-2 rounded-lg transition-all hover:bg-[rgba(201,169,97,0.05)]"
-                    style={{ color: 'var(--text-secondary)' }}
+                    className="block w-full text-left text-xs px-3 py-2 rounded-lg transition-all hover:bg-[rgba(201,169,97,0.05)] text-[var(--text-secondary)]"
                   >
-                    <span style={{ color: 'var(--brand)' }}>&#x2726;</span> {idea}
+                    <span className="text-[var(--brand)]">&#x2726;</span> {idea}
                   </button>
                 ))}
               </div>

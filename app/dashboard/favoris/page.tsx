@@ -58,10 +58,10 @@ export default function FavorisPage() {
   return (
     <div className="max-w-5xl mx-auto space-y-8">
       <div>
-        <h1 className="font-display text-3xl sm:text-4xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold text-[var(--text-primary)]">
           {t('favorites.title')}
         </h1>
-        <p className="mt-2" style={{ color: 'var(--text-secondary)' }}>
+        <p className="mt-2 text-[var(--text-secondary)]">
           {t('favorites.subtitle')}
         </p>
       </div>
@@ -72,11 +72,11 @@ export default function FavorisPage() {
         </div>
       ) : favoriteDouleurs.length === 0 ? (
         <div className="text-center py-16 glass rounded-2xl">
-          <svg className="w-12 h-12 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} style={{ color: 'var(--text-muted)' }}>
+          <svg className="w-12 h-12 mx-auto mb-4 text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} >
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
           </svg>
-          <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>{t('favorites.empty')}</p>
-          <p className="text-sm mt-2" style={{ color: 'var(--text-muted)' }}>
+          <p className="text-lg text-[var(--text-secondary)]">{t('favorites.empty')}</p>
+          <p className="text-sm mt-2 text-[var(--text-muted)]">
             {t('favorites.empty_desc')}
           </p>
           <Link
@@ -108,10 +108,10 @@ export default function FavorisPage() {
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-base mb-1 group-hover:text-[var(--brand)] transition-colors" style={{ color: 'var(--text-primary)' }}>
+                      <h3 className="font-semibold text-base mb-1 group-hover:text-[var(--brand)] transition-colors text-[var(--text-primary)]">
                         {d.title}
                       </h3>
-                      <p className="text-sm leading-relaxed line-clamp-2" style={{ color: 'var(--text-secondary)' }}>
+                      <p className="text-sm leading-relaxed line-clamp-2 text-[var(--text-secondary)]">
                         {d.description}
                       </p>
                     </div>

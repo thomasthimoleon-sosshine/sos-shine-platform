@@ -117,7 +117,7 @@ export default function LoginPage() {
             <h1 className="font-display text-[2.5rem] font-light leading-[1.1] tracking-[-0.02em] text-[#F5F0E8] mb-3">
               {s('login_title')}
             </h1>
-            <p className="text-[15px] font-light text-[#6B6560]">
+            <p className="text-[15px] font-light text-[#9B9590]">
               {s('login_subtitle')}
             </p>
           </div>
@@ -128,7 +128,7 @@ export default function LoginPage() {
             <div>
               <label
                 htmlFor="email"
-                className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-2.5 transition-colors duration-300 ${focused === 'email' ? 'text-[#B8A472]' : 'text-[#6B6560]'}`}
+                className={`block text-[11px] font-medium uppercase tracking-[0.1em] mb-2.5 transition-colors duration-300 ${focused === 'email' ? 'text-[#C4B080]' : 'text-[#9B9590]'}`}
               >
                 Email
               </label>
@@ -141,7 +141,7 @@ export default function LoginPage() {
                 onBlur={() => setFocused(null)}
                 required
                 placeholder="votre@email.com"
-                className="w-full px-5 py-4 rounded-2xl text-[15px] font-light bg-[#0D1018] border border-[rgba(184,164,114,0.06)] text-[#F5F0E8] outline-none transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] placeholder:text-[#3D3A36] focus:border-[rgba(184,164,114,0.2)] focus:bg-[#0F1320] focus:shadow-[0_0_0_4px_rgba(184,164,114,0.04)]"
+                className="w-full px-5 py-4 rounded-2xl text-[15px] font-light bg-[#111827] border border-[rgba(184,164,114,0.10)] text-[#F5F0E8] outline-none transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] placeholder:text-[#8A857F] focus:border-[rgba(184,164,114,0.2)] focus:bg-[#0F1320] focus:shadow-[0_0_0_4px_rgba(184,164,114,0.04)]"
               />
             </div>
 
@@ -150,11 +150,11 @@ export default function LoginPage() {
               <div className="flex items-center justify-between mb-2.5">
                 <label
                   htmlFor="password"
-                  className={`block text-[11px] font-medium uppercase tracking-[0.1em] transition-colors duration-300 ${focused === 'password' ? 'text-[#B8A472]' : 'text-[#6B6560]'}`}
+                  className={`block text-[11px] font-medium uppercase tracking-[0.1em] transition-colors duration-300 ${focused === 'password' ? 'text-[#C4B080]' : 'text-[#9B9590]'}`}
                 >
                   {t('auth.password_label')}
                 </label>
-                <Link href="/forgot-password" className="text-[11px] text-[#6B6560] hover:text-[#B8A472] transition-colors duration-300">
+                <Link href="/forgot-password" className="text-[11px] text-[#9B9590] hover:text-[#B8A472] transition-colors duration-300">
                   {t('auth.forgot_password')}
                 </Link>
               </div>
@@ -167,7 +167,7 @@ export default function LoginPage() {
                 onBlur={() => setFocused(null)}
                 required
                 placeholder="••••••••"
-                className="w-full px-5 py-4 rounded-2xl text-[15px] font-light bg-[#0D1018] border border-[rgba(184,164,114,0.06)] text-[#F5F0E8] outline-none transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] placeholder:text-[#3D3A36] focus:border-[rgba(184,164,114,0.2)] focus:bg-[#0F1320] focus:shadow-[0_0_0_4px_rgba(184,164,114,0.04)]"
+                className="w-full px-5 py-4 rounded-2xl text-[15px] font-light bg-[#111827] border border-[rgba(184,164,114,0.10)] text-[#F5F0E8] outline-none transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] placeholder:text-[#8A857F] focus:border-[rgba(184,164,114,0.2)] focus:bg-[#0F1320] focus:shadow-[0_0_0_4px_rgba(184,164,114,0.04)]"
               />
             </div>
 
@@ -210,14 +210,14 @@ export default function LoginPage() {
           {/* Divider */}
           <div className="flex items-center gap-5 my-8">
             <span className="flex-1 h-px bg-[rgba(184,164,114,0.06)]" />
-            <span className="text-[10px] uppercase tracking-[0.15em] text-[#3D3A36]">{t('auth.or')}</span>
+            <span className="text-[10px] uppercase tracking-[0.15em] text-[#8A857F]">{t('auth.or')}</span>
             <span className="flex-1 h-px bg-[rgba(184,164,114,0.06)]" />
           </div>
 
           {/* Google */}
           <button
             onClick={handleGoogleSignIn}
-            className="w-full py-3.5 rounded-2xl text-[13px] font-light flex items-center justify-center gap-3 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] border border-[rgba(255,255,255,0.04)] text-[#6B6560] hover:border-[rgba(184,164,114,0.12)] hover:text-[#A8A29E] hover:bg-[rgba(15,22,36,0.5)] cursor-pointer"
+            className="w-full py-3.5 rounded-2xl text-[13px] font-light flex items-center justify-center gap-3 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] border border-[rgba(255,255,255,0.04)] text-[#9B9590] hover:border-[rgba(184,164,114,0.12)] hover:text-[#A8A29E] hover:bg-[rgba(15,22,36,0.5)] cursor-pointer"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
@@ -234,7 +234,7 @@ export default function LoginPage() {
               href="https://sosshine.fr"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-[12px] text-[#3D3A36] hover:text-[#6B6560] transition-colors duration-300"
+              className="inline-flex items-center gap-1.5 text-[12px] text-[#8A857F] hover:text-[#9B9590] transition-colors duration-300"
             >
               <span>Acc&egrave;s SOS Shine&reg; Kids</span>
               <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -249,7 +249,7 @@ export default function LoginPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="mt-16 text-center text-[13px] text-[#3D3A36]"
+          className="mt-16 text-center text-[13px] text-[#8A857F]"
         >
           {s('login_signup_text')}{' '}
           <Link href="/signup" className="text-[#B8A472] hover:text-[#D4C99A] transition-colors duration-300">

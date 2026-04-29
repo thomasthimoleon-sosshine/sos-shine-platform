@@ -261,7 +261,7 @@ function FAQItem({ item, isOpen, onToggle }: { item: { q: string; a: string }; i
         onClick={onToggle}
         className="w-full flex items-center justify-between px-5 sm:px-6 py-4 sm:py-5 text-left"
       >
-        <span className="text-sm sm:text-base font-medium pr-4" style={{ color: 'var(--text-primary)' }}>{item.q}</span>
+        <span className="text-sm sm:text-base font-medium pr-4 text-[var(--text-primary)]">{item.q}</span>
         <motion.span
           animate={{ rotate: isOpen ? 45 : 0 }}
           transition={{ duration: 0.2 }}
@@ -277,7 +277,7 @@ function FAQItem({ item, isOpen, onToggle }: { item: { q: string; a: string }; i
         transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
         className="overflow-hidden"
       >
-        <p className="px-5 sm:px-6 pb-5 text-sm sm:text-[15px] font-light leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+        <p className="px-5 sm:px-6 pb-5 text-sm sm:text-[15px] font-light leading-relaxed text-[var(--text-secondary)]">
           {item.a}
         </p>
       </motion.div>
@@ -556,30 +556,28 @@ export default function LandingClient({ initialSections, initialPositions, initi
       <SparklingDiamonds />
       <FloatingOrbs />
 
-      {/* ═══ FIXED HEADER ═══ */}
+      {/* ═══ FIXED HEADER — Le Club 10 style ═══ */}
       {headerVisible && (
           <header
-            className={`fixed top-0 left-0 right-0 z-50 py-3 md:py-4 header-animate ${headerScrolled ? 'header-scrolled' : ''}`}
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${headerScrolled ? 'py-3 bg-[#06070A]/80 backdrop-blur-2xl border-b border-[rgba(184,164,114,0.04)]' : 'py-5 md:py-6'}`}
           >
-            <div className="flex items-center justify-center relative px-4 md:px-6">
+            <div className="flex items-center justify-between max-w-7xl mx-auto px-5 md:px-10">
               <Link href="/" className="flex items-center gap-3">
-                <img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-14 sm:h-18 md:h-24 w-auto object-contain" />
+                <img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className={`transition-all duration-700 w-auto object-contain ${headerScrolled ? 'h-10 md:h-12' : 'h-12 md:h-16'}`} />
               </Link>
-              <div className="absolute right-4 md:right-6 flex items-center gap-2 sm:gap-3">
+              <div className="flex items-center gap-4 sm:gap-6">
                 <Link
                   href={g.header_login_href || '/login'}
-                  className="text-xs sm:text-sm tracking-wide transition-colors duration-300 hover:opacity-80"
-                  style={{ color: 'var(--text-secondary)' }}
+                  className="text-[13px] tracking-[0.02em] text-[#9B9590] hover:text-[#F5F0E8] transition-colors duration-300"
                 >
                   {g.header_login_label || 'Se connecter'}
                 </Link>
                 <Link
                   href={globalContent.header_cta_href || '/signup'}
                   onClick={() => trackConversion('signup')}
-                  className="hidden sm:inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all duration-300 hover:scale-105"
-                  style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}
+                  className="hidden sm:inline-flex items-center px-5 py-2.5 rounded-full text-[13px] font-medium tracking-[0.02em] bg-[#B8A472] text-[#08090A] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-[#C4B080] hover:shadow-[0_0_30px_rgba(184,164,114,0.12)] active:scale-[0.98]"
                 >
-                  {globalContent.header_cta_label || 'Commencer gratuitement'}
+                  {globalContent.header_cta_label || 'Commencer'}
                 </Link>
                 <ThemeToggle />
               </div>
@@ -593,25 +591,27 @@ export default function LandingClient({ initialSections, initialPositions, initi
       <div style={{ order: ord("hero") }}>
       {/* ═══ HERO — Word by word reveal ═══ */}
       {vis('hero') && (
-        <motion.section ref={heroRef} className="relative min-h-screen flex items-center pt-20 md:pt-24" style={{ opacity: heroOpacity, scale: heroScale }}>
+        <motion.section ref={heroRef} className="relative min-h-[100vh] flex items-center pt-28 md:pt-32 pb-20" style={{ opacity: heroOpacity, scale: heroScale }}>
+          {/* Ambient layers */}
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[300px] h-[300px] md:w-[600px] md:h-[600px] rounded-full opacity-[0.03] blur-[60px] md:blur-[80px]" style={{ background: gold }} />
+            <div className="absolute top-[10%] left-1/2 -translate-x-1/2 w-[600px] h-[500px] md:w-[900px] md:h-[700px] rounded-full opacity-20" style={{ background: 'radial-gradient(ellipse, rgba(15,22,36,0.8) 0%, transparent 70%)' }} />
+            <div className="absolute top-[20%] left-1/2 -translate-x-1/2 w-[300px] h-[250px] md:w-[500px] md:h-[400px] rounded-full opacity-[0.03]" style={{ background: `radial-gradient(circle, ${gold} 0%, transparent 60%)` }} />
           </div>
 
-          <div className="relative z-10 px-5 md:px-20 py-12 md:py-24 max-w-6xl mx-auto w-full text-center">
-            {/* Surtitle / Micro-copy */}
+          <div className="relative z-10 px-5 md:px-10 py-16 md:py-28 max-w-5xl mx-auto w-full text-center">
+            {/* Surtitle — ultra-discret, Le Club 10 style */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="mb-8"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="mb-10 md:mb-12"
             >
-              <span className="inline-block px-4 py-1.5 rounded-full text-xs tracking-[0.25em] uppercase font-medium" style={{ background: `rgba(${goldRgb}, 0.08)`, color: gold, border: `1px solid rgba(${goldRgb}, 0.15)` }}>
-                {hero.surtitle || 'Espace de soutien premium'}
+              <span className="text-[10px] sm:text-[11px] tracking-[0.3em] uppercase font-medium text-[#9B9590]">
+                {hero.surtitle || 'Plateforme de déconditionnement émotionnel'}
               </span>
             </motion.div>
 
-            <h1 className="font-display font-light leading-[1.08] mb-8" style={{ ...tStyle("hero"), perspective: "1000px" }}>
+            <h1 className="font-display font-light text-[2.2rem] sm:text-[3rem] md:text-[3.8rem] lg:text-[4.5rem] leading-[1.06] tracking-[-0.02em] text-[#F5F0E8] mb-10 md:mb-14" style={{ perspective: "1000px" }}>
               {(hero.title || '').split("\n").map((line: string, i: number) => {
                 const isHighlight = line.includes("chaos") || line.includes("Reprogrammez") || line.includes("expériences") || line.includes("schémas") || line.includes("potentiel") || line.includes("émotionnels");
                 const lineWords = line.split(/\s+/);
@@ -644,10 +644,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
             >
-              <p className="text-base sm:text-xl md:text-2xl text-[var(--text-secondary)] leading-relaxed max-w-2xl mx-auto font-light mb-8 md:mb-10" style={{
-                fontFamily: fontMap[heroSty.text_font] || undefined,
-                textAlign: (heroSty.text_align as "left" | "center" | "right") || undefined,
-              }}>
+              <p className="text-[15px] sm:text-[17px] md:text-[19px] text-[#9B9590] leading-[1.7] max-w-xl mx-auto font-light mb-12 md:mb-16">
                 {hero.subtitle || ''}
               </p>
             </motion.div>
@@ -756,15 +753,15 @@ export default function LandingClient({ initialSections, initialPositions, initi
 
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}>
               <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-5 justify-center items-center">
-                {/* Primary CTA — Signature Émotionnelle */}
+                {/* Primary CTA */}
                 <Link href={hero.cta_primary_href || '/signature-emotionnelle'} className="w-full sm:w-auto">
-                  <button className="magnetic-btn pulse-ring w-full sm:w-auto px-6 sm:px-10 py-3.5 sm:py-4.5 rounded-full text-sm sm:text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}>
+                  <button className="w-full sm:w-auto px-8 sm:px-10 py-4 rounded-full text-[14px] font-medium tracking-[0.02em] bg-[#B8A472] text-[#08090A] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-[#C4B080] hover:shadow-[0_0_40px_rgba(184,164,114,0.12)] active:scale-[0.98] cursor-pointer">
                     {hero.cta_primary_label || 'Découvrir ma Signature Émotionnelle'}
                   </button>
                 </Link>
                 {/* Secondary CTA */}
                 <Link href={hero.cta_secondary_href || '/encyclopedie'} className="w-full sm:w-auto">
-                  <button className="magnetic-btn w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full text-sm sm:text-base font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.3)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
+                  <button className="w-full sm:w-auto px-8 py-4 rounded-full text-[14px] font-light tracking-[0.02em] text-[#9B9590] border border-[rgba(184,164,114,0.12)] hover:border-[rgba(184,164,114,0.25)] hover:text-[#F5F0E8] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] cursor-pointer">
                     {hero.cta_secondary_label || 'Découvrir les protocoles'}
                   </button>
                 </Link>
@@ -772,7 +769,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
 
               {/* CTA Subtext */}
               {hero.cta_primary_subtext && (
-                <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-3 text-center font-light">
+                <p className="text-[12px] text-[#6B6560] mt-5 text-center font-light tracking-wide">
                   {hero.cta_primary_subtext}
                 </p>
               )}
@@ -797,10 +794,10 @@ export default function LandingClient({ initialSections, initialPositions, initi
                 {statsItems.map((stat: { value: string; label: string }, i: number) => (
                   <RevealOnScroll key={stat.label || i} delay={i * 0.15}>
                     <div className="text-center">
-                      <p className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display italic font-light mb-3 md:mb-4" style={{ color: gold }}>
+                      <p className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display italic font-light mb-3 md:mb-4 text-[var(--brand)]">
                         <AnimatedCounter value={stat.value} />
                       </p>
-                      <p className="text-[10px] sm:text-xs md:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase font-medium" style={{ color: 'var(--text-muted)' }}>
+                      <p className="text-[10px] sm:text-xs md:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase font-medium text-[var(--text-muted)]">
                         {stat.label}
                       </p>
                     </div>
@@ -830,7 +827,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                 <Link href={sigCta.button_href || '/signature-emotionnelle'}>
                   <div className="glow-card p-6 sm:p-8 md:p-12 cursor-pointer group">
                     <p className="luxury-title text-[10px] sm:text-xs tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{sigCta.label || 'Test exclusif'}</p>
-                    <h3 className="font-display text-xl sm:text-2xl md:text-4xl font-light mb-3 md:mb-4" style={{ color: gold }}>
+                    <h3 className="font-display text-xl sm:text-2xl md:text-4xl font-light mb-3 md:mb-4 text-[var(--brand)]">
                       {sigCta.title || 'Découvrez votre'}{' '}
                       <span className="text-shimmer">{sigCta.title_highlight || 'Signature Émotionnelle'}</span>
                     </h3>
@@ -886,7 +883,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
 
               {prob.closing && (
                 <RevealOnScroll delay={0.25}>
-                  <p className="text-base md:text-lg font-light text-center max-w-2xl mx-auto mb-10 md:mb-14" style={{ color: gold }}>
+                  <p className="text-base md:text-lg font-light text-center max-w-2xl mx-auto mb-10 md:mb-14 text-[var(--brand)]">
                     {prob.closing}
                   </p>
                 </RevealOnScroll>
@@ -905,7 +902,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                         viewport={{ once: true }}
                         transition={{ delay: 0.3 + i * 0.08 }}
                       >
-                        <span className="text-xs sm:text-sm font-light" style={{ color: 'var(--text-secondary)' }}>
+                        <span className="text-xs sm:text-sm font-light text-[var(--text-secondary)]">
                           {symptom.label}
                         </span>
                       </motion.div>
@@ -918,7 +915,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
               {prob.cta_text && (
                 <RevealOnScroll delay={0.35}>
                   <div className="text-center">
-                    <Link href={prob.cta_href || '/encyclopedie'} className="inline-flex items-center gap-2 text-sm font-medium transition-colors duration-300 hover:opacity-80" style={{ color: gold }}>
+                    <Link href={prob.cta_href || '/encyclopedie'} className="inline-flex items-center gap-2 text-sm font-medium transition-colors duration-300 hover:opacity-80 text-[var(--brand)]">
                       {prob.cta_text}
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
                     </Link>
@@ -1132,7 +1129,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                           viewport={{ once: true }}
                           transition={{ delay: 0.15 + i * 0.08 }}
                         >
-                          <span className="mt-0.5 text-sm sm:text-base flex-shrink-0" style={{ color: gold }}>&#10022;</span>
+                          <span className="mt-0.5 text-sm sm:text-base flex-shrink-0 text-[var(--brand)]">&#10022;</span>
                           <span className="text-[var(--text-secondary)] text-sm sm:text-base font-light leading-relaxed">{item}</span>
                         </motion.div>
                       ))}
@@ -1267,7 +1264,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
             )}
             {temos.verified_badge && (
               <RevealOnScroll delay={0.15}>
-                <p className="text-center text-xs sm:text-sm font-light mb-10 md:mb-16 flex items-center justify-center gap-2" style={{ color: 'var(--text-muted)' }}>
+                <p className="text-center text-xs sm:text-sm font-light mb-10 md:mb-16 flex items-center justify-center gap-2 text-[var(--text-muted)]">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: '#55EFC4' }}>
                     <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
@@ -1297,7 +1294,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                         <div className="flex items-center gap-2 mb-4 md:mb-6">
                           <div className="flex gap-1">
                             {[1,2,3,4,5].map(s => (
-                              <span key={s} className="text-sm" style={{ color: gold }}>★</span>
+                              <span key={s} className="text-sm text-[var(--brand)]">★</span>
                             ))}
                           </div>
                           {t.verified && (
@@ -1333,7 +1330,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                           </div>
                         )}
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium truncate" style={{ color: gold }}>{t.name}</p>
+                          <p className="text-sm font-medium truncate text-[var(--brand)]">{t.name}</p>
                           <p className="text-xs truncate text-[var(--text-muted)]">{t.city}</p>
                         </div>
                       </div>
@@ -1388,7 +1385,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                 )}
                 {hist.paragraph4 && (
                   <RevealOnScroll delay={0.3}>
-                    <p className="text-base md:text-lg font-light italic" style={{ color: gold }}>
+                    <p className="text-base md:text-lg font-light italic text-[var(--brand)]">
                       {hist.paragraph4}
                     </p>
                   </RevealOnScroll>
@@ -1399,11 +1396,11 @@ export default function LandingClient({ initialSections, initialPositions, initi
               {hist.signature && (
                 <RevealOnScroll delay={0.35}>
                   <div className="text-center mb-10 md:mb-16">
-                    <p className="font-display text-lg md:text-xl italic" style={{ color: gold }}>
+                    <p className="font-display text-lg md:text-xl italic text-[var(--brand)]">
                       — {hist.signature}
                     </p>
                     {hist.signature_subtitle && (
-                      <p className="text-xs sm:text-sm mt-1 font-light" style={{ color: 'var(--text-muted)' }}>
+                      <p className="text-xs sm:text-sm mt-1 font-light text-[var(--text-muted)]">
                         {hist.signature_subtitle}
                       </p>
                     )}
@@ -1420,7 +1417,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                       <span className="block w-2 h-2 rotate-45" style={{ background: gold, opacity: 0.5 }} />
                       <span className="block w-16 h-px" style={{ background: `linear-gradient(to left, transparent, rgba(${goldRgb}, 0.3))` }} />
                     </div>
-                    <h3 className="font-display text-xl sm:text-2xl md:text-3xl font-light mb-4 md:mb-6" style={{ color: 'var(--text-primary)' }}>
+                    <h3 className="font-display text-xl sm:text-2xl md:text-3xl font-light mb-4 md:mb-6 text-[var(--text-primary)]">
                       {hist.team_title}
                     </h3>
                     {hist.team_description && (
@@ -1502,28 +1499,28 @@ export default function LandingClient({ initialSections, initialPositions, initi
             <div className="max-w-5xl mx-auto">
               <RevealOnScroll>
                 <div className="text-center mb-12 md:mb-16">
-                  {tr.label && <p className="text-xs tracking-[0.2em] uppercase mb-4" style={{ color: gold }}>{tr.label}</p>}
+                  {tr.label && <p className="text-xs tracking-[0.2em] uppercase mb-4 text-[var(--brand)]">{tr.label}</p>}
                   {tr.title && (
                     <h2 className="font-display font-light leading-[1.15] mb-6" style={tStyle("transformation")}>
                       <WordByWordReveal text={tr.title} />
                     </h2>
                   )}
-                  {tr.description && <p className="text-base md:text-lg max-w-3xl mx-auto" style={{ color: 'var(--text-secondary)' }}>{tr.description}</p>}
+                  {tr.description && <p className="text-base md:text-lg max-w-3xl mx-auto text-[var(--text-secondary)]">{tr.description}</p>}
                 </div>
               </RevealOnScroll>
               <div className="space-y-8 md:space-y-12">
                 {trItems.map((item: { before: string; after: string; timeframe?: string; challenge?: string }, i: number) => (
                   <RevealOnScroll key={i} delay={i * 0.1}>
                     <div className="rounded-2xl p-6 md:p-8" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
-                      {item.challenge && <p className="text-xs tracking-[0.15em] uppercase mb-4 font-medium" style={{ color: gold }}>{item.challenge}{item.timeframe ? ` — ${item.timeframe}` : ''}</p>}
+                      {item.challenge && <p className="text-xs tracking-[0.15em] uppercase mb-4 font-medium text-[var(--brand)]">{item.challenge}{item.timeframe ? ` — ${item.timeframe}` : ''}</p>}
                       <div className="grid md:grid-cols-2 gap-6">
                         <div>
                           <p className="text-xs uppercase tracking-wider mb-2 font-semibold" style={{ color: '#FF6B6B' }}>Avant</p>
-                          <p className="text-sm md:text-base leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{item.before}</p>
+                          <p className="text-sm md:text-base leading-relaxed text-[var(--text-secondary)]">{item.before}</p>
                         </div>
                         <div>
                           <p className="text-xs uppercase tracking-wider mb-2 font-semibold" style={{ color: '#55EFC4' }}>Après</p>
-                          <p className="text-sm md:text-base leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{item.after}</p>
+                          <p className="text-sm md:text-base leading-relaxed text-[var(--text-secondary)]">{item.after}</p>
                         </div>
                       </div>
                     </div>
@@ -1551,7 +1548,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
               <RevealOnScroll>
                 <div className="mb-8 md:mb-12">
                   <span className="block w-16 h-px mx-auto mb-6" style={{ background: gold }} />
-                  <h2 className="font-display font-light italic text-2xl sm:text-3xl md:text-5xl leading-[1.2]" style={{ color: gold }}>
+                  <h2 className="font-display font-light italic text-2xl sm:text-3xl md:text-5xl leading-[1.2] text-[var(--brand)]">
                     <WordByWordReveal text={manif.title || ''} />
                   </h2>
                   <span className="block w-16 h-px mx-auto mt-6" style={{ background: gold }} />
@@ -1561,7 +1558,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
               <div className="space-y-6 md:space-y-8">
                 {paragraphs.map((p: string, i: number) => (
                   <RevealOnScroll key={i} delay={0.15 + i * 0.1}>
-                    <p className="text-base md:text-xl font-light leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                    <p className="text-base md:text-xl font-light leading-relaxed text-[var(--text-secondary)]">
                       {p}
                     </p>
                   </RevealOnScroll>
@@ -1570,7 +1567,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
 
               {manif.signature && (
                 <RevealOnScroll delay={0.5}>
-                  <p className="mt-10 md:mt-14 font-display text-lg md:text-xl italic" style={{ color: gold }}>
+                  <p className="mt-10 md:mt-14 font-display text-lg md:text-xl italic text-[var(--brand)]">
                     — {manif.signature}
                   </p>
                 </RevealOnScroll>
@@ -1634,7 +1631,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                   <GlowingCard className={`p-6 sm:p-8 md:p-10 h-full flex flex-col relative ${plan.highlight ? 'ring-1' : ''}`} glowColor={`rgba(${tc.rgb},0.15)`} style={plan.highlight ? { '--tw-ring-color': `rgba(${tc.rgb},0.15)` } as React.CSSProperties : undefined}>
                     <p className="luxury-title text-xs sm:text-sm tracking-[0.2em] sm:tracking-[0.25em] mb-1" style={{ color: tc.main }}>{plan.name}</p>
                     {plan.tagline && (
-                      <p className="text-xs font-light mb-4 md:mb-6" style={{ color: 'var(--text-muted)' }}>{plan.tagline}</p>
+                      <p className="text-xs font-light mb-4 md:mb-6 text-[var(--text-muted)]">{plan.tagline}</p>
                     )}
                     {!plan.tagline && <div className="mb-4 md:mb-6" />}
 
@@ -1682,7 +1679,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
               <RevealOnScroll delay={0.35}>
                 <div className="mt-10 md:mt-16 text-center max-w-2xl mx-auto">
                   <div className="glow-card p-6 sm:p-8 md:p-10">
-                    <h3 className="font-display text-lg sm:text-xl md:text-2xl font-light mb-4" style={{ color: 'var(--text-primary)' }}>
+                    <h3 className="font-display text-lg sm:text-xl md:text-2xl font-light mb-4 text-[var(--text-primary)]">
                       {pricing.guarantee_title}
                     </h3>
                     {pricing.guarantee_description && (
@@ -1704,7 +1701,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
               <RevealOnScroll delay={0.5}>
                 <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 mt-6 md:mt-10">
                   {pricing.trust_badges.map((badge: string, i: number) => (
-                    <span key={i} className="flex items-center gap-2 text-xs font-light" style={{ color: 'var(--text-muted)' }}>
+                    <span key={i} className="flex items-center gap-2 text-xs font-light text-[var(--text-muted)]">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: gold, opacity: 0.5 }}>
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                       </svg>
@@ -1738,7 +1735,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                     <p className="luxury-title text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{gar.label || 'Notre engagement'}</p>
                   </RevealOnScroll>
                   <RevealOnScroll delay={0.15}>
-                    <h2 className="font-display font-light text-2xl sm:text-3xl md:text-4xl mb-4 md:mb-6" style={{ color: 'var(--text-primary)' }}>
+                    <h2 className="font-display font-light text-2xl sm:text-3xl md:text-4xl mb-4 md:mb-6 text-[var(--text-primary)]">
                       {gar.title || ''}
                     </h2>
                   </RevealOnScroll>
@@ -1794,7 +1791,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
               {(faq.cta_text || faq.cta_button_label) && (
                 <RevealOnScroll delay={0.3}>
                   <div className="mt-8 md:mt-12 text-center">
-                    {faq.cta_text && <p className="text-sm font-light mb-4" style={{ color: 'var(--text-muted)' }}>{faq.cta_text}</p>}
+                    {faq.cta_text && <p className="text-sm font-light mb-4 text-[var(--text-muted)]">{faq.cta_text}</p>}
                     {faq.cta_button_label && (
                       <Link href={faq.cta_button_href || '/contact'}>
                         <button className="magnetic-btn px-6 sm:px-8 py-3 sm:py-3.5 rounded-full text-sm font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.25)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
@@ -1856,7 +1853,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                   <RevealOnScroll delay={0.2} direction="right">
                     <div className="h-full">
                       {pq.not_title && (
-                        <h3 className="font-display text-xl sm:text-2xl font-light mb-6" style={{ color: 'var(--text-primary)' }}>
+                        <h3 className="font-display text-xl sm:text-2xl font-light mb-6 text-[var(--text-primary)]">
                           {pq.not_title}
                         </h3>
                       )}
@@ -1987,7 +1984,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                   </span>
                 </RevealOnScroll>
                 <RevealOnScroll delay={0.1}>
-                  <h1 className="font-display font-light text-3xl sm:text-4xl md:text-6xl leading-[1.1] mb-6 md:mb-8" style={{ color: gold }}>
+                  <h1 className="font-display font-light text-3xl sm:text-4xl md:text-6xl leading-[1.1] mb-6 md:mb-8 text-[var(--brand)]">
                     {(v2.hero_title || '').split('\n').map((line: string, i: number) => <span key={i} className="block">{line}</span>)}
                   </h1>
                 </RevealOnScroll>
@@ -2028,8 +2025,8 @@ export default function LandingClient({ initialSections, initialPositions, initi
                   ].map((stat, i) => (
                     <RevealOnScroll key={i} delay={i * 0.1}>
                       <div className="text-center py-4 md:py-6">
-                        <p className="font-display text-3xl sm:text-4xl md:text-5xl font-light mb-2" style={{ color: gold }}>{stat.value}</p>
-                        <p className="text-[9px] sm:text-[10px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-muted)' }}>{stat.label}</p>
+                        <p className="font-display text-3xl sm:text-4xl md:text-5xl font-light mb-2 text-[var(--brand)]">{stat.value}</p>
+                        <p className="text-[9px] sm:text-[10px] tracking-[0.15em] uppercase text-[var(--text-muted)]">{stat.label}</p>
                       </div>
                     </RevealOnScroll>
                   ))}
@@ -2041,7 +2038,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
             <section className="px-5 md:px-20 py-16 md:py-28">
               <div className="max-w-3xl mx-auto text-center">
                 <RevealOnScroll>
-                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-5xl leading-[1.12] mb-8 md:mb-12" style={{ color: gold }}>
+                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-5xl leading-[1.12] mb-8 md:mb-12 text-[var(--brand)]">
                     {(v2.truth_title || '').split('\n').map((line: string, i: number) => <span key={i} className="block">{line}</span>)}
                   </h2>
                 </RevealOnScroll>
@@ -2052,7 +2049,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                   <p className="text-base md:text-lg text-[var(--text-secondary)] leading-relaxed mb-10">{v2.truth_p2 || ''}</p>
                 </RevealOnScroll>
                 <RevealOnScroll delay={0.2}>
-                  <p className="font-display text-xl md:text-2xl font-light italic" style={{ color: gold }}>{v2.truth_closing || ''}</p>
+                  <p className="font-display text-xl md:text-2xl font-light italic text-[var(--brand)]">{v2.truth_closing || ''}</p>
                 </RevealOnScroll>
               </div>
             </section>
@@ -2062,7 +2059,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
               <div className="absolute inset-0 pointer-events-none opacity-[0.02]" style={{ background: `radial-gradient(circle at 30% 50%, ${gold}, transparent 60%)` }} />
               <div className="max-w-4xl mx-auto relative z-10">
                 <RevealOnScroll>
-                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-5xl leading-[1.12] text-center mb-12 md:mb-16" style={{ color: gold }}>
+                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-5xl leading-[1.12] text-center mb-12 md:mb-16 text-[var(--brand)]">
                     {(v2.julia_title || '').split('\n').map((line: string, i: number) => <span key={i} className="block">{line}</span>)}
                   </h2>
                 </RevealOnScroll>
@@ -2071,18 +2068,18 @@ export default function LandingClient({ initialSections, initialPositions, initi
                   <RevealOnScroll delay={0.1}><p>{v2.julia_p2 || ''}</p></RevealOnScroll>
                   <RevealOnScroll delay={0.15}><p>{v2.julia_p3 || ''}</p></RevealOnScroll>
                   <RevealOnScroll delay={0.2}>
-                    <p className="font-display text-xl md:text-2xl font-light italic pt-4" style={{ color: gold }}>{v2.julia_promise || ''}</p>
+                    <p className="font-display text-xl md:text-2xl font-light italic pt-4 text-[var(--brand)]">{v2.julia_promise || ''}</p>
                   </RevealOnScroll>
                 </div>
                 <RevealOnScroll delay={0.25}>
                   <div className="mt-10 pt-8" style={{ borderTop: `1px solid rgba(${goldRgb}, 0.1)` }}>
-                    <p className="font-display text-lg font-semibold" style={{ color: gold }}>{v2.julia_signature || ''}</p>
+                    <p className="font-display text-lg font-semibold text-[var(--brand)]">{v2.julia_signature || ''}</p>
                     <p className="text-sm text-[var(--text-muted)] mt-1">{v2.julia_signature_sub || ''}</p>
                   </div>
                 </RevealOnScroll>
                 <RevealOnScroll delay={0.3}>
                   <div className="mt-14 md:mt-20 text-center">
-                    <p className="font-display text-xl md:text-2xl font-light mb-4" style={{ color: gold }}>{v2.julia_team_intro || ''}</p>
+                    <p className="font-display text-xl md:text-2xl font-light mb-4 text-[var(--brand)]">{v2.julia_team_intro || ''}</p>
                     <p className="text-base text-[var(--text-secondary)] leading-relaxed max-w-2xl mx-auto">{v2.julia_team_text || ''}</p>
                   </div>
                 </RevealOnScroll>
@@ -2093,7 +2090,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
             <section className="px-5 md:px-20 py-16 md:py-28">
               <div className="max-w-4xl mx-auto">
                 <RevealOnScroll>
-                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-5xl leading-[1.12] text-center mb-4 md:mb-6" style={{ color: gold }}>
+                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-5xl leading-[1.12] text-center mb-4 md:mb-6 text-[var(--brand)]">
                     {(v2.temoignages_title || '').split('\n').map((line: string, i: number) => <span key={i} className="block">{line}</span>)}
                   </h2>
                 </RevealOnScroll>
@@ -2122,7 +2119,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                   </span>
                 </RevealOnScroll>
                 <RevealOnScroll delay={0.05}>
-                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-5xl leading-[1.12] mb-6" style={{ color: gold }}>
+                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-5xl leading-[1.12] mb-6 text-[var(--brand)]">
                     {(v2.encyclo_title || '').split('\n').map((line: string, i: number) => <span key={i} className="block">{line}</span>)}
                   </h2>
                 </RevealOnScroll>
@@ -2145,7 +2142,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                         {tag}
                       </span>
                     ))}
-                    <span className="px-3 py-1.5 text-xs" style={{ color: 'var(--text-muted)' }}>Et plus...</span>
+                    <span className="px-3 py-1.5 text-xs text-[var(--text-muted)]">Et plus...</span>
                   </div>
                 </RevealOnScroll>
                 <RevealOnScroll delay={0.25}>
@@ -2163,11 +2160,10 @@ export default function LandingClient({ initialSections, initialPositions, initi
             <section id="parcours-v2" className="px-5 md:px-20 py-16 md:py-28">
               <div className="max-w-5xl mx-auto">
                 <RevealOnScroll>
-                  <span className="block text-center text-[10px] tracking-[0.25em] uppercase font-medium mb-6"
-                    style={{ color: gold }}>
+                  <span className="block text-center text-[10px] tracking-[0.25em] uppercase font-medium mb-6 text-[var(--brand)]">
                     {v2.parcours_badge || ''}
                   </span>
-                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-5xl leading-[1.12] text-center mb-12 md:mb-16" style={{ color: gold }}>
+                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-5xl leading-[1.12] text-center mb-12 md:mb-16 text-[var(--brand)]">
                     {(v2.parcours_title || '').split('\n').map((line: string, i: number) => <span key={i} className="block">{line}</span>)}
                   </h2>
                 </RevealOnScroll>
@@ -2193,10 +2189,10 @@ export default function LandingClient({ initialSections, initialPositions, initi
             <section className="px-5 md:px-20 py-16 md:py-28">
               <div className="max-w-5xl mx-auto">
                 <RevealOnScroll>
-                  <span className="block text-center text-[10px] tracking-[0.25em] uppercase font-medium mb-6" style={{ color: gold }}>
+                  <span className="block text-center text-[10px] tracking-[0.25em] uppercase font-medium mb-6 text-[var(--brand)]">
                     {v2.community_badge || ''}
                   </span>
-                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-5xl leading-[1.12] text-center mb-6" style={{ color: gold }}>
+                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-5xl leading-[1.12] text-center mb-6 text-[var(--brand)]">
                     {(v2.community_title || '').split('\n').map((line: string, i: number) => <span key={i} className="block">{line}</span>)}
                   </h2>
                 </RevealOnScroll>
@@ -2207,14 +2203,14 @@ export default function LandingClient({ initialSections, initialPositions, initi
                   <p className="text-center text-base text-[var(--text-secondary)] mb-4">{v2.community_paragraph || ''}</p>
                 </RevealOnScroll>
                 <RevealOnScroll delay={0.12}>
-                  <p className="text-center font-display text-lg italic mb-12 md:mb-16" style={{ color: gold }}>{v2.community_closing || ''}</p>
+                  <p className="text-center font-display text-lg italic mb-12 md:mb-16 text-[var(--brand)]">{v2.community_closing || ''}</p>
                 </RevealOnScroll>
                 <div className="grid sm:grid-cols-2 gap-4 md:gap-6">
                   {(v2.community_blocks || []).map((block: { icon: string; title: string; description: string }, i: number) => (
                     <RevealOnScroll key={i} delay={0.15 + i * 0.06}>
                       <div className="rounded-2xl p-6 md:p-8 h-full" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
                         <span className="text-2xl md:text-3xl block mb-3">{block.icon}</span>
-                        <h3 className="font-semibold text-base mb-2" style={{ color: gold }}>{block.title}</h3>
+                        <h3 className="font-semibold text-base mb-2 text-[var(--brand)]">{block.title}</h3>
                         <p className="text-sm text-[var(--text-secondary)] leading-relaxed">{block.description}</p>
                       </div>
                     </RevealOnScroll>
@@ -2230,7 +2226,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
             <section className="px-5 md:px-20 py-16 md:py-28">
               <div className="max-w-3xl mx-auto text-center">
                 <RevealOnScroll>
-                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-5xl leading-[1.12] mb-10 md:mb-14" style={{ color: gold }}>
+                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-5xl leading-[1.12] mb-10 md:mb-14 text-[var(--brand)]">
                     {(v2.day1_title || '').split('\n').map((line: string, i: number) => <span key={i} className="block">{line}</span>)}
                   </h2>
                 </RevealOnScroll>
@@ -2238,7 +2234,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                   {(v2.day1_items || []).map((item: string, i: number) => (
                     <RevealOnScroll key={i} delay={0.05 + i * 0.05}>
                       <li className="flex items-start gap-3">
-                        <span className="mt-1 text-sm flex-shrink-0" style={{ color: gold }}>&#10022;</span>
+                        <span className="mt-1 text-sm flex-shrink-0 text-[var(--brand)]">&#10022;</span>
                         <span className="text-base text-[var(--text-secondary)] leading-relaxed">{item}</span>
                       </li>
                     </RevealOnScroll>
@@ -2251,7 +2247,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
             <section className="px-5 md:px-20 py-16 md:py-28 relative">
               <div className="max-w-3xl mx-auto">
                 <RevealOnScroll>
-                  <h2 className="font-display font-light text-xl sm:text-2xl md:text-4xl leading-[1.15] text-center mb-10 md:mb-14" style={{ color: gold }}>
+                  <h2 className="font-display font-light text-xl sm:text-2xl md:text-4xl leading-[1.15] text-center mb-10 md:mb-14 text-[var(--brand)]">
                     {(v2.notus_title || '').split('\n').map((line: string, i: number) => <span key={i} className="block">{line}</span>)}
                   </h2>
                 </RevealOnScroll>
@@ -2260,7 +2256,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                     {(v2.notus_quote || '').split('\n').map((line: string, i: number) => (
                       <p key={i} className="text-base md:text-lg text-[var(--text-secondary)] leading-relaxed font-light italic">{line}</p>
                     ))}
-                    <p className="mt-4 text-sm font-semibold" style={{ color: gold }}>{v2.notus_author || ''}</p>
+                    <p className="mt-4 text-sm font-semibold text-[var(--brand)]">{v2.notus_author || ''}</p>
                   </blockquote>
                 </RevealOnScroll>
                 <RevealOnScroll delay={0.15}>
@@ -2270,7 +2266,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                   <p className="text-base text-[var(--text-secondary)] leading-relaxed text-center mb-6">{v2.notus_description || ''}</p>
                 </RevealOnScroll>
                 <RevealOnScroll delay={0.25}>
-                  <p className="font-display text-lg font-light italic text-center" style={{ color: gold }}>{v2.notus_closing || ''}</p>
+                  <p className="font-display text-lg font-light italic text-center text-[var(--brand)]">{v2.notus_closing || ''}</p>
                 </RevealOnScroll>
               </div>
             </section>
@@ -2279,10 +2275,10 @@ export default function LandingClient({ initialSections, initialPositions, initi
             <section className="px-5 md:px-20 py-16 md:py-28">
               <div className="max-w-5xl mx-auto">
                 <RevealOnScroll>
-                  <span className="block text-center text-[10px] tracking-[0.25em] uppercase font-medium mb-4" style={{ color: gold }}>
+                  <span className="block text-center text-[10px] tracking-[0.25em] uppercase font-medium mb-4 text-[var(--brand)]">
                     {v2.pricing_badge || ''}
                   </span>
-                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-5xl leading-[1.12] text-center mb-2" style={{ color: gold }}>
+                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-5xl leading-[1.12] text-center mb-2 text-[var(--brand)]">
                     {v2.pricing_title || ''}
                   </h2>
                   <p className="text-center text-sm text-[var(--text-muted)] mb-12 md:mb-16">{v2.pricing_subtitle || ''}</p>
@@ -2301,16 +2297,16 @@ export default function LandingClient({ initialSections, initialPositions, initi
                             {plan.badge}
                           </span>
                         )}
-                        <h3 className="text-sm font-semibold tracking-wider uppercase mb-4" style={{ color: 'var(--text-muted)' }}>{plan.name}</h3>
+                        <h3 className="text-sm font-semibold tracking-wider uppercase mb-4 text-[var(--text-muted)]">{plan.name}</h3>
                         <div className="flex items-baseline gap-1 mb-2">
-                          <span className="font-display text-4xl md:text-5xl font-light" style={{ color: gold }}>{plan.price}€</span>
+                          <span className="font-display text-4xl md:text-5xl font-light text-[var(--brand)]">{plan.price}€</span>
                           <span className="text-sm text-[var(--text-muted)]">{plan.period}</span>
                         </div>
                         <p className="text-sm text-[var(--text-secondary)] mb-6">{plan.description}</p>
                         <ul className="space-y-3 flex-1 mb-8">
                           {plan.features.map((f: string, fi: number) => (
                             <li key={fi} className="flex items-start gap-2">
-                              <span className="mt-0.5 text-xs" style={{ color: gold }}>&#10022;</span>
+                              <span className="mt-0.5 text-xs text-[var(--brand)]">&#10022;</span>
                               <span className="text-sm text-[var(--text-secondary)]">{f}</span>
                             </li>
                           ))}
@@ -2341,7 +2337,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
             <section className="px-5 md:px-20 py-16 md:py-28">
               <div className="max-w-3xl mx-auto">
                 <RevealOnScroll>
-                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-4xl leading-[1.12] text-center mb-10 md:mb-14" style={{ color: gold }}>
+                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-4xl leading-[1.12] text-center mb-10 md:mb-14 text-[var(--brand)]">
                     {v2.pourqui_title || ''}
                   </h2>
                 </RevealOnScroll>
@@ -2380,7 +2376,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
               </div>
               <div className="relative z-10 max-w-3xl mx-auto text-center">
                 <RevealOnScroll>
-                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-5xl leading-[1.12] mb-8 md:mb-12" style={{ color: gold }}>
+                  <h2 className="font-display font-light text-2xl sm:text-3xl md:text-5xl leading-[1.12] mb-8 md:mb-12 text-[var(--brand)]">
                     {(v2.cta_title || '').split('\n').map((line: string, i: number) => <span key={i} className="block">{line}</span>)}
                   </h2>
                 </RevealOnScroll>
@@ -2420,7 +2416,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                       <WordByWordReveal text={c.title} />
                     </h2>
                   )}
-                  <div className="prose prose-invert prose-lg max-w-none" style={{ color: 'var(--text-secondary)' }} dangerouslySetInnerHTML={{ __html: c.html_content }} />
+                  <div className="prose prose-invert prose-lg max-w-none text-[var(--text-secondary)]" dangerouslySetInnerHTML={{ __html: c.html_content }} />
                 </div>
               </RevealOnScroll>
             </section>
@@ -2452,7 +2448,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                       className="w-full max-w-2xl mx-auto rounded-2xl mb-8"
                     />
                   )}
-                  {c.description && <p className="text-base md:text-lg leading-relaxed max-w-3xl mx-auto mb-8" style={{ color: 'var(--text-secondary)' }}>{c.description}</p>}
+                  {c.description && <p className="text-base md:text-lg leading-relaxed max-w-3xl mx-auto mb-8 text-[var(--text-secondary)]">{c.description}</p>}
                   {c.button_label && (
                     <Link href={c.button_href || '/signup'} onClick={() => trackConversion('custom_cta')}>
                       <button className="magnetic-btn px-8 py-4 rounded-full text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, var(--brand), var(--brand-deep))`, color: '#000000' }}>
@@ -2460,7 +2456,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                       </button>
                     </Link>
                   )}
-                  {c.html_content && <div className="prose prose-invert prose-lg max-w-none mt-8" style={{ color: 'var(--text-secondary)' }} dangerouslySetInnerHTML={{ __html: c.html_content }} />}
+                  {c.html_content && <div className="prose prose-invert prose-lg max-w-none mt-8 text-[var(--text-secondary)]" dangerouslySetInnerHTML={{ __html: c.html_content }} />}
                 </div>
               </RevealOnScroll>
             </section>
@@ -2481,20 +2477,20 @@ export default function LandingClient({ initialSections, initialPositions, initi
                       <WordByWordReveal text={c.title} />
                     </h2>
                   )}
-                  {c.description && <p className="text-base md:text-lg max-w-3xl mx-auto mb-12" style={{ color: 'var(--text-secondary)' }}>{c.description}</p>}
+                  {c.description && <p className="text-base md:text-lg max-w-3xl mx-auto mb-12 text-[var(--text-secondary)]">{c.description}</p>}
                   <div className={`grid gap-6 ${cards.length <= 2 ? 'md:grid-cols-2' : cards.length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-2 lg:grid-cols-4'}`}>
                     {cards.map((card, i) => (
                       <RevealOnScroll key={i} delay={i * 0.1}>
                         <div className="rounded-2xl p-6 md:p-8 text-center" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}>
                           {card.image_url && <img src={card.image_url} alt="" className="w-16 h-16 mx-auto mb-4 rounded-xl object-cover" />}
                           {card.icon && !card.image_url && <span className="text-3xl mb-4 block">{card.icon}</span>}
-                          {card.title && <h3 className="font-display text-lg md:text-xl font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>{card.title}</h3>}
-                          {card.description && <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{card.description}</p>}
+                          {card.title && <h3 className="font-display text-lg md:text-xl font-semibold mb-3 text-[var(--text-primary)]">{card.title}</h3>}
+                          {card.description && <p className="text-sm leading-relaxed text-[var(--text-secondary)]">{card.description}</p>}
                         </div>
                       </RevealOnScroll>
                     ))}
                   </div>
-                  {c.html_content && <div className="prose prose-invert prose-lg max-w-none mt-8" style={{ color: 'var(--text-secondary)' }} dangerouslySetInnerHTML={{ __html: c.html_content }} />}
+                  {c.html_content && <div className="prose prose-invert prose-lg max-w-none mt-8 text-[var(--text-secondary)]" dangerouslySetInnerHTML={{ __html: c.html_content }} />}
                 </div>
               </RevealOnScroll>
             </section>
@@ -2515,7 +2511,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                       <WordByWordReveal text={c.title} />
                     </h2>
                   )}
-                  {c.description && <p className="text-base md:text-lg leading-relaxed mb-10" style={{ color: 'var(--text-secondary)' }}>{c.description}</p>}
+                  {c.description && <p className="text-base md:text-lg leading-relaxed mb-10 text-[var(--text-secondary)]">{c.description}</p>}
                   {c.button_label && (
                     <Link href={c.button_href || '/signup'}>
                       <button className="magnetic-btn pulse-ring px-10 py-5 rounded-full text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, var(--brand), var(--brand-deep))`, color: '#000000' }}>
@@ -2523,7 +2519,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                       </button>
                     </Link>
                   )}
-                  {c.html_content && <div className="prose prose-invert prose-lg max-w-none mt-8" style={{ color: 'var(--text-secondary)' }} dangerouslySetInnerHTML={{ __html: c.html_content }} />}
+                  {c.html_content && <div className="prose prose-invert prose-lg max-w-none mt-8 text-[var(--text-secondary)]" dangerouslySetInnerHTML={{ __html: c.html_content }} />}
                 </div>
               </RevealOnScroll>
             </section>
@@ -2544,18 +2540,18 @@ export default function LandingClient({ initialSections, initialPositions, initi
                       <WordByWordReveal text={c.title} />
                     </h2>
                   )}
-                  {c.description && <p className="text-base md:text-lg max-w-3xl mx-auto mb-12" style={{ color: 'var(--text-secondary)' }}>{c.description}</p>}
+                  {c.description && <p className="text-base md:text-lg max-w-3xl mx-auto mb-12 text-[var(--text-secondary)]">{c.description}</p>}
                   <div className={`grid gap-4 ${images.length <= 2 ? 'md:grid-cols-2' : images.length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-2 lg:grid-cols-4'}`}>
                     {images.map((img, i) => (
                       <RevealOnScroll key={i} delay={i * 0.08}>
                         <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid var(--border)' }}>
                           {img.url && <img src={img.url} alt={img.caption || ''} className="w-full aspect-square object-cover" />}
-                          {img.caption && <p className="px-4 py-3 text-sm" style={{ color: 'var(--text-secondary)' }}>{img.caption}</p>}
+                          {img.caption && <p className="px-4 py-3 text-sm text-[var(--text-secondary)]">{img.caption}</p>}
                         </div>
                       </RevealOnScroll>
                     ))}
                   </div>
-                  {c.html_content && <div className="prose prose-invert prose-lg max-w-none mt-8" style={{ color: 'var(--text-secondary)' }} dangerouslySetInnerHTML={{ __html: c.html_content }} />}
+                  {c.html_content && <div className="prose prose-invert prose-lg max-w-none mt-8 text-[var(--text-secondary)]" dangerouslySetInnerHTML={{ __html: c.html_content }} />}
                 </div>
               </RevealOnScroll>
             </section>
@@ -2574,9 +2570,9 @@ export default function LandingClient({ initialSections, initialPositions, initi
                     <WordByWordReveal text={c.title} />
                   </h2>
                 )}
-                {c.description && <p className="text-base md:text-lg leading-relaxed max-w-3xl mx-auto mb-8" style={{ color: 'var(--text-secondary)' }}>{c.description}</p>}
+                {c.description && <p className="text-base md:text-lg leading-relaxed max-w-3xl mx-auto mb-8 text-[var(--text-secondary)]">{c.description}</p>}
                 {c.image_url && <img src={c.image_url} alt="" className="w-full max-w-2xl mx-auto rounded-2xl mb-8 object-cover" />}
-                {c.html_content && <div className="prose prose-invert prose-lg max-w-none" style={{ color: 'var(--text-secondary)' }} dangerouslySetInnerHTML={{ __html: c.html_content }} />}
+                {c.html_content && <div className="prose prose-invert prose-lg max-w-none text-[var(--text-secondary)]" dangerouslySetInnerHTML={{ __html: c.html_content }} />}
               </div>
             </RevealOnScroll>
           </section>

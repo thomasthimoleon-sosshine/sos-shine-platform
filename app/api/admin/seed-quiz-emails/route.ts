@@ -53,18 +53,35 @@ const EMAILS = [
 ]
 
 export async function POST() {
+  return seedEmails()
+}
+
+export async function GET() {
+  return seedEmails()
+}
+
+async function seedEmails() {
   const supabase = getAdminClient()
   if (!supabase) return NextResponse.json({ error: 'Not configured' }, { status: 500 })
 
-  // Find the quiz v2 sequence
-  const { data: sequences } = await supabase
+  // Find or create the quiz v2 sequence
+  let { data: sequences } = await supabase
     .from('crm_sequences')
     .select('id')
     .eq('trigger_type', 'signature_test_v2')
     .limit(1)
 
   if (!sequences || sequences.length === 0) {
-    return NextResponse.json({ error: 'Sequence signature_test_v2 not found. Run the migration first.' }, { status: 404 })
+    const { data: created, error: createErr } = await supabase
+      .from('crm_sequences')
+      .insert({ name: 'Signature Émotionnelle V2', trigger_type: 'signature_test_v2', status: 'active' })
+      .select('id')
+      .single()
+
+    if (createErr || !created) {
+      return NextResponse.json({ error: 'Failed to create sequence', details: createErr?.message }, { status: 500 })
+    }
+    sequences = [created]
   }
 
   const sequenceId = sequences[0].id

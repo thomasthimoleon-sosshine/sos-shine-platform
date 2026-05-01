@@ -1,18 +1,23 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, Suspense } from 'react'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { motion, useScroll, useTransform, useInView } from 'framer-motion'
+import TextReveal from '@/components/landing/TextReveal'
+import MagneticButton from '@/components/landing/MagneticButton'
+import ScrollIndicator from '@/components/landing/ScrollIndicator'
+import PainScroll from '@/components/landing/PainScroll'
+import StickyMechanism from '@/components/landing/StickyMechanism'
+import PricingMorph from '@/components/landing/PricingMorph'
+
+const DiamondScene = dynamic(() => import('@/components/landing/DiamondScene'), { ssr: false })
 
 const IMG = 'https://krdfvggmfswbohuevzlb.supabase.co/storage/v1/object/public/uploads'
-const HERO     = `${IMG}/616ED53A-03A5-4368-9C3E-15655CE75A3A.png`
-const COMPREND = `${IMG}/AC966289-197D-4246-B77B-F5FB2139B4EC.png`
-const LIBERER  = `${IMG}/4075E759-EDBC-479B-B270-833CD22B3D2E.png`
-const AGIR     = `${IMG}/66DBE573-D7E0-4E9F-BD4D-9D4CEC07CAE1.png`
-const MOCKUP   = `${IMG}/8DC279D8-7E82-43EE-BC60-DFAE22AD31FA.png`
 const COMMUNTE = `${IMG}/D3025812-9AA8-42DE-B8C2-C034218A2EFA.png`
+const MOCKUP   = `${IMG}/8DC279D8-7E82-43EE-BC60-DFAE22AD31FA.png`
 
-const ease = [0.16, 1, 0.3, 1] as const
+const ease = [0.16, 1, 0.3, 1] as [number, number, number, number]
 
 function Reveal({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
   const ref = useRef(null)
@@ -30,504 +35,303 @@ function Reveal({ children, className = '', delay = 0 }: { children: React.React
   )
 }
 
-function TickerBand({ items, speed = 15 }: { items: string[]; speed?: number }) {
-  const quadrupled = [...items, ...items, ...items, ...items]
+function ImageReveal({ src, alt, className = '' }: { src: string; alt: string; className?: string }) {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, margin: '-50px' })
   return (
-    <div className="relative overflow-hidden py-5 border-y border-[rgba(184,164,114,0.06)]">
-      <motion.div
-        className="flex gap-12 whitespace-nowrap"
-        animate={{ x: ['0%', '-50%'] }}
-        transition={{ duration: speed, repeat: Infinity, ease: 'linear' }}
-      >
-        {quadrupled.map((item, i) => (
-          <span key={i} className="text-[11px] uppercase tracking-[0.25em] font-medium text-[#6B6560]">
-            {item}
-            <span className="mx-6 text-[#3D3A36]">&middot;</span>
-          </span>
-        ))}
-      </motion.div>
-    </div>
+    <motion.div
+      ref={ref}
+      initial={{ clipPath: 'inset(100% 0 0 0)' }}
+      animate={isInView ? { clipPath: 'inset(0% 0 0 0)' } : {}}
+      transition={{ duration: 1, ease }}
+      className={className}
+    >
+      <img src={src} alt={alt} className="w-full h-full object-cover" />
+    </motion.div>
   )
 }
 
 export default function LandingJulia() {
   const heroRef = useRef(null)
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
-  const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0])
+  const { scrollYProgress: heroProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
+  const heroOpacity = useTransform(heroProgress, [0, 0.8], [1, 0])
+  const heroScale = useTransform(heroProgress, [0, 1], [1, 0.95])
 
   return (
-    <main className="min-h-screen bg-[#06070A] text-[#F5F0E8] overflow-hidden">
+    <main className="bg-[#0A0A0F] text-[#FAFAF7] overflow-hidden selection:bg-[#D4AF7F]/20 selection:text-[#FAFAF7]">
 
-      {/* ═══ HEADER ═══ */}
-      <header className="fixed top-0 left-0 right-0 z-50 py-5 md:py-6 bg-[#06070A]/60 backdrop-blur-2xl">
+      {/* ═══════════════════════════════════════════
+          HEADER
+      ═══════════════════════════════════════════ */}
+      <header className="fixed top-0 left-0 right-0 z-50 py-5 md:py-6 mix-blend-difference">
         <div className="flex items-center justify-between max-w-7xl mx-auto px-6 md:px-10">
           <Link href="/">
-            <img src="/images/logo-shine.png" alt="SOS Shine" className="h-10 md:h-12 w-auto object-contain" />
+            <img src="/images/logo-shine.png" alt="SOS Shine" className="h-10 md:h-12 w-auto object-contain invert" />
           </Link>
-          <div className="flex items-center gap-5 sm:gap-6">
-            <Link href="/login" className="text-[13px] text-[#9B9590] hover:text-[#F5F0E8] transition-colors duration-300">
-              Se connecter
+          <nav className="flex items-center gap-6">
+            <Link href="/login" className="text-[13px] text-[#FAFAF7]/50 hover:text-[#FAFAF7] transition-colors duration-500">
+              Connexion
             </Link>
             <Link
               href="/signup"
-              className="hidden sm:inline-flex px-5 py-2.5 rounded-full text-[13px] font-medium bg-[#B8A472] text-[#08090A] hover:bg-[#C4B080] transition-all duration-500 active:scale-[0.98]"
+              className="hidden sm:inline-flex px-5 py-2.5 rounded-full text-[13px] font-medium bg-[#FAFAF7] text-[#0A0A0F] hover:bg-[#D4AF7F] transition-all duration-500"
             >
-              Commencer
+              Rejoindre
             </Link>
-          </div>
+          </nav>
         </div>
       </header>
 
-      {/* ═══ HERO — fullscreen image + text ═══ */}
-      <motion.section ref={heroRef} className="relative min-h-[100vh] flex items-end" style={{ opacity: heroOpacity }}>
-        {/* Background image */}
-        <div className="absolute inset-0">
-          <img src={HERO} alt="" className="w-full h-full object-cover object-[70%_center]" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#06070A] via-[#06070A]/70 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#06070A]/80 to-transparent" />
-        </div>
+      {/* ═══════════════════════════════════════════
+          ACTE 1 — LE HOOK (Hero)
+      ═══════════════════════════════════════════ */}
+      <motion.section ref={heroRef} className="relative h-[100vh] flex items-center justify-center" style={{ opacity: heroOpacity, scale: heroScale }}>
+        <Suspense fallback={null}>
+          <DiamondScene scrollProgress={0.5} />
+        </Suspense>
 
-        <div className="relative z-10 max-w-5xl mx-auto px-6 md:px-10 w-full pb-20 md:pb-28">
+        <div className="relative z-10 text-center px-6 max-w-4xl">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5, duration: 1.5 }}
+          >
+            <h1 className="font-display text-[2rem] sm:text-[3rem] md:text-[4rem] lg:text-[5.5rem] font-light leading-[1.04] tracking-[-0.04em] mb-8">
+              <TextReveal text="Et si ce qui te fait" delay={0.6} />
+              <br />
+              <TextReveal text="souffrir était exactement" delay={0.9} />
+              <br />
+              <span className="italic">
+                <TextReveal text="ce qui doit briller ?" delay={1.2} />
+              </span>
+            </h1>
+          </motion.div>
+
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1.2, delay: 0.3, ease }}
-            className="text-[10px] sm:text-[11px] tracking-[0.3em] uppercase font-medium text-[#B8A472] mb-6"
+            transition={{ delay: 2, duration: 1 }}
+            className="text-[14px] sm:text-[16px] text-[#FAFAF7]/35 font-light tracking-wide mb-12"
           >
-            Plateforme de d&eacute;conditionnement &eacute;motionnel
-          </motion.p>
-
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5, ease }}
-            className="font-display font-light text-[2.2rem] sm:text-[3rem] md:text-[3.8rem] lg:text-[4.5rem] leading-[1.06] tracking-[-0.02em] mb-6 md:mb-8 max-w-3xl"
-          >
-            Ce que vous vivez<br />
-            a une explication.<br />
-            Et une sortie.
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8, ease }}
-            className="text-[15px] sm:text-[17px] text-[#9B9590] leading-[1.7] max-w-lg font-light mb-10"
-          >
-            SOS Shine d&eacute;code les sch&eacute;mas &eacute;motionnels qui pilotent votre vie
-            et vous donne les outils pour reprendre les commandes.
+            D&eacute;conditionnement &eacute;motionnel guid&eacute;
           </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.1, ease }}
-            className="flex flex-col sm:flex-row gap-4"
+            transition={{ delay: 2.2, duration: 0.8, ease }}
+            className="flex flex-col sm:flex-row gap-4 justify-center"
           >
-            <Link href="/signature-emotionnelle"
-              className="px-8 py-4 rounded-full text-[14px] font-medium bg-[#B8A472] text-[#08090A] transition-all duration-500 hover:bg-[#C4B080] hover:shadow-[0_0_40px_rgba(184,164,114,0.15)] active:scale-[0.98] text-center"
-            >
-              D&eacute;couvrir ma Signature &Eacute;motionnelle
-            </Link>
-            <Link href="/encyclopedie"
-              className="px-8 py-4 rounded-full text-[14px] font-light text-[#9B9590] border border-[rgba(184,164,114,0.12)] hover:border-[rgba(184,164,114,0.25)] hover:text-[#F5F0E8] transition-all duration-500 text-center"
-            >
-              D&eacute;couvrir les protocoles
-            </Link>
+            <MagneticButton href="/signature-emotionnelle">
+              D&eacute;couvrir ma Signature
+            </MagneticButton>
+            <MagneticButton href="/encyclopedie" variant="ghost">
+              Explorer les protocoles
+            </MagneticButton>
           </motion.div>
         </div>
+
+        <ScrollIndicator />
       </motion.section>
 
-      {/* ═══ TICKER ═══ */}
-      <TickerBand items={[
-        'Déconditionnement émotionnel',
-        'Protocoles guidés',
-        'Communauté bienveillante',
-        'Shine TV',
-        'Shine Audible',
-        'Encyclopédie 200+ sujets',
-        'Lives hebdomadaires',
-      ]} />
+      {/* ═══════════════════════════════════════════
+          ACTE 2 — LE MIROIR (Pain Recognition)
+      ═══════════════════════════════════════════ */}
+      <PainScroll />
 
-      {/* ═══ PROBLÈME ═══ */}
-      <section className="py-28 md:py-40">
-        <div className="max-w-3xl mx-auto px-6 md:px-10 text-center">
-          <Reveal>
-            <p className="text-[10px] tracking-[0.3em] uppercase font-medium text-[#6B6560] mb-8">
-              La v&eacute;rit&eacute; qui change tout
-            </p>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <h2 className="font-display text-[1.8rem] sm:text-[2.5rem] md:text-[3rem] font-light leading-[1.1] tracking-[-0.02em] mb-10">
-              Vous n&apos;&ecirc;tes pas cass&eacute;(e).<br />
-              <span className="text-[#B8A472]">Vous &ecirc;tes conditionn&eacute;(e).</span>
-            </h2>
-          </Reveal>
-          <Reveal delay={0.2}>
-            <p className="text-[15px] text-[#9B9590] leading-[1.8] font-light max-w-lg mx-auto">
-              Chaque r&eacute;action excessive. Chaque relation qui finit pareil.
-              Chaque effondrement que vous n&apos;arrivez pas &agrave; expliquer.
-              Ce ne sont pas des d&eacute;fauts de caract&egrave;re.
-              Ce sont des sch&eacute;mas — construits dans l&apos;enfance,
-              renforc&eacute;s par vos exp&eacute;riences, r&eacute;p&eacute;t&eacute;s &agrave; votre insu.
-            </p>
-          </Reveal>
-          <Reveal delay={0.3}>
-            <p className="text-[17px] text-[#F5F0E8] font-light mt-12">
-              Quand vous comprenez votre sch&eacute;ma, vous arr&ecirc;tez de le subir.
-            </p>
-          </Reveal>
-        </div>
-      </section>
+      {/* ═══════════════════════════════════════════
+          ACTE 3 — LA RÉVÉLATION (Mécanisme)
+      ═══════════════════════════════════════════ */}
+      <StickyMechanism />
 
-      {/* ═══ 3 ÉTAPES — avec images ═══ */}
-      <section className="py-28 md:py-40 border-t border-[rgba(184,164,114,0.04)]">
+      {/* ═══════════════════════════════════════════
+          ACTE 4 — LA TRINITÉ (Co-créateurs)
+      ═══════════════════════════════════════════ */}
+      <section className="py-32 md:py-44 border-t border-[#FAFAF7]/[0.03]">
         <div className="max-w-6xl mx-auto px-6 md:px-10">
           <Reveal>
-            <p className="text-[10px] tracking-[0.3em] uppercase font-medium text-[#6B6560] mb-8 text-center">
-              Le parcours
+            <p className="text-[10px] tracking-[0.3em] uppercase font-medium text-[#FAFAF7]/25 mb-6 text-center">
+              Les co-cr&eacute;ateurs
             </p>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <h2 className="font-display text-[1.8rem] sm:text-[2.5rem] font-light leading-[1.1] tracking-[-0.02em] text-center mb-20 md:mb-28">
-              Trois &eacute;tapes. Un nouveau d&eacute;part.
+            <h2 className="font-display text-[2rem] sm:text-[2.8rem] md:text-[3.5rem] font-light leading-[1.06] tracking-[-0.03em] text-center mb-20 md:mb-28">
+              Une table. Trois chaises.<br />
+              <span className="italic text-[#FAFAF7]/40">La tienne attend.</span>
             </h2>
           </Reveal>
 
-          {/* Step 1 — Comprendre */}
-          <Reveal>
-            <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16 mb-24 md:mb-32">
-              <div className="w-full md:w-1/2 aspect-[4/3] rounded-[24px] overflow-hidden">
-                <img src={COMPREND} alt="Comprendre" className="w-full h-full object-cover" />
-              </div>
-              <div className="w-full md:w-1/2">
-                <span className="font-display text-[4rem] font-light text-[rgba(184,164,114,0.1)] leading-none block mb-4">01</span>
-                <h3 className="text-[20px] font-medium text-[#F5F0E8] mb-4">Comprendre</h3>
-                <p className="text-[15px] text-[#9B9590] leading-[1.8] font-light">
-                  Mettre des mots sur ce qui vous d&eacute;truit en silence.
-                  Identifier le sch&eacute;ma qui se r&eacute;p&egrave;te.
-                  Comprendre pourquoi vous r&eacute;agissez comme &ccedil;a — sans jugement.
-                </p>
-              </div>
-            </div>
-          </Reveal>
-
-          {/* Step 2 — Libérer */}
-          <Reveal>
-            <div className="flex flex-col md:flex-row-reverse items-center gap-10 md:gap-16 mb-24 md:mb-32">
-              <div className="w-full md:w-1/2 aspect-[4/3] rounded-[24px] overflow-hidden">
-                <img src={LIBERER} alt="Libérer" className="w-full h-full object-cover" />
-              </div>
-              <div className="w-full md:w-1/2">
-                <span className="font-display text-[4rem] font-light text-[rgba(184,164,114,0.1)] leading-none block mb-4">02</span>
-                <h3 className="text-[20px] font-medium text-[#F5F0E8] mb-4">Lib&eacute;rer</h3>
-                <p className="text-[15px] text-[#9B9590] leading-[1.8] font-light">
-                  Une crise &agrave; 2h du matin ? Une lib&eacute;ration physique et &eacute;motionnelle
-                  imm&eacute;diate, guid&eacute;e pas &agrave; pas. Protocoles de respiration,
-                  de d&eacute;charge, de recentrage — accessibles 24/7.
-                </p>
-              </div>
-            </div>
-          </Reveal>
-
-          {/* Step 3 — Agir */}
-          <Reveal>
-            <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16">
-              <div className="w-full md:w-1/2 aspect-[4/3] rounded-[24px] overflow-hidden">
-                <img src={AGIR} alt="Agir" className="w-full h-full object-cover" />
-              </div>
-              <div className="w-full md:w-1/2">
-                <span className="font-display text-[4rem] font-light text-[rgba(184,164,114,0.1)] leading-none block mb-4">03</span>
-                <h3 className="text-[20px] font-medium text-[#F5F0E8] mb-4">Agir</h3>
-                <p className="text-[15px] text-[#9B9590] leading-[1.8] font-light">
-                  Reprogrammer vos automatismes en nouveaux r&eacute;flexes.
-                  Des protocoles concrets, pas de la th&eacute;orie.
-                  Chaque jour, un pas vers la personne que vous &ecirc;tes vraiment.
-                </p>
-              </div>
-            </div>
-          </Reveal>
+          <div className="grid md:grid-cols-3 gap-8 md:gap-6">
+            {[
+              {
+                name: 'Julia',
+                role: 'La Sœur Spirituelle',
+                desc: "Cœur, intuition, résonance émotionnelle. Elle sent ce que les mots ne disent pas.",
+                image: '/images/julia.jpeg',
+                accent: '#FBCFE8',
+              },
+              {
+                name: 'William',
+                role: "L'Architecte Pédagogue",
+                desc: "Mécanismes psychiques, MTC, hypnothérapie. Il décode ce que le mental cache.",
+                image: null,
+                accent: '#A78BFA',
+              },
+              {
+                name: 'Thomas',
+                role: 'Le Pratiquant Incarné',
+                desc: "Miroir, respiration ventrale, ancrage. Il pratique chaque jour ce qu'il enseigne.",
+                image: null,
+                accent: '#7DD3FC',
+              },
+            ].map((person, i) => (
+              <Reveal key={person.name} delay={i * 0.15}>
+                <div className="group text-center">
+                  <div className="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden border border-[#FAFAF7]/[0.06] relative">
+                    {person.image ? (
+                      <img src={person.image} alt={person.name} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-[2rem] font-display font-light" style={{ color: person.accent, background: `${person.accent}08` }}>
+                        {person.name[0]}
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-[11px] tracking-[0.2em] uppercase font-medium mb-2" style={{ color: person.accent }}>
+                    {person.role}
+                  </p>
+                  <h3 className="font-display text-[1.5rem] font-light text-[#FAFAF7] mb-3 tracking-[-0.02em]">
+                    {person.name}
+                  </h3>
+                  <p className="text-[13px] text-[#FAFAF7]/40 leading-[1.7] font-light max-w-xs mx-auto">
+                    {person.desc}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* ═══ MOCKUP PLATEFORME ═══ */}
-      <section className="py-28 md:py-40 border-t border-[rgba(184,164,114,0.04)]">
-        <div className="max-w-5xl mx-auto px-6 md:px-10 text-center">
+      {/* ═══════════════════════════════════════════
+          ACTE 5 — LA PRATIQUE (Écosystème)
+      ═══════════════════════════════════════════ */}
+      <section className="py-32 md:py-44 border-t border-[#FAFAF7]/[0.03]">
+        <div className="max-w-6xl mx-auto px-6 md:px-10">
           <Reveal>
-            <p className="text-[10px] tracking-[0.3em] uppercase font-medium text-[#6B6560] mb-8">
-              Votre sanctuaire digital
+            <p className="text-[10px] tracking-[0.3em] uppercase font-medium text-[#FAFAF7]/25 mb-6 text-center">
+              L&apos;&eacute;cosyst&egrave;me
             </p>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <h2 className="font-display text-[1.8rem] sm:text-[2.5rem] font-light leading-[1.1] tracking-[-0.02em] mb-16 md:mb-20">
-              Une exp&eacute;rience pens&eacute;e<br />pour votre transformation.
+            <h2 className="font-display text-[2rem] sm:text-[2.8rem] font-light leading-[1.06] tracking-[-0.03em] text-center mb-20">
+              Tout ce dont tu as besoin.<br />
+              <span className="italic text-[#FAFAF7]/40">Rien de superflu.</span>
             </h2>
           </Reveal>
-          <Reveal delay={0.2}>
-            <div className="rounded-[24px] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+
+          {/* Bento Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[200px] md:auto-rows-[220px]">
+            {/* Encyclopédie — large */}
+            <Reveal className="col-span-2 row-span-2">
+              <div className="h-full rounded-[24px] p-8 flex flex-col justify-end relative overflow-hidden group"
+                style={{ background: 'linear-gradient(160deg, rgba(125,211,252,0.08) 0%, rgba(10,10,15,0.95) 60%)' }}>
+                <div className="absolute top-6 right-6 text-[11px] tracking-[0.2em] uppercase text-[#7DD3FC]/60">203 sujets</div>
+                <span className="text-3xl mb-3">&#9671;</span>
+                <h3 className="font-display text-[1.3rem] font-light text-[#FAFAF7] mb-2">L&apos;Encyclop&eacute;die</h3>
+                <p className="text-[12px] text-[#FAFAF7]/35 font-light leading-relaxed">
+                  De A &agrave; Z, chaque exp&eacute;rience &eacute;motionnelle d&eacute;cod&eacute;e.
+                  Protocoles guid&eacute;s : Comprendre &middot; Lib&eacute;rer &middot; Agir.
+                </p>
+              </div>
+            </Reveal>
+
+            {/* Shine TV */}
+            <Reveal delay={0.1}>
+              <div className="h-full rounded-[24px] p-6 flex flex-col justify-end"
+                style={{ background: 'linear-gradient(160deg, rgba(167,139,250,0.06) 0%, rgba(10,10,15,0.95) 60%)' }}>
+                <span className="text-xl mb-2">&#9654;</span>
+                <h3 className="text-[14px] font-medium text-[#FAFAF7] mb-1">Shine TV</h3>
+                <p className="text-[11px] text-[#FAFAF7]/30 font-light">Vid&eacute;os guid&eacute;es</p>
+              </div>
+            </Reveal>
+
+            {/* Audible */}
+            <Reveal delay={0.15}>
+              <div className="h-full rounded-[24px] p-6 flex flex-col justify-end"
+                style={{ background: 'linear-gradient(160deg, rgba(251,207,232,0.06) 0%, rgba(10,10,15,0.95) 60%)' }}>
+                <span className="text-xl mb-2">&#9835;</span>
+                <h3 className="text-[14px] font-medium text-[#FAFAF7] mb-1">Shine Audible</h3>
+                <p className="text-[11px] text-[#FAFAF7]/30 font-light">M&eacute;ditations &middot; Gratuit</p>
+              </div>
+            </Reveal>
+
+            {/* Librairie */}
+            <Reveal delay={0.2}>
+              <div className="h-full rounded-[24px] p-6 flex flex-col justify-end"
+                style={{ background: 'linear-gradient(160deg, rgba(212,175,127,0.06) 0%, rgba(10,10,15,0.95) 60%)' }}>
+                <span className="text-xl mb-2">&#9733;</span>
+                <h3 className="text-[14px] font-medium text-[#FAFAF7] mb-1">Librairie</h3>
+                <p className="text-[11px] text-[#FAFAF7]/30 font-light">eBooks &amp; guides</p>
+              </div>
+            </Reveal>
+
+            {/* Communauté — wide */}
+            <Reveal delay={0.25} className="col-span-2 md:col-span-1">
+              <div className="h-full rounded-[24px] overflow-hidden relative group">
+                <img src={COMMUNTE} alt="Communauté" className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0F] via-transparent to-transparent" />
+                <div className="absolute bottom-6 left-6">
+                  <h3 className="text-[14px] font-medium text-[#FAFAF7] mb-1">Feu de Camp</h3>
+                  <p className="text-[11px] text-[#FAFAF7]/30 font-light">Communaut&eacute; &middot; Gratuit</p>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+
+          {/* Mockup */}
+          <Reveal delay={0.3}>
+            <div className="mt-20 rounded-[24px] overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.5)]">
               <img src={MOCKUP} alt="SOS Shine — Application" className="w-full" />
             </div>
           </Reveal>
         </div>
       </section>
 
-      {/* ═══ CE QUE VOUS RECEVEZ ═══ */}
-      <section className="py-28 md:py-40 border-t border-[rgba(184,164,114,0.04)]">
+      {/* ═══════════════════════════════════════════
+          ACTE 6 — LA PREUVE (Témoignages)
+      ═══════════════════════════════════════════ */}
+      <section className="py-32 md:py-44 border-t border-[#FAFAF7]/[0.03]">
         <div className="max-w-5xl mx-auto px-6 md:px-10">
           <Reveal>
-            <p className="text-[10px] tracking-[0.3em] uppercase font-medium text-[#6B6560] mb-8 text-center">
-              Tout est inclus
+            <p className="text-[10px] tracking-[0.3em] uppercase font-medium text-[#FAFAF7]/25 mb-6 text-center">
+              T&eacute;moignages v&eacute;rifi&eacute;s
             </p>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <h2 className="font-display text-[1.8rem] sm:text-[2.5rem] font-light leading-[1.1] tracking-[-0.02em] text-center mb-16 md:mb-20">
-              Ce que vous recevez<br />d&egrave;s le premier jour.
+            <h2 className="font-display text-[2rem] sm:text-[2.8rem] font-light leading-[1.06] tracking-[-0.03em] text-center mb-20">
+              Elles ont travers&eacute;.<br />
+              <span className="italic text-[#FAFAF7]/40">Elles t&eacute;moignent.</span>
             </h2>
           </Reveal>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="columns-1 md:columns-2 gap-5 space-y-5">
             {[
-              { icon: '📖', title: "L'Encyclopédie", desc: "200+ protocoles de déconditionnement classés par expérience de vie. De A à Z." },
-              { icon: '🎬', title: 'Shine TV', desc: "Protocoles vidéo guidés par Julia. Comprendre, libérer, agir — en image." },
-              { icon: '🎧', title: 'Shine Audible', desc: "Méditations, respirations, guidances audio. Pour les moments où vous avez juste besoin d'écouter." },
-              { icon: '📚', title: 'Shine Librairie', desc: "eBooks et guides écrits par Julia. Votre bibliothèque de transformation." },
-              { icon: '🔥', title: 'Communauté', desc: "Le Feu de Camp — un espace anonyme, bienveillant, sans jugement. Vous n'êtes plus seul(e).", featured: true },
-              { icon: '📅', title: 'Événements live', desc: "Lives hebdomadaires avec Julia, soins collectifs mensuels, ateliers thématiques." },
-            ].map((item, i) => (
-              <Reveal key={item.title} delay={i * 0.08}>
-                <div className="p-7 rounded-[20px] bg-[#0D1018] border border-[rgba(184,164,114,0.06)] hover:border-[rgba(184,164,114,0.15)] transition-all duration-500 h-full group">
-                  <span className="text-2xl block mb-5 group-hover:scale-110 transition-transform duration-500">{item.icon}</span>
-                  <h3 className="text-[15px] font-medium text-[#F5F0E8] mb-3">{item.title}</h3>
-                  <p className="text-[13px] text-[#9B9590] leading-[1.7] font-light">{item.desc}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ JULIA ═══ */}
-      <section className="py-28 md:py-40 border-t border-[rgba(184,164,114,0.04)]">
-        <div className="max-w-4xl mx-auto px-6 md:px-10">
-          <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16">
-            <Reveal className="shrink-0">
-              <div className="w-48 h-48 md:w-56 md:h-56 rounded-full overflow-hidden border-2 border-[rgba(184,164,114,0.1)]">
-                <img src="/images/julia.jpeg" alt="Julia Laureau" className="w-full h-full object-cover" />
-              </div>
-            </Reveal>
-            <Reveal delay={0.15}>
-              <div>
-                <p className="text-[10px] tracking-[0.3em] uppercase font-medium text-[#6B6560] mb-4">
-                  Fondatrice
-                </p>
-                <h2 className="font-display text-[1.8rem] sm:text-[2.2rem] font-light leading-[1.15] mb-6">
-                  Julia Laureau
-                </h2>
-                <p className="text-[15px] text-[#9B9590] leading-[1.8] font-light mb-6">
-                  Auteure du livre &laquo;&nbsp;Le D&eacute;conditionnement&nbsp;&raquo;,
-                  Julia accompagne depuis des ann&eacute;es des personnes qui r&eacute;p&egrave;tent
-                  les m&ecirc;mes sch&eacute;mas sans comprendre pourquoi.
-                  SOS Shine est n&eacute; de cette exp&eacute;rience : rendre accessible
-                  &agrave; tous ce qui change vraiment une vie.
-                </p>
-                <p className="text-[14px] text-[#B8A472] font-light italic">
-                  &laquo;&nbsp;On ne comprend vraiment quelqu&apos;un que quand on est pass&eacute; par l&agrave;.&nbsp;&raquo;
-                </p>
-              </div>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ COMMUNAUTÉ — Feu de Camp ═══ */}
-      <section className="py-28 md:py-40 border-t border-[rgba(184,164,114,0.04)]">
-        <div className="max-w-6xl mx-auto px-6 md:px-10">
-          <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16">
-            <Reveal className="w-full md:w-3/5">
-              <div className="aspect-[16/10] rounded-[24px] overflow-hidden">
-                <img src={COMMUNTE} alt="Le Feu de Camp — Communauté SOS Shine" className="w-full h-full object-cover" />
-              </div>
-            </Reveal>
-            <Reveal delay={0.15} className="w-full md:w-2/5">
-              <p className="text-[10px] tracking-[0.3em] uppercase font-medium text-[#6B6560] mb-4">
-                Le Feu de Camp
-              </p>
-              <h2 className="font-display text-[1.8rem] sm:text-[2.2rem] font-light leading-[1.15] mb-6">
-                Vous n&apos;&ecirc;tes<br />plus seul(e).
-              </h2>
-              <p className="text-[15px] text-[#9B9590] leading-[1.8] font-light mb-6">
-                Un espace anonyme, bienveillant, sans jugement.
-                Des personnes qui traversent les m&ecirc;mes sch&eacute;mas que vous.
-                Des conversations qui gu&eacute;rissent autant que les protocoles.
-              </p>
-              <Link href="/signup"
-                className="inline-flex px-6 py-3 rounded-full text-[13px] font-medium border border-[rgba(184,164,114,0.15)] text-[#9B9590] hover:border-[rgba(184,164,114,0.3)] hover:text-[#F5F0E8] transition-all duration-500"
-              >
-                Rejoindre la communaut&eacute;
-              </Link>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ TICKER 2 ═══ */}
-      <TickerBand items={[
-        '200+ protocoles',
-        '7 jours gratuits',
-        'Sans engagement',
-        'Accessible 24/7',
-        'Communauté bienveillante',
-        'Contenu exclusif',
-      ]} />
-
-      {/* ═══ PRICING ═══ */}
-      <section className="py-28 md:py-40">
-        <div className="max-w-5xl mx-auto px-6 md:px-10">
-          <Reveal>
-            <p className="text-[10px] tracking-[0.3em] uppercase font-medium text-[#6B6560] mb-8 text-center">
-              L&apos;offre
-            </p>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <h2 className="font-display text-[1.8rem] sm:text-[2.5rem] font-light leading-[1.1] tracking-[-0.02em] text-center mb-16">
-              Un prix. Tout inclus.
-            </h2>
-          </Reveal>
-
-          <div className="grid md:grid-cols-3 gap-5">
-            {/* Gratuit */}
-            <Reveal delay={0.1}>
-              <div className="p-7 rounded-[24px] bg-[#0D1018] border border-[rgba(184,164,114,0.06)] h-full flex flex-col justify-between">
-                <div>
-                  <p className="text-[11px] tracking-[0.2em] uppercase text-[#9B9590] mb-4 text-center">Gratuit</p>
-                  <div className="flex items-baseline justify-center gap-1 mb-2">
-                    <span className="font-display text-[2.5rem] font-light text-[#F5F0E8]">0</span>
-                    <span className="text-[15px] text-[#6B6560]">&euro;</span>
-                  </div>
-                  <p className="text-[12px] text-[#6B6560] mb-8 text-center">Pour toujours</p>
-
-                  <ul className="space-y-3 mb-8">
-                    {[
-                      'Test Signature Émotionnelle',
-                      'Shine Audible — Toutes les méditations',
-                      'Communauté & Feu de Camp',
-                      'Encyclopédie (aperçu)',
-                    ].map(item => (
-                      <li key={item} className="flex items-start gap-3 text-[13px] text-[#9B9590] font-light">
-                        <span className="text-[#6BCFA0] mt-0.5 shrink-0">&#10003;</span>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <Link href="/signup"
-                  className="block w-full py-3.5 rounded-full text-[13px] font-medium border border-[rgba(184,164,114,0.15)] text-[#9B9590] hover:border-[rgba(184,164,114,0.3)] hover:text-[#F5F0E8] transition-all duration-500 text-center"
-                >
-                  Cr&eacute;er mon compte
-                </Link>
-              </div>
-            </Reveal>
-
-            {/* Essentielle */}
-            <Reveal delay={0.2}>
-              <div className="p-7 rounded-[24px] bg-[#0D1018] border border-[rgba(184,164,114,0.06)] h-full flex flex-col justify-between">
-                <div>
-                  <p className="text-[11px] tracking-[0.2em] uppercase text-[#9B9590] mb-4 text-center">Essentielle</p>
-                  <div className="flex items-baseline justify-center gap-1 mb-2">
-                    <span className="font-display text-[2.5rem] font-light text-[#F5F0E8]">9,90</span>
-                    <span className="text-[15px] text-[#6B6560]">&euro;/mois</span>
-                  </div>
-                  <p className="text-[12px] text-[#6B6560] mb-8 text-center">Acc&egrave;s imm&eacute;diat</p>
-
-                  <ul className="space-y-3 mb-8">
-                    {[
-                      'Tout le gratuit inclus',
-                      'Encyclopédie complète (200+ protocoles)',
-                      'Shine TV — Vidéos guidées',
-                      'Shine Librairie — eBooks',
-                      'Événements live hebdomadaires',
-                    ].map(item => (
-                      <li key={item} className="flex items-start gap-3 text-[13px] text-[#9B9590] font-light">
-                        <span className="text-[#B8A472] mt-0.5 shrink-0">&#10003;</span>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <Link href="/rejoindre"
-                  className="block w-full py-3.5 rounded-full text-[13px] font-medium border border-[rgba(184,164,114,0.15)] text-[#9B9590] hover:border-[rgba(184,164,114,0.3)] hover:text-[#F5F0E8] transition-all duration-500 text-center"
-                >
-                  Choisir Essentielle
-                </Link>
-              </div>
-            </Reveal>
-
-            {/* Sérénité */}
-            <Reveal delay={0.3}>
-              <div className="p-7 rounded-[24px] bg-[#0D1018] border border-[rgba(184,164,114,0.15)] relative overflow-hidden h-full flex flex-col justify-between">
-                <div className="absolute top-0 left-0 right-0 h-px bg-[linear-gradient(90deg,transparent,rgba(184,164,114,0.3),transparent)]" />
-                <div>
-                  <p className="text-[11px] tracking-[0.2em] uppercase text-[#B8A472] mb-4 text-center">S&eacute;r&eacute;nit&eacute;</p>
-                  <div className="flex items-baseline justify-center gap-2 mb-1">
-                    <span className="text-[14px] text-[#6B6560] line-through">49,90&euro;</span>
-                    <span className="font-display text-[2.5rem] font-light text-[#F5F0E8]">29,90</span>
-                    <span className="text-[15px] text-[#6B6560]">&euro;/mois</span>
-                  </div>
-                  <p className="text-[12px] text-[#B8A472] mb-8 text-center">7 jours <strong>GRATUIT</strong> &middot; code SHINE2026</p>
-
-                  <ul className="space-y-3 mb-8">
-                    {[
-                      'Tout Essentielle inclus',
-                      'Accès prioritaire nouveaux protocoles',
-                      'Sessions de groupe avec Julia',
-                      'Soins collectifs mensuels',
-                      'Parcours personnalisé Signature',
-                      'Support prioritaire',
-                    ].map(item => (
-                      <li key={item} className="flex items-start gap-3 text-[13px] text-[#9B9590] font-light">
-                        <span className="text-[#B8A472] mt-0.5 shrink-0">&#10003;</span>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <Link href="/rejoindre"
-                  className="block w-full py-3.5 rounded-full text-[13px] font-medium bg-[#B8A472] text-[#08090A] hover:bg-[#C4B080] hover:shadow-[0_0_30px_rgba(184,164,114,0.1)] transition-all duration-500 text-center"
-                >
-                  Essayer 7 jours GRATUIT
-                </Link>
-              </div>
-            </Reveal>
-          </div>
-
-          <Reveal delay={0.35}>
-            <p className="text-center text-[12px] text-[#6B6560] mt-8">
-              Sans engagement &middot; Annulable &agrave; tout instant &middot; Paiement s&eacute;curis&eacute;
-            </p>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ═══ FAQ ═══ */}
-      <section className="py-28 md:py-40 border-t border-[rgba(184,164,114,0.04)]">
-        <div className="max-w-2xl mx-auto px-6 md:px-10">
-          <Reveal>
-            <h2 className="font-display text-[1.8rem] sm:text-[2.5rem] font-light leading-[1.1] text-center mb-16">
-              Questions fr&eacute;quentes
-            </h2>
-          </Reveal>
-
-          <div className="space-y-6">
-            {[
-              { q: "Est-ce que SOS Shine remplace un thérapeute ?", a: "Non. SOS Shine est un complément. Nous ne posons aucun diagnostic. Nous vous aidons à comprendre vos schémas et à agir dessus au quotidien." },
-              { q: "Combien de temps faut-il pour voir des résultats ?", a: "La plupart des membres rapportent un déclic dès les 2 premières semaines. Les transformations profondes prennent 2 à 3 mois de pratique régulière." },
-              { q: "Je peux annuler quand je veux ?", a: "Oui. Sans engagement, sans justification. Si on doit vous retenir par un contrat, c'est qu'on n'a pas fait notre travail." },
-              { q: "C'est quoi la Signature Émotionnelle ?", a: "Un test gratuit de 15 questions qui révèle votre schéma émotionnel dominant — celui qui pilote vos réactions sans que vous le sachiez. C'est le point de départ." },
-            ].map((item, i) => (
+              { text: "J'ai compris en 3 semaines ce que 4 ans de thérapie n'avaient pas touché. Le schéma était là, sous mes yeux, depuis toujours.", name: 'Camille', detail: '34 ans · Lyon · 3 mois de pratique' },
+              { text: "La première fois que j'ai fait le protocole de respiration ventrale, j'ai pleuré pendant 20 minutes. Pas de tristesse. De libération.", name: 'Sophie', detail: '41 ans · Paris · 6 mois de pratique' },
+              { text: "Mon couple a changé. Pas parce que lui a changé. Parce que j'ai arrêté de rejouer le même film.", name: 'Nadia', detail: '29 ans · Marseille · 2 mois de pratique' },
+              { text: "Je recommençais tout, tout le temps. Les relations, les jobs, les amitiés. Le même schéma. Maintenant je le vois venir.", name: 'Marie', detail: '38 ans · Bordeaux · 4 mois de pratique' },
+              { text: "Le Feu de Camp m'a sauvée un dimanche soir à 23h. Quelqu'un a répondu. Quelqu'un comprenait.", name: 'Léa', detail: '26 ans · Nantes · 1 mois de pratique' },
+            ].map((t, i) => (
               <Reveal key={i} delay={i * 0.08}>
-                <div className="p-6 rounded-[20px] bg-[#0D1018] border border-[rgba(184,164,114,0.06)]">
-                  <h3 className="text-[15px] font-medium text-[#F5F0E8] mb-3">{item.q}</h3>
-                  <p className="text-[13px] text-[#9B9590] leading-[1.7] font-light">{item.a}</p>
+                <div
+                  className="break-inside-avoid p-6 rounded-[20px] transition-all duration-500 hover:scale-[1.02] group"
+                  style={{
+                    background: 'rgba(250,250,247,0.02)',
+                    border: '1px solid rgba(250,250,247,0.04)',
+                    backdropFilter: 'blur(20px)',
+                  }}
+                >
+                  <p className="text-[14px] text-[#FAFAF7]/60 leading-[1.8] font-light italic mb-5">
+                    &ldquo;{t.text}&rdquo;
+                  </p>
+                  <div>
+                    <p className="text-[13px] text-[#FAFAF7] font-medium">{t.name}</p>
+                    <p className="text-[11px] text-[#FAFAF7]/25 mt-0.5">{t.detail}</p>
+                  </div>
                 </div>
               </Reveal>
             ))}
@@ -535,50 +339,34 @@ export default function LandingJulia() {
         </div>
       </section>
 
-      {/* ═══ CTA FINAL ═══ */}
-      <section className="py-28 md:py-40 border-t border-[rgba(184,164,114,0.04)]">
-        <div className="max-w-3xl mx-auto px-6 md:px-10 text-center">
+      {/* ═══════════════════════════════════════════
+          ACTE 7 — LE CHOIX (Pricing)
+      ═══════════════════════════════════════════ */}
+      <PricingMorph />
+
+      {/* ═══════════════════════════════════════════
+          OUTRO — Footer
+      ═══════════════════════════════════════════ */}
+      <footer className="py-20 border-t border-[#FAFAF7]/[0.03]">
+        <div className="max-w-4xl mx-auto px-6 md:px-10 text-center">
           <Reveal>
-            <h2 className="font-display text-[1.8rem] sm:text-[2.5rem] md:text-[3rem] font-light leading-[1.1] tracking-[-0.02em] mb-6">
-              Vous m&eacute;ritez de comprendre<br />
-              <span className="text-[#B8A472]">ce qui vous arrive.</span>
-            </h2>
+            <img src="/images/logo-shine.png" alt="SOS Shine" className="h-10 mx-auto mb-8 object-contain opacity-30" />
           </Reveal>
           <Reveal delay={0.1}>
-            <p className="text-[15px] text-[#9B9590] leading-[1.7] font-light max-w-lg mx-auto mb-12">
-              Commencez par d&eacute;couvrir votre Signature &Eacute;motionnelle.
-              C&apos;est gratuit, &ccedil;a prend 5 minutes, et &ccedil;a change tout.
+            <p className="font-display text-[1.2rem] italic text-[#FAFAF7]/20 font-light mb-12">
+              Julia &middot; William &middot; Thomas
             </p>
           </Reveal>
           <Reveal delay={0.2}>
-            <Link href="/signature-emotionnelle"
-              className="inline-flex px-10 py-4 rounded-full text-[14px] font-medium bg-[#B8A472] text-[#08090A] hover:bg-[#C4B080] hover:shadow-[0_0_40px_rgba(184,164,114,0.12)] transition-all duration-500 active:scale-[0.98]"
-            >
-              Faire mon test gratuit
-            </Link>
+            <div className="flex flex-wrap justify-center gap-8 text-[12px] text-[#FAFAF7]/15">
+              <Link href="/mentions-legales" className="hover:text-[#FAFAF7]/40 transition-colors">Mentions l&eacute;gales</Link>
+              <Link href="/cgv" className="hover:text-[#FAFAF7]/40 transition-colors">CGV</Link>
+              <Link href="/confidentialite" className="hover:text-[#FAFAF7]/40 transition-colors">Confidentialit&eacute;</Link>
+              <Link href="/contact" className="hover:text-[#FAFAF7]/40 transition-colors">Contact</Link>
+            </div>
           </Reveal>
-        </div>
-      </section>
-
-      {/* ═══ FOOTER ═══ */}
-      <footer className="py-16 border-t border-[rgba(184,164,114,0.04)]">
-        <div className="max-w-5xl mx-auto px-6 md:px-10">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="text-center md:text-left">
-              <img src="/images/logo-shine.png" alt="SOS Shine" className="h-10 mx-auto md:mx-0 mb-3 object-contain opacity-60" />
-              <p className="text-[12px] text-[#6B6560]">
-                La premi&egrave;re encyclop&eacute;die mondiale<br />du bien-&ecirc;tre &eacute;motionnel.
-              </p>
-            </div>
-            <div className="flex flex-wrap justify-center gap-6 text-[12px] text-[#6B6560]">
-              <Link href="/mentions-legales" className="hover:text-[#9B9590] transition-colors">Mentions l&eacute;gales</Link>
-              <Link href="/cgv" className="hover:text-[#9B9590] transition-colors">CGV</Link>
-              <Link href="/confidentialite" className="hover:text-[#9B9590] transition-colors">Confidentialit&eacute;</Link>
-              <Link href="/contact" className="hover:text-[#9B9590] transition-colors">Contact</Link>
-            </div>
-          </div>
-          <p className="text-center text-[11px] text-[#3D3A36] mt-10">
-            &copy; {new Date().getFullYear()} SOS Shine&reg;. Tous droits r&eacute;serv&eacute;s.
+          <p className="text-[10px] text-[#FAFAF7]/8 mt-10">
+            &copy; {new Date().getFullYear()} SOS Shine&reg;
           </p>
         </div>
       </footer>

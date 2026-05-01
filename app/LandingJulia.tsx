@@ -382,7 +382,7 @@ export default function LandingJulia() {
 
       {/* ═══ PRICING ═══ */}
       <section className="py-28 md:py-40">
-        <div className="max-w-4xl mx-auto px-6 md:px-10">
+        <div className="max-w-5xl mx-auto px-6 md:px-10">
           <Reveal>
             <p className="text-[10px] tracking-[0.3em] uppercase font-medium text-[#6B6560] mb-8 text-center">
               L&apos;offre
@@ -394,9 +394,43 @@ export default function LandingJulia() {
             </h2>
           </Reveal>
 
-          <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-            <Reveal delay={0.15}>
-              <div className="p-8 rounded-[24px] bg-[#0D1018] border border-[rgba(184,164,114,0.06)] h-full flex flex-col justify-between">
+          <div className="grid md:grid-cols-3 gap-5">
+            {/* Gratuit */}
+            <Reveal delay={0.1}>
+              <div className="p-7 rounded-[24px] bg-[#0D1018] border border-[rgba(184,164,114,0.06)] h-full flex flex-col justify-between">
+                <div>
+                  <p className="text-[11px] tracking-[0.2em] uppercase text-[#9B9590] mb-4 text-center">Gratuit</p>
+                  <div className="flex items-baseline justify-center gap-1 mb-2">
+                    <span className="font-display text-[2.5rem] font-light text-[#F5F0E8]">0</span>
+                    <span className="text-[15px] text-[#6B6560]">&euro;</span>
+                  </div>
+                  <p className="text-[12px] text-[#6B6560] mb-8 text-center">Pour toujours</p>
+
+                  <ul className="space-y-3 mb-8">
+                    {[
+                      'Test Signature Émotionnelle',
+                      'Shine Audible — Toutes les méditations',
+                      'Communauté & Feu de Camp',
+                      'Encyclopédie (aperçu)',
+                    ].map(item => (
+                      <li key={item} className="flex items-start gap-3 text-[13px] text-[#9B9590] font-light">
+                        <span className="text-[#6BCFA0] mt-0.5 shrink-0">&#10003;</span>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <Link href="/signup"
+                  className="block w-full py-3.5 rounded-full text-[13px] font-medium border border-[rgba(184,164,114,0.15)] text-[#9B9590] hover:border-[rgba(184,164,114,0.3)] hover:text-[#F5F0E8] transition-all duration-500 text-center"
+                >
+                  Cr&eacute;er mon compte
+                </Link>
+              </div>
+            </Reveal>
+
+            {/* Essentielle */}
+            <Reveal delay={0.2}>
+              <div className="p-7 rounded-[24px] bg-[#0D1018] border border-[rgba(184,164,114,0.06)] h-full flex flex-col justify-between">
                 <div>
                   <p className="text-[11px] tracking-[0.2em] uppercase text-[#9B9590] mb-4 text-center">Essentielle</p>
                   <div className="flex items-baseline justify-center gap-1 mb-2">
@@ -407,11 +441,10 @@ export default function LandingJulia() {
 
                   <ul className="space-y-3 mb-8">
                     {[
+                      'Tout le gratuit inclus',
                       'Encyclopédie complète (200+ protocoles)',
                       'Shine TV — Vidéos guidées',
-                      'Shine Audible — Méditations audio',
                       'Shine Librairie — eBooks',
-                      'Communauté & Feu de Camp',
                       'Événements live hebdomadaires',
                     ].map(item => (
                       <li key={item} className="flex items-start gap-3 text-[13px] text-[#9B9590] font-light">
@@ -429,17 +462,18 @@ export default function LandingJulia() {
               </div>
             </Reveal>
 
-            <Reveal delay={0.25}>
-              <div className="p-8 rounded-[24px] bg-[#0D1018] border border-[rgba(184,164,114,0.15)] relative overflow-hidden h-full flex flex-col justify-between">
+            {/* Sérénité */}
+            <Reveal delay={0.3}>
+              <div className="p-7 rounded-[24px] bg-[#0D1018] border border-[rgba(184,164,114,0.15)] relative overflow-hidden h-full flex flex-col justify-between">
                 <div className="absolute top-0 left-0 right-0 h-px bg-[linear-gradient(90deg,transparent,rgba(184,164,114,0.3),transparent)]" />
                 <div>
                   <p className="text-[11px] tracking-[0.2em] uppercase text-[#B8A472] mb-4 text-center">S&eacute;r&eacute;nit&eacute;</p>
                   <div className="flex items-baseline justify-center gap-2 mb-1">
-                    <span className="text-[16px] text-[#6B6560] line-through">49,90&euro;</span>
+                    <span className="text-[14px] text-[#6B6560] line-through">49,90&euro;</span>
                     <span className="font-display text-[2.5rem] font-light text-[#F5F0E8]">29,90</span>
                     <span className="text-[15px] text-[#6B6560]">&euro;/mois</span>
                   </div>
-                  <p className="text-[12px] text-[#B8A472] mb-8 text-center">7 jours d&apos;essai <strong>GRATUIT</strong> &middot; code SHINE2026</p>
+                  <p className="text-[12px] text-[#B8A472] mb-8 text-center">7 jours <strong>GRATUIT</strong> &middot; code SHINE2026</p>
 
                   <ul className="space-y-3 mb-8">
                     {[
@@ -447,7 +481,7 @@ export default function LandingJulia() {
                       'Accès prioritaire nouveaux protocoles',
                       'Sessions de groupe avec Julia',
                       'Soins collectifs mensuels',
-                      'Parcours personnalisé selon votre Signature',
+                      'Parcours personnalisé Signature',
                       'Support prioritaire',
                     ].map(item => (
                       <li key={item} className="flex items-start gap-3 text-[13px] text-[#9B9590] font-light">
@@ -460,24 +494,14 @@ export default function LandingJulia() {
                 <Link href="/rejoindre"
                   className="block w-full py-3.5 rounded-full text-[13px] font-medium bg-[#B8A472] text-[#08090A] hover:bg-[#C4B080] hover:shadow-[0_0_30px_rgba(184,164,114,0.1)] transition-all duration-500 text-center"
                 >
-                  Essayer GRATUITEMENT 7 jours
+                  Essayer 7 jours GRATUIT
                 </Link>
               </div>
             </Reveal>
           </div>
 
-          <Reveal delay={0.3}>
-            <div className="text-center mt-10">
-              <Link href="/signature-emotionnelle"
-                className="inline-flex items-center gap-2 text-[13px] text-[#B8A472] hover:text-[#C4B080] transition-colors duration-300"
-              >
-                Ou commencez par le test gratuit &rarr;
-              </Link>
-            </div>
-          </Reveal>
-
           <Reveal delay={0.35}>
-            <p className="text-center text-[12px] text-[#6B6560] mt-6">
+            <p className="text-center text-[12px] text-[#6B6560] mt-8">
               Sans engagement &middot; Annulable &agrave; tout instant &middot; Paiement s&eacute;curis&eacute;
             </p>
           </Reveal>

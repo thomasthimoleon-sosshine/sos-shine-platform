@@ -135,7 +135,7 @@ export async function POST(request: NextRequest) {
 <tr><td align="center" style="padding:40px 16px;">
 <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
 <tr><td align="center" style="padding-bottom:32px;">
-<span style="font-size:28px;font-weight:300;letter-spacing:0.15em;color:#C9A961;font-family:Georgia,serif;">SOS SHINE<sup style="font-size:14px;">®</sup></span>
+<img src="https://sosshine.com/images/logo-shine.png" alt="SOS Shine" width="140" style="display:block;margin:0 auto;" />
 </td></tr>
 <tr><td style="background:#0A0A0A;border:1px solid #1a1a1a;border-radius:16px;padding:40px 32px;">
 <h2 style="color:#C9A961;margin:0 0 16px;">Test réussi !</h2>

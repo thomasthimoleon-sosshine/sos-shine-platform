@@ -38,9 +38,7 @@ export function wrapInEmailLayout(bodyContent: string): string {
           <!-- Header -->
           <tr>
             <td align="center" style="padding-bottom:32px;">
-              <span style="font-size:28px;font-weight:300;letter-spacing:0.15em;color:#C9A961;font-family:Georgia,'Times New Roman',serif;">
-                SOS SHINE<span style="font-size:14px;vertical-align:super;">®</span>
-              </span>
+              <img src="https://sosshine.com/images/logo-shine.png" alt="SOS Shine" width="140" style="display:block;margin:0 auto;" />
             </td>
           </tr>
           <!-- Content -->

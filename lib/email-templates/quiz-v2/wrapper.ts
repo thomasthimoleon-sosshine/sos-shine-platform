@@ -47,16 +47,7 @@ export function wrapEmail(content: string, vars: { email?: string; trackingId?: 
 
 <!-- Logo -->
 <tr><td align="center" style="padding:0 0 32px 0;">
-<table role="presentation" cellspacing="0" cellpadding="0">
-<tr>
-<td style="text-align:center;vertical-align:middle;">
-<img src="https://sosshine.com/images/logo-shine.png" alt="SOS Shine" width="120" style="display:block;margin:0 auto;" />
-</td>
-<td style="padding-left:12px;">
-<span style="font-family:${SERIF};font-size:18px;color:${BRAND};letter-spacing:1px;">SOS Shine</span>
-</td>
-</tr>
-</table>
+<img src="https://sosshine.com/images/logo-shine.png" alt="SOS Shine" width="140" style="display:block;margin:0 auto;" />
 </td></tr>
 
 <!-- Content card -->

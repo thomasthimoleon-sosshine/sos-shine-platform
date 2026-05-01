@@ -2,18 +2,15 @@
 
 import { useRef, Suspense } from 'react'
 import Link from 'next/link'
-import dynamic from 'next/dynamic'
 import { motion, useScroll, useTransform, useInView } from 'framer-motion'
-import TextReveal from '@/components/landing/TextReveal'
 import MagneticButton from '@/components/landing/MagneticButton'
-import ScrollIndicator from '@/components/landing/ScrollIndicator'
-import PainScroll from '@/components/landing/PainScroll'
-import StickyMechanism from '@/components/landing/StickyMechanism'
 import PricingMorph from '@/components/landing/PricingMorph'
 
-const DiamondScene = dynamic(() => import('@/components/landing/DiamondScene'), { ssr: false })
-
 const IMG = 'https://krdfvggmfswbohuevzlb.supabase.co/storage/v1/object/public/uploads'
+const HERO     = `${IMG}/616ED53A-03A5-4368-9C3E-15655CE75A3A.png`
+const COMPREND = `${IMG}/AC966289-197D-4246-B77B-F5FB2139B4EC.png`
+const LIBERER  = `${IMG}/4075E759-EDBC-479B-B270-833CD22B3D2E.png`
+const AGIR     = `${IMG}/66DBE573-D7E0-4E9F-BD4D-9D4CEC07CAE1.png`
 const COMMUNTE = `${IMG}/D3025812-9AA8-42DE-B8C2-C034218A2EFA.png`
 const MOCKUP   = `${IMG}/8DC279D8-7E82-43EE-BC60-DFAE22AD31FA.png`
 
@@ -83,44 +80,50 @@ export default function LandingJulia() {
       </header>
 
       {/* ═══════════════════════════════════════════
-          ACTE 1 — LE HOOK (Hero)
+          ACTE 1 — LE HOOK (Hero avec image)
       ═══════════════════════════════════════════ */}
-      <motion.section ref={heroRef} className="relative h-[100vh] flex items-center justify-center" style={{ opacity: heroOpacity, scale: heroScale }}>
-        <Suspense fallback={null}>
-          <DiamondScene scrollProgress={0.5} />
-        </Suspense>
+      <motion.section ref={heroRef} className="relative min-h-[100vh] flex items-end" style={{ opacity: heroOpacity, scale: heroScale }}>
+        <div className="absolute inset-0">
+          <img src={HERO} alt="" className="w-full h-full object-cover object-[70%_center]" loading="eager" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0F] via-[#0A0A0F]/60 to-[#0A0A0F]/20" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0F]/70 to-transparent" />
+        </div>
 
-        <div className="relative z-10 text-center px-6 max-w-4xl">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5, duration: 1.5 }}
-          >
-            <h1 className="font-display text-[2rem] sm:text-[3rem] md:text-[4rem] lg:text-[5.5rem] font-light leading-[1.04] tracking-[-0.04em] mb-8">
-              <TextReveal text="Et si ce qui te fait" delay={0.6} />
-              <br />
-              <TextReveal text="souffrir était exactement" delay={0.9} />
-              <br />
-              <span className="italic">
-                <TextReveal text="ce qui doit briller ?" delay={1.2} />
-              </span>
-            </h1>
-          </motion.div>
-
+        <div className="relative z-10 max-w-5xl mx-auto px-6 md:px-10 w-full pb-16 md:pb-24">
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 2, duration: 1 }}
-            className="text-[14px] sm:text-[16px] text-[#FAFAF7]/35 font-light tracking-wide mb-12"
+            transition={{ delay: 0.3, duration: 1, ease }}
+            className="text-[10px] sm:text-[11px] tracking-[0.3em] uppercase font-medium text-[#D4AF7F] mb-6"
           >
-            D&eacute;conditionnement &eacute;motionnel guid&eacute;
+            D&eacute;conditionnement &eacute;motionnel
+          </motion.p>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.8, ease }}
+            className="font-display font-light text-[2rem] sm:text-[3rem] md:text-[4rem] lg:text-[5rem] leading-[1.04] tracking-[-0.04em] mb-8 max-w-3xl"
+          >
+            Et si ce qui te fait souffrir &eacute;tait exactement{' '}
+            <em className="italic text-[#FAFAF7]/60">ce qui doit briller&nbsp;?</em>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.8, ease }}
+            className="text-[15px] sm:text-[17px] text-[#FAFAF7]/45 leading-[1.7] max-w-lg font-light mb-10"
+          >
+            SOS Shine d&eacute;code les sch&eacute;mas &eacute;motionnels qui pilotent ta vie
+            et te donne les outils pour reprendre les commandes.
           </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 2.2, duration: 0.8, ease }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
+            transition={{ delay: 1.1, duration: 0.8, ease }}
+            className="flex flex-col sm:flex-row gap-4"
           >
             <MagneticButton href="/signature-emotionnelle">
               D&eacute;couvrir ma Signature
@@ -131,18 +134,109 @@ export default function LandingJulia() {
           </motion.div>
         </div>
 
-        <ScrollIndicator />
+        {/* Scroll indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2, duration: 1 }}
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        >
+          <motion.div
+            className="w-px h-10 bg-gradient-to-b from-[#FAFAF7]/20 to-transparent origin-top"
+            animate={{ scaleY: [0, 1, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease }}
+          />
+        </motion.div>
       </motion.section>
 
       {/* ═══════════════════════════════════════════
           ACTE 2 — LE MIROIR (Pain Recognition)
       ═══════════════════════════════════════════ */}
-      <PainScroll />
+      <section className="py-28 md:py-40">
+        <div className="max-w-3xl mx-auto px-6 md:px-10 space-y-20 md:space-y-28">
+          {[
+            "Tu souris. À l'intérieur, tu hurles.",
+            "Tu sais. Tu n'arrives pas à faire.",
+            "Tu donnes. Personne ne voit que tu meurs.",
+            "Tu contrôles. Parce que lâcher, c'est tomber.",
+            "Tu recommences. La même histoire. Le même mur.",
+          ].map((pain, i) => (
+            <Reveal key={i} delay={0.1}>
+              <p className="font-display text-[1.5rem] sm:text-[2rem] md:text-[2.8rem] font-light leading-[1.15] tracking-[-0.03em] italic text-center text-[#FAFAF7]/70">
+                {pain}
+              </p>
+            </Reveal>
+          ))}
+        </div>
+      </section>
 
       {/* ═══════════════════════════════════════════
-          ACTE 3 — LA RÉVÉLATION (Mécanisme)
+          ACTE 3 — LA RÉVÉLATION (3 étapes avec images)
       ═══════════════════════════════════════════ */}
-      <StickyMechanism />
+      <section className="py-28 md:py-40 border-t border-[#FAFAF7]/[0.03]">
+        <div className="max-w-6xl mx-auto px-6 md:px-10">
+          <Reveal>
+            <p className="text-[10px] tracking-[0.3em] uppercase font-medium text-[#FAFAF7]/25 mb-6 text-center">
+              Le parcours
+            </p>
+            <h2 className="font-display text-[1.8rem] sm:text-[2.5rem] md:text-[3rem] font-light leading-[1.06] tracking-[-0.03em] text-center mb-20 md:mb-28">
+              Tu ne te r&eacute;pareras pas.<br />
+              <span className="italic text-[#FAFAF7]/40">Tu te r&eacute;v&egrave;les.</span>
+            </h2>
+          </Reveal>
+
+          {/* Step 1 */}
+          <Reveal>
+            <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16 mb-20 md:mb-28">
+              <div className="w-full md:w-1/2 aspect-[4/3] rounded-[24px] overflow-hidden">
+                <img src={COMPREND} alt="Comprendre" className="w-full h-full object-cover" loading="lazy" />
+              </div>
+              <div className="w-full md:w-1/2">
+                <span className="block text-[11px] uppercase tracking-[0.3em] font-medium text-[#7DD3FC] mb-4">01</span>
+                <h3 className="font-display text-[1.5rem] sm:text-[2rem] font-light tracking-[-0.02em] text-[#FAFAF7] mb-4 leading-[1.15]">Comprendre</h3>
+                <p className="text-[15px] text-[#FAFAF7]/45 leading-[1.8] font-light">
+                  Identifier le sch&eacute;ma inconscient qui pilote tes r&eacute;actions. Pas de la th&eacute;orie.
+                  Une lecture pr&eacute;cise de ce qui se joue en toi — depuis toujours.
+                </p>
+              </div>
+            </div>
+          </Reveal>
+
+          {/* Step 2 */}
+          <Reveal>
+            <div className="flex flex-col md:flex-row-reverse items-center gap-10 md:gap-16 mb-20 md:mb-28">
+              <div className="w-full md:w-1/2 aspect-[4/3] rounded-[24px] overflow-hidden">
+                <img src={LIBERER} alt="Libérer" className="w-full h-full object-cover" loading="lazy" />
+              </div>
+              <div className="w-full md:w-1/2">
+                <span className="block text-[11px] uppercase tracking-[0.3em] font-medium text-[#A78BFA] mb-4">02</span>
+                <h3 className="font-display text-[1.5rem] sm:text-[2rem] font-light tracking-[-0.02em] text-[#FAFAF7] mb-4 leading-[1.15]">Lib&eacute;rer</h3>
+                <p className="text-[15px] text-[#FAFAF7]/45 leading-[1.8] font-light">
+                  D&eacute;charger l&apos;&eacute;motion stock&eacute;e dans le corps. Respiration ventrale,
+                  lib&eacute;ration somatique. Ce qui doit sortir sort.
+                </p>
+              </div>
+            </div>
+          </Reveal>
+
+          {/* Step 3 */}
+          <Reveal>
+            <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16">
+              <div className="w-full md:w-1/2 aspect-[4/3] rounded-[24px] overflow-hidden">
+                <img src={AGIR} alt="Agir" className="w-full h-full object-cover" loading="lazy" />
+              </div>
+              <div className="w-full md:w-1/2">
+                <span className="block text-[11px] uppercase tracking-[0.3em] font-medium text-[#FBCFE8] mb-4">03</span>
+                <h3 className="font-display text-[1.5rem] sm:text-[2rem] font-light tracking-[-0.02em] text-[#FAFAF7] mb-4 leading-[1.15]">Agir</h3>
+                <p className="text-[15px] text-[#FAFAF7]/45 leading-[1.8] font-light">
+                  Reprogrammer l&apos;automatisme. Miroir, ancrage, rituel du matin.
+                  Chaque jour, un nouveau r&eacute;flexe remplace l&apos;ancien.
+                </p>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
 
       {/* ═══════════════════════════════════════════
           ACTE 4 — LA TRINITÉ (Co-créateurs)

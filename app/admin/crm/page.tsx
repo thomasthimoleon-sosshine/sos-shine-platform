@@ -29,6 +29,15 @@ interface EmailEvent {
   created_at: string
 }
 
+interface Contact {
+  id: string
+  email: string
+  first_name: string | null
+  source: string
+  opted_out: boolean
+  created_at: string
+}
+
 interface Stats {
   totalContacts: number
   totalSent: number
@@ -57,6 +66,13 @@ export default function CRMPage() {
   const [editHtml, setEditHtml] = useState('')
   const [saving, setSaving] = useState(false)
   const [previewHtml, setPreviewHtml] = useState<string | null>(null)
+  const [tab, setTab] = useState<'sequences' | 'contacts'>('sequences')
+  const [contacts, setContacts] = useState<Contact[]>([])
+  const [contactsTotal, setContactsTotal] = useState(0)
+  const [contactsPage, setContactsPage] = useState(1)
+  const [contactsSearch, setContactsSearch] = useState('')
+  const [contactsSource, setContactsSource] = useState('all')
+  const [contactsLoading, setContactsLoading] = useState(false)
 
   const supabase = createClient()
 
@@ -156,6 +172,34 @@ export default function CRMPage() {
   const openRate = stats.totalSent > 0 ? Math.round((stats.totalOpened / stats.totalSent) * 100) : 0
   const clickRate = stats.totalSent > 0 ? Math.round((stats.totalClicked / stats.totalSent) * 100) : 0
 
+  const sourceLabels: Record<string, string> = {
+    all: 'Toutes les sources',
+    member: 'Membres inscrits',
+    signature_test: 'Quiz Signature',
+    waitlist: 'Liste d\'attente',
+    quiz_landing: 'Landing Quiz',
+    blog: 'Blog',
+  }
+
+  async function loadContacts(p = contactsPage, s = contactsSearch, src = contactsSource) {
+    setContactsLoading(true)
+    try {
+      const params = new URLSearchParams({ page: String(p) })
+      if (s) params.set('search', s)
+      if (src !== 'all') params.set('source', src)
+      const res = await fetch(`/api/crm/contacts?${params}`)
+      const data = await res.json()
+      setContacts(data.contacts || [])
+      setContactsTotal(data.total || 0)
+    } catch { /* */ }
+    setContactsLoading(false)
+  }
+
+  function switchToContacts() {
+    setTab('contacts')
+    if (contacts.length === 0) loadContacts()
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
@@ -177,6 +221,23 @@ export default function CRMPage() {
         </p>
       </div>
 
+      {/* ── Tabs ── */}
+      <div className="flex gap-1 p-1 rounded-[var(--radius-lg)] bg-[var(--surface-raised)] w-fit">
+        <button
+          onClick={() => setTab('sequences')}
+          className={`px-5 py-2.5 rounded-[var(--radius-md)] text-[13px] font-medium transition-all cursor-pointer ${tab === 'sequences' ? 'bg-[var(--brand-alpha-medium)] text-[var(--brand)]' : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'}`}
+        >
+          S&eacute;quences
+        </button>
+        <button
+          onClick={switchToContacts}
+          className={`px-5 py-2.5 rounded-[var(--radius-md)] text-[13px] font-medium transition-all cursor-pointer ${tab === 'contacts' ? 'bg-[var(--brand-alpha-medium)] text-[var(--brand)]' : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'}`}
+        >
+          Contacts ({stats.totalContacts})
+        </button>
+      </div>
+
+      {tab === 'sequences' && <>
       {/* ── Stats ── */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
@@ -404,6 +465,112 @@ export default function CRMPage() {
               ))}
             </div>
           </div>
+        </div>
+      )}
+
+      </>}
+
+      {/* ── ONGLET CONTACTS ── */}
+      {tab === 'contacts' && (
+        <div className="space-y-4">
+          {/* Search + filter */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex-1 flex gap-2">
+              <input
+                value={contactsSearch}
+                onChange={e => setContactsSearch(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && loadContacts(1, contactsSearch, contactsSource)}
+                placeholder="Rechercher par email ou pr&eacute;nom..."
+                className="flex-1 px-4 py-2.5 rounded-[var(--radius-lg)] text-sm bg-[var(--surface-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] outline-none focus:border-[var(--brand-alpha-strong)] transition-all placeholder:text-[var(--text-muted)]"
+              />
+              <button
+                onClick={() => loadContacts(1, contactsSearch, contactsSource)}
+                className="px-4 py-2.5 rounded-[var(--radius-lg)] text-sm bg-[var(--brand)] text-[var(--text-inverse)] cursor-pointer hover:bg-[var(--brand-light)] transition-all"
+              >
+                Chercher
+              </button>
+            </div>
+            <select
+              value={contactsSource}
+              onChange={e => { setContactsSource(e.target.value); setContactsPage(1); loadContacts(1, contactsSearch, e.target.value) }}
+              className="px-4 py-2.5 rounded-[var(--radius-lg)] text-sm bg-[var(--surface-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] outline-none cursor-pointer"
+            >
+              {Object.entries(sourceLabels).map(([k, v]) => (
+                <option key={k} value={k}>{v}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Total */}
+          <p className="text-[11px] text-[var(--text-muted)] uppercase tracking-wider">
+            {contactsTotal} contact{contactsTotal > 1 ? 's' : ''}
+          </p>
+
+          {/* List */}
+          {contactsLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="w-6 h-6 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
+            </div>
+          ) : contacts.length === 0 ? (
+            <div className="p-8 rounded-[var(--radius-xl)] bg-[var(--surface-raised)] border border-[var(--border-subtle)] text-center text-[var(--text-muted)]">
+              Aucun contact trouv&eacute;.
+            </div>
+          ) : (
+            <div className="rounded-[var(--radius-xl)] bg-[var(--surface-raised)] border border-[var(--border-subtle)] overflow-hidden">
+              <div className="divide-y divide-[var(--border-subtle)]">
+                {contacts.map(c => (
+                  <div key={c.id} className="flex items-center justify-between px-5 py-3.5 hover:bg-[var(--surface-card)] transition-colors">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-8 h-8 rounded-full bg-[var(--brand-alpha-weak)] text-[var(--brand)] flex items-center justify-center text-xs font-semibold shrink-0">
+                        {(c.first_name || c.email)[0].toUpperCase()}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm text-[var(--text-primary)] truncate">
+                          {c.first_name ? `${c.first_name} — ` : ''}{c.email}
+                        </p>
+                        <p className="text-[11px] text-[var(--text-muted)]">
+                          {new Date(c.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 shrink-0">
+                      <span className="px-2.5 py-1 rounded-full text-[10px] font-medium bg-[var(--surface-card)] text-[var(--text-secondary)]">
+                        {sourceLabels[c.source] || c.source}
+                      </span>
+                      {c.opted_out && (
+                        <span className="px-2.5 py-1 rounded-full text-[10px] font-medium bg-[var(--danger-alpha-weak)] text-[var(--danger)]">
+                          D&eacute;sinscrit
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Pagination */}
+          {Math.ceil(contactsTotal / 50) > 1 && (
+            <div className="flex items-center justify-center gap-2">
+              <button
+                onClick={() => { const p = contactsPage - 1; setContactsPage(p); loadContacts(p) }}
+                disabled={contactsPage <= 1}
+                className="px-3 py-1.5 rounded-[var(--radius-md)] text-sm text-[var(--text-secondary)] hover:bg-[var(--surface-card)] disabled:opacity-30 cursor-pointer transition-all"
+              >
+                &larr;
+              </button>
+              <span className="text-sm text-[var(--text-muted)]">
+                {contactsPage} / {Math.ceil(contactsTotal / 50)}
+              </span>
+              <button
+                onClick={() => { const p = contactsPage + 1; setContactsPage(p); loadContacts(p) }}
+                disabled={contactsPage >= Math.ceil(contactsTotal / 50)}
+                className="px-3 py-1.5 rounded-[var(--radius-md)] text-sm text-[var(--text-secondary)] hover:bg-[var(--surface-card)] disabled:opacity-30 cursor-pointer transition-all"
+              >
+                &rarr;
+              </button>
+            </div>
+          )}
         </div>
       )}
 

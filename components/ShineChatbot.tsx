@@ -221,23 +221,25 @@ export default function ShineChatbot() {
         )}
       </AnimatePresence>
 
-      {/* Petit onglet discret au lieu du gros bouton rond */}
+      {/* Point doré discret — remplace le robot blanc */}
       <motion.button
         onClick={() => setOpen(!open)}
-        className={`fixed right-4 z-[9998] cursor-pointer rounded-full w-10 h-10 flex items-center justify-center transition-all duration-300 ${miniPlayerActive ? 'bottom-[5rem]' : 'bottom-4'}`}
+        className={`fixed right-4 z-[9998] cursor-pointer rounded-full flex items-center justify-center transition-all duration-300 ${miniPlayerActive ? 'bottom-[5rem]' : 'bottom-4'} ${open ? 'w-10 h-10' : 'w-3 h-3'}`}
         style={{
-          border: '1.5px solid rgba(212, 175, 55, 0.4)',
-          boxShadow: '0 2px 12px rgba(0,0,0,0.4), 0 0 8px rgba(201,169,97,0.1)',
+          background: open ? 'rgba(10, 10, 10, 0.9)' : '#D4A857',
+          border: open ? '1px solid rgba(212, 168, 87, 0.3)' : 'none',
+          boxShadow: open 
+            ? '0 4px 20px rgba(0,0,0,0.5), 0 0 15px rgba(212,168,87,0.1)' 
+            : '0 0 10px rgba(212,168,87,0.4)',
         }}
-        whileHover={{ scale: 1.1 }}
+        whileHover={{ scale: open ? 1.05 : 1.5 }}
         whileTap={{ scale: 0.9 }}
       >
-        {open ? (
-          <div className="w-full h-full rounded-full flex items-center justify-center" style={{ background: 'rgba(212, 175, 55, 0.15)' }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--brand)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </div>
-        ) : (
-          <img src="/images/shine-avatar.jpeg" alt="Shine" className="w-full h-full rounded-full object-cover" />
+        {open && (
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D4A857" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
         )}
       </motion.button>
     </>

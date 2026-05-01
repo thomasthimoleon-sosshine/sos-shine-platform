@@ -167,7 +167,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
+    <html lang="fr" className="bg-[#0A0A0A]">
       <head>
         <script
           type="application/ld+json"

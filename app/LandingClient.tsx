@@ -193,6 +193,62 @@ function ScrollProgress() {
   return <motion.div className="scroll-progress" style={{ width }} />;
 }
 
+// Custom Gold Cursor (desktop only)
+function CustomCursor() {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    // Only enable on desktop with hover capability
+    const isDesktop = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (!isDesktop) return;
+
+    document.documentElement.classList.add('premium-cursor');
+    setIsVisible(true);
+
+    const onMouseMove = (e: MouseEvent) => {
+      setPosition({ x: e.clientX, y: e.clientY });
+    };
+
+    const onMouseEnter = () => setIsVisible(true);
+    const onMouseLeave = () => setIsVisible(false);
+
+    // Detect hoverable elements
+    const onMouseOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const isInteractive = target.closest('a, button, [role="button"], input, textarea, select, [data-hover]');
+      setIsHovering(!!isInteractive);
+    };
+
+    window.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseenter', onMouseEnter);
+    document.addEventListener('mouseleave', onMouseLeave);
+    document.addEventListener('mouseover', onMouseOver);
+
+    return () => {
+      document.documentElement.classList.remove('premium-cursor');
+      window.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseenter', onMouseEnter);
+      document.removeEventListener('mouseleave', onMouseLeave);
+      document.removeEventListener('mouseover', onMouseOver);
+    };
+  }, []);
+
+  if (!isVisible) return null;
+
+  return (
+    <div
+      className={`custom-cursor ${isHovering ? 'hovering' : ''}`}
+      style={{
+        left: position.x,
+        top: position.y,
+        opacity: isVisible ? 1 : 0,
+      }}
+    />
+  );
+}
+
 function FloatingOrbs() {
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
@@ -447,9 +503,9 @@ export default function LandingClient({ initialSections, initialPositions, initi
 
   // Default section order (matches hardcoded JSX order as fallback)
   const DEFAULT_ORDER: Record<string, number> = {
-    hero: 0, probleme: 1, histoire: 2, temoignages: 3, encyclopedie: 4,
-    steps: 5, communaute: 6, produit: 7, manifeste: 8, pricing: 9,
-    pour_qui: 10, cta_dark: 11,
+    hero: 0, probleme: 1, histoire: 2, julia_portrait: 3, temoignages: 4, encyclopedie: 5,
+    steps: 6, communaute: 7, produit: 8, manifeste: 9, pricing: 10,
+    pour_qui: 11, cta_dark: 12,
     landing_v2: 0,
     // Hidden sections
     stats: 50, signature_cta: 51, principe: 52, fondateurs: 53, transformation: 54,
@@ -553,29 +609,33 @@ export default function LandingClient({ initialSections, initialPositions, initi
   return (
     <main className="grain relative z-0 overflow-hidden" style={cssVars}>
       <ScrollProgress />
+      <CustomCursor />
       <SparklingDiamonds />
       <FloatingOrbs />
 
-      {/* ═══ FIXED HEADER — Le Club 10 style ═══ */}
+      {/* ═══ FIXED HEADER — Calm × Aesop Premium ═══ */}
       {headerVisible && (
           <header
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${headerScrolled ? 'py-3 bg-[#06070A]/80 backdrop-blur-2xl border-b border-[rgba(184,164,114,0.04)]' : 'py-5 md:py-6'}`}
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${headerScrolled ? 'py-3 bg-[#0A0A0A]/90 backdrop-blur-2xl border-b border-[rgba(212,168,87,0.06)]' : 'py-5 md:py-6'}`}
           >
             <div className="flex items-center justify-between max-w-7xl mx-auto px-5 md:px-10">
               <Link href="/" className="flex items-center gap-3">
-                <img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className={`transition-all duration-700 w-auto object-contain ${headerScrolled ? 'h-10 md:h-12' : 'h-12 md:h-16'}`} />
+                {/* Wordmark typographique au lieu du logo pixelisé */}
+                <span className={`wordmark-logo font-display transition-all duration-700 ${headerScrolled ? 'text-xl md:text-2xl' : 'text-2xl md:text-3xl'}`}>
+                  SOS SHINE
+                </span>
               </Link>
               <div className="flex items-center gap-4 sm:gap-6">
                 <Link
                   href={g.header_login_href || '/login'}
-                  className="text-[13px] tracking-[0.02em] text-[#9B9590] hover:text-[#F5F0E8] transition-colors duration-300"
+                  className="text-[13px] tracking-[0.02em] text-[#A89F8E] hover:text-[#F5F1E8] transition-colors duration-300"
                 >
                   {g.header_login_label || 'Se connecter'}
                 </Link>
                 <Link
                   href={globalContent.header_cta_href || '/signup'}
                   onClick={() => trackConversion('signup')}
-                  className="hidden sm:inline-flex items-center px-5 py-2.5 rounded-full text-[13px] font-medium tracking-[0.02em] bg-[#B8A472] text-[#08090A] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-[#C4B080] hover:shadow-[0_0_30px_rgba(184,164,114,0.12)] active:scale-[0.98]"
+                  className="hidden sm:inline-flex items-center px-5 py-2.5 rounded-full text-[13px] font-medium tracking-[0.02em] btn-gold-outline"
                 >
                   {globalContent.header_cta_label || 'Commencer'}
                 </Link>
@@ -589,62 +649,64 @@ export default function LandingClient({ initialSections, initialPositions, initi
       <div style={{ display: "flex", flexDirection: "column" }}>
 
       <div style={{ order: ord("hero") }}>
-      {/* ═══ HERO — Word by word reveal ═══ */}
+      {/* ═══ HERO — Premium Calm × Aesop style ═══ */}
       {vis('hero') && (
-        <motion.section ref={heroRef} className="relative min-h-[100vh] flex items-center pt-28 md:pt-32 pb-20" style={{ opacity: heroOpacity, scale: heroScale }}>
-          {/* Ambient layers */}
+        <motion.section ref={heroRef} className="relative min-h-[100vh] flex items-center justify-center pt-28 md:pt-32 pb-24 md:pb-32" style={{ opacity: heroOpacity, scale: heroScale }}>
+          {/* Subtle grain texture + Gold radial halo */}
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-[10%] left-1/2 -translate-x-1/2 w-[600px] h-[500px] md:w-[900px] md:h-[700px] rounded-full opacity-20" style={{ background: 'radial-gradient(ellipse, rgba(15,22,36,0.8) 0%, transparent 70%)' }} />
-            <div className="absolute top-[20%] left-1/2 -translate-x-1/2 w-[300px] h-[250px] md:w-[500px] md:h-[400px] rounded-full opacity-[0.03]" style={{ background: `radial-gradient(circle, ${gold} 0%, transparent 60%)` }} />
+            {/* Dark ambient base */}
+            <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at center, rgba(20,20,20,0.3) 0%, transparent 70%)' }} />
+            {/* Gold halo - très diffus, subtil */}
+            <div className="hero-gold-halo" />
           </div>
 
-          <div className="relative z-10 px-5 md:px-10 py-16 md:py-28 max-w-5xl mx-auto w-full text-center">
-            {/* Surtitle — ultra-discret, Le Club 10 style */}
+          <div className="relative z-10 px-5 md:px-10 py-20 md:py-32 max-w-5xl mx-auto w-full text-center">
+            {/* Eyebrow — ultra-discret, sequential fade-in */}
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="mb-10 md:mb-12"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="mb-10 md:mb-14"
             >
-              <span className="text-[10px] sm:text-[11px] tracking-[0.3em] uppercase font-medium text-[#9B9590]">
+              <span className="text-[10px] sm:text-[11px] tracking-[0.35em] uppercase font-light text-[#A89F8E]">
                 {hero.surtitle || 'Plateforme de déconditionnement émotionnel'}
               </span>
             </motion.div>
 
-            <h1 className="font-display font-light text-[2.2rem] sm:text-[3rem] md:text-[3.8rem] lg:text-[4.5rem] leading-[1.06] tracking-[-0.02em] text-[#F5F0E8] mb-10 md:mb-14" style={{ perspective: "1000px" }}>
-              {(hero.title || '').split("\n").map((line: string, i: number) => {
-                const isHighlight = line.includes("chaos") || line.includes("Reprogrammez") || line.includes("expériences") || line.includes("schémas") || line.includes("potentiel") || line.includes("émotionnels");
-                const lineWords = line.split(/\s+/);
-                const baseDelay = i * 0.2 + 0.15;
-                return (
-                  <span key={i} className="block">
-                    {i > 0 && <span className="block h-2" />}
-                    {lineWords.map((word, wi) => (
-                      <motion.span
-                        key={wi}
-                        className={`inline-block mr-[0.3em] ${isHighlight ? 'text-shimmer' : ''}`}
-                        initial={{ opacity: 0, y: 25 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{
-                          duration: 0.5,
-                          delay: baseDelay + wi * 0.06,
-                          ease: [0.16, 1, 0.3, 1],
-                        }}
-                      >
-                        {word}
-                      </motion.span>
-                    ))}
-                  </span>
-                );
-              })}
-            </h1>
+            {/* Main Title — text-5xl to text-7xl desktop, italic on "Et une sortie." */}
+            <motion.h1 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className="font-display font-light text-[2.5rem] sm:text-[3.5rem] md:text-[4.5rem] lg:text-[5.5rem] leading-[1.04] tracking-[-0.02em] text-[#F5F1E8] mb-12 md:mb-16"
+            >
+              {(() => {
+                const title = hero.title || 'Ce que vous vivez a une explication.\nEt une sortie.';
+                const lines = title.split('\n');
+                return lines.map((line: string, i: number) => {
+                  // Check if this line should be italic (contains "sortie" or is the second line)
+                  const shouldBeItalic = line.toLowerCase().includes('sortie') || (i === 1 && lines.length > 1);
+                  return (
+                    <span key={i} className="block">
+                      {i > 0 && <span className="block h-2 md:h-3" />}
+                      {shouldBeItalic ? (
+                        <span className="hero-title-italic italic">{line}</span>
+                      ) : (
+                        line
+                      )}
+                    </span>
+                  );
+                });
+              })()}
+            </motion.h1>
 
+            {/* Subtitle */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.8, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
             >
-              <p className="text-[15px] sm:text-[17px] md:text-[19px] text-[#9B9590] leading-[1.7] max-w-xl mx-auto font-light mb-12 md:mb-16">
+              <p className="text-[15px] sm:text-[17px] md:text-[19px] text-[#A89F8E] leading-[1.75] max-w-xl mx-auto font-light mb-14 md:mb-20">
                 {hero.subtitle || ''}
               </p>
             </motion.div>
@@ -752,16 +814,16 @@ export default function LandingClient({ initialSections, initialPositions, initi
             )}
 
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}>
-              <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-5 justify-center items-center">
-                {/* Primary CTA */}
+              <div className="flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-6 justify-center items-center">
+                {/* Primary CTA — Outline gold avec pulse glow */}
                 <Link href={hero.cta_primary_href || '/signature-emotionnelle'} className="w-full sm:w-auto">
-                  <button className="w-full sm:w-auto px-8 sm:px-10 py-4 rounded-full text-[14px] font-medium tracking-[0.02em] bg-[#B8A472] text-[#08090A] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-[#C4B080] hover:shadow-[0_0_40px_rgba(184,164,114,0.12)] active:scale-[0.98] cursor-pointer">
+                  <button className="w-full sm:w-auto px-10 sm:px-12 py-4 rounded-full text-[14px] font-medium tracking-[0.03em] btn-gold-outline cta-gold-pulse cursor-pointer">
                     {hero.cta_primary_label || 'Découvrir ma Signature Émotionnelle'}
                   </button>
                 </Link>
                 {/* Secondary CTA */}
                 <Link href={hero.cta_secondary_href || '/encyclopedie'} className="w-full sm:w-auto">
-                  <button className="w-full sm:w-auto px-8 py-4 rounded-full text-[14px] font-light tracking-[0.02em] text-[#9B9590] border border-[rgba(184,164,114,0.12)] hover:border-[rgba(184,164,114,0.25)] hover:text-[#F5F0E8] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] cursor-pointer">
+                  <button className="w-full sm:w-auto px-8 py-4 rounded-full text-[14px] font-light tracking-[0.02em] text-[#A89F8E] border border-[rgba(212,168,87,0.15)] hover:border-[rgba(212,168,87,0.35)] hover:text-[#F5F1E8] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] cursor-pointer">
                     {hero.cta_secondary_label || 'Découvrir les protocoles'}
                   </button>
                 </Link>
@@ -769,7 +831,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
 
               {/* CTA Subtext */}
               {hero.cta_primary_subtext && (
-                <p className="text-[12px] text-[#6B6560] mt-5 text-center font-light tracking-wide">
+                <p className="text-[12px] text-[#6B6560] mt-6 text-center font-light tracking-wide">
                   {hero.cta_primary_subtext}
                 </p>
               )}
@@ -782,22 +844,27 @@ export default function LandingClient({ initialSections, initialPositions, initi
       </div>
 
       <div style={{ order: ord("stats") }}>
-      {/* ═══ SOCIAL PROOF STATS ═══ */}
+      {/* ═══ SOCIAL PROOF STATS — Premium avec séparateurs dorés ═══ */}
       {vis('stats') && (() => {
         const statsData = sec('stats');
         const statsItems = statsData.items || [];
+        const colCount = statsItems.length || 3;
         return (
-          <section className="relative py-16 md:py-24" style={{ background: 'linear-gradient(180deg, rgba(15,12,8,0.95) 0%, rgba(20,16,10,0.98) 100%)' }}>
-            <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at center, rgba(${goldRgb}, 0.04) 0%, transparent 70%)` }} />
+          <section className="relative py-20 md:py-28">
+            {/* Section divider top */}
+            <div className="section-divider mb-20 md:mb-28" />
+            
             <div className="max-w-5xl mx-auto px-5 md:px-20 relative z-10">
-              <div className={`grid gap-8 md:gap-12`} style={{ gridTemplateColumns: `repeat(${statsItems.length || 3}, minmax(0, 1fr))` }}>
+              <div className={`stats-grid cols-${colCount} gap-8 md:gap-12`} style={{ gridTemplateColumns: `repeat(${colCount}, minmax(0, 1fr))` }}>
                 {statsItems.map((stat: { value: string; label: string }, i: number) => (
                   <RevealOnScroll key={stat.label || i} delay={i * 0.15}>
                     <div className="text-center">
-                      <p className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display italic font-light mb-3 md:mb-4 text-[var(--brand)]">
+                      {/* Grand serif doré */}
+                      <p className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-light mb-4 md:mb-5" style={{ color: '#D4A857' }}>
                         <AnimatedCounter value={stat.value} />
                       </p>
-                      <p className="text-[10px] sm:text-xs md:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase font-medium text-[var(--text-muted)]">
+                      {/* Labels en sans-serif uppercase tracking-wider blanc cassé */}
+                      <p className="text-[10px] sm:text-xs tracking-[0.2em] uppercase font-medium" style={{ color: '#A89F8E' }}>
                         {stat.label}
                       </p>
                     </div>
@@ -805,6 +872,9 @@ export default function LandingClient({ initialSections, initialPositions, initi
                 ))}
               </div>
             </div>
+            
+            {/* Section divider bottom */}
+            <div className="section-divider mt-20 md:mt-28" />
           </section>
         );
       })()}
@@ -1432,6 +1502,50 @@ export default function LandingClient({ initialSections, initialPositions, initi
           </section>
         );
       })()}
+      </div>
+
+      <div style={{ order: ord("julia_portrait") }}>
+      {/* ═══ SECTION JULIA — Portrait & Citation (Premium) ═══ */}
+      <section className="px-5 md:px-20 py-24 md:py-40 relative cv-auto">
+        {/* Section divider top */}
+        <div className="section-divider mb-16 md:mb-24" />
+        
+        <div className="max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-center">
+            {/* Portrait — placeholder with gold border (ratio portrait) */}
+            <RevealOnScroll direction="left">
+              <div className="julia-portrait-frame max-w-sm mx-auto md:mx-0">
+                {/* Placeholder — remplacer par photo Julia */}
+                <div className="w-full h-full bg-gradient-to-br from-[#1a1a1a] to-[#0f0f0f] flex items-center justify-center">
+                  <div className="text-center p-8">
+                    <div className="w-20 h-20 mx-auto mb-4 rounded-full border border-[rgba(212,168,87,0.3)] flex items-center justify-center">
+                      <span className="font-display text-3xl text-[#D4A857]">J</span>
+                    </div>
+                    <p className="text-xs tracking-[0.2em] uppercase text-[#A89F8E]">Photo Julia</p>
+                    <p className="text-[10px] text-[#6B6560] mt-1">Ratio portrait - N&B avec teinte chaude</p>
+                  </div>
+                </div>
+              </div>
+            </RevealOnScroll>
+            
+            {/* Citation avec cadre minimal (filets dorés haut/bas) */}
+            <RevealOnScroll direction="right" delay={0.2}>
+              <div className="julia-quote-frame">
+                <blockquote className="font-display text-xl sm:text-2xl md:text-3xl font-light italic leading-[1.4] text-[#F5F1E8]">
+                  &laquo;&nbsp;Ce que vous vivez a une explication. Et une sortie. Je l&apos;ai trouvée. Laissez-moi vous montrer le chemin.&nbsp;&raquo;
+                </blockquote>
+                <div className="mt-8">
+                  <p className="font-display text-lg font-medium text-[#D4A857]">Julia Laureau</p>
+                  <p className="text-sm text-[#A89F8E] mt-1">Fondatrice de SOS Shine, auteure du Déconditionnement</p>
+                </div>
+              </div>
+            </RevealOnScroll>
+          </div>
+        </div>
+        
+        {/* Section divider bottom */}
+        <div className="section-divider mt-16 md:mt-24" />
+      </section>
       </div>
 
       <div style={{ order: ord("fondateurs") }}>

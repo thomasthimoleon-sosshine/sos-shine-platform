@@ -8,35 +8,35 @@
 
 /* ── 1. Design Tokens ── */
 :root {
-  /* ── Brand — Or subtil, patiné, vécu ── */
-  --brand: #B8A472;
-  --brand-light: #D4C99A;
-  --brand-deep: #96845A;
-  --brand-muted: #A69768;
-  --brand-alpha-weak: rgba(184, 164, 114, 0.06);
-  --brand-alpha-medium: rgba(184, 164, 114, 0.12);
-  --brand-alpha-strong: rgba(184, 164, 114, 0.24);
+  /* ── Brand — Or principal (Calm × Aesop × Luxe spirituelle) ── */
+  --brand: #D4A857;
+  --brand-light: #E8C77E;
+  --brand-deep: #B8923C;
+  --brand-muted: #C4A05A;
+  --brand-alpha-weak: rgba(212, 168, 87, 0.06);
+  --brand-alpha-medium: rgba(212, 168, 87, 0.12);
+  --brand-alpha-strong: rgba(212, 168, 87, 0.24);
 
-  /* ── Surfaces — Noir profond + Bleu nuit ── */
-  --surface: #08090A;
-  --surface-raised: #0F1624;
-  --surface-card: #131A2B;
-  --surface-elevated: #1A2540;
-  --surface-overlay: rgba(8, 9, 10, 0.85);
+  /* ── Surfaces — Noir profond légèrement chaud ── */
+  --surface: #0A0A0A;
+  --surface-raised: #101010;
+  --surface-card: #141414;
+  --surface-elevated: #1A1A1A;
+  --surface-overlay: rgba(10, 10, 10, 0.85);
 
   /* ── Borders ── */
-  --border: rgba(184, 164, 114, 0.08);
+  --border: rgba(212, 168, 87, 0.08);
   --border-subtle: rgba(255, 255, 255, 0.04);
-  --border-medium: rgba(184, 164, 114, 0.15);
-  --border-strong: rgba(184, 164, 114, 0.25);
-  --border-hover: rgba(184, 164, 114, 0.20);
+  --border-medium: rgba(212, 168, 87, 0.15);
+  --border-strong: rgba(212, 168, 87, 0.25);
+  --border-hover: rgba(212, 168, 87, 0.20);
 
-  /* ── Text — Ivoire + nuances ── */
-  --text-primary: #F5F0E8;
-  --text-secondary: #A8A29E;
-  --text-muted: #64605A;
+  /* ── Text — Blanc cassé ivoire + nuances ── */
+  --text-primary: #F5F1E8;
+  --text-secondary: #A89F8E;
+  --text-muted: #6B6560;
   --text-bold: #FAFAF8;
-  --text-inverse: #08090A;
+  --text-inverse: #0A0A0A;
 
   /* ── Status ── */
   --success: #6BCFA0;
@@ -107,6 +107,12 @@
   --dark-border-hover: var(--border-hover);
   --button-bg: var(--brand);
   --gold-gradient: linear-gradient(135deg, var(--brand), var(--brand-deep));
+
+  /* ── Premium Landing specific ── */
+  --gold-primary: #D4A857;
+  --gold-highlight: #E8C77E;
+  --off-white: #F5F1E8;
+  --warm-gray: #A89F8E;
 }
 
 /* ── Light Theme ── */
@@ -643,7 +649,7 @@ h1 .text-shimmer, h2 .text-shimmer, h3 .text-shimmer, .text-shimmer {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #0a0a0a;
+  background: #0A0A0A;
   animation: loaderFade 0.4s ease-out 0.6s forwards;
 }
 
@@ -1054,3 +1060,208 @@ h1 .text-shimmer, h2 .text-shimmer, h3 .text-shimmer, .text-shimmer {
 .blog-html-content code { background: rgba(116, 192, 252, 0.1); color: #74C0FC; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.85em; }
 .blog-html-content pre { background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; }
 .blog-html-content pre code { background: none; padding: 0; }
+
+/* ═══════════════════════════════════════════
+   SOS SHINE — Premium Landing Upgrade
+   "Calm × Aesop × Maison de Luxe Spirituelle"
+═══════════════════════════════════════════ */
+
+/* ── Custom Gold Cursor (desktop only) ── */
+@media (hover: hover) and (pointer: fine) {
+  html.premium-cursor,
+  html.premium-cursor * {
+    cursor: none !important;
+  }
+  
+  .custom-cursor {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    background: var(--gold-primary, #D4A857);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease, width 0.2s ease, height 0.2s ease, background 0.2s ease;
+    mix-blend-mode: difference;
+  }
+  
+  .custom-cursor.hovering {
+    width: 24px;
+    height: 24px;
+    background: rgba(212, 168, 87, 0.3);
+    border: 1px solid var(--gold-primary, #D4A857);
+  }
+}
+
+/* ── Gold Pulse Glow for CTA buttons ── */
+@keyframes goldPulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(212, 168, 87, 0);
+  }
+  50% {
+    box-shadow: 0 0 20px 4px rgba(212, 168, 87, 0.15);
+  }
+}
+
+.cta-gold-pulse {
+  animation: goldPulseGlow 3s ease-in-out infinite;
+}
+
+/* ── Section Gold Divider ── */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(212, 168, 87, 0.2) 20%,
+    rgba(212, 168, 87, 0.2) 80%,
+    transparent 100%
+  );
+  margin: 0 auto;
+  max-width: 80%;
+}
+
+/* ── Stats with vertical gold separators ── */
+.stats-grid {
+  display: grid;
+  position: relative;
+}
+
+.stats-grid::before,
+.stats-grid::after {
+  content: '';
+  position: absolute;
+  top: 20%;
+  height: 60%;
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(212, 168, 87, 0.3) 50%,
+    transparent 100%
+  );
+}
+
+.stats-grid.cols-3::before {
+  left: 33.33%;
+}
+.stats-grid.cols-3::after {
+  left: 66.66%;
+}
+
+/* ── Hero Gold Radial Halo ── */
+.hero-gold-halo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px;
+  height: 600px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(212, 168, 87, 0.06) 0%,
+    rgba(212, 168, 87, 0.02) 40%,
+    transparent 70%
+  );
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Outline Gold Button (CTA secondary style) ── */
+.btn-gold-outline {
+  border: 1px solid var(--gold-primary, #D4A857);
+  background: transparent;
+  color: var(--gold-primary, #D4A857);
+  transition: all 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.btn-gold-outline:hover {
+  background: var(--gold-primary, #D4A857);
+  color: #0A0A0A;
+  box-shadow: 0 0 30px rgba(212, 168, 87, 0.2);
+}
+
+/* ── Julia Section — Portrait Frame ── */
+.julia-portrait-frame {
+  position: relative;
+  aspect-ratio: 3/4;
+  border: 1px solid rgba(212, 168, 87, 0.3);
+  border-radius: var(--radius-lg, 14px);
+  overflow: hidden;
+}
+
+.julia-portrait-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%) sepia(10%);
+  transition: filter 0.6s ease;
+}
+
+.julia-portrait-frame:hover img {
+  filter: grayscale(50%) sepia(15%);
+}
+
+/* ── Julia Quote Frame (top/bottom gold lines) ── */
+.julia-quote-frame {
+  position: relative;
+  padding: 2rem 0;
+}
+
+.julia-quote-frame::before,
+.julia-quote-frame::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(212, 168, 87, 0.4) 30%,
+    rgba(212, 168, 87, 0.4) 70%,
+    transparent 100%
+  );
+}
+
+.julia-quote-frame::before {
+  top: 0;
+}
+
+.julia-quote-frame::after {
+  bottom: 0;
+}
+
+/* ── Wordmark Logo Style ── */
+.wordmark-logo {
+  font-family: var(--font-cormorant), 'Cormorant Garamond', serif;
+  font-weight: 300;
+  letter-spacing: 0.25em;
+  color: var(--gold-primary, #D4A857);
+  text-transform: uppercase;
+}
+
+/* ── Hero Sequential Fade-in ── */
+@keyframes heroFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-fade-1 { animation: heroFadeIn 0.8s ease-out 0.3s both; }
+.hero-fade-2 { animation: heroFadeIn 0.8s ease-out 0.6s both; }
+.hero-fade-3 { animation: heroFadeIn 0.8s ease-out 0.9s both; }
+.hero-fade-4 { animation: heroFadeIn 0.8s ease-out 1.2s both; }
+
+/* ── Italic emphasis for hero title ── */
+.hero-title-italic {
+  font-style: italic;
+  color: var(--gold-primary, #D4A857);
+}

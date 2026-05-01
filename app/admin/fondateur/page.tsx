@@ -500,31 +500,31 @@ export default function FounderDashboard() {
 
           {/* CRM quick actions */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-            <Link href="/admin/crm/contacts" className="rounded-xl p-4 text-center transition-all hover:scale-[1.02]"
+            <Link href="/admin/crm" className="rounded-xl p-4 text-center transition-all hover:scale-[1.02]"
               style={{ background: 'rgba(74,144,217,0.06)', border: '1px solid rgba(74,144,217,0.15)' }}>
               <div className="text-2xl mb-2">👥</div>
               <div className="text-sm font-medium" style={{ color: '#4A90D9' }}>Contacts</div>
               <div className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Voir et synchroniser</div>
             </Link>
-            <Link href="/admin/crm/campaigns" className="rounded-xl p-4 text-center transition-all hover:scale-[1.02]"
+            <Link href="/admin/crm" className="rounded-xl p-4 text-center transition-all hover:scale-[1.02]"
               style={{ background: 'rgba(116,192,252,0.06)', border: '1px solid rgba(116,192,252,0.15)' }}>
               <div className="text-2xl mb-2">📧</div>
               <div className="text-sm font-medium" style={{ color: '#74C0FC' }}>Campagnes</div>
               <div className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Créer et planifier</div>
             </Link>
-            <Link href="/admin/crm/sequences" className="rounded-xl p-4 text-center transition-all hover:scale-[1.02]"
+            <Link href="/admin/crm" className="rounded-xl p-4 text-center transition-all hover:scale-[1.02]"
               style={{ background: 'rgba(162,155,254,0.06)', border: '1px solid rgba(162,155,254,0.15)' }}>
               <div className="text-2xl mb-2">🔄</div>
               <div className="text-sm font-medium" style={{ color: '#A29BFE' }}>Séquences</div>
               <div className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Emails automatiques</div>
             </Link>
-            <Link href="/admin/crm/email-templates" className="rounded-xl p-4 text-center transition-all hover:scale-[1.02]"
+            <Link href="/admin/crm" className="rounded-xl p-4 text-center transition-all hover:scale-[1.02]"
               style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.15)' }}>
               <div className="text-2xl mb-2">📬</div>
               <div className="text-sm font-medium" style={{ color: '#C9A961' }}>Templates</div>
               <div className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Modifier les emails</div>
             </Link>
-            <Link href="/admin/crm/signature-emails" className="rounded-xl p-4 text-center transition-all hover:scale-[1.02]"
+            <Link href="/admin/crm" className="rounded-xl p-4 text-center transition-all hover:scale-[1.02]"
               style={{ background: 'rgba(196,160,232,0.06)', border: '1px solid rgba(196,160,232,0.15)' }}>
               <div className="text-2xl mb-2">🧬</div>
               <div className="text-sm font-medium" style={{ color: '#C4A0E8' }}>Emails Signature</div>
@@ -537,7 +537,7 @@ export default function FounderDashboard() {
             <Section title="Dernières campagnes" subtitle="Aperçu rapide de vos campagnes récentes">
               <div className="space-y-2">
                 {recentCampaigns.map((camp) => (
-                  <Link key={camp.id} href={`/admin/crm/campaigns?selected=${camp.id}`}
+                  <Link key={camp.id} href={`/admin/crm?selected=${camp.id}`}
                     className="block p-3 rounded-lg transition-all hover:scale-[1.005]"
                     style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
                     <div className="flex items-center justify-between">

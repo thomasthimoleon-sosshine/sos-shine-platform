@@ -30,16 +30,16 @@ function Reveal({ children, className = '', delay = 0 }: { children: React.React
   )
 }
 
-function TickerBand({ items }: { items: string[] }) {
-  const doubled = [...items, ...items]
+function TickerBand({ items, speed = 15 }: { items: string[]; speed?: number }) {
+  const quadrupled = [...items, ...items, ...items, ...items]
   return (
     <div className="relative overflow-hidden py-5 border-y border-[rgba(184,164,114,0.06)]">
       <motion.div
         className="flex gap-12 whitespace-nowrap"
         animate={{ x: ['0%', '-50%'] }}
-        transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+        transition={{ duration: speed, repeat: Infinity, ease: 'linear' }}
       >
-        {doubled.map((item, i) => (
+        {quadrupled.map((item, i) => (
           <span key={i} className="text-[11px] uppercase tracking-[0.25em] font-medium text-[#6B6560]">
             {item}
             <span className="mx-6 text-[#3D3A36]">&middot;</span>
@@ -396,17 +396,33 @@ export default function LandingJulia() {
 
           <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
             <Reveal delay={0.15}>
-              <div className="p-8 rounded-[24px] bg-[#0D1018] border border-[rgba(184,164,114,0.06)] text-center h-full flex flex-col justify-between">
+              <div className="p-8 rounded-[24px] bg-[#0D1018] border border-[rgba(184,164,114,0.06)] h-full flex flex-col justify-between">
                 <div>
-                  <p className="text-[11px] tracking-[0.2em] uppercase text-[#9B9590] mb-4">Essentielle</p>
+                  <p className="text-[11px] tracking-[0.2em] uppercase text-[#9B9590] mb-4 text-center">Essentielle</p>
                   <div className="flex items-baseline justify-center gap-1 mb-2">
                     <span className="font-display text-[2.5rem] font-light text-[#F5F0E8]">9,90</span>
                     <span className="text-[15px] text-[#6B6560]">&euro;/mois</span>
                   </div>
-                  <p className="text-[12px] text-[#6B6560] mb-8">Acc&egrave;s imm&eacute;diat</p>
+                  <p className="text-[12px] text-[#6B6560] mb-8 text-center">Acc&egrave;s imm&eacute;diat</p>
+
+                  <ul className="space-y-3 mb-8">
+                    {[
+                      'Encyclopédie complète (200+ protocoles)',
+                      'Shine TV — Vidéos guidées',
+                      'Shine Audible — Méditations audio',
+                      'Shine Librairie — eBooks',
+                      'Communauté & Feu de Camp',
+                      'Événements live hebdomadaires',
+                    ].map(item => (
+                      <li key={item} className="flex items-start gap-3 text-[13px] text-[#9B9590] font-light">
+                        <span className="text-[#B8A472] mt-0.5 shrink-0">&#10003;</span>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
                 <Link href="/rejoindre"
-                  className="block w-full py-3.5 rounded-full text-[13px] font-medium border border-[rgba(184,164,114,0.15)] text-[#9B9590] hover:border-[rgba(184,164,114,0.3)] hover:text-[#F5F0E8] transition-all duration-500"
+                  className="block w-full py-3.5 rounded-full text-[13px] font-medium border border-[rgba(184,164,114,0.15)] text-[#9B9590] hover:border-[rgba(184,164,114,0.3)] hover:text-[#F5F0E8] transition-all duration-500 text-center"
                 >
                   Choisir Essentielle
                 </Link>
@@ -414,28 +430,54 @@ export default function LandingJulia() {
             </Reveal>
 
             <Reveal delay={0.25}>
-              <div className="p-8 rounded-[24px] bg-[#0D1018] border border-[rgba(184,164,114,0.15)] text-center relative overflow-hidden h-full flex flex-col justify-between">
+              <div className="p-8 rounded-[24px] bg-[#0D1018] border border-[rgba(184,164,114,0.15)] relative overflow-hidden h-full flex flex-col justify-between">
                 <div className="absolute top-0 left-0 right-0 h-px bg-[linear-gradient(90deg,transparent,rgba(184,164,114,0.3),transparent)]" />
                 <div>
-                  <p className="text-[11px] tracking-[0.2em] uppercase text-[#B8A472] mb-4">S&eacute;r&eacute;nit&eacute;</p>
+                  <p className="text-[11px] tracking-[0.2em] uppercase text-[#B8A472] mb-4 text-center">S&eacute;r&eacute;nit&eacute;</p>
                   <div className="flex items-baseline justify-center gap-2 mb-1">
                     <span className="text-[16px] text-[#6B6560] line-through">49,90&euro;</span>
                     <span className="font-display text-[2.5rem] font-light text-[#F5F0E8]">29,90</span>
                     <span className="text-[15px] text-[#6B6560]">&euro;/mois</span>
                   </div>
-                  <p className="text-[12px] text-[#B8A472] mb-8">7 jours d&apos;essai gratuit &middot; code SHINE2026</p>
+                  <p className="text-[12px] text-[#B8A472] mb-8 text-center">7 jours d&apos;essai <strong>GRATUIT</strong> &middot; code SHINE2026</p>
+
+                  <ul className="space-y-3 mb-8">
+                    {[
+                      'Tout Essentielle inclus',
+                      'Accès prioritaire nouveaux protocoles',
+                      'Sessions de groupe avec Julia',
+                      'Soins collectifs mensuels',
+                      'Parcours personnalisé selon votre Signature',
+                      'Support prioritaire',
+                    ].map(item => (
+                      <li key={item} className="flex items-start gap-3 text-[13px] text-[#9B9590] font-light">
+                        <span className="text-[#B8A472] mt-0.5 shrink-0">&#10003;</span>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
                 <Link href="/rejoindre"
-                  className="block w-full py-3.5 rounded-full text-[13px] font-medium bg-[#B8A472] text-[#08090A] hover:bg-[#C4B080] hover:shadow-[0_0_30px_rgba(184,164,114,0.1)] transition-all duration-500"
+                  className="block w-full py-3.5 rounded-full text-[13px] font-medium bg-[#B8A472] text-[#08090A] hover:bg-[#C4B080] hover:shadow-[0_0_30px_rgba(184,164,114,0.1)] transition-all duration-500 text-center"
                 >
-                  Commencer S&eacute;r&eacute;nit&eacute;
+                  Essayer GRATUITEMENT 7 jours
                 </Link>
               </div>
             </Reveal>
           </div>
 
           <Reveal delay={0.3}>
-            <p className="text-center text-[12px] text-[#6B6560] mt-8">
+            <div className="text-center mt-10">
+              <Link href="/signature-emotionnelle"
+                className="inline-flex items-center gap-2 text-[13px] text-[#B8A472] hover:text-[#C4B080] transition-colors duration-300"
+              >
+                Ou commencez par le test gratuit &rarr;
+              </Link>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.35}>
+            <p className="text-center text-[12px] text-[#6B6560] mt-6">
               Sans engagement &middot; Annulable &agrave; tout instant &middot; Paiement s&eacute;curis&eacute;
             </p>
           </Reveal>

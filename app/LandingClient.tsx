@@ -213,7 +213,7 @@ const DIAMONDS = [
 const DiamondSvg = memo(function DiamondSvg({ size }: { size: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <circle cx="12" cy="12" r="4" fill="#C9A961" opacity="0.4" />
+      <circle cx="12" cy="12" r="4" fill="#D4AF37" opacity="0.4" />
       <circle cx="12" cy="12" r="2" fill="#FFFBE6" opacity="0.9" />
     </svg>
   );
@@ -459,7 +459,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
   function ord(key: string): number { return sectionPositions[key] ?? DEFAULT_ORDER[key] ?? 999; }
 
   const g = sty('_global');
-  const gold = g.color_primary || '#C9A961';
+  const gold = g.color_primary || '#D4AF37';
   const accent = g.color_secondary || '#74C0FC';
   const bg = g.color_bg || '#362038';
   const buttonBg = g.color_button || gold;
@@ -552,6 +552,10 @@ export default function LandingClient({ initialSections, initialPositions, initi
 
   return (
     <main className="grain relative z-0 overflow-hidden" style={cssVars}>
+      {/* ── Atmospheric overlays ── */}
+      <div className="fixed inset-0 pointer-events-none z-[1]"
+        style={{ background: `radial-gradient(ellipse 900px 600px at 50% 0%, rgba(${goldRgb},0.05), transparent 55%)` }}
+      />
       <ScrollProgress />
       <SparklingDiamonds />
       <FloatingOrbs />
@@ -559,7 +563,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
       {/* ═══ FIXED HEADER — Le Club 10 style ═══ */}
       {headerVisible && (
           <header
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${headerScrolled ? 'py-3 bg-[#06070A]/80 backdrop-blur-2xl border-b border-[rgba(184,164,114,0.04)]' : 'py-5 md:py-6'}`}
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${headerScrolled ? 'py-3 bg-[#050505]/80 backdrop-blur-2xl border-b border-[rgba(212,175,55,0.06)]' : 'py-5 md:py-6'}`}
           >
             <div className="flex items-center justify-between max-w-7xl mx-auto px-5 md:px-10">
               <Link href="/" className="flex items-center gap-3">
@@ -575,7 +579,10 @@ export default function LandingClient({ initialSections, initialPositions, initi
                 <Link
                   href={globalContent.header_cta_href || '/signup'}
                   onClick={() => trackConversion('signup')}
-                  className="hidden sm:inline-flex items-center px-5 py-2.5 rounded-full text-[13px] font-medium tracking-[0.02em] bg-[#B8A472] text-[#08090A] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-[#C4B080] hover:shadow-[0_0_30px_rgba(184,164,114,0.12)] active:scale-[0.98]"
+                  className="hidden sm:inline-flex items-center px-5 py-2.5 rounded-full text-[13px] font-medium tracking-[0.02em] text-[#050505] active:scale-[0.98] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                  style={{ backgroundColor: gold, boxShadow: `0 0 30px rgba(${goldRgb},0.18)` }}
+                  onMouseEnter={e => (e.currentTarget.style.boxShadow = `0 0 45px rgba(${goldRgb},0.28)`)}
+                  onMouseLeave={e => (e.currentTarget.style.boxShadow = `0 0 30px rgba(${goldRgb},0.18)`)}
                 >
                   {globalContent.header_cta_label || 'Commencer'}
                 </Link>
@@ -755,13 +762,21 @@ export default function LandingClient({ initialSections, initialPositions, initi
               <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-5 justify-center items-center">
                 {/* Primary CTA */}
                 <Link href={hero.cta_primary_href || '/signature-emotionnelle'} className="w-full sm:w-auto">
-                  <button className="w-full sm:w-auto px-8 sm:px-10 py-4 rounded-full text-[14px] font-medium tracking-[0.02em] bg-[#B8A472] text-[#08090A] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-[#C4B080] hover:shadow-[0_0_40px_rgba(184,164,114,0.12)] active:scale-[0.98] cursor-pointer">
+                  <button className="w-full sm:w-auto px-8 sm:px-10 py-4 rounded-full text-[14px] font-medium tracking-[0.02em] text-[#050505] active:scale-[0.98] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] cursor-pointer"
+                    style={{ backgroundColor: gold, boxShadow: `0 0 40px rgba(${goldRgb},0.2)` }}
+                    onMouseEnter={e => (e.currentTarget.style.boxShadow = `0 0 60px rgba(${goldRgb},0.32)`)}
+                    onMouseLeave={e => (e.currentTarget.style.boxShadow = `0 0 40px rgba(${goldRgb},0.2)`)}>
+
                     {hero.cta_primary_label || 'Découvrir ma Signature Émotionnelle'}
                   </button>
                 </Link>
                 {/* Secondary CTA */}
                 <Link href={hero.cta_secondary_href || '/encyclopedie'} className="w-full sm:w-auto">
-                  <button className="w-full sm:w-auto px-8 py-4 rounded-full text-[14px] font-light tracking-[0.02em] text-[#9B9590] border border-[rgba(184,164,114,0.12)] hover:border-[rgba(184,164,114,0.25)] hover:text-[#F5F0E8] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] cursor-pointer">
+                  <button className="w-full sm:w-auto px-8 py-4 rounded-full text-[14px] font-light tracking-[0.02em] text-[#a1a1aa] hover:text-[#e0e0e0] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] cursor-pointer"
+                    style={{ border: `1px solid rgba(${goldRgb},0.15)` }}
+                    onMouseEnter={e => (e.currentTarget.style.borderColor = `rgba(${goldRgb},0.3)`)}
+                    onMouseLeave={e => (e.currentTarget.style.borderColor = `rgba(${goldRgb},0.15)`)}>
+
                     {hero.cta_secondary_label || 'Découvrir les protocoles'}
                   </button>
                 </Link>

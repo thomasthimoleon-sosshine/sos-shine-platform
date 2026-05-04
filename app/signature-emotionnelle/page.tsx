@@ -295,7 +295,7 @@ export default function SignatureEmotionnellePage() {
       // Save before showing email
       await saveResponse(sessionId, responseId, { responses, currentQuestion: question.id })
       trackEvent(sessionId, responseId, 'quiz_question_answered', { questionId: question.id })
-      setMicroTension('Ce que tu viens de montrer est rarement conscient. Les prochaines questions vont révéler la racine.')
+      setMicroTension('La moitié du chemin est là. Ce qui vient maintenant va chercher la racine.')
       setTimeout(() => {
         setMicroTension(null)
         setPhase('email')
@@ -354,7 +354,7 @@ export default function SignatureEmotionnellePage() {
 
     // Micro-tension after Q5
     if (currentQ === 4) {
-      setMicroTension('On commence à voir un schéma chez toi… et il est plus précis que tu ne le penses.')
+      setMicroTension('Ce que tu viens d\'écrire — tu ne le formules probablement pas souvent. On va plus loin.')
       setTimeout(() => {
         setMicroTension(null)
         setCurrentQ((prev: number) => prev + 1)

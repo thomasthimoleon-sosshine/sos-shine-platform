@@ -22,15 +22,15 @@ export function EmailCapture({ onSubmit, loading }: Props) {
       <span className="text-4xl mb-6 block">✨</span>
 
       <h2 className="font-display text-xl sm:text-2xl font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
-        Ce que tu viens de montrer est rarement conscient.
+        Tu as déjà montré plus que tu ne crois.
       </h2>
 
       <p className="text-sm leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
-        Peu de gens vont aussi loin dans leurs réponses. Un schéma très précis est en train de se dessiner — que tu vis probablement depuis des années sans l&apos;avoir nommé.
+        Un schéma précis est en train de se dessiner — dans tes réactions, tes contradictions, et ce que tu n&apos;as peut-être jamais vraiment nommé.
       </p>
 
       <p className="text-sm leading-relaxed italic mb-8" style={{ color: 'var(--brand, var(--brand))', opacity: 0.8 }}>
-        Ton profil est prêt. Et il est probablement plus précis que tu ne l&apos;imagines.
+        Les 5 dernières questions vont à la racine. Ton profil t&apos;attend de l&apos;autre côté.
       </p>
 
       <div className="space-y-4">

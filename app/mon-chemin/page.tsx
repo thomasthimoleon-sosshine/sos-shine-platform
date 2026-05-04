@@ -319,67 +319,24 @@ function MonCheminContent() {
           ))}
         </div>
 
-        {/* Contenu gratuit inclus */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="rounded-2xl p-6 space-y-4"
-          style={{ background: 'rgba(85,239,196,0.04)', border: '1px solid rgba(85,239,196,0.12)' }}
-        >
-          <p className="text-xs font-medium uppercase tracking-wider" style={{ color: '#55EFC4', opacity: 0.8 }}>
-            Déjà inclus dans ton accès gratuit
-          </p>
-          <div className="space-y-3">
-            <a
-              href="/dashboard/shine-audible"
-              className="flex items-center gap-3 group"
-            >
-              <span className="text-lg">🎧</span>
-              <div className="flex-1">
-                <p className="text-sm font-medium group-hover:opacity-80 transition-opacity" style={{ color: 'var(--text-primary)' }}>
-                  Shine Audible
-                </p>
-                <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                  Podcasts, méditations et audios — accès complet gratuit
-                </p>
-              </div>
-              <span className="text-xs" style={{ color: '#55EFC4' }}>→</span>
-            </a>
-            <a
-              href="/dashboard/communaute"
-              className="flex items-center gap-3 group"
-            >
-              <span className="text-lg">🌿</span>
-              <div className="flex-1">
-                <p className="text-sm font-medium group-hover:opacity-80 transition-opacity" style={{ color: 'var(--text-primary)' }}>
-                  La communauté
-                </p>
-                <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                  Échanges, soutien et partages entre membres
-                </p>
-              </div>
-              <span className="text-xs" style={{ color: '#55EFC4' }}>→</span>
-            </a>
-          </div>
-        </motion.div>
-
         {/* Upgrade bloc — sobre, non bloquant */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="text-center pb-4"
+          transition={{ delay: 0.4 }}
+          className="rounded-2xl p-6 text-center space-y-3"
+          style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}
         >
-          <p className="text-xs mb-2" style={{ color: 'var(--text-muted)' }}>
-            Lives, audios premium, accompagnement Sérénité
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-muted)' }}>
+            Pour accéder aux lives, audios premium et accompagnements Sérénité,
+            tu peux passer à l&apos;offre Sérénité.
           </p>
           <a
             href="/rejoindre?source=mon-chemin"
-            className="text-xs font-medium transition-opacity hover:opacity-70"
+            className="inline-block text-sm font-medium transition-opacity hover:opacity-70"
             style={{ color: 'var(--brand)' }}
           >
-            Découvrir l&apos;offre Sérénité →
+            Découvrir Sérénité →
           </a>
         </motion.div>
 

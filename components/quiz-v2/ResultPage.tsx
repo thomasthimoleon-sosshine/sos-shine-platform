@@ -72,14 +72,13 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const matchedProtocols = protocols
+  const sortedProtocols = protocols
     .map(p => ({ ...p, matchScore: calculateMatchScores(scores, p.dimension_weights) }))
-    .filter(p => p.matchScore >= 70)
     .sort((a, b) => b.matchScore - a.matchScore)
 
-  const available = matchedProtocols.filter(p => p.status === 'available')
-  const comingSoon = matchedProtocols.filter(p => p.status === 'coming_soon')
-  const topProtocol = available[0] ?? matchedProtocols[0] ?? null
+  const available = sortedProtocols.filter(p => p.status === 'available')
+  const comingSoon = sortedProtocols.filter(p => p.status === 'coming_soon')
+  const topProtocol = available[0] ?? comingSoon[0] ?? sortedProtocols[0] ?? null
 
   const displayName = firstName || 'Toi'
   const signupUrl = `/signup?source=quiz&email=${encodeURIComponent(email)}`
@@ -90,7 +89,10 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
 
   function storeProtocolSlug() {
     if (topProtocol) {
-      try { sessionStorage.setItem('sos_protocol_slug', topProtocol.slug) } catch {}
+      try {
+        sessionStorage.setItem('sos_protocol_slug', topProtocol.slug)
+        if (email) sessionStorage.setItem('sos_quiz_email', email)
+      } catch {}
     }
   }
 
@@ -379,7 +381,8 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
                       {p.duration_days} jours · Match {p.matchScore}%
                     </p>
                   </div>
-                  <Link href={`/dashboard/encyclopedie/${p.slug}`}
+                  <Link href={`/protocole/${p.slug}?preview=true&email=${encodeURIComponent(email)}`}
+                    onClick={() => { try { sessionStorage.setItem('sos_protocol_slug', p.slug) } catch {} }}
                     className="text-xs px-4 py-2 rounded-full font-medium flex-shrink-0"
                     style={{ background: 'rgba(85,239,196,0.15)', color: '#55EFC4' }}>
                     Commencer →

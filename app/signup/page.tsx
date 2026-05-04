@@ -75,7 +75,11 @@ export default function SignupPage() {
   useEffect(() => {
     const supabase = createClient()
     supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user) signupRouter.replace('/dashboard')
+      if (user) {
+        let protocolSlug: string | null = null
+        try { protocolSlug = sessionStorage.getItem('sos_protocol_slug') } catch {}
+        signupRouter.replace(protocolSlug ? `/mon-chemin?protocol=${protocolSlug}` : '/dashboard')
+      }
     })
   }, [signupRouter])
 

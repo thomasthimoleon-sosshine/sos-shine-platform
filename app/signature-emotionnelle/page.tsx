@@ -273,6 +273,7 @@ export default function SignatureEmotionnellePage() {
   const [dominant, setDominant] = useState('1')
   const [secondary, setSecondary] = useState('2')
   const [q15Response, setQ15Response] = useState('')
+  const [microTension, setMicroTension] = useState<string | null>(null)
 
   const question = QUESTIONS[currentQ]
 
@@ -294,7 +295,11 @@ export default function SignatureEmotionnellePage() {
       // Save before showing email
       await saveResponse(sessionId, responseId, { responses, currentQuestion: question.id })
       trackEvent(sessionId, responseId, 'quiz_question_answered', { questionId: question.id })
-      setPhase('email')
+      setMicroTension('Ce que tu viens de montrer est rarement conscient. Les prochaines questions vont révéler la racine.')
+      setTimeout(() => {
+        setMicroTension(null)
+        setPhase('email')
+      }, 2200)
       return
     }
 
@@ -347,6 +352,16 @@ export default function SignatureEmotionnellePage() {
     })
     trackEvent(sessionId, responseId, 'quiz_question_answered', { questionId: question.id, questionType: question.type })
 
+    // Micro-tension after Q5
+    if (currentQ === 4) {
+      setMicroTension('On commence à voir un schéma chez toi… et il est plus précis que tu ne le penses.')
+      setTimeout(() => {
+        setMicroTension(null)
+        setCurrentQ((prev: number) => prev + 1)
+      }, 2200)
+      return
+    }
+
     setCurrentQ((prev: number) => prev + 1)
   }, [currentQ, question, responses, sessionId, responseId, email, firstName])
 
@@ -386,6 +401,30 @@ export default function SignatureEmotionnellePage() {
 
   return (
     <main className="min-h-screen relative z-10" style={{ background: 'var(--dark, #000000)' }}>
+      <AnimatePresence>
+        {microTension && (
+          <motion.div
+            key="micro-tension"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="fixed inset-0 flex items-center justify-center z-50 px-6"
+            style={{ background: 'var(--dark, #000000)' }}
+          >
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="font-display text-xl sm:text-2xl font-light text-center max-w-sm leading-relaxed"
+              style={{ color: 'var(--brand)' }}
+            >
+              {microTension}
+            </motion.p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <AnimatePresence mode="wait">
         {phase === 'intro' && (
           <IntroScreen key="intro" onStart={handleStart} />

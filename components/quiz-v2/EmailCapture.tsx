@@ -22,15 +22,15 @@ export function EmailCapture({ onSubmit, loading }: Props) {
       <span className="text-4xl mb-6 block">✨</span>
 
       <h2 className="font-display text-xl sm:text-2xl font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
-        Tu as traversé les 10 questions les plus profondes de ce test.
+        Ce que tu viens de montrer est rarement conscient.
       </h2>
 
-      <p className="text-sm leading-relaxed mb-8" style={{ color: 'var(--text-secondary)' }}>
-        Il reste 5 questions pour affiner ton profil émotionnel et trouver le chemin qui te correspond.
+      <p className="text-sm leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
+        Peu de gens vont aussi loin dans leurs réponses. Un schéma très précis est en train de se dessiner — que tu vis probablement depuis des années sans l&apos;avoir nommé.
       </p>
 
-      <p className="text-sm leading-relaxed mb-8" style={{ color: 'var(--text-secondary)' }}>
-        Une chose importante : ton résultat personnalisé sera envoyé dans ta boîte mail pour que tu puisses y revenir quand tu en auras besoin — et tu recevras aussi les chemins qui s&apos;ouvriront spécifiquement pour toi dans les prochains mois.
+      <p className="text-sm leading-relaxed italic mb-8" style={{ color: 'var(--brand, var(--brand))', opacity: 0.8 }}>
+        Ton profil est prêt. Et il est probablement plus précis que tu ne l&apos;imagines.
       </p>
 
       <div className="space-y-4">
@@ -57,7 +57,7 @@ export function EmailCapture({ onSubmit, loading }: Props) {
             color: isValid ? '#000000' : 'var(--text-muted)',
           }}
         >
-          {loading ? 'Envoi...' : 'CONTINUER · 5 MIN →'}
+          {loading ? 'Envoi...' : 'RÉVÉLER MON PROFIL →'}
         </button>
       </div>
 
@@ -65,7 +65,7 @@ export function EmailCapture({ onSubmit, loading }: Props) {
         <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
         </svg>
-        Aucun spam. Jamais. Tu pourras te désinscrire en un clic.
+        Données confidentielles. Aucun spam — uniquement ton résultat.
       </p>
     </motion.div>
   )

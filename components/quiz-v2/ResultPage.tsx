@@ -294,13 +294,24 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
       {/* ══════════ ACTE 6 — TON POINT DE DÉPART ══════════ */}
       <Acte>
         <div className="space-y-8">
-          <div>
+          <div className="space-y-2">
             <h2 className="font-display text-lg sm:text-xl font-semibold tracking-wide uppercase" style={{ color: 'var(--brand)' }}>
-              Ton point de départ.
+              Ton protocole recommandé
             </h2>
-            <p className="text-sm mt-2" style={{ color: 'var(--text-muted)' }}>
-              À partir de tes 15 réponses, voici les protocoles qui vont vraiment te parler.
-            </p>
+            {topProtocol ? (
+              <>
+                <p className="text-base font-semibold" style={{ color: 'var(--text-primary)' }}>
+                  {topProtocol.title} — {topProtocol.matchScore}% de correspondance
+                </p>
+                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                  C&apos;est le point de départ le plus adapté à ce que ton test vient de révéler.
+                </p>
+              </>
+            ) : (
+              <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+                Crée ton espace pour découvrir les protocoles qui te correspondent.
+              </p>
+            )}
           </div>
 
           {/* Top protocol — highlighted */}
@@ -343,15 +354,14 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
                 ))}
               </div>
 
-              {topProtocol.status === 'available' && (
-                <Link
-                  href={`/dashboard/encyclopedie/${topProtocol.slug}`}
-                  className="block text-center py-3 rounded-full text-sm font-semibold transition-all hover:brightness-110"
-                  style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
-                >
-                  Commencer ce protocole →
-                </Link>
-              )}
+              <Link
+                href={`/protocole/${topProtocol.slug}?preview=true&email=${encodeURIComponent(email)}`}
+                onClick={storeProtocolSlug}
+                className="block text-center py-3 rounded-full text-sm font-semibold transition-all hover:brightness-110"
+                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
+              >
+                Commencer ce protocole
+              </Link>
             </div>
           )}
 
@@ -406,6 +416,16 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
           <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
             On t&apos;enverra un email personnalisé à chaque nouveau protocole qui te correspond.
           </p>
+
+          {!topProtocol && (
+            <Link
+              href={signupUrl}
+              className="block text-center w-full py-4 rounded-full text-sm font-semibold transition-all hover:brightness-110"
+              style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
+            >
+              Créer mon espace gratuit
+            </Link>
+          )}
         </div>
       </Acte>
 

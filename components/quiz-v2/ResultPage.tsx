@@ -318,9 +318,9 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
                   Ce protocole t&apos;accompagne en 3 étapes :
                 </p>
                 {[
-                  { num: '1', label: 'Identifier le déclencheur', desc: 'reconnaître quand le schéma s\'active dans ton quotidien' },
-                  { num: '2', label: 'Comprendre l\'origine', desc: 'relier le présent à ce qui s\'est formé dans ton histoire' },
-                  { num: '3', label: 'Changer la réponse', desc: 'remplacer l\'automatisme par un choix conscient' },
+                  { num: '1', label: 'Comprendre', desc: 'reconnaître quand le schéma s\'active dans ton quotidien' },
+                  { num: '2', label: 'Libérer & intégrer', desc: 'relier le présent à ce qui s\'est formé dans ton histoire' },
+                  { num: '3', label: 'Agir', desc: 'remplacer l\'automatisme par un choix conscient' },
                 ].map(step => (
                   <div key={step.num} className="flex items-start gap-3">
                     <span className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5"
@@ -340,7 +340,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
                   className="block text-center py-3 rounded-full text-sm font-semibold transition-all hover:brightness-110"
                   style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
                 >
-                  Accéder au protocole →
+                  Commencer ce protocole →
                 </Link>
               )}
             </div>

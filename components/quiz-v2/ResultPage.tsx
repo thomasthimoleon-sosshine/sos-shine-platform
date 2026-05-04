@@ -82,11 +82,11 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
   const topProtocol = available[0] ?? matchedProtocols[0] ?? null
 
   const displayName = firstName || 'Toi'
-  const rejoindreUrl = `/rejoindre?source=quiz&email=${encodeURIComponent(email)}`
-  const essentielleUrl = `/rejoindre?source=quiz&plan=essential&email=${encodeURIComponent(email)}`
+  const signupUrl = `/signup?source=quiz&email=${encodeURIComponent(email)}`
+  const essentielleUrl = `/signup?source=quiz&plan=essential&email=${encodeURIComponent(email)}`
   const ctaUrl = topProtocol
     ? `/protocole/${topProtocol.slug}?from=quiz&preview=true&email=${encodeURIComponent(email)}`
-    : rejoindreUrl
+    : signupUrl
 
   function storeProtocolSlug() {
     if (topProtocol) {

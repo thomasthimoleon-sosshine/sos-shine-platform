@@ -41,6 +41,18 @@ function Acte({ children, delay = 0 }: { children: React.ReactNode; delay?: numb
   )
 }
 
+async function trackResultEvent(eventType: string, eventData: Record<string, unknown>, email: string) {
+  try {
+    await fetch('/api/quiz-v2/track', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessionId: null, quizResponseId: null, eventType, eventData: { ...eventData, email } }),
+    })
+  } catch {
+    // fire-and-forget
+  }
+}
+
 export function ResultPage({ firstName, scores, dominant, secondary, q15Response, email }: Props) {
   const [protocols, setProtocols] = useState<Protocol[]>([])
   const dimInfo = DIMENSIONS[parseInt(dominant) as keyof typeof DIMENSIONS]
@@ -53,7 +65,12 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
       if (data) setProtocols(data)
     }
     loadProtocols()
-  }, [])
+
+    trackResultEvent('result_page_viewed', { dominant, secondary }, email)
+    if (dimInfo) {
+      trackResultEvent('pattern_identified', { dominant, secondary, dimName: dimInfo.name }, email)
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const matchedProtocols = protocols
     .map(p => ({ ...p, matchScore: calculateMatchScores(scores, p.dimension_weights) }))
@@ -62,8 +79,17 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
 
   const available = matchedProtocols.filter(p => p.status === 'available')
   const comingSoon = matchedProtocols.filter(p => p.status === 'coming_soon')
+  const topProtocol = available[0] ?? matchedProtocols[0] ?? null
 
   const displayName = firstName || 'Toi'
+  const rejoindreUrl = `/rejoindre?source=quiz&email=${encodeURIComponent(email)}`
+  const essentielleUrl = `/rejoindre?source=quiz&plan=essential&email=${encodeURIComponent(email)}`
+
+  useEffect(() => {
+    if (topProtocol) {
+      trackResultEvent('protocol_recommendation_viewed', { protocolId: topProtocol.id, protocolTitle: topProtocol.title, matchScore: topProtocol.matchScore }, email)
+    }
+  }, [topProtocol?.id]) // eslint-disable-line react-hooks/exhaustive-deps
 
   async function handleNotify(protocolId: string) {
     const supabase = createClient()
@@ -95,7 +121,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
             className="text-sm leading-relaxed"
             style={{ color: 'var(--text-secondary)' }}
           >
-            Avant toute chose : merci d&apos;avoir eu le courage de répondre jusqu&apos;au bout.
+            Ce n&apos;est pas par hasard que tu es allé(e) jusqu&apos;au bout.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, scale: 0 }}
@@ -111,26 +137,58 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
             className="text-sm"
             style={{ color: 'var(--text-secondary)' }}
           >
-            Voilà ce que tes 15 réponses nous ont révélé.
+            15 questions. Un schéma qui se dessine depuis des années. Voilà ce que tes réponses nous ont révélé.
           </motion.p>
         </div>
       </Acte>
 
       {/* ══════════ ACTE 2 — LE PATTERN ══════════ */}
-      {texts && (
+      {texts && dimInfo && (
         <Acte>
           <div className="space-y-6">
             <h2 className="font-display text-lg sm:text-xl font-semibold tracking-wide uppercase" style={{ color: 'var(--brand)' }}>
-              Il y a un pattern dans tes réponses.
+              On a identifié un schéma.
             </h2>
             <div className="whitespace-pre-line text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
               {texts.acte2}
+            </div>
+            <div className="rounded-xl px-5 py-4" style={{ background: 'rgba(201,169,97,0.07)', border: '1px solid rgba(201,169,97,0.18)' }}>
+              <p className="text-sm font-semibold" style={{ color: 'var(--brand)' }}>
+                {dimInfo.icon} {dimInfo.name}
+              </p>
+              <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
+                Ce n&apos;est pas une étiquette. C&apos;est une clé.
+              </p>
             </div>
           </div>
         </Acte>
       )}
 
-      {/* ══════════ ACTE 3 — LE POURQUOI ══════════ */}
+      {/* ══════════ COÛT IMMÉDIAT ══════════ */}
+      {texts && (
+        <Acte>
+          <div className="space-y-5">
+            <h2 className="font-display text-lg sm:text-xl font-semibold tracking-wide uppercase" style={{ color: 'var(--brand)' }}>
+              Ce que ça te coûte aujourd&apos;hui.
+            </h2>
+            <ul className="space-y-3">
+              {texts.costImmediate.map((item, i) => (
+                <li key={i} className="flex items-start gap-3 text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                  <span className="mt-0.5 flex-shrink-0" style={{ color: 'var(--brand)' }}>—</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            {texts.safetyNote && (
+              <p className="text-sm font-medium pt-1" style={{ color: 'var(--brand)', opacity: 0.9 }}>
+                {texts.safetyNote}
+              </p>
+            )}
+          </div>
+        </Acte>
+      )}
+
+      {/* ══════════ ACTE 3 — D'OÙ ÇA VIENT ══════════ */}
       {texts && (
         <Acte>
           <div className="space-y-6">
@@ -144,15 +202,51 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
         </Acte>
       )}
 
-      {/* ══════════ ACTE 4 — LE COÛT ══════════ */}
+      {/* ══════════ ACTE 4 — LE PIÈGE INVISIBLE ══════════ */}
       <Acte>
         <div className="space-y-6">
           <h2 className="font-display text-lg sm:text-xl font-semibold tracking-wide uppercase" style={{ color: 'var(--brand)' }}>
-            Ce qui va se passer si rien ne change.
+            Le piège invisible.
           </h2>
+          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+            Si rien ne change, voilà ce qui va se passer :
+          </p>
           <div className="whitespace-pre-line text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
             {generateActe4(dominant)}
           </div>
+        </div>
+      </Acte>
+
+      {/* ══════════ COMPRENDRE NE SUFFIT PAS ══════════ */}
+      <Acte>
+        <div className="rounded-2xl px-7 py-8 space-y-4 text-center"
+          style={{ background: 'rgba(201,169,97,0.05)', border: '1px solid rgba(201,169,97,0.14)' }}>
+          <h3 className="font-display text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
+            Comprendre ne suffit pas.
+          </h3>
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+            Tu sais déjà. Peut-être depuis longtemps.
+          </p>
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+            Ce que tu ne sais pas encore, c&apos;est comment sortir du schéma. C&apos;est exactement pour ça que SOS Shine a été conçu.
+          </p>
+        </div>
+      </Acte>
+
+      {/* ══════════ CTA INTERMÉDIAIRE ══════════ */}
+      <Acte>
+        <div className="text-center space-y-3">
+          <Link
+            href={rejoindreUrl}
+            onClick={() => trackResultEvent('cta_clicked', { ctaType: 'intermediaire', position: 'before_acte5' }, email)}
+            className="block w-full py-4 rounded-full text-sm font-semibold transition-all hover:brightness-110"
+            style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
+          >
+            Commencer mon protocole maintenant
+          </Link>
+          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+            7 jours offerts · accès immédiat · annulable à tout moment
+          </p>
         </div>
       </Acte>
 
@@ -188,22 +282,74 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
         </div>
       </Acte>
 
-      {/* ══════════ ACTE 6 — LE CHEMIN ══════════ */}
+      {/* ══════════ ACTE 6 — TON POINT DE DÉPART ══════════ */}
       <Acte>
         <div className="space-y-8">
           <div>
             <h2 className="font-display text-lg sm:text-xl font-semibold tracking-wide uppercase" style={{ color: 'var(--brand)' }}>
-              Voici ton chemin.
+              Ton point de départ.
             </h2>
             <p className="text-sm mt-2" style={{ color: 'var(--text-muted)' }}>
               À partir de tes 15 réponses, voici les protocoles qui vont vraiment te parler.
             </p>
           </div>
 
-          {/* Available protocols */}
-          {available.length > 0 && (
+          {/* Top protocol — highlighted */}
+          {topProtocol && (
+            <div className="rounded-2xl p-6 space-y-5"
+              style={{ background: 'linear-gradient(160deg, rgba(201,169,97,0.10), rgba(201,169,97,0.03))', border: '1px solid rgba(201,169,97,0.25)' }}>
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wider mb-1" style={{ color: 'var(--brand)', opacity: 0.7 }}>
+                    Ton protocole recommandé
+                  </p>
+                  <p className="text-base font-semibold" style={{ color: 'var(--text-primary)' }}>
+                    {topProtocol.title}
+                  </p>
+                  <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
+                    {topProtocol.duration_days} jours · Match {topProtocol.matchScore}%
+                  </p>
+                </div>
+                <span className="text-xl flex-shrink-0">{dimInfo?.icon}</span>
+              </div>
+
+              <div className="space-y-3 pt-1" style={{ borderTop: '1px solid rgba(201,169,97,0.15)' }}>
+                <p className="text-xs font-medium pt-2" style={{ color: 'var(--text-muted)' }}>
+                  Ce protocole t&apos;accompagne en 3 étapes :
+                </p>
+                {[
+                  { num: '1', label: 'Identifier le déclencheur', desc: 'reconnaître quand le schéma s\'active dans ton quotidien' },
+                  { num: '2', label: 'Comprendre l\'origine', desc: 'relier le présent à ce qui s\'est formé dans ton histoire' },
+                  { num: '3', label: 'Changer la réponse', desc: 'remplacer l\'automatisme par un choix conscient' },
+                ].map(step => (
+                  <div key={step.num} className="flex items-start gap-3">
+                    <span className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5"
+                      style={{ background: 'rgba(201,169,97,0.2)', color: 'var(--brand)' }}>
+                      {step.num}
+                    </span>
+                    <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                      <span className="font-medium" style={{ color: 'var(--text-primary)' }}>{step.label}</span> — {step.desc}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              {topProtocol.status === 'available' && (
+                <Link
+                  href={`/dashboard/encyclopedie/${topProtocol.slug}`}
+                  className="block text-center py-3 rounded-full text-sm font-semibold transition-all hover:brightness-110"
+                  style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
+                >
+                  Accéder au protocole →
+                </Link>
+              )}
+            </div>
+          )}
+
+          {/* Other available protocols */}
+          {available.length > 1 && (
             <div className="space-y-3">
-              {available.slice(0, 4).map(p => (
+              {available.slice(1, 4).map(p => (
                 <div key={p.id} className="rounded-xl p-5 flex items-center justify-between"
                   style={{ background: 'rgba(85,239,196,0.06)', border: '1px solid rgba(85,239,196,0.15)' }}>
                   <div>
@@ -211,7 +357,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
                       <span style={{ color: '#55EFC4' }}>✓</span> {p.title}
                     </p>
                     <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
-                      {p.duration_days} jours de protocole · Match : {p.matchScore}%
+                      {p.duration_days} jours · Match {p.matchScore}%
                     </p>
                   </div>
                   <Link href={`/dashboard/encyclopedie/${p.slug}`}
@@ -235,7 +381,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
                       <span style={{ color: 'var(--brand)' }}>⏳</span> {p.title}
                     </p>
                     <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
-                      Disponible en {p.release_date ? new Date(p.release_date).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) : 'bientôt'} · Match : {p.matchScore}%
+                      Disponible en {p.release_date ? new Date(p.release_date).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) : 'bientôt'} · Match {p.matchScore}%
                     </p>
                   </div>
                   <button onClick={() => handleNotify(p.id)}
@@ -254,7 +400,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
         </div>
       </Acte>
 
-      {/* ══════════ CTA FINAL ══════════ */}
+      {/* ══════════ ACTE 7 — CTA FINAL ══════════ */}
       <Acte>
         <div className="rounded-2xl p-8 text-center space-y-6"
           style={{ background: 'linear-gradient(160deg, rgba(201,169,97,0.08), rgba(201,169,97,0.02))', border: '1px solid rgba(201,169,97,0.2)' }}>
@@ -263,10 +409,10 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
             Rejoindre SOS Shine
           </h2>
           <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-            Acc&egrave;s &agrave; TOUS tes protocoles personnalis&eacute;s, &agrave; ta communaut&eacute;, aux lives, et &agrave; tout ce qui viendra pour toi dans les prochains mois.
+            Ton protocole personnalisé, ta communauté, les lives — tout ce qu&apos;il faut pour que le schéma change vraiment, pas juste se comprendre.
           </p>
 
-          {/* Sérénité — prix promo */}
+          {/* Prix promo */}
           <div className="space-y-3">
             <div className="flex items-baseline justify-center gap-2">
               <span className="text-lg line-through" style={{ color: 'var(--text-muted)' }}>{PROMO.originalPrice}{PROMO.currency}</span>
@@ -274,22 +420,29 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
               <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
             </div>
             <p className="text-xs font-medium" style={{ color: '#55EFC4' }}>
-              code {PROMO.code} appliqu&eacute; automatiquement
+              code {PROMO.code} appliqué automatiquement
             </p>
             <div className="flex justify-center">
               <PromoCountdown className="text-xs" />
             </div>
           </div>
 
-          <Link
-            href={`/rejoindre?source=quiz&email=${encodeURIComponent(email)}`}
-            className="block w-full py-4 rounded-full text-sm font-semibold transition-all hover:brightness-110"
-            style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}>
-            COMMENCER S&Eacute;R&Eacute;NIT&Eacute; &middot; 7 jours offerts
-          </Link>
+          <div className="space-y-3">
+            <Link
+              href={rejoindreUrl}
+              onClick={() => trackResultEvent('cta_clicked', { ctaType: 'final', position: 'acte7' }, email)}
+              className="block w-full py-4 rounded-full text-sm font-semibold transition-all hover:brightness-110"
+              style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
+            >
+              Sortir de ce schéma maintenant
+            </Link>
+            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+              7 jours offerts · ton protocole recommandé · accès immédiat
+            </p>
+          </div>
 
           <Link
-            href={`/rejoindre?source=quiz&plan=essential&email=${encodeURIComponent(email)}`}
+            href={essentielleUrl}
             className="block text-sm font-medium transition-colors hover:opacity-80"
             style={{ color: 'var(--text-secondary)' }}>
             Voir la formule Essentielle (9,90&euro;/mois) &rarr;
@@ -300,7 +453,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
               <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
             </svg>
             <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-              Inscription + paiement s&eacute;curis&eacute; &middot; R&eacute;sultat envoy&eacute; &agrave; ton email
+              Inscription + paiement sécurisé · Résultat envoyé à ton email
             </p>
           </div>
         </div>

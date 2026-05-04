@@ -7,6 +7,8 @@ export type DimensionText = {
   acte2: string
   acte3: string
   acte4: { fatigue: string; situation: string; etat: string }
+  costImmediate: [string, string, string]
+  safetyNote?: string
 }
 
 export const DIMENSION_TEXTS: Record<string, DimensionText> = {
@@ -30,6 +32,12 @@ Aujourd'hui, tu n'as plus besoin de cette stratégie. Mais elle est devenue toi.
       situation: "distance émotionnelle avec tes proches",
       etat: "sentiment d'être spectateur/trice de ta propre vie",
     },
+
+    costImmediate: [
+      "les décisions que tu remets parce que tu ne fais pas confiance à ce que tu ressens",
+      "les conversations où tu expliques au lieu de te laisser toucher",
+      "la tête qui tourne en boucle la nuit alors que le corps, lui, attend",
+    ],
   },
 
   '2': {
@@ -52,6 +60,12 @@ Tu es arrivé(e) là où tu es grâce à cette stratégie. Mais aujourd'hui, ell
       situation: "impossibilité de te poser",
       etat: "vide que plus rien ne remplit",
     },
+
+    costImmediate: [
+      "les projets lancés à toute vitesse… puis abandonnés quand l'excitation retombe",
+      "les relations que tu évites d'approfondir parce que ça obligerait à ralentir",
+      "le vide qui revient dès que tu t'arrêtes enfin",
+    ],
   },
 
   '3': {
@@ -74,6 +88,12 @@ Tu as appris à exister par le don. Mais aujourd'hui, tu te perds dans les autre
       situation: "sentiment d'invisibilité",
       etat: "identité dissoute dans les besoins des autres",
     },
+
+    costImmediate: [
+      "l'énergie que tu donnes encore et encore, sans jamais en recevoir autant",
+      "les besoins que tu tais pour ne pas paraître égoïste",
+      "la sensation, au fond, de ne pas vraiment exister pour toi-même",
+    ],
   },
 
   '4': {
@@ -96,6 +116,12 @@ Le résultat est le même : tu as construit une autonomie si solide qu'elle est 
       situation: "impression de porter seul(e)",
       etat: "cœur fermé même à ceux qui t'aiment",
     },
+
+    costImmediate: [
+      "la fatigue silencieuse de tout porter sans jamais rien montrer",
+      "la solitude au milieu des gens qui t'aiment — et qui ne le savent pas",
+      "les mots que tu n'arrives pas à prononcer même quand tu en aurais besoin",
+    ],
   },
 
   '5': {
@@ -119,6 +145,12 @@ Depuis ce jour, tu as décidé qu'on ne t'y reprendrait plus. Tenir les rênes e
       situation: "incapacité à te détendre vraiment",
       etat: "corps qui craque sous la pression du contrôle",
     },
+
+    costImmediate: [
+      "l'énergie gaspillée à anticiper des scénarios qui n'arrivent jamais",
+      "les relations tendues par ton besoin de maîtriser ce que tu ne peux pas contrôler",
+      "l'impossibilité de te détendre vraiment — même en vacances, même la nuit",
+    ],
   },
 
   '6': {
@@ -141,6 +173,12 @@ Tu es devenu(e) un caméléon pour survivre. Mais aujourd'hui, tu ne sais plus q
       situation: "sensation de ne plus savoir qui tu es",
       etat: "identité floue, vie qui ne te ressemble pas",
     },
+
+    costImmediate: [
+      "l'énergie épuisante de calibrer ta personnalité selon les gens en face de toi",
+      "le vide quand tu es enfin seul(e) et que tu ne sais plus quoi ressentir",
+      "la sensation sourde de vivre une vie qui n'est pas vraiment la tienne",
+    ],
   },
 
   '7': {
@@ -163,6 +201,14 @@ Depuis, ton système nerveux scanne en permanence. Ce n'est pas une faiblesse. C
       situation: "incapacité à te sentir en sécurité",
       etat: "corps qui ne dort jamais vraiment",
     },
+
+    costImmediate: [
+      "le sommeil fragmenté — ton corps ne sait plus quand il peut vraiment se reposer",
+      "la méfiance qui s'infiltre même dans tes relations les plus proches",
+      "l'épuisement silencieux d'un corps qui reste en alerte même quand tout va bien",
+    ],
+
+    safetyNote: "Tu n'as pas à porter ça seul(e).",
   },
 
   '8': {
@@ -185,6 +231,12 @@ Vivre dans l'idéal était un refuge. Mais aujourd'hui, c'est une cage qui t'emp
       situation: "report permanent de ta vraie vie",
       etat: "nostalgie d'un futur qui n'arrive jamais",
     },
+
+    costImmediate: [
+      "les opportunités du présent que tu laisses filer en attendant mieux",
+      "les relations que tu dévalorisent parce qu'elles ne sont pas à la hauteur de ce que tu imagines",
+      "l'insatisfaction chronique qui te ronge — quoi que tu obtienness",
+    ],
   },
 
   '9': {
@@ -207,6 +259,12 @@ Tu as appris à lisser, à apaiser, à disparaître. Tu es devenu(e) le baume de
       situation: "invisibilité volontaire dans tes relations",
       etat: "sentiment de vivre la vie des autres",
     },
+
+    costImmediate: [
+      "les fois où tu dis oui alors que tout en toi voulait dire non",
+      "les gens qui t'oublient ou te prennent pour acquis(e) — parce que tu ne demandes jamais",
+      "ta propre voix, de plus en plus difficile à entendre",
+    ],
   },
 
   '10': {
@@ -229,6 +287,12 @@ Tu as appris à provoquer pour vivre. Mais aujourd'hui, l'intensité elle-même 
       situation: "incapacité à trouver la paix",
       etat: "peur du calme devenue plus grande que tout",
     },
+
+    costImmediate: [
+      "les relations que tu sabotes dès qu'elles deviennent trop stables",
+      "l'épuisement après chaque tempête — que tu as souvent déclenchée toi-même",
+      "l'incapacité à te sentir bien dans le calme, même quand tu le veux",
+    ],
   },
 }
 

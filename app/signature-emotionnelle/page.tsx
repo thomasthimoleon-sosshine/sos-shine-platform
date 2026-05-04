@@ -147,6 +147,7 @@ function QuizScreen({ onComplete }: { onComplete: (answers: Record<number, numbe
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
   const [direction, setDirection] = useState(1);
+  const [microTension, setMicroTension] = useState<string | null>(null);
 
   const question = QUESTIONS[currentQ];
 
@@ -160,13 +161,32 @@ function QuizScreen({ onComplete }: { onComplete: (answers: Record<number, numbe
 
       if (currentQ < QUESTIONS.length - 1) {
         setDirection(1);
-        setCurrentQ((prev) => prev + 1);
-        setSelectedIdx(null);
+
+        const advanceToNext = () => {
+          setCurrentQ((prev) => prev + 1);
+          setSelectedIdx(null);
+        };
+
+        if (question.id === 5) {
+          setMicroTension(t('signature.micro_tension_1'));
+          setTimeout(() => {
+            setMicroTension(null);
+            advanceToNext();
+          }, 2200);
+        } else if (question.id === 10) {
+          setMicroTension(t('signature.micro_tension_2'));
+          setTimeout(() => {
+            setMicroTension(null);
+            advanceToNext();
+          }, 2200);
+        } else {
+          advanceToNext();
+        }
       } else {
         onComplete(newAnswers);
       }
     }, 400);
-  }, [selectedIdx, answers, question.id, currentQ, onComplete]);
+  }, [selectedIdx, answers, question.id, currentQ, onComplete, t]);
 
   const goBack = useCallback(() => {
     if (currentQ > 0) {
@@ -272,6 +292,29 @@ function QuizScreen({ onComplete }: { onComplete: (answers: Record<number, numbe
           {t('signature.previous')}
         </motion.button>
       )}
+
+      <AnimatePresence>
+        {microTension && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="fixed inset-0 flex items-center justify-center z-50 px-6"
+            style={{ background: "var(--dark)" }}
+          >
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="font-display text-xl md:text-2xl font-light text-center max-w-sm leading-relaxed"
+              style={{ color: "var(--gold)" }}
+            >
+              {microTension}
+            </motion.p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
@@ -390,15 +433,25 @@ function EmailScreen({ onSubmit, firstName }: { onSubmit: (email: string) => voi
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.25 }}
-        className="text-lg text-[var(--text-secondary)] font-light max-w-lg mb-10 leading-relaxed"
+        className="text-lg text-[var(--text-secondary)] font-light max-w-lg mb-6 leading-relaxed"
       >
         {t("signature.email_subtitle").replace("{firstName}", firstName)}
+      </motion.p>
+
+      <motion.p
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.35 }}
+        className="text-sm font-light italic mb-8 max-w-sm"
+        style={{ color: "var(--gold)", opacity: 0.75 }}
+      >
+        {t("signature.email_pre_field")}
       </motion.p>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.35 }}
+        transition={{ duration: 0.6, delay: 0.45 }}
         className="w-full max-w-sm"
       >
         <label className="block text-sm tracking-[0.15em] uppercase text-[var(--text-muted)] mb-3 text-left">

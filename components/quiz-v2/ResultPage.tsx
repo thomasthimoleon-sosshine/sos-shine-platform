@@ -83,18 +83,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
   const displayName = firstName || 'Toi'
   const signupUrl = `/signup?source=quiz&email=${encodeURIComponent(email)}`
   const essentielleUrl = `/signup?source=quiz&plan=essential&email=${encodeURIComponent(email)}`
-  const ctaUrl = topProtocol
-    ? `/protocole/${topProtocol.slug}?from=quiz&preview=true&email=${encodeURIComponent(email)}`
-    : signupUrl
-
-  function storeProtocolSlug() {
-    if (topProtocol) {
-      try {
-        sessionStorage.setItem('sos_protocol_slug', topProtocol.slug)
-        if (email) sessionStorage.setItem('sos_quiz_email', email)
-      } catch {}
-    }
-  }
+  const ctaUrl = signupUrl
 
   useEffect(() => {
     if (topProtocol) {
@@ -249,7 +238,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
         <div className="text-center space-y-3">
           <Link
             href={ctaUrl}
-            onClick={() => { storeProtocolSlug(); trackResultEvent('cta_clicked', { ctaType: 'intermediaire', position: 'before_acte5' }, email) }}
+            onClick={() => { trackResultEvent('cta_clicked', { ctaType: 'intermediaire', position: 'before_acte5' }, email) }}
             className="block w-full py-4 rounded-full text-sm font-semibold transition-all hover:brightness-110"
             style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
           >
@@ -357,12 +346,11 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
               </div>
 
               <Link
-                href={`/protocole/${topProtocol.slug}?preview=true&email=${encodeURIComponent(email)}`}
-                onClick={storeProtocolSlug}
+                href={signupUrl}
                 className="block text-center py-3 rounded-full text-sm font-semibold transition-all hover:brightness-110"
                 style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
               >
-                Commencer ce protocole
+                Créer mon espace gratuit
               </Link>
             </div>
           )}
@@ -381,11 +369,10 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
                       {p.duration_days} jours · Match {p.matchScore}%
                     </p>
                   </div>
-                  <Link href={`/protocole/${p.slug}?preview=true&email=${encodeURIComponent(email)}`}
-                    onClick={() => { try { sessionStorage.setItem('sos_protocol_slug', p.slug) } catch {} }}
+                  <Link href={signupUrl}
                     className="text-xs px-4 py-2 rounded-full font-medium flex-shrink-0"
                     style={{ background: 'rgba(85,239,196,0.15)', color: '#55EFC4' }}>
-                    Commencer →
+                    Rejoindre →
                   </Link>
                 </div>
               ))}
@@ -462,7 +449,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
           <div className="space-y-3">
             <Link
               href={ctaUrl}
-              onClick={() => { storeProtocolSlug(); trackResultEvent('cta_clicked', { ctaType: 'final', position: 'acte7' }, email) }}
+              onClick={() => { trackResultEvent('cta_clicked', { ctaType: 'final', position: 'acte7' }, email) }}
               className="block w-full py-4 rounded-full text-sm font-semibold transition-all hover:brightness-110"
               style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
             >

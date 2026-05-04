@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import { calculateMatchScores } from '@/lib/quiz-v2/scoring'
+import SubscriptionGate from '@/components/SubscriptionGate'
 
 type Protocol = {
   id: string
@@ -198,6 +199,7 @@ function MonCheminContent() {
   }
 
   return (
+    <SubscriptionGate>
     <main className="min-h-screen" style={{ background: 'var(--surface)' }}>
       <div className="max-w-2xl mx-auto px-6 py-16 space-y-10">
 
@@ -342,6 +344,7 @@ function MonCheminContent() {
 
       </div>
     </main>
+    </SubscriptionGate>
   )
 }
 

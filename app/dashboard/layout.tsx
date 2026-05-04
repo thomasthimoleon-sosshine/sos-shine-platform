@@ -233,46 +233,46 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[var(--surface)]">
+      <div className="min-h-screen flex items-center justify-center bg-[#050505]">
         <div className="text-center space-y-4">
-          <div className="w-10 h-10 rounded-2xl mx-auto flex items-center justify-center bg-[var(--brand)]">
-            <div className="w-5 h-5 border-2 border-[var(--surface)] border-t-transparent rounded-full animate-spin" />
+          <div className="w-10 h-10 rounded-2xl mx-auto flex items-center justify-center bg-[rgba(212,175,55,0.12)] border border-[#D4AF37]/30">
+            <div className="w-5 h-5 border-2 border-[#050505] border-t-[#D4AF37] rounded-full animate-spin" />
           </div>
-          <p className="text-sm text-[var(--text-muted)]">{t('common.loading')}</p>
+          <p className="text-sm text-[#52525b]">{t('common.loading')}</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen flex bg-[var(--surface)]">
+    <div className="min-h-screen flex bg-[#050505]">
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-40 lg:hidden bg-[var(--surface-overlay)] backdrop-blur-sm"
+          className="fixed inset-0 z-40 lg:hidden bg-black/60 backdrop-blur-sm"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* ── Sidebar ── */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-[16.5rem] flex flex-col transition-transform duration-300 ease-out lg:translate-x-0 bg-[var(--surface-raised)] border-r border-[var(--border-subtle)] ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-[16.5rem] flex flex-col transition-transform duration-300 ease-out lg:translate-x-0 bg-[rgba(9,9,11,0.4)] backdrop-blur-xl border-r border-white/[0.04] ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         {/* Logo */}
-        <div className="px-5 py-5 flex items-center gap-3 border-b border-[var(--border-subtle)]">
+        <div className="px-5 py-5 flex items-center gap-3 border-b border-white/[0.04]">
           <Link href="/dashboard" className="flex items-center gap-3 group" onClick={() => setSidebarOpen(false)}>
             {logoUrl ? (
               <img src={logoUrl} alt="SOS Shine" className="w-9 h-9 rounded-xl object-contain" />
             ) : (
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center font-display text-base font-semibold bg-[var(--brand)] text-[var(--text-inverse)]">
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center font-display text-base font-semibold bg-[rgba(212,175,55,0.12)] text-[#D4AF37] border border-[#D4AF37]/30">
                 S
               </div>
             )}
             <div>
-              <h1 className="font-display text-base font-semibold tracking-tight text-[var(--text-primary)]">
+              <h1 className="font-display text-base font-semibold tracking-tight text-[#D4AF37]">
                 SOS Shine
               </h1>
-              <p className="text-[11px] leading-none text-[var(--text-muted)]">{t('nav.your_space')}</p>
+              <p className="text-[11px] leading-none text-[#52525b]">{t('nav.your_space')}</p>
             </div>
           </Link>
         </div>
@@ -286,10 +286,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 key={item.href}
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
-                className={`nav-item flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium relative group transition-colors duration-[var(--transition-base)] ${isActive ? 'bg-[var(--brand-alpha-weak)] text-[var(--brand)]' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-card)]'}`}
+                className={`nav-item flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium relative group transition-colors duration-[var(--transition-base)] ${isActive ? 'bg-[rgba(212,175,55,0.07)] text-[#D4AF37]' : 'text-[#a1a1aa] hover:text-[#e0e0e0] hover:bg-white/[0.03]'}`}
               >
                 {isActive && (
-                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-full bg-[var(--brand)]" />
+                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-full bg-[#D4AF37]" />
                 )}
                 <span className="opacity-70 group-hover:opacity-100 transition-opacity">{item.icon}</span>
                 {t(item.labelKey)}
@@ -308,14 +308,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {isAdmin && (
             <>
               <div className="pt-5 pb-1.5 px-3">
-                <span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">
+                <span className="text-[10px] font-semibold uppercase tracking-widest text-[#52525b]">
                   {t('nav.administration')}
                 </span>
               </div>
               <Link
                 href="/admin"
                 onClick={() => setSidebarOpen(false)}
-                className="nav-item flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium group text-[var(--accent-blue)] hover:bg-[var(--surface-card)] transition-colors"
+                className="nav-item flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium group text-[#60a5fa] hover:bg-white/[0.03] transition-colors"
               >
                 <span className="opacity-70 group-hover:opacity-100 transition-opacity">
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -330,16 +330,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </nav>
 
         {/* ── User section ── */}
-        <div className="px-3 py-4 border-t border-[var(--border-subtle)]">
-          <div className="flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] mb-2 bg-[var(--surface-card)]">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 ring-1 ring-[var(--border-subtle)] bg-[var(--brand-alpha-medium)] text-[var(--brand)]">
+        <div className="px-3 py-4 border-t border-white/[0.04]">
+          <div className="flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] mb-2 bg-[rgba(255,255,255,0.025)] border border-white/[0.05]">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 ring-1 ring-[#D4AF37]/20 bg-[rgba(212,175,55,0.12)] text-[#D4AF37]">
               {profile?.prenom?.charAt(0).toUpperCase() || 'M'}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-[13px] font-medium truncate text-[var(--text-primary)]">
+              <p className="text-[13px] font-medium truncate text-[#e0e0e0]">
                 {profile?.prenom || 'Membre'}
               </p>
-              <p className="text-[11px] truncate text-[var(--text-muted)]">
+              <p className="text-[11px] truncate text-[#52525b]">
                 {profile?.email}
               </p>
             </div>
@@ -350,7 +350,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
           <button
             onClick={handleSignOut}
-            className="nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-[var(--radius-lg)] text-[13px] cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-secondary)] hover:bg-[var(--surface-card)] transition-colors"
+            className="nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-[var(--radius-lg)] text-[13px] cursor-pointer text-[#52525b] hover:text-[#a1a1aa] hover:bg-white/[0.03] transition-colors"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
@@ -363,10 +363,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* ── Main content area ── */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Mobile topbar */}
-        <header className="lg:hidden flex items-center justify-between px-4 py-3 sticky top-0 z-30 bg-[var(--surface-raised)]/90 backdrop-blur-xl border-b border-[var(--border-subtle)]">
+        <header className="lg:hidden flex items-center justify-between px-4 py-3 sticky top-0 z-30 bg-[rgba(9,9,11,0.85)] backdrop-blur-xl border-b border-white/[0.04]">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="p-2 rounded-[var(--radius-md)] cursor-pointer transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+            className="p-2 rounded-[var(--radius-md)] cursor-pointer transition-colors text-[#a1a1aa] hover:text-[#e0e0e0]"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
@@ -375,7 +375,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {logoUrl ? (
             <img src={logoUrl} alt="SOS Shine" className="h-7 object-contain" />
           ) : (
-            <span className="font-display text-base font-semibold tracking-tight text-[var(--brand)]">
+            <span className="font-display text-base font-semibold tracking-tight text-[#D4AF37]">
               SOS Shine
             </span>
           )}
@@ -402,7 +402,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-[80] flex items-center justify-center px-4 bg-[var(--surface-overlay)] backdrop-blur-md"
+            className="fixed inset-0 z-[80] flex items-center justify-center px-4 bg-black/70 backdrop-blur-md"
             onClick={dismissWelcomePopup}
           >
             <motion.div
@@ -410,29 +410,29 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               transition={{ type: 'spring', damping: 22, stiffness: 260 }}
-              className="w-full max-w-md rounded-[var(--radius-2xl)] overflow-hidden text-center relative bg-[var(--surface-card)] border border-[var(--border-medium)] shadow-[0_25px_60px_rgba(0,0,0,0.5),0_0_40px_rgba(184,164,114,0.06)]"
+              className="w-full max-w-md rounded-[var(--radius-2xl)] overflow-hidden text-center relative bg-[rgba(12,12,15,0.95)] border border-white/[0.08] shadow-[0_25px_60px_rgba(0,0,0,0.7),0_0_40px_rgba(212,175,55,0.06)]"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Glow */}
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 rounded-full opacity-20 blur-[60px]" style={{ background: 'var(--brand)' }} />
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 rounded-full opacity-20 blur-[60px]" style={{ background: '#D4AF37' }} />
 
               <div className="relative z-10 px-6 sm:px-8 py-8 sm:py-10">
                 {/* Diamond icon */}
-                <div className="w-16 h-16 rounded-[var(--radius-xl)] mx-auto mb-5 flex items-center justify-center bg-[var(--brand-alpha-weak)] border border-[var(--border-medium)]">
+                <div className="w-16 h-16 rounded-[var(--radius-xl)] mx-auto mb-5 flex items-center justify-center bg-[rgba(212,175,55,0.07)] border border-[#D4AF37]/20">
                   <span className="text-3xl">✨</span>
                 </div>
 
-                <h2 className="font-display text-xl sm:text-2xl font-semibold mb-3 text-[var(--brand)]">
+                <h2 className="font-display text-xl sm:text-2xl font-semibold mb-3 text-[#D4AF37]">
                   Félicitations Shiner !
                 </h2>
 
-                <p className="text-[15px] leading-relaxed mb-8 text-[var(--text-secondary)]">
+                <p className="text-[15px] leading-relaxed mb-8 text-[#a1a1aa]">
                   Pour ta résilience, ta lumière est en train de se rallumer ✨
                 </p>
 
                 <button
                   onClick={dismissWelcomePopup}
-                  className="w-full sm:w-auto px-8 py-3.5 rounded-full text-sm font-semibold tracking-wide cursor-pointer transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)] hover:scale-[1.02] active:scale-[0.98] bg-[var(--brand)] text-[var(--text-inverse)] shadow-[var(--glow-gold)]"
+                  className="w-full sm:w-auto px-8 py-3.5 rounded-full text-sm font-semibold tracking-wide cursor-pointer transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)] hover:scale-[1.02] active:scale-[0.98] bg-[#D4AF37] text-[#050505] shadow-[0_0_30px_rgba(212,175,55,0.3)]"
                 >
                   Continuer à façonner mon diamant 💎
                 </button>

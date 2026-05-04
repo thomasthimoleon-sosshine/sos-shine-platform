@@ -11,6 +11,14 @@ function SuccessContent() {
   const [status, setStatus] = useState<'loading' | 'verified' | 'error'>('loading')
   const [emailSent, setEmailSent] = useState(false)
   const [isNewAccount, setIsNewAccount] = useState(false)
+  const [protocolSlug, setProtocolSlug] = useState<string | null>(null)
+
+  useEffect(() => {
+    try {
+      const slug = sessionStorage.getItem('sos_protocol_slug')
+      if (slug) setProtocolSlug(slug)
+    } catch {}
+  }, [])
 
   useEffect(() => {
     if (!sessionId) {
@@ -170,18 +178,18 @@ function SuccessContent() {
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+        <div className="flex flex-col gap-3 justify-center">
           <Link
-            href="/login"
+            href={protocolSlug ? `/mon-chemin?protocol=${protocolSlug}` : '/mon-chemin'}
             className="inline-flex items-center justify-center px-8 py-3.5 rounded-full font-medium text-sm tracking-wide transition-all bg-[linear-gradient(135deg,var(--brand),var(--brand-deep))] text-[var(--text-inverse)]"
           >
-            Se connecter
+            Commencer mon protocole
           </Link>
           <Link
-            href="/"
+            href="/login"
             className="inline-flex items-center justify-center px-8 py-3.5 rounded-full font-medium text-sm tracking-wide transition-all bg-[var(--border-subtle)] text-[var(--text-secondary)] border border-[var(--border)]"
           >
-            Retour &agrave; l&apos;accueil
+            Se connecter
           </Link>
         </div>
 

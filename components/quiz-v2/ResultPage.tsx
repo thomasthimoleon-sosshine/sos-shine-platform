@@ -84,6 +84,15 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
   const displayName = firstName || 'Toi'
   const rejoindreUrl = `/rejoindre?source=quiz&email=${encodeURIComponent(email)}`
   const essentielleUrl = `/rejoindre?source=quiz&plan=essential&email=${encodeURIComponent(email)}`
+  const ctaUrl = topProtocol
+    ? `/protocole/${topProtocol.slug}?from=quiz&preview=true&email=${encodeURIComponent(email)}`
+    : rejoindreUrl
+
+  function storeProtocolSlug() {
+    if (topProtocol) {
+      try { sessionStorage.setItem('sos_protocol_slug', topProtocol.slug) } catch {}
+    }
+  }
 
   useEffect(() => {
     if (topProtocol) {
@@ -237,8 +246,8 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
       <Acte>
         <div className="text-center space-y-3">
           <Link
-            href={rejoindreUrl}
-            onClick={() => trackResultEvent('cta_clicked', { ctaType: 'intermediaire', position: 'before_acte5' }, email)}
+            href={ctaUrl}
+            onClick={() => { storeProtocolSlug(); trackResultEvent('cta_clicked', { ctaType: 'intermediaire', position: 'before_acte5' }, email) }}
             className="block w-full py-4 rounded-full text-sm font-semibold transition-all hover:brightness-110"
             style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
           >
@@ -429,8 +438,8 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
 
           <div className="space-y-3">
             <Link
-              href={rejoindreUrl}
-              onClick={() => trackResultEvent('cta_clicked', { ctaType: 'final', position: 'acte7' }, email)}
+              href={ctaUrl}
+              onClick={() => { storeProtocolSlug(); trackResultEvent('cta_clicked', { ctaType: 'final', position: 'acte7' }, email) }}
               className="block w-full py-4 rounded-full text-sm font-semibold transition-all hover:brightness-110"
               style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
             >

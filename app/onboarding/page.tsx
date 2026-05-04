@@ -92,9 +92,19 @@ export default function OnboardingPage() {
   const [loading, setLoading] = useState(false)
   const [prenom, setPrenom] = useState('')
   const [checkingAuth, setCheckingAuth] = useState(true)
+  const [nextDestination, setNextDestination] = useState('/dashboard')
 
   useEffect(() => {
     async function check() {
+      // Read ?next from URL to know where to redirect after onboarding
+      let nextDest = '/dashboard'
+      try {
+        const params = new URLSearchParams(window.location.search)
+        const n = params.get('next')
+        if (n) nextDest = decodeURIComponent(n)
+      } catch {}
+      setNextDestination(nextDest)
+
       const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) {
@@ -111,7 +121,7 @@ export default function OnboardingPage() {
         .maybeSingle()
 
       if (existing) {
-        router.push('/dashboard')
+        router.push(nextDest)
         return
       }
       setCheckingAuth(false)
@@ -296,7 +306,7 @@ export default function OnboardingPage() {
 
               <div className="flex items-center justify-between mt-8 gap-4">
                 <button
-                  onClick={() => router.push('/dashboard')}
+                  onClick={() => router.push(nextDestination)}
                   className="text-[13px] cursor-pointer text-[var(--text-muted)]"
                 >
                   Passer cette étape
@@ -361,7 +371,7 @@ export default function OnboardingPage() {
 
               <div className="flex flex-col items-center gap-3">
                 <button
-                  onClick={() => router.push('/dashboard')}
+                  onClick={() => router.push(nextDestination)}
                   className="px-8 py-3.5 rounded-full text-sm font-medium transition-all hover:opacity-90 cursor-pointer bg-[linear-gradient(135deg,var(--brand),var(--brand-deep))] text-[var(--text-inverse)]"
                 >
                   Accéder à mon espace

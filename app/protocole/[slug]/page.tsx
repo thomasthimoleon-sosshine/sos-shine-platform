@@ -48,11 +48,14 @@ function ProtocolPreviewContent() {
   }, [slug]) // eslint-disable-line
 
   function handleCtaClick() {
-    try { sessionStorage.setItem('sos_protocol_slug', slug) } catch {}
+    try {
+      sessionStorage.setItem('sos_protocol_slug', slug)
+      if (email) sessionStorage.setItem('sos_quiz_email', email)
+    } catch {}
     track('protocol_cta_clicked', { protocolSlug: slug, from: 'preview', email })
   }
 
-  const ctaUrl = `/rejoindre?source=quiz&protocol=${slug}&email=${encodeURIComponent(email)}`
+  const ctaUrl = `/signup?source=quiz&protocol=${slug}&email=${encodeURIComponent(email)}`
 
   if (loading) {
     return (
@@ -182,10 +185,10 @@ function ProtocolPreviewContent() {
             className="block w-full py-4 rounded-full text-sm font-semibold transition-all hover:brightness-110"
             style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
           >
-            Débloquer ce protocole maintenant
+            Créer mon espace et commencer
           </a>
           <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-            7 jours offerts · accès immédiat · annulable à tout moment
+            Gratuit · accès immédiat à ton chemin · upgrade possible ensuite
           </p>
         </motion.div>
 

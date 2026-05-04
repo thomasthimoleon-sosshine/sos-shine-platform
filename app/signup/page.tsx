@@ -79,6 +79,14 @@ export default function SignupPage() {
     })
   }, [signupRouter])
 
+  // Pre-fill email from quiz sessionStorage
+  useEffect(() => {
+    try {
+      const savedEmail = sessionStorage.getItem('sos_quiz_email')
+      if (savedEmail) setEmail(savedEmail)
+    } catch {}
+  }, [])
+
   const [prenom, setPrenom] = useState('')
   const [email, setEmail] = useState('')
   const [birthDate, setBirthDate] = useState('')
@@ -140,12 +148,18 @@ export default function SignupPage() {
 
     try {
       const supabase = createClient()
+      let protocolSlug: string | null = null
+      try { protocolSlug = sessionStorage.getItem('sos_protocol_slug') } catch {}
+      const nextPath = protocolSlug
+        ? `/mon-chemin?protocol=${protocolSlug}`
+        : '/dashboard/tarifs'
+
       const { error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: { prenom, ...(birthDate ? { birth_date: birthDate } : {}) },
-          emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard/tarifs`,
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(nextPath)}`,
         },
       })
 
@@ -168,10 +182,15 @@ export default function SignupPage() {
       setError('Veuillez accepter les conditions générales de vente.')
       return
     }
+    let protocolSlug: string | null = null
+    try { protocolSlug = sessionStorage.getItem('sos_protocol_slug') } catch {}
+    const nextPath = protocolSlug
+      ? `/mon-chemin?protocol=${protocolSlug}`
+      : '/dashboard/tarifs'
     const supabase = createClient()
     await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${window.location.origin}/auth/callback?next=/dashboard/tarifs` },
+      options: { redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(nextPath)}` },
     })
   }
 

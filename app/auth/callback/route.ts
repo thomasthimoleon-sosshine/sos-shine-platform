@@ -126,9 +126,12 @@ export async function GET(request: Request) {
           } catch {}
         }
 
-        // New users → onboarding first, then pricing
+        // New users → onboarding first, then their intended destination
         if (isNewUser) {
-          next = '/onboarding'
+          const hasCustomNext = nextParam !== '/dashboard/tarifs' && nextParam !== '/dashboard'
+          next = hasCustomNext
+            ? `/onboarding?next=${encodeURIComponent(nextParam)}`
+            : '/onboarding'
         }
       }
 

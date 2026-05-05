@@ -2164,7 +2164,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                   <Link href={v2.encyclo_cta_href || '/signature-emotionnelle'}>
                     <button className="magnetic-btn px-8 py-4 rounded-full text-base font-medium tracking-wide"
                       style={{ border: `1px solid rgba(${goldRgb},0.3)`, color: gold }}>
-                      {v2.encyclo_cta || "Explorer l'encyclopédie complète"}
+                      {v2.encyclo_cta || "Découvrir ma Signature Émotionnelle"}
                     </button>
                   </Link>
                 </RevealOnScroll>

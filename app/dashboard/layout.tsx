@@ -199,52 +199,26 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         })
       }
 
-      // Guard: non-abonnés ne peuvent pas accéder au dashboard
+      // Guard: non-abonnés ont accès limité au dashboard
       if (!isUserAdmin) {
         const plan = profileData?.plan as string | null
-        const isSubscribed = plan === 'serenite' || plan === 'essential' || plan === 'premium'
-        setIsSubscribed(isSubscribed)
-        if (!isSubscribed) {
-          // 1. sessionStorage
-          let protocolSlug: string | null = null
-          try { protocolSlug = sessionStorage.getItem('sos_protocol_slug') } catch {}
+        const subscribed = plan === 'serenite' || plan === 'essential' || plan === 'premium'
+        setIsSubscribed(subscribed)
 
-          // 2. localStorage (clés sos_progress_[uid]_[slug])
-          if (!protocolSlug) {
-            try {
-              for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i)
-                if (key?.startsWith(`sos_progress_${user.id}_`)) {
-                  protocolSlug = key.replace(`sos_progress_${user.id}_`, '')
-                  break
-                }
-              }
-            } catch {}
+        if (!subscribed) {
+          // Pages autorisées pour les utilisateurs gratuits
+          const allowedFree = [
+            '/dashboard/encyclopedie',
+            '/dashboard/communaute',
+            '/dashboard/profil',
+            '/dashboard/tarifs',
+          ]
+          const isAllowed = allowedFree.some(p => pathname?.startsWith(p))
+          if (!isAllowed) {
+            router.push('/mon-chemin')
+            return
           }
-
-          // 3. Supabase : retrouver le protocole depuis les réponses quiz
-          if (!protocolSlug && user.email) {
-            try {
-              const { data: responses } = await supabase
-                .from('quiz_v2_responses' as any)
-                .select('scores')
-                .eq('email', user.email)
-                .order('created_at', { ascending: false })
-                .limit(1)
-              if ((responses as any)?.[0]?.scores) {
-                const { data: protocols } = await supabase.from('protocols' as any).select('*')
-                if (protocols && (protocols as any[]).length > 0) {
-                  const matched = (protocols as any[])
-                    .map(p => ({ ...p, matchScore: calculateMatchScores((responses as any)[0].scores, p.dimension_weights) }))
-                    .sort((a, b) => b.matchScore - a.matchScore)
-                  protocolSlug = matched[0]?.slug || null
-                }
-              }
-            } catch {}
-          }
-
-          router.push(protocolSlug ? `/mon-chemin?protocol=${protocolSlug}` : '/signature-emotionnelle')
-          return
+          // Accès autorisé — navigation limitée, on continue
         }
       }
 

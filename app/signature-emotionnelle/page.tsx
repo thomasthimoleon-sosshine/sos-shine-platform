@@ -124,7 +124,7 @@ function QuestionScreen({
   const hasAnswer = (() => {
     if (question.type === 'single') return (response.choiceIndexes?.length || 0) > 0 || (response.freeText?.trim().length || 0) > 0
     if (question.type === 'multi') return (response.choiceIndexes?.length || 0) > 0 || (response.freeText?.trim().length || 0) > 0
-    if (question.type === 'slider') return true // slider always has a value (default 5)
+    if (question.type === 'slider') return true
     if (question.type === 'freetext' || question.type === 'freetext_suggestions') return (response.freeText?.trim().length || 0) > 0
     return false
   })()
@@ -133,22 +133,30 @@ function QuestionScreen({
     !!(response.freeText && (!response.choiceIndexes || response.choiceIndexes.length === 0))
   )
 
+  // Single choice auto-advances; show manual button only for other types (or when "other" text field is open)
+  const showContinueButton =
+    (question.type === 'single' && isOtherSelected) ||
+    question.type === 'multi' ||
+    question.type === 'slider' ||
+    question.type === 'freetext' ||
+    question.type === 'freetext_suggestions'
+
   return (
     <motion.div
       key={question.id}
-      initial={{ opacity: 0, x: 30 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -30 }}
-      transition={{ duration: 0.25 }}
-      className="max-w-lg mx-auto px-6 py-8"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -16 }}
+      transition={{ duration: 0.22, ease: [0.25, 0.46, 0.45, 0.94] }}
+      className="max-w-lg mx-auto px-5 pt-6 pb-8"
     >
       {question.intro && (
-        <p className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>
+        <p className="text-xs mb-3" style={{ color: 'var(--text-muted)' }}>
           {question.intro}
         </p>
       )}
 
-      <h2 className="font-display text-lg sm:text-xl font-semibold mb-8" style={{ color: 'var(--text-primary)' }}>
+      <h2 className="font-display text-xl sm:text-2xl font-semibold mb-7 leading-snug" style={{ color: 'var(--text-primary)' }}>
         {question.question}
       </h2>
 
@@ -162,6 +170,7 @@ function QuestionScreen({
           onOtherChange={(text) => onUpdate({ choiceIndexes: [], freeText: text })}
           onSelectOther={() => { setIsOtherSelected(true); onUpdate({ choiceIndexes: [], freeText: response.freeText || '' }) }}
           isOtherSelected={isOtherSelected}
+          onAutoAdvance={onNext}
         />
       )}
 
@@ -188,6 +197,7 @@ function QuestionScreen({
           value={response.sliderValue ?? 5}
           onChange={(v) => onUpdate({ ...response, sliderValue: v })}
           onMount={() => { if (response.sliderValue === undefined) onUpdate({ ...response, sliderValue: 5 }) }}
+          onAutoAdvance={onNext}
           labels={question.sliderLabels}
           hasOther={question.hasOther}
           otherText={response.freeText || ''}
@@ -213,29 +223,36 @@ function QuestionScreen({
       )}
 
       {/* Spacer for sticky nav */}
-      <div className="h-24" />
+      <div className="h-28" />
 
-      {/* Sticky bottom navigation — above mobile browser bars */}
-      <div className="fixed bottom-0 left-0 right-0 z-20 px-6 pb-[env(safe-area-inset-bottom,16px)] pt-4"
-        style={{ background: 'linear-gradient(to top, var(--dark, #000000) 60%, transparent)' }}>
-        <div className="max-w-lg mx-auto flex justify-between items-center">
-          {canGoBack ? (
-            <button onClick={onPrev} className="text-sm cursor-pointer" style={{ color: 'var(--text-muted)' }}>
-              ← Précédente
-            </button>
-          ) : <span />}
-
-          <button
-            onClick={onNext}
-            disabled={!hasAnswer}
-            className="px-8 py-3 rounded-full text-sm font-semibold transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
-            style={{
-              background: hasAnswer ? 'linear-gradient(135deg, var(--brand), var(--gold-deep, #B8960F))' : 'rgba(255,255,255,0.06)',
-              color: hasAnswer ? '#000000' : 'var(--text-muted)',
-            }}
-          >
-            {isLast ? 'Voir mon résultat' : 'Suivant →'}
-          </button>
+      {/* Sticky bottom nav */}
+      <div className="fixed bottom-0 left-0 right-0 z-20 px-5 pb-[env(safe-area-inset-bottom,20px)] pt-4"
+        style={{ background: 'linear-gradient(to top, var(--dark, #000000) 70%, transparent)' }}>
+        <div className="max-w-lg mx-auto space-y-2">
+          {showContinueButton && (
+            <motion.button
+              onClick={onNext}
+              disabled={!hasAnswer}
+              className="w-full py-4 rounded-full text-sm font-semibold transition-colors cursor-pointer disabled:cursor-not-allowed"
+              style={{
+                background: hasAnswer ? 'linear-gradient(135deg, var(--brand), var(--gold-deep, #B8960F))' : 'rgba(255,255,255,0.06)',
+                color: hasAnswer ? '#000000' : 'var(--text-muted)',
+                opacity: hasAnswer ? 1 : 0.4,
+              }}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: hasAnswer ? 1 : 0.4, y: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              {isLast ? 'Voir mon résultat →' : 'Continuer →'}
+            </motion.button>
+          )}
+          {canGoBack && (
+            <div className="text-center">
+              <button onClick={onPrev} className="text-xs py-2 px-4 cursor-pointer" style={{ color: 'var(--text-muted)' }}>
+                ← Précédente
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </motion.div>
@@ -455,15 +472,15 @@ export default function SignatureEmotionnellePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            className="fixed inset-0 flex items-center justify-center z-50 px-6"
+            transition={{ duration: 0.4, ease: 'easeOut' }}
+            className="fixed inset-0 flex items-center justify-center z-50 px-8"
             style={{ background: 'var(--dark, #000000)' }}
           >
             <motion.p
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="font-display text-xl sm:text-2xl font-light text-center max-w-sm leading-relaxed"
+              initial={{ opacity: 0, y: 16, filter: 'blur(4px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              transition={{ duration: 0.5, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+              className="font-display text-xl sm:text-2xl font-light text-center max-w-xs leading-relaxed"
               style={{ color: 'var(--brand)' }}
             >
               {microTension}

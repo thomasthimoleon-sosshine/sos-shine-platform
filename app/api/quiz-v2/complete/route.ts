@@ -49,24 +49,37 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    // Fetch protocols for email
+    // Fetch protocols for email and top slug persistence
     let matchedProtocols: Array<{ title: string; matchScore: number; status: string; duration_days: number }> = []
+    let topProtocolSlug: string | null = null
     try {
       const { data: protocols } = await supabase.from('protocols').select('*')
       if (protocols) {
-        matchedProtocols = protocols
+        const allScored = protocols
           .map((proto: Record<string, unknown>) => ({
             title: proto.title as string,
+            slug: proto.slug as string,
             status: proto.status as string,
             duration_days: (proto.duration_days as number) || 30,
             matchScore: calculateMatchScores(scores, (proto.dimension_weights as Record<string, number>) || {}),
           }))
-          .filter(p => p.matchScore >= 70)
           .sort((a, b) => b.matchScore - a.matchScore)
-          .slice(0, 5)
+
+        // Best match regardless of threshold (available protocols first)
+        topProtocolSlug = allScored.find(p => p.status === 'available')?.slug || allScored[0]?.slug || null
+
+        // Email: only protocols scoring >= 70
+        matchedProtocols = allScored.filter(p => p.matchScore >= 70).slice(0, 5)
       }
     } catch (e) {
       console.error('Protocol fetch error:', e)
+    }
+
+    // Persist top slug on the quiz response row
+    if (responseId && topProtocolSlug) {
+      await supabase.from('quiz_v2_responses')
+        .update({ top_protocol_slug: topProtocolSlug })
+        .eq('id', responseId)
     }
 
     // Send Email 2 (résultat complet)

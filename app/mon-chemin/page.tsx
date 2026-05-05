@@ -64,7 +64,7 @@ function MonCheminContent() {
       const uid = user?.id || null
       setUserId(uid)
 
-      // Resolve protocol slug: URL param → sessionStorage → Supabase fallback
+      // Resolve protocol slug: URL param → sessionStorage → Supabase (user_id) → Supabase (email)
       let slug: string | null = searchParams.get('protocol')
       if (!slug) {
         try { slug = sessionStorage.getItem('sos_protocol_slug') } catch {}
@@ -77,20 +77,48 @@ function MonCheminContent() {
         found = data || null
       }
 
-      // Supabase fallback: derive from user's latest quiz response
+      // Supabase fallback by user_id: top_protocol_slug first, then compute from scores
+      if (!found && uid) {
+        const { data: responses } = await (supabase as any)
+          .from('quiz_v2_responses')
+          .select('top_protocol_slug, scores')
+          .eq('user_id', uid)
+          .order('created_at', { ascending: false })
+          .limit(1)
+
+        const latest = responses?.[0]
+        if (latest?.top_protocol_slug) {
+          const { data } = await (supabase as any).from('protocols').select('*').eq('slug', latest.top_protocol_slug).single()
+          found = data || null
+        } else if (latest?.scores) {
+          const { data: allProtocols } = await (supabase as any).from('protocols').select('*')
+          if (allProtocols) {
+            const matched = (allProtocols as Protocol[])
+              .map(p => ({ ...p, matchScore: calculateMatchScores(latest.scores, p.dimension_weights) }))
+              .sort((a: any, b: any) => b.matchScore - a.matchScore)
+            found = matched[0] || null
+          }
+        }
+      }
+
+      // Legacy fallback by email (responses avant le lien user_id)
       if (!found && user?.email) {
         const { data: responses } = await (supabase as any)
           .from('quiz_v2_responses')
-          .select('scores')
+          .select('top_protocol_slug, scores')
           .eq('email', user.email)
           .order('created_at', { ascending: false })
           .limit(1)
 
-        if (responses?.[0]?.scores) {
+        const latest = responses?.[0]
+        if (latest?.top_protocol_slug) {
+          const { data } = await (supabase as any).from('protocols').select('*').eq('slug', latest.top_protocol_slug).single()
+          found = data || null
+        } else if (latest?.scores) {
           const { data: allProtocols } = await (supabase as any).from('protocols').select('*')
           if (allProtocols) {
             const matched = (allProtocols as Protocol[])
-              .map(p => ({ ...p, matchScore: calculateMatchScores(responses[0].scores, p.dimension_weights) }))
+              .map(p => ({ ...p, matchScore: calculateMatchScores(latest.scores, p.dimension_weights) }))
               .sort((a: any, b: any) => b.matchScore - a.matchScore)
             found = matched[0] || null
           }
@@ -99,16 +127,30 @@ function MonCheminContent() {
 
       setProtocol(found)
 
-      // Load progress from localStorage — default step 1, never block
+      // Load progress: Supabase (cross-device) → localStorage fallback
       if (found && uid) {
+        let loadedFromSupabase = false
         try {
-          const raw = localStorage.getItem(`sos_progress_${uid}_${found.slug}`)
-          const parsed = raw ? JSON.parse(raw) : null
-          const savedStep = parsed?.step
-          if (savedStep === 2 || savedStep === 3) setCurrentStep(savedStep)
-          if (parsed?.allDone) setAllDone(true)
-        } catch {
-          // malformed or empty → default step 1
+          const { data: progress } = await (supabase as any)
+            .from('user_protocol_progress')
+            .select('step, all_done')
+            .eq('user_id', uid)
+            .eq('protocol_slug', found.slug)
+            .single()
+          if (progress) {
+            if (progress.step === 2 || progress.step === 3) setCurrentStep(progress.step)
+            if (progress.all_done) setAllDone(true)
+            loadedFromSupabase = true
+          }
+        } catch {}
+
+        if (!loadedFromSupabase) {
+          try {
+            const raw = localStorage.getItem(`sos_progress_${uid}_${found.slug}`)
+            const parsed = raw ? JSON.parse(raw) : null
+            if (parsed?.step === 2 || parsed?.step === 3) setCurrentStep(parsed.step)
+            if (parsed?.allDone) setAllDone(true)
+          } catch {}
         }
       }
 
@@ -135,6 +177,11 @@ function MonCheminContent() {
         JSON.stringify({ step, allDone: done })
       )
     } catch {}
+    const supabase = createClient()
+    ;(supabase as any).from('user_protocol_progress').upsert(
+      { user_id: userId, protocol_slug: protocol.slug, step, all_done: done, updated_at: new Date().toISOString() },
+      { onConflict: 'user_id,protocol_slug' }
+    ).then(() => {}).catch(() => {})
   }
 
   function handleComplete() {

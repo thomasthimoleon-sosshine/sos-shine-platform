@@ -81,6 +81,17 @@ export async function GET(request: Request) {
           // Profile creation is best-effort; user can still proceed
         }
 
+        // Link any existing quiz responses (by email) to this user_id
+        try {
+          const adminForQuiz = createAdminClient()
+          if (adminForQuiz && user.email) {
+            await adminForQuiz.from('quiz_v2_responses')
+              .update({ user_id: user.id })
+              .eq('email', user.email)
+              .is('user_id', null)
+          }
+        } catch {}
+
         const isNewUser = user.created_at && (Date.now() - new Date(user.created_at).getTime() < 60000)
 
         // ─── A/B variant attribution ───

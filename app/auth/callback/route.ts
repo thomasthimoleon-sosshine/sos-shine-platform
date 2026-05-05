@@ -149,5 +149,8 @@ export async function GET(request: Request) {
     console.error('Auth callback error:', error.message)
   }
 
-  return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`)
+  const loginUrl = nextParam !== '/dashboard'
+    ? `/login?next=${encodeURIComponent(nextParam)}&error=auth_callback_failed`
+    : `/login?error=auth_callback_failed`
+  return NextResponse.redirect(`${origin}${loginUrl}`)
 }

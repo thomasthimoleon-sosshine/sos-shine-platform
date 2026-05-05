@@ -55,7 +55,15 @@ export default function LoginPage() {
       const supabase = createClient()
       const { error: signInError } = await supabase.auth.signInWithPassword({ email, password })
       if (signInError) { setError(signInError.message); setLoading(false); return }
-      router.push('/dashboard')
+      const params = new URLSearchParams(window.location.search)
+      const next = params.get('next')
+      if (next && next.startsWith('/')) {
+        router.push(next)
+        return
+      }
+      let protocolSlug: string | null = null
+      try { protocolSlug = sessionStorage.getItem('sos_protocol_slug') } catch {}
+      router.push(protocolSlug ? `/mon-chemin?protocol=${protocolSlug}` : '/dashboard')
     } catch {
       setError(t('auth.connection_error'))
       setLoading(false)
@@ -64,9 +72,17 @@ export default function LoginPage() {
 
   async function handleGoogleSignIn() {
     const supabase = createClient()
+    const params = new URLSearchParams(window.location.search)
+    const urlNext = params.get('next')
+    let next = urlNext && urlNext.startsWith('/') ? urlNext : null
+    if (!next) {
+      let protocolSlug: string | null = null
+      try { protocolSlug = sessionStorage.getItem('sos_protocol_slug') } catch {}
+      if (protocolSlug) next = `/mon-chemin?protocol=${protocolSlug}`
+    }
     await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${window.location.origin}/auth/callback?next=/dashboard` },
+      options: { redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next || '/dashboard')}` },
     })
   }
 

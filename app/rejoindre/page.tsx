@@ -8,7 +8,7 @@ import { loadStripe } from '@stripe/stripe-js'
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from '@stripe/react-stripe-js'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 import { createClient } from '@/lib/supabase/client'
-import { PRICES, TOTAL_PRICES, ORIGINAL_PRICES, DURATIONS, PLAN_INFO, formatPrice } from '@/lib/stripe'
+import { PRICES, DURATIONS, formatPrice } from '@/lib/stripe'
 import type { PlanId, DurationId } from '@/lib/stripe'
 import { PromoCountdown, PROMO } from '@/components/PromoCountdown'
 
@@ -553,7 +553,6 @@ function PaymentContent() {
     setCheckoutModal({ plan })
   }
 
-  const durationInfo = DURATIONS.find(d => d.id === selectedDuration)!
 
   return (
     <>

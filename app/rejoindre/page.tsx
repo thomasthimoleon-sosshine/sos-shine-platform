@@ -554,7 +554,6 @@ function PaymentContent() {
   }
 
   const durationInfo = DURATIONS.find(d => d.id === selectedDuration)!
-  const showTotalPrice = selectedDuration !== 'monthly'
 
   return (
     <>
@@ -583,59 +582,8 @@ function PaymentContent() {
         )}
       </AnimatePresence>
 
-      {/* Duration selector */}
-      <Reveal delay={0.3}>
-        <div className="text-center mb-2">
-          <p className="text-[11px] tracking-[0.35em] uppercase mb-4 font-medium" style={{ color: 'var(--text-muted)' }}>
-            Choisissez votre dur&eacute;e d&apos;engagement
-          </p>
-          <DurationSelector selected={selectedDuration} onChange={setSelectedDuration} />
-        </div>
-      </Reveal>
-
-      {/* Pricing cards */}
-      <div className="grid sm:grid-cols-2 gap-5 mb-6 max-w-3xl mx-auto">
-        {/* Essentielle */}
-        <Reveal delay={0.4}>
-          <div className="glass p-6 sm:p-8 text-center h-full flex flex-col" style={{ borderColor: 'rgba(240,166,140,0.18)' }}>
-            <p className="text-xs tracking-[0.25em] uppercase mb-4" style={{ color: '#F0A68C' }}>
-              {PLAN_INFO.essential.name}
-            </p>
-            <div className="flex items-baseline justify-center gap-1.5 mb-1">
-              <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#F0A68C' }}>
-                {formatPrice(PRICES.essential.monthly)}
-              </span>
-              <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
-            </div>
-            <p className="text-xs mb-1 font-medium" style={{ color: '#E17055' }}>
-              Sans essai gratuit
-            </p>
-            <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>
-              {t('join.no_commitment')}
-            </p>
-
-            <div className="space-y-2.5 text-left mb-6 flex-1">
-              {[
-                'Encyclopédie complète (accès illimité)',
-                'Chat & Communauté',
-              ].map((item) => (
-                <div key={item} className="flex items-start gap-2.5">
-                  <span className="mt-0.5 text-sm flex-shrink-0" style={{ color: '#F0A68C' }}>&#9670;</span>
-                  <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{item}</span>
-                </div>
-              ))}
-            </div>
-
-            <button
-              onClick={() => handleCheckout('essential')}
-              className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm"
-              style={{ background: 'linear-gradient(135deg, #F0A68C, #D4825E)', color: '#000000' }}
-            >
-              {`Choisir l'Essentielle \u2014 ${formatPrice(PRICES.essential.monthly)}/mois`}
-            </button>
-          </div>
-        </Reveal>
-
+      {/* Pricing card — Sérénité uniquement */}
+      <div className="max-w-md mx-auto mb-6">
         {/* Sérénité */}
         <Reveal delay={0.5}>
           <div className="glass p-6 sm:p-8 text-center h-full flex flex-col relative overflow-hidden" style={{ borderColor: 'rgba(85,239,196,0.25)', boxShadow: '0 0 30px rgba(85,239,196,0.06)' }}>
@@ -646,22 +594,7 @@ function PaymentContent() {
             <p className="text-xs tracking-[0.25em] uppercase mb-4" style={{ color: '#55EFC4' }}>
               {PLAN_INFO.serenite.name}
             </p>
-            {showTotalPrice ? (
-              <>
-                <div className="flex items-baseline justify-center gap-1.5 mb-1">
-                  <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#55EFC4' }}>
-                    {formatPrice(TOTAL_PRICES.serenite[selectedDuration])}
-                  </span>
-                </div>
-                <p className="text-[10px] mb-2 line-through" style={{ color: 'var(--text-muted)' }}>
-                  au lieu de {formatPrice(ORIGINAL_PRICES.serenite[selectedDuration as 'quarterly' | 'semiannual' | 'annual'])}
-                </p>
-                <p className="text-xs mb-1 font-medium" style={{ color: '#55EFC4' }}>
-                  {durationInfo.months} mois &mdash; <span>{durationInfo.discount}</span>
-                </p>
-              </>
-            ) : (
-              <>
+            <>
                 <div className="flex items-baseline justify-center gap-1.5 mb-1">
                   <span className="font-display text-xl line-through" style={{ color: 'var(--text-muted)' }}>
                     {PROMO.originalPrice}{PROMO.currency}
@@ -674,16 +607,15 @@ function PaymentContent() {
                 <p className="text-xs mb-1 font-medium" style={{ color: '#55EFC4' }}>
                   code {PROMO.code} &middot; 7 jours d&apos;essai gratuit &mdash; CB requise
                 </p>
- <div className="mb-2 flex justify-center text-xs" ><PromoCountdown /></div>
-              </>
-            )}
+                <div className="mb-2 flex justify-center text-xs"><PromoCountdown /></div>
+            </>
             <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>
               {t('join.no_commitment')}
             </p>
 
             <div className="space-y-2.5 text-left mb-6 flex-1">
               {[
-                'Tout le contenu de l\'Essentielle',
+                'Encyclopédie complète (tous les protocoles)',
                 'Shine Librairie',
                 'Shine TV & Shorts',
                 'Shine Audible',
@@ -703,26 +635,14 @@ function PaymentContent() {
               className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm"
               style={{ background: 'linear-gradient(135deg, #55EFC4, #00B894)', color: '#000000' }}
             >
-              {showTotalPrice
-                ? `Sérénité ${durationInfo.months} mois — ${formatPrice(TOTAL_PRICES.serenite[selectedDuration])}`
-                : 'Essayer Sérénité — 7 jours gratuits (CB requise)'
-              }
+              Essayer Sérénité — 7 jours gratuits (CB requise)
             </button>
           </div>
         </Reveal>
 
       </div>
 
-      {/* Savings highlight for non-monthly */}
-      {selectedDuration !== 'monthly' && (
-        <Reveal delay={0.7}>
-          <div className="glass p-4 text-center mb-6" style={{ borderColor: 'rgba(201,169,97,0.2)', background: 'rgba(201,169,97,0.03)' }}>
-            <p className="text-sm font-medium" style={{ color: '#C9A961' }}>
-              Vous &eacute;conomisez jusqu&apos;&agrave; {DURATIONS.find(d => d.id === selectedDuration)?.discount} avec l&apos;engagement {durationInfo.label}
-            </p>
-          </div>
-        </Reveal>
-      )}
+
     </>
   )
 }
@@ -788,12 +708,7 @@ export default function RejoindrePage() {
           </div>
           <span className="font-display text-lg font-medium" style={{ color: 'var(--brand)' }}>SOS Shine</span>
         </Link>
-        <Link href="/encyclopedie" className="text-sm transition-colors" style={{ color: 'var(--text-muted)' }}
-          onMouseEnter={(e) => e.currentTarget.style.color = 'var(--brand)'}
-          onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
-        >
-          {t('join.see_encyclopedia')}
-        </Link>
+
       </header>
 
       <div className="max-w-4xl mx-auto px-6 md:px-8 py-16">
@@ -856,9 +771,7 @@ export default function RejoindrePage() {
                   </Link>
                 </>
               )}
-              <Link href="/encyclopedie" className="text-xs gold-underline" style={{ color: 'var(--text-secondary)' }}>
-                {t('join.continue_explore')}
-              </Link>
+
             </div>
             <div className="flex items-center justify-center gap-1.5">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--text-muted)' }}>
@@ -876,17 +789,7 @@ export default function RejoindrePage() {
           </p>
         </Reveal>
 
-        {/* Back link */}
-        <Reveal delay={0.7}>
-          <div className="text-center mt-10">
-            <Link href="/encyclopedie" className="text-sm transition-colors" style={{ color: 'var(--text-muted)' }}
-              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--brand)'}
-              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
-            >
-              &larr; {t('join.back_encyclopedia')}
-            </Link>
-          </div>
-        </Reveal>
+
       </div>
     </main>
   )

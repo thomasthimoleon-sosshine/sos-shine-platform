@@ -784,14 +784,14 @@ export default function DouleurDetailPage() {
       </div>
 
       {/* Steps navigation */}
-      <div className="flex gap-2 overflow-x-auto pb-2">
+      <div className="grid grid-cols-3 gap-2">
         {steps.map((step) => {
           const completed = isStepCompleted(step.num)
           return (
             <button
               key={step.num}
               onClick={() => setActiveStep(step.num)}
-              className="flex items-center gap-2.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer whitespace-nowrap flex-shrink-0"
+              className="flex items-center justify-center gap-2 px-3 py-3 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer"
               style={{
                 background: activeStep === step.num ? `${step.color}15` : 'var(--surface-card)',
                 border: activeStep === step.num ? `1px solid ${step.color}40` : '1px solid var(--border)',

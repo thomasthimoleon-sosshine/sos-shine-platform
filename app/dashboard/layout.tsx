@@ -10,6 +10,7 @@ import type { Profile } from '@/types/database'
 import ThemeToggle from '@/components/ThemeToggle'
 import NotificationBell from '@/components/NotificationBell'
 import CrisisButton from '@/components/CrisisButton'
+import ShineChatbot from '@/components/ShineChatbot'
 
 import { useTranslation } from '@/lib/i18n/useTranslation'
 
@@ -142,6 +143,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [loading, setLoading] = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
+  const [isSubscribed, setIsSubscribed] = useState(false)
   const [unreadMessages, setUnreadMessages] = useState(0)
   const [logoUrl, setLogoUrl] = useState<string | null>(null)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
@@ -201,6 +203,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       if (!isUserAdmin) {
         const plan = profileData?.plan as string | null
         const isSubscribed = plan === 'serenite' || plan === 'essential' || plan === 'premium'
+        setIsSubscribed(isSubscribed)
         if (!isSubscribed) {
           // 1. sessionStorage
           let protocolSlug: string | null = null
@@ -442,8 +445,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* Page content */}
         <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">{children}</main>
 
-        {/* Floating crisis button — always accessible */}
-        <CrisisButton />
+        {/* Floating crisis button + chatbot — abonnés uniquement */}
+        {isSubscribed && <CrisisButton />}
+        {isSubscribed && <ShineChatbot />}
 
       </div>
 

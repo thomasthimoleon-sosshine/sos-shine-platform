@@ -3,7 +3,6 @@ import localFont from "next/font/local";
 import "./globals.css";
 import ThemeProvider from "@/components/ThemeProvider";
 import SecurityProvider from "@/components/SecurityProvider";
-import ShineChatbot from "@/components/ShineChatbot";
 import VisitTracker from "@/components/VisitTracker";
 
 const cormorant = localFont({
@@ -187,7 +186,6 @@ export default function RootLayout({
         <div className="ambient-glow" />
         <SecurityProvider>
           <ThemeProvider>{children}</ThemeProvider>
-          <ShineChatbot />
           <VisitTracker />
         </SecurityProvider>
       </body>

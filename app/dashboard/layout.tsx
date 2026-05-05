@@ -309,7 +309,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         {/* Navigation */}
         <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-          {navItemDefs.map((item) => {
+          {/* Sidebar complète pour abonnés, simplifiée pour gratuits */}
+          {(isSubscribed || isAdmin ? navItemDefs : []).map((item) => {
             const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href))
             return (
               <Link
@@ -333,6 +334,63 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </Link>
             )
           })}
+
+          {/* Nav simplifiée pour utilisateurs gratuits */}
+          {!isSubscribed && !isAdmin && (
+            <>
+              {/* Mon protocole */}
+              <Link
+                href="/mon-chemin"
+                onClick={() => setSidebarOpen(false)}
+                className={`nav-item flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium relative group transition-colors duration-[var(--transition-base)] ${pathname?.startsWith('/dashboard/encyclopedie') ? 'bg-[rgba(212,175,55,0.07)] text-[#D4AF37]' : 'text-[#a1a1aa] hover:text-[#e0e0e0] hover:bg-white/[0.03]'}`}
+              >
+                {pathname?.startsWith('/dashboard/encyclopedie') && (
+                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-full bg-[#D4AF37]" />
+                )}
+                <span className="opacity-70 group-hover:opacity-100 transition-opacity">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                  </svg>
+                </span>
+                Mon protocole
+              </Link>
+
+              {/* Feu de camp */}
+              <Link
+                href="/dashboard/communaute"
+                onClick={() => setSidebarOpen(false)}
+                className={`nav-item flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium relative group transition-colors duration-[var(--transition-base)] ${pathname?.startsWith('/dashboard/communaute') ? 'bg-[rgba(212,175,55,0.07)] text-[#D4AF37]' : 'text-[#a1a1aa] hover:text-[#e0e0e0] hover:bg-white/[0.03]'}`}
+              >
+                {pathname?.startsWith('/dashboard/communaute') && (
+                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-full bg-[#D4AF37]" />
+                )}
+                <span className="opacity-70 group-hover:opacity-100 transition-opacity">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V17.25m14.25-4.5V6.375A2.625 2.625 0 0015.75 3.75H8.25A2.625 2.625 0 005.625 6.375v6.375m14.25 4.5H3.75m11.25 0a3 3 0 11-6 0" />
+                  </svg>
+                </span>
+                Feu de camp
+              </Link>
+
+              {/* CTA Sérénité */}
+              <div className="pt-4">
+                <Link
+                  href="/rejoindre"
+                  onClick={() => setSidebarOpen(false)}
+                  className="flex items-center justify-center gap-2 w-full px-3 py-3 rounded-[var(--radius-lg)] text-[13px] font-semibold transition-all hover:brightness-110"
+                  style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  Passer à Sérénité
+                </Link>
+                <p className="text-[10px] text-center mt-1.5" style={{ color: 'var(--text-muted)' }}>
+                  49,90€/mois · 7 jours offerts
+                </p>
+              </div>
+            </>
+          )}
 
           {/* Admin link */}
           {isAdmin && (

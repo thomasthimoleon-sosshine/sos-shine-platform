@@ -85,7 +85,8 @@ export async function GET(request: Request) {
         try {
           const adminForQuiz = createAdminClient()
           if (adminForQuiz && user.email) {
-            await adminForQuiz.from('quiz_v2_responses')
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            await (adminForQuiz as any).from('quiz_v2_responses')
               .update({ user_id: user.id })
               .eq('email', user.email)
               .is('user_id', null)

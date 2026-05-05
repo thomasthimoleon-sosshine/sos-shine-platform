@@ -172,10 +172,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       const { data: profileData } = await supabase.from('profiles').select('*').eq('id', user.id).single()
 
+      const adminRoles = ['founder', 'admin_content', 'admin_support']
+      const userRole = profileData?.role as string | undefined
+      const isUserAdmin = userRole ? adminRoles.includes(userRole) : false
+
       if (profileData) {
         const p = profileData as Profile
         setProfile(p)
-        setIsAdmin(p.role === 'founder' || p.role === 'admin_content' || p.role === 'admin_support')
+        setIsAdmin(isUserAdmin)
       } else {
         setProfile({
           id: user.id,
@@ -190,6 +194,30 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           video_url: null,
           is_bot: false,
         })
+      }
+
+      // Guard: non-abonnés ne peuvent pas accéder au dashboard
+      if (!isUserAdmin) {
+        const plan = profileData?.plan as string | null
+        const isSubscribed = plan === 'serenite' || plan === 'essential' || plan === 'premium'
+        if (!isSubscribed) {
+          // Chercher le slug du protocole (sessionStorage puis localStorage)
+          let protocolSlug: string | null = null
+          try { protocolSlug = sessionStorage.getItem('sos_protocol_slug') } catch {}
+          if (!protocolSlug) {
+            try {
+              for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i)
+                if (key?.startsWith(`sos_progress_${user.id}_`)) {
+                  protocolSlug = key.replace(`sos_progress_${user.id}_`, '')
+                  break
+                }
+              }
+            } catch {}
+          }
+          router.push(protocolSlug ? `/mon-chemin?protocol=${protocolSlug}` : '/signature-emotionnelle')
+          return
+        }
       }
 
       // Afficher le popup de bienvenue une fois par session

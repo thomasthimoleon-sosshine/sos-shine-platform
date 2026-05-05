@@ -73,41 +73,45 @@ export default function SignupPage() {
   const { t } = useTranslation()
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const source = params.get('source')
+    const urlSlug = params.get('protocol')
+    const urlEmail = params.get('email')
+
+    // Pre-fill email: sessionStorage first, URL param fallback
+    try {
+      const savedEmail = sessionStorage.getItem('sos_quiz_email')
+      if (savedEmail) setEmail(savedEmail)
+      else if (urlEmail) setEmail(urlEmail)
+    } catch {
+      if (urlEmail) setEmail(urlEmail)
+    }
+
     const supabase = createClient()
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (user) {
+        // Already logged in → find protocol and redirect
         let protocolSlug: string | null = null
         try { protocolSlug = sessionStorage.getItem('sos_protocol_slug') } catch {}
-        if (!protocolSlug) {
-          const params = new URLSearchParams(window.location.search)
-          const urlSlug = params.get('protocol')
-          const source = params.get('source')
-          if (urlSlug) {
-            protocolSlug = urlSlug
-            try { sessionStorage.setItem('sos_protocol_slug', urlSlug) } catch {}
-          } else if (source === 'quiz') {
-            signupRouter.replace('/signature-emotionnelle')
-            return
-          }
+        if (!protocolSlug && urlSlug) {
+          protocolSlug = urlSlug
+          try { sessionStorage.setItem('sos_protocol_slug', urlSlug) } catch {}
+        }
+        if (!protocolSlug && source === 'quiz') {
+          signupRouter.replace('/signature-emotionnelle')
+          return
         }
         signupRouter.replace(protocolSlug ? `/mon-chemin?protocol=${protocolSlug}` : '/dashboard')
+      } else {
+        // Not logged in → enforce quiz funnel
+        let storedSlug: string | null = null
+        try { storedSlug = sessionStorage.getItem('sos_protocol_slug') } catch {}
+        if (source !== 'quiz' && !urlSlug && !storedSlug) {
+          signupRouter.replace('/signature-emotionnelle')
+        }
       }
     })
   }, [signupRouter])
-
-  // Pre-fill email from quiz sessionStorage or URL params
-  useEffect(() => {
-    try {
-      const savedEmail = sessionStorage.getItem('sos_quiz_email')
-      if (savedEmail) {
-        setEmail(savedEmail)
-        return
-      }
-    } catch {}
-    const params = new URLSearchParams(window.location.search)
-    const urlEmail = params.get('email')
-    if (urlEmail) setEmail(urlEmail)
-  }, [])
 
   const [prenom, setPrenom] = useState('')
   const [email, setEmail] = useState('')

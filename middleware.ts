@@ -49,11 +49,8 @@ export async function middleware(request: NextRequest) {
   })
 
   if (!user && !isPublicRoute) {
-    return NextResponse.redirect(new URL('/login', request.url))
+    return NextResponse.redirect(new URL('/signature-emotionnelle', request.url))
   }
-
-  // Dashboard routes: authenticated users can browse freely (no subscription required)
-  // Content restriction is handled client-side via SubscriptionGate component
 
   return response
 }

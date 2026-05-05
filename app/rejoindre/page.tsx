@@ -361,7 +361,7 @@ function EmbeddedCheckoutModal({ plan, duration, email, prenom, onClose }: { pla
             </svg>
           </button>
           <h3 className="font-display text-xl font-light" style={{ color: '#C9A961' }}>
-            {PLAN_INFO[plan].name} — {DURATIONS.find(d => d.id === duration)?.label}
+            Sérénité — {DURATIONS.find(d => d.id === duration)?.label}
           </h3>
           <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
             {formatPrice(PRICES[plan][duration])}/mois
@@ -591,7 +591,7 @@ function PaymentContent() {
               Populaire
             </div>
             <p className="text-xs tracking-[0.25em] uppercase mb-4" style={{ color: '#55EFC4' }}>
-              {PLAN_INFO.serenite.name}
+              Sérénité
             </p>
             <>
                 <div className="flex items-baseline justify-center gap-1.5 mb-1">

@@ -100,6 +100,7 @@ export default function DouleurDetailPage() {
   const [isLegacyAccess, setIsLegacyAccess] = useState(false)
   const [isPreviewMode, setIsPreviewMode] = useState(false)
   const [isFreeUser, setIsFreeUser] = useState(false)
+  const [showProtocolPaywall, setShowProtocolPaywall] = useState(false)
 
   // Quiz state
   const [quizQuestions, setQuizQuestions] = useState<DouleurQuizQuestion[]>([])
@@ -350,7 +351,7 @@ export default function DouleurDetailPage() {
         const subRes = await fetch(`/api/subscription/features?user_id=${user.id}`)
         const subData = await subRes.json()
         if (!subData.is_active && !subData.is_admin) {
-          setIsPreviewMode(true)
+          // Free logged-in users: step 1 fully accessible — no preview mode cap
           setIsFreeUser(true)
         }
       } catch { /* non-critical */ }
@@ -790,17 +791,25 @@ export default function DouleurDetailPage() {
           return (
             <button
               key={step.num}
-              onClick={() => setActiveStep(step.num)}
+              onClick={() => {
+                if (isFreeUser && step.num > 1) { setShowProtocolPaywall(true); return }
+                setActiveStep(step.num)
+              }}
               className="flex items-center justify-center gap-2 px-3 py-3 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer"
               style={{
                 background: activeStep === step.num ? `${step.color}15` : 'var(--surface-card)',
                 border: activeStep === step.num ? `1px solid ${step.color}40` : '1px solid var(--border)',
-                color: activeStep === step.num ? step.color : 'var(--text-secondary)',
+                color: activeStep === step.num ? step.color : isFreeUser && step.num > 1 ? 'var(--text-muted)' : 'var(--text-secondary)',
+                opacity: isFreeUser && step.num > 1 ? 0.6 : 1,
               }}
             >
               {completed ? (
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="#55EFC4" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              ) : isFreeUser && step.num > 1 ? (
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                 </svg>
               ) : (
                 <span className="text-lg">{step.icon}</span>
@@ -1097,11 +1106,14 @@ export default function DouleurDetailPage() {
         <div className="mt-8 pt-6 space-y-4" style={{ borderTop: `1px solid ${currentStep.color}15` }}>
           {!isStepCompleted(currentStep.num) ? (
             <button
-              onClick={() => markStepComplete(currentStep.num)}
+              onClick={() => {
+                if (isFreeUser && currentStep.num === 1) { setShowProtocolPaywall(true); return }
+                markStepComplete(currentStep.num)
+              }}
               className="w-full py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer"
               style={{ background: `${currentStep.color}15`, color: currentStep.color, border: `1px solid ${currentStep.color}30` }}
             >
-              Marquer l&apos;étape {currentStep.num} comme terminée
+              {isFreeUser && currentStep.num === 1 ? 'Continuer mon évolution →' : `Marquer l'étape ${currentStep.num} comme terminée`}
             </button>
           ) : (
             <div className="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium"
@@ -1126,8 +1138,12 @@ export default function DouleurDetailPage() {
               Étape précédente
             </button>
             <button
-              onClick={() => setActiveStep(Math.min(hasQuiz ? quizStepNum : totalSteps, activeStep + 1))}
-              disabled={activeStep === totalSteps && !hasQuiz}
+              onClick={() => {
+                const nextStep = Math.min(hasQuiz ? quizStepNum : totalSteps, activeStep + 1)
+                if (isFreeUser && nextStep > 1) { setShowProtocolPaywall(true); return }
+                setActiveStep(nextStep)
+              }}
+              disabled={activeStep === totalSteps && !hasQuiz && !isFreeUser}
               className="flex items-center gap-2 text-sm transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
               style={{ color: currentStep.color }}
             >
@@ -1651,6 +1667,71 @@ export default function DouleurDetailPage() {
       )}
 
     </div>
+
+    {/* Protocol paywall overlay — for free users trying to access steps 2/3 */}
+    {showProtocolPaywall && (
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center p-6"
+        style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)' }}
+        onClick={(e) => { if (e.target === e.currentTarget) setShowProtocolPaywall(false) }}
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 20, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          className="max-w-md w-full rounded-2xl p-8 space-y-6"
+          style={{
+            background: 'linear-gradient(160deg, var(--surface-card, #1a1a1a), rgba(201,169,97,0.04))',
+            border: '1px solid rgba(201,169,97,0.25)',
+          }}
+        >
+          <div className="space-y-3">
+            <h2 className="font-display text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+              Tu viens de comprendre. Maintenant, il faut transformer.
+            </h2>
+            <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+              L&apos;étape 1 t&apos;a donné la clé intellectuelle. Les étapes 2 et 3 vont dans le corps, libèrent le schéma en profondeur, et ancrent de nouvelles réponses dans ta vie réelle.
+            </p>
+          </div>
+
+          <ul className="space-y-2">
+            {[
+              'Libérer ce schéma à la racine',
+              'Reconnecter ton corps et ton histoire',
+              'Changer concrètement tes réactions au quotidien',
+            ].map((item) => (
+              <li key={item} className="flex items-start gap-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                <span className="mt-0.5 flex-shrink-0" style={{ color: 'var(--brand)' }}>→</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+
+          <div className="space-y-3">
+            <a
+              href="/dashboard/tarifs"
+              className="block w-full py-4 rounded-full text-sm font-semibold text-center transition-all hover:brightness-110"
+              style={{
+                background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))',
+                color: '#000000',
+                boxShadow: '0 4px 24px rgba(201,169,97,0.3)',
+              }}
+            >
+              Accéder à Sérénité — 49,90€/mois
+            </a>
+            <p className="text-xs text-center" style={{ color: 'var(--text-muted)' }}>
+              Protocole complet · Shine TV · Lives · Communauté · Annulable à tout moment
+            </p>
+            <button
+              onClick={() => setShowProtocolPaywall(false)}
+              className="block w-full py-3 text-xs text-center transition-colors cursor-pointer"
+              style={{ color: 'var(--text-muted)' }}
+            >
+              Pas maintenant
+            </button>
+          </div>
+        </motion.div>
+      </div>
+    )}
     </>
   )
 }

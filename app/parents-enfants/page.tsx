@@ -311,7 +311,7 @@ export default function ParentsEnfantsPage() {
       <footer className="px-6 py-8 text-center" style={{ borderTop: '1px solid var(--border)' }}>
         <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-[var(--text-muted)]">
           <Link href="/" className="hover:text-[var(--brand)] transition-colors">Accueil</Link>
-          <Link href="/encyclopedie" className="hover:text-[var(--brand)] transition-colors">Encyclopédie</Link>
+          <Link href="/signature-emotionnelle" className="hover:text-[var(--brand)] transition-colors">Signature Émotionnelle</Link>
           <Link href="/signature-emotionnelle" className="hover:text-[var(--brand)] transition-colors">Signature Émotionnelle</Link>
           <Link href="/contact" className="hover:text-[var(--brand)] transition-colors">Contact</Link>
           <Link href="/cgv" className="hover:text-[var(--brand)] transition-colors">CGV</Link>

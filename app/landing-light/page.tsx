@@ -81,10 +81,10 @@ export default function LandingLight() {
             >
               D&eacute;couvrir ma Signature
             </Link>
-            <Link href="/encyclopedie"
+            <Link href="/signature-emotionnelle"
               className="px-8 py-4 rounded-full text-[14px] font-light text-[#1A1916]/50 border border-[#1A1916]/10 hover:border-[#1A1916]/25 hover:text-[#1A1916] transition-all duration-500 text-center"
             >
-              Explorer les protocoles
+              Découvrir mon protocole
             </Link>
           </motion.div>
 

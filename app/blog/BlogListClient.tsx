@@ -290,7 +290,7 @@ export default function BlogListClient({ initialArticles }: BlogListClientProps)
           </Link>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
             <Link href="/" className="text-[10px] tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors">Accueil</Link>
-            <Link href="/encyclopedie" className="text-[10px] tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors">Encyclopedie</Link>
+            <Link href="/signature-emotionnelle" className="text-[10px] tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors">Quiz</Link>
             <Link href="/blog" className="text-[10px] tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors">Blog</Link>
             <Link href="/contact" className="text-[10px] tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors">Contact</Link>
           </div>

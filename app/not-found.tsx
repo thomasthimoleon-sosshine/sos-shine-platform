@@ -18,9 +18,9 @@ export default function NotFound() {
             className="px-6 py-3 rounded-full text-sm font-semibold transition-all hover:brightness-110 bg-[linear-gradient(135deg,var(--brand),var(--brand-deep))] text-[var(--text-inverse)]">
             Retour à l&apos;accueil
           </Link>
-          <Link href="/dashboard/encyclopedie"
+          <Link href="/signature-emotionnelle"
             className="px-6 py-3 rounded-full text-sm font-medium transition-all bg-[var(--brand-alpha-weak)] border border-[var(--border-medium)] text-[var(--brand)]">
-            Explorer l&apos;encyclopédie
+            Découvrir ma Signature
           </Link>
         </div>
       </div>

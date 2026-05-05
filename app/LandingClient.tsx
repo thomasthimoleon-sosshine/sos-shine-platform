@@ -771,7 +771,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                   </button>
                 </Link>
                 {/* Secondary CTA */}
-                <Link href={hero.cta_secondary_href || '/encyclopedie'} className="w-full sm:w-auto">
+                <Link href={hero.cta_secondary_href || '/signature-emotionnelle'} className="w-full sm:w-auto">
                   <button className="w-full sm:w-auto px-8 py-4 rounded-full text-[14px] font-light tracking-[0.02em] text-[#a1a1aa] hover:text-[#e0e0e0] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] cursor-pointer"
                     style={{ border: `1px solid rgba(${goldRgb},0.15)` }}
                     onMouseEnter={e => (e.currentTarget.style.borderColor = `rgba(${goldRgb},0.3)`)}
@@ -930,7 +930,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
               {prob.cta_text && (
                 <RevealOnScroll delay={0.35}>
                   <div className="text-center">
-                    <Link href={prob.cta_href || '/encyclopedie'} className="inline-flex items-center gap-2 text-sm font-medium transition-colors duration-300 hover:opacity-80 text-[var(--brand)]">
+                    <Link href={prob.cta_href || '/signature-emotionnelle'} className="inline-flex items-center gap-2 text-sm font-medium transition-colors duration-300 hover:opacity-80 text-[var(--brand)]">
                       {prob.cta_text}
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
                     </Link>
@@ -1074,7 +1074,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 sm:gap-4">
               {(encyclo.items || []).filter((d: string) => !encyclopediaSearch || d.toLowerCase().includes(encyclopediaSearch.toLowerCase())).map((d: string, i: number) => (
                 <RevealOnScroll key={d} delay={i * 0.05} direction="scale">
-                  <Link href={`/encyclopedie/${slugify(d)}`}>
+                  <Link href="/signature-emotionnelle">
                     <GlowingCard className="px-3 sm:px-5 py-3 sm:py-4 text-center cursor-pointer group">
                       <span className="encyclo-item text-xs sm:text-sm font-light transition-colors duration-300 group-hover:text-[var(--brand)]" style={{
                         color: i === (encyclo.items || []).length - 1 ? gold : 'var(--text-secondary)',
@@ -1089,9 +1089,9 @@ export default function LandingClient({ initialSections, initialPositions, initi
 
             <RevealOnScroll delay={0.3}>
               <div className="text-center mt-8 md:mt-12">
-                <Link href="/encyclopedie">
+                <Link href="/signature-emotionnelle">
                   <button className="magnetic-btn px-6 sm:px-8 py-3 sm:py-3.5 rounded-full text-sm font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.25)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
-                    {encyclo.button_label || "Explorer l'encyclopédie"}
+                    {encyclo.button_label || "Découvrir mon protocole"}
                   </button>
                 </Link>
               </div>
@@ -2146,7 +2146,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                     <input type="text" readOnly placeholder={v2.encyclo_search_placeholder || 'Rechercher...'}
                       className="w-full rounded-full px-6 py-4 text-sm outline-none cursor-pointer"
                       style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid rgba(${goldRgb}, 0.15)`, color: 'var(--text-secondary)' }}
-                      onClick={() => { window.location.href = v2.encyclo_cta_href || '/encyclopedie' }} />
+                      onClick={() => { window.location.href = v2.encyclo_cta_href || '/signature-emotionnelle' }} />
                   </div>
                 </RevealOnScroll>
                 <RevealOnScroll delay={0.2}>
@@ -2161,7 +2161,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                   </div>
                 </RevealOnScroll>
                 <RevealOnScroll delay={0.25}>
-                  <Link href={v2.encyclo_cta_href || '/encyclopedie'}>
+                  <Link href={v2.encyclo_cta_href || '/signature-emotionnelle'}>
                     <button className="magnetic-btn px-8 py-4 rounded-full text-base font-medium tracking-wide"
                       style={{ border: `1px solid rgba(${goldRgb},0.3)`, color: gold }}>
                       {v2.encyclo_cta || "Explorer l'encyclopédie complète"}

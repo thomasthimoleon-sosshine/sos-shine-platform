@@ -142,8 +142,8 @@ export default function LandingJulia() {
             <MagneticButton href="/signature-emotionnelle">
               D&eacute;couvrir ma Signature
             </MagneticButton>
-            <MagneticButton href="/encyclopedie" variant="ghost">
-              Explorer les protocoles
+            <MagneticButton href="/signature-emotionnelle" variant="ghost">
+              Découvrir mon protocole
             </MagneticButton>
           </motion.div>
         </div>

@@ -3,6 +3,8 @@
 import { useState, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 import { QUESTIONS, type AllResponses, type QuizResponse } from '@/lib/quiz-v2'
 import { processQuizResults } from '@/lib/quiz-v2/scoring'
 import type { DimensionScores } from '@/lib/quiz-v2/dimensions'
@@ -244,6 +246,8 @@ function QuestionScreen({
 // MAIN PAGE
 // ═══════════════════════════════════════════
 export default function SignatureEmotionnellePage() {
+  const router = useRouter()
+
   // Restore progress from sessionStorage if available
   const saved = typeof window !== 'undefined' ? sessionStorage.getItem('quiz_v2_progress') : null
   const savedData = saved ? JSON.parse(saved) : null
@@ -268,6 +272,30 @@ export default function SignatureEmotionnellePage() {
       sessionStorage.removeItem('quiz_v2_progress')
     }
   }, [phase, firstName, currentQ, responses, sessionId, responseId, email])
+
+  // Returning user check: if already completed quiz, redirect to their protocol
+  useEffect(() => {
+    async function checkReturningUser() {
+      try {
+        const supabase = createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) return
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { data } = await (supabase as any)
+          .from('quiz_v2_responses')
+          .select('top_protocol_slug')
+          .eq('user_id', user.id)
+          .not('top_protocol_slug', 'is', null)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .maybeSingle()
+        if (data?.top_protocol_slug) {
+          router.replace('/mon-chemin')
+        }
+      } catch { /* non-critical */ }
+    }
+    checkReturningUser()
+  }, []) // eslint-disable-line
 
   const [scores, setScores] = useState<DimensionScores>({})
   const [dominant, setDominant] = useState('1')
@@ -372,6 +400,25 @@ export default function SignatureEmotionnellePage() {
   const handleEmailSubmit = useCallback(async (capturedEmail: string) => {
     setEmailLoading(true)
     setEmail(capturedEmail)
+
+    // Check if this email already has a completed quiz
+    try {
+      const supabase = createClient()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data: existing } = await (supabase as any)
+        .from('quiz_v2_responses')
+        .select('top_protocol_slug')
+        .eq('email', capturedEmail)
+        .not('top_protocol_slug', 'is', null)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+      if (existing?.top_protocol_slug) {
+        try { sessionStorage.setItem('sos_protocol_slug', existing.top_protocol_slug) } catch {}
+        router.replace('/mon-chemin')
+        return
+      }
+    } catch { /* non-critical */ }
 
     await saveResponse(sessionId, responseId, {
       email: capturedEmail,

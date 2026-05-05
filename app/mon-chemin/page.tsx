@@ -1,11 +1,11 @@
 'use client'
 
 import { useEffect, useState, Suspense } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import { calculateMatchScores } from '@/lib/quiz-v2/scoring'
-import SubscriptionGate from '@/components/SubscriptionGate'
+import { useSubscription } from '@/hooks/useSubscription'
 
 type Protocol = {
   id: string
@@ -46,8 +46,11 @@ async function track(eventType: string, eventData: Record<string, unknown>) {
 
 function MonCheminContent() {
   const searchParams = useSearchParams()
+  const router = useRouter()
+  const { isActive } = useSubscription()
 
   const [protocol, setProtocol] = useState<Protocol | null>(null)
+  const [paywallVisible, setPaywallVisible] = useState(false)
   const [loading, setLoading] = useState(true)
   const [userId, setUserId] = useState<string | null>(null)
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1)
@@ -118,6 +121,12 @@ function MonCheminContent() {
     init()
   }, []) // eslint-disable-line
 
+  useEffect(() => {
+    if (!loading && !protocol) {
+      router.replace('/signature-emotionnelle')
+    }
+  }, [loading, protocol, router])
+
   function saveProgress(step: 1 | 2 | 3, done = false) {
     if (!protocol || !userId) return
     try {
@@ -130,6 +139,10 @@ function MonCheminContent() {
 
   function handleComplete() {
     track('protocol_step_completed', { protocolSlug: protocol?.slug, step: currentStep })
+    if (currentStep === 1 && !isActive) {
+      setPaywallVisible(true)
+      return
+    }
     if (currentStep < 3) {
       const next = (currentStep + 1) as 1 | 2 | 3
       setCurrentStep(next)
@@ -156,17 +169,10 @@ function MonCheminContent() {
     )
   }
 
-  if (!protocol) {
+  if (!loading && !protocol) {
     return (
       <main className="min-h-screen flex items-center justify-center px-6" style={{ background: 'var(--surface)' }}>
-        <div className="text-center space-y-4">
-          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-            Impossible de retrouver ton protocole recommandé.
-          </p>
-          <a href="/dashboard" className="text-sm underline" style={{ color: 'var(--brand)' }}>
-            Accéder au dashboard
-          </a>
-        </div>
+        <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Redirection...</p>
       </main>
     )
   }
@@ -198,8 +204,9 @@ function MonCheminContent() {
     )
   }
 
+  const showPaywall = paywallVisible || (currentStep > 1 && !isActive)
+
   return (
-    <SubscriptionGate>
     <main className="min-h-screen" style={{ background: 'var(--surface)' }}>
       <div className="max-w-2xl mx-auto px-6 py-16 space-y-10">
 
@@ -209,10 +216,10 @@ function MonCheminContent() {
             Ton chemin commence ici
           </p>
           <h1 className="font-display text-2xl sm:text-3xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-            {protocol.title}
+            {protocol!.title}
           </h1>
           <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-            {protocol.duration_days} jours de protocole
+            {protocol!.duration_days} jours de protocole
           </p>
         </motion.div>
 
@@ -224,16 +231,16 @@ function MonCheminContent() {
           className="flex gap-2"
         >
           {([1, 2, 3] as const).map(n => {
-            const isActive = n === currentStep
+            const isStepActive = n === currentStep
             const isDone = n < currentStep
             const isLocked = n > currentStep
             return (
               <div key={n} className="flex-1 rounded-xl px-3 py-3 text-center transition-all"
                 style={{
-                  background: isActive ? 'rgba(201,169,97,0.12)' : isDone ? 'rgba(85,239,196,0.08)' : 'rgba(255,255,255,0.03)',
-                  border: isActive ? '1px solid rgba(201,169,97,0.3)' : isDone ? '1px solid rgba(85,239,196,0.2)' : '1px solid rgba(255,255,255,0.06)',
+                  background: isStepActive ? 'rgba(201,169,97,0.12)' : isDone ? 'rgba(85,239,196,0.08)' : 'rgba(255,255,255,0.03)',
+                  border: isStepActive ? '1px solid rgba(201,169,97,0.3)' : isDone ? '1px solid rgba(85,239,196,0.2)' : '1px solid rgba(255,255,255,0.06)',
                 }}>
-                <p className="text-xs font-bold" style={{ color: isActive ? 'var(--brand)' : isDone ? '#55EFC4' : 'var(--text-muted)' }}>
+                <p className="text-xs font-bold" style={{ color: isStepActive ? 'var(--brand)' : isDone ? '#55EFC4' : 'var(--text-muted)' }}>
                   {isDone ? '✓' : n}
                 </p>
                 <p className="text-xs mt-1 leading-tight" style={{ color: isLocked ? 'var(--text-muted)' : 'var(--text-secondary)' }}>
@@ -244,107 +251,110 @@ function MonCheminContent() {
           })}
         </motion.div>
 
-        {/* Active step */}
-        <AnimatePresence mode="wait">
+        {/* Paywall or active step */}
+        {showPaywall ? (
           <motion.div
-            key={currentStep}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.35 }}
             className="rounded-2xl p-6 space-y-5"
             style={{ background: 'linear-gradient(160deg, rgba(201,169,97,0.08), rgba(201,169,97,0.02))', border: '1px solid rgba(201,169,97,0.2)' }}
           >
-            <div>
-              <p className="text-xs font-medium uppercase tracking-wider mb-1" style={{ color: 'var(--brand)', opacity: 0.7 }}>
-                Étape {currentStep}
-              </p>
-              <h2 className="font-display text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-                {steps[currentStep].title}
-              </h2>
-            </div>
-
-            {stepState === 'idle' ? (
-              <button
-                onClick={() => setStepState('started')}
-                className="w-full py-4 rounded-full text-sm font-semibold transition-all hover:brightness-110 cursor-pointer"
-                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
-              >
-                Commencer l&apos;étape {currentStep}
-              </button>
-            ) : (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="space-y-5"
-              >
-                <p className="text-sm leading-relaxed whitespace-pre-line" style={{ color: 'var(--text-secondary)' }}>
-                  {steps[currentStep].text}
-                </p>
-                <button
-                  onClick={handleComplete}
-                  className="w-full py-4 rounded-full text-sm font-semibold transition-all hover:brightness-110 cursor-pointer"
-                  style={{ background: 'rgba(85,239,196,0.12)', color: '#55EFC4', border: '1px solid rgba(85,239,196,0.25)' }}
-                >
-                  J&apos;ai terminé — je continue →
-                </button>
-              </motion.div>
-            )}
+            <p className="text-sm leading-relaxed whitespace-pre-line" style={{ color: 'var(--text-secondary)' }}>
+              {"Tu viens de mettre quelque chose en lumière.\n\nMais comprendre ne suffit pas.\n\nPour libérer ce schéma, l'intégrer dans ton corps et commencer à agir autrement, le vrai travail commence maintenant."}
+            </p>
+            <a
+              href={`/rejoindre?source=mon-chemin&protocol=${protocol!.slug}`}
+              className="block w-full py-4 rounded-full text-sm font-semibold text-center transition-all hover:brightness-110"
+              style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
+            >
+              Continuer mon protocole avec Sérénité
+            </a>
+            <p className="text-xs text-center" style={{ color: 'var(--text-muted)' }}>
+              49,90€/mois · annulable à tout moment
+            </p>
           </motion.div>
-        </AnimatePresence>
+        ) : (
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentStep}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.35 }}
+              className="rounded-2xl p-6 space-y-5"
+              style={{ background: 'linear-gradient(160deg, rgba(201,169,97,0.08), rgba(201,169,97,0.02))', border: '1px solid rgba(201,169,97,0.2)' }}
+            >
+              <div>
+                <p className="text-xs font-medium uppercase tracking-wider mb-1" style={{ color: 'var(--brand)', opacity: 0.7 }}>
+                  Étape {currentStep}
+                </p>
+                <h2 className="font-display text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+                  {steps[currentStep].title}
+                </h2>
+              </div>
+
+              {stepState === 'idle' ? (
+                <button
+                  onClick={() => setStepState('started')}
+                  className="w-full py-4 rounded-full text-sm font-semibold transition-all hover:brightness-110 cursor-pointer"
+                  style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
+                >
+                  Commencer l&apos;étape {currentStep}
+                </button>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="space-y-5"
+                >
+                  <p className="text-sm leading-relaxed whitespace-pre-line" style={{ color: 'var(--text-secondary)' }}>
+                    {steps[currentStep].text}
+                  </p>
+                  <button
+                    onClick={handleComplete}
+                    className="w-full py-4 rounded-full text-sm font-semibold transition-all hover:brightness-110 cursor-pointer"
+                    style={{ background: 'rgba(85,239,196,0.12)', color: '#55EFC4', border: '1px solid rgba(85,239,196,0.25)' }}
+                  >
+                    {currentStep === 1 ? "J'ai compris ce qui se joue" : "J'ai terminé — je continue →"}
+                  </button>
+                </motion.div>
+              )}
+            </motion.div>
+          </AnimatePresence>
+        )}
 
         {/* Locked steps */}
-        <div className="space-y-3">
-          {([2, 3] as const).filter(n => n > currentStep).map(n => (
-            <motion.div
-              key={n}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.15 }}
-              className="rounded-2xl p-5 flex items-center gap-4"
-              style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}
-            >
-              <span className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
-                style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-muted)' }}>
-                {n}
-              </span>
-              <div>
-                <p className="text-sm font-semibold" style={{ color: 'var(--text-muted)' }}>
-                  {steps[n].title}
-                </p>
-                <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)', opacity: 0.7 }}>
-                  Débloquée une fois que tu termines l&apos;étape {n - 1}
-                </p>
-              </div>
-              <span className="ml-auto text-sm">🔒</span>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Upgrade bloc — sobre, non bloquant */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="rounded-2xl p-6 text-center space-y-3"
-          style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}
-        >
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-muted)' }}>
-            Pour accéder aux lives, audios premium et accompagnements Sérénité,
-            tu peux passer à l&apos;offre Sérénité.
-          </p>
-          <a
-            href="/rejoindre?source=mon-chemin"
-            className="inline-block text-sm font-medium transition-opacity hover:opacity-70"
-            style={{ color: 'var(--brand)' }}
-          >
-            Découvrir Sérénité →
-          </a>
-        </motion.div>
+        {!showPaywall && (
+          <div className="space-y-3">
+            {([2, 3] as const).filter(n => n > currentStep).map(n => (
+              <motion.div
+                key={n}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.15 }}
+                className="rounded-2xl p-5 flex items-center gap-4"
+                style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}
+              >
+                <span className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
+                  style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-muted)' }}>
+                  {n}
+                </span>
+                <div>
+                  <p className="text-sm font-semibold" style={{ color: 'var(--text-muted)' }}>
+                    {steps[n].title}
+                  </p>
+                  <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)', opacity: 0.7 }}>
+                    Débloquée une fois que tu termines l&apos;étape {n - 1}
+                  </p>
+                </div>
+                <span className="ml-auto text-sm">🔒</span>
+              </motion.div>
+            ))}
+          </div>
+        )}
 
       </div>
     </main>
-    </SubscriptionGate>
   )
 }
 

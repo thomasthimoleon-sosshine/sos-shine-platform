@@ -55,6 +55,7 @@ async function trackResultEvent(eventType: string, eventData: Record<string, unk
 
 export function ResultPage({ firstName, scores, dominant, secondary, q15Response, email }: Props) {
   const [protocols, setProtocols] = useState<Protocol[]>([])
+  const [protocolsLoading, setProtocolsLoading] = useState(true)
   const dimInfo = DIMENSIONS[parseInt(dominant) as keyof typeof DIMENSIONS]
   const texts = DIMENSION_TEXTS[dominant]
 
@@ -63,6 +64,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
       const supabase = createClient()
       const { data } = await (supabase as any).from('protocols').select('*')
       if (data) setProtocols(data)
+      setProtocolsLoading(false)
     }
     loadProtocols()
 
@@ -83,7 +85,9 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
   const displayName = firstName || 'Toi'
   const signupUrl = `/signup?source=quiz&email=${encodeURIComponent(email)}`
   const essentielleUrl = `/signup?source=quiz&plan=essential&email=${encodeURIComponent(email)}`
-  const ctaUrl = signupUrl
+  const ctaUrl = topProtocol
+    ? `/protocole/${topProtocol.slug}?preview=true&email=${encodeURIComponent(email)}`
+    : signupUrl
 
   useEffect(() => {
     if (topProtocol) {
@@ -97,6 +101,15 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
       user_email: email,
       protocol_id: protocolId,
     })
+  }
+
+  function storeProtocolSlug() {
+    if (topProtocol) {
+      try {
+        sessionStorage.setItem('sos_protocol_slug', topProtocol.slug)
+        if (email) sessionStorage.setItem('sos_quiz_email', email)
+      } catch {}
+    }
   }
 
   return (
@@ -236,14 +249,21 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
       {/* ══════════ CTA INTERMÉDIAIRE ══════════ */}
       <Acte>
         <div className="text-center space-y-3">
-          <Link
-            href={ctaUrl}
-            onClick={() => { trackResultEvent('cta_clicked', { ctaType: 'intermediaire', position: 'before_acte5' }, email) }}
-            className="block w-full py-4 rounded-full text-sm font-semibold transition-all hover:brightness-110"
-            style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
-          >
-            Commencer mon protocole maintenant
-          </Link>
+          {protocolsLoading ? (
+            <button disabled className="block w-full py-4 rounded-full text-sm font-semibold opacity-50 cursor-not-allowed"
+              style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}>
+              Chargement de ton protocole…
+            </button>
+          ) : (
+            <Link
+              href={ctaUrl}
+              onClick={() => { storeProtocolSlug(); trackResultEvent('cta_clicked', { ctaType: 'intermediaire', position: 'before_acte5' }, email) }}
+              className="block w-full py-4 rounded-full text-sm font-semibold transition-all hover:brightness-110"
+              style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
+            >
+              Commencer mon protocole maintenant
+            </Link>
+          )}
           <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
             7 jours offerts · accès immédiat · annulable à tout moment
           </p>
@@ -346,11 +366,12 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
               </div>
 
               <Link
-                href={signupUrl}
+                href={ctaUrl}
+                onClick={() => storeProtocolSlug()}
                 className="block text-center py-3 rounded-full text-sm font-semibold transition-all hover:brightness-110"
                 style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
               >
-                Créer mon espace gratuit
+                Découvrir mon protocole
               </Link>
             </div>
           )}
@@ -369,10 +390,10 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
                       {p.duration_days} jours · Match {p.matchScore}%
                     </p>
                   </div>
-                  <Link href={signupUrl}
+                  <Link href={`/protocole/${p.slug}?preview=true&email=${encodeURIComponent(email)}`}
                     className="text-xs px-4 py-2 rounded-full font-medium flex-shrink-0"
                     style={{ background: 'rgba(85,239,196,0.15)', color: '#55EFC4' }}>
-                    Rejoindre →
+                    Voir →
                   </Link>
                 </div>
               ))}
@@ -407,7 +428,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
             On t&apos;enverra un email personnalisé à chaque nouveau protocole qui te correspond.
           </p>
 
-          {!topProtocol && (
+          {!topProtocol && !protocolsLoading && (
             <Link
               href={signupUrl}
               className="block text-center w-full py-4 rounded-full text-sm font-semibold transition-all hover:brightness-110"
@@ -447,14 +468,21 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
           </div>
 
           <div className="space-y-3">
-            <Link
-              href={ctaUrl}
-              onClick={() => { trackResultEvent('cta_clicked', { ctaType: 'final', position: 'acte7' }, email) }}
-              className="block w-full py-4 rounded-full text-sm font-semibold transition-all hover:brightness-110"
-              style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
-            >
-              Sortir de ce schéma maintenant
-            </Link>
+            {protocolsLoading ? (
+              <button disabled className="block w-full py-4 rounded-full text-sm font-semibold opacity-50 cursor-not-allowed"
+                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}>
+                Chargement de ton protocole…
+              </button>
+            ) : (
+              <Link
+                href={ctaUrl}
+                onClick={() => { storeProtocolSlug(); trackResultEvent('cta_clicked', { ctaType: 'final', position: 'acte7' }, email) }}
+                className="block w-full py-4 rounded-full text-sm font-semibold transition-all hover:brightness-110"
+                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
+              >
+                Sortir de ce schéma maintenant
+              </Link>
+            )}
             <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
               7 jours offerts · ton protocole recommandé · accès immédiat
             </p>

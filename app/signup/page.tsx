@@ -78,17 +78,35 @@ export default function SignupPage() {
       if (user) {
         let protocolSlug: string | null = null
         try { protocolSlug = sessionStorage.getItem('sos_protocol_slug') } catch {}
+        if (!protocolSlug) {
+          const params = new URLSearchParams(window.location.search)
+          const urlSlug = params.get('protocol')
+          const source = params.get('source')
+          if (urlSlug) {
+            protocolSlug = urlSlug
+            try { sessionStorage.setItem('sos_protocol_slug', urlSlug) } catch {}
+          } else if (source === 'quiz') {
+            signupRouter.replace('/signature-emotionnelle')
+            return
+          }
+        }
         signupRouter.replace(protocolSlug ? `/mon-chemin?protocol=${protocolSlug}` : '/dashboard')
       }
     })
   }, [signupRouter])
 
-  // Pre-fill email from quiz sessionStorage
+  // Pre-fill email from quiz sessionStorage or URL params
   useEffect(() => {
     try {
       const savedEmail = sessionStorage.getItem('sos_quiz_email')
-      if (savedEmail) setEmail(savedEmail)
+      if (savedEmail) {
+        setEmail(savedEmail)
+        return
+      }
     } catch {}
+    const params = new URLSearchParams(window.location.search)
+    const urlEmail = params.get('email')
+    if (urlEmail) setEmail(urlEmail)
   }, [])
 
   const [prenom, setPrenom] = useState('')

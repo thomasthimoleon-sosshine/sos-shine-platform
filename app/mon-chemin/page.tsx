@@ -256,22 +256,39 @@ function MonCheminContent() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-2xl p-6 space-y-5"
+            className="rounded-2xl p-7 space-y-6"
             style={{ background: 'linear-gradient(160deg, rgba(201,169,97,0.08), rgba(201,169,97,0.02))', border: '1px solid rgba(201,169,97,0.2)' }}
           >
+            <h2 className="font-display text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+              Tu viens de comprendre. Maintenant, il faut transformer.
+            </h2>
             <p className="text-sm leading-relaxed whitespace-pre-line" style={{ color: 'var(--text-secondary)' }}>
-              {"Tu viens de mettre quelque chose en lumière.\n\nMais comprendre ne suffit pas.\n\nPour libérer ce schéma, l'intégrer dans ton corps et commencer à agir autrement, le vrai travail commence maintenant."}
+              {"Ce que tu viens de voir, ce n'est pas le problème.\nC'est la prise de conscience.\n\nLe vrai travail commence maintenant :\naller dans ton corps, libérer ce qui s'est construit,\net apprendre à agir autrement dans ta vie réelle.\n\nC'est exactement ce que font les étapes 2 et 3."}
             </p>
-            <a
-              href={`/rejoindre?source=mon-chemin&protocol=${protocol!.slug}`}
-              className="block w-full py-4 rounded-full text-sm font-semibold text-center transition-all hover:brightness-110"
-              style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
-            >
-              Continuer mon protocole avec Sérénité
-            </a>
-            <p className="text-xs text-center" style={{ color: 'var(--text-muted)' }}>
-              49,90€/mois · annulable à tout moment
-            </p>
+            <ul className="space-y-2">
+              {[
+                'Libérer ce schéma à la racine',
+                'Reconnecter ton corps et ton histoire',
+                'Changer concrètement tes réactions au quotidien',
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                  <span style={{ color: 'var(--brand)' }} className="mt-0.5 flex-shrink-0">→</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <div className="space-y-2">
+              <a
+                href={`/rejoindre?source=mon-chemin&protocol=${protocol!.slug}`}
+                className="block w-full py-4 rounded-full text-sm font-semibold text-center transition-all hover:brightness-110"
+                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
+              >
+                Continuer mon protocole
+              </a>
+              <p className="text-xs text-center" style={{ color: 'var(--text-muted)' }}>
+                7 jours offerts · accès immédiat · annulable à tout moment
+              </p>
+            </div>
           </motion.div>
         ) : (
           <AnimatePresence mode="wait">

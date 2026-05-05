@@ -7,7 +7,6 @@ import { DIMENSIONS, type DimensionScores } from '@/lib/quiz-v2/dimensions'
 import { DIMENSION_TEXTS, generateActe4 } from '@/lib/quiz-v2/result-texts'
 import { calculateMatchScores } from '@/lib/quiz-v2/scoring'
 import { createClient } from '@/lib/supabase/client'
-import { PromoCountdown, PROMO } from '@/components/PromoCountdown'
 
 type Protocol = {
   id: string
@@ -84,7 +83,6 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
 
   const displayName = firstName || 'Toi'
   const signupUrl = `/signup?source=quiz&email=${encodeURIComponent(email)}`
-  const essentielleUrl = `/signup?source=quiz&plan=essential&email=${encodeURIComponent(email)}`
   const ctaUrl = topProtocol
     ? `/protocole/${topProtocol.slug}?preview=true&email=${encodeURIComponent(email)}`
     : signupUrl
@@ -440,69 +438,16 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
         </div>
       </Acte>
 
-      {/* ══════════ ACTE 7 — CTA FINAL ══════════ */}
+      {/* ══════════ ACTE 7 — CONCLUSION ══════════ */}
       <Acte>
-        <div className="rounded-2xl p-8 text-center space-y-6"
+        <div className="rounded-2xl p-8 text-center space-y-4"
           style={{ background: 'linear-gradient(160deg, rgba(201,169,97,0.08), rgba(201,169,97,0.02))', border: '1px solid rgba(201,169,97,0.2)' }}>
-
           <h2 className="font-display text-xl font-semibold" style={{ color: 'var(--brand)' }}>
             Rejoindre SOS Shine
           </h2>
           <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
             Ton protocole personnalisé, ta communauté, les lives — tout ce qu&apos;il faut pour que le schéma change vraiment, pas juste se comprendre.
           </p>
-
-          {/* Prix promo */}
-          <div className="space-y-3">
-            <div className="flex items-baseline justify-center gap-2">
-              <span className="text-lg line-through" style={{ color: 'var(--text-muted)' }}>{PROMO.originalPrice}{PROMO.currency}</span>
-              <span className="font-display text-3xl font-light" style={{ color: '#55EFC4' }}>{PROMO.promoPrice}{PROMO.currency}</span>
-              <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
-            </div>
-            <p className="text-xs font-medium" style={{ color: '#55EFC4' }}>
-              code {PROMO.code} appliqué automatiquement
-            </p>
-            <div className="flex justify-center">
-              <PromoCountdown className="text-xs" />
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            {protocolsLoading ? (
-              <button disabled className="block w-full py-4 rounded-full text-sm font-semibold opacity-50 cursor-not-allowed"
-                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}>
-                Chargement de ton protocole…
-              </button>
-            ) : (
-              <Link
-                href={ctaUrl}
-                onClick={() => { storeProtocolSlug(); trackResultEvent('cta_clicked', { ctaType: 'final', position: 'acte7' }, email) }}
-                className="block w-full py-4 rounded-full text-sm font-semibold transition-all hover:brightness-110"
-                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
-              >
-                Sortir de ce schéma maintenant
-              </Link>
-            )}
-            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-              7 jours offerts · ton protocole recommandé · accès immédiat
-            </p>
-          </div>
-
-          <Link
-            href={essentielleUrl}
-            className="block text-sm font-medium transition-colors hover:opacity-80"
-            style={{ color: 'var(--text-secondary)' }}>
-            Voir la formule Essentielle (9,90&euro;/mois) &rarr;
-          </Link>
-
-          <div className="flex items-center justify-center gap-2 pt-2" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--text-muted)' }}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-            </svg>
-            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-              Inscription + paiement sécurisé · Résultat envoyé à ton email
-            </p>
-          </div>
         </div>
       </Acte>
 

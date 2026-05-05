@@ -1104,15 +1104,18 @@ export default function DouleurDetailPage() {
 
         {/* Step completion + navigation */}
         <div className="mt-8 pt-6 space-y-4" style={{ borderTop: `1px solid ${currentStep.color}15` }}>
-          {!isStepCompleted(currentStep.num) && !(isFreeUser && currentStep.num === 1) ? (
+          {!isStepCompleted(currentStep.num) ? (
             <button
-              onClick={() => markStepComplete(currentStep.num)}
+              onClick={() => {
+                if (isFreeUser && currentStep.num === 1) { setShowProtocolPaywall(true); return }
+                markStepComplete(currentStep.num)
+              }}
               className="w-full py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer"
               style={{ background: `${currentStep.color}15`, color: currentStep.color, border: `1px solid ${currentStep.color}30` }}
             >
-              {`Marquer l'étape ${currentStep.num} comme terminée`}
+              {isFreeUser && currentStep.num === 1 ? 'Continuer mon évolution →' : `Marquer l'étape ${currentStep.num} comme terminée`}
             </button>
-          ) : isStepCompleted(currentStep.num) ? (
+          ) : (
             <div className="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium"
               style={{ background: 'rgba(85,239,196,0.06)', color: '#55EFC4', border: '1px solid rgba(85,239,196,0.15)' }}>
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -1140,7 +1143,7 @@ export default function DouleurDetailPage() {
                 if (isFreeUser && nextStep > 1) { setShowProtocolPaywall(true); return }
                 setActiveStep(nextStep)
               }}
-              disabled={(activeStep === totalSteps && !hasQuiz) || (isFreeUser && activeStep >= 1)}
+              disabled={activeStep === totalSteps && !hasQuiz && !isFreeUser}
               className="flex items-center gap-2 text-sm transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
               style={{ color: currentStep.color }}
             >
@@ -1152,48 +1155,6 @@ export default function DouleurDetailPage() {
           </div>
         </div>
       </div>}
-
-      {/* Inline paywall — shown below step 1 for free users */}
-      {isFreeUser && activeStep === 1 && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15 }}
-          className="rounded-2xl p-7 space-y-6"
-          style={{ background: 'linear-gradient(160deg, rgba(201,169,97,0.08), rgba(201,169,97,0.02))', border: '1px solid rgba(201,169,97,0.2)' }}
-        >
-          <h2 className="font-display text-xl font-semibold leading-snug" style={{ color: 'var(--text-primary)' }}>
-            Tu viens de comprendre.<br />Maintenant, il faut transformer.
-          </h2>
-          <p className="text-sm leading-relaxed whitespace-pre-line" style={{ color: 'var(--text-secondary)' }}>
-            {`Ce que tu viens de voir, ce n'est pas le problème.\nC'est la prise de conscience.\n\nLe vrai travail commence maintenant :\naller dans ton corps, libérer ce qui s'est construit,\net apprendre à agir autrement dans ta vie réelle.\n\nC'est exactement ce que font les étapes 2 et 3.`}
-          </p>
-          <ul className="space-y-2">
-            {[
-              'Libérer ce schéma à la racine',
-              'Reconnecter ton corps et ton histoire',
-              'Changer concrètement tes réactions au quotidien',
-            ].map((item) => (
-              <li key={item} className="flex items-start gap-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
-                <span className="mt-0.5 flex-shrink-0" style={{ color: 'var(--brand)' }}>→</span>
-                {item}
-              </li>
-            ))}
-          </ul>
-          <div className="space-y-2">
-            <Link
-              href="/rejoindre"
-              className="block w-full py-4 rounded-full text-sm font-semibold text-center transition-all hover:brightness-110"
-              style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
-            >
-              Continuer mon protocole
-            </Link>
-            <p className="text-xs text-center" style={{ color: 'var(--text-muted)' }}>
-              7 jours offerts · accès immédiat · annulable à tout moment
-            </p>
-          </div>
-        </motion.div>
-      )}
 
       {/* Sujets complémentaires — shown after last step */}
       {activeStep === totalSteps && relatedDouleurs.length > 0 && (

@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
+import { calculateMatchScores } from '@/lib/quiz-v2/scoring'
 import type { Profile } from '@/types/database'
 import ThemeToggle from '@/components/ThemeToggle'
 import NotificationBell from '@/components/NotificationBell'
@@ -201,9 +202,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         const plan = profileData?.plan as string | null
         const isSubscribed = plan === 'serenite' || plan === 'essential' || plan === 'premium'
         if (!isSubscribed) {
-          // Chercher le slug du protocole (sessionStorage puis localStorage)
+          // 1. sessionStorage
           let protocolSlug: string | null = null
           try { protocolSlug = sessionStorage.getItem('sos_protocol_slug') } catch {}
+
+          // 2. localStorage (clés sos_progress_[uid]_[slug])
           if (!protocolSlug) {
             try {
               for (let i = 0; i < localStorage.length; i++) {
@@ -215,6 +218,28 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               }
             } catch {}
           }
+
+          // 3. Supabase : retrouver le protocole depuis les réponses quiz
+          if (!protocolSlug && user.email) {
+            try {
+              const { data: responses } = await supabase
+                .from('quiz_v2_responses' as any)
+                .select('scores')
+                .eq('email', user.email)
+                .order('created_at', { ascending: false })
+                .limit(1)
+              if ((responses as any)?.[0]?.scores) {
+                const { data: protocols } = await supabase.from('protocols' as any).select('*')
+                if (protocols && (protocols as any[]).length > 0) {
+                  const matched = (protocols as any[])
+                    .map(p => ({ ...p, matchScore: calculateMatchScores((responses as any)[0].scores, p.dimension_weights) }))
+                    .sort((a, b) => b.matchScore - a.matchScore)
+                  protocolSlug = matched[0]?.slug || null
+                }
+              }
+            } catch {}
+          }
+
           router.push(protocolSlug ? `/mon-chemin?protocol=${protocolSlug}` : '/signature-emotionnelle')
           return
         }

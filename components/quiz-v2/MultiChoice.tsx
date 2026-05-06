@@ -34,30 +34,40 @@ export function MultiChoice({ choices, hasOther, maxSelections, selected, otherT
           <motion.button
             key={i}
             onClick={() => !isDisabled && onToggle(i)}
-            className="w-full text-left px-5 py-4 rounded-xl flex items-center gap-3 cursor-pointer"
+            className="w-full text-left px-4 py-3.5 rounded-2xl flex items-center gap-3.5 cursor-pointer transition-colors"
             style={{
-              background: isSelected ? 'rgba(201,169,97,0.14)' : 'rgba(255,255,255,0.03)',
-              border: isSelected ? '1px solid rgba(201,169,97,0.45)' : '1px solid rgba(255,255,255,0.06)',
-              opacity: isDisabled ? 0.4 : 1,
+              background: isSelected ? 'rgba(201,169,97,0.12)' : 'rgba(255,255,255,0.04)',
+              border: isSelected ? '1.5px solid rgba(201,169,97,0.5)' : '1.5px solid rgba(255,255,255,0.07)',
+              opacity: isDisabled ? 0.35 : 1,
               minHeight: '56px',
             }}
-            whileTap={isDisabled ? {} : { scale: 0.97, transition: { duration: 0.1 } }}
+            whileTap={isDisabled ? {} : { scale: 0.97, transition: { duration: 0.08 } }}
           >
+            {/* Checkbox indicator */}
+            <span
+              className="flex-shrink-0 w-5 h-5 rounded-md flex items-center justify-center"
+              style={{
+                border: isSelected ? '2px solid var(--brand)' : '2px solid rgba(255,255,255,0.15)',
+                background: isSelected ? 'var(--brand)' : 'transparent',
+                transition: 'all 0.15s ease',
+              }}
+            >
+              {isSelected && (
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 0.12 }}
+                  className="text-[9px] font-bold"
+                  style={{ color: '#000', lineHeight: 1 }}
+                >
+                  ✓
+                </motion.span>
+              )}
+            </span>
             <span className="text-lg flex-shrink-0">{choice.emoji}</span>
-            <span className="text-sm flex-1" style={{ color: isSelected ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
+            <span className="text-sm leading-snug flex-1" style={{ color: isSelected ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
               {choice.text}
             </span>
-            {isSelected && (
-              <motion.span
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.15 }}
-                className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold"
-                style={{ background: 'var(--brand)', color: '#000' }}
-              >
-                ✓
-              </motion.span>
-            )}
           </motion.button>
         )
       })}

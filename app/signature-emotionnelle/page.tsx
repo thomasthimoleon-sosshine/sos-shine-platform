@@ -148,15 +148,15 @@ function QuestionScreen({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -16 }}
       transition={{ duration: 0.22, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className="max-w-lg mx-auto px-5 pt-6 pb-8"
+      className="max-w-lg mx-auto px-6 pt-4 pb-8"
     >
       {question.intro && (
-        <p className="text-xs mb-3" style={{ color: 'var(--text-muted)' }}>
+        <p className="text-xs mb-3 tracking-wide uppercase" style={{ color: 'var(--text-muted)' }}>
           {question.intro}
         </p>
       )}
 
-      <h2 className="font-display text-xl sm:text-2xl font-semibold mb-7 leading-snug" style={{ color: 'var(--text-primary)' }}>
+      <h2 className="font-display text-lg sm:text-xl font-semibold mb-7 leading-snug" style={{ color: 'var(--text-primary)' }}>
         {question.question}
       </h2>
 

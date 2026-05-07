@@ -77,9 +77,14 @@ export async function POST(request: NextRequest) {
 
     // Persist top slug on the quiz response row
     if (responseId && topProtocolSlug) {
-      await supabase.from('quiz_v2_responses')
+      const { error: slugUpdateError } = await supabase.from('quiz_v2_responses')
         .update({ top_protocol_slug: topProtocolSlug })
         .eq('id', responseId)
+      if (slugUpdateError) {
+        console.error('[quiz/complete] top_protocol_slug update failed:', slugUpdateError.message, { responseId, topProtocolSlug })
+      }
+    } else {
+      console.warn('[quiz/complete] top_protocol_slug not persisted — missing data:', { responseId, topProtocolSlug })
     }
 
     // Send Email 2 (résultat complet)

@@ -27,7 +27,14 @@ function replaceVars(text: string, vars: Record<string, string>): string {
   return result
 }
 
-export async function GET() {
+export async function GET(request: Request) {
+  const cronSecret = process.env.CRON_SECRET || process.env.BOT_SECRET
+  const isVercelCron = request.headers.get('x-vercel-cron') === '1'
+  const authHeader = request.headers.get('authorization')
+  if (cronSecret && !isVercelCron && authHeader !== `Bearer ${cronSecret}`) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
   const supabase = getAdminClient()
   if (!supabase) return NextResponse.json({ error: 'Not configured' }, { status: 500 })
 

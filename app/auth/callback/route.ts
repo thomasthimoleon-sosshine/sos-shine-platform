@@ -93,7 +93,7 @@ export async function GET(request: Request) {
           }
         } catch {}
 
-        const isNewUser = user.created_at && (Date.now() - new Date(user.created_at).getTime() < 60000)
+        const isNewUser = user.created_at && (Date.now() - new Date(user.created_at).getTime() < 300000)
 
         // ─── A/B variant attribution ───
         // Read ab_variant from cookie (set by LandingClient) and persist it on profile

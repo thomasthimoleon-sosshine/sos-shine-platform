@@ -119,7 +119,7 @@ function NameCaptureScreen({ onSubmit }: { onSubmit: (name: string) => void }) {
             onChange={(e) => setName(e.target.value)}
             placeholder="Ton prénom"
             autoFocus
-            className="w-full px-5 py-4 rounded-xl text-sm text-center outline-none font-sans"
+            className="w-full px-5 py-4 rounded-xl text-base text-center outline-none font-sans"
             style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: 'var(--text-primary)' }}
             onKeyDown={(e) => e.key === 'Enter' && name.trim() && onSubmit(name.trim())}
           />

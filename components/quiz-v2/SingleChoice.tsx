@@ -109,7 +109,7 @@ export function SingleChoice({
               maxLength={200}
               rows={2}
               autoFocus
-              className="w-full mt-3 px-3 py-2 rounded-xl text-sm outline-none resize-none font-sans"
+              className="w-full mt-3 px-3 py-2 rounded-xl text-base outline-none resize-none font-sans"
               style={{
                 background: 'rgba(255,255,255,0.04)',
                 border: '1px solid rgba(255,255,255,0.08)',

@@ -39,7 +39,7 @@ export function EmailCapture({ onSubmit, loading }: Props) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="ton@email.com"
-          className="w-full px-5 py-4 rounded-xl text-sm text-center outline-none transition-all focus:ring-2 focus:ring-[var(--brand)]"
+          className="w-full px-5 py-4 rounded-xl text-base text-center outline-none transition-all focus:ring-2 focus:ring-[var(--brand)]"
           style={{
             background: 'rgba(255,255,255,0.04)',
             border: '1px solid rgba(255,255,255,0.08)',

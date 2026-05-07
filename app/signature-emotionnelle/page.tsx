@@ -16,7 +16,7 @@ import { FreeTextInput } from '@/components/quiz-v2/FreeTextInput'
 import { EmailCapture } from '@/components/quiz-v2/EmailCapture'
 import { ResultPage } from '@/components/quiz-v2/ResultPage'
 
-type Phase = 'intro' | 'quiz' | 'email' | 'result'
+type Phase = 'intro' | 'quiz' | 'nameCapture' | 'email' | 'result'
 
 function generateSessionId() {
   return `qv2_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`
@@ -47,55 +47,94 @@ async function saveResponse(sessionId: string, responseId: string | null, data: 
 }
 
 // ═══════════════════════════════════════════
-// INTRO SCREEN
+// INTRO SCREEN — no first name
 // ═══════════════════════════════════════════
-function IntroScreen({ onStart }: { onStart: (name: string) => void }) {
-  const [name, setName] = useState('')
-
+function IntroScreen({ onStart }: { onStart: () => void }) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0, x: -50 }}
-      className="min-h-screen flex items-center justify-center px-6"
+      exit={{ opacity: 0, y: -16 }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
+      className="min-h-screen flex flex-col items-center justify-center px-6 text-center"
     >
-      <div className="max-w-md w-full text-center space-y-8">
-        <Link href="/" className="inline-flex items-center justify-center mb-8">
-          <img src="/images/logo-shine.png" alt="SOS Shine" className="h-12" />
+      <div className="max-w-sm w-full space-y-10">
+        <Link href="/" className="inline-block">
+          <img src="/images/logo-shine.png" alt="SOS Shine" className="h-10 mx-auto" />
         </Link>
 
-        <h1 className="font-display text-2xl sm:text-3xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-          Découvre ta Signature Émotionnelle
-        </h1>
-
-        <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-          15 questions pour comprendre pourquoi tu réagis comme ça. Ton profil émotionnel, tes schémas, et par où commencer.
-        </p>
-
         <div className="space-y-4">
+          <h1 className="font-sans text-[22px] font-bold leading-tight" style={{ color: 'var(--text-primary)' }}>
+            Découvre le schéma émotionnel<br />
+            qui influence tes réactions.
+          </h1>
+          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
+            15 questions · 3 minutes · résultat immédiat
+          </p>
+        </div>
+
+        <div className="space-y-3">
+          <button
+            onClick={onStart}
+            className="w-full py-4 rounded-full text-sm font-semibold cursor-pointer"
+            style={{ background: 'linear-gradient(135deg, var(--brand), var(--gold-deep, #B8960F))', color: '#000000' }}
+          >
+            Commencer →
+          </button>
+          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.25)' }}>
+            Gratuit · Aucun engagement · Résultat immédiat
+          </p>
+        </div>
+      </div>
+    </motion.div>
+  )
+}
+
+// ═══════════════════════════════════════════
+// NAME CAPTURE — after Q4, more engaged
+// ═══════════════════════════════════════════
+function NameCaptureScreen({ onSubmit }: { onSubmit: (name: string) => void }) {
+  const [name, setName] = useState('')
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -16 }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
+      className="min-h-screen flex items-center justify-center px-6"
+    >
+      <div className="max-w-sm w-full text-center space-y-8">
+        <div className="space-y-3">
+          <h2 className="font-display text-xl font-semibold" style={{ color: 'var(--brand)' }}>
+            Un prénom, maintenant.
+          </h2>
+          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.45)' }}>
+            Pour personnaliser la suite.
+          </p>
+        </div>
+        <div className="space-y-3">
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Ton prénom"
             autoFocus
-            className="w-full px-5 py-4 rounded-xl text-sm text-center outline-none transition-all focus:ring-2 focus:ring-[var(--brand)]"
+            className="w-full px-5 py-4 rounded-xl text-sm text-center outline-none font-sans"
             style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: 'var(--text-primary)' }}
-            onKeyDown={(e) => e.key === 'Enter' && name.trim() && onStart(name.trim())}
+            onKeyDown={(e) => e.key === 'Enter' && name.trim() && onSubmit(name.trim())}
           />
           <button
-            onClick={() => name.trim() && onStart(name.trim())}
+            onClick={() => name.trim() && onSubmit(name.trim())}
             disabled={!name.trim()}
-            className="w-full py-4 rounded-full text-sm font-semibold transition-all cursor-pointer disabled:opacity-30"
-            style={{ background: 'linear-gradient(135deg, var(--brand), var(--gold-deep, #B8960F))', color: '#000000' }}
+            className="w-full py-4 rounded-full text-sm font-semibold cursor-pointer disabled:opacity-30"
+            style={{
+              background: name.trim() ? 'linear-gradient(135deg, var(--brand), var(--gold-deep, #B8960F))' : 'rgba(255,255,255,0.06)',
+              color: name.trim() ? '#000' : 'var(--text-muted)',
+            }}
           >
-            COMMENCER · 6 MIN
+            Continuer →
           </button>
         </div>
-
-        <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-          Gratuit. Aucun engagement. Résultat immédiat.
-        </p>
       </div>
     </motion.div>
   )
@@ -151,13 +190,13 @@ function QuestionScreen({
       className="max-w-lg mx-auto px-6 pt-4 pb-8"
     >
       {question.intro && (
-        <p className="text-xs mb-3 tracking-wide uppercase" style={{ color: 'var(--text-muted)' }}>
+        <p className="text-[11px] mb-3 tracking-wider uppercase font-sans" style={{ color: 'rgba(255,255,255,0.35)' }}>
           {question.intro}
         </p>
       )}
 
-      <h2 className="font-display text-lg sm:text-xl font-semibold mb-7 leading-snug" style={{ color: 'var(--text-primary)' }}>
-        {question.question}
+      <h2 className="font-sans font-bold text-base sm:text-[17px] mb-5 leading-snug whitespace-pre-line" style={{ color: 'var(--text-primary)' }}>
+        {question.shortQuestion || question.question}
       </h2>
 
       {question.type === 'single' && question.choices && (
@@ -171,6 +210,7 @@ function QuestionScreen({
           onSelectOther={() => { setIsOtherSelected(true); onUpdate({ choiceIndexes: [], freeText: response.freeText || '' }) }}
           isOtherSelected={isOtherSelected}
           onAutoAdvance={onNext}
+          microReveal={question.microReveal}
         />
       )}
 
@@ -280,7 +320,7 @@ export default function SignatureEmotionnellePage() {
 
   // Save progress to sessionStorage on every change
   useEffect(() => {
-    if (phase !== 'intro' && phase !== 'result') {
+    if (phase !== 'intro' && phase !== 'nameCapture' && phase !== 'result') {
       sessionStorage.setItem('quiz_v2_progress', JSON.stringify({
         phase, firstName, currentQ, responses, sessionId, responseId, email,
       }))
@@ -322,13 +362,19 @@ export default function SignatureEmotionnellePage() {
 
   const question = QUESTIONS[currentQ]
 
-  const handleStart = useCallback(async (name: string) => {
-    setFirstName(name)
+  const handleStart = useCallback(async () => {
     setPhase('quiz')
-    const id = await saveResponse(sessionId, null, { firstName: name, currentQuestion: 1 })
+    const id = await saveResponse(sessionId, null, { currentQuestion: 1 })
     setResponseId(id)
-    trackEvent(sessionId, id, 'quiz_started', { firstName: name })
+    trackEvent(sessionId, id, 'quiz_started', {})
   }, [sessionId])
+
+  const handleNameCapture = useCallback(async (name: string) => {
+    setFirstName(name)
+    await saveResponse(sessionId, responseId, { firstName: name })
+    setPhase('quiz')
+    setCurrentQ(4) // continue at Q5
+  }, [sessionId, responseId])
 
   const handleUpdateResponse = useCallback((r: QuizResponse) => {
     setResponses((prev: AllResponses) => ({ ...prev, [question.id]: r }))
@@ -396,6 +442,12 @@ export default function SignatureEmotionnellePage() {
       if (rid) setResponseId(rid)
     })
     trackEvent(sessionId, responseId, 'quiz_question_answered', { questionId: question.id, questionType: question.type })
+
+    // Name capture after Q4 (if no name yet)
+    if (currentQ === 3 && !firstName) {
+      setPhase('nameCapture')
+      return
+    }
 
     // Micro-tension after Q5
     if (currentQ === 4) {
@@ -492,6 +544,10 @@ export default function SignatureEmotionnellePage() {
       <AnimatePresence mode="wait">
         {phase === 'intro' && (
           <IntroScreen key="intro" onStart={handleStart} />
+        )}
+
+        {phase === 'nameCapture' && (
+          <NameCaptureScreen key="nameCapture" onSubmit={handleNameCapture} />
         )}
 
         {phase === 'quiz' && question && (

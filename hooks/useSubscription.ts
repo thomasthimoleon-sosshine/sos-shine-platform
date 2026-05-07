@@ -64,11 +64,15 @@ export function useSubscription(): SubscriptionState {
         // Check subscription
         const { data: sub } = await supabase
           .from('subscriptions')
-          .select('status, plan')
+          .select('status, plan, grace_period_end')
           .eq('user_id', user.id)
           .maybeSingle()
 
-        const hasActiveSub = sub && (sub.status === 'active' || sub.status === 'trialing')
+        const isActiveStatus = sub?.status === 'active' || sub?.status === 'trialing'
+        const isPastDueInGrace = sub?.status === 'past_due' &&
+          sub?.grace_period_end != null &&
+          new Date(sub.grace_period_end) > new Date()
+        const hasActiveSub = isActiveStatus || isPastDueInGrace
 
         setState({
           loading: false,

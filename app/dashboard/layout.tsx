@@ -200,8 +200,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       // Guard: non-abonnés ont accès limité au dashboard
       if (!isUserAdmin) {
-        const plan = profileData?.plan as string | null
-        const subscribed = plan === 'serenite' || plan === 'essential' || plan === 'premium'
+        const { data: sub } = await supabase
+          .from('subscriptions')
+          .select('status, grace_period_end')
+          .eq('user_id', user.id)
+          .maybeSingle()
+        const isActiveStatus = sub?.status === 'active' || sub?.status === 'trialing'
+        const isPastDueInGrace = sub?.status === 'past_due' &&
+          sub?.grace_period_end != null &&
+          new Date(sub.grace_period_end) > new Date()
+        const subscribed = isActiveStatus || isPastDueInGrace
         setIsSubscribed(subscribed)
 
         if (!subscribed) {
@@ -476,9 +484,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* Page content */}
         <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">{children}</main>
 
-        {/* Floating crisis button + chatbot — abonnés uniquement */}
-        {isSubscribed && <CrisisButton />}
-        {isSubscribed && <ShineChatbot />}
+        {/* Floating crisis button + chatbot — abonnés et admins */}
+        {(isSubscribed || isAdmin) && <CrisisButton />}
+        {(isSubscribed || isAdmin) && <ShineChatbot />}
 
       </div>
 

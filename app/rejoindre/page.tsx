@@ -312,7 +312,7 @@ function DurationSelector({ selected, onChange }: { selected: DurationId; onChan
 }
 
 /* ─── EMBEDDED CHECKOUT MODAL ─── */
-function EmbeddedCheckoutModal({ plan, duration, email, prenom, onClose }: { plan: PlanId; duration: DurationId; email: string; prenom: string; onClose: () => void }) {
+function EmbeddedCheckoutModal({ plan, duration, email, prenom, userId = '', onClose }: { plan: PlanId; duration: DurationId; email: string; prenom: string; userId?: string; onClose: () => void }) {
   const [checkoutError, setCheckoutError] = useState<string | null>(null)
 
   const fetchClientSecret = useCallback(async () => {
@@ -321,7 +321,7 @@ function EmbeddedCheckoutModal({ plan, duration, email, prenom, onClose }: { pla
       const res = await fetch('/api/stripe/create-embedded-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan, duration: effectiveDuration, email, prenom: prenom || undefined }),
+        body: JSON.stringify({ plan, duration: effectiveDuration, email, prenom: prenom || undefined, userId: userId || undefined }),
       })
       const data = await res.json()
       if (data.error) {
@@ -506,14 +506,15 @@ function EmailModal({ plan, duration, onClose, initialEmail = '' }: { plan: Plan
 /* ─── POST-LAUNCH PAYMENT SECTION ─── */
 function PaymentContent() {
   const { t } = useTranslation()
+  const router = useRouter()
   const searchParams = useSearchParams()
   const quizEmail = searchParams.get('email') || ''
   const quizSource = searchParams.get('source')
   const quizPlan = searchParams.get('plan') as PlanId | null
   const [selectedDuration, setSelectedDuration] = useState<DurationId>('monthly')
   const [checkoutModal, setCheckoutModal] = useState<{ plan: PlanId } | null>(null)
-  const [embeddedCheckout, setEmbeddedCheckout] = useState<{ plan: PlanId; duration: DurationId; email: string; prenom: string } | null>(null)
-  const [loggedInUser, setLoggedInUser] = useState<{ email: string; prenom: string } | null>(null)
+  const [embeddedCheckout, setEmbeddedCheckout] = useState<{ plan: PlanId; duration: DurationId; email: string; prenom: string; userId: string } | null>(null)
+  const [loggedInUser, setLoggedInUser] = useState<{ id: string; email: string; prenom: string } | null>(null)
   const [autoOpened, setAutoOpened] = useState(false)
 
   useEffect(() => {
@@ -521,6 +522,7 @@ function PaymentContent() {
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (user) {
         setLoggedInUser({
+          id: user.id,
           email: user.email || '',
           prenom: user.user_metadata?.prenom || user.user_metadata?.full_name?.split(' ')[0] || '',
         })
@@ -545,12 +547,12 @@ function PaymentContent() {
 
     // If user is logged in, show embedded checkout directly
     if (loggedInUser) {
-      setEmbeddedCheckout({ plan, duration: plan === 'essential' ? 'monthly' : selectedDuration, email: loggedInUser.email, prenom: loggedInUser.prenom || '' })
+      setEmbeddedCheckout({ plan, duration: plan === 'essential' ? 'monthly' : selectedDuration, email: loggedInUser.email, prenom: loggedInUser.prenom || '', userId: loggedInUser.id })
       return
     }
 
-    // Not logged in — collect email then show embedded checkout
-    setCheckoutModal({ plan })
+    // Not logged in — redirect to signup so the user creates an account first
+    router.push('/signup?source=rejoindre&next=/rejoindre')
   }
 
 
@@ -576,6 +578,7 @@ function PaymentContent() {
             duration={embeddedCheckout.duration}
             email={embeddedCheckout.email}
             prenom={embeddedCheckout.prenom}
+            userId={embeddedCheckout.userId}
             onClose={() => setEmbeddedCheckout(null)}
           />
         )}

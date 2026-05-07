@@ -318,17 +318,15 @@ export default function SignatureEmotionnellePage() {
   const [email, setEmail] = useState(savedData?.email || '')
   const [emailLoading, setEmailLoading] = useState(false)
 
-  // Save progress to sessionStorage on every change
+  // Save progress to sessionStorage on every change (including result, so browser back restores it)
   useEffect(() => {
-    if (phase !== 'intro' && phase !== 'nameCapture' && phase !== 'result') {
+    if (phase !== 'intro' && phase !== 'nameCapture') {
       sessionStorage.setItem('quiz_v2_progress', JSON.stringify({
         phase, firstName, currentQ, responses, sessionId, responseId, email,
+        scores, dominant, secondary, q15Response,
       }))
     }
-    if (phase === 'result') {
-      sessionStorage.removeItem('quiz_v2_progress')
-    }
-  }, [phase, firstName, currentQ, responses, sessionId, responseId, email])
+  }, [phase, firstName, currentQ, responses, sessionId, responseId, email, scores, dominant, secondary, q15Response])
 
   // Returning user check: if already completed quiz, redirect to their protocol
   useEffect(() => {
@@ -354,15 +352,16 @@ export default function SignatureEmotionnellePage() {
     checkReturningUser()
   }, []) // eslint-disable-line
 
-  const [scores, setScores] = useState<DimensionScores>({})
-  const [dominant, setDominant] = useState('1')
-  const [secondary, setSecondary] = useState('2')
-  const [q15Response, setQ15Response] = useState('')
+  const [scores, setScores] = useState<DimensionScores>(savedData?.scores || {})
+  const [dominant, setDominant] = useState(savedData?.dominant || '1')
+  const [secondary, setSecondary] = useState(savedData?.secondary || '2')
+  const [q15Response, setQ15Response] = useState(savedData?.q15Response || '')
   const [microTension, setMicroTension] = useState<string | null>(null)
 
   const question = QUESTIONS[currentQ]
 
   const handleStart = useCallback(async () => {
+    try { sessionStorage.removeItem('quiz_v2_progress') } catch {}
     setPhase('quiz')
     const id = await saveResponse(sessionId, null, { currentQuestion: 1 })
     setResponseId(id)

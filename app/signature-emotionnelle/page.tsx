@@ -317,6 +317,10 @@ export default function SignatureEmotionnellePage() {
   const [responseId, setResponseId] = useState<string | null>(savedData?.responseId || null)
   const [email, setEmail] = useState(savedData?.email || '')
   const [emailLoading, setEmailLoading] = useState(false)
+  const [scores, setScores] = useState<DimensionScores>(savedData?.scores || {})
+  const [dominant, setDominant] = useState(savedData?.dominant || '1')
+  const [secondary, setSecondary] = useState(savedData?.secondary || '2')
+  const [q15Response, setQ15Response] = useState(savedData?.q15Response || '')
 
   // Save progress to sessionStorage on every change (including result, so browser back restores it)
   useEffect(() => {
@@ -352,10 +356,6 @@ export default function SignatureEmotionnellePage() {
     checkReturningUser()
   }, []) // eslint-disable-line
 
-  const [scores, setScores] = useState<DimensionScores>(savedData?.scores || {})
-  const [dominant, setDominant] = useState(savedData?.dominant || '1')
-  const [secondary, setSecondary] = useState(savedData?.secondary || '2')
-  const [q15Response, setQ15Response] = useState(savedData?.q15Response || '')
   const [microTension, setMicroTension] = useState<string | null>(null)
 
   const question = QUESTIONS[currentQ]

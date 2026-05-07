@@ -37,7 +37,7 @@ function ProtocolPreviewContent() {
   useEffect(() => {
     async function load() {
       const supabase = createClient()
-      const { data } = await (supabase as any).from('protocols').select('*').eq('slug', slug).single()
+      const { data } = await (supabase as any).from('protocols').select('*').eq('slug', slug).maybeSingle()
       setProtocol(data || null)
       setLoading(false)
       if (data) {

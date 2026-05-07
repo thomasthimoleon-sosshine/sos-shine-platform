@@ -62,11 +62,12 @@ export function useSubscription(): SubscriptionState {
         }
 
         // Check subscription
-        const { data: sub } = await supabase
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { data: sub } = await (supabase as any)
           .from('subscriptions')
           .select('status, plan, grace_period_end')
           .eq('user_id', user.id)
-          .maybeSingle()
+          .maybeSingle() as { data: { status: string; plan: string | null; grace_period_end: string | null } | null }
 
         const isActiveStatus = sub?.status === 'active' || sub?.status === 'trialing'
         const isPastDueInGrace = sub?.status === 'past_due' &&

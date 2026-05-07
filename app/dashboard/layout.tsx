@@ -200,11 +200,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       // Guard: non-abonnés ont accès limité au dashboard
       if (!isUserAdmin) {
-        const { data: sub } = await supabase
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { data: sub } = await (supabase as any)
           .from('subscriptions')
           .select('status, grace_period_end')
           .eq('user_id', user.id)
-          .maybeSingle()
+          .maybeSingle() as { data: { status: string; grace_period_end: string | null } | null }
         const isActiveStatus = sub?.status === 'active' || sub?.status === 'trialing'
         const isPastDueInGrace = sub?.status === 'past_due' &&
           sub?.grace_period_end != null &&

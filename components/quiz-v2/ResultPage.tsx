@@ -278,16 +278,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
           {q15Response && (
             <div className="space-y-4">
               <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                Tout à l&apos;heure, tu as écrit une phrase à l&apos;enfant en toi :
-              </p>
-              <blockquote
-                className="font-display text-xl sm:text-2xl italic text-center py-6 px-4"
-                style={{ color: 'var(--brand)' }}
-              >
-                &laquo;&nbsp;{q15Response}&nbsp;&raquo;
-              </blockquote>
-              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                Cette phrase n&apos;était pas un hasard.
+                Tu as pris le temps de te connecter à cet(te) enfant en toi. Cette phrase n&apos;était pas un hasard.
               </p>
               <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
                 C&apos;est exactement ce que cet(te) enfant attendait d&apos;entendre il y a 20, 30 ans.

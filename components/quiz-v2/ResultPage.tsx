@@ -275,19 +275,14 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
             Mais tu peux changer.
           </h2>
 
-          {q15Response && (
-            <div className="space-y-4">
-              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                Tu as pris le temps de te connecter à cet(te) enfant en toi. Cette phrase n&apos;était pas un hasard.
-              </p>
-              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                C&apos;est exactement ce que cet(te) enfant attendait d&apos;entendre il y a 20, 30 ans.
-              </p>
-              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                Et c&apos;est exactement ce que SOS Shine va t&apos;aider à lui dire vraiment.
-              </p>
-            </div>
-          )}
+          <div className="space-y-4">
+            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+              Les schémas qui te freinent aujourd&apos;hui se sont formés pour te protéger. Ils ont eu leur utilité. Mais ils ne te servent plus.
+            </p>
+            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+              Ce n&apos;est pas une question de volonté. C&apos;est une question de méthode.
+            </p>
+          </div>
         </div>
       </Acte>
 

@@ -302,6 +302,9 @@ function QuestionScreen({
 // ═══════════════════════════════════════════
 // MAIN PAGE
 // ═══════════════════════════════════════════
+// Emails that always start fresh — never restore a previous result
+const TEST_QUIZ_EMAILS = new Set(['julialaureau@sosshine.com', 'ttse335@gmail.com'])
+
 export default function SignatureEmotionnellePage() {
   const router = useRouter()
 
@@ -309,18 +312,22 @@ export default function SignatureEmotionnellePage() {
   const saved = typeof window !== 'undefined' ? sessionStorage.getItem('quiz_v2_progress') : null
   const savedData = saved ? JSON.parse(saved) : null
 
-  const [phase, setPhase] = useState<Phase>(savedData?.phase || 'intro')
-  const [firstName, setFirstName] = useState(savedData?.firstName || '')
-  const [currentQ, setCurrentQ] = useState(savedData?.currentQ || 0)
-  const [responses, setResponses] = useState<AllResponses>(savedData?.responses || {})
-  const [sessionId] = useState(savedData?.sessionId || generateSessionId)
-  const [responseId, setResponseId] = useState<string | null>(savedData?.responseId || null)
-  const [email, setEmail] = useState(savedData?.email || '')
+  // Test users never land on a previous result — they always see the intro
+  const isTestUser = savedData?.email && TEST_QUIZ_EMAILS.has(savedData.email.toLowerCase())
+  const restoreData = (isTestUser && savedData?.phase === 'result') ? null : savedData
+
+  const [phase, setPhase] = useState<Phase>(restoreData?.phase || 'intro')
+  const [firstName, setFirstName] = useState(restoreData?.firstName || '')
+  const [currentQ, setCurrentQ] = useState(restoreData?.currentQ || 0)
+  const [responses, setResponses] = useState<AllResponses>(restoreData?.responses || {})
+  const [sessionId] = useState(restoreData?.sessionId || generateSessionId)
+  const [responseId, setResponseId] = useState<string | null>(restoreData?.responseId || null)
+  const [email, setEmail] = useState(restoreData?.email || '')
   const [emailLoading, setEmailLoading] = useState(false)
-  const [scores, setScores] = useState<DimensionScores>(savedData?.scores || {})
-  const [dominant, setDominant] = useState(savedData?.dominant || '1')
-  const [secondary, setSecondary] = useState(savedData?.secondary || '2')
-  const [q15Response, setQ15Response] = useState(savedData?.q15Response || '')
+  const [scores, setScores] = useState<DimensionScores>(restoreData?.scores || {})
+  const [dominant, setDominant] = useState(restoreData?.dominant || '1')
+  const [secondary, setSecondary] = useState(restoreData?.secondary || '2')
+  const [q15Response, setQ15Response] = useState(restoreData?.q15Response || '')
 
   // Save progress to sessionStorage on every change (including result, so browser back restores it)
   useEffect(() => {

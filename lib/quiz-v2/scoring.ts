@@ -87,19 +87,25 @@ function scoreFreeText(text: string): DimensionScores {
   return scores
 }
 
+// Theoretical maximum raw score per dimension, computed from all questions.
+// Ensures fair comparison: dim 4 (24 pts available) vs dim 5 (12 pts available)
+// are normalized independently rather than relative to each other.
+const DIMENSION_MAX_SCORES: Record<string, number> = {
+  '1': 20, '2': 18, '3': 19, '4': 24,
+  '5': 12, '6': 12, '7': 15, '8': 13,
+  '9': 14, '10': 17,
+}
+
 /**
  * Normalize raw scores to 0-100 scale
- * Uses the theoretical max per dimension across all questions
+ * Uses per-dimension theoretical maxima so all 10 dimensions are comparable.
  */
 export function normalizeScores(raw: DimensionScores): DimensionScores {
-  // Find the maximum raw score across all dimensions for relative scaling
-  const maxRaw = Math.max(...Object.values(raw), 1)
-
   const normalized: DimensionScores = {}
   for (const [dim, score] of Object.entries(raw)) {
-    normalized[dim] = Math.min(100, Math.round((score / maxRaw) * 100))
+    const maxForDim = DIMENSION_MAX_SCORES[dim] || 20
+    normalized[dim] = Math.min(100, Math.round((score / maxForDim) * 100))
   }
-
   return normalized
 }
 

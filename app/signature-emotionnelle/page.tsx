@@ -332,29 +332,8 @@ export default function SignatureEmotionnellePage() {
     }
   }, [phase, firstName, currentQ, responses, sessionId, responseId, email, scores, dominant, secondary, q15Response])
 
-  // Returning user check: if already completed quiz, redirect to their protocol
-  useEffect(() => {
-    async function checkReturningUser() {
-      try {
-        const supabase = createClient()
-        const { data: { user } } = await supabase.auth.getUser()
-        if (!user) return
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const { data } = await (supabase as any)
-          .from('quiz_v2_responses')
-          .select('top_protocol_slug')
-          .eq('user_id', user.id)
-          .not('top_protocol_slug', 'is', null)
-          .order('created_at', { ascending: false })
-          .limit(1)
-          .maybeSingle()
-        if (data?.top_protocol_slug) {
-          router.replace('/mon-chemin')
-        }
-      } catch { /* non-critical */ }
-    }
-    checkReturningUser()
-  }, []) // eslint-disable-line
+  // Note: returning-user auto-redirect intentionally removed.
+  // Retaking the quiz must always be possible to get a fresh result.
 
   const [microTension, setMicroTension] = useState<string | null>(null)
 
@@ -362,6 +341,16 @@ export default function SignatureEmotionnellePage() {
 
   const handleStart = useCallback(async () => {
     try { sessionStorage.removeItem('quiz_v2_progress') } catch {}
+    // Reset all state so retakes start completely fresh
+    setCurrentQ(0)
+    setResponses({})
+    setScores({})
+    setDominant('1')
+    setSecondary('2')
+    setQ15Response('')
+    setFirstName('')
+    setEmail('')
+    setResponseId(null)
     setPhase('quiz')
     const id = await saveResponse(sessionId, null, { currentQuestion: 1 })
     setResponseId(id)
@@ -468,25 +457,7 @@ export default function SignatureEmotionnellePage() {
   const handleEmailSubmit = useCallback(async (capturedEmail: string) => {
     setEmailLoading(true)
     setEmail(capturedEmail)
-
-    // Check if this email already has a completed quiz
-    try {
-      const supabase = createClient()
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const { data: existing } = await (supabase as any)
-        .from('quiz_v2_responses')
-        .select('top_protocol_slug')
-        .eq('email', capturedEmail)
-        .not('top_protocol_slug', 'is', null)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle()
-      if (existing?.top_protocol_slug) {
-        try { sessionStorage.setItem('sos_protocol_slug', existing.top_protocol_slug) } catch {}
-        router.replace('/mon-chemin')
-        return
-      }
-    } catch { /* non-critical */ }
+    // No redirect for returning users — always let them complete the new quiz.
 
     await saveResponse(sessionId, responseId, {
       email: capturedEmail,

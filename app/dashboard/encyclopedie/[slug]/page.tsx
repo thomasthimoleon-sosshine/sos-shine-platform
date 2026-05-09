@@ -1113,7 +1113,7 @@ export default function DouleurDetailPage() {
               className="w-full py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer"
               style={{ background: `${currentStep.color}15`, color: currentStep.color, border: `1px solid ${currentStep.color}30` }}
             >
-              {isFreeUser && currentStep.num === 1 ? 'Continuer mon évolution →' : `Marquer l'étape ${currentStep.num} comme terminée`}
+              {isFreeUser && currentStep.num === 1 ? "J'ai compris — passer à l'étape 2 →" : `Marquer l'étape ${currentStep.num} comme terminée`}
             </button>
           ) : (
             <div className="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium"

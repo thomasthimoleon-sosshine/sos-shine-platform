@@ -1,10 +1,9 @@
 /**
  * SOS Shine — Quiz V2 Archetype Layer
  *
- * 25 emotional archetypes displayed on top of the existing 10-dimension scoring engine.
- * Dimensions are NOT replaced — archetypes are a memorable identity layer added above them.
- *
- * Mapping: (dominant_dimension, secondary_dimension) → archetype key
+ * 25 emotional archetypes as identity layer above the existing scoring engine.
+ * Each archetype has a 6-part psychological structure designed to create
+ * recognition, emotional shock, relief, and desire to continue.
  */
 
 export type Blessure = 'Rejet' | 'Abandon' | 'Humiliation' | 'Trahison' | 'Injustice'
@@ -16,8 +15,12 @@ export type Archetype = {
   emotion: string
   mode: string
   zone: string
-  signes: string[]
-  explication: string
+  // 6-part psychological structure
+  reconnaissance: string   // Mirror — immediate recognition, short lines
+  verite: string           // Uncomfortable hidden truth
+  mecanique: string        // Deep mechanism — nervous system / blessure / survival
+  consequence: string      // Future cost if nothing changes
+  transition: string       // Natural bridge to the protocol
 }
 
 export const ARCHETYPES: Record<string, Archetype> = {
@@ -28,15 +31,35 @@ export const ARCHETYPES: Record<string, Archetype> = {
     emotion: 'Colère rentrée',
     mode: 'Contrôle',
     zone: 'Famille',
-    signes: [
-      'Tu portes tout le monde sur tes épaules, même ceux qui ne te l\'ont pas demandé',
-      'Tu te sens responsable de l\'équilibre autour de toi, au point d\'oublier le tien',
-      'Tu as du mal à déléguer parce que "personne ne fait aussi bien que toi"',
-      'Au fond, tu es épuisé(e) mais tu n\'oses pas t\'arrêter',
-    ],
-    explication: `Enfant, tu as appris que pour être aimé(e), il fallait être utile. Être fort(e). Être celui ou celle qui tient. Ton système nerveux a mémorisé que le contrôle = la sécurité, et le lâcher-prise = le danger.
+    reconnaissance: `Tu aides.
+Tu portes.
+Tu rassures.
+Mais personne ne voit
+à quel point tu es fatigué(e).`,
+    verite: `Tu ne donnes pas seulement par amour.
+Tu donnes aussi
+pour éviter d'être oublié(e).`,
+    mecanique: `Ton système nerveux a appris
+que ta valeur dépendait
+de ce que tu apportais aux autres.
 
-Ce n'est pas ta faute : c'est une stratégie de survie brillante qui a fonctionné. Mais aujourd'hui, elle te coûte ton énergie vitale.`,
+Le contrôle = la sécurité.
+Le lâcher-prise = le danger.
+
+Ce n'est pas un choix que tu as fait.
+C'est une conclusion que ton corps a tirée
+pour toi.`,
+    consequence: `Et à force de porter tout le monde,
+tu t'éloignes lentement de toi-même.
+
+Un jour, tu te retournes
+et tu ne te reconnais plus.`,
+    transition: `Il existe une façon de reposer le poids.
+Pas d'un coup.
+Progressivement.
+Sans tout perdre.
+
+C'est ce que le protocole te propose.`,
   },
 
   hyper_vigilant: {
@@ -46,15 +69,32 @@ Ce n'est pas ta faute : c'est une stratégie de survie brillante qui a fonctionn
     emotion: 'Anxiété',
     mode: 'Contrôle',
     zone: 'Couple',
-    signes: [
-      'Tu scannes en permanence les émotions de l\'autre pour anticiper un éventuel rejet',
-      'Un message sans réponse déclenche un vertige intérieur disproportionné',
-      'Tu as besoin de savoir où l\'autre est, ce qu\'il pense, ce qu\'il ressent',
-      'Tu sais que c\'est "trop" mais tu n\'arrives pas à couper l\'alerte',
-    ],
-    explication: `Ton système nerveux a appris très tôt que l'amour pouvait disparaître d'une seconde à l'autre. Alors il reste en veille. Toujours.
+    reconnaissance: `Un message sans réponse.
+Et déjà — quelque chose en toi s'emballe.
+Tu cherches des signes.
+Tu surveilles sans le vouloir.
+Tu n'arrives pas à couper l'alerte.`,
+    verite: `Ce n'est pas de la jalousie.
+Ce n'est pas du contrôle.
+C'est une alarme d'enfant
+qui n'a jamais été désactivée.`,
+    mecanique: `Ton système nerveux a appris très tôt
+que l'amour pouvait disparaître
+d'une seconde à l'autre.
 
-Ce n'est pas de la jalousie ni du contrôle : c'est une alarme d'enfant qui n'a jamais été désactivée. Ton corps continue à chercher la sécurité là où, enfant, elle a manqué.`,
+Alors il reste en veille. Toujours.
+Ton corps continue à chercher la sécurité
+là où, enfant, elle a manqué.`,
+    consequence: `Cette alerte permanente
+fatigue les gens que tu aimes.
+Et te fatigue, toi, encore plus.
+
+Et malgré tout, tu ne sais pas comment l'éteindre.`,
+    transition: `Il est possible de désactiver cette alarme.
+Pas en faisant semblant qu'elle n'existe pas.
+En retournant à la source.
+
+C'est le début du protocole.`,
   },
 
   invisible_lumineux: {
@@ -64,15 +104,33 @@ Ce n'est pas de la jalousie ni du contrôle : c'est une alarme d'enfant qui n'a 
     emotion: 'Honte',
     mode: 'Effacement',
     zone: 'Identité',
-    signes: [
-      'Tu as l\'impression que ta présence dérange, même quand on t\'invite',
-      'Tu t\'excuses d\'exister avant même d\'avoir parlé',
-      'Tu brilles en coulisses mais tu te fais petit(e) dès qu\'on te regarde',
-      'Tu rêves d\'être vu(e) mais tu as appris à disparaître',
-    ],
-    explication: `Un jour, quelqu'un t'a fait comprendre — peut-être sans mot, peut-être d'un regard — que tu étais "en trop". Ton être profond a entendu "je ne suis pas légitime".
+    reconnaissance: `Tu brilles.
+Mais tu te fais petit(e)
+avant même qu'on te le demande.
 
-Tu n'es pas timide : tu es blessé(e) de rejet. Et la lumière que tu portes cherche juste la permission de sortir.`,
+Tu as quelque chose à dire.
+Mais tu attends toujours la permission.`,
+    verite: `Tu ne manques pas de confiance.
+Tu as peur d'exister.
+Parce qu'exister,
+c'est risquer d'être rejeté(e).`,
+    mecanique: `Un jour, quelqu'un t'a fait sentir
+que tu étais "en trop".
+
+Ton être profond a entendu :
+"je ne suis pas légitime."
+
+Et depuis, tu te rends invisible
+pour ne plus jamais entendre ça.`,
+    consequence: `Mais à force de disparaître,
+tu laisses ta propre vie se vivre sans toi.
+
+Et la lumière que tu portes
+reste enfermée.`,
+    transition: `La lumière que tu portes
+cherche juste la permission de sortir.
+
+Le protocole ouvre cette porte.`,
   },
 
   volcan_contenu: {
@@ -82,15 +140,35 @@ Tu n'es pas timide : tu es blessé(e) de rejet. Et la lumière que tu portes che
     emotion: 'Colère rentrée',
     mode: 'Somatisation',
     zone: 'Corps',
-    signes: [
-      'Tu as des tensions chroniques — mâchoire, épaules, dos, ventre',
-      'Des migraines ou des maux qui "sortent de nulle part"',
-      'Tu ne te mets jamais en colère, mais ton corps dit non pour toi',
-      'Il y a quelque chose qui pousse de l\'intérieur, sans sortir',
-    ],
-    explication: `Enfant, on t'a appris que la colère était dangereuse, sale, interdite. Alors tu l'as avalée. Mais l'énergie d'une émotion ne disparaît jamais : elle se loge dans les tissus.
+    reconnaissance: `Mâchoire serrée.
+Épaules coincées.
+Ventre noué.
 
-Ton corps porte ce que ta voix n'a pas eu le droit de dire. Ce n'est pas une maladie : c'est une mémoire.`,
+Ton corps parle
+quand ta voix se tait.`,
+    verite: `Il y a une colère en toi
+que tu n'as pas le droit d'exprimer.
+Alors elle s'installe dans tes muscles.
+
+Et ton corps paye ce que ta voix ne peut pas dire.`,
+    mecanique: `On t'a appris que la colère était dangereuse.
+Alors tu l'as avalée.
+
+Mais l'énergie d'une émotion ne disparaît jamais.
+Elle se loge dans les tissus.
+Elle attend.`,
+    consequence: `Et les tensions chroniques,
+les migraines,
+les douleurs sans raison apparente —
+
+ce ne sont pas des hasards.
+C'est une mémoire que ton corps garde.`,
+    transition: `Ce que tu portes dans le corps
+peut être libéré.
+Pas en explosion.
+En douceur, en sécurité.
+
+C'est ce que propose le protocole.`,
   },
 
   explorateur_perdu: {
@@ -100,15 +178,34 @@ Ton corps porte ce que ta voix n'a pas eu le droit de dire. Ce n'est pas une mal
     emotion: 'Vide',
     mode: 'Fuite',
     zone: 'Sens',
-    signes: [
-      'Tu changes de projet, de ville, de relation dès que ça devient "stable"',
-      'Tu cherches un sens, une mission, un appel — sans jamais le trouver',
-      'Tu as un besoin viscéral de nouveauté pour sentir que tu existes',
-      'Quand tout est calme, un vide immense apparaît et tu fuis à nouveau',
-    ],
-    explication: `Quelqu'un a trahi la confiance de l'enfant que tu étais. Depuis, rester = risquer d'être trahi(e) à nouveau. Alors tu pars avant.
+    reconnaissance: `Tu repars. Encore.
+Nouveau projet.
+Nouvelle ville.
+Nouvelle relation.
 
-Ce que tu cherches dehors, ce n'est pas un sens : c'est un endroit où tu pourrais enfin poser ta confiance sans qu'on te la brise.`,
+Le calme t'angoisse plus que le chaos.`,
+    verite: `Tu ne cherches pas un sens.
+Tu fuis un endroit
+où tu as été trahi(e).
+
+Ce que tu cherches dehors
+n'est pas là-bas.`,
+    mecanique: `Quelqu'un a trahi la confiance
+de l'enfant que tu étais.
+
+Depuis, rester = risquer d'être blessé à nouveau.
+Alors tu pars avant.
+Toujours avant.`,
+    consequence: `Et à force de fuir,
+tu n'arrives jamais
+là où tu voudrais être.
+
+Un beau jour, tu te rends compte
+que tu fuis depuis des années.`,
+    transition: `Rester n'est pas dangereux.
+Tu peux apprendre ça.
+Pas seul(e).
+Avec le protocole.`,
   },
 
   loup_solitaire: {
@@ -118,15 +215,35 @@ Ce que tu cherches dehors, ce n'est pas un sens : c'est un endroit où tu pourra
     emotion: 'Tristesse',
     mode: 'Retrait',
     zone: 'Couple',
-    signes: [
-      'Tu préfères être seul(e) que mal accompagné(e) — et c\'est devenu une règle',
-      'Tu attires des gens, puis tu prends peur et tu t\'éloignes',
-      'Tu as une force tranquille, mais une tristesse de fond qui ne te quitte pas',
-      'Au fond, tu aimerais être rejoint(e), mais tu ne sais plus comment',
-    ],
-    explication: `Tu as appris que compter sur quelqu'un, c'est risquer d'être laissé(e). Alors tu as transformé ta blessure en philosophie : "je me suffis".
+    reconnaissance: `Tu n'as besoin de personne.
+Ou c'est ce que tu te dis.
 
-Mais ton corps, lui, sait que l'humain n'est pas fait pour être seul. Ce n'est pas de l'indépendance : c'est une prudence qui t'a sauvé(e), et qui aujourd'hui t'isole.`,
+Mais parfois, la nuit,
+tu aimerais juste
+être rejoint(e).`,
+    verite: `Ce n'est pas de l'indépendance.
+C'est une protection.
+
+Tu t'es retiré(e) avant d'être abandonné(e).
+Parce que l'abandon fait trop mal.`,
+    mecanique: `Tu as appris que compter sur quelqu'un,
+c'est risquer d'être laissé(e).
+
+Alors tu as transformé ta blessure en philosophie :
+"je me suffis."
+
+Mais ton corps sait que l'humain
+n'est pas fait pour être seul.`,
+    consequence: `Et cette tristesse de fond ne ment pas.
+Elle est là, même dans les bons moments.
+Même entouré(e) de gens.
+
+Parce que tu ne les laisses pas vraiment entrer.`,
+    transition: `Tu peux rouvrir la porte.
+Pas d'un coup.
+Juste un peu.
+
+Le protocole commence là.`,
   },
 
   chevalier_masque: {
@@ -136,15 +253,34 @@ Mais ton corps, lui, sait que l'humain n'est pas fait pour être seul. Ce n'est 
     emotion: 'Peur',
     mode: 'Contrôle',
     zone: 'Travail',
-    signes: [
-      'Tu performes, tu brilles, tu es irréprochable — au prix de ta santé',
-      'Personne ne te voit fragile, et tu préfères que ça reste comme ça',
-      'Tu as peur qu\'on découvre que tu n\'es "pas à la hauteur"',
-      'Tu confonds valeur personnelle et performance professionnelle',
-    ],
-    explication: `On t'a humilié(e) quand tu étais vulnérable. Alors plus jamais. Ton armure, c'est la compétence. Ton bouclier, c'est l'excellence.
+    reconnaissance: `Tu réussis.
+Tu performes.
+Tu es irréprochable.
 
-Mais derrière, il y a un(e) enfant qui continue à trembler à l'idée d'être rabaissé(e). Ta réussite n'est pas ton problème : c'est la peur qui l'alimente qui t'épuise.`,
+Et tu trembles à l'idée
+qu'on te voie fragile.`,
+    verite: `Ton armure, c'est la compétence.
+Ton bouclier, c'est l'excellence.
+
+Mais derrière,
+il y a quelqu'un qui a peur
+d'être rabaissé(e).`,
+    mecanique: `On t'a humilié(e) quand tu étais vulnérable.
+Alors plus jamais.
+
+Tu as construit une armure si solide
+que même ceux qui t'aiment
+n'arrivent plus à te toucher.`,
+    consequence: `Et cette armure te protège.
+Mais elle t'isole aussi.
+
+Et au fond, tu voudrais juste
+être vu(e) sans avoir à performer.`,
+    transition: `La vulnérabilité ne te détruira pas.
+Tu peux apprendre à retirer l'armure
+cinq minutes à la fois.
+
+C'est par là que commence le protocole.`,
   },
 
   accordeur_perpetuel: {
@@ -154,15 +290,34 @@ Mais derrière, il y a un(e) enfant qui continue à trembler à l'idée d'être 
     emotion: 'Culpabilité',
     mode: 'Sacrifice',
     zone: 'Couple',
-    signes: [
-      'Tu dis oui avant même d\'avoir écouté ton envie',
-      'Tu te sens coupable de poser une limite, même quand c\'est légitime',
-      'Tu adaptes ta personnalité à chaque personne — et tu ne sais plus qui tu es',
-      'Dans tes relations, tu portes 80% de l\'effort émotionnel',
-    ],
-    explication: `Tu as appris que tu étais aimé(e) quand tu étais "gentil(le)", arrangeant(e), pratique. Ton "non" a été puni ou ignoré. Alors il a disparu.
+    reconnaissance: `Tu dis oui.
+Avant même d'avoir vérifié
+si tu en avais envie.
 
-Ce que tu appelles "être gentil(le)" est en réalité une stratégie de survie : plaire pour ne pas être rejeté(e). Et ça te coûte ton identité.`,
+Tu t'adaptes.
+Tu arrondis.
+Tu souris.`,
+    verite: `Ce n'est pas de la gentillesse.
+C'est une stratégie.
+
+Plaire pour ne pas être rejeté(e).
+
+Et ça te coûte ton identité.`,
+    mecanique: `Ton "non" a été puni ou ignoré.
+Alors il a disparu.
+
+Et tu as appris que tu étais aimé(e)
+seulement quand tu étais arrangeant(e),
+utile, agréable.`,
+    consequence: `Et à force de t'adapter à tout le monde,
+tu ne sais plus
+qui tu es quand tu es seul(e).
+
+Et cette solitude-là est la plus dure.`,
+    transition: `Retrouver ton "non",
+c'est retrouver toi-même.
+
+Le protocole commence par là.`,
   },
 
   scientifique_glace: {
@@ -172,15 +327,37 @@ Ce que tu appelles "être gentil(le)" est en réalité une stratégie de survie 
     emotion: 'Peur',
     mode: 'Évitement',
     zone: 'Couple',
-    signes: [
-      'Tu analyses tout, y compris tes émotions — et celles des autres',
-      'Tu es en relation mais émotionnellement "à côté", comme sous cloche',
-      'Tu as des raisonnements brillants pour ne pas ressentir',
-      'Tu te demandes parfois si tu es "cassé(e)" au niveau affectif',
-    ],
-    explication: `On t'a trahi(e) alors que tu étais ouvert(e). Ton cerveau a conclu : "ressentir = danger". Il a construit une paroi de verre entre toi et tes émotions pour te protéger.
+    reconnaissance: `Tu analyses.
+Tout.
 
-Ce n'est pas une froideur naturelle : c'est une anesthésie très sophistiquée. Sous la glace, tout est encore là — intact.`,
+Tes émotions.
+Celles des autres.
+Comme si comprendre
+pouvait remplacer ressentir.`,
+    verite: `Ce n'est pas de la froideur.
+C'est une paroi de verre.
+
+Que tu as construite
+pour ne plus jamais être blessé(e)
+de cette façon-là.`,
+    mecanique: `On t'a trahi(e) alors que tu étais ouvert(e).
+
+Ton cerveau a conclu : "ressentir = danger."
+
+Il a construit une anesthésie très sophistiquée.
+Pour te protéger.
+Mais sous la glace, tout est encore là.
+Intact.`,
+    consequence: `Et en relation,
+tu es là sans être vraiment là.
+
+Les autres le sentent.
+Et toi aussi.`,
+    transition: `Il est possible de décongeler doucement.
+Pas d'un coup.
+En sécurité.
+
+C'est ce que propose le protocole.`,
   },
 
   enfant_perdu: {
@@ -190,15 +367,33 @@ Ce n'est pas une froideur naturelle : c'est une anesthésie très sophistiquée.
     emotion: 'Tristesse',
     mode: 'Gel',
     zone: 'Sens',
-    signes: [
-      'Tu as une sensation de flottement, comme si tu n\'étais jamais vraiment là',
-      'Tu ne sais pas ce que tu veux, ce qui te plaît, ce que tu ressens',
-      'Tu regardes les autres vivre et tu as l\'impression d\'être spectateur(rice)',
-      'Une tristesse ancienne est présente, sans raison claire',
-    ],
-    explication: `Quand on est abandonné(e) émotionnellement enfant, une partie de soi "sort" du corps pour ne pas sentir. C'est un mécanisme de dissociation — brillant, protecteur, normal.
+    reconnaissance: `Tu es là.
+Mais pas vraiment.
 
-Mais cette partie-là ne revient pas toute seule. Elle attend qu'on aille la chercher avec douceur. Tu n'es pas perdu(e) : tu es en attente de retour.`,
+Tu regardes les autres vivre
+comme depuis l'autre côté d'une vitre.`,
+    verite: `Ce flottement que tu ressens,
+ce n'est pas un vide.
+
+C'est une absence.
+Une partie de toi qui a quitté le corps
+pour ne pas souffrir.`,
+    mecanique: `Quand on est abandonné(e) émotionnellement enfant,
+une partie de soi "sort" du corps.
+
+C'est un mécanisme de protection.
+Brillant. Automatique.
+Et difficile à défaire seul(e).`,
+    consequence: `Et pendant ce temps,
+ta vie se passe sans toi.
+
+Tu fonctionnes.
+Mais tu ne vis pas vraiment.`,
+    transition: `Cette partie qui s'est absentée
+attend qu'on aille la chercher.
+Avec douceur.
+
+Le protocole est ce chemin-là.`,
   },
 
   architecte_obsessionnel: {
@@ -208,15 +403,34 @@ Mais cette partie-là ne revient pas toute seule. Elle attend qu'on aille la che
     emotion: 'Anxiété',
     mode: 'Contrôle',
     zone: 'Travail',
-    signes: [
-      'Tu planifies, anticipes, vérifies — et ça ne suffit jamais',
-      'Une tâche imprévue déclenche un pic d\'angoisse disproportionné',
-      'Tu ne t\'endors pas sans avoir mentalement "rangé" la journée du lendemain',
-      'Tu as honte de ta rigidité mais tu n\'arrives pas à lâcher',
-    ],
-    explication: `Tu as vécu, jeune, un environnement injuste où tout pouvait basculer sans prévenir. Ton cerveau a tiré une conclusion : "si je prévois tout, rien ne peut me surprendre."
+    reconnaissance: `Tu planifies.
+Tu anticipes.
+Tu vérifies.
 
-Le contrôle est devenu ton oxygène. Ce n'est pas de la maniaquerie : c'est une anxiété de survie qui s'est professionnalisée.`,
+Et ça ne suffit jamais.
+L'imprévu te coûte trop cher.`,
+    verite: `Ce n'est pas de la rigueur.
+C'est de l'anxiété de survie
+qui s'est professionnalisée.`,
+    mecanique: `Tu as vécu, jeune,
+un environnement où tout pouvait basculer
+sans prévenir.
+
+Ton cerveau a tiré une conclusion :
+"si je prévois tout,
+rien ne peut me surprendre."
+
+Le contrôle est devenu ton oxygène.`,
+    consequence: `Mais ce contrôle permanent t'épuise.
+Et ne t'empêche pas de souffrir
+quand l'imprévu arrive quand même.
+
+Et il arrive toujours.`,
+    transition: `Tu peux apprendre à autoriser l'imprévu.
+Pas à te laisser submerger par lui.
+Pas à perdre ta rigueur.
+
+Juste à respirer entre les lignes.`,
   },
 
   rebelle_blesse: {
@@ -226,15 +440,35 @@ Le contrôle est devenu ton oxygène. Ce n'est pas de la maniaquerie : c'est une
     emotion: 'Colère',
     mode: 'Agression',
     zone: 'Famille',
-    signes: [
-      'Tu exploses sur des détails et tu le regrettes ensuite',
-      'Tu as une rage intérieure qui te fatigue autant qu\'elle te défend',
-      'Tu es en conflit chronique avec ta famille ou tes figures d\'autorité',
-      'Au fond, tu voudrais juste qu\'on reconnaisse que c\'était injuste',
-    ],
-    explication: `Ta colère n'est pas un défaut : c'est la trace d'une injustice qui n'a jamais été réparée. Personne n'a jamais dit "ce qui t'est arrivé n'était pas juste, et je suis désolé(e)."
+    reconnaissance: `Tu exploses.
+Ensuite tu regrettes.
 
-Alors la colère monte la garde pour toi. Elle protège un(e) enfant qui attend encore sa reconnaissance.`,
+Tu as une rage que tu portes depuis longtemps.
+Elle te fatigue
+autant qu'elle te défend.`,
+    verite: `Ta colère n'est pas un défaut.
+C'est la trace d'une injustice
+qui n'a jamais été réparée.
+
+Et personne ne te l'a encore dit.`,
+    mecanique: `Personne n'a jamais dit :
+"ce qui t'est arrivé n'était pas juste."
+
+Alors la colère monte la garde pour toi.
+Elle protège un(e) enfant
+qui attend encore sa reconnaissance.`,
+    consequence: `Mais cette colère non traitée
+te coûte les relations
+que tu veux le plus garder.
+
+Et au fond, tout ce que tu veux
+c'est qu'on reconnaisse
+que c'était injuste.`,
+    transition: `Honorer la colère,
+ce n'est pas l'éteindre.
+C'est lui donner sa juste place.
+
+Le protocole commence par cette reconnaissance.`,
   },
 
   donneur_sans_retour: {
@@ -244,15 +478,34 @@ Alors la colère monte la garde pour toi. Elle protège un(e) enfant qui attend 
     emotion: 'Épuisement',
     mode: 'Sacrifice',
     zone: 'Couple',
-    signes: [
-      'Tu donnes beaucoup, tout le temps, à tout le monde',
-      'Tu as peur que si tu arrêtais de donner, on ne t\'aimerait plus',
-      'Tu es entouré(e) mais tu te sens seul(e) sur l\'essentiel',
-      'Recevoir te met mal à l\'aise, ça te fait presque honte',
-    ],
-    explication: `Tu as appris que ta valeur se mesurait à ce que tu pouvais offrir. Pas à ce que tu es. Alors donner est devenu une monnaie d'existence.
+    reconnaissance: `Tu donnes.
+Tout le temps.
+À tout le monde.
 
-Le problème, c'est que personne ne peut remplir un puits qui n'a jamais été rempli à la base. Tu ne donnes pas par amour : tu donnes par peur d'être abandonné(e) si tu arrêtes.`,
+Et recevoir te met mal à l'aise.
+Comme si tu ne le méritais pas.`,
+    verite: `Tu ne donnes pas seulement par générosité.
+Tu donnes par peur.
+
+Peur d'être abandonné(e)
+si tu t'arrêtes.`,
+    mecanique: `Tu as appris que ta valeur
+se mesurait à ce que tu pouvais offrir.
+Pas à ce que tu es.
+
+Alors donner est devenu ta monnaie d'existence.
+
+Et personne ne peut remplir un puits
+qui n'a jamais été rempli à la base.`,
+    consequence: `Tu es entouré(e).
+Mais seul(e) sur l'essentiel.
+
+Parce que personne ne te voit vraiment.
+Ils voient ce que tu fais.`,
+    transition: `Ta valeur ne dépend pas de ce que tu donnes.
+Tu peux commencer à le croire.
+
+Le protocole commence par là.`,
   },
 
   cherchant_fatigue: {
@@ -262,15 +515,34 @@ Le problème, c'est que personne ne peut remplir un puits qui n'a jamais été r
     emotion: 'Mélancolie',
     mode: 'Fuite',
     zone: 'Sens',
-    signes: [
-      'Tu cumules les formations, les livres, les thérapies, les retraites',
-      'Tu sais beaucoup de choses, mais rien ne te transforme en profondeur',
-      'Tu sens qu\'il te manque quelque chose, sans pouvoir le nommer',
-      'Une mélancolie douce t\'accompagne, surtout la nuit',
-    ],
-    explication: `Quelqu'un en qui tu avais confiance a trahi quelque chose d'important. Depuis, tu cherches une vérité qui ne te décevra pas. Mais tu la cherches dehors — alors qu'elle est dedans.
+    reconnaissance: `Tu cherches.
+Encore les livres.
+Les formations.
+Les thérapeutes.
+Les retraites.
 
-Tu n'as pas besoin d'un nouveau savoir : tu as besoin qu'on te dise "arrête de chercher, tout est déjà là". Ta fatigue est une invitation à rentrer.`,
+Et quelque chose manque toujours.`,
+    verite: `Tu ne cherches pas une vérité.
+Tu cherches quelqu'un
+en qui tu pourrais avoir confiance
+sans finir par être déçu(e).`,
+    mecanique: `Quelqu'un a trahi quelque chose d'important
+quand tu étais ouvert(e).
+
+Depuis, tu cherches dehors
+ce que tu as peur de ne pas trouver dedans.
+
+Et tu accumules le savoir
+sans jamais te transformer en profondeur.`,
+    consequence: `Parce que la transformation
+demande de s'arrêter de chercher.
+
+Et s'arrêter de chercher
+te terrife.`,
+    transition: `Tout est déjà là.
+Le protocole est une invitation à rentrer.
+Pas à en apprendre plus.
+À habiter ce que tu sais déjà.`,
   },
 
   emotionnel_noye: {
@@ -280,15 +552,35 @@ Tu n'as pas besoin d'un nouveau savoir : tu as besoin qu'on te dise "arrête de 
     emotion: 'Honte',
     mode: 'Somatisation',
     zone: 'Corps',
-    signes: [
-      'Tu es traversé(e) par des vagues émotionnelles qui te submergent',
-      'Tu pleures facilement et ça te met mal à l\'aise',
-      'Ton corps réagit avant ta pensée : boule au ventre, larmes, rougissement',
-      'Tu as honte d\'être "trop sensible" et tu aimerais être "normal(e)"',
-    ],
-    explication: `Tu n'es pas trop sensible. Tu es sensible, point. Et on t'a humilié(e) pour ça. Ton système nerveux a appris que ressentir = être moqué(e).
+    reconnaissance: `Tu ressens trop.
+Ou c'est ce qu'on t'a dit.
 
-Mais il continue à ressentir, parce que c'est sa nature. Ce que tu vis comme un défaut est en réalité un don mal accueilli. La honte n'est pas la tienne : elle appartient à ceux qui t'ont rabaissé(e).`,
+Tes larmes arrivent trop vite.
+Ton corps réagit avant ta tête.
+Et ça te met mal à l'aise.`,
+    verite: `Tu n'es pas trop sensible.
+On t'a humilié(e) pour ta sensibilité.
+
+Et depuis,
+tu as honte de ce que tu es.
+
+La honte n'est pas la tienne.`,
+    mecanique: `Ton système nerveux a appris
+que ressentir = être moqué(e).
+
+Mais il continue à ressentir.
+Parce que c'est sa nature.
+
+Et ce que tu vis comme un défaut
+est en réalité un don
+mal accueilli.`,
+    consequence: `Et à force d'avoir honte de ce que tu es,
+tu t'éloignes d'une sensibilité
+qui est pourtant une force réelle.`,
+    transition: `La honte ne t'appartient pas.
+Tu peux la rendre.
+
+Le protocole commence par cette restitution.`,
   },
 
   guerrier_fatigue: {
@@ -298,15 +590,36 @@ Mais il continue à ressentir, parce que c'est sa nature. Ce que tu vis comme un
     emotion: 'Épuisement',
     mode: 'Contrôle',
     zone: 'Travail',
-    signes: [
-      'Tu te bats depuis si longtemps que tu ne sais plus ce que "se reposer" veut dire',
-      'Tu prends sur toi, encore et encore, jusqu\'à l\'os',
-      'Tu rêves d\'arrêter mais tu as peur que tout s\'écroule si tu le fais',
-      'Ton corps te lâche par moments — vertiges, palpitations, insomnies',
-    ],
-    explication: `Tu as porté, jeune, une charge qui n'était pas la tienne. Tu as tenu parce qu'il fallait tenir. Et aujourd'hui, ton corps te supplie d'arrêter — mais ton système de survie n'a pas appris le mode "pause."
+    reconnaissance: `Tu te bats.
+Depuis si longtemps.
 
-Tu ne manques pas de volonté : tu es en dette chronique de repos, et ton réservoir est vide.`,
+Et tu ne sais même plus
+ce que ce serait
+de ne pas combattre.`,
+    verite: `Ce n'est pas de la force.
+C'est de l'épuisement
+qui ne s'est jamais autorisé
+à s'arrêter.`,
+    mecanique: `Tu as porté, jeune, une charge
+qui n'était pas la tienne.
+
+Tu as tenu parce qu'il fallait tenir.
+Et ton système de survie
+n'a jamais appris le mode "pause".
+
+Tu ne manques pas de volonté.
+Tu es en dette chronique de repos.`,
+    consequence: `Ton corps te supplie d'arrêter.
+Mais tu n'entends plus le signal.
+
+Et le jour où tu t'arrêteras
+ce sera peut-être parce que ton corps
+t'y aura obligé.`,
+    transition: `Déposer les armes n'est pas perdre.
+C'est survivre différemment.
+
+Le protocole t'apprend ce que "s'arrêter" veut dire
+sans que tout s'effondre.`,
   },
 
   amoureux_vide: {
@@ -316,15 +629,37 @@ Tu ne manques pas de volonté : tu es en dette chronique de repos, et ton réser
     emotion: 'Vide',
     mode: 'Fusion',
     zone: 'Couple',
-    signes: [
-      'Tu tombes amoureux(se) très vite et très fort',
-      'Sans l\'autre, tu as un vide immense qui te terrifie',
-      'Tu te perds dans la relation, au point de ne plus savoir qui tu es',
-      'Tu sais que c\'est "trop" mais tu n\'arrives pas à être seul(e)',
-    ],
-    explication: `Un grand vide s'est creusé en toi quand tu étais petit(e), à un moment où tu avais besoin d'une présence constante et où elle a manqué. Depuis, ton système cherche à combler ce trou avec l'autre.
+    reconnaissance: `Sans l'autre —
+un vide immense.
 
-Mais aucun partenaire ne peut remplir un vide d'enfant — seule une partie de toi peut y aller. Ce n'est pas de la dépendance honteuse : c'est un appel très ancien.`,
+Tu tombes fort et vite.
+Tu te perds dans la relation.
+Et seul(e), tu ne sais plus qui tu es.`,
+    verite: `Ce n'est pas de l'amour seul.
+C'est un vide d'enfant
+que tu essaies de combler
+par l'autre.
+
+Et aucun partenaire
+ne peut remplir un vide d'enfant.`,
+    mecanique: `Un grand vide s'est creusé
+quand tu avais besoin d'une présence constante
+et qu'elle a manqué.
+
+Depuis, ton système cherche
+à combler ce trou.
+
+Mais ce trou-là n'est pas dehors.`,
+    consequence: `Et tu passes de relation en relation
+avec l'espoir que l'une d'elles
+comblera enfin ce creux.
+
+En attendant, tu te perds.`,
+    transition: `Apprendre à être ton propre refuge.
+C'est possible.
+C'est le vrai début.
+
+C'est ce que propose le protocole.`,
   },
 
   gardien_secrets: {
@@ -334,15 +669,34 @@ Mais aucun partenaire ne peut remplir un vide d'enfant — seule une partie de t
     emotion: 'Méfiance',
     mode: 'Gel',
     zone: 'Couple',
-    signes: [
-      'Tu ne dis jamais tout, même aux personnes les plus proches',
-      'Tu observes les autres longtemps avant de t\'ouvrir — et tu ne t\'ouvres jamais complètement',
-      'Tu as un "jardin secret" où personne n\'entre',
-      'Parfois, tu te sens seul(e) même entouré(e) de gens qui t\'aiment',
-    ],
-    explication: `On t'a trahi(e) sur quelque chose d'intime. Depuis, ta vulnérabilité est verrouillée à double tour. Ta méfiance n'est pas de la paranoïa : c'est de la mémoire.
+    reconnaissance: `Tu ne dis jamais tout.
+Même à ceux qui t'aiment le plus.
 
-Et cette mémoire est précieuse — elle t'a protégé(e). Mais elle peut aussi apprendre à reconnaître les gens qui, aujourd'hui, sont dignes de confiance.`,
+Il y a un jardin secret
+où personne n'entre.
+Jamais vraiment.`,
+    verite: `Ce n'est pas de la réserve.
+C'est de la mémoire.
+
+Quelqu'un t'a trahi(e) sur quelque chose d'intime.
+Et depuis, tu gardes tout sous clé.`,
+    mecanique: `Ta vulnérabilité est verrouillée
+à double tour.
+
+Ta méfiance t'a protégé(e).
+Elle est précieuse.
+
+Mais elle peut aussi apprendre
+à distinguer le passé du présent.`,
+    consequence: `Tu es entouré(e).
+Mais seul(e) à l'intérieur.
+
+Parce que personne ne peut vraiment entrer.
+Et quelque part, tu en souffres.`,
+    transition: `Tu peux apprendre à rouvrir.
+Pas à tout livrer.
+Juste à distinguer
+ceux qui méritent ta confiance aujourd'hui.`,
   },
 
   ombre_silencieuse: {
@@ -352,15 +706,37 @@ Et cette mémoire est précieuse — elle t'a protégé(e). Mais elle peut aussi
     emotion: 'Tristesse',
     mode: 'Retrait',
     zone: 'Identité',
-    signes: [
-      'Tu es discret(ète), on t\'oublie facilement, et ça te convient — presque',
-      'Tu as une vie intérieure riche que personne ne voit',
-      'Tu évites les groupes, les confrontations, la visibilité',
-      'Une tristesse calme t\'accompagne, comme une musique de fond',
-    ],
-    explication: `Tu as compris très tôt qu'être vu(e), c'était risquer d'être rejeté(e). Alors tu as choisi l'ombre. Cette stratégie t'a protégé(e) de beaucoup de blessures, mais elle t'a aussi coupé(e) d'une partie de ta vie.
+    reconnaissance: `Tu es discret(ète).
+On t'oublie facilement.
+Et ça te convient.
+Presque.
 
-Tu n'es pas introverti(e) par nature : tu l'es devenu(e) par blessure. La différence est immense.`,
+Mais il y a une vie intérieure riche
+que personne ne voit jamais.`,
+    verite: `Tu n'es pas introverti(e) par nature.
+Tu l'es devenu(e) par blessure.
+
+Être vu(e), c'est risquer d'être rejeté(e).
+Alors tu as choisi l'ombre.`,
+    mecanique: `Tu as compris très tôt
+qu'être vu(e), c'était dangereux.
+
+Alors tu as disparu.
+Cette stratégie t'a protégé(e)
+de beaucoup de blessures.
+
+Mais elle t'a aussi coupé(e)
+d'une partie de ta vie.`,
+    consequence: `Et pendant ce temps,
+tu passes à côté
+de ce que tu as à offrir.
+
+Et la tristesse de fond
+n'est pas un hasard.`,
+    transition: `Sortir de l'ombre d'un centimètre.
+Pas plus. Pour commencer.
+
+C'est tout ce que demande le protocole.`,
   },
 
   funambule_anxieux: {
@@ -370,15 +746,33 @@ Tu n'es pas introverti(e) par nature : tu l'es devenu(e) par blessure. La diffé
     emotion: 'Anxiété',
     mode: 'Hypervigilance',
     zone: 'Travail',
-    signes: [
-      'Tu as l\'impression de marcher sur un fil en permanence',
-      'Une critique te donne l\'impression de tout perdre',
-      'Tu anticipes les catastrophes pour ne pas être pris(e) au dépourvu',
-      'Ton système nerveux est en alerte même quand tout va bien',
-    ],
-    explication: `Tu as appris tôt que la stabilité pouvait disparaître. Alors tu vis en équilibre, toujours prêt(e) à rattraper la chute. Ce n'est pas de la fragilité : c'est une forme d'intelligence de survie très avancée.
+    reconnaissance: `Tu marches sur un fil.
+Toujours.
 
-Mais ton corps ne peut pas tenir le funambule à vie. Il lui faut un filet — pas de la volonté.`,
+Une critique, une hésitation —
+et tu as l'impression
+que tout va s'effondrer.`,
+    verite: `Ce n'est pas de la fragilité.
+C'est une intelligence de survie
+qui n'a jamais eu de filet.`,
+    mecanique: `Tu as appris tôt
+que la stabilité pouvait disparaître.
+
+Alors tu vis en équilibre constant,
+prêt(e) à rattraper la chute.
+
+Mais ton corps ne peut pas
+tenir le funambule à vie.`,
+    consequence: `Et ton système nerveux est en alerte
+même quand tout va bien.
+
+Même quand il n'y a rien à surveiller.
+Même quand tu es en sécurité.`,
+    transition: `Le protocole n'est pas un filet.
+C'est un sol.
+Solide. Sous tes pieds.
+
+C'est ce que tu n'as jamais eu.`,
   },
 
   exile_du_soi: {
@@ -388,15 +782,37 @@ Mais ton corps ne peut pas tenir le funambule à vie. Il lui faut un filet — p
     emotion: 'Vide',
     mode: 'Gel',
     zone: 'Identité',
-    signes: [
-      'Tu ne sais plus qui tu es vraiment, derrière les rôles',
-      'Tu as l\'impression d\'avoir perdu le contact avec quelque chose d\'essentiel',
-      'Tu fonctionnes, mais tu ne vis pas vraiment',
-      'Un sentiment d\'étrangeté à toi-même est présent, par vagues',
-    ],
-    explication: `Tu as été humilié(e) sur ce que tu étais, profondément. Alors une partie de toi est partie — pas en fuite, en exil. Elle a préféré s'absenter plutôt que d'être attaquée à nouveau.
+    reconnaissance: `Tu fonctionnes.
+Tu t'occupes.
+Tu joues ton rôle.
 
-Ta tâche aujourd'hui n'est pas de "devenir quelqu'un d'autre" : c'est de rappeler cette partie exilée, qui t'attend.`,
+Mais tu as l'impression
+d'être étranger(ère) à toi-même.`,
+    verite: `Une partie de toi
+n'est pas partie en fuite.
+Elle est partie en exil.
+
+Pour ne plus être attaquée.`,
+    mecanique: `Tu as été humilié(e) sur ce que tu étais,
+profondément.
+
+Alors une partie de toi s'est absentée.
+Elle a préféré partir
+plutôt que d'être attaquée à nouveau.
+
+Elle attend. Quelque part en toi.`,
+    consequence: `Et tu vis une vie
+qui ressemble à la tienne
+mais ne te ressemble pas vraiment.
+
+Et ce vide que tu ressens
+n'est pas un défaut.
+C'est une invitation.`,
+    transition: `L'exilé(e) n'est pas loin.
+Il/elle est en toi.
+
+Et il est possible d'aller le/la chercher.
+Avec douceur. Sans forcer.`,
   },
 
   gardien_clan: {
@@ -406,15 +822,33 @@ Ta tâche aujourd'hui n'est pas de "devenir quelqu'un d'autre" : c'est de rappel
     emotion: 'Colère',
     mode: 'Sacrifice',
     zone: 'Famille',
-    signes: [
-      'Tu portes l\'histoire de ta famille comme une mission secrète',
-      'Tu défends tes proches même quand ils te blessent',
-      'Tu as une colère contre tout ce qui écrase les tiens',
-      'Tu te sacrifies "pour que ça n\'arrive plus"',
-    ],
-    explication: `Tu portes une transmission transgénérationnelle : une injustice vécue par les tiens que personne n'a réparée. Ta loyauté inconsciente est magnifique et épuisante.
+    reconnaissance: `Tu défends les tiens.
+Même quand ils te blessent.
+Tu portes quelque chose
+qui dépasse ta propre vie.`,
+    verite: `Tu essaies de réparer
+une injustice qui n'est pas la tienne.
 
-Tu essaies de réparer quelque chose qui n'est pas à toi. Ce n'est pas ta mission de vie : c'est une charge que tu as le droit de déposer.`,
+Elle appartient à ton histoire.
+Pas à ta mission.`,
+    mecanique: `Tu portes une transmission transgénérationnelle.
+Une injustice vécue par les tiens
+que personne n'a réparée.
+
+Et ta loyauté inconsciente
+la porte pour eux.
+
+C'est magnifique. Et épuisant.`,
+    consequence: `Et à force de te sacrifier
+pour une histoire qui n'est pas la tienne,
+tu n'écris jamais la tienne.
+
+Ta vie attend.`,
+    transition: `Tu as le droit de déposer
+ce qui ne t'appartient pas.
+
+Ce n'est pas une trahison.
+C'est de la liberté.`,
   },
 
   saboteur_lumineux: {
@@ -424,15 +858,37 @@ Tu essaies de réparer quelque chose qui n'est pas à toi. Ce n'est pas ta missi
     emotion: 'Peur',
     mode: 'Fuite',
     zone: 'Travail',
-    signes: [
-      'Tu as un talent évident, mais tu te freines dès que ça prend forme',
-      'À chaque fois que ça va marcher, quelque chose "tombe" et tu recommences à zéro',
-      'Tu as peur du succès autant que de l\'échec',
-      'Tu sais que tu as quelque chose à donner — et ça te terrifie',
-    ],
-    explication: `Enfant, briller = être rejeté(e) ou puni(e). Alors briller est devenu dangereux. Ton talent est là, intact, mais une partie de toi l'éteint à chaque fois qu'il risque de t'exposer.
+    reconnaissance: `Tu as un talent.
+Tu le sais.
 
-Ce n'est pas du syndrome de l'imposteur : c'est une peur d'enfant d'être abandonné(e) si tu prends trop de place.`,
+Et dès que ça prend forme,
+quelque chose "tombe".
+Tu recommences à zéro.`,
+    verite: `Tu n'as pas peur d'échouer.
+Tu as peur de réussir.
+
+Parce que réussir, c'est être vu(e).
+Et être vu(e),
+c'est risquer d'être rejeté(e).`,
+    mecanique: `Enfant, briller = être puni(e) ou rejeté(e).
+Alors briller est devenu dangereux.
+
+Et une partie de toi
+éteint ta lumière à chaque fois
+qu'elle risque de t'exposer.
+
+Ton talent est là. Intact.
+En attente d'une permission.`,
+    consequence: `Et cette permission,
+tu ne te l'accordes pas encore.
+
+Et les années passent.
+Et ton talent reste enfermé.`,
+    transition: `Briller peut être sécurisé.
+Pas seul(e).
+Accompagné(e).
+
+C'est ce que propose le protocole.`,
   },
 
   hyperactif_epuise: {
@@ -442,15 +898,35 @@ Ce n'est pas du syndrome de l'imposteur : c'est une peur d'enfant d'être abando
     emotion: 'Anxiété',
     mode: 'Fuite en avant',
     zone: 'Corps',
-    signes: [
-      'Tu ne t\'arrêtes jamais : sport, travail, sorties, projets — tout à la fois',
-      'Le silence t\'angoisse, tu as besoin de remplir',
-      'Ton corps t\'envoie des signaux que tu ignores systématiquement',
-      'Tu tombes en miettes dès que tu ralentis — maladies dès les vacances',
-    ],
-    explication: `Le mouvement est ton anesthésie. Tant que tu cours, tu ne sens pas le vide d'abandon de ton enfance. Mais ton corps, lui, accumule tout ce que ton rythme ne veut pas voir.
+    reconnaissance: `Tu ne t'arrêtes jamais.
+Sport. Travail. Enfants. Projets.
+Tout à la fois.
 
-Tu n'es pas dynamique : tu es en fuite. Et ta fuite a un coût — ton corps paye la facture.`,
+Et dès que tu ralentis —
+tu tombes malade.`,
+    verite: `Le mouvement est ton anesthésie.
+Tant que tu cours,
+tu ne sens pas le vide.`,
+    mecanique: `Tant que tu courais,
+tu n'entendais pas le vide
+d'abandon de ton enfance.
+
+Mais ton corps, lui, accumule.
+Et il présente la facture
+dès que tu t'arrêtes.
+
+Tu n'es pas dynamique.
+Tu es en fuite.`,
+    consequence: `Et un jour, ton corps t'arrêtera
+si tu ne le fais pas toi-même.
+
+Ce jour-là, le vide sera là.
+Inaltenable.`,
+    transition: `Ralentir ne te détruira pas.
+Tu peux apprendre à habiter le calme
+sans en avoir peur.
+
+Le protocole commence dans ce silence-là.`,
   },
 
   pelerin: {
@@ -460,25 +936,46 @@ Tu n'es pas dynamique : tu es en fuite. Et ta fuite a un coût — ton corps pay
     emotion: 'Mélancolie',
     mode: 'Retrait',
     zone: 'Sens',
-    signes: [
-      'Tu as l\'impression d\'être "en chemin" depuis toujours, sans jamais arriver',
-      'Tu vis à distance du monde, comme en observateur(rice) bienveillant(e)',
-      'Tu portes une sagesse que les autres viennent chercher, mais tu te sens seul(e) sur ta route',
-      'Une mélancolie profonde t\'accompagne, presque belle',
-    ],
-    explication: `Une trahison ancienne t'a fait perdre la confiance dans le monde. Alors tu as choisi le retrait sage — ni fuite ni combat, une sorte de marche parallèle.
+    reconnaissance: `Tu es en chemin.
+Depuis toujours.
 
-Ta mélancolie n'est pas une dépression : c'est le deuil d'un monde qui aurait dû t'accueillir et qui ne l'a pas fait. Tu n'as pas besoin d'arriver quelque part. Tu as besoin d'être accompagné(e) sur la route.`,
+Une mélancolie profonde t'accompagne.
+Quelque chose de beau et de triste
+à la fois.`,
+    verite: `Tu ne cherches pas une destination.
+Tu cherches un monde
+qui t'aurait accueilli
+comme tu méritais de l'être.`,
+    mecanique: `Une trahison ancienne
+t'a fait perdre confiance dans le monde.
+
+Alors tu as choisi le retrait sage.
+Ni fuite ni combat.
+Une sorte de marche parallèle.
+
+Et tu portes une sagesse réelle.
+Mais tu marches seul(e).`,
+    consequence: `Et cette solitude,
+tu n'as pas vraiment choisi de la porter.
+
+Elle s'est imposée
+le jour où tu as perdu confiance.`,
+    transition: `Tu n'as pas besoin d'arriver quelque part.
+Tu as besoin d'être accompagné(e)
+sur la route.
+
+Le protocole marche avec toi.`,
   },
 }
 
 /**
  * Lookup table: dominant_secondary → archetype key
- * Primary key is dominant dimension. Secondary dimension refines the result.
+ * Dominant dimension determines primary blessure family.
+ * Secondary dimension refines the archetype within that family.
  * Falls back to 'default' when secondary not found.
  */
 const ARCHETYPE_LOOKUP: Record<string, Record<string, string>> = {
-  '1': { // Analyse mentale → primarily Trahison/Injustice
+  '1': { // Analyse mentale → Trahison/Injustice
     default: 'scientifique_glace',
     '2': 'cherchant_fatigue',
     '5': 'architecte_obsessionnel',
@@ -490,7 +987,7 @@ const ARCHETYPE_LOOKUP: Record<string, Record<string, string>> = {
     '10': 'rebelle_blesse',
     '3': 'gardien_epuise',
   },
-  '2': { // Fuite en action → primarily Rejet/Abandon
+  '2': { // Fuite en action → Rejet/Abandon
     default: 'hyperactif_epuise',
     '4': 'hyperactif_epuise',
     '8': 'hyperactif_epuise',
@@ -502,7 +999,7 @@ const ARCHETYPE_LOOKUP: Record<string, Record<string, string>> = {
     '7': 'funambule_anxieux',
     '5': 'guerrier_fatigue',
   },
-  '3': { // Care-taking → primarily Rejet/Humiliation
+  '3': { // Care-taking → Rejet/Humiliation
     default: 'donneur_sans_retour',
     '6': 'accordeur_perpetuel',
     '9': 'accordeur_perpetuel',
@@ -514,7 +1011,7 @@ const ARCHETYPE_LOOKUP: Record<string, Record<string, string>> = {
     '10': 'gardien_clan',
     '8': 'amoureux_vide',
   },
-  '4': { // Autonomie forcée → primarily Abandon
+  '4': { // Autonomie forcée → Abandon
     default: 'loup_solitaire',
     '7': 'loup_solitaire',
     '9': 'loup_solitaire',
@@ -526,7 +1023,7 @@ const ARCHETYPE_LOOKUP: Record<string, Record<string, string>> = {
     '6': 'ombre_silencieuse',
     '3': 'amoureux_vide',
   },
-  '5': { // Contrôle → primarily Injustice
+  '5': { // Contrôle → Injustice
     default: 'architecte_obsessionnel',
     '1': 'architecte_obsessionnel',
     '7': 'architecte_obsessionnel',
@@ -538,7 +1035,7 @@ const ARCHETYPE_LOOKUP: Record<string, Record<string, string>> = {
     '6': 'chevalier_masque',
     '8': 'cherchant_fatigue',
   },
-  '6': { // Adaptation/Masking → primarily Rejet
+  '6': { // Adaptation/Masking → Rejet
     default: 'accordeur_perpetuel',
     '3': 'accordeur_perpetuel',
     '9': 'invisible_lumineux',
@@ -550,7 +1047,7 @@ const ARCHETYPE_LOOKUP: Record<string, Record<string, string>> = {
     '1': 'scientifique_glace',
     '8': 'amoureux_vide',
   },
-  '7': { // Hypervigilance → primarily Abandon/Trahison
+  '7': { // Hypervigilance → Abandon/Trahison
     default: 'hyper_vigilant',
     '6': 'hyper_vigilant',
     '3': 'hyper_vigilant',
@@ -562,7 +1059,7 @@ const ARCHETYPE_LOOKUP: Record<string, Record<string, string>> = {
     '2': 'funambule_anxieux',
     '10': 'rebelle_blesse',
   },
-  '8': { // Idéalisation → primarily Abandon/Trahison
+  '8': { // Idéalisation → Abandon/Trahison
     default: 'pelerin',
     '2': 'explorateur_perdu',
     '10': 'explorateur_perdu',
@@ -574,7 +1071,7 @@ const ARCHETYPE_LOOKUP: Record<string, Record<string, string>> = {
     '7': 'pelerin',
     '5': 'cherchant_fatigue',
   },
-  '9': { // Évitement du conflit → primarily Humiliation
+  '9': { // Évitement du conflit → Humiliation
     default: 'volcan_contenu',
     '10': 'volcan_contenu',
     '3': 'volcan_contenu',
@@ -586,7 +1083,7 @@ const ARCHETYPE_LOOKUP: Record<string, Record<string, string>> = {
     '2': 'emotionnel_noye',
     '8': 'emotionnel_noye',
   },
-  '10': { // Intensité/Drame → primarily Trahison/Injustice
+  '10': { // Intensité/Drame → Trahison/Injustice
     default: 'rebelle_blesse',
     '9': 'volcan_contenu',
     '4': 'volcan_contenu',
@@ -600,28 +1097,17 @@ const ARCHETYPE_LOOKUP: Record<string, Record<string, string>> = {
   },
 }
 
-/**
- * Returns the archetype for a given dominant + secondary dimension combination.
- * Dimensions are strings '1'-'10'.
- */
 export function getArchetype(dominant: string, secondary: string): Archetype {
   const dimMap = ARCHETYPE_LOOKUP[dominant]
   const key = dimMap?.[secondary] ?? dimMap?.['default'] ?? 'scientifique_glace'
   return ARCHETYPES[key] ?? ARCHETYPES['scientifique_glace']
 }
 
-/**
- * Maps old quiz ProfileKey (P1-P10) to dimension string ('1'-'10').
- * P1 = L'Analyste = Dim 1, P2 = L'Électron Libre = Dim 2, etc.
- */
 const PROFILE_TO_DIM: Record<string, string> = {
   P1: '1', P2: '2', P3: '3', P4: '4', P5: '5',
   P6: '6', P7: '7', P8: '8', P9: '9', P10: '10',
 }
 
-/**
- * Returns the archetype for old quiz profile keys (P1-P10).
- */
 export function getArchetypeForProfiles(dominant: string, secondary: string): Archetype {
   const d = PROFILE_TO_DIM[dominant] ?? dominant
   const s = PROFILE_TO_DIM[secondary] ?? secondary
@@ -629,9 +1115,9 @@ export function getArchetypeForProfiles(dominant: string, secondary: string): Ar
 }
 
 export const BLESSURE_COLORS: Record<Blessure, { bg: string; border: string; text: string }> = {
-  Rejet:     { bg: 'rgba(139,92,246,0.08)',   border: 'rgba(139,92,246,0.25)',  text: '#a78bfa' },
-  Abandon:   { bg: 'rgba(59,130,246,0.08)',   border: 'rgba(59,130,246,0.25)', text: '#60a5fa' },
-  Humiliation: { bg: 'rgba(236,72,153,0.08)', border: 'rgba(236,72,153,0.25)', text: '#f472b6' },
-  Trahison:  { bg: 'rgba(245,158,11,0.08)',   border: 'rgba(245,158,11,0.25)', text: '#fbbf24' },
-  Injustice: { bg: 'rgba(201,169,97,0.08)',   border: 'rgba(201,169,97,0.25)', text: '#C9A961' },
+  Rejet:       { bg: 'rgba(139,92,246,0.07)',  border: 'rgba(139,92,246,0.2)',  text: '#a78bfa' },
+  Abandon:     { bg: 'rgba(59,130,246,0.07)',  border: 'rgba(59,130,246,0.2)', text: '#60a5fa' },
+  Humiliation: { bg: 'rgba(236,72,153,0.07)',  border: 'rgba(236,72,153,0.2)', text: '#f472b6' },
+  Trahison:    { bg: 'rgba(245,158,11,0.07)',  border: 'rgba(245,158,11,0.2)', text: '#fbbf24' },
+  Injustice:   { bg: 'rgba(201,169,97,0.07)',  border: 'rgba(201,169,97,0.2)', text: '#C9A961' },
 }

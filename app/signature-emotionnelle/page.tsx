@@ -504,49 +504,53 @@ function EmailScreen({ onSubmit, firstName }: { onSubmit: (email: string) => voi
   );
 }
 
+// Utility: reveals in view once (scroll-triggered for sections below the fold)
+function Beat({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.7, delay, ease: [0.25, 0.46, 0.45, 0.94] }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
 function ResultScreen({ profileKey, secondaryKey, firstName }: { profileKey: ProfileKey; secondaryKey: ProfileKey; firstName: string }) {
   const { t } = useTranslation();
   const profile = PROFILES[profileKey];
   const archetype = getArchetypeForProfiles(profileKey, secondaryKey);
-  const blessureColors = BLESSURE_COLORS[archetype.blessure];
+  const bc = BLESSURE_COLORS[archetype.blessure];
   const inject = (text: string) => text.replace(/\{firstName\}/g, firstName);
-
-  const sections = [
-    { label: t('signature.section_essence'), icon: "◆", text: inject(profile.essence) },
-    { label: t('signature.section_light'), icon: "✦", text: inject(profile.lumiere) },
-    { label: t('signature.section_shadow'), icon: "◇", text: inject(profile.ombre) },
-    { label: t('signature.section_protocol'), icon: "▸", text: inject(profile.protocole) },
-  ];
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="px-6 py-16 md:py-24"
+      transition={{ duration: 0.5 }}
+      className="min-h-screen"
     >
-      <div className="max-w-3xl mx-auto">
-
-        {/* ── ARCHETYPE IDENTITY REVEAL ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-4"
+      {/* ════ ACTE 1 — IDENTITÉ ════ */}
+      <div className="flex flex-col items-center justify-center min-h-[90vh] px-6 text-center">
+        <motion.span
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="inline-block px-4 py-1.5 rounded-full text-[11px] tracking-[0.22em] uppercase font-medium mb-10"
+          style={{ background: bc.bg, color: bc.text, border: `1px solid ${bc.border}` }}
         >
-          <span
-            className="inline-block px-4 py-1.5 rounded-full text-xs tracking-[0.2em] uppercase font-medium mb-8"
-            style={{ background: blessureColors.bg, color: blessureColors.text, border: `1px solid ${blessureColors.border}` }}
-          >
-            Blessure d&apos;origine · {archetype.blessure}
-          </span>
-        </motion.div>
+          {archetype.blessure}
+        </motion.span>
 
         <motion.h1
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.15 }}
-          className="font-display text-4xl md:text-6xl font-light text-center mb-4 leading-tight"
-          style={{ color: "var(--gold)" }}
+          transition={{ duration: 0.8, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
+          className="font-display text-[2.6rem] sm:text-6xl font-light leading-[1.1] mb-8"
+          style={{ color: "var(--gold)", letterSpacing: "-0.01em" }}
         >
           {archetype.name}
         </motion.h1>
@@ -554,127 +558,178 @@ function ResultScreen({ profileKey, secondaryKey, firstName }: { profileKey: Pro
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.35 }}
-          className="text-center text-sm tracking-[0.15em] uppercase mb-12"
-          style={{ color: blessureColors.text, opacity: 0.75 }}
+          transition={{ delay: 1.0 }}
+          className="text-[11px] tracking-[0.22em] uppercase"
+          style={{ color: bc.text, opacity: 0.6 }}
         >
-          {archetype.emotion} · {archetype.mode}
+          {archetype.emotion}&nbsp;&nbsp;·&nbsp;&nbsp;{archetype.mode}
         </motion.p>
 
-        {/* Signes */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.45 }}
-          className="rounded-2xl p-6 md:p-8 mb-8 space-y-4"
-          style={{ background: blessureColors.bg, border: `1px solid ${blessureColors.border}` }}
-        >
-          <p className="text-xs tracking-[0.2em] uppercase font-medium mb-5" style={{ color: blessureColors.text }}>
-            Ce qui se passe dans ta vie
-          </p>
-          <ul className="space-y-3">
-            {archetype.signes.map((signe, i) => (
-              <motion.li
-                key={i}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.55 + i * 0.08 }}
-                className="flex items-start gap-3 text-[15px] font-light leading-relaxed"
-                style={{ color: "var(--text-secondary)" }}
-              >
-                <span className="flex-shrink-0 mt-1 text-xs" style={{ color: blessureColors.text }}>•</span>
-                {signe}
-              </motion.li>
-            ))}
-          </ul>
-        </motion.div>
-
-        {/* Explication */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.85 }}
-          className="rounded-2xl p-6 md:p-8 mb-12"
-          style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.06)" }}
-        >
-          <p className="text-xs tracking-[0.2em] uppercase font-medium mb-4" style={{ color: "var(--gold)", opacity: 0.7 }}>
-            Ce qui se passe vraiment
-          </p>
-          <p className="text-[15px] font-light leading-[1.9] whitespace-pre-line" style={{ color: "var(--text-secondary)" }}>
-            {archetype.explication}
-          </p>
-        </motion.div>
-
-        {/* ── PROFILE DETAIL ── */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.0 }}
-          className="text-center mb-10"
+          transition={{ delay: 1.6 }}
+          className="mt-20 flex flex-col items-center gap-1"
+          style={{ color: "var(--text-muted)" }}
         >
-          <div
-            className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center text-3xl"
-            style={{ background: `${profile.color}15`, border: `2px solid ${profile.color}40` }}
+          <span className="text-xs tracking-[0.15em] uppercase">Continue</span>
+          <motion.span
+            animate={{ y: [0, 5, 0] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+            className="text-lg"
           >
-            {profile.icon}
-          </div>
-          <p className="text-sm tracking-[0.15em] uppercase font-medium" style={{ color: profile.color }}>
-            {profile.archetype}
-          </p>
-          <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
-            {profile.subtitle}
-          </p>
+            ↓
+          </motion.span>
         </motion.div>
+      </div>
 
-        <div className="space-y-5">
-          {sections.map((section, i) => (
-            <motion.div
-              key={section.label}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 1.1 + i * 0.1 }}
-              className="glow-card p-8 md:p-10"
-            >
-              <div className="flex items-center gap-3 mb-5">
-                <span className="text-lg" style={{ color: profile.color }}>{section.icon}</span>
-                <h3 className="font-display text-xl font-medium tracking-wide" style={{ color: profile.color }}>
-                  {section.label}
-                </h3>
-              </div>
-              <p className="text-[var(--text-secondary)] leading-[1.8] text-[15px] font-light">
-                {section.text}
-              </p>
-            </motion.div>
-          ))}
-        </div>
+      {/* ════ ACTE 2 — RECONNAISSANCE ════ */}
+      <div className="px-6 pb-24 max-w-lg mx-auto">
+        <Beat>
+          <p className="text-[11px] tracking-[0.22em] uppercase mb-8" style={{ color: bc.text, opacity: 0.55 }}>
+            Ce que tu vis
+          </p>
+          <p
+            className="text-[1.35rem] sm:text-2xl font-light leading-[1.75] whitespace-pre-line"
+            style={{ color: "var(--text-primary)" }}
+          >
+            {archetype.reconnaissance}
+          </p>
+        </Beat>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5 }}
-          className="mt-12 text-center space-y-4"
-        >
+        {/* ── Divider ── */}
+        <div className="my-20 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
+
+        {/* ════ ACTE 3 — VÉRITÉ CACHÉE ════ */}
+        <Beat>
+          <p className="text-[11px] tracking-[0.22em] uppercase mb-8" style={{ color: bc.text, opacity: 0.55 }}>
+            La vérité cachée
+          </p>
+          <p
+            className="text-[1.15rem] sm:text-xl font-light leading-[1.85] whitespace-pre-line"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            {archetype.verite}
+          </p>
+        </Beat>
+
+        <div className="my-20 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
+
+        {/* ════ ACTE 4 — MÉCANIQUE PROFONDE ════ */}
+        <Beat>
+          <p className="text-[11px] tracking-[0.22em] uppercase mb-8" style={{ color: bc.text, opacity: 0.55 }}>
+            D&apos;où ça vient
+          </p>
+          <p
+            className="text-[1.05rem] sm:text-lg font-light leading-[1.95] whitespace-pre-line"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            {archetype.mecanique}
+          </p>
+        </Beat>
+
+        <div className="my-20 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
+
+        {/* ════ ACTE 5 — CONSÉQUENCE ════ */}
+        <Beat>
+          <p className="text-[11px] tracking-[0.22em] uppercase mb-8" style={{ color: bc.text, opacity: 0.55 }}>
+            Ce qui va se passer
+          </p>
+          <p
+            className="text-[1.15rem] sm:text-xl font-light leading-[1.85] whitespace-pre-line"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            {archetype.consequence}
+          </p>
+        </Beat>
+
+        <div className="my-20 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
+
+        {/* ════ ACTE 6 — TRANSITION ════ */}
+        <Beat>
+          <p
+            className="text-[1.2rem] sm:text-xl font-light leading-[1.85] whitespace-pre-line"
+            style={{ color: "var(--gold)" }}
+          >
+            {archetype.transition}
+          </p>
+        </Beat>
+
+        {/* ════ CTA ════ */}
+        <Beat delay={0.1} className="mt-16 text-center">
           <Link href="/rejoindre">
             <button
-              className="magnetic-btn pulse-ring px-10 py-5 rounded-full text-base font-semibold tracking-wide"
+              className="magnetic-btn pulse-ring w-full max-w-sm py-5 rounded-full text-base font-semibold tracking-wide transition-all hover:brightness-110"
               style={{ background: "linear-gradient(135deg, var(--gold), var(--gold-deep))", color: "#050505" }}
             >
               {t('signature.join_cta')}
             </button>
           </Link>
+          <p className="mt-4 text-xs" style={{ color: "var(--text-muted)" }}>
+            7 jours offerts · sans engagement
+          </p>
+        </Beat>
 
-          <div className="flex justify-center gap-6 pt-4">
+        {/* ════ PROFILE DEEPER DIVE ════ */}
+        <div className="mt-28">
+          <Beat>
+            <div className="flex items-center gap-4 mb-16">
+              <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.06)" }} />
+              <span className="text-[11px] tracking-[0.2em] uppercase" style={{ color: "var(--text-muted)" }}>
+                Ton profil complet
+              </span>
+              <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.06)" }} />
+            </div>
+          </Beat>
+
+          <Beat className="text-center mb-14">
+            <div
+              className="w-14 h-14 rounded-full mx-auto mb-5 flex items-center justify-center text-2xl"
+              style={{ background: `${profile.color}12`, border: `1px solid ${profile.color}30` }}
+            >
+              {profile.icon}
+            </div>
+            <p className="text-sm font-medium tracking-[0.12em] uppercase" style={{ color: profile.color }}>
+              {profile.archetype}
+            </p>
+          </Beat>
+
+          {[
+            { label: t('signature.section_essence'), text: inject(profile.essence) },
+            { label: t('signature.section_light'),   text: inject(profile.lumiere) },
+            { label: t('signature.section_shadow'),  text: inject(profile.ombre) },
+            { label: t('signature.section_protocol'), text: inject(profile.protocole) },
+          ].map((section, i) => (
+            <Beat key={section.label} delay={i * 0.05} className="mb-14">
+              <p className="text-[11px] tracking-[0.2em] uppercase mb-5" style={{ color: profile.color, opacity: 0.7 }}>
+                {section.label}
+              </p>
+              <p className="text-[15px] font-light leading-[1.9]" style={{ color: "var(--text-secondary)" }}>
+                {section.text}
+              </p>
+            </Beat>
+          ))}
+        </div>
+
+        {/* ════ FOOTER ════ */}
+        <Beat className="mt-16 pb-12 text-center">
+          <div className="flex justify-center gap-8">
             <button
               onClick={() => window.location.reload()}
-              className="text-sm tracking-[0.1em] uppercase text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors gold-underline"
+              className="text-xs tracking-[0.12em] uppercase transition-colors"
+              style={{ color: "var(--text-muted)" }}
             >
               {t('signature.retake')}
             </button>
-            <Link href="/" className="text-sm tracking-[0.1em] uppercase text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors gold-underline">
+            <Link
+              href="/"
+              className="text-xs tracking-[0.12em] uppercase transition-colors"
+              style={{ color: "var(--text-muted)" }}
+            >
               {t('signature.back_home')}
             </Link>
           </div>
-        </motion.div>
+        </Beat>
       </div>
     </motion.div>
   );

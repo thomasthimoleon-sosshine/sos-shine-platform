@@ -155,10 +155,6 @@ function PrelaunchContent() {
             {/* Essentielle */}
             <div className="text-center">
               <p className="text-xs tracking-[0.25em] uppercase mb-3" style={{ color: '#74C0FC' }}>Essentielle</p>
-              <div className="flex items-baseline justify-center gap-1.5 mb-1">
-                <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#74C0FC' }}>9,90&euro;</span>
-                <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
-              </div>
               <p className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>
                 Acc&egrave;s imm&eacute;diat &mdash; Sans essai gratuit
               </p>
@@ -624,10 +620,6 @@ function PaymentContent() {
             <p className="text-xs tracking-[0.25em] uppercase mb-4" style={{ color: '#74C0FC' }}>
               Essentielle
             </p>
-            <div className="flex items-baseline justify-center gap-1.5 mb-1">
-              <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#74C0FC' }}>9,90€</span>
-              <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
-            </div>
             <p className="text-xs mb-4 font-medium" style={{ color: 'var(--text-muted)' }}>
               Accès immédiat &mdash; Sans essai gratuit
             </p>
@@ -652,7 +644,7 @@ function PaymentContent() {
               className="w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm border"
               style={{ borderColor: 'rgba(116,192,252,0.4)', color: '#74C0FC', background: 'rgba(116,192,252,0.08)' }}
             >
-              Choisir Essentielle — 9,90€/mois
+              Choisir Essentielle
             </button>
           </div>
         </Reveal>

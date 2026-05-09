@@ -145,22 +145,22 @@ function PrelaunchContent() {
         <div className="glass p-8 sm:p-10 text-center mb-10" style={{ borderColor: 'rgba(201,169,97,0.12)' }}>
           <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(201,169,97,0.3), transparent)' }} />
           <p className="text-[11px] tracking-[0.35em] uppercase mb-2 font-medium" style={{ color: 'var(--text-muted)' }}>
-            D&eacute;couvrez nos 3 offres
+            D&eacute;couvrez nos offres
           </p>
           <p className="text-sm mb-6 font-light" style={{ color: 'var(--text-secondary)' }}>
-            Rejoignez avant le 22 mars et b&eacute;n&eacute;ficiez d&apos;un tarif pr&eacute;f&eacute;rentiel &agrave; vie.
+            B&eacute;n&eacute;ficiez d&apos;un tarif pr&eacute;f&eacute;rentiel en rejoignant maintenant.
           </p>
 
-          <div className="grid sm:grid-cols-3 gap-6 mb-6">
+          <div className="grid sm:grid-cols-2 gap-6 mb-6">
             {/* Essentielle */}
             <div className="text-center">
-              <p className="text-xs tracking-[0.25em] uppercase mb-3" style={{ color: '#F0A68C' }}>Essentielle</p>
+              <p className="text-xs tracking-[0.25em] uppercase mb-3" style={{ color: '#74C0FC' }}>Essentielle</p>
               <div className="flex items-baseline justify-center gap-1.5 mb-1">
-                <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#F0A68C' }}>9,90&euro;</span>
+                <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#74C0FC' }}>9,90&euro;</span>
                 <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
               </div>
               <p className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>
-                Acc&egrave;s imm&eacute;diat, sans essai gratuit
+                Acc&egrave;s imm&eacute;diat &mdash; Sans essai gratuit
               </p>
             </div>
             {/* Sérénité */}
@@ -174,18 +174,7 @@ function PrelaunchContent() {
               <p className="text-[10px] mt-1 font-medium" style={{ color: '#55EFC4' }}>
                 code {PROMO.code} &middot; 7 jours d&apos;essai gratuit
               </p>
- <div className="mt-2 flex justify-center text-xs" ><PromoCountdown /></div>
-            </div>
-            {/* Premium */}
-            <div className="text-center">
-              <p className="text-xs tracking-[0.25em] uppercase mb-3" style={{ color: '#A78BFA' }}>Premium</p>
-              <div className="flex items-baseline justify-center gap-1.5 mb-1">
-                <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#A78BFA' }}>99,90&euro;</span>
-                <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
-              </div>
-              <p className="text-[10px] mt-1" style={{ color: '#A78BFA' }}>
-                7 jours d&apos;essai gratuit &mdash; CB requise
-              </p>
+              <div className="mt-2 flex justify-center text-xs"><PromoCountdown /></div>
             </div>
           </div>
 
@@ -361,7 +350,7 @@ function EmbeddedCheckoutModal({ plan, duration, email, prenom, userId = '', onC
             </svg>
           </button>
           <h3 className="font-display text-xl font-light" style={{ color: '#C9A961' }}>
-            Sérénité — {DURATIONS.find(d => d.id === duration)?.label}
+            {plan === 'essential' ? 'Essentielle' : 'Sérénité'} — {DURATIONS.find(d => d.id === duration)?.label}
           </h3>
           <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
             {formatPrice(PRICES[plan][duration])}/mois
@@ -512,32 +501,33 @@ function PaymentContent() {
   const quizSource = searchParams.get('source')
   const quizPlan = searchParams.get('plan') as PlanId | null
   const [selectedDuration, setSelectedDuration] = useState<DurationId>('monthly')
-  const [checkoutModal, setCheckoutModal] = useState<{ plan: PlanId } | null>(null)
   const [embeddedCheckout, setEmbeddedCheckout] = useState<{ plan: PlanId; duration: DurationId; email: string; prenom: string; userId: string } | null>(null)
   const [loggedInUser, setLoggedInUser] = useState<{ id: string; email: string; prenom: string } | null>(null)
-  const [autoOpened, setAutoOpened] = useState(false)
 
   useEffect(() => {
     const supabase = createClient()
     supabase.auth.getUser().then(({ data: { user } }) => {
+      let lu: { id: string; email: string; prenom: string } | null = null
       if (user) {
-        setLoggedInUser({
+        lu = {
           id: user.id,
           email: user.email || '',
           prenom: user.user_metadata?.prenom || user.user_metadata?.full_name?.split(' ')[0] || '',
-        })
+        }
+        setLoggedInUser(lu)
+      }
+      // Auto-open checkout depuis un lien email quiz
+      if (quizSource === 'quiz' && quizEmail) {
+        const plan: PlanId = quizPlan === 'essential' ? 'essential' : 'serenite'
+        if (lu) {
+          setEmbeddedCheckout({ plan, duration: 'monthly', email: lu.email, prenom: lu.prenom, userId: lu.id })
+        } else {
+          const next = encodeURIComponent(`/rejoindre?source=quiz&plan=${plan}&email=${encodeURIComponent(quizEmail)}`)
+          router.push(`/signup?source=rejoindre&next=${next}`)
+        }
       }
     })
-  }, [])
-
-  useEffect(() => {
-    if (autoOpened) return
-    if (quizSource === 'quiz' && quizEmail) {
-      setAutoOpened(true)
-      const plan: PlanId = quizPlan === 'essential' ? 'essential' : 'serenite'
-      setCheckoutModal({ plan })
-    }
-  }, [quizSource, quizEmail, quizPlan, autoOpened])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCheckout = async (plan: PlanId) => {
     // Essential only has monthly pricing — force monthly regardless of selected duration
@@ -558,19 +548,7 @@ function PaymentContent() {
 
   return (
     <>
-      {/* Email collection → embedded checkout modal for non-logged-in users */}
-      <AnimatePresence>
-        {checkoutModal && (
-          <EmailModal
-            plan={checkoutModal.plan}
-            duration={selectedDuration}
-            onClose={() => setCheckoutModal(null)}
-            initialEmail={quizEmail}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Embedded checkout for logged-in users */}
+      {/* Embedded checkout modal */}
       <AnimatePresence>
         {embeddedCheckout && (
           <EmbeddedCheckoutModal
@@ -584,8 +562,8 @@ function PaymentContent() {
         )}
       </AnimatePresence>
 
-      {/* Pricing card — Sérénité uniquement */}
-      <div className="max-w-md mx-auto mb-6">
+      {/* Pricing cards — Sérénité + Essentielle */}
+      <div className="max-w-2xl mx-auto mb-6 grid sm:grid-cols-2 gap-6 items-start">
         {/* Sérénité */}
         <Reveal delay={0.5}>
           <div className="glass p-6 sm:p-8 text-center h-full flex flex-col relative overflow-hidden" style={{ borderColor: 'rgba(85,239,196,0.25)', boxShadow: '0 0 30px rgba(85,239,196,0.06)' }}>
@@ -614,7 +592,6 @@ function PaymentContent() {
             <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>
               {t('join.no_commitment')}
             </p>
-
             <div className="space-y-2.5 text-left mb-6 flex-1">
               {[
                 'Encyclopédie complète (tous les protocoles)',
@@ -631,7 +608,6 @@ function PaymentContent() {
                 </div>
               ))}
             </div>
-
             <button
               onClick={() => handleCheckout('serenite')}
               className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm"
@@ -642,6 +618,44 @@ function PaymentContent() {
           </div>
         </Reveal>
 
+        {/* Essentielle */}
+        <Reveal delay={0.6}>
+          <div className="glass p-6 sm:p-8 text-center h-full flex flex-col" style={{ borderColor: 'rgba(116,192,252,0.2)' }}>
+            <p className="text-xs tracking-[0.25em] uppercase mb-4" style={{ color: '#74C0FC' }}>
+              Essentielle
+            </p>
+            <div className="flex items-baseline justify-center gap-1.5 mb-1">
+              <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#74C0FC' }}>9,90€</span>
+              <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
+            </div>
+            <p className="text-xs mb-4 font-medium" style={{ color: 'var(--text-muted)' }}>
+              Accès immédiat &mdash; Sans essai gratuit
+            </p>
+            <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>
+              {t('join.no_commitment')}
+            </p>
+            <div className="space-y-2.5 text-left mb-6 flex-1">
+              {[
+                'Encyclopédie complète (tous les protocoles)',
+                'Shine Librairie',
+                'Shine TV & Shorts',
+                'Shine Audible',
+              ].map((item) => (
+                <div key={item} className="flex items-start gap-2.5">
+                  <span className="mt-0.5 text-sm flex-shrink-0" style={{ color: '#74C0FC' }}>&#9670;</span>
+                  <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{item}</span>
+                </div>
+              ))}
+            </div>
+            <button
+              onClick={() => handleCheckout('essential')}
+              className="w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm border"
+              style={{ borderColor: 'rgba(116,192,252,0.4)', color: '#74C0FC', background: 'rgba(116,192,252,0.08)' }}
+            >
+              Choisir Essentielle — 9,90€/mois
+            </button>
+          </div>
+        </Reveal>
       </div>
 
 

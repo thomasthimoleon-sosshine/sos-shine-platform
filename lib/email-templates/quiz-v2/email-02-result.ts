@@ -4,7 +4,7 @@
  * Contient le résultat COMPLET (pas de lien "voir résultat" qui relance le quiz)
  */
 
-import { wrapEmail, h2, p, pMuted, goldDivider, quoteBlock, ctaButton, ctaLink, signature, spacer } from './wrapper'
+import { wrapEmail, h2, p, goldDivider, ctaButton, ctaLink, signature, spacer } from './wrapper'
 import { DIMENSION_TEXTS, generateActe4 } from '@/lib/quiz-v2/result-texts'
 import { DIMENSIONS } from '@/lib/quiz-v2/dimensions'
 import type { DimensionScores } from '@/lib/quiz-v2/dimensions'
@@ -24,7 +24,7 @@ type Vars = {
 }
 
 export function generateEmail02(vars: Vars): { subject: string; html: string } {
-  const { firstName, email, dominant, secondary, scores, q15Response, protocols } = vars
+  const { firstName, email, dominant, secondary, scores, protocols } = vars
   const dimInfo = DIMENSIONS[parseInt(dominant) as keyof typeof DIMENSIONS]
   const secInfo = DIMENSIONS[parseInt(secondary) as keyof typeof DIMENSIONS]
   const texts = DIMENSION_TEXTS[dominant]
@@ -97,16 +97,12 @@ ${secInfo?.icon || ''} ${secInfo?.name || 'Dimension ' + secondary}
 
     goldDivider(),
 
-    // ── Q15 Response (Acte 5) ──
-    q15Response ? [
-      h2(`Ta phrase à l'enfant en toi`),
-      quoteBlock(q15Response),
-      spacer(16),
-      p(`Cette phrase n'était pas un hasard.`),
-      p(`C'est exactement ce que cet(te) enfant attendait d'entendre il y a 20, 30 ans.`),
-      p(`Et c'est exactement ce que SOS Shine va t'aider à lui dire vraiment.`),
-      goldDivider(),
-    ].join('') : '',
+    // ── Acte 5 — La promesse ──
+    h2(`Mais tu peux changer.`),
+    p(`Les schémas qui te freinent aujourd'hui se sont formés pour te protéger. Ils ont eu leur utilité. Mais ils ne te servent plus.`),
+    p(`Ce n'est pas une question de volonté. C'est une question de méthode.`),
+    spacer(8),
+    goldDivider(),
 
     // ── Protocols (Acte 6) ──
     h2(`Tes protocoles personnalisés`),

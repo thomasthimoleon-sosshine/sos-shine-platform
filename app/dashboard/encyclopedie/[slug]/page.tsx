@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
@@ -81,7 +81,6 @@ function buildSteps(douleur: Douleur, dynamicSteps: DouleurStep[]): StepConfig[]
 
 export default function DouleurDetailPage() {
   const params = useParams()
-  const router = useRouter()
   const slug = params.slug as string
   const { hasFeature } = useFeatureAccess()
   const [douleur, setDouleur] = useState<Douleur | null>(null)
@@ -793,7 +792,7 @@ export default function DouleurDetailPage() {
             <button
               key={step.num}
               onClick={() => {
-                if (isFreeUser && step.num > 1) { router.push('/rejoindre'); return }
+                if (isFreeUser && step.num > 1) { setShowProtocolPaywall(true); return }
                 setActiveStep(step.num)
               }}
               className="flex items-center justify-center gap-2 px-3 py-3 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer"
@@ -1108,7 +1107,7 @@ export default function DouleurDetailPage() {
           {!isStepCompleted(currentStep.num) ? (
             <button
               onClick={() => {
-                if (isFreeUser && currentStep.num === 1) { router.push('/rejoindre'); return }
+                if (isFreeUser && currentStep.num === 1) { setShowProtocolPaywall(true); return }
                 markStepComplete(currentStep.num)
               }}
               className="w-full py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer"
@@ -1141,7 +1140,7 @@ export default function DouleurDetailPage() {
             <button
               onClick={() => {
                 const nextStep = Math.min(hasQuiz ? quizStepNum : totalSteps, activeStep + 1)
-                if (isFreeUser && nextStep > 1) { router.push('/rejoindre'); return }
+                if (isFreeUser && nextStep > 1) { setShowProtocolPaywall(true); return }
                 setActiveStep(nextStep)
               }}
               disabled={activeStep === totalSteps && !hasQuiz && !isFreeUser}

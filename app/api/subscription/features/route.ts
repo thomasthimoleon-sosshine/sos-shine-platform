@@ -79,7 +79,7 @@ export async function GET(request: Request) {
         }
         return NextResponse.json({
           plan: 'free',
-          is_active: true,
+          is_active: false,
           features: freeFeatureMap,
         })
       }

@@ -49,7 +49,8 @@ export async function middleware(request: NextRequest) {
   })
 
   if (!user && !isPublicRoute) {
-    return NextResponse.redirect(new URL('/signature-emotionnelle', request.url))
+    const next = encodeURIComponent(request.nextUrl.pathname + request.nextUrl.search)
+    return NextResponse.redirect(new URL(`/login?next=${next}`, request.url))
   }
 
   return response

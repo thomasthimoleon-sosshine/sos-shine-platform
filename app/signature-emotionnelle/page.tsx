@@ -3,7 +3,8 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { QUESTIONS, PROFILES, calculateResult, type ProfileKey } from "@/lib/signature-test";
+import { QUESTIONS, PROFILES, calculateResult, calculateTopTwo, type ProfileKey } from "@/lib/signature-test";
+import { getArchetypeForProfiles, BLESSURE_COLORS } from "@/lib/quiz-v2/archetypes";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 
 type Phase = "intro" | "quiz" | "loading" | "email" | "result";
@@ -503,9 +504,11 @@ function EmailScreen({ onSubmit, firstName }: { onSubmit: (email: string) => voi
   );
 }
 
-function ResultScreen({ profileKey, firstName }: { profileKey: ProfileKey; firstName: string }) {
+function ResultScreen({ profileKey, secondaryKey, firstName }: { profileKey: ProfileKey; secondaryKey: ProfileKey; firstName: string }) {
   const { t } = useTranslation();
   const profile = PROFILES[profileKey];
+  const archetype = getArchetypeForProfiles(profileKey, secondaryKey);
+  const blessureColors = BLESSURE_COLORS[archetype.blessure];
   const inject = (text: string) => text.replace(/\{firstName\}/g, firstName);
 
   const sections = [
@@ -522,53 +525,114 @@ function ResultScreen({ profileKey, firstName }: { profileKey: ProfileKey; first
       className="px-6 py-16 md:py-24"
     >
       <div className="max-w-3xl mx-auto">
+
+        {/* ── ARCHETYPE IDENTITY REVEAL ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-4"
+        >
+          <span
+            className="inline-block px-4 py-1.5 rounded-full text-xs tracking-[0.2em] uppercase font-medium mb-8"
+            style={{ background: blessureColors.bg, color: blessureColors.text, border: `1px solid ${blessureColors.border}` }}
+          >
+            Blessure d&apos;origine · {archetype.blessure}
+          </span>
+        </motion.div>
+
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.15 }}
+          className="font-display text-4xl md:text-6xl font-light text-center mb-4 leading-tight"
+          style={{ color: "var(--gold)" }}
+        >
+          {archetype.name}
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.35 }}
+          className="text-center text-sm tracking-[0.15em] uppercase mb-12"
+          style={{ color: blessureColors.text, opacity: 0.75 }}
+        >
+          {archetype.emotion} · {archetype.mode}
+        </motion.p>
+
+        {/* Signes */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          transition={{ duration: 0.6, delay: 0.45 }}
+          className="rounded-2xl p-6 md:p-8 mb-8 space-y-4"
+          style={{ background: blessureColors.bg, border: `1px solid ${blessureColors.border}` }}
         >
-          <span className="inline-block px-5 py-2 rounded-full text-xs tracking-[0.25em] uppercase font-medium mb-6" style={{ background: "rgba(212,175,55,0.08)", color: "var(--gold)", border: "1px solid rgba(212,175,55,0.15)" }}>
-            {t('signature.result_badge')}
-          </span>
+          <p className="text-xs tracking-[0.2em] uppercase font-medium mb-5" style={{ color: blessureColors.text }}>
+            Ce qui se passe dans ta vie
+          </p>
+          <ul className="space-y-3">
+            {archetype.signes.map((signe, i) => (
+              <motion.li
+                key={i}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.55 + i * 0.08 }}
+                className="flex items-start gap-3 text-[15px] font-light leading-relaxed"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                <span className="flex-shrink-0 mt-1 text-xs" style={{ color: blessureColors.text }}>•</span>
+                {signe}
+              </motion.li>
+            ))}
+          </ul>
+        </motion.div>
 
-          <motion.div
-            initial={{ scale: 0.5, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.2, type: "spring" }}
-            className="w-24 h-24 rounded-full mx-auto mb-6 flex items-center justify-center text-4xl"
+        {/* Explication */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.85 }}
+          className="rounded-2xl p-6 md:p-8 mb-12"
+          style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.06)" }}
+        >
+          <p className="text-xs tracking-[0.2em] uppercase font-medium mb-4" style={{ color: "var(--gold)", opacity: 0.7 }}>
+            Ce qui se passe vraiment
+          </p>
+          <p className="text-[15px] font-light leading-[1.9] whitespace-pre-line" style={{ color: "var(--text-secondary)" }}>
+            {archetype.explication}
+          </p>
+        </motion.div>
+
+        {/* ── PROFILE DETAIL ── */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.0 }}
+          className="text-center mb-10"
+        >
+          <div
+            className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center text-3xl"
             style={{ background: `${profile.color}15`, border: `2px solid ${profile.color}40` }}
           >
             {profile.icon}
-          </motion.div>
-
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="font-display text-3xl md:text-5xl font-light mb-3"
-            style={{ color: profile.color }}
-          >
+          </div>
+          <p className="text-sm tracking-[0.15em] uppercase font-medium" style={{ color: profile.color }}>
             {profile.archetype}
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="text-lg text-[var(--text-secondary)] font-light"
-          >
+          </p>
+          <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
             {profile.subtitle}
-          </motion.p>
+          </p>
         </motion.div>
 
-        <div className="space-y-6">
+        <div className="space-y-5">
           {sections.map((section, i) => (
             <motion.div
               key={section.label}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.5 + i * 0.12 }}
+              transition={{ duration: 0.5, delay: 1.1 + i * 0.1 }}
               className="glow-card p-8 md:p-10"
             >
               <div className="flex items-center gap-3 mb-5">
@@ -587,7 +651,7 @@ function ResultScreen({ profileKey, firstName }: { profileKey: ProfileKey; first
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.2 }}
+          transition={{ delay: 1.5 }}
           className="mt-12 text-center space-y-4"
         >
           <Link href="/rejoindre">
@@ -620,6 +684,7 @@ export default function SignatureEmotionnellePage() {
   const [phase, setPhase] = useState<Phase>("intro");
   const [firstName, setFirstName] = useState("");
   const [resultProfile, setResultProfile] = useState<ProfileKey | null>(null);
+  const [secondaryProfile, setSecondaryProfile] = useState<ProfileKey>('P2');
 
   const handleStart = useCallback((name: string) => {
     setFirstName(name);
@@ -628,10 +693,11 @@ export default function SignatureEmotionnellePage() {
 
   const handleComplete = useCallback((answers: Record<number, number>) => {
     setPhase("loading");
-    const result = calculateResult(answers);
+    const { dominant, secondary } = calculateTopTwo(answers);
 
     setTimeout(() => {
-      setResultProfile(result);
+      setResultProfile(dominant);
+      setSecondaryProfile(secondary);
       setPhase("email");
       window.scrollTo({ top: 0, behavior: "smooth" });
     }, 2800);
@@ -666,7 +732,7 @@ export default function SignatureEmotionnellePage() {
             <EmailScreen key="email" onSubmit={handleEmailSubmit} firstName={firstName} />
           )}
           {phase === "result" && resultProfile && (
-            <ResultScreen key="result" profileKey={resultProfile} firstName={firstName} />
+            <ResultScreen key="result" profileKey={resultProfile} secondaryKey={secondaryProfile} firstName={firstName} />
           )}
         </AnimatePresence>
       </div>

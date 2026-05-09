@@ -300,6 +300,32 @@ export const PROFILES: Record<ProfileKey, Profile> = {
   },
 };
 
+function computeTotals(answers: Record<number, number>): Record<ProfileKey, number> {
+  const totals: Record<ProfileKey, number> = {
+    P1: 0, P2: 0, P3: 0, P4: 0, P5: 0,
+    P6: 0, P7: 0, P8: 0, P9: 0, P10: 0,
+  };
+  for (const [questionIdStr, answerIndex] of Object.entries(answers)) {
+    const questionId = parseInt(questionIdStr, 10);
+    const question = QUESTIONS.find(q => q.id === questionId);
+    if (!question || answerIndex < 0 || answerIndex >= question.answers.length) continue;
+    const selectedAnswer = question.answers[answerIndex];
+    for (const [profileKey, score] of Object.entries(selectedAnswer.scores)) {
+      totals[profileKey as ProfileKey] += score;
+    }
+  }
+  return totals;
+}
+
+export function calculateTopTwo(answers: Record<number, number>): { dominant: ProfileKey; secondary: ProfileKey } {
+  const totals = computeTotals(answers);
+  const sorted = (Object.entries(totals) as [ProfileKey, number][]).sort((a, b) => b[1] - a[1]);
+  return {
+    dominant: sorted[0]?.[0] ?? 'P1',
+    secondary: sorted[1]?.[0] ?? 'P2',
+  };
+}
+
 export function calculateResult(answers: Record<number, number>): ProfileKey {
   const totals: Record<ProfileKey, number> = {
     P1: 0, P2: 0, P3: 0, P4: 0, P5: 0,

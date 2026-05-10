@@ -4,22 +4,13 @@
  */
 
 import type { DimensionScores } from './dimensions'
-import type { Question } from './questions'
 import { QUESTIONS } from './questions'
-import scoringKeywordsData from '@/config/scoring-keywords.json'
-
-type ScoringKeywords = {
-  dimensions: Record<string, { name: string; keywords: string[] }>
-  points_per_keyword: number
-}
-
-const scoringKeywords = scoringKeywordsData as ScoringKeywords
 
 // Response types stored in quiz_v2_responses.responses JSONB
 export type QuizResponse = {
-  choiceIndexes?: number[]    // for single/multi
-  sliderValue?: number        // for slider
-  freeText?: string           // for freetext / other field
+  choiceIndexes?: number[]
+  sliderValue?: number
+  freeText?: string
 }
 
 export type AllResponses = Record<number, QuizResponse>
@@ -46,54 +37,18 @@ export function calculateRawScores(responses: AllResponses): DimensionScores {
         }
       }
     }
-
-    // Score from slider
-    if (response.sliderValue !== undefined && question.sliderScoring) {
-      const sliderScores = question.sliderScoring(response.sliderValue)
-      for (const [dim, pts] of Object.entries(sliderScores)) {
-        raw[dim] = (raw[dim] || 0) + pts
-      }
-    }
-
-    // Score from free text (keyword detection)
-    if (response.freeText) {
-      const textScores = scoreFreeText(response.freeText)
-      for (const [dim, pts] of Object.entries(textScores)) {
-        raw[dim] = (raw[dim] || 0) + pts
-      }
-    }
   }
 
   return raw
-}
-
-/**
- * Score free text by detecting keywords
- */
-function scoreFreeText(text: string): DimensionScores {
-  const scores: DimensionScores = {}
-  const normalized = text.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
-  const ptsPerKeyword = scoringKeywords.points_per_keyword
-
-  for (const [dim, config] of Object.entries(scoringKeywords.dimensions)) {
-    for (const keyword of config.keywords) {
-      const normalizedKw = keyword.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
-      if (normalized.includes(normalizedKw)) {
-        scores[dim] = (scores[dim] || 0) + ptsPerKeyword
-      }
-    }
-  }
-
-  return scores
 }
 
 // Theoretical maximum raw score per dimension, computed from all questions.
 // Ensures fair comparison: dim 4 (24 pts available) vs dim 5 (12 pts available)
 // are normalized independently rather than relative to each other.
 const DIMENSION_MAX_SCORES: Record<string, number> = {
-  '1': 20, '2': 18, '3': 19, '4': 24,
-  '5': 12, '6': 12, '7': 15, '8': 13,
-  '9': 14, '10': 17,
+  '1': 24, '2': 14, '3': 18, '4': 28,
+  '5': 22, '6': 32, '7': 22, '8': 18,
+  '9': 15, '10': 20,
 }
 
 /**

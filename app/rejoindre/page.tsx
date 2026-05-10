@@ -558,11 +558,11 @@ function PaymentContent() {
         )}
       </AnimatePresence>
 
-      {/* Pricing cards — Sérénité + Essentielle */}
-      <div className="max-w-2xl mx-auto mb-6 grid sm:grid-cols-2 gap-6 items-start">
+      {/* Pricing card — Sérénité uniquement */}
+      <div className="max-w-md mx-auto mb-6">
         {/* Sérénité */}
         <Reveal delay={0.5}>
-          <div className="glass p-6 sm:p-8 text-center h-full flex flex-col relative overflow-hidden" style={{ borderColor: 'rgba(85,239,196,0.25)', boxShadow: '0 0 30px rgba(85,239,196,0.06)' }}>
+          <div className="glass p-6 sm:p-8 text-center flex flex-col relative overflow-hidden" style={{ borderColor: 'rgba(85,239,196,0.25)', boxShadow: '0 0 30px rgba(85,239,196,0.06)' }}>
             <div className="absolute top-4 right-4 text-[10px] tracking-[0.2em] uppercase px-3 py-1 rounded-full font-semibold"
               style={{ background: 'rgba(85,239,196,0.15)', color: '#55EFC4', border: '1px solid rgba(85,239,196,0.25)' }}>
               Populaire
@@ -614,40 +614,6 @@ function PaymentContent() {
           </div>
         </Reveal>
 
-        {/* Essentielle */}
-        <Reveal delay={0.6}>
-          <div className="glass p-6 sm:p-8 text-center h-full flex flex-col" style={{ borderColor: 'rgba(116,192,252,0.2)' }}>
-            <p className="text-xs tracking-[0.25em] uppercase mb-4" style={{ color: '#74C0FC' }}>
-              Essentielle
-            </p>
-            <p className="text-xs mb-4 font-medium" style={{ color: 'var(--text-muted)' }}>
-              Accès immédiat &mdash; Sans essai gratuit
-            </p>
-            <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>
-              {t('join.no_commitment')}
-            </p>
-            <div className="space-y-2.5 text-left mb-6 flex-1">
-              {[
-                'Encyclopédie complète (tous les protocoles)',
-                'Shine Librairie',
-                'Shine TV & Shorts',
-                'Shine Audible',
-              ].map((item) => (
-                <div key={item} className="flex items-start gap-2.5">
-                  <span className="mt-0.5 text-sm flex-shrink-0" style={{ color: '#74C0FC' }}>&#9670;</span>
-                  <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{item}</span>
-                </div>
-              ))}
-            </div>
-            <button
-              onClick={() => handleCheckout('essential')}
-              className="w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm border"
-              style={{ borderColor: 'rgba(116,192,252,0.4)', color: '#74C0FC', background: 'rgba(116,192,252,0.08)' }}
-            >
-              Choisir Essentielle
-            </button>
-          </div>
-        </Reveal>
       </div>
 
 

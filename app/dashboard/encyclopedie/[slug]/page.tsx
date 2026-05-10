@@ -422,6 +422,16 @@ export default function DouleurDetailPage() {
   const steps = douleur ? buildSteps(douleur, dynamicSteps) : []
   const totalSteps = steps.length
 
+  // Resume at first incomplete step when progress loads
+  useEffect(() => {
+    if (!progress || steps.length === 0) return
+    const sc = progress.steps_completed || {}
+    const firstIncomplete = steps.find(s =>
+      !(sc[String(s.num)] || (s.num === 1 && progress.step1_completed) || (s.num === 2 && progress.step2_completed) || (s.num === 3 && progress.step3_completed))
+    )
+    if (firstIncomplete && firstIncomplete.num > 1) setActiveStep(firstIncomplete.num)
+  }, [progress]) // eslint-disable-line
+
   async function markStepComplete(stepNum: number) {
     if (!douleur || !userId) return
     const supabase = createClient()

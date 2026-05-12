@@ -52,7 +52,22 @@ async function getCredentials() {
   throw new Error('Resend not configured: set RESEND_API_KEY or connect via Replit integration');
 }
 
+// ⛔ EMAILS PAUSED — mettre à false pour réactiver l'envoi
+const EMAILS_PAUSED = true
+
+const noopResend = {
+  emails: {
+    send: async (payload: unknown) => {
+      console.warn('[EMAILS_PAUSED] Envoi bloqué :', JSON.stringify(payload).slice(0, 200))
+      return { data: null, error: null }
+    },
+  },
+} as unknown as Resend
+
 export async function getResendClient() {
+  if (EMAILS_PAUSED) {
+    return { client: noopResend, fromEmail: 'paused@sosshine.com' }
+  }
   const { apiKey, fromEmail } = await getCredentials();
   return {
     client: new Resend(apiKey),

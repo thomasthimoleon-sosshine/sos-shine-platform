@@ -1,3 +1,5 @@
+// DEPRECATED — Conservé pour archive. Remplacé par génération via Claude API à venir.
+
 /**
  * SOS Shine — Quiz V2 Archetype Layer
  *

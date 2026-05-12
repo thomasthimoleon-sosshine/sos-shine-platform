@@ -75,9 +75,13 @@ function findAnswer(input: string): string {
   return bestMatch.answer;
 }
 
+// Set to true when Claude API backend is connected
+const CHATBOT_ENABLED = false
+
 type Message = { from: 'user' | 'bot'; text: string };
 
 export default function ShineChatbot() {
+  if (!CHATBOT_ENABLED) return null
   const [open, setOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [messages, setMessages] = useState<Message[]>([

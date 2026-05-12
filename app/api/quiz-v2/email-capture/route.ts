@@ -17,6 +17,10 @@ function getSiteUrl() {
 
 export async function POST(request: NextRequest) {
   try {
+    const { rateLimit, getIp } = await import('@/lib/rate-limit')
+    const { allowed } = rateLimit(getIp(request), { maxRequests: 30, windowMs: 60_000 })
+    if (!allowed) return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+
     const { sessionId, responseId, email, firstName } = await request.json()
 
     if (!email) return NextResponse.json({ error: 'Email required' }, { status: 400 })

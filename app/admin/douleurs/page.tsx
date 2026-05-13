@@ -638,10 +638,12 @@ export default function AdminDouleursPage() {
     let count = 0
     const vid = 'video_url' in s ? s.video_url : null
     const aud = 'audio_url' in s ? s.audio_url : null
+    const aud2 = (s as any).audio_url_2 || null
     const pdf = 'pdf_url' in s ? s.pdf_url : null
     const img = 'image_url' in s ? s.image_url : null
     if (vid) count++
     if (aud) count++
+    if (aud2) count++
     if (pdf) count++
     if (img) count++
     return count
@@ -659,6 +661,7 @@ export default function AdminDouleursPage() {
     if (d.step1_image_url) count++
     if (d.step2_video_url) count++
     if (d.audio_energy_url) count++
+    if ((d as any).audio_energy_url_2) count++
     if (d.step2_pdf_url) count++
     if (d.step2_image_url) count++
     if (d.step3_video_url) count++
@@ -1353,7 +1356,7 @@ export default function AdminDouleursPage() {
           }).map((d) => {
             const totalMedia = getTotalMediaCount(d)
             const stepCount = d.dynamicSteps && d.dynamicSteps.length > 0 ? d.dynamicSteps.length : 3
-            const totalPossibleMedia = stepCount * 4
+            const totalPossibleMedia = stepCount * 4 + 1
             return (
               <div key={d.id} className="rounded-xl overflow-hidden transition-all duration-200"
                 style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>

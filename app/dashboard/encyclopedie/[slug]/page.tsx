@@ -45,13 +45,13 @@ function buildSteps(douleur: Douleur, dynamicSteps: DouleurStep[]): StepConfig[]
       video: s.video_url,
       video2: s.video_url_2,
       audio: s.audio_url,
-      audio2: (s as any).audio_url_2 || null,
+      audio2: s.audio_url_2 || null,
       pdf: s.pdf_url,
       image: s.image_url,
-      video_cover: (s as any).video_cover || null,
-      video2_cover: (s as any).video2_cover || null,
-      audio_cover: (s as any).audio_cover || null,
-      audio2_cover: (s as any).audio2_cover || null,
+      video_cover: s.video_cover || null,
+      video2_cover: s.video2_cover || null,
+      audio_cover: s.audio_cover || null,
+      audio2_cover: s.audio2_cover || null,
       exercise_content: s.exercise_content,
     }))
   }

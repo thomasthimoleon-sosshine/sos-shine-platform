@@ -307,13 +307,13 @@ export default function AdminDouleursPage() {
       video_url_2: s.video_url_2 || '',
       audio_url: s.audio_url || '',
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      audio_url_2: (s as any).audio_url_2 || '',
+      audio_url_2: s.audio_url_2 || '',
       pdf_url: s.pdf_url || '',
       image_url: s.image_url || '',
-      video_cover: (s as any).video_cover || '',
-      video2_cover: (s as any).video2_cover || '',
-      audio_cover: (s as any).audio_cover || '',
-      audio2_cover: (s as any).audio2_cover || '',
+      video_cover: s.video_cover || '',
+      video2_cover: s.video2_cover || '',
+      audio_cover: s.audio_cover || '',
+      audio2_cover: s.audio2_cover || '',
       exercise_content: s.exercise_content || '',
     }))
   }
@@ -638,7 +638,7 @@ export default function AdminDouleursPage() {
     let count = 0
     const vid = 'video_url' in s ? s.video_url : null
     const aud = 'audio_url' in s ? s.audio_url : null
-    const aud2 = (s as any).audio_url_2 || null
+    const aud2 = 'audio_url_2' in s ? s.audio_url_2 : null
     const pdf = 'pdf_url' in s ? s.pdf_url : null
     const img = 'image_url' in s ? s.image_url : null
     if (vid) count++

@@ -81,8 +81,13 @@ export type DouleurStep = {
   video_url: string | null
   video_url_2: string | null
   audio_url: string | null
+  audio_url_2: string | null
   pdf_url: string | null
   image_url: string | null
+  video_cover: string | null
+  video2_cover: string | null
+  audio_cover: string | null
+  audio2_cover: string | null
   exercise_content: string | null
   created_at: string
   updated_at: string

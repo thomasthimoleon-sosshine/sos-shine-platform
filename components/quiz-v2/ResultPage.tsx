@@ -7,6 +7,7 @@ import { DIMENSIONS, type DimensionScores } from '@/lib/quiz-v2/dimensions'
 import { DIMENSION_TEXTS, generateActe4 } from '@/lib/quiz-v2/result-texts'
 import { calculateMatchScores } from '@/lib/quiz-v2/scoring'
 import { createClient } from '@/lib/supabase/client'
+import { getArchetype, BLESSURE_COLORS } from '@/lib/quiz-v2/archetypes.legacy'
 
 type Protocol = {
   id: string
@@ -25,6 +26,20 @@ type Props = {
   secondary: string
   q15Response: string
   email: string
+}
+
+function Beat({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.7, delay, ease: [0.25, 0.46, 0.45, 0.94] }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  )
 }
 
 function Acte({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
@@ -57,6 +72,8 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
   const [protocolsLoading, setProtocolsLoading] = useState(true)
   const dimInfo = DIMENSIONS[parseInt(dominant) as keyof typeof DIMENSIONS]
   const texts = DIMENSION_TEXTS[dominant]
+  const archetype = getArchetype(dominant, secondary)
+  const bc = BLESSURE_COLORS[archetype.blessure]
 
   useEffect(() => {
     async function loadProtocols() {
@@ -111,7 +128,128 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-16 space-y-20">
+    <div className="min-h-screen">
+
+      {/* ══════════ OUVERTURE — IDENTITÉ ARCHÉTYPALE ══════════ */}
+      <div className="flex flex-col items-center justify-center min-h-[90vh] px-6 text-center">
+        <motion.span
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="inline-block px-4 py-1.5 rounded-full text-[11px] tracking-[0.22em] uppercase font-medium mb-10"
+          style={{ background: bc.bg, color: bc.text, border: `1px solid ${bc.border}` }}
+        >
+          {archetype.blessure}
+        </motion.span>
+
+        <motion.h1
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
+          className="font-display text-[2.4rem] sm:text-6xl font-light leading-[1.1] mb-6"
+          style={{ color: 'var(--brand)', letterSpacing: '-0.01em' }}
+        >
+          {archetype.name}
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.0 }}
+          className="text-[11px] tracking-[0.22em] uppercase mb-2"
+          style={{ color: bc.text, opacity: 0.6 }}
+        >
+          {archetype.emotion}&nbsp;&nbsp;·&nbsp;&nbsp;{archetype.mode}
+        </motion.p>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.4 }}
+          className="text-sm max-w-xs mt-4"
+          style={{ color: 'var(--text-secondary)' }}
+        >
+          {displayName}, voilà ce que tes réponses ont révélé.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2.0 }}
+          className="mt-20 flex flex-col items-center gap-1"
+          style={{ color: 'var(--text-muted)' }}
+        >
+          <span className="text-xs tracking-[0.15em] uppercase">Continue</span>
+          <motion.span
+            animate={{ y: [0, 5, 0] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+            className="text-lg"
+          >
+            ↓
+          </motion.span>
+        </motion.div>
+      </div>
+
+      {/* ══════════ NARRATION PSYCHOLOGIQUE ══════════ */}
+      <div className="px-6 pb-8 max-w-lg mx-auto">
+        <hr style={{ borderColor: 'rgba(255,255,255,0.06)' }} className="my-20" />
+
+        <Beat>
+          <p className="text-[11px] tracking-[0.22em] uppercase mb-8" style={{ color: bc.text, opacity: 0.55 }}>
+            Ce qu&apos;on voit en toi
+          </p>
+          <p className="text-[1.35rem] font-light leading-[1.65] whitespace-pre-line" style={{ color: 'var(--text-primary)' }}>
+            {archetype.reconnaissance}
+          </p>
+        </Beat>
+
+        <hr style={{ borderColor: 'rgba(255,255,255,0.06)' }} className="my-20" />
+
+        <Beat>
+          <p className="text-[11px] tracking-[0.22em] uppercase mb-8" style={{ color: bc.text, opacity: 0.55 }}>
+            La vérité cachée
+          </p>
+          <p className="text-[1.15rem] font-light leading-[1.7] whitespace-pre-line" style={{ color: 'var(--text-secondary)' }}>
+            {archetype.verite}
+          </p>
+        </Beat>
+
+        <hr style={{ borderColor: 'rgba(255,255,255,0.06)' }} className="my-20" />
+
+        <Beat>
+          <p className="text-[11px] tracking-[0.22em] uppercase mb-8" style={{ color: bc.text, opacity: 0.55 }}>
+            La mécanique intérieure
+          </p>
+          <p className="text-[1.05rem] font-light leading-[1.75] whitespace-pre-line" style={{ color: 'var(--text-secondary)' }}>
+            {archetype.mecanique}
+          </p>
+        </Beat>
+
+        <hr style={{ borderColor: 'rgba(255,255,255,0.06)' }} className="my-20" />
+
+        <Beat>
+          <p className="text-[11px] tracking-[0.22em] uppercase mb-8" style={{ color: bc.text, opacity: 0.55 }}>
+            Ce que ça coûte
+          </p>
+          <p className="text-[1.15rem] font-light leading-[1.7] whitespace-pre-line" style={{ color: 'var(--text-secondary)' }}>
+            {archetype.consequence}
+          </p>
+        </Beat>
+
+        <hr style={{ borderColor: 'rgba(255,255,255,0.06)' }} className="my-20" />
+
+        <Beat>
+          <p className="text-[11px] tracking-[0.22em] uppercase mb-8" style={{ color: bc.text, opacity: 0.55 }}>
+            La suite
+          </p>
+          <p className="text-[1.15rem] font-light leading-[1.7] whitespace-pre-line" style={{ color: 'var(--brand)' }}>
+            {archetype.transition}
+          </p>
+        </Beat>
+      </div>
+
+      {/* ══════════ CONTENU DIMENSION + PROTOCOLE ══════════ */}
+      <div className="max-w-2xl mx-auto px-6 py-16 space-y-20">
 
       {/* ══════════ ACTE 1 — RECONNAISSANCE ══════════ */}
       <Acte>
@@ -470,6 +608,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, q15Response
           </div>
         </div>
       </Acte>
+      </div> {/* fin CONTENU DIMENSION + PROTOCOLE */}
     </div>
   )
 }

@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.97.0",
     "@excalidraw/excalidraw": "^0.18.0",
     "@fontsource/cormorant-garamond": "^5.2.11",
     "@fontsource/dm-sans": "^5.2.8",

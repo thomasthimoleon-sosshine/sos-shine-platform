@@ -292,6 +292,28 @@ export function ResultPage({ firstName, scores, dominant, secondary, email }: Pr
           </Beat>
         )}
 
+        {/* Deep dive CTA */}
+        <Beat>
+          <div
+            className="rounded-2xl p-5 space-y-3 text-center"
+            style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(201,169,97,0.15)' }}
+          >
+            <p className="text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--brand)', opacity: 0.7 }}>
+              Aller plus loin
+            </p>
+            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+              Ce résultat est un premier aperçu. Le scanner approfondi — 40 questions, 12 dimensions — génère une lecture complète et personnalisée rien que pour vous.
+            </p>
+            <a
+              href="/quiz-approfondi"
+              className="block py-3 px-6 rounded-full text-sm font-medium transition-all hover:brightness-110"
+              style={{ background: 'rgba(201,169,97,0.12)', border: '1px solid rgba(201,169,97,0.3)', color: 'var(--brand)' }}
+            >
+              Faire le scanner complet →
+            </a>
+          </div>
+        </Beat>
+
         {/* Partage */}
         <Beat>
           <div className="text-center space-y-4 pt-4">

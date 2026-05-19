@@ -804,15 +804,19 @@ export default function DouleurDetailPage() {
             <button
               key={step.num}
               onClick={() => {
-                if (isFreeUser && step.num > 1) { setShowProtocolPaywall(true); return }
+                if (isFreeUser && step.num > 1) {
+                  if (!isStepCompleted(1)) return
+                  setShowProtocolPaywall(true)
+                  return
+                }
                 setActiveStep(step.num)
               }}
-              className="flex items-center justify-center gap-2 px-3 py-3 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer"
+              className={`flex items-center justify-center gap-2 px-3 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${isFreeUser && step.num > 1 && !isStepCompleted(1) ? 'cursor-not-allowed' : 'cursor-pointer'}`}
               style={{
                 background: activeStep === step.num ? `${step.color}15` : 'var(--surface-card)',
                 border: activeStep === step.num ? `1px solid ${step.color}40` : '1px solid var(--border)',
                 color: activeStep === step.num ? step.color : isFreeUser && step.num > 1 ? 'var(--text-muted)' : 'var(--text-secondary)',
-                opacity: isFreeUser && step.num > 1 ? 0.6 : 1,
+                opacity: isFreeUser && step.num > 1 ? (isStepCompleted(1) ? 0.7 : 0.35) : 1,
               }}
             >
               {completed ? (

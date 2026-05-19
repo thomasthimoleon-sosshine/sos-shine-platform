@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation'
+import QuizLandingClient from './QuizLandingClient'
 
-export default function QuizV1Page() {
-  redirect('/signature-emotionnelle')
+export default function QuizLandingPage() {
+  return <QuizLandingClient />
 }

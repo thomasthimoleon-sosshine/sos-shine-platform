@@ -573,6 +573,7 @@ export default function QuizApprofondiPage() {
   const [isStreaming, setIsStreaming] = useState(false)
   const [protocolTitle, setProtocolTitle] = useState<string | undefined>()
   const [protocolSlug, setProtocolSlug] = useState<string | undefined>()
+  const sessionId = useRef(`qv3_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`)
   const abortRef = useRef<AbortController | null>(null)
 
   const fetchAndGenerate = useCallback(async (
@@ -630,6 +631,14 @@ export default function QuizApprofondiPage() {
         setResultText(full)
       }
       setIsStreaming(false)
+
+      // ── Sauvegarde + envoi email après streaming complet ──
+      fetch('/api/quiz-v3/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: sessionId.current, profile, resultText: full }),
+      }).catch(() => { /* non-bloquant */ })
+
     } catch (err) {
       if ((err as Error).name !== 'AbortError') {
         setResultText('Une erreur est survenue. Veuillez réessayer.')

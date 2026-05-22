@@ -69,12 +69,25 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
   )
 }
 
+const TICKER_ITEMS = ['✨ Événement SOS Shine', '📍 Sud de la France', '📅 13 juin 2026', '🕕 18h – 21h30', '→ Réserver ma place']
+
 export default function QuizLandingClient() {
+  const items3x = [...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS]
   return (
     <main className="min-h-screen" style={{ background: '#000000', color: '#e0e0e0' }}>
 
+      {/* Ticker événement */}
+      <a href="/ceremonie" className="fixed top-0 left-0 right-0 z-50 overflow-hidden" style={{ background: '#C9A961', height: '36px' }}>
+        <style>{`@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-33.333%)}}`}</style>
+        <div className="flex items-center h-full whitespace-nowrap" style={{ animation: 'ticker 22s linear infinite' }}>
+          {items3x.map((item, i) => (
+            <span key={i} className="text-xs font-semibold px-4 py-2 mx-3" style={{ color: '#000' }}>{item}</span>
+          ))}
+        </div>
+      </a>
+
       {/* ══════════ SECTION 1 — HERO ══════════ */}
-      <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden pt-9">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full opacity-[0.06] blur-[100px]" style={{ background: 'var(--brand, var(--brand))' }} />
         </div>
@@ -82,15 +95,11 @@ export default function QuizLandingClient() {
         <div className="relative z-10 max-w-lg text-center space-y-8">
           <Reveal>
             <div className="flex items-center justify-center mb-4">
-              <img src="/images/logo-shine.png" alt="SOS Shine" className="h-12" />
+              <img src="/images/logo-shine.png" alt="SOS Shine" className="h-24" />
             </div>
           </Reveal>
 
           <Reveal delay={0.1}>
-            <span className="text-3xl">✨</span>
-          </Reveal>
-
-          <Reveal delay={0.2}>
             <h1 className="font-display text-2xl sm:text-3xl md:text-4xl font-semibold leading-tight" style={{ color: '#e0e0e0' }}>
               Il y a une phrase qui résume comment tu te protèges émotionnellement depuis toujours.
             </h1>

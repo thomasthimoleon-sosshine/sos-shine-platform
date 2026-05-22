@@ -41,10 +41,10 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const publicRoutes = ['/', '/login', '/signup', '/rejoindre', '/encyclopedie', '/contact', '/cgv', '/confidentialite', '/mentions-legales', '/signature-emotionnelle', '/compte-inactif']
+  const publicRoutes = ['/', '/login', '/signup', '/rejoindre', '/encyclopedie', '/contact', '/cgv', '/confidentialite', '/mentions-legales', '/signature-emotionnelle', '/compte-inactif', '/ceremonie']
   const isPublicRoute = publicRoutes.some(route => {
     const isExact = request.nextUrl.pathname === route;
-    const isSubRoute = request.nextUrl.pathname.startsWith('/encyclopedie') || request.nextUrl.pathname.startsWith('/auth/') || request.nextUrl.pathname.startsWith('/api/') || request.nextUrl.pathname.startsWith('/signature-emotionnelle');
+    const isSubRoute = request.nextUrl.pathname.startsWith('/encyclopedie') || request.nextUrl.pathname.startsWith('/auth/') || request.nextUrl.pathname.startsWith('/api/') || request.nextUrl.pathname.startsWith('/signature-emotionnelle') || request.nextUrl.pathname.startsWith('/ceremonie') || request.nextUrl.pathname.startsWith('/protocole');
     return isExact || isSubRoute;
   })
 

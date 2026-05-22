@@ -3,7 +3,7 @@
  */
 import { wrapEmail, p, ctaButton, signature } from './wrapper'
 
-const URL_SERENITE = 'https://buy.stripe.com/3cI5kvai06p51oJbgK5ZC0f'
+const URL_SERENITE = 'https://buy.stripe.com/4gM6oz4XGdRx4AV3Oi5ZC0r'
 
 type Vars = { firstName: string; email: string }
 
@@ -29,9 +29,9 @@ export function generateEmail11(vars: Vars): { subject: string; html: string } {
     p(`Dans quelques jours, cette séquence d'emails se terminera et tu passeras dans ma newsletter classique. Tu recevras encore de mes nouvelles, mais sans cette proximité, sans ce fil quotidien.`),
     p(`Là, maintenant, tu es dans une vraie fenêtre de changement.`),
     p(`Et peut-être que ce n'est pas un hasard si tu lis encore ces mots aujourd'hui.`),
-    p(`Tu peux essayer SOS Shine pendant 7 jours gratuitement. Sans pression. Sans engagement.`),
+    p(`Tu peux rejoindre SOS Shine maintenant. Sans engagement. Résiliable à tout moment.`),
     p(`Juste pour voir ce que ça déclenche en toi.`),
-    ctaButton('Commencer mes 7 jours gratuits', URL_SERENITE, { email }),
+    ctaButton('Rejoindre SOS Shine', URL_SERENITE, { email }),
     p(`À demain.`),
     signature(),
     p(`<br><em style="font-size:12px;color:#737373;">P.S. : Si tu choisis d'attendre, ce n'est pas grave. Vraiment. Mais fais-moi une promesse : ne laisse pas ce "plus tard" devenir un "jamais". Pose-toi simplement une question dans 6 mois : "Est-ce que la vie que je vis aujourd'hui est différente de celle que je vivais en lisant ce mail ?" Et écoute honnêtement ta réponse.</em>`),

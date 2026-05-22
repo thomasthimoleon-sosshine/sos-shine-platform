@@ -55,7 +55,8 @@ function ProtocolPreviewContent() {
     track('protocol_cta_clicked', { protocolSlug: slug, from: 'preview', email })
   }
 
-  const ctaUrl = `/signup?source=quiz&protocol=${slug}&email=${encodeURIComponent(email)}`
+  const urlPlateforme = `https://buy.stripe.com/4gM6oz4XGdRx4AV3Oi5ZC0r?prefilled_email=${encodeURIComponent(email)}`
+  const urlProtocole  = `https://buy.stripe.com/9B600b2PycNtd7r98C5ZC0q?prefilled_email=${encodeURIComponent(email)}`
 
   if (loading) {
     return (
@@ -177,18 +178,29 @@ function ProtocolPreviewContent() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.44 }}
-          className="space-y-3 text-center"
+          className="space-y-3"
         >
           <a
-            href={ctaUrl}
+            href={urlPlateforme}
             onClick={handleCtaClick}
-            className="block w-full py-4 rounded-full text-sm font-semibold transition-all hover:brightness-110"
+            className="block w-full py-4 rounded-full text-sm font-semibold text-center transition-all hover:brightness-110"
             style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
           >
-            Créer mon espace et commencer
+            Rejoindre SOS Shine — 29,90€/mois
           </a>
-          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-            Gratuit · accès immédiat à ton chemin · upgrade possible ensuite
+          <p className="text-xs text-center" style={{ color: 'var(--text-muted)' }}>
+            Étapes 2+3 + plateforme complète · sans engagement
+          </p>
+          <a
+            href={urlProtocole}
+            onClick={handleCtaClick}
+            className="block w-full py-3 rounded-full text-sm font-medium text-center transition-all hover:opacity-80"
+            style={{ border: '1px solid rgba(201,169,97,0.3)', color: 'var(--brand)' }}
+          >
+            Accéder uniquement à mon protocole — 33€
+          </a>
+          <p className="text-xs text-center" style={{ color: 'var(--text-muted)' }}>
+            Étapes 2+3 seulement · paiement unique
           </p>
         </motion.div>
 

@@ -3,7 +3,7 @@
  */
 import { wrapEmail, p, h3, ctaButton, signature, goldDivider } from './wrapper'
 
-const URL_SERENITE = 'https://buy.stripe.com/3cI5kvai06p51oJbgK5ZC0f'
+const URL_SERENITE = 'https://buy.stripe.com/4gM6oz4XGdRx4AV3Oi5ZC0r'
 
 type Vars = { firstName: string; email: string }
 
@@ -12,7 +12,7 @@ export function generateEmail12(vars: Vars): { subject: string; html: string } {
   const subject = `Voilà ce qui va se passer concrètement.`
 
   const content = [
-    p(`Si aujourd'hui tu décides de commencer tes 7 jours gratuits sur SOS Shine, voilà concrètement ce qu'il va se passer.`),
+    p(`Si aujourd'hui tu décides de rejoindre SOS Shine, voilà concrètement ce qu'il va se passer.`),
     p(`Pas une promesse vague. Pas un "tu vas voir, tu seras transformé·e". Du concret.`),
     goldDivider(),
     h3(`Minute 1`),
@@ -42,7 +42,7 @@ export function generateEmail12(vars: Vars): { subject: string; html: string } {
     ctaButton('Démarrer maintenant', URL_SERENITE, { email }),
     p(`À demain.`),
     signature(),
-    p(`<br><em style="font-size:12px;color:#737373;">P.S. : Une chose que je veux que tu saches. Les 7 jours gratuits ne sont pas un piège commercial. C'est moi qui ai voulu cette formule, dès le début, parce que je trouve normal qu'on puisse voir avant de s'engager. On ne te demande pas de croire sur parole. On te demande juste de venir voir.</em>`),
+    p(`<br><em style="font-size:12px;color:#737373;">P.S. : Une chose que je veux que tu saches. SOS Shine est sans engagement, résiliable à tout moment. C'est moi qui ai voulu ça dès le début, parce que je trouve normal qu'on puisse voir avant de continuer. On ne te demande pas de croire sur parole. On te demande juste de venir voir.</em>`),
   ].join('')
 
   return { subject, html: wrapEmail(content, { email }) }

@@ -272,11 +272,11 @@ export function ResultPage({ firstName, scores, dominant, secondary, email }: Pr
                 className="block text-center py-4 rounded-full text-sm font-semibold transition-all hover:brightness-110"
                 style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
               >
-                Commencer mon protocole — 7 jours gratuits
+                Commencer mon protocole
               </Link>
 
               <p className="text-center text-xs" style={{ color: 'var(--text-muted)' }}>
-                Annulable à tout moment · Aucun engagement
+                29,90€/mois · sans engagement · ou 33€ one-shot
               </p>
             </div>
           </Beat>

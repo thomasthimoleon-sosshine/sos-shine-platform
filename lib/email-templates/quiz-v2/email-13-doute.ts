@@ -3,7 +3,7 @@
  */
 import { wrapEmail, p, testimonialBlock, ctaButton, signature, spacer } from './wrapper'
 
-const URL_SERENITE = 'https://buy.stripe.com/3cI5kvai06p51oJbgK5ZC0f'
+const URL_SERENITE = 'https://buy.stripe.com/4gM6oz4XGdRx4AV3Oi5ZC0r'
 
 type Vars = { firstName: string; email: string }
 

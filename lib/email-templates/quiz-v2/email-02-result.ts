@@ -9,7 +9,8 @@ import type { DimensionScores } from '@/lib/quiz-v2/dimensions'
 
 const BRAND = '#C9A961'
 const SERIF = "Georgia, 'Times New Roman', serif"
-const URL_REJOINDRE = 'https://sosshine.com/rejoindre'
+const URL_PLATEFORME = 'https://buy.stripe.com/4gM6oz4XGdRx4AV3Oi5ZC0r'
+const URL_PROTOCOLE  = 'https://buy.stripe.com/9B600b2PycNtd7r98C5ZC0q'
 
 type Vars = {
   firstName: string
@@ -150,21 +151,17 @@ Tes protocoles personnalisés sont en préparation. Tu seras notifié(e) dès qu
     // ── CTA — prix promo vers /rejoindre ──
     h2(`Rejoindre SOS Shine`),
 
-    // Prix promo
+    // Prix
     `<table role="presentation" width="100%" cellspacing="0" cellpadding="0">
-<tr><td align="center" style="padding:8px 0 4px 0;">
-<span style="font-size:16px;color:#737373;text-decoration:line-through;">49,90€</span>
-<span style="font-family:${SERIF};font-size:28px;color:#55EFC4;font-weight:400;margin-left:8px;">29,90€</span>
-<span style="font-size:14px;color:#737373;">/mois</span>
-</td></tr>
-<tr><td align="center" style="padding:4px 0 16px 0;">
-<span style="font-size:12px;color:#55EFC4;font-weight:600;">code SHINE2026 · 7 jours d'essai gratuit</span>
+<tr><td align="center" style="padding:8px 0 16px 0;">
+<span style="font-family:${SERIF};font-size:28px;color:#55EFC4;font-weight:400;">29,90€</span>
+<span style="font-size:14px;color:#737373;">/mois · sans engagement</span>
 </td></tr>
 </table>`,
 
-    ctaButton('REJOINDRE SÉRÉNITÉ — 7 jours offerts', `${URL_REJOINDRE}?source=quiz&email=${encodeURIComponent(email)}`, { email }),
+    ctaButton('Rejoindre SOS Shine — Plateforme complète', `${URL_PLATEFORME}?prefilled_email=${encodeURIComponent(email)}`, { email }),
 
-    ctaLink('Commencer avec la formule Essentielle (9,90€/mois) →', `${URL_REJOINDRE}?source=quiz&plan=essential&email=${encodeURIComponent(email)}`),
+    ctaLink('Accéder uniquement à mon protocole — 33€ →', `${URL_PROTOCOLE}?prefilled_email=${encodeURIComponent(email)}`),
 
     goldDivider(),
 

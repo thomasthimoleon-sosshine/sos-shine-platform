@@ -22,13 +22,13 @@ function EventTicker() {
       <div
         className="flex whitespace-nowrap"
         style={{
-          animation: 'ticker 28s linear infinite',
+          animation: 'ticker 12s linear infinite',
         }}
       >
         {items.map((item, i) => (
-          <span key={i} className="inline-flex items-center px-6 py-2 text-xs font-semibold tracking-wide flex-shrink-0" style={{ color: '#000' }}>
+          <span key={i} className="inline-flex items-center px-3 py-2 text-xs font-semibold tracking-wide flex-shrink-0" style={{ color: '#000' }}>
             {item}
-            <span className="mx-4 opacity-40">|</span>
+            <span className="mx-2 opacity-40">·</span>
           </span>
         ))}
       </div>

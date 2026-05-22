@@ -82,7 +82,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, email }: Pr
 
   const signupUrl = `/signup?source=quiz&email=${encodeURIComponent(email)}`
   const ctaUrl = topProtocol
-    ? `/signup?source=quiz&email=${encodeURIComponent(email)}&next=${encodeURIComponent(`/protocole/${topProtocol.slug}`)}`
+    ? `/protocole/${topProtocol.slug}?preview=true&email=${encodeURIComponent(email)}`
     : signupUrl
 
   function storeProtocolSlug() {

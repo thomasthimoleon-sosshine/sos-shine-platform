@@ -152,15 +152,11 @@ export default function QuizLandingClient() {
           {/* Logo */}
           <Reveal>
             <div className="flex items-center justify-center mb-4">
-              <img src="/images/logo-shine.png" alt="SOS Shine" className="h-12" />
+              <img src="/images/logo-shine.png" alt="SOS Shine" className="h-24" />
             </div>
           </Reveal>
 
           <Reveal delay={0.1}>
-            <span className="text-3xl">✨</span>
-          </Reveal>
-
-          <Reveal delay={0.2}>
             <h1 className="font-display text-2xl sm:text-3xl md:text-4xl font-semibold leading-tight" style={{ color: '#e0e0e0' }}>
               Il y a une phrase qui résume comment tu te protèges émotionnellement depuis toujours.
             </h1>

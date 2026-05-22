@@ -5,12 +5,48 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 
 const QUIZ_URL = '/signature-emotionnelle'
+const EVENT_URL = '/evenement-juin-2026'
+
+const TICKER_ITEMS = [
+  '✨ Événement SOS Shine',
+  '📍 Sud de la France',
+  '📅 13 juin 2026',
+  '🕕 18h – 21h30',
+  '→ Réserver ma place',
+]
+
+function EventTicker() {
+  const items = [...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS]
+  return (
+    <Link href={EVENT_URL} className="fixed top-0 left-0 right-0 z-[60] block overflow-hidden cursor-pointer" style={{ background: 'var(--brand, #C9A961)' }}>
+      <div
+        className="flex whitespace-nowrap"
+        style={{
+          animation: 'ticker 28s linear infinite',
+        }}
+      >
+        {items.map((item, i) => (
+          <span key={i} className="inline-flex items-center px-6 py-2 text-xs font-semibold tracking-wide flex-shrink-0" style={{ color: '#000' }}>
+            {item}
+            <span className="mx-4 opacity-40">|</span>
+          </span>
+        ))}
+      </div>
+      <style>{`
+        @keyframes ticker {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-33.333%); }
+        }
+      `}</style>
+    </Link>
+  )
+}
 
 function TopNav() {
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-end gap-3 px-6 py-4"
-      style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.04)' }}
+      className="fixed left-0 right-0 z-50 flex items-center justify-end gap-3 px-6 py-4"
+      style={{ top: '32px', background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.04)' }}
     >
       <Link
         href="/login"
@@ -102,10 +138,11 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
 export default function QuizLandingClient() {
   return (
     <main className="min-h-screen" style={{ background: '#000000', color: '#e0e0e0' }}>
+      <EventTicker />
       <TopNav />
 
       {/* ══════════ SECTION 1 — HERO ══════════ */}
-      <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden pt-16">
+      <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden pt-24">
         {/* Background gradient */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full opacity-[0.06] blur-[100px]" style={{ background: 'var(--brand, var(--brand))' }} />

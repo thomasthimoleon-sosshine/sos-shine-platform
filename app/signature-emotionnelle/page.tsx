@@ -3,9 +3,10 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { QUESTIONS, PROFILES, calculateResult, calculateTopTwo, type ProfileKey } from "@/lib/signature-test";
+import { QUESTIONS, PROFILES, calculateTopTwo, type ProfileKey } from "@/lib/signature-test";
 import { getArchetypeForProfiles, BLESSURE_COLORS } from "@/lib/quiz-v2/archetypes";
 import { useTranslation } from "@/lib/i18n/useTranslation";
+import { createClient } from "@/lib/supabase/client";
 
 type Phase = "intro" | "quiz" | "loading" | "email" | "result";
 
@@ -521,7 +522,7 @@ function Beat({ children, delay = 0, className = "" }: { children: React.ReactNo
 
 type Protocol = { id: string; title: string; slug: string; status: string; duration_days: number }
 
-function ResultScreen({ profileKey, secondaryKey, firstName }: { profileKey: ProfileKey; secondaryKey: ProfileKey; firstName: string }) {
+function ResultScreen({ profileKey, secondaryKey, firstName, email }: { profileKey: ProfileKey; secondaryKey: ProfileKey; firstName: string; email: string }) {
   const { t } = useTranslation();
   const profile = PROFILES[profileKey];
   const archetype = getArchetypeForProfiles(profileKey, secondaryKey);
@@ -533,7 +534,11 @@ function ResultScreen({ profileKey, secondaryKey, firstName }: { profileKey: Pro
     const supabase = createClient();
     (supabase as any).from('protocols').select('id,title,slug,status,duration_days').then(({ data }: { data: Protocol[] | null }) => {
       if (data) {
-        const sorted = [...data].sort((a, b) => (a.status === 'available' ? -1 : 1) - (b.status === 'available' ? -1 : 1));
+        const sorted = [...data].sort((a, b) => {
+          const aAvail = a.status === 'available' ? 0 : 1;
+          const bAvail = b.status === 'available' ? 0 : 1;
+          return aAvail - bAvail;
+        });
         setProtocols(sorted);
       }
     });
@@ -544,9 +549,16 @@ function ResultScreen({ profileKey, secondaryKey, firstName }: { profileKey: Pro
 
   function handleCta() {
     if (topProtocol) {
-      try { sessionStorage.setItem('sos_protocol_slug', topProtocol.slug); } catch {}
+      try {
+        sessionStorage.setItem('sos_protocol_slug', topProtocol.slug);
+        if (email) sessionStorage.setItem('sos_quiz_email', email);
+      } catch {}
     }
   }
+
+  const signupUrl = topProtocol
+    ? `/signup?source=quiz&protocol=${topProtocol.slug}${email ? `&email=${encodeURIComponent(email)}` : ''}`
+    : `/signup?source=quiz`;
 
   return (
     <motion.div
@@ -677,18 +689,55 @@ function ResultScreen({ profileKey, secondaryKey, firstName }: { profileKey: Pro
           </p>
         </Beat>
 
+        {/* ════ PROTOCOLES RECOMMANDÉS ════ */}
+        {topProtocol && (
+          <Beat delay={0.05} className="mt-20">
+            <p className="text-[11px] tracking-[0.22em] uppercase mb-6 text-center" style={{ color: 'var(--gold)', opacity: 0.6 }}>
+              Ton protocole recommandé
+            </p>
+            <div
+              className="rounded-2xl p-6 mb-4"
+              style={{ background: 'linear-gradient(160deg, rgba(201,169,97,0.10), rgba(201,169,97,0.03))', border: '1px solid rgba(201,169,97,0.25)' }}
+            >
+              <p className="text-xs font-medium uppercase tracking-wider mb-1" style={{ color: 'var(--gold)', opacity: 0.7 }}>
+                Protocole principal
+              </p>
+              <p className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
+                {topProtocol.title}
+              </p>
+              <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
+                {topProtocol.duration_days} jours · 3 étapes
+              </p>
+            </div>
+            {otherProtocols.length > 0 && (
+              <div className="space-y-2">
+                <p className="text-[10px] tracking-[0.18em] uppercase mb-3" style={{ color: 'var(--text-muted)', opacity: 0.6 }}>
+                  Également compatibles
+                </p>
+                {otherProtocols.map((p) => (
+                  <div key={p.id} className="rounded-xl px-4 py-3 flex items-center gap-3"
+                    style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{p.title}</p>
+                    <span className="ml-auto text-xs" style={{ color: 'var(--text-muted)' }}>{p.duration_days}j</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </Beat>
+        )}
+
         {/* ════ CTA ════ */}
-        <Beat delay={0.1} className="mt-16 text-center">
-          <Link href="/rejoindre">
+        <Beat delay={0.1} className="mt-12 text-center">
+          <Link href={signupUrl} onClick={handleCta}>
             <button
               className="magnetic-btn pulse-ring w-full max-w-sm py-5 rounded-full text-base font-semibold tracking-wide transition-all hover:brightness-110"
               style={{ background: "linear-gradient(135deg, var(--gold), var(--gold-deep))", color: "#050505" }}
             >
-              {t('signature.join_cta')}
+              Commencer mon protocole →
             </button>
           </Link>
           <p className="mt-4 text-xs" style={{ color: "var(--text-muted)" }}>
-            7 jours offerts · sans engagement
+            Étape 1 gratuite · Sans engagement
           </p>
         </Beat>
 
@@ -760,6 +809,7 @@ function ResultScreen({ profileKey, secondaryKey, firstName }: { profileKey: Pro
 export default function SignatureEmotionnellePage() {
   const [phase, setPhase] = useState<Phase>("intro");
   const [firstName, setFirstName] = useState("");
+  const [quizEmail, setQuizEmail] = useState("");
   const [resultProfile, setResultProfile] = useState<ProfileKey | null>(null);
   const [secondaryProfile, setSecondaryProfile] = useState<ProfileKey>('P2');
 
@@ -783,6 +833,7 @@ export default function SignatureEmotionnellePage() {
   const handleEmailSubmit = useCallback(async (email: string) => {
     const profileKey = resultProfile;
     const profileName = profileKey ? PROFILES[profileKey]?.archetype : null;
+    setQuizEmail(email);
     try {
       await fetch("/api/signature-lead", {
         method: "POST",
@@ -809,7 +860,7 @@ export default function SignatureEmotionnellePage() {
             <EmailScreen key="email" onSubmit={handleEmailSubmit} firstName={firstName} />
           )}
           {phase === "result" && resultProfile && (
-            <ResultScreen key="result" profileKey={resultProfile} secondaryKey={secondaryProfile} firstName={firstName} />
+            <ResultScreen key="result" profileKey={resultProfile} secondaryKey={secondaryProfile} firstName={firstName} email={quizEmail} />
           )}
         </AnimatePresence>
       </div>

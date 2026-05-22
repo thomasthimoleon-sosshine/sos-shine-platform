@@ -138,12 +138,17 @@ export async function GET(request: Request) {
           } catch {}
         }
 
-        // New users → onboarding first, then their intended destination
+        // New users → onboarding first, unless coming from a protocol/quiz flow
         if (isNewUser) {
-          const hasCustomNext = nextParam !== '/dashboard/tarifs' && nextParam !== '/dashboard'
-          next = hasCustomNext
-            ? `/onboarding?next=${encodeURIComponent(nextParam)}`
-            : '/onboarding'
+          const skipOnboarding = nextParam.startsWith('/protocole/') || nextParam.startsWith('/mon-chemin')
+          if (skipOnboarding) {
+            next = nextParam
+          } else {
+            const hasCustomNext = nextParam !== '/dashboard/tarifs' && nextParam !== '/dashboard'
+            next = hasCustomNext
+              ? `/onboarding?next=${encodeURIComponent(nextParam)}`
+              : '/onboarding'
+          }
         }
       }
 

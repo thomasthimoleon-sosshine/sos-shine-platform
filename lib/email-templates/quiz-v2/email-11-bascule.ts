@@ -1,5 +1,5 @@
 /**
- * Email 11 — La bascule commerciale (J+9 10h)
+ * Email 11 — Le cerveau adore attendre (J+9)
  */
 import { wrapEmail, p, ctaButton, signature } from './wrapper'
 
@@ -9,22 +9,32 @@ type Vars = { firstName: string; email: string }
 
 export function generateEmail11(vars: Vars): { subject: string; html: string } {
   const { firstName, email } = vars
-  const subject = `${firstName ? firstName + ', 5' : '5'} jours pour décider`
+  const subject = `Le cerveau adore attendre.`
 
   const content = [
-    firstName ? p(`${firstName},`) : '',
-    p(`Je vais être directe.`),
-    p(`Ça fait 9 jours que tu as découvert ta Signature.`),
-    p(`9 jours pendant lesquels ton schéma a continué de tourner.`),
-    p(`9 jours où tu as peut-être relu ton résultat 3 ou 4 fois en te disant <em>"il faudrait que je fasse quelque chose"</em>.`),
-    p(`Je ne te jugerai jamais pour ça. La plupart des gens font la même chose. C'est humain.`),
-    p(`Mais je veux aussi te dire ça :`),
-    p(`<strong style="color:#e0e0e0;">Dans 5 jours, je vais arrêter de t'écrire.</strong> Tu rentreras dans une newsletter classique (un email par semaine, moins intime).`),
-    p(`C'est maintenant, dans cette fenêtre, que les choses peuvent vraiment commencer pour toi.`),
-    p(`7 jours gratuits. Aucune carte bleue sauvegardée si tu annules. Aucune question posée.`),
-    p(`Tu n'as rien à perdre. Tout à essayer.`),
-    ctaButton('Commencer mes 7 jours gratuits', URL_SERENITE),
+    p(`Je vais être honnête avec toi.`),
+    p(`Ça fait maintenant plusieurs jours que tu as découvert ta Signature Émotionnelle.`),
+    p(`Et je sais qu'il y a de fortes chances que certaines phrases continuent encore de tourner dans ta tête. Que tu y repenses dans les transports. Que tu y reviennes en faisant la vaisselle. Que tu te dises parfois "tiens, c'est exactement ça" en observant une réaction qui t'a échappé.`),
+    p(`Parce qu'une fois qu'on met enfin des mots sur certains mécanismes, on ne peut plus vraiment faire semblant de ne pas les voir.`),
+    p(`Mais je sais aussi quelque chose d'autre.`),
+    p(`Le cerveau adore attendre.`),
+    p(`<em>"Je commencerai plus tard."</em><br><em>"Quand j'aurai un peu plus de temps."</em><br><em>"Quand ça ira mieux."</em><br><em>"Quand je serai vraiment prêt·e."</em><br><em>"Après les vacances."</em><br><em>"À la rentrée."</em><br><em>"En janvier."</em>`),
+    p(`Le problème, c'est que ce "plus tard" peut parfois durer des années entières. Des décennies, même. J'ai accompagné des personnes qui attendaient depuis 20 ans le bon moment.`),
+    p(`Je le sais aussi parce que moi-même, j'ai attendu longtemps avant de vraiment me choisir. J'ai accumulé des prises de conscience, des lectures, des bonnes résolutions, sans jamais oser passer à l'action concrètement. Jusqu'au jour où j'ai compris que la version de moi qui attendait ne deviendrait jamais celle qui agirait. Ce sont deux femmes différentes.`),
+    p(`Alors aujourd'hui, j'ai juste envie de te dire une chose :`),
+    p(`Tu n'as pas besoin d'être prêt(e) parfaitement pour commencer.`),
+    p(`Tu as juste besoin de décider une chose, ce soir, dans le calme :`),
+    p(`Est-ce que tu veux continuer exactement comme aujourd'hui ? Avec les mêmes pensées au réveil. Les mêmes réactions automatiques. Les mêmes fatigues qui reviennent en boucle. Les mêmes scénarios qui se rejouent dans ta vie.`),
+    p(`Ou est-ce que tu veux commencer, doucement, à créer autre chose ? Pas tout révolutionner. Pas tout abandonner. Juste poser une première pierre dans un autre sol.`),
+    p(`Dans quelques jours, cette séquence d'emails se terminera et tu passeras dans ma newsletter classique. Tu recevras encore de mes nouvelles, mais sans cette proximité, sans ce fil quotidien.`),
+    p(`Là, maintenant, tu es dans une vraie fenêtre de changement.`),
+    p(`Et peut-être que ce n'est pas un hasard si tu lis encore ces mots aujourd'hui.`),
+    p(`Tu peux essayer SOS Shine pendant 7 jours gratuitement. Sans pression. Sans engagement.`),
+    p(`Juste pour voir ce que ça déclenche en toi.`),
+    ctaButton('Commencer mes 7 jours gratuits', URL_SERENITE, { email }),
+    p(`À demain.`),
     signature(),
+    p(`<br><em style="font-size:12px;color:#737373;">P.S. : Si tu choisis d'attendre, ce n'est pas grave. Vraiment. Mais fais-moi une promesse : ne laisse pas ce "plus tard" devenir un "jamais". Pose-toi simplement une question dans 6 mois : "Est-ce que la vie que je vis aujourd'hui est différente de celle que je vivais en lisant ce mail ?" Et écoute honnêtement ta réponse.</em>`),
   ].join('')
 
   return { subject, html: wrapEmail(content, { email }) }

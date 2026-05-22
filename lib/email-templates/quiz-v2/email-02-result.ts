@@ -1,11 +1,9 @@
 /**
  * Email 2 — Résultat complet
  * Envoyé 1 min après completion du quiz (Q15 répondue)
- * Contient le résultat COMPLET (pas de lien "voir résultat" qui relance le quiz)
  */
 
 import { wrapEmail, h2, p, goldDivider, ctaButton, ctaLink, signature, spacer } from './wrapper'
-import { DIMENSION_TEXTS, generateActe4 } from '@/lib/quiz-v2/result-texts'
 import { DIMENSIONS } from '@/lib/quiz-v2/dimensions'
 import type { DimensionScores } from '@/lib/quiz-v2/dimensions'
 
@@ -27,9 +25,7 @@ export function generateEmail02(vars: Vars): { subject: string; html: string } {
   const { firstName, email, dominant, secondary, scores, protocols } = vars
   const dimInfo = DIMENSIONS[parseInt(dominant) as keyof typeof DIMENSIONS]
   const secInfo = DIMENSIONS[parseInt(secondary) as keyof typeof DIMENSIONS]
-  const texts = DIMENSION_TEXTS[dominant]
 
-  const displayName = firstName || 'Toi'
   const subject = `${firstName ? firstName + ', v' : 'V'}oilà ce que tes 15 réponses ont révélé`
 
   const dominantScore = scores[dominant] || 0
@@ -37,10 +33,9 @@ export function generateEmail02(vars: Vars): { subject: string; html: string } {
 
   const content = [
     // ── Opening ──
-    firstName ? p(`${firstName},`) : '',
-    p(`On vient de finir ensemble.`),
-    p(`Avant toute chose, merci d'avoir répondu honnêtement. Tu n'imagines pas à quel point la plupart des gens se mentent à eux-mêmes en répondant à ce genre de test.`),
-    p(`Pas toi.`),
+    p(`On vient de finir ensemble et avant tout, merci. Je te remercie et remercie ton âme vraiment.`),
+    p(`Parce que répondre honnêtement à ce genre de questions, ce n'est pas anodin. Beaucoup de personnes passent leur vie à éviter de regarder ce qu'elles ressentent. À fonctionner, à sourire, à avancer, sans jamais s'arrêter pour se poser la vraie question.`),
+    p(`Toi, tu viens de le faire, maintenant, quelque chose d'important commence.`),
 
     goldDivider(),
 
@@ -79,34 +74,37 @@ ${secInfo?.icon || ''} ${secInfo?.name || 'Dimension ' + secondary}
 
     goldDivider(),
 
-    // ── Pattern (Acte 2 — COMPLET) ──
+    // ── Acte 2 — Il y a un pattern ──
     h2(`Il y a un pattern dans tes réponses.`),
-    texts ? `<div style="font-size:15px;line-height:1.75;color:#d4d4d4;white-space:pre-line;margin:0 0 16px 0;">${texts.acte2}</div>` : '',
+    p(`Je vais être directe avec toi.`),
+    p(`Ce que tu viens de lire, ce n'est pas "un résultat de test", c'est un pattern émotionnel. Une manière que ton cerveau, ton système nerveux et ton corps ont développée pour survivre, s'adapter, se protéger, ou simplement avancer malgré certaines blessures, certains conditionnements, certaines expériences que personne ne t'a appris à nommer.`),
+    p(`Ce pattern, tu ne l'as pas choisi. Il s'est installé pendant que tu étais trop petit(e) pour comprendre ce qui se passait.`),
 
     goldDivider(),
 
-    // ── Origin (Acte 3 — COMPLET) ──
+    // ── Acte 3 — D'où ça vient ──
     h2(`D'où ça vient ?`),
-    texts ? `<div style="font-size:15px;line-height:1.75;color:#d4d4d4;white-space:pre-line;margin:0 0 16px 0;">${texts.acte3}</div>` : '',
+    p(`La plupart de nos automatismes émotionnels se forment entre 0 et 7 ans. À une époque où ton cerveau enregistrait tout sans filtre. Les mots qu'on te disait. Les silences. Les regards. Les absences. L'amour qu'on te donnait, et la forme exacte sous laquelle on te le donnait.`),
+    p(`Aujourd'hui, ton subconscient continue de répondre au monde avec ces vieux codes. Même quand ils ne te servent plus.`),
+    p(`C'est pour ça que tu peux comprendre intellectuellement ce qui te bloque, et continuer pourtant à répéter les mêmes scénarios. Ce n'est pas un manque de volonté. C'est une question de niveau. Le mental ne guérit pas le subconscient.`),
 
     goldDivider(),
 
-    // ── Cost (Acte 4 — COMPLET) ──
-    h2(`Ce qui va se passer si rien ne change.`),
-    `<div style="font-size:15px;line-height:1.75;color:#d4d4d4;white-space:pre-line;margin:0 0 16px 0;">${generateActe4(dominant)}</div>`,
+    // ── Acte 4 — Ce qui change ──
+    h2(`Ce qui change quand on prend le bon chemin.`),
+    p(`Un pattern compris peut se dissoudre. Un mécanisme nommé perd une grande partie de son pouvoir. Et un corps qui retrouve la sécurité intérieure cesse de répéter les mêmes scénarios.`),
+    p(`C'est exactement pour ça que SOS Shine existe.`),
+    p(`Pas pour faire du développement personnel "instagrammable". Pas pour t'offrir des phrases lumineuses qui s'évaporent au bout de trois jours.`),
+    p(`Mais pour te donner une vraie méthode, structurée en trois étapes : Comprendre. Libérer. Agir.`),
+    p(`J'ai 22 ans d'expérience que je peux te transmettre. Pour que tu n'aies pas à perdre le temps que j'ai perdu, moi.`),
 
     goldDivider(),
 
-    // ── Acte 5 — La promesse ──
-    h2(`Mais tu peux changer.`),
-    p(`Les schémas qui te freinent aujourd'hui se sont formés pour te protéger. Ils ont eu leur utilité. Mais ils ne te servent plus.`),
-    p(`Ce n'est pas une question de volonté. C'est une question de méthode.`),
-    spacer(8),
-    goldDivider(),
-
-    // ── Protocols (Acte 6) ──
+    // ── Acte 5 — Protocoles intro ──
     h2(`Tes protocoles personnalisés`),
-    p(`À partir de tes 15 réponses, voici les protocoles qui correspondent à ce que tu traverses :`),
+    p(`Sur la plateforme, ton parcours s'adapte à ton profil. Les protocoles, les exercices, les méditations et les audios que tu vas recevoir ne sont pas les mêmes selon la Signature Émotionnelle qui ressort de tes réponses. Chaque profil reçoit ses propres clés.`),
+    p(`Tu y retrouveras des protocoles guidés étape par étape, des exercices neuro-émotionnels, des outils cognitifs, des méditations, des respirations, des audios à fréquences spécifiques (432 Hz, binauraux, bilatéraux), des lives mensuels, une encyclopédie complète des défis émotionnels, et une communauté de personnes qui traversent souvent les mêmes choses que toi.`),
+    p(`Pas un programme de plus. Un chemin.`),
 
     spacer(8),
 
@@ -151,7 +149,6 @@ Tes protocoles personnalisés sont en préparation. Tu seras notifié(e) dès qu
 
     // ── CTA — prix promo vers /rejoindre ──
     h2(`Rejoindre SOS Shine`),
-    p(`Accède à tous tes protocoles personnalisés, à ta communauté, aux lives, et à tout ce qui viendra pour toi.`),
 
     // Prix promo
     `<table role="presentation" width="100%" cellspacing="0" cellpadding="0">
@@ -167,16 +164,19 @@ Tes protocoles personnalisés sont en préparation. Tu seras notifié(e) dès qu
 
     ctaButton('REJOINDRE SÉRÉNITÉ — 7 jours offerts', `${URL_REJOINDRE}?source=quiz&email=${encodeURIComponent(email)}`, { email }),
 
-    ctaLink('Formule Essentielle (9,90€/mois) →', `${URL_REJOINDRE}?source=quiz&plan=essential&email=${encodeURIComponent(email)}`),
+    ctaLink('Commencer avec la formule Essentielle (9,90€/mois) →', `${URL_REJOINDRE}?source=quiz&plan=essential&email=${encodeURIComponent(email)}`),
 
     goldDivider(),
 
     // ── Closing ──
-    p(`Prends ton temps pour relire ce résultat. Ce n'est pas anodin.`),
-    p(`Conserve cet email précieusement — c'est ta Signature Émotionnelle complète.`),
+    p(`Conserve précieusement cette Signature Émotionnelle.`),
+    p(`Relis-la dans quelques jours. Puis dans quelques semaines.`),
+    p(`Tu verras déjà les choses différemment.`),
     p(`À très vite.`),
 
     signature(),
+
+    p(`<br><em style="font-size:12px;color:#737373;">P.S. : Je t'écris depuis le sud de la France, en pleine nature. Entre la mère, la thérapeute, l'autrice, la fondatrice. Et ce paradoxe d'une femme qui ne s'arrête jamais, justement parce qu'elle sait à quel point ce qu'elle bâtit peut éviter à d'autres des années d'errance. Si tu as ouvert ce mail jusqu'à la fin, c'est que quelque chose en toi est prêt. Fais-toi confiance.</em>`),
   ].join('')
 
   return {

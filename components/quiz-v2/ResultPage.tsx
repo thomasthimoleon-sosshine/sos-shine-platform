@@ -123,8 +123,8 @@ export function ResultPage({ firstName, scores, dominant, secondary, email }: Pr
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.0 }}
-          className="text-[11px] tracking-[0.22em] uppercase"
-          style={{ color: bc.text, opacity: 0.6 }}
+          className="text-[11px] tracking-[0.35em] uppercase"
+          style={{ color: 'var(--brand)', opacity: 0.55 }}
         >
           {archetype.emotion}&nbsp;&nbsp;·&nbsp;&nbsp;{archetype.mode}
         </motion.p>
@@ -162,50 +162,50 @@ export function ResultPage({ firstName, scores, dominant, secondary, email }: Pr
 
         <hr style={{ borderColor: 'rgba(255,255,255,0.06)' }} className="my-20" />
         <Beat>
-          <p className="text-[11px] tracking-[0.22em] uppercase mb-8" style={{ color: bc.text, opacity: 0.55 }}>
+          <p className="text-[11px] tracking-[0.35em] uppercase mb-8" style={{ color: 'var(--brand)', opacity: 0.7 }}>
             Ce qu&apos;on voit en toi
           </p>
-          <p className="text-[1.35rem] font-light leading-[1.65] whitespace-pre-line" style={{ color: 'var(--text-primary)' }}>
+          <p className="text-base sm:text-lg font-light leading-relaxed whitespace-pre-line" style={{ color: 'var(--text-primary)' }}>
             {archetype.reconnaissance}
           </p>
         </Beat>
 
         <hr style={{ borderColor: 'rgba(255,255,255,0.06)' }} className="my-20" />
         <Beat>
-          <p className="text-[11px] tracking-[0.22em] uppercase mb-8" style={{ color: bc.text, opacity: 0.55 }}>
+          <p className="text-[11px] tracking-[0.35em] uppercase mb-8" style={{ color: 'var(--brand)', opacity: 0.7 }}>
             La vérité cachée
           </p>
-          <p className="text-[1.15rem] font-light leading-[1.7] whitespace-pre-line" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-base font-light leading-relaxed whitespace-pre-line" style={{ color: 'rgba(255,255,255,0.7)' }}>
             {archetype.verite}
           </p>
         </Beat>
 
         <hr style={{ borderColor: 'rgba(255,255,255,0.06)' }} className="my-20" />
         <Beat>
-          <p className="text-[11px] tracking-[0.22em] uppercase mb-8" style={{ color: bc.text, opacity: 0.55 }}>
+          <p className="text-[11px] tracking-[0.35em] uppercase mb-8" style={{ color: 'var(--brand)', opacity: 0.7 }}>
             La mécanique intérieure
           </p>
-          <p className="text-[1.05rem] font-light leading-[1.75] whitespace-pre-line" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-base font-light leading-relaxed whitespace-pre-line" style={{ color: 'rgba(255,255,255,0.7)' }}>
             {archetype.mecanique}
           </p>
         </Beat>
 
         <hr style={{ borderColor: 'rgba(255,255,255,0.06)' }} className="my-20" />
         <Beat>
-          <p className="text-[11px] tracking-[0.22em] uppercase mb-8" style={{ color: bc.text, opacity: 0.55 }}>
+          <p className="text-[11px] tracking-[0.35em] uppercase mb-8" style={{ color: 'var(--brand)', opacity: 0.7 }}>
             Ce que ça coûte
           </p>
-          <p className="text-[1.15rem] font-light leading-[1.7] whitespace-pre-line" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-base font-light leading-relaxed whitespace-pre-line" style={{ color: 'rgba(255,255,255,0.7)' }}>
             {archetype.consequence}
           </p>
         </Beat>
 
         <hr style={{ borderColor: 'rgba(255,255,255,0.06)' }} className="my-20" />
         <Beat>
-          <p className="text-[11px] tracking-[0.22em] uppercase mb-8" style={{ color: bc.text, opacity: 0.55 }}>
+          <p className="text-[11px] tracking-[0.35em] uppercase mb-8" style={{ color: 'var(--brand)', opacity: 0.7 }}>
             La suite
           </p>
-          <p className="text-[1.15rem] font-light leading-[1.7] whitespace-pre-line" style={{ color: 'var(--brand)' }}>
+          <p className="text-base font-light leading-relaxed whitespace-pre-line" style={{ color: 'var(--brand)' }}>
             {archetype.transition}
           </p>
         </Beat>
@@ -217,7 +217,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, email }: Pr
       <div className="px-6 pb-24 max-w-lg mx-auto space-y-8">
 
         <Beat>
-          <p className="text-[11px] tracking-[0.22em] uppercase mb-2" style={{ color: 'var(--brand)', opacity: 0.7 }}>
+          <p className="text-[11px] tracking-[0.35em] uppercase mb-2" style={{ color: 'var(--brand)', opacity: 0.7 }}>
             Ton protocole recommandé
           </p>
           {topProtocol && (

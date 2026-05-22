@@ -519,12 +519,34 @@ function Beat({ children, delay = 0, className = "" }: { children: React.ReactNo
   );
 }
 
+type Protocol = { id: string; title: string; slug: string; status: string; duration_days: number }
+
 function ResultScreen({ profileKey, secondaryKey, firstName }: { profileKey: ProfileKey; secondaryKey: ProfileKey; firstName: string }) {
   const { t } = useTranslation();
   const profile = PROFILES[profileKey];
   const archetype = getArchetypeForProfiles(profileKey, secondaryKey);
   const bc = BLESSURE_COLORS[archetype.blessure];
   const inject = (text: string) => text.replace(/\{firstName\}/g, firstName);
+
+  const [protocols, setProtocols] = useState<Protocol[]>([]);
+  useEffect(() => {
+    const supabase = createClient();
+    (supabase as any).from('protocols').select('id,title,slug,status,duration_days').then(({ data }: { data: Protocol[] | null }) => {
+      if (data) {
+        const sorted = [...data].sort((a, b) => (a.status === 'available' ? -1 : 1) - (b.status === 'available' ? -1 : 1));
+        setProtocols(sorted);
+      }
+    });
+  }, []);
+
+  const topProtocol = protocols[0] ?? null;
+  const otherProtocols = protocols.slice(1, 3);
+
+  function handleCta() {
+    if (topProtocol) {
+      try { sessionStorage.setItem('sos_protocol_slug', topProtocol.slug); } catch {}
+    }
+  }
 
   return (
     <motion.div

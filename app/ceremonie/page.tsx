@@ -125,7 +125,7 @@ export default function CeremoniePage() {
 
           <Fade delay={0.08}>
             <p className="text-[10px] tracking-[0.35em] uppercase font-medium" style={{ color: GOLD, opacity: 0.8 }}>
-              Premier événement physique · Été 2026
+              Premier événement physique<br />SOS Shine · Été 2026
             </p>
           </Fade>
 

@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 
-const QUIZ_URL = '/signature-emotionnelle'
+const QUIZ_URL = '/signature-emotionnelle?start=1'
 const EVENT_URL = '/ceremonie'
 
 const TICKER_ITEMS = [
@@ -18,26 +18,15 @@ const TICKER_ITEMS = [
 function EventTicker() {
   const items = [...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS]
   return (
-    <Link href={EVENT_URL} className="fixed top-0 left-0 right-0 z-[60] block overflow-hidden cursor-pointer" style={{ background: 'var(--brand, #C9A961)' }}>
-      <div
-        className="flex whitespace-nowrap"
-        style={{
-          animation: 'ticker 22s linear infinite',
-        }}
-      >
+    <Link href={EVENT_URL} className="fixed top-0 left-0 right-0 z-[60] block overflow-hidden cursor-pointer" style={{ background: '#C9A961', height: '36px' }}>
+      <style>{`@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-33.333%)}}`}</style>
+      <div className="flex items-center h-full whitespace-nowrap" style={{ animation: 'ticker 22s linear infinite' }}>
         {items.map((item, i) => (
-          <span key={i} className="inline-flex items-center px-4 py-2 text-xs font-semibold tracking-wide flex-shrink-0" style={{ color: '#000' }}>
+          <span key={i} className="text-xs font-semibold px-4 mx-3 flex-shrink-0" style={{ color: '#000' }}>
             {item}
-            <span className="mx-3 opacity-40">·</span>
           </span>
         ))}
       </div>
-      <style>{`
-        @keyframes ticker {
-          0%   { transform: translateX(0); }
-          100% { transform: translateX(-33.333%); }
-        }
-      `}</style>
     </Link>
   )
 }
@@ -46,19 +35,19 @@ function TopNav() {
   return (
     <nav
       className="fixed left-0 right-0 z-50 flex items-center justify-end gap-3 px-6 py-4"
-      style={{ top: '32px', background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.04)' }}
+      style={{ top: '36px', background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.04)' }}
     >
       <Link
         href="/login"
-        className="text-sm font-medium px-4 py-2 rounded-lg transition-colors hover:bg-white/5"
-        style={{ color: '#a1a1aa' }}
+        className="text-sm font-medium px-4 py-2 rounded-full transition-colors hover:bg-white/5"
+        style={{ color: 'rgba(255,255,255,0.45)' }}
       >
         Se connecter
       </Link>
       <Link
         href={QUIZ_URL}
-        className="text-sm font-semibold px-4 py-2 rounded-lg transition-all hover:brightness-110"
-        style={{ background: 'var(--brand, #C9A961)', color: '#000' }}
+        className="text-sm font-semibold px-5 py-2 rounded-full transition-all hover:brightness-110"
+        style={{ background: 'linear-gradient(135deg, var(--brand), var(--gold-deep, #B8960F))', color: '#000' }}
       >
         S'inscrire
       </Link>
@@ -97,17 +86,14 @@ function CtaButton({ position, label = 'DÉCOUVRIR MA SIGNATURE →', large = fa
     <Link
       href={QUIZ_URL}
       onClick={() => trackCta(position)}
-      className={`inline-block text-center font-semibold rounded-lg transition-all hover:brightness-110 hover:scale-[1.02] active:scale-[0.98] ${large ? 'w-full sm:w-auto px-10 py-5 text-base' : 'px-8 py-4 text-sm'}`}
-      style={{ background: 'var(--brand, var(--brand))', color: '#000000' }}
+      className={`inline-block text-center font-semibold rounded-full transition-all hover:brightness-110 hover:scale-[1.02] active:scale-[0.98] ${large ? 'w-full px-10 py-4 text-sm' : 'px-8 py-4 text-sm'}`}
+      style={{ background: 'linear-gradient(135deg, var(--brand), var(--gold-deep, #B8960F))', color: '#000000' }}
     >
       {label}
     </Link>
   )
 }
 
-// ═══════════════════════════════════════════
-// FAQ Accordion
-// ═══════════════════════════════════════════
 function FaqItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false)
   return (
@@ -116,8 +102,13 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between py-5 text-left cursor-pointer"
       >
-        <span className="text-sm font-medium pr-4" style={{ color: 'var(--text-primary, #e0e0e0)' }}>{question}</span>
-        <span className="text-lg flex-shrink-0 transition-transform" style={{ color: 'var(--brand, var(--brand))', transform: open ? 'rotate(45deg)' : 'rotate(0)' }}>+</span>
+        <span className="text-sm font-medium pr-4" style={{ color: 'var(--text-primary)' }}>{question}</span>
+        <span
+          className="text-lg flex-shrink-0 transition-transform"
+          style={{ color: 'var(--brand)', transform: open ? 'rotate(45deg)' : 'rotate(0)', display: 'inline-block' }}
+        >
+          +
+        </span>
       </button>
       {open && (
         <motion.div
@@ -125,125 +116,107 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
           animate={{ opacity: 1, height: 'auto' }}
           className="pb-5"
         >
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary, #a1a1aa)' }}>{answer}</p>
+          <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)' }}>{answer}</p>
         </motion.div>
       )}
     </div>
   )
 }
 
-// ═══════════════════════════════════════════
-// MAIN PAGE
-// ═══════════════════════════════════════════
 export default function QuizLandingClient() {
   return (
-    <main className="min-h-screen" style={{ background: '#000000', color: '#e0e0e0' }}>
+    <main className="min-h-screen" style={{ background: '#000000', color: 'var(--text-primary)' }}>
       <EventTicker />
       <TopNav />
 
-      {/* ══════════ SECTION 1 — HERO ══════════ */}
-      <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden pt-24">
-        {/* Background gradient */}
+      {/* ══════════ HERO ══════════ */}
+      <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden" style={{ paddingTop: '80px' }}>
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full opacity-[0.06] blur-[100px]" style={{ background: 'var(--brand, var(--brand))' }} />
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full opacity-[0.05] blur-[100px]" style={{ background: 'var(--brand)' }} />
         </div>
 
-        <div className="relative z-10 max-w-lg text-center space-y-8">
-          {/* Logo */}
+        <div className="relative z-10 max-w-sm w-full text-center space-y-10">
           <Reveal>
-            <div className="flex items-center justify-center mb-4">
-              <img src="/images/logo-shine.png" alt="SOS Shine" className="h-24" />
+            <Link href="/" className="inline-block">
+              <img src="/images/logo-shine.png" alt="SOS Shine" className="h-24 mx-auto" />
+            </Link>
+          </Reveal>
+
+          <Reveal delay={0.15}>
+            <div className="space-y-4">
+              <h1 className="font-sans text-[22px] sm:text-3xl font-bold leading-tight" style={{ color: 'var(--text-primary)' }}>
+                Il y a une phrase qui résume comment tu te protèges émotionnellement depuis toujours.
+              </h1>
+              <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                Tu ne l&apos;as jamais entendue.<br />
+                Mais elle dirige ta vie.
+              </p>
             </div>
           </Reveal>
 
-          <Reveal delay={0.1}>
-            <h1 className="font-display text-2xl sm:text-3xl md:text-4xl font-semibold leading-tight" style={{ color: '#e0e0e0' }}>
-              Il y a une phrase qui résume comment tu te protèges émotionnellement depuis toujours.
-            </h1>
-          </Reveal>
-
           <Reveal delay={0.3}>
-            <p className="text-base sm:text-lg leading-relaxed" style={{ color: '#a1a1aa' }}>
-              Tu ne l&apos;as jamais entendue.<br />
-              Mais elle dirige ta vie.
-            </p>
-          </Reveal>
-
-          <Reveal delay={0.4}>
-            <CtaButton position="hero" large />
-          </Reveal>
-
-          <Reveal delay={0.5}>
-            <p className="text-xs flex items-center justify-center gap-2 flex-wrap" style={{ color: '#737373' }}>
-              <span>⏱️ 3 minutes</span>
-              <span>·</span>
-              <span>🎁 Gratuit</span>
-              <span>·</span>
-              <span>🔒 Aucune inscription</span>
-            </p>
-          </Reveal>
-
-          <Reveal delay={0.6}>
-            <div className="pt-4">
-              <p className="text-sm" style={{ color: 'var(--brand, var(--brand))' }}>⭐⭐⭐⭐⭐</p>
-              <p className="text-xs italic mt-1" style={{ color: '#737373' }}>&laquo; Une révélation. &raquo;</p>
+            <div className="space-y-3">
+              <CtaButton position="hero" label="Commencer →" large />
+              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.25)' }}>
+                Gratuit · Aucun engagement · Résultat immédiat
+              </p>
             </div>
           </Reveal>
         </div>
       </section>
 
-      {/* ══════════ SECTION 2 — POURQUOI DIFFÉRENT ══════════ */}
+      {/* ══════════ POURQUOI DIFFÉRENT ══════════ */}
       <section className="px-6 py-20 sm:py-28">
-        <div className="max-w-lg mx-auto text-center space-y-8">
+        <div className="max-w-lg mx-auto text-center space-y-10">
           <Reveal>
-            <p className="text-xs tracking-[0.3em] uppercase font-medium" style={{ color: 'var(--brand, var(--brand))' }}>
+            <p className="text-[11px] tracking-[0.3em] uppercase font-medium" style={{ color: 'var(--brand)', opacity: 0.7 }}>
               Pourquoi ce test est différent
             </p>
           </Reveal>
 
           <Reveal delay={0.1}>
-            <div className="space-y-6">
-              <p className="font-display text-lg sm:text-xl leading-relaxed" style={{ color: '#e0e0e0' }}>
+            <div className="space-y-5">
+              <p className="font-sans text-lg sm:text-xl font-bold leading-snug" style={{ color: 'var(--text-primary)' }}>
                 Pas un énième test de magazine.
               </p>
-              <p className="font-display text-lg sm:text-xl leading-relaxed" style={{ color: '#e0e0e0' }}>
+              <p className="font-sans text-lg sm:text-xl font-bold leading-snug" style={{ color: 'var(--text-primary)' }}>
                 Pas de cases dans lesquelles on te range.
               </p>
-              <p className="font-display text-lg sm:text-xl leading-relaxed" style={{ color: '#a1a1aa' }}>
+              <p className="font-sans text-base leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>
                 Pas de &laquo;&nbsp;personnalité INFP&nbsp;&raquo; ou &laquo;&nbsp;type 4 ennéagramme&nbsp;&raquo;.
               </p>
             </div>
           </Reveal>
 
           <Reveal delay={0.2}>
-            <div className="w-12 h-px mx-auto" style={{ background: 'var(--brand, var(--brand))' }} />
+            <div className="w-10 h-px mx-auto" style={{ background: 'var(--brand)', opacity: 0.4 }} />
           </Reveal>
 
           <Reveal delay={0.3}>
-            <div className="space-y-4">
-              <p className="text-base leading-relaxed" style={{ color: '#a1a1aa' }}>
-                Juste <strong style={{ color: '#e0e0e0' }}>UNE phrase</strong>. La tienne.
+            <div className="space-y-4 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)' }}>
+              <p>
+                Juste <strong style={{ color: 'var(--text-primary)' }}>UNE phrase</strong>. La tienne.
               </p>
-              <p className="text-base leading-relaxed" style={{ color: '#a1a1aa' }}>
+              <p>
                 Celle qui résume comment tu réagis quand quelque chose te touche.
               </p>
-              <p className="text-base leading-relaxed" style={{ color: '#a1a1aa' }}>
+              <p>
                 Pourquoi tu portes ce que tu portes. Pourquoi tu fuis ce que tu fuis. Pourquoi tu reproduis ce que tu ne veux pas reproduire.
               </p>
             </div>
           </Reveal>
 
           <Reveal delay={0.4}>
-            <CtaButton position="section_2" label="COMMENCER LE TEST →" />
+            <CtaButton position="section_2" label="Commencer le test →" />
           </Reveal>
         </div>
       </section>
 
-      {/* ══════════ SECTION 3 — EN 3 ÉTAPES ══════════ */}
-      <section className="px-6 py-20 sm:py-28" style={{ background: 'rgba(255,255,255,0.015)' }}>
-        <div className="max-w-2xl mx-auto space-y-12">
+      {/* ══════════ EN 3 ÉTAPES ══════════ */}
+      <section className="px-6 py-20 sm:py-28" style={{ background: 'rgba(201,169,97,0.025)', borderTop: '1px solid rgba(201,169,97,0.08)', borderBottom: '1px solid rgba(201,169,97,0.08)' }}>
+        <div className="max-w-lg mx-auto space-y-12">
           <Reveal>
-            <p className="text-xs tracking-[0.3em] uppercase font-medium text-center" style={{ color: 'var(--brand, var(--brand))' }}>
+            <p className="text-[11px] tracking-[0.3em] uppercase font-medium text-center" style={{ color: 'var(--brand)', opacity: 0.7 }}>
               En 3 étapes
             </p>
           </Reveal>
@@ -255,12 +228,12 @@ export default function QuizLandingClient() {
           ].map((step, i) => (
             <Reveal key={step.num} delay={i * 0.1}>
               <div className="flex gap-6 items-start">
-                <span className="font-display text-3xl font-light flex-shrink-0" style={{ color: 'var(--brand, var(--brand))', opacity: 0.6 }}>
+                <span className="font-display text-3xl font-light flex-shrink-0 mt-1" style={{ color: 'var(--brand)', opacity: 0.5 }}>
                   {step.num}
                 </span>
-                <div>
-                  <h3 className="font-display text-lg font-semibold mb-2" style={{ color: '#e0e0e0' }}>{step.title}</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: '#a1a1aa' }}>{step.desc}</p>
+                <div className="space-y-1.5">
+                  <h3 className="font-sans font-bold text-base leading-snug" style={{ color: 'var(--text-primary)' }}>{step.title}</h3>
+                  <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>{step.desc}</p>
                 </div>
               </div>
             </Reveal>
@@ -268,72 +241,75 @@ export default function QuizLandingClient() {
         </div>
       </section>
 
-      {/* ══════════ SECTION 4 — TÉMOIGNAGES ══════════ */}
+      {/* ══════════ TÉMOIGNAGES ══════════ */}
       <section className="px-6 py-20 sm:py-28">
         <div className="max-w-2xl mx-auto space-y-10">
           <Reveal>
-            <p className="text-xs tracking-[0.3em] uppercase font-medium text-center" style={{ color: 'var(--brand, var(--brand))' }}>
+            <p className="text-[11px] tracking-[0.3em] uppercase font-medium text-center" style={{ color: 'var(--brand)', opacity: 0.7 }}>
               Elles ont fait le test
             </p>
           </Reveal>
 
-          <div className="grid sm:grid-cols-2 gap-6">
+          <div className="grid sm:grid-cols-2 gap-4">
             {[
               { text: "J'ai pleuré en lisant ma Signature. Pas de tristesse. De soulagement. Quelqu'un voyait enfin ce que je portais.", author: 'Camille, 41 ans' },
               { text: "Pas un énième test de magazine. Un vrai miroir.", author: 'Léa, 29 ans' },
               { text: "10 ans en thérapie. Et en 3 minutes sur SOS Shine, j'ai compris un truc que personne n'avait réussi à me dire.", author: 'Sophie, 34 ans' },
               { text: "Mon mari et moi avons fait le test séparément. On a compris nos 12 ans de conflit en 10 minutes.", author: 'Marc, 45 ans' },
             ].map((t, i) => (
-              <Reveal key={i} delay={i * 0.1}>
-                <div className="rounded-xl p-6 h-full" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                  <p className="font-display text-sm italic leading-relaxed mb-4" style={{ color: '#e0e0e0' }}>
+              <Reveal key={i} delay={i * 0.08}>
+                <div
+                  className="rounded-2xl p-6 h-full"
+                  style={{ background: 'rgba(201,169,97,0.04)', border: '1px solid rgba(201,169,97,0.15)' }}
+                >
+                  <p className="text-sm italic leading-relaxed mb-4" style={{ color: 'rgba(255,255,255,0.75)' }}>
                     &laquo;&nbsp;{t.text}&nbsp;&raquo;
                   </p>
-                  <p className="text-xs" style={{ color: '#737373' }}>— {t.author}</p>
+                  <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>— {t.author}</p>
                 </div>
               </Reveal>
             ))}
           </div>
 
-          <Reveal delay={0.4}>
-            <div className="text-center pt-4">
-              <CtaButton position="section_4" label="FAIRE LE TEST →" large />
+          <Reveal delay={0.3}>
+            <div className="text-center">
+              <CtaButton position="section_4" label="Faire le test →" large />
             </div>
           </Reveal>
         </div>
       </section>
 
-      {/* ══════════ SECTION 5 — JULIA + LIVRE ══════════ */}
-      <section className="px-6 py-20 sm:py-28" style={{ background: 'rgba(255,255,255,0.015)' }}>
-        <div className="max-w-2xl mx-auto">
+      {/* ══════════ JULIA ══════════ */}
+      <section className="px-6 py-20 sm:py-28" style={{ background: 'rgba(201,169,97,0.025)', borderTop: '1px solid rgba(201,169,97,0.08)', borderBottom: '1px solid rgba(201,169,97,0.08)' }}>
+        <div className="max-w-lg mx-auto">
           <Reveal>
-            <p className="text-xs tracking-[0.3em] uppercase font-medium text-center mb-10" style={{ color: 'var(--brand, var(--brand))' }}>
+            <p className="text-[11px] tracking-[0.3em] uppercase font-medium text-center mb-10" style={{ color: 'var(--brand)', opacity: 0.7 }}>
               Créé par Julia Laureau
             </p>
           </Reveal>
 
           <Reveal delay={0.1}>
             <div className="flex flex-col sm:flex-row items-center gap-8 text-center sm:text-left">
-              <img src="/images/julia.jpeg" alt="Julia Laureau" className="w-24 h-24 rounded-full object-cover flex-shrink-0" />
+              <img src="/images/julia.jpeg" alt="Julia Laureau" className="w-24 h-24 rounded-full object-cover flex-shrink-0" style={{ border: '2px solid rgba(201,169,97,0.3)' }} />
               <div className="space-y-3">
-                <p className="text-sm leading-relaxed" style={{ color: '#a1a1aa' }}>
-                  Auteure du livre fondateur <strong style={{ color: '#e0e0e0' }}>&laquo;&nbsp;SOS Shine — Briller Comme un Diamant&nbsp;&raquo;</strong>.
+                <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                  Auteure du livre fondateur <strong style={{ color: 'var(--text-primary)' }}>&laquo;&nbsp;SOS Shine — Briller Comme un Diamant&nbsp;&raquo;</strong>.
                 </p>
-                <p className="text-sm leading-relaxed" style={{ color: '#a1a1aa' }}>
+                <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)' }}>
                   Ce test est l&apos;aboutissement de plusieurs années d&apos;accompagnements.
                 </p>
-                <p className="text-sm" style={{ color: 'var(--brand, var(--brand))' }}>⭐⭐⭐⭐⭐ Sur Amazon</p>
+                <p className="text-xs" style={{ color: 'var(--brand)', opacity: 0.8 }}>⭐⭐⭐⭐⭐ Sur Amazon</p>
               </div>
             </div>
           </Reveal>
         </div>
       </section>
 
-      {/* ══════════ SECTION 6 — FAQ ══════════ */}
+      {/* ══════════ FAQ ══════════ */}
       <section className="px-6 py-20 sm:py-28">
         <div className="max-w-lg mx-auto space-y-8">
           <Reveal>
-            <p className="text-xs tracking-[0.3em] uppercase font-medium text-center" style={{ color: 'var(--brand, var(--brand))' }}>
+            <p className="text-[11px] tracking-[0.3em] uppercase font-medium text-center" style={{ color: 'var(--brand)', opacity: 0.7 }}>
               Questions fréquentes
             </p>
           </Reveal>
@@ -342,7 +318,7 @@ export default function QuizLandingClient() {
             <div>
               <FaqItem question="C'est vraiment gratuit ?" answer="Oui. 100% gratuit. Aucune carte bancaire demandée." />
               <FaqItem question="Combien de temps ça prend ?" answer="Entre 3 et 5 minutes selon ton rythme." />
-              <FaqItem question="Je dois m'inscrire pour commencer ?" answer="Non. Tu peux commencer immédiatement. On te demandera ton email à la mi-test pour t'envoyer ton résultat par mail (et pour que tu puisses y revenir plus tard)." />
+              <FaqItem question="Je dois m'inscrire pour commencer ?" answer="Non. Tu peux commencer immédiatement. On te demandera ton email à mi-test pour t'envoyer ton résultat par mail." />
               <FaqItem question="Mes réponses sont confidentielles ?" answer="Oui, totalement. Aucune réponse n'est partagée avec qui que ce soit." />
               <FaqItem question="C'est de la psychologie sérieuse ?" answer="C'est basé sur des années d'accompagnements et de recherche sur les schémas émotionnels. Ce n'est pas un test scientifique validé, c'est un outil de prise de conscience." />
             </div>
@@ -350,48 +326,47 @@ export default function QuizLandingClient() {
         </div>
       </section>
 
-      {/* ══════════ SECTION 7 — CTA FINAL ══════════ */}
+      {/* ══════════ CTA FINAL ══════════ */}
       <section className="relative px-6 py-24 sm:py-32 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full opacity-[0.04] blur-[120px]" style={{ background: 'var(--brand, var(--brand))' }} />
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full opacity-[0.04] blur-[100px]" style={{ background: 'var(--brand)' }} />
         </div>
 
-        <div className="relative z-10 max-w-lg mx-auto text-center space-y-8">
+        <div className="relative z-10 max-w-sm mx-auto text-center space-y-8">
           <Reveal>
-            <h2 className="font-display text-2xl sm:text-3xl font-semibold" style={{ color: '#e0e0e0' }}>
-              Prêt(e) à te voir ?
+            <h2 className="font-sans text-[22px] sm:text-3xl font-bold leading-tight" style={{ color: 'var(--text-primary)' }}>
+              Prête à te voir ?
             </h2>
           </Reveal>
 
           <Reveal delay={0.1}>
-            <p className="text-base leading-relaxed" style={{ color: '#a1a1aa' }}>
+            <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>
               3 minutes pour découvrir une phrase qui va peut-être changer la lecture que tu as de toi-même.
             </p>
           </Reveal>
 
           <Reveal delay={0.2}>
-            <CtaButton position="footer" label="COMMENCER MAINTENANT →" large />
-          </Reveal>
-
-          <Reveal delay={0.3}>
-            <p className="text-xs" style={{ color: '#737373' }}>
-              Gratuit · Sans inscription · 3 à 5 minutes
-            </p>
+            <div className="space-y-3">
+              <CtaButton position="footer" label="Commencer maintenant →" large />
+              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.25)' }}>
+                Gratuit · Aucun engagement · Résultat immédiat
+              </p>
+            </div>
           </Reveal>
         </div>
       </section>
 
       {/* ══════════ FOOTER ══════════ */}
-      <footer className="px-6 py-10 text-center" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+      <footer className="px-6 py-10 text-center" style={{ borderTop: '1px solid rgba(201,169,97,0.08)' }}>
         <div className="flex items-center justify-center mb-4">
-          <img src="/images/logo-shine.png" alt="SOS Shine" className="h-8 opacity-50" />
+          <img src="/images/logo-shine.png" alt="SOS Shine" className="h-8 opacity-40" />
         </div>
-        <div className="flex items-center justify-center gap-4 text-xs" style={{ color: '#525252' }}>
-          <Link href="/mentions-legales" className="hover:underline">Mentions légales</Link>
+        <div className="flex items-center justify-center gap-4 text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>
+          <Link href="/mentions-legales" className="hover:opacity-60 transition-opacity">Mentions légales</Link>
           <span>·</span>
-          <Link href="/confidentialite" className="hover:underline">Confidentialité</Link>
+          <Link href="/confidentialite" className="hover:opacity-60 transition-opacity">Confidentialité</Link>
         </div>
-        <p className="text-xs mt-3" style={{ color: '#525252' }}>© 2026 SOS Shine®</p>
+        <p className="text-xs mt-3" style={{ color: 'rgba(255,255,255,0.15)' }}>© 2026 SOS Shine®</p>
       </footer>
     </main>
   )

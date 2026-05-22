@@ -499,6 +499,13 @@ export default function SignatureEmotionnellePage() {
     setCurrentQ(10)
   }, [sessionId, responseId, firstName])
 
+  // Auto-start when coming from landing CTA with ?start=1
+  useEffect(() => {
+    if (typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('start') === '1' && phase === 'intro') {
+      handleStart()
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   useEffect(() => {
     if (phase === 'result') {
       trackEvent(sessionId, responseId, 'result_page_viewed', { dominant })

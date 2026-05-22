@@ -274,10 +274,6 @@ export function ResultPage({ firstName, scores, dominant, secondary, email }: Pr
               >
                 Commencer mon protocole
               </Link>
-
-              <p className="text-center text-xs" style={{ color: 'var(--text-muted)' }}>
-                29,90€/mois · sans engagement · ou 33€ one-shot
-              </p>
             </div>
           </Beat>
         ) : (

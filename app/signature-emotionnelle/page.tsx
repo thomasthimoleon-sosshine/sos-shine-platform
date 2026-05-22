@@ -50,6 +50,9 @@ async function saveResponse(sessionId: string, responseId: string | null, data: 
 // INTRO SCREEN — no first name
 // ═══════════════════════════════════════════
 function IntroScreen({ onStart }: { onStart: () => void }) {
+  const TICKER_ITEMS = ['✨ Événement SOS Shine', '📍 Sud de la France', '📅 13 juin 2026', '🕕 18h – 21h30', '→ Réserver ma place']
+  const items3x = [...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS]
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -58,9 +61,19 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
       transition={{ duration: 0.4, ease: 'easeOut' }}
       className="min-h-screen flex flex-col items-center justify-center px-6 text-center"
     >
-      <div className="max-w-sm w-full space-y-10">
+      {/* Ticker événement */}
+      <a href="/ceremonie" className="fixed top-0 left-0 right-0 z-50 overflow-hidden" style={{ background: '#C9A961', height: '36px' }}>
+        <style>{`@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-33.333%)}}`}</style>
+        <div className="flex items-center h-full whitespace-nowrap" style={{ animation: 'ticker 22s linear infinite' }}>
+          {items3x.map((item, i) => (
+            <span key={i} className="text-xs font-semibold px-4 py-2 mx-3" style={{ color: '#000' }}>{item}</span>
+          ))}
+        </div>
+      </a>
+
+      <div className="max-w-sm w-full space-y-10 pt-9">
         <Link href="/" className="inline-block">
-          <img src="/images/logo-shine.png" alt="SOS Shine" className="h-10 mx-auto" />
+          <img src="/images/logo-shine.png" alt="SOS Shine" className="h-24 mx-auto" />
         </Link>
 
         <div className="space-y-4">
@@ -69,7 +82,7 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
             qui influence tes réactions.
           </h1>
           <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
-            15 questions · 3 minutes · résultat immédiat
+            12 questions · 3 minutes · résultat immédiat
           </p>
         </div>
 

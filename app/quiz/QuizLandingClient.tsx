@@ -249,7 +249,7 @@ export default function QuizLandingClient() {
           </Reveal>
 
           {[
-            { num: '01', title: 'Tu réponds à 15 questions.', desc: "Pas de jugement. Pas de bonne ou mauvaise réponse. Juste toi. Certaines questions vont te toucher. C'est normal." },
+            { num: '01', title: 'Tu réponds à 12 questions.', desc: "Pas de jugement. Pas de bonne ou mauvaise réponse. Juste toi. Certaines questions vont te toucher. C'est normal." },
             { num: '02', title: 'On analyse ton profil sur 10 dimensions.', desc: "Pas un seul résultat parmi 10. Une combinaison unique qui te ressemble vraiment." },
             { num: '03', title: 'Tu reçois ta Signature.', desc: "Avec un texte personnalisé qui décode ce que tu portes, d'où ça vient, et comment t'en libérer." },
           ].map((step, i) => (

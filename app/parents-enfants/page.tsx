@@ -42,7 +42,7 @@ const SECTIONS = [
   {
     icon: '✨',
     title: 'Activités bien-être en famille',
-    desc: 'Des activités à faire ensemble pour cultiver le bien-être familial. Méditations, jeux émotionnels, exercices créatifs — transformez le quotidien en moments de connexion et de joie.',
+    desc: 'Des activités à faire ensemble pour cultiver le bien-être familial. Méditations, jeux émotionnels, exercices créatifs - transformez le quotidien en moments de connexion et de joie.',
     details: [
       'Méditations parent-enfant guidées par Julia',
       'Le jeu des émotions : nommer pour apprivoiser',
@@ -53,10 +53,10 @@ const SECTIONS = [
 ]
 
 const AGES = [
-  { range: '0 – 3 ans', label: 'Petite enfance', desc: 'Attachement, régulation co-créée, sécurité de base' },
-  { range: '3 – 6 ans', label: 'Éveil émotionnel', desc: 'Tempêtes émotionnelles, socialisation, autonomie naissante' },
-  { range: '6 – 12 ans', label: 'Âge de raison', desc: 'Confiance en soi, gestion des conflits, harcèlement scolaire' },
-  { range: '12 – 18 ans', label: 'Adolescence', desc: 'Identité, séparation, communication, estime de soi' },
+  { range: '0 - 3 ans', label: 'Petite enfance', desc: 'Attachement, régulation co-créée, sécurité de base' },
+  { range: '3 - 6 ans', label: 'Éveil émotionnel', desc: 'Tempêtes émotionnelles, socialisation, autonomie naissante' },
+  { range: '6 - 12 ans', label: 'Âge de raison', desc: 'Confiance en soi, gestion des conflits, harcèlement scolaire' },
+  { range: '12 - 18 ans', label: 'Adolescence', desc: 'Identité, séparation, communication, estime de soi' },
 ]
 
 function Reveal({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
@@ -153,7 +153,7 @@ export default function ParentsEnfantsPage() {
             <p className="font-display text-xl md:text-2xl font-light italic leading-relaxed mb-4 text-[var(--text-primary)]">
               &ldquo;Un enfant qui se sent compris n&apos;a plus besoin de crier pour être entendu.&rdquo;
             </p>
-            <p className="text-sm text-[var(--brand)]">— Julia Laureau</p>
+            <p className="text-sm text-[var(--brand)]">- Julia Laureau</p>
           </div>
         </Reveal>
       </section>
@@ -236,7 +236,7 @@ export default function ParentsEnfantsPage() {
                   style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
                   <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-sm font-semibold mx-auto mb-4"
                     style={{ background: 'rgba(201,169,97,0.08)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.12)' }}>
-                    {a.range.split('–')[0].trim()}
+                    {a.range.split('-')[0].trim()}
                   </div>
                   <h3 className="font-display text-base font-semibold mb-1 text-[var(--text-primary)]">{a.label}</h3>
                   <p className="text-xs text-[var(--brand)]">{a.range}</p>

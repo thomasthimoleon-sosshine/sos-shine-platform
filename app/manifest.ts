@@ -17,7 +17,7 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
   return {
     name: 'SOS Shine',
     short_name: 'SOS Shine',
-    description: 'Votre sanctuaire — Accompagnement corps, émotion, action.',
+    description: 'Votre sanctuaire - Accompagnement corps, émotion, action.',
     start_url: '/dashboard',
     display: 'standalone',
     background_color: '#362038',

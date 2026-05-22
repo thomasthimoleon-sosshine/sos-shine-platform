@@ -1,5 +1,5 @@
 /**
- * SOS Shine — Quiz V2 Questions
+ * SOS Shine - Quiz V2 Questions
  * 15 questions across 3 phases, closed answers only
  */
 
@@ -36,7 +36,7 @@ export type Question = {
 
 export const QUESTIONS: Question[] = [
   // ══════════════════════════════════════════
-  // PHASE 1 — DIAGNOSTIC (Q1-Q5)
+  // PHASE 1 - DIAGNOSTIC (Q1-Q5)
   // ══════════════════════════════════════════
   {
     id: 1,
@@ -53,9 +53,9 @@ export const QUESTIONS: Question[] = [
       'Bouger pour ne pas sentir.',
     ],
     choices: [
-      { emoji: '🧠', text: 'J\'analyse — comprendre aide à tenir', scores: { '1': 3, '5': 1, '7': 1 } },
+      { emoji: '🧠', text: 'J\'analyse - comprendre aide à tenir', scores: { '1': 3, '5': 1, '7': 1 } },
       { emoji: '🎭', text: 'Je fais comme si tout allait bien', scores: { '4': 3, '6': 2 } },
-      { emoji: '🌊', text: 'Je m\'effondre — les émotions débordent', scores: { '10': 2, '3': 1, '8': 1 } },
+      { emoji: '🌊', text: 'Je m\'effondre - les émotions débordent', scores: { '10': 2, '3': 1, '8': 1 } },
       { emoji: '🚪', text: 'Je m\'isole pour gérer seul(e)', scores: { '4': 3, '7': 1 } },
       { emoji: '⚡', text: 'Je me jette dans l\'action', scores: { '2': 3, '5': 1 } },
     ],
@@ -75,7 +75,7 @@ export const QUESTIONS: Question[] = [
     ],
     choices: [
       { emoji: '⚡', text: 'Gérer les tensions et les conflits autour de moi', scores: { '9': 2, '6': 1 } },
-      { emoji: '👁', text: 'Toujours anticiper — être en alerte permanente', scores: { '7': 3, '1': 2 } },
+      { emoji: '👁', text: 'Toujours anticiper - être en alerte permanente', scores: { '7': 3, '1': 2 } },
       { emoji: '🔄', text: 'Ne pas contrôler ce qui se passe autour de moi', scores: { '5': 2, '9': 1 } },
       { emoji: '🏋️', text: 'Tout porter seul(e) sans pouvoir demander de l\'aide', scores: { '4': 2, '2': 1 } },
       { emoji: '😶', text: 'Avoir l\'impression que rien ne changera jamais', scores: { '7': 3, '10': 1, '8': 1 } },
@@ -105,7 +105,7 @@ export const QUESTIONS: Question[] = [
     question: 'Tu es en conflit avec quelqu\'un. Comment tu gères ?',
     hasOther: false,
     microReveal: [
-      'La paix avant tout — même au prix de toi-même.',
+      'La paix avant tout - même au prix de toi-même.',
       'La logique comme bouclier contre la douleur.',
       'L\'intensité prend le dessus avant que tu puisses l\'arrêter.',
       'Disparaître vaut mieux qu\'affronter.',
@@ -115,7 +115,7 @@ export const QUESTIONS: Question[] = [
       { emoji: '🕊', text: 'Je cède pour que ça s\'arrête', scores: { '6': 3, '4': 2 } },
       { emoji: '🧩', text: 'Je cherche la solution logique qui arrange tout le monde', scores: { '6': 2, '7': 1, '5': 1 } },
       { emoji: '💥', text: 'Je réagis fort sur le moment, puis je regrette', scores: { '10': 1, '8': 1 } },
-      { emoji: '💨', text: 'Je disparais — mentalement ou physiquement', scores: { '6': 3, '9': 1 } },
+      { emoji: '💨', text: 'Je disparais - mentalement ou physiquement', scores: { '6': 3, '9': 1 } },
       { emoji: '🫶', text: 'Je prends soin de l\'autre même si c\'est moi qui suis blessé(e)', scores: { '3': 3, '9': 1 } },
     ],
   },
@@ -129,7 +129,7 @@ export const QUESTIONS: Question[] = [
     choices: [
       { emoji: '💔', text: 'Sentir que quelqu\'un est déçu de moi', scores: { '3': 2, '9': 1 } },
       { emoji: '⚡', text: 'Les conflits et les tensions autour de moi', scores: { '9': 2, '6': 2 } },
-      { emoji: '❓', text: 'L\'incertitude — ne pas savoir ce qui va se passer', scores: { '7': 3, '1': 1 } },
+      { emoji: '❓', text: 'L\'incertitude - ne pas savoir ce qui va se passer', scores: { '7': 3, '1': 1 } },
       { emoji: '🚫', text: 'Devoir dire non ou décevoir les autres', scores: { '3': 3, '6': 1 } },
       { emoji: '🌀', text: 'Perdre le contrôle d\'une situation', scores: { '5': 3, '1': 1 } },
       { emoji: '👁', text: 'Être jugé(e) ou critiqué(e)', scores: { '6': 3, '9': 1 } },
@@ -137,7 +137,7 @@ export const QUESTIONS: Question[] = [
   },
 
   // ══════════════════════════════════════════
-  // PHASE 2 — RECONNAISSANCE (Q6-Q10)
+  // PHASE 2 - RECONNAISSANCE (Q6-Q10)
   // ══════════════════════════════════════════
   {
     id: 6,
@@ -155,7 +155,7 @@ export const QUESTIONS: Question[] = [
     ],
     choices: [
       { emoji: '🫧', text: 'Me sentir seul(e) même quand je suis entouré(e)', scores: { '10': 2, '9': 1 } },
-      { emoji: '🔋', text: 'Ne jamais vraiment me détendre — toujours en tension', scores: { '1': 2, '5': 2, '7': 1 } },
+      { emoji: '🔋', text: 'Ne jamais vraiment me détendre - toujours en tension', scores: { '1': 2, '5': 2, '7': 1 } },
       { emoji: '🌑', text: 'Ne pas être à la hauteur de ce que je pourrais être', scores: { '8': 3, '10': 1 } },
       { emoji: '⚖️', text: 'Ne jamais savoir si je fais les bons choix', scores: { '7': 2, '1': 2 } },
       { emoji: '🌊', text: 'Devoir toujours m\'adapter aux attentes des autres', scores: { '6': 2, '4': 2 } },
@@ -176,7 +176,7 @@ export const QUESTIONS: Question[] = [
       'Vivre pour le regard des autres.',
     ],
     choices: [
-      { emoji: '🫀', text: 'La peur de mal faire — je préfère ne pas commencer', scores: { '1': 2, '5': 2, '9': 1 } },
+      { emoji: '🫀', text: 'La peur de mal faire - je préfère ne pas commencer', scores: { '1': 2, '5': 2, '9': 1 } },
       { emoji: '🏔', text: 'La conviction que je dois y arriver seul(e)', scores: { '4': 3, '9': 1 } },
       { emoji: '🌪', text: 'Je m\'épuise en action pour ne pas avoir à ressentir', scores: { '2': 3, '4': 1 } },
       { emoji: '❄️', text: 'L\'intensité de ce que je ressens me paralyse', scores: { '10': 2, '5': 1 } },
@@ -191,20 +191,20 @@ export const QUESTIONS: Question[] = [
     question: 'Quand tout s\'effondre, tu…',
     hasOther: false,
     microReveal: [
-      'La vulnérabilité comme danger — l\'isolation comme protection.',
+      'La vulnérabilité comme danger - l\'isolation comme protection.',
       'Comprendre pour ne pas être submergé(e).',
       'Le pire comme seul scénario possible.',
       'Reprendre la main coûte que coûte.',
-      'Les émotions prennent tout — il ne reste plus rien d\'autre.',
+      'Les émotions prennent tout - il ne reste plus rien d\'autre.',
       'Tenir la façade pour que personne ne voie.',
     ],
     choices: [
-      { emoji: '🚪', text: 'Tu t\'isoles et tu gères seul(e) — montrer ta faiblesse est hors de question', scores: { '4': 2, '7': 2 } },
-      { emoji: '🔍', text: 'Tu analyses tout pour comprendre — comme si comprendre pouvait arrêter la douleur', scores: { '7': 3, '1': 1, '8': 1 } },
-      { emoji: '🌩', text: 'Tu imagines le pire — ta tête part dans tous les scénarios catastrophiques', scores: { '8': 2, '7': 1, '10': 1 } },
-      { emoji: '⚙️', text: 'Tu reprends le contrôle — listes, action, organisation', scores: { '4': 3, '5': 1 } },
-      { emoji: '🌊', text: 'Tu lâches tout — les émotions te submergent complètement', scores: { '10': 3, '8': 1 } },
-      { emoji: '🎭', text: 'Tu fais comme si rien n\'était — tu souris pour les autres', scores: { '6': 2, '4': 2 } },
+      { emoji: '🚪', text: 'Tu t\'isoles et tu gères seul(e) - montrer ta faiblesse est hors de question', scores: { '4': 2, '7': 2 } },
+      { emoji: '🔍', text: 'Tu analyses tout pour comprendre - comme si comprendre pouvait arrêter la douleur', scores: { '7': 3, '1': 1, '8': 1 } },
+      { emoji: '🌩', text: 'Tu imagines le pire - ta tête part dans tous les scénarios catastrophiques', scores: { '8': 2, '7': 1, '10': 1 } },
+      { emoji: '⚙️', text: 'Tu reprends le contrôle - listes, action, organisation', scores: { '4': 3, '5': 1 } },
+      { emoji: '🌊', text: 'Tu lâches tout - les émotions te submergent complètement', scores: { '10': 3, '8': 1 } },
+      { emoji: '🎭', text: 'Tu fais comme si rien n\'était - tu souris pour les autres', scores: { '6': 2, '4': 2 } },
     ],
   },
   {
@@ -222,12 +222,12 @@ export const QUESTIONS: Question[] = [
       'L\'intensité comme preuve d\'être en vie.',
     ],
     choices: [
-      { emoji: '✨', text: 'Comprendre quelque chose en profondeur — une vérité qui clique', scores: { '1': 3, '7': 2 } },
+      { emoji: '✨', text: 'Comprendre quelque chose en profondeur - une vérité qui clique', scores: { '1': 3, '7': 2 } },
       { emoji: '🌱', text: 'Être vraiment utile pour quelqu\'un', scores: { '3': 2, '4': 2 } },
       { emoji: '🗺️', text: 'Avoir tout planifié et maîtrisé', scores: { '7': 2, '8': 2 } },
       { emoji: '🌸', text: 'Être reconnu(e) et apprécié(e) pour ce que je fais', scores: { '6': 3, '4': 1 } },
       { emoji: '🏆', text: 'Réussir quelque chose par mes propres moyens', scores: { '4': 3, '5': 1 } },
-      { emoji: '🔥', text: 'Les moments d\'intensité — quand je me sens pleinement présent(e)', scores: { '8': 2, '10': 2 } },
+      { emoji: '🔥', text: 'Les moments d\'intensité - quand je me sens pleinement présent(e)', scores: { '8': 2, '10': 2 } },
     ],
   },
   {
@@ -249,13 +249,13 @@ export const QUESTIONS: Question[] = [
       { emoji: '💔', text: 'Décevoir les personnes que tu aimes', scores: { '3': 3, '6': 1 } },
       { emoji: '🌫', text: 'Ne pas comprendre ce qui se passe vraiment', scores: { '1': 3, '7': 1 } },
       { emoji: '🛡', text: 'Paraître faible ou dans le besoin aux yeux des autres', scores: { '6': 2, '4': 2 } },
-      { emoji: '⚡', text: 'Rester immobile — tu préfères l\'action même inutile', scores: { '2': 2, '5': 2 } },
+      { emoji: '⚡', text: 'Rester immobile - tu préfères l\'action même inutile', scores: { '2': 2, '5': 2 } },
       { emoji: '🪞', text: 'Ne pas être à la hauteur de l\'image que les autres ont de toi', scores: { '6': 3, '8': 1 } },
     ],
   },
 
   // ══════════════════════════════════════════
-  // PHASE 3 — INTÉGRATION (Q11-Q15)
+  // PHASE 3 - INTÉGRATION (Q11-Q15)
   // ══════════════════════════════════════════
   {
     id: 11,
@@ -270,15 +270,15 @@ export const QUESTIONS: Question[] = [
       'L\'action comme seule sortie acceptable.',
       'S\'effacer pour ne pas déranger.',
       'La maîtrise comme identité.',
-      'Tout ou rien — jamais dans l\'entre-deux.',
+      'Tout ou rien - jamais dans l\'entre-deux.',
     ],
     choices: [
-      { emoji: '🔒', text: 'Je les garde pour moi — les exprimer me rend vulnérable', scores: { '9': 2, '7': 1 } },
-      { emoji: '🧠', text: 'J\'analyse avant de ressentir — ma tête passe avant mon cœur', scores: { '7': 2, '8': 1 } },
-      { emoji: '⚡', text: 'Je les transforme en énergie — je bouge, j\'agis, je fais', scores: { '2': 1, '4': 1, '5': 1 } },
+      { emoji: '🔒', text: 'Je les garde pour moi - les exprimer me rend vulnérable', scores: { '9': 2, '7': 1 } },
+      { emoji: '🧠', text: 'J\'analyse avant de ressentir - ma tête passe avant mon cœur', scores: { '7': 2, '8': 1 } },
+      { emoji: '⚡', text: 'Je les transforme en énergie - je bouge, j\'agis, je fais', scores: { '2': 1, '4': 1, '5': 1 } },
       { emoji: '🫶', text: 'Les émotions des autres passent avant les miennes', scores: { '6': 2, '7': 1 } },
-      { emoji: '🎯', text: 'Je les contrôle — montrer ses émotions c\'est perdre le contrôle', scores: { '1': 1, '5': 2 } },
-      { emoji: '🌋', text: 'Tout ou rien — jamais dans la nuance', scores: { '8': 3, '10': 1 } },
+      { emoji: '🎯', text: 'Je les contrôle - montrer ses émotions c\'est perdre le contrôle', scores: { '1': 1, '5': 2 } },
+      { emoji: '🌋', text: 'Tout ou rien - jamais dans la nuance', scores: { '8': 3, '10': 1 } },
     ],
   },
   {
@@ -292,7 +292,7 @@ export const QUESTIONS: Question[] = [
       'Ne pas être une charge pour les autres.',
       'L\'harmonie comme condition de survie.',
       'L\'autonomie comme droit fondamental.',
-      'Être vu(e) vraiment — pas le masque.',
+      'Être vu(e) vraiment - pas le masque.',
       'La présence dans les moments qui comptent.',
     ],
     choices: [
@@ -315,15 +315,15 @@ export const QUESTIONS: Question[] = [
       'L\'instinct même quand ça dérange.',
       'Éviter de froisser quelqu\'un.',
       'Anticiper chaque risque avant de se lancer.',
-      'Seul(e) — les avis compliquent.',
+      'Seul(e) - les avis compliquent.',
       'La perfection comme seule option acceptable.',
     ],
     choices: [
-      { emoji: '⏳', text: 'J\'attends d\'être sûr(e) — décider trop vite m\'angoisse', scores: { '4': 2, '6': 2 } },
+      { emoji: '⏳', text: 'J\'attends d\'être sûr(e) - décider trop vite m\'angoisse', scores: { '4': 2, '6': 2 } },
       { emoji: '⚡', text: 'Je décide vite et fort même si ça choque', scores: { '4': 2, '6': 1, '10': 1 } },
       { emoji: '🌐', text: 'Je consulte tout le monde pour ne froisser personne', scores: { '9': 2, '6': 2 } },
       { emoji: '🔭', text: 'J\'anticipe tous les risques possibles avant de me lancer', scores: { '4': 2, '6': 1, '7': 1 } },
-      { emoji: '🔑', text: 'Je décide seul(e) — les avis des autres me compliquent', scores: { '4': 2, '6': 2 } },
+      { emoji: '🔑', text: 'Je décide seul(e) - les avis des autres me compliquent', scores: { '4': 2, '6': 2 } },
       { emoji: '🔬', text: 'J\'analyse longtemps pour trouver la solution parfaite', scores: { '6': 2, '1': 1, '5': 1 } },
     ],
   },
@@ -342,12 +342,12 @@ export const QUESTIONS: Question[] = [
       'Le poids de porter les autres sans jamais le dire.',
     ],
     choices: [
-      { emoji: '🌙', text: 'Tes rêves les plus fous — trop grands pour les partager', scores: { '8': 1 } },
+      { emoji: '🌙', text: 'Tes rêves les plus fous - trop grands pour les partager', scores: { '8': 1 } },
       { emoji: '🌑', text: 'Tes peurs les plus profondes', scores: { '8': 2, '7': 1 } },
-      { emoji: '🗝', text: 'Tes vraies opinions — tu les gardes pour éviter les conflits', scores: { '6': 2, '1': 1 } },
-      { emoji: '💊', text: 'Tes blessures passées — tu préfères ne pas les rouvrir', scores: { '8': 2, '10': 1 } },
-      { emoji: '🌊', text: 'L\'intensité de ce que tu ressens — personne ne comprendrait', scores: { '10': 2, '8': 1 } },
-      { emoji: '🏋️', text: 'À quel point tu portes les autres — tu n\'en parles jamais', scores: { '10': 2, '4': 1, '3': 1 } },
+      { emoji: '🗝', text: 'Tes vraies opinions - tu les gardes pour éviter les conflits', scores: { '6': 2, '1': 1 } },
+      { emoji: '💊', text: 'Tes blessures passées - tu préfères ne pas les rouvrir', scores: { '8': 2, '10': 1 } },
+      { emoji: '🌊', text: 'L\'intensité de ce que tu ressens - personne ne comprendrait', scores: { '10': 2, '8': 1 } },
+      { emoji: '🏋️', text: 'À quel point tu portes les autres - tu n\'en parles jamais', scores: { '10': 2, '4': 1, '3': 1 } },
     ],
   },
   {
@@ -358,19 +358,19 @@ export const QUESTIONS: Question[] = [
     hasOther: false,
     microReveal: [
       'La vérité comme seul horizon.',
-      'Toujours prêt(e) — jamais vraiment en sécurité.',
+      'Toujours prêt(e) - jamais vraiment en sécurité.',
       'Donner comme façon d\'exister.',
       'Maîtriser pour ne pas avoir peur.',
       'S\'adapter comme seule façon de rester.',
-      'Ressentir fort — c\'est la façon d\'être vivant(e).',
+      'Ressentir fort - c\'est la façon d\'être vivant(e).',
     ],
     choices: [
-      { emoji: '🔍', text: 'Comprendre les choses en profondeur — la vérité avant tout', scores: { '1': 3 } },
-      { emoji: '🛡', text: 'Être toujours prêt(e) — anticiper pour ne jamais être pris(e) au dépourvu', scores: { '7': 2, '8': 2 } },
-      { emoji: '🌸', text: 'Prendre soin des autres — même quand tu oublies de prendre soin de toi', scores: { '3': 3, '4': 1 } },
-      { emoji: '⚙️', text: 'Maîtriser ta vie — chaque détail, chaque plan', scores: { '5': 3, '1': 1 } },
-      { emoji: '🌊', text: 'T\'adapter à tout et à tous — être ce dont les autres ont besoin', scores: { '6': 3, '4': 1 } },
-      { emoji: '⚡', text: 'Ressentir fort — les hauts très hauts, les bas très bas', scores: { '7': 3, '8': 1 } },
+      { emoji: '🔍', text: 'Comprendre les choses en profondeur - la vérité avant tout', scores: { '1': 3 } },
+      { emoji: '🛡', text: 'Être toujours prêt(e) - anticiper pour ne jamais être pris(e) au dépourvu', scores: { '7': 2, '8': 2 } },
+      { emoji: '🌸', text: 'Prendre soin des autres - même quand tu oublies de prendre soin de toi', scores: { '3': 3, '4': 1 } },
+      { emoji: '⚙️', text: 'Maîtriser ta vie - chaque détail, chaque plan', scores: { '5': 3, '1': 1 } },
+      { emoji: '🌊', text: 'T\'adapter à tout et à tous - être ce dont les autres ont besoin', scores: { '6': 3, '4': 1 } },
+      { emoji: '⚡', text: 'Ressentir fort - les hauts très hauts, les bas très bas', scores: { '7': 3, '8': 1 } },
     ],
   },
 ]

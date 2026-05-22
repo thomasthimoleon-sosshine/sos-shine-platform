@@ -1,7 +1,7 @@
 import type { Question } from './types'
 
 export const QUESTIONS: Question[] = [
-  // ─── PHASE 1 — Entrée émotionnelle & cognitive ───
+  // ─── PHASE 1 - Entrée émotionnelle & cognitive ───
   {
     id: 'Q1',
     phase: 1,
@@ -219,7 +219,7 @@ export const QUESTIONS: Question[] = [
     ],
   },
 
-  // ─── PHASE 2 — Relations, parents, attachement ───
+  // ─── PHASE 2 - Relations, parents, attachement ───
   {
     id: 'Q9',
     phase: 2,
@@ -437,7 +437,7 @@ export const QUESTIONS: Question[] = [
     ],
   },
 
-  // ─── PHASE 3 — Corps, somatique, terrain physique ───
+  // ─── PHASE 3 - Corps, somatique, terrain physique ───
   {
     id: 'Q17',
     phase: 3,
@@ -655,7 +655,7 @@ export const QUESTIONS: Question[] = [
     ],
   },
 
-  // ─── PHASE 4 — Mental, croyances, conditionnements ───
+  // ─── PHASE 4 - Mental, croyances, conditionnements ───
   {
     id: 'Q25',
     phase: 4,
@@ -873,7 +873,7 @@ export const QUESTIONS: Question[] = [
     ],
   },
 
-  // ─── PHASE 5 — Spirituel, énergétique, projection ───
+  // ─── PHASE 5 - Spirituel, énergétique, projection ───
   {
     id: 'Q33',
     phase: 5,

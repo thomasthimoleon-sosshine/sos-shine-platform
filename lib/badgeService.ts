@@ -1,5 +1,5 @@
 /**
- * SOS Shine — Badge Service
+ * SOS Shine - Badge Service
  * Event-driven badge unlocking based on action counters and badgesConfig.json
  */
 

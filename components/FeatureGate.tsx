@@ -8,7 +8,7 @@ import { createClient } from '@/lib/supabase/client'
 import SubscriptionModal from './SubscriptionModal'
 import type { PlanId } from '@/lib/stripe/config'
 
-// Features GRATUITES — accessibles à tous les membres inscrits (même sans abonnement)
+// Features GRATUITES - accessibles à tous les membres inscrits (même sans abonnement)
 export const FREE_FEATURES = new Set<string>([
   'communaute',
   'mur',
@@ -90,7 +90,7 @@ export default function FeatureGate({ children, featureKey, loadingText }: Featu
     )
   }
 
-  // Free features — always accessible to any authenticated user
+  // Free features - always accessible to any authenticated user
   if (FREE_FEATURES.has(featureKey)) {
     return <>{children}</>
   }

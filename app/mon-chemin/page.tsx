@@ -91,7 +91,7 @@ function MonCheminContent() {
         }
       }
 
-      // No protocol found — if user is authenticated, go to dashboard instead of forcing the quiz again
+      // No protocol found - if user is authenticated, go to dashboard instead of forcing the quiz again
       router.replace(uid ? '/dashboard' : '/signature-emotionnelle')
     }
     init()

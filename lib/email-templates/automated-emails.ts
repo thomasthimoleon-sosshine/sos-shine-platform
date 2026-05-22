@@ -1,5 +1,5 @@
 // =============================================
-// SOS SHINE® — Service d'emails automatiques
+// SOS SHINE® - Service d'emails automatiques
 // 23 templates éditables depuis le BackOffice
 // =============================================
 

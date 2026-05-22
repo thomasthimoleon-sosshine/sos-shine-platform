@@ -1,5 +1,5 @@
 /**
- * Email 11 — Le cerveau adore attendre (J+9)
+ * Email 11 - Le cerveau adore attendre (J+9)
  */
 import { wrapEmail, p, ctaButton, signature } from './wrapper'
 

@@ -1,5 +1,5 @@
 /**
- * Email 9 — Combien vaut le fait de respirer enfin (J+7)
+ * Email 9 - Combien vaut le fait de respirer enfin (J+7)
  */
 import { wrapEmail, p, ctaButton, signature } from './wrapper'
 

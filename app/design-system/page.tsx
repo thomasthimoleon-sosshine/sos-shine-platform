@@ -50,10 +50,10 @@ export default function DesignSystemPage() {
     <main className="min-h-screen p-6 md:p-12 space-y-12" style={{ background: 'var(--surface)' }}>
       <div>
         <h1 className="font-display text-3xl font-semibold text-[var(--brand)]">
-          Design System — SOS Shine
+          Design System - SOS Shine
         </h1>
         <p className="text-sm text-[var(--text-muted)] mt-1">
-          Phase 2 showcase — 9 composants, tous variants
+          Phase 2 showcase - 9 composants, tous variants
         </p>
       </div>
 
@@ -91,19 +91,19 @@ export default function DesignSystemPage() {
       <Section title="Card">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
           <Card variant="elevated">
-            <CardHeader>Elevated — Header md</CardHeader>
+            <CardHeader>Elevated - Header md</CardHeader>
             <CardContent>Contenu avec padding md (24px)</CardContent>
           </Card>
           <Card variant="ghost">
-            <CardHeader size="sm">Flat — Header sm</CardHeader>
+            <CardHeader size="sm">Flat - Header sm</CardHeader>
             <CardContent size="sm">Contenu avec padding sm (16px)</CardContent>
           </Card>
           <Card variant="elevated">
-            <CardHeader size="lg">Elevated — Header lg</CardHeader>
+            <CardHeader size="lg">Elevated - Header lg</CardHeader>
             <CardContent size="lg">Contenu avec padding lg (32px)</CardContent>
           </Card>
           <Card variant="ghost" className="p-6">
-            <p className="text-sm text-[var(--text-secondary)]">Flat — sans header, padding libre</p>
+            <p className="text-sm text-[var(--text-secondary)]">Flat - sans header, padding libre</p>
           </Card>
         </div>
       </Section>
@@ -128,9 +128,9 @@ export default function DesignSystemPage() {
             </Button>
           ))}
         </Row>
-        <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={`Modal — ${modalSize}`} size={modalSize}>
+        <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={`Modal - ${modalSize}`} size={modalSize}>
           <p className="text-sm text-[var(--text-secondary)] mb-4">
-            Focus trap actif. Essayez Tab — le focus reste dans la modal.
+            Focus trap actif. Essayez Tab - le focus reste dans la modal.
           </p>
           <div className="flex gap-3">
             <Button variant="primary" size="sm" onClick={() => setModalOpen(false)}>Confirmer</Button>
@@ -160,10 +160,10 @@ export default function DesignSystemPage() {
       <Section title="Tooltip">
         <Row label="Positions">
           <Tooltip content="Je suis en haut" position="top">
-            <Button variant="secondary" size="sm">Hover — Top</Button>
+            <Button variant="secondary" size="sm">Hover - Top</Button>
           </Tooltip>
           <Tooltip content="Je suis en bas" position="bottom">
-            <Button variant="secondary" size="sm">Hover — Bottom</Button>
+            <Button variant="secondary" size="sm">Hover - Bottom</Button>
           </Tooltip>
         </Row>
       </Section>
@@ -198,7 +198,7 @@ export default function DesignSystemPage() {
       </Section>
 
       {/* ══════════ TOKENS ══════════ */}
-      <Section title="Couleurs — Tokens">
+      <Section title="Couleurs - Tokens">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl">
           {[
             { name: '--brand', label: 'Brand' },
@@ -225,7 +225,7 @@ export default function DesignSystemPage() {
       </Section>
 
       <p className="text-sm text-[var(--text-muted)] pt-8 border-t border-[var(--border)]">
-        Page jetable — Phase 2 showcase. À supprimer après Phase 3.
+        Page jetable - Phase 2 showcase. À supprimer après Phase 3.
       </p>
     </main>
   )

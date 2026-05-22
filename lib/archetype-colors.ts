@@ -1,6 +1,6 @@
 /**
- * SOS Shine — Archetype Colors
- * Separated from the design system — used only in the Signature Émotionnelle quiz.
+ * SOS Shine - Archetype Colors
+ * Separated from the design system - used only in the Signature Émotionnelle quiz.
  * All colors pass WCAG AA contrast on --surface (#050505).
  */
 

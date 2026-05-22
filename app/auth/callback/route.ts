@@ -57,7 +57,7 @@ export async function GET(request: Request) {
             .maybeSingle()
 
           if (!existingProfile) {
-            // Only create profile if it doesn't exist — never overwrite existing data
+            // Only create profile if it doesn't exist - never overwrite existing data
             await admin.from('profiles').insert({
               id: user.id,
               prenom,

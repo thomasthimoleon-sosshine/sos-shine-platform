@@ -1,5 +1,5 @@
 /**
- * SOS Shine — Export du journal intime en PDF
+ * SOS Shine - Export du journal intime en PDF
  * Permet aux membres d'exporter leur journal personnel.
  */
 
@@ -36,7 +36,7 @@ export interface JournalEntry {
 
 export async function generateJournalPDF(data: JournalExportData): Promise<Uint8Array> {
   const { doc, fontRegular, fontBold } = await createDocument(
-    `Journal Intime — ${data.memberName} — SOS Shine`
+    `Journal Intime - ${data.memberName} - SOS Shine`
   )
 
   let page = addPage(doc)
@@ -185,7 +185,7 @@ export async function generateJournalPDF(data: JournalExportData): Promise<Uint8
     color: COLORS.gold,
   })
   y -= 14
-  page.drawText('— Julia Laureau, SOS Shine', {
+  page.drawText('- Julia Laureau, SOS Shine', {
     x: PAGE.marginLeft + 140,
     y,
     size: 8,

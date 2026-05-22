@@ -319,7 +319,7 @@ export default function TarifsPage() {
         >
           <div className="p-6 text-center border-b border-[var(--border)]">
             <h2 className="font-display text-xl font-semibold text-[var(--text-primary)]">
-              {PLAN_INFO[checkoutPlan.plan].name} — {DURATIONS.find(d => d.id === checkoutPlan.duration)?.label}
+              {PLAN_INFO[checkoutPlan.plan].name} - {DURATIONS.find(d => d.id === checkoutPlan.duration)?.label}
             </h2>
             <p className="text-sm mt-1 text-[var(--text-secondary)]">
               {formatPrice(PRICES[checkoutPlan.plan][checkoutPlan.duration])}/mois
@@ -571,7 +571,7 @@ export default function TarifsPage() {
                       boxShadow: isHighlight ? `0 4px 20px rgba(${hexToRgb(color)}, 0.25)` : undefined,
                     }}
                   >
-                    {info.hasTrial ? 'Essayer gratuitement — 7 jours' : 'Commencer maintenant'}
+                    {info.hasTrial ? 'Essayer gratuitement - 7 jours' : 'Commencer maintenant'}
                   </button>
                 </div>
               </motion.div>

@@ -412,7 +412,7 @@ export default function Home() {
           </header>
         )}
 
-      {/* ═══ HERO — Word by word reveal ═══ */}
+      {/* ═══ HERO - Word by word reveal ═══ */}
       {vis('hero') && (
         <motion.section ref={heroRef} className="relative min-h-screen flex items-center pt-24" style={{ opacity: heroOpacity, scale: heroScale }}>
           <div className="absolute inset-0 pointer-events-none">
@@ -545,7 +545,7 @@ export default function Home() {
                   <Link key={i} href={btn.href === '/signup' || btn.href === '/login' ? '/signup' : btn.href}>
                     {btn.variant === 'primary' ? (
                       <button className="magnetic-btn pulse-ring px-8 py-4 rounded-full text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}>
-                        {btn.label} — {trialDays} jours d&apos;essai
+                        {btn.label} - {trialDays} jours d&apos;essai
                       </button>
                     ) : (
                       <button className="magnetic-btn px-8 py-4 rounded-full text-base font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.3)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
@@ -612,7 +612,7 @@ export default function Home() {
         </section>
       )}
 
-      {/* ═══ LES ETAPES — Glowing Cards ═══ */}
+      {/* ═══ LES ETAPES - Glowing Cards ═══ */}
       {vis('steps') && (
         <section className="px-6 md:px-20 py-32 relative">
           <div className="max-w-6xl mx-auto">
@@ -820,7 +820,7 @@ export default function Home() {
                       <div className="w-56 md:w-64 rounded-lg overflow-hidden border border-[var(--brand)]/20 group-hover:border-[var(--brand)]/60 transition-all duration-500 shadow-lg group-hover:shadow-[0_0_30px_rgba(212,175,55,0.2)]">
                         <img
                           src={hist.book_image || '/images/book-cover.jpeg'}
-                          alt="SOS Shine — Briller Comme un Diamant"
+                          alt="SOS Shine - Briller Comme un Diamant"
                           className="w-full aspect-[3/4] object-cover"
                         />
                       </div>

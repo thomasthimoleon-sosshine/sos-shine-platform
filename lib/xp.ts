@@ -1,6 +1,6 @@
 /**
- * SOS Shine — XP & Levels Engine V2
- * Exponential level thresholds — max Diamant = 1,000,000 XP
+ * SOS Shine - XP & Levels Engine V2
+ * Exponential level thresholds - max Diamant = 1,000,000 XP
  * Cooperation model: the GIVER gets XP, not the receiver.
  */
 

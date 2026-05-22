@@ -30,11 +30,11 @@ const FAQ_DATA: { keywords: string[]; answer: string }[] = [
   },
   {
     keywords: ['julia', 'fondatrice', 'fondateur', 'créateur', 'qui'],
-    answer: "SOS Shine a été fondé par Julia Laureau, auteure du livre \"SOS Shine — Briller Comme un Diamant\" et spécialiste du déconditionnement émotionnel. Elle est accompagnée de Wiliam et Thomas, co-fondateurs passionnés. 💫",
+    answer: "SOS Shine a été fondé par Julia Laureau, auteure du livre \"SOS Shine - Briller Comme un Diamant\" et spécialiste du déconditionnement émotionnel. Elle est accompagnée de Wiliam et Thomas, co-fondateurs passionnés. 💫",
   },
   {
     keywords: ['livre', 'bouquin', 'ouvrage', 'amazon'],
-    answer: "Le livre \"SOS Shine — Briller Comme un Diamant\" de Julia Laureau est disponible sur Amazon. C'est un programme interactif de déconditionnement émotionnel avec vidéos explicatives et exercices pratiques. C'est de là que tout est parti ! 📚",
+    answer: "Le livre \"SOS Shine - Briller Comme un Diamant\" de Julia Laureau est disponible sur Amazon. C'est un programme interactif de déconditionnement émotionnel avec vidéos explicatives et exercices pratiques. C'est de là que tout est parti ! 📚",
   },
   {
     keywords: ['groupe', 'parole', 'communauté', 'communaute', 'forum', 'échanger', 'echanger'],

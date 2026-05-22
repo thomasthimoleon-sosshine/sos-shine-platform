@@ -1,7 +1,7 @@
-// DEPRECATED — Conservé pour archive. Remplacé par génération via Claude API à venir.
+// DEPRECATED - Conservé pour archive. Remplacé par génération via Claude API à venir.
 
 /**
- * SOS Shine — Quiz V2 Archetype Layer
+ * SOS Shine - Quiz V2 Archetype Layer
  *
  * 25 emotional archetypes as identity layer above the existing scoring engine.
  * Each archetype has a 6-part psychological structure designed to create
@@ -18,9 +18,9 @@ export type Archetype = {
   mode: string
   zone: string
   // 6-part psychological structure
-  reconnaissance: string   // Mirror — immediate recognition, short lines
+  reconnaissance: string   // Mirror - immediate recognition, short lines
   verite: string           // Uncomfortable hidden truth
-  mecanique: string        // Deep mechanism — nervous system / blessure / survival
+  mecanique: string        // Deep mechanism - nervous system / blessure / survival
   consequence: string      // Future cost if nothing changes
   transition: string       // Natural bridge to the protocol
 }
@@ -72,7 +72,7 @@ C'est ce que le protocole te propose.`,
     mode: 'Contrôle',
     zone: 'Couple',
     reconnaissance: `Un message sans réponse.
-Et déjà — quelque chose en toi s'emballe.
+Et déjà - quelque chose en toi s'emballe.
 Tu cherches des signes.
 Tu surveilles sans le vouloir.
 Tu n'arrives pas à couper l'alerte.`,
@@ -161,7 +161,7 @@ Elle se loge dans les tissus.
 Elle attend.`,
     consequence: `Et les tensions chroniques,
 les migraines,
-les douleurs sans raison apparente —
+les douleurs sans raison apparente -
 
 ce ne sont pas des hasards.
 C'est une mémoire que ton corps garde.`,
@@ -631,7 +631,7 @@ sans que tout s'effondre.`,
     emotion: 'Vide',
     mode: 'Fusion',
     zone: 'Couple',
-    reconnaissance: `Sans l'autre —
+    reconnaissance: `Sans l'autre -
 un vide immense.
 
 Tu tombes fort et vite.
@@ -751,7 +751,7 @@ C'est tout ce que demande le protocole.`,
     reconnaissance: `Tu marches sur un fil.
 Toujours.
 
-Une critique, une hésitation —
+Une critique, une hésitation -
 et tu as l'impression
 que tout va s'effondrer.`,
     verite: `Ce n'est pas de la fragilité.
@@ -904,7 +904,7 @@ C'est ce que propose le protocole.`,
 Sport. Travail. Enfants. Projets.
 Tout à la fois.
 
-Et dès que tu ralentis —
+Et dès que tu ralentis -
 tu tombes malade.`,
     verite: `Le mouvement est ton anesthésie.
 Tant que tu cours,

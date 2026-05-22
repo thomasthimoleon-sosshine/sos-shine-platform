@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
       }, { onConflict: 'email', ignoreDuplicates: true })
     } catch { /* non-critical */ }
 
-    // Send Email 1 (capture — quiz not finished yet)
+    // Send Email 1 (capture - quiz not finished yet)
     try {
       const siteUrl = getSiteUrl()
       const resumeUrl = `${siteUrl}/signature-emotionnelle`

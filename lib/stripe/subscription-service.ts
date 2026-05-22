@@ -129,7 +129,7 @@ export async function upsertSubscription(params: UpsertSubscriptionParams): Prom
 
   // Si la colonne 'duration' n'existe pas encore en base, réessayer sans
   if (error && error.code === 'PGRST204' && error.message?.includes('duration')) {
-    console.warn('[SubscriptionService] Colonne "duration" absente — upsert sans duration')
+    console.warn('[SubscriptionService] Colonne "duration" absente - upsert sans duration')
     delete upsertData.duration
     const retry = await supabase.from('subscriptions').upsert(upsertData, { onConflict: 'user_id' })
     error = retry.error
@@ -185,7 +185,7 @@ export async function sendWelcomeEmail(
         </a>
       </div>
     `
-    await sendRawEmail(email, 'Bienvenue sur SOS Shine — Paiement confirmé', html, { recipientName: firstName })
+    await sendRawEmail(email, 'Bienvenue sur SOS Shine - Paiement confirmé', html, { recipientName: firstName })
   }
   return true
 }
@@ -281,7 +281,7 @@ export async function processSuccessfulPayment(params: ProcessPaymentParams): Pr
     trialEnd, waitlistDiscount, amountTotal, source
   } = params
 
-  console.log(`[SubscriptionService] Activation abonnement (${source}) — userId: ${userId}, plan: ${plan}, durée: ${duration}`)
+  console.log(`[SubscriptionService] Activation abonnement (${source}) - userId: ${userId}, plan: ${plan}, durée: ${duration}`)
 
   // Étape 1 : Activer l'abonnement
   const subCreated = await upsertSubscription({
@@ -316,7 +316,7 @@ export async function processSuccessfulPayment(params: ProcessPaymentParams): Pr
   // Étape 4 : Programmer les emails de nurturing
   await scheduleNurturingEmails(email, firstName, plan)
 
-  console.log(`[SubscriptionService] Abonnement activé — userId: ${userId}, email: ${emailSent}`)
+  console.log(`[SubscriptionService] Abonnement activé - userId: ${userId}, email: ${emailSent}`)
 
   return {
     success: true,
@@ -569,15 +569,15 @@ export async function handleChargeRefunded(charge: Stripe.Charge): Promise<void>
       amount_refunded: ch.amount_refunded,
     })
 
-    console.log(`[Webhook] Remboursement total — userId: ${sub.user_id} désactivé`)
+    console.log(`[Webhook] Remboursement total - userId: ${sub.user_id} désactivé`)
   } else {
-    // Partial refund — just log it
+    // Partial refund - just log it
     await logPaymentEvent(sub.user_id, 'partial_refund', sub.plan || 'essential', {
       charge_id: ch.id,
       amount_refunded: ch.amount_refunded,
       amount_total: ch.amount,
     })
-    console.log(`[Webhook] Remboursement partiel — userId: ${sub.user_id}`)
+    console.log(`[Webhook] Remboursement partiel - userId: ${sub.user_id}`)
   }
 }
 

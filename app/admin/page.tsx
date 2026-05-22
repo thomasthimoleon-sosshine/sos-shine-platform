@@ -127,15 +127,15 @@ export default function AdminDashboard() {
             <div className="grid sm:grid-cols-3 gap-4">
               <div className="rounded-lg p-4" style={{ background: 'rgba(201,169,97,0.05)' }}>
                 <p className="text-xs mb-1" style={{ color: 'var(--text-muted)' }}>CA ce mois</p>
-                <p className="font-display text-2xl font-semibold" style={{ color: 'var(--brand)' }}>—</p>
+                <p className="font-display text-2xl font-semibold" style={{ color: 'var(--brand)' }}>-</p>
               </div>
               <div className="rounded-lg p-4" style={{ background: 'rgba(85,239,196,0.05)' }}>
                 <p className="text-xs mb-1" style={{ color: 'var(--text-muted)' }}>Abonnements actifs</p>
-                <p className="font-display text-2xl font-semibold" style={{ color: '#55EFC4' }}>—</p>
+                <p className="font-display text-2xl font-semibold" style={{ color: '#55EFC4' }}>-</p>
               </div>
               <div className="rounded-lg p-4" style={{ background: 'rgba(255,107,107,0.05)' }}>
                 <p className="text-xs mb-1" style={{ color: 'var(--text-muted)' }}>Désabonnements</p>
-                <p className="font-display text-2xl font-semibold" style={{ color: '#FF6B6B' }}>—</p>
+                <p className="font-display text-2xl font-semibold" style={{ color: '#FF6B6B' }}>-</p>
               </div>
             </div>
           </div>

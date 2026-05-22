@@ -1,5 +1,5 @@
 // =============================================
-// SOS SHINE® — Seeds des 23 templates email
+// SOS SHINE® - Seeds des 23 templates email
 // Éditables depuis le BackOffice CRM
 // =============================================
 
@@ -128,7 +128,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
     html_content: `<h2 style="color:#C9A961;font-family:Georgia,serif;font-weight:300;margin:0 0 20px;">Bienvenue {firstName} !</h2>
 <p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Vous faites désormais partie de la liste d'attente de <strong style="color:#C9A961;">SOS Shine®</strong>.</p>
 <p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Nous vous préviendrons dès que les portes s'ouvriront. En attendant, restez connecté(e) à votre lumière intérieure.</p>
-<p style="color:#a1a1aa;font-size:14px;line-height:1.8;margin-top:24px;">Avec bienveillance,<br/><strong style="color:#C9A961;">Julia</strong> — Fondatrice SOS Shine®</p>`,
+<p style="color:#a1a1aa;font-size:14px;line-height:1.8;margin-top:24px;">Avec bienveillance,<br/><strong style="color:#C9A961;">Julia</strong> - Fondatrice SOS Shine®</p>`,
     trigger_type: 'waitlist_signup',
     trigger_delay_days: 0,
     description: 'Envoyé immédiatement à l\'inscription sur la liste d\'attente',
@@ -138,7 +138,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
   {
     template_key: 'waitlist_reminder_j3',
     category: 'waitlist',
-    name: 'Rappel J+3 — Liste d\'attente',
+    name: 'Rappel J+3 - Liste d\'attente',
     subject: '{firstName}, votre place est réservée...',
     html_content: `<h2 style="color:#C9A961;font-family:Georgia,serif;font-weight:300;margin:0 0 20px;">Votre lumière attend, {firstName}</h2>
 <p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Il y a quelques jours, vous avez rejoint notre liste d'attente. Nous préparons quelque chose de <strong style="color:#C9A961;">magnifique</strong> pour vous.</p>
@@ -188,7 +188,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
   {
     template_key: 'quiz_followup_j2',
     category: 'quiz',
-    name: 'Suivi J+2 — Après le quiz',
+    name: 'Suivi J+2 - Après le quiz',
     subject: '{firstName}, avez-vous exploré votre Signature ?',
     html_content: `<h2 style="color:#C9A961;font-family:Georgia,serif;font-weight:300;margin:0 0 20px;">Comment allez-vous, {firstName} ?</h2>
 <p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Depuis la découverte de votre Signature Émotionnelle, avez-vous pris un moment pour explorer votre profil en profondeur ?</p>
@@ -205,7 +205,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
   {
     template_key: 'quiz_conversion_j5',
     category: 'quiz',
-    name: 'Conversion J+5 — Offre spéciale',
+    name: 'Conversion J+5 - Offre spéciale',
     subject: '{firstName}, une invitation spéciale pour vous',
     html_content: `<h2 style="color:#C9A961;font-family:Georgia,serif;font-weight:300;margin:0 0 20px;">Une invitation pour vous, {firstName}</h2>
 <p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Votre Signature Émotionnelle a révélé un potentiel extraordinaire. Ne laissez pas cette découverte sans suite.</p>
@@ -224,7 +224,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
   {
     template_key: 'subscription_welcome',
     category: 'subscription',
-    name: 'Bienvenue — Nouvel abonné',
+    name: 'Bienvenue - Nouvel abonné',
     subject: 'Bienvenue dans la famille SOS Shine, {firstName} !',
     html_content: `<h2 style="color:#C9A961;font-family:Georgia,serif;font-weight:300;margin:0 0 20px;">Bienvenue {firstName} !</h2>
 <p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Vous faites maintenant partie de la famille <strong style="color:#C9A961;">SOS Shine®</strong> avec votre abonnement <strong>{planName}</strong>.</p>
@@ -248,7 +248,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
     template_key: 'subscription_confirmation',
     category: 'subscription',
     name: 'Confirmation de paiement',
-    subject: 'Confirmation de votre abonnement SOS Shine — {planAmount}/mois',
+    subject: 'Confirmation de votre abonnement SOS Shine - {planAmount}/mois',
     html_content: `<h2 style="color:#C9A961;font-family:Georgia,serif;font-weight:300;margin:0 0 20px;">Paiement confirmé</h2>
 <p style="color:#E0E0E0;font-size:15px;line-height:1.8;">{firstName}, votre abonnement <strong style="color:#C9A961;">{planName}</strong> à {planAmount}/mois est bien actif.</p>
 <p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Votre prochain prélèvement aura lieu le mois prochain. Vous pouvez gérer votre abonnement depuis votre espace membre à tout moment.</p>`,
@@ -263,7 +263,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
   {
     template_key: 'nurturing_j1',
     category: 'nurturing',
-    name: 'Nurturing J+1 — Premier pas',
+    name: 'Nurturing J+1 - Premier pas',
     subject: '{firstName}, votre premier pas lumineux',
     html_content: `<h2 style="color:#C9A961;font-family:Georgia,serif;font-weight:300;margin:0 0 20px;">Votre premier jour, {firstName}</h2>
 <p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Félicitations pour votre inscription ! Aujourd'hui est le premier jour de votre transformation émotionnelle.</p>
@@ -280,7 +280,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
   {
     template_key: 'nurturing_j3',
     category: 'nurturing',
-    name: 'Nurturing J+3 — Méditation',
+    name: 'Nurturing J+3 - Méditation',
     subject: '{firstName}, offrez-vous une pause méditative',
     html_content: `<h2 style="color:#C9A961;font-family:Georgia,serif;font-weight:300;margin:0 0 20px;">Pause lumineuse, {firstName}</h2>
 <p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Après quelques jours sur SOS Shine, il est temps de plonger dans <strong style="color:#C9A961;">Shine Audible</strong>.</p>
@@ -297,7 +297,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
   {
     template_key: 'nurturing_j7',
     category: 'nurturing',
-    name: 'Nurturing J+7 — Première semaine',
+    name: 'Nurturing J+7 - Première semaine',
     subject: 'Déjà 1 semaine, {firstName} ! Comment vous sentez-vous ?',
     html_content: `<h2 style="color:#C9A961;font-family:Georgia,serif;font-weight:300;margin:0 0 20px;">Une semaine de lumière, {firstName}</h2>
 <p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Cela fait déjà une semaine que vous avez rejoint SOS Shine®. Comment vous sentez-vous ?</p>
@@ -314,7 +314,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
   {
     template_key: 'nurturing_j14',
     category: 'nurturing',
-    name: 'Nurturing J+14 — Défi',
+    name: 'Nurturing J+14 - Défi',
     subject: '{firstName}, relevez votre premier défi Shine !',
     html_content: `<h2 style="color:#C9A961;font-family:Georgia,serif;font-weight:300;margin:0 0 20px;">Prêt(e) pour un défi, {firstName} ?</h2>
 <p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Après deux semaines de découverte, il est temps de passer à l'action avec nos <strong style="color:#C9A961;">Défis SOS Shine</strong>.</p>
@@ -394,11 +394,11 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
   {
     template_key: 'cancellation_winback_j7',
     category: 'cancellation',
-    name: 'Win-back J+7 — Après résiliation',
+    name: 'Win-back J+7 - Après résiliation',
     subject: '{firstName}, la lumière vous attend toujours...',
     html_content: `<h2 style="color:#C9A961;font-family:Georgia,serif;font-weight:300;margin:0 0 20px;">Vous nous manquez, {firstName}</h2>
 <p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Cela fait une semaine que vous nous avez quittés, et nous espérons que tout va bien.</p>
-<p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Sachez que votre place est toujours réservée chez <strong style="color:#C9A961;">SOS Shine®</strong>. Revenez quand vous le souhaitez — votre lumière intérieure ne demande qu'à briller.</p>
+<p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Sachez que votre place est toujours réservée chez <strong style="color:#C9A961;">SOS Shine®</strong>. Revenez quand vous le souhaitez - votre lumière intérieure ne demande qu'à briller.</p>
 <div style="text-align:center;margin:32px 0;">
   <a href="{site_url}/rejoindre" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#B8960F);">Revenir chez SOS Shine</a>
 </div>`,
@@ -434,7 +434,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
     subject: 'Bravo {firstName} ! Un nouveau filleul vient de s\'inscrire',
     html_content: `<h2 style="color:#C9A961;font-family:Georgia,serif;font-weight:300;margin:0 0 20px;">Nouveau filleul !</h2>
 <p style="color:#E0E0E0;font-size:15px;line-height:1.8;">{firstName}, quelqu'un vient de rejoindre SOS Shine® grâce à votre lien de parrainage ! Votre commission sera créditée automatiquement.</p>
-<p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Continuez à partager votre lumière — chaque parrainage compte.</p>`,
+<p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Continuez à partager votre lumière - chaque parrainage compte.</p>`,
     trigger_type: 'affiliate_referral',
     trigger_delay_days: 0,
     description: 'Envoyé quand un filleul s\'inscrit',

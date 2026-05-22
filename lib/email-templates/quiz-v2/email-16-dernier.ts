@@ -1,5 +1,5 @@
 /**
- * Email 16 — Le dernier mail. Avec un cadeau. (J+14)
+ * Email 16 - Le dernier mail. Avec un cadeau. (J+14)
  */
 import { wrapEmail, p, ctaButton, goldDivider, signature } from './wrapper'
 

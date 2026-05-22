@@ -36,7 +36,7 @@ function isAdmin(role: string): boolean {
   return role === 'founder' || role === 'admin_content' || role === 'admin_support'
 }
 
-// GET — list all affiliate applications (candidatures)
+// GET - list all affiliate applications (candidatures)
 export async function GET() {
   const caller = await getCallerProfile()
   if (!caller || !isAdmin(caller.role)) {
@@ -61,7 +61,7 @@ export async function GET() {
   }
 }
 
-// PATCH — approve or reject a candidature
+// PATCH - approve or reject a candidature
 export async function PATCH(request: Request) {
   const caller = await getCallerProfile()
   if (!caller || !isAdmin(caller.role)) {

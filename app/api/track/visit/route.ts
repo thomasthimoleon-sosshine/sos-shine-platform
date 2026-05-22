@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
       const { data: { user } } = await supabase.auth.getUser()
       userId = user?.id || null
     } catch {
-      // Continue without user — tracking still works for anonymous visitors
+      // Continue without user - tracking still works for anonymous visitors
     }
 
     // Hash IP for privacy
@@ -136,14 +136,14 @@ export async function POST(request: NextRequest) {
 
     if (insertError) {
       console.error('[VisitTracker] Insert error:', insertError.message, insertError.code)
-      // Don't return 500 — tracking failure shouldn't cause visible errors
+      // Don't return 500 - tracking failure shouldn't cause visible errors
       return NextResponse.json({ ok: false, detail: insertError.message })
     }
 
     return NextResponse.json({ ok: true })
   } catch (e) {
     console.error('[VisitTracker] Error:', e)
-    // Return 200 even on error — tracking should never show errors to users
+    // Return 200 even on error - tracking should never show errors to users
     return NextResponse.json({ ok: false })
   }
 }

@@ -337,7 +337,7 @@ export default function AdminPublications() {
       return
     }
     setPosts(prev => prev.map(p => p.id === post.id ? { ...p, delete_locked: newLocked } : p))
-    setActionSuccess(newLocked ? 'Suppression verrouillee — le membre ne peut plus supprimer cette publication.' : 'Suppression deverrouillee — le membre peut supprimer sa publication.')
+    setActionSuccess(newLocked ? 'Suppression verrouillee - le membre ne peut plus supprimer cette publication.' : 'Suppression deverrouillee - le membre peut supprimer sa publication.')
     setTimeout(() => setActionSuccess(null), 4000)
     setLockingId(null)
   }
@@ -657,7 +657,7 @@ export default function AdminPublications() {
                     {togglingId === post.id ? '...' : post.is_published ? 'Masquer' : 'Rendre visible'}
                   </button>
 
-                  {/* Lock/Unlock delete — only for non-founder posts */}
+                  {/* Lock/Unlock delete - only for non-founder posts */}
                   {post.profiles?.role !== 'founder' && (
                     <button onClick={() => toggleDeleteLock(post)} disabled={lockingId === post.id}
                       className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all disabled:opacity-50 cursor-pointer flex items-center gap-1.5"

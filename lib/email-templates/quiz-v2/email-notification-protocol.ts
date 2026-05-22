@@ -1,5 +1,5 @@
 /**
- * Email notification — Nouveau protocole disponible
+ * Email notification - Nouveau protocole disponible
  * Déclenché quand un protocole passe de coming_soon à available
  */
 import { wrapEmail, p, h2, ctaButton, goldDivider, spacer } from './wrapper'

@@ -7,7 +7,7 @@ const STEPS = [
   {
     num: '01',
     title: 'Comprendre',
-    body: "Identifier le schéma inconscient qui pilote tes réactions. Pas de la théorie. Une lecture précise de ce qui se joue en toi — depuis toujours.",
+    body: "Identifier le schéma inconscient qui pilote tes réactions. Pas de la théorie. Une lecture précise de ce qui se joue en toi - depuis toujours.",
     accent: '#7DD3FC',
   },
   {
@@ -36,7 +36,7 @@ export default function StickyMechanism() {
       <div className="sticky top-0 h-screen flex items-center">
         <div className="max-w-7xl mx-auto px-6 md:px-10 w-full grid md:grid-cols-2 gap-16 md:gap-24 items-center">
 
-          {/* Left — Visual */}
+          {/* Left - Visual */}
           <div className="relative aspect-square hidden md:flex items-center justify-center">
             {STEPS.map((step, i) => {
               const start = i / STEPS.length
@@ -49,7 +49,7 @@ export default function StickyMechanism() {
             })}
           </div>
 
-          {/* Right — Text */}
+          {/* Right - Text */}
           <div className="relative h-[60vh] flex items-center">
             {STEPS.map((step, i) => {
               const start = i / STEPS.length

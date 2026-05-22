@@ -226,7 +226,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             router.push('/mon-chemin')
             return
           }
-          // Accès autorisé — navigation limitée, on continue
+          // Accès autorisé - navigation limitée, on continue
         }
       }
 
@@ -485,7 +485,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* Page content */}
         <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">{children}</main>
 
-        {/* Floating crisis button + chatbot — abonnés et admins */}
+        {/* Floating crisis button + chatbot - abonnés et admins */}
         {(isSubscribed || isAdmin) && <CrisisButton />}
         {(isSubscribed || isAdmin) && <ShineChatbot />}
 

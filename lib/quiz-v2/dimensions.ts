@@ -1,5 +1,5 @@
 /**
- * SOS Shine — Quiz V2 Dimensions
+ * SOS Shine - Quiz V2 Dimensions
  * 10 emotional dimensions scored 0-100
  */
 

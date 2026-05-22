@@ -330,7 +330,7 @@ END $$;`}</pre>
             Blog
           </h1>
           <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
-            {articles.length} article{articles.length !== 1 ? 's' : ''} — Cr&eacute;ez en Markdown ou HTML
+            {articles.length} article{articles.length !== 1 ? 's' : ''} - Cr&eacute;ez en Markdown ou HTML
           </p>
         </div>
         <button

@@ -79,7 +79,7 @@ function PdfReaderModal({ url, title, onClose }: { url: string; title: string; o
       {/* Bottom info bar */}
       <div className="flex items-center justify-center px-4 py-2 shrink-0 bg-[var(--surface-card)] border-t border-[var(--border)]">
         <p className="text-[11px] text-[var(--text-muted)]">
-          Lecture en ligne uniquement — Téléchargement non autorisé
+          Lecture en ligne uniquement - Téléchargement non autorisé
         </p>
       </div>
     </motion.div>
@@ -1007,7 +1007,7 @@ export default function ShineLibrairiePage() {
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
               </svg>
-              A — Z
+              A - Z
             </button>
             <button
               onClick={() => setActiveFilter('favorites')}
@@ -1101,7 +1101,7 @@ export default function ShineLibrairiePage() {
                       <p className="text-[11px] truncate text-[var(--text-muted)]">{book.author}</p>
                       <div className="flex items-center gap-2 mt-1">
                         <StarRating rating={Math.round(book.rating)} size="sm" />
-                        <span className="text-[11px] text-[var(--text-muted)]">{book.rating > 0 ? book.rating.toFixed(1) : '—'}</span>
+                        <span className="text-[11px] text-[var(--text-muted)]">{book.rating > 0 ? book.rating.toFixed(1) : '-'}</span>
                       </div>
                     </div>
                   </motion.div>
@@ -1208,7 +1208,7 @@ export default function ShineLibrairiePage() {
               <svg className="w-5 h-5 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
               </svg>
-              Encyclopédie A — Z
+              Encyclopédie A - Z
             </h2>
             {(() => {
               const sorted = [...books].sort((a, b) => a.title.localeCompare(b.title, 'fr'))

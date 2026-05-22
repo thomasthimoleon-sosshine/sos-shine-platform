@@ -57,7 +57,7 @@ export default function MembreProfilPage() {
       if (data) setProfile(data as Profile)
       setLoading(false)
 
-      // Vérifier le statut de connexion (rayon) — avant de charger les posts
+      // Vérifier le statut de connexion (rayon) - avant de charger les posts
       let isRayon = false
       const { data: connData, error: connError } = await supabase
         .from('shine_connections')
@@ -153,7 +153,7 @@ export default function MembreProfilPage() {
         setConnectionId(data.connection.id)
         setRayonSuccess(`Rayon envoyé à ${profile?.pseudo || profile?.prenom || 'ce membre'} !`)
       } else if (res.status === 409) {
-        // Connexion déjà existante — resynchroniser le statut
+        // Connexion déjà existante - resynchroniser le statut
         setRayonError('Une demande de connexion existe déjà avec ce membre.')
         if (data.status === 'pending') {
           setConnectionStatus('pending_sent')
@@ -387,7 +387,7 @@ export default function MembreProfilPage() {
         </div>
       )}
 
-      {/* Éclat — Personal Wall */}
+      {/* Éclat - Personal Wall */}
       <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         <h3 className="font-display text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--brand)' }}>
           <span className="text-xl">✨</span>

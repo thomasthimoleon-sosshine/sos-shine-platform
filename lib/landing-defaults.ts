@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────
-   Landing Page — Section defaults & types
+   Landing Page - Section defaults & types
    Source unique de vérité pour le contenu initial
 ───────────────────────────────────────────── */
 
@@ -581,7 +581,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   },
   {
     section_key: 'legal_mentions',
-    label: 'Page — Mentions légales',
+    label: 'Page - Mentions légales',
     position: 60,
     is_visible: true,
     content: {
@@ -592,7 +592,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   },
   {
     section_key: 'legal_cgv',
-    label: 'Page — CGV',
+    label: 'Page - CGV',
     position: 61,
     is_visible: true,
     content: {
@@ -603,7 +603,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   },
   {
     section_key: 'legal_privacy',
-    label: 'Page — Confidentialité',
+    label: 'Page - Confidentialité',
     position: 62,
     is_visible: true,
     content: {
@@ -614,7 +614,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
   },
   {
     section_key: 'legal_contact',
-    label: 'Page — Contact',
+    label: 'Page - Contact',
     position: 63,
     is_visible: true,
     content: {
@@ -785,14 +785,14 @@ export const SECTION_EDITOR_LABELS: Record<string, { label: string; icon: string
   steps: { label: 'Le Parcours (3 étapes)', icon: '🔄', description: 'Comprendre / Libérer / Agir' },
   communaute: { label: 'Communauté', icon: '🤝', description: 'Feu de Camp, Rayons, Éclat, Lives' },
   produit: { label: 'Ce que vous recevez', icon: '🎁', description: 'Checklist des fonctionnalités dès J1' },
-  manifeste: { label: 'Ce que nous ne sommes pas', icon: '✊', description: 'Le disclaimer honnête — bloc le plus important' },
+  manifeste: { label: 'Ce que nous ne sommes pas', icon: '✊', description: 'Le disclaimer honnête - bloc le plus important' },
   pricing: { label: 'Tarification', icon: '💰', description: 'Plans, prix, boutons d\'essai' },
   pour_qui: { label: 'Pour qui / Pas pour qui', icon: '🎯', description: 'Audience cible et exclusions' },
   cta_dark: { label: 'CTA Final', icon: '🚀', description: 'Dernier appel à l\'action avant le footer' },
   footer: { label: 'Pied de page', icon: '🔗', description: 'Logo, liens légaux, réseaux sociaux' },
   stats: { label: 'Chiffres clés', icon: '📊', description: 'Social proof avec des chiffres' },
   signature_cta: { label: 'CTA Signature Émotionnelle', icon: '🧪', description: 'Bloc dédié au test Signature' },
-  principe: { label: 'Le Principe', icon: '🧠', description: 'Notre approche — le déconditionnement' },
+  principe: { label: 'Le Principe', icon: '🧠', description: 'Notre approche - le déconditionnement' },
   fondateurs: { label: 'Les Fondateurs', icon: '👥', description: 'Photos et rôles de l\'équipe' },
   ticker_1: { label: 'Bandeau défilant 1', icon: '📜', description: 'Premier bandeau de mots-clés' },
   ticker_2: { label: 'Bandeau défilant 2', icon: '📜', description: 'Second bandeau de mots-clés' },

@@ -29,7 +29,7 @@ function generateReferralCode(userId: string): string {
 }
 
 // ═══════════════════════════════════════════════════════
-// Landing View — Pour les non-affiliés
+// Landing View - Pour les non-affiliés
 // ═══════════════════════════════════════════════════════
 function AffiliateLanding({ onApply }: { onApply: () => void }) {
   const { t } = useTranslation()
@@ -1073,7 +1073,7 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
 }
 
 // ═══════════════════════════════════════════════════════
-// Support Contact — Contacter les fondateurs
+// Support Contact - Contacter les fondateurs
 // ═══════════════════════════════════════════════════════
 function SupportContact() {
   const [message, setMessage] = useState('')

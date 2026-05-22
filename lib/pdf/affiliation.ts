@@ -1,5 +1,5 @@
 /**
- * SOS Shine — Rapport d'affiliation PDF
+ * SOS Shine - Rapport d'affiliation PDF
  * Génère un relevé détaillé des gains, conversions et clics d'un affilié.
  */
 
@@ -69,7 +69,7 @@ export async function generateAffiliationReportPDF(
   data: AffiliationReportData
 ): Promise<Uint8Array> {
   const { doc, fontRegular, fontBold } = await createDocument(
-    `Rapport Affiliation — ${data.affiliate.name} — SOS Shine`
+    `Rapport Affiliation - ${data.affiliate.name} - SOS Shine`
   )
 
   let page = addPage(doc)
@@ -282,7 +282,7 @@ export async function generateAffiliationReportPDF(
       y = drawKeyValue(
         page,
         formatDateFR(w.date),
-        `${formatEUR(w.amount)} — ${w.method.toUpperCase()} — ${statusLabel[w.status]}`,
+        `${formatEUR(w.amount)} - ${w.method.toUpperCase()} - ${statusLabel[w.status]}`,
         y,
         fontRegular,
         fontBold,

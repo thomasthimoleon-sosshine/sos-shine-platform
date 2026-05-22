@@ -120,7 +120,7 @@ export function SingleChoice({
         </motion.div>
       )}
 
-      {/* Micro-reveal — emotional echo after selection */}
+      {/* Micro-reveal - emotional echo after selection */}
       <AnimatePresence>
         {revealText && (
           <motion.p

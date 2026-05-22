@@ -62,7 +62,7 @@ export async function GET(request: Request) {
       const isActive = sub && (sub.status === 'active' || sub.status === 'trialing')
       const userPlan = isActive ? sub.plan : null
 
-      // Free tier — accès gratuit à la communauté et Shine Audible pour tous les membres inscrits
+      // Free tier - accès gratuit à la communauté et Shine Audible pour tous les membres inscrits
       const freeFeatureMap = FREE_FEATURES.reduce(
         (acc, k) => ({ ...acc, [k]: true }),
         {} as Record<string, boolean>

@@ -10,7 +10,7 @@ import { getStripe } from '@/lib/stripe/client'
 const PRODUCTS_TO_CREATE = [
   {
     key: 'essential_monthly',
-    name: 'SOS Shine — Essentielle',
+    name: 'SOS Shine - Essentielle',
     description: "L'autonomie et l'accès à la base de connaissances",
     amount: 990,
     interval: 'month' as const,
@@ -18,7 +18,7 @@ const PRODUCTS_TO_CREATE = [
   },
   {
     key: 'serenite_monthly',
-    name: 'SOS Shine — Sérénité (Mensuel)',
+    name: 'SOS Shine - Sérénité (Mensuel)',
     description: 'Un accompagnement énergétique régulier',
     amount: 4990,
     interval: 'month' as const,
@@ -26,31 +26,31 @@ const PRODUCTS_TO_CREATE = [
   },
   {
     key: 'serenite_quarterly',
-    name: 'SOS Shine — Sérénité (3 mois)',
-    description: 'Un accompagnement énergétique régulier — forfait 3 mois',
+    name: 'SOS Shine - Sérénité (3 mois)',
+    description: 'Un accompagnement énergétique régulier - forfait 3 mois',
     amount: 13473,
     interval: 'month' as const,
     interval_count: 3,
   },
   {
     key: 'serenite_semiannual',
-    name: 'SOS Shine — Sérénité (6 mois)',
-    description: 'Un accompagnement énergétique régulier — forfait 6 mois',
+    name: 'SOS Shine - Sérénité (6 mois)',
+    description: 'Un accompagnement énergétique régulier - forfait 6 mois',
     amount: 23952,
     interval: 'month' as const,
     interval_count: 6,
   },
   {
     key: 'serenite_annual',
-    name: 'SOS Shine — Sérénité (Annuel)',
-    description: 'Un accompagnement énergétique régulier — forfait annuel',
+    name: 'SOS Shine - Sérénité (Annuel)',
+    description: 'Un accompagnement énergétique régulier - forfait annuel',
     amount: 41916,
     interval: 'year' as const,
     interval_count: 1,
   },
   {
     key: 'premium_monthly',
-    name: 'SOS Shine — Premium (Mensuel)',
+    name: 'SOS Shine - Premium (Mensuel)',
     description: "L'immersion totale et l'accès privilégié",
     amount: 9990,
     interval: 'month' as const,
@@ -58,24 +58,24 @@ const PRODUCTS_TO_CREATE = [
   },
   {
     key: 'premium_quarterly',
-    name: 'SOS Shine — Premium (3 mois)',
-    description: "L'immersion totale — forfait 3 mois",
+    name: 'SOS Shine - Premium (3 mois)',
+    description: "L'immersion totale - forfait 3 mois",
     amount: 28970,
     interval: 'month' as const,
     interval_count: 3,
   },
   {
     key: 'premium_semiannual',
-    name: 'SOS Shine — Premium (6 mois)',
-    description: "L'immersion totale — forfait 6 mois",
+    name: 'SOS Shine - Premium (6 mois)',
+    description: "L'immersion totale - forfait 6 mois",
     amount: 57940,
     interval: 'month' as const,
     interval_count: 6,
   },
   {
     key: 'premium_annual',
-    name: 'SOS Shine — Premium (Annuel)',
-    description: "L'immersion totale — forfait annuel",
+    name: 'SOS Shine - Premium (Annuel)',
+    description: "L'immersion totale - forfait annuel",
     amount: 83916,
     interval: 'year' as const,
     interval_count: 1,
@@ -84,7 +84,7 @@ const PRODUCTS_TO_CREATE = [
 
 export async function POST(request: Request) {
   try {
-    // Protect this endpoint — only accessible with authorization
+    // Protect this endpoint - only accessible with authorization
     const authHeader = request.headers.get('authorization')
     const secret = process.env.CRON_SECRET || process.env.BOT_SECRET
     if (!secret || authHeader !== `Bearer ${secret}`) {

@@ -1,5 +1,5 @@
 /**
- * Email 2 — Résultat complet
+ * Email 2 - Résultat complet
  * Envoyé 1 min après completion du quiz (Q15 répondue)
  */
 
@@ -75,7 +75,7 @@ ${secInfo?.icon || ''} ${secInfo?.name || 'Dimension ' + secondary}
 
     goldDivider(),
 
-    // ── Acte 2 — Il y a un pattern ──
+    // ── Acte 2 - Il y a un pattern ──
     h2(`Il y a un pattern dans tes réponses.`),
     p(`Je vais être directe avec toi.`),
     p(`Ce que tu viens de lire, ce n'est pas "un résultat de test", c'est un pattern émotionnel. Une manière que ton cerveau, ton système nerveux et ton corps ont développée pour survivre, s'adapter, se protéger, ou simplement avancer malgré certaines blessures, certains conditionnements, certaines expériences que personne ne t'a appris à nommer.`),
@@ -83,7 +83,7 @@ ${secInfo?.icon || ''} ${secInfo?.name || 'Dimension ' + secondary}
 
     goldDivider(),
 
-    // ── Acte 3 — D'où ça vient ──
+    // ── Acte 3 - D'où ça vient ──
     h2(`D'où ça vient ?`),
     p(`La plupart de nos automatismes émotionnels se forment entre 0 et 7 ans. À une époque où ton cerveau enregistrait tout sans filtre. Les mots qu'on te disait. Les silences. Les regards. Les absences. L'amour qu'on te donnait, et la forme exacte sous laquelle on te le donnait.`),
     p(`Aujourd'hui, ton subconscient continue de répondre au monde avec ces vieux codes. Même quand ils ne te servent plus.`),
@@ -91,7 +91,7 @@ ${secInfo?.icon || ''} ${secInfo?.name || 'Dimension ' + secondary}
 
     goldDivider(),
 
-    // ── Acte 4 — Ce qui change ──
+    // ── Acte 4 - Ce qui change ──
     h2(`Ce qui change quand on prend le bon chemin.`),
     p(`Un pattern compris peut se dissoudre. Un mécanisme nommé perd une grande partie de son pouvoir. Et un corps qui retrouve la sécurité intérieure cesse de répéter les mêmes scénarios.`),
     p(`C'est exactement pour ça que SOS Shine existe.`),
@@ -101,7 +101,7 @@ ${secInfo?.icon || ''} ${secInfo?.name || 'Dimension ' + secondary}
 
     goldDivider(),
 
-    // ── Acte 5 — Protocoles intro ──
+    // ── Acte 5 - Protocoles intro ──
     h2(`Tes protocoles personnalisés`),
     p(`Sur la plateforme, ton parcours s'adapte à ton profil. Les protocoles, les exercices, les méditations et les audios que tu vas recevoir ne sont pas les mêmes selon la Signature Émotionnelle qui ressort de tes réponses. Chaque profil reçoit ses propres clés.`),
     p(`Tu y retrouveras des protocoles guidés étape par étape, des exercices neuro-émotionnels, des outils cognitifs, des méditations, des respirations, des audios à fréquences spécifiques (432 Hz, binauraux, bilatéraux), des lives mensuels, une encyclopédie complète des défis émotionnels, et une communauté de personnes qui traversent souvent les mêmes choses que toi.`),
@@ -148,7 +148,7 @@ Tes protocoles personnalisés sont en préparation. Tu seras notifié(e) dès qu
 
     goldDivider(),
 
-    // ── CTA — prix promo vers /rejoindre ──
+    // ── CTA - prix promo vers /rejoindre ──
     h2(`Rejoindre SOS Shine`),
 
     // Prix
@@ -159,9 +159,9 @@ Tes protocoles personnalisés sont en préparation. Tu seras notifié(e) dès qu
 </td></tr>
 </table>`,
 
-    ctaButton('Rejoindre SOS Shine — Plateforme complète', `${URL_PLATEFORME}?prefilled_email=${encodeURIComponent(email)}`, { email }),
+    ctaButton('Rejoindre SOS Shine - Plateforme complète', `${URL_PLATEFORME}?prefilled_email=${encodeURIComponent(email)}`, { email }),
 
-    ctaLink('Accéder uniquement à mon protocole — 33€ →', `${URL_PROTOCOLE}?prefilled_email=${encodeURIComponent(email)}`),
+    ctaLink('Accéder uniquement à mon protocole - 33€ →', `${URL_PROTOCOLE}?prefilled_email=${encodeURIComponent(email)}`),
 
     goldDivider(),
 

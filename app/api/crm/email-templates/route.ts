@@ -26,7 +26,7 @@ export async function GET() {
     const categories = [
       { key: 'waitlist', label: 'Liste d\'attente', icon: '📋' },
       { key: 'quiz', label: 'Quiz Signature Émotionnelle', icon: '🧬' },
-      { key: 'subscription', label: 'Abonnements — Confirmation', icon: '💳' },
+      { key: 'subscription', label: 'Abonnements - Confirmation', icon: '💳' },
       { key: 'nurturing', label: 'Nurturing Post-Inscription', icon: '🌱' },
       { key: 'renewal', label: 'Renouvellement', icon: '🔄' },
       { key: 'cancellation', label: 'Résiliation', icon: '🌙' },

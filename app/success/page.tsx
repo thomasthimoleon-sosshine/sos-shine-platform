@@ -22,7 +22,7 @@ function SuccessContent() {
 
   useEffect(() => {
     if (!sessionId) {
-      // No session_id — show generic success
+      // No session_id - show generic success
       setStatus('verified')
       return
     }

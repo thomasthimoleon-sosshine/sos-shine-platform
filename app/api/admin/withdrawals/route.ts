@@ -35,7 +35,7 @@ function isAdmin(role: string): boolean {
   return role === 'founder' || role === 'admin_content' || role === 'admin_support'
 }
 
-// GET — list all withdrawal requests
+// GET - list all withdrawal requests
 export async function GET() {
   const caller = await getCallerProfile()
   if (!caller || !isAdmin(caller.role)) {
@@ -60,7 +60,7 @@ export async function GET() {
   }
 }
 
-// PATCH — process a withdrawal request (approve/complete/reject)
+// PATCH - process a withdrawal request (approve/complete/reject)
 export async function PATCH(request: Request) {
   const caller = await getCallerProfile()
   if (!caller || !isAdmin(caller.role)) {
@@ -181,7 +181,7 @@ export async function PATCH(request: Request) {
   }
 }
 
-// POST — user creates a withdrawal request
+// POST - user creates a withdrawal request
 export async function POST(request: Request) {
   try {
     const cookieStore = await cookies()

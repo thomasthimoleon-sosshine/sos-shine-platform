@@ -40,7 +40,7 @@ function isAdmin(role: string): boolean {
   return role === 'founder' || role === 'admin_content' || role === 'admin_support'
 }
 
-// GET — list all profiles (admin only)
+// GET - list all profiles (admin only)
 export async function GET() {
   const caller = await getCallerProfile()
   if (!caller || !isAdmin(caller.role)) {
@@ -90,7 +90,7 @@ export async function GET() {
   }
 }
 
-// PUT — toggle member active status (admin)
+// PUT - toggle member active status (admin)
 export async function PUT(request: Request) {
   const caller = await getCallerProfile()
   if (!caller || !isAdmin(caller.role)) {
@@ -120,7 +120,7 @@ export async function PUT(request: Request) {
   }
 }
 
-// POST — toggle publish ban (admin only)
+// POST - toggle publish ban (admin only)
 export async function POST(request: Request) {
   const caller = await getCallerProfile()
   if (!caller || !isAdmin(caller.role)) {
@@ -169,7 +169,7 @@ export async function POST(request: Request) {
   }
 }
 
-// DELETE — permanently delete a member (founder only)
+// DELETE - permanently delete a member (founder only)
 export async function DELETE(request: Request) {
   const caller = await getCallerProfile()
   if (!caller || caller.role !== 'founder') {
@@ -207,7 +207,7 @@ export async function DELETE(request: Request) {
   }
 }
 
-// PATCH — update a member's role (founder only)
+// PATCH - update a member's role (founder only)
 export async function PATCH(request: Request) {
   const caller = await getCallerProfile()
   if (!caller || caller.role !== 'founder') {

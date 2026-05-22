@@ -123,7 +123,7 @@ export default function AnciennesClientesPage() {
         const email = (cols[emailIdx] || '').toLowerCase().trim()
 
         if (!email || !email.includes('@')) {
-          if (email) errors.push(`"${email}" — email invalide`)
+          if (email) errors.push(`"${email}" - email invalide`)
           continue
         }
 
@@ -142,7 +142,7 @@ export default function AnciennesClientesPage() {
           if (insertErr.code === '23505') {
             skipped++
           } else {
-            errors.push(`${email} — ${insertErr.message}`)
+            errors.push(`${email} - ${insertErr.message}`)
           }
         } else {
           added++
@@ -311,7 +311,7 @@ export default function AnciennesClientesPage() {
                   </p>
                   <p className="text-xs truncate" style={{ color: 'var(--text-muted)' }}>
                     {client.email}
-                    {client.notes && <span className="ml-2 opacity-50">— {client.notes}</span>}
+                    {client.notes && <span className="ml-2 opacity-50">- {client.notes}</span>}
                   </p>
                 </div>
                 <div className="flex items-center gap-3 flex-shrink-0">

@@ -288,7 +288,7 @@ export default function AbTestingDashboard() {
         {[
           { label: 'Vues totales', value: totalViews, color: '#74C0FC' },
           { label: 'Conversions', value: totalConversions, color: '#55EFC4' },
-          { label: 'Taux global', value: totalViews > 0 ? `${Math.round((totalConversions / totalViews) * 10000) / 100}%` : '—', color: '#C9A961' },
+          { label: 'Taux global', value: totalViews > 0 ? `${Math.round((totalConversions / totalViews) * 10000) / 100}%` : '-', color: '#C9A961' },
           { label: 'Leader', value: winner ? (winner === 'julia' ? 'Julia' : 'Thomas') : 'Égalité', color: winner ? '#55EFC4' : 'var(--text-muted)' },
         ].map((c) => (
           <div key={c.label} className="rounded-xl p-5" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
@@ -414,7 +414,7 @@ export default function AbTestingDashboard() {
 
           return (
             <>
-              {/* Global distribution — big bar */}
+              {/* Global distribution - big bar */}
               <div className="mb-6">
                 <p className="text-[10px] uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>
                   Répartition globale ({grandTotal} visites)

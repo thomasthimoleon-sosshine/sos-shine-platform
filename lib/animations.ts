@@ -1,5 +1,5 @@
 /**
- * SOS Shine — Shared Animation Variants (Framer Motion)
+ * SOS Shine - Shared Animation Variants (Framer Motion)
  * Cinématographiques, lentes, naturelles.
  */
 

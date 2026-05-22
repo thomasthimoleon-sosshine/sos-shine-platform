@@ -94,7 +94,7 @@ export default function LandingJulia() {
       </header>
 
       {/* ═══════════════════════════════════════════
-          ACTE 1 — LE HOOK (Hero avec image)
+          ACTE 1 - LE HOOK (Hero avec image)
       ═══════════════════════════════════════════ */}
       <motion.section ref={heroRef} className="relative min-h-[100vh] flex items-end" style={{ opacity: heroOpacity, scale: heroScale }}>
         <div className="absolute inset-0">
@@ -164,7 +164,7 @@ export default function LandingJulia() {
       </motion.section>
 
       {/* ═══════════════════════════════════════════
-          ACTE 2 — LE MIROIR (Pain Recognition)
+          ACTE 2 - LE MIROIR (Pain Recognition)
       ═══════════════════════════════════════════ */}
       <section className="py-28 md:py-40">
         <div className="max-w-3xl mx-auto px-6 md:px-10 space-y-20 md:space-y-28">
@@ -185,7 +185,7 @@ export default function LandingJulia() {
       </section>
 
       {/* ═══════════════════════════════════════════
-          ACTE 3 — LA RÉVÉLATION (3 étapes avec images)
+          ACTE 3 - LA RÉVÉLATION (3 étapes avec images)
       ═══════════════════════════════════════════ */}
       <section className="py-28 md:py-40 border-t border-white/[0.04]">
         <div className="max-w-6xl mx-auto px-6 md:px-10">
@@ -210,7 +210,7 @@ export default function LandingJulia() {
                 <h3 className="font-display text-[1.5rem] sm:text-[2rem] font-light tracking-[-0.02em] text-[#D4AF37] mb-4 leading-[1.15]">Comprendre</h3>
                 <p className="text-[15px] text-[#a1a1aa] leading-[1.8] font-light">
                   Identifier le sch&eacute;ma inconscient qui pilote tes r&eacute;actions. Pas de la th&eacute;orie.
-                  Une lecture pr&eacute;cise de ce qui se joue en toi — depuis toujours.
+                  Une lecture pr&eacute;cise de ce qui se joue en toi - depuis toujours.
                 </p>
               </div>
             </div>
@@ -253,7 +253,7 @@ export default function LandingJulia() {
       </section>
 
       {/* ═══════════════════════════════════════════
-          ACTE 4 — LA TRINITÉ (Co-créateurs)
+          ACTE 4 - LA TRINITÉ (Co-créateurs)
       ═══════════════════════════════════════════ */}
       <section className="py-32 md:py-44 border-t border-white/[0.04]">
         <div className="max-w-6xl mx-auto px-6 md:px-10">
@@ -319,7 +319,7 @@ export default function LandingJulia() {
       </section>
 
       {/* ═══════════════════════════════════════════
-          ACTE 5 — LA PRATIQUE (Écosystème)
+          ACTE 5 - LA PRATIQUE (Écosystème)
       ═══════════════════════════════════════════ */}
       <section className="py-32 md:py-44 border-t border-white/[0.04]">
         <div className="max-w-6xl mx-auto px-6 md:px-10">
@@ -335,7 +335,7 @@ export default function LandingJulia() {
 
           {/* Bento Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[200px] md:auto-rows-[220px]">
-            {/* Encyclopédie — large */}
+            {/* Encyclopédie - large */}
             <Reveal className="col-span-2 row-span-2">
               <div
                 className="h-full rounded-[24px] p-8 flex flex-col justify-end relative overflow-hidden group border border-[#D4AF37]/08 transition-all duration-500 hover:border-[#D4AF37]/20"
@@ -399,7 +399,7 @@ export default function LandingJulia() {
               </div>
             </Reveal>
 
-            {/* Communauté — wide */}
+            {/* Communauté - wide */}
             <Reveal delay={0.25} className="col-span-2 md:col-span-1">
               <div className="h-full rounded-[24px] overflow-hidden relative group border border-white/[0.04]">
                 <img src={COMMUNTE} alt="Communauté" className="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-opacity duration-700" />
@@ -415,14 +415,14 @@ export default function LandingJulia() {
           {/* Mockup */}
           <Reveal delay={0.3}>
             <div className="mt-20 rounded-[24px] overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.6),0_0_60px_rgba(212,175,55,0.04)] ring-1 ring-[#D4AF37]/08">
-              <img src={MOCKUP} alt="SOS Shine — Application" className="w-full" />
+              <img src={MOCKUP} alt="SOS Shine - Application" className="w-full" />
             </div>
           </Reveal>
         </div>
       </section>
 
       {/* ═══════════════════════════════════════════
-          ACTE 6 — LA PREUVE (Témoignages)
+          ACTE 6 - LA PREUVE (Témoignages)
       ═══════════════════════════════════════════ */}
       <section className="py-32 md:py-44 border-t border-white/[0.04]">
         <div className="max-w-5xl mx-auto px-6 md:px-10">
@@ -469,12 +469,12 @@ export default function LandingJulia() {
       </section>
 
       {/* ═══════════════════════════════════════════
-          ACTE 7 — LE CHOIX (Pricing)
+          ACTE 7 - LE CHOIX (Pricing)
       ═══════════════════════════════════════════ */}
       <PricingMorph />
 
       {/* ═══════════════════════════════════════════
-          OUTRO — Footer
+          OUTRO - Footer
       ═══════════════════════════════════════════ */}
       <footer className="py-20 border-t border-white/[0.04]">
         <div className="max-w-4xl mx-auto px-6 md:px-10 text-center">

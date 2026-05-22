@@ -113,7 +113,7 @@ export async function POST() {
 
       if (existing && existing.length > 0) {
         skipped++
-        details.push(`⏭ "${seqDef.name}" — déjà existante`)
+        details.push(`⏭ "${seqDef.name}" - déjà existante`)
         continue
       }
 
@@ -131,7 +131,7 @@ export async function POST() {
         }))
 
       if (steps.length === 0) {
-        details.push(`⚠ "${seqDef.name}" — aucun template trouvé`)
+        details.push(`⚠ "${seqDef.name}" - aucun template trouvé`)
         continue
       }
 
@@ -147,7 +147,7 @@ export async function POST() {
 
       if (error) {
         console.error(`Failed to create sequence ${seqDef.name}:`, error)
-        details.push(`❌ "${seqDef.name}" — erreur création`)
+        details.push(`❌ "${seqDef.name}" - erreur création`)
         continue
       }
 
@@ -162,12 +162,12 @@ export async function POST() {
 
       if (stepsErr) {
         console.error(`Failed to create steps for ${seqDef.name}:`, stepsErr)
-        details.push(`❌ "${seqDef.name}" — erreur steps`)
+        details.push(`❌ "${seqDef.name}" - erreur steps`)
         continue
       }
 
       created++
-      details.push(`✅ "${seqDef.name}" — ${steps.length} emails`)
+      details.push(`✅ "${seqDef.name}" - ${steps.length} emails`)
     }
 
     return NextResponse.json({

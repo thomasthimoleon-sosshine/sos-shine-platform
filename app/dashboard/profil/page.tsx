@@ -428,7 +428,7 @@ export default function ProfilPage() {
             <div className="flex items-center justify-between">
               <span className="text-sm text-[var(--text-secondary)]">{t('dashboard.plan_label')}</span>
               <span className="text-sm font-medium text-[var(--text-primary)]">
-                {subscription.plan === 'serenite' ? 'Sérénité — 49,90€/mois' : 'Essentielle — 9,90€/mois'}
+                {subscription.plan === 'serenite' ? 'Sérénité - 49,90€/mois' : 'Essentielle - 9,90€/mois'}
                 {subscription.waitlist_discount && (
                   <span className="ml-2 text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--brand)' }}>
                     -10€ fondateur
@@ -469,7 +469,7 @@ export default function ProfilPage() {
                           >
                             {upgrading ? 'En cours...' : (
                               <>
-                                {isUpgrade ? '↑' : '↓'} {PLAN_NAMES[plan]} — {PLAN_PRICES_EUR[plan].toFixed(2).replace('.', ',')}€/mois
+                                {isUpgrade ? '↑' : '↓'} {PLAN_NAMES[plan]} - {PLAN_PRICES_EUR[plan].toFixed(2).replace('.', ',')}€/mois
                               </>
                             )}
                           </button>
@@ -546,7 +546,7 @@ export default function ProfilPage() {
               <span className="text-sm text-[var(--text-secondary)]">Votre plan actuel</span>
               <span className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--success)' }}>
                 <span className="w-2 h-2 rounded-full" style={{ background: 'var(--success)' }} />
-                Plan Gratuit — 0€/mois
+                Plan Gratuit - 0€/mois
               </span>
             </div>
             <div className="text-xs space-y-1.5 pt-3 text-[var(--text-secondary)]" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>

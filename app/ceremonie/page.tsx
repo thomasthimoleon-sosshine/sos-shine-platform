@@ -73,7 +73,7 @@ function ReservationForm() {
         className="w-full py-4 rounded-full text-sm font-semibold transition-all hover:brightness-110 disabled:opacity-60 cursor-pointer"
         style={{ background: `linear-gradient(135deg, ${GOLD}, #B8960F)`, color: '#000' }}
       >
-        {loading ? 'Redirection...' : 'Réserver ma place — 21€'}
+        {loading ? 'Redirection...' : 'Réserver ma place - 21€'}
       </button>
       <p className="text-xs text-center" style={{ color: 'rgba(255,255,255,0.25)' }}>
         Acompte 21€ · Solde 90€ en espèces sur place · Remboursable jusqu'à J-14
@@ -111,7 +111,7 @@ export default function CeremoniePage() {
         <div className="absolute inset-0">
           <img
             src="/images/ceremonie-hero.png"
-            alt="L'Éveil — SOS Shine"
+            alt="L'Éveil - SOS Shine"
             className="w-full h-full object-cover"
             style={{ objectPosition: 'center 40%' }}
           />
@@ -153,7 +153,7 @@ export default function CeremoniePage() {
 
           <Fade delay={0.5}>
             <p className="text-xs" style={{ color: 'rgba(255,255,255,0.25)' }}>
-              13 juin 2026 · 18h – 21h30 · Lac de Saint-Cassien · 20 places
+              13 juin 2026 · 18h - 21h30 · Lac de Saint-Cassien · 20 places
             </p>
           </Fade>
         </div>
@@ -218,7 +218,7 @@ export default function CeremoniePage() {
               num: '02',
               title: 'Le Mental',
               color: GOLD,
-              desc: 'Ce que tu portes a un mécanisme précis. On le démonte ensemble — puis on le brûle.',
+              desc: 'Ce que tu portes a un mécanisme précis. On le démonte ensemble - puis on le brûle.',
             },
             {
               num: '03',
@@ -262,7 +262,7 @@ export default function CeremoniePage() {
             <div className="grid grid-cols-2 gap-3">
               {[
                 { label: 'Date', value: '13 juin 2026' },
-                { label: 'Horaires', value: '18h00 – 21h30' },
+                { label: 'Horaires', value: '18h00 - 21h30' },
                 { label: 'Lieu', value: 'Lac de Saint-Cassien, Var' },
                 { label: 'Places', value: '20 personnes max' },
                 { label: 'Avec', value: 'Julia · William · Thomas' },
@@ -283,12 +283,12 @@ export default function CeremoniePage() {
           <Fade delay={0.2}>
             <div className="space-y-2 pt-2">
               {[
-                'Tenue confortable — prévoir un plaid pour le coucher du soleil',
+                'Tenue confortable - prévoir un plaid pour le coucher du soleil',
                 'En cas de pluie : report communiqué 48h avant',
                 'Venir seul(e) est conseillé',
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-3 py-2" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                  <span style={{ color: GOLD, opacity: 0.4, flexShrink: 0 }}>—</span>
+                  <span style={{ color: GOLD, opacity: 0.4, flexShrink: 0 }}>-</span>
                   <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>{item}</p>
                 </div>
               ))}
@@ -332,7 +332,7 @@ export default function CeremoniePage() {
                 { q: 'Pourquoi un acompte ?', a: "Pour réserver ta place sans bloquer tout ton budget. Le solde de 90€ se règle sur place, en espèces, le soir même." },
                 { q: 'Et si je ne peux plus venir ?', a: "L'acompte est remboursable jusqu'à 14 jours avant. Au-delà, il peut être transféré à une autre personne ou sur une prochaine date." },
                 { q: "Et s'il pleut ?", a: 'Report à une date alternative communiquée 48h avant, avec le même groupe.' },
-                { q: 'Puis-je venir seul·e ?', a: "Oui — c'est même la façon idéale. Le format est conçu pour des personnes qui viennent seules et se connectent au groupe." },
+                { q: 'Puis-je venir seul·e ?', a: "Oui - c'est même la façon idéale. Le format est conçu pour des personnes qui viennent seules et se connectent au groupe." },
               ].map(item => (
                 <FaqItem key={item.q} q={item.q} a={item.a} />
               ))}

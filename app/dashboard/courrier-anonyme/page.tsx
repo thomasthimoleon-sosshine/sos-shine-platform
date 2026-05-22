@@ -91,7 +91,7 @@ export default function CourrierAnonymePage() {
             <p className="text-sm leading-relaxed max-w-md mx-auto mb-6 text-[var(--text-secondary)]">
               Votre courrier a bien été reçu. L&apos;équipe fondatrice le lira avec attention.
               Si votre message inspire un sujet, il pourra être traité dans un épisode
-              de Shine TV ou du podcast — toujours dans le respect de votre anonymat.
+              de Shine TV ou du podcast - toujours dans le respect de votre anonymat.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <button
@@ -122,7 +122,7 @@ export default function CourrierAnonymePage() {
                   <p className="text-xs leading-relaxed text-[var(--text-secondary)]">
                     Cet espace vous permet d&apos;écrire librement ce que vous avez sur le cœur.
                     Vos messages sont transmis directement à l&apos;équipe fondatrice (Julia, William & Thomas)
-                    qui pourront y répondre en vidéo sur Shine TV, en podcast, ou dans un article —
+                    qui pourront y répondre en vidéo sur Shine TV, en podcast, ou dans un article -
                     toujours sans jamais révéler votre identité.
                   </p>
                 </div>

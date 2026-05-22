@@ -1,5 +1,5 @@
 /**
- * Email 7 — Un petit cadeau pour aujourd'hui (J+5)
+ * Email 7 - Un petit cadeau pour aujourd'hui (J+5)
  */
 import { wrapEmail, p, quoteBlock, signature, spacer } from './wrapper'
 

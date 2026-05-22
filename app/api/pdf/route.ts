@@ -1,5 +1,5 @@
 /**
- * SOS Shine — API Route PDF
+ * SOS Shine - API Route PDF
  *
  * GET /api/pdf?type=invoice&id=...
  * GET /api/pdf?type=affiliation&from=...&to=...
@@ -111,7 +111,7 @@ async function handleInvoice(
     },
     items: [
       {
-        description: `Abonnement SOS Shine — ${subscription.plan}`,
+        description: `Abonnement SOS Shine - ${subscription.plan}`,
         plan: subscription.plan,
         period: subscription.current_period_end
           ? `Jusqu'au ${new Date(subscription.current_period_end).toLocaleDateString('fr-FR')}`

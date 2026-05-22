@@ -80,7 +80,7 @@ export function PreviewAudio({ src, title, ctaText, ctaLink }: PreviewAudioProps
 
   return (
     <div className="rounded-xl p-4 space-y-3" style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(201,169,97,0.15)' }}>
-      <p className="font-medium text-sm text-[var(--text-primary)]">Audio — {title}</p>
+      <p className="font-medium text-sm text-[var(--text-primary)]">Audio - {title}</p>
       <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.12)' }}>
         <span className="text-lg flex-shrink-0 mt-0.5">🎧</span>
         <p className="text-xs leading-relaxed text-[var(--text-secondary)]">

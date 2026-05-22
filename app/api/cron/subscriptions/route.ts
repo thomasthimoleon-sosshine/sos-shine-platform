@@ -361,7 +361,7 @@ function getEmailContent(
       </div></div>`,
     },
     payment_failed_3: {
-      subject: `🚨 Dernier rappel avant suspension — SOS Shine`,
+      subject: `🚨 Dernier rappel avant suspension - SOS Shine`,
       html: `<div style="${baseStyle}"><div style="${cardStyle}">
         <h1 style="color: #ef4444; font-size: 24px; margin-bottom: 16px;">Dernier rappel</h1>
         <p>Bonjour ${name},</p>

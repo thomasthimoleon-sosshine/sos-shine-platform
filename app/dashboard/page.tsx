@@ -900,7 +900,7 @@ export default function DashboardHome() {
       {/* ── Météo Énergétique ── */}
       <EnergyWeatherWidget profile={profile} />
 
-      {/* ── Citation du jour — DEMARCATION LINE ── */}
+      {/* ── Citation du jour - DEMARCATION LINE ── */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -919,7 +919,7 @@ export default function DashboardHome() {
           &ldquo;{siteSettings.dash_custom_quote || (quote ? quote.text.fr : t('quote.text'))}&rdquo;
         </p>
         <p className="mt-4 text-[13px] font-medium relative text-[var(--brand)]">
-          — {siteSettings.dash_custom_quote_author || (quote ? quote.author.fr : t('quote.author'))}
+          - {siteSettings.dash_custom_quote_author || (quote ? quote.author.fr : t('quote.author'))}
         </p>
       </motion.div>
 
@@ -938,7 +938,7 @@ export default function DashboardHome() {
       {/* ── NPS feedback (after 7 days) ── */}
       <NpsWidget userId={currentUserId} createdAt={profile?.created_at || null} />
 
-      {/* ── Affiliate widget — viral loop ── */}
+      {/* ── Affiliate widget - viral loop ── */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}

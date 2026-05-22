@@ -11,7 +11,7 @@ const TICKER_ITEMS = [
   '✨ Événement SOS Shine',
   '📍 Sud de la France',
   '📅 13 juin 2026',
-  '🕕 18h – 21h30',
+  '🕕 18h - 21h30',
   '→ Réserver ma place',
 ]
 
@@ -265,7 +265,7 @@ export default function QuizLandingClient() {
                   <p className="text-sm italic leading-relaxed mb-4" style={{ color: 'rgba(255,255,255,0.75)' }}>
                     &laquo;&nbsp;{t.text}&nbsp;&raquo;
                   </p>
-                  <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>— {t.author}</p>
+                  <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>- {t.author}</p>
                 </div>
               </Reveal>
             ))}
@@ -293,7 +293,7 @@ export default function QuizLandingClient() {
               <img src="/images/julia.jpeg" alt="Julia Laureau" className="w-24 h-24 rounded-full object-cover flex-shrink-0" style={{ border: '2px solid rgba(201,169,97,0.3)' }} />
               <div className="space-y-3">
                 <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)' }}>
-                  Auteure du livre fondateur <strong style={{ color: 'var(--text-primary)' }}>&laquo;&nbsp;SOS Shine — Briller Comme un Diamant&nbsp;&raquo;</strong>.
+                  Auteure du livre fondateur <strong style={{ color: 'var(--text-primary)' }}>&laquo;&nbsp;SOS Shine - Briller Comme un Diamant&nbsp;&raquo;</strong>.
                 </p>
                 <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)' }}>
                   Ce test est l&apos;aboutissement de plusieurs années d&apos;accompagnements.

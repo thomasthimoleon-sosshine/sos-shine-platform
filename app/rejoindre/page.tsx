@@ -140,7 +140,7 @@ function PrelaunchContent() {
         </div>
       </Reveal>
 
-      {/* Pricing preview — 3 tiers */}
+      {/* Pricing preview - 3 tiers */}
       <Reveal delay={0.4}>
         <div className="glass p-8 sm:p-10 text-center mb-10" style={{ borderColor: 'rgba(201,169,97,0.12)' }}>
           <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(201,169,97,0.3), transparent)' }} />
@@ -346,7 +346,7 @@ function EmbeddedCheckoutModal({ plan, duration, email, prenom, userId = '', onC
             </svg>
           </button>
           <h3 className="font-display text-xl font-light" style={{ color: '#C9A961' }}>
-            {plan === 'essential' ? 'Essentielle' : 'Sérénité'} — {DURATIONS.find(d => d.id === duration)?.label}
+            {plan === 'essential' ? 'Essentielle' : 'Sérénité'} - {DURATIONS.find(d => d.id === duration)?.label}
           </h3>
           <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
             {formatPrice(PRICES[plan][duration])}/mois
@@ -526,7 +526,7 @@ function PaymentContent() {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCheckout = async (plan: PlanId) => {
-    // Essential only has monthly pricing — force monthly regardless of selected duration
+    // Essential only has monthly pricing - force monthly regardless of selected duration
     if (plan === 'essential') {
       setSelectedDuration('monthly')
     }
@@ -537,7 +537,7 @@ function PaymentContent() {
       return
     }
 
-    // Not logged in — redirect to signup so the user creates an account first
+    // Not logged in - redirect to signup so the user creates an account first
     router.push('/signup?source=rejoindre&next=/rejoindre')
   }
 
@@ -558,7 +558,7 @@ function PaymentContent() {
         )}
       </AnimatePresence>
 
-      {/* Pricing card — Sérénité uniquement */}
+      {/* Pricing card - Sérénité uniquement */}
       <div className="max-w-md mx-auto mb-6">
         {/* Sérénité */}
         <Reveal delay={0.5}>
@@ -609,7 +609,7 @@ function PaymentContent() {
               className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm"
               style={{ background: 'linear-gradient(135deg, #55EFC4, #00B894)', color: '#000000' }}
             >
-              Essayer Sérénité — 7 jours gratuits (CB requise)
+              Essayer Sérénité - 7 jours gratuits (CB requise)
             </button>
           </div>
         </Reveal>

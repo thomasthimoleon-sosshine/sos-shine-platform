@@ -1,5 +1,5 @@
 /**
- * SOS Shine — Design Tokens v4
+ * SOS Shine - Design Tokens v4
  * Premium Sanctuary Design System
  *
  * Direction : noir profond · bleu nuit · ivoire · or subtil
@@ -13,29 +13,29 @@
 // ── Palette ──
 
 export const palette = {
-  // Noir profond — pas un noir plat, un noir avec de la profondeur
+  // Noir profond - pas un noir plat, un noir avec de la profondeur
   black:      '#08090A',
   blackPure:  '#000000',
   blackWarm:  '#0C0D0F',
 
-  // Bleu nuit — la couleur signature de l'immersion
+  // Bleu nuit - la couleur signature de l'immersion
   night:       '#0F1624',
   nightDeep:   '#0A0F1A',
   nightLight:  '#162038',
   nightMuted:  '#1A2540',
 
-  // Ivoire — chaleur, humanité, respiration
+  // Ivoire - chaleur, humanité, respiration
   ivory:       '#F5F0E8',
   ivoryMuted:  '#E8E2D6',
   ivoryWarm:   '#FBF8F3',
 
-  // Or subtil — pas brillant, patiné, vécu
+  // Or subtil - pas brillant, patiné, vécu
   gold:        '#B8A472',
   goldLight:   '#D4C99A',
   goldDeep:    '#96845A',
   goldMuted:   '#A69768',
 
-  // Blanc — texte et accents
+  // Blanc - texte et accents
   white:       '#FAFAF8',
   whiteMuted:  '#E8E6E1',
 } as const
@@ -114,17 +114,17 @@ export const fontFamily = {
 } as const
 
 export const fontSize = {
-  '2xs':  '0.625rem',    // 10px — micro labels
-  xs:     '0.6875rem',   // 11px — captions, metadata
-  sm:     '0.8125rem',   // 13px — secondary text
-  base:   '0.9375rem',   // 15px — body
-  md:     '1.0625rem',   // 17px — emphasized body
-  lg:     '1.25rem',     // 20px — section titles
-  xl:     '1.5rem',      // 24px — page subtitles
-  '2xl':  '1.875rem',    // 30px — page titles
-  '3xl':  '2.5rem',      // 40px — hero subtitles
-  '4xl':  '3.25rem',     // 52px — hero titles
-  '5xl':  '4rem',        // 64px — display
+  '2xs':  '0.625rem',    // 10px - micro labels
+  xs:     '0.6875rem',   // 11px - captions, metadata
+  sm:     '0.8125rem',   // 13px - secondary text
+  base:   '0.9375rem',   // 15px - body
+  md:     '1.0625rem',   // 17px - emphasized body
+  lg:     '1.25rem',     // 20px - section titles
+  xl:     '1.5rem',      // 24px - page subtitles
+  '2xl':  '1.875rem',    // 30px - page titles
+  '3xl':  '2.5rem',      // 40px - hero subtitles
+  '4xl':  '3.25rem',     // 52px - hero titles
+  '5xl':  '4rem',        // 64px - display
 } as const
 
 export const fontWeight = {
@@ -197,7 +197,7 @@ export const shadows = {
   xl:    '0 16px 48px rgba(0, 0, 0, 0.35)',
   '2xl': '0 24px 64px rgba(0, 0, 0, 0.4)',
 
-  // Brand glow — subtil, pas criard
+  // Brand glow - subtil, pas criard
   glow:      '0 0 24px rgba(184, 164, 114, 0.08)',
   glowHover: '0 0 40px rgba(184, 164, 114, 0.12)',
   glowStrong:'0 0 60px rgba(184, 164, 114, 0.18)',

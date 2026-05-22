@@ -141,7 +141,7 @@ function NameCapture({ onSubmit }: { onSubmit: (name: string) => void }) {
       <div className="max-w-sm w-full space-y-8 text-center">
         <div className="space-y-3">
           <p className="text-xs uppercase tracking-widest" style={{ color: 'var(--brand)', opacity: 0.7 }}>
-            Phase 2 — Relations & attachement
+            Phase 2 - Relations & attachement
           </p>
           <h2 className="font-display text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
             Avant de continuer…
@@ -196,7 +196,7 @@ function BirthdateCapture({ firstName, onSubmit }: { firstName: string; onSubmit
       <div className="max-w-sm w-full space-y-8 text-center">
         <div className="space-y-3">
           <p className="text-xs uppercase tracking-widest" style={{ color: 'var(--brand)', opacity: 0.7 }}>
-            Phase 3 — Corps & somatique
+            Phase 3 - Corps & somatique
           </p>
           <h2 className="font-display text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
             Une dernière chose, {firstName}
@@ -258,7 +258,7 @@ function EmailCapture({ firstName, onSubmit }: { firstName: string; onSubmit: (e
             Presque terminé, {firstName}
           </p>
           <h2 className="font-display text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-            Phase 5 — Spirituel & projection
+            Phase 5 - Spirituel & projection
           </h2>
           <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
             Pour vous envoyer votre fiche complète et personnalisée
@@ -513,7 +513,7 @@ function QuestionScreen({
         {/* Phase + counter */}
         <div className="flex items-center justify-between">
           <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
-            Phase {q.phase} — {phaseLabel}
+            Phase {q.phase} - {phaseLabel}
           </span>
           <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
             {qIndex + 1} / {totalQ}

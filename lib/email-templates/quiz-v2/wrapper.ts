@@ -1,5 +1,5 @@
 /**
- * SOS Shine — Quiz V2 Email Premium Wrapper
+ * SOS Shine - Quiz V2 Email Premium Wrapper
  * Dark luxury design matching the platform identity
  */
 
@@ -62,7 +62,7 @@ ${content}
 <!-- Footer -->
 <tr><td style="padding:32px 0 0 0;text-align:center;">
 <p style="font-size:11px;color:${TEXT_MUTED};line-height:1.8;margin:0;font-family:${SANS};">
-SOS Shine® — La première encyclopédie mondiale du bien-être émotionnel<br>
+SOS Shine® - La première encyclopédie mondiale du bien-être émotionnel<br>
 <a href="https://sosshine.com" style="color:${TEXT_MUTED};">sosshine.com</a>
 </p>
 <p style="font-size:11px;color:${TEXT_MUTED};line-height:1.8;margin:12px 0 0 0;">
@@ -154,7 +154,7 @@ export function testimonialBlock(text: string, author: string): string {
 <p style="font-family:${SERIF};font-size:14px;font-style:italic;color:${TEXT};line-height:1.7;margin:0 0 8px 0;">
 "${text}"
 </p>
-<p style="font-size:12px;color:${TEXT_MUTED};margin:0;">— ${author}</p>
+<p style="font-size:12px;color:${TEXT_MUTED};margin:0;">- ${author}</p>
 </td></tr>
 </table>`
 }

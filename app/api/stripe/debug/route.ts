@@ -9,7 +9,7 @@ import type { PlanId } from '@/lib/stripe'
  * PROTECTED: Requires BOT_SECRET or CRON_SECRET authorization.
  */
 export async function GET(request: Request) {
-  // Protect debug endpoint — only accessible with authorization
+  // Protect debug endpoint - only accessible with authorization
   const authHeader = request.headers.get('authorization')
   const secret = process.env.CRON_SECRET || process.env.BOT_SECRET
   if (!secret || authHeader !== `Bearer ${secret}`) {
@@ -39,7 +39,7 @@ export async function GET(request: Request) {
   // Test Stripe connection
   const stripe = getStripe()
   if (!stripe) {
-    results.stripe_connection = 'FAILED — getStripe() returned null'
+    results.stripe_connection = 'FAILED - getStripe() returned null'
     return NextResponse.json(results)
   }
 

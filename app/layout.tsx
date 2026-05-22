@@ -36,9 +36,9 @@ const siteUrl =
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "SOS Shine — Plateforme de déconditionnement émotionnel",
+  title: "SOS Shine - Plateforme de déconditionnement émotionnel",
   description:
-    "Comprenez pourquoi vous répétez les mêmes schémas émotionnels — et sortez-en. 200+ protocoles guidés par Julia Laureau, auteure du Déconditionnement. Test gratuit en 20 questions.",
+    "Comprenez pourquoi vous répétez les mêmes schémas émotionnels - et sortez-en. 200+ protocoles guidés par Julia Laureau, auteure du Déconditionnement. Test gratuit en 20 questions.",
   keywords: [
     "déconditionnement émotionnel",
     "schémas émotionnels",
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Julia Laureau" }],
   openGraph: {
-    title: "SOS Shine — Comprendre vos schémas. Les transformer.",
+    title: "SOS Shine - Comprendre vos schémas. Les transformer.",
     description:
       "200+ protocoles guidés pour décoder vos réactions émotionnelles et reprendre les commandes de votre vie. Pas du bien-être. Du déconditionnement. Par Julia Laureau.",
     url: siteUrl,
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
         url: "/api/og",
         width: 1200,
         height: 630,
-        alt: "SOS Shine — Plateforme de déconditionnement émotionnel",
+        alt: "SOS Shine - Plateforme de déconditionnement émotionnel",
         type: "image/png",
       },
     ],
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "SOS Shine — Déconditionnement émotionnel",
+    title: "SOS Shine - Déconditionnement émotionnel",
     description:
       "Comprenez pourquoi vous répétez les mêmes schémas. 200+ protocoles par Julia Laureau. Test gratuit.",
     images: ["/api/og"],
@@ -153,7 +153,7 @@ const jsonLd = {
           name: 'Plan Sérénité',
           price: '49.90',
           priceCurrency: 'EUR',
-          description: 'Tout inclus — Shine TV, Lives, Événements',
+          description: 'Tout inclus - Shine TV, Lives, Événements',
         },
       ],
     },

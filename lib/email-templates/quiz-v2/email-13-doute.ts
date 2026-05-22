@@ -1,5 +1,5 @@
 /**
- * Email 13 — Il m'arrive de douter, moi aussi (J+11)
+ * Email 13 - Il m'arrive de douter, moi aussi (J+11)
  */
 import { wrapEmail, p, testimonialBlock, ctaButton, signature, spacer } from './wrapper'
 

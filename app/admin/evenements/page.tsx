@@ -364,7 +364,7 @@ export default function AdminEvenements() {
                 type="text"
                 value={form.title}
                 onChange={(e) => setForm({ ...form, title: e.target.value })}
-                placeholder="Ex: Soin collectif — Pleine lune"
+                placeholder="Ex: Soin collectif - Pleine lune"
                 style={inputStyle}
               />
             </div>

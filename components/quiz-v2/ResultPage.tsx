@@ -97,7 +97,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, email }: Pr
   return (
     <div className="min-h-screen">
 
-      {/* ══════════ OUVERTURE — IDENTITÉ ARCHÉTYPALE ══════════ */}
+      {/* ══════════ OUVERTURE - IDENTITÉ ARCHÉTYPALE ══════════ */}
       <div className="flex flex-col items-center justify-center min-h-[90vh] px-6 text-center">
         <motion.span
           initial={{ opacity: 0, scale: 0.9 }}
@@ -260,7 +260,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, email }: Pr
                       {step.num}
                     </span>
                     <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                      <span className="font-medium" style={{ color: 'var(--text-primary)' }}>{step.label}</span> — {step.desc}
+                      <span className="font-medium" style={{ color: 'var(--text-primary)' }}>{step.label}</span> - {step.desc}
                     </p>
                   </div>
                 ))}
@@ -298,7 +298,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, email }: Pr
               Aller plus loin
             </p>
             <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-              Ce résultat est un premier aperçu. Le scanner approfondi — 40 questions, 12 dimensions — génère une lecture complète et personnalisée rien que pour vous.
+              Ce résultat est un premier aperçu. Le scanner approfondi - 40 questions, 12 dimensions - génère une lecture complète et personnalisée rien que pour vous.
             </p>
             <a
               href="/quiz-approfondi"

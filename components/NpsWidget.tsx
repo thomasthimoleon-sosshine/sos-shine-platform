@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 
 /**
- * NPS feedback widget — appears after 7 days on dashboard.
+ * NPS feedback widget - appears after 7 days on dashboard.
  * Asks "On a scale of 0 to 10, how likely are you to recommend SOS Shine?"
  * then an optional comment. Stored in nps_responses.
  * Dismissal is persisted via localStorage so it doesn't nag.

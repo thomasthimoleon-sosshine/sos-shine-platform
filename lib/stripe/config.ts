@@ -119,7 +119,7 @@ export const PLAN_INFO: Record<PlanId, { name: string; tagline: string; hasTrial
   },
   premium: {
     name: 'Premium (archivé)',
-    tagline: "Plan archivé — non disponible à la vente",
+    tagline: "Plan archivé - non disponible à la vente",
     hasTrial: false,
   },
 }

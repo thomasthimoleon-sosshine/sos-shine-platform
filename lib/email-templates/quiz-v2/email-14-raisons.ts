@@ -1,5 +1,5 @@
 /**
- * Email 14 — Les 3 phrases qu'on se dit pour ne pas commencer (J+12)
+ * Email 14 - Les 3 phrases qu'on se dit pour ne pas commencer (J+12)
  */
 import { wrapEmail, p, h3, ctaButton, signature, goldDivider } from './wrapper'
 

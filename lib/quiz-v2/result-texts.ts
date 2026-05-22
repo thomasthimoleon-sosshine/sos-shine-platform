@@ -1,5 +1,5 @@
 /**
- * SOS Shine — Quiz V2 Result Page Texts
+ * SOS Shine - Quiz V2 Result Page Texts
  * Dynamic content for Actes 2, 3, 4 based on dominant dimension
  */
 
@@ -103,7 +103,7 @@ Demander, pour toi, c'est t'exposer. Dépendre, c'est être en danger. Alors tu 
 
 Même toi.`,
 
-    acte3: `Quelque part dans ton histoire — peut-être très tôt, peut-être récemment — tu as appris que demander de l'aide était dangereux.
+    acte3: `Quelque part dans ton histoire - peut-être très tôt, peut-être récemment - tu as appris que demander de l'aide était dangereux.
 
 Peut-être parce qu'on t'a répondu "tu es grand(e), tu peux gérer".
 Peut-être parce que demander avait un coût (une punition, une déception, une dette).
@@ -119,7 +119,7 @@ Le résultat est le même : tu as construit une autonomie si solide qu'elle est 
 
     costImmediate: [
       "la fatigue silencieuse de tout porter sans jamais rien montrer",
-      "la solitude au milieu des gens qui t'aiment — et qui ne le savent pas",
+      "la solitude au milieu des gens qui t'aiment - et qui ne le savent pas",
       "les mots que tu n'arrives pas à prononcer même quand tu en aurais besoin",
     ],
   },
@@ -149,7 +149,7 @@ Depuis ce jour, tu as décidé qu'on ne t'y reprendrait plus. Tenir les rênes e
     costImmediate: [
       "l'énergie gaspillée à anticiper des scénarios qui n'arrivent jamais",
       "les relations tendues par ton besoin de maîtriser ce que tu ne peux pas contrôler",
-      "l'impossibilité de te détendre vraiment — même en vacances, même la nuit",
+      "l'impossibilité de te détendre vraiment - même en vacances, même la nuit",
     ],
   },
 
@@ -203,7 +203,7 @@ Depuis, ton système nerveux scanne en permanence. Ce n'est pas une faiblesse. C
     },
 
     costImmediate: [
-      "le sommeil fragmenté — ton corps ne sait plus quand il peut vraiment se reposer",
+      "le sommeil fragmenté - ton corps ne sait plus quand il peut vraiment se reposer",
       "la méfiance qui s'infiltre même dans tes relations les plus proches",
       "l'épuisement silencieux d'un corps qui reste en alerte même quand tout va bien",
     ],
@@ -235,7 +235,7 @@ Vivre dans l'idéal était un refuge. Mais aujourd'hui, c'est une cage qui t'emp
     costImmediate: [
       "les opportunités du présent que tu laisses filer en attendant mieux",
       "les relations que tu dévalorisent parce qu'elles ne sont pas à la hauteur de ce que tu imagines",
-      "l'insatisfaction chronique qui te ronge — quoi que tu obtienness",
+      "l'insatisfaction chronique qui te ronge - quoi que tu obtienness",
     ],
   },
 
@@ -262,7 +262,7 @@ Tu as appris à lisser, à apaiser, à disparaître. Tu es devenu(e) le baume de
 
     costImmediate: [
       "les fois où tu dis oui alors que tout en toi voulait dire non",
-      "les gens qui t'oublient ou te prennent pour acquis(e) — parce que tu ne demandes jamais",
+      "les gens qui t'oublient ou te prennent pour acquis(e) - parce que tu ne demandes jamais",
       "ta propre voix, de plus en plus difficile à entendre",
     ],
   },
@@ -290,7 +290,7 @@ Tu as appris à provoquer pour vivre. Mais aujourd'hui, l'intensité elle-même 
 
     costImmediate: [
       "les relations que tu sabotes dès qu'elles deviennent trop stables",
-      "l'épuisement après chaque tempête — que tu as souvent déclenchée toi-même",
+      "l'épuisement après chaque tempête - que tu as souvent déclenchée toi-même",
       "l'incapacité à te sentir bien dans le calme, même quand tu le veux",
     ],
   },

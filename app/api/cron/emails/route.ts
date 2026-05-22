@@ -12,7 +12,7 @@ function getAdminClient() {
 // Ce cron doit être appelé toutes les 15 minutes
 // Il traite :
 // 1. Les emails programmés (scheduled_emails) dont l'heure est passée
-// 2. Les séquences CRM (crm_sequence_enrollments) — étapes à envoyer
+// 2. Les séquences CRM (crm_sequence_enrollments) - étapes à envoyer
 // 3. Les rappels d'événements J-1
 export async function GET(request: Request) {
   try {

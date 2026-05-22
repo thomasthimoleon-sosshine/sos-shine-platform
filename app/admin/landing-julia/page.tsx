@@ -110,7 +110,7 @@ function GenericSectionEditor({ content, sectionKey, onChange }: {
             || field === 'team_members' || field === 'members' || field === 'trust_items'
             || field === 'symptoms' || field === 'positive' || field === 'negative'
             || field === 'questions') {
-          // Arrays — text list editor
+          // Arrays - text list editor
           if (Array.isArray(value)) {
             if (value.length === 0) return null
             if (typeof value[0] === 'string') {
@@ -125,7 +125,7 @@ function GenericSectionEditor({ content, sectionKey, onChange }: {
                 </div>
               )
             }
-            // Complex array (objects) — JSON editor
+            // Complex array (objects) - JSON editor
             return (
               <div key={field}>
                 <SectionDivider title={field.replace(/_/g, ' ')} />
@@ -250,7 +250,7 @@ export default function LandingJuliaPage() {
         .order('position')
 
       if (res.error && res.error.message.includes('variant')) {
-        // Column doesn't exist yet — load without variant filter
+        // Column doesn't exist yet - load without variant filter
         const fallback = await supabase
           .from('landing_sections')
           .select('section_key, content, is_visible, position')
@@ -450,7 +450,7 @@ export default function LandingJuliaPage() {
         <div>
           <h1 className="font-display text-3xl font-semibold" style={{ color: '#A78BFA' }}>Landing Page Julia</h1>
           <p className="mt-1 text-sm" style={{ color: 'var(--text-secondary)' }}>
-            Version Julia — Toutes les sections sont modifiables et réorganisables
+            Version Julia - Toutes les sections sont modifiables et réorganisables
           </p>
         </div>
         <div className="flex items-center gap-3">

@@ -526,7 +526,7 @@ export default function CRMPage() {
                       </div>
                       <div className="min-w-0">
                         <p className="text-sm text-[var(--text-primary)] truncate">
-                          {c.first_name ? `${c.first_name} — ` : ''}{c.email}
+                          {c.first_name ? `${c.first_name} - ` : ''}{c.email}
                         </p>
                         <p className="text-[11px] text-[var(--text-muted)]">
                           {new Date(c.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}

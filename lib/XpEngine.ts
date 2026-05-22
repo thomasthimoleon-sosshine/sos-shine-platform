@@ -1,5 +1,5 @@
 /**
- * SOS Shine — XP Engine V2
+ * SOS Shine - XP Engine V2
  * Dynamic, exponential gamification with anti-farming mechanics.
  *
  * Core principles:

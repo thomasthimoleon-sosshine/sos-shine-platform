@@ -1,6 +1,6 @@
 // ═══════════════════════════════════════════════════════════════
 // POST /api/stripe/webhook
-// Webhook Stripe — SEULE source de vérité pour le traitement des paiements
+// Webhook Stripe - SEULE source de vérité pour le traitement des paiements
 // ═══════════════════════════════════════════════════════════════
 
 import { NextResponse } from 'next/server'
@@ -62,7 +62,7 @@ export async function POST(request: Request) {
             .from('ceremonie_reservations')
             .update({ status: 'paid', stripe_session_id: session.id, paid_at: new Date().toISOString() })
             .eq('id', session.client_reference_id)
-          console.log(`[Webhook] Acompte cérémonie validé — réservation ${session.client_reference_id}`)
+          console.log(`[Webhook] Acompte cérémonie validé - réservation ${session.client_reference_id}`)
           break
         }
 

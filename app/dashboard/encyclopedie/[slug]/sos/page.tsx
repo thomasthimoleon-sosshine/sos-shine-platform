@@ -153,7 +153,7 @@ export default function DouleurSosPage() {
           </div>
         )}
 
-        {/* Audio player — big, central, warm */}
+        {/* Audio player - big, central, warm */}
         <div className="rounded-3xl p-8" style={{ background: 'linear-gradient(160deg, rgba(255,107,107,0.08), rgba(0,0,0,0.3))', border: '1px solid rgba(255,107,107,0.25)' }}>
           <audio
             ref={audioRef}

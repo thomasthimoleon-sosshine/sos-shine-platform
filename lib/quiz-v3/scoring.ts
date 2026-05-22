@@ -55,14 +55,14 @@ export function calculateProfile(answers: Answers, firstName: string, email: str
 
   const phase = dominant(dimScores.PHASE) || 'reconstruction'
 
-  // PAR — separate père / mère
+  // PAR - separate père / mère
   const parScores = dimScores.PAR
   const pereSubs = Object.entries(parScores).filter(([k]) => k.startsWith('père')).sort((a, b) => b[1] - a[1])
   const mereSubs = Object.entries(parScores).filter(([k]) => k.startsWith('mère')).sort((a, b) => b[1] - a[1])
   const parentalPere = pereSubs[0]?.[0]?.replace('père ', '') || 'peu présent'
   const parentalMere = mereSubs[0]?.[0]?.replace('mère ', '') || 'distante'
 
-  // SOMA — top 3 zones
+  // SOMA - top 3 zones
   const somaZones = topN(dimScores.SOMA, 3)
 
   // CORPS rapport
@@ -81,7 +81,7 @@ export function calculateProfile(answers: Answers, firstName: string, email: str
   // Top 3 conditionnements
   const conditionnements = topN(dimScores.COND, 3)
 
-  // Q40 desire — map answer to text
+  // Q40 desire - map answer to text
   const q40 = QUESTIONS.find(q => q.id === 'Q40')
   const q40Answer = answers['Q40']
   const q40Desire = q40?.choices.find(c => c.key === q40Answer)?.label || 'se transformer'

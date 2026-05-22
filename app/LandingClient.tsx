@@ -560,7 +560,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
       <SparklingDiamonds />
       <FloatingOrbs />
 
-      {/* ═══ FIXED HEADER — Le Club 10 style ═══ */}
+      {/* ═══ FIXED HEADER - Le Club 10 style ═══ */}
       {headerVisible && (
           <header
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${headerScrolled ? 'py-3 bg-[#050505]/80 backdrop-blur-2xl border-b border-[rgba(212,175,55,0.06)]' : 'py-5 md:py-6'}`}
@@ -592,11 +592,11 @@ export default function LandingClient({ initialSections, initialPositions, initi
           </header>
         )}
 
-      {/* Flex wrapper for dynamic section ordering — always active so CSS order works */}
+      {/* Flex wrapper for dynamic section ordering - always active so CSS order works */}
       <div style={{ display: "flex", flexDirection: "column" }}>
 
       <div style={{ order: ord("hero") }}>
-      {/* ═══ HERO — Word by word reveal ═══ */}
+      {/* ═══ HERO - Word by word reveal ═══ */}
       {vis('hero') && (
         <motion.section ref={heroRef} className="relative min-h-[100vh] flex items-center pt-28 md:pt-32 pb-20" style={{ opacity: heroOpacity, scale: heroScale }}>
           {/* Ambient layers */}
@@ -606,7 +606,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
           </div>
 
           <div className="relative z-10 px-5 md:px-10 py-16 md:py-28 max-w-5xl mx-auto w-full text-center">
-            {/* Surtitle — ultra-discret, Le Club 10 style */}
+            {/* Surtitle - ultra-discret, Le Club 10 style */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -674,7 +674,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                       v.paused ? v.play() : v.pause();
                     }}
                   />
-                  {/* Sound toggle — gold blink, transparent once clicked */}
+                  {/* Sound toggle - gold blink, transparent once clicked */}
                   <button
                     type="button"
                     aria-label="Toggle sound"
@@ -994,7 +994,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
       </div>
 
       <div style={{ order: ord("steps") }}>
-      {/* ═══ LES ETAPES — Glowing Cards ═══ */}
+      {/* ═══ LES ETAPES - Glowing Cards ═══ */}
       {vis('steps') && (
         <section className="px-5 md:px-20 py-16 md:py-32 relative cv-auto">
           <div className="max-w-6xl mx-auto">
@@ -1412,7 +1412,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                 <RevealOnScroll delay={0.35}>
                   <div className="text-center mb-10 md:mb-16">
                     <p className="font-display text-lg md:text-xl italic text-[var(--brand)]">
-                      — {hist.signature}
+                      - {hist.signature}
                     </p>
                     {hist.signature_subtitle && (
                       <p className="text-xs sm:text-sm mt-1 font-light text-[var(--text-muted)]">
@@ -1527,7 +1527,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                 {trItems.map((item: { before: string; after: string; timeframe?: string; challenge?: string }, i: number) => (
                   <RevealOnScroll key={i} delay={i * 0.1}>
                     <div className="rounded-2xl p-6 md:p-8" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
-                      {item.challenge && <p className="text-xs tracking-[0.15em] uppercase mb-4 font-medium text-[var(--brand)]">{item.challenge}{item.timeframe ? ` — ${item.timeframe}` : ''}</p>}
+                      {item.challenge && <p className="text-xs tracking-[0.15em] uppercase mb-4 font-medium text-[var(--brand)]">{item.challenge}{item.timeframe ? ` - ${item.timeframe}` : ''}</p>}
                       <div className="grid md:grid-cols-2 gap-6">
                         <div>
                           <p className="text-xs uppercase tracking-wider mb-2 font-semibold" style={{ color: '#FF6B6B' }}>Avant</p>
@@ -1583,7 +1583,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
               {manif.signature && (
                 <RevealOnScroll delay={0.5}>
                   <p className="mt-10 md:mt-14 font-display text-lg md:text-xl italic text-[var(--brand)]">
-                    — {manif.signature}
+                    - {manif.signature}
                   </p>
                 </RevealOnScroll>
               )}
@@ -1980,7 +1980,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
       })()}
       </div>
 
-      {/* ═══ LANDING V2 — Complete 12-section landing page ═══ */}
+      {/* ═══ LANDING V2 - Complete 12-section landing page ═══ */}
       {vis('landing_v2') && (() => {
         const v2 = sec('landing_v2')
         return (
@@ -2413,7 +2413,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
         )
       })()}
 
-      {/* ═══ CUSTOM SECTIONS (all types) — each wrapped with its own order ═══ */}
+      {/* ═══ CUSTOM SECTIONS (all types) - each wrapped with its own order ═══ */}
       {Object.entries(sections).filter(([key, s]) => key.startsWith('custom_') && s.is_visible).map(([key, s]) => {
         const c = s.content
         const sType = c.section_type || (c.html_content ? 'html' : 'text')
@@ -2661,7 +2661,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
               </div>
 
               <p className="text-[10px] tracking-[0.15em] sm:tracking-[0.2em] uppercase text-[var(--text-muted)]">
-                &copy; {foot.copyright_year || '2026'} {foot.name || 'SOS Shine\u00ae'}{foot.copyright_suffix || ' — Tous droits réservés'}
+                &copy; {foot.copyright_year || '2026'} {foot.name || 'SOS Shine\u00ae'}{foot.copyright_suffix || ' - Tous droits réservés'}
               </p>
             </div>
           </div>

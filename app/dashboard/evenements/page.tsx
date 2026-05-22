@@ -439,7 +439,7 @@ export default function EvenementsPage() {
         </p>
       </div>
 
-      {/* World Map — only if events with coordinates exist */}
+      {/* World Map - only if events with coordinates exist */}
       {!loading && mapEvents.length > 0 && (
         <WorldGlobe events={mapEvents} selectedEvent={selectedEvent} onSelect={scrollToEvent} dragLabel={t('dashboard.drag_globe')} />
       )}
@@ -674,7 +674,7 @@ export default function EvenementsPage() {
                           className="text-xs px-4 py-2 rounded-xl font-semibold transition-all duration-200 cursor-pointer inline-flex items-center gap-1.5"
                           style={{ background: 'var(--brand)', color: 'var(--surface)' }}
                         >
-                          Réserver — {getEventPrice().label}
+                          Réserver - {getEventPrice().label}
                         </a>
                       )}
                     </div>
@@ -701,7 +701,7 @@ export default function EvenementsPage() {
           Après 4 mois dans la communauté, vous pouvez organiser vos propres Shine Walks et devenir Éclaireur.
         </p>
         <span className="text-xs font-medium text-[var(--brand)]">
-          Programme Éclaireur — bientôt disponible
+          Programme Éclaireur - bientôt disponible
         </span>
       </div>
     </div>

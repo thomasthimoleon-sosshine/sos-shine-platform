@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
-// GET — Fil d'actualité : Éclat posts des Rayons (connexions acceptées)
+// GET - Fil d'actualité : Éclat posts des Rayons (connexions acceptées)
 export async function GET() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()

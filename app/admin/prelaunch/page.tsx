@@ -59,7 +59,7 @@ const sections: SectionDef[] = [
       { label: 'Description offre', key: 'prelaunch_pricing_desc', type: 'text', default: "Rejoignez maintenant et beneficiez d'un tarif preferentiel a vie." },
       sep('Tarif Early Bird'),
       { label: 'Prix early bird', key: 'prelaunch_price_early', type: 'text', default: '19,90' },
-      { label: 'Label tarif early bird', key: 'prelaunch_price_early_label', type: 'text', default: 'Tarif fondateur — a vie' },
+      { label: 'Label tarif early bird', key: 'prelaunch_price_early_label', type: 'text', default: 'Tarif fondateur - a vie' },
       sep('Tarif Standard'),
       { label: 'Prix standard', key: 'prelaunch_price_standard', type: 'text', default: '29,90' },
       { label: 'Label tarif standard', key: 'prelaunch_price_standard_label', type: 'text', default: 'Tarif standard apres lancement' },
@@ -67,7 +67,7 @@ const sections: SectionDef[] = [
       { label: 'Suffixe prix (ex: /mois)', key: 'prelaunch_price_suffix', type: 'text', default: '/mois' },
       { label: 'Texte separateur (ex: au lieu de)', key: 'prelaunch_price_separator', type: 'text', default: 'au lieu de' },
       sep('Economies'),
-      { label: 'Texte engagement', key: 'prelaunch_no_commitment', type: 'text', default: 'Sans engagement — Annulable a tout instant' },
+      { label: 'Texte engagement', key: 'prelaunch_no_commitment', type: 'text', default: 'Sans engagement - Annulable a tout instant' },
       { label: 'Texte economie', key: 'prelaunch_savings_text', type: 'text', default: "10€ d'economie/mois, pour toujours." },
     ],
   },
@@ -76,7 +76,7 @@ const sections: SectionDef[] = [
     fields: [
       { label: 'Placeholder prénom', key: 'prelaunch_form_name_placeholder', type: 'text', default: 'Votre prénom (optionnel)' },
       { label: 'Placeholder email', key: 'prelaunch_form_email_placeholder', type: 'text', default: 'Votre email' },
-      { label: 'Texte du bouton', key: 'prelaunch_form_button', type: 'text', default: "Rejoindre la liste d'attente — 19,90€/mois à vie" },
+      { label: 'Texte du bouton', key: 'prelaunch_form_button', type: 'text', default: "Rejoindre la liste d'attente - 19,90€/mois à vie" },
       sep('Messages'),
       { label: 'Titre après inscription', key: 'prelaunch_success_title', type: 'text', default: 'Bienvenue parmi les fondateurs' },
       { label: 'Message après inscription', key: 'prelaunch_success_message', type: 'textarea', default: "Votre place est réservée. Vous recevrez un email le jour de l'ouverture avec votre accès prioritaire au tarif de 19,90€/mois à vie." },
@@ -236,7 +236,7 @@ export default function PrelaunchEditPage() {
         <div className="flex items-center gap-3">
           <div className="w-3 h-3 rounded-full" style={{ background: isEnabled ? '#55EFC4' : 'var(--text-muted)' }} />
           <span className="text-sm font-medium" style={{ color: isEnabled ? '#55EFC4' : 'var(--text-muted)' }}>
-            {isEnabled ? 'Page de pre-lancement ACTIVE — La landing page principale est remplacee' : 'Page de pre-lancement desactivee — La landing page principale est affichee'}
+            {isEnabled ? 'Page de pre-lancement ACTIVE - La landing page principale est remplacee' : 'Page de pre-lancement desactivee - La landing page principale est affichee'}
           </span>
         </div>
       </div>

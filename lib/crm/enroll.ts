@@ -1,6 +1,6 @@
 /**
  * Enroll a contact into CRM sequences matching a trigger type.
- * Non-blocking — failures are logged but don't throw.
+ * Non-blocking - failures are logged but don't throw.
  */
 export async function enrollInSequence(
   trigger_type: string,

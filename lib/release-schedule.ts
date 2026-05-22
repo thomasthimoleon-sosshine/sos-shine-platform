@@ -3,12 +3,12 @@
 // 5 protocols per month starting May 2026
 
 const PRIORITY_ORDER: string[] = [
-  // Tier 1 — touches 21 archetypes
+  // Tier 1 - touches 21 archetypes
   'couple',
   'trahison',
   'relation-au-travail',
   'mission-de-vie',
-  // Tier 2 — 3 archetypes each
+  // Tier 2 - 3 archetypes each
   'famille-toxique',
   'controle',
   'honte',
@@ -17,12 +17,12 @@ const PRIORITY_ORDER: string[] = [
   'dissociation',
   'vide-existentiel',
   'identite',
-  // Tier 3 — 2 archetypes each
+  // Tier 3 - 2 archetypes each
   'hypervigilance',
   'injustice',
   'colere',
   'solitude',
-  // Tier 4 — 1 archetype each
+  // Tier 4 - 1 archetype each
   'attachement',
   'perfectionnisme',
   'culpabilite',

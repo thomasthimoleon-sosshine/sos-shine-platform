@@ -24,7 +24,7 @@ function getAdminClient() {
   return createClient(url, key, { auth: { autoRefreshToken: false, persistSession: false } })
 }
 
-// Use {firstName} and {email} as placeholders — replaced at send time
+// Use {firstName} and {email} as placeholders - replaced at send time
 const PLACEHOLDER = { firstName: '{firstName}', email: '{email}', resumeUrl: '{resumeUrl}', topProtocol: '{topProtocol}', dominant: '3', q15Response: '{q15Response}' }
 
 const SAMPLE_SCORES: Record<string, number> = { '1': 40, '2': 20, '3': 100, '4': 60, '5': 30, '6': 50, '7': 35, '8': 25, '9': 80, '10': 45 }

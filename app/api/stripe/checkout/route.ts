@@ -21,7 +21,7 @@ export async function POST(request: Request) {
   try {
     const { plan, duration = 'monthly', email, prenom, userId } = await request.json()
 
-    // Validation — l'utilisateur doit être connecté
+    // Validation - l'utilisateur doit être connecté
     if (!userId) {
       return NextResponse.json({ error: 'Vous devez être connecté pour vous abonner' }, { status: 401 })
     }

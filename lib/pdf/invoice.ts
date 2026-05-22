@@ -1,5 +1,5 @@
 /**
- * SOS Shine — Génération de factures / reçus PDF
+ * SOS Shine - Génération de factures / reçus PDF
  * Factures pour les abonnements Stripe et reçus de paiement.
  */
 
@@ -55,7 +55,7 @@ export interface InvoiceItem {
 
 export async function generateInvoicePDF(data: InvoiceData): Promise<Uint8Array> {
   const { doc, fontRegular, fontBold } = await createDocument(
-    `Facture ${data.invoiceNumber} — SOS Shine`
+    `Facture ${data.invoiceNumber} - SOS Shine`
   )
 
   const page = addPage(doc)

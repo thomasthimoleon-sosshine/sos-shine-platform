@@ -75,7 +75,7 @@ export function generateQuizV3ResultEmail(
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Votre lecture personnalisée — SOS Shine</title>
+  <title>Votre lecture personnalisée - SOS Shine</title>
 </head>
 <body style="margin:0;padding:0;background:#000000;font-family:Helvetica,Arial,sans-serif;color:#e0e0e0;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#000000;">

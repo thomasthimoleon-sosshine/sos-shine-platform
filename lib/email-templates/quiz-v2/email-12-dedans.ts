@@ -1,5 +1,5 @@
 /**
- * Email 12 — Voilà ce qui va se passer concrètement (J+10)
+ * Email 12 - Voilà ce qui va se passer concrètement (J+10)
  */
 import { wrapEmail, p, h3, ctaButton, signature, goldDivider } from './wrapper'
 

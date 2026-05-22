@@ -1,5 +1,5 @@
 /**
- * SOS Shine — Typography System
+ * SOS Shine - Typography System
  * Base: 14px | Ratio: 1.25 (Major Third)
  * Font: Cormorant Garamond (display) + DM Sans (body)
  *
@@ -34,6 +34,6 @@ export const typeScale = {
  *
  * DEPRECATED sizes (do not use):
  * text-[10px], text-[11px], text-[13px], text-[15px],
- * text-base (16px — use 'base' 17px instead),
- * text-xs (12px — use 'xs' 11px instead)
+ * text-base (16px - use 'base' 17px instead),
+ * text-xs (12px - use 'xs' 11px instead)
  */

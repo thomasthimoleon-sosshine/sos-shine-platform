@@ -276,7 +276,7 @@ export default function AdminAbonnementsPage() {
                     <span className="w-2 h-2 rounded-full shrink-0" style={{ background: evt.color }} />
                     <span className="text-sm flex-1" style={{ color: 'var(--text-primary)' }}>
                       <span style={{ color: evt.color }}>{evt.label}</span>
-                      {' — '}
+                      {' - '}
                       {log.profiles?.prenom || 'Membre'}
                       {log.plan && <span style={{ color: 'var(--text-muted)' }}> ({planConfig[log.plan]?.label || log.plan})</span>}
                       {log.previous_plan && log.previous_plan !== log.plan && (
@@ -368,7 +368,7 @@ export default function AdminAbonnementsPage() {
                               </div>
                             )}
                             <div>
-                              <p className="text-sm" style={{ color: 'var(--text-primary)' }}>{sub.profiles?.prenom || '—'}</p>
+                              <p className="text-sm" style={{ color: 'var(--text-primary)' }}>{sub.profiles?.prenom || '-'}</p>
                               <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{sub.profiles?.email}</p>
                             </div>
                           </div>
@@ -402,14 +402,14 @@ export default function AdminAbonnementsPage() {
                               )}
                             </div>
                           ) : (
-                            <span style={{ color: 'var(--text-muted)' }}>—</span>
+                            <span style={{ color: 'var(--text-muted)' }}>-</span>
                           )}
                         </td>
                         <td className="px-4 py-3.5">
                           {sub.reminder_sent_count > 0 ? (
                             <span className="text-sm" style={{ color: '#E17055' }}>{sub.reminder_sent_count} envoyé{sub.reminder_sent_count > 1 ? 's' : ''}</span>
                           ) : (
-                            <span style={{ color: 'var(--text-muted)' }}>—</span>
+                            <span style={{ color: 'var(--text-muted)' }}>-</span>
                           )}
                         </td>
                         <td className="px-4 py-3.5">
@@ -418,7 +418,7 @@ export default function AdminAbonnementsPage() {
                               Jusqu&apos;au {formatDate(sub.grace_period_end!)}
                             </span>
                           ) : (
-                            <span style={{ color: 'var(--text-muted)' }}>—</span>
+                            <span style={{ color: 'var(--text-muted)' }}>-</span>
                           )}
                         </td>
                         <td className="px-4 py-3.5">
@@ -452,7 +452,7 @@ export default function AdminAbonnementsPage() {
                 <div className="flex-1 min-w-0">
                   <p className="text-sm" style={{ color: 'var(--text-primary)' }}>
                     <span className="font-medium" style={{ color: evt.color }}>{evt.label}</span>
-                    {' — '}
+                    {' - '}
                     {log.profiles?.prenom || 'Membre'} ({log.profiles?.email})
                   </p>
                   {log.plan && (

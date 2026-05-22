@@ -1,5 +1,5 @@
 /**
- * SOS Shine — PDF Core Library
+ * SOS Shine - PDF Core Library
  * Utilitaires de base pour la génération de PDFs avec le branding SOS Shine.
  */
 
@@ -141,7 +141,7 @@ export function drawFooter(
   })
 
   // Texte gauche
-  page.drawText('SOS Shine — Briller Comme un Diamant', {
+  page.drawText('SOS Shine - Briller Comme un Diamant', {
     x: PAGE.marginLeft,
     y,
     size: 7,

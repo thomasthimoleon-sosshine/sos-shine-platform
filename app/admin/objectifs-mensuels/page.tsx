@@ -28,10 +28,10 @@ const MILESTONES = [
   { date: '22/03/2026', label: 'Lancement', target: 'Conversion waitlist → 50 premiers abonnés', icon: '🚀' },
   { date: '30/04/2026', label: 'Cap des 85', target: 'Valider le product-market fit', icon: '✅' },
   { date: '30/06/2026', label: 'Cap des 188', target: 'Activer le programme d\'affiliation', icon: '🤝' },
-  { date: '31/08/2026', label: 'Cap des 292', target: 'MRR > 10K€ — seuil de viabilité', icon: '💰' },
-  { date: '31/10/2026', label: 'Cap des 447', target: 'MRR > 16K€ — croissance confirmée', icon: '📈' },
-  { date: '31/12/2026', label: 'Cap des 611', target: 'MRR > 22K€ — campagne Noël annuels', icon: '🎄' },
-  { date: '28/02/2027', label: 'Cap des 783', target: 'MRR ~29K€ — ARR ~348K€', icon: '🏆' },
+  { date: '31/08/2026', label: 'Cap des 292', target: 'MRR > 10K€ - seuil de viabilité', icon: '💰' },
+  { date: '31/10/2026', label: 'Cap des 447', target: 'MRR > 16K€ - croissance confirmée', icon: '📈' },
+  { date: '31/12/2026', label: 'Cap des 611', target: 'MRR > 22K€ - campagne Noël annuels', icon: '🎄' },
+  { date: '28/02/2027', label: 'Cap des 783', target: 'MRR ~29K€ - ARR ~348K€', icon: '🏆' },
 ]
 
 const PHASE_COLORS: Record<string, string> = {
@@ -395,7 +395,7 @@ export default function ObjectifsMensuelsPage() {
               {[
                 { label: 'MRR actuel', value: fmtEur(stats.mrr), target: fmtEur(currentTarget.mrr), color: '#C9A961', icon: '💰' },
                 { label: 'ARR projeté', value: fmtEur(stats.mrr * 12), target: fmtEur(currentTarget.mrr * 12), color: '#55EFC4', icon: '📊' },
-                { label: 'ARPU', value: stats.totalActive > 0 ? fmtEur(stats.mrr / stats.totalActive) : '—', target: '~37€', color: '#74C0FC', icon: '👤' },
+                { label: 'ARPU', value: stats.totalActive > 0 ? fmtEur(stats.mrr / stats.totalActive) : '-', target: '~37€', color: '#74C0FC', icon: '👤' },
                 { label: 'En essai', value: fmt(stats.trialingCount), target: '', color: '#A29BFE', icon: '⏳' },
                 { label: 'Impayés', value: fmt(stats.pastDueCount), target: '', color: stats.pastDueCount > 0 ? '#EF4444' : '#55EFC4', icon: '⚠️' },
                 { label: 'Early adopters', value: fmt(stats.waitlistDiscountCount), target: '-10€/mois', color: '#C9A961', icon: '⭐' },
@@ -495,7 +495,7 @@ export default function ObjectifsMensuelsPage() {
                           ) : isPast ? (
                             <span style={{ color: '#55EFC4' }}>✓</span>
                           ) : (
-                            <span style={{ color: 'var(--text-muted)' }}>—</span>
+                            <span style={{ color: 'var(--text-muted)' }}>-</span>
                           )}
                         </td>
                       </tr>
@@ -556,7 +556,7 @@ export default function ObjectifsMensuelsPage() {
           {/* Recommendations */}
           <div className="rounded-xl p-6" style={{ background: 'rgba(116,192,252,0.03)', border: '1px solid rgba(116,192,252,0.12)' }}>
             <h2 className="font-display text-lg font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
-              Leviers d&apos;action — {currentTarget.phase}
+              Leviers d&apos;action - {currentTarget.phase}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {currentTarget.phase === 'Lancement' && [

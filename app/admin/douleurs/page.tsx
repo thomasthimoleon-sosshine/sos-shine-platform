@@ -759,7 +759,7 @@ export default function AdminDouleursPage() {
                 onChange={(e) => setForm(prev => ({ ...prev, category: e.target.value }))}
                 style={inputStyle}
               >
-                <option value="">— Choisir une catégorie —</option>
+                <option value="">- Choisir une catégorie -</option>
                 {ENCYCLOPEDIE_CATEGORIES.map(c => (
                   <option key={c} value={c}>{c}</option>
                 ))}
@@ -1010,7 +1010,7 @@ export default function AdminDouleursPage() {
                         {/* Media uploads */}
                         <div className="grid gap-4">
                           <FileUpload
-                            label={i === 0 ? `Vidéo principale — Étape ${i + 1}` : `Vidéo — Étape ${i + 1}`}
+                            label={i === 0 ? `Vidéo principale - Étape ${i + 1}` : `Vidéo - Étape ${i + 1}`}
                             accept="video/*"
                             folder="douleurs"
                             currentUrl={step.video_url || null}
@@ -1020,7 +1020,7 @@ export default function AdminDouleursPage() {
                           />
                           {/* 2nd video: only on step 1 (Comprendre) */}
                           <FileUpload
-                            label={`Couverture vidéo — Étape ${i + 1}`}
+                            label={`Couverture vidéo - Étape ${i + 1}`}
                             accept="image/*"
                             folder="douleurs"
                             currentUrl={step.video_cover || null}
@@ -1031,7 +1031,7 @@ export default function AdminDouleursPage() {
                           {i === 0 && (
                             <>
                             <FileUpload
-                              label={`Vidéo secondaire — Étape ${i + 1} (optionnel)`}
+                              label={`Vidéo secondaire - Étape ${i + 1} (optionnel)`}
                               accept="video/*"
                               folder="douleurs"
                               currentUrl={step.video_url_2 || null}
@@ -1040,7 +1040,7 @@ export default function AdminDouleursPage() {
                               onRemoved={() => updateStep(i, 'video_url_2', '')}
                             />
                             <FileUpload
-                              label={`Couverture vidéo secondaire — Étape ${i + 1}`}
+                              label={`Couverture vidéo secondaire - Étape ${i + 1}`}
                               accept="image/*"
                               folder="douleurs"
                               currentUrl={step.video2_cover || null}
@@ -1051,7 +1051,7 @@ export default function AdminDouleursPage() {
                             </>
                           )}
                           <FileUpload
-                            label={i === 1 ? `Audio principal — Étape ${i + 1}` : `Audio — Étape ${i + 1}`}
+                            label={i === 1 ? `Audio principal - Étape ${i + 1}` : `Audio - Étape ${i + 1}`}
                             accept="audio/*"
                             folder="douleurs"
                             currentUrl={step.audio_url || null}
@@ -1060,7 +1060,7 @@ export default function AdminDouleursPage() {
                             onRemoved={() => updateStep(i, 'audio_url', '')}
                           />
                           <FileUpload
-                            label={`Couverture audio — Étape ${i + 1}`}
+                            label={`Couverture audio - Étape ${i + 1}`}
                             accept="image/*"
                             folder="douleurs"
                             currentUrl={step.audio_cover || null}
@@ -1072,7 +1072,7 @@ export default function AdminDouleursPage() {
                           {i === 1 && (
                             <>
                             <FileUpload
-                              label={`Audio secondaire — Étape ${i + 1} (optionnel)`}
+                              label={`Audio secondaire - Étape ${i + 1} (optionnel)`}
                               accept="audio/*"
                               folder="douleurs"
                               currentUrl={step.audio_url_2 || null}
@@ -1081,7 +1081,7 @@ export default function AdminDouleursPage() {
                               onRemoved={() => updateStep(i, 'audio_url_2', '')}
                             />
                             <FileUpload
-                              label={`Couverture audio secondaire — Étape ${i + 1}`}
+                              label={`Couverture audio secondaire - Étape ${i + 1}`}
                               accept="image/*"
                               folder="douleurs"
                               currentUrl={step.audio2_cover || null}
@@ -1092,7 +1092,7 @@ export default function AdminDouleursPage() {
                             </>
                           )}
                           <FileUpload
-                            label={`PDF — Étape ${i + 1}`}
+                            label={`PDF - Étape ${i + 1}`}
                             accept="application/pdf"
                             folder="douleurs"
                             currentUrl={step.pdf_url || null}
@@ -1101,7 +1101,7 @@ export default function AdminDouleursPage() {
                             onRemoved={() => updateStep(i, 'pdf_url', '')}
                           />
                           <FileUpload
-                            label={`Image / Photo — Étape ${i + 1}`}
+                            label={`Image / Photo - Étape ${i + 1}`}
                             accept="image/*"
                             folder="douleurs"
                             currentUrl={step.image_url || null}

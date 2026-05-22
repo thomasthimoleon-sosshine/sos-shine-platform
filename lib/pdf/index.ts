@@ -1,5 +1,5 @@
 /**
- * SOS Shine — Librairie PDF
+ * SOS Shine - Librairie PDF
  *
  * Génération de documents PDF avec le branding SOS Shine :
  *   - Factures / reçus d'abonnement

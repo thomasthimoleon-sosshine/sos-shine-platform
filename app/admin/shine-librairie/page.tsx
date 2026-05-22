@@ -322,7 +322,7 @@ export default function AdminShineLibrairiePage() {
           <div>
             <label htmlFor="douleur_id" style={labelStyle}>Lier à une douleur (Encyclopédie)</label>
             <select id="douleur_id" name="douleur_id" value={form.douleur_id} onChange={handleChange} style={inputStyle}>
-              <option value="">— Aucune —</option>
+              <option value="">- Aucune -</option>
               {douleurs.map((d) => (
                 <option key={d.id} value={d.id}>{d.title}</option>
               ))}

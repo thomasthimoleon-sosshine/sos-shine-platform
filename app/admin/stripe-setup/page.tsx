@@ -49,7 +49,7 @@ export default function StripeSetupPage() {
   return (
     <div style={{ maxWidth: 800, margin: '40px auto', padding: '0 20px', fontFamily: 'system-ui, sans-serif' }}>
       <h1 style={{ fontSize: 28, marginBottom: 8, color: '#C9A961' }}>
-        Configuration Stripe — SOS Shine
+        Configuration Stripe - SOS Shine
       </h1>
       <p style={{ color: '#aaa', marginBottom: 32 }}>
         Cette page crée automatiquement tous les produits et prix dans votre compte Stripe,
@@ -62,11 +62,11 @@ export default function StripeSetupPage() {
             Cliquez sur le bouton ci-dessous pour créer les 9 prix dans Stripe :
           </p>
           <ul style={{ textAlign: 'left', color: '#999', marginBottom: 24, lineHeight: 2 }}>
-            <li>Essentielle — Mensuel (9,90 EUR/mois)</li>
-            <li>Sérénité — Mensuel (49,90 EUR/mois)</li>
-            <li>Sérénité — 3 mois, 6 mois, Annuel</li>
-            <li>Premium — Mensuel (99,90 EUR/mois)</li>
-            <li>Premium — 3 mois, 6 mois, Annuel</li>
+            <li>Essentielle - Mensuel (9,90 EUR/mois)</li>
+            <li>Sérénité - Mensuel (49,90 EUR/mois)</li>
+            <li>Sérénité - 3 mois, 6 mois, Annuel</li>
+            <li>Premium - Mensuel (99,90 EUR/mois)</li>
+            <li>Premium - 3 mois, 6 mois, Annuel</li>
           </ul>
           <button
             onClick={handleSetup}

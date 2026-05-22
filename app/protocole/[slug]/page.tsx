@@ -67,7 +67,7 @@ function ProtocolPreviewContent() {
     <main className="min-h-screen" style={{ background: 'var(--surface)' }}>
       <div className="max-w-2xl mx-auto px-6 py-16 space-y-10">
 
-        {/* Bloc 1 — Contexte */}
+        {/* Bloc 1 - Contexte */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -89,7 +89,7 @@ function ProtocolPreviewContent() {
           </p>
         </motion.div>
 
-        {/* Bloc 2 — Structure 3 étapes */}
+        {/* Bloc 2 - Structure 3 étapes */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -110,7 +110,7 @@ function ProtocolPreviewContent() {
           </div>
         </motion.div>
 
-        {/* Bloc 3 — Étape 1 visible */}
+        {/* Bloc 3 - Étape 1 visible */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -136,7 +136,7 @@ function ProtocolPreviewContent() {
           </p>
         </motion.div>
 
-        {/* Bloc 4 — Étapes 2-3 verrouillées */}
+        {/* Bloc 4 - Étapes 2-3 verrouillées */}
         {[{ num: 2, label: 'Libérer & intégrer' }, { num: 3, label: 'Agir' }].map((step, i) => (
           <motion.div
             key={step.num}
@@ -162,7 +162,7 @@ function ProtocolPreviewContent() {
           </motion.div>
         ))}
 
-        {/* Bloc 5 — Bouton "Commencer mon protocole" → inscription */}
+        {/* Bloc 5 - Bouton "Commencer mon protocole" → inscription */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

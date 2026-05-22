@@ -47,10 +47,10 @@ async function saveResponse(sessionId: string, responseId: string | null, data: 
 }
 
 // ═══════════════════════════════════════════
-// INTRO SCREEN — no first name
+// INTRO SCREEN - no first name
 // ═══════════════════════════════════════════
 function IntroScreen({ onStart }: { onStart: () => void }) {
-  const TICKER_ITEMS = ['✨ Événement SOS Shine', '📍 Sud de la France', '📅 13 juin 2026', '🕕 18h – 21h30', '→ Réserver ma place']
+  const TICKER_ITEMS = ['✨ Événement SOS Shine', '📍 Sud de la France', '📅 13 juin 2026', '🕕 18h - 21h30', '→ Réserver ma place']
   const items3x = [...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS]
 
   return (
@@ -104,7 +104,7 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
 }
 
 // ═══════════════════════════════════════════
-// NAME CAPTURE — after Q4, more engaged
+// NAME CAPTURE - after Q4, more engaged
 // ═══════════════════════════════════════════
 function NameCaptureScreen({ onSubmit }: { onSubmit: (name: string) => void }) {
   const [name, setName] = useState('')
@@ -315,7 +315,7 @@ function QuestionScreen({
 // ═══════════════════════════════════════════
 // MAIN PAGE
 // ═══════════════════════════════════════════
-// Emails that always start fresh — never restore a previous result
+// Emails that always start fresh - never restore a previous result
 const TEST_QUIZ_EMAILS = new Set(['julialaureau@sosshine.com', 'ttse335@gmail.com'])
 
 export default function SignatureEmotionnellePage() {
@@ -325,7 +325,7 @@ export default function SignatureEmotionnellePage() {
   const saved = typeof window !== 'undefined' ? sessionStorage.getItem('quiz_v2_progress') : null
   const savedData = saved ? JSON.parse(saved) : null
 
-  // Test users never land on a previous result — they always see the intro
+  // Test users never land on a previous result - they always see the intro
   const isTestUser = savedData?.email && TEST_QUIZ_EMAILS.has(savedData.email.toLowerCase())
   const restoreData = (isTestUser && savedData?.phase === 'result') ? null : savedData
 
@@ -445,7 +445,7 @@ export default function SignatureEmotionnellePage() {
       return
     }
 
-    // Normal next question — save in background
+    // Normal next question - save in background
     saveResponse(sessionId, responseId, { responses, currentQuestion: question.id }).then(rid => {
       if (rid) setResponseId(rid)
     })
@@ -459,7 +459,7 @@ export default function SignatureEmotionnellePage() {
 
     // Micro-tension after Q5
     if (currentQ === 4) {
-      setMicroTension('Ce que tu viens d\'écrire — tu ne le formules probablement pas souvent. On va plus loin.')
+      setMicroTension('Ce que tu viens d\'écrire - tu ne le formules probablement pas souvent. On va plus loin.')
       setTimeout(() => {
         setMicroTension(null)
         setCurrentQ((prev: number) => prev + 1)
@@ -477,7 +477,7 @@ export default function SignatureEmotionnellePage() {
   const handleEmailSubmit = useCallback(async (capturedEmail: string) => {
     setEmailLoading(true)
     setEmail(capturedEmail)
-    // No redirect for returning users — always let them complete the new quiz.
+    // No redirect for returning users - always let them complete the new quiz.
 
     await saveResponse(sessionId, responseId, {
       email: capturedEmail,

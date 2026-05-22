@@ -1,5 +1,5 @@
 /**
- * Email 6 — Quand elle a compris comment elle fonctionnait (J+4)
+ * Email 6 - Quand elle a compris comment elle fonctionnait (J+4)
  */
 import { wrapEmail, p, ctaButton, signature } from './wrapper'
 

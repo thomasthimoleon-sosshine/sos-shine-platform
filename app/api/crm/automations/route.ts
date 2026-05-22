@@ -3,7 +3,7 @@ import { getAdminClient } from '@/lib/crm/supabase-admin'
 import { verifyAdminAccess } from '@/lib/crm/auth'
 import { getResendClient } from '@/lib/crm/resend'
 
-// GET — Diagnostic complet du système email + automatisations
+// GET - Diagnostic complet du système email + automatisations
 export async function GET() {
   try {
     if (!await verifyAdminAccess()) return NextResponse.json({ error: 'Non autorisé' }, { status: 403 })
@@ -112,7 +112,7 @@ export async function GET() {
   }
 }
 
-// POST — Actions: test email, trigger cron, retry failed
+// POST - Actions: test email, trigger cron, retry failed
 export async function POST(request: NextRequest) {
   try {
     if (!await verifyAdminAccess()) return NextResponse.json({ error: 'Non autorisé' }, { status: 403 })

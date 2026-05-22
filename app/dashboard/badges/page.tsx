@@ -31,7 +31,7 @@ export default function BadgesGalleryPage() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { setLoading(false); return }
 
-      // Check if user is a founder — if so, unlock all badges automatically
+      // Check if user is a founder - if so, unlock all badges automatically
       const { data: profile } = await supabase
         .from('profiles')
         .select('role')

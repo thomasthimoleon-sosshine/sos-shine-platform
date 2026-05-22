@@ -1,4 +1,4 @@
-/* ── Textes de l'application — Français uniquement ── */
+/* ── Textes de l'application - Français uniquement ── */
 
 export const translations: Record<string, string> = {
   'nav.home': 'Accueil',
@@ -231,7 +231,7 @@ export const translations: Record<string, string> = {
   'join.subtitle': 'Un espace complet pour comprendre, apaiser et transformer vos challenges émotionnels. Accessible 24h/24, 7j/7.',
   'join.full_access': 'Accès complet',
   'join.per_month': '/mois',
-  'join.no_commitment': 'Sans engagement — Annulable à tout instant',
+  'join.no_commitment': 'Sans engagement - Annulable à tout instant',
   'join.pay_cta': 'Passer au paiement sécurisé',
   'join.already_member': 'Déjà membre ? Se connecter',
   'join.continue_explore': "Continuer l'exploration",
@@ -363,7 +363,7 @@ export const translations: Record<string, string> = {
   'dashboard.remove_photo': 'Supprimer la photo',
   'dashboard.sending': 'Envoi...',
   'dashboard.presentation_video': 'Vidéo de présentation',
-  'dashboard.presentation_video_desc': 'Facultatif — présentez-vous à la communauté en vidéo.',
+  'dashboard.presentation_video_desc': 'Facultatif - présentez-vous à la communauté en vidéo.',
   'dashboard.add_video': 'Ajouter une vidéo de présentation',
   'dashboard.change_video': 'Changer la vidéo',
   'dashboard.remove_video': 'Supprimer',
@@ -431,9 +431,9 @@ export const translations: Record<string, string> = {
   'affiliate.tier_silver': 'Argent',
   'affiliate.tier_gold': 'Or',
   'affiliate.tier_diamond': 'Diamant',
-  'affiliate.tier_bronze_range': '0 – 10 filleuls',
-  'affiliate.tier_silver_range': '11 – 50 filleuls',
-  'affiliate.tier_gold_range': '51 – 100 filleuls',
+  'affiliate.tier_bronze_range': '0 - 10 filleuls',
+  'affiliate.tier_silver_range': '11 - 50 filleuls',
+  'affiliate.tier_gold_range': '51 - 100 filleuls',
   'affiliate.tier_diamond_range': '100+ filleuls',
   'affiliate.commission': 'commission',
   'affiliate.recurring': 'Récurrente chaque mois',

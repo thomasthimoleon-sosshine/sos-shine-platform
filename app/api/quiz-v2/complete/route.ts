@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
         console.error('[quiz/complete] top_protocol_slug update failed:', slugUpdateError.message, { responseId, topProtocolSlug })
       }
     } else {
-      console.warn('[quiz/complete] top_protocol_slug not persisted — missing data:', { responseId, topProtocolSlug })
+      console.warn('[quiz/complete] top_protocol_slug not persisted - missing data:', { responseId, topProtocolSlug })
     }
 
     // Send Email 2 (résultat complet)

@@ -27,7 +27,7 @@ export default function VisitTracker() {
 
     const sessionId = getSessionId()
 
-    // Fire and forget — don't block rendering
+    // Fire and forget - don't block rendering
     // Small delay to not compete with critical page resources
     const timer = setTimeout(() => {
       fetch('/api/track/visit', {
@@ -40,7 +40,7 @@ export default function VisitTracker() {
           timestamp: new Date().toISOString(),
         }),
       }).catch(() => {
-        // Silently fail — tracking should never break UX
+        // Silently fail - tracking should never break UX
       })
     }, 500)
 

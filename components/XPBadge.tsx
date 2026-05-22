@@ -118,7 +118,7 @@ export default function XPBadge({ userId, size = 'md', showDetails = false }: XP
       ) : (
         <div className="mb-4 rounded-xl p-3 text-center" style={{ background: 'rgba(201,169,97,0.08)', border: '1px solid rgba(201,169,97,0.15)' }}>
           <p className="text-sm font-semibold text-[var(--brand)]">Rang maximum atteint !</p>
-          <p className="text-[11px] mt-0.5 text-[var(--text-muted)]">1 000 000 XP — Diamant</p>
+          <p className="text-[11px] mt-0.5 text-[var(--text-muted)]">1 000 000 XP - Diamant</p>
         </div>
       )}
 

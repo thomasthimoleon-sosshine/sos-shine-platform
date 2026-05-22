@@ -124,7 +124,7 @@ export default function ChatDouleurPage() {
           <span style={{ color: 'var(--text-primary)' }}>Chat</span>
         </div>
         <h1 className="font-display text-2xl font-semibold flex items-center gap-3" style={{ color: 'var(--text-primary)' }}>
-          <span className="text-xl">🔥</span> Feu de Camp — {displayTitle}
+          <span className="text-xl">🔥</span> Feu de Camp - {displayTitle}
         </h1>
         <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
           Échangez avec ceux qui traversent la même épreuve.

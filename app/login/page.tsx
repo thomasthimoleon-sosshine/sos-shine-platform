@@ -94,7 +94,7 @@ export default function LoginPage() {
         {/* Deep blue radial */}
         <div className="absolute top-[-20%] left-[50%] -translate-x-1/2 w-[800px] h-[600px] rounded-full opacity-30"
           style={{ background: 'radial-gradient(ellipse, rgba(15,22,36,0.8) 0%, transparent 70%)' }} />
-        {/* Gold accent — very subtle */}
+        {/* Gold accent - very subtle */}
         <div className="absolute top-[15%] left-[50%] -translate-x-1/2 w-[400px] h-[300px] rounded-full opacity-[0.04]"
           style={{ background: 'radial-gradient(circle, #B8A472 0%, transparent 60%)' }} />
         {/* Grain texture */}
@@ -105,7 +105,7 @@ export default function LoginPage() {
       {/* ── Content ── */}
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6 py-16">
 
-        {/* Logo — breathing room */}
+        {/* Logo - breathing room */}
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}

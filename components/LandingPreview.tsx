@@ -111,7 +111,7 @@ export default function LandingPreview() {
               <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FFBD2E' }} />
               <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#28C840' }} />
               <span className="flex-1 text-center text-[10px] truncate" style={{ color: 'var(--text-muted)' }}>
-                {selected.label} — {selected.width}px
+                {selected.label} - {selected.width}px
               </span>
             </div>
             <iframe

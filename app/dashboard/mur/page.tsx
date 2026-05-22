@@ -186,7 +186,7 @@ export default function MurPage() {
         setBanUntil(null)
       }
 
-      // 3. Load posts (without fragile FK joins — we load profiles separately)
+      // 3. Load posts (without fragile FK joins - we load profiles separately)
       let query = supabase
         .from('posts')
         .select('*')

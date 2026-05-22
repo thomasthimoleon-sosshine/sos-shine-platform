@@ -1,5 +1,5 @@
 /**
- * Email 3 — Une question qui va peut-être te déranger (J+1)
+ * Email 3 - Une question qui va peut-être te déranger (J+1)
  */
 import { wrapEmail, p, signature } from './wrapper'
 
@@ -15,8 +15,8 @@ export function generateEmail03(vars: Vars): { subject: string; html: string } {
     p(`Parce que quand le cerveau met enfin de la conscience sur quelque chose qu'il vivait en automatique depuis des années, il ne peut plus faire semblant de ne pas l'avoir vu. C'est souvent là que les choses commencent à bouger. Pas de manière spectaculaire. Pas avec des feux d'artifice. Mais intérieurement.`),
     p(`Une phrase qu'on relit le soir. Une émotion qui remonte sans prévenir. Un comportement qu'on observe enfin de l'extérieur. Une fatigue qu'on comprend autrement.`),
     p(`Et je veux te dire quelque chose, parce que je suis passée par là. Ça fait maintenant 5 ans que je travaille sur ce que j'appelle le déconditionnement. Que je le déploie, que je le modifie, qu'il évolue en même temps que moi et mes expériences personnelles et professionnelles. Parce que le conditionnement, ce n'est pas un concept. C'est ce qui structure nos réactions, nos choix, nos relations, parfois sans qu'on en soupçonne l'existence.`),
-    p(`Quand j'ai commencé à parler de ça — du subconscient, des enregistrements, que j'ai parlé de mes recherches — ma mère m'a dit : <em>"Mais toi, tu n'as jamais été conditionnée."</em>`),
-    p(`Sauf qu'avec un seul son de cloche, une seule personne référente, pas de famille élargie, un cercle très restreint… je crois honnêtement que j'ai été la fille la plus conditionnée qui soit — c'est exactement pour cette raison que j'en ai fait un programme.`),
+    p(`Quand j'ai commencé à parler de ça - du subconscient, des enregistrements, que j'ai parlé de mes recherches - ma mère m'a dit : <em>"Mais toi, tu n'as jamais été conditionnée."</em>`),
+    p(`Sauf qu'avec un seul son de cloche, une seule personne référente, pas de famille élargie, un cercle très restreint… je crois honnêtement que j'ai été la fille la plus conditionnée qui soit - c'est exactement pour cette raison que j'en ai fait un programme.`),
     p(`Parce que je vois trop de personnes qui ont la connaissance, qui ont lu, qui ont compris, qui ont fait des thérapies pendant des années, et qui restent bloquées. Pas parce qu'elles manquent de volonté. Mais parce que les automatismes installés par le conditionnement sont plus forts que la compréhension intellectuelle.`),
     p(`<strong style="color:#e0e0e0;">Comprendre n'est pas suffisant.</strong>`),
     p(`Le cerveau a besoin de répétition. Le système nerveux a besoin de sécurité. Le corps a besoin de vivre autre chose pour arrêter de reproduire les mêmes schémas. C'est précisément ce qu'on construit chaque jour dans SOS Shine®, avec William, Thomas.`),

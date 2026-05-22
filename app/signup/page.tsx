@@ -318,14 +318,14 @@ export default function SignupPage() {
           <p className="text-[var(--text-muted)] text-[13px] mt-2">{s('signup_subtitle')}</p>
         </div>
 
-        {/* Card — glass */}
+        {/* Card - glass */}
         <div className="rounded-[var(--radius-2xl)] p-8 md:p-10 bg-[var(--surface-raised)] border border-[var(--border-subtle)] shadow-[var(--shadow-lg)]">
           <h1 className="font-display text-[var(--text-primary)] mb-8" style={titleStyle}>
             {s('signup_title')}
           </h1>
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Honeypot — invisible to users, catches bots */}
+            {/* Honeypot - invisible to users, catches bots */}
             <div style={{ position: 'absolute', left: '-9999px' }} aria-hidden="true">
               <input id="_hp_name" type="text" tabIndex={-1} autoComplete="off" />
             </div>
@@ -345,7 +345,7 @@ export default function SignupPage() {
             </div>
             <div>
               <label htmlFor="birthDate" className="block text-[13px] text-[var(--text-secondary)] mb-2 font-medium">
-                Date de naissance <span className="text-[11px] text-[var(--text-muted)] font-normal">(optionnel — pour votre météo énergétique)</span>
+                Date de naissance <span className="text-[11px] text-[var(--text-muted)] font-normal">(optionnel - pour votre météo énergétique)</span>
               </label>
               <input id="birthDate" type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)}
                 className="w-full px-4 py-3 rounded-[var(--radius-lg)] text-sm transition-all duration-[var(--transition-base)] bg-[var(--surface-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] outline-none focus:border-[var(--brand-alpha-strong)] focus:shadow-[0_0_0_3px_var(--brand-alpha-weak)] placeholder:text-[var(--text-muted)]"

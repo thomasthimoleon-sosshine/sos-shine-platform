@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server'
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
 
-// No auth required — linked from email, must work without session
+// No auth required - linked from email, must work without session
 export async function GET() {
   try {
     const doc = await PDFDocument.create()
     doc.setTitle('5 minutes pour réaligner ta journée')
-    doc.setAuthor('Julia Laureau — SOS Shine')
+    doc.setAuthor('Julia Laureau - SOS Shine')
     doc.setCreator('SOS Shine Platform')
 
     const fontRegular = await doc.embedFont(StandardFonts.TimesRoman)
@@ -63,7 +63,7 @@ export async function GET() {
       return y
     }
 
-    // ─── PAGE 1 — COUVERTURE ────────────────────────────────────────────────
+    // ─── PAGE 1 - COUVERTURE ────────────────────────────────────────────────
     const page1 = doc.addPage([W, H])
 
     // Fond crème
@@ -90,7 +90,7 @@ export async function GET() {
     page1.drawRectangle({ x: ML, y: H - 200, width: CW, height: 1, color: GOLD })
 
     // Sous-titre
-    const subtitle = 'Un cadeau de Julia — SOS Shine'
+    const subtitle = 'Un cadeau de Julia - SOS Shine'
     const subtitleSize = 14
     const subtitleWidth = fontItalic.widthOfTextAtSize(subtitle, subtitleSize)
     page1.drawText(subtitle, {
@@ -112,7 +112,7 @@ export async function GET() {
       size: 9, font: fontSans, color: GRAY,
     })
 
-    // ─── PAGES 2-6 — LES 5 ÉTAPES ───────────────────────────────────────────
+    // ─── PAGES 2-6 - LES 5 ÉTAPES ───────────────────────────────────────────
     const steps = [
       {
         num: '1',
@@ -191,14 +191,14 @@ export async function GET() {
       drawWrapped(page, step.body, fontSans, 13, ML, H - 290, BLACK, CW, 22)
 
       // Footer
-      page.drawText(`SOS Shine — sosshine.com`, {
-        x: W / 2 - fontSans.widthOfTextAtSize('SOS Shine — sosshine.com', 9) / 2,
+      page.drawText(`SOS Shine - sosshine.com`, {
+        x: W / 2 - fontSans.widthOfTextAtSize('SOS Shine - sosshine.com', 9) / 2,
         y: 25,
         size: 9, font: fontSans, color: GRAY,
       })
     }
 
-    // ─── PAGE FINALE — CITATION + SIGNATURE ─────────────────────────────────
+    // ─── PAGE FINALE - CITATION + SIGNATURE ─────────────────────────────────
     const pageFinal = doc.addPage([W, H])
     pageFinal.drawRectangle({ x: 0, y: 0, width: W, height: H, color: BG })
     pageFinal.drawRectangle({ x: 0, y: H - 8, width: W, height: 8, color: GOLD })
@@ -227,7 +227,7 @@ export async function GET() {
 
     // Signature
     cy -= 20
-    const sig = '— Julia'
+    const sig = '- Julia'
     const sigW = fontRegular.widthOfTextAtSize(sig, 16)
     pageFinal.drawText(sig, {
       x: (W - sigW) / 2,
@@ -239,7 +239,7 @@ export async function GET() {
     pageFinal.drawRectangle({ x: ML, y: 80, width: CW, height: 0.5, color: GOLD })
 
     // Footer final
-    const footerText = 'SOS Shine — sosshine.com — © 2026'
+    const footerText = 'SOS Shine - sosshine.com - © 2026'
     const footerW = fontSans.widthOfTextAtSize(footerText, 9)
     pageFinal.drawText(footerText, {
       x: (W - footerW) / 2,

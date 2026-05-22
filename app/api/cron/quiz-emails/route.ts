@@ -58,7 +58,7 @@ export async function GET(request: Request) {
 
     const sequenceId = sequences[0].id
 
-    // 2. Load all steps for this sequence (from DB — editable by admin)
+    // 2. Load all steps for this sequence (from DB - editable by admin)
     const { data: steps } = await supabase
       .from('crm_sequence_steps')
       .select('step_order, delay_days, subject, html_content')

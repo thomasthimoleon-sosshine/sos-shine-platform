@@ -183,7 +183,7 @@ export default function DouleurDetailPage() {
           }
         }
 
-        // Not found in published — check if it exists but is unpublished
+        // Not found in published - check if it exists but is unpublished
         const { data: allUnpublished } = await supabase
           .from('douleurs')
           .select('id, title, slug, is_published')
@@ -331,7 +331,7 @@ export default function DouleurDetailPage() {
           setLinkedArticle(data as { slug: string; title: string; excerpt: string | null; cover_image: string | null; read_time: number | null })
         }
       } catch {
-        // Column may not exist yet — fail silently
+        // Column may not exist yet - fail silently
       }
     }
     loadLinkedArticle()
@@ -353,7 +353,7 @@ export default function DouleurDetailPage() {
         const subRes = await fetch(`/api/subscription/features?user_id=${user.id}`)
         const subData = await subRes.json()
         if (!subData.is_active && !subData.is_admin) {
-          // Free logged-in users: step 1 fully accessible — no preview mode cap
+          // Free logged-in users: step 1 fully accessible - no preview mode cap
           setIsFreeUser(true)
         }
       } catch { /* non-critical */ }
@@ -468,7 +468,7 @@ export default function DouleurDetailPage() {
         completed_at: allComplete ? new Date().toISOString() : progress.completed_at,
       } as UserProgress)
 
-      // No per-step XP in V2 — XP is awarded via Boss Quest quiz
+      // No per-step XP in V2 - XP is awarded via Boss Quest quiz
     } else {
       const newData = {
         user_id: userId,
@@ -613,7 +613,7 @@ export default function DouleurDetailPage() {
 
           <p className="text-sm sm:text-[15px] leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
             Nous mettons tout notre cœur à préparer ce contenu pour qu&apos;il soit à la hauteur de ce que vous traversez.
-            Julia, William et Thomas travaillent dessus pour vous offrir un protocole complet — avec la même profondeur
+            Julia, William et Thomas travaillent dessus pour vous offrir un protocole complet - avec la même profondeur
             et la même bienveillance que tous les autres.
           </p>
 
@@ -626,7 +626,7 @@ export default function DouleurDetailPage() {
               Julia, William et Thomas répondent à vos questions en direct.
             </p>
             <p className="text-sm leading-relaxed mt-3" style={{ color: 'var(--text-secondary)' }}>
-              Vous pouvez aussi nous écrire directement — nous vous guiderons personnellement
+              Vous pouvez aussi nous écrire directement - nous vous guiderons personnellement
               vers les ressources qui peuvent déjà vous accompagner.
             </p>
           </div>
@@ -696,7 +696,7 @@ export default function DouleurDetailPage() {
         <span style={{ color: 'var(--text-primary)' }}>{douleur.title}</span>
       </div>
 
-      {/* SOS banner — appears at the top when an SOS meditation is configured */}
+      {/* SOS banner - appears at the top when an SOS meditation is configured */}
       {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
       {(douleur as any)?.sos_audio_url && (
         <Link
@@ -718,7 +718,7 @@ export default function DouleurDetailPage() {
                 Vous êtes en crise ?
               </p>
               <h3 className="font-display text-lg sm:text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-                Méditation SOS 5 min — accès immédiat
+                Méditation SOS 5 min - accès immédiat
               </h3>
             </div>
             <div className="flex-shrink-0">
@@ -881,7 +881,7 @@ export default function DouleurDetailPage() {
           </p>
         )}
 
-        {/* Content area — show ALL available media for this step */}
+        {/* Content area - show ALL available media for this step */}
         {(() => {
           const hasAnyContent = currentStep.video || currentStep.video2 || currentStep.audio || currentStep.audio2 || currentStep.pdf || currentStep.image || currentStep.exercise_content
 
@@ -1014,7 +1014,7 @@ export default function DouleurDetailPage() {
               {/* Image: shown as standalone when no video, or as cover above audio */}
               {!currentStep.video && currentStep.image && (
                 <div className="rounded-xl overflow-hidden" style={{ background: 'var(--dark)' }}>
-                  <img src={currentStep.image} alt={`${douleur?.title} — Étape ${currentStep.num}`} className="w-full h-auto rounded-xl" />
+                  <img src={currentStep.image} alt={`${douleur?.title} - Étape ${currentStep.num}`} className="w-full h-auto rounded-xl" />
                 </div>
               )}
 
@@ -1036,7 +1036,7 @@ export default function DouleurDetailPage() {
 
                     return (
                       <div className="rounded-xl p-4 space-y-3" style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(201,169,97,0.15)' }}>
-                        <p className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>Audio — {title}</p>
+                        <p className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>Audio - {title}</p>
                         <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.12)' }}>
                           <span className="text-lg flex-shrink-0 mt-0.5">🎧</span>
                           <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
@@ -1061,11 +1061,11 @@ export default function DouleurDetailPage() {
                 })() : (
                 <div className="rounded-xl overflow-hidden" style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${currentStep.color}20` }}>
                   {currentStep.audio_cover && (
-                    <img src={currentStep.audio_cover} alt={`Audio — ${currentStep.title}`} className="w-full" />
+                    <img src={currentStep.audio_cover} alt={`Audio - ${currentStep.title}`} className="w-full" />
                   )}
                   <div className="p-4 space-y-3">
                     <p className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>
-                      Audio — {currentStep.title}
+                      Audio - {currentStep.title}
                     </p>
                     <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.12)' }}>
                       <span className="text-lg flex-shrink-0 mt-0.5">🎧</span>
@@ -1082,11 +1082,11 @@ export default function DouleurDetailPage() {
               {currentStep.audio2 && !isPreviewMode && (
                 <div className="rounded-xl overflow-hidden" style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${currentStep.color}20` }}>
                   {currentStep.audio2_cover && (
-                    <img src={currentStep.audio2_cover} alt={`Audio 2 — ${currentStep.title}`} className="w-full" />
+                    <img src={currentStep.audio2_cover} alt={`Audio 2 - ${currentStep.title}`} className="w-full" />
                   )}
                   <div className="p-4 space-y-3">
                     <p className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>
-                      Audio 2 — {currentStep.title}
+                      Audio 2 - {currentStep.title}
                     </p>
                     <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.12)' }}>
                       <span className="text-lg flex-shrink-0 mt-0.5">🎧</span>
@@ -1107,7 +1107,7 @@ export default function DouleurDetailPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                     </svg>
                     <div>
-                      <p className="font-medium text-sm" style={{ color: 'var(--brand)' }}>PDF — Exercices & plan d&apos;action</p>
+                      <p className="font-medium text-sm" style={{ color: 'var(--brand)' }}>PDF - Exercices & plan d&apos;action</p>
                       <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{isFreeUser ? 'Abonnez-vous pour télécharger' : 'Créez votre compte pour télécharger'}</p>
                     </div>
                   </div>
@@ -1149,7 +1149,7 @@ export default function DouleurDetailPage() {
               className="w-full py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer"
               style={{ background: `${currentStep.color}15`, color: currentStep.color, border: `1px solid ${currentStep.color}30` }}
             >
-              {isFreeUser && currentStep.num === 1 ? "J'ai compris — passer à l'étape 2 →" : `Marquer l'étape ${currentStep.num} comme terminée`}
+              {isFreeUser && currentStep.num === 1 ? "J'ai compris - passer à l'étape 2 →" : `Marquer l'étape ${currentStep.num} comme terminée`}
             </button>
           ) : (
             <div className="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium"
@@ -1192,7 +1192,7 @@ export default function DouleurDetailPage() {
         </div>
       </div>}
 
-      {/* Sujets complémentaires — shown after last step */}
+      {/* Sujets complémentaires - shown after last step */}
       {activeStep === totalSteps && relatedDouleurs.length > 0 && (
         <div className="rounded-xl p-5" style={{ background: 'rgba(201,169,97,0.04)', border: '1px solid rgba(201,169,97,0.15)' }}>
           <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--brand)' }}>
@@ -1229,7 +1229,7 @@ export default function DouleurDetailPage() {
                 Quiz de compréhension
               </h2>
               <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                {quizQuestions.length} questions — Minimum {Math.ceil(quizQuestions.length * 0.8)}/{quizQuestions.length} pour valider
+                {quizQuestions.length} questions - Minimum {Math.ceil(quizQuestions.length * 0.8)}/{quizQuestions.length} pour valider
               </p>
             </div>
           </div>
@@ -1252,7 +1252,7 @@ export default function DouleurDetailPage() {
                   Quiz validé !
                 </h3>
                 <p className="text-sm mb-1" style={{ color: 'var(--text-secondary)' }}>
-                  Vous avez obtenu {bestAttempt?.score}/{bestAttempt?.total} — Bravo !
+                  Vous avez obtenu {bestAttempt?.score}/{bestAttempt?.total} - Bravo !
                 </p>
                 <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
                   Vous pouvez repasser le quiz si vous le souhaitez.
@@ -1367,7 +1367,7 @@ export default function DouleurDetailPage() {
                           </p>
                         ) : (
                           <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                            Score non amélioré — pas d&apos;XP supplémentaire
+                            Score non amélioré - pas d&apos;XP supplémentaire
                           </p>
                         )}
                         <div className="flex items-center justify-between text-[11px]" style={{ color: 'var(--text-muted)' }}>
@@ -1441,7 +1441,7 @@ export default function DouleurDetailPage() {
           🔥
         </div>
         <h3 className="font-display text-lg font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
-          Accéder au Feu de Camp — {douleur.title}
+          Accéder au Feu de Camp - {douleur.title}
         </h3>
         <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
           Échangez avec ceux qui traversent la même épreuve que vous.
@@ -1704,7 +1704,7 @@ export default function DouleurDetailPage() {
 
     </div>
 
-    {/* Protocol paywall overlay — for free users trying to access steps 2/3 */}
+    {/* Protocol paywall overlay - for free users trying to access steps 2/3 */}
     {showProtocolPaywall && (
       <div
         className="fixed inset-0 z-50 flex items-center justify-center p-6"
@@ -1752,7 +1752,7 @@ export default function DouleurDetailPage() {
                 boxShadow: '0 4px 24px rgba(201,169,97,0.3)',
               }}
             >
-              Accéder à Sérénité — 49,90€/mois
+              Accéder à Sérénité - 49,90€/mois
             </a>
             <p className="text-xs text-center" style={{ color: 'var(--text-muted)' }}>
               Protocole complet · Shine TV · Lives · Communauté · Annulable à tout moment

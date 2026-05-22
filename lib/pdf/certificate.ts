@@ -1,5 +1,5 @@
 /**
- * SOS Shine — Certificat / attestation PDF
+ * SOS Shine - Certificat / attestation PDF
  * Certificats de participation aux événements et attestations de parcours.
  */
 
@@ -30,7 +30,7 @@ export interface CertificateData {
 
 export async function generateCertificatePDF(data: CertificateData): Promise<Uint8Array> {
   const { doc, fontRegular, fontBold } = await createDocument(
-    `Certificat — ${data.recipientName} — SOS Shine`
+    `Certificat - ${data.recipientName} - SOS Shine`
   )
 
   // Page en paysage pour le certificat

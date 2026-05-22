@@ -260,7 +260,7 @@ export default function AdminDefisPage() {
       if (challenge && user) {
         const { data: post, error: postErr } = await supabase.from('posts').insert({
           author_id: user.id,
-          title: `Défi "${challenge.title}" — Vainqueur !`,
+          title: `Défi "${challenge.title}" - Vainqueur !`,
           content: `Félicitations au vainqueur du défi "${challenge.title}" ! Bravo pour votre engagement et votre persévérance.`,
           post_type: 'announcement',
           category: 'remerciements',

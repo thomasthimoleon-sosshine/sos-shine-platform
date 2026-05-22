@@ -1,5 +1,5 @@
 /**
- * Email 4 — Ce qui se passe en toi depuis 48h (J+2)
+ * Email 4 - Ce qui se passe en toi depuis 48h (J+2)
  */
 import { wrapEmail, p, goldDivider, signature } from './wrapper'
 
@@ -24,7 +24,7 @@ export function generateEmail04(vars: Vars): { subject: string; html: string } {
     p(`Pourquoi ?`),
     p(`Parce que la connaissance s'installe dans une partie du cerveau. Et les automatismes vivent dans une autre. Et tant qu'on ne va pas reprogrammer cette deuxième partie, par le corps, par la répétition, par la sécurité émotionnelle, par des protocoles précis, rien ne change durablement.`),
     p(`C'est exactement ce qu'on a construit dans SOS Shine.`),
-    p(`Quand j'ai imaginé la plateforme, je voulais une chose précise. Quelque chose qui soit disponible 24h/24. Pour que les personnes n'aient plus à attendre le prochain rendez-vous. Pour qu'au moment exact où l'urgence émotionnelle frappe — à 2h du matin, un dimanche, en plein milieu d'une nuit blanche ou juste après une dispute — elles trouvent une réponse. Un protocole. Une voix.`),
+    p(`Quand j'ai imaginé la plateforme, je voulais une chose précise. Quelque chose qui soit disponible 24h/24. Pour que les personnes n'aient plus à attendre le prochain rendez-vous. Pour qu'au moment exact où l'urgence émotionnelle frappe - à 2h du matin, un dimanche, en plein milieu d'une nuit blanche ou juste après une dispute - elles trouvent une réponse. Un protocole. Une voix.`),
     p(`Un soir, j'étais dans ma chambre après une journée entière de rendez-vous. Et la seule chose que je voulais, c'était créer cet endroit. Un espace où les gens puissent se prendre en main au moment précis où ils en ont besoin.`),
     p(`Pas trois semaines plus tard. Maintenant.`),
     p(`C'est de là qu'est née la plateforme.`),

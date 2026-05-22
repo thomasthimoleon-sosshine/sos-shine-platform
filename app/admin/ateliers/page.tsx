@@ -158,7 +158,7 @@ export default function AdminAteliersPage() {
                     {atelier.title}
                   </p>
                   <p className="text-[11px] mt-0.5" style={{ color: 'var(--text-muted)' }}>
-                    {atelier.month_icon} {atelier.month_theme} &middot; Arc {atelier.arc_number} — {atelier.arc_label}
+                    {atelier.month_icon} {atelier.month_theme} &middot; Arc {atelier.arc_number} - {atelier.arc_label}
                     {atelier.is_live && ' · 🔴 Live'}
                   </p>
                 </div>

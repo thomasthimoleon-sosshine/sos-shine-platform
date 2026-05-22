@@ -1,5 +1,5 @@
 /**
- * SOS Shine — Quiz V2 Scoring Engine
+ * SOS Shine - Quiz V2 Scoring Engine
  * Multidimensional scoring across 10 emotional dimensions (0-100)
  */
 

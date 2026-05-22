@@ -479,7 +479,7 @@ export default function FounderDashboard() {
             })}
           </div>
 
-          {/* ═══════════════════ CRM — VUE FONDATEUR ═══════════════════ */}
+          {/* ═══════════════════ CRM - VUE FONDATEUR ═══════════════════ */}
           <div>
             <h2 className="text-sm font-semibold uppercase tracking-wider mb-1" style={{ color: '#C9A961' }}>
               CRM & Campagnes Email
@@ -575,7 +575,7 @@ export default function FounderDashboard() {
           {/* ═══════════════════ SECTION 2: PROJECTION 12 MOIS ═══════════════════ */}
           <div>
             <h2 className="text-sm font-semibold uppercase tracking-wider mb-1" style={{ color: '#C9A961' }}>
-              Projection 12 mois — Objectif 5 000 abonnés
+              Projection 12 mois - Objectif 5 000 abonnés
             </h2>
             <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>
               Simulation basée sur les prix réels SOS Shine, un taux de churn de 6%/mois, et les coûts moyens des plateformes de bien-être/coaching similaires (Petit BamBou, Headspace, Insight Timer Pro).
@@ -612,7 +612,7 @@ export default function FounderDashboard() {
 
           {/* ─── Revenue breakdown by plan ─── */}
           <div className="grid lg:grid-cols-2 gap-6">
-            <Section title="Répartition par plan (M12)" subtitle={`${fmt(month12.subscribers)} abonnés — Distribution type plateforme bien-être`}>
+            <Section title="Répartition par plan (M12)" subtitle={`${fmt(month12.subscribers)} abonnés - Distribution type plateforme bien-être`}>
               <div style={{ height: 280 }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
@@ -658,7 +658,7 @@ export default function FounderDashboard() {
           </div>
 
           {/* ─── Profit & Loss waterfall ─── */}
-          <Section title="Compte de résultat projeté (M12)" subtitle={`MRR: ${fmtEur(month12.mrr)} — Marge nette: ${marginPct.toFixed(1)}%`}>
+          <Section title="Compte de résultat projeté (M12)" subtitle={`MRR: ${fmtEur(month12.mrr)} - Marge nette: ${marginPct.toFixed(1)}%`}>
             <div style={{ height: 350 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={[
@@ -692,7 +692,7 @@ export default function FounderDashboard() {
 
           {/* ─── Cost breakdown ─── */}
           <div className="grid lg:grid-cols-2 gap-6">
-            <Section title="Ventilation des coûts (M12 — 5 000 abonnés)" subtitle="Coûts opérationnels mensuels estimés hors commissions et Stripe">
+            <Section title="Ventilation des coûts (M12 - 5 000 abonnés)" subtitle="Coûts opérationnels mensuels estimés hors commissions et Stripe">
               <div style={{ height: 300 }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
@@ -737,7 +737,7 @@ export default function FounderDashboard() {
                   <p className="font-display text-5xl font-bold" style={{ color: healthData[0].fill }}>{healthScore}</p>
                   <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>/ 100</p>
                   <p className="text-sm mt-2" style={{ color: 'var(--text-secondary)' }}>
-                    {healthScore > 70 ? 'Excellente santé financière' : healthScore > 40 ? 'Santé correcte — optimisable' : 'Attention — marge faible'}
+                    {healthScore > 70 ? 'Excellente santé financière' : healthScore > 40 ? 'Santé correcte - optimisable' : 'Attention - marge faible'}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 gap-3 w-full mt-6">
@@ -755,7 +755,7 @@ export default function FounderDashboard() {
           </div>
 
           {/* ─── Monthly costs evolution ─── */}
-          <Section title="Evolution des coûts vs revenus" subtitle="Suivi mensuel sur 12 mois — convergence vers la rentabilité">
+          <Section title="Evolution des coûts vs revenus" subtitle="Suivi mensuel sur 12 mois - convergence vers la rentabilité">
             <div style={{ height: 350 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={projection}>
@@ -773,7 +773,7 @@ export default function FounderDashboard() {
           </Section>
 
           {/* ─── Affiliate tracking ─── */}
-          <Section title="Programme d'affiliation — Projection" subtitle="Commission 10% sur les abonnements parrainés (~30% des inscriptions via affiliation)">
+          <Section title="Programme d'affiliation - Projection" subtitle="Commission 10% sur les abonnements parrainés (~30% des inscriptions via affiliation)">
             <div style={{ height: 280 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={projection}>
@@ -814,7 +814,7 @@ export default function FounderDashboard() {
           {/* ═══════════════════ SECTION 3: FISCALITÉ CHYPRE ═══════════════════ */}
           <div>
             <h2 className="text-sm font-semibold uppercase tracking-wider mb-1" style={{ color: '#C9A961' }}>
-              Fiscalité Chypre — Simulation détaillée
+              Fiscalité Chypre - Simulation détaillée
             </h2>
             <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>
               SOS Shine Ltd enregistrée à Chypre. IS: 12.5% | Contribution défense: 17% sur dividendes | GHS: 2.65% sur dividendes | 3 associés | 5% CA fondation humanitaire | 10% CA événements
@@ -871,7 +871,7 @@ export default function FounderDashboard() {
           </Section>
 
           {/* ─── Net per partner evolution ─── */}
-          <Section title="Evolution du revenu net par associé" subtitle="Mensuel — après toutes charges, impôts et prélèvements sociaux">
+          <Section title="Evolution du revenu net par associé" subtitle="Mensuel - après toutes charges, impôts et prélèvements sociaux">
             <div style={{ height: 300 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={projection}>
@@ -892,7 +892,7 @@ export default function FounderDashboard() {
           </Section>
 
           {/* ─── Server costs detail ─── */}
-          <Section title="Détail des coûts serveurs & infrastructure" subtitle="Evolution avec la croissance — Supabase Pro + Vercel Pro + CDN vidéo">
+          <Section title="Détail des coûts serveurs & infrastructure" subtitle="Evolution avec la croissance - Supabase Pro + Vercel Pro + CDN vidéo">
             <div style={{ height: 280 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={projection}>
@@ -1041,7 +1041,7 @@ export default function FounderDashboard() {
 
           <div className="grid lg:grid-cols-2 gap-6">
             {/* Device distribution */}
-            <Section title="Répartition par appareil" subtitle="Ce mois — Desktop, Mobile, Tablette">
+            <Section title="Répartition par appareil" subtitle="Ce mois - Desktop, Mobile, Tablette">
               <div style={{ height: 260 }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>

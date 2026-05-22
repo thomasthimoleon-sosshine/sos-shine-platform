@@ -389,7 +389,7 @@ export default function SubscriptionModal({
               <>
                 <div className="text-center mb-4">
                   <p className="text-sm font-medium text-[var(--text-primary)]">
-                    {PLAN_INFO[checkoutPlan.plan].name} — {DURATIONS.find(d => d.id === checkoutPlan.duration)?.label}
+                    {PLAN_INFO[checkoutPlan.plan].name} - {DURATIONS.find(d => d.id === checkoutPlan.duration)?.label}
                   </p>
                   <p className="text-xs mt-0.5 text-[var(--text-secondary)]">
                     {formatPrice(PRICES[checkoutPlan.plan][checkoutPlan.duration])}/mois

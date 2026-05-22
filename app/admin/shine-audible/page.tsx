@@ -194,7 +194,7 @@ export default function AdminShineAudiblePage() {
   }
 
   function formatDuration(seconds: number): string {
-    if (seconds <= 0) return '—'
+    if (seconds <= 0) return '-'
     const m = Math.floor(seconds / 60)
     const s = seconds % 60
     return `${m}:${String(s).padStart(2, '0')}`
@@ -297,7 +297,7 @@ export default function AdminShineAudiblePage() {
           <div>
             <label htmlFor="douleur_id" style={labelStyle}>Lier à une douleur (Encyclopédie)</label>
             <select id="douleur_id" name="douleur_id" value={form.douleur_id} onChange={handleChange} style={inputStyle}>
-              <option value="">— Aucune —</option>
+              <option value="">- Aucune -</option>
               {douleurs.map((d) => (
                 <option key={d.id} value={d.id}>{d.title}</option>
               ))}

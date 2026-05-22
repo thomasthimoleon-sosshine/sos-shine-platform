@@ -1,5 +1,5 @@
 /**
- * Email 1 — Abandon quiz à Q10
+ * Email 1 - Abandon quiz à Q10
  * Envoyé 2 min après email donné à Q10, SI quiz pas terminé
  */
 import { wrapEmail, p, ctaButton, signature } from './wrapper'

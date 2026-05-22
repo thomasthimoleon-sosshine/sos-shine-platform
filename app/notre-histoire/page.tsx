@@ -76,7 +76,7 @@ export default function NotreHistoirePage() {
                 <div className="w-44 sm:w-56 md:w-64 rounded-lg overflow-hidden border transition-all duration-500 shadow-lg" style={{ borderColor: `${gold}33` }}>
                   <img
                     src={hist.book_image || '/images/book-cover.jpeg'}
-                    alt="SOS Shine — Briller Comme un Diamant"
+                    alt="SOS Shine - Briller Comme un Diamant"
                     className="w-full aspect-[3/4] object-contain"
                   />
                 </div>
@@ -86,10 +86,10 @@ export default function NotreHistoirePage() {
             {/* Text content */}
             <div className="flex-1 text-center md:text-left">
               <p className="text-base md:text-xl leading-relaxed mb-4 md:mb-6 text-[var(--text-secondary)]">
-                {hist.paragraph1 || "Tout a commencé avec un livre. Julia Laureau, thérapeute holistique, a créé \"SOS Shine — Briller Comme un Diamant\" — bien plus qu'un ouvrage de développement personnel, une véritable bible de transformation qui combine coaching vidéo, méditations guidées et séances énergétiques."}
+                {hist.paragraph1 || "Tout a commencé avec un livre. Julia Laureau, thérapeute holistique, a créé \"SOS Shine - Briller Comme un Diamant\" - bien plus qu'un ouvrage de développement personnel, une véritable bible de transformation qui combine coaching vidéo, méditations guidées et séances énergétiques."}
               </p>
               <p className="text-base md:text-xl leading-relaxed mb-4 md:mb-6 text-[var(--text-secondary)]">
-                {hist.paragraph2 || "Ce programme interactif a déjà aidé des dizaines de personnes à se libérer de leurs blocages et à accéder à leur véritable potentiel. Face à cet élan, la plateforme SOS Shine est née — la continuité naturelle du livre, transformée en une communauté vivante d'accompagnement et de reconstruction."}
+                {hist.paragraph2 || "Ce programme interactif a déjà aidé des dizaines de personnes à se libérer de leurs blocages et à accéder à leur véritable potentiel. Face à cet élan, la plateforme SOS Shine est née - la continuité naturelle du livre, transformée en une communauté vivante d'accompagnement et de reconstruction."}
               </p>
               {(hist.quote) && (
                 <p className="text-sm md:text-base leading-relaxed mb-6 md:mb-8 italic text-[var(--text-muted)]">
@@ -143,7 +143,7 @@ export default function NotreHistoirePage() {
             {/* Les trois fondateurs */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 relative z-10">
 
-              {/* Julia — Énergie */}
+              {/* Julia - Énergie */}
               <div className="group relative">
                 <div className="rounded-2xl border p-6 sm:p-8 md:p-10 text-center h-full flex flex-col items-center" style={{ borderColor: 'var(--border)', background: 'rgba(255,255,255,0.02)' }}>
                   <div className="w-14 h-14 sm:w-16 sm:h-16 mb-5 md:mb-6 relative flex items-center justify-center">
@@ -162,7 +162,7 @@ export default function NotreHistoirePage() {
                 </div>
               </div>
 
-              {/* William — Corps */}
+              {/* William - Corps */}
               <div className="group relative">
                 <div className="rounded-2xl border p-6 sm:p-8 md:p-10 text-center h-full flex flex-col items-center" style={{ borderColor: 'var(--border)', background: 'rgba(255,255,255,0.02)' }}>
                   <div className="w-14 h-14 sm:w-16 sm:h-16 mb-5 md:mb-6 relative flex items-center justify-center">
@@ -181,7 +181,7 @@ export default function NotreHistoirePage() {
                 </div>
               </div>
 
-              {/* Thomas — Mental */}
+              {/* Thomas - Mental */}
               <div className="group relative">
                 <div className="rounded-2xl border p-6 sm:p-8 md:p-10 text-center h-full flex flex-col items-center" style={{ borderColor: 'var(--border)', background: 'rgba(255,255,255,0.02)' }}>
                   <div className="w-14 h-14 sm:w-16 sm:h-16 mb-5 md:mb-6 relative flex items-center justify-center">
@@ -229,10 +229,10 @@ export default function NotreHistoirePage() {
         <div className="max-w-5xl mx-auto">
           <blockquote className="text-center">
             <p className="font-display font-light text-lg sm:text-xl md:text-2xl lg:text-3xl italic leading-relaxed" style={{ color: gold }}>
-              &ldquo;{hist.manifeste || "Nous ne guérissons pas. Nous révélons. Ce que vous cherchez est déjà en vous — enfoui sous des années de conditionnements. Notre mission est de vous aider à le retrouver."}&rdquo;
+              &ldquo;{hist.manifeste || "Nous ne guérissons pas. Nous révélons. Ce que vous cherchez est déjà en vous - enfoui sous des années de conditionnements. Notre mission est de vous aider à le retrouver."}&rdquo;
             </p>
             <footer className="mt-6 md:mt-8">
-              <p className="text-[10px] sm:text-xs tracking-[0.3em] uppercase text-[var(--text-muted)]">— Julia, William & Thomas</p>
+              <p className="text-[10px] sm:text-xs tracking-[0.3em] uppercase text-[var(--text-muted)]">- Julia, William & Thomas</p>
             </footer>
           </blockquote>
         </div>

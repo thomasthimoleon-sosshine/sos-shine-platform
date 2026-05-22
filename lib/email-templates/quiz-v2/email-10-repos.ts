@@ -1,5 +1,5 @@
 /**
- * Email 10 — Une pensée avant la nuit (J+8)
+ * Email 10 - Une pensée avant la nuit (J+8)
  */
 import { wrapEmail, p, signature } from './wrapper'
 

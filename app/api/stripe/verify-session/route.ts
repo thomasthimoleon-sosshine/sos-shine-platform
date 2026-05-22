@@ -101,7 +101,7 @@ export async function POST(request: Request) {
         trialEnd = sub.trial_end
         subForDetection = sub
       } catch {
-        // Ignore — on continue avec les valeurs par défaut
+        // Ignore - on continue avec les valeurs par défaut
       }
     }
 

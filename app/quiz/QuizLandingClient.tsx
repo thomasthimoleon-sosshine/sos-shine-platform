@@ -20,7 +20,7 @@ function TopNav() {
         Se connecter
       </Link>
       <Link
-        href="/signup"
+        href={QUIZ_URL}
         className="text-sm font-semibold px-4 py-2 rounded-lg transition-all hover:brightness-110"
         style={{ background: 'var(--brand, #C9A961)', color: '#000' }}
       >

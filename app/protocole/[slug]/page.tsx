@@ -2,7 +2,7 @@
 
 import { useEffect, useState, Suspense } from 'react'
 import { useParams, useSearchParams } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 
 type Protocol = {
@@ -25,116 +25,6 @@ async function track(eventType: string, eventData: Record<string, unknown>) {
   } catch {}
 }
 
-function UpgradeModal({ email, slug, onClose }: { email: string; slug: string; onClose: () => void }) {
-  const urlPlateforme = `https://buy.stripe.com/4gM6oz4XGdRx4AV3Oi5ZC0r?prefilled_email=${encodeURIComponent(email)}`
-  const urlProtocole  = `https://buy.stripe.com/9B600b2PycNtd7r98C5ZC0q?prefilled_email=${encodeURIComponent(email)}`
-
-  function handleClick(type: 'plateforme' | 'protocole') {
-    try {
-      sessionStorage.setItem('sos_protocol_slug', slug)
-      if (email) sessionStorage.setItem('sos_quiz_email', email)
-    } catch {}
-    track('protocol_cta_clicked', { protocolSlug: slug, from: 'modal', type, email })
-  }
-
-  return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex items-end sm:items-center justify-center px-4 pb-4 sm:pb-0"
-        style={{ background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(6px)' }}
-        onClick={onClose}
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 40 }}
-          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full max-w-md rounded-3xl p-7 space-y-6"
-          style={{ background: 'var(--surface, #111)', border: '1px solid rgba(201,169,97,0.25)' }}
-          onClick={e => e.stopPropagation()}
-        >
-          {/* Header */}
-          <div className="text-center space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium"
-              style={{ background: 'rgba(85,239,196,0.12)', color: '#55EFC4' }}>
-              ✓ Étape 1 terminée
-            </div>
-            <h2 className="font-display text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-              Débloquer les étapes 2 & 3
-            </h2>
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-              L&apos;étape 1 est gratuite. Pour continuer ton protocole, choisis ta formule.
-            </p>
-          </div>
-
-          {/* Divider */}
-          <div style={{ height: '1px', background: 'rgba(201,169,97,0.12)' }} />
-
-          {/* Options */}
-          <div className="space-y-3">
-            {/* Option 1 — Plateforme */}
-            <a
-              href={urlPlateforme}
-              onClick={() => handleClick('plateforme')}
-              className="block rounded-2xl p-5 transition-all hover:brightness-110"
-              style={{ background: 'linear-gradient(135deg, rgba(201,169,97,0.15), rgba(201,169,97,0.05))', border: '1px solid rgba(201,169,97,0.35)' }}
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-sm font-semibold" style={{ color: 'var(--brand)' }}>
-                    SOS Shine — Plateforme complète
-                  </p>
-                  <p className="text-xs mt-1 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                    Étapes 2+3 de ton protocole · Tous les protocoles · Lives · Encyclopédie · Communauté
-                  </p>
-                </div>
-                <span className="text-lg font-semibold flex-shrink-0 pt-0.5" style={{ color: 'var(--brand)' }}>→</span>
-              </div>
-              <p className="text-base font-bold mt-3" style={{ color: 'var(--text-primary)' }}>
-                29,90€<span className="text-xs font-normal" style={{ color: 'var(--text-muted)' }}>/mois · sans engagement</span>
-              </p>
-            </a>
-
-            {/* Option 2 — Protocole seul */}
-            <a
-              href={urlProtocole}
-              onClick={() => handleClick('protocole')}
-              className="block rounded-2xl p-5 transition-all hover:opacity-80"
-              style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(201,169,97,0.2)' }}
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
-                    Mon protocole uniquement
-                  </p>
-                  <p className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>
-                    Étapes 2+3 de ton protocole · Accès à vie · Paiement unique
-                  </p>
-                </div>
-                <span className="text-lg font-semibold flex-shrink-0 pt-0.5" style={{ color: 'var(--text-muted)' }}>→</span>
-              </div>
-              <p className="text-base font-bold mt-3" style={{ color: 'var(--text-primary)' }}>
-                33€<span className="text-xs font-normal" style={{ color: 'var(--text-muted)' }}> · paiement unique</span>
-              </p>
-            </a>
-          </div>
-
-          <button
-            onClick={onClose}
-            className="block w-full text-center text-xs py-2 cursor-pointer"
-            style={{ color: 'var(--text-muted)' }}
-          >
-            Fermer
-          </button>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
-  )
-}
-
 function ProtocolPreviewContent() {
   const params = useParams()
   const searchParams = useSearchParams()
@@ -143,7 +33,6 @@ function ProtocolPreviewContent() {
 
   const [protocol, setProtocol] = useState<Protocol | null>(null)
   const [loading, setLoading] = useState(true)
-  const [showModal, setShowModal] = useState(false)
 
   useEffect(() => {
     async function load() {
@@ -176,14 +65,6 @@ function ProtocolPreviewContent() {
 
   return (
     <main className="min-h-screen" style={{ background: 'var(--surface)' }}>
-      {showModal && (
-        <UpgradeModal
-          email={email}
-          slug={slug}
-          onClose={() => setShowModal(false)}
-        />
-      )}
-
       <div className="max-w-2xl mx-auto px-6 py-16 space-y-10">
 
         {/* Bloc 1 — Contexte */}
@@ -281,25 +162,23 @@ function ProtocolPreviewContent() {
           </motion.div>
         ))}
 
-        {/* Bloc 5 — Bouton "J'ai terminé l'étape 1" */}
+        {/* Bloc 5 — Bouton "Commencer mon protocole" → inscription */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.44 }}
           className="space-y-3"
         >
-          <button
-            onClick={() => {
-              track('step1_completed_clicked', { protocolSlug: slug, email })
-              setShowModal(true)
-            }}
-            className="block w-full py-4 rounded-full text-sm font-semibold text-center transition-all hover:brightness-110 cursor-pointer"
+          <a
+            href={`/signup?source=quiz&email=${encodeURIComponent(email)}&next=${encodeURIComponent(`/protocole/${slug}`)}`}
+            onClick={() => track('protocol_signup_clicked', { protocolSlug: slug, email })}
+            className="block w-full py-4 rounded-full text-sm font-semibold text-center transition-all hover:brightness-110"
             style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
           >
-            J&apos;ai terminé l&apos;étape 1 →
-          </button>
+            Commencer mon protocole →
+          </a>
           <p className="text-xs text-center" style={{ color: 'var(--text-muted)' }}>
-            L&apos;étape 1 est gratuite · Débloquer les étapes 2 & 3 pour continuer
+            Inscription gratuite · L&apos;étape 1 est offerte
           </p>
         </motion.div>
 

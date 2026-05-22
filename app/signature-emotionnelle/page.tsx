@@ -3,10 +3,11 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { QUESTIONS, PROFILES, calculateTopTwo, type ProfileKey } from "@/lib/signature-test";
+import { QUESTIONS, PROFILES, calculateTopTwo, computeTotals, type ProfileKey } from "@/lib/signature-test";
 import { getArchetypeForProfiles, BLESSURE_COLORS } from "@/lib/quiz-v2/archetypes";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import { createClient } from "@/lib/supabase/client";
+import { ResultPage } from "@/components/quiz-v2/ResultPage";
 
 type Phase = "intro" | "quiz" | "loading" | "email" | "result";
 
@@ -520,298 +521,13 @@ function Beat({ children, delay = 0, className = "" }: { children: React.ReactNo
   );
 }
 
-type Protocol = { id: string; title: string; slug: string; status: string; duration_days: number }
-
-function ResultScreen({ profileKey, secondaryKey, firstName, email }: { profileKey: ProfileKey; secondaryKey: ProfileKey; firstName: string; email: string }) {
-  const { t } = useTranslation();
-  const profile = PROFILES[profileKey];
-  const archetype = getArchetypeForProfiles(profileKey, secondaryKey);
-  const bc = BLESSURE_COLORS[archetype.blessure];
-  const inject = (text: string) => text.replace(/\{firstName\}/g, firstName);
-
-  const [protocols, setProtocols] = useState<Protocol[]>([]);
-  useEffect(() => {
-    const supabase = createClient();
-    (supabase as any).from('protocols').select('id,title,slug,status,duration_days').then(({ data }: { data: Protocol[] | null }) => {
-      if (data) {
-        const sorted = [...data].sort((a, b) => {
-          const aAvail = a.status === 'available' ? 0 : 1;
-          const bAvail = b.status === 'available' ? 0 : 1;
-          return aAvail - bAvail;
-        });
-        setProtocols(sorted);
-      }
-    });
-  }, []);
-
-  const topProtocol = protocols[0] ?? null;
-  const otherProtocols = protocols.slice(1, 3);
-
-  function handleCta() {
-    if (topProtocol) {
-      try {
-        sessionStorage.setItem('sos_protocol_slug', topProtocol.slug);
-        if (email) sessionStorage.setItem('sos_quiz_email', email);
-      } catch {}
-    }
-  }
-
-  const signupUrl = topProtocol
-    ? `/signup?source=quiz&protocol=${topProtocol.slug}${email ? `&email=${encodeURIComponent(email)}` : ''}`
-    : `/signup?source=quiz`;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="min-h-screen"
-    >
-      {/* ════ ACTE 1 — IDENTITÉ ════ */}
-      <div className="flex flex-col items-center justify-center min-h-[90vh] px-6 text-center">
-        <motion.span
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="inline-block px-4 py-1.5 rounded-full text-[11px] tracking-[0.22em] uppercase font-medium mb-10"
-          style={{ background: bc.bg, color: bc.text, border: `1px solid ${bc.border}` }}
-        >
-          {archetype.blessure}
-        </motion.span>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
-          className="font-display text-[2.6rem] sm:text-6xl font-light leading-[1.1] mb-8"
-          style={{ color: "var(--gold)", letterSpacing: "-0.01em" }}
-        >
-          {archetype.name}
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.0 }}
-          className="text-[11px] tracking-[0.22em] uppercase"
-          style={{ color: bc.text, opacity: 0.6 }}
-        >
-          {archetype.emotion}&nbsp;&nbsp;·&nbsp;&nbsp;{archetype.mode}
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.6 }}
-          className="mt-20 flex flex-col items-center gap-1"
-          style={{ color: "var(--text-muted)" }}
-        >
-          <span className="text-xs tracking-[0.15em] uppercase">Continue</span>
-          <motion.span
-            animate={{ y: [0, 5, 0] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-            className="text-lg"
-          >
-            ↓
-          </motion.span>
-        </motion.div>
-      </div>
-
-      {/* ════ ACTE 2 — RECONNAISSANCE ════ */}
-      <div className="px-6 pb-24 max-w-lg mx-auto">
-        <Beat>
-          <p className="text-[11px] tracking-[0.22em] uppercase mb-8" style={{ color: bc.text, opacity: 0.55 }}>
-            Ce que tu vis
-          </p>
-          <p
-            className="text-[1.35rem] sm:text-2xl font-light leading-[1.75] whitespace-pre-line"
-            style={{ color: "var(--text-primary)" }}
-          >
-            {archetype.reconnaissance}
-          </p>
-        </Beat>
-
-        {/* ── Divider ── */}
-        <div className="my-20 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
-
-        {/* ════ ACTE 3 — VÉRITÉ CACHÉE ════ */}
-        <Beat>
-          <p className="text-[11px] tracking-[0.22em] uppercase mb-8" style={{ color: bc.text, opacity: 0.55 }}>
-            La vérité cachée
-          </p>
-          <p
-            className="text-[1.15rem] sm:text-xl font-light leading-[1.85] whitespace-pre-line"
-            style={{ color: "var(--text-secondary)" }}
-          >
-            {archetype.verite}
-          </p>
-        </Beat>
-
-        <div className="my-20 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
-
-        {/* ════ ACTE 4 — MÉCANIQUE PROFONDE ════ */}
-        <Beat>
-          <p className="text-[11px] tracking-[0.22em] uppercase mb-8" style={{ color: bc.text, opacity: 0.55 }}>
-            D&apos;où ça vient
-          </p>
-          <p
-            className="text-[1.05rem] sm:text-lg font-light leading-[1.95] whitespace-pre-line"
-            style={{ color: "var(--text-secondary)" }}
-          >
-            {archetype.mecanique}
-          </p>
-        </Beat>
-
-        <div className="my-20 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
-
-        {/* ════ ACTE 5 — CONSÉQUENCE ════ */}
-        <Beat>
-          <p className="text-[11px] tracking-[0.22em] uppercase mb-8" style={{ color: bc.text, opacity: 0.55 }}>
-            Ce qui va se passer
-          </p>
-          <p
-            className="text-[1.15rem] sm:text-xl font-light leading-[1.85] whitespace-pre-line"
-            style={{ color: "var(--text-secondary)" }}
-          >
-            {archetype.consequence}
-          </p>
-        </Beat>
-
-        <div className="my-20 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
-
-        {/* ════ ACTE 6 — TRANSITION ════ */}
-        <Beat>
-          <p
-            className="text-[1.2rem] sm:text-xl font-light leading-[1.85] whitespace-pre-line"
-            style={{ color: "var(--gold)" }}
-          >
-            {archetype.transition}
-          </p>
-        </Beat>
-
-        {/* ════ PROTOCOLES RECOMMANDÉS ════ */}
-        {topProtocol && (
-          <Beat delay={0.05} className="mt-20">
-            <p className="text-[11px] tracking-[0.22em] uppercase mb-6 text-center" style={{ color: 'var(--gold)', opacity: 0.6 }}>
-              Ton protocole recommandé
-            </p>
-            <div
-              className="rounded-2xl p-6 mb-4"
-              style={{ background: 'linear-gradient(160deg, rgba(201,169,97,0.10), rgba(201,169,97,0.03))', border: '1px solid rgba(201,169,97,0.25)' }}
-            >
-              <p className="text-xs font-medium uppercase tracking-wider mb-1" style={{ color: 'var(--gold)', opacity: 0.7 }}>
-                Protocole principal
-              </p>
-              <p className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
-                {topProtocol.title}
-              </p>
-              <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
-                {topProtocol.duration_days} jours · 3 étapes
-              </p>
-            </div>
-            {otherProtocols.length > 0 && (
-              <div className="space-y-2">
-                <p className="text-[10px] tracking-[0.18em] uppercase mb-3" style={{ color: 'var(--text-muted)', opacity: 0.6 }}>
-                  Également compatibles
-                </p>
-                {otherProtocols.map((p) => (
-                  <div key={p.id} className="rounded-xl px-4 py-3 flex items-center gap-3"
-                    style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{p.title}</p>
-                    <span className="ml-auto text-xs" style={{ color: 'var(--text-muted)' }}>{p.duration_days}j</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </Beat>
-        )}
-
-        {/* ════ CTA ════ */}
-        <Beat delay={0.1} className="mt-12 text-center">
-          <Link href={signupUrl} onClick={handleCta}>
-            <button
-              className="magnetic-btn pulse-ring w-full max-w-sm py-5 rounded-full text-base font-semibold tracking-wide transition-all hover:brightness-110"
-              style={{ background: "linear-gradient(135deg, var(--gold), var(--gold-deep))", color: "#050505" }}
-            >
-              Commencer mon protocole →
-            </button>
-          </Link>
-          <p className="mt-4 text-xs" style={{ color: "var(--text-muted)" }}>
-            Étape 1 gratuite · Sans engagement
-          </p>
-        </Beat>
-
-        {/* ════ PROFILE DEEPER DIVE ════ */}
-        <div className="mt-28">
-          <Beat>
-            <div className="flex items-center gap-4 mb-16">
-              <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.06)" }} />
-              <span className="text-[11px] tracking-[0.2em] uppercase" style={{ color: "var(--text-muted)" }}>
-                Ton profil complet
-              </span>
-              <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.06)" }} />
-            </div>
-          </Beat>
-
-          <Beat className="text-center mb-14">
-            <div
-              className="w-14 h-14 rounded-full mx-auto mb-5 flex items-center justify-center text-2xl"
-              style={{ background: `${profile.color}12`, border: `1px solid ${profile.color}30` }}
-            >
-              {profile.icon}
-            </div>
-            <p className="text-sm font-medium tracking-[0.12em] uppercase" style={{ color: profile.color }}>
-              {profile.archetype}
-            </p>
-          </Beat>
-
-          {[
-            { label: t('signature.section_essence'), text: inject(profile.essence) },
-            { label: t('signature.section_light'),   text: inject(profile.lumiere) },
-            { label: t('signature.section_shadow'),  text: inject(profile.ombre) },
-            { label: t('signature.section_protocol'), text: inject(profile.protocole) },
-          ].map((section, i) => (
-            <Beat key={section.label} delay={i * 0.05} className="mb-14">
-              <p className="text-[11px] tracking-[0.2em] uppercase mb-5" style={{ color: profile.color, opacity: 0.7 }}>
-                {section.label}
-              </p>
-              <p className="text-[15px] font-light leading-[1.9]" style={{ color: "var(--text-secondary)" }}>
-                {section.text}
-              </p>
-            </Beat>
-          ))}
-        </div>
-
-        {/* ════ FOOTER ════ */}
-        <Beat className="mt-16 pb-12 text-center">
-          <div className="flex justify-center gap-8">
-            <button
-              onClick={() => window.location.reload()}
-              className="text-xs tracking-[0.12em] uppercase transition-colors"
-              style={{ color: "var(--text-muted)" }}
-            >
-              {t('signature.retake')}
-            </button>
-            <Link
-              href="/"
-              className="text-xs tracking-[0.12em] uppercase transition-colors"
-              style={{ color: "var(--text-muted)" }}
-            >
-              {t('signature.back_home')}
-            </Link>
-          </div>
-        </Beat>
-      </div>
-    </motion.div>
-  );
-}
-
 export default function SignatureEmotionnellePage() {
   const [phase, setPhase] = useState<Phase>("intro");
   const [firstName, setFirstName] = useState("");
   const [quizEmail, setQuizEmail] = useState("");
   const [resultProfile, setResultProfile] = useState<ProfileKey | null>(null);
   const [secondaryProfile, setSecondaryProfile] = useState<ProfileKey>('P2');
+  const [dimensionScores, setDimensionScores] = useState<Record<string, number>>({});
 
   const handleStart = useCallback((name: string) => {
     setFirstName(name);
@@ -821,6 +537,15 @@ export default function SignatureEmotionnellePage() {
   const handleComplete = useCallback((answers: Record<number, number>) => {
     setPhase("loading");
     const { dominant, secondary } = calculateTopTwo(answers);
+
+    // Compute full dimension scores: P1-P10 → "1"-"10", normalized 0-1
+    const rawTotals = computeTotals(answers);
+    const maxVal = Math.max(...Object.values(rawTotals), 1);
+    const dimScores: Record<string, number> = {};
+    for (const [key, val] of Object.entries(rawTotals)) {
+      if (key.startsWith('P')) dimScores[key.slice(1)] = val / maxVal;
+    }
+    setDimensionScores(dimScores);
 
     setTimeout(() => {
       setResultProfile(dominant);
@@ -845,6 +570,10 @@ export default function SignatureEmotionnellePage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [firstName, resultProfile]);
 
+  // dominant dimension number from profile key: "P6" → "6"
+  const dominantDim = resultProfile ? resultProfile.slice(1) : '1';
+  const secondaryDim = secondaryProfile ? secondaryProfile.slice(1) : '2';
+
   return (
     <main className="relative z-0 min-h-screen" style={{ background: "var(--dark)" }}>
       <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }}>
@@ -860,7 +589,16 @@ export default function SignatureEmotionnellePage() {
             <EmailScreen key="email" onSubmit={handleEmailSubmit} firstName={firstName} />
           )}
           {phase === "result" && resultProfile && (
-            <ResultScreen key="result" profileKey={resultProfile} secondaryKey={secondaryProfile} firstName={firstName} email={quizEmail} />
+            <ResultPage
+              key="result"
+              firstName={firstName}
+              scores={dimensionScores}
+              dominant={dominantDim}
+              secondary={secondaryDim}
+              profileKey={resultProfile}
+              secondaryKey={secondaryProfile}
+              email={quizEmail}
+            />
           )}
         </AnimatePresence>
       </div>

@@ -300,7 +300,7 @@ export const PROFILES: Record<ProfileKey, Profile> = {
   },
 };
 
-function computeTotals(answers: Record<number, number>): Record<ProfileKey, number> {
+export function computeTotals(answers: Record<number, number>): Record<ProfileKey, number> {
   const totals: Record<ProfileKey, number> = {
     P1: 0, P2: 0, P3: 0, P4: 0, P5: 0,
     P6: 0, P7: 0, P8: 0, P9: 0, P10: 0,

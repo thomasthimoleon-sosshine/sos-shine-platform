@@ -190,8 +190,15 @@ export default function CeremoniePage() {
 
       {/* ══════ HERO ══════ */}
       <section className="relative min-h-screen flex flex-col items-center justify-center px-6 text-center overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full opacity-[0.04] blur-[120px]" style={{ background: C.gold }} />
+        {/* Photo de fond */}
+        <div className="absolute inset-0">
+          <img
+            src="/images/ceremonie-hero.png"
+            alt="Cérémonie SOS Shine au bord du lac"
+            className="w-full h-full object-cover"
+            style={{ objectPosition: 'center 40%' }}
+          />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(10,10,10,0.72) 0%, rgba(10,10,10,0.55) 40%, rgba(10,10,10,0.75) 80%, rgba(10,10,10,0.95) 100%)' }} />
         </div>
 
         <div className="relative z-10 max-w-2xl space-y-8">

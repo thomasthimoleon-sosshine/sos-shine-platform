@@ -49,6 +49,23 @@ export async function POST(request: Request) {
       // ── Paiement réussi via Checkout ──
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session
+
+        // Acompte cérémonie (paiement one-time via Payment Link)
+        if (session.mode === 'payment' && session.client_reference_id) {
+          const { createClient: createSupa } = await import('@supabase/supabase-js')
+          const supabase = createSupa(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.SUPABASE_SERVICE_ROLE_KEY!,
+            { auth: { autoRefreshToken: false, persistSession: false } }
+          )
+          await supabase
+            .from('ceremonie_reservations')
+            .update({ status: 'paid', stripe_session_id: session.id, paid_at: new Date().toISOString() })
+            .eq('id', session.client_reference_id)
+          console.log(`[Webhook] Acompte cérémonie validé — réservation ${session.client_reference_id}`)
+          break
+        }
+
         if (session.mode !== 'subscription') break
 
         const customerId = session.customer as string

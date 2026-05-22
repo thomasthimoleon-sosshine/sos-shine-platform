@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 
 const QUIZ_URL = '/signature-emotionnelle'
-const EVENT_URL = '/evenement-juin-2026'
+const EVENT_URL = '/ceremonie'
 
 const TICKER_ITEMS = [
   '✨ Événement SOS Shine',

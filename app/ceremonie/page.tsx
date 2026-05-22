@@ -120,8 +120,12 @@ export default function CeremoniePage() {
 
         <div className="relative z-10 max-w-xl space-y-8">
           <Fade>
+            <img src="/images/logo-shine.png" alt="SOS Shine" className="h-28 mx-auto" />
+          </Fade>
+
+          <Fade delay={0.08}>
             <p className="text-[10px] tracking-[0.35em] uppercase font-medium" style={{ color: GOLD, opacity: 0.8 }}>
-              SOS Shine · Premier événement physique · Été 2026
+              Premier événement physique · Été 2026
             </p>
           </Fade>
 

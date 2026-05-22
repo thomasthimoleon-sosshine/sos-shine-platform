@@ -6,6 +6,30 @@ import { motion } from 'framer-motion'
 
 const QUIZ_URL = '/signature-emotionnelle'
 
+function TopNav() {
+  return (
+    <nav
+      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-end gap-3 px-6 py-4"
+      style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.04)' }}
+    >
+      <Link
+        href="/login"
+        className="text-sm font-medium px-4 py-2 rounded-lg transition-colors hover:bg-white/5"
+        style={{ color: '#a1a1aa' }}
+      >
+        Se connecter
+      </Link>
+      <Link
+        href="/signup"
+        className="text-sm font-semibold px-4 py-2 rounded-lg transition-all hover:brightness-110"
+        style={{ background: 'var(--brand, #C9A961)', color: '#000' }}
+      >
+        S'inscrire
+      </Link>
+    </nav>
+  )
+}
+
 function trackCta(position: string) {
   fetch('/api/quiz-v2/track', {
     method: 'POST',
@@ -78,9 +102,10 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
 export default function QuizLandingClient() {
   return (
     <main className="min-h-screen" style={{ background: '#000000', color: '#e0e0e0' }}>
+      <TopNav />
 
       {/* ══════════ SECTION 1 — HERO ══════════ */}
-      <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden pt-16">
         {/* Background gradient */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full opacity-[0.06] blur-[100px]" style={{ background: 'var(--brand, var(--brand))' }} />

@@ -37,7 +37,7 @@ function Divider() {
 const FAQ_ITEMS = [
   {
     q: 'Pourquoi un acompte et pas le paiement complet ?',
-    a: 'Pour réserver ta place sans bloquer ton budget. Le solde de 90€ se règle sur place le jour de la cérémonie (CB, espèces ou virement).',
+    a: 'Pour réserver ta place sans bloquer ton budget. Le solde de 90€ se règle sur place le jour de la cérémonie, en espèces.',
   },
   {
     q: 'Et si je ne peux plus venir ?',
@@ -175,7 +175,7 @@ function ReservationForm() {
         {loading ? 'Redirection...' : 'Réserver ma place — 21€ d\'acompte'}
       </button>
       <p className="text-xs text-center" style={{ color: '#737373' }}>
-        Acompte 21€ · Solde de 90€ sur place · Remboursable jusqu'à J-14
+        Acompte 21€ · Solde de 90€ en espèces sur place · Remboursable jusqu'à J-14
       </p>
     </form>
   )
@@ -277,7 +277,7 @@ export default function CeremoniePage() {
               { label: 'Lieu', value: 'Lac de Saint-Cassien, Var' },
               { label: 'Places', value: '20 personnes uniquement' },
               { label: 'Tarif', value: '111€ par personne' },
-              { label: 'Acompte', value: '21€ · solde 90€ sur place' },
+              { label: 'Acompte', value: '21€ · solde 90€ en espèces sur place' },
               { label: 'La trinité', value: 'Julia · William · Thomas' },
               { label: 'Restauration', value: 'Eau infusée & infusions chaudes' },
             ].map((item, i) => (
@@ -457,7 +457,7 @@ export default function CeremoniePage() {
               20 places. Pas une de plus.
             </h2>
             <p className="text-sm mt-4 leading-relaxed" style={{ color: '#a1a1aa' }}>
-              Un acompte de 21€ confirme ta place. Le solde de 90€ se règle sur place.
+              Un acompte de 21€ confirme ta place. Le solde de 90€ se règle en espèces sur place.
             </p>
           </Fade>
 

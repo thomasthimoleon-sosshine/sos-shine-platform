@@ -1,9 +1,10 @@
 /**
  * Email 12 - Voilà ce qui va se passer concrètement (J+10)
  */
-import { wrapEmail, p, h3, ctaButton, signature, goldDivider } from './wrapper'
+import { wrapEmail, p, h3, ctaButton, ctaLink, signature, goldDivider } from './wrapper'
 
-const URL_SERENITE = 'https://buy.stripe.com/4gM6oz4XGdRx4AV3Oi5ZC0r'
+const URL_SERENITE  = 'https://buy.stripe.com/4gM6oz4XGdRx4AV3Oi5ZC0r'
+const URL_PROTOCOLE = 'https://buy.stripe.com/9B600b2PycNtd7r98C5ZC0q'
 
 type Vars = { firstName: string; email: string }
 
@@ -39,7 +40,8 @@ export function generateEmail12(vars: Vars): { subject: string; html: string } {
     p(`Pas de promesse de miracle. Pas de transformation instantanée. Pas de "ta vie va changer en 7 jours".`),
     p(`Mais 7 jours, c'est largement assez pour sentir si un endroit te fait du bien. Si la voix qu'on y entend te parle. Si la méthode te correspond. Si ton corps, ton mental et ton cœur ont envie de continuer.`),
     p(`Et si la réponse est oui, alors un vrai chemin peut commencer.`),
-    ctaButton('Démarrer maintenant', URL_SERENITE, { email }),
+    ctaButton('Rejoindre SOS Shine - 29,90€/mois', URL_SERENITE, { email }),
+    ctaLink('Accéder à mon protocole uniquement - 33€ →', `${URL_PROTOCOLE}?prefilled_email=${encodeURIComponent(email)}`),
     p(`À demain.`),
     signature(),
     p(`<br><em style="font-size:12px;color:#737373;">P.S. : Une chose que je veux que tu saches. Les 7 jours gratuits ne sont pas un piège commercial. C'est moi qui ai voulu cette formule, dès le début, parce que je trouve normal qu'on puisse voir avant de s'engager. On ne te demande pas de croire sur parole. On te demande juste de venir voir.</em>`),

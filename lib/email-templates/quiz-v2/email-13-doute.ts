@@ -1,9 +1,10 @@
 /**
  * Email 13 - Il m'arrive de douter, moi aussi (J+11)
  */
-import { wrapEmail, p, testimonialBlock, ctaButton, signature, spacer } from './wrapper'
+import { wrapEmail, p, testimonialBlock, ctaButton, ctaLink, signature, spacer } from './wrapper'
 
-const URL_SERENITE = 'https://buy.stripe.com/4gM6oz4XGdRx4AV3Oi5ZC0r'
+const URL_SERENITE  = 'https://buy.stripe.com/4gM6oz4XGdRx4AV3Oi5ZC0r'
+const URL_PROTOCOLE = 'https://buy.stripe.com/9B600b2PycNtd7r98C5ZC0q'
 
 type Vars = { firstName: string; email: string }
 
@@ -29,7 +30,8 @@ export function generateEmail13(vars: Vars): { subject: string; html: string } {
     p(`Voilà ce que c'est, vraiment, recommencer à se respecter. D'abord, décider. Puis avancer, un pas après l'autre, sur le chemin qu'on a enfin osé prendre. Et c'est exactement pour ça qu'on continue à construire SOS Shine, avec William, Thomas et toute l'équipe. Pour accompagner ce moment de décision, et tous les pas qui suivent.`),
     p(`Peut-être que si tu lis encore mes mails aujourd'hui, ce n'est pas un hasard non plus.`),
     p(`Peut-être qu'une décision est en train de mûrir en toi.`),
-    ctaButton('Rejoindre SOS Shine', URL_SERENITE, { email }),
+    ctaButton('Rejoindre SOS Shine - 29,90€/mois', URL_SERENITE, { email }),
+    ctaLink('Accéder à mon protocole uniquement - 33€ →', `${URL_PROTOCOLE}?prefilled_email=${encodeURIComponent(email)}`),
     p(`À demain.`),
     signature(),
     p(`<br><em style="font-size:12px;color:#737373;">P.S. : Cette femme dont je viens de te parler, elle continue son chemin sur la plateforme. Elle n'a pas guéri en six semaines. Elle n'est pas devenue une autre personne. Elle est juste, doucement, en train de redevenir elle-même. C'est tout ce qu'on cherche à offrir. Pas une métamorphose. Une reconnexion.</em>`),

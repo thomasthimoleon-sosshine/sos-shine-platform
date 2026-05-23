@@ -1,9 +1,10 @@
 /**
  * Email 6 - Quand elle a compris comment elle fonctionnait (J+4)
  */
-import { wrapEmail, p, ctaButton, signature } from './wrapper'
+import { wrapEmail, p, ctaButton, ctaLink, signature } from './wrapper'
 
-const URL_SERENITE = 'https://buy.stripe.com/4gM6oz4XGdRx4AV3Oi5ZC0r'
+const URL_SERENITE  = 'https://buy.stripe.com/4gM6oz4XGdRx4AV3Oi5ZC0r'
+const URL_PROTOCOLE = 'https://buy.stripe.com/9B600b2PycNtd7r98C5ZC0q'
 
 type Vars = { firstName: string; email: string }
 
@@ -32,7 +33,8 @@ export function generateEmail06(vars: Vars): { subject: string; html: string } {
     p(`C'est ça, le chemin qu'on a construit dans SOS Shine.`),
     p(`Pas une promesse de transformation magique. Pas un programme de plus à empiler sur tous les autres. Une vraie méthode, le déconditionnement, déployée jour après jour, à travers des protocoles, des outils, une communauté et une structure qui te permettent enfin d'enlever ce qui ne t'appartient pas.`),
     p(`Tu peux faire exactement ce chemin-là.`),
-    ctaButton('Rejoindre SOS Shine - 7 jours gratuits', URL_SERENITE, { email }),
+    ctaButton('Rejoindre SOS Shine - 29,90€/mois', URL_SERENITE, { email }),
+    ctaLink('Accéder à mon protocole uniquement - 33€ →', `${URL_PROTOCOLE}?prefilled_email=${encodeURIComponent(email)}`),
     p(`À demain.`),
     signature(),
     p(`<br><em style="font-size:12px;color:#737373;">P.S. : Ce qui m'impressionne le plus chez Laetitia, ce n'est pas ce qu'elle a accompli. C'est le moment précis où elle a décidé qu'elle ne voulait plus subir. Ce moment-là, personne ne peut le décider à ta place. Mais quand il arrive, il faut être prêt·e à le saisir.</em>`),

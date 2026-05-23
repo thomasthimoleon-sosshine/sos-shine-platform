@@ -1,9 +1,10 @@
 /**
  * Email 14 - Les 3 phrases qu'on se dit pour ne pas commencer (J+12)
  */
-import { wrapEmail, p, h3, ctaButton, signature, goldDivider } from './wrapper'
+import { wrapEmail, p, h3, ctaButton, ctaLink, signature, goldDivider } from './wrapper'
 
-const URL_SERENITE = 'https://buy.stripe.com/4gM6oz4XGdRx4AV3Oi5ZC0r'
+const URL_SERENITE  = 'https://buy.stripe.com/4gM6oz4XGdRx4AV3Oi5ZC0r'
+const URL_PROTOCOLE = 'https://buy.stripe.com/9B600b2PycNtd7r98C5ZC0q'
 
 type Vars = { firstName: string; email: string }
 
@@ -34,11 +35,12 @@ export function generateEmail14(vars: Vars): { subject: string; html: string } {
     p(`Et puis un jour, j'ai compris quelque chose.`),
     p(`"Plus tard" est souvent une manière polie de dire "jamais".`),
     p(`Une manière élégante de rester dans une vie qui ne nous convient plus vraiment, tout en se rassurant en se disant qu'un jour, ça changera. Tout seul. Sans qu'on ait à prendre la décision difficile.`),
-    p(`Mais la vie ne change pas toute seule. Elle change le jour où on décide, ou quand la vie le fera à ta place, ce jour-là, tu n'auras plus le choix.`),
+    p(`Mais la vie ne change pas toute seule. Elle change le jour où on décide, ou quand la vie le fera à ta place, ce jour là, tu n'auras plus le choix.`),
     goldDivider(),
     p(`Si tu es honnête avec toi-même, il y a probablement une de ces phrases qui résonne en toi en lisant ce mail. Et ce n'est pas grave. C'est même normal. Ces résistances font partie de tout chemin de changement. Mais peut-être qu'aujourd'hui, il est temps d'arrêter de laisser tes anciens schémas décider à ta place.`),
     p(`Tu n'as pas besoin d'être prêt(e) à 100%. Tu as juste besoin de faire un premier pas.`),
-    ctaButton('Commencer mes 7 jours gratuits', URL_SERENITE, { email }),
+    ctaButton('Rejoindre SOS Shine - 29,90€/mois', URL_SERENITE, { email }),
+    ctaLink('Accéder à mon protocole uniquement - 33€ →', `${URL_PROTOCOLE}?prefilled_email=${encodeURIComponent(email)}`),
     p(`À demain.`),
     signature(),
     p(`<br><em style="font-size:12px;color:#737373;">P.S. : Si tu hésites encore, fais juste un exercice ce soir. Relis ces 3 phrases. Et demande-toi : "Laquelle est-ce que je me dis le plus souvent ? Et qu'est-ce qu'elle protège, en moi ?" Souvent, c'est sous une de ces phrases que se cache la vraie peur. Et la nommer, c'est déjà commencer à la désamorcer.</em>`),

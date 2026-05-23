@@ -1,9 +1,10 @@
 /**
  * Email 15 - Dans 6 mois, à quoi ressemble ta vie ? (J+13)
  */
-import { wrapEmail, p, ctaButton, signature } from './wrapper'
+import { wrapEmail, p, ctaButton, ctaLink, signature } from './wrapper'
 
-const URL_SERENITE = 'https://buy.stripe.com/4gM6oz4XGdRx4AV3Oi5ZC0r'
+const URL_SERENITE  = 'https://buy.stripe.com/4gM6oz4XGdRx4AV3Oi5ZC0r'
+const URL_PROTOCOLE = 'https://buy.stripe.com/9B600b2PycNtd7r98C5ZC0q'
 
 type Vars = { firstName: string; email: string }
 
@@ -41,7 +42,8 @@ export function generateEmail15(vars: Vars): { subject: string; html: string } {
     p(`Toi.`),
     p(`La porte est encore ouverte aujourd'hui.`),
     p(`Et peut-être que ce n'est vraiment pas un hasard si tu es encore là à lire ces mots, alors que tu aurais pu te désabonner il y a longtemps.`),
-    ctaButton('Rejoindre SOS Shine - dernière chance', URL_SERENITE, { email }),
+    ctaButton('Rejoindre SOS Shine - 29,90€/mois', URL_SERENITE, { email }),
+    ctaLink('Accéder à mon protocole uniquement - 33€ →', `${URL_PROTOCOLE}?prefilled_email=${encodeURIComponent(email)}`),
     p(`À demain.`),
     signature(),
     p(`<br><em style="font-size:12px;color:#737373;">P.S. : Tu sais ce qui m'a fait basculer, moi, à l'époque ? Ce n'est pas une révélation lumineuse. C'est une question. Ce matin-là à Pékin je me suis demandée : "Tu veux vraiment vivre encore 30 ans comme ça ?" Et j'ai su, à l'intérieur, que la réponse était non. C'est peut-être la seule question qui compte vraiment ce soir. Pose-la-toi. Et écoute ta réponse.</em>`),

@@ -1,9 +1,10 @@
 /**
  * Email 9 - Combien vaut le fait de respirer enfin (J+7)
  */
-import { wrapEmail, p, ctaButton, signature } from './wrapper'
+import { wrapEmail, p, ctaButton, ctaLink, signature } from './wrapper'
 
-const URL_SERENITE = 'https://buy.stripe.com/4gM6oz4XGdRx4AV3Oi5ZC0r'
+const URL_SERENITE  = 'https://buy.stripe.com/4gM6oz4XGdRx4AV3Oi5ZC0r'
+const URL_PROTOCOLE = 'https://buy.stripe.com/9B600b2PycNtd7r98C5ZC0q'
 
 type Vars = { firstName: string; email: string }
 
@@ -22,13 +23,13 @@ export function generateEmail09(vars: Vars): { subject: string; html: string } {
     p(`Comme un espace vivant. Quotidien. Disponible 24h/24. Dans lequel tu avances à ton rythme, avec des outils concrets, sans avoir à attendre la prochaine séance, le prochain stage, la prochaine semaine.`),
     p(`Pour moins que le prix d'une seule séance classique avec un thérapeute, tu retrouves chaque mois :`),
     p(`Des protocoles guidés, personnalisés selon ton profil. Des exercices émotionnels et cognitifs. Des méditations et des audios à fréquences spécifiques. Des lives mensuels. Une encyclopédie complète des défis émotionnels. Une communauté de personnes qui traversent souvent les mêmes choses que toi. Et surtout, un espace où tu peux enfin arrêter de tout porter seul·e.`),
-    p(`Tu peux essayer pendant 7 jours gratuitement.`),
     p(`Sans engagement. Sans carte de crédit obligatoire si tu hésites. Juste pour ressentir si cet endroit te fait du bien.`),
     p(`Parce qu'au fond, ta paix intérieure influence toute ta vie. Tes relations. Ton énergie. Ton sommeil. Ton travail. Ta santé. Tes décisions. Ta capacité à profiter de tes enfants. Ta façon d'aimer. Ta façon de te montrer au monde.`),
     p(`Tout part de là.`),
     p(`Et quand on regarde les choses honnêtement, la vraie question n'est plus "est-ce que ça coûte trop cher ?".`),
     p(`C'est <em>"combien ça me coûte, chaque jour, de continuer à fonctionner comme ça ?"</em>`),
-    ctaButton('Essayer 7 jours gratuits', URL_SERENITE, { email }),
+    ctaButton('Rejoindre SOS Shine - 29,90€/mois', URL_SERENITE, { email }),
+    ctaLink('Accéder à mon protocole uniquement - 33€ →', `${URL_PROTOCOLE}?prefilled_email=${encodeURIComponent(email)}`),
     p(`À demain.`),
     signature(),
     p(`<br><em style="font-size:12px;color:#737373;">P.S. : Si tu hésites encore, je veux que tu saches une chose. Le tarif d'entrée de SOS Shine est volontairement bas. Pas parce que ce qu'on y offre vaut peu. Parce que je voulais que personne ne reste bloqué(e) dehors faute de moyens. C'est une décision que j'ai prise au tout début, et que je tiens depuis. La plateforme doit rester accessible.</em>`),

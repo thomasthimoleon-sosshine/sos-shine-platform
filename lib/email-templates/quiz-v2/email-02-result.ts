@@ -159,7 +159,7 @@ Tes protocoles personnalisés sont en préparation. Tu seras notifié(e) dès qu
 </td></tr>
 </table>`,
 
-    ctaButton('Rejoindre SOS Shine - Plateforme complète', `${URL_PLATEFORME}?prefilled_email=${encodeURIComponent(email)}`, { email }),
+    ctaButton('Rejoindre SOS Shine - 29,90€/mois', `${URL_PLATEFORME}?prefilled_email=${encodeURIComponent(email)}`, { email }),
 
     ctaLink('Accéder uniquement à mon protocole - 33€ →', `${URL_PROTOCOLE}?prefilled_email=${encodeURIComponent(email)}`),
 

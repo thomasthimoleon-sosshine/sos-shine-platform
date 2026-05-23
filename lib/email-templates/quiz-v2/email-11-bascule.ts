@@ -1,9 +1,10 @@
 /**
  * Email 11 - Le cerveau adore attendre (J+9)
  */
-import { wrapEmail, p, ctaButton, signature } from './wrapper'
+import { wrapEmail, p, ctaButton, ctaLink, signature } from './wrapper'
 
-const URL_SERENITE = 'https://buy.stripe.com/4gM6oz4XGdRx4AV3Oi5ZC0r'
+const URL_SERENITE  = 'https://buy.stripe.com/4gM6oz4XGdRx4AV3Oi5ZC0r'
+const URL_PROTOCOLE = 'https://buy.stripe.com/9B600b2PycNtd7r98C5ZC0q'
 
 type Vars = { firstName: string; email: string }
 
@@ -31,7 +32,8 @@ export function generateEmail11(vars: Vars): { subject: string; html: string } {
     p(`Et peut-être que ce n'est pas un hasard si tu lis encore ces mots aujourd'hui.`),
     p(`Tu peux essayer SOS Shine pendant 7 jours gratuitement. Sans pression. Sans engagement.`),
     p(`Juste pour voir ce que ça déclenche en toi.`),
-    ctaButton('Commencer mes 7 jours gratuits', URL_SERENITE, { email }),
+    ctaButton('Rejoindre SOS Shine - 29,90€/mois', URL_SERENITE, { email }),
+    ctaLink('Accéder à mon protocole uniquement - 33€ →', `${URL_PROTOCOLE}?prefilled_email=${encodeURIComponent(email)}`),
     p(`À demain.`),
     signature(),
     p(`<br><em style="font-size:12px;color:#737373;">P.S. : Si tu choisis d'attendre, ce n'est pas grave. Vraiment. Mais fais-moi une promesse : ne laisse pas ce "plus tard" devenir un "jamais". Pose-toi simplement une question dans 6 mois : "Est-ce que la vie que je vis aujourd'hui est différente de celle que je vivais en lisant ce mail ?" Et écoute honnêtement ta réponse.</em>`),

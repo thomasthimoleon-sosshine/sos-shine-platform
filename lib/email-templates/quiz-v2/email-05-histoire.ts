@@ -1,9 +1,10 @@
 /**
  * Email 5 - Moi aussi, j'étais à ta place (J+3)
  */
-import { wrapEmail, p, ctaButton, signature } from './wrapper'
+import { wrapEmail, p, ctaButton, ctaLink, signature } from './wrapper'
 
-const URL_SERENITE = 'https://buy.stripe.com/4gM6oz4XGdRx4AV3Oi5ZC0r'
+const URL_SERENITE  = 'https://buy.stripe.com/4gM6oz4XGdRx4AV3Oi5ZC0r'
+const URL_PROTOCOLE = 'https://buy.stripe.com/9B600b2PycNtd7r98C5ZC0q'
 
 type Vars = { firstName: string; email: string }
 
@@ -25,7 +26,8 @@ export function generateEmail05(vars: Vars): { subject: string; html: string } {
     p(`Aujourd'hui, je t'écris ce mail depuis cette maison. Au bord de ce lac. Exactement celle que j'avais imaginée.`),
     p(`Parce que j'ai créé ce que je voulais. Et tout ça n'est pas arrivé parce que j'avais accumulé encore plus de connaissances. C'est arrivé le jour où j'ai commencé à les mettre en action. C'est ce jour-là que ma propre vie a changé.`),
     p(`Et c'est aussi de ce jour-là qu'est née la méthode qu'on déploie aujourd'hui dans SOS Shine. Pour que tu n'aies pas à faire ce chemin seule. Pour que tu aies l'endroit que je n'ai pas eu.`),
-    ctaButton('Découvrir la méthode SOS Shine', URL_SERENITE, { email }),
+    ctaButton('Rejoindre SOS Shine - 29,90€/mois', URL_SERENITE, { email }),
+    ctaLink('Accéder à mon protocole uniquement - 33€ →', `${URL_PROTOCOLE}?prefilled_email=${encodeURIComponent(email)}`),
     p(`À demain.`),
     signature(),
     p(`<br><em style="font-size:12px;color:#737373;">P.S. : Si tu as lu jusqu'ici, c'est que quelque chose dans cette histoire te parle. Peut-être que tu n'es pas marié(e) à Pékin. Peut-être que ton point de bascule, c'est autre chose. Mais il y a une chose que je sais : quand on commence à entendre cet appel intérieur, il ne s'éteint plus. Il revient. Encore. Et encore. Jusqu'à ce qu'on lui réponde.</em>`),

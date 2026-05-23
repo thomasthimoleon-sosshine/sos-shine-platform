@@ -22,7 +22,7 @@ export function generateEmail01(vars: Vars): { subject: string; html: string } {
     ctaButton('Reprendre là où je me suis arrêtée', resumeUrl, { email }),
     p(`Prends 2 minutes, honore toi maintenant.`),
     signature(),
-    p(`<br><em style="font-size:12px;color:#737373;">P.S. : SOS Shine®, c'est né des urgences émotionnelles qu'on vit tous les jours sans savoir les nommer. La traduction littérale de SOS, c'est "sauver nos âmes". Et c'est un jour de février 2023 que ma quête de sens a vraiment pris un tournant : celui de transmettre mes 22 ans d'expérience à celles qui en ont besoin. Parce que quand on se rend compte à 40 ans qu'on a vécu sous conditionnements, on n'a pas 20 ans devant Soi. Et aujourd'hui, ce que je veux, c'est te transmettre mes 22 ans d'expériences. Pour que tu puisses créer ta vie le plus vite possible.</em>`),
+    p(`<br><em style="font-size:12px;color:#737373;">P.S. : SOS Shine®, c'est né des urgences émotionnelles qu'on vit tous les jours sans savoir les nommer. La traduction littérale de SOS, c'est "sauver nos âmes". Et c'est un jour de février 2023 que ma quête de sens a vraiment pris un tournant : celui de transmettre mes 22 ans d'expérience à celles qui en ont besoin. Parce que quand on se rend compte à 40 ans qu'on a vécu sous conditionnements, on n'a pas 20 ans devant Soi. Et aujourd'hui, ce que je veux, c'est te transmettre mes 22 d'expériences. Pour que tu puisses créer ta vie le plus vite possible.</em>`),
   ].join('')
 
   return { subject, html: wrapEmail(content, { email }) }

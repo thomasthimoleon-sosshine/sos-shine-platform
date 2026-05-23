@@ -28,7 +28,7 @@ export function generateEmail09(vars: Vars): { subject: string; html: string } {
     p(`Tout part de là.`),
     p(`Et quand on regarde les choses honnêtement, la vraie question n'est plus "est-ce que ça coûte trop cher ?".`),
     p(`C'est <em>"combien ça me coûte, chaque jour, de continuer à fonctionner comme ça ?"</em>`),
-    ctaButton('Rejoindre SOS Shine', URL_SERENITE, { email }),
+    ctaButton('Essayer 7 jours gratuits', URL_SERENITE, { email }),
     p(`À demain.`),
     signature(),
     p(`<br><em style="font-size:12px;color:#737373;">P.S. : Si tu hésites encore, je veux que tu saches une chose. Le tarif d'entrée de SOS Shine est volontairement bas. Pas parce que ce qu'on y offre vaut peu. Parce que je voulais que personne ne reste bloqué(e) dehors faute de moyens. C'est une décision que j'ai prise au tout début, et que je tiens depuis. La plateforme doit rester accessible.</em>`),

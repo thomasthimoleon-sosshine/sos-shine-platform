@@ -25,7 +25,7 @@ export function generateEmail08(vars: Vars): { subject: string; html: string } {
     p(`Parce que ne pas avoir le temps pour soi, c'est déjà un symptôme. C'est déjà un mécanisme. C'est souvent ce vieux conditionnement qui dit qu'on doit faire passer tout le monde avant soi. Que se choisir, ce serait égoïste. Que mériter du repos, ça se gagne.`),
     p(`Rien de tout ça n'est vrai.`),
     p(`Tu mérites ce temps, simplement parce que tu existes.`),
-    ctaButton('Rejoindre SOS Shine', URL_SERENITE, { email }),
+    ctaButton('Commencer mes 7 jours gratuits', URL_SERENITE, { email }),
     p(`À demain.`),
     signature(),
     p(`<br><em style="font-size:12px;color:#737373;">P.S. : Quand on retire 10 minutes à une journée déjà pleine, on ne perd pas 10 minutes. On en gagne souvent une heure. Parce qu'un système nerveux apaisé est infiniment plus efficace qu'un système nerveux en alerte permanente. Essaie. Tu verras.</em>`),

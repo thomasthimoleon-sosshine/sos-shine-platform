@@ -82,6 +82,12 @@ async function seedEmails() {
       return NextResponse.json({ error: 'Failed to create sequence', details: createErr?.message }, { status: 500 })
     }
     sequences = [created]
+  } else {
+    // Ensure sequence is active
+    await supabase
+      .from('crm_sequences')
+      .update({ status: 'active', name: 'Signature Émotionnelle V2' })
+      .eq('id', sequences[0].id)
   }
 
   const sequenceId = sequences[0].id
@@ -109,5 +115,5 @@ async function seedEmails() {
     }
   }
 
-  return NextResponse.json({ ok: true, inserted, sequenceId })
+  return NextResponse.json({ ok: true, inserted, sequenceId, status: 'active' })
 }

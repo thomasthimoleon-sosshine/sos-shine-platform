@@ -52,8 +52,8 @@ async function getCredentials() {
   throw new Error('Resend not configured: set RESEND_API_KEY or connect via Replit integration');
 }
 
-// ⛔ EMAILS PAUSED - mettre à false pour réactiver l'envoi
-const EMAILS_PAUSED = true
+// ✅ EMAILS ACTIFS
+const EMAILS_PAUSED = false
 
 const noopResend = {
   emails: {

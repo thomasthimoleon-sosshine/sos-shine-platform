@@ -19,6 +19,10 @@
     {
       "path": "/api/cron/quiz-emails",
       "schedule": "0 14 * * *"
+    },
+    {
+      "path": "/api/cron/quiz-abandon",
+      "schedule": "0 * * * *"
     }
   ]
 }

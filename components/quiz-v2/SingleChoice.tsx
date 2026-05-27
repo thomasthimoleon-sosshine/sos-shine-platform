@@ -39,12 +39,12 @@ export function SingleChoice({
       setTimeout(() => {
         advancingRef.current = false
         onAutoAdvance()
-      }, 950)
+      }, 2400)
     } else {
       setTimeout(() => {
         advancingRef.current = false
         onAutoAdvance()
-      }, 200)
+      }, 400)
     }
   }
 

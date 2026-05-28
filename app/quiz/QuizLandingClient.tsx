@@ -295,7 +295,7 @@ export default function QuizLandingClient() {
                 <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)' }}>
                   Auteure du livre fondateur{' '}
                   <a
-                    href="https://www.amazon.fr/dp/AMAZON_PLACEHOLDER"
+                    href="https://amzn.eu/d/01oUKWRG"
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{ color: 'var(--text-primary)', textDecoration: 'underline', textUnderlineOffset: '3px' }}
@@ -307,7 +307,7 @@ export default function QuizLandingClient() {
                   Ce test est l&apos;aboutissement de plusieurs années d&apos;accompagnements.
                 </p>
                 <a
-                  href="https://www.amazon.fr/dp/AMAZON_PLACEHOLDER"
+                  href="https://amzn.eu/d/01oUKWRG"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-xs hover:opacity-80 transition-opacity"

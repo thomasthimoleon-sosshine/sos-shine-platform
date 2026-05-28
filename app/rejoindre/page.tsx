@@ -8,7 +8,7 @@ import { loadStripe } from '@stripe/stripe-js'
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from '@stripe/react-stripe-js'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 import { createClient } from '@/lib/supabase/client'
-import { PRICES, DURATIONS, formatPrice } from '@/lib/stripe'
+import { PRICES, DURATIONS, formatPrice, getPaymentLink } from '@/lib/stripe'
 import type { PlanId, DurationId } from '@/lib/stripe'
 import { PromoCountdown, PROMO } from '@/components/PromoCountdown'
 
@@ -163,14 +163,12 @@ function PrelaunchContent() {
             <div className="text-center">
               <p className="text-xs tracking-[0.25em] uppercase mb-3" style={{ color: '#55EFC4' }}>S&eacute;r&eacute;nit&eacute;</p>
               <div className="flex items-baseline justify-center gap-1.5 mb-1">
-                <span className="font-display text-xl line-through" style={{ color: 'var(--text-muted)' }}>{PROMO.originalPrice}&euro;</span>
                 <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#55EFC4' }}>{PROMO.promoPrice}&euro;</span>
                 <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
               </div>
               <p className="text-[10px] mt-1 font-medium" style={{ color: '#55EFC4' }}>
-                code {PROMO.code} &middot; 7 jours d&apos;essai gratuit
+                7 jours d&apos;essai gratuit inclus
               </p>
-              <div className="mt-2 flex justify-center text-xs"><PromoCountdown /></div>
             </div>
           </div>
 
@@ -497,7 +495,6 @@ function PaymentContent() {
   const quizSource = searchParams.get('source')
   const quizPlan = searchParams.get('plan') as PlanId | null
   const [selectedDuration, setSelectedDuration] = useState<DurationId>('monthly')
-  const [embeddedCheckout, setEmbeddedCheckout] = useState<{ plan: PlanId; duration: DurationId; email: string; prenom: string; userId: string } | null>(null)
   const [loggedInUser, setLoggedInUser] = useState<{ id: string; email: string; prenom: string } | null>(null)
 
   useEffect(() => {
@@ -512,11 +509,17 @@ function PaymentContent() {
         }
         setLoggedInUser(lu)
       }
-      // Auto-open checkout depuis un lien email quiz
+      // Auto-redirect to payment link depuis un lien email quiz
       if (quizSource === 'quiz' && quizEmail) {
         const plan: PlanId = quizPlan === 'essential' ? 'essential' : 'serenite'
         if (lu) {
-          setEmbeddedCheckout({ plan, duration: 'monthly', email: lu.email, prenom: lu.prenom, userId: lu.id })
+          const paymentLink = getPaymentLink(plan, 'monthly')
+          if (paymentLink) {
+            const url = new URL(paymentLink)
+            url.searchParams.set('prefilled_email', lu.email)
+            url.searchParams.set('client_reference_id', lu.id)
+            window.location.href = url.toString()
+          }
         } else {
           const next = encodeURIComponent(`/rejoindre?source=quiz&plan=${plan}&email=${encodeURIComponent(quizEmail)}`)
           router.push(`/signup?source=rejoindre&next=${next}`)
@@ -526,38 +529,25 @@ function PaymentContent() {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCheckout = async (plan: PlanId) => {
-    // Essential only has monthly pricing - force monthly regardless of selected duration
-    if (plan === 'essential') {
-      setSelectedDuration('monthly')
-    }
+    const duration: DurationId = plan === 'essential' ? 'monthly' : selectedDuration
+    const paymentLink = getPaymentLink(plan, duration)
 
-    // If user is logged in, show embedded checkout directly
-    if (loggedInUser) {
-      setEmbeddedCheckout({ plan, duration: plan === 'essential' ? 'monthly' : selectedDuration, email: loggedInUser.email, prenom: loggedInUser.prenom || '', userId: loggedInUser.id })
+    if (paymentLink) {
+      const email = loggedInUser?.email || quizEmail
+      const url = new URL(paymentLink)
+      if (email) url.searchParams.set('prefilled_email', email)
+      if (loggedInUser?.id) url.searchParams.set('client_reference_id', loggedInUser.id)
+      window.location.href = url.toString()
       return
     }
 
-    // Not logged in - redirect to signup so the user creates an account first
+    // Fallback: redirect to signup if no payment link configured
     router.push('/signup?source=rejoindre&next=/rejoindre')
   }
 
 
   return (
     <>
-      {/* Embedded checkout modal */}
-      <AnimatePresence>
-        {embeddedCheckout && (
-          <EmbeddedCheckoutModal
-            plan={embeddedCheckout.plan}
-            duration={embeddedCheckout.duration}
-            email={embeddedCheckout.email}
-            prenom={embeddedCheckout.prenom}
-            userId={embeddedCheckout.userId}
-            onClose={() => setEmbeddedCheckout(null)}
-          />
-        )}
-      </AnimatePresence>
-
       {/* Pricing card - Sérénité uniquement */}
       <div className="max-w-md mx-auto mb-6">
         {/* Sérénité */}
@@ -572,18 +562,14 @@ function PaymentContent() {
             </p>
             <>
                 <div className="flex items-baseline justify-center gap-1.5 mb-1">
-                  <span className="font-display text-xl line-through" style={{ color: 'var(--text-muted)' }}>
-                    {PROMO.originalPrice}{PROMO.currency}
-                  </span>
                   <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#55EFC4' }}>
                     {PROMO.promoPrice}{PROMO.currency}
                   </span>
                   <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
                 </div>
                 <p className="text-xs mb-1 font-medium" style={{ color: '#55EFC4' }}>
-                  code {PROMO.code} &middot; 7 jours d&apos;essai gratuit &mdash; CB requise
+                  7 jours d&apos;essai gratuit &mdash; CB requise
                 </p>
-                <div className="mb-2 flex justify-center text-xs"><PromoCountdown /></div>
             </>
             <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>
               {t('join.no_commitment')}

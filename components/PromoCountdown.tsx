@@ -56,7 +56,7 @@ export function PromoCountdown({ className }: { className?: string }) {
 
 export const PROMO = {
   code: 'SHINE2026',
-  originalPrice: '49,90',
+  originalPrice: '',
   promoPrice: '29,90',
   currency: '€',
 } as const

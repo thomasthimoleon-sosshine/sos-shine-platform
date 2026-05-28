@@ -1,13 +1,8 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { loadStripe } from '@stripe/stripe-js'
-import {
-  EmbeddedCheckoutProvider,
-  EmbeddedCheckout,
-} from '@stripe/react-stripe-js'
 import { createClient } from '@/lib/supabase/client'
 import { useSubscription } from '@/hooks/useSubscription'
 import Link from 'next/link'
@@ -23,9 +18,8 @@ import {
   DURATIONS,
   formatPrice,
   getSavingsPercent,
+  getPaymentLink,
 } from '@/lib/stripe/config'
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '')
 
 const PLAN_FEATURES: Record<PlanId, string[]> = {
   essential: [
@@ -51,19 +45,13 @@ export default function TarifsPage() {
   const searchParams = useSearchParams()
   const { isActive, userId } = useSubscription()
   const [selectedDuration, setSelectedDuration] = useState<DurationId>('monthly')
-  const [checkoutPlan, setCheckoutPlan] = useState<{ plan: PlanId; duration: DurationId } | null>(null)
   const [userEmail, setUserEmail] = useState('')
-  const [userPrenom, setUserPrenom] = useState('')
   const [checkoutSuccess, setCheckoutSuccess] = useState(false)
-  const [showInfoForm, setShowInfoForm] = useState(false)
-  const [pendingPlan, setPendingPlan] = useState<{ plan: PlanId; duration: DurationId } | null>(null)
 
   useEffect(() => {
     if (searchParams.get('checkout') === 'success') {
       setCheckoutSuccess(true)
 
-      // Filet de sécurité : si le webhook n'a pas fonctionné,
-      // verify-session déclenche la création du compte + email
       const sessionId = searchParams.get('session_id')
       if (sessionId) {
         fetch('/api/stripe/verify-session', {
@@ -81,61 +69,19 @@ export default function TarifsPage() {
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
         setUserEmail(user.email || '')
-        const { data: profile } = await supabase.from('profiles').select('prenom').eq('id', user.id).single()
-        setUserPrenom(profile?.prenom || user.user_metadata?.prenom || '')
       }
     }
     loadUser()
   }, [])
 
-  const [checkoutError, setCheckoutError] = useState<string | null>(null)
-
-  const fetchClientSecret = useCallback(async () => {
-    if (!checkoutPlan) return ''
-    try {
-      const res = await fetch('/api/stripe/create-embedded-checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          plan: checkoutPlan.plan,
-          duration: checkoutPlan.duration,
-          email: userEmail,
-          prenom: userPrenom,
-          userId,
-        }),
-      })
-      const data = await res.json()
-      if (data.error) {
-        console.error('[Checkout] API error:', data.error)
-        setCheckoutError(data.error)
-        throw new Error(data.error)
-      }
-      return data.clientSecret
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Erreur inconnue'
-      if (!checkoutError) setCheckoutError(msg)
-      throw err
-    }
-  }, [checkoutPlan, userEmail, userPrenom, userId, checkoutError])
-
   function handleSelectPlan(plan: PlanId) {
-    const duration = plan === 'essential' ? 'monthly' : selectedDuration
-    // Si prénom ou email manquant, afficher le formulaire d'abord
-    if (!userPrenom.trim() || !userEmail.trim()) {
-      setPendingPlan({ plan, duration })
-      setShowInfoForm(true)
-    } else {
-      setCheckoutPlan({ plan, duration })
-    }
-  }
-
-  function handleInfoFormSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!userPrenom.trim() || !userEmail.trim()) return
-    setShowInfoForm(false)
-    if (pendingPlan) {
-      setCheckoutPlan(pendingPlan)
-      setPendingPlan(null)
+    const duration: DurationId = plan === 'essential' ? 'monthly' : selectedDuration
+    const paymentLink = getPaymentLink(plan, duration)
+    if (paymentLink) {
+      const url = new URL(paymentLink)
+      if (userEmail) url.searchParams.set('prefilled_email', userEmail)
+      if (userId) url.searchParams.set('client_reference_id', userId)
+      window.location.href = url.toString()
     }
   }
 
@@ -205,148 +151,6 @@ export default function TarifsPage() {
             style={{ background: 'rgba(201,169,97,0.1)', border: '1px solid rgba(201,169,97,0.2)', color: 'var(--brand)' }}>
             Gérer mon abonnement
           </Link>
-        </div>
-      </div>
-    )
-  }
-
-  // Info form (prénom + email) before checkout
-  if (showInfoForm && pendingPlan) {
-    return (
-      <div className="max-w-md mx-auto py-16">
-        <button
-          onClick={() => { setShowInfoForm(false); setPendingPlan(null) }}
-          className="flex items-center gap-2 mb-6 text-sm font-medium transition-colors cursor-pointer text-[var(--text-secondary)]"
-        >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-          </svg>
-          Retour aux tarifs
-        </button>
-
-        <div
-          className="rounded-2xl p-8"
-          style={{
-            background: 'var(--surface-card)',
-            border: '1px solid var(--border)',
-          }}
-        >
-          <h2 className="font-display text-xl font-semibold mb-2 text-center text-[var(--text-primary)]">
-            Vos informations
-          </h2>
-          <p className="text-sm mb-6 text-center text-[var(--text-secondary)]">
-            Pour personnaliser votre expérience et créer votre compte.
-          </p>
-
-          <form onSubmit={handleInfoFormSubmit} className="space-y-4">
-            <div>
-              <label className="block text-xs font-medium mb-1.5 text-[var(--text-secondary)]">
-                Prénom
-              </label>
-              <input
-                type="text"
-                value={userPrenom}
-                onChange={(e) => setUserPrenom(e.target.value)}
-                placeholder="Votre prénom"
-                required
-                className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-colors"
-                style={{
-                  background: 'var(--dark-bg)',
-                  border: '1px solid var(--border)',
-                  color: 'var(--text-primary)',
-                }}
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-medium mb-1.5 text-[var(--text-secondary)]">
-                Email
-              </label>
-              <input
-                type="email"
-                value={userEmail}
-                onChange={(e) => setUserEmail(e.target.value)}
-                placeholder="votre@email.com"
-                required
-                className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-colors"
-                style={{
-                  background: 'var(--dark-bg)',
-                  border: '1px solid var(--border)',
-                  color: 'var(--text-primary)',
-                }}
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={!userPrenom.trim() || !userEmail.trim()}
-              className="w-full py-3 rounded-full text-sm font-semibold tracking-wide transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] cursor-pointer mt-2"
-              style={{
-                background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
-                color: '#000000',
-                boxShadow: '0 4px 20px rgba(201,169,97,0.3)',
-                opacity: (!userPrenom.trim() || !userEmail.trim()) ? 0.5 : 1,
-              }}
-            >
-              Continuer vers le paiement
-            </button>
-          </form>
-        </div>
-      </div>
-    )
-  }
-
-  // Checkout overlay
-  if (checkoutPlan) {
-    return (
-      <div className="max-w-3xl mx-auto py-8">
-        <button
-          onClick={() => setCheckoutPlan(null)}
-          className="flex items-center gap-2 mb-6 text-sm font-medium transition-colors cursor-pointer text-[var(--text-secondary)]"
-        >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-          </svg>
-          Retour aux tarifs
-        </button>
-
-        <div
-          className="rounded-2xl overflow-hidden"
-          style={{
-            background: 'var(--surface-card)',
-            border: '1px solid var(--border)',
-          }}
-        >
-          <div className="p-6 text-center border-b border-[var(--border)]">
-            <h2 className="font-display text-xl font-semibold text-[var(--text-primary)]">
-              {PLAN_INFO[checkoutPlan.plan].name} - {DURATIONS.find(d => d.id === checkoutPlan.duration)?.label}
-            </h2>
-            <p className="text-sm mt-1 text-[var(--text-secondary)]">
-              {formatPrice(PRICES[checkoutPlan.plan][checkoutPlan.duration])}/mois
-            </p>
-          </div>
-
-          {checkoutError ? (
-            <div className="p-8 text-center">
-              <p className="text-sm mb-4" style={{ color: '#ef4444' }}>{checkoutError}</p>
-              <button
-                onClick={() => { setCheckoutError(null); setCheckoutPlan(null) }}
-                className="px-6 py-2.5 rounded-full text-sm font-medium"
-                style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.25)' }}
-              >
-                Retour aux tarifs
-              </button>
-            </div>
-          ) : (
-            <div className="p-1" id="checkout-container">
-              <EmbeddedCheckoutProvider
-                stripe={stripePromise}
-                options={{ fetchClientSecret }}
-              >
-                <EmbeddedCheckout />
-              </EmbeddedCheckoutProvider>
-            </div>
-          )}
         </div>
       </div>
     )
@@ -493,24 +297,14 @@ export default function TarifsPage() {
                     {planId === 'serenite' && effectiveDuration === 'monthly' ? (
                       <>
                         <div className="flex items-baseline gap-2">
-                          <span className="text-lg line-through text-[var(--text-muted)]">
-                            {PROMO.originalPrice}{PROMO.currency}
-                          </span>
                           <span className="text-3xl font-bold" style={{ color: 'var(--success)' }}>
                             {PROMO.promoPrice}{PROMO.currency}
                           </span>
                           <span className="text-sm text-[var(--text-muted)]">/mois</span>
                         </div>
-                        <p className="text-xs mt-1 font-medium" style={{ color: 'var(--success)' }}>
-                          avec le code {PROMO.code}
-                        </p>
-                        <div className="mt-2">
-                          <p className="text-xs mb-1 text-[var(--text-muted)]">Offre expire dans :</p>
-                          <PromoCountdown />
-                        </div>
                         {info.hasTrial && (
                           <p className="text-xs mt-2 font-medium" style={{ color: 'var(--success)' }}>
-                            + 7 jours d&apos;essai gratuit
+                            7 jours d&apos;essai gratuit inclus
                           </p>
                         )}
                       </>

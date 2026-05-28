@@ -1,14 +1,10 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { loadStripe } from '@stripe/stripe-js'
-import { EmbeddedCheckoutProvider, EmbeddedCheckout } from '@stripe/react-stripe-js'
 import { createClient } from '@/lib/supabase/client'
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '')
 
 export default function CompteInactifPage() {
   const router = useRouter()
@@ -17,7 +13,6 @@ export default function CompteInactifPage() {
   const [userPrenom, setUserPrenom] = useState('')
   const [subStatus, setSubStatus] = useState<string | null>(null)
   const [hasSubscription, setHasSubscription] = useState(false)
-  const [checkoutPlan, setCheckoutPlan] = useState<{ plan: string; duration: string } | null>(null)
 
   useEffect(() => {
     const supabase = createClient()
@@ -48,26 +43,18 @@ export default function CompteInactifPage() {
   }, [router])
 
   const handleResubscribe = (plan: 'essential' | 'serenite' | 'premium') => {
-    setCheckoutPlan({ plan, duration: 'monthly' })
+    const paymentLinks: Record<string, string> = {
+      serenite: 'https://buy.stripe.com/4gM6oz4XGdRx4AV3Oi5ZC0r',
+      essential: 'https://buy.stripe.com/3cIcMXducdRx3wResW5ZC0e',
+    }
+    const link = paymentLinks[plan]
+    if (link) {
+      const url = new URL(link)
+      if (userEmail) url.searchParams.set('prefilled_email', userEmail)
+      if (userId) url.searchParams.set('client_reference_id', userId)
+      window.location.href = url.toString()
+    }
   }
-
-  const fetchClientSecret = useCallback(async () => {
-    if (!checkoutPlan || !userEmail) return ''
-    const res = await fetch('/api/stripe/create-embedded-checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        plan: checkoutPlan.plan,
-        duration: checkoutPlan.duration,
-        email: userEmail,
-        prenom: userPrenom,
-        userId,
-      }),
-    })
-    const data = await res.json()
-    if (data.error) throw new Error(data.error)
-    return data.clientSecret
-  }, [checkoutPlan, userEmail, userPrenom, userId])
 
   const handleSignOut = async () => {
     const supabase = createClient()
@@ -82,42 +69,6 @@ export default function CompteInactifPage() {
   }
 
   const statusInfo = subStatus ? statusLabels[subStatus] || statusLabels.inactive : statusLabels.inactive
-
-  // Embedded checkout overlay
-  if (checkoutPlan) {
-    const planNames: Record<string, string> = { essential: 'Essentielle', serenite: 'Sérénité', premium: 'Premium' }
-    return (
-      <main className="min-h-screen flex items-center justify-center p-6 bg-[var(--surface)]">
-        <div className="w-full max-w-2xl">
-          <button
-            onClick={() => setCheckoutPlan(null)}
-            className="flex items-center gap-2 mb-6 text-sm font-medium transition-colors cursor-pointer text-[var(--text-secondary)]"
-          >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-            </svg>
-            Retour
-          </button>
-
-          <div className="rounded-2xl overflow-hidden bg-[var(--surface-card)] border border-[var(--border)]">
-            <div className="p-6 text-center border-b border-[var(--border)]">
-              <h2 className="font-display text-xl font-semibold text-[var(--text-primary)]">
-                {planNames[checkoutPlan.plan] || checkoutPlan.plan}
-              </h2>
-              <p className="text-sm mt-1 text-[var(--text-secondary)]">
-                Paiement sécurisé
-              </p>
-            </div>
-            <div className="p-1">
-              <EmbeddedCheckoutProvider stripe={stripePromise} options={{ fetchClientSecret }}>
-                <EmbeddedCheckout />
-              </EmbeddedCheckoutProvider>
-            </div>
-          </div>
-        </div>
-      </main>
-    )
-  }
 
   return (
     <main className="min-h-screen flex items-center justify-center p-6 bg-[var(--surface)]">

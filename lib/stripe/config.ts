@@ -33,7 +33,7 @@ export const PRODUCT_TO_PLAN: Record<string, { plan: PlanId; duration: DurationI
 
 export const PAYMENT_LINKS: Record<string, string> = {
   essential_monthly:    'https://buy.stripe.com/3cIcMXducdRx3wResW5ZC0e',
-  serenite_monthly:     'https://buy.stripe.com/3cI5kvai06p51oJbgK5ZC0f',
+  serenite_monthly:     'https://buy.stripe.com/4gM6oz4XGdRx4AV3Oi5ZC0r',
   serenite_quarterly:   'https://buy.stripe.com/eVq8wH2PyeVBc3ngB45ZC0h',
   serenite_semiannual:  'https://buy.stripe.com/6oU5kv61K9Bh6J3doS5ZC0i',
   serenite_annual:      'https://buy.stripe.com/aFafZ93TC00H6J3esW5ZC0j',
@@ -49,10 +49,10 @@ export const PRICES: Record<PlanId, Record<DurationId, number>> = {
     annual: 990,
   },
   serenite: {
-    monthly: 4990,
-    quarterly: 4491,     // -10%
-    semiannual: 3992,    // -20%
-    annual: 3493,        // -30%
+    monthly: 2990,
+    quarterly: 2691,     // -10%
+    semiannual: 2392,    // -20%
+    annual: 2093,        // -30%
   },
   premium: {
     monthly: 9990,
@@ -72,10 +72,10 @@ export const TOTAL_PRICES: Record<PlanId, Record<DurationId, number>> = {
     annual: 11880,
   },
   serenite: {
-    monthly: 4990,
-    quarterly: 13473,
-    semiannual: 23952,
-    annual: 41916,
+    monthly: 2990,
+    quarterly: 8073,
+    semiannual: 14352,
+    annual: 25116,
   },
   premium: {
     monthly: 9990,
@@ -138,7 +138,7 @@ export const PLAN_COLORS: Record<PlanId, string> = {
 
 export const PLAN_PRICES_EUR: Record<PlanId, number> = {
   essential: 9.90,
-  serenite: 49.90,
+  serenite: 29.90,
   premium: 99.90,
 }
 
@@ -188,8 +188,8 @@ export function detectPlanFromProductId(productId: string): { plan: PlanId; dura
 
 export function detectPlanFromAmount(amountCents: number | null): PlanId {
   if (!amountCents) return 'essential'
-  // Sérénité: 49.90€/mois = 4990 cents
-  if (amountCents >= 4000) return 'serenite'
+  // Sérénité: 29.90€/mois = 2990 cents
+  if (amountCents >= 2000) return 'serenite'
   // Essential: 9.90€/mois = 990 cents
   return 'essential'
 }

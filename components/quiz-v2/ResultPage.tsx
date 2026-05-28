@@ -65,8 +65,12 @@ export function ResultPage({ firstName, scores, dominant, secondary, email }: Pr
   useEffect(() => {
     async function loadProtocols() {
       const supabase = createClient()
-      const { data } = await (supabase as any).from('protocols').select('*')
-      if (data) setProtocols(data)
+      const [{ data }, { data: publishedDouleurs }] = await Promise.all([
+        (supabase as any).from('protocols').select('*'),
+        (supabase as any).from('douleurs').select('slug').eq('is_published', true),
+      ])
+      const publishedSet = new Set((publishedDouleurs || []).map((d: { slug: string }) => d.slug))
+      if (data) setProtocols((data as Protocol[]).filter(p => publishedSet.has(p.slug)))
       setProtocolsLoading(false)
     }
     loadProtocols()

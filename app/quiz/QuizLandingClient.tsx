@@ -246,7 +246,7 @@ export default function QuizLandingClient() {
         <div className="max-w-2xl mx-auto space-y-10">
           <Reveal>
             <p className="text-[11px] tracking-[0.3em] uppercase font-medium text-center" style={{ color: 'var(--brand)', opacity: 0.7 }}>
-              Elles ont fait le test
+              Ils et elles ont fait le test
             </p>
           </Reveal>
 
@@ -293,12 +293,28 @@ export default function QuizLandingClient() {
               <img src="/images/julia.jpeg" alt="Julia Laureau" className="w-24 h-24 rounded-full object-cover flex-shrink-0" style={{ border: '2px solid rgba(201,169,97,0.3)' }} />
               <div className="space-y-3">
                 <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)' }}>
-                  Auteure du livre fondateur <strong style={{ color: 'var(--text-primary)' }}>&laquo;&nbsp;SOS Shine - Briller Comme un Diamant&nbsp;&raquo;</strong>.
+                  Auteure du livre fondateur{' '}
+                  <a
+                    href="https://www.amazon.fr/dp/AMAZON_PLACEHOLDER"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: 'var(--text-primary)', textDecoration: 'underline', textUnderlineOffset: '3px' }}
+                  >
+                    &laquo;&nbsp;SOS Shine - Briller Comme un Diamant&nbsp;&raquo;
+                  </a>.
                 </p>
                 <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)' }}>
                   Ce test est l&apos;aboutissement de plusieurs années d&apos;accompagnements.
                 </p>
-                <p className="text-xs" style={{ color: 'var(--brand)', opacity: 0.8 }}>⭐⭐⭐⭐⭐ Sur Amazon</p>
+                <a
+                  href="https://www.amazon.fr/dp/AMAZON_PLACEHOLDER"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs hover:opacity-80 transition-opacity"
+                  style={{ color: 'var(--brand)', opacity: 0.8 }}
+                >
+                  ⭐⭐⭐⭐⭐ Sur Amazon →
+                </a>
               </div>
             </div>
           </Reveal>
@@ -335,7 +351,7 @@ export default function QuizLandingClient() {
         <div className="relative z-10 max-w-sm mx-auto text-center space-y-8">
           <Reveal>
             <h2 className="font-sans text-[22px] sm:text-3xl font-bold leading-tight" style={{ color: 'var(--text-primary)' }}>
-              Prête à te voir ?
+              Prêt(e) à te voir ?
             </h2>
           </Reveal>
 

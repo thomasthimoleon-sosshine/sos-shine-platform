@@ -431,8 +431,8 @@ export default function LandingJulia() {
               T&eacute;moignages v&eacute;rifi&eacute;s
             </p>
             <h2 className="font-display text-[2rem] sm:text-[2.8rem] font-light leading-[1.06] tracking-[-0.03em] text-center mb-20 text-[#e0e0e0]">
-              Elles ont travers&eacute;.<br />
-              <span className="italic text-[#D4AF37]/60">Elles t&eacute;moignent.</span>
+              Ils et elles ont travers&eacute;.<br />
+              <span className="italic text-[#D4AF37]/60">Ils et elles t&eacute;moignent.</span>
             </h2>
           </Reveal>
 

@@ -97,6 +97,7 @@ export async function POST(request: NextRequest) {
         scores,
         q15Response: q15Response || '',
         protocols: matchedProtocols,
+        protocolSlug: topProtocolSlug,
       })
       const { client: resend, fromEmail } = await getResendClient()
       await resend.emails.send({

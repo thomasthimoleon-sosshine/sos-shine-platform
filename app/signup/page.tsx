@@ -13,7 +13,7 @@ const DEFAULTS: Record<string, string> = {
   signup_button_text: 'Créer mon compte',
   signup_login_text: 'Déjà membre ?',
   signup_login_link_text: 'Se connecter',
-  signup_trial_text: 'Un abonnement sera nécessaire pour accéder à la plateforme',
+  signup_trial_text: 'L\'étape 1 de ton protocole est offerte · sans carte bancaire',
   signup_confirm_title: 'Vérifiez votre email',
   signup_confirm_text: 'Un lien de confirmation a été envoyé. Cliquez dessus pour activer votre compte.',
   signup_title_font: 'Cormorant Garamond',

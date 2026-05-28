@@ -380,7 +380,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 Feu de camp
               </Link>
 
-              {/* CTA Sérénité */}
+              {/* CTA upgrade */}
               <div className="pt-4">
                 <Link
                   href="/rejoindre"
@@ -391,10 +391,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
-                  Passer à Sérénité
+                  Débloquer les étapes 2 &amp; 3
                 </Link>
                 <p className="text-[10px] text-center mt-1.5" style={{ color: 'var(--text-muted)' }}>
-                  49,90€/mois · 7 jours offerts
+                  29,90€/mois · ou 33€ en accès unique
                 </p>
               </div>
             </>

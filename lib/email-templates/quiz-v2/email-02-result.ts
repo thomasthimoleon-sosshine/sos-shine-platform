@@ -10,7 +10,6 @@ import type { DimensionScores } from '@/lib/quiz-v2/dimensions'
 const BRAND = '#C9A961'
 const SERIF = "Georgia, 'Times New Roman', serif"
 const URL_PLATEFORME = 'https://buy.stripe.com/4gM6oz4XGdRx4AV3Oi5ZC0r'
-const URL_PROTOCOLE  = 'https://buy.stripe.com/9B600b2PycNtd7r98C5ZC0q'
 
 type Vars = {
   firstName: string
@@ -20,10 +19,14 @@ type Vars = {
   scores: DimensionScores
   q15Response: string
   protocols: Array<{ title: string; matchScore: number; status: string; duration_days: number }>
+  protocolSlug?: string | null
 }
 
 export function generateEmail02(vars: Vars): { subject: string; html: string } {
-  const { firstName, email, dominant, secondary, scores, protocols } = vars
+  const { firstName, email, dominant, secondary, scores, protocols, protocolSlug } = vars
+  const protocoleUrl = protocolSlug
+    ? `https://sosshine.com/protocole/${protocolSlug}?email=${encodeURIComponent(email)}`
+    : `https://sosshine.com/signup?source=quiz&email=${encodeURIComponent(email)}`
   const dimInfo = DIMENSIONS[parseInt(dominant) as keyof typeof DIMENSIONS]
   const secInfo = DIMENSIONS[parseInt(secondary) as keyof typeof DIMENSIONS]
 
@@ -148,20 +151,22 @@ Tes protocoles personnalisés sont en préparation. Tu seras notifié(e) dès qu
 
     goldDivider(),
 
-    // ── CTA - prix promo vers /rejoindre ──
-    h2(`Rejoindre SOS Shine`),
+    // ── CTA - étape 1 gratuite ──
+    h2(`Commence par l'étape 1 — c'est gratuit`),
 
-    // Prix
+    p(`Ton protocole est prêt. L'étape 1 — Comprendre — t'est offerte. Elle seule peut déjà changer quelque chose dans ta façon de te voir.`),
+
     `<table role="presentation" width="100%" cellspacing="0" cellpadding="0">
-<tr><td align="center" style="padding:8px 0 16px 0;">
-<span style="font-family:${SERIF};font-size:28px;color:#55EFC4;font-weight:400;">29,90€</span>
-<span style="font-size:14px;color:#737373;">/mois · sans engagement</span>
+<tr><td align="center" style="padding:4px 0 8px 0;">
+<span style="display:inline-block;padding:4px 14px;border-radius:99px;font-size:11px;font-weight:600;color:#55EFC4;background:rgba(85,239,196,0.1);border:1px solid rgba(85,239,196,0.2);">✓ Inscription gratuite · Étape 1 offerte</span>
 </td></tr>
 </table>`,
 
-    ctaButton('Rejoindre SOS Shine - 29,90€/mois', `${URL_PLATEFORME}?prefilled_email=${encodeURIComponent(email)}`, { email }),
+    ctaButton('Accéder à mon étape 1 gratuite →', protocoleUrl, { email }),
 
-    ctaLink('Accéder uniquement à mon protocole - 33€ →', `${URL_PROTOCOLE}?prefilled_email=${encodeURIComponent(email)}`),
+    `<p style="text-align:center;font-size:12px;color:#737373;margin:8px 0 0 0;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+Les étapes 2 &amp; 3 sont accessibles à partir de 29,90€/mois ou 33€ en accès unique.
+</p>`,
 
     goldDivider(),
 

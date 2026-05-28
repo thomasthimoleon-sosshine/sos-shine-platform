@@ -91,17 +91,17 @@ function MonCheminContent() {
         }
       }
 
-      // No protocol found - pick first available protocol as fallback (prevents infinite loop with /dashboard)
+      // No protocol found - pick first available protocol that has a published douleur (prevents loop + coming-soon page)
       if (uid) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const { data: fallback } = await (supabase as any)
-          .from('protocols')
-          .select('slug')
-          .eq('status', 'available')
-          .order('created_at', { ascending: true })
-          .limit(1)
-          .maybeSingle()
-        router.replace(fallback?.slug ? `/dashboard/encyclopedie/${fallback.slug}` : '/signature-emotionnelle')
+        const [{ data: allProtos }, { data: publishedDouleurs }] = await Promise.all([
+          (supabase as any).from('protocols').select('slug').eq('status', 'available').order('created_at', { ascending: true }),
+          (supabase as any).from('douleurs').select('slug').eq('is_published', true),
+        ])
+        const publishedSet = new Set((publishedDouleurs || []).map((d: { slug: string }) => d.slug))
+        const best = (allProtos || []).find((p: { slug: string }) => publishedSet.has(p.slug))
+        const fallbackSlug = best?.slug || (publishedDouleurs?.[0]?.slug ?? null)
+        router.replace(fallbackSlug ? `/dashboard/encyclopedie/${fallbackSlug}` : '/signature-emotionnelle')
       } else {
         router.replace('/signature-emotionnelle')
       }

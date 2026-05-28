@@ -1752,11 +1752,22 @@ export default function DouleurDetailPage() {
                 boxShadow: '0 4px 24px rgba(201,169,97,0.3)',
               }}
             >
-              Accéder à Sérénité - 49,90€/mois
+              Accès complet à la plateforme — 29,90€/mois
             </a>
             <p className="text-xs text-center" style={{ color: 'var(--text-muted)' }}>
-              Protocole complet · Shine TV · Lives · Communauté · Annulable à tout moment
+              Shine TV · Lives · Communauté · Sans engagement
             </p>
+            <a
+              href="https://buy.stripe.com/9B600b2PycNtd7r98C5ZC0q"
+              className="block w-full py-3 rounded-full text-sm font-medium text-center transition-all hover:brightness-110"
+              style={{
+                background: 'rgba(201,169,97,0.08)',
+                border: '1px solid rgba(201,169,97,0.25)',
+                color: 'var(--brand)',
+              }}
+            >
+              Juste les étapes 2 &amp; 3 de ce protocole — 33€
+            </a>
             <button
               onClick={() => setShowProtocolPaywall(false)}
               className="block w-full py-3 text-xs text-center transition-colors cursor-pointer"

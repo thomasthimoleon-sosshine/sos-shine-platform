@@ -15,26 +15,51 @@ function MonCheminContent() {
       const { data: { user } } = await supabase.auth.getUser()
       const uid = user?.id || null
 
-      // Resolve slug: URL param → sessionStorage → Supabase by user_id → Supabase by email
-      let resolvedSlug: string | null = searchParams.get('protocol')
+      // Load published douleurs + available protocols once — used everywhere below
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const [{ data: publishedDouleurs }, { data: availableProtocols }] = await Promise.all([
+        (supabase as any).from('douleurs').select('slug').eq('is_published', true),
+        (supabase as any).from('protocols').select('slug, dimension_weights').eq('status', 'available'),
+      ])
+      const publishedSet = new Set((publishedDouleurs || []).map((d: { slug: string }) => d.slug))
 
-      if (!resolvedSlug) {
-        try { resolvedSlug = sessionStorage.getItem('sos_protocol_slug') } catch {}
+      function isAccessible(slug: string) {
+        return publishedSet.has(slug)
       }
 
-      // Verify slug exists in protocols table
-      if (resolvedSlug) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const { data } = await (supabase as any).from('protocols').select('slug').eq('slug', resolvedSlug).maybeSingle()
-        if (data?.slug) {
-          router.replace(`/dashboard/encyclopedie/${data.slug}`)
+      function bestScoredSlug(scores: Record<string, number>): string | null {
+        if (!availableProtocols?.length) return null
+        const best = (availableProtocols as { slug: string; dimension_weights: Record<string, number> }[])
+          .filter(p => isAccessible(p.slug))
+          .map(p => ({ slug: p.slug, score: calculateMatchScores(scores, p.dimension_weights) }))
+          .sort((a, b) => b.score - a.score)[0]
+        return best?.slug || null
+      }
+
+      function fallbackSlug(): string | null {
+        const best = (availableProtocols || []).find((p: { slug: string }) => isAccessible(p.slug))
+        return best?.slug || (publishedDouleurs?.[0]?.slug ?? null)
+      }
+
+      // 1. URL param
+      let slug: string | null = searchParams.get('protocol')
+
+      // 2. sessionStorage
+      if (!slug) {
+        try { slug = sessionStorage.getItem('sos_protocol_slug') } catch {}
+      }
+
+      // Verify URL/sessionStorage slug is accessible
+      if (slug) {
+        if (isAccessible(slug)) {
+          router.replace(`/dashboard/encyclopedie/${slug}`)
           return
         }
-        resolvedSlug = null
+        slug = null
       }
 
-      // Supabase fallback by user_id
-      if (!resolvedSlug && uid) {
+      // 3. Supabase by user_id
+      if (!slug && uid) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const { data: responses } = await (supabase as any)
           .from('quiz_v2_responses')
@@ -44,26 +69,17 @@ function MonCheminContent() {
           .limit(1)
 
         const latest = responses?.[0]
-        if (latest?.top_protocol_slug) {
+        if (latest?.top_protocol_slug && isAccessible(latest.top_protocol_slug)) {
           router.replace(`/dashboard/encyclopedie/${latest.top_protocol_slug}`)
           return
         } else if (latest?.scores) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const { data: allProtocols } = await (supabase as any).from('protocols').select('slug, dimension_weights, status')
-          if (allProtocols?.length > 0) {
-            const best = (allProtocols as { slug: string; dimension_weights: Record<string, number>; status: string }[])
-              .map(p => ({ slug: p.slug, score: calculateMatchScores(latest.scores, p.dimension_weights) }))
-              .sort((a, b) => b.score - a.score)[0]
-            if (best?.slug) {
-              router.replace(`/dashboard/encyclopedie/${best.slug}`)
-              return
-            }
-          }
+          const best = bestScoredSlug(latest.scores)
+          if (best) { router.replace(`/dashboard/encyclopedie/${best}`); return }
         }
       }
 
-      // Fallback by email
-      if (!resolvedSlug && user?.email) {
+      // 4. Supabase by email
+      if (!slug && user?.email) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const { data: responses } = await (supabase as any)
           .from('quiz_v2_responses')
@@ -73,38 +89,18 @@ function MonCheminContent() {
           .limit(1)
 
         const latest = responses?.[0]
-        if (latest?.top_protocol_slug) {
+        if (latest?.top_protocol_slug && isAccessible(latest.top_protocol_slug)) {
           router.replace(`/dashboard/encyclopedie/${latest.top_protocol_slug}`)
           return
         } else if (latest?.scores) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const { data: allProtocols } = await (supabase as any).from('protocols').select('slug, dimension_weights, status')
-          if (allProtocols?.length > 0) {
-            const best = (allProtocols as { slug: string; dimension_weights: Record<string, number>; status: string }[])
-              .map(p => ({ slug: p.slug, score: calculateMatchScores(latest.scores, p.dimension_weights) }))
-              .sort((a, b) => b.score - a.score)[0]
-            if (best?.slug) {
-              router.replace(`/dashboard/encyclopedie/${best.slug}`)
-              return
-            }
-          }
+          const best = bestScoredSlug(latest.scores)
+          if (best) { router.replace(`/dashboard/encyclopedie/${best}`); return }
         }
       }
 
-      // No protocol found - pick first available protocol that has a published douleur (prevents loop + coming-soon page)
-      if (uid) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const [{ data: allProtos }, { data: publishedDouleurs }] = await Promise.all([
-          (supabase as any).from('protocols').select('slug').eq('status', 'available').order('created_at', { ascending: true }),
-          (supabase as any).from('douleurs').select('slug').eq('is_published', true),
-        ])
-        const publishedSet = new Set((publishedDouleurs || []).map((d: { slug: string }) => d.slug))
-        const best = (allProtos || []).find((p: { slug: string }) => publishedSet.has(p.slug))
-        const fallbackSlug = best?.slug || (publishedDouleurs?.[0]?.slug ?? null)
-        router.replace(fallbackSlug ? `/dashboard/encyclopedie/${fallbackSlug}` : '/signature-emotionnelle')
-      } else {
-        router.replace('/signature-emotionnelle')
-      }
+      // 5. Fallback: first available + published protocol
+      const fb = fallbackSlug()
+      router.replace(fb ? `/dashboard/encyclopedie/${fb}` : (uid ? '/dashboard' : '/signature-emotionnelle'))
     }
     init()
   }, []) // eslint-disable-line

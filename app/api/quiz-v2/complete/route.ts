@@ -53,7 +53,12 @@ export async function POST(request: NextRequest) {
     let matchedProtocols: Array<{ title: string; matchScore: number; status: string; duration_days: number }> = []
     let topProtocolSlug: string | null = null
     try {
-      const { data: protocols } = await supabase.from('protocols').select('*')
+      const [{ data: protocols }, { data: publishedDouleurs }] = await Promise.all([
+        supabase.from('protocols').select('*'),
+        supabase.from('douleurs').select('slug').eq('is_published', true),
+      ])
+      const publishedSlugs = new Set((publishedDouleurs || []).map((d: { slug: string }) => d.slug))
+
       if (protocols) {
         const allScored = protocols
           .map((proto: Record<string, unknown>) => ({
@@ -65,11 +70,13 @@ export async function POST(request: NextRequest) {
           }))
           .sort((a, b) => b.matchScore - a.matchScore)
 
-        // Best match regardless of threshold (available protocols first)
-        topProtocolSlug = allScored.find(p => p.status === 'available')?.slug || allScored[0]?.slug || null
+        // Best match: available protocol with published douleur content
+        topProtocolSlug = allScored.find(p => p.status === 'available' && publishedSlugs.has(p.slug))?.slug
+          || allScored.find(p => p.status === 'available')?.slug
+          || null
 
-        // Email: only protocols scoring >= 70
-        matchedProtocols = allScored.filter(p => p.matchScore >= 70).slice(0, 5)
+        // Email: only protocols scoring >= 70 with published content
+        matchedProtocols = allScored.filter(p => p.matchScore >= 70 && publishedSlugs.has(p.slug)).slice(0, 5)
       }
     } catch (e) {
       console.error('Protocol fetch error:', e)

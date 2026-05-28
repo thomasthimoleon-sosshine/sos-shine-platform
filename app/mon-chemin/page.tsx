@@ -91,8 +91,20 @@ function MonCheminContent() {
         }
       }
 
-      // No protocol found - if user is authenticated, go to dashboard instead of forcing the quiz again
-      router.replace(uid ? '/dashboard' : '/signature-emotionnelle')
+      // No protocol found - pick first available protocol as fallback (prevents infinite loop with /dashboard)
+      if (uid) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { data: fallback } = await (supabase as any)
+          .from('protocols')
+          .select('slug')
+          .eq('status', 'available')
+          .order('created_at', { ascending: true })
+          .limit(1)
+          .maybeSingle()
+        router.replace(fallback?.slug ? `/dashboard/encyclopedie/${fallback.slug}` : '/signature-emotionnelle')
+      } else {
+        router.replace('/signature-emotionnelle')
+      }
     }
     init()
   }, []) // eslint-disable-line

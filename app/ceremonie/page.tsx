@@ -140,7 +140,7 @@ export default function CeremoniePage() {
 
           <Fade delay={0.25}>
             <p className="text-base sm:text-lg leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>
-              Une nuit au bord du lac.<br />
+              Une soirée au bord du lac.<br />
               Quelque chose va changer en toi.
             </p>
           </Fade>

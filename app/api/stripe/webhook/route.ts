@@ -6,6 +6,7 @@
 import { NextResponse } from 'next/server'
 import { getStripe } from '@/lib/stripe/client'
 import type Stripe from 'stripe'
+import { sendRawEmail } from '@/lib/email-templates/automated-emails'
 import {
   detectPlanFromSession,
   processSuccessfulPayment,
@@ -15,6 +16,37 @@ import {
   handlePaymentSucceeded,
   handleChargeRefunded,
 } from '@/lib/stripe/subscription-service'
+
+function buildCeremonieConfirmationEmail(prenom: string): string {
+  return `
+<div style="font-family: Georgia, serif; color: #1a1a1a; max-width: 560px; margin: 0 auto;">
+  <p style="font-size: 16px; line-height: 1.7;">Bonjour ${prenom},</p>
+  <p style="font-size: 16px; line-height: 1.7;">
+    Ta réservation pour <strong>L'Éveil</strong> est bien confirmée.<br>
+    On a vraiment hâte de te retrouver là-bas.
+  </p>
+  <div style="background: #f9f6f0; border-left: 3px solid #C9A961; padding: 20px 24px; margin: 28px 0; border-radius: 4px;">
+    <p style="margin: 0 0 8px; font-size: 15px;">📅 <strong>Samedi 13 juin 2026</strong></p>
+    <p style="margin: 0 0 8px; font-size: 15px;">🕕 <strong>18h00 — 21h30</strong></p>
+    <p style="margin: 0; font-size: 15px;">📍 <strong>Lac de Saint-Cassien</strong></p>
+    <p style="margin: 8px 0 0; font-size: 14px; color: #666;">L'adresse exacte te sera communiquée 24h avant 🙂</p>
+  </div>
+  <p style="font-size: 15px; line-height: 1.7; margin-bottom: 8px;"><strong>Quelques petites choses à savoir :</strong></p>
+  <ul style="font-size: 15px; line-height: 1.9; color: #333; padding-left: 20px;">
+    <li>Le solde de <strong>90€</strong> se règle en espèces sur place le soir de l'événement</li>
+    <li>Prévois une tenue dans laquelle tu te sens à l'aise pour bouger et t'asseoir dehors</li>
+    <li>Le lieu est en plein air au bord du lac — une petite laine pour le soir peut être utile</li>
+    <li>Pense à prendre tes précautions contre les moustiques 🌿</li>
+  </ul>
+  <p style="font-size: 15px; line-height: 1.7; margin-top: 28px;">
+    Si tu as la moindre question d'ici là, réponds simplement à cet email.
+  </p>
+  <p style="font-size: 15px; line-height: 1.7; margin-top: 24px;">
+    À très vite,<br>
+    <strong>Julia, William et Thomas 🌿</strong>
+  </p>
+</div>`.trim()
+}
 
 export async function POST(request: Request) {
   const stripe = getStripe()
@@ -58,11 +90,25 @@ export async function POST(request: Request) {
             process.env.SUPABASE_SERVICE_ROLE_KEY!,
             { auth: { autoRefreshToken: false, persistSession: false } }
           )
-          await supabase
+          const { data: reservation } = await supabase
             .from('ceremonie_reservations')
             .update({ status: 'paid', stripe_session_id: session.id, paid_at: new Date().toISOString() })
             .eq('id', session.client_reference_id)
+            .select('prenom, email')
+            .single()
           console.log(`[Webhook] Acompte cérémonie validé - réservation ${session.client_reference_id}`)
+
+          // Email de confirmation après paiement validé
+          if (reservation?.email) {
+            const prenom = (reservation as { prenom: string; email: string }).prenom
+            const email = (reservation as { prenom: string; email: string }).email
+            sendRawEmail(
+              email,
+              "Ta place est confirmée — L'Éveil · 13 juin au lac ✨",
+              buildCeremonieConfirmationEmail(prenom),
+              { recipientName: prenom, eventType: 'ceremonie_payment_confirmed' }
+            ).catch(err => console.error('[Webhook] Ceremonie email error:', err))
+          }
           break
         }
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 
@@ -26,18 +26,32 @@ function ReservationForm() {
   const [prenom, setPrenom] = useState('')
   const [nom, setNom] = useState('')
   const [email, setEmail] = useState('')
+  const [honeypot, setHoneypot] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const mountedAt = useRef(Date.now())
+
+  useEffect(() => { mountedAt.current = Date.now() }, [])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError('')
+
+    // Honeypot check — bots fill the hidden field
+    if (honeypot) return
+
+    // Timing check — bots submit in < 2 seconds
+    if (Date.now() - mountedAt.current < 2000) {
+      setError('Veuillez patienter un instant avant de soumettre.')
+      return
+    }
+
     setLoading(true)
     try {
       const res = await fetch('/api/ceremonie/reserve', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prenom, nom, email }),
+        body: JSON.stringify({ prenom, nom, email, _hp: honeypot }),
       })
       const data = await res.json()
       if (!res.ok) { setError(data.error || 'Une erreur est survenue.'); setLoading(false); return }
@@ -61,6 +75,11 @@ function ReservationForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3 w-full max-w-md mx-auto">
+      {/* Honeypot — hidden from real users, filled by bots */}
+      <div aria-hidden="true" style={{ position: 'absolute', top: '-9999px', left: '-9999px', height: 0, width: 0, overflow: 'hidden' }}>
+        <label htmlFor="website">Ne pas remplir</label>
+        <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" value={honeypot} onChange={e => setHoneypot(e.target.value)} />
+      </div>
       <div className="grid grid-cols-2 gap-3">
         <input type="text" placeholder="Prénom *" value={prenom} onChange={e => setPrenom(e.target.value)} required style={inputStyle} />
         <input type="text" placeholder="Nom *" value={nom} onChange={e => setNom(e.target.value)} required style={inputStyle} />

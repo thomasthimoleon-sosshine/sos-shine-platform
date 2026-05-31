@@ -21,6 +21,7 @@ const adminNav = [
   { href: '/admin/shine-librairie', label: 'Shine Librairie', icon: '📚' },
   { href: '/admin/shine-shorts', label: 'Shine Shorts', icon: '📱' },
   { href: '/admin/evenements', label: 'Événements', icon: '📅' },
+  { href: '/admin/inscrits-ceremonie', label: 'Inscrits L\'Éveil', icon: '🏕️' },
   { href: '/admin/publications', label: 'Publications', icon: '📢' },
   { href: '/admin/membres', label: 'Membres', icon: '👥' },
   { href: '/admin/abonnements', label: 'Abonnements', icon: '💳' },

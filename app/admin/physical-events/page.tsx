@@ -66,7 +66,8 @@ export default function PhysicalEventsAdmin() {
 
   async function load() {
     setLoading(true)
-    const { data } = await supabase
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data } = await (supabase as any)
       .from('physical_events')
       .select('*')
       .order('sort_order', { ascending: true })
@@ -98,13 +99,15 @@ export default function PhysicalEventsAdmin() {
     }
 
     let error
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const db = supabase as any
     if (editing.id) {
-      const { id, ...rest } = payload as unknown as PhysicalEvent
-      const res = await supabase.from('physical_events').update(rest).eq('id', id)
+      const { id, ...rest } = payload
+      const res = await db.from('physical_events').update(rest).eq('id', id)
       error = res.error
     } else {
-      const { id: _id, ...rest } = payload as unknown as PhysicalEvent
-      const res = await supabase.from('physical_events').insert(rest)
+      const { id: _id, ...rest } = payload
+      const res = await db.from('physical_events').insert(rest)
       error = res.error
     }
 
@@ -119,13 +122,15 @@ export default function PhysicalEventsAdmin() {
   }
 
   async function togglePublish(id: string, current: boolean) {
-    await supabase.from('physical_events').update({ is_published: !current }).eq('id', id)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (supabase as any).from('physical_events').update({ is_published: !current }).eq('id', id)
     load()
   }
 
   async function deleteEvent(id: string) {
     if (!confirm('Supprimer cet événement ?')) return
-    await supabase.from('physical_events').delete().eq('id', id)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (supabase as any).from('physical_events').delete().eq('id', id)
     load()
   }
 

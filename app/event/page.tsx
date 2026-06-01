@@ -102,117 +102,111 @@ export default async function EventPage() {
               const time = formatTime(event.event_date, event.end_time)
 
               return (
-                <article key={event.id} style={{
-                  borderRadius: '20px',
-                  overflow: 'hidden',
-                  border: '1px solid rgba(201,169,97,0.15)',
-                  background: 'rgba(255,255,255,0.02)',
-                }}>
-                  {/* Image */}
-                  {event.image_url && (
-                    <div style={{ height: '260px', overflow: 'hidden', position: 'relative' }}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={event.image_url}
-                        alt={event.title}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      />
-                      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 40%, rgba(10,10,10,0.8) 100%)' }} />
-                    </div>
-                  )}
-
-                  <div style={{ padding: '32px' }}>
-                    {/* Badge free */}
-                    {event.is_free && (
-                      <span style={{ display: 'inline-block', fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase', padding: '4px 12px', borderRadius: '999px', background: 'rgba(85,239,196,0.12)', color: '#55EFC4', border: '1px solid rgba(85,239,196,0.25)', marginBottom: '16px', fontWeight: '600' }}>
-                        Gratuit
-                      </span>
+                <Link key={event.id} href={`/event/${event.id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+                  <article style={{
+                    borderRadius: '20px',
+                    overflow: 'hidden',
+                    border: '1px solid rgba(201,169,97,0.15)',
+                    background: 'rgba(255,255,255,0.02)',
+                    cursor: 'pointer',
+                  }}>
+                    {/* Image */}
+                    {event.image_url && (
+                      <div style={{ height: '260px', overflow: 'hidden', position: 'relative' }}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={event.image_url}
+                          alt={event.title}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 40%, rgba(10,10,10,0.8) 100%)' }} />
+                      </div>
                     )}
 
-                    {/* Date block */}
-                    {event.event_date && (
-                      <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '12px' }}>
-                        <span style={{ fontSize: '11px', letterSpacing: '0.25em', textTransform: 'uppercase', color: '#C9A961' }}>
-                          {date.weekday} {date.day} {date.month} {date.year}
+                    <div style={{ padding: '32px' }}>
+                      {/* Badge free */}
+                      {event.is_free && (
+                        <span style={{ display: 'inline-block', fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase', padding: '4px 12px', borderRadius: '999px', background: 'rgba(85,239,196,0.12)', color: '#55EFC4', border: '1px solid rgba(85,239,196,0.25)', marginBottom: '16px', fontWeight: '600' }}>
+                          Gratuit
                         </span>
-                        {time && (
-                          <>
-                            <span style={{ color: 'rgba(201,169,97,0.3)' }}>·</span>
-                            <span style={{ fontSize: '11px', letterSpacing: '0.15em', color: 'rgba(245,241,232,0.5)' }}>{time}</span>
-                          </>
-                        )}
-                      </div>
-                    )}
+                      )}
 
-                    {/* Title */}
-                    <h2 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(1.5rem, 3vw, 2.25rem)', fontWeight: '300', color: '#F5F1E8', margin: '0 0 8px', lineHeight: '1.2' }}>
-                      {event.title}
-                    </h2>
+                      {/* Date block */}
+                      {event.event_date && (
+                        <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '12px' }}>
+                          <span style={{ fontSize: '11px', letterSpacing: '0.25em', textTransform: 'uppercase', color: '#C9A961' }}>
+                            {date.weekday} {date.day} {date.month} {date.year}
+                          </span>
+                          {time && (
+                            <>
+                              <span style={{ color: 'rgba(201,169,97,0.3)' }}>·</span>
+                              <span style={{ fontSize: '11px', letterSpacing: '0.15em', color: 'rgba(245,241,232,0.5)' }}>{time}</span>
+                            </>
+                          )}
+                        </div>
+                      )}
 
-                    {event.subtitle && (
-                      <p style={{ fontSize: '13px', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(245,241,232,0.4)', marginBottom: '16px' }}>
-                        {event.subtitle}
-                      </p>
-                    )}
+                      {/* Title */}
+                      <h2 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(1.5rem, 3vw, 2.25rem)', fontWeight: '300', color: '#F5F1E8', margin: '0 0 8px', lineHeight: '1.2' }}>
+                        {event.title}
+                      </h2>
 
-                    {/* Description */}
-                    {event.description && (
-                      <p style={{ fontSize: '16px', lineHeight: '1.7', color: 'rgba(245,241,232,0.6)', marginBottom: '24px', maxWidth: '560px' }}>
-                        {event.description}
-                      </p>
-                    )}
+                      {event.subtitle && (
+                        <p style={{ fontSize: '13px', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(245,241,232,0.4)', marginBottom: '16px' }}>
+                          {event.subtitle}
+                        </p>
+                      )}
 
-                    {/* Location */}
-                    {event.location_name && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                        <span style={{ fontSize: '15px' }}>📍</span>
-                        <span style={{ fontSize: '14px', color: 'rgba(245,241,232,0.55)' }}>{event.location_name}</span>
-                      </div>
-                    )}
-                    {event.address && (
-                      <p style={{ fontSize: '13px', color: 'rgba(245,241,232,0.3)', marginBottom: '24px', paddingLeft: '23px' }}>
-                        {event.address}
-                      </p>
-                    )}
+                      {/* Description */}
+                      {event.description && (
+                        <p style={{ fontSize: '16px', lineHeight: '1.7', color: 'rgba(245,241,232,0.6)', marginBottom: '24px', maxWidth: '560px' }}>
+                          {event.description}
+                        </p>
+                      )}
 
-                    {/* Price */}
-                    {!event.is_free && event.price_label && (
-                      <p style={{ fontSize: '13px', color: 'rgba(245,241,232,0.4)', marginBottom: '24px' }}>
-                        💳 {event.price_label}
-                      </p>
-                    )}
+                      {/* Location */}
+                      {event.location_name && (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                          <span style={{ fontSize: '15px' }}>📍</span>
+                          <span style={{ fontSize: '14px', color: 'rgba(245,241,232,0.55)' }}>{event.location_name}</span>
+                        </div>
+                      )}
+                      {event.address && (
+                        <p style={{ fontSize: '13px', color: 'rgba(245,241,232,0.3)', marginBottom: '24px', paddingLeft: '23px' }}>
+                          {event.address}
+                        </p>
+                      )}
 
-                    {/* CTA */}
-                    {event.stripe_url && (
-                      <a
-                        href={event.stripe_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                          display: 'inline-block',
-                          padding: '14px 32px',
-                          borderRadius: '999px',
-                          background: 'linear-gradient(135deg, #C9A961, #B8960F)',
-                          color: '#000',
-                          fontWeight: '600',
-                          fontSize: '14px',
-                          textDecoration: 'none',
-                          letterSpacing: '0.03em',
-                          transition: 'opacity 0.2s',
-                        }}
-                      >
-                        {event.cta_label || 'Réserver ma place'}
-                      </a>
-                    )}
+                      {/* Price */}
+                      {!event.is_free && event.price_label && (
+                        <p style={{ fontSize: '13px', color: 'rgba(245,241,232,0.4)', marginBottom: '24px' }}>
+                          💳 {event.price_label}
+                        </p>
+                      )}
 
-                    {/* Max spots */}
-                    {event.max_spots && (
-                      <p style={{ fontSize: '12px', color: 'rgba(245,241,232,0.25)', marginTop: '12px' }}>
-                        {event.max_spots} places disponibles
-                      </p>
-                    )}
-                  </div>
-                </article>
+                      {/* Voir l'événement */}
+                      <span style={{
+                        display: 'inline-block',
+                        padding: '14px 32px',
+                        borderRadius: '999px',
+                        background: 'linear-gradient(135deg, #C9A961, #B8960F)',
+                        color: '#000',
+                        fontWeight: '600',
+                        fontSize: '14px',
+                        letterSpacing: '0.03em',
+                      }}>
+                        Voir l&apos;événement →
+                      </span>
+
+                      {/* Max spots */}
+                      {event.max_spots && (
+                        <p style={{ fontSize: '12px', color: 'rgba(245,241,232,0.25)', marginTop: '12px' }}>
+                          {event.max_spots} places disponibles
+                        </p>
+                      )}
+                    </div>
+                  </article>
+                </Link>
               )
             })}
           </div>

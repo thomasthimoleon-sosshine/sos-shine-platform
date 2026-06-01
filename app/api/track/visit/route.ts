@@ -49,7 +49,7 @@ function isInternalReferrer(referrer: string | null | undefined): boolean {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { page_path, referrer, session_id } = body
+    const { page_path, referrer, session_id, utm_source, utm_medium, utm_campaign, utm_content } = body
 
     if (!page_path) {
       return NextResponse.json({ error: 'page_path requis' }, { status: 400 })
@@ -109,6 +109,10 @@ export async function POST(request: NextRequest) {
         device_type: deviceType,
         session_id: session_id || null,
         is_authenticated: !!userId,
+        utm_source: utm_source || null,
+        utm_medium: utm_medium || null,
+        utm_campaign: utm_campaign || null,
+        utm_content: utm_content || null,
       })
       if (anonInsertError) {
         console.error('[VisitTracker] Anon insert error:', anonInsertError.message, anonInsertError.code)
@@ -132,6 +136,10 @@ export async function POST(request: NextRequest) {
       device_type: deviceType,
       session_id: session_id || null,
       is_authenticated: !!userId,
+      utm_source: utm_source || null,
+      utm_medium: utm_medium || null,
+      utm_campaign: utm_campaign || null,
+      utm_content: utm_content || null,
     })
 
     if (insertError) {

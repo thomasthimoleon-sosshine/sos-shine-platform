@@ -4,6 +4,42 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { isSpamEmail, isSpamName } from '@/lib/anti-spam'
 
+type VisitRow = {
+  created_at: string
+  utm_source: string | null
+  referrer: string | null
+}
+
+type DayStats = { date: string; count: number }
+type SourceStats = { source: string; count: number }
+
+function getReferrerSource(referrer: string | null, utmSource: string | null): string {
+  if (utmSource) return utmSource
+  if (!referrer) return 'Direct'
+  try {
+    const host = new URL(referrer).hostname.replace('www.', '')
+    if (host.includes('instagram')) return 'instagram'
+    if (host.includes('facebook')) return 'facebook'
+    if (host.includes('google')) return 'google'
+    if (host.includes('tiktok')) return 'tiktok'
+    if (host.includes('whatsapp')) return 'whatsapp'
+    if (host.includes('sosshine') || host.includes('localhost') || host.includes('vercel')) return 'interne'
+    return host
+  } catch {
+    return 'Direct'
+  }
+}
+
+const SOURCE_ICON: Record<string, string> = {
+  instagram: '📸',
+  facebook: '📘',
+  google: '🔍',
+  tiktok: '🎵',
+  whatsapp: '💬',
+  Direct: '🔗',
+  interne: '🏠',
+}
+
 type Reservation = {
   id: string
   prenom: string
@@ -53,18 +89,37 @@ export default function InscritsCeremonieAdmin() {
   const [cleaning, setCleaning] = useState(false)
   const [confirmClean, setConfirmClean] = useState(false)
 
+  // Analytics state
+  const [visits, setVisits] = useState<VisitRow[]>([])
+  const [analyticsLoading, setAnalyticsLoading] = useState(true)
+
   useEffect(() => {
+    const supabase = createClient()
+
     async function load() {
-      const supabase = createClient()
       const { data, error } = await supabase
         .from('ceremonie_reservations')
         .select('id, prenom, nom, email, status, created_at, paid_at, ceremonie_date')
         .order('created_at', { ascending: false })
-
       if (!error && data) setReservations(data as Reservation[])
       setLoading(false)
     }
+
+    async function loadAnalytics() {
+      const since = new Date()
+      since.setDate(since.getDate() - 30)
+      const { data } = await supabase
+        .from('site_visits')
+        .select('created_at, utm_source, referrer')
+        .like('page_path', '/event%')
+        .gte('created_at', since.toISOString())
+        .order('created_at', { ascending: false })
+      setVisits((data || []) as VisitRow[])
+      setAnalyticsLoading(false)
+    }
+
     load()
+    loadAnalytics()
   }, [])
 
   const filtered = reservations.filter(r => {
@@ -115,6 +170,36 @@ export default function InscritsCeremonieAdmin() {
     )
   }
 
+  // Analytics computed values
+  const today = new Date().toISOString().slice(0, 10)
+  const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString()
+  const visitsToday = visits.filter(v => v.created_at.slice(0, 10) === today).length
+  const visitsWeek = visits.filter(v => v.created_at >= weekAgo).length
+  const visitsTotal = visits.length
+
+  // Daily for last 14 days
+  const dailyMap: Record<string, number> = {}
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date(Date.now() - i * 86400000).toISOString().slice(0, 10)
+    dailyMap[d] = 0
+  }
+  visits.forEach(v => {
+    const d = v.created_at.slice(0, 10)
+    if (d in dailyMap) dailyMap[d]++
+  })
+  const dailyStats: DayStats[] = Object.entries(dailyMap).map(([date, count]) => ({ date, count }))
+  const maxDay = Math.max(...dailyStats.map(d => d.count), 1)
+
+  // Sources
+  const sourceMap: Record<string, number> = {}
+  visits.forEach(v => {
+    const s = getReferrerSource(v.referrer, v.utm_source)
+    sourceMap[s] = (sourceMap[s] || 0) + 1
+  })
+  const sources: SourceStats[] = Object.entries(sourceMap)
+    .sort((a, b) => b[1] - a[1])
+    .map(([source, count]) => ({ source, count }))
+
   return (
     <div className="max-w-5xl mx-auto py-8 px-4">
       {/* Header */}
@@ -125,6 +210,98 @@ export default function InscritsCeremonieAdmin() {
         <p className="text-sm text-[var(--text-muted)]">
           13 juin 2026 · Lac de Saint-Cassien · 20 places
         </p>
+      </div>
+
+      {/* Analytics block */}
+      <div className="rounded-2xl p-6 mb-8" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="font-display text-base font-medium text-[var(--text-primary)]">
+            📊 Visites — page /event (30 derniers jours)
+          </h2>
+          {analyticsLoading && (
+            <div className="w-4 h-4 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
+          )}
+        </div>
+
+        {/* KPI row */}
+        <div className="grid grid-cols-3 gap-4 mb-6">
+          {[
+            { label: "Aujourd'hui", value: visitsToday, color: '#C9A961' },
+            { label: 'Cette semaine', value: visitsWeek, color: '#74C0FC' },
+            { label: 'Total (30j)', value: visitsTotal, color: 'var(--text-primary)' },
+          ].map(k => (
+            <div key={k.label} className="rounded-xl p-4 text-center"
+              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}>
+              <div className="font-display text-2xl font-light mb-1" style={{ color: k.color }}>{k.value}</div>
+              <div className="text-xs text-[var(--text-muted)]">{k.label}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Daily bar chart */}
+        <div className="mb-6">
+          <p className="text-xs text-[var(--text-muted)] mb-3 uppercase tracking-widest">14 derniers jours</p>
+          <div className="flex items-end gap-1" style={{ height: '64px' }}>
+            {dailyStats.map(d => {
+              const heightPct = maxDay > 0 ? (d.count / maxDay) * 100 : 0
+              const isToday = d.date === today
+              return (
+                <div key={d.date} className="flex-1 flex flex-col items-center gap-1 group relative">
+                  <div
+                    className="w-full rounded-t-sm transition-all"
+                    style={{
+                      height: `${Math.max(heightPct, d.count > 0 ? 8 : 2)}%`,
+                      background: isToday
+                        ? 'linear-gradient(to top, #C9A961, #E8C97A)'
+                        : 'rgba(201,169,97,0.35)',
+                      minHeight: '2px',
+                    }}
+                  />
+                  {d.count > 0 && (
+                    <span className="absolute -top-5 text-xs text-[var(--text-muted)] opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                      {d.count}
+                    </span>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+          <div className="flex justify-between mt-1">
+            <span className="text-xs text-[var(--text-muted)] opacity-40">{dailyStats[0]?.date.slice(5)}</span>
+            <span className="text-xs text-[var(--text-muted)] opacity-40">{dailyStats[13]?.date.slice(5)}</span>
+          </div>
+        </div>
+
+        {/* Sources */}
+        {sources.length > 0 && (
+          <div>
+            <p className="text-xs text-[var(--text-muted)] mb-3 uppercase tracking-widest">Sources de trafic</p>
+            <div className="space-y-2">
+              {sources.map(s => (
+                <div key={s.source} className="flex items-center gap-3">
+                  <span className="text-base w-6 flex-shrink-0">{SOURCE_ICON[s.source] || '🌐'}</span>
+                  <span className="text-sm text-[var(--text-secondary)] capitalize flex-shrink-0 w-28 truncate">{s.source}</span>
+                  <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.06)' }}>
+                    <div
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${(s.count / visitsTotal) * 100}%`,
+                        background: 'linear-gradient(to right, #C9A961, #E8C97A)',
+                      }}
+                    />
+                  </div>
+                  <span className="text-sm text-[var(--text-muted)] flex-shrink-0 w-8 text-right">{s.count}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {!analyticsLoading && visits.length === 0 && (
+          <p className="text-sm text-[var(--text-muted)] text-center py-4">
+            Aucune visite encore enregistrée sur /event
+          </p>
+        )}
       </div>
 
       {/* Stats */}

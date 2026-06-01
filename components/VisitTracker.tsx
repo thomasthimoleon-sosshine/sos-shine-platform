@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 
 function getSessionId(): string {
   if (typeof window === 'undefined') return ''
@@ -15,20 +15,24 @@ function getSessionId(): string {
 
 export default function VisitTracker() {
   const pathname = usePathname()
+  const searchParams = useSearchParams()
   const lastTracked = useRef<string>('')
 
   useEffect(() => {
-    // Avoid tracking the same page twice in quick succession
     if (pathname === lastTracked.current) return
     lastTracked.current = pathname
 
-    // Skip API routes, static assets, etc.
     if (pathname.startsWith('/api/') || pathname.startsWith('/_next/')) return
 
     const sessionId = getSessionId()
 
-    // Fire and forget - don't block rendering
-    // Small delay to not compete with critical page resources
+    const utm = {
+      utm_source: searchParams.get('utm_source'),
+      utm_medium: searchParams.get('utm_medium'),
+      utm_campaign: searchParams.get('utm_campaign'),
+      utm_content: searchParams.get('utm_content'),
+    }
+
     const timer = setTimeout(() => {
       fetch('/api/track/visit', {
         method: 'POST',
@@ -38,14 +42,13 @@ export default function VisitTracker() {
           referrer: document.referrer || null,
           session_id: sessionId,
           timestamp: new Date().toISOString(),
+          ...utm,
         }),
-      }).catch(() => {
-        // Silently fail - tracking should never break UX
-      })
+      }).catch(() => {})
     }, 500)
 
     return () => clearTimeout(timer)
-  }, [pathname])
+  }, [pathname, searchParams])
 
   return null
 }

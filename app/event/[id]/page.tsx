@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
+import ReserveForm from './ReserveForm'
 
 export const revalidate = 60
 
@@ -181,26 +182,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         </div>
 
         {/* CTA */}
-        {event.stripe_url && (
-          <a
-            href={event.stripe_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: 'inline-block',
-              padding: '16px 40px',
-              borderRadius: '999px',
-              background: 'linear-gradient(135deg, #C9A961, #B8960F)',
-              color: '#000',
-              fontWeight: '700',
-              fontSize: '15px',
-              textDecoration: 'none',
-              letterSpacing: '0.04em',
-            }}
-          >
-            {event.cta_label || 'Réserver ma place'}
-          </a>
-        )}
+        <ReserveForm ctaLabel={event.cta_label || 'Réserver ma place'} stripeUrl={event.stripe_url} />
 
         {/* Footer */}
         <div style={{ textAlign: 'center', marginTop: '80px' }}>

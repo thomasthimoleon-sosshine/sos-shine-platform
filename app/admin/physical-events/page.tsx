@@ -99,11 +99,11 @@ export default function PhysicalEventsAdmin() {
 
     let error
     if (editing.id) {
-      const { id, ...rest } = payload as PhysicalEvent
+      const { id, ...rest } = payload as unknown as PhysicalEvent
       const res = await supabase.from('physical_events').update(rest).eq('id', id)
       error = res.error
     } else {
-      const { id: _id, ...rest } = payload as PhysicalEvent
+      const { id: _id, ...rest } = payload as unknown as PhysicalEvent
       const res = await supabase.from('physical_events').insert(rest)
       error = res.error
     }

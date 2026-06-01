@@ -3,8 +3,21 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Événements — SOS Shine®',
-  description: 'Retrouvez tous les événements physiques SOS Shine : soirées, ateliers, cérémonies au bord du lac.',
+  title: 'Événements SOS Shine® — Soirées, ateliers & cérémonies',
+  description: 'Rejoins-nous en vrai : soirées au bord du lac, ateliers, cérémonies. Découvrez les prochains événements physiques SOS Shine.',
+  openGraph: {
+    title: 'Événements SOS Shine® 🌿',
+    description: 'Rejoins-nous en vrai : soirées au bord du lac, ateliers, cérémonies. Événements payants et gratuits.',
+    url: 'https://www.sosshine.com/event',
+    siteName: 'SOS Shine®',
+    locale: 'fr_FR',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Événements SOS Shine® 🌿',
+    description: 'Rejoins-nous en vrai : soirées au bord du lac, ateliers, cérémonies.',
+  },
 }
 
 export const revalidate = 60

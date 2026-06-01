@@ -43,9 +43,25 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { id } = await params
   const event = await getEvent(id)
   if (!event) return { title: 'Événement — SOS Shine®' }
+  const desc = event.description || event.subtitle || 'Un événement physique SOS Shine.'
   return {
     title: `${event.title} — SOS Shine®`,
-    description: event.description || event.subtitle || undefined,
+    description: desc,
+    openGraph: {
+      title: `${event.title} 🌿`,
+      description: desc,
+      url: `https://www.sosshine.com/event/${id}`,
+      siteName: 'SOS Shine®',
+      locale: 'fr_FR',
+      type: 'website',
+      ...(event.image_url ? { images: [{ url: event.image_url, width: 1200, height: 630, alt: event.title }] } : {}),
+    },
+    twitter: {
+      card: event.image_url ? 'summary_large_image' : 'summary',
+      title: `${event.title} 🌿`,
+      description: desc,
+      ...(event.image_url ? { images: [event.image_url] } : {}),
+    },
   }
 }
 

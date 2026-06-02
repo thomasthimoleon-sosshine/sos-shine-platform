@@ -308,6 +308,17 @@ export default function CeremoniePage() {
         </div>
       </section>
 
+      {/* ── Photo break: coussins en cercle au lac ── */}
+      <div className="w-full overflow-hidden" style={{ height: 'clamp(260px, 45vw, 520px)' }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/ceremonie-cercle.jpg"
+          alt="Le cercle au bord du lac"
+          className="w-full h-full object-cover"
+          style={{ objectPosition: 'center 60%' }}
+        />
+      </div>
+
       {/* ══════════════════════════════════
           CE QUI T'ATTEND
       ══════════════════════════════════ */}
@@ -383,6 +394,18 @@ export default function CeremoniePage() {
         </div>
       </section>
 
+      {/* ── Photo break: groupe en cercle avec bols tibétains ── */}
+      <div className="w-full overflow-hidden relative" style={{ height: 'clamp(300px, 55vw, 600px)' }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/ceremonie-groupe.jpg"
+          alt="Le groupe en cercle"
+          className="w-full h-full object-cover"
+          style={{ objectPosition: 'center 30%' }}
+        />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(10,10,10,0.4) 0%, transparent 30%, transparent 70%, rgba(10,10,10,0.6) 100%)' }} />
+      </div>
+
       {/* ══════════════════════════════════
           POURQUOI C'EST DIFFÉRENT
       ══════════════════════════════════ */}
@@ -437,6 +460,18 @@ export default function CeremoniePage() {
           </div>
         </div>
       </section>
+
+      {/* ── Photo break: bols tibétains ── */}
+      <div className="grid grid-cols-2 overflow-hidden" style={{ height: 'clamp(200px, 40vw, 420px)' }}>
+        <div className="overflow-hidden">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/images/ceremonie-bols.jpg" alt="Bols tibétains au coucher du soleil" className="w-full h-full object-cover" style={{ objectPosition: 'center' }} />
+        </div>
+        <div className="overflow-hidden">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/images/ceremonie-mains.jpg" alt="Connexion au groupe" className="w-full h-full object-cover" style={{ objectPosition: 'center' }} />
+        </div>
+      </div>
 
       {/* ══════════════════════════════════
           FONDATEURS
@@ -496,6 +531,18 @@ export default function CeremoniePage() {
           </div>
         </div>
       </section>
+
+      {/* ── Photo break: main ouverte ── */}
+      <div className="w-full overflow-hidden relative" style={{ height: 'clamp(240px, 42vw, 480px)' }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/ceremonie-main.jpg"
+          alt="Présence et ouverture"
+          className="w-full h-full object-cover"
+          style={{ objectPosition: 'center 40%' }}
+        />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(10,10,10,0.3) 0%, transparent 40%, rgba(10,10,10,0.5) 100%)' }} />
+      </div>
 
       {/* ══════════════════════════════════
           INFOS PRATIQUES

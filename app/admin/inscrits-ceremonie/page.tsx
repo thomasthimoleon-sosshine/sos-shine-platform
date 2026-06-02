@@ -114,7 +114,7 @@ export default function InscritsCeremonieAdmin() {
         .like('page_path', '/event%')
         .gte('created_at', since.toISOString())
         .order('created_at', { ascending: false })
-      setVisits((data || []) as VisitRow[])
+      setVisits((data || []) as unknown as VisitRow[])
       setAnalyticsLoading(false)
     }
 

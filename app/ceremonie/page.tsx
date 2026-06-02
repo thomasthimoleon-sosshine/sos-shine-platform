@@ -496,19 +496,19 @@ export default function CeremoniePage() {
                 photo: '/images/julia.jpeg',
                 name: 'Julia',
                 role: 'Fondatrice · SOS Shine',
-                bio: 'Spécialisée dans le déconditionnement émotionnel, Julia a accompagné plus de 3 000 personnes à identifier et transformer leurs schémas profonds. Elle est la voix et l\'âme de SOS Shine.',
+                bio: 'Spécialisée dans le déconditionnement émotionnel, Julia a accompagné plus de 3 000 personnes à identifier et transformer leurs schémas profonds. Elle anime les bols tibétains et guide le groupe à travers chaque étape de la soirée.',
               },
               {
                 photo: '/images/wiliam.png',
                 name: 'William',
-                role: 'Thérapeute sonore',
-                bio: 'Praticien en thérapie par le son depuis 10 ans, William utilise les bols tibétains comme outil de libération émotionnelle. Son travail touche là où les mots ne peuvent pas aller.',
+                role: 'Praticien MTC · Neurosciences',
+                bio: 'Praticien en Médecine Traditionnelle Chinoise, William apporte une lecture neuroscientifique de nos blocages émotionnels. Il révèle ce que ton corps porte sans que tu en sois conscient.',
               },
               {
                 photo: '/images/thomas.jpeg',
                 name: 'Thomas',
-                role: 'Co-fondateur · SOS Shine',
-                bio: 'Thomas est le bâtisseur invisible de SOS Shine. Il conçoit les formats, les espaces et les expériences pour que chaque moment soit porteur de transformation réelle.',
+                role: 'Co-fondateur · Méditation guidée',
+                bio: 'Thomas guide les méditations de la soirée. Ses séances plongent dans un espace rare de silence et de présence — un voyage intérieur que ceux qui l\'ont vécu n\'oublient pas.',
               },
             ].map((f, i) => (
               <Fade key={i} delay={i * 0.1}>

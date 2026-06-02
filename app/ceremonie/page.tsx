@@ -3,13 +3,11 @@
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { createClient } from '@/lib/supabase/client'
 
 const GOLD = '#C9A961'
 const GOLD2 = '#E8C97A'
 const BG = '#0A0A0A'
 const IVORY = '#F5F1E8'
-const MAX_SPOTS = 20
 
 function Fade({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
   return (
@@ -26,7 +24,7 @@ function Fade({ children, delay = 0, className = '' }: { children: React.ReactNo
 }
 
 // ─── RESERVATION FORM ───────────────────────────────────────────────────────
-function ReservationForm({ spotsLeft }: { spotsLeft: number | null }) {
+function ReservationForm() {
   const [prenom, setPrenom] = useState('')
   const [nom, setNom] = useState('')
   const [email, setEmail] = useState('')
@@ -102,11 +100,6 @@ function ReservationForm({ spotsLeft }: { spotsLeft: number | null }) {
         <p className="text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>
           Remboursable jusqu'à J-14 · Paiement 100% sécurisé (Stripe)
         </p>
-        {spotsLeft !== null && spotsLeft <= 5 && (
-          <p className="text-xs font-medium" style={{ color: '#FF6B35' }}>
-            ⚠ Plus que {spotsLeft} place{spotsLeft > 1 ? 's' : ''} disponible{spotsLeft > 1 ? 's' : ''}
-          </p>
-        )}
       </div>
     </form>
   )
@@ -147,20 +140,6 @@ function FaqItem({ q, a }: { q: string; a: string }) {
 // PAGE
 // ═══════════════════════════════════════════════════════════════════════════
 export default function CeremoniePage() {
-  const [spotsLeft, setSpotsLeft] = useState<number | null>(null)
-
-  useEffect(() => {
-    const supabase = createClient()
-    supabase
-      .from('ceremonie_reservations')
-      .select('id', { count: 'exact', head: true })
-      .eq('status', 'paid')
-      .then(({ count }) => {
-        if (count !== null) setSpotsLeft(MAX_SPOTS - count)
-      })
-  }, [])
-
-  const spotsDisplay = spotsLeft !== null ? spotsLeft : MAX_SPOTS - 1
 
   return (
     <main style={{ background: BG, color: IVORY, overflowX: 'hidden' }}>
@@ -221,7 +200,7 @@ export default function CeremoniePage() {
               style={{ background: 'rgba(255,107,53,0.12)', border: '1px solid rgba(255,107,53,0.3)' }}>
               <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#FF6B35' }} />
               <span className="text-xs font-medium" style={{ color: '#FF6B35' }}>
-                Il reste {spotsDisplay} place{spotsDisplay > 1 ? 's' : ''} sur {MAX_SPOTS}
+                Places limitées · 20 personnes max
               </span>
             </div>
           </Fade>
@@ -609,7 +588,7 @@ export default function CeremoniePage() {
               style={{ background: 'rgba(255,107,53,0.1)', border: '1px solid rgba(255,107,53,0.25)' }}>
               <span className="w-2 h-2 rounded-full animate-pulse flex-shrink-0" style={{ background: '#FF6B35' }} />
               <span className="text-sm font-medium" style={{ color: '#FF8355' }}>
-                Il reste {spotsDisplay} place{spotsDisplay > 1 ? 's' : ''} · 13 juin 2026
+                Places limitées · 13 juin 2026
               </span>
             </div>
           </Fade>
@@ -655,7 +634,7 @@ export default function CeremoniePage() {
           </Fade>
 
           <Fade delay={0.25}>
-            <ReservationForm spotsLeft={spotsLeft} />
+            <ReservationForm />
           </Fade>
         </div>
       </section>
@@ -698,7 +677,7 @@ export default function CeremoniePage() {
           </Fade>
           <Fade delay={0.1}>
             <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>
-              {spotsDisplay} place{spotsDisplay > 1 ? 's' : ''} restante{spotsDisplay > 1 ? 's' : ''}.<br />
+              Places limitées · 20 personnes max.<br />
               La prochaine date n'est pas encore fixée.
             </p>
           </Fade>

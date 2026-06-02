@@ -92,7 +92,7 @@ function ReservationForm({ spotsLeft }: { spotsLeft: number | null }) {
         className="w-full py-5 rounded-full font-semibold transition-all disabled:opacity-60 cursor-pointer text-base"
         style={{ background: `linear-gradient(135deg, ${GOLD}, #B8960F)`, color: '#000', letterSpacing: '0.02em' }}
       >
-        {loading ? 'Redirection en cours...' : `Réserver ma place — 21€`}
+        {loading ? 'Redirection en cours...' : `Réserver ma place`}
       </motion.button>
 
       <div className="text-center space-y-1">
@@ -232,7 +232,7 @@ export default function CeremoniePage() {
               className="inline-block px-12 py-4 rounded-full font-semibold transition-all hover:brightness-110 text-sm"
               style={{ background: `linear-gradient(135deg, ${GOLD}, #B8960F)`, color: '#000', letterSpacing: '0.03em' }}
             >
-              Réserver ma place — 21€
+              Réserver ma place
             </a>
           </Fade>
 
@@ -708,7 +708,7 @@ export default function CeremoniePage() {
               className="inline-block px-12 py-4 rounded-full font-semibold transition-all hover:brightness-110 text-sm"
               style={{ background: `linear-gradient(135deg, ${GOLD}, #B8960F)`, color: '#000', letterSpacing: '0.03em' }}
             >
-              Réserver ma place — 21€
+              Réserver ma place
             </a>
           </Fade>
           <Fade delay={0.26}>

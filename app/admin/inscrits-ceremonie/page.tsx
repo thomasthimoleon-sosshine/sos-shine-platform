@@ -111,7 +111,7 @@ export default function InscritsCeremonieAdmin() {
       const { data } = await supabase
         .from('site_visits')
         .select('created_at, utm_source, referrer')
-        .like('page_path', '/event%')
+        .like('page_path', '/ceremonie%')
         .gte('created_at', since.toISOString())
         .order('created_at', { ascending: false })
       setVisits((data || []) as unknown as VisitRow[])
@@ -216,7 +216,7 @@ export default function InscritsCeremonieAdmin() {
       <div className="rounded-2xl p-6 mb-8" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         <div className="flex items-center justify-between mb-5">
           <h2 className="font-display text-base font-medium text-[var(--text-primary)]">
-            📊 Visites — page /event (30 derniers jours)
+            📊 Visites — page /ceremonie (30 derniers jours)
           </h2>
           {analyticsLoading && (
             <div className="w-4 h-4 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />

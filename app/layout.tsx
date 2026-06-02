@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Suspense } from "react";
 import "./globals.css";
 import ThemeProvider from "@/components/ThemeProvider";
 import SecurityProvider from "@/components/SecurityProvider";
@@ -186,7 +187,7 @@ export default function RootLayout({
         <div className="ambient-glow" />
         <SecurityProvider>
           <ThemeProvider>{children}</ThemeProvider>
-          <VisitTracker />
+          <Suspense fallback={null}><VisitTracker /></Suspense>
         </SecurityProvider>
       </body>
     </html>

@@ -8,6 +8,7 @@ type VisitRow = {
   created_at: string
   utm_source: string | null
   referrer: string | null
+  time_on_page_seconds: number | null
 }
 
 type DayStats = { date: string; count: number }
@@ -110,7 +111,7 @@ export default function InscritsCeremonieAdmin() {
       since.setDate(since.getDate() - 30)
       const { data } = await supabase
         .from('site_visits')
-        .select('created_at, utm_source, referrer')
+        .select('created_at, utm_source, referrer, time_on_page_seconds')
         .like('page_path', '/ceremonie%')
         .gte('created_at', since.toISOString())
         .order('created_at', { ascending: false })
@@ -177,6 +178,14 @@ export default function InscritsCeremonieAdmin() {
   const visitsWeek = visits.filter(v => v.created_at >= weekAgo).length
   const visitsTotal = visits.length
 
+  const withDuration = visits.filter(v => v.time_on_page_seconds && v.time_on_page_seconds > 0)
+  const avgSeconds = withDuration.length > 0
+    ? Math.round(withDuration.reduce((s, v) => s + (v.time_on_page_seconds || 0), 0) / withDuration.length)
+    : 0
+  const avgDurationLabel = avgSeconds > 0
+    ? avgSeconds >= 60 ? `${Math.floor(avgSeconds / 60)}m ${avgSeconds % 60}s` : `${avgSeconds}s`
+    : '—'
+
   // Daily for last 14 days
   const dailyMap: Record<string, number> = {}
   for (let i = 13; i >= 0; i--) {
@@ -224,11 +233,12 @@ export default function InscritsCeremonieAdmin() {
         </div>
 
         {/* KPI row */}
-        <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
           {[
             { label: "Aujourd'hui", value: visitsToday, color: '#C9A961' },
             { label: 'Cette semaine', value: visitsWeek, color: '#74C0FC' },
             { label: 'Total (30j)', value: visitsTotal, color: 'var(--text-primary)' },
+            { label: 'Durée moyenne', value: avgDurationLabel, color: '#55EFC4' },
           ].map(k => (
             <div key={k.label} className="rounded-xl p-4 text-center"
               style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}>

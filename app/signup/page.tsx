@@ -1,7 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import { useTranslation } from '@/lib/i18n/useTranslation'
@@ -36,10 +37,16 @@ const sizeMap: Record<string, string> = {
   sm: '1.875rem', md: '2.25rem', lg: '3rem', xl: '3.75rem', '2xl': '4.5rem',
 }
 
-export default function SignupPage() {
+function SignupForm() {
   const { t } = useTranslation()
+  const searchParams = useSearchParams()
+  const source = searchParams.get('source') || ''
+  const protocolSlug = searchParams.get('protocol') || ''
+  const prefillEmail = searchParams.get('email') || ''
+  const isQuizSource = source === 'quiz'
+
   const [prenom, setPrenom] = useState('')
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState(prefillEmail)
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -69,12 +76,13 @@ export default function SignupPage() {
 
     try {
       const supabase = createClient()
+      const nextPath = protocolSlug ? `/protocole/${protocolSlug}` : '/onboarding'
       const { error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: { prenom },
-          emailRedirectTo: `${window.location.origin}/auth/callback?next=/onboarding`,
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(nextPath)}`,
         },
       })
 
@@ -93,9 +101,10 @@ export default function SignupPage() {
 
   async function handleGoogleSignIn() {
     const supabase = createClient()
+    const nextPath = protocolSlug ? `/protocole/${protocolSlug}` : '/dashboard'
     await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${window.location.origin}/auth/callback?next=/dashboard` },
+      options: { redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(nextPath)}` },
     })
   }
 
@@ -267,10 +276,29 @@ export default function SignupPage() {
           </Link>
         </p>
 
-        <p className="text-center text-[11px] text-[var(--text-muted)] mt-4 italic">
-          {s('signup_trial_text')}
-        </p>
+        {!isQuizSource && (
+          <p className="text-center text-[11px] text-[var(--text-muted)] mt-4 italic">
+            {s('signup_trial_text')}
+          </p>
+        )}
+        {isQuizSource && protocolSlug && (
+          <p className="text-center text-[11px] text-[var(--text-muted)] mt-4 italic">
+            Ton protocole sera accessible dès la création de ton compte.
+          </p>
+        )}
       </motion.div>
     </main>
+  )
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen flex items-center justify-center" style={{ background: 'var(--surface)' }}>
+        <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Chargement...</p>
+      </main>
+    }>
+      <SignupForm />
+    </Suspense>
   )
 }

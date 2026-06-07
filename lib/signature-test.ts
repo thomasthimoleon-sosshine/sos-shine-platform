@@ -27,137 +27,137 @@ export interface Profile {
 export const QUESTIONS: Question[] = [
   {
     id: 1,
-    question: "Lorsque vous traversez une période difficile, quel est votre premier réflexe ?",
+    question: "Quand quelque chose te fait vraiment mal — et que tu continues à faire semblant que tout va bien — ce qui se passe en toi en premier :",
     answers: [
-      { text: "J'analyse la situation sous tous les angles pour comprendre ce qui se passe", scores: { P1: 3, P7: 1 } },
-      { text: "Je me lance dans une activité ou un projet pour ne pas rester immobile", scores: { P2: 3, P10: 1 } },
-      { text: "Je m'assure que mes proches vont bien avant de penser à moi", scores: { P3: 3, P9: 1 } },
-      { text: "Je prends de la distance et je gère seul(e)", scores: { P4: 3, P5: 1 } },
+      { text: "Je tourne ça dans ma tête en boucle, parfois pendant des jours — tout en donnant l'impression à l'extérieur que j'ai digéré", scores: { P1: 3, P7: 1 } },
+      { text: "Je me jette dans quelque chose — n'importe quoi — pour ne pas rester face à ce que je ressens", scores: { P2: 3, P10: 1 } },
+      { text: "Je vérifie comment vont les gens que j'aime avant même de m'occuper de ma propre douleur", scores: { P3: 3, P9: 1 } },
+      { text: "Je ferme tout, je dis \"ça va\" — et j'absorbe seul(e) dans un silence que personne autour de moi ne voit", scores: { P4: 3, P5: 1 } },
     ]
   },
   {
     id: 2,
-    question: "Face à un conflit avec un proche, quelle est votre réaction instinctive ?",
+    question: "Quand quelqu'un que tu aimes entre en conflit avec toi — même si tu n'es pas fier(e) de ta réaction — ce qui monte vraiment en toi, avant même que tu réagisses :",
     answers: [
-      { text: "Je cherche à comprendre la logique derrière le désaccord", scores: { P1: 3, P5: 1 } },
-      { text: "Je fais tout pour apaiser les tensions et retrouver l'harmonie", scores: { P9: 3, P6: 1 } },
-      { text: "Je m'adapte à l'autre pour éviter que la situation ne dégénère", scores: { P6: 3, P3: 1 } },
-      { text: "Je ressens une montée d'énergie intense et j'ai besoin de m'exprimer", scores: { P10: 3, P8: 1 } },
+      { text: "Je me réfugie dans la logique — pas pour vraiment comprendre, mais pour éviter de ressentir à quel point ça fait mal", scores: { P1: 3, P5: 1 } },
+      { text: "Une panique intérieure que je déguise en douceur — je répare l'autre pour faire taire ce malaise en moi", scores: { P9: 3, P6: 1 } },
+      { text: "Je cède, je m'adapte — et je ravale ma colère en souriant, en me disant que c'est pour le bien de la relation", scores: { P6: 3, P3: 1 } },
+      { text: "Une rage ou une douleur intense que je n'arrive pas à taire — même quand je sais que ça va empirer les choses", scores: { P10: 3, P8: 1 } },
     ]
   },
   {
     id: 3,
-    question: "Qu'est-ce qui vous épuise le plus au quotidien ?",
+    question: "Si tu t'arrêtais vraiment — pas ce que tu racontes aux autres, mais ce que tu ressens au fond — ce qui te vide vraiment de ton énergie, souvent en silence :",
     answers: [
-      { text: "Ne pas comprendre pourquoi les choses arrivent", scores: { P1: 3, P7: 1 } },
-      { text: "Être obligé(e) de rester immobile ou dans la routine", scores: { P2: 3, P10: 1 } },
-      { text: "Sentir que les gens autour de moi ne vont pas bien", scores: { P3: 3, P8: 1 } },
-      { text: "Devoir dépendre de quelqu'un d'autre", scores: { P4: 3, P5: 1 } },
+      { text: "Rejouer les mêmes questions en boucle — chercher un sens qui ne vient jamais, même si ça fait des années que je cherche", scores: { P1: 3, P7: 1 } },
+      { text: "Avoir l'impression de stagner — même quand objectivement je \"réussis\", le calme me donne le sentiment que je disparais", scores: { P2: 3, P10: 1 } },
+      { text: "Absorber les émotions des autres comme si c'était les miennes — me vider pour eux sans qu'ils le sachent, ni moi parfois", scores: { P3: 3, P8: 1 } },
+      { text: "Faire seul(e) ce que je pourrais déléguer — parce que dépendre de quelqu'un me met dans une vulnérabilité que je ne supporte pas", scores: { P4: 3, P5: 1 } },
     ]
   },
   {
     id: 4,
-    question: "Comment gérez-vous l'incertitude dans votre vie ?",
+    question: "Quand tu n'as aucun contrôle sur ce qui va se passer — même si tu gardes une façade calme — ce qui se passe vraiment en toi :",
     answers: [
-      { text: "Je planifie et j'anticipe tous les scénarios possibles", scores: { P7: 3, P5: 1 } },
-      { text: "Je m'adapte en temps réel, en me fondant dans le contexte", scores: { P6: 3, P2: 1 } },
-      { text: "Je cherche du sens profond dans ce qui m'arrive", scores: { P8: 3, P1: 1 } },
-      { text: "Je provoque un changement radical pour reprendre le contrôle", scores: { P10: 3, P4: 1 } },
+      { text: "Je planifie sans m'arrêter, parfois jusqu'à l'épuisement — comme si anticiper le pire pouvait m'en protéger", scores: { P7: 3, P5: 1 } },
+      { text: "Je me coule dans la situation, je m'adapte en temps réel — la résistance me semble plus dangereuse que l'incertitude", scores: { P6: 3, P2: 1 } },
+      { text: "Je cherche un sens à tout — et si je n'en trouve pas, j'invente un récit pour rendre l'incertitude supportable", scores: { P8: 3, P1: 1 } },
+      { text: "Je provoque parfois le changement moi-même — plutôt qu'attendre qu'il arrive, ce qui me donne l'illusion du contrôle", scores: { P10: 3, P4: 1 } },
     ]
   },
   {
     id: 5,
-    question: "Dans vos relations, quel rôle endossez-vous le plus souvent ?",
+    question: "Dans tes relations, il y a un rôle que tu endosses presque automatiquement — souvent sans l'avoir choisi, parfois même quand il t'épuise :",
     answers: [
-      { text: "Le conseiller ou la conseillère : on vient me voir pour ma lucidité", scores: { P1: 3, P9: 1 } },
-      { text: "Le pilier : je suis celui ou celle sur qui tout le monde s'appuie", scores: { P3: 3, P5: 1 } },
-      { text: "Le médiateur : je fais le lien entre les gens et j'apaise les tensions", scores: { P9: 3, P6: 1 } },
-      { text: "L'électron libre : je suis le moteur qui entraîne les autres", scores: { P2: 3, P10: 1 } },
+      { text: "Le conseiller — celui ou celle qui aide tout le monde à y voir clair… et qui rentre chez lui/elle sans que personne ne lui ait demandé comment il/elle allait", scores: { P1: 3, P9: 1 } },
+      { text: "Le pilier — je tiens tout le monde, j'absorbe tout, et je dis \"ça va\" alors que je suis parfois en train de m'effondrer à l'intérieur", scores: { P3: 3, P5: 1 } },
+      { text: "Le médiateur — celui ou celle qui s'oublie pour que les autres ne se déchirent pas, même si personne ne fait la même chose pour lui/elle", scores: { P9: 3, P6: 1 } },
+      { text: "Le moteur — je génère de l'énergie pour tout le monde, et quand je tombe, je tombe souvent seul(e), sans filet", scores: { P2: 3, P10: 1 } },
     ]
   },
   {
     id: 6,
-    question: "Quelle est votre plus grande peur inconsciente ?",
+    question: "Au fond de toi — même si tu ne veux pas toujours le voir — la peur qui pilote réellement tes décisions depuis des années :",
     answers: [
-      { text: "Perdre le contrôle de la situation ou de moi-même", scores: { P5: 3, P7: 1 } },
-      { text: "Être abandonné(e) ou devenir invisible aux yeux des autres", scores: { P3: 3, P6: 1 } },
-      { text: "Ne jamais trouver quelqu'un qui me comprenne vraiment", scores: { P8: 3, P4: 1 } },
-      { text: "Être trahi(e) et regretter d'avoir fait confiance", scores: { P4: 3, P7: 1 } },
+      { text: "Que si je lâche le contrôle une seule fois, quelque chose se brise — et que je ne sois plus jamais la même personne qu'avant", scores: { P5: 3, P7: 1 } },
+      { text: "Que le jour où tu cesses d'être utile, les gens partent — et que leur amour était conditionné à ce que tu faisais pour eux", scores: { P3: 3, P6: 1 } },
+      { text: "Que tu es fondamentalement différent(e) — et que si tu te montrais vraiment, les gens prendraient de la distance", scores: { P8: 3, P4: 1 } },
+      { text: "Que faire confiance finira toujours par te coûter quelque chose — alors tu restes en retrait, même quand une partie de toi voudrait avancer", scores: { P4: 3, P7: 1 } },
     ]
   },
   {
     id: 7,
-    question: "Quand une émotion forte vous submerge, que faites-vous ?",
+    question: "Quand une émotion te déborde vraiment — celle que tu aurais préféré ne pas ressentir — ce qui se passe en toi (même si en surface tu sembles tenir) :",
     answers: [
-      { text: "J'essaie de la décortiquer mentalement pour la comprendre", scores: { P1: 3, P7: 1 } },
-      { text: "Je la canalise dans une action concrète ou un mouvement", scores: { P2: 3, P10: 1 } },
-      { text: "Je la garde pour moi et je me referme", scores: { P4: 3, P9: 1 } },
-      { text: "Je la vis intensément, quitte à être submergé(e)", scores: { P8: 3, P10: 1 } },
+      { text: "Je la dissèque mentalement jusqu'à ne plus la ressentir — une façon de m'assurer qu'elle ne prend pas le contrôle", scores: { P1: 3, P7: 1 } },
+      { text: "Je me jette dans l'action ou le mouvement pour ne plus avoir à la regarder en face — et souvent ça marche, jusqu'au prochain craquage", scores: { P2: 3, P10: 1 } },
+      { text: "Je la verrouille tellement bien que même moi je finis par douter qu'elle existe — jusqu'au jour où elle explose", scores: { P4: 3, P9: 1 } },
+      { text: "Je m'y noie parfois volontairement — comme si ressentir intensément était la seule preuve que je suis vraiment vivant(e)", scores: { P8: 3, P10: 1 } },
     ]
   },
   {
     id: 8,
-    question: "Qu'est-ce qui vous redonne de l'énergie quand vous êtes à plat ?",
+    question: "Quand tu es au fond du creux — pas la fatigue du soir, la vraie — ce qui te recharge réellement (pas ce que tu dirais à quelqu'un, ce que tu fais vraiment) :",
     answers: [
-      { text: "Avoir un nouveau projet ou une nouvelle direction à explorer", scores: { P2: 3, P10: 2 } },
-      { text: "Une conversation profonde et authentique avec quelqu'un", scores: { P8: 3, P3: 1 } },
-      { text: "Un moment de solitude où je peux tout remettre en ordre", scores: { P5: 3, P4: 1 } },
-      { text: "Sentir que je suis utile et que mes proches vont bien", scores: { P3: 3, P9: 1 } },
+      { text: "Un nouveau départ, une nouvelle direction — comme si repartir à zéro était ma façon de guérir de tout", scores: { P2: 3, P10: 2 } },
+      { text: "Être enfin vu(e) sans avoir à performer — sans devoir être fort(e) ni expliquer — même si je me l'autorise rarement", scores: { P8: 3, P3: 1 } },
+      { text: "M'isoler complètement, sans avoir à justifier pourquoi — juste disparaître quelques heures du monde et de ses attentes", scores: { P5: 3, P4: 1 } },
+      { text: "M'assurer que les gens que j'aime vont bien — parce que ça me donne une raison valable de me sentir utile, et donc d'exister un peu", scores: { P3: 3, P9: 1 } },
     ]
   },
   {
     id: 9,
-    question: "Comment réagissez-vous lorsque quelqu'un vous déçoit profondément ?",
+    question: "Quand quelqu'un en qui tu avais vraiment confiance te déçoit — la réaction que tu n'avouerais pas facilement, mais qui est là :",
     answers: [
-      { text: "Je coupe le lien et je me protège immédiatement", scores: { P4: 3, P10: 1 } },
-      { text: "Je cherche à comprendre ses raisons avant de juger", scores: { P1: 2, P9: 2 } },
-      { text: "Je fais comme si de rien n'était pour préserver la relation", scores: { P6: 3, P9: 1 } },
-      { text: "Je ressens une blessure intense et je remets tout en question", scores: { P8: 3, P3: 1 } },
+      { text: "Je coupe net, parfois sans un mot — et même si une partie de moi voudrait expliquer, l'autre a déjà fermé la porte à clé", scores: { P4: 3, P10: 1 } },
+      { text: "Je cherche à comprendre pour ne pas avoir à ressentir — si j'explique son comportement, je n'ai pas à admettre à quel point ça m'a fait mal", scores: { P1: 2, P9: 2 } },
+      { text: "Je souris, je dis que tout va bien — et je digère seul(e) une blessure que l'autre ne saura probablement jamais", scores: { P6: 3, P9: 1 } },
+      { text: "Je me rejoue la scène en cherchant le signe que j'aurais dû voir — pour me dire que c'est de ma faute d'avoir fait confiance", scores: { P8: 3, P3: 1 } },
     ]
   },
   {
     id: 10,
-    question: "Dans un groupe, quelle posture adoptez-vous naturellement ?",
+    question: "Dans un groupe que tu connais peu — observe ton comportement automatique, pas celui que tu voudrais avoir — ce qui se passe vraiment en toi :",
     answers: [
-      { text: "J'observe et j'analyse les dynamiques avant de m'impliquer", scores: { P7: 3, P1: 1 } },
-      { text: "Je m'ajuste au ton du groupe pour que tout se passe bien", scores: { P6: 3, P9: 1 } },
-      { text: "Je prends les rênes si personne ne le fait", scores: { P5: 3, P2: 1 } },
-      { text: "Je recherche les échanges vrais et profonds, pas le superficiel", scores: { P8: 3, P4: 1 } },
+      { text: "Je scanne l'environnement sans le montrer — je repère où sont les risques avant de décider qui je vais être dans ce groupe", scores: { P7: 3, P1: 1 } },
+      { text: "Je prends automatiquement la couleur du groupe — parfois tellement que je ne sais plus très bien qui j'étais avant d'entrer dans la pièce", scores: { P6: 3, P9: 1 } },
+      { text: "Je prends le leadership même quand personne ne me le demande — pas toujours par désir de diriger, mais parce que le flou me stresse", scores: { P5: 3, P2: 1 } },
+      { text: "Je reste en marge, cherchant la seule personne qui semble vraiment intéressante — et je rentre épuisé(e) par tout ce que j'ai dû simuler", scores: { P8: 3, P4: 1 } },
     ]
   },
   {
     id: 11,
-    question: "Quel type de silence vous met le plus mal à l'aise ?",
+    question: "Il y a un type de silence qui te dérange plus que les autres — souvent parce qu'il réveille quelque chose en toi que tu préfères ne pas regarder. Lequel ?",
     answers: [
-      { text: "Le silence après un conflit non résolu", scores: { P9: 3, P3: 1 } },
-      { text: "Le silence de l'inactivité, quand rien ne se passe", scores: { P2: 3, P10: 1 } },
-      { text: "Le silence intérieur, quand je n'ai pas de réponse à mes questions", scores: { P1: 3, P8: 1 } },
-      { text: "Le silence des autres, quand je ne sais pas ce qu'ils pensent", scores: { P7: 3, P6: 1 } },
+      { text: "Le silence après un conflit — où tu es prêt(e) à tout pour que ça reprenne normalement, même si tu avais raison", scores: { P9: 3, P3: 1 } },
+      { text: "Le silence de l'inaction — où tes propres pensées deviennent trop bruyantes et où tu ferais n'importe quoi pour les faire taire", scores: { P2: 3, P10: 1 } },
+      { text: "Ce silence intérieur épuisant où les mêmes questions reviennent depuis des années — sans réponse, sans fond", scores: { P1: 3, P8: 1 } },
+      { text: "Le silence de quelqu'un qui d'habitude te parle — quand tu n'arrives plus à lire ses intentions et que ton esprit invente des scénarios", scores: { P7: 3, P6: 1 } },
     ]
   },
   {
     id: 12,
-    question: "Que pensez-vous de la vulnérabilité ?",
+    question: "Face à ta vulnérabilité — cette partie que tu montres rarement, même à ceux qui t'aiment — ce qui se passe vraiment en toi :",
     answers: [
-      { text: "C'est une force, mais je préfère la montrer uniquement à ceux qui la méritent", scores: { P4: 3, P8: 1 } },
-      { text: "J'y aspire mais j'ai peur de perdre le contrôle si je m'y abandonne", scores: { P5: 3, P1: 1 } },
-      { text: "Je la montre surtout quand l'autre en a besoin, rarement pour moi", scores: { P3: 3, P6: 1 } },
-      { text: "Je la contourne en passant à l'action ou au changement", scores: { P2: 3, P10: 1 } },
+      { text: "Je la vois comme une force chez les autres — mais quand c'est moi qui en aurais besoin, j'ai peur de perdre quelque chose d'essentiel en me montrant fragile", scores: { P4: 3, P8: 1 } },
+      { text: "J'aspire à la légèreté — mais je garde le contrôle parce qu'une partie de moi croit que c'est la seule chose qui me tient debout", scores: { P5: 3, P1: 1 } },
+      { text: "Je l'encourage chez les autres, je l'accueille avec chaleur — et pour moi-même, je fais comme si elle n'existait pas, ou pas maintenant", scores: { P3: 3, P6: 1 } },
+      { text: "Dès que je sens que je pourrais craquer, je trouve quelque chose à faire — une urgence, un projet — n'importe quoi pour ne pas rester là avec ça", scores: { P2: 3, P10: 1 } },
     ]
   },
   {
     id: 13,
-    question: "Face à un changement majeur et imprévu dans votre vie, vous avez tendance à :",
+    question: "Quand un changement que tu n'as pas choisi s'impose à toi — comme il l'a probablement fait plusieurs fois dans ta vie — ce qui se déclenche automatiquement :",
     answers: [
-      { text: "Anticiper toutes les conséquences et préparer un plan B", scores: { P7: 3, P5: 2 } },
-      { text: "Voir ça comme une opportunité de tout réinventer", scores: { P10: 3, P2: 1 } },
-      { text: "M'adapter rapidement pour rassurer mon entourage", scores: { P6: 2, P3: 2 } },
-      { text: "Me replier pour digérer le choc à mon rythme", scores: { P4: 3, P1: 1 } },
+      { text: "Je planifie avec une précision presque anxieuse — pas parce que j'aime ça, mais parce que l'incertitude me fait ressentir quelque chose que je préfère éviter", scores: { P7: 3, P5: 2 } },
+      { text: "Je me convaincs que c'est une opportunité — parfois parce que c'est vrai, parfois parce que c'est ma façon de ne pas m'effondrer", scores: { P10: 3, P2: 1 } },
+      { text: "Je deviens le roc pour les autres — en intégrant le choc tellement vite en apparence que personne ne voit que j'ai mis ma propre douleur en attente", scores: { P6: 2, P3: 2 } },
+      { text: "Je disparais — pas vraiment par choix, mais parce que digérer devant les autres me semble impossible et presque dangereux", scores: { P4: 3, P1: 1 } },
     ]
   },
   {
     id: 14,
-    question: "Quelle phrase résonne le plus en vous ?",
+    question: "Parmi ces phrases, laquelle te touche là, maintenant — comme si elle avait été écrite pour toi, sans que tu saches vraiment pourquoi ?",
     answers: [
       { text: "\"Si je comprends pourquoi, je peux tout supporter\"", scores: { P1: 3, P7: 1 } },
       { text: "\"Je préfère plier que de demander de l'aide\"", scores: { P4: 2, P5: 2 } },
@@ -167,12 +167,12 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: 15,
-    question: "Si vous deviez décrire votre mode de survie en un mot, ce serait :",
+    question: "Si tu étais vraiment honnête — avec toi-même, pas avec les autres — le mécanisme que tu utilises depuis des années pour survivre aux moments les plus durs :",
     answers: [
-      { text: "La compréhension — tout analyser pour ne plus souffrir", scores: { P1: 3, P7: 1 } },
-      { text: "L'harmonie — tout apaiser pour que personne ne souffre", scores: { P9: 3, P3: 1 } },
-      { text: "Le mouvement — avancer pour ne pas sombrer", scores: { P2: 3, P10: 1 } },
-      { text: "L'adaptation — me transformer pour ne pas être rejeté(e)", scores: { P6: 3, P9: 1 } },
+      { text: "Comprendre — parce que tant que tu as une explication, tu n'as pas à vraiment ressentir ce que ça fait", scores: { P1: 3, P7: 1 } },
+      { text: "T'oublier pour t'assurer que les autres vont bien — et appeler ça de l'amour, alors que c'est parfois de la peur", scores: { P9: 3, P3: 1 } },
+      { text: "Courir — te perdre dans l'action, les projets, le mouvement — pour ne jamais avoir à t'asseoir avec ce que tu ressens vraiment", scores: { P2: 3, P10: 1 } },
+      { text: "Te fondre dans ce que les autres veulent voir — jusqu'à ne plus très bien savoir qui tu étais avant de commencer à t'adapter", scores: { P6: 3, P9: 1 } },
     ]
   },
 ];
@@ -300,7 +300,7 @@ export const PROFILES: Record<ProfileKey, Profile> = {
   },
 };
 
-export function calculateResult(answers: Record<number, number>): ProfileKey {
+export function computeTotals(answers: Record<number, number>): Record<ProfileKey, number> {
   const totals: Record<ProfileKey, number> = {
     P1: 0, P2: 0, P3: 0, P4: 0, P5: 0,
     P6: 0, P7: 0, P8: 0, P9: 0, P10: 0,
@@ -317,6 +317,12 @@ export function calculateResult(answers: Record<number, number>): ProfileKey {
     }
   }
 
+  return totals;
+}
+
+export function calculateResult(answers: Record<number, number>): ProfileKey {
+  const totals = computeTotals(answers);
+
   let maxKey: ProfileKey = 'P1';
   let maxScore = -1;
   for (const [key, score] of Object.entries(totals)) {
@@ -327,4 +333,14 @@ export function calculateResult(answers: Record<number, number>): ProfileKey {
   }
 
   return maxKey;
+}
+
+export function calculateTopTwo(answers: Record<number, number>): { dominant: ProfileKey; secondary: ProfileKey } {
+  const totals = computeTotals(answers);
+
+  const sorted = (Object.entries(totals) as [ProfileKey, number][]).sort((a, b) => b[1] - a[1]);
+  return {
+    dominant: sorted[0]?.[0] ?? 'P1',
+    secondary: sorted[1]?.[0] ?? 'P2',
+  };
 }

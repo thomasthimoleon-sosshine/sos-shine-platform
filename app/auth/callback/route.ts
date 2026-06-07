@@ -1,14 +1,38 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createServerClient } from '@supabase/ssr'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { sendTemplateEmail, scheduleEmail } from '@/lib/email-templates/automated-emails'
+import { enrollInSequence } from '@/lib/crm/enroll'
+import { cookies } from 'next/headers'
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
-  const next = searchParams.get('next') ?? '/dashboard'
+  const nextParam = searchParams.get('next') ?? '/dashboard'
+  let next = nextParam
 
   if (code) {
-    const supabase = await createClient()
+    const cookieStore = await cookies()
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll()
+          },
+          setAll(cookiesToSet) {
+            try {
+              cookiesToSet.forEach(({ name, value, options }) =>
+                cookieStore.set(name, value, options)
+              )
+            } catch {
+              // Can be ignored in middleware/route handlers
+            }
+          },
+        },
+      }
+    )
     const { error } = await supabase.auth.exchangeCodeForSession(code)
 
     if (!error) {
@@ -25,8 +49,16 @@ export async function GET(request: Request) {
           const email = user.email || ''
           const avatarUrl = user.user_metadata?.avatar_url || user.user_metadata?.picture || null
 
-          await admin.from('profiles').upsert(
-            {
+          // Check if profile already exists to avoid overwriting plan/role
+          const { data: existingProfile } = await admin
+            .from('profiles')
+            .select('id')
+            .eq('id', user.id)
+            .maybeSingle()
+
+          if (!existingProfile) {
+            // Only create profile if it doesn't exist — never overwrite existing data
+            await admin.from('profiles').insert({
               id: user.id,
               prenom,
               email,
@@ -37,54 +69,85 @@ export async function GET(request: Request) {
               video_url: null,
               plan: null,
               is_bot: false,
-            },
-            { onConflict: 'id', ignoreDuplicates: true }
-          )
+            })
+          } else {
+            // Update only safe fields (avatar, prenom if empty)
+            await admin.from('profiles').update({
+              avatar_url: avatarUrl,
+              email,
+            }).eq('id', user.id)
+          }
         } catch {
           // Profile creation is best-effort; user can still proceed
         }
 
+        // Link any existing quiz responses (by email) to this user_id
+        try {
+          const adminForQuiz = createAdminClient()
+          if (adminForQuiz && user.email) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            await (adminForQuiz.from('quiz_v2_responses') as any)
+              .update({ user_id: user.id })
+              .eq('email', user.email)
+              .is('user_id', null)
+          }
+        } catch {}
+
         const isNewUser = user.created_at && (Date.now() - new Date(user.created_at).getTime() < 60000)
-        if (isNewUser) {
+
+        // ─── A/B variant attribution ───
+        // Read ab_variant from cookie (set by LandingClient) and persist it on profile
+        // This allows full funnel tracking: visit → signup → subscription → LTV
+        const abVariantCookie = cookieStore.get('ab_variant')?.value
+        if (abVariantCookie === 'julia' || abVariantCookie === 'thomas') {
           try {
-            const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
-              || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : null)
-              || ''
-            if (siteUrl) {
-              const firstName = user.user_metadata?.full_name?.split(' ')[0]
-                || user.user_metadata?.name?.split(' ')[0]
-                || null
-              await fetch(`${siteUrl}/api/crm/sequences/enroll`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  trigger_type: 'signup',
-                  email: user.email,
-                  first_name: firstName,
-                }),
-              })
+            const admin = createAdminClient()
+            if (admin) {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              await (admin.from('profiles') as any)
+                .update({ ab_variant: abVariantCookie })
+                .eq('id', user.id)
+                .is('ab_variant', null) // only set if not already set (first touch wins)
             }
           } catch {}
         }
 
-        // Redirect new users to onboarding questionnaire
         if (isNewUser) {
-          const adminCheck = createAdminClient()
-          const { data: onboardingDone } = await adminCheck.from('onboarding_responses')
-            .select('id')
-            .eq('user_id', user.id)
-            .maybeSingle()
+          const firstName = user.user_metadata?.prenom
+            || user.user_metadata?.full_name?.split(' ')[0]
+            || user.user_metadata?.name?.split(' ')[0]
+            || 'Membre'
+          const userEmail = user.email || ''
 
-          if (!onboardingDone) {
-            const forwardedHost = request.headers.get('x-forwarded-host')
-            const isLocalEnv = process.env.NODE_ENV === 'development'
-            if (isLocalEnv) {
-              return NextResponse.redirect(`${origin}/onboarding`)
-            } else if (forwardedHost) {
-              return NextResponse.redirect(`https://${forwardedHost}/onboarding`)
-            } else {
-              return NextResponse.redirect(`${origin}/onboarding`)
-            }
+          try {
+            // Email de bienvenue immédiat
+            await sendTemplateEmail('registration_welcome', userEmail, {
+              firstName,
+              email: userEmail,
+            }, { recipientName: firstName })
+
+            // Séquence de conversion pour les non-abonnés (J+1, J+3, J+7, J+14)
+            const vars = { firstName, email: userEmail }
+            scheduleEmail('registration_conversion_j1', userEmail, vars, 1, { recipientName: firstName }).catch(() => {})
+            scheduleEmail('registration_conversion_j3', userEmail, vars, 3, { recipientName: firstName }).catch(() => {})
+            scheduleEmail('registration_conversion_j7', userEmail, vars, 7, { recipientName: firstName }).catch(() => {})
+            scheduleEmail('registration_conversion_j14', userEmail, vars, 14, { recipientName: firstName }).catch(() => {})
+
+            // Enrôlement CRM
+            enrollInSequence('registration', userEmail, firstName).catch(() => {})
+          } catch {}
+        }
+
+        // New users → onboarding first, unless coming from a protocol/quiz flow
+        if (isNewUser) {
+          const skipOnboarding = nextParam.startsWith('/protocole/') || nextParam.startsWith('/mon-chemin')
+          if (skipOnboarding) {
+            next = nextParam
+          } else {
+            const hasCustomNext = nextParam !== '/dashboard/tarifs' && nextParam !== '/dashboard'
+            next = hasCustomNext
+              ? `/onboarding?next=${encodeURIComponent(nextParam)}`
+              : '/onboarding'
           }
         }
       }
@@ -103,5 +166,8 @@ export async function GET(request: Request) {
     console.error('Auth callback error:', error.message)
   }
 
-  return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`)
+  const loginUrl = nextParam !== '/dashboard'
+    ? `/login?next=${encodeURIComponent(nextParam)}&error=auth_callback_failed`
+    : `/login?error=auth_callback_failed`
+  return NextResponse.redirect(`${origin}${loginUrl}`)
 }

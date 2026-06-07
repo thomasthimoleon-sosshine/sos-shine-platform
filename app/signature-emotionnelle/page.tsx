@@ -3,8 +3,11 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { QUESTIONS, PROFILES, calculateResult, type ProfileKey } from "@/lib/signature-test";
+import { QUESTIONS, PROFILES, calculateTopTwo, computeTotals, type ProfileKey } from "@/lib/signature-test";
+import { getArchetypeForProfiles, BLESSURE_COLORS } from "@/lib/quiz-v2/archetypes";
 import { useTranslation } from "@/lib/i18n/useTranslation";
+import { createClient } from "@/lib/supabase/client";
+import { ResultPage } from "@/components/quiz-v2/ResultPage";
 
 type Phase = "intro" | "quiz" | "loading" | "email" | "result";
 
@@ -147,6 +150,7 @@ function QuizScreen({ onComplete }: { onComplete: (answers: Record<number, numbe
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
   const [direction, setDirection] = useState(1);
+  const [microTension, setMicroTension] = useState<string | null>(null);
 
   const question = QUESTIONS[currentQ];
 
@@ -160,13 +164,32 @@ function QuizScreen({ onComplete }: { onComplete: (answers: Record<number, numbe
 
       if (currentQ < QUESTIONS.length - 1) {
         setDirection(1);
-        setCurrentQ((prev) => prev + 1);
-        setSelectedIdx(null);
+
+        const advanceToNext = () => {
+          setCurrentQ((prev) => prev + 1);
+          setSelectedIdx(null);
+        };
+
+        if (question.id === 5) {
+          setMicroTension(t('signature.micro_tension_1'));
+          setTimeout(() => {
+            setMicroTension(null);
+            advanceToNext();
+          }, 2200);
+        } else if (question.id === 10) {
+          setMicroTension(t('signature.micro_tension_2'));
+          setTimeout(() => {
+            setMicroTension(null);
+            advanceToNext();
+          }, 2200);
+        } else {
+          advanceToNext();
+        }
       } else {
         onComplete(newAnswers);
       }
     }, 400);
-  }, [selectedIdx, answers, question.id, currentQ, onComplete]);
+  }, [selectedIdx, answers, question.id, currentQ, onComplete, t]);
 
   const goBack = useCallback(() => {
     if (currentQ > 0) {
@@ -272,6 +295,29 @@ function QuizScreen({ onComplete }: { onComplete: (answers: Record<number, numbe
           {t('signature.previous')}
         </motion.button>
       )}
+
+      <AnimatePresence>
+        {microTension && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="fixed inset-0 flex items-center justify-center z-50 px-6"
+            style={{ background: "var(--dark)" }}
+          >
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="font-display text-xl md:text-2xl font-light text-center max-w-sm leading-relaxed"
+              style={{ color: "var(--gold)" }}
+            >
+              {microTension}
+            </motion.p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
@@ -390,15 +436,25 @@ function EmailScreen({ onSubmit, firstName }: { onSubmit: (email: string) => voi
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.25 }}
-        className="text-lg text-[var(--text-secondary)] font-light max-w-lg mb-10 leading-relaxed"
+        className="text-lg text-[var(--text-secondary)] font-light max-w-lg mb-6 leading-relaxed"
       >
         {t("signature.email_subtitle").replace("{firstName}", firstName)}
+      </motion.p>
+
+      <motion.p
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.35 }}
+        className="text-sm font-light italic mb-8 max-w-sm"
+        style={{ color: "var(--gold)", opacity: 0.75 }}
+      >
+        {t("signature.email_pre_field")}
       </motion.p>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.35 }}
+        transition={{ duration: 0.6, delay: 0.45 }}
         className="w-full max-w-sm"
       >
         <label className="block text-sm tracking-[0.15em] uppercase text-[var(--text-muted)] mb-3 text-left">
@@ -450,115 +506,17 @@ function EmailScreen({ onSubmit, firstName }: { onSubmit: (email: string) => voi
   );
 }
 
-function ResultScreen({ profileKey, firstName }: { profileKey: ProfileKey; firstName: string }) {
-  const { t } = useTranslation();
-  const profile = PROFILES[profileKey];
-  const inject = (text: string) => text.replace(/\{firstName\}/g, firstName);
-
-  const sections = [
-    { label: t('signature.section_essence'), icon: "◆", text: inject(profile.essence) },
-    { label: t('signature.section_light'), icon: "✦", text: inject(profile.lumiere) },
-    { label: t('signature.section_shadow'), icon: "◇", text: inject(profile.ombre) },
-    { label: t('signature.section_protocol'), icon: "▸", text: inject(profile.protocole) },
-  ];
-
+// Utility: reveals in view once (scroll-triggered for sections below the fold)
+function Beat({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="px-6 py-16 md:py-24"
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.7, delay, ease: [0.25, 0.46, 0.45, 0.94] }}
+      className={className}
     >
-      <div className="max-w-3xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
-          <span className="inline-block px-5 py-2 rounded-full text-xs tracking-[0.25em] uppercase font-medium mb-6" style={{ background: "rgba(212,175,55,0.08)", color: "var(--gold)", border: "1px solid rgba(212,175,55,0.15)" }}>
-            {t('signature.result_badge')}
-          </span>
-
-          <motion.div
-            initial={{ scale: 0.5, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.2, type: "spring" }}
-            className="w-24 h-24 rounded-full mx-auto mb-6 flex items-center justify-center text-4xl"
-            style={{ background: `${profile.color}15`, border: `2px solid ${profile.color}40` }}
-          >
-            {profile.icon}
-          </motion.div>
-
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="font-display text-3xl md:text-5xl font-light mb-3"
-            style={{ color: profile.color }}
-          >
-            {profile.archetype}
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="text-lg text-[var(--text-secondary)] font-light"
-          >
-            {profile.subtitle}
-          </motion.p>
-        </motion.div>
-
-        <div className="space-y-6">
-          {sections.map((section, i) => (
-            <motion.div
-              key={section.label}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.5 + i * 0.12 }}
-              className="glow-card p-8 md:p-10"
-            >
-              <div className="flex items-center gap-3 mb-5">
-                <span className="text-lg" style={{ color: profile.color }}>{section.icon}</span>
-                <h3 className="font-display text-xl font-medium tracking-wide" style={{ color: profile.color }}>
-                  {section.label}
-                </h3>
-              </div>
-              <p className="text-[var(--text-secondary)] leading-[1.8] text-[15px] font-light">
-                {section.text}
-              </p>
-            </motion.div>
-          ))}
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.2 }}
-          className="mt-12 text-center space-y-4"
-        >
-          <Link href="/rejoindre">
-            <button
-              className="magnetic-btn pulse-ring px-10 py-5 rounded-full text-base font-semibold tracking-wide"
-              style={{ background: "linear-gradient(135deg, var(--gold), var(--gold-deep))", color: "#050505" }}
-            >
-              {t('signature.join_cta')}
-            </button>
-          </Link>
-
-          <div className="flex justify-center gap-6 pt-4">
-            <button
-              onClick={() => window.location.reload()}
-              className="text-sm tracking-[0.1em] uppercase text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors gold-underline"
-            >
-              {t('signature.retake')}
-            </button>
-            <Link href="/" className="text-sm tracking-[0.1em] uppercase text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors gold-underline">
-              {t('signature.back_home')}
-            </Link>
-          </div>
-        </motion.div>
-      </div>
+      {children}
     </motion.div>
   );
 }
@@ -566,7 +524,10 @@ function ResultScreen({ profileKey, firstName }: { profileKey: ProfileKey; first
 export default function SignatureEmotionnellePage() {
   const [phase, setPhase] = useState<Phase>("intro");
   const [firstName, setFirstName] = useState("");
+  const [quizEmail, setQuizEmail] = useState("");
   const [resultProfile, setResultProfile] = useState<ProfileKey | null>(null);
+  const [secondaryProfile, setSecondaryProfile] = useState<ProfileKey>('P2');
+  const [dimensionScores, setDimensionScores] = useState<Record<string, number>>({});
 
   const handleStart = useCallback((name: string) => {
     setFirstName(name);
@@ -575,10 +536,20 @@ export default function SignatureEmotionnellePage() {
 
   const handleComplete = useCallback((answers: Record<number, number>) => {
     setPhase("loading");
-    const result = calculateResult(answers);
+    const { dominant, secondary } = calculateTopTwo(answers);
+
+    // Compute full dimension scores: P1-P10 → "1"-"10", normalized 0-1
+    const rawTotals = computeTotals(answers);
+    const maxVal = Math.max(...Object.values(rawTotals), 1);
+    const dimScores: Record<string, number> = {};
+    for (const [key, val] of Object.entries(rawTotals)) {
+      if (key.startsWith('P')) dimScores[key.slice(1)] = val / maxVal;
+    }
+    setDimensionScores(dimScores);
 
     setTimeout(() => {
-      setResultProfile(result);
+      setResultProfile(dominant);
+      setSecondaryProfile(secondary);
       setPhase("email");
       window.scrollTo({ top: 0, behavior: "smooth" });
     }, 2800);
@@ -587,6 +558,7 @@ export default function SignatureEmotionnellePage() {
   const handleEmailSubmit = useCallback(async (email: string) => {
     const profileKey = resultProfile;
     const profileName = profileKey ? PROFILES[profileKey]?.archetype : null;
+    setQuizEmail(email);
     try {
       await fetch("/api/signature-lead", {
         method: "POST",
@@ -597,6 +569,10 @@ export default function SignatureEmotionnellePage() {
     setPhase("result");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [firstName, resultProfile]);
+
+  // dominant dimension number from profile key: "P6" → "6"
+  const dominantDim = resultProfile ? resultProfile.slice(1) : '1';
+  const secondaryDim = secondaryProfile ? secondaryProfile.slice(1) : '2';
 
   return (
     <main className="relative z-0 min-h-screen" style={{ background: "var(--dark)" }}>
@@ -613,7 +589,16 @@ export default function SignatureEmotionnellePage() {
             <EmailScreen key="email" onSubmit={handleEmailSubmit} firstName={firstName} />
           )}
           {phase === "result" && resultProfile && (
-            <ResultScreen key="result" profileKey={resultProfile} firstName={firstName} />
+            <ResultPage
+              key="result"
+              firstName={firstName}
+              scores={dimensionScores}
+              dominant={dominantDim}
+              secondary={secondaryDim}
+              profileKey={resultProfile}
+              secondaryKey={secondaryProfile}
+              email={quizEmail}
+            />
           )}
         </AnimatePresence>
       </div>

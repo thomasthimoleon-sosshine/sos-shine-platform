@@ -13,6 +13,7 @@ const adminNav = [
   { href: '/admin/messages-encouragement', label: 'Encouragements', icon: '💬' },
   { href: '/admin/landing-julia', label: 'Landing Julia', icon: '🏠' },
   { href: '/admin/landing-thomas', label: 'Landing Page', icon: '🏠' },
+  { href: '/admin/presentation', label: 'Présentation', icon: '🌟' },
   { href: '/admin/ab-testing', label: 'A/B Testing', icon: '🔬' },
   { href: '/admin/prelaunch', label: 'Pre-lancement', icon: '🚀' },
   { href: '/admin/douleurs', label: 'Challenges', icon: '📘' },

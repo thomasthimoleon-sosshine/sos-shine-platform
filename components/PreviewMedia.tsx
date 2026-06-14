@@ -59,7 +59,7 @@ export function PreviewVideo({ src, poster, ctaText, ctaLink, subtitleText }: Pr
 
 function VideoWithCustomPlay({
   src, poster, videoRef,
-}: { src: string; poster?: string; videoRef: React.RefObject<HTMLVideoElement> }) {
+}: { src: string; poster?: string; videoRef: React.RefObject<HTMLVideoElement | null> }) {
   const [playing, setPlaying] = useState(false)
 
   function handlePlay() {

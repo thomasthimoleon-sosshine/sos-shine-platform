@@ -44,7 +44,7 @@ export async function middleware(request: NextRequest) {
   const publicRoutes = ['/', '/login', '/signup', '/encyclopedie', '/contact', '/cgv', '/confidentialite', '/mentions-legales', '/notre-histoire', '/signature-emotionnelle', '/compte-inactif', '/livre-sos-shine', '/livre-supers-pouvoirs', '/forgot-password', '/reset-password', '/inscription-confirmee', '/parents-enfants', '/success', '/cancel', '/blog', '/rejoindre', '/quiz', '/ceremonie']
   const isPublicRoute = publicRoutes.some(route => {
     const isExact = request.nextUrl.pathname === route;
-    const isSubRoute = request.nextUrl.pathname.startsWith('/encyclopedie') || request.nextUrl.pathname.startsWith('/auth/') || request.nextUrl.pathname.startsWith('/api/') || request.nextUrl.pathname.startsWith('/signature-emotionnelle') || request.nextUrl.pathname.startsWith('/blog') || request.nextUrl.pathname.startsWith('/rejoindre') || request.nextUrl.pathname.startsWith('/protocole') || request.nextUrl.pathname.startsWith('/ceremonie') || request.nextUrl.pathname.startsWith('/event');
+    const isSubRoute = request.nextUrl.pathname.startsWith('/encyclopedie') || request.nextUrl.pathname.startsWith('/auth/') || request.nextUrl.pathname.startsWith('/api/') || request.nextUrl.pathname.startsWith('/signature-emotionnelle') || request.nextUrl.pathname.startsWith('/blog') || request.nextUrl.pathname.startsWith('/rejoindre') || request.nextUrl.pathname.startsWith('/protocole') || request.nextUrl.pathname.startsWith('/ceremonie') || request.nextUrl.pathname.startsWith('/event') || request.nextUrl.pathname.startsWith('/quiz-approfondi');
     return isExact || isSubRoute;
   })
 

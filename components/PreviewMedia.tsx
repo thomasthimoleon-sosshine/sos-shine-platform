@@ -53,8 +53,58 @@ export function PreviewVideo({ src, poster, ctaText, ctaLink, subtitleText }: Pr
   }
 
   return (
-    <div className="rounded-xl overflow-hidden aspect-video bg-[var(--surface)]">
-      <video ref={videoRef} src={src} poster={poster} controls preload="metadata" className="w-full h-full" />
+    <VideoWithCustomPlay src={src} poster={poster} videoRef={videoRef} />
+  )
+}
+
+function VideoWithCustomPlay({
+  src, poster, videoRef,
+}: { src: string; poster?: string; videoRef: React.RefObject<HTMLVideoElement> }) {
+  const [playing, setPlaying] = useState(false)
+
+  function handlePlay() {
+    setPlaying(true)
+    setTimeout(() => { videoRef.current?.play() }, 50)
+  }
+
+  return (
+    <div className="rounded-xl overflow-hidden aspect-video bg-black relative">
+      {!playing && (
+        <>
+          {poster && (
+            <img src={poster} alt="" className="absolute inset-0 w-full h-full object-cover" />
+          )}
+          <div className="absolute inset-0 bg-black/20" />
+          <button
+            onClick={handlePlay}
+            className="absolute inset-0 flex items-center justify-center group"
+            aria-label="Lire la vidéo"
+          >
+            <div
+              className="w-16 h-16 rounded-full flex items-center justify-center transition-all duration-200 group-hover:scale-110"
+              style={{
+                background: 'rgba(0,0,0,0.35)',
+                backdropFilter: 'blur(8px)',
+                border: '2px solid rgba(201,169,97,0.6)',
+                boxShadow: '0 0 32px rgba(201,169,97,0.25)',
+              }}
+            >
+              <svg className="w-7 h-7 ml-1" viewBox="0 0 24 24" fill="none">
+                <path d="M6 4.5L19.5 12 6 19.5V4.5Z" fill="#C9A961" />
+              </svg>
+            </div>
+          </button>
+        </>
+      )}
+      <video
+        ref={videoRef}
+        src={src}
+        poster={poster}
+        controls={playing}
+        preload="metadata"
+        className="w-full h-full"
+        style={{ opacity: playing ? 1 : 0 }}
+      />
     </div>
   )
 }

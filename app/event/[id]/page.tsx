@@ -107,14 +107,14 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
       <div style={{ maxWidth: '760px', margin: '0 auto', padding: '48px 24px 80px' }}>
         {/* Image */}
         {event.image_url && (
-          <div style={{ borderRadius: '20px', overflow: 'hidden', marginBottom: '48px', height: '360px', position: 'relative' }}>
+          <div style={{ borderRadius: '20px', overflow: 'hidden', marginBottom: '48px', position: 'relative' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={event.image_url}
               alt={event.title}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              style={{ width: '100%', height: 'auto', display: 'block' }}
             />
-            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 40%, rgba(10,10,10,0.7) 100%)' }} />
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 60%, rgba(10,10,10,0.7) 100%)' }} />
           </div>
         )}
 

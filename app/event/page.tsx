@@ -123,14 +123,14 @@ export default async function EventPage() {
                   }}>
                     {/* Image */}
                     {event.image_url && (
-                      <div style={{ height: '260px', overflow: 'hidden', position: 'relative' }}>
+                      <div style={{ overflow: 'hidden', position: 'relative' }}>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={event.image_url}
                           alt={event.title}
-                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          style={{ width: '100%', height: 'auto', display: 'block' }}
                         />
-                        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 40%, rgba(10,10,10,0.8) 100%)' }} />
+                        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 60%, rgba(10,10,10,0.8) 100%)' }} />
                       </div>
                     )}
 

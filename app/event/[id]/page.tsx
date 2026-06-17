@@ -95,11 +95,9 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
     <main style={{ minHeight: '100vh', background: '#0A0A0A', color: '#F5F1E8' }}>
       {/* Header */}
       <header style={{ padding: '24px 24px 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', maxWidth: '760px', margin: '0 auto' }}>
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
-          <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'linear-gradient(135deg, #C9A961, #B8960F)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Georgia, serif', fontSize: '16px', fontWeight: '600', color: '#000' }}>
-            S
-          </div>
-          <span style={{ fontFamily: 'Georgia, serif', fontSize: '18px', color: '#C9A961', fontWeight: '500' }}>SOS Shine®</span>
+        <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/images/logo-shine-transparent.png" alt="SOS Shine®" style={{ height: '40px', width: 'auto' }} />
         </Link>
         <Link href="/event" style={{ fontSize: '13px', color: 'rgba(245,241,232,0.4)', textDecoration: 'none', letterSpacing: '0.05em' }}>
           ← Tous les événements

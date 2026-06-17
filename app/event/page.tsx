@@ -49,20 +49,22 @@ async function getEvents(): Promise<PhysicalEvent[]> {
   return (data || []) as PhysicalEvent[]
 }
 
+const TZ = 'Europe/Paris'
+
 function formatEventDate(iso: string | null): { day: string; month: string; weekday: string } {
   if (!iso) return { day: '—', month: '—', weekday: '—' }
   const d = new Date(iso)
   return {
-    weekday: d.toLocaleDateString('fr-FR', { weekday: 'long' }),
-    day: d.toLocaleDateString('fr-FR', { day: 'numeric' }),
-    month: d.toLocaleDateString('fr-FR', { month: 'long' }),
+    weekday: d.toLocaleDateString('fr-FR', { weekday: 'long', timeZone: TZ }),
+    day: d.toLocaleDateString('fr-FR', { day: 'numeric', timeZone: TZ }),
+    month: d.toLocaleDateString('fr-FR', { month: 'long', timeZone: TZ }),
   }
 }
 
 function formatTime(iso: string | null, endTime: string | null): string {
   if (!iso) return ''
   const d = new Date(iso)
-  const start = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+  const start = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', timeZone: TZ })
   return endTime ? `${start} — ${endTime}` : start
 }
 

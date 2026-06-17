@@ -3,22 +3,34 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import type { NextEvent } from './page'
 
 const QUIZ_URL = '/signature-emotionnelle?start=1'
-const EVENT_URL = '/ceremonie'
 
-const TICKER_ITEMS = [
-  '✨ Événement SOS Shine',
-  '📍 Sud de la France',
-  '📅 13 juin 2026',
-  '🕕 18h - 21h30',
-  '→ Réserver ma place',
-]
+function buildTickerItems(event: NextEvent | null): string[] {
+  if (!event) return ['✨ Événement SOS Shine', '→ Voir les événements']
 
-function EventTicker() {
-  const items = [...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS]
+  const dateLabel = event.event_date
+    ? new Date(event.event_date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+    : null
+  const timeStart = event.event_date
+    ? new Date(event.event_date).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+    : null
+
+  const items: string[] = ['✨ ' + event.title]
+  if (event.location_name) items.push('📍 ' + event.location_name)
+  if (dateLabel) items.push('📅 ' + dateLabel)
+  if (timeStart) items.push('🕕 ' + (event.end_time ? `${timeStart} - ${event.end_time}` : timeStart))
+  items.push('→ Réserver ma place')
+  return items
+}
+
+function EventTicker({ nextEvent }: { nextEvent: NextEvent | null }) {
+  const tickerItems = buildTickerItems(nextEvent)
+  const eventUrl = nextEvent ? `/event/${nextEvent.id}` : '/event'
+  const items = [...tickerItems, ...tickerItems, ...tickerItems]
   return (
-    <Link href={EVENT_URL} className="fixed top-0 left-0 right-0 z-[60] block overflow-hidden cursor-pointer" style={{ background: '#C9A961', height: '36px' }}>
+    <Link href={eventUrl} className="fixed top-0 left-0 right-0 z-[60] block overflow-hidden cursor-pointer" style={{ background: '#C9A961', height: '36px' }}>
       <style>{`@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-33.333%)}}`}</style>
       <div className="flex items-center h-full whitespace-nowrap" style={{ animation: 'ticker 22s linear infinite' }}>
         {items.map((item, i) => (
@@ -123,10 +135,10 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
   )
 }
 
-export default function QuizLandingClient() {
+export default function QuizLandingClient({ nextEvent }: { nextEvent: NextEvent | null }) {
   return (
     <main className="min-h-screen" style={{ background: '#000000', color: 'var(--text-primary)' }}>
-      <EventTicker />
+      <EventTicker nextEvent={nextEvent} />
       <TopNav />
 
       {/* ══════════ HERO ══════════ */}

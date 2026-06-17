@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react'
 
-export default function ReserveForm({ ctaLabel, stripeUrl }: { ctaLabel: string; stripeUrl: string | null }) {
+export default function ReserveForm({ ctaLabel, stripeUrl, isFree }: { ctaLabel: string; stripeUrl: string | null; isFree?: boolean }) {
   const [open, setOpen] = useState(false)
   const [prenom, setPrenom] = useState('')
   const [nom, setNom] = useState('')
@@ -31,7 +31,11 @@ export default function ReserveForm({ ctaLabel, stripeUrl }: { ctaLabel: string;
       return
     }
 
-    window.location.href = data.url!
+    if (isFree) {
+      window.location.href = '/inscription-confirmee'
+    } else {
+      window.location.href = data.url!
+    }
   }
 
   if (!open) {
@@ -123,7 +127,7 @@ export default function ReserveForm({ ctaLabel, stripeUrl }: { ctaLabel: string;
                 letterSpacing: '0.03em',
               }}
             >
-              {loading ? 'Redirection...' : 'Confirmer et payer'}
+              {loading ? (isFree ? 'Inscription...' : 'Redirection...') : (isFree ? 'Confirmer ma présence' : 'Confirmer et payer')}
             </button>
             <button
               type="button"

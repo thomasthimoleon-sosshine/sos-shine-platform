@@ -202,6 +202,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
           ctaLabel={event.cta_label || 'Réserver ma place'}
           stripeUrl={event.stripe_url}
           isFree={event.is_free}
+          eventId={event.id}
           eventTitle={event.title}
           eventDate={event.event_date ?? undefined}
           eventLocation={event.location_name ?? undefined}

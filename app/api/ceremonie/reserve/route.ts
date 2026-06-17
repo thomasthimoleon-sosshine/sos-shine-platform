@@ -40,8 +40,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Trop de tentatives. Réessaie dans une minute.' }, { status: 429 })
     }
 
-    const body = await request.json() as { prenom: string; nom: string; email: string; _hp?: string; isFree?: boolean; eventTitle?: string; eventDate?: string; eventLocation?: string }
-    const { prenom, nom, email, _hp, isFree, eventTitle, eventDate, eventLocation } = body
+    const body = await request.json() as { prenom: string; nom: string; email: string; _hp?: string; isFree?: boolean; eventId?: string; eventTitle?: string; eventDate?: string; eventLocation?: string }
+    const { prenom, nom, email, _hp, isFree, eventId, eventTitle, eventDate, eventLocation } = body
 
     if (_hp) {
       return NextResponse.json({ error: 'Réservation invalide.' }, { status: 400 })
@@ -69,7 +69,12 @@ export async function POST(request: NextRequest) {
 
     const { data, error } = await supabase
       .from('ceremonie_reservations')
-      .insert({ prenom: prenom.trim(), nom: nom.trim(), email: email.trim().toLowerCase() })
+      .insert({
+        prenom: prenom.trim(),
+        nom: nom.trim(),
+        email: email.trim().toLowerCase(),
+        ...(eventId ? { event_id: eventId } : {}),
+      })
       .select('id')
       .single()
 

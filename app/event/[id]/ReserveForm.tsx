@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react'
 
-export default function ReserveForm({ ctaLabel, stripeUrl, isFree }: { ctaLabel: string; stripeUrl: string | null; isFree?: boolean }) {
+export default function ReserveForm({ ctaLabel, stripeUrl, isFree, eventTitle, eventDate, eventLocation }: { ctaLabel: string; stripeUrl: string | null; isFree?: boolean; eventTitle?: string; eventDate?: string; eventLocation?: string }) {
   const [open, setOpen] = useState(false)
   const [prenom, setPrenom] = useState('')
   const [nom, setNom] = useState('')
@@ -21,7 +21,7 @@ export default function ReserveForm({ ctaLabel, stripeUrl, isFree }: { ctaLabel:
     const res = await fetch('/api/ceremonie/reserve', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prenom, nom, email, _hp: hp }),
+      body: JSON.stringify({ prenom, nom, email, _hp: hp, isFree, eventTitle, eventDate, eventLocation }),
     })
     const data = await res.json() as { url?: string; error?: string }
 

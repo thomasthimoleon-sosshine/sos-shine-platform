@@ -82,7 +82,7 @@ export default async function EventPage() {
       <header style={{ padding: '24px 24px 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', maxWidth: '900px', margin: '0 auto' }}>
         <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/logo-shine-transparent.png" alt="SOS Shine®" style={{ height: '40px', width: 'auto' }} />
+          <img src="/images/logo-shine.png" alt="SOS Shine®" style={{ height: '40px', width: 'auto' }} />
         </Link>
       </header>
 

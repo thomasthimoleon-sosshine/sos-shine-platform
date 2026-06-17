@@ -97,7 +97,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
       <header style={{ padding: '24px 24px 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', maxWidth: '760px', margin: '0 auto' }}>
         <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/logo-shine-transparent.png" alt="SOS Shine®" style={{ height: '40px', width: 'auto' }} />
+          <img src="/images/logo-shine.png" alt="SOS Shine®" style={{ height: '40px', width: 'auto' }} />
         </Link>
         <Link href="/event" style={{ fontSize: '13px', color: 'rgba(245,241,232,0.4)', textDecoration: 'none', letterSpacing: '0.05em' }}>
           ← Tous les événements

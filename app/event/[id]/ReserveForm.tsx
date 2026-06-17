@@ -32,7 +32,7 @@ export default function ReserveForm({ ctaLabel, stripeUrl, isFree }: { ctaLabel:
     }
 
     if (isFree) {
-      window.location.href = '/inscription-confirmee'
+      window.location.href = '/event/confirmation'
     } else {
       window.location.href = data.url!
     }

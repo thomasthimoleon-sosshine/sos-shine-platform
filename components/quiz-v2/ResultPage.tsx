@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import Link from 'next/link'
 import { DIMENSIONS, type DimensionScores } from '@/lib/quiz-v2/dimensions'
 import { calculateMatchScores } from '@/lib/quiz-v2/scoring'
@@ -27,7 +27,7 @@ type Props = {
   email: string
 }
 
-function Reveal({
+function FadeIn({
   children,
   delay = 0,
   className = '',
@@ -38,10 +38,10 @@ function Reveal({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 28 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.75, delay, ease: [0.22, 1, 0.36, 1] }}
+      viewport={{ once: true, margin: '-50px' }}
+      transition={{ duration: 0.9, delay, ease: [0.22, 1, 0.36, 1] }}
       className={className}
     >
       {children}
@@ -70,22 +70,24 @@ async function trackResultEvent(
   }
 }
 
-const SECTION_LABELS = [
-  { num: '01', title: 'Ce qu\'on voit en toi', key: 'reconnaissance' as const },
-  { num: '02', title: 'La vérité cachée',      key: 'verite' as const },
-  { num: '03', title: 'La mécanique intérieure', key: 'mecanique' as const },
-  { num: '04', title: 'Ce que ça coûte',        key: 'consequence' as const },
-  { num: '05', title: 'La suite',               key: 'transition' as const },
-]
+// Format today's date as "18 juin 2026"
+function formatDate() {
+  return new Date().toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  })
+}
 
 export function ResultPage({ firstName, scores, dominant, secondary, email }: Props) {
   const [protocols, setProtocols] = useState<Protocol[]>([])
   const [protocolsLoading, setProtocolsLoading] = useState(true)
+  const { scrollYProgress } = useScroll()
+  const progressWidth = useTransform(scrollYProgress, [0, 1], ['0%', '100%'])
 
-  const dimInfo = DIMENSIONS[parseInt(dominant) as keyof typeof DIMENSIONS]
   const archetype = getArchetype(dominant, secondary)
   const bc = BLESSURE_COLORS[archetype.blessure]
-  const displayName = firstName || 'toi'
+  const displayName = firstName || null
 
   useEffect(() => {
     async function loadProtocols() {
@@ -127,257 +129,340 @@ export function ResultPage({ firstName, scores, dominant, secondary, email }: Pr
   }
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--bg, #0a0a0a)' }}>
+    <div style={{ background: '#080808', color: '#fff', minHeight: '100vh' }}>
 
-      {/* ─── HERO ─── */}
-      <section className="relative flex flex-col items-center justify-center min-h-screen px-6 text-center overflow-hidden">
+      {/* Barre de progression */}
+      <motion.div
+        className="fixed top-0 left-0 h-[2px] z-50 origin-left"
+        style={{ width: progressWidth, background: bc.text }}
+      />
 
-        {/* Halo décoratif */}
+      {/* ─── PAGE : COVER ─── */}
+      <section
+        className="relative min-h-screen flex flex-col items-center justify-center px-6 text-center overflow-hidden"
+      >
+        {/* Ambiance lumineuse */}
         <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[480px] h-[480px] rounded-full pointer-events-none"
+          className="absolute inset-0 pointer-events-none"
           style={{
-            background: `radial-gradient(circle, ${bc.bg.replace('0.07', '0.18')} 0%, transparent 70%)`,
+            background: `radial-gradient(ellipse 80% 60% at 50% 40%, ${bc.bg.replace('0.07', '0.2')} 0%, transparent 70%)`,
           }}
         />
 
-        {/* Badge blessure */}
+        {/* En-tête lettre */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.85 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="relative mb-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.4 }}
+          className="relative flex flex-col items-center gap-1 mb-16"
         >
-          <span
-            className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-[10px] tracking-[0.28em] uppercase font-semibold"
-            style={{ background: bc.bg, color: bc.text, border: `1px solid ${bc.border}` }}
-          >
-            <span
-              className="w-1.5 h-1.5 rounded-full"
-              style={{ background: bc.text }}
-            />
-            Blessure {archetype.blessure}
+          <span className="text-[9px] tracking-[0.4em] uppercase" style={{ color: 'rgba(255,255,255,0.2)' }}>
+            SOS Shine
           </span>
+          <div className="w-px h-8 mt-2" style={{ background: 'rgba(255,255,255,0.1)' }} />
         </motion.div>
 
-        {/* Prénom + intro */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.7 }}
-          className="text-sm mb-3 tracking-wide"
-          style={{ color: 'rgba(255,255,255,0.38)' }}
-        >
-          {displayName}, voici ta signature émotionnelle
-        </motion.p>
+        {/* Corps cover */}
+        <div className="relative max-w-sm w-full">
 
-        {/* Nom archétype */}
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="font-display font-light leading-[1.08] mb-6 max-w-sm"
-          style={{
-            fontSize: 'clamp(2rem, 8vw, 3.5rem)',
-            color: 'var(--brand, #C9A961)',
-            letterSpacing: '-0.01em',
-          }}
-        >
-          {archetype.name}
-        </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.8 }}
+            className="text-sm font-light mb-4"
+            style={{ color: 'rgba(255,255,255,0.3)' }}
+          >
+            Une lettre pour
+          </motion.p>
 
-        {/* Tags émotion · mode · zone */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.3 }}
-          className="flex flex-wrap justify-center gap-2 mb-16"
-        >
-          {[archetype.emotion, archetype.mode, archetype.zone].map(tag => (
-            <span
-              key={tag}
-              className="px-3 py-1 rounded-full text-[10px] tracking-[0.18em] uppercase"
+          {displayName && (
+            <motion.p
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1 }}
+              className="font-display font-light mb-6"
               style={{
-                background: 'rgba(255,255,255,0.05)',
-                border: '1px solid rgba(255,255,255,0.1)',
-                color: 'rgba(255,255,255,0.45)',
+                fontSize: 'clamp(1.6rem, 7vw, 2.8rem)',
+                letterSpacing: '-0.01em',
+                color: 'rgba(255,255,255,0.9)',
               }}
             >
-              {tag}
+              {displayName}
+            </motion.p>
+          )}
+
+          {/* Sceau archétype */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, delay: 1.3, ease: [0.16, 1, 0.3, 1] }}
+            className="inline-flex flex-col items-center gap-4 px-8 py-8 rounded-2xl my-4"
+            style={{
+              background: bc.bg,
+              border: `1px solid ${bc.border}`,
+            }}
+          >
+            <span className="text-[8px] tracking-[0.4em] uppercase" style={{ color: bc.text, opacity: 0.7 }}>
+              Signature Émotionnelle · Blessure de {archetype.blessure}
             </span>
-          ))}
-        </motion.div>
+            <h1
+              className="font-display font-light leading-tight text-center"
+              style={{
+                fontSize: 'clamp(1.7rem, 7vw, 3rem)',
+                letterSpacing: '-0.02em',
+                background: `linear-gradient(160deg, #fff 30%, ${bc.text} 100%)`,
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
+              {archetype.name}
+            </h1>
+            <div className="flex items-center gap-2 flex-wrap justify-center">
+              {[archetype.emotion, archetype.mode].map(t => (
+                <span
+                  key={t}
+                  className="text-[9px] tracking-[0.2em] uppercase px-3 py-1 rounded-full"
+                  style={{
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    color: 'rgba(255,255,255,0.4)',
+                  }}
+                >
+                  {t}
+                </span>
+              ))}
+            </div>
+          </motion.div>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.9 }}
+            className="text-[10px] mt-8"
+            style={{ color: 'rgba(255,255,255,0.15)' }}
+          >
+            {formatDate()}
+          </motion.p>
+        </div>
 
         {/* Scroll cue */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.9 }}
-          className="flex flex-col items-center gap-2"
-          style={{ color: 'rgba(255,255,255,0.2)' }}
+          transition={{ delay: 2.3 }}
+          className="absolute bottom-12 flex flex-col items-center gap-3"
         >
-          <span className="text-[9px] tracking-[0.3em] uppercase">Découvrir</span>
+          <span className="text-[8px] tracking-[0.4em] uppercase" style={{ color: 'rgba(255,255,255,0.15)' }}>
+            Lire la lettre
+          </span>
           <motion.div
             animate={{ y: [0, 6, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
             className="w-px h-8"
-            style={{ background: 'linear-gradient(to bottom, rgba(201,169,97,0.5), transparent)' }}
+            style={{ background: `linear-gradient(to bottom, ${bc.text}66, transparent)` }}
           />
         </motion.div>
       </section>
 
-      {/* ─── SÉPARATEUR ─── */}
-      <div className="flex items-center gap-4 px-6 max-w-lg mx-auto py-4">
-        <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.06)' }} />
-        <span
-          className="text-[9px] tracking-[0.3em] uppercase"
-          style={{ color: 'rgba(201,169,97,0.4)' }}
-        >
-          Lecture psychologique
-        </span>
-        <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.06)' }} />
-      </div>
+      {/* ─── LETTRE ─── */}
+      <article className="relative px-6 max-w-[580px] mx-auto pt-20 pb-10">
 
-      {/* ─── SECTIONS NARRATIVES ─── */}
-      <div className="px-6 max-w-lg mx-auto space-y-0 pb-8">
-        {SECTION_LABELS.map((section, i) => (
-          <Reveal key={section.num} delay={0.05 * i} className="py-14">
-            <div className="flex gap-6">
-              {/* Numéro + ligne verticale */}
-              <div className="flex flex-col items-center gap-2 pt-1 flex-shrink-0">
-                <span
-                  className="text-[10px] font-bold tabular-nums"
-                  style={{ color: 'var(--brand, #C9A961)', opacity: 0.6 }}
-                >
-                  {section.num}
-                </span>
-                {i < SECTION_LABELS.length - 1 && (
-                  <div
-                    className="w-px flex-1 mt-2"
-                    style={{
-                      minHeight: 60,
-                      background: 'linear-gradient(to bottom, rgba(201,169,97,0.2), transparent)',
-                    }}
-                  />
-                )}
-              </div>
-
-              {/* Contenu */}
-              <div className="flex-1 pb-2">
-                <p
-                  className="text-[10px] tracking-[0.28em] uppercase font-semibold mb-4"
-                  style={{ color: 'var(--brand, #C9A961)', opacity: 0.65 }}
-                >
-                  {section.title}
-                </p>
-                <p
-                  className="text-[0.95rem] leading-[1.85] font-light whitespace-pre-line"
-                  style={{
-                    color: section.key === 'transition'
-                      ? 'var(--brand, #C9A961)'
-                      : section.key === 'reconnaissance'
-                      ? 'rgba(255,255,255,0.9)'
-                      : 'rgba(255,255,255,0.65)',
-                  }}
-                >
-                  {archetype[section.key]}
-                </p>
-              </div>
-            </div>
-          </Reveal>
-        ))}
-      </div>
-
-      {/* ─── PROTOCOLE ─── */}
-      <div className="px-6 max-w-lg mx-auto pb-8">
+        {/* Ligne latérale gauche */}
         <div
-          className="h-px mb-16"
-          style={{ background: 'linear-gradient(to right, transparent, rgba(201,169,97,0.25), transparent)' }}
+          className="absolute top-0 bottom-0 left-6 sm:left-10 w-px pointer-events-none"
+          style={{
+            background: `linear-gradient(to bottom, transparent, ${bc.border} 8%, ${bc.border} 92%, transparent)`,
+          }}
         />
 
-        <Reveal>
-          <div className="mb-8">
+        <div className="pl-8 sm:pl-12">
+
+          {/* Date et objet */}
+          <FadeIn className="mb-14">
+            <p className="text-[10px] tracking-[0.25em] uppercase mb-6" style={{ color: 'rgba(255,255,255,0.2)' }}>
+              {formatDate()}
+            </p>
+            <p className="text-[11px] tracking-wide uppercase font-semibold mb-1" style={{ color: bc.text, opacity: 0.8 }}>
+              Objet
+            </p>
+            <p className="text-base font-light" style={{ color: 'rgba(255,255,255,0.55)' }}>
+              Ta Signature Émotionnelle — {archetype.name}
+            </p>
+          </FadeIn>
+
+          {/* Salutation */}
+          <FadeIn delay={0.1} className="mb-10">
             <p
-              className="text-[10px] tracking-[0.3em] uppercase font-semibold mb-2"
-              style={{ color: 'var(--brand, #C9A961)', opacity: 0.6 }}
+              className="font-display font-light"
+              style={{
+                fontSize: 'clamp(1.1rem, 4vw, 1.5rem)',
+                color: 'rgba(255,255,255,0.85)',
+                letterSpacing: '-0.01em',
+              }}
             >
-              Protocole recommandé
+              {displayName ? `${displayName},` : 'À toi,'}
             </p>
-            <p className="text-xl font-light" style={{ color: 'rgba(255,255,255,0.85)' }}>
-              Le point de départ adapté à ton profil
+          </FadeIn>
+
+          {/* Paragraphe 1 — Reconnaissance */}
+          <FadeIn delay={0.15} className="mb-10">
+            <p
+              className="text-[0.92rem] leading-[2] font-light whitespace-pre-line"
+              style={{ color: 'rgba(255,255,255,0.82)' }}
+            >
+              {archetype.reconnaissance}
             </p>
+          </FadeIn>
+
+          {/* Pull quote — Vérité */}
+          <FadeIn delay={0.2} className="mb-10">
+            <blockquote
+              className="pl-5 py-1"
+              style={{ borderLeft: `2px solid ${bc.text}` }}
+            >
+              <p
+                className="text-[0.88rem] leading-[1.95] font-light italic whitespace-pre-line"
+                style={{ color: 'rgba(255,255,255,0.5)' }}
+              >
+                {archetype.verite}
+              </p>
+            </blockquote>
+          </FadeIn>
+
+          {/* Paragraphe 2 — Mécanique */}
+          <FadeIn delay={0.25} className="mb-10">
+            <p
+              className="text-[0.92rem] leading-[2] font-light whitespace-pre-line"
+              style={{ color: 'rgba(255,255,255,0.65)' }}
+            >
+              {archetype.mecanique}
+            </p>
+          </FadeIn>
+
+          {/* Paragraphe 3 — Conséquence */}
+          <FadeIn delay={0.3} className="mb-10">
+            <p
+              className="text-[0.92rem] leading-[2] font-light whitespace-pre-line"
+              style={{ color: 'rgba(255,255,255,0.5)' }}
+            >
+              {archetype.consequence}
+            </p>
+          </FadeIn>
+
+          {/* Clôture — Transition */}
+          <FadeIn delay={0.35} className="mb-16">
+            <p
+              className="text-[0.95rem] leading-[2] font-light whitespace-pre-line"
+              style={{ color: bc.text }}
+            >
+              {archetype.transition}
+            </p>
+          </FadeIn>
+
+          {/* Signature */}
+          <FadeIn delay={0.4} className="mb-20">
+            <div className="flex flex-col gap-2">
+              <div className="w-12 h-px" style={{ background: 'rgba(255,255,255,0.12)' }} />
+              <p className="text-xs font-light" style={{ color: 'rgba(255,255,255,0.25)' }}>
+                L'équipe SOS Shine
+              </p>
+            </div>
+          </FadeIn>
+
+        </div>
+      </article>
+
+      {/* ─── PROTOCOLE ─── */}
+      <section className="px-6 max-w-[580px] mx-auto pb-8">
+
+        <FadeIn>
+          <div className="flex items-center gap-4 mb-12">
+            <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.05)' }} />
+            <span className="text-[9px] tracking-[0.35em] uppercase" style={{ color: bc.text, opacity: 0.55 }}>
+              Recommandation
+            </span>
+            <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.05)' }} />
           </div>
-        </Reveal>
+        </FadeIn>
+
+        <FadeIn className="mb-8">
+          <p className="text-[9px] tracking-[0.3em] uppercase mb-2" style={{ color: 'rgba(255,255,255,0.25)' }}>
+            Protocole adapté
+          </p>
+          <p
+            className="font-display font-light"
+            style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', letterSpacing: '-0.01em', color: '#fff' }}
+          >
+            Par où commencer
+          </p>
+        </FadeIn>
 
         {protocolsLoading ? (
           <div
-            className="rounded-2xl p-7 animate-pulse"
-            style={{
-              background: 'rgba(201,169,97,0.04)',
-              border: '1px solid rgba(201,169,97,0.12)',
-            }}
+            className="rounded-2xl p-8 animate-pulse"
+            style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}
           >
-            <div className="h-4 rounded w-2/3 mb-3" style={{ background: 'rgba(255,255,255,0.06)' }} />
-            <div className="h-3 rounded w-1/2"    style={{ background: 'rgba(255,255,255,0.04)' }} />
+            <div className="h-5 rounded w-3/4 mb-4" style={{ background: 'rgba(255,255,255,0.04)' }} />
+            <div className="h-3 rounded w-1/2" style={{ background: 'rgba(255,255,255,0.03)' }} />
           </div>
         ) : topProtocol ? (
-          <Reveal>
+          <FadeIn>
             <div
               className="rounded-2xl overflow-hidden"
               style={{
-                background: 'linear-gradient(160deg, rgba(201,169,97,0.09) 0%, rgba(201,169,97,0.03) 100%)',
-                border: '1px solid rgba(201,169,97,0.22)',
+                background: `linear-gradient(160deg, ${bc.bg.replace('0.07', '0.1')} 0%, rgba(255,255,255,0.015) 60%)`,
+                border: `1px solid ${bc.border}`,
               }}
             >
-              {/* Header protocole */}
-              <div className="p-6 pb-5">
-                <div className="flex items-start justify-between gap-4 mb-1">
-                  <h3 className="text-base font-semibold" style={{ color: 'var(--text-primary, #fff)' }}>
+              <div className="p-7 pb-5">
+                <div className="flex justify-between items-start gap-4 mb-4">
+                  <h3
+                    className="text-lg font-semibold leading-snug"
+                    style={{ color: '#fff', letterSpacing: '-0.01em' }}
+                  >
                     {topProtocol.title}
                   </h3>
-                  <span className="text-2xl flex-shrink-0 mt-0.5">{dimInfo?.icon}</span>
+                  <div
+                    className="w-11 h-11 rounded-xl flex items-center justify-center text-xl shrink-0"
+                    style={{ background: bc.bg, border: `1px solid ${bc.border}` }}
+                  >
+                    {DIMENSIONS[parseInt(dominant) as keyof typeof DIMENSIONS]?.icon}
+                  </div>
                 </div>
-                <div className="flex items-center gap-3 mt-2">
+                <div className="flex items-center gap-3">
                   <span
-                    className="text-[10px] tracking-[0.15em] uppercase px-2.5 py-1 rounded-full"
-                    style={{
-                      background: 'rgba(201,169,97,0.12)',
-                      color: 'var(--brand, #C9A961)',
-                    }}
+                    className="text-[9px] tracking-[0.2em] uppercase px-3 py-1.5 rounded-full font-semibold"
+                    style={{ background: bc.bg, color: bc.text, border: `1px solid ${bc.border}` }}
                   >
                     {topProtocol.duration_days} jours
                   </span>
-                  <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                  <span className="text-[11px]" style={{ color: 'rgba(255,255,255,0.25)' }}>
                     {topProtocol.matchScore}% de correspondance
                   </span>
                 </div>
               </div>
 
-              {/* Étapes */}
               <div
-                className="px-6 py-5 space-y-4"
-                style={{ borderTop: '1px solid rgba(201,169,97,0.12)' }}
+                className="px-7 py-5 space-y-4"
+                style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}
               >
                 {[
-                  { num: 1, label: 'Comprendre',         desc: 'Reconnaître quand le schéma s\'active' },
-                  { num: 2, label: 'Libérer & intégrer', desc: 'Relier le présent à ton histoire' },
-                  { num: 3, label: 'Agir',               desc: 'Remplacer l\'automatisme par un choix conscient' },
-                ].map(step => (
-                  <div key={step.num} className="flex items-start gap-4">
+                  { label: 'Comprendre',          desc: 'Reconnaître quand le schéma s\'active' },
+                  { label: 'Libérer & intégrer',   desc: 'Relier le présent à ton histoire' },
+                  { label: 'Agir',                 desc: 'Remplacer l\'automatisme par un choix conscient' },
+                ].map((step, i) => (
+                  <div key={i} className="flex items-start gap-4">
                     <div
-                      className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5"
-                      style={{
-                        background: 'rgba(201,169,97,0.15)',
-                        color: 'var(--brand, #C9A961)',
-                        border: '1px solid rgba(201,169,97,0.25)',
-                      }}
+                      className="w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold shrink-0 mt-0.5"
+                      style={{ background: bc.bg, color: bc.text, border: `1px solid ${bc.border}` }}
                     >
-                      {step.num}
+                      {i + 1}
                     </div>
                     <div>
-                      <p className="text-[0.8rem] font-semibold" style={{ color: 'rgba(255,255,255,0.85)' }}>
+                      <p className="text-[0.8rem] font-semibold" style={{ color: 'rgba(255,255,255,0.8)' }}>
                         {step.label}
                       </p>
-                      <p className="text-[0.75rem] mt-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                      <p className="text-[0.72rem] mt-0.5 leading-relaxed" style={{ color: 'rgba(255,255,255,0.3)' }}>
                         {step.desc}
                       </p>
                     </div>
@@ -385,131 +470,120 @@ export function ResultPage({ firstName, scores, dominant, secondary, email }: Pr
                 ))}
               </div>
 
-              {/* CTA */}
-              <div className="px-6 pb-6 pt-4">
+              <div className="px-7 pb-7 pt-5">
                 <Link
                   href={ctaUrl}
                   onClick={() => {
                     storeProtocolSlug()
                     trackResultEvent('cta_clicked', { protocolSlug: topProtocol.slug }, email)
                   }}
-                  className="block text-center py-4 rounded-xl text-sm font-semibold transition-all hover:brightness-110 active:scale-[0.98]"
+                  className="flex items-center justify-center gap-3 py-4 rounded-xl text-sm font-semibold transition-all hover:brightness-110 active:scale-[0.98]"
                   style={{
-                    background: 'linear-gradient(135deg, #C9A961, #B8960F)',
+                    background: `linear-gradient(135deg, ${bc.text}, #B8960F)`,
                     color: '#000',
                     letterSpacing: '0.02em',
                   }}
                 >
                   Commencer mon protocole
+                  <span>→</span>
                 </Link>
               </div>
             </div>
-          </Reveal>
+          </FadeIn>
         ) : (
-          <Reveal>
+          <FadeIn>
             <Link
               href={signupUrl}
-              className="block text-center w-full py-4 rounded-xl text-sm font-semibold transition-all hover:brightness-110"
-              style={{
-                background: 'linear-gradient(135deg, #C9A961, #B8960F)',
-                color: '#000',
-              }}
+              className="flex items-center justify-center gap-3 w-full py-4 rounded-xl text-sm font-semibold transition-all hover:brightness-110"
+              style={{ background: `linear-gradient(135deg, ${bc.text}, #B8960F)`, color: '#000' }}
             >
               Créer mon espace gratuit
+              <span>→</span>
             </Link>
-          </Reveal>
+          </FadeIn>
         )}
-      </div>
+      </section>
 
-      {/* ─── SCANNER APPROFONDI ─── */}
-      <div className="px-6 max-w-lg mx-auto pb-10">
-        <Reveal>
+      {/* ─── SCANNER ─── */}
+      <section className="px-6 max-w-[580px] mx-auto pb-10 pt-6">
+        <FadeIn>
           <div
-            className="rounded-2xl p-6"
+            className="rounded-2xl p-6 flex items-start gap-5"
             style={{
-              background: 'rgba(255,255,255,0.02)',
-              border: '1px solid rgba(255,255,255,0.07)',
+              background: 'rgba(255,255,255,0.015)',
+              border: '1px solid rgba(255,255,255,0.05)',
             }}
           >
-            <div className="flex items-start gap-4">
-              <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5 text-lg"
-                style={{ background: 'rgba(201,169,97,0.1)', border: '1px solid rgba(201,169,97,0.2)' }}
-              >
-                🔬
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-semibold mb-1" style={{ color: 'rgba(255,255,255,0.85)' }}>
-                  Scanner émotionnel approfondi
-                </p>
-                <p className="text-xs leading-relaxed mb-4" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                  40 questions · 12 dimensions · lecture personnalisée générée par IA — pour aller bien au-delà de cet aperçu.
-                </p>
-                <a
-                  href="/quiz-approfondi"
-                  className="inline-flex items-center gap-2 text-xs font-medium transition-all hover:brightness-125"
-                  style={{ color: 'var(--brand, #C9A961)' }}
-                >
-                  Faire le scanner complet
-                  <span>→</span>
-                </a>
-              </div>
+            <div
+              className="w-11 h-11 rounded-xl flex items-center justify-center text-xl shrink-0"
+              style={{ background: 'rgba(201,169,97,0.08)', border: '1px solid rgba(201,169,97,0.12)' }}
+            >
+              🔬
             </div>
-          </div>
-        </Reveal>
-      </div>
-
-      {/* ─── PARTAGE ─── */}
-      <div className="px-6 max-w-lg mx-auto pb-24">
-        <Reveal>
-          <div
-            className="h-px mb-10"
-            style={{ background: 'rgba(255,255,255,0.05)' }}
-          />
-          <div className="text-center space-y-5">
-            <p className="text-[10px] tracking-[0.25em] uppercase" style={{ color: 'rgba(255,255,255,0.25)' }}>
-              Partager mon résultat
-            </p>
-            <div className="flex justify-center gap-3">
-              <button
-                onClick={() => {
-                  const text = `Je viens de découvrir ma Signature Émotionnelle sur SOS Shine. Et toi ? 👉 https://sosshine.com/signature-emotionnelle`
-                  if (navigator.share) {
-                    navigator.share({
-                      title: 'Ma Signature Émotionnelle',
-                      text,
-                      url: 'https://sosshine.com/signature-emotionnelle',
-                    }).catch(() => {})
-                  } else {
-                    navigator.clipboard.writeText(text).then(() => alert('Lien copié !'))
-                  }
-                }}
-                className="px-5 py-2.5 rounded-full text-xs font-medium cursor-pointer transition-all hover:scale-[1.03]"
-                style={{
-                  background: 'rgba(201,169,97,0.07)',
-                  border: '1px solid rgba(201,169,97,0.18)',
-                  color: 'var(--brand, #C9A961)',
-                }}
-              >
-                📤 Partager
-              </button>
+            <div>
+              <p className="text-sm font-semibold mb-1.5" style={{ color: 'rgba(255,255,255,0.75)' }}>
+                Scanner émotionnel approfondi
+              </p>
+              <p className="text-xs leading-relaxed mb-4" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                40 questions · 12 dimensions · lecture personnalisée par IA
+              </p>
               <a
-                href={`https://wa.me/?text=${encodeURIComponent('Je viens de découvrir ma Signature Émotionnelle sur SOS Shine 🔥 → https://sosshine.com/signature-emotionnelle')}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-5 py-2.5 rounded-full text-xs font-medium transition-all hover:scale-[1.03]"
-                style={{
-                  background: 'rgba(37,211,102,0.07)',
-                  border: '1px solid rgba(37,211,102,0.18)',
-                  color: '#25D366',
-                }}
+                href="/quiz-approfondi"
+                className="inline-flex items-center gap-2 text-xs font-semibold"
+                style={{ color: 'var(--brand, #C9A961)' }}
               >
-                💬 WhatsApp
+                Accéder au scanner →
               </a>
             </div>
           </div>
-        </Reveal>
-      </div>
+        </FadeIn>
+      </section>
+
+      {/* ─── PARTAGE ─── */}
+      <section className="px-6 max-w-[580px] mx-auto pb-28 pt-4">
+        <FadeIn>
+          <div className="flex items-center gap-4 mb-7">
+            <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.04)' }} />
+            <span className="text-[9px] tracking-[0.3em] uppercase" style={{ color: 'rgba(255,255,255,0.12)' }}>
+              Partager
+            </span>
+            <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.04)' }} />
+          </div>
+          <div className="flex gap-3">
+            <button
+              onClick={() => {
+                const text = `Je viens de découvrir ma Signature Émotionnelle sur SOS Shine. Et toi ? 👉 https://sosshine.com/signature-emotionnelle`
+                if (navigator.share) {
+                  navigator.share({ title: 'Ma Signature Émotionnelle', text, url: 'https://sosshine.com/signature-emotionnelle' }).catch(() => {})
+                } else {
+                  navigator.clipboard.writeText(text).then(() => alert('Lien copié !'))
+                }
+              }}
+              className="flex-1 py-3 rounded-xl text-xs font-medium cursor-pointer transition-all hover:brightness-110"
+              style={{
+                background: 'rgba(201,169,97,0.05)',
+                border: '1px solid rgba(201,169,97,0.12)',
+                color: 'var(--brand, #C9A961)',
+              }}
+            >
+              📤 Partager
+            </button>
+            <a
+              href={`https://wa.me/?text=${encodeURIComponent('Je viens de découvrir ma Signature Émotionnelle sur SOS Shine 🔥 → https://sosshine.com/signature-emotionnelle')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 py-3 rounded-xl text-xs font-medium text-center transition-all hover:brightness-110"
+              style={{
+                background: 'rgba(37,211,102,0.05)',
+                border: '1px solid rgba(37,211,102,0.12)',
+                color: '#25D366',
+              }}
+            >
+              💬 WhatsApp
+            </a>
+          </div>
+        </FadeIn>
+      </section>
 
     </div>
   )

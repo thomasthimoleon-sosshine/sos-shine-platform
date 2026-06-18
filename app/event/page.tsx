@@ -109,61 +109,45 @@ export default async function EventPage() {
 
               return (
                 <Link key={event.id} href={`/event/${event.id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
-                  <article style={{ borderRadius: '20px', overflow: 'hidden', cursor: 'pointer', position: 'relative' }}>
-                    {event.image_url ? (
-                      <div style={{ position: 'relative' }}>
+                  <article style={{ borderRadius: '20px', overflow: 'hidden', cursor: 'pointer', border: '1px solid rgba(201,169,97,0.12)', background: '#111' }}>
+                    {/* Image */}
+                    {event.image_url && (
+                      <div style={{ overflow: 'hidden' }}>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={event.image_url}
                           alt={event.title}
                           style={{ width: '100%', height: 'auto', display: 'block' }}
                         />
-                        {/* Gradient overlay */}
-                        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '55%', background: 'linear-gradient(to top, rgba(10,10,10,0.92) 0%, rgba(10,10,10,0.5) 60%, transparent 100%)' }} />
-                        {/* Info overlay */}
-                        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '28px 24px 24px' }}>
-                          {event.is_free && (
-                            <span style={{ display: 'inline-block', fontSize: '9px', letterSpacing: '0.2em', textTransform: 'uppercase', padding: '3px 10px', borderRadius: '999px', background: 'rgba(85,239,196,0.18)', color: '#55EFC4', border: '1px solid rgba(85,239,196,0.3)', marginBottom: '10px', fontWeight: '600' }}>
-                              Gratuit
-                            </span>
-                          )}
-                          {event.event_date && (
-                            <p style={{ fontSize: '10px', letterSpacing: '0.25em', textTransform: 'uppercase', color: '#C9A961', margin: '0 0 6px', fontWeight: '500' }}>
-                              {date.weekday} {date.day} {date.month}
-                              {time && <span style={{ color: 'rgba(201,169,97,0.6)', marginLeft: '6px' }}>· {time}</span>}
-                            </p>
-                          )}
-                          <h2 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(1.3rem, 4vw, 1.8rem)', fontWeight: '300', color: '#F5F1E8', margin: 0, lineHeight: '1.2' }}>
-                            {event.title}
-                          </h2>
-                          {event.location_name && (
-                            <p style={{ fontSize: '12px', color: 'rgba(245,241,232,0.45)', margin: '6px 0 0', letterSpacing: '0.05em' }}>
-                              📍 {event.location_name}
-                            </p>
-                          )}
-                        </div>
                       </div>
-                    ) : (
-                      /* Fallback si pas d'image */
-                      <div style={{ padding: '36px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(201,169,97,0.15)', borderRadius: '20px' }}>
+                    )}
+
+                    {/* Info block */}
+                    <div style={{ padding: '20px 24px 24px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', flexWrap: 'wrap' }}>
                         {event.is_free && (
-                          <span style={{ display: 'inline-block', fontSize: '9px', letterSpacing: '0.2em', textTransform: 'uppercase', padding: '3px 10px', borderRadius: '999px', background: 'rgba(85,239,196,0.12)', color: '#55EFC4', border: '1px solid rgba(85,239,196,0.25)', marginBottom: '14px', fontWeight: '600' }}>
+                          <span style={{ fontSize: '9px', letterSpacing: '0.2em', textTransform: 'uppercase', padding: '3px 10px', borderRadius: '999px', background: 'rgba(85,239,196,0.12)', color: '#55EFC4', border: '1px solid rgba(85,239,196,0.25)', fontWeight: '600' }}>
                             Gratuit
                           </span>
                         )}
                         {event.event_date && (
-                          <p style={{ fontSize: '10px', letterSpacing: '0.25em', textTransform: 'uppercase', color: '#C9A961', margin: '0 0 8px' }}>
-                            {date.weekday} {date.day} {date.month}{time && ` · ${time}`}
+                          <p style={{ fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#C9A961', margin: 0, fontWeight: '500' }}>
+                            {date.weekday} {date.day} {date.month}
+                            {time && <span style={{ color: 'rgba(201,169,97,0.55)' }}> · {time}</span>}
                           </p>
                         )}
-                        <h2 style={{ fontFamily: 'Georgia, serif', fontSize: '1.6rem', fontWeight: '300', color: '#F5F1E8', margin: 0 }}>
-                          {event.title}
-                        </h2>
-                        {event.location_name && (
-                          <p style={{ fontSize: '13px', color: 'rgba(245,241,232,0.4)', marginTop: '8px' }}>📍 {event.location_name}</p>
-                        )}
                       </div>
-                    )}
+
+                      <h2 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(1.25rem, 4vw, 1.7rem)', fontWeight: '300', color: '#F5F1E8', margin: '0 0 8px', lineHeight: '1.25' }}>
+                        {event.title}
+                      </h2>
+
+                      {event.location_name && (
+                        <p style={{ fontSize: '12px', color: 'rgba(245,241,232,0.35)', margin: 0, letterSpacing: '0.04em' }}>
+                          📍 {event.location_name}
+                        </p>
+                      )}
+                    </div>
                   </article>
                 </Link>
               )

@@ -74,14 +74,14 @@ export default async function EventPage() {
   return (
     <main style={{ minHeight: '100vh', background: '#0A0A0A', color: '#F5F1E8' }}>
       {/* Header */}
-      <header style={{ padding: '24px 24px 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', maxWidth: '680px', margin: '0 auto' }}>
+      <header style={{ padding: '24px 24px 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', maxWidth: '960px', margin: '0 auto' }}>
         <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/images/logo-shine.png" alt="SOS Shine®" style={{ height: '40px', width: 'auto' }} />
         </Link>
       </header>
 
-      <div style={{ maxWidth: '680px', margin: '0 auto', padding: '48px 24px 80px' }}>
+      <div style={{ maxWidth: '960px', margin: '0 auto', padding: '48px 24px 80px' }}>
         {/* Title */}
         <div style={{ textAlign: 'center', marginBottom: '52px' }}>
           <p style={{ fontSize: '11px', letterSpacing: '0.35em', textTransform: 'uppercase', color: '#C9A961', marginBottom: '12px', fontWeight: '500' }}>

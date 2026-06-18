@@ -147,19 +147,19 @@ export default function QuizLandingClient({ nextEvent }: { nextEvent: NextEvent 
           <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full opacity-[0.05] blur-[100px]" style={{ background: 'var(--brand)' }} />
         </div>
 
-        <div className="relative z-10 max-w-sm w-full text-center space-y-10">
+        <div className="relative z-10 max-w-sm lg:max-w-3xl w-full text-center space-y-10 lg:space-y-12">
           <Reveal>
             <Link href="/" className="inline-block">
-              <img src="/images/logo-shine.png" alt="SOS Shine" className="h-24 mx-auto" />
+              <img src="/images/logo-shine.png" alt="SOS Shine" className="h-24 lg:h-32 mx-auto" />
             </Link>
           </Reveal>
 
           <Reveal delay={0.15}>
-            <div className="space-y-4">
-              <h1 className="font-sans text-[22px] sm:text-3xl font-bold leading-tight" style={{ color: 'var(--text-primary)' }}>
+            <div className="space-y-4 lg:space-y-6">
+              <h1 className="font-sans text-[22px] sm:text-3xl lg:text-5xl lg:leading-[1.1] font-bold leading-tight mx-auto lg:max-w-3xl" style={{ color: 'var(--text-primary)' }}>
                 Il y a une phrase qui résume comment tu te protèges émotionnellement depuis toujours.
               </h1>
-              <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              <p className="text-sm lg:text-lg leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>
                 Tu ne l&apos;as jamais entendue.<br />
                 Mais elle dirige ta vie.
               </p>
@@ -179,7 +179,7 @@ export default function QuizLandingClient({ nextEvent }: { nextEvent: NextEvent 
 
       {/* ══════════ POURQUOI DIFFÉRENT ══════════ */}
       <section className="px-6 py-20 sm:py-28">
-        <div className="max-w-lg mx-auto text-center space-y-10">
+        <div className="max-w-lg lg:max-w-3xl mx-auto text-center space-y-10">
           <Reveal>
             <p className="text-[11px] tracking-[0.3em] uppercase font-medium" style={{ color: 'var(--brand)', opacity: 0.7 }}>
               Pourquoi ce test est différent
@@ -188,13 +188,13 @@ export default function QuizLandingClient({ nextEvent }: { nextEvent: NextEvent 
 
           <Reveal delay={0.1}>
             <div className="space-y-5">
-              <p className="font-sans text-lg sm:text-xl font-bold leading-snug" style={{ color: 'var(--text-primary)' }}>
+              <p className="font-sans text-lg sm:text-xl lg:text-3xl font-bold leading-snug" style={{ color: 'var(--text-primary)' }}>
                 Pas un énième test de magazine.
               </p>
-              <p className="font-sans text-lg sm:text-xl font-bold leading-snug" style={{ color: 'var(--text-primary)' }}>
+              <p className="font-sans text-lg sm:text-xl lg:text-3xl font-bold leading-snug" style={{ color: 'var(--text-primary)' }}>
                 Pas de cases dans lesquelles on te range.
               </p>
-              <p className="font-sans text-base leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              <p className="font-sans text-base lg:text-lg leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>
                 Pas de &laquo;&nbsp;personnalité INFP&nbsp;&raquo; ou &laquo;&nbsp;type 4 ennéagramme&nbsp;&raquo;.
               </p>
             </div>
@@ -205,7 +205,7 @@ export default function QuizLandingClient({ nextEvent }: { nextEvent: NextEvent 
           </Reveal>
 
           <Reveal delay={0.3}>
-            <div className="space-y-4 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)' }}>
+            <div className="space-y-4 text-sm lg:text-lg leading-relaxed max-w-xl mx-auto" style={{ color: 'rgba(255,255,255,0.45)' }}>
               <p>
                 Juste <strong style={{ color: 'var(--text-primary)' }}>UNE phrase</strong>. La tienne.
               </p>
@@ -226,43 +226,45 @@ export default function QuizLandingClient({ nextEvent }: { nextEvent: NextEvent 
 
       {/* ══════════ EN 3 ÉTAPES ══════════ */}
       <section className="px-6 py-20 sm:py-28" style={{ background: 'rgba(201,169,97,0.025)', borderTop: '1px solid rgba(201,169,97,0.08)', borderBottom: '1px solid rgba(201,169,97,0.08)' }}>
-        <div className="max-w-lg mx-auto space-y-12">
+        <div className="max-w-lg lg:max-w-5xl mx-auto space-y-12">
           <Reveal>
             <p className="text-[11px] tracking-[0.3em] uppercase font-medium text-center" style={{ color: 'var(--brand)', opacity: 0.7 }}>
               En 3 étapes
             </p>
           </Reveal>
 
-          {[
-            { num: '01', title: 'Tu réponds à 12 questions.', desc: "Pas de jugement. Pas de bonne ou mauvaise réponse. Juste toi. Certaines questions vont te toucher. C'est normal." },
-            { num: '02', title: 'On analyse ton profil sur 10 dimensions.', desc: "Pas un seul résultat parmi 10. Une combinaison unique qui te ressemble vraiment." },
-            { num: '03', title: 'Tu reçois ta Signature.', desc: "Avec un texte personnalisé qui décode ce que tu portes, d'où ça vient, et comment t'en libérer." },
-          ].map((step, i) => (
-            <Reveal key={step.num} delay={i * 0.1}>
-              <div className="flex gap-6 items-start">
-                <span className="font-display text-3xl font-light flex-shrink-0 mt-1" style={{ color: 'var(--brand)', opacity: 0.5 }}>
-                  {step.num}
-                </span>
-                <div className="space-y-1.5">
-                  <h3 className="font-sans font-bold text-base leading-snug" style={{ color: 'var(--text-primary)' }}>{step.title}</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>{step.desc}</p>
+          <div className="space-y-12 lg:space-y-0 lg:grid lg:grid-cols-3 lg:gap-10">
+            {[
+              { num: '01', title: 'Tu réponds à 12 questions.', desc: "Pas de jugement. Pas de bonne ou mauvaise réponse. Juste toi. Certaines questions vont te toucher. C'est normal." },
+              { num: '02', title: 'On analyse ton profil sur 10 dimensions.', desc: "Pas un seul résultat parmi 10. Une combinaison unique qui te ressemble vraiment." },
+              { num: '03', title: 'Tu reçois ta Signature.', desc: "Avec un texte personnalisé qui décode ce que tu portes, d'où ça vient, et comment t'en libérer." },
+            ].map((step, i) => (
+              <Reveal key={step.num} delay={i * 0.1}>
+                <div className="flex gap-6 items-start lg:flex-col lg:gap-4">
+                  <span className="font-display text-3xl lg:text-5xl font-light flex-shrink-0 mt-1" style={{ color: 'var(--brand)', opacity: 0.5 }}>
+                    {step.num}
+                  </span>
+                  <div className="space-y-1.5 lg:space-y-3">
+                    <h3 className="font-sans font-bold text-base lg:text-xl leading-snug" style={{ color: 'var(--text-primary)' }}>{step.title}</h3>
+                    <p className="text-sm lg:text-base leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>{step.desc}</p>
+                  </div>
                 </div>
-              </div>
-            </Reveal>
-          ))}
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* ══════════ TÉMOIGNAGES ══════════ */}
       <section className="px-6 py-20 sm:py-28">
-        <div className="max-w-2xl mx-auto space-y-10">
+        <div className="max-w-2xl lg:max-w-4xl mx-auto space-y-10">
           <Reveal>
             <p className="text-[11px] tracking-[0.3em] uppercase font-medium text-center" style={{ color: 'var(--brand)', opacity: 0.7 }}>
               Ils et elles ont fait le test
             </p>
           </Reveal>
 
-          <div className="grid sm:grid-cols-2 gap-4">
+          <div className="grid sm:grid-cols-2 gap-4 lg:gap-6">
             {[
               { text: "J'ai pleuré en lisant ma Signature. Pas de tristesse. De soulagement. Quelqu'un voyait enfin ce que je portais.", author: 'Camille, 41 ans' },
               { text: "Pas un énième test de magazine. Un vrai miroir.", author: 'Léa, 29 ans' },
@@ -293,7 +295,7 @@ export default function QuizLandingClient({ nextEvent }: { nextEvent: NextEvent 
 
       {/* ══════════ JULIA ══════════ */}
       <section className="px-6 py-20 sm:py-28" style={{ background: 'rgba(201,169,97,0.025)', borderTop: '1px solid rgba(201,169,97,0.08)', borderBottom: '1px solid rgba(201,169,97,0.08)' }}>
-        <div className="max-w-lg mx-auto">
+        <div className="max-w-lg lg:max-w-2xl mx-auto">
           <Reveal>
             <p className="text-[11px] tracking-[0.3em] uppercase font-medium text-center mb-10" style={{ color: 'var(--brand)', opacity: 0.7 }}>
               Créé par Julia Laureau
@@ -335,7 +337,7 @@ export default function QuizLandingClient({ nextEvent }: { nextEvent: NextEvent 
 
       {/* ══════════ FAQ ══════════ */}
       <section className="px-6 py-20 sm:py-28">
-        <div className="max-w-lg mx-auto space-y-8">
+        <div className="max-w-lg lg:max-w-2xl mx-auto space-y-8">
           <Reveal>
             <p className="text-[11px] tracking-[0.3em] uppercase font-medium text-center" style={{ color: 'var(--brand)', opacity: 0.7 }}>
               Questions fréquentes
@@ -360,15 +362,15 @@ export default function QuizLandingClient({ nextEvent }: { nextEvent: NextEvent 
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full opacity-[0.04] blur-[100px]" style={{ background: 'var(--brand)' }} />
         </div>
 
-        <div className="relative z-10 max-w-sm mx-auto text-center space-y-8">
+        <div className="relative z-10 max-w-sm lg:max-w-2xl mx-auto text-center space-y-8">
           <Reveal>
-            <h2 className="font-sans text-[22px] sm:text-3xl font-bold leading-tight" style={{ color: 'var(--text-primary)' }}>
+            <h2 className="font-sans text-[22px] sm:text-3xl lg:text-5xl font-bold leading-tight" style={{ color: 'var(--text-primary)' }}>
               Prêt(e) à te voir ?
             </h2>
           </Reveal>
 
           <Reveal delay={0.1}>
-            <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>
+            <p className="text-sm lg:text-lg leading-relaxed max-w-xl mx-auto" style={{ color: 'rgba(255,255,255,0.4)' }}>
               3 minutes pour découvrir une phrase qui va peut-être changer la lecture que tu as de toi-même.
             </p>
           </Reveal>

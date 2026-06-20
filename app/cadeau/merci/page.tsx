@@ -6,7 +6,8 @@ export const metadata: Metadata = {
   robots: { index: false },
 }
 
-const PDF_PATH = '/le-couple-vivant.pdf'
+const PDF_DOWNLOAD = 'https://drive.google.com/uc?export=download&id=1oYleBJgiDBdkeEau9tLy4JWzFXHPbtRo'
+const PDF_VIEW = 'https://drive.google.com/file/d/1oYleBJgiDBdkeEau9tLy4JWzFXHPbtRo/view'
 
 export default function CadeauMerciPage() {
   return (
@@ -39,8 +40,9 @@ export default function CadeauMerciPage() {
 
         {/* Main CTA */}
         <a
-          href={PDF_PATH}
-          download="Le-Couple-Vivant-SOS-Shine.pdf"
+          href={PDF_DOWNLOAD}
+          target="_blank"
+          rel="noreferrer"
           style={{
             display: 'block',
             width: '100%',
@@ -62,7 +64,7 @@ export default function CadeauMerciPage() {
         <p style={{ marginTop: '18px', fontSize: '12px', color: 'rgba(245,241,232,0.28)', fontFamily: 'Inter, sans-serif', lineHeight: '1.55' }}>
           Le telechargement ne demarre pas ?{' '}
           <a
-            href={PDF_PATH}
+            href={PDF_VIEW}
             target="_blank"
             rel="noreferrer"
             style={{ color: '#C9A961', textDecoration: 'underline', textUnderlineOffset: '3px' }}

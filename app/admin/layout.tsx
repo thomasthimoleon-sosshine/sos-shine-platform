@@ -24,6 +24,7 @@ const adminNav = [
   { href: '/admin/evenements', label: 'Événements', icon: '📅' },
   { href: '/admin/inscrits-evenements', label: 'Inscrits Événements', icon: '🏕️' },
   { href: '/admin/physical-events', label: 'Événements /event', icon: '🎪' },
+  { href: '/admin/leads-cadeau', label: 'Leads — Guide PDF', icon: '📩' },
   { href: '/admin/publications', label: 'Publications', icon: '📢' },
   { href: '/admin/membres', label: 'Membres', icon: '👥' },
   { href: '/admin/abonnements', label: 'Abonnements', icon: '💳' },

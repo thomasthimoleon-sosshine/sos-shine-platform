@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import type { Post, PostCategory, PostMediaType } from '@/types/database'
 import { useTranslation } from '@/lib/i18n/useTranslation'
+import { incrementAndCheckBadges } from '@/lib/badgeService'
 import FileUpload from '@/components/FileUpload'
 import AudioPlayer from '@/components/AudioPlayer'
 import VoiceRecorder from '@/components/VoiceRecorder'
@@ -400,6 +401,8 @@ export default function MurPage() {
         return
       }
 
+      incrementAndCheckBadges(user.id, 'publications_created').catch(() => {})
+
       // Success: reset form and reload
       setCreateTitle('')
       setCreateContent('')
@@ -514,6 +517,7 @@ export default function MurPage() {
       console.error('[Mur] Comment error:', commentError)
       setError(`Erreur lors de l'envoi du commentaire: ${commentError.message}`)
     } else {
+      incrementAndCheckBadges(currentUserId, 'comments_left').catch(() => {})
       setCommentText('')
       await loadComments(postId)
       setPosts(prev => prev.map(p => p.id === postId

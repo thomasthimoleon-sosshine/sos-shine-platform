@@ -528,10 +528,9 @@ export default function LandingMixClient({ nextEvent }: { nextEvent: NextEvent |
                   <h3 className="font-sans font-bold text-lg mb-1" style={{ color: '#F5F0E8' }}>Abonnement</h3>
                   <p className="text-sm mb-5" style={{ color: 'rgba(255,255,255,0.4)' }}>Accès illimité à toute la plateforme</p>
                   <div className="flex items-baseline gap-2 mb-1">
-                    <span className="text-4xl font-bold" style={{ color: '#C9A961' }}>25€</span>
+                    <span className="text-4xl font-bold" style={{ color: '#C9A961' }}>29,90€</span>
                     <span className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>/mois</span>
                   </div>
-                  <p className="text-xs line-through" style={{ color: 'rgba(255,255,255,0.25)' }}>Au lieu de 43,95€</p>
                 </div>
                 <ul className="space-y-2 flex-1">
                   {['Encyclopédie complète (200+ protocoles)', 'Communauté & Feu de Camp 24/7', 'Shine TV, Audible, Librairie', 'Courrier Anonyme', 'Événements & sessions live'].map(f => (
@@ -550,14 +549,13 @@ export default function LandingMixClient({ nextEvent }: { nextEvent: NextEvent |
                 style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)' }}>
                 <div>
                   <h3 className="font-sans font-bold text-lg mb-1" style={{ color: '#F5F0E8' }}>À la carte</h3>
-                  <p className="text-sm mb-5" style={{ color: 'rgba(255,255,255,0.4)' }}>Accès à un module spécifique</p>
+                  <p className="text-sm mb-5" style={{ color: 'rgba(255,255,255,0.4)' }}>Étapes 2 & 3 du protocole recommandé</p>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>À partir de</span>
                     <span className="text-4xl font-bold" style={{ color: '#F5F0E8' }}>33€</span>
                   </div>
                 </div>
                 <ul className="space-y-2 flex-1">
-                  {['Un module encyclopédie au choix', 'Accès à vie au module', 'Protocoles téléchargeables', 'Support communautaire inclus'].map(f => (
+                  {['Étape 2 : Libérer — déconditionner les schémas', 'Étape 3 : Agir — ancrer les nouveaux comportements', 'Protocoles téléchargeables', 'Accès à vie au module'].map(f => (
                     <li key={f} className="flex items-start gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.45)' }}>
                       <span style={{ color: 'rgba(255,255,255,0.3)', flexShrink: 0 }}>◆</span> {f}
                     </li>

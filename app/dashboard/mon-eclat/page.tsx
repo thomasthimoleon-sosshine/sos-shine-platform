@@ -815,7 +815,7 @@ export default function MonEclatPage() {
                       )}
                       {post.video_url && (
                         <div className="mt-4 rounded-xl overflow-hidden">
-                          <video src={post.video_url} controls className="w-full" />
+                          <video src={post.video_url} controls controlsList="nodownload" onContextMenu={(e) => e.preventDefault()} className="w-full" />
                         </div>
                       )}
                       {post.audio_url && (

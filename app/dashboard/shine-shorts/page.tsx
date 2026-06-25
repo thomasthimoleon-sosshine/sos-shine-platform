@@ -334,6 +334,7 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate }: {
               preload="metadata"
               className="w-full h-full object-contain"
               controlsList="nodownload"
+              onContextMenu={(e) => e.preventDefault()}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">

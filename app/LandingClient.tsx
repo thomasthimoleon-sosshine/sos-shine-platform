@@ -1298,6 +1298,8 @@ export default function LandingClient({ initialSections, initialPositions, initi
                         <video
                           src={t.video_url}
                           controls
+                          controlsList="nodownload"
+                          onContextMenu={(e) => e.preventDefault()}
                           preload="metadata"
                           poster={t.avatar_url || undefined}
                           className="w-full h-full object-cover"

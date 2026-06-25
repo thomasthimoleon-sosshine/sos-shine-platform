@@ -221,7 +221,7 @@ export default function SavedPostsTab({ onProfileClick }: Props) {
               )}
               {saved.post.video_url && (
                 <div className="mt-3 rounded-xl overflow-hidden">
-                  <video src={saved.post.video_url} controls className="w-full max-h-48" />
+                  <video src={saved.post.video_url} controls controlsList="nodownload" onContextMenu={(e) => e.preventDefault()} className="w-full max-h-48" />
                 </div>
               )}
               {saved.post.audio_url && (

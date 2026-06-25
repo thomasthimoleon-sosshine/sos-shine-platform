@@ -481,6 +481,8 @@ export default function Home() {
                     muted
                     loop
                     playsInline
+                    controlsList="nodownload"
+                    onContextMenu={(e) => e.preventDefault()}
                     className="w-full aspect-video cursor-pointer"
                     onClick={(e) => {
                       const v = e.currentTarget;

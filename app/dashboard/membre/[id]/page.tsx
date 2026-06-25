@@ -428,7 +428,7 @@ export default function MembreProfilPage() {
             </svg>
             Vidéo de présentation
           </h3>
-          <video src={profile.video_url} controls className="w-full rounded-xl bg-black max-h-96" />
+          <video src={profile.video_url} controls controlsList="nodownload" onContextMenu={(e) => e.preventDefault()} className="w-full rounded-xl bg-black max-h-96" />
         </div>
       )}
 
@@ -478,7 +478,7 @@ export default function MembreProfilPage() {
                   )}
                   {post.video_url && (
                     <div className="mt-3 rounded-lg overflow-hidden">
-                      <video src={post.video_url} controls className="w-full" />
+                      <video src={post.video_url} controls controlsList="nodownload" onContextMenu={(e) => e.preventDefault()} className="w-full" />
                     </div>
                   )}
                   {post.audio_url && (

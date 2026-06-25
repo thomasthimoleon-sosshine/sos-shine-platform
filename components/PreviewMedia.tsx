@@ -101,6 +101,8 @@ function VideoWithCustomPlay({
         src={src}
         poster={poster}
         controls={playing}
+        controlsList="nodownload"
+        onContextMenu={(e) => e.preventDefault()}
         preload="metadata"
         className="w-full h-full"
         style={{ opacity: playing ? 1 : 0 }}

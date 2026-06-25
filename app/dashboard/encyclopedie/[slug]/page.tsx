@@ -948,7 +948,7 @@ export default function DouleurDetailPage() {
 
             return (
               <div className="rounded-xl overflow-hidden aspect-video" style={{ background: 'var(--dark)' }}>
-                <video ref={videoRef} src={src} poster={poster} controls preload="metadata" className="w-full h-full" />
+                <video ref={videoRef} src={src} poster={poster} controls controlsList="nodownload" onContextMenu={(e) => e.preventDefault()} preload="metadata" className="w-full h-full" />
               </div>
             )
           }
@@ -987,6 +987,8 @@ export default function DouleurDetailPage() {
                     src={currentStep.video}
                     poster={currentStep.video_cover || currentStep.image || undefined}
                     controls
+                    controlsList="nodownload"
+                    onContextMenu={(e) => e.preventDefault()}
                     preload="metadata"
                     className="w-full h-full"
                   />
@@ -1004,6 +1006,8 @@ export default function DouleurDetailPage() {
                     src={currentStep.video2}
                     poster={currentStep.video2_cover || undefined}
                     controls
+                    controlsList="nodownload"
+                    onContextMenu={(e) => e.preventDefault()}
                     preload="metadata"
                     className="w-full h-full"
                   />

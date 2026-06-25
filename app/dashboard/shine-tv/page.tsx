@@ -600,6 +600,7 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
           crossOrigin="anonymous"
           className="w-full h-full object-contain"
           controlsList="nodownload"
+          onContextMenu={(e) => e.preventDefault()}
           onTimeUpdate={() => {
             const v = videoRef.current
             if (!v) return

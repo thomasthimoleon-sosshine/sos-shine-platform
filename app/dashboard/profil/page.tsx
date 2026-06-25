@@ -389,7 +389,7 @@ export default function ProfilPage() {
         <p className="text-xs mb-4 text-[var(--text-muted)]">{t('dashboard.presentation_video_desc')}</p>
         {profile?.video_url ? (
           <div className="space-y-3">
-            <video src={profile.video_url} controls className="w-full max-h-64 rounded-xl bg-black" />
+            <video src={profile.video_url} controls controlsList="nodownload" onContextMenu={(e) => e.preventDefault()} className="w-full max-h-64 rounded-xl bg-black" />
             <div className="flex items-center gap-3">
               <input ref={videoRef} type="file" accept="video/*" className="hidden" onChange={handleVideoUpload} />
               <button onClick={() => videoRef.current?.click()} disabled={uploadingVideo}

@@ -315,6 +315,8 @@ export default function LandingMixClient({ nextEvent }: { nextEvent: NextEvent |
                   src="https://www.sosshine.com/videos/presentation.mp4"
                   autoPlay
                   controls
+                  controlsList="nodownload"
+                  onContextMenu={(e) => e.preventDefault()}
                   className="w-full h-full object-cover"
                 />
               ) : (

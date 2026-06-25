@@ -396,7 +396,7 @@ export default function PublicDouleurDetailPage() {
                       }
                       return (
                         <div className="rounded-xl overflow-hidden aspect-video bg-[var(--surface)]">
-                          <video ref={videoRef} src={src} poster={poster} controls preload="metadata" className="w-full h-full" />
+                          <video ref={videoRef} src={src} poster={poster} controls controlsList="nodownload" onContextMenu={(e) => e.preventDefault()} preload="metadata" className="w-full h-full" />
                         </div>
                       )
                     }

@@ -288,7 +288,7 @@ export default function RayonsFeedTab({ onProfileClick }: Props) {
 
               {/* Media */}
  {post.image_url && <div className="mt-3 rounded-xl overflow-hidden w-full" ><img src={post.image_url} alt="" /></div>}
- {post.video_url && <div className="mt-3 rounded-xl overflow-hidden w-full" ><video src={post.video_url} controls /></div>}
+ {post.video_url && <div className="mt-3 rounded-xl overflow-hidden w-full" ><video src={post.video_url} controls controlsList="nodownload" onContextMenu={(e) => e.preventDefault()} /></div>}
               {post.audio_url && <div className="mt-3"><AudioPlayer src={post.audio_url} /></div>}
             </div>
 

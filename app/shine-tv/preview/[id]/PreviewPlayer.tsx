@@ -61,6 +61,8 @@ export default function PreviewPlayer({
           style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
           playsInline
           controls={!ended}
+          controlsList="nodownload"
+          onContextMenu={(e) => e.preventDefault()}
           preload="metadata"
         />
       )}

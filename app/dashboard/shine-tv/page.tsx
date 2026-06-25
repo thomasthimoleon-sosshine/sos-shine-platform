@@ -868,6 +868,56 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate, onWatch }: {
   const [newRating, setNewRating] = useState(0)
   const [reviews, setReviews] = useState<Review[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showShare, setShowShare] = useState(false)
+  const [copyDone, setCopyDone] = useState(false)
+  const [rayons, setRayons] = useState<{ id: string; name: string; avatar: string | null; partnerId: string }[]>([])
+  const [rayonSearch, setRayonSearch] = useState('')
+  const [sentTo, setSentTo] = useState<Set<string>>(new Set())
+
+  async function loadRayons() {
+    const res = await fetch('/api/rayons')
+    if (!res.ok) return
+    const json = await res.json()
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+    const connections = (json.connections || []) as { id: string; sender_id: string; receiver_id: string; profiles: Record<string, { prenom: string; pseudo: string | null; avatar_url: string | null }> }[]
+    setRayons(connections.map(c => {
+      const partnerId = c.sender_id === user.id ? c.receiver_id : c.sender_id
+      const p = c.profiles?.[partnerId]
+      return { id: c.id, partnerId, name: p?.pseudo || p?.prenom || 'Membre', avatar: p?.avatar_url || null }
+    }))
+  }
+
+  function handleOpenShare() {
+    setShowShare(true)
+    if (rayons.length === 0) loadRayons()
+  }
+
+  function handleCopyLink() {
+    const url = `${window.location.origin}/shine-tv/preview/${video.id}`
+    navigator.clipboard.writeText(url).then(() => {
+      setCopyDone(true)
+      setTimeout(() => setCopyDone(false), 2500)
+    })
+  }
+
+  async function handleSendToRayon(partnerId: string) {
+    if (sentTo.has(partnerId)) return
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+    const previewUrl = `${window.location.origin}/shine-tv/preview/${video.id}`
+    await supabase.from('private_messages').insert({
+      sender_id: user.id,
+      receiver_id: partnerId,
+      content: `🎬 Je partage avec toi cette vidéo Shine TV : *${video.title}*\n${previewUrl}`,
+      message_type: 'text',
+    })
+    setSentTo(prev => new Set([...prev, partnerId]))
+  }
+
+  const filteredRayons = rayons.filter(r => r.name.toLowerCase().includes(rayonSearch.toLowerCase()))
 
   const handleSubmitReview = async () => {
     if (!newReview.trim() || newRating === 0) return
@@ -977,12 +1027,96 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate, onWatch }: {
                   <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                 </svg>
               </button>
+              <button
+                onClick={handleOpenShare}
+                className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110"
+                style={{ background: showShare ? 'rgba(201,169,97,0.15)' : 'rgba(255,255,255,0.08)', border: showShare ? '1px solid rgba(201,169,97,0.3)' : '1px solid rgba(255,255,255,0.15)' }}
+                title="Partager"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke={showShare ? 'var(--brand)' : 'white'} strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
+                </svg>
+              </button>
             </div>
           </div>
 
           <p className="text-[14px] leading-relaxed mb-6 text-[var(--text-secondary)]">
             {video.description}
           </p>
+
+          {/* Share panel */}
+          {showShare && (
+            <div className="rounded-2xl p-5 mb-6" style={{ background: 'rgba(201,169,97,0.05)', border: '1px solid rgba(201,169,97,0.15)' }}>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-sm font-semibold text-[var(--text-primary)]">Partager cette vidéo</h3>
+                <button onClick={() => setShowShare(false)} className="text-[var(--text-muted)] hover:text-white text-lg leading-none cursor-pointer">×</button>
+              </div>
+
+              {/* Lien externe */}
+              <div className="mb-5">
+                <p className="text-[11px] uppercase tracking-widest text-[var(--text-muted)] mb-2 font-medium">Lien externe · preview 2 min</p>
+                <div className="flex gap-2">
+                  <div className="flex-1 px-3 py-2 rounded-xl text-[12px] truncate text-[var(--text-muted)]"
+                    style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border)' }}>
+                    {typeof window !== 'undefined' ? `${window.location.origin}/shine-tv/preview/${video.id}` : `/shine-tv/preview/${video.id}`}
+                  </div>
+                  <button
+                    onClick={handleCopyLink}
+                    className="px-4 py-2 rounded-xl text-[12px] font-semibold cursor-pointer transition-all flex-shrink-0"
+                    style={{ background: copyDone ? 'rgba(85,239,196,0.15)' : 'rgba(201,169,97,0.15)', color: copyDone ? '#55EFC4' : 'var(--brand)', border: copyDone ? '1px solid rgba(85,239,196,0.3)' : '1px solid rgba(201,169,97,0.2)' }}
+                  >
+                    {copyDone ? '✓ Copié' : 'Copier'}
+                  </button>
+                </div>
+                <p className="text-[11px] text-[var(--text-muted)] mt-1.5">
+                  Les non-membres verront les 2 premières minutes, puis seront invités à rejoindre SOS Shine.
+                </p>
+              </div>
+
+              {/* Partage interne */}
+              <div>
+                <p className="text-[11px] uppercase tracking-widest text-[var(--text-muted)] mb-2 font-medium">Envoyer à un Rayon</p>
+                {rayons.length === 0 ? (
+                  <p className="text-[12px] text-[var(--text-muted)] text-center py-4">Aucun Rayon connecté pour l&apos;instant.</p>
+                ) : (
+                  <>
+                    <input
+                      type="text"
+                      placeholder="Rechercher un Rayon…"
+                      value={rayonSearch}
+                      onChange={e => setRayonSearch(e.target.value)}
+                      className="w-full px-3 py-2 rounded-xl text-[12px] outline-none mb-3"
+                      style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
+                    />
+                    <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+                      {filteredRayons.map(r => (
+                        <div key={r.id} className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-semibold"
+                            style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)' }}>
+                            {r.avatar
+                              ? <img src={r.avatar} alt={r.name} className="w-full h-full rounded-full object-cover" />
+                              : r.name.charAt(0).toUpperCase()}
+                          </div>
+                          <span className="flex-1 text-[13px] text-[var(--text-primary)]">{r.name}</span>
+                          <button
+                            onClick={() => handleSendToRayon(r.partnerId)}
+                            className="px-3 py-1.5 rounded-lg text-[11px] font-semibold cursor-pointer transition-all flex-shrink-0"
+                            style={{
+                              background: sentTo.has(r.partnerId) ? 'rgba(85,239,196,0.12)' : 'rgba(201,169,97,0.12)',
+                              color: sentTo.has(r.partnerId) ? '#55EFC4' : 'var(--brand)',
+                              border: sentTo.has(r.partnerId) ? '1px solid rgba(85,239,196,0.2)' : '1px solid rgba(201,169,97,0.2)',
+                            }}
+                          >
+                            {sentTo.has(r.partnerId) ? '✓ Envoyé' : 'Envoyer'}
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Your rating */}
           <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-4 rounded-xl mb-6 flex items-center gap-4 flex-wrap"

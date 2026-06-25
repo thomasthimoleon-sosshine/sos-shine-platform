@@ -123,7 +123,7 @@ function generateProjection(targetSubscribers: number = 5000) {
       month: months[i],
       monthIndex: i,
       subscribers,
-      essential,
+      essential: 0,
       serenite,
       premium,
       mrr: Math.round(mrr),

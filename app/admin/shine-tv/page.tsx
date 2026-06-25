@@ -9,7 +9,7 @@ interface ShineVideo {
   title: string
   description: string | null
   thumbnail_url: string | null
-  thumbnail_desktop_url: string | null
+  thumbnail_desktop_url?: string | null
   video_url: string | null
   subtitle_url?: string | null
   category: string

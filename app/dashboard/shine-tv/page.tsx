@@ -12,6 +12,7 @@ type ShineVideo = {
   title: string
   description: string
   thumbnail: string
+  thumbnailDesktop: string | null
   videoUrl: string
   subtitleUrl: string
   category: string
@@ -292,7 +293,7 @@ function HeroBanner({ video, onOpen, onInfo }: { video: ShineVideo; onOpen: () =
       {/* ─── Desktop: layout Netflix classique avec overlay ─── */}
       <div className="hidden sm:block relative w-full overflow-hidden sm:rounded-2xl" style={{ height: 'clamp(400px, 55vh, 600px)' }}>
         <img
-          src={video.thumbnail}
+          src={video.thumbnailDesktop || video.thumbnail}
           alt={video.title}
           className="absolute inset-0 w-full h-full object-cover object-top"
         />
@@ -1212,6 +1213,7 @@ export default function ShineTVPage() {
         title: v.title,
         description: v.description || '',
         thumbnail: v.thumbnail_url || '',
+        thumbnailDesktop: v.thumbnail_desktop_url || null,
         videoUrl: v.video_url || '',
         subtitleUrl: v.subtitle_url || '',
         category: v.category,

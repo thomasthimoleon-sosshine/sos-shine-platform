@@ -9,6 +9,7 @@ interface ShineVideo {
   title: string
   description: string | null
   thumbnail_url: string | null
+  thumbnail_desktop_url: string | null
   video_url: string | null
   subtitle_url?: string | null
   category: string
@@ -42,6 +43,7 @@ const emptyForm = {
   title: '',
   description: '',
   thumbnail_url: '',
+  thumbnail_desktop_url: '',
   video_url: '',
   subtitle_url: '',
   category: 'healing',
@@ -101,6 +103,7 @@ export default function AdminShineTVPage() {
       title: v.title,
       description: v.description || '',
       thumbnail_url: v.thumbnail_url || '',
+      thumbnail_desktop_url: v.thumbnail_desktop_url || '',
       video_url: v.video_url || '',
       subtitle_url: v.subtitle_url || '',
       category: v.category,
@@ -128,6 +131,7 @@ export default function AdminShineTVPage() {
       title: form.title.trim(),
       description: form.description.trim() || null,
       thumbnail_url: form.thumbnail_url.trim() || null,
+      thumbnail_desktop_url: form.thumbnail_desktop_url.trim() || null,
       video_url: form.video_url.trim() || null,
       subtitle_url: form.subtitle_url.trim() || null,
       category: form.category,
@@ -271,13 +275,23 @@ export default function AdminShineTVPage() {
           </div>
 
           <FileUpload
-            label="Miniature (thumbnail)"
+            label="Miniature mobile (thumbnail)"
             accept="image/*"
             folder="shine-tv"
             currentUrl={form.thumbnail_url || null}
-            hint="Image 16:9 recommandée (JPG, PNG, WebP)"
+            hint="Image portrait/carrée pour mobile (JPG, PNG, WebP)"
             onUploaded={(url) => setForm((prev) => ({ ...prev, thumbnail_url: url }))}
             onRemoved={() => setForm((prev) => ({ ...prev, thumbnail_url: '' }))}
+          />
+
+          <FileUpload
+            label="Miniature desktop (facultatif)"
+            accept="image/*"
+            folder="shine-tv"
+            currentUrl={form.thumbnail_desktop_url || null}
+            hint="Image 16:9 paysage pour desktop — si vide, utilise l'image mobile"
+            onUploaded={(url) => setForm((prev) => ({ ...prev, thumbnail_desktop_url: url }))}
+            onRemoved={() => setForm((prev) => ({ ...prev, thumbnail_desktop_url: '' }))}
           />
 
           <FileUpload

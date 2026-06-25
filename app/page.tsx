@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
-import QuizLandingClient from './quiz/QuizLandingClient'
+import LandingMixClient from './LandingMixClient'
 import type { NextEvent } from './quiz/page'
 
 async function getNextEvent(): Promise<NextEvent | null> {
@@ -22,5 +22,5 @@ async function getNextEvent(): Promise<NextEvent | null> {
 
 export default async function Home() {
   const nextEvent = await getNextEvent()
-  return <QuizLandingClient nextEvent={nextEvent} />
+  return <LandingMixClient nextEvent={nextEvent} />
 }

@@ -261,7 +261,7 @@ export default function LandingMixClient({ nextEvent }: { nextEvent: NextEvent |
               {
                 icon: '🎬',
                 title: 'Contenu Exclusif',
-                desc: 'Shine TV, Interviews, Podcasts, Audible, Livres. Un accès illimité à l'essentiel.',
+                desc: "Shine TV, Interviews, Podcasts, Audible, Livres. Un accès illimité à l'essentiel.",
                 badge: 'Exclusif',
                 color: '#A29BFE',
               },

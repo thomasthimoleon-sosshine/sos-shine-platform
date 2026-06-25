@@ -188,10 +188,10 @@ export default function LandingMixClient({ nextEvent }: { nextEvent: NextEvent |
 
           <div className="space-y-8">
             {[
-              { phrase: 'Tu souris.', suite: 'À l'intérieur, tu hurles.' },
-              { phrase: 'Tu sais.', suite: 'Tu n'arrives pas à faire.' },
-              { phrase: 'Tu donnes.', suite: 'Personne ne voit que tu t'épuises.' },
-              { phrase: 'Tu contrôles.', suite: 'Parce que lâcher, c'est tomber.' },
+              { phrase: 'Tu souris.', suite: "À l’intérieur, tu hurles." },
+              { phrase: 'Tu sais.', suite: "Tu n’arrives pas à faire." },
+              { phrase: 'Tu donnes.', suite: "Personne ne voit que tu t’épuises." },
+              { phrase: 'Tu contrôles.', suite: "Parce que lâcher, c’est tomber." },
               { phrase: 'Tu recommences.', suite: 'La même histoire. Le même mur.' },
             ].map((item, i) => (
               <Reveal key={i} delay={i * 0.08}>
@@ -468,9 +468,9 @@ export default function LandingMixClient({ nextEvent }: { nextEvent: NextEvent |
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {[
-              { name: 'Julia', role: 'Le Pilier Énergétique', desc: 'Auteure du livre fondateur de SOS Shine. Elle canalise l'énergie invisible qui nous traverse.', color: '#FBCFE8', avatar: '/images/julia.jpeg' },
+              { name: 'Julia', role: 'Le Pilier Énergétique', desc: "Auteure du livre fondateur de SOS Shine. Elle canalise l'énergie invisible qui nous traverse.", color: '#FBCFE8', avatar: '/images/julia.jpeg' },
               { name: 'William', role: 'Le Pilier Corporel', desc: 'Hypnothérapeute, diplômé en médecine chinoise. Il déconstruit les blocages ancrés dans le corps.', color: '#A78BFA', avatar: null },
-              { name: 'Thomas', role: 'Le Pilier Pratique', desc: 'Protocoles d'action concrets. Il transforme la prise de conscience en résultats tangibles.', color: '#7DD3FC', avatar: null },
+              { name: 'Thomas', role: 'Le Pilier Pratique', desc: "Protocoles d'action concrets. Il transforme la prise de conscience en résultats tangibles.", color: '#7DD3FC', avatar: null },
             ].map((person, i) => (
               <Reveal key={i} delay={i * 0.12}>
                 <div className="rounded-2xl p-6 text-center"

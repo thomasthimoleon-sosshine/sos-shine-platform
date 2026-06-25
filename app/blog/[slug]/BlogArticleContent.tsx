@@ -345,6 +345,7 @@ export default function BlogArticleContent({
             <div className="pb-6 md:pb-10 mb-6 md:mb-10 border-b border-[var(--border)]">
               <ShareBar title={article.title} slug={article.slug} />
             </div>
+          </motion.div>
 
           {/* Content */}
           <motion.div

@@ -451,6 +451,15 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
   const [newRating, setNewRating] = useState(0)
   const [reviews, setReviews] = useState<Review[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [copied, setCopied] = useState(false)
+
+  const handleCopyLink = () => {
+    const url = `${window.location.origin}/dashboard/shine-audible?id=${audio.id}`
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
+  }
 
   const handleSubmitReview = async () => {
     if (!newReview.trim() || newRating === 0) return
@@ -500,6 +509,19 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
         style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Share button */}
+        <button
+          onClick={handleCopyLink}
+          className="absolute top-4 left-4 z-20 h-9 px-3 rounded-full flex items-center gap-1.5 text-[12px] font-medium cursor-pointer transition-all hover:bg-white/20"
+          style={{ background: 'rgba(0,0,0,0.6)', color: '#fff' }}
+        >
+          {copied ? (
+            <><svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>Copié !</>
+          ) : (
+            <><svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>Partager</>
+          )}
+        </button>
+
         {/* Close button */}
         <button
           onClick={onClose}
@@ -726,6 +748,7 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
 export default function ShineAudiblePage() {
   const searchParams = useSearchParams()
   const douleurParam = searchParams.get('douleur')
+  const idParam = searchParams.get('id')
   const [audios, setAudios] = useState<ShineAudio[]>([])
   const [search, setSearch] = useState('')
   const [selectedAudio, setSelectedAudio] = useState<ShineAudio | null>(null)
@@ -844,9 +867,21 @@ export default function ShineAudiblePage() {
 
       setAudios(mapped)
       setLoading(false)
+      if (idParam) {
+        const found = mapped.find(a => a.id === idParam)
+        if (found) setSelectedAudio(found)
+      }
     }
     loadAudios()
   }, [])
+
+  useEffect(() => {
+    if (selectedAudio) {
+      window.history.replaceState(null, '', `?id=${selectedAudio.id}`)
+    } else {
+      window.history.replaceState(null, '', window.location.pathname)
+    }
+  }, [selectedAudio])
 
   // Sync play/pause state with audio element
   useEffect(() => {

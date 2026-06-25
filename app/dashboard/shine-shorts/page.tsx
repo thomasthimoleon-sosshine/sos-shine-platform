@@ -228,6 +228,15 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate }: {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [liked, setLiked] = useState(false)
   const [likesCount, setLikesCount] = useState(0)
+  const [copied, setCopied] = useState(false)
+
+  const handleCopyLink = () => {
+    const url = `${window.location.origin}/dashboard/shine-shorts?id=${short.id}`
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
+  }
 
   const handleSubmitReview = async () => {
     if (!newReview.trim() || newRating === 0) return
@@ -289,6 +298,19 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate }: {
         style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Share button */}
+        <button
+          onClick={handleCopyLink}
+          className="absolute top-3 left-3 z-20 h-9 px-3 rounded-full flex items-center gap-1.5 text-[12px] font-medium cursor-pointer transition-all hover:bg-white/20"
+          style={{ background: 'rgba(0,0,0,0.6)', color: '#fff' }}
+        >
+          {copied ? (
+            <><svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>Copié !</>
+          ) : (
+            <><svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>Partager</>
+          )}
+        </button>
+
         {/* Close button */}
         <button
           onClick={onClose}
@@ -533,6 +555,7 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate }: {
 export default function ShineShortsPage() {
   const searchParams = useSearchParams()
   const douleurParam = searchParams.get('douleur')
+  const idParam = searchParams.get('id')
   const [shorts, setShorts] = useState<ShineShort[]>([])
   const [search, setSearch] = useState('')
   const [selectedShort, setSelectedShort] = useState<ShineShort | null>(null)
@@ -638,10 +661,22 @@ export default function ShineShortsPage() {
 
       setShorts(mapped)
       setLoading(false)
+      if (idParam) {
+        const found = mapped.find(s => s.id === idParam)
+        if (found) setSelectedShort(found)
+      }
     }
 
     loadShorts()
   }, [])
+
+  useEffect(() => {
+    if (selectedShort) {
+      window.history.replaceState(null, '', `?id=${selectedShort.id}`)
+    } else {
+      window.history.replaceState(null, '', window.location.pathname)
+    }
+  }, [selectedShort])
 
   const handleToggleFavorite = async (id: string) => {
     const supabase = createClient()

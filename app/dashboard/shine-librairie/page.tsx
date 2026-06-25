@@ -429,6 +429,15 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
   const [newRating, setNewRating] = useState(0)
   const [reviews, setReviews] = useState<Review[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [copied, setCopied] = useState(false)
+
+  const handleCopyLink = () => {
+    const url = `${window.location.origin}/dashboard/shine-librairie?id=${book.id}`
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
+  }
 
   const typeLabels: Record<string, string> = {
     ebook: 'eBook', guide: 'Guide pratique', workbook: "Cahier d'exercices",
@@ -478,6 +487,19 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
         className="w-full max-w-3xl rounded-2xl overflow-hidden relative bg-[var(--surface-card)] border border-[var(--border)]"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Share button */}
+        <button
+          onClick={handleCopyLink}
+          className="absolute top-4 left-4 z-20 h-9 px-3 rounded-full flex items-center gap-1.5 text-[12px] font-medium cursor-pointer transition-all hover:bg-white/20"
+          style={{ background: 'rgba(0,0,0,0.6)', color: '#fff' }}
+        >
+          {copied ? (
+            <><svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>Copié !</>
+          ) : (
+            <><svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>Partager</>
+          )}
+        </button>
+
         {/* Close button */}
         <button
           onClick={onClose}
@@ -702,6 +724,7 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
 export default function ShineLibrairiePage() {
   const searchParams = useSearchParams()
   const douleurParam = searchParams.get('douleur')
+  const idParam = searchParams.get('id')
   const [books, setBooks] = useState<ShineBook[]>([])
   const [search, setSearch] = useState('')
   const [selectedBook, setSelectedBook] = useState<ShineBook | null>(null)
@@ -807,10 +830,22 @@ export default function ShineLibrairiePage() {
 
       setBooks(mapped)
       setLoading(false)
+      if (idParam) {
+        const found = mapped.find(b => b.id === idParam)
+        if (found) setSelectedBook(found)
+      }
     }
 
     loadBooks()
   }, [])
+
+  useEffect(() => {
+    if (selectedBook) {
+      window.history.replaceState(null, '', `?id=${selectedBook.id}`)
+    } else {
+      window.history.replaceState(null, '', window.location.pathname)
+    }
+  }, [selectedBook])
 
   const handleToggleFavorite = async (id: string) => {
     const supabase = createClient()

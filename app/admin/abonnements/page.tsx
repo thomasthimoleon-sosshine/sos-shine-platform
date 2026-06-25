@@ -66,7 +66,7 @@ const statusConfig: Record<string, { label: string; color: string; bg: string }>
 }
 
 const planConfig: Record<string, { label: string; color: string; bg: string }> = {
-  essential: { label: 'Essentielle', color: '#C9A961', bg: 'rgba(201,169,97,0.12)' },
+  essential: { label: 'Essentielle (ancien)', color: '#74C0FC', bg: 'rgba(116,192,252,0.12)' },
   serenite:  { label: 'Sérénité',    color: '#55EFC4', bg: 'rgba(85,239,196,0.12)' },
   premium:   { label: 'Premium',     color: '#74C0FC', bg: 'rgba(116,192,252,0.12)' },
 }

@@ -122,24 +122,10 @@ export default function CompteInactifPage() {
           )}
 
           <button
-            onClick={() => handleResubscribe('essential')}
-            className="w-full py-4 rounded-full font-semibold tracking-wide transition-all text-sm bg-[var(--brand-alpha-medium)] text-[var(--brand)] border border-[var(--brand-alpha-strong)]"
-          >
-            S&apos;abonner Essentielle - 9,90€/mois
-          </button>
-
-          <button
             onClick={() => handleResubscribe('serenite')}
-            className="w-full py-4 rounded-full font-semibold tracking-wide transition-all text-sm bg-[linear-gradient(135deg,var(--success),#00B894)] text-[var(--text-inverse)]"
+            className="w-full py-4 rounded-full font-semibold tracking-wide transition-all text-sm bg-[linear-gradient(135deg,var(--brand),var(--brand-deep))] text-[var(--text-inverse)]"
           >
-            S&apos;abonner Sérénité - 49,90€/mois
-          </button>
-
-          <button
-            onClick={() => handleResubscribe('premium')}
-            className="w-full py-4 rounded-full font-medium tracking-wide transition-all text-sm bg-[linear-gradient(135deg,var(--brand),var(--brand-deep))] text-[var(--text-inverse)]"
-          >
-            S&apos;abonner Premium - 99,90€/mois
+            S&apos;abonner SOS Shine - 29,90€/mois
           </button>
         </div>
 

@@ -82,11 +82,11 @@ function generateProjection(targetSubscribers: number = 5000) {
 
     // Distribution based on similar wellness/coaching platforms
     // Essential ~60%, Sérénité ~40%
-    const essential = Math.round(subscribers * 0.60)
-    const serenite = subscribers - essential
+    // Ancien: const essential = Math.round(subscribers * 0.60)
+    const serenite = subscribers
     const premium = 0
 
-    const mrr = essential * PLAN_PRICES.essential +
+    const mrr =
       serenite * PLAN_PRICES.serenite
 
     // Affiliate: ~10% commission on referred subscriptions, ~30% of subs via affiliation
@@ -367,7 +367,7 @@ export default function FounderDashboard() {
 
   // Plan distribution pie
   const planPieData = [
-    { name: 'Essentielle', value: month12.essential, color: PLAN_COLORS.essential },
+    { name: 'SOS Shine', value: month12.serenite, color: PLAN_COLORS.serenite },
     { name: 'Sérénité', value: month12.serenite, color: PLAN_COLORS.serenite },
     { name: 'Premium', value: month12.premium, color: PLAN_COLORS.premium },
   ]
@@ -968,7 +968,7 @@ export default function FounderDashboard() {
             <h3 className="text-sm font-semibold mb-2" style={{ color: '#C9A961' }}>Méthodologie & hypothèses</h3>
             <div className="grid sm:grid-cols-2 gap-x-8 gap-y-1 text-xs" style={{ color: 'var(--text-secondary)' }}>
               <p>Croissance en courbe S (sigmoïde) vers 5 000 abonnés</p>
-              <p>Distribution: 55% Essentielle, 30% Sérénité, 15% Premium</p>
+              <p>Distribution: 100% SOS Shine (29,90€/mois)</p>
               <p>Taux de churn: 6%/mois (moyenne secteur bien-être)</p>
               <p>Affiliation: 30% des inscriptions, commission 10%</p>
               <p>Frais Stripe: ~2.5% moyen (cartes EU)</p>

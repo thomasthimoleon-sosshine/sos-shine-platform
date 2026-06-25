@@ -428,7 +428,7 @@ export default function ProfilPage() {
             <div className="flex items-center justify-between">
               <span className="text-sm text-[var(--text-secondary)]">{t('dashboard.plan_label')}</span>
               <span className="text-sm font-medium text-[var(--text-primary)]">
-                {subscription.plan === 'serenite' ? 'Sérénité - 49,90€/mois' : 'Essentielle - 9,90€/mois'}
+                {subscription.plan === 'serenite' ? 'SOS Shine - 29,90€/mois' : subscription.plan === 'essential' ? 'Essentielle (ancien tarif)' : subscription.plan}
                 {subscription.waitlist_discount && (
                   <span className="ml-2 text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--brand)' }}>
                     -10€ fondateur
@@ -454,7 +454,7 @@ export default function ProfilPage() {
               <div className="rounded-xl p-4" style={{ background: 'rgba(201,169,97,0.04)', border: '1px solid rgba(201,169,97,0.12)' }}>
                 <p className="text-xs font-medium mb-3 text-[var(--brand)]">Changer de forfait</p>
                 <div className="flex flex-col gap-2">
-                  {(['essential', 'serenite'] as PlanId[])
+                  {(['serenite'] as PlanId[])
                     .filter(p => p !== subscription.plan)
                     .map(plan => {
                       const isUpgrade = PLAN_ORDER[plan] > PLAN_ORDER[subscription.plan as PlanId]
@@ -559,21 +559,13 @@ export default function ProfilPage() {
                 Débloquez plus de contenu avec un abonnement :
               </p>
               <div className="space-y-2">
-                <a href="/dashboard/tarifs?plan=essential" className="flex items-center justify-between px-4 py-3 rounded-xl transition-all cursor-pointer"
-                  style={{ background: 'rgba(116,192,252,0.05)', border: '1px solid rgba(116,192,252,0.2)' }}>
-                  <div>
-                    <p className="text-sm font-semibold" style={{ color: 'var(--accent-blue)' }}>Essentielle</p>
-                    <p className="text-[11px] text-[var(--text-muted)]">+ Encyclopédie complète + chats par douleur</p>
-                  </div>
-                  <span className="text-sm font-semibold" style={{ color: 'var(--accent-blue)' }}>9,90€/mois</span>
-                </a>
-                <a href="/dashboard/tarifs?plan=serenite" className="flex items-center justify-between px-4 py-3 rounded-xl transition-all cursor-pointer"
+                <a href="/dashboard/tarifs" className="flex items-center justify-between px-4 py-3 rounded-xl transition-all cursor-pointer"
                   style={{ background: 'rgba(201,169,97,0.05)', border: '1px solid rgba(201,169,97,0.2)' }}>
                   <div>
-                    <p className="text-sm font-semibold text-[var(--brand)]">Sérénité</p>
-                    <p className="text-[11px] text-[var(--text-muted)]">+ Shine TV, Shorts, Librairie, lives</p>
+                    <p className="text-sm font-semibold text-[var(--brand)]">SOS Shine</p>
+                    <p className="text-[11px] text-[var(--text-muted)]">Tout inclus — TV, Shorts, Librairie, encyclopédie, lives</p>
                   </div>
-                  <span className="text-sm font-semibold text-[var(--brand)]">49,90€/mois</span>
+                  <span className="text-sm font-semibold text-[var(--brand)]">29,90€/mois</span>
                 </a>
               </div>
             </div>

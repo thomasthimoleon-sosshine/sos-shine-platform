@@ -8,34 +8,33 @@ import MagneticButton from './MagneticButton'
 const ease = [0.16, 1, 0.3, 1] as [number, number, number, number]
 
 const PLANS = {
-  essentielle: {
-    name: 'Essentielle',
-    price: '9,90',
-    period: '/mois',
+  gratuit: {
+    name: 'Gratuit',
+    price: '0',
+    period: '',
     badge: null,
+    features: [
+      'Communauté & Mur d\'entraide',
+      'Shine Audible - Méditations & podcasts',
+      'Étape 1 de votre protocole recommandé',
+      'Quiz Signature Émotionnelle',
+    ],
+    cta: 'Créer mon compte gratuit',
+    href: '/signature-emotionnelle?start=1',
+  },
+  serenite: {
+    name: 'SOS Shine',
+    price: '29,90',
+    period: '/mois',
+    badge: '7 JOURS GRATUIT',
     features: [
       'Encyclopédie complète - 200+ protocoles',
       'Shine TV - Vidéos guidées par Julia',
       'Shine Librairie - eBooks & guides',
+      'Shine Shorts - Capsules bien-être',
       'Événements live hebdomadaires',
-      'Communauté & Feu de Camp',
-      'Shine Audible - Méditations',
-    ],
-    cta: 'Choisir Essentielle',
-    href: '/rejoindre',
-  },
-  serenite: {
-    name: 'Sérénité',
-    price: '29,90',
-    originalPrice: '49,90',
-    period: '/mois',
-    badge: '7 JOURS GRATUIT',
-    features: [
-      'Tout Essentielle inclus',
-      'Accès prioritaire nouveaux protocoles',
+      'Protocole complet personnalisé (étapes 1-3)',
       'Sessions de groupe avec Julia',
-      'Soins collectifs mensuels',
-      'Parcours personnalisé Signature',
       'Support prioritaire',
     ],
     cta: 'Essayer 7 jours gratuit',
@@ -77,7 +76,7 @@ export default function PricingMorph() {
           className="flex justify-center mb-12"
         >
           <div className="flex p-1 rounded-full bg-[#FAFAF7]/[0.04] border border-[#FAFAF7]/[0.06]">
-            {(['essentielle', 'serenite'] as PlanKey[]).map((key) => (
+            {(['gratuit', 'serenite'] as PlanKey[]).map((key) => (
               <button
                 key={key}
                 onClick={() => setSelected(key)}
@@ -130,15 +129,10 @@ export default function PricingMorph() {
                 {/* Price */}
                 <div className="text-center mb-10">
                   <div className="flex items-baseline justify-center gap-3">
-                    {'originalPrice' in plan && plan.originalPrice && (
-                      <span className="text-[18px] text-[#FAFAF7]/20 line-through">{plan.originalPrice}&euro;</span>
-                    )}
                     <span className="font-display text-[4rem] sm:text-[5rem] font-light text-[#FAFAF7] tracking-[-0.03em]">{plan.price}</span>
-                    <span className="text-[16px] text-[#FAFAF7]/30 font-light">&euro;{plan.period}</span>
+                    {plan.period && <span className="text-[16px] text-[#FAFAF7]/30 font-light">&euro;{plan.period}</span>}
+                    {!plan.period && <span className="text-[16px] text-[#FAFAF7]/30 font-light">&euro;</span>}
                   </div>
-                  {'originalPrice' in plan && (
-                    <p className="text-[12px] text-[#D4AF7F] mt-2">code SHINE2026</p>
-                  )}
                 </div>
 
                 {/* Features */}

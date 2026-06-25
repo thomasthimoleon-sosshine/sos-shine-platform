@@ -62,7 +62,7 @@ export default function AdminAnalyticsPage() {
     const serenite = activeOrTrial.filter(s => s.plan === 'serenite').length
     const trialing = allSubs.filter(s => s.status === 'trialing').length
 
-    const mrr = essential * 9.90 + serenite * 49.90
+    const mrr = serenite * 29.90
     const activeSubs = activeOrTrial.length
     const totalMembers = membersRes.count || 0
     const canceledCount = canceledRes.count || 0
@@ -83,8 +83,8 @@ export default function AdminAnalyticsPage() {
     })
 
     setPlanBreakdown([
-      { plan: 'Essentielle', count: essential, mrr: essential * 9.90, color: '#74C0FC' },
-      { plan: 'Sérénité', count: serenite, mrr: serenite * 49.90, color: '#C9A961' },
+      
+      { plan: 'Sérénité', count: serenite, mrr: serenite * 29.90, color: '#C9A961' },
     ])
 
     // ── Daily signups + conversions ──
@@ -190,8 +190,8 @@ export default function AdminAnalyticsPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
               { label: 'Churn 30j', value: `${kpis.churnRate}%`, color: '#FF6B6B', hint: `${kpis.canceledLast30} annulations` },
-              { label: 'Plan Essentielle', value: kpis.essentialSubs, color: '#74C0FC', hint: '9,90€/mois' },
-              { label: 'Plan Sérénité', value: kpis.sereniteSubs, color: '#C9A961', hint: '49,90€/mois' },
+              
+              { label: 'Plan SOS Shine', value: kpis.sereniteSubs, color: '#C9A961', hint: '29,90€/mois' },
               { label: 'ARR projeté', value: `${(kpis.mrr * 12).toFixed(0)}€`, color: '#55EFC4', hint: 'MRR × 12' },
             ].map(k => (
               <div key={k.label} className="rounded-xl p-4"

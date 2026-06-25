@@ -67,7 +67,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Stripe non configuré. Vérifiez STRIPE_SECRET_KEY dans les variables d\'environnement.' }, { status: 500 })
     }
 
-    const effectiveDuration: DurationId = (plan === 'essential' && duration !== 'monthly') ? 'monthly' : duration
+    const effectiveDuration: DurationId = duration
     const priceId = getStripePriceId(plan as PlanId, effectiveDuration)
 
     if (!priceId) {

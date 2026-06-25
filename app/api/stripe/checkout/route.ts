@@ -49,7 +49,7 @@ export async function POST(request: Request) {
     }
 
     // Essential = mensuel uniquement
-    const effectiveDuration: DurationId = (plan === 'essential' && duration !== 'monthly') ? 'monthly' : duration
+    const effectiveDuration: DurationId = duration
     const priceId = getStripePriceId(plan as PlanId, effectiveDuration)
 
     if (!priceId) {

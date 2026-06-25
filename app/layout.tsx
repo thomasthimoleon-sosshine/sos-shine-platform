@@ -144,15 +144,15 @@ const jsonLd = {
         },
         {
           '@type': 'Offer',
-          name: 'Plan Essentielle',
-          price: '9.90',
+          name: 'Plan Gratuit',
+          price: '0',
           priceCurrency: 'EUR',
           description: 'Encyclopédie complète + chats par challenge',
         },
         {
           '@type': 'Offer',
           name: 'Plan Sérénité',
-          price: '29.90',
+          price: '29.90', // SOS Shine
           priceCurrency: 'EUR',
           description: 'Tout inclus - Shine TV, Lives, Événements',
         },

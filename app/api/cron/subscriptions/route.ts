@@ -305,7 +305,7 @@ function getEmailContent(
   graceEnd: string | null,
 ) {
   const name = prenom || 'Membre'
-  const planLabel = plan === 'premium' ? 'Premium' : plan === 'serenite' ? 'Sérénité' : 'Essentielle'
+  const planLabel = plan === 'serenite' ? 'SOS Shine' : plan === 'essential' ? 'Essentielle (ancien)' : 'Premium'
   const graceEndFormatted = graceEnd
     ? new Date(graceEnd).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
     : ''

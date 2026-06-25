@@ -3,7 +3,7 @@ import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 
 // Features offertes à TOUS les membres inscrits (plan gratuit)
 // La communauté (mur + chat général) et Shine Audible sont offerts sans abonnement
-// Les chats par douleur et l'encyclopédie nécessitent Essentielle (9,90€)
+// Gratuit : communauté + Shine Audible + étape 1 protocole
 const FREE_FEATURES = [
   'communaute',
   'mur',

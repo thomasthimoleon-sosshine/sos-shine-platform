@@ -151,25 +151,15 @@ function PrelaunchContent() {
             B&eacute;n&eacute;ficiez d&apos;un tarif pr&eacute;f&eacute;rentiel en rejoignant maintenant.
           </p>
 
-          <div className="grid sm:grid-cols-2 gap-6 mb-6">
-            {/* Essentielle */}
-            <div className="text-center">
-              <p className="text-xs tracking-[0.25em] uppercase mb-3" style={{ color: '#74C0FC' }}>Essentielle</p>
-              <p className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>
-                Acc&egrave;s imm&eacute;diat &mdash; Sans essai gratuit
-              </p>
+          <div className="text-center mb-6">
+            <p className="text-xs tracking-[0.25em] uppercase mb-3" style={{ color: '#55EFC4' }}>SOS Shine — Tout inclus</p>
+            <div className="flex items-baseline justify-center gap-1.5 mb-1">
+              <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#55EFC4' }}>29,90&euro;</span>
+              <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
             </div>
-            {/* Sérénité */}
-            <div className="text-center">
-              <p className="text-xs tracking-[0.25em] uppercase mb-3" style={{ color: '#55EFC4' }}>S&eacute;r&eacute;nit&eacute;</p>
-              <div className="flex items-baseline justify-center gap-1.5 mb-1">
-                <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#55EFC4' }}>{PROMO.promoPrice}&euro;</span>
-                <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
-              </div>
-              <p className="text-[10px] mt-1 font-medium" style={{ color: '#55EFC4' }}>
-                7 jours d&apos;essai gratuit inclus
-              </p>
-            </div>
+            <p className="text-[10px] mt-1 font-medium" style={{ color: '#55EFC4' }}>
+              7 jours d&apos;essai gratuit inclus
+            </p>
           </div>
 
           <p className="text-xs mb-2 font-light" style={{ color: 'var(--text-secondary)' }}>
@@ -299,7 +289,7 @@ function EmbeddedCheckoutModal({ plan, duration, email, prenom, userId = '', onC
   const [checkoutError, setCheckoutError] = useState<string | null>(null)
 
   const fetchClientSecret = useCallback(async () => {
-    const effectiveDuration = plan === 'essential' ? 'monthly' : duration
+    const effectiveDuration = duration
     try {
       const res = await fetch('/api/stripe/create-embedded-checkout', {
         method: 'POST',
@@ -344,7 +334,7 @@ function EmbeddedCheckoutModal({ plan, duration, email, prenom, userId = '', onC
             </svg>
           </button>
           <h3 className="font-display text-xl font-light" style={{ color: '#C9A961' }}>
-            {plan === 'essential' ? 'Essentielle' : 'Sérénité'} - {DURATIONS.find(d => d.id === duration)?.label}
+            SOS Shine - {DURATIONS.find(d => d.id === duration)?.label}
           </h3>
           <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
             {formatPrice(PRICES[plan][duration])}/mois
@@ -529,7 +519,7 @@ function PaymentContent() {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCheckout = async (plan: PlanId) => {
-    const duration: DurationId = plan === 'essential' ? 'monthly' : selectedDuration
+    const duration: DurationId = selectedDuration
     const paymentLink = getPaymentLink(plan, duration)
 
     if (paymentLink) {

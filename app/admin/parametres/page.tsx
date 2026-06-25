@@ -169,11 +169,11 @@ const sections: SectionDef[] = [
     fields: [
       { label: 'Titre de section', key: 'pricing_section_title', type: 'text', default: 'Choisissez votre accompagnement' },
       { label: 'Sous-titre', key: 'pricing_section_subtitle', type: 'text', default: 'Sans engagement - Annulable à tout instant' },
-      { label: 'Prix Essentielle (EUR/mois)', key: 'price_essential', type: 'text', default: '9.90' },
-      { label: 'Prix Sérénité (EUR/mois)', key: 'price_serenite', type: 'text', default: '29.90' },
+      { label: 'Prix SOS Shine (EUR/mois)', key: 'price_serenite_display', type: 'text', default: '29.90' },
+      
       { label: 'Jours d\'essai gratuit (Sérénité)', key: 'trial_days', type: 'text', default: '7' },
-      { label: 'Features Essentielle (une par ligne)', key: 'features_essential', type: 'textarea', default: "Encyclopédie complète (accès illimité)\nChat & Communauté" },
-      { label: 'Features Sérénité (une par ligne)', key: 'features_serenite', type: 'textarea', default: "Tout le contenu de l'Essentielle\nShine Librairie\nShine TV & Shorts\nShine Audible\nSoin collectif mensuel\nLive thématique hebdomadaire\nÉvénements physiques\n7 jours d'essai gratuit" },
+      
+      
       { label: 'Texte sous les offres', key: 'pricing_footer', type: 'text', default: "Parce que si on doit vous retenir par un contrat, c'est qu'on n'a pas fait notre travail." },
       sep('Style'),
       { label: 'Police du titre', key: 'pricing_title_font', type: 'select', options: fontOpts, default: 'Cormorant Garamond' },

@@ -19,7 +19,7 @@ const MONTHLY_TARGETS = [
   { month: 'Fév 2027',     year: 2027, monthIndex: 1,  newSubs: 100, cumulActive: 783, mrr: 29000, churn: 20, phase: 'Consolidation' },
 ]
 
-const PLAN_TARGET_RATIOS = { essential: 0.55, serenite: 0.30, premium: 0.15 }
+const PLAN_TARGET_RATIOS = { essential: 0, serenite: 1.0, premium: 0 }
 const DURATION_RATIOS = { monthly: 0.50, quarterly: 0.20, semiannual: 0.15, annual: 0.15 }
 
 import { PLAN_PRICES, PLAN_NAMES as PLAN_LABELS, PLAN_COLORS } from '@/lib/stripe'
@@ -600,7 +600,7 @@ export default function ObjectifsMensuelsPage() {
               ))}
               {currentTarget.phase === 'Consolidation' && [
                 { text: 'Campagne "bonnes résolutions" bien-être', priority: 'Haute' },
-                { text: 'Upsell Essentielle → Sérénité → Premium', priority: 'Haute' },
+                { text: 'Conversion Gratuit → SOS Shine 29,90€/mois', priority: 'Haute' },
                 { text: 'Optimisation de la rétention (réduire churn à < 3%)', priority: 'Moyenne' },
               ].map((l, i) => (
                 <div key={i} className="flex items-start gap-3 rounded-lg p-3" style={{ background: 'rgba(255,255,255,0.02)' }}>

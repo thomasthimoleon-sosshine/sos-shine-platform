@@ -358,7 +358,7 @@ export default function BadgesQuestPage() {
                           <p className="text-[10px] font-medium leading-tight" style={{ color: isUnlocked ? 'var(--brand)' : 'var(--text-muted)' }}>
                             {badge.title}
                           </p>
-                          <p className="text-[9px] mt-0.5 text-[var(--text-muted)]">{badge.threshold}</p>
+                          <p className="text-[9px] mt-0.5 text-[var(--text-muted)]">{badge.threshold} {QUEST_INFO[catKey]?.unit || ''}</p>
                         </Link>
                       )
                     })}

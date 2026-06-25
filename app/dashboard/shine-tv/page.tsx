@@ -895,7 +895,7 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate, onWatch }: {
   }
 
   function handleCopyLink() {
-    const url = `${window.location.origin}/shine-tv/preview/${video.id}`
+    const url = `${window.location.origin}/dashboard/shine-tv?id=${video.id}`
     navigator.clipboard.writeText(url).then(() => {
       setCopyDone(true)
       setTimeout(() => setCopyDone(false), 2500)
@@ -907,7 +907,7 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate, onWatch }: {
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
-    const previewUrl = `${window.location.origin}/shine-tv/preview/${video.id}`
+    const previewUrl = `${window.location.origin}/dashboard/shine-tv?id=${video.id}`
     await supabase.from('private_messages').insert({
       sender_id: user.id,
       receiver_id: partnerId,
@@ -1260,6 +1260,7 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate, onWatch }: {
 export default function ShineTVPage() {
   const searchParams = useSearchParams()
   const douleurParam = searchParams.get('douleur')
+  const idParam = searchParams.get('id')
   const [videos, setVideos] = useState<ShineVideo[]>([])
   const [search, setSearch] = useState('')
   const [selectedVideo, setSelectedVideo] = useState<ShineVideo | null>(null)
@@ -1362,10 +1363,22 @@ export default function ShineTVPage() {
 
       setVideos(mapped)
       setLoading(false)
+      if (idParam) {
+        const found = mapped.find(v => v.id === idParam)
+        if (found) setSelectedVideo(found)
+      }
     }
 
     loadVideos()
   }, [])
+
+  useEffect(() => {
+    if (selectedVideo) {
+      window.history.replaceState(null, '', `?id=${selectedVideo.id}`)
+    } else {
+      window.history.replaceState(null, '', window.location.pathname)
+    }
+  }, [selectedVideo])
 
   const handleToggleFavorite = async (id: string) => {
     const supabase = createClient()

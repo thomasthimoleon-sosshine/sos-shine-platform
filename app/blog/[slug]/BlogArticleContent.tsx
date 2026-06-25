@@ -109,7 +109,7 @@ function ShareBar({ title, slug }: { title: string; slug: string }) {
   )
 }
 
-
+function MarkdownRenderer({ content }: { content: string }) {
   // Simple markdown-to-HTML for blog articles
   const lines = content.trim().split('\n')
   const elements: React.ReactNode[] = []

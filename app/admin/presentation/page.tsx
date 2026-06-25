@@ -326,15 +326,9 @@ export default function PresentationPage() {
                   <div className="text-center mb-8">
                     <h3 className="font-display text-[1.6rem] font-light mb-4">{plan.name}</h3>
                     <div className="flex items-baseline justify-center gap-2.5">
-                      {'originalPrice' in plan && plan.originalPrice && (
-                        <span className="text-[16px] text-[#FAFAF7]/25 line-through">{plan.originalPrice}€</span>
-                      )}
                       <span className="font-display text-[3.5rem] font-light tracking-[-0.03em]">{plan.price}</span>
                       <span className="text-[15px] text-[#FAFAF7]/30 font-light">€{plan.period}</span>
                     </div>
-                    {'originalPrice' in plan && plan.originalPrice && (
-                      <p className="text-[12px] text-[#D4C99A] mt-2">code SHINE2026</p>
-                    )}
                   </div>
 
                   <ul className="space-y-3.5 mb-9 flex-1">

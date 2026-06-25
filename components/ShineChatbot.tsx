@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const FAQ_DATA: { keywords: string[]; answer: string }[] = [
   {
     keywords: ['prix', 'tarif', 'coût', 'combien', 'abonnement', 'payer', 'gratuit', 'cher'],
-    answer: "Nous proposons deux formules : l'Essentielle à 9,90€/mois avec l'encyclopédie et le chat communauté, et la Sérénité à 49,90€/mois avec en plus la librairie, Shine TV, Shorts, Audible, le soin collectif mensuel, les lives hebdomadaires et les événements physiques (7 jours d'essai gratuit). 💎",
+    answer: "L'abonnement SOS Shine est à 29,90€/mois et donne accès à tout : encyclopédie, Shine TV, Shorts, Audible, Librairie, communauté, événements, soins collectifs et lives (7 jours d'essai gratuit). Les étapes 2 & 3 de votre protocole recommandé sont également disponibles en accès unique à 33€. 💎",
   },
   {
     keywords: ['essai', 'tester', 'essayer', 'période'],

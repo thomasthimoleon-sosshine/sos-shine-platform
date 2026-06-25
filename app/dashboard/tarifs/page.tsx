@@ -22,20 +22,14 @@ import {
 } from '@/lib/stripe/config'
 
 const PLAN_FEATURES: Record<PlanId, string[]> = {
-  essential: [
-    'Encyclopédie complète (accès illimité)',
-    'Protocoles guidés en 3 étapes',
-    'Chat & Communauté',
-    '+ Tout le plan Gratuit',
-  ],
+  essential: [],
   serenite: [
-    'Tout le contenu de l\'Essentielle',
-    'Shine TV (vidéos longues)',
-    'Shine Shorts (vidéos courtes)',
-    'Shine Librairie (ebooks & PDF)',
-    'Shine Audible (podcasts & méditations)',
-    'Événements inclus (soins collectifs, lives, ateliers)',
-    'Soin collectif mensuel avec Julia',
+    'Encyclopédie complète (200+ protocoles)',
+    'Étapes 2 & 3 de votre protocole recommandé',
+    'Shine TV, Shorts, Audible & Librairie',
+    'Communauté & Feu de Camp 24/7',
+    'Courrier Anonyme',
+    'Soins collectifs, lives & événements',
     '7 jours d\'essai gratuit',
   ],
   premium: [],
@@ -75,7 +69,7 @@ export default function TarifsPage() {
   }, [])
 
   function handleSelectPlan(plan: PlanId) {
-    const duration: DurationId = plan === 'essential' ? 'monthly' : selectedDuration
+    const duration: DurationId = selectedDuration
     const paymentLink = getPaymentLink(plan, duration)
     if (paymentLink) {
       const url = new URL(paymentLink)
@@ -157,7 +151,7 @@ export default function TarifsPage() {
   }
 
   // Pricing cards
-  const plans: PlanId[] = ['essential', 'serenite']
+  const plans: PlanId[] = ['serenite']
 
   return (
     <div className="max-w-5xl mx-auto py-8">
@@ -171,7 +165,7 @@ export default function TarifsPage() {
           Choisissez votre abonnement
         </motion.h1>
         <p className="text-sm sm:text-[15px] text-[var(--text-secondary)]">
-          Sans engagement. Annulation en un clic. 7 jours gratuits sur Sérénité et Premium.
+          Sans engagement. Annulation en un clic. 7 jours gratuits inclus.
         </p>
       </div>
 
@@ -207,7 +201,7 @@ export default function TarifsPage() {
       </div>
 
       {/* Plan cards */}
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
         {/* Freemium card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -228,7 +222,7 @@ export default function TarifsPage() {
               </div>
             </div>
             <ul className="space-y-2.5 mb-8 flex-1">
-              {['Chat & Communauté', 'Shine Audible (podcasts)', 'Gamification (XP, badges, défis)', 'Quiz Signature Émotionnelle', 'Extraits des protocoles (30s)'].map(f => (
+              {['Communauté & Mur', 'Shine Audible (podcasts & méditations)', 'Étape 1 de votre protocole recommandé (gratuit)', 'Quiz Signature Émotionnelle'].map(f => (
                 <li key={f} className="flex items-start gap-2 text-sm text-[var(--text-secondary)]">
                   <span className="mt-0.5 text-[var(--text-muted)]">◆</span>
                   {f}
@@ -248,7 +242,7 @@ export default function TarifsPage() {
             const info = PLAN_INFO[planId]
             const color = PLAN_COLORS[planId]
             const isHighlight = planId === 'serenite'
-            const effectiveDuration: DurationId = planId === 'essential' ? 'monthly' : selectedDuration
+            const effectiveDuration: DurationId = selectedDuration
             const monthlyPrice = PRICES[planId][effectiveDuration]
             const totalPrice = TOTAL_PRICES[planId][effectiveDuration]
             const originalPrice = ORIGINAL_PRICES[planId]?.[effectiveDuration]

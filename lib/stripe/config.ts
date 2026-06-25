@@ -108,13 +108,13 @@ export const DURATIONS: { id: DurationId; label: string; months: number; discoun
 
 export const PLAN_INFO: Record<PlanId, { name: string; tagline: string; hasTrial: boolean }> = {
   essential: {
-    name: 'Essentielle',
-    tagline: "L'autonomie et l'accès à la base de connaissances",
+    name: 'Essentielle (archivé)',
+    tagline: "Plan archivé - non disponible à la vente",
     hasTrial: false,
   },
   serenite: {
-    name: 'Sérénité',
-    tagline: 'Un accompagnement énergétique régulier',
+    name: 'SOS Shine',
+    tagline: 'Accès complet à toute la plateforme',
     hasTrial: true,
   },
   premium: {
@@ -148,8 +148,8 @@ export const PLAN_ORDER: Record<PlanId, number> = {
   premium: 3,
 }
 
-// Plans disponibles à l'achat (Premium archivé)
-export const PURCHASABLE_PLANS: PlanId[] = ['essential', 'serenite']
+// Plans disponibles à l'achat (Essentielle et Premium archivés)
+export const PURCHASABLE_PLANS: PlanId[] = ['serenite']
 
 // ── Coupon waitlist ──
 
@@ -176,9 +176,6 @@ export function getStripePriceId(plan: PlanId, duration: DurationId): string {
 }
 
 export function getPaymentLink(plan: PlanId, duration: DurationId): string {
-  if (plan === 'essential' && duration !== 'monthly') {
-    return PAYMENT_LINKS['essential_monthly'] || ''
-  }
   return PAYMENT_LINKS[`${plan}_${duration}`] || ''
 }
 
@@ -187,15 +184,13 @@ export function detectPlanFromProductId(productId: string): { plan: PlanId; dura
 }
 
 export function detectPlanFromAmount(amountCents: number | null): PlanId {
-  if (!amountCents) return 'essential'
-  // Sérénité: 29.90€/mois = 2990 cents
+  if (!amountCents) return 'serenite'
   if (amountCents >= 2000) return 'serenite'
-  // Essential: 9.90€/mois = 990 cents
-  return 'essential'
+  return 'serenite'
 }
 
 export function hasBundles(plan: PlanId): boolean {
-  return plan !== 'essential'
+  return plan === 'serenite'
 }
 
 export function formatPrice(cents: number): string {

@@ -20,19 +20,18 @@ export const FREE_FEATURES = new Set<string>([
   'xp',
 ])
 
-// Plan minimum requis pour chaque feature
-// Gratuit (0€) : Communauté (mur + général) + Shine Audible
-// Essentielle (9,90€) : + Encyclopédie complète + Chats par douleur
-// Sérénité (49,90€) : + Librairie + Shine TV + Shorts + Soin collectif + Live hebdo + Événements
+// Gratuit (0€) : Communauté + Mur + Shine Audible + Étape 1 protocole
+// SOS Shine (29,90€/mois) : tout le reste
 const FEATURE_MIN_PLAN: Record<string, { plan: PlanId; label: string }> = {
-  chat_douleur: { plan: 'essential', label: 'Essentielle' },
-  shine_tv: { plan: 'serenite', label: 'Sérénité' },
-  shine_shorts: { plan: 'serenite', label: 'Sérénité' },
-  shine_librairie: { plan: 'serenite', label: 'Sérénité' },
-  soin_collectif: { plan: 'serenite', label: 'Sérénité' },
-  visio: { plan: 'serenite', label: 'Sérénité' },
-  live_hebdo: { plan: 'serenite', label: 'Sérénité' },
-  evenements_payants: { plan: 'serenite', label: 'Sérénité' },
+  chat_douleur: { plan: 'serenite', label: 'SOS Shine' },
+  encyclopedie: { plan: 'serenite', label: 'SOS Shine' },
+  shine_tv: { plan: 'serenite', label: 'SOS Shine' },
+  shine_shorts: { plan: 'serenite', label: 'SOS Shine' },
+  shine_librairie: { plan: 'serenite', label: 'SOS Shine' },
+  soin_collectif: { plan: 'serenite', label: 'SOS Shine' },
+  visio: { plan: 'serenite', label: 'SOS Shine' },
+  live_hebdo: { plan: 'serenite', label: 'SOS Shine' },
+  evenements_payants: { plan: 'serenite', label: 'SOS Shine' },
 }
 
 interface FeatureGateProps {

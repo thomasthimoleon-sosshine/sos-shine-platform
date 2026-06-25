@@ -24,25 +24,17 @@ import {
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '')
 
 const PLAN_FEATURES: Record<PlanId, string[]> = {
-  essential: [
-    'Encyclopédie complète',
-    'Protocoles guidés en 3 étapes',
-    'Chat & Communauté',
-    '+ Tout le plan Gratuit',
-  ],
+  essential: [],
   serenite: [
-    'Tout de l\'Essentielle',
-    'Shine TV (vidéos longues)',
-    'Shine Shorts (vidéos courtes)',
-    'Shine Librairie (ebooks & PDF)',
-    'Shine Audible (podcasts & méditations)',
-    'Événements inclus (soins, lives, ateliers)',
-    'Soin collectif mensuel avec Julia',
+    'Encyclopédie complète (200+ protocoles)',
+    'Étapes 2 & 3 de votre protocole recommandé',
+    'Shine TV, Shorts, Audible, Librairie',
+    'Communauté & Feu de Camp',
+    'Courrier Anonyme',
+    'Événements, soins collectifs, lives',
     '7 jours d\'essai gratuit',
   ],
-  premium: [
-    'Plan archivé',
-  ],
+  premium: [],
 }
 
 interface SubscriptionModalProps {
@@ -111,7 +103,7 @@ export default function SubscriptionModal({
   }, [checkoutPlan, userEmail, userPrenom, userId, checkoutError])
 
   function handleSelectPlan(plan: PlanId) {
-    const duration = plan === 'essential' ? 'monthly' : selectedDuration
+    const duration = selectedDuration
     setCheckoutPlan({ plan, duration })
     setCheckoutError(null)
     setStep('checkout')
@@ -159,7 +151,7 @@ export default function SubscriptionModal({
 
   if (!isOpen) return null
 
-  const plans: PlanId[] = ['essential', 'serenite']
+  const plans: PlanId[] = ['serenite']
 
   return (
     <AnimatePresence>
@@ -262,13 +254,13 @@ export default function SubscriptionModal({
                 </div>
 
                 {/* Plan cards */}
-                <div className="grid sm:grid-cols-2 gap-4">
+                <div className="grid gap-4 max-w-md mx-auto w-full">
                   {plans.map((planId) => {
                     const info = PLAN_INFO[planId]
                     const color = PLAN_COLORS[planId]
                     const isHighlight = planId === 'serenite'
                     const isSuggested = planId === suggestedPlan
-                    const effectiveDuration: DurationId = planId === 'essential' ? 'monthly' : selectedDuration
+                    const effectiveDuration: DurationId = selectedDuration
                     const monthlyPrice = PRICES[planId][effectiveDuration]
                     const totalPrice = TOTAL_PRICES[planId][effectiveDuration]
                     const originalPrice = ORIGINAL_PRICES[planId]?.[effectiveDuration]

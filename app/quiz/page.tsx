@@ -1,6 +1,9 @@
 import { createClient } from '@supabase/supabase-js'
 import QuizLandingClient from './QuizLandingClient'
 
+// Recalcule le prochain événement à chaque requête (sinon la date est figée au build)
+export const dynamic = 'force-dynamic'
+
 export type NextEvent = {
   id: string
   title: string

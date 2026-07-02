@@ -2,6 +2,9 @@ import { createClient } from '@supabase/supabase-js'
 import LandingMixClient from './LandingMixClient'
 import type { NextEvent } from './quiz/page'
 
+// Recalcule le prochain événement à chaque requête (sinon la date est figée au build)
+export const dynamic = 'force-dynamic'
+
 async function getNextEvent(): Promise<NextEvent | null> {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY

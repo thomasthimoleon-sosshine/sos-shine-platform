@@ -78,6 +78,11 @@ export default function SignupPage() {
     const urlSlug = params.get('protocol')
     const urlEmail = params.get('email')
 
+    // Persist protocol slug as soon as it arrives (used on signup submit + logged-in redirect)
+    if (urlSlug) {
+      try { sessionStorage.setItem('sos_protocol_slug', urlSlug) } catch {}
+    }
+
     // Pre-fill email: sessionStorage first, URL param fallback
     try {
       const savedEmail = sessionStorage.getItem('sos_quiz_email')

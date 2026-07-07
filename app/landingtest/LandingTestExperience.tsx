@@ -960,14 +960,6 @@ export default function LandingTestExperience() {
     >
       <WaveBackground />
 
-      {/* Badge discret : page de test admin */}
-      <div
-        className="fixed top-3 left-1/2 -translate-x-1/2 z-50 px-3 py-1 rounded-full text-[10px] tracking-[0.2em] uppercase"
-        style={{ background: 'rgba(201,169,97,0.12)', color: C.gold, border: '1px solid rgba(201,169,97,0.25)' }}
-      >
-        Aperçu admin · /landingtest
-      </div>
-
       <Hero />
       <Identification />
       <MorphPhrases />

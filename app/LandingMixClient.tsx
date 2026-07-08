@@ -168,6 +168,22 @@ export default function LandingMixClient({ nextEvent }: { nextEvent: NextEvent |
               </p>
             </div>
           </Reveal>
+
+          <Reveal delay={0.6}>
+            <div className="flex flex-col items-center gap-2 pt-2">
+              <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>ou</span>
+              <a
+                href="https://julialaureau.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-all hover:scale-[1.03]"
+                style={{ border: '1px solid rgba(201,169,97,0.4)', color: '#C9A961', background: 'rgba(201,169,97,0.04)' }}
+              >
+                Prendre rendez-vous avec Julia Laureau
+                <span aria-hidden>↗</span>
+              </a>
+            </div>
+          </Reveal>
         </div>
 
         {/* Scroll hint */}

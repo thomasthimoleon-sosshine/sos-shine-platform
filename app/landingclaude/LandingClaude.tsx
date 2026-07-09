@@ -261,11 +261,16 @@ export default function LandingClaude() {
 
     const title = root.querySelector<HTMLElement>('#lpctitle')
     if (title) {
-      const cs = Array.from(title.textContent || '')
-      title.innerHTML = cs.map((c) => `<span class="w"><span>${c === ' ' ? '&nbsp;' : c}</span></span>`).join('')
+      // Découpe par MOTS (ponctuation soudée au mot) puis lettres à l'intérieur,
+      // pour que les retours à la ligne ne se fassent qu'entre les mots.
+      const words = (title.textContent || '').split(' ')
+      const total = words.join('').length
+      title.innerHTML = words
+        .map((word) => `<span class="w">${Array.from(word).map((c) => `<span>${c}</span>`).join('')}</span>`)
+        .join(' ')
       const to = setTimeout(() => {
         title.classList.add('play')
-        title.querySelectorAll<HTMLElement>('.w span').forEach((s, i) => { s.style.transitionDelay = (0.25 + i * 0.026 + Math.sin((i / cs.length) * Math.PI) * 0.12) + 's' })
+        title.querySelectorAll<HTMLElement>('.w span').forEach((s, i) => { s.style.transitionDelay = (0.25 + i * 0.026 + Math.sin((i / total) * Math.PI) * 0.12) + 's' })
       }, 80)
       cleanups.push(() => clearTimeout(to))
     }

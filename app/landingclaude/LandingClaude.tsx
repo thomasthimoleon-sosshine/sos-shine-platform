@@ -20,7 +20,7 @@ const CSS = `
 #lpc a{color:inherit;text-decoration:none}
 #lpc .wrap{max-width:1120px;margin:0 auto;padding:0 28px}
 #lpc section{position:relative;z-index:1;padding:clamp(72px,11vh,130px) 0}
-#lpc .bar{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:14px 24px;backdrop-filter:blur(12px);background:rgba(245,241,233,.75);border-bottom:1px solid var(--line)}
+#lpc .bar{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:14px 24px;background:rgba(245,241,233,.94);border-bottom:1px solid var(--line)}
 #lpc .bar .brand{font-family:var(--serif);font-size:19px}
 #lpc .bar .brand b{color:var(--gold)}
 #lpc .bar .nav{display:flex;align-items:center;gap:22px}
@@ -218,6 +218,8 @@ export default function LandingClaude() {
     const root = document.getElementById('lpc')
     if (!root) return
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    // Mobile / tactile / faible puissance : pas de canvas animé en continu (jank au scroll)
+    const lowPower = reduce || window.matchMedia('(hover: none), (pointer: coarse), (max-width: 900px)').matches
     const cleanups: Array<() => void> = []
     const revealAll = () => root.querySelectorAll('.rv').forEach((e) => e.classList.add('in'))
     if (!reduce) root.classList.add('anim')
@@ -228,31 +230,43 @@ export default function LandingClaude() {
       if (!cv) return
       try {
         const ctx = cv.getContext('2d'); if (!ctx) return
-        let raf = 0, w = 0, h = 0
-        const dpr = Math.min(window.devicePixelRatio || 1, 2)
+        let raf = 0, w = 0, h = 0, last = 0
+        const dpr = Math.min(window.devicePixelRatio || 1, 1.5)
         const m = { x: 0.5, y: 0.5, tx: 0.5, ty: 0.5 }
-        const rs = () => { const r = cv.getBoundingClientRect(); w = r.width || window.innerWidth; h = r.height || window.innerHeight; cv.width = w * dpr; cv.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0) }
-        const d = (t: number) => {
+        const draw = (time: number, my: number, mx: number) => {
           ctx.clearRect(0, 0, w, h)
-          m.x += (m.tx - m.x) * 0.04; m.y += (m.ty - m.y) * 0.04
-          const time = t * 0.00015, L = deep ? 4 : 6
+          const L = deep ? 4 : 6
           for (let i = 0; i < L; i++) {
-            const p = i / (L - 1), yB = h * (0.2 + p * 0.62) + (m.y - 0.5) * 26 * (p - 0.5)
-            const amp = (22 + i * 9) * (0.7 + m.y * 0.5), fr = 0.0015 + i * 0.00035
-            const ph = time * (1 + i * 0.24) + i * 0.9 + m.x * 1.2
+            const p = i / (L - 1), yB = h * (0.2 + p * 0.62) + (my - 0.5) * 26 * (p - 0.5)
+            const amp = (22 + i * 9) * (0.7 + my * 0.5), fr = 0.0015 + i * 0.00035
+            const ph = time * (1 + i * 0.24) + i * 0.9 + mx * 1.2
             const rgb = deep ? (i % 2 ? '143,169,155' : '194,161,91') : (i % 3 === 2 ? '143,169,155' : '194,161,91')
             const a = deep ? 0.16 : 0.075
             ctx.beginPath()
-            for (let x = -20; x <= w + 20; x += 14) { const y = yB + Math.sin(x * fr + ph) * amp + Math.sin(x * fr * 0.5 + ph * 1.7) * amp * 0.35; if (x === -20) ctx.moveTo(x, y); else ctx.lineTo(x, y) }
+            for (let x = -20; x <= w + 20; x += 18) { const y = yB + Math.sin(x * fr + ph) * amp + Math.sin(x * fr * 0.5 + ph * 1.7) * amp * 0.35; if (x === -20) ctx.moveTo(x, y); else ctx.lineTo(x, y) }
             const g = ctx.createLinearGradient(0, 0, w, 0)
             g.addColorStop(0, `rgba(${rgb},0)`); g.addColorStop(0.5, `rgba(${rgb},${a})`); g.addColorStop(1, `rgba(${rgb},0)`)
             ctx.strokeStyle = g; ctx.lineWidth = 1.2; ctx.stroke()
           }
-          raf = requestAnimationFrame(d)
+        }
+        const rs = () => { const r = cv.getBoundingClientRect(); w = r.width || window.innerWidth; h = r.height || window.innerHeight; cv.width = w * dpr; cv.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); if (lowPower) draw(0.5, 0.5, 0.5) }
+        window.addEventListener('resize', rs)
+        rs()
+        if (lowPower) {
+          // rendu statique unique, aucun rAF ni mousemove -> zéro jank au scroll
+          cleanups.push(() => window.removeEventListener('resize', rs))
+          return
+        }
+        const loop = (t: number) => {
+          raf = requestAnimationFrame(loop)
+          if (t - last < 33) return // ~30 fps suffisent, allège le CPU
+          last = t
+          m.x += (m.tx - m.x) * 0.05; m.y += (m.ty - m.y) * 0.05
+          draw(t * 0.00015, m.y, m.x)
         }
         const onMove = (e: MouseEvent) => { m.tx = e.clientX / window.innerWidth; m.ty = e.clientY / window.innerHeight }
-        window.addEventListener('resize', rs); window.addEventListener('mousemove', onMove)
-        rs(); if (reduce) d(0); else raf = requestAnimationFrame(d)
+        window.addEventListener('mousemove', onMove)
+        raf = requestAnimationFrame(loop)
         cleanups.push(() => { cancelAnimationFrame(raf); window.removeEventListener('resize', rs); window.removeEventListener('mousemove', onMove) })
       } catch { /* noop */ }
     }

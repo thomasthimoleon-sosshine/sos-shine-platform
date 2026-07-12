@@ -1,12 +1,11 @@
 'use client'
 
 /**
- * /landingtest — Refonte premium de la landing (page publique).
- * Aperçu de la nouvelle expérience émotionnelle SOS Shine.
+ * /landingtest — affiche la landing Julia (composant restauré).
  */
 
-import LandingTestExperience from './LandingTestExperience'
+import LandingJulia from '../LandingJulia'
 
 export default function LandingTestPage() {
-  return <LandingTestExperience />
+  return <LandingJulia />
 }

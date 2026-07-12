@@ -293,10 +293,21 @@ interface LandingClientProps {
   initialPrelaunchEnabled?: boolean
   initialPrelaunchSettings?: PrelaunchSettings
   variant?: LandingVariant
+  /** Si défini, TOUS les CTA de la landing pointent vers cette URL (ex. le questionnaire). */
+  ctaHref?: string
+  /** Masque toute mention d'essai gratuit / 7 jours. */
+  hideTrial?: boolean
 }
 
-export default function LandingClient({ initialSections, initialPositions, initialPrelaunchEnabled, initialPrelaunchSettings, variant = 'julia' }: LandingClientProps) {
+export default function LandingClient({ initialSections, initialPositions, initialPrelaunchEnabled, initialPrelaunchSettings, variant = 'julia', ctaHref, hideTrial = false }: LandingClientProps) {
   const { t } = useTranslation();
+  // Tous les CTA renvoient vers ctaHref si fourni (sinon le lien d'origine / le test).
+  const forceCta = (h?: string, d = '/signature-emotionnelle') => ctaHref || h || d;
+  // Retire les libellés d'essai gratuit / 7 jours quand hideTrial est actif.
+  const noTrial = (arr?: string[]): string[] => (hideTrial ? (arr || []).filter((f) => !/essai|7\s*jours/i.test(f)) : (arr || []));
+  const trialText = (s?: string): string | undefined => (hideTrial && s && /essai|7\s*jours/i.test(s) ? undefined : s);
+  // Nettoie un libellé de bouton en retirant la mention d'essai (ex. "Commencer, 7 jours gratuits" -> "Commencer").
+  const cleanLabel = (s?: string): string | undefined => (hideTrial && s ? s.replace(/[,·-]?\s*(7\s*jours\s*(d['’]essai)?\s*gratuits?|essai gratuit\w*)/gi, '').trim() || s : s);
   const [headerVisible, setHeaderVisible] = useState(true);
   const [headerScrolled, setHeaderScrolled] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -518,7 +529,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
   const ctaDark = sec('cta_dark');
   const foot = sec('footer');
 
-  const trialDays = globalContent.trial_days || 7;
+  const trialDays = hideTrial ? 0 : (globalContent.trial_days || 7);
   const logoUrl = globalContent.logo_url || '';
 
   const cssVars = {
@@ -577,14 +588,14 @@ export default function LandingClient({ initialSections, initialPositions, initi
                   {g.header_login_label || 'Se connecter'}
                 </Link>
                 <Link
-                  href={globalContent.header_cta_href || '/signup'}
+                  href={forceCta(globalContent.header_cta_href, '/signup')}
                   onClick={() => trackConversion('signup')}
                   className="hidden sm:inline-flex items-center px-5 py-2.5 rounded-full text-[13px] font-medium tracking-[0.02em] text-[#050505] active:scale-[0.98] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
                   style={{ backgroundColor: gold, boxShadow: `0 0 30px rgba(${goldRgb},0.18)` }}
                   onMouseEnter={e => (e.currentTarget.style.boxShadow = `0 0 45px rgba(${goldRgb},0.28)`)}
                   onMouseLeave={e => (e.currentTarget.style.boxShadow = `0 0 30px rgba(${goldRgb},0.18)`)}
                 >
-                  {globalContent.header_cta_label || 'Commencer'}
+                  {cleanLabel(globalContent.header_cta_label) || 'Commencer'}
                 </Link>
                 <ThemeToggle />
               </div>
@@ -761,17 +772,17 @@ export default function LandingClient({ initialSections, initialPositions, initi
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}>
               <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-5 justify-center items-center">
                 {/* Primary CTA */}
-                <Link href={hero.cta_primary_href || '/signature-emotionnelle'} className="w-full sm:w-auto">
+                <Link href={forceCta(hero.cta_primary_href)} className="w-full sm:w-auto">
                   <button className="w-full sm:w-auto px-8 sm:px-10 py-4 rounded-full text-[14px] font-medium tracking-[0.02em] text-[#050505] active:scale-[0.98] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] cursor-pointer"
                     style={{ backgroundColor: gold, boxShadow: `0 0 40px rgba(${goldRgb},0.2)` }}
                     onMouseEnter={e => (e.currentTarget.style.boxShadow = `0 0 60px rgba(${goldRgb},0.32)`)}
                     onMouseLeave={e => (e.currentTarget.style.boxShadow = `0 0 40px rgba(${goldRgb},0.2)`)}>
 
-                    {hero.cta_primary_label || 'Découvrir ma Signature Émotionnelle'}
+                    {cleanLabel(hero.cta_primary_label) || 'Découvrir ma Signature Émotionnelle'}
                   </button>
                 </Link>
                 {/* Secondary CTA */}
-                <Link href={hero.cta_secondary_href || '/signature-emotionnelle'} className="w-full sm:w-auto">
+                <Link href={forceCta(hero.cta_secondary_href)} className="w-full sm:w-auto">
                   <button className="w-full sm:w-auto px-8 py-4 rounded-full text-[14px] font-light tracking-[0.02em] text-[#a1a1aa] hover:text-[#e0e0e0] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] cursor-pointer"
                     style={{ border: `1px solid rgba(${goldRgb},0.15)` }}
                     onMouseEnter={e => (e.currentTarget.style.borderColor = `rgba(${goldRgb},0.3)`)}
@@ -839,7 +850,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
           <section className="px-5 md:px-20 py-12 md:py-20 relative cv-auto">
             <RevealOnScroll>
               <div className="max-w-3xl mx-auto text-center">
-                <Link href={sigCta.button_href || '/signature-emotionnelle'}>
+                <Link href={forceCta(sigCta.button_href)}>
                   <div className="glow-card p-6 sm:p-8 md:p-12 cursor-pointer group">
                     <p className="luxury-title text-[10px] sm:text-xs tracking-[0.3em] sm:tracking-[0.4em] text-[var(--text-muted)] mb-3 md:mb-4">{sigCta.label || 'Test exclusif'}</p>
                     <h3 className="font-display text-xl sm:text-2xl md:text-4xl font-light mb-3 md:mb-4 text-[var(--brand)]">
@@ -930,7 +941,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
               {prob.cta_text && (
                 <RevealOnScroll delay={0.35}>
                   <div className="text-center">
-                    <Link href={prob.cta_href || '/signature-emotionnelle'} className="inline-flex items-center gap-2 text-sm font-medium transition-colors duration-300 hover:opacity-80 text-[var(--brand)]">
+                    <Link href={forceCta(prob.cta_href)} className="inline-flex items-center gap-2 text-sm font-medium transition-colors duration-300 hover:opacity-80 text-[var(--brand)]">
                       {prob.cta_text}
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
                     </Link>
@@ -1074,7 +1085,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 sm:gap-4">
               {(encyclo.items || []).filter((d: string) => !encyclopediaSearch || d.toLowerCase().includes(encyclopediaSearch.toLowerCase())).map((d: string, i: number) => (
                 <RevealOnScroll key={d} delay={i * 0.05} direction="scale">
-                  <Link href="/signature-emotionnelle">
+                  <Link href={forceCta(undefined)}>
                     <GlowingCard className="px-3 sm:px-5 py-3 sm:py-4 text-center cursor-pointer group">
                       <span className="encyclo-item text-xs sm:text-sm font-light transition-colors duration-300 group-hover:text-[var(--brand)]" style={{
                         color: i === (encyclo.items || []).length - 1 ? gold : 'var(--text-secondary)',
@@ -1089,7 +1100,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
 
             <RevealOnScroll delay={0.3}>
               <div className="text-center mt-8 md:mt-12">
-                <Link href="/signature-emotionnelle">
+                <Link href={forceCta(undefined)}>
                   <button className="magnetic-btn px-6 sm:px-8 py-3 sm:py-3.5 rounded-full text-sm font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.25)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
                     {encyclo.button_label || "Découvrir mon protocole"}
                   </button>
@@ -1178,7 +1189,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
               {prod.cta_label && (
                 <RevealOnScroll delay={0.5}>
                   <div className="text-center mt-8 md:mt-12">
-                    <Link href={prod.cta_href || '/signup'} onClick={() => trackConversion('produit_cta')}>
+                    <Link href={forceCta(prod.cta_href, '/signup')} onClick={() => trackConversion('produit_cta')}>
                       <button className="magnetic-btn px-6 sm:px-8 py-3 sm:py-3.5 rounded-full text-sm font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.25)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
                         {prod.cta_label}
                       </button>
@@ -1660,7 +1671,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                     </div>
 
                     <div className="space-y-3 md:space-y-4 flex-1 mb-6 md:mb-10">
-                      {(plan.features || []).map((f: string, fi: number) => (
+                      {noTrial(plan.features).map((f: string, fi: number) => (
                         <motion.div
                           key={f}
                           className="flex items-start gap-2 sm:gap-3"
@@ -1675,12 +1686,12 @@ export default function LandingClient({ initialSections, initialPositions, initi
                       ))}
                     </div>
 
-                    <Link href={plan.button_href || '/signup'} onClick={() => trackConversion('signup')}>
+                    <Link href={forceCta(plan.button_href, '/signup')} onClick={() => trackConversion('signup')}>
                       <button className={`magnetic-btn w-full py-3 sm:py-4 rounded-full text-sm sm:text-base font-semibold tracking-wide ${plan.highlight ? 'pulse-ring' : ''}`} style={{
                         background: `linear-gradient(135deg, ${tc.main}, ${tc.deep})`,
                         color: btnTextColor
                       }}>
-                        {plan.button_label}
+                        {cleanLabel(plan.button_label)}
                       </button>
                     </Link>
                   </GlowingCard>
@@ -1692,7 +1703,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
             })()}
 
             {/* Guarantee within pricing */}
-            {pricing.guarantee_title && (
+            {!hideTrial && pricing.guarantee_title && (
               <RevealOnScroll delay={0.35}>
                 <div className="mt-10 md:mt-16 text-center max-w-2xl mx-auto">
                   <div className="glow-card p-6 sm:p-8 md:p-10">
@@ -1927,13 +1938,13 @@ export default function LandingClient({ initialSections, initialPositions, initi
               </RevealOnScroll>
             )}
             <RevealOnScroll delay={0.3}>
-              <Link href={ctaDark.button_href || '/signup'} onClick={() => trackConversion('signup')}>
+              <Link href={forceCta(ctaDark.button_href, '/signup')} onClick={() => trackConversion('signup')}>
                 <button className="magnetic-btn pulse-ring px-8 sm:px-10 py-4 sm:py-5 rounded-full text-base sm:text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}>
-                  {ctaDark.button_label || 'Rejoindre SOS Shine'}
+                  {cleanLabel(ctaDark.button_label) || 'Rejoindre SOS Shine'}
                 </button>
               </Link>
             </RevealOnScroll>
-            {ctaDark.trust_line && (
+            {trialText(ctaDark.trust_line) && (
               <RevealOnScroll delay={0.4}>
                 <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-4 md:mt-6 font-light tracking-wide">
                   {ctaDark.trust_line}
@@ -1962,9 +1973,9 @@ export default function LandingClient({ initialSections, initialPositions, initi
               </RevealOnScroll>
               <RevealOnScroll delay={0.2}>
                 {ctaL.button_label && (
-                  <Link href={ctaL.button_href || '/signup'} onClick={() => trackConversion('cta_light')}>
+                  <Link href={forceCta(ctaL.button_href, '/signup')} onClick={() => trackConversion('cta_light')}>
                     <button className="magnetic-btn px-8 sm:px-10 py-4 sm:py-5 rounded-full text-base sm:text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}>
-                      {ctaL.button_label}
+                      {cleanLabel(ctaL.button_label)}
                     </button>
                   </Link>
                 )}
@@ -2012,7 +2023,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                 </RevealOnScroll>
                 <RevealOnScroll delay={0.3}>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <Link href={v2.hero_cta_primary_href || '/signup'} onClick={() => trackConversion('signup')}>
+                    <Link href={forceCta(v2.hero_cta_primary_href, '/signup')} onClick={() => trackConversion('signup')}>
                       <button className="magnetic-btn pulse-ring px-8 py-4 rounded-full text-base font-semibold tracking-wide"
                         style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}>
                         {v2.hero_cta_primary || 'Rejoindre SOS Shine'}
@@ -2163,7 +2174,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                   </div>
                 </RevealOnScroll>
                 <RevealOnScroll delay={0.25}>
-                  <Link href={v2.encyclo_cta_href || '/signature-emotionnelle'}>
+                  <Link href={forceCta(v2.encyclo_cta_href)}>
                     <button className="magnetic-btn px-8 py-4 rounded-full text-base font-medium tracking-wide"
                       style={{ border: `1px solid rgba(${goldRgb},0.3)`, color: gold }}>
                       {v2.encyclo_cta || "Découvrir ma Signature Émotionnelle"}
@@ -2321,17 +2332,17 @@ export default function LandingClient({ initialSections, initialPositions, initi
                         </div>
                         <p className="text-sm text-[var(--text-secondary)] mb-6">{plan.description}</p>
                         <ul className="space-y-3 flex-1 mb-8">
-                          {plan.features.map((f: string, fi: number) => (
+                          {noTrial(plan.features).map((f: string, fi: number) => (
                             <li key={fi} className="flex items-start gap-2">
                               <span className="mt-0.5 text-xs text-[var(--brand)]">&#10022;</span>
                               <span className="text-sm text-[var(--text-secondary)]">{f}</span>
                             </li>
                           ))}
                         </ul>
-                        <Link href={plan.button_href || '/signup'} onClick={() => trackConversion('signup')}>
+                        <Link href={forceCta(plan.button_href, '/signup')} onClick={() => trackConversion('signup')}>
                           <button className={`magnetic-btn w-full py-3.5 rounded-full text-sm font-semibold tracking-wide ${plan.highlight ? 'pulse-ring' : ''}`}
                             style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}>
-                            {plan.button_label}
+                            {cleanLabel(plan.button_label)}
                           </button>
                         </Link>
                       </div>
@@ -2398,7 +2409,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                   </h2>
                 </RevealOnScroll>
                 <RevealOnScroll delay={0.1}>
-                  <Link href={v2.cta_button_href || '/signup'} onClick={() => trackConversion('signup')}>
+                  <Link href={forceCta(v2.cta_button_href, '/signup')} onClick={() => trackConversion('signup')}>
                     <button className="magnetic-btn pulse-ring px-10 py-5 rounded-full text-lg font-semibold tracking-wide"
                       style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}>
                       {v2.cta_button || 'Rejoindre SOS Shine'}
@@ -2406,7 +2417,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
                   </Link>
                 </RevealOnScroll>
                 <RevealOnScroll delay={0.15}>
-                  <p className="text-sm text-[var(--text-muted)] mt-6 tracking-wide">{v2.cta_details || ''}</p>
+                  <p className="text-sm text-[var(--text-muted)] mt-6 tracking-wide">{trialText(v2.cta_details) || ''}</p>
                 </RevealOnScroll>
               </div>
             </section>

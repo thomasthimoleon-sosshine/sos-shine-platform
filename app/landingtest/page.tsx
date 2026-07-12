@@ -1,30 +1,21 @@
 'use client'
 
 /**
- * /landingtest — Mix : page d'accueil actuelle (à jour) + vidéo remontée dans le hero
- * (comme la landing Thomas). L'événement est chargé côté client.
+ * /landingtest — Landing "Thomas" (A/B) récupérée, avec 3 ajustements :
+ *  - tous les CTA renvoient au questionnaire (ctaHref)
+ *  - pas de mention d'essai gratuit (hideTrial)
+ *  - prix à jour (via le contenu / valeurs par défaut)
+ * Contenu chargé depuis Supabase (landing_sections, variant='thomas').
  */
 
-import { useEffect, useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
-import LandingMixClient from '../LandingMixClient'
-import type { NextEvent } from '../quiz/page'
+import LandingClient from '../LandingClient'
 
 export default function LandingTestPage() {
-  const [nextEvent, setNextEvent] = useState<NextEvent | null>(null)
-
-  useEffect(() => {
-    const supabase = createClient()
-    supabase
-      .from('physical_events')
-      .select('id, title, event_date, end_time, location_name')
-      .eq('is_published', true)
-      .gte('event_date', new Date().toISOString())
-      .order('event_date', { ascending: true })
-      .limit(1)
-      .maybeSingle()
-      .then(({ data }) => setNextEvent((data as unknown as NextEvent) || null))
-  }, [])
-
-  return <LandingMixClient nextEvent={nextEvent} heroVideo />
+  return (
+    <LandingClient
+      variant="thomas"
+      ctaHref="/signature-emotionnelle?start=1"
+      hideTrial
+    />
+  )
 }

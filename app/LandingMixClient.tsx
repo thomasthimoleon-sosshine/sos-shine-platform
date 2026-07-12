@@ -119,7 +119,7 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
 }
 
 // ══════════════════════════════════════════════════════════
-export default function LandingMixClient({ nextEvent, heroVideo = false }: { nextEvent: NextEvent | null; heroVideo?: boolean }) {
+export default function LandingMixClient({ nextEvent }: { nextEvent: NextEvent | null }) {
   const [videoStarted, setVideoStarted] = useState(false)
 
   return (
@@ -181,40 +181,6 @@ export default function LandingMixClient({ nextEvent, heroVideo = false }: { nex
               </p>
             </div>
           </Reveal>
-
-          {heroVideo && (
-            <Reveal delay={0.6}>
-              <div className="relative rounded-2xl overflow-hidden bg-black aspect-video cursor-pointer group max-w-2xl mx-auto mt-4"
-                onClick={() => setVideoStarted(true)}
-                style={{ border: '1px solid rgba(201,169,97,0.15)' }}>
-                {videoStarted ? (
-                  <video
-                    src="https://www.sosshine.com/videos/presentation.mp4"
-                    autoPlay
-                    controls
-                    controlsList="nodownload"
-                    onContextMenu={(e) => e.preventDefault()}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <>
-                    <img src="/images/logo-shine.png" alt="SOS Shine présentation"
-                      className="absolute inset-0 w-full h-full object-contain p-16 opacity-20" />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-16 h-16 rounded-full flex items-center justify-center transition-transform duration-200 group-hover:scale-110"
-                        style={{ background: 'rgba(201,169,97,0.9)' }}>
-                        <svg width="26" height="26" viewBox="0 0 24 24" fill="#000"><path d="M8 5v14l11-7z" /></svg>
-                      </div>
-                    </div>
-                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full text-[12px] font-semibold"
-                      style={{ background: 'rgba(0,0,0,0.6)', color: 'rgba(255,255,255,0.6)' }}>
-                      Regarder la présentation (2 min)
-                    </div>
-                  </>
-                )}
-              </div>
-            </Reveal>
-          )}
         </div>
 
         {/* Scroll hint */}
@@ -340,7 +306,6 @@ export default function LandingMixClient({ nextEvent, heroVideo = false }: { nex
       </section>
 
       {/* ══ VIDÉO ══ */}
-      {!heroVideo && (
       <section className="px-6 py-24 sm:py-32">
         <div className="max-w-lg lg:max-w-3xl mx-auto space-y-10">
           <Reveal>
@@ -393,7 +358,6 @@ export default function LandingMixClient({ nextEvent, heroVideo = false }: { nex
           </Reveal>
         </div>
       </section>
-      )}
 
       {/* ══ PROTOCOLE TRANSFORMATION — 3 ÉTAPES ══ */}
       <section className="px-6 py-24 sm:py-32" style={{ background: 'rgba(201,169,97,0.025)', borderTop: '1px solid rgba(201,169,97,0.08)', borderBottom: '1px solid rgba(201,169,97,0.08)' }}>

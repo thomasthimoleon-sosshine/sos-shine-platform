@@ -1,11 +1,12 @@
 'use client'
 
 /**
- * /landingtest — affiche la landing Julia (composant restauré).
+ * /landingtest — affiche la landing "Thomas" (variante A/B, avec vidéo).
+ * Le contenu est chargé depuis Supabase (landing_sections, variant='thomas').
  */
 
-import LandingJulia from '../LandingJulia'
+import LandingClient from '../LandingClient'
 
 export default function LandingTestPage() {
-  return <LandingJulia />
+  return <LandingClient variant="thomas" />
 }

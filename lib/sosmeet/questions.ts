@@ -50,7 +50,7 @@ export const SCALE: Choice[] = [
   { label: 'Tout à fait', value: 100 },
 ]
 
-export const QUESTIONS: Question[] = [
+const RAW_QUESTIONS: Question[] = [
   // ── Intentions ──
   { id: 'int1', dim: 'intentions', type: 'choice', text: 'Aujourd\'hui, vous cherchez avant tout…', choices: [
     { label: 'Une relation profonde et durable', value: 100 },
@@ -161,6 +161,104 @@ export const QUESTIONS: Question[] = [
   { id: 'deal2', dim: 'dealbreakers', type: S, text: 'Le manque de travail émotionnel chez l\'autre serait rédhibitoire.' },
   { id: 'deal3', dim: 'dealbreakers', type: S, text: 'Un mode de vie très différent du vôtre (rythme, valeurs) serait bloquant.' },
   { id: 'deal4', dim: 'dealbreakers', type: S, text: 'L\'honnêteté est pour vous la condition absolue de tout lien.' },
+
+  // ══ Compléments (jusqu'à 100 questions) — triées par dimension à l'export ══
+
+  // Intentions
+  { id: 'int6', dim: 'intentions', type: S, text: 'Vous êtes prêt·e à faire évoluer vos habitudes de célibataire pour construire à deux.' },
+  { id: 'int7', dim: 'intentions', type: 'choice', text: 'Votre horizon pour une relation sérieuse…', choices: [
+    { label: 'Le plus tôt possible', value: 100 },
+    { label: 'Dans l\'année', value: 75 },
+    { label: 'Quand la bonne personne arrive', value: 50 },
+    { label: 'Aucune urgence, je laisse venir', value: 30 },
+  ] },
+  { id: 'int8', dim: 'intentions', type: S, text: 'Vous cherchez un·e partenaire de vie, pas seulement une belle rencontre.' },
+  { id: 'int9', dim: 'intentions', type: S, text: 'Vous êtes prêt·e à traverser des inconforts pour faire grandir un lien qui compte.' },
+
+  // Spiritualité
+  { id: 'spi7', dim: 'spiritualite', type: S, text: 'Vous participez à des retraites, cercles ou stages (yoga, méditation, chamanisme…).' },
+  { id: 'spi8', dim: 'spiritualite', type: S, text: 'Votre développement personnel est un engagement quotidien, pas une phase.' },
+  { id: 'spi9', dim: 'spiritualite', type: S, text: 'Vous ressentez une quête de sens plus grande que la simple réussite matérielle.' },
+  { id: 'spi10', dim: 'spiritualite', type: S, text: 'La présence à l\'instant compte plus, pour vous, que les projections dans le futur.' },
+
+  // Signature émotionnelle
+  { id: 'sig6', dim: 'signature', type: S, text: 'Vous repérez quand vous "rejouez" un ancien schéma dans une relation.' },
+  { id: 'sig7', dim: 'signature', type: S, text: 'Vous êtes à l\'aise pour demander de l\'aide ou du soutien émotionnel.' },
+  { id: 'sig8', dim: 'signature', type: S, text: 'Vous savez poser des limites claires sans culpabiliser.' },
+  { id: 'sig9', dim: 'signature', type: S, text: 'Vous restez présent·e quand l\'autre traverse une émotion forte.' },
+
+  // Attachement
+  { id: 'att6', dim: 'attachement', type: S, text: 'Quand un lien devient sérieux, vous restez serein·e plutôt qu\'inquiet·e.' },
+  { id: 'att7', dim: 'attachement', type: S, text: 'Vous avez tendance à vous fondre dans la relation au point de vous oublier.' },
+  { id: 'att8', dim: 'attachement', type: S, text: 'La solitude ne vous fait pas peur : vous savez être bien seul·e.' },
+  { id: 'att9', dim: 'attachement', type: S, text: 'Vous exprimez vos besoins d\'affection sans crainte du rejet.' },
+
+  // Valeurs
+  { id: 'val7', dim: 'valeurs', type: S, text: 'L\'engagement social ou spirituel donne du sens à votre vie.' },
+  { id: 'val8', dim: 'valeurs', type: S, text: 'La croissance personnelle passe avant le confort et la stabilité.' },
+  { id: 'val9', dim: 'valeurs', type: S, text: 'La simplicité volontaire (moins de possessions, plus d\'essentiel) vous attire.' },
+
+  // Communication
+  { id: 'com6', dim: 'communication', type: S, text: 'Vous exprimez vos besoins clairement plutôt que d\'attendre qu\'on devine.' },
+  { id: 'com7', dim: 'communication', type: S, text: 'Vous accueillez un retour sur vous-même sans vous braquer.' },
+  { id: 'com8', dim: 'communication', type: S, text: 'Vous préférez régler un désaccord tout de suite plutôt que de laisser traîner.' },
+  { id: 'com9', dim: 'communication', type: S, text: 'Vous savez dire non sans vous justifier à l\'excès.' },
+
+  // Intimité (sensible)
+  { id: 'itm6', dim: 'intimite', type: S, sensitive: true, text: 'Vous voyez la sexualité comme un lieu de connexion, pas seulement de plaisir.' },
+  { id: 'itm7', dim: 'intimite', type: S, sensitive: true, text: 'Vous êtes ouvert·e à explorer des pratiques conscientes du corps (souffle, présence, lenteur).' },
+  { id: 'itm8', dim: 'intimite', type: S, sensitive: true, text: 'La confiance et la sécurité émotionnelle précèdent l\'abandon physique, pour vous.' },
+  { id: 'itm9', dim: 'intimite', type: S, sensitive: true, text: 'Parler de sexualité de façon ouverte et saine vous semble naturel.' },
+
+  // Logistique
+  { id: 'log5', dim: 'logistique', type: 'choice', text: 'Votre situation affective actuelle…', choices: [
+    { label: 'Pleinement disponible', value: 100 },
+    { label: 'En transition', value: 60 },
+    { label: 'C\'est encore un peu compliqué', value: 25 },
+  ] },
+  { id: 'log6', dim: 'logistique', type: S, text: 'Vous êtes émotionnellement disponible pour une nouvelle relation, maintenant.' },
+  { id: 'log7', dim: 'logistique', type: 'choice', text: 'Vous vivez plutôt…', choices: [
+    { label: 'En pleine nature / campagne', value: 100 },
+    { label: 'Périurbain, au calme', value: 65 },
+    { label: 'En ville', value: 30 },
+    { label: 'Nomade / en voyage', value: 50 },
+  ] },
+  { id: 'log8', dim: 'logistique', type: S, text: 'Une relation à distance au début ne vous fait pas peur si le lien est juste.' },
+
+  // Corps & équilibre
+  { id: 'crp5', dim: 'corps', type: S, text: 'Vous pratiquez une activité corporelle régulière (yoga, danse, sport, marche).' },
+  { id: 'crp6', dim: 'corps', type: S, text: 'Le sommeil et le repos sont sacrés pour vous.' },
+  { id: 'crp7', dim: 'corps', type: S, text: 'Vous êtes attentif·ve à ce qui vous épuise ou vous nourrit en énergie.' },
+  { id: 'crp8', dim: 'corps', type: 'choice', text: 'Votre rapport aux substances (alcool, tabac…)…', choices: [
+    { label: 'Rien du tout', value: 100 },
+    { label: 'Occasionnel et conscient', value: 60 },
+    { label: 'Assez festif', value: 25 },
+  ] },
+
+  // Personnalité
+  { id: 'per6', dim: 'personnalite', type: S, text: 'Vous êtes plutôt introspectif·ve, tourné·e vers l\'intérieur.' },
+  { id: 'per7', dim: 'personnalite', type: S, text: 'Vous vous adaptez facilement à l\'imprévu.' },
+  { id: 'per8', dim: 'personnalite', type: S, text: 'La curiosité et l\'envie d\'apprendre vous animent.' },
+  { id: 'per9', dim: 'personnalite', type: S, text: 'Vous êtes sensible à la beauté (art, nature, musique) au quotidien.' },
+
+  // Maturité du cheminement
+  { id: 'mat5', dim: 'maturite', type: S, text: 'Vous avez fait un travail thérapeutique ou de développement (thérapie, coaching, cercles).' },
+  { id: 'mat6', dim: 'maturite', type: S, text: 'Vous savez reconnaître vos torts et présenter des excuses sincères.' },
+  { id: 'mat7', dim: 'maturite', type: S, text: 'Vous ne cherchez pas l\'autre pour vous "compléter", mais pour partager.' },
+  { id: 'mat8', dim: 'maturite', type: S, text: 'Vous êtes au clair avec vos relations passées : deuils faits, leçons intégrées.' },
+  { id: 'mat9', dim: 'maturite', type: S, text: 'Vous savez précisément ce que vous ne voulez plus revivre en relation.' },
+
+  // Non-négociables
+  { id: 'deal5', dim: 'dealbreakers', type: S, text: 'La fermeture au dialogue serait un non catégorique pour vous.' },
+  { id: 'deal6', dim: 'dealbreakers', type: S, text: 'Un manque de respect envers le vivant (nature, animaux) serait rédhibitoire.' },
+  { id: 'deal7', dim: 'dealbreakers', type: S, text: 'Une incompatibilité sur le désir d\'enfant serait bloquante.' },
+  { id: 'deal8', dim: 'dealbreakers', type: S, text: 'La jalousie ou le besoin de contrôle seraient des signaux d\'alarme absolus.' },
 ]
+
+// Triées par dimension pour un parcours fluide, quel que soit l'ordre de saisie.
+const DIM_ORDER = DIMENSIONS.map((d) => d.key)
+export const QUESTIONS: Question[] = [...RAW_QUESTIONS].sort(
+  (a, b) => DIM_ORDER.indexOf(a.dim) - DIM_ORDER.indexOf(b.dim)
+)
 
 export const TOTAL_QUESTIONS = QUESTIONS.length

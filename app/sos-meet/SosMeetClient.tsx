@@ -353,10 +353,20 @@ export default function SosMeetClient() {
                     : 'Votre place est réservée. Vous ferez partie des premiers invités à la bêta.'}
                   <br />Envie de faire venir les bonnes personnes ? Partagez SOS Meet.
                 </p>
-                <button onClick={share} className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-[15px] font-semibold transition-transform hover:scale-[1.03]"
-                  style={{ background: C.gold, color: '#3a2f14' }}>
-                  {copied ? 'Lien copié ✓' : 'Partager SOS Meet'} <span aria-hidden>↗</span>
-                </button>
+                <div className="flex flex-col items-center gap-3">
+                  <Link
+                    href={`/sos-meet/profil?email=${encodeURIComponent(email)}`}
+                    className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-[15px] font-semibold transition-transform hover:scale-[1.03]"
+                    style={{ background: `linear-gradient(135deg, ${C.violet}, ${C.lavender})`, color: C.cream, boxShadow: '0 14px 34px -14px rgba(107,78,155,0.6)' }}
+                  >
+                    Préparer mon profil de compatibilité <span aria-hidden>→</span>
+                  </Link>
+                  <span className="text-[12px]" style={{ color: 'rgba(43,39,51,0.45)' }}>~10 min · vous prenez de l&apos;avance sur vos futures rencontres</span>
+                  <button onClick={share} className="inline-flex items-center gap-2 mt-2 px-6 py-3 rounded-full text-[14px] font-semibold transition-transform hover:scale-[1.03]"
+                    style={{ background: 'transparent', color: C.violet, border: `1px solid rgba(107,78,155,0.3)` }}>
+                    {copied ? 'Lien copié ✓' : 'Partager SOS Meet'} <span aria-hidden>↗</span>
+                  </button>
+                </div>
               </div>
             )}
           </div>

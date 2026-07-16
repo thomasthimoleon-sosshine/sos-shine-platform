@@ -4,13 +4,16 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 
-// ── Palette ──
+// ── Palette (doré SOS Shine en principal, crème lumineux, touche de violet) ──
 const C = {
   cream: '#FAF7F2',
-  violet: '#6B4E9B',
-  lavender: '#9B7EC8',
-  gold: '#C9A96E',
+  violet: '#9C7C1E',   // (nom conservé) doré profond, lisible comme texte sur crème
+  lavender: '#C9A961', // (nom conservé) doré vif — partenaire de dégradé
+  gold: '#C9A961',     // doré SOS Shine
+  goldSoft: '#E2CB86',
   ink: '#2B2733',
+  dark: '#0A0A0F',     // section "avantage SOS Shine"
+  accent: '#9B7EC8',   // la touche de violet (halos)
 }
 const serif = { fontFamily: 'var(--font-fraunces), Georgia, "Times New Roman", serif' }
 const sans = { fontFamily: 'var(--font-figtree), -apple-system, system-ui, sans-serif' }
@@ -144,7 +147,7 @@ export default function SosMeetClient() {
         <header className="max-w-6xl mx-auto px-5 sm:px-8 py-5 flex items-center justify-between">
           <span className="text-[19px] font-semibold" style={{ ...serif, color: C.violet }}>SOS Meet</span>
           <a href="#waitlist" className="text-[13px] sm:text-[14px] font-semibold px-5 py-2.5 rounded-full transition-transform hover:scale-[1.03]"
-            style={{ background: C.violet, color: C.cream }}>
+            style={{ background: C.gold, color: '#2b220e' }}>
             Liste d&apos;attente
           </a>
         </header>
@@ -153,7 +156,7 @@ export default function SosMeetClient() {
         <section className="max-w-4xl mx-auto px-5 sm:px-8 pt-12 sm:pt-20 pb-16 text-center">
           <Reveal>
             <span className="inline-block text-[11px] tracking-[0.2em] uppercase font-semibold px-4 py-1.5 rounded-full mb-8"
-              style={{ background: 'rgba(107,78,155,0.08)', color: C.violet }}>
+              style={{ background: 'rgba(201,169,97,0.08)', color: C.violet }}>
               Par l&apos;équipe SOS Shine
             </span>
           </Reveal>
@@ -170,7 +173,7 @@ export default function SosMeetClient() {
           </Reveal>
           <Reveal delay={0.2}>
             <a href="#waitlist" className="inline-flex items-center gap-2 text-[16px] font-semibold px-8 py-4 rounded-full transition-transform hover:scale-[1.03] active:scale-[0.98]"
-              style={{ background: `linear-gradient(135deg, ${C.violet}, ${C.lavender})`, color: C.cream, boxShadow: '0 16px 40px -14px rgba(107,78,155,0.6)' }}>
+              style={{ background: `linear-gradient(135deg, ${C.violet}, ${C.lavender})`, color: '#2b220e', boxShadow: '0 16px 40px -14px rgba(201,169,97,0.6)' }}>
               Rejoindre la liste d&apos;attente <span aria-hidden>→</span>
             </a>
             {count !== null && count > 0 && (
@@ -218,7 +221,7 @@ export default function SosMeetClient() {
             {PILIERS.map((p, i) => (
               <Reveal key={i} delay={(i % 2) * 0.08}>
                 <div className="h-full rounded-[28px] p-8 transition-transform hover:-translate-y-1"
-                  style={{ background: 'linear-gradient(160deg,#fff,#FBF8F3)', border: '1px solid rgba(107,78,155,0.12)' }}>
+                  style={{ background: 'linear-gradient(160deg,#fff,#FBF8F3)', border: '1px solid rgba(201,169,97,0.12)' }}>
                   <div className="text-3xl mb-4">{p.icon}</div>
                   <h3 className="text-[20px] font-semibold mb-2.5" style={{ ...serif, color: C.violet }}>{p.title}</h3>
                   <p className="text-[15px] leading-relaxed" style={{ color: 'rgba(43,39,51,0.68)' }}>{p.body}</p>
@@ -229,7 +232,7 @@ export default function SosMeetClient() {
         </section>
 
         {/* 4. AVANTAGE SOS SHINE */}
-        <section className="py-16 sm:py-24" style={{ background: 'linear-gradient(160deg,#6B4E9B,#54407d)' }}>
+        <section className="py-16 sm:py-24" style={{ background: 'linear-gradient(160deg,#0A0A0F,#1a1510)' }}>
           <div className="max-w-4xl mx-auto px-5 sm:px-8 text-center" style={{ color: C.cream }}>
             <Reveal>
               <p className="text-[11px] tracking-[0.22em] uppercase font-semibold mb-4" style={{ color: C.gold }}>L&apos;avantage SOS Shine</p>
@@ -282,7 +285,7 @@ export default function SosMeetClient() {
 
         {/* 6. WAITLIST */}
         <section id="waitlist" className="max-w-xl mx-auto px-5 sm:px-8 py-16 sm:py-24 scroll-mt-8">
-          <div className="rounded-[32px] p-7 sm:p-10" style={{ background: '#fff', border: '1px solid rgba(107,78,155,0.15)', boxShadow: '0 40px 90px -50px rgba(107,78,155,0.4)' }}>
+          <div className="rounded-[32px] p-7 sm:p-10" style={{ background: '#fff', border: '1px solid rgba(201,169,97,0.15)', boxShadow: '0 40px 90px -50px rgba(201,169,97,0.4)' }}>
             {!done ? (
               <>
                 <Reveal>
@@ -336,7 +339,7 @@ export default function SosMeetClient() {
                   {error && <p className="text-[13px]" style={{ color: '#c0392b' }}>{error}</p>}
 
                   <button type="submit" disabled={status === 'loading'} className="w-full py-4 rounded-full text-[15px] font-semibold transition-transform hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60"
-                    style={{ background: `linear-gradient(135deg, ${C.violet}, ${C.lavender})`, color: C.cream, boxShadow: '0 14px 34px -14px rgba(107,78,155,0.6)' }}>
+                    style={{ background: `linear-gradient(135deg, ${C.violet}, ${C.lavender})`, color: '#2b220e', boxShadow: '0 14px 34px -14px rgba(201,169,97,0.6)' }}>
                     {status === 'loading' ? 'Un instant…' : 'Rejoindre la liste d\'attente'}
                   </button>
                 </form>
@@ -357,13 +360,13 @@ export default function SosMeetClient() {
                   <Link
                     href={`/sos-meet/profil?email=${encodeURIComponent(email)}`}
                     className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-[15px] font-semibold transition-transform hover:scale-[1.03]"
-                    style={{ background: `linear-gradient(135deg, ${C.violet}, ${C.lavender})`, color: C.cream, boxShadow: '0 14px 34px -14px rgba(107,78,155,0.6)' }}
+                    style={{ background: `linear-gradient(135deg, ${C.violet}, ${C.lavender})`, color: '#2b220e', boxShadow: '0 14px 34px -14px rgba(201,169,97,0.6)' }}
                   >
                     Préparer mon profil de compatibilité <span aria-hidden>→</span>
                   </Link>
                   <span className="text-[12px]" style={{ color: 'rgba(43,39,51,0.45)' }}>~10 min · vous prenez de l&apos;avance sur vos futures rencontres</span>
                   <button onClick={share} className="inline-flex items-center gap-2 mt-2 px-6 py-3 rounded-full text-[14px] font-semibold transition-transform hover:scale-[1.03]"
-                    style={{ background: 'transparent', color: C.violet, border: `1px solid rgba(107,78,155,0.3)` }}>
+                    style={{ background: 'transparent', color: C.violet, border: `1px solid rgba(201,169,97,0.3)` }}>
                     {copied ? 'Lien copié ✓' : 'Partager SOS Meet'} <span aria-hidden>↗</span>
                   </button>
                 </div>

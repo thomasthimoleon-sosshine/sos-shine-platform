@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { QUESTIONS, DIMENSIONS, SCALE, TOTAL_QUESTIONS, type Question } from '@/lib/sosmeet/questions'
 import { computeScores, type Answers } from '@/lib/sosmeet/scoring'
 
-const C = { cream: '#FAF7F2', violet: '#6B4E9B', lavender: '#9B7EC8', gold: '#C9A96E', ink: '#2B2733' }
+const C = { cream: '#FAF7F2', violet: '#9C7C1E', lavender: '#C9A961', gold: '#C9A961', goldSoft: '#E2CB86', ink: '#2B2733' }
 const serif = { fontFamily: 'var(--font-fraunces), Georgia, serif' }
 const sans = { fontFamily: 'var(--font-figtree), -apple-system, system-ui, sans-serif' }
 const ease = [0.16, 1, 0.3, 1] as [number, number, number, number]
@@ -109,7 +109,7 @@ export default function ProfilClient() {
             <input type="email" required value={emailInput} onChange={(e) => setEmailInput(e.target.value)} placeholder="vous@email.com"
               className="w-full px-4 py-3.5 rounded-2xl text-[15px] outline-none border" style={{ background: '#fff', borderColor: 'rgba(43,39,51,0.12)', color: C.ink }} />
             {gateError && <p className="text-[13px]" style={{ color: '#c0392b' }}>{gateError}</p>}
-            <button type="submit" className="w-full py-4 rounded-full text-[15px] font-semibold" style={{ background: `linear-gradient(135deg,${C.violet},${C.lavender})`, color: C.cream }}>Continuer</button>
+            <button type="submit" className="w-full py-4 rounded-full text-[15px] font-semibold" style={{ background: `linear-gradient(135deg,${C.violet},${C.lavender})`, color: '#2b220e' }}>Continuer</button>
           </form>
           <p className="text-[13px] mt-6" style={{ color: 'rgba(43,39,51,0.5)' }}>
             Pas encore inscrit·e ? <Link href="/sos-meet#waitlist" style={{ color: C.violet }}>Rejoindre la liste d&apos;attente</Link>
@@ -124,7 +124,7 @@ export default function ProfilClient() {
     return (
       <main style={bg} className={wrap}>
         <div className="max-w-xl mx-auto px-6 py-20">
-          <span className="text-[11px] tracking-[0.2em] uppercase font-semibold px-4 py-1.5 rounded-full" style={{ background: 'rgba(107,78,155,0.08)', color: C.violet }}>~10–15 minutes</span>
+          <span className="text-[11px] tracking-[0.2em] uppercase font-semibold px-4 py-1.5 rounded-full" style={{ background: 'rgba(201,169,97,0.08)', color: C.violet }}>~10–15 minutes</span>
           <h1 className="font-normal leading-tight mt-6 mb-4" style={{ ...serif, fontSize: 'clamp(2rem,5.5vw,2.8rem)' }}>Créons votre profil, en profondeur.</h1>
           <p className="text-[16px] leading-relaxed mb-6" style={{ color: 'rgba(43,39,51,0.7)' }}>
             {TOTAL_QUESTIONS} questions pour cerner qui vous êtes vraiment — vos intentions, votre chemin, vos schémas émotionnels,
@@ -146,7 +146,7 @@ export default function ProfilClient() {
             </span>
           </label>
           <button disabled={!sensitiveConsent} onClick={startQuiz} className="w-full py-4 rounded-full text-[15px] font-semibold disabled:opacity-50"
-            style={{ background: `linear-gradient(135deg,${C.violet},${C.lavender})`, color: C.cream }}>
+            style={{ background: `linear-gradient(135deg,${C.violet},${C.lavender})`, color: '#2b220e' }}>
             {answeredN > 0 ? 'Reprendre mon profil' : 'Commencer'}
           </button>
         </div>
@@ -170,7 +170,7 @@ export default function ProfilClient() {
             {DIMENSIONS.map((d) => (
               <div key={d.key}>
                 <div className="flex justify-between text-[13px] mb-1"><span style={{ color: 'rgba(43,39,51,0.7)' }}>{d.emoji} {d.label}</span><span style={{ color: C.violet }}>{scores[d.key]}</span></div>
-                <div className="h-2 rounded-full" style={{ background: 'rgba(107,78,155,0.1)' }}>
+                <div className="h-2 rounded-full" style={{ background: 'rgba(201,169,97,0.1)' }}>
                   <div className="h-2 rounded-full" style={{ width: `${scores[d.key]}%`, background: `linear-gradient(90deg,${C.violet},${C.lavender})` }} />
                 </div>
               </div>
@@ -199,7 +199,7 @@ export default function ProfilClient() {
             <span>{d.emoji} {d.label}</span>
             <span>{answeredN}/{TOTAL_QUESTIONS}{saveNote && <span style={{ color: C.violet }}> · {saveNote}</span>}</span>
           </div>
-          <div className="h-1.5 rounded-full" style={{ background: 'rgba(107,78,155,0.12)' }}>
+          <div className="h-1.5 rounded-full" style={{ background: 'rgba(201,169,97,0.12)' }}>
             <div className="h-1.5 rounded-full transition-all duration-500" style={{ width: `${pct}%`, background: `linear-gradient(90deg,${C.violet},${C.lavender})` }} />
           </div>
         </div>
@@ -218,7 +218,7 @@ export default function ProfilClient() {
                     className="w-full text-left px-5 py-4 rounded-2xl text-[15px] transition-all hover:scale-[1.01]"
                     style={{
                       background: active ? `linear-gradient(135deg,${C.violet},${C.lavender})` : '#fff',
-                      color: active ? C.cream : C.ink,
+                      color: active ? '#2b220e' : C.ink,
                       border: `1px solid ${active ? 'transparent' : 'rgba(43,39,51,0.1)'}`,
                     }}>
                     {o.label}

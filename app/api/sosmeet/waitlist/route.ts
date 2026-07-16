@@ -78,6 +78,24 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Erreur serveur, réessayez.' }, { status: 500 })
     }
 
+    // Email de bienvenue (non bloquant)
+    try {
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '')
+      const profileUrl = `${siteUrl}/sos-meet/profil?email=${encodeURIComponent(cleanEmail)}`
+      const { sendRawEmail } = await import('@/lib/email-templates/automated-emails')
+      const body = `
+        <h2 style="color:#C9A961;font-family:Georgia,serif;font-weight:400;margin:0 0 16px;">Bienvenue sur le chemin, ${cleanFirst} 🤍</h2>
+        <p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Votre place sur la liste d'attente de <strong>SOS Meet</strong> est réservée. Vous serez parmi les premiers invités à la bêta des rencontres conscientes.</p>
+        <p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Envie de prendre de l'avance ? Préparez dès maintenant votre <strong>profil de compatibilité</strong> — un questionnaire profond qui nous permettra de vous présenter des personnes réellement alignées.</p>
+        <div style="text-align:center;margin:28px 0;">
+          <a href="${profileUrl}" style="display:inline-block;padding:14px 32px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#E2CB86);">Préparer mon profil</a>
+        </div>
+        <p style="color:#a1a1aa;font-size:13px;line-height:1.7;">À très vite,<br/>L'équipe SOS Meet, par SOS Shine®</p>
+      `
+      // Fire-and-forget : ne pas bloquer la réponse
+      sendRawEmail(cleanEmail, 'Bienvenue sur SOS Meet ✨', body, { recipientName: cleanFirst, eventType: 'sosmeet_waitlist_welcome' }).catch(() => {})
+    } catch {}
+
     return NextResponse.json({ message: 'success' }, { status: 201 })
   } catch (e) {
     console.error('[sosmeet/waitlist] exception:', e)

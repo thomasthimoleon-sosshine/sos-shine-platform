@@ -31,10 +31,10 @@ main{position:relative;z-index:10}
 
 /* ---------- Utilitaires ---------- */
 .eyebrow{font-family:'Jost',sans-serif;font-weight:300;font-size:.7rem;letter-spacing:.5em;text-transform:uppercase;color:var(--or)}
-.btn{display:inline-block;font-family:'Jost',sans-serif;font-weight:300;font-size:.78rem;letter-spacing:.35em;
+.btn{display:inline-block;font-family:'Jost',sans-serif;font-weight:300;font-size:.72rem;letter-spacing:.22em;
   text-transform:uppercase;color:var(--ivoire);text-decoration:none;text-align:center;
-  padding:1.15rem 2.6rem;border:1px solid rgba(201,169,97,.55);background:rgba(201,169,97,.07);
-  backdrop-filter:blur(6px);transition:.5s}
+  padding:.85rem 2rem;border:1px solid rgba(201,169,97,.55);background:rgba(201,169,97,.07);
+  backdrop-filter:blur(6px);transition:.5s;border-radius:14px}
 .btn:hover{background:rgba(201,169,97,.2);border-color:var(--or-clair);color:var(--or-clair)}
 .btn.plein{background:linear-gradient(135deg,rgba(201,169,97,.92),rgba(224,174,154,.88));color:var(--noir);border:none;font-weight:400}
 .btn.plein:hover{filter:brightness(1.12)}
@@ -194,6 +194,13 @@ footer{position:relative;z-index:10;padding:3rem 8vw;text-align:center;font-fami
 @media (max-width:820px){
   .grille{grid-template-columns:1fr;gap:3rem}
   .voile{padding:5.5rem 7vw}
+  /* Le hero démarre sous le nav pour éviter le chevauchement */
+  .libre{justify-content:flex-start;padding-top:8.5rem;padding-bottom:6rem}
+  #hero .eyebrow{margin-bottom:.4rem}
+  /* Boutons plus fins et lisibles, jamais en pavé */
+  .btn{font-size:.66rem;letter-spacing:.16em;padding:.8rem 1.6rem;max-width:100%}
+  .btn.plein{white-space:normal;line-height:1.5}
+  #flottant{padding:.75rem 1.2rem;font-size:.6rem}
 }
 @media (prefers-reduced-motion:reduce){
   .rev{transition:none;opacity:1;transform:none}

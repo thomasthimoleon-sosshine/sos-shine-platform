@@ -268,7 +268,7 @@ export default function LoginPage() {
           className="mt-16 text-center text-[13px] text-[#8A857F]"
         >
           {s('login_signup_text')}{' '}
-          <Link href="/signup" className="text-[#B8A472] hover:text-[#D4C99A] transition-colors duration-300">
+          <Link href="/signup?source=rejoindre" className="text-[#B8A472] hover:text-[#D4C99A] transition-colors duration-300">
             {s('login_signup_link_text')}
           </Link>
         </motion.p>

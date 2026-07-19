@@ -183,7 +183,7 @@ export default function SignupPage() {
       try { protocolSlug = sessionStorage.getItem('sos_protocol_slug') } catch {}
       const nextPath = protocolSlug
         ? `/mon-chemin?protocol=${protocolSlug}`
-        : '/dashboard/tarifs'
+        : '/dashboard'
 
       const { error: signUpError } = await supabase.auth.signUp({
         email,
@@ -217,7 +217,7 @@ export default function SignupPage() {
     try { protocolSlug = sessionStorage.getItem('sos_protocol_slug') } catch {}
     const nextPath = protocolSlug
       ? `/mon-chemin?protocol=${protocolSlug}`
-      : '/dashboard/tarifs'
+      : '/dashboard'
     const supabase = createClient()
     await supabase.auth.signInWithOAuth({
       provider: 'google',

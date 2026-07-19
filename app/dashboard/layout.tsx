@@ -212,22 +212,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           new Date(sub.grace_period_end) > new Date()
         const subscribed = isActiveStatus || isPastDueInGrace
         setIsSubscribed(subscribed)
-
-        if (!subscribed) {
-          // Pages autorisées pour les utilisateurs gratuits
-          const allowedFree = [
-            '/dashboard/encyclopedie',
-            '/dashboard/communaute',
-            '/dashboard/profil',
-            '/dashboard/tarifs',
-          ]
-          const isAllowed = allowedFree.some(p => pathname?.startsWith(p))
-          if (!isAllowed) {
-            router.push('/mon-chemin')
-            return
-          }
-          // Accès autorisé - navigation limitée, on continue
-        }
+        // Modèle freemium : les membres gratuits peuvent explorer TOUTE la
+        // plateforme (en aperçu). Le verrouillage du contenu complet est géré
+        // au niveau de chaque espace (extraits vidéo, étape 1 des protocoles…),
+        // plus par un renvoi global. Plus de bounce vers /mon-chemin.
       }
 
       // Afficher le popup de bienvenue une fois par session
@@ -317,8 +305,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         {/* Navigation */}
         <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-          {/* Sidebar complète pour abonnés, simplifiée pour gratuits */}
-          {(isSubscribed || isAdmin ? navItemDefs : []).map((item) => {
+          {/* Freemium : menu complet pour tout le monde (contenu en aperçu pour les gratuits) */}
+          {navItemDefs.map((item) => {
             const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href))
             return (
               <Link
@@ -343,61 +331,38 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             )
           })}
 
-          {/* Nav simplifiée pour utilisateurs gratuits */}
+          {/* Mon parcours guidé — le « chemin » gardé en option, pour tous */}
+          <Link
+            href="/mon-chemin"
+            onClick={() => setSidebarOpen(false)}
+            className="nav-item flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium relative group transition-colors duration-[var(--transition-base)] text-[#a1a1aa] hover:text-[#e0e0e0] hover:bg-white/[0.03]"
+          >
+            <span className="opacity-70 group-hover:opacity-100 transition-opacity">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z" />
+              </svg>
+            </span>
+            Mon parcours guidé
+          </Link>
+
+          {/* CTA upgrade — pour les membres gratuits */}
           {!isSubscribed && !isAdmin && (
-            <>
-              {/* Mon protocole */}
+            <div className="pt-4">
               <Link
-                href="/mon-chemin"
+                href="/rejoindre"
                 onClick={() => setSidebarOpen(false)}
-                className={`nav-item flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium relative group transition-colors duration-[var(--transition-base)] ${pathname?.startsWith('/dashboard/encyclopedie') ? 'bg-[rgba(212,175,55,0.07)] text-[#D4AF37]' : 'text-[#a1a1aa] hover:text-[#e0e0e0] hover:bg-white/[0.03]'}`}
+                className="flex items-center justify-center gap-2 w-full px-3 py-3 rounded-[var(--radius-lg)] text-[13px] font-semibold transition-all hover:brightness-110"
+                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
               >
-                {pathname?.startsWith('/dashboard/encyclopedie') && (
-                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-full bg-[#D4AF37]" />
-                )}
-                <span className="opacity-70 group-hover:opacity-100 transition-opacity">
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-                  </svg>
-                </span>
-                Mon protocole
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                Tout débloquer
               </Link>
-
-              {/* Feu de camp */}
-              <Link
-                href="/dashboard/communaute"
-                onClick={() => setSidebarOpen(false)}
-                className={`nav-item flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium relative group transition-colors duration-[var(--transition-base)] ${pathname?.startsWith('/dashboard/communaute') ? 'bg-[rgba(212,175,55,0.07)] text-[#D4AF37]' : 'text-[#a1a1aa] hover:text-[#e0e0e0] hover:bg-white/[0.03]'}`}
-              >
-                {pathname?.startsWith('/dashboard/communaute') && (
-                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-full bg-[#D4AF37]" />
-                )}
-                <span className="opacity-70 group-hover:opacity-100 transition-opacity">
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V17.25m14.25-4.5V6.375A2.625 2.625 0 0015.75 3.75H8.25A2.625 2.625 0 005.625 6.375v6.375m14.25 4.5H3.75m11.25 0a3 3 0 11-6 0" />
-                  </svg>
-                </span>
-                Feu de camp
-              </Link>
-
-              {/* CTA upgrade */}
-              <div className="pt-4">
-                <Link
-                  href="/rejoindre"
-                  onClick={() => setSidebarOpen(false)}
-                  className="flex items-center justify-center gap-2 w-full px-3 py-3 rounded-[var(--radius-lg)] text-[13px] font-semibold transition-all hover:brightness-110"
-                  style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
-                >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                  Débloquer les étapes 2 &amp; 3
-                </Link>
-                <p className="text-[10px] text-center mt-1.5" style={{ color: 'var(--text-muted)' }}>
-                  29,90€/mois · ou 33€ en accès unique
-                </p>
-              </div>
-            </>
+              <p className="text-[10px] text-center mt-1.5" style={{ color: 'var(--text-muted)' }}>
+                29,90€/mois · ou 33€ en accès unique
+              </p>
+            </div>
           )}
 
           {/* Admin link */}

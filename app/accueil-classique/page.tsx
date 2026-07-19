@@ -1,7 +1,8 @@
 import { createClient } from '@supabase/supabase-js'
-import LandingMixClient from './LandingMixClient'
-import type { NextEvent } from './quiz/page'
+import LandingMixClient from '../LandingMixClient'
+import type { NextEvent } from '../quiz/page'
 
+// Ancienne page d'accueil, conservée en secours (remplacée à la racine par la landing 3D).
 // Recalcule le prochain événement à chaque requête (sinon la date est figée au build)
 export const dynamic = 'force-dynamic'
 
@@ -23,7 +24,7 @@ async function getNextEvent(): Promise<NextEvent | null> {
   return (data as NextEvent) || null
 }
 
-export default async function Home() {
+export default async function AccueilClassique() {
   const nextEvent = await getNextEvent()
   return <LandingMixClient nextEvent={nextEvent} />
 }

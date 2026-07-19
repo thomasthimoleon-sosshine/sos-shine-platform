@@ -58,8 +58,9 @@ h2 em{font-style:italic;color:var(--or-clair)}
 /* ---------- Nav ---------- */
 nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;
   padding:1.5rem 5vw;background:linear-gradient(to bottom,rgba(10,8,6,.8),transparent)}
-.logo{font-family:'Jost',sans-serif;font-weight:300;font-size:.85rem;letter-spacing:.5em;text-transform:uppercase;text-decoration:none}
-.logo span{color:var(--or)}
+.logo{display:inline-flex;align-items:center;text-decoration:none}
+.logo img{height:44px;width:auto;display:block}
+@media (max-width:820px){.logo img{height:36px}}
 .nav-cta{font-family:'Jost',sans-serif;font-weight:300;font-size:.68rem;letter-spacing:.3em;text-transform:uppercase;
   text-decoration:none;color:var(--or-clair);border-bottom:1px solid rgba(201,169,97,.4);padding-bottom:.2rem}
 #flottant{position:fixed;bottom:1.6rem;right:1.6rem;z-index:60;font-family:'Jost',sans-serif;font-weight:300;
@@ -216,7 +217,7 @@ footer{position:relative;z-index:10;padding:3rem 8vw;text-align:center;font-fami
 <div id="grain"></div>
 
 <nav>
-  <a class="logo" href="#hero">SOS <span>Shine</span></a>
+  <a class="logo" href="#hero" aria-label="SOS Shine"><img src="/images/logo-shine-transparent.png" alt="SOS Shine" /></a>
   <a class="nav-cta" href="/signature-emotionnelle?start=1">Faire le test</a>
 </nav>
 <a id="flottant" href="/signature-emotionnelle?start=1">Ma Signature · 3 min</a>

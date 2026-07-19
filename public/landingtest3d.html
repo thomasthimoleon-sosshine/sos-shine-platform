@@ -79,6 +79,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:
 #hero h1 .or{color:var(--or-clair);font-style:italic}
 #hero .lead{max-width:52ch}
 .hero-actions{margin-top:2.8rem;display:flex;flex-direction:column;align-items:center;gap:1.2rem}
+.rdv-julia{display:inline-flex;align-items:center;gap:.5rem;margin-bottom:1.8rem;font-family:'Jost',sans-serif;
+  font-weight:300;font-size:.64rem;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;
+  color:var(--or-clair);border:1px solid rgba(201,169,97,.4);background:rgba(201,169,97,.05);
+  padding:.6rem 1.3rem;border-radius:100px;transition:.3s}
+.rdv-julia:hover{background:rgba(201,169,97,.14);border-color:var(--or-clair)}
 .lien-discret{font-family:'Jost',sans-serif;font-weight:300;font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;
   color:rgba(245,239,227,.5);text-decoration:none;border-bottom:1px solid rgba(245,239,227,.2);padding-bottom:.2rem;transition:.4s}
 .lien-discret:hover{color:var(--or-clair);border-color:var(--or-clair)}
@@ -225,7 +230,7 @@ footer{position:relative;z-index:10;padding:3rem 8vw;text-align:center;font-fami
   <a class="logo" href="#hero" aria-label="SOS Shine"><img src="/images/logo-shine.png" alt="SOS Shine" /></a>
   <div class="nav-liens">
     <a class="nav-login" href="/login">Se connecter</a>
-    <a class="nav-cta" href="/signature-emotionnelle?start=1">Faire le test</a>
+    <a class="nav-cta" href="/signature-emotionnelle?start=1">Commencer</a>
   </div>
 </nav>
 <a id="flottant" href="/signature-emotionnelle?start=1">Ma Signature · 3 min</a>
@@ -234,6 +239,7 @@ footer{position:relative;z-index:10;padding:3rem 8vw;text-align:center;font-fami
 
 <!-- 1. HERO : immersion totale -->
 <section class="libre" id="hero">
+  <a class="rdv-julia rev" href="https://julialaureau.com" target="_blank" rel="noopener noreferrer">Prendre rendez-vous avec Julia Laureau <span aria-hidden="true">↗</span></a>
   <p class="eyebrow rev">Déconditionnement émotionnel</p>
   <h1 class="rev">Tu répètes les mêmes réactions sans savoir vraiment <span class="or">pourquoi</span> ?</h1>
   <p class="lead rev">Ce test gratuit révèle la mécanique émotionnelle qui pilote tes comportements depuis des années.</p>

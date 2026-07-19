@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
-import FeatureGate from '@/components/FeatureGate'
+import { useSubscription } from '@/hooks/useSubscription'
 
 // ── Types ──
 type ShineVideo = {
@@ -343,12 +343,15 @@ function HeroBanner({ video, onOpen, onInfo }: { video: ShineVideo; onOpen: () =
 }
 
 // ── Netflix-Style Full Screen Player ──
-function FullScreenPlayer({ video, onClose, onShowInfo }: {
+function FullScreenPlayer({ video, onClose, onShowInfo, previewSeconds }: {
   video: ShineVideo
   onClose: () => void
   onShowInfo: () => void
+  /** Si défini, la lecture est coupée après ce nombre de secondes (membre non abonné). */
+  previewSeconds?: number
 }) {
   const videoRef = useRef<HTMLVideoElement>(null)
+  const [previewEnded, setPreviewEnded] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const [isPlaying, setIsPlaying] = useState(true)
   const [progress, setProgress] = useState(0)
@@ -604,6 +607,11 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
           onTimeUpdate={() => {
             const v = videoRef.current
             if (!v) return
+            if (previewSeconds && v.currentTime >= previewSeconds) {
+              v.pause()
+              setPreviewEnded(true)
+              return
+            }
             setCurrentTime(v.currentTime)
             setProgress(v.duration ? (v.currentTime / v.duration) * 100 : 0)
           }}
@@ -630,6 +638,30 @@ function FullScreenPlayer({ video, onClose, onShowInfo }: {
           <img src={video.thumbnail} alt={video.title} className="w-full h-full object-contain" />
           <div className="absolute inset-0 flex items-center justify-center bg-black/50">
             <p className="text-white text-lg">Vidéo non disponible</p>
+          </div>
+        </div>
+      )}
+
+      {/* Écran de fin d'extrait (membre non abonné) */}
+      {previewEnded && (
+        <div className="absolute inset-0 z-30 flex items-center justify-center px-6" style={{ background: 'rgba(5,5,5,0.92)', backdropFilter: 'blur(6px)' }} onClick={(e) => e.stopPropagation()}>
+          <div className="max-w-md w-full text-center">
+            <div className="w-14 h-14 rounded-2xl mx-auto mb-5 flex items-center justify-center" style={{ background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
+              <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="#D4AF37" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
+            </div>
+            <h3 className="font-display text-2xl font-light mb-2" style={{ color: '#D4AF37' }}>Tu as vu l&apos;aperçu ✨</h3>
+            <p className="text-sm mb-7 leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
+              Abonne-toi à SOS Shine pour regarder cette vidéo en entier — et débloquer toute la plateforme.
+            </p>
+            <div className="flex flex-col gap-3 items-center">
+              <a href="/rejoindre" className="w-full sm:w-auto px-8 py-3.5 rounded-full text-sm font-semibold" style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}>
+                M&apos;abonner pour voir en entier
+              </a>
+              <button onClick={onClose} className="text-xs cursor-pointer" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                Revenir à la bibliothèque
+              </button>
+            </div>
+            <p className="text-[11px] mt-4" style={{ color: 'rgba(255,255,255,0.3)' }}>29,90€/mois · ou 33€ en accès unique</p>
           </div>
         </div>
       )}
@@ -1259,6 +1291,9 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate, onWatch }: {
 
 // ── Main Page ──
 export default function ShineTVPage() {
+  const { isActive: isSubscribed } = useSubscription()
+  // Membre non abonné : lecture limitée à un aperçu de 2 min.
+  const previewCap = isSubscribed ? undefined : 120
   const searchParams = useSearchParams()
   const douleurParam = searchParams.get('douleur')
   const idParam = searchParams.get('id')
@@ -1451,7 +1486,6 @@ export default function ShineTVPage() {
   }
 
   return (
-    <FeatureGate featureKey="shine_tv">
     <div className="-mx-4 sm:-mx-6 lg:-mx-8 -mt-4 sm:-mt-6 lg:-mt-8">
       {/* Hero */}
       {heroVideo && !search && activeFilter === 'all' && (
@@ -1841,6 +1875,7 @@ export default function ShineTVPage() {
             video={watchingVideo}
             onClose={() => setWatchingVideo(null)}
             onShowInfo={() => { setSelectedVideo(watchingVideo); setWatchingVideo(null) }}
+            previewSeconds={previewCap}
           />
         )}
       </AnimatePresence>
@@ -1875,6 +1910,5 @@ export default function ShineTVPage() {
         }
       `}</style>
     </div>
-    </FeatureGate>
   )
 }

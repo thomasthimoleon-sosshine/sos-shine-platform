@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
-import FeatureGate from '@/components/FeatureGate'
+import { useSubscription } from '@/hooks/useSubscription'
 
 // ── Types ──
 type ShineShort = {
@@ -215,12 +215,16 @@ type Review = {
 }
 
 // ── Video Detail Modal ──
-function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate }: {
+function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate, previewSeconds }: {
   short: ShineShort
   onClose: () => void
   onToggleFavorite: (id: string) => void
   onRate: (id: string, r: number) => void
+  /** Si défini, coupe la lecture après ce nombre de secondes (membre non abonné). */
+  previewSeconds?: number
 }) {
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const [previewEnded, setPreviewEnded] = useState(false)
   const [tab, setTab] = useState<'overview' | 'reviews'>('overview')
   const [newReview, setNewReview] = useState('')
   const [newRating, setNewRating] = useState(0)
@@ -325,7 +329,9 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate }: {
         {/* Video */}
         <div className="relative aspect-video bg-black">
           {short.videoUrl ? (
+            <>
             <video
+              ref={videoRef}
               src={short.videoUrl}
               controls
               autoPlay
@@ -335,7 +341,25 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate }: {
               className="w-full h-full object-contain"
               controlsList="nodownload"
               onContextMenu={(e) => e.preventDefault()}
+              onTimeUpdate={() => {
+                const v = videoRef.current
+                if (v && previewSeconds && v.currentTime >= previewSeconds) {
+                  v.pause()
+                  setPreviewEnded(true)
+                }
+              }}
             />
+            {previewEnded && (
+              <div className="absolute inset-0 z-20 flex items-center justify-center px-6 text-center" style={{ background: 'rgba(5,5,5,0.92)', backdropFilter: 'blur(6px)' }}>
+                <div className="max-w-xs">
+                  <h3 className="font-display text-xl font-light mb-2" style={{ color: '#D4AF37' }}>Aperçu terminé ✨</h3>
+                  <p className="text-sm mb-5" style={{ color: 'rgba(255,255,255,0.6)' }}>Abonne-toi pour voir la suite et débloquer toute la plateforme.</p>
+                  <a href="/rejoindre" className="inline-block px-7 py-3 rounded-full text-sm font-semibold" style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}>M&apos;abonner</a>
+                  <p className="text-[11px] mt-3" style={{ color: 'rgba(255,255,255,0.3)' }}>29,90€/mois · ou 33€ en accès unique</p>
+                </div>
+              </div>
+            )}
+            </>
           ) : (
             <div className="w-full h-full flex items-center justify-center">
               <div className="w-20 h-20 rounded-full flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110"
@@ -554,6 +578,8 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate }: {
 
 // ── Main Page ──
 export default function ShineShortsPage() {
+  const { isActive: isSubscribed } = useSubscription()
+  const previewCap = isSubscribed ? undefined : 120
   const searchParams = useSearchParams()
   const douleurParam = searchParams.get('douleur')
   const idParam = searchParams.get('id')
@@ -748,7 +774,6 @@ export default function ShineShortsPage() {
   }
 
   return (
-    <FeatureGate featureKey="shine_shorts">
     <div className="-mx-4 sm:-mx-6 lg:-mx-8 -mt-4 sm:-mt-6 lg:-mt-8">
       {/* Header */}
       <div className="px-4 sm:px-6 lg:px-8 pt-6 pb-4" style={{ background: 'linear-gradient(180deg, rgba(162,155,254,0.08) 0%, transparent 100%)' }}>
@@ -1164,10 +1189,10 @@ export default function ShineShortsPage() {
             onClose={() => setSelectedShort(null)}
             onToggleFavorite={handleToggleFavorite}
             onRate={handleRate}
+            previewSeconds={previewCap}
           />
         )}
       </AnimatePresence>
     </div>
-    </FeatureGate>
   )
 }

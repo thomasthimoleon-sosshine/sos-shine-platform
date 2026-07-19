@@ -519,6 +519,15 @@ function PaymentContent() {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCheckout = async (plan: PlanId) => {
+    // Règle : l'inscription (compte gratuit) est obligatoire pour souscrire.
+    // Un visiteur non connecté est d'abord envoyé vers l'inscription, puis
+    // ramené ici pour finaliser son abonnement.
+    if (!loggedInUser) {
+      const next = encodeURIComponent(`/rejoindre?source=rejoindre&plan=${plan}`)
+      router.push(`/signup?source=rejoindre&next=${next}`)
+      return
+    }
+
     const duration: DurationId = selectedDuration
     const paymentLink = getPaymentLink(plan, duration)
 

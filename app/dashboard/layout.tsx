@@ -159,6 +159,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [logoUrl, setLogoUrl] = useState<string | null>(null)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
   const [showWelcomePopup, setShowWelcomePopup] = useState(false)
+  // Déplie les entrées secondaires du menu (Shorts, Audible, Librairie, Blog, Favoris…).
+  const [showMoreNav, setShowMoreNav] = useState(false)
 
   const dismissWelcomePopup = useCallback(() => {
     setShowWelcomePopup(false)
@@ -342,6 +344,44 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </Link>
             )
           })}
+
+          {/* ── Entrées secondaires, dépliables via « Plus » (rien n'est perdu) ── */}
+          {showMoreNav && navItemDefs.filter((item) => !PRIMARY_NAV.includes(item.href)).map((item) => {
+            const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href))
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setSidebarOpen(false)}
+                className={`nav-item flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium relative group transition-colors duration-[var(--transition-base)] ${isActive ? 'bg-[rgba(212,175,55,0.07)] text-[#D4AF37]' : 'text-[#a1a1aa] hover:text-[#e0e0e0] hover:bg-white/[0.03]'}`}
+              >
+                {isActive && (
+                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-full bg-[#D4AF37]" />
+                )}
+                <span className="opacity-70 group-hover:opacity-100 transition-opacity">{item.icon}</span>
+                {t(item.labelKey)}
+                {'hasBadge' in item && item.hasBadge && unreadMessages > 0 && (
+                  <span className="ml-auto min-w-[18px] h-[18px] rounded-full flex items-center justify-center text-[10px] font-bold animate-pulse bg-[var(--danger)] text-white">
+                    {unreadMessages > 9 ? '9+' : unreadMessages}
+                  </span>
+                )}
+              </Link>
+            )
+          })}
+
+          {/* Bouton Plus / Moins : révèle les autres espaces sans encombrer le menu */}
+          <button
+            type="button"
+            onClick={() => setShowMoreNav((v) => !v)}
+            className="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium text-[#a1a1aa] hover:text-[#e0e0e0] hover:bg-white/[0.03] transition-colors cursor-pointer"
+          >
+            <span className="opacity-70">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d={showMoreNav ? 'M4.5 15.75l7.5-7.5 7.5 7.5' : 'M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5'} />
+              </svg>
+            </span>
+            {showMoreNav ? 'Voir moins' : 'Plus'}
+          </button>
 
           {/* Mon parcours guidé — le « chemin » gardé en option, pour tous */}
           <Link

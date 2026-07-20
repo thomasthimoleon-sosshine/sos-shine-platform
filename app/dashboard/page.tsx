@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import type { Profile } from '@/types/database'
@@ -646,6 +647,36 @@ function ActuShineSection() {
 }
 
 /* ─────────────────────────────────────────────
+   Carte rapide (présentational — simple lien)
+   Ajout léger pour la grille simplifiée. Aucune logique métier.
+   ───────────────────────────────────────────── */
+function QuickCard({ href, title, subtitle, accent, icon }: {
+  href: string
+  title: string
+  subtitle: string
+  accent: string
+  icon: React.ReactNode
+}) {
+  return (
+    <Link
+      href={href}
+      className="glass glass-hover p-5 rounded-2xl flex items-center gap-4 transition-all hover:scale-[1.01]"
+    >
+      <span
+        className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
+        style={{ background: `${accent}18`, color: accent }}
+      >
+        {icon}
+      </span>
+      <span className="min-w-0">
+        <span className="block font-semibold text-[15px] text-[var(--text-primary)]">{title}</span>
+        <span className="block text-[12px] text-[var(--text-muted)] truncate">{subtitle}</span>
+      </span>
+    </Link>
+  )
+}
+
+/* ─────────────────────────────────────────────
    Main Dashboard Page: Ma Légende
    ───────────────────────────────────────────── */
 function getTimeSlot(): TimeSlot {
@@ -658,6 +689,11 @@ function getTimeSlot(): TimeSlot {
 
 export default function DashboardHome() {
   const { t } = useTranslation()
+  const router = useRouter()
+  // État purement visuel : replie les widgets secondaires (rien n'est supprimé).
+  const [showMore, setShowMore] = useState(false)
+  // Terme de recherche encyclopédie (simple navigation, aucune logique métier).
+  const [search, setSearch] = useState('')
   const [profile, setProfile] = useState<Profile | null>(null)
   const [greeting, setGreeting] = useState('')
   const [quote, setQuote] = useState<Quote | null>(null)
@@ -801,47 +837,63 @@ export default function DashboardHome() {
     loadSettings()
   }, [])
 
+  // Cible du CTA principal : le protocole recommandé si l'utilisateur en a un, sinon l'encyclopédie.
+  const protocolHref = firstGoal?.recommended_slug
+    ? `/dashboard/encyclopedie/${firstGoal.recommended_slug}`
+    : '/dashboard/encyclopedie'
+
+  // Recherche encyclopédie : simple navigation (aucune logique métier ajoutée).
+  function handleSearch(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    const q = search.trim()
+    router.push(q ? `/dashboard/encyclopedie?q=${encodeURIComponent(q)}` : '/dashboard/encyclopedie')
+  }
+
+  // Niveau courant (déjà chargé via xpData) — affiché en version compacte.
+  const level = xpData ? getLevelForXP(xpData.total_xp) : null
+
   return (
-    <div className="max-w-5xl mx-auto space-y-8">
-      {/* ── Hero greeting ── */}
-      <motion.div
+    <div className="max-w-3xl mx-auto space-y-6">
+
+      {/* ══════════ 1. HERO PERSO — message court + un seul gros CTA ══════════ */}
+      <motion.section
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
+        className="text-center pt-2"
       >
-        <div className="flex items-start justify-between gap-3 flex-wrap">
-          <h1 className="font-display text-xl sm:text-2xl font-semibold tracking-tight text-[var(--text-primary)]">
-            {siteSettings.dash_welcome || t('dashboard.welcome')} <span className="text-[var(--brand)]">{profile?.prenom || 'Membre'}</span>
-          </h1>
+        <h1 className="font-display text-2xl sm:text-3xl font-semibold tracking-tight text-[var(--text-primary)]">
+          {siteSettings.dash_welcome || t('dashboard.welcome')} <span className="text-[var(--brand)]">{profile?.prenom || 'Membre'}</span>
+        </h1>
+        {/* Phrase personnalisée courte (message existant déjà chargé) */}
+        {greeting && (
+          <p className="mt-3 text-[16px] sm:text-[18px] font-medium leading-relaxed text-[var(--brand)] max-w-xl mx-auto">
+            {greeting}
+          </p>
+        )}
+        {/* CTA principal unique, très visible */}
+        <Link
+          href={protocolHref}
+          className="mt-6 inline-flex items-center gap-2 px-7 py-4 rounded-full text-[15px] font-semibold transition-all hover:scale-[1.03]"
+          style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000' }}
+        >
+          Continuer mon protocole du jour →
+        </Link>
+        {/* Éléments discrets : streak + notifications */}
+        <div className="mt-4 flex items-center justify-center gap-3 flex-wrap">
           {streak.current > 0 && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-full"
-              style={{
-                background: 'linear-gradient(135deg, rgba(255,107,53,0.12), rgba(201,169,97,0.08))',
-                border: '1px solid rgba(255,107,53,0.3)',
-              }}
-              title={`Plus longue série : ${streak.longest} jours`}
-            >
-              <span className="text-base">🔥</span>
-              <span className="text-xs font-semibold" style={{ color: '#FF6B35' }}>
-                {streak.current} {streak.current > 1 ? 'jours' : 'jour'}
-              </span>
-            </motion.div>
+            <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold"
+              style={{ background: 'rgba(255,107,53,0.12)', border: '1px solid rgba(255,107,53,0.3)', color: '#FF6B35' }}
+              title={`Plus longue série : ${streak.longest} jours`}>
+              🔥 {streak.current} {streak.current > 1 ? 'jours' : 'jour'}
+            </span>
           )}
-        </div>
-        <p className="mt-3 text-[17px] sm:text-[19px] font-medium leading-relaxed tracking-wide text-[var(--brand)]">
-          {greeting}
-        </p>
-        <div className="mt-4">
           <PushNotificationButton />
         </div>
-      </motion.div>
+      </motion.section>
 
-      {/* ── Premier défi (only if user has an onboarding goal and hasn't started any protocol yet) ── */}
-      {firstGoal && firstGoal.douleur && !hasStartedAny && (
+      {/* ══════════ 2. CARTE PRINCIPALE — Protocole du jour (mise en avant forte) ══════════ */}
+      {firstGoal && firstGoal.douleur ? (
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -855,21 +907,12 @@ export default function DashboardHome() {
           <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full opacity-30 pointer-events-none"
             style={{ background: 'radial-gradient(circle, rgba(85,239,196,0.15), transparent 70%)' }} />
           <div className="relative p-6 sm:p-8">
-            <div className="flex items-start gap-3 mb-3">
-              <span className="text-2xl">🚀</span>
-              <div className="flex-1 min-w-0">
-                <p className="text-[11px] font-semibold uppercase tracking-wider mb-1 text-[var(--success)]">
-                  Votre premier pas
-                </p>
-                <h2 className="font-display text-xl sm:text-2xl font-semibold text-[var(--text-primary)]">
-                  {firstGoal.title}
-                </h2>
-              </div>
-            </div>
-            <p className="text-sm mb-5 leading-relaxed text-[var(--text-secondary)]">
-              Vous avez choisi cet objectif au démarrage. Voici le protocole qui vous correspond pour commencer en douceur.
+            <p className="text-[11px] font-semibold uppercase tracking-wider mb-1 text-[var(--success)]">
+              {hasStartedAny ? 'Votre protocole' : 'Votre premier pas'}
             </p>
-
+            <h2 className="font-display text-xl sm:text-2xl font-semibold text-[var(--text-primary)] mb-4">
+              {firstGoal.title}
+            </h2>
             <Link href={`/dashboard/encyclopedie/${firstGoal.recommended_slug}`}
               className="block rounded-xl p-4 transition-all hover:scale-[1.005]"
               style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.06)' }}>
@@ -889,178 +932,271 @@ export default function DashboardHome() {
                 </div>
               </div>
             </Link>
-
             <p className="text-[11px] mt-3 text-center text-[var(--text-muted)]">
               3 étapes. Vidéo, audio, exercice. ~25 minutes.
             </p>
           </div>
         </motion.div>
+      ) : (
+        /* Fallback : aucun protocole choisi → invitation à explorer l'encyclopédie */
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
+          className="glass relative overflow-hidden p-6 sm:p-8 text-center"
+          style={{ background: 'linear-gradient(135deg, rgba(201,169,97,0.06), var(--surface-card))', borderColor: 'rgba(201,169,97,0.15)' }}
+        >
+          <h2 className="font-display text-xl font-semibold text-[var(--text-primary)] mb-2">Commencez votre transformation</h2>
+          <p className="text-sm text-[var(--text-secondary)] mb-5 max-w-md mx-auto">
+            Choisissez le protocole qui correspond à ce que vous traversez en ce moment.
+          </p>
+          <Link href="/dashboard/encyclopedie"
+            className="inline-block px-6 py-3 rounded-full text-sm font-semibold"
+            style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000' }}>
+            Explorer l&apos;encyclopédie →
+          </Link>
+        </motion.div>
       )}
 
-      {/* ── Météo Énergétique ── */}
-      <EnergyWeatherWidget profile={profile} />
-
-      {/* ── Citation du jour - DEMARCATION LINE ── */}
+      {/* ══════════ 3. GRILLE DE CARTES RAPIDES ══════════ */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1, duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
-        className="glass glass-hover relative overflow-hidden p-6 sm:p-8"
-        style={{
-          background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.05), var(--surface-card))',
-          borderColor: 'rgba(212, 175, 55, 0.1)',
-        }}
+        transition={{ delay: 0.2, duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
+        className="grid sm:grid-cols-2 gap-4"
       >
-        <div
-          className="absolute -top-20 -right-20 w-60 h-60 rounded-full opacity-30 pointer-events-none"
-          style={{ background: 'radial-gradient(circle, rgba(212, 175, 55, 0.08), transparent 70%)' }}
+        {/* Encyclopédie + barre de recherche */}
+        <form onSubmit={handleSearch}
+          className="glass p-5 rounded-2xl flex flex-col gap-3 sm:col-span-2">
+          <div className="flex items-center gap-2">
+            <span className="text-[15px] font-semibold text-[var(--text-primary)]">Encyclopédie</span>
+            <span className="text-[12px] text-[var(--text-muted)]">· 200+ protocoles</span>
+          </div>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Rechercher une émotion, une situation…"
+              className="flex-1 px-4 py-2.5 rounded-xl text-sm outline-none"
+              style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
+            />
+            <button type="submit"
+              className="px-4 py-2.5 rounded-xl text-sm font-semibold shrink-0"
+              style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)' }}>
+              Chercher
+            </button>
+          </div>
+        </form>
+
+        {/* Contenus récents — une seule médiathèque mise en avant */}
+        <QuickCard
+          href="/dashboard/shine-tv"
+          title="Contenus récents"
+          subtitle="Vidéos, audios & lectures"
+          accent="#74C0FC"
+          icon={<svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M6 20.25h12m-7.5-3v3m3-3v3m-10.125-3h17.25c.621 0 1.125-.504 1.125-1.125V4.875c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125z" /></svg>}
         />
-        <p className="font-display text-xl sm:text-2xl italic leading-relaxed relative text-[var(--text-primary)]">
-          &ldquo;{siteSettings.dash_custom_quote || (quote ? quote.text.fr : t('quote.text'))}&rdquo;
-        </p>
-        <p className="mt-4 text-[13px] font-medium relative text-[var(--brand)]">
-          - {siteSettings.dash_custom_quote_author || (quote ? quote.author.fr : t('quote.author'))}
-        </p>
+
+        {/* Communauté */}
+        <QuickCard
+          href="/dashboard/communaute"
+          title="Communauté"
+          subtitle="Le Feu de camp"
+          accent="#55EFC4"
+          icon={<svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0z" /></svg>}
+        />
+
+        {/* Événements */}
+        <QuickCard
+          href="/dashboard/evenements"
+          title="Événements"
+          subtitle="Rencontres & ateliers"
+          accent="#FDCB6E"
+          icon={<svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" /></svg>}
+        />
       </motion.div>
 
-      {/* ── Jauge Niveau & XP (below citation) ── */}
-      <LevelXPSection xpData={xpData} />
+      {/* ══════════ 4. AVANCÉE SIMPLE (léger) ══════════ */}
+      {(level || streak.current > 0) && (
+        <div className="glass p-4 flex items-center justify-center gap-6 text-center flex-wrap">
+          {level && (
+            <span className="flex items-center gap-2">
+              <span className="text-lg">{level.icon}</span>
+              <span className="text-sm font-semibold text-[var(--brand)]">{level.name}</span>
+            </span>
+          )}
+          {streak.current > 0 && (
+            <span className="text-sm text-[var(--text-muted)]">🔥 Série de {streak.current} {streak.current > 1 ? 'jours' : 'jour'}</span>
+          )}
+          <Link href="/dashboard/badges" className="text-sm font-medium text-[var(--brand)] gold-underline">Mes badges →</Link>
+        </div>
+      )}
 
-      {/* ── Étape 2: Mes contributions ── */}
-      <ContributionsSection xpData={xpData} />
+      {/* ══════════ 5. AFFICHER PLUS — widgets détaillés CONSERVÉS, masqués par défaut ══════════ */}
+      {/* Rien n'est supprimé : Météo, Citation, XP détaillé, Contributions, Badges, Actu-Shine
+          et Affiliation restent disponibles ici pour ne pas surcharger l'accueil. */}
+      <div className="text-center">
+        <button
+          type="button"
+          onClick={() => setShowMore((v) => !v)}
+          className="text-[13px] font-medium text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors cursor-pointer"
+        >
+          {showMore ? 'Afficher moins ▲' : 'Afficher plus ▼'}
+        </button>
+      </div>
 
-      {/* ── Étape 3: Badges ── */}
-      <BadgesSection userId={currentUserId} role={profile?.role} />
+      {showMore && (
+        <div className="space-y-6">
+          {/* ── Météo Énergétique ── */}
+          <EnergyWeatherWidget profile={profile} />
 
-      {/* ── Étape 4: Actu - Shine ── */}
-      <ActuShineSection />
+          {/* ── Citation du jour ── */}
+          <div
+            className="glass glass-hover relative overflow-hidden p-6 sm:p-8"
+            style={{ background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.05), var(--surface-card))', borderColor: 'rgba(212, 175, 55, 0.1)' }}
+          >
+            <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full opacity-30 pointer-events-none"
+              style={{ background: 'radial-gradient(circle, rgba(212, 175, 55, 0.08), transparent 70%)' }} />
+            <p className="font-display text-xl sm:text-2xl italic leading-relaxed relative text-[var(--text-primary)]">
+              &ldquo;{siteSettings.dash_custom_quote || (quote ? quote.text.fr : t('quote.text'))}&rdquo;
+            </p>
+            <p className="mt-4 text-[13px] font-medium relative text-[var(--brand)]">
+              - {siteSettings.dash_custom_quote_author || (quote ? quote.author.fr : t('quote.author'))}
+            </p>
+          </div>
 
-      {/* ── NPS feedback (after 7 days) ── */}
+          {/* ── Niveau & XP détaillé ── */}
+          <LevelXPSection xpData={xpData} />
+
+          {/* ── Mes contributions ── */}
+          <ContributionsSection xpData={xpData} />
+
+          {/* ── Badges ── */}
+          <BadgesSection userId={currentUserId} role={profile?.role} />
+
+          {/* ── Actu - Shine ── */}
+          <ActuShineSection />
+
+          {/* ── Affiliation ── */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
+            className="glass glass-hover relative overflow-hidden"
+            style={{ background: 'linear-gradient(135deg, rgba(201,169,97,0.08), rgba(116,192,252,0.04))', border: '1px solid rgba(201,169,97,0.2)' }}
+          >
+            <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full opacity-30 pointer-events-none"
+              style={{ background: 'radial-gradient(circle, rgba(201,169,97,0.15), transparent 70%)' }} />
+            <div className="relative p-6 sm:p-8">
+              {affiliateStatus.approved && affiliateStatus.referral_code ? (
+                <>
+                  <div className="flex items-start gap-3 mb-4">
+                    <span className="text-2xl">💛</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[11px] font-semibold uppercase tracking-wider mb-1 text-[var(--brand)]">
+                        Votre lien d&apos;affiliation
+                      </p>
+                      <h2 className="font-display text-xl sm:text-2xl font-semibold text-[var(--text-primary)]">
+                        Partagez et gagnez 30%
+                      </h2>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 mb-4">
+                    <div className="rounded-xl p-3 text-center" style={{ background: 'rgba(0,0,0,0.2)' }}>
+                      <p className="text-xs text-[var(--text-muted)]">Inscrits</p>
+                      <p className="font-display text-2xl font-semibold text-[var(--brand)]">
+                        {affiliateStatus.total_referrals}
+                      </p>
+                    </div>
+                    <div className="rounded-xl p-3 text-center" style={{ background: 'rgba(0,0,0,0.2)' }}>
+                      <p className="text-xs text-[var(--text-muted)]">Gains en attente</p>
+                      <p className="font-display text-2xl font-semibold text-[var(--success)]">
+                        {affiliateStatus.pending_earnings.toFixed(2)}€
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="rounded-xl p-3 mb-4 flex items-center gap-2"
+                    style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border)' }}>
+                    <code className="flex-1 text-xs truncate text-[var(--text-secondary)]">
+                      sosshine.com/signup?ref={affiliateStatus.referral_code}
+                    </code>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard.writeText(`https://sosshine.com/signup?ref=${affiliateStatus.referral_code}`)
+                      }}
+                      className="text-[11px] px-3 py-1.5 rounded-lg cursor-pointer flex-shrink-0"
+                      style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)' }}
+                    >
+                      Copier
+                    </button>
+                  </div>
+
+                  <Link href="/dashboard/affiliation"
+                    className="block text-center py-3 rounded-xl text-sm font-semibold transition-all hover:scale-[1.005]"
+                    style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000' }}>
+                    Voir mon tableau de bord →
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-start gap-3 mb-3">
+                    <span className="text-2xl">💛</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[11px] font-semibold uppercase tracking-wider mb-1 text-[var(--brand)]">
+                        Programme d&apos;affiliation
+                      </p>
+                      <h2 className="font-display text-xl sm:text-2xl font-semibold text-[var(--text-primary)]">
+                        Recommandez, gagnez 30% à vie
+                      </h2>
+                    </div>
+                  </div>
+                  <p className="text-sm mb-5 leading-relaxed text-[var(--text-secondary)]">
+                    Aidez vos proches à comprendre leurs schémas émotionnels. Pour chaque ami qui s&apos;abonne grâce à vous, vous touchez <strong className="text-[var(--brand)]">30% de commission à vie</strong>.
+                  </p>
+
+                  <div className="grid grid-cols-3 gap-2 mb-5">
+                    <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(0,0,0,0.2)' }}>
+                      <p className="font-display text-lg font-semibold text-[var(--brand)]">30%</p>
+                      <p className="text-[10px] text-[var(--text-muted)]">Commission</p>
+                    </div>
+                    <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(0,0,0,0.2)' }}>
+                      <p className="font-display text-lg font-semibold text-[var(--brand)]">À vie</p>
+                      <p className="text-[10px] text-[var(--text-muted)]">Durée</p>
+                    </div>
+                    <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(0,0,0,0.2)' }}>
+                      <p className="font-display text-lg font-semibold text-[var(--brand)]">0€</p>
+                      <p className="text-[10px] text-[var(--text-muted)]">À débourser</p>
+                    </div>
+                  </div>
+
+                  <Link href="/dashboard/affiliation"
+                    className="block text-center py-3 rounded-xl text-sm font-semibold transition-all hover:scale-[1.005]"
+                    style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000' }}>
+                    {affiliateStatus.exists ? 'Voir mon espace affilié →' : 'Devenir affilié →'}
+                  </Link>
+                </>
+              )}
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* ── NPS feedback (s'auto-affiche après 7 jours) ── */}
       <NpsWidget userId={currentUserId} createdAt={profile?.created_at || null} />
 
-      {/* ── Affiliate widget - viral loop ── */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.55, duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
-        className="glass glass-hover relative overflow-hidden"
-        style={{
-          background: 'linear-gradient(135deg, rgba(201,169,97,0.08), rgba(116,192,252,0.04))',
-          border: '1px solid rgba(201,169,97,0.2)',
-        }}
-      >
-        <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full opacity-30 pointer-events-none"
-          style={{ background: 'radial-gradient(circle, rgba(201,169,97,0.15), transparent 70%)' }} />
-
-        <div className="relative p-6 sm:p-8">
-          {affiliateStatus.approved && affiliateStatus.referral_code ? (
-            <>
-              <div className="flex items-start gap-3 mb-4">
-                <span className="text-2xl">💛</span>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[11px] font-semibold uppercase tracking-wider mb-1 text-[var(--brand)]">
-                    Votre lien d&apos;affiliation
-                  </p>
-                  <h2 className="font-display text-xl sm:text-2xl font-semibold text-[var(--text-primary)]">
-                    Partagez et gagnez 30%
-                  </h2>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 mb-4">
-                <div className="rounded-xl p-3 text-center" style={{ background: 'rgba(0,0,0,0.2)' }}>
-                  <p className="text-xs text-[var(--text-muted)]">Inscrits</p>
-                  <p className="font-display text-2xl font-semibold text-[var(--brand)]">
-                    {affiliateStatus.total_referrals}
-                  </p>
-                </div>
-                <div className="rounded-xl p-3 text-center" style={{ background: 'rgba(0,0,0,0.2)' }}>
-                  <p className="text-xs text-[var(--text-muted)]">Gains en attente</p>
-                  <p className="font-display text-2xl font-semibold text-[var(--success)]">
-                    {affiliateStatus.pending_earnings.toFixed(2)}€
-                  </p>
-                </div>
-              </div>
-
-              <div className="rounded-xl p-3 mb-4 flex items-center gap-2"
-                style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border)' }}>
-                <code className="flex-1 text-xs truncate text-[var(--text-secondary)]">
-                  sosshine.com/signup?ref={affiliateStatus.referral_code}
-                </code>
-                <button
-                  type="button"
-                  onClick={() => {
-                    navigator.clipboard.writeText(`https://sosshine.com/signup?ref=${affiliateStatus.referral_code}`)
-                  }}
-                  className="text-[11px] px-3 py-1.5 rounded-lg cursor-pointer flex-shrink-0"
-                  style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)' }}
-                >
-                  Copier
-                </button>
-              </div>
-
-              <Link href="/dashboard/affiliation"
-                className="block text-center py-3 rounded-xl text-sm font-semibold transition-all hover:scale-[1.005]"
-                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000' }}>
-                Voir mon tableau de bord →
-              </Link>
-            </>
-          ) : (
-            <>
-              <div className="flex items-start gap-3 mb-3">
-                <span className="text-2xl">💛</span>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[11px] font-semibold uppercase tracking-wider mb-1 text-[var(--brand)]">
-                    Programme d&apos;affiliation
-                  </p>
-                  <h2 className="font-display text-xl sm:text-2xl font-semibold text-[var(--text-primary)]">
-                    Recommandez, gagnez 30% à vie
-                  </h2>
-                </div>
-              </div>
-              <p className="text-sm mb-5 leading-relaxed text-[var(--text-secondary)]">
-                Aidez vos proches à comprendre leurs schémas émotionnels. Pour chaque ami qui s&apos;abonne grâce à vous, vous touchez <strong className="text-[var(--brand)]">30% de commission à vie</strong>.
-              </p>
-
-              <div className="grid grid-cols-3 gap-2 mb-5">
-                <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(0,0,0,0.2)' }}>
-                  <p className="font-display text-lg font-semibold text-[var(--brand)]">30%</p>
-                  <p className="text-[10px] text-[var(--text-muted)]">Commission</p>
-                </div>
-                <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(0,0,0,0.2)' }}>
-                  <p className="font-display text-lg font-semibold text-[var(--brand)]">À vie</p>
-                  <p className="text-[10px] text-[var(--text-muted)]">Durée</p>
-                </div>
-                <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(0,0,0,0.2)' }}>
-                  <p className="font-display text-lg font-semibold text-[var(--brand)]">0€</p>
-                  <p className="text-[10px] text-[var(--text-muted)]">À débourser</p>
-                </div>
-              </div>
-
-              <Link href="/dashboard/affiliation"
-                className="block text-center py-3 rounded-xl text-sm font-semibold transition-all hover:scale-[1.005]"
-                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000' }}>
-                {affiliateStatus.exists ? 'Voir mon espace affilié →' : 'Devenir affilié →'}
-              </Link>
-            </>
-          )}
-        </div>
-      </motion.div>
-
-      {/* ── Help footer ── */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.6, duration: 0.5 }}
-        className="glass p-5 text-center"
-      >
+      {/* ── Aide (footer léger) ── */}
+      <div className="glass p-5 text-center">
         <p className="text-[13px] text-[var(--text-muted)]">
           {siteSettings.dash_help_text || t('dashboard.help')}{' '}
           <a href={`mailto:${siteSettings.dash_help_email || 'julialaureau@sosshine.com'}`} className="gold-underline font-medium text-[var(--brand)]">
             {siteSettings.dash_help_email || 'julialaureau@sosshine.com'}
           </a>
         </p>
-      </motion.div>
+      </div>
     </div>
   )
 }

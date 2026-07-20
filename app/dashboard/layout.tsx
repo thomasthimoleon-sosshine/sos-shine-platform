@@ -134,6 +134,18 @@ const navItemDefs = [
   },
 ]
 
+// Menu simplifié : on n'affiche que 6 entrées principales pour ne pas noyer l'utilisateur.
+// Les autres espaces (favoris, shorts, audible, librairie, blog, affiliation…) restent
+// accessibles via les cartes de l'accueil et leurs URLs — rien n'est supprimé.
+const PRIMARY_NAV = [
+  '/dashboard',
+  '/dashboard/encyclopedie',
+  '/dashboard/shine-tv',
+  '/dashboard/communaute',
+  '/dashboard/evenements',
+  '/dashboard/profil',
+]
+
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const pathname = usePathname()
@@ -305,8 +317,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         {/* Navigation */}
         <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-          {/* Freemium : menu complet pour tout le monde (contenu en aperçu pour les gratuits) */}
-          {navItemDefs.map((item) => {
+          {/* Menu simplifié à 6 entrées (voir PRIMARY_NAV). Contenu en aperçu pour les gratuits. */}
+          {navItemDefs.filter((item) => PRIMARY_NAV.includes(item.href)).map((item) => {
             const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href))
             return (
               <Link

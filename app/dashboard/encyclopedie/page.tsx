@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useMemo } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { getReleaseDate } from '@/lib/release-schedule'
@@ -285,8 +286,10 @@ type ShineAvailability = {
 
 export default function EncyclopediePage() {
   const { t } = useTranslation()
+  const searchParams = useSearchParams()
   const [allDouleurs, setAllDouleurs] = useState<Douleur[]>([])
-  const [search, setSearch] = useState('')
+  // Pré-remplit la recherche depuis ?q= (venant de la barre de l'accueil).
+  const [search, setSearch] = useState(searchParams.get('q') || '')
   const [activeLetter, setActiveLetter] = useState('ALL')
   const [activeCat, setActiveCat] = useState('ALL')
   const [onlyOriginal, setOnlyOriginal] = useState(false)

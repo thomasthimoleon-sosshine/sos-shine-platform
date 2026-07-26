@@ -17,7 +17,7 @@
     --line:#4A3323;          /* filets */
     --cream:#F3E7D3;         /* texte principal */
     --cream-dim:#C9B497;     /* texte secondaire */
-    --muted:#9C876C;         /* labels discrets */
+    --muted:#B9A283;         /* labels discrets — remonté pour la lisibilité (WCAG) */
     --terra:#C4623A;         /* terracotta */
     --terra-soft:#D67C52;
     --gold:#D9A94B;          /* doré */
@@ -165,7 +165,8 @@
   /* ---------- TEAM ---------- */
   .team{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
   .member{text-align:center}
-  .avatar{width:112px;height:112px;border-radius:50%;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:34px;color:#241206;background:radial-gradient(circle at 35% 30%,var(--gold-bright),var(--terra));box-shadow:0 0 0 1px var(--line),0 14px 34px -14px rgba(196,98,58,.6)}
+  .avatar{width:112px;height:112px;border-radius:50%;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:34px;color:#241206;background:radial-gradient(circle at 35% 30%,var(--gold-bright),var(--terra));box-shadow:0 0 0 1px var(--line),0 14px 34px -14px rgba(196,98,58,.6);overflow:hidden}
+  .avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
   .member .role{font-size:12px;letter-spacing:1.8px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
   .member h3{font-size:21px;margin-bottom:8px}
   .member p{font-size:14.5px;color:var(--cream-dim);max-width:32ch;margin:0 auto}
@@ -238,6 +239,13 @@
   /* ---------- RESPONSIVE ---------- */
   @media(max-width:900px){
     .nav-links{display:none}
+    /* Menu mobile déroulant quand le burger est activé */
+    header.nav-open .nav-links{display:flex;flex-direction:column;align-items:stretch;gap:0;
+      position:absolute;top:70px;left:0;right:0;background:rgba(28,17,12,.98);
+      border-bottom:1px solid var(--line);padding:10px 24px 20px}
+    header.nav-open .nav-links a{padding:13px 0;font-size:16px;border-bottom:1px solid rgba(74,51,35,.4)}
+    header.nav-open .nav-links a:last-child{border-bottom:none}
+    header.nav-open .nav-links .nav-cta{margin-top:12px;text-align:center;border-bottom:none}
     .burger{display:block}
     .sig-wrap,.app-cols,.local{grid-template-columns:1fr;gap:30px}
     .grid-4,.steps,.team,.quotes,.prices{grid-template-columns:1fr}
@@ -301,7 +309,7 @@
     </div>
     <div class="reassure">
       <span><b>Gratuit</b></span><span class="dot">·</span>
-      <span>12 questions</span><span class="dot">·</span>
+      <span>12 questions · 3 min</span><span class="dot">·</span>
       <span>Résultat immédiat</span><span class="dot">·</span>
       <span>Sans carte bancaire</span>
     </div>
@@ -349,7 +357,6 @@
       <div class="space reveal"><div class="n">03</div><h3>Le Courrier Anonyme</h3><p>Écris ce que tu n'as jamais osé dire à voix haute. Dépose-le. Reçois une réponse. Certaines choses ont besoin de sortir pour cesser de peser.</p></div>
       <div class="space reveal"><div class="n">04</div><h3>Les Contenus exclusifs</h3><p>Shine TV, podcasts, le livre. De la matière profonde pour nourrir ta transformation, où que tu sois.</p></div>
     </div>
-    <div class="capture reveal">Aperçu réel de la plateforme — captures d'écran à intégrer</div>
   </div>
 </section>
 
@@ -394,7 +401,7 @@
       <h2>Trois regards complémentaires, <span class="em">une même direction</span>.</h2>
     </div>
     <div class="team">
-      <div class="member reveal"><div class="avatar">J</div><div class="role">Fondatrice et voix</div><h3>Julia</h3><p>Elle a traversé ce dont elle parle. C'est sa voix dans les protocoles, son histoire qui a fondé SOS Shine. Elle marche à côté, pas au-dessus.</p></div>
+      <div class="member reveal"><div class="avatar"><img src="/images/julia.jpeg" alt="Julia, fondatrice de SOS Shine" loading="lazy" /></div><div class="role">Fondatrice et voix</div><h3>Julia</h3><p>Elle a traversé ce dont elle parle. C'est sa voix dans les protocoles, son histoire qui a fondé SOS Shine. Elle marche à côté, pas au-dessus.</p></div>
       <div class="member reveal"><div class="avatar">W</div><div class="role">Hypnothérapeute</div><h3>William</h3><p>Il éclaire les liens entre l'émotion, le corps, les automatismes et le subconscient.</p></div>
       <div class="member reveal"><div class="avatar">T</div><div class="role">Architecture</div><h3>Thomas</h3><p>Il construit l'espace qui rend tout ça possible : la plateforme, les outils, l'expérience. Pour que la technologie s'efface derrière ta transformation.</p></div>
     </div>
@@ -445,13 +452,13 @@
         <span class="badge">Recommandé</span>
         <h3>L'Abonnement</h3>
         <div class="amt">29,90 € <small>/ mois</small></div>
-        <p>Accès complet : les 200 protocoles, le Feu de Camp, le Courrier Anonyme, Shine TV et tous les contenus. Sans engagement, tu pars quand tu veux.</p>
+        <p>Accès à <b>tout</b>, tant que tu es abonné : les 200 protocoles, le Feu de Camp, le Courrier Anonyme, Shine TV et tous les contenus. Sans engagement, tu pars quand tu veux.</p>
         <a href="/rejoindre" class="btn btn-gold">Rejoindre SOS Shine</a>
       </div>
       <div class="price reveal">
         <h3>À la carte</h3>
         <div class="amt">33 € <small>/ module</small></div>
-        <p>Un protocole complet, à toi pour toujours. Pour celles et ceux qui veulent traverser une chose précise avant d'aller plus loin.</p>
+        <p>Un protocole complet, <b>à toi à vie</b> — même sans abonnement. Pour celles et ceux qui veulent traverser une chose précise, une fois, sans récurrence.</p>
         <a href="/rejoindre" class="btn btn-ghost">Choisir mon module</a>
       </div>
     </div>
@@ -460,7 +467,7 @@
 </section>
 
 <!-- 15 · FAQ -->
-<section class="band">
+<section class="band" id="faq">
   <div class="container">
     <div class="sec-head center reveal">
       <span class="eyebrow">FAQ</span>
@@ -513,6 +520,16 @@
 
 <script>
   document.documentElement.classList.add('js');
+
+  // Menu mobile : ouvre/ferme le menu déroulant au clic sur le burger
+  const burger = document.querySelector('.burger');
+  const hdr = document.querySelector('header');
+  if (burger && hdr) {
+    burger.addEventListener('click', () => hdr.classList.toggle('nav-open'));
+    hdr.querySelectorAll('.nav-links a').forEach(a =>
+      a.addEventListener('click', () => hdr.classList.remove('nav-open')));
+  }
+
   // Scroll reveal
   const io = new IntersectionObserver((entries)=>{
     entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });

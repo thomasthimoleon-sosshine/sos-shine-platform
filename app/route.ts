@@ -9,7 +9,9 @@ export const dynamic = 'force-static'
 
 export async function GET() {
   try {
-    const html = await readFile(path.join(process.cwd(), 'public', 'landingtest3d.html'), 'utf8')
+    // L'accueil sert la version 3D (landing-home.html), découplée de /landingtest3d
+    // qui sert la version d'essai (Projection).
+    const html = await readFile(path.join(process.cwd(), 'public', 'landing-home.html'), 'utf8')
     return new Response(html, {
       headers: {
         'content-type': 'text/html; charset=utf-8',

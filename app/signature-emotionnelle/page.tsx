@@ -398,7 +398,7 @@ export default function SignatureEmotionnellePage() {
       setTimeout(() => {
         setMicroTension(null)
         setPhase('email')
-      }, 2200)
+      }, 1400)
       return
     }
 
@@ -463,7 +463,7 @@ export default function SignatureEmotionnellePage() {
       setTimeout(() => {
         setMicroTension(null)
         setCurrentQ((prev: number) => prev + 1)
-      }, 2200)
+      }, 1400)
       return
     }
 

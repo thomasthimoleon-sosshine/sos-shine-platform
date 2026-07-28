@@ -108,10 +108,12 @@
   .reassure{display:inline-flex;flex-wrap:wrap;gap:8px 20px;justify-content:center;font-size:13.5px;color:var(--cream-dim)}
   .reassure b{color:var(--cream);font-weight:500}
   .reassure .dot{color:var(--gold)}
-  /* Lien discret « rendez-vous avec Julia » */
-  .rdv-julia{display:inline-flex;align-items:center;gap:6px;margin-top:22px;font-size:13px;
-    color:var(--cream-dim);border-bottom:1px solid rgba(201,169,97,.35);padding-bottom:2px;transition:color .2s,border-color .2s}
-  .rdv-julia:hover{color:var(--gold-bright);border-color:var(--gold-bright)}
+  /* « Rendez-vous avec Julia » — premier bouton visible, en tête du hero */
+  .rdv-julia{display:inline-flex;align-items:center;gap:7px;margin:0 auto 26px;font-family:var(--sans);
+    font-size:13px;font-weight:500;letter-spacing:.02em;color:var(--gold-bright);
+    border:1px solid rgba(201,169,97,.4);background:rgba(201,169,97,.06);
+    padding:9px 18px;border-radius:100px;transition:background .2s,border-color .2s,transform .15s}
+  .rdv-julia:hover{background:rgba(201,169,97,.14);border-color:var(--gold-bright);transform:translateY(-1px)}
 
   /* ---------- SECTIONS ---------- */
   section.band{padding:100px 0}
@@ -305,6 +307,7 @@
 <section class="hero" id="test">
   <div class="glow"></div>
   <div class="container">
+    <a href="https://julialaureau.com" target="_blank" rel="noopener noreferrer" class="rdv-julia">Prendre rendez-vous avec Julia <span aria-hidden="true">↗</span></a>
     <span class="eyebrow">La plateforme qui t'aide à comprendre tes émotions et à reprendre le contrôle</span>
     <h1>Tu as l'impression de toujours réagir de la même façon… <span class="em">et tu en as marre.</span></h1>
     <p class="sub">SOS Shine t'aide à comprendre pourquoi tu réagis comme ça, d'où ça vient, et comment faire autrement grâce à des outils simples et un accompagnement humain.</p>
@@ -318,9 +321,6 @@
       <span>12 questions · 3 minutes</span><span class="dot">·</span>
       <span>Résultat immédiat</span><span class="dot">·</span>
       <span>Sans carte bancaire</span>
-    </div>
-    <div>
-      <a href="https://julialaureau.com" target="_blank" rel="noopener noreferrer" class="rdv-julia">Prendre rendez-vous avec Julia <span aria-hidden="true">↗</span></a>
     </div>
   </div>
 </section>

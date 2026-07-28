@@ -54,18 +54,19 @@ export function SingleChoice({
         <motion.button
           key={i}
           onClick={() => handleSelect(i)}
-          className="w-full text-left px-4 py-3 rounded-2xl flex items-center gap-3 cursor-pointer"
+          className="w-full text-left px-5 py-4 rounded-2xl flex items-center gap-3 cursor-pointer"
           style={{
-            background: selected === i ? 'rgba(201,169,97,0.1)' : 'rgba(255,255,255,0.035)',
-            border: selected === i ? '1.5px solid rgba(201,169,97,0.45)' : '1.5px solid rgba(255,255,255,0.06)',
-            minHeight: '52px',
+            background: selected === i ? 'rgba(201,169,97,0.12)' : 'rgba(245,239,227,0.035)',
+            border: selected === i ? '1.5px solid rgba(201,169,97,0.5)' : '1.5px solid rgba(245,239,227,0.07)',
+            boxShadow: selected === i ? '0 0 24px rgba(201,169,97,0.10)' : 'none',
+            minHeight: '56px',
           }}
           whileTap={{ scale: 0.975, transition: { duration: 0.08 } }}
         >
           <span className="text-base flex-shrink-0 w-7 text-center">{choice.emoji}</span>
           <span
-            className="text-sm font-sans leading-snug flex-1"
-            style={{ color: selected === i ? 'var(--text-primary)' : 'rgba(255,255,255,0.6)' }}
+            className="text-[15px] font-sans leading-snug flex-1"
+            style={{ color: selected === i ? 'var(--text-primary)' : 'rgba(245,239,227,0.72)' }}
           >
             {choice.shortText || choice.text}
           </span>
@@ -94,10 +95,10 @@ export function SingleChoice({
           <button
             onClick={onSelectOther}
             className="flex items-center gap-3 w-full text-left cursor-pointer"
-            style={{ minHeight: '28px' }}
+            style={{ minHeight: '48px' }}
           >
             <span className="text-base flex-shrink-0 w-7 text-center">✍️</span>
-            <span className="text-sm font-sans" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            <span className="text-[15px] font-sans" style={{ color: 'rgba(245,239,227,0.6)' }}>
               {otherText || 'Autre chose…'}
             </span>
           </button>

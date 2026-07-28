@@ -6,9 +6,10 @@ import { motion } from 'framer-motion'
 type Props = {
   onSubmit: (email: string) => void
   loading?: boolean
+  firstName?: string
 }
 
-export function EmailCapture({ onSubmit, loading }: Props) {
+export function EmailCapture({ onSubmit, loading, firstName }: Props) {
   const [email, setEmail] = useState('')
   const isValid = email.includes('@') && email.includes('.')
 
@@ -21,8 +22,8 @@ export function EmailCapture({ onSubmit, loading }: Props) {
     >
       <span className="text-4xl mb-6 block">✨</span>
 
-      <h2 className="font-display text-xl sm:text-2xl font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
-        Tu as déjà montré plus que tu ne crois.
+      <h2 className="font-display text-2xl sm:text-3xl font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
+        {firstName ? `${firstName}, ton profil est presque prêt.` : 'Ton profil est presque prêt.'}
       </h2>
 
       <p className="text-sm leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
@@ -36,8 +37,15 @@ export function EmailCapture({ onSubmit, loading }: Props) {
       <div className="space-y-4">
         <input
           type="email"
+          inputMode="email"
+          autoComplete="email"
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
+          enterKeyHint="go"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Enter' && isValid && !loading) onSubmit(email) }}
           placeholder="ton@email.com"
           className="w-full px-5 py-4 rounded-xl text-base text-center outline-none transition-all focus:ring-2 focus:ring-[var(--brand)]"
           style={{

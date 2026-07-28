@@ -33,18 +33,19 @@ export function MultiChoice({ choices, hasOther, maxSelections, selected, otherT
         return (
           <motion.button
             key={i}
-            onClick={() => !isDisabled && onToggle(i)}
-            className="w-full text-left px-4 py-3 rounded-2xl flex items-center gap-3 cursor-pointer"
+            onClick={() => { if (!isDisabled) { try { navigator.vibrate?.(8) } catch {} ; onToggle(i) } }}
+            className="w-full text-left px-5 py-4 rounded-2xl flex items-center gap-3 cursor-pointer"
             style={{
-              background: isSelected ? 'rgba(201,169,97,0.1)' : 'rgba(255,255,255,0.035)',
-              border: isSelected ? '1.5px solid rgba(201,169,97,0.45)' : '1.5px solid rgba(255,255,255,0.06)',
+              background: isSelected ? 'rgba(201,169,97,0.12)' : 'rgba(245,239,227,0.035)',
+              border: isSelected ? '1.5px solid rgba(201,169,97,0.5)' : '1.5px solid rgba(245,239,227,0.07)',
+              boxShadow: isSelected ? '0 0 24px rgba(201,169,97,0.10)' : 'none',
               opacity: isDisabled ? 0.3 : 1,
-              minHeight: '52px',
+              minHeight: '56px',
             }}
             whileTap={isDisabled ? {} : { scale: 0.975, transition: { duration: 0.08 } }}
           >
             <span className="text-base flex-shrink-0 w-7 text-center">{choice.emoji}</span>
-            <span className="text-sm font-sans leading-snug flex-1" style={{ color: isSelected ? 'var(--text-primary)' : 'rgba(255,255,255,0.6)' }}>
+            <span className="text-[15px] font-sans leading-snug flex-1" style={{ color: isSelected ? 'var(--text-primary)' : 'rgba(245,239,227,0.72)' }}>
               {choice.shortText || choice.text}
             </span>
             {isSelected && (
@@ -70,9 +71,9 @@ export function MultiChoice({ choices, hasOther, maxSelections, selected, otherT
             border: isOtherSelected ? '1.5px solid rgba(201,169,97,0.45)' : '1.5px solid rgba(255,255,255,0.06)',
           }}
         >
-          <button onClick={onToggleOther} className="flex items-center gap-3 w-full text-left cursor-pointer" style={{ minHeight: '28px' }}>
+          <button onClick={onToggleOther} className="flex items-center gap-3 w-full text-left cursor-pointer" style={{ minHeight: '48px' }}>
             <span className="text-base flex-shrink-0 w-7 text-center">✍️</span>
-            <span className="text-sm font-sans" style={{ color: 'rgba(255,255,255,0.5)' }}>Autre chose…</span>
+            <span className="text-[15px] font-sans" style={{ color: 'rgba(245,239,227,0.6)' }}>Autre chose…</span>
           </button>
           {isOtherSelected && (
             <textarea

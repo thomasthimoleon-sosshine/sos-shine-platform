@@ -77,7 +77,7 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
         </Link>
 
         <div className="space-y-4">
-          <h1 className="font-sans text-[22px] font-bold leading-tight" style={{ color: 'var(--text-primary)' }}>
+          <h1 className="font-display text-[27px] sm:text-[32px] font-semibold leading-tight" style={{ color: 'var(--text-primary)' }}>
             Découvre le schéma émotionnel<br />
             qui influence tes réactions.
           </h1>
@@ -208,7 +208,7 @@ function QuestionScreen({
         </p>
       )}
 
-      <h2 className="font-sans font-bold text-base sm:text-[17px] mb-5 leading-snug whitespace-pre-line" style={{ color: 'var(--text-primary)' }}>
+      <h2 className="font-display font-semibold text-[22px] sm:text-[26px] mb-5 leading-snug whitespace-pre-line" style={{ color: 'var(--text-primary)' }}>
         {question.shortQuestion || question.question}
       </h2>
 
@@ -513,7 +513,7 @@ export default function SignatureEmotionnellePage() {
   }, [phase, sessionId, responseId, dominant])
 
   return (
-    <main className="min-h-screen relative z-10" style={{ background: 'var(--dark, #000000)' }}>
+    <main className="quiz-shell min-h-screen relative z-10">
       <AnimatePresence>
         {microTension && (
           <motion.div
@@ -568,7 +568,7 @@ export default function SignatureEmotionnellePage() {
         )}
 
         {phase === 'email' && (
-          <EmailCapture key="email" onSubmit={handleEmailSubmit} loading={emailLoading} />
+          <EmailCapture key="email" onSubmit={handleEmailSubmit} loading={emailLoading} firstName={firstName} />
         )}
 
         {phase === 'result' && (

@@ -1054,3 +1054,19 @@ h1 .text-shimmer, h2 .text-shimmer, h3 .text-shimmer, .text-shimmer {
 .blog-html-content code { background: rgba(116, 192, 252, 0.1); color: #74C0FC; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.85em; }
 .blog-html-content pre { background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; }
 .blog-html-content pre code { background: none; padding: 0; }
+
+/* ============================================================
+   QUIZ « Signature Émotionnelle » — charte SOS Shine scopée.
+   Redéfinit les tokens couleur UNIQUEMENT dans le quiz pour
+   aligner la palette sur la landing (vrai or #C9A961, noir
+   chaud, ivoire) sans impacter le reste du site.
+   ============================================================ */
+.quiz-shell {
+  --brand: #C9A961;              /* or SOS Shine (remplace l'olive #B8A472) */
+  --gold-deep: #E8C77D;          /* or clair */
+  --text-primary: #F5EFE3;       /* ivoire */
+  --text-secondary: rgba(245,239,227,0.72);
+  --text-muted: rgba(245,239,227,0.45);
+  background: #0A0806 !important; /* noir chaud charte */
+  color: #F5EFE3;
+}

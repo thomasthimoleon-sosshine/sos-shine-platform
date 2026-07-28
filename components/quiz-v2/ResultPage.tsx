@@ -115,8 +115,10 @@ export function ResultPage({ firstName, scores, dominant, secondary, email }: Pr
   const topProtocol = available[0] ?? sortedProtocols[0] ?? null
 
   const signupUrl = `/signup?source=quiz&email=${encodeURIComponent(email)}`
+  // Conversion : on va DIRECTEMENT à la création de compte (1 clic), en gardant
+  // le protocole recommandé en mémoire (retrouvé dans l'espace juste après).
   const ctaUrl = topProtocol
-    ? `/protocole/${topProtocol.slug}?preview=true&email=${encodeURIComponent(email)}`
+    ? `/signup?source=quiz&protocol=${topProtocol.slug}&email=${encodeURIComponent(email)}`
     : signupUrl
 
   function storeProtocolSlug() {
@@ -484,9 +486,13 @@ export function ResultPage({ firstName, scores, dominant, secondary, email }: Pr
                     letterSpacing: '0.02em',
                   }}
                 >
-                  Commencer mon protocole
+                  Créer mon compte pour commencer
                   <span>→</span>
                 </Link>
+                {/* Réassurance collée au bouton */}
+                <p className="text-[11px] text-center mt-3" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                  Gratuit · 20 secondes · sans carte bancaire — tu retrouves ta lettre et ton protocole dans ton espace.
+                </p>
               </div>
             </div>
           </FadeIn>
@@ -497,47 +503,18 @@ export function ResultPage({ firstName, scores, dominant, secondary, email }: Pr
               className="flex items-center justify-center gap-3 w-full py-4 rounded-xl text-sm font-semibold transition-all hover:brightness-110"
               style={{ background: `linear-gradient(135deg, ${bc.text}, #B8960F)`, color: '#000' }}
             >
-              Créer mon espace gratuit
+              Créer mon compte gratuit
               <span>→</span>
             </Link>
+            <p className="text-[11px] text-center mt-3" style={{ color: 'rgba(255,255,255,0.35)' }}>
+              Gratuit · 20 secondes · sans carte bancaire — tu retrouves ta lettre dans ton espace.
+            </p>
           </FadeIn>
         )}
       </section>
 
-      {/* ─── SCANNER ─── */}
-      <section className="px-6 max-w-[580px] mx-auto pb-10 pt-6">
-        <FadeIn>
-          <div
-            className="rounded-2xl p-6 flex items-start gap-5"
-            style={{
-              background: 'rgba(255,255,255,0.015)',
-              border: '1px solid rgba(255,255,255,0.05)',
-            }}
-          >
-            <div
-              className="w-11 h-11 rounded-xl flex items-center justify-center text-xl shrink-0"
-              style={{ background: 'rgba(201,169,97,0.08)', border: '1px solid rgba(201,169,97,0.12)' }}
-            >
-              🔬
-            </div>
-            <div>
-              <p className="text-sm font-semibold mb-1.5" style={{ color: 'rgba(255,255,255,0.75)' }}>
-                Scanner émotionnel approfondi
-              </p>
-              <p className="text-xs leading-relaxed mb-4" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                40 questions · 12 dimensions · lecture personnalisée par IA
-              </p>
-              <a
-                href="/quiz-approfondi"
-                className="inline-flex items-center gap-2 text-xs font-semibold"
-                style={{ color: 'var(--brand, #C9A961)' }}
-              >
-                Accéder au scanner →
-              </a>
-            </div>
-          </div>
-        </FadeIn>
-      </section>
+      {/* ─── SCANNER : retiré de la page de résultat (fuite de conversion).
+           Le scanner approfondi reste accessible depuis le dashboard, après inscription. ─── */}
 
       {/* ─── PARTAGE ─── */}
       <section className="px-6 max-w-[580px] mx-auto pb-28 pt-4">

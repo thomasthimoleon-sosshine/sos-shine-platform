@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import { useTranslation } from '@/lib/i18n/useTranslation'
+import { track } from '@/lib/analytics/track'
 
 const DEFAULTS: Record<string, string> = {
   signup_title: 'Créer mon compte',
@@ -12,7 +13,7 @@ const DEFAULTS: Record<string, string> = {
   signup_button_text: 'Créer mon compte',
   signup_login_text: 'Déjà membre ?',
   signup_login_link_text: 'Se connecter',
-  signup_trial_text: '7 jours gratuits — Puis 29,90€/mois — Sans engagement',
+  signup_trial_text: 'Inscription gratuite — Choisissez votre formule ensuite — Sans engagement',
   signup_confirm_title: 'Vérifiez votre email',
   signup_confirm_text: 'Un lien de confirmation a été envoyé. Cliquez dessus pour activer votre compte.',
   signup_title_font: 'Cormorant Garamond',
@@ -84,6 +85,7 @@ export default function SignupPage() {
         return
       }
 
+      track('signup_submitted', { email })
       setSuccess(true)
     } catch {
       setError(t('auth.signup_error'))

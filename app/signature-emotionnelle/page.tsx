@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { QUESTIONS, PROFILES, calculateResult, type ProfileKey } from "@/lib/signature-test";
 import { useTranslation } from "@/lib/i18n/useTranslation";
+import { track } from "@/lib/analytics/track";
 
 type Phase = "intro" | "quiz" | "loading" | "email" | "result";
 
@@ -147,12 +148,36 @@ function QuizScreen({ onComplete }: { onComplete: (answers: Record<number, numbe
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
   const [direction, setDirection] = useState(1);
+  // Chronomètre du questionnaire (mesure du temps total et par question).
+  // Initialisé sur montage (Date.now() ne doit pas être appelé au rendu).
+  const startedAtRef = useRef<number>(0);
+  const lastAnswerAtRef = useRef<number>(0);
+
+  useEffect(() => {
+    const now = Date.now();
+    startedAtRef.current = now;
+    lastAnswerAtRef.current = now;
+  }, []);
 
   const question = QUESTIONS[currentQ];
 
   const handleSelect = useCallback((answerIdx: number) => {
     if (selectedIdx !== null) return;
     setSelectedIdx(answerIdx);
+
+    const now = Date.now();
+    // Temps passé sur CETTE question + temps total depuis le début du test
+    track("question_answered", {
+      step: currentQ + 1,
+      metadata: {
+        question_id: question.id,
+        answer_idx: answerIdx,
+        total_questions: QUESTIONS.length,
+        question_ms: now - lastAnswerAtRef.current,
+        elapsed_ms: now - startedAtRef.current,
+      },
+    });
+    lastAnswerAtRef.current = now;
 
     setTimeout(() => {
       const newAnswers = { ...answers, [question.id]: answerIdx };
@@ -163,6 +188,13 @@ function QuizScreen({ onComplete }: { onComplete: (answers: Record<number, numbe
         setCurrentQ((prev) => prev + 1);
         setSelectedIdx(null);
       } else {
+        track("test_completed", {
+          step: QUESTIONS.length,
+          metadata: {
+            total_questions: QUESTIONS.length,
+            total_ms: Date.now() - startedAtRef.current,
+          },
+        });
         onComplete(newAnswers);
       }
     }, 400);
@@ -539,6 +571,7 @@ function ResultScreen({ profileKey, firstName }: { profileKey: ProfileKey; first
         >
           <Link href="/rejoindre">
             <button
+              onClick={() => track("join_clicked", { metadata: { profile: profileKey } })}
               className="magnetic-btn pulse-ring px-10 py-5 rounded-full text-base font-semibold tracking-wide"
               style={{ background: "linear-gradient(135deg, var(--gold), var(--gold-deep))", color: "#050505" }}
             >
@@ -570,6 +603,7 @@ export default function SignatureEmotionnellePage() {
 
   const handleStart = useCallback((name: string) => {
     setFirstName(name);
+    track("test_started", { metadata: { has_name: Boolean(name) } });
     setPhase("quiz");
   }, []);
 
@@ -580,6 +614,7 @@ export default function SignatureEmotionnellePage() {
     setTimeout(() => {
       setResultProfile(result);
       setPhase("email");
+      track("email_gate_shown", { metadata: { profile: result } });
       window.scrollTo({ top: 0, behavior: "smooth" });
     }, 2800);
   }, []);
@@ -587,6 +622,14 @@ export default function SignatureEmotionnellePage() {
   const handleEmailSubmit = useCallback(async (email: string) => {
     const profileKey = resultProfile;
     const profileName = profileKey ? PROFILES[profileKey]?.archetype : null;
+    track("email_submitted", { email, metadata: { profile: profileKey } });
+    // On garde le lead pour pré-remplir le paiement (évite un checkout sans email)
+    try {
+      localStorage.setItem(
+        "sos-shine-lead",
+        JSON.stringify({ email, firstName, profileKey }),
+      );
+    } catch {}
     try {
       await fetch("/api/signature-lead", {
         method: "POST",
@@ -595,6 +638,7 @@ export default function SignatureEmotionnellePage() {
       });
     } catch {}
     setPhase("result");
+    track("result_viewed", { email, metadata: { profile: profileKey } });
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [firstName, resultProfile]);
 

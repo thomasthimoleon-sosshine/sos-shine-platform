@@ -7,6 +7,7 @@ import { useTranslation } from '@/lib/i18n/useTranslation'
 import { createClient } from '@/lib/supabase/client'
 import { PRICES, TOTAL_PRICES, DURATIONS, PLAN_INFO, formatPrice, getSavingsPercent } from '@/lib/stripe'
 import type { PlanId, DurationId } from '@/lib/stripe'
+import { track } from '@/lib/analytics/track'
 
 const PRELAUNCH_END = new Date('2026-03-22T00:00:00+02:00')
 
@@ -312,11 +313,34 @@ function PaymentContent() {
       if (user) {
         setUserEmail(user.email || null)
         setUserId(user.id)
+      } else {
+        // Visiteur non connecté : on récupère l'email capturé au test
+        // pour ne pas casser le paiement (sinon le checkout échoue).
+        try {
+          const raw = localStorage.getItem('sos-shine-lead')
+          if (raw) {
+            const lead = JSON.parse(raw)
+            if (lead?.email) setUserEmail(lead.email)
+          }
+        } catch {}
       }
     })
   }, [])
 
   const handleCheckout = async (plan: PlanId) => {
+    track('checkout_started', {
+      email: userEmail,
+      metadata: { plan, duration: selectedDuration, logged_in: Boolean(userId) },
+    })
+
+    // Sans email connu, un checkout échoue côté serveur : on redirige vers
+    // l'inscription (qui ramènera ensuite au paiement) plutôt que d'afficher
+    // une erreur brute.
+    if (!userEmail) {
+      window.location.href = `/signup?next=/rejoindre&plan=${plan}`
+      return
+    }
+
     setLoadingPlan(plan)
     try {
       const res = await fetch('/api/stripe/checkout', {

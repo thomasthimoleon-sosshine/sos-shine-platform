@@ -8,33 +8,33 @@
 
 /* ── 1. Design Tokens ── */
 :root {
-  /* ── Brand — Or subtil, patiné, vécu ── */
-  --brand: #B8A472;
-  --brand-light: #D4C99A;
-  --brand-deep: #96845A;
-  --brand-muted: #A69768;
-  --brand-alpha-weak: rgba(184, 164, 114, 0.06);
-  --brand-alpha-medium: rgba(184, 164, 114, 0.12);
-  --brand-alpha-strong: rgba(184, 164, 114, 0.24);
+  /* ── Brand — Or SOS Shine (aligné sur la landing) ── */
+  --brand: #C9A961;
+  --brand-light: #E8C77D;
+  --brand-deep: #A9822E;
+  --brand-muted: #B0A084;
+  --brand-alpha-weak: rgba(201, 169, 97, 0.06);
+  --brand-alpha-medium: rgba(201, 169, 97, 0.12);
+  --brand-alpha-strong: rgba(201, 169, 97, 0.24);
 
-  /* ── Surfaces — Noir profond + Bleu nuit ── */
-  --surface: #08090A;
-  --surface-raised: #0F1624;
-  --surface-card: #131A2B;
-  --surface-elevated: #1A2540;
-  --surface-overlay: rgba(8, 9, 10, 0.85);
+  /* ── Surfaces — Noir chaud SOS Shine ── */
+  --surface: #0A0806;
+  --surface-raised: #12100B;
+  --surface-card: #16130D;
+  --surface-elevated: #1F1A12;
+  --surface-overlay: rgba(10, 8, 6, 0.85);
 
   /* ── Borders ── */
-  --border: rgba(184, 164, 114, 0.08);
+  --border: rgba(201, 169, 97, 0.10);
   --border-subtle: rgba(255, 255, 255, 0.04);
-  --border-medium: rgba(184, 164, 114, 0.15);
-  --border-strong: rgba(184, 164, 114, 0.25);
-  --border-hover: rgba(184, 164, 114, 0.20);
+  --border-medium: rgba(201, 169, 97, 0.18);
+  --border-strong: rgba(201, 169, 97, 0.28);
+  --border-hover: rgba(201, 169, 97, 0.22);
 
   /* ── Text — Ivoire + nuances ── */
-  --text-primary: #F5F0E8;
-  --text-secondary: #A8A29E;
-  --text-muted: #64605A;
+  --text-primary: #F5EFE3;
+  --text-secondary: #B7AC97;
+  --text-muted: #877E6C;
   --text-bold: #FAFAF8;
   --text-inverse: #08090A;
 

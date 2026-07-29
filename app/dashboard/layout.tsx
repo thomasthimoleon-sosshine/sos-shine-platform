@@ -273,10 +273,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#050505]">
+      <div className="min-h-screen flex items-center justify-center bg-[#0A0806]">
         <div className="text-center space-y-4">
-          <div className="w-10 h-10 rounded-2xl mx-auto flex items-center justify-center bg-[rgba(212,175,55,0.12)] border border-[#D4AF37]/30">
-            <div className="w-5 h-5 border-2 border-[#050505] border-t-[#D4AF37] rounded-full animate-spin" />
+          <div className="w-10 h-10 rounded-2xl mx-auto flex items-center justify-center bg-[rgba(212,175,55,0.12)] border border-[#C9A961]/30">
+            <div className="w-5 h-5 border-2 border-[#0A0806] border-t-[#C9A961] rounded-full animate-spin" />
           </div>
           <p className="text-sm text-[#52525b]">{t('common.loading')}</p>
         </div>
@@ -285,7 +285,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <div className="min-h-screen flex bg-[#050505]">
+    <div className="min-h-screen flex bg-[#0A0806]">
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
@@ -304,12 +304,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {logoUrl ? (
               <img src={logoUrl} alt="SOS Shine" className="w-9 h-9 rounded-xl object-contain" />
             ) : (
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center font-display text-base font-semibold bg-[rgba(212,175,55,0.12)] text-[#D4AF37] border border-[#D4AF37]/30">
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center font-display text-base font-semibold bg-[rgba(212,175,55,0.12)] text-[#C9A961] border border-[#C9A961]/30">
                 S
               </div>
             )}
             <div>
-              <h1 className="font-display text-base font-semibold tracking-tight text-[#D4AF37]">
+              <h1 className="font-display text-base font-semibold tracking-tight text-[#C9A961]">
                 SOS Shine
               </h1>
               <p className="text-[11px] leading-none text-[#52525b]">{t('nav.your_space')}</p>
@@ -327,10 +327,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 key={item.href}
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
-                className={`nav-item flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium relative group transition-colors duration-[var(--transition-base)] ${isActive ? 'bg-[rgba(212,175,55,0.07)] text-[#D4AF37]' : 'text-[#a1a1aa] hover:text-[#e0e0e0] hover:bg-white/[0.03]'}`}
+                className={`nav-item flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium relative group transition-colors duration-[var(--transition-base)] ${isActive ? 'bg-[rgba(212,175,55,0.07)] text-[#C9A961]' : 'text-[#a1a1aa] hover:text-[#e0e0e0] hover:bg-white/[0.03]'}`}
               >
                 {isActive && (
-                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-full bg-[#D4AF37]" />
+                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-full bg-[#C9A961]" />
                 )}
                 <span className="opacity-70 group-hover:opacity-100 transition-opacity">{item.icon}</span>
                 {t(item.labelKey)}
@@ -353,10 +353,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 key={item.href}
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
-                className={`nav-item flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium relative group transition-colors duration-[var(--transition-base)] ${isActive ? 'bg-[rgba(212,175,55,0.07)] text-[#D4AF37]' : 'text-[#a1a1aa] hover:text-[#e0e0e0] hover:bg-white/[0.03]'}`}
+                className={`nav-item flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium relative group transition-colors duration-[var(--transition-base)] ${isActive ? 'bg-[rgba(212,175,55,0.07)] text-[#C9A961]' : 'text-[#a1a1aa] hover:text-[#e0e0e0] hover:bg-white/[0.03]'}`}
               >
                 {isActive && (
-                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-full bg-[#D4AF37]" />
+                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-full bg-[#C9A961]" />
                 )}
                 <span className="opacity-70 group-hover:opacity-100 transition-opacity">{item.icon}</span>
                 {t(item.labelKey)}
@@ -445,7 +445,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* ── User section ── */}
         <div className="px-3 py-4 border-t border-white/[0.04]">
           <div className="flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] mb-2 bg-[rgba(255,255,255,0.025)] border border-white/[0.05]">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 ring-1 ring-[#D4AF37]/20 bg-[rgba(212,175,55,0.12)] text-[#D4AF37]">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 ring-1 ring-[#C9A961]/20 bg-[rgba(212,175,55,0.12)] text-[#C9A961]">
               {profile?.prenom?.charAt(0).toUpperCase() || 'M'}
             </div>
             <div className="flex-1 min-w-0">
@@ -488,7 +488,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {logoUrl ? (
             <img src={logoUrl} alt="SOS Shine" className="h-7 object-contain" />
           ) : (
-            <span className="font-display text-base font-semibold tracking-tight text-[#D4AF37]">
+            <span className="font-display text-base font-semibold tracking-tight text-[#C9A961]">
               SOS Shine
             </span>
           )}
@@ -528,15 +528,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               onClick={(e) => e.stopPropagation()}
             >
               {/* Glow */}
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 rounded-full opacity-20 blur-[60px]" style={{ background: '#D4AF37' }} />
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 rounded-full opacity-20 blur-[60px]" style={{ background: '#C9A961' }} />
 
               <div className="relative z-10 px-6 sm:px-8 py-8 sm:py-10">
                 {/* Diamond icon */}
-                <div className="w-16 h-16 rounded-[var(--radius-xl)] mx-auto mb-5 flex items-center justify-center bg-[rgba(212,175,55,0.07)] border border-[#D4AF37]/20">
+                <div className="w-16 h-16 rounded-[var(--radius-xl)] mx-auto mb-5 flex items-center justify-center bg-[rgba(212,175,55,0.07)] border border-[#C9A961]/20">
                   <span className="text-3xl">✨</span>
                 </div>
 
-                <h2 className="font-display text-xl sm:text-2xl font-semibold mb-3 text-[#D4AF37]">
+                <h2 className="font-display text-xl sm:text-2xl font-semibold mb-3 text-[#C9A961]">
                   Félicitations Shiner !
                 </h2>
 
@@ -546,7 +546,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
                 <button
                   onClick={dismissWelcomePopup}
-                  className="w-full sm:w-auto px-8 py-3.5 rounded-full text-sm font-semibold tracking-wide cursor-pointer transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)] hover:scale-[1.02] active:scale-[0.98] bg-[#D4AF37] text-[#050505] shadow-[0_0_30px_rgba(212,175,55,0.3)]"
+                  className="w-full sm:w-auto px-8 py-3.5 rounded-full text-sm font-semibold tracking-wide cursor-pointer transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)] hover:scale-[1.02] active:scale-[0.98] bg-[#C9A961] text-[#0A0806] shadow-[0_0_30px_rgba(212,175,55,0.3)]"
                 >
                   Continuer à façonner mon diamant 💎
                 </button>

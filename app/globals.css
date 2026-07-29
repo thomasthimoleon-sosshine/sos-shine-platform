@@ -1070,3 +1070,25 @@ h1 .text-shimmer, h2 .text-shimmer, h3 .text-shimmer, .text-shimmer {
   background: #0A0806 !important; /* noir chaud charte */
   color: #F5EFE3;
 }
+
+/* ============================================================
+   PILOTE — Charte SOS Shine sur le dashboard d'accueil.
+   Scopé à .shine-home : recolore les cartes/accents en noir
+   chaud + or #C9A961 + ivoire (comme la landing), sans toucher
+   au reste de l'app. Étape témoin avant généralisation.
+   ============================================================ */
+.shine-home {
+  --brand: #C9A961;
+  --brand-light: #E8C77D;
+  --brand-deep: #A9822E;
+  --brand-alpha-weak: rgba(201,169,97,0.06);
+  --brand-alpha-medium: rgba(201,169,97,0.12);
+  --brand-alpha-strong: rgba(201,169,97,0.22);
+  --surface-card: #16130D;
+  --surface-elevated: #1F1A12;
+  --border: rgba(201,169,97,0.14);
+  --border-medium: rgba(201,169,97,0.22);
+  --text-primary: #F5EFE3;
+  --text-secondary: rgba(245,239,227,0.70);
+  --text-muted: rgba(245,239,227,0.42);
+}

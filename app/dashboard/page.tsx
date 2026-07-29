@@ -853,7 +853,7 @@ export default function DashboardHome() {
   const level = xpData ? getLevelForXP(xpData.total_xp) : null
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="shine-home max-w-3xl mx-auto space-y-6">
 
       {/* ══════════ 1. HERO PERSO — message court + un seul gros CTA ══════════ */}
       <motion.section

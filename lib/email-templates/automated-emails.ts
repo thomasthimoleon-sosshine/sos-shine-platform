@@ -235,7 +235,7 @@ export async function cancelScheduledEmails(
 export function getPlanDisplayName(plan: string): string {
   switch (plan) {
     case 'essential': return 'Essentielle (ancien)'
-    case 'serenite': return 'Sérénité'
+    case 'serenite': return 'SOS Shine'
     case 'premium': return 'Premium'
     default: return plan
   }

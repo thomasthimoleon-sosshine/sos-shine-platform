@@ -554,7 +554,7 @@ function PaymentContent() {
               Populaire
             </div>
             <p className="text-xs tracking-[0.25em] uppercase mb-4" style={{ color: '#55EFC4' }}>
-              Sérénité
+              SOS Shine
             </p>
             <>
                 <div className="flex items-baseline justify-center gap-1.5 mb-1">
@@ -588,7 +588,7 @@ function PaymentContent() {
               className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm"
               style={{ background: 'linear-gradient(135deg, #55EFC4, #00B894)', color: '#000000' }}
             >
-              Rejoindre Sérénité
+              Rejoindre SOS Shine
             </button>
           </div>
         </Reveal>

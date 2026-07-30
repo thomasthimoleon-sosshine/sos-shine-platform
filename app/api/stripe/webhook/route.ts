@@ -7,6 +7,7 @@ import { NextResponse } from 'next/server'
 import { getStripe } from '@/lib/stripe/client'
 import type Stripe from 'stripe'
 import { sendRawEmail } from '@/lib/email-templates/automated-emails'
+import { parseProtocolRef } from '@/lib/stripe/config'
 import {
   detectPlanFromSession,
   processSuccessfulPayment,
@@ -81,6 +82,37 @@ export async function POST(request: Request) {
       // ── Paiement réussi via Checkout ──
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session
+
+        // Achat d'un protocole seul (accès unique 33€, paiement one-time)
+        // client_reference_id au format p_<userId>_<slug>
+        if (session.mode === 'payment' && session.client_reference_id?.startsWith('p_')) {
+          const parsed = parseProtocolRef(session.client_reference_id)
+          if (parsed) {
+            const { createClient: createSupa } = await import('@supabase/supabase-js')
+            const supabase = createSupa(
+              process.env.NEXT_PUBLIC_SUPABASE_URL!,
+              process.env.SUPABASE_SERVICE_ROLE_KEY!,
+              { auth: { autoRefreshToken: false, persistSession: false } }
+            )
+            // Débloquage idempotent (unique user_id + protocol_slug)
+            const { error: unlockErr } = await supabase
+              .from('protocol_unlocks')
+              .upsert({
+                user_id: parsed.userId,
+                protocol_slug: parsed.slug,
+                stripe_session_id: session.id,
+              }, { onConflict: 'user_id,protocol_slug', ignoreDuplicates: true })
+
+            if (unlockErr) {
+              console.error('[Webhook] protocol_unlock upsert failed:', unlockErr, parsed)
+            } else {
+              console.log(`[Webhook] Protocole débloqué - user ${parsed.userId}, slug ${parsed.slug}`)
+            }
+          } else {
+            console.error('[Webhook] client_reference_id protocole illisible:', session.client_reference_id)
+          }
+          break
+        }
 
         // Acompte cérémonie (paiement one-time via Payment Link)
         if (session.mode === 'payment' && session.client_reference_id) {

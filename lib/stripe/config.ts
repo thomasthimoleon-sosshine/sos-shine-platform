@@ -39,6 +39,26 @@ export const PAYMENT_LINKS: Record<string, string> = {
   serenite_annual:      'https://buy.stripe.com/aFafZ93TC00H6J3esW5ZC0j',
 }
 
+// ── Accès unique : débloquer UN protocole entier (paiement one-time) ──
+export const SINGLE_PROTOCOL_LINK = 'https://buy.stripe.com/9B600b2PycNtd7r98C5ZC0q'
+export const SINGLE_PROTOCOL_PRICE_EUR = 33
+
+// Encode l'utilisateur + le protocole acheté dans le client_reference_id Stripe
+// (caractères autorisés : alphanumériques, tirets, underscores).
+// Format : p_<userId>_<slug>. Le userId est un UUID de 36 caractères.
+export function buildProtocolRef(userId: string, slug: string): string {
+  return `p_${userId}_${slug}`
+}
+
+export function parseProtocolRef(ref: string): { userId: string; slug: string } | null {
+  if (!ref.startsWith('p_')) return null
+  const rest = ref.slice(2)
+  const userId = rest.slice(0, 36)
+  const slug = rest.slice(37) // saute l'underscore séparateur
+  if (!userId || !slug) return null
+  return { userId, slug }
+}
+
 // ── Prix mensuels (en centimes d'euro) ──
 
 export const PRICES: Record<PlanId, Record<DurationId, number>> = {

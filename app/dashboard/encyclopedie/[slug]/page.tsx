@@ -353,8 +353,21 @@ export default function DouleurDetailPage() {
         const subRes = await fetch(`/api/subscription/features?user_id=${user.id}`)
         const subData = await subRes.json()
         if (!subData.is_active && !subData.is_admin) {
-          // Free logged-in users: step 1 fully accessible - no preview mode cap
-          setIsFreeUser(true)
+          // Pas d'abonnement : vérifier si CE protocole a été débloqué à l'unité (33€).
+          let hasUnlock = false
+          try {
+            const { data: unlock } = await supabase
+              .from('protocol_unlocks')
+              .select('id')
+              .eq('user_id', user.id)
+              .eq('protocol_slug', douleur.slug)
+              .maybeSingle()
+            hasUnlock = !!unlock
+          } catch { /* table absente : on ignore */ }
+
+          // Protocole non débloqué → utilisateur gratuit (étape 1 seule).
+          // Protocole débloqué → accès complet à ce protocole (comme un abonné).
+          if (!hasUnlock) setIsFreeUser(true)
         }
       } catch { /* non-critical */ }
 

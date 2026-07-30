@@ -157,9 +157,6 @@ function PrelaunchContent() {
               <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#55EFC4' }}>29,90&euro;</span>
               <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
             </div>
-            <p className="text-[10px] mt-1 font-medium" style={{ color: '#55EFC4' }}>
-              7 jours d&apos;essai gratuit inclus
-            </p>
           </div>
 
           <p className="text-xs mb-2 font-light" style={{ color: 'var(--text-secondary)' }}>
@@ -566,9 +563,6 @@ function PaymentContent() {
                   </span>
                   <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
                 </div>
-                <p className="text-xs mb-1 font-medium" style={{ color: '#55EFC4' }}>
-                  7 jours d&apos;essai gratuit &mdash; CB requise
-                </p>
             </>
             <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>
               {t('join.no_commitment')}
@@ -594,7 +588,7 @@ function PaymentContent() {
               className="cta-glow w-full py-3.5 rounded-full font-medium tracking-wide transition-all text-sm"
               style={{ background: 'linear-gradient(135deg, #55EFC4, #00B894)', color: '#000000' }}
             >
-              Essayer Sérénité - 7 jours gratuits (CB requise)
+              Rejoindre Sérénité
             </button>
           </div>
         </Reveal>

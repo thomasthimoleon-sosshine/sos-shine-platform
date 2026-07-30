@@ -4,6 +4,7 @@
 // =============================================
 
 import { getResendClient } from '@/lib/crm/resend'
+import { withTrackingPixel } from '@/lib/crm/tracking-pixel'
 import { createClient } from '@supabase/supabase-js'
 
 function getAdminClient() {
@@ -113,7 +114,7 @@ export async function sendTemplateEmail(
 
     const subject = renderTemplate(template.subject, allVars)
     const bodyHtml = renderTemplate(template.html_content, allVars)
-    const fullHtml = wrapInEmailLayout(bodyHtml)
+    const fullHtml = withTrackingPixel(wrapInEmailLayout(bodyHtml), recipientEmail, templateKey)
 
     const { client: resend, fromEmail } = await getResendClient()
     const { error: sendErr } = await resend.emails.send({
@@ -260,7 +261,7 @@ export async function sendRawEmail(
   options?: { recipientName?: string; eventType?: string }
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const fullHtml = wrapInEmailLayout(bodyHtml)
+    const fullHtml = withTrackingPixel(wrapInEmailLayout(bodyHtml), recipientEmail, options?.eventType || 'raw')
     const { client: resend, fromEmail } = await getResendClient()
 
     const { error: sendErr } = await resend.emails.send({

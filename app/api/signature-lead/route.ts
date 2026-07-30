@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { PROFILES, type ProfileKey } from '@/lib/signature-test'
 import { generateSignatureResultEmail } from '@/lib/email-templates/signature-result'
 import { getResendClient } from '@/lib/crm/resend'
+import { withTrackingPixel } from '@/lib/crm/tracking-pixel'
 
 function getAdminClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -104,7 +105,7 @@ export async function POST(request: NextRequest) {
           from: `SOS Shine® <${fromEmail}>`,
           to: cleanEmail,
           subject,
-          html,
+          html: withTrackingPixel(html, cleanEmail, 'signature_result'),
         })
 
         if (!sendErr) {

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { getResendClient } from '@/lib/crm/resend'
 import { generateEmail01 } from '@/lib/email-templates/quiz-v2/email-01-capture'
+import { withTrackingPixel } from '@/lib/crm/tracking-pixel'
 
 function getAdminClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -73,7 +74,7 @@ export async function GET(request: Request) {
         from: `Julia Laureau <${fromEmail}>`,
         to: row.email,
         subject,
-        html,
+        html: withTrackingPixel(html, row.email, 'quiz_v2_email_01'),
       })
 
       await supabase.from('crm_campaign_events').insert({

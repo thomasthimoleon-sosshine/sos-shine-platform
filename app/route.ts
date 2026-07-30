@@ -9,9 +9,9 @@ export const dynamic = 'force-static'
 
 export async function GET() {
   try {
-    // L'accueil sert la version 3D (landing-home.html), découplée de /landingtest3d
-    // qui sert la version d'essai (Projection).
-    const html = await readFile(path.join(process.cwd(), 'public', 'landing-home.html'), 'utf8')
+    // L'accueil officiel sert désormais la landing "Projection" (landingtest3d.html).
+    // Elle reste aussi accessible sur /landingtest3d ; l'ancienne 3D est dans landing-home.html.
+    const html = await readFile(path.join(process.cwd(), 'public', 'landingtest3d.html'), 'utf8')
     return new Response(html, {
       headers: {
         'content-type': 'text/html; charset=utf-8',

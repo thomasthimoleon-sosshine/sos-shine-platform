@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { getResendClient } from '@/lib/crm/resend'
 import { generateEmail02 } from '@/lib/email-templates/quiz-v2/email-02-result'
 import { calculateMatchScores, getDominantDimensions } from '@/lib/quiz-v2/scoring'
+import { withTrackingPixel } from '@/lib/crm/tracking-pixel'
 
 function getAdminClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -111,7 +112,7 @@ export async function POST(request: NextRequest) {
         from: `Julia Laureau <${fromEmail}>`,
         to: cleanEmail,
         subject,
-        html,
+        html: withTrackingPixel(html, cleanEmail, 'quiz_v2_email_02'),
       })
 
       // Log send event

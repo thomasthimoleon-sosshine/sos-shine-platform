@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getAdminClient } from '@/lib/crm/supabase-admin'
 import { getResendClient } from '@/lib/crm/resend'
+import { withTrackingPixel } from '@/lib/crm/tracking-pixel'
 
 const GRACE_PERIOD_DAYS = 7
 const REMINDER_INTERVALS_DAYS = [0, 3, 7] // immédiat, +3j, +7j
@@ -257,7 +258,7 @@ async function sendReminder(
       from: `SOS Shine® <${fromEmail}>`,
       to: profile.email,
       subject: emailContent.subject,
-      html: emailContent.html,
+      html: withTrackingPixel(emailContent.html, profile.email, reminderType),
     })
 
     if (error) {

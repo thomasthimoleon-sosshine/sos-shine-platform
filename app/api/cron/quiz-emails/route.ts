@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { getResendClient } from '@/lib/crm/resend'
+import { withTrackingPixel } from '@/lib/crm/tracking-pixel'
 
 function getAdminClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -176,7 +177,8 @@ export async function GET(request: Request) {
       }
 
       const subject = replaceVars(step.subject, vars)
-      const html = replaceVars(step.html_content, vars)
+      const rawHtml = replaceVars(step.html_content, vars)
+      const html = withTrackingPixel(rawHtml, response.email, `quiz_v2_email_${String(step.step_order).padStart(2, '0')}`)
 
       // Send
       try {

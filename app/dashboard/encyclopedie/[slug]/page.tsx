@@ -30,6 +30,12 @@ type StepConfig = {
   audio_cover: string | null
   audio2_cover: string | null
   exercise_content: string | null
+  // Titres d'outils personnalisés (optionnels)
+  videoTitle?: string | null
+  video2Title?: string | null
+  audioTitle?: string | null
+  audio2Title?: string | null
+  pdfTitle?: string | null
 }
 
 // Build steps from dynamic douleur_steps or fallback to legacy columns
@@ -53,6 +59,11 @@ function buildSteps(douleur: Douleur, dynamicSteps: DouleurStep[]): StepConfig[]
       audio_cover: s.audio_cover || null,
       audio2_cover: s.audio2_cover || null,
       exercise_content: s.exercise_content,
+      videoTitle: s.video_title,
+      video2Title: s.video2_title,
+      audioTitle: s.audio_title,
+      audio2Title: s.audio2_title,
+      pdfTitle: s.pdf_title,
     }))
   }
 
@@ -1005,7 +1016,7 @@ export default function DouleurDetailPage() {
 
           return (
             <div className="space-y-4">
-              {currentStep.video && <ToolHeader icon="🎬" label="Vidéo de coaching" color={currentStep.color} />}
+              {currentStep.video && <ToolHeader icon="🎬" label={currentStep.videoTitle || "Vidéo de coaching"} color={currentStep.color} />}
               {currentStep.video && (
                 isPreviewMode
                   ? <PreviewVideo src={currentStep.video} poster={currentStep.video_cover || currentStep.image || undefined} label={currentStep.title} />
@@ -1025,7 +1036,7 @@ export default function DouleurDetailPage() {
               )}
 
               {/* Secondary video (optional) */}
-              {currentStep.video2 && <ToolHeader icon="🎬" label="Vidéo complémentaire" color={currentStep.color} />}
+              {currentStep.video2 && <ToolHeader icon="🎬" label={currentStep.video2Title || "Vidéo complémentaire"} color={currentStep.color} />}
               {currentStep.video2 && (
                 isPreviewMode
                   ? <PreviewVideo src={currentStep.video2} poster={currentStep.video2_cover || undefined} label={currentStep.title} />
@@ -1051,7 +1062,7 @@ export default function DouleurDetailPage() {
                 </div>
               )}
 
-              {currentStep.audio && <ToolHeader icon="🎧" label="Séance audio guidée" color={currentStep.color} />}
+              {currentStep.audio && <ToolHeader icon="🎧" label={currentStep.audioTitle || "Séance audio guidée"} color={currentStep.color} />}
               {currentStep.audio && (
                 isPreviewMode ? (() => {
                   function PreviewAudio({ src, title }: { src: string; title: string }) {
@@ -1113,7 +1124,7 @@ export default function DouleurDetailPage() {
                 )
               )}
 
-              {currentStep.audio2 && !isPreviewMode && <ToolHeader icon="🎧" label="Séance audio complémentaire" color={currentStep.color} />}
+              {currentStep.audio2 && !isPreviewMode && <ToolHeader icon="🎧" label={currentStep.audio2Title || "Séance audio complémentaire"} color={currentStep.color} />}
               {currentStep.audio2 && !isPreviewMode && (
                 <div className="rounded-xl overflow-hidden" style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${currentStep.color}20` }}>
                   {currentStep.audio2_cover && (
@@ -1134,7 +1145,7 @@ export default function DouleurDetailPage() {
                 </div>
               )}
 
-              {currentStep.pdf && <ToolHeader icon="📓" label="Cahier de travail" color={currentStep.color} />}
+              {currentStep.pdf && <ToolHeader icon="📓" label={currentStep.pdfTitle || "Cahier de travail"} color={currentStep.color} />}
               {currentStep.pdf && (
                 isPreviewMode ? (
                   <div className="flex items-center gap-3 p-4 rounded-xl cursor-pointer" onClick={() => window.location.href = isFreeUser ? '/dashboard/tarifs' : '/signup'}

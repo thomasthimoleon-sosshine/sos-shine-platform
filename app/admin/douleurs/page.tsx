@@ -37,6 +37,12 @@ type StepForm = {
   audio_cover: string
   audio2_cover: string
   exercise_content: string
+  // Titres personnalisés par outil (optionnels)
+  video_title?: string
+  video2_title?: string
+  audio_title?: string
+  audio2_title?: string
+  pdf_title?: string
 }
 
 function createEmptyStep(num: number): StepForm {
@@ -315,6 +321,11 @@ export default function AdminDouleursPage() {
       audio_cover: s.audio_cover || '',
       audio2_cover: s.audio2_cover || '',
       exercise_content: s.exercise_content || '',
+      video_title: s.video_title || '',
+      video2_title: s.video2_title || '',
+      audio_title: s.audio_title || '',
+      audio2_title: s.audio2_title || '',
+      pdf_title: s.pdf_title || '',
     }))
   }
 
@@ -520,6 +531,11 @@ export default function AdminDouleursPage() {
         audio_cover: s.audio_cover.trim() || null,
         audio2_cover: s.audio2_cover.trim() || null,
         exercise_content: s.exercise_content.trim() || null,
+        video_title: (s.video_title || '').trim() || null,
+        video2_title: (s.video2_title || '').trim() || null,
+        audio_title: (s.audio_title || '').trim() || null,
+        audio2_title: (s.audio2_title || '').trim() || null,
+        pdf_title: (s.pdf_title || '').trim() || null,
       }))
 
       if (stepsToUpsert.length > 0) {
@@ -1009,6 +1025,11 @@ export default function AdminDouleursPage() {
 
                         {/* Media uploads */}
                         <div className="grid gap-4">
+                          <div>
+                            <label style={labelStyle}>Titre affiché (optionnel)</label>
+                            <input type="text" value={step.video_title || ''} onChange={e => updateStep(i, 'video_title', e.target.value)}
+                              placeholder="Vidéo de coaching" style={inputStyle} />
+                          </div>
                           <FileUpload
                             label={i === 0 ? `Vidéo principale - Étape ${i + 1}` : `Vidéo - Étape ${i + 1}`}
                             accept="video/*"
@@ -1030,6 +1051,11 @@ export default function AdminDouleursPage() {
                           />
                           {i === 0 && (
                             <>
+                            <div>
+                            <label style={labelStyle}>Titre affiché (optionnel)</label>
+                            <input type="text" value={step.video2_title || ''} onChange={e => updateStep(i, 'video2_title', e.target.value)}
+                              placeholder="Vidéo complémentaire" style={inputStyle} />
+                          </div>
                             <FileUpload
                               label={`Vidéo secondaire - Étape ${i + 1} (optionnel)`}
                               accept="video/*"
@@ -1050,6 +1076,11 @@ export default function AdminDouleursPage() {
                             />
                             </>
                           )}
+                          <div>
+                            <label style={labelStyle}>Titre affiché (optionnel)</label>
+                            <input type="text" value={step.audio_title || ''} onChange={e => updateStep(i, 'audio_title', e.target.value)}
+                              placeholder="Séance audio guidée" style={inputStyle} />
+                          </div>
                           <FileUpload
                             label={i === 1 ? `Audio principal - Étape ${i + 1}` : `Audio - Étape ${i + 1}`}
                             accept="audio/*"
@@ -1071,6 +1102,11 @@ export default function AdminDouleursPage() {
                           {/* 2nd audio: only on step 2 (Libérer) */}
                           {i === 1 && (
                             <>
+                            <div>
+                            <label style={labelStyle}>Titre affiché (optionnel)</label>
+                            <input type="text" value={step.audio2_title || ''} onChange={e => updateStep(i, 'audio2_title', e.target.value)}
+                              placeholder="Séance audio complémentaire" style={inputStyle} />
+                          </div>
                             <FileUpload
                               label={`Audio secondaire - Étape ${i + 1} (optionnel)`}
                               accept="audio/*"
@@ -1091,6 +1127,11 @@ export default function AdminDouleursPage() {
                             />
                             </>
                           )}
+                          <div>
+                            <label style={labelStyle}>Titre affiché (optionnel)</label>
+                            <input type="text" value={step.pdf_title || ''} onChange={e => updateStep(i, 'pdf_title', e.target.value)}
+                              placeholder="Cahier de travail" style={inputStyle} />
+                          </div>
                           <FileUpload
                             label={`PDF - Étape ${i + 1}`}
                             accept="application/pdf"

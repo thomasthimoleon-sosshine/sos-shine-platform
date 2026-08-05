@@ -89,6 +89,12 @@ export type DouleurStep = {
   audio_cover: string | null
   audio2_cover: string | null
   exercise_content: string | null
+  // Titres personnalisés par outil (optionnels — fallback vers un libellé par défaut)
+  video_title: string | null
+  video2_title: string | null
+  audio_title: string | null
+  audio2_title: string | null
+  pdf_title: string | null
   created_at: string
   updated_at: string
 }

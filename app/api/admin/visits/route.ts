@@ -56,6 +56,11 @@ export async function GET() {
     let svDevices: { type: string; count: number }[] = []
     let svDailyData: { date: string; count: number }[] = []
     let svHourlyData: { hour: string; count: number }[] = []
+    let svSources: { source: string; visits: number; uniques: number }[] = []
+    let svReferrers: { referrer: string; count: number }[] = []
+    let svWeekday: { day: string; count: number }[] = []
+    let svAvgDuration = 0
+    let svMedianDuration = 0
 
     try {
       const [
@@ -110,6 +115,55 @@ export async function GET() {
         const hourlyCounts: number[] = Array(24).fill(0)
         for (const row of (hourlyRes.data || [])) { hourlyCounts[new Date(row.created_at).getHours()]++ }
         svHourlyData = hourlyCounts.map((count, hour) => ({ hour: `${hour}h`, count }))
+
+        // Jour de la semaine (à partir des 30 derniers jours), réordonné Lun→Dim
+        const wd = Array(7).fill(0)
+        for (const row of (dailyRes.data || [])) { wd[new Date(row.created_at).getDay()]++ }
+        const WD = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam']
+        svWeekday = [1, 2, 3, 4, 5, 6, 0].map(i => ({ day: WD[i], count: wd[i] }))
+
+        // ── Métriques enrichies : plateforme d'origine, durée, référents (30 j) ──
+        const [utmRes, durationRes, referrerRes] = await Promise.all([
+          admin.from('site_visits').select('utm_source, session_id').gte('created_at', thirtyDaysAgo).limit(20000),
+          admin.from('site_visits').select('time_on_page_seconds').gte('created_at', thirtyDaysAgo).not('time_on_page_seconds', 'is', null).limit(20000),
+          admin.from('site_visits').select('referrer').gte('created_at', thirtyDaysAgo).limit(20000),
+        ])
+
+        // Plateforme d'origine (UTM source) : visites + visiteurs uniques
+        const srcVisits: Record<string, number> = {}
+        const srcSessions: Record<string, Set<string>> = {}
+        for (const row of (utmRes.data || [])) {
+          const src = ((row as { utm_source?: string }).utm_source || '(direct)') as string
+          srcVisits[src] = (srcVisits[src] || 0) + 1
+          if (!srcSessions[src]) srcSessions[src] = new Set()
+          const sid = (row as { session_id?: string }).session_id
+          if (sid) srcSessions[src].add(sid)
+        }
+        svSources = Object.entries(srcVisits)
+          .map(([source, visits]) => ({ source, visits, uniques: srcSessions[source]?.size || 0 }))
+          .sort((a, b) => b.visits - a.visits)
+
+        // Durée de visite (moyenne + médiane), bornée pour ignorer les aberrations
+        const durs = (durationRes.data || [])
+          .map(r => Number((r as { time_on_page_seconds?: number }).time_on_page_seconds))
+          .filter(n => n > 0 && n < 3600)
+        if (durs.length) {
+          svAvgDuration = Math.round(durs.reduce((a, b) => a + b, 0) / durs.length)
+          const sorted = [...durs].sort((a, b) => a - b)
+          svMedianDuration = sorted[Math.floor(sorted.length / 2)]
+        }
+
+        // Référents (d'où le clic vient — Google, Instagram, direct…)
+        const refCounts: Record<string, number> = {}
+        for (const row of (referrerRes.data || [])) {
+          let ref = ((row as { referrer?: string }).referrer || '') as string
+          if (!ref) ref = '(accès direct)'
+          else { try { ref = new URL(ref).hostname.replace(/^www\./, '') } catch { /* garder tel quel */ } }
+          refCounts[ref] = (refCounts[ref] || 0) + 1
+        }
+        svReferrers = Object.entries(refCounts)
+          .map(([referrer, count]) => ({ referrer, count }))
+          .sort((a, b) => b.count - a.count).slice(0, 12)
       }
     } catch (e) {
       console.error('site_visits queries failed:', e)
@@ -225,6 +279,11 @@ export async function GET() {
       devices,
       dailyData,
       hourlyData: mergedHourly,
+      sources: svSources,
+      referrers: svReferrers,
+      weekdayData: svWeekday,
+      avgDuration: svAvgDuration,
+      medianDuration: svMedianDuration,
       _sources: {
         site_visits: siteVisitsOk ? svTotal : 'table_unavailable',
         ab_test_visits: abTotal,

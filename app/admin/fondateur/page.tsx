@@ -247,11 +247,17 @@ export default function FounderDashboard() {
     devices: { type: string; count: number }[]
     dailyData: { date: string; count: number }[]
     hourlyData: { hour: string; count: number }[]
+    sources: { source: string; visits: number; uniques: number }[]
+    referrers: { referrer: string; count: number }[]
+    weekdayData: { day: string; count: number }[]
+    avgDuration: number
+    medianDuration: number
   }>({
     total: 0, today: 0, week: 0, month: 0,
     uniqueToday: 0, uniqueWeek: 0, uniqueMonth: 0,
     authenticatedMonth: 0,
     topPages: [], devices: [], dailyData: [], hourlyData: [],
+    sources: [], referrers: [], weekdayData: [], avgDuration: 0, medianDuration: 0,
   })
 
   // CRM stats
@@ -1090,6 +1096,101 @@ export default function FounderDashboard() {
                     </div>
                   )
                 })}
+              </div>
+            </Section>
+          </div>
+
+          {/* ── Temps passé sur le site ── */}
+          {(() => {
+            const fmtDur = (s: number) => s <= 0 ? '—' : s >= 60 ? `${Math.floor(s / 60)} min ${s % 60}s` : `${s}s`
+            return (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                <StatCard icon="⏱️" label="Durée moyenne / visite" value={fmtDur(visitStats.avgDuration)} color="#55EFC4" />
+                <StatCard icon="📈" label="Durée médiane / visite" value={fmtDur(visitStats.medianDuration)} color="#74C0FC" />
+              </div>
+            )
+          })()}
+
+          {/* ── Plateforme d'origine + Jour de la semaine ── */}
+          <div className="grid lg:grid-cols-2 gap-6 mt-6">
+            <Section title="D'où viennent tes visiteurs" subtitle="Plateforme d'origine (30 j) — nécessite des liens taggés (utm_source)">
+              <div className="space-y-2">
+                {visitStats.sources.length === 0 && (
+                  <p className="text-xs py-6 text-center" style={{ color: 'var(--text-muted)' }}>Aucune donnée de source pour le moment.</p>
+                )}
+                {visitStats.sources.map((s, i) => {
+                  const max = visitStats.sources[0]?.visits || 1
+                  const pct = (s.visits / max) * 100
+                  const label = s.source === '(direct)' ? 'Direct / non taggé' : s.source
+                  return (
+                    <div key={s.source} className="flex items-center gap-3">
+                      <span className="text-xs font-semibold w-5 text-right" style={{ color: '#C9A961' }}>{i + 1}</span>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-xs truncate" style={{ color: 'var(--text-primary)' }}>{label}</span>
+                          <span className="text-xs font-semibold ml-2" style={{ color: '#74C0FC' }}>{fmt(s.visits)} <span style={{ color: 'var(--text-muted)' }}>· {fmt(s.uniques)} uniques</span></span>
+                        </div>
+                        <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
+                          <div className="h-full rounded-full" style={{ width: `${pct}%`, background: 'linear-gradient(90deg, #C9A961, #74C0FC)' }} />
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </Section>
+
+            <Section title="Jour de la semaine" subtitle="Visites par jour (30 derniers jours)">
+              <div style={{ height: 260 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={visitStats.weekdayData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                    <XAxis dataKey="day" stroke="var(--text-muted)" tick={{ fontSize: 11 }} />
+                    <YAxis stroke="var(--text-muted)" tick={{ fontSize: 11 }} />
+                    <Tooltip content={<CustomTooltip />} />
+                    <Bar dataKey="count" name="Visites" fill="#A29BFE" radius={[4, 4, 0, 0]} opacity={0.85} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </Section>
+          </div>
+
+          {/* ── Référents + Abandons du quiz ── */}
+          <div className="grid lg:grid-cols-2 gap-6 mt-6">
+            <Section title="Référents" subtitle="D'où vient réellement le clic (Google, Instagram, direct…)">
+              <div className="space-y-2">
+                {visitStats.referrers.length === 0 && (
+                  <p className="text-xs py-6 text-center" style={{ color: 'var(--text-muted)' }}>Aucune donnée de référent.</p>
+                )}
+                {visitStats.referrers.map((r, i) => {
+                  const max = visitStats.referrers[0]?.count || 1
+                  const pct = (r.count / max) * 100
+                  return (
+                    <div key={r.referrer} className="flex items-center gap-3">
+                      <span className="text-xs font-semibold w-5 text-right" style={{ color: '#C9A961' }}>{i + 1}</span>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-xs truncate" style={{ color: 'var(--text-primary)' }}>{r.referrer}</span>
+                          <span className="text-xs font-semibold ml-2" style={{ color: '#55EFC4' }}>{fmt(r.count)}</span>
+                        </div>
+                        <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
+                          <div className="h-full rounded-full" style={{ width: `${pct}%`, background: 'linear-gradient(90deg, #55EFC4, #74C0FC)' }} />
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </Section>
+
+            <Section title="Où les gens abandonnent" subtitle="Décrochage question par question du questionnaire">
+              <div className="flex flex-col items-start justify-center h-full gap-3 py-4">
+                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                  Le détail du décrochage à chaque question (et le taux de complétion) est dans le tableau de bord dédié au funnel.
+                </p>
+                <a href="/admin/quiz-funnel" className="px-5 py-2.5 rounded-xl text-sm font-medium" style={{ background: 'rgba(201,169,97,0.12)', color: '#C9A961', border: '1px solid rgba(201,169,97,0.3)' }}>
+                  Voir où les gens abandonnent le quiz →
+                </a>
               </div>
             </Section>
           </div>

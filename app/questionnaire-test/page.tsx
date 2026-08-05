@@ -8,99 +8,19 @@
 // transition vers l'offre (+ envoi par email).
 // Non branchée à la vraie base : scoring 100 % local (localStorage),
 // pensée pour valider l'UX et les textes avant intégration.
-// Tout est data-driven (STEPS + PROFILES) pour être modifié facilement.
+// Data-driven (STEPS) ; résultat = archétype réel du test Signature.
 // ══════════════════════════════════════════════════════════════
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { QUESTIONS } from '@/lib/quiz-v2/questions'
+import { getDominantDimensions } from '@/lib/quiz-v2/scoring'
+import { getArchetype, BLESSURE_COLORS, type Archetype } from '@/lib/quiz-v2/archetypes.legacy'
 
-// ── Correspondance : dimensions du test Signature (10) → profils (6) ──
-// On score avec le VRAI moteur de dimensions (mêmes questions que le test
-// Signature), puis on regroupe la dimension dominante vers l'un des 6 profils.
-// (« L'Empathique » n'a pas de dimension propre dans les 10 : on lui rattache
-//  l'idéalisation/fusion à l'autre — ajustable ici à tout moment.)
-const DIM_TO_PROFILE: Record<string, ProfileId> = {
-  '1': 'analyseur',    // Analyse mentale
-  '2': 'intense',      // Fuite en action
-  '3': 'protecteur',   // Care-taking
-  '4': 'protecteur',   // Autonomie forcée (porter seul)
-  '5': 'controleur',   // Contrôle
-  '6': 'adaptateur',   // Adaptation / Masking
-  '7': 'controleur',   // Hypervigilance
-  '8': 'empathique',   // Idéalisation / fusion à l'autre
-  '9': 'adaptateur',   // Évitement du conflit
-  '10': 'intense',     // Intensité / Drame
-}
 
 // ── Profils émotionnels (6) ──────────────────────────────────
 type ProfileId = 'protecteur' | 'analyseur' | 'adaptateur' | 'controleur' | 'empathique' | 'intense'
 
-type Profile = {
-  name: string
-  signification: string
-  pourquoi: string
-  benefices: string[]
-  couts: string[]
-  declencheurs: string[]
-  controle: string
-}
 
-const PROFILES: Record<ProfileId, Profile> = {
-  protecteur: {
-    name: 'Le Protecteur',
-    signification: `Tu fonctionnes en portant les autres. Ta valeur, tu la ressens surtout quand tu es utile, présent(e), indispensable. Tu anticipes les besoins de ton entourage souvent avant les tiens.`,
-    pourquoi: `Très tôt, ton système a appris que ta place se gagnait en donnant. Prendre soin est devenu ta façon d'exister et d'être en sécurité dans le lien.`,
-    benefices: ['Une immense capacité d\'attention aux autres', 'Un lien de confiance fort avec ton entourage', 'Une fiabilité rare — on peut compter sur toi'],
-    couts: ['Tu t\'oublies au profit des autres', 'Une fatigue de fond que personne ne voit', 'De la difficulté à recevoir ou demander de l\'aide'],
-    declencheurs: ['Sentir que quelqu\'un a besoin de toi', 'La peur de décevoir', 'Un silence que tu interprètes comme un rejet'],
-    controle: `Quand ce mécanisme prend le contrôle, tu donnes jusqu'à l'épuisement, tu culpabilises de penser à toi, et tu attends une reconnaissance qui ne vient pas toujours.`,
-  },
-  analyseur: {
-    name: 'L\'Analyseur',
-    signification: `Tu fonctionnes par la compréhension. Comprendre te donne le sentiment de reprendre le contrôle sur ce qui te dépasse. Tu passes souvent par la tête avant le cœur.`,
-    pourquoi: `Analyser a été ta façon de te protéger de l'imprévisible : si tu comprends, tu ne subis pas. La pensée est devenue ton refuge le plus sûr.`,
-    benefices: ['Une grande lucidité', 'La capacité de prendre du recul', 'Des décisions réfléchies, rarement impulsives'],
-    couts: ['Tu ressens à retardement, voire pas du tout sur le moment', 'La rumination', 'Une distance avec tes propres émotions'],
-    declencheurs: ['Ne pas comprendre une situation', 'L\'incertitude', 'Une émotion trop forte pour être "gérée"'],
-    controle: `Quand ce mécanisme prend le contrôle, tu analyses au lieu de ressentir, tu tournes en boucle, et tu utilises la compréhension pour éviter de vivre l'émotion.`,
-  },
-  adaptateur: {
-    name: 'L\'Adaptateur',
-    signification: `Tu fonctionnes en t'ajustant aux autres. Tu lis les attentes, tu lisses les tensions, tu te fais discret(e) pour maintenir l'harmonie autour de toi.`,
-    pourquoi: `Tu as appris que la sécurité passait par la paix : ne pas déranger, ne pas déplaire. T'adapter est devenu un réflexe de survie dans le lien.`,
-    benefices: ['Une sensibilité fine aux autres', 'Un talent pour apaiser et créer du lien', 'Une grande souplesse relationnelle'],
-    couts: ['Tu te perds à force de t\'adapter', 'Tu dis oui quand tu penses non', 'Tu ne sais plus toujours ce que TU veux'],
-    declencheurs: ['Un conflit ou une tension', 'Devoir décevoir quelqu\'un', 'Le regard et le jugement des autres'],
-    controle: `Quand ce mécanisme prend le contrôle, tu t'effaces, tu cèdes pour avoir la paix, et tu accumules une frustration silencieuse.`,
-  },
-  controleur: {
-    name: 'Le Contrôleur',
-    signification: `Tu fonctionnes par la maîtrise. Anticiper, organiser, prévoir : c'est ainsi que tu te sens en sécurité. L'imprévu et la perte de contrôle t'angoissent.`,
-    pourquoi: `Contrôler a été ta réponse au chaos : si tout est prévu, rien ne peut te surprendre. La maîtrise est devenue ton rempart contre la peur.`,
-    benefices: ['Une grande fiabilité', 'De l\'anticipation et de la rigueur', 'La capacité de tenir debout dans la tempête'],
-    couts: ['Tu ne te détends jamais vraiment', 'Tu portes tout seul(e)', 'La difficulté à lâcher prise et à faire confiance'],
-    declencheurs: ['Perdre le contrôle d\'une situation', 'L\'incertitude', 'Devoir déléguer ou dépendre de quelqu\'un'],
-    controle: `Quand ce mécanisme prend le contrôle, tu t'épuises à tout gérer, tu deviens rigide, et tu confonds sécurité et contrôle permanent.`,
-  },
-  empathique: {
-    name: 'L\'Empathique',
-    signification: `Tu fonctionnes en absorbant les émotions des autres. Tu ressens ce que vit ton entourage comme si c'était le tien — parfois jusqu'à ne plus distinguer tes propres émotions.`,
-    pourquoi: `Ta sensibilité s'est développée comme une antenne : capter l'état des autres t'a permis de te sentir en lien et de prévenir le danger émotionnel.`,
-    benefices: ['Une profondeur émotionnelle rare', 'Une capacité de connexion authentique', 'Une intuition juste sur les autres'],
-    couts: ['Tu te charges des émotions qui ne t\'appartiennent pas', 'La saturation, la fatigue émotionnelle', 'Du mal à te sentir vu(e) toi-même'],
-    declencheurs: ['Être dans un environnement tendu', 'La souffrance de quelqu\'un', 'Se sentir seul(e) même entouré(e)'],
-    controle: `Quand ce mécanisme prend le contrôle, tu portes le poids émotionnel des autres, tu t'oublies, et tu te vides sans t'en rendre compte.`,
-  },
-  intense: {
-    name: 'L\'Intense',
-    signification: `Tu fonctionnes à haute intensité. Tu ressens fort, tu vis les choses pleinement — les hauts très hauts, les bas très bas. La nuance t'est parfois étrangère.`,
-    pourquoi: `Ressentir intensément a toujours été ta façon d'être vivant(e). L'émotion forte est ton langage, même quand elle te déborde.`,
-    benefices: ['Une vitalité et une passion contagieuses', 'Une authenticité totale', 'Une capacité à vivre l\'instant pleinement'],
-    couts: ['Les montagnes russes émotionnelles', 'Des réactions fortes vite regrettées', 'La difficulté à réguler ce qui monte'],
-    declencheurs: ['Une émotion forte, positive ou négative', 'Le sentiment d\'injustice', 'L\'impression de ne pas être compris(e)'],
-    controle: `Quand ce mécanisme prend le contrôle, l'émotion te submerge, tu réagis avant de réfléchir, et tu passes du tout au rien sans transition.`,
-  },
-}
 
 // ── Types de contenu ─────────────────────────────────────────
 type Choice = { emoji: string; text: string; s: ProfileId[] }
@@ -303,19 +223,16 @@ export default function QuestionnaireTest() {
         for (const [d, v] of Object.entries(sc)) dims[d] = (dims[d] || 0) + (v as number)
       }
     }
-    // 2. Regroupement des dimensions vers les 6 profils
-    const tally: Record<ProfileId, number> = { protecteur: 0, analyseur: 0, adaptateur: 0, controleur: 0, empathique: 0, intense: 0 }
-    for (const [d, v] of Object.entries(dims)) {
-      const p = DIM_TO_PROFILE[d]
-      if (p) tally[p] += v
-    }
-    const total = Object.values(tally).reduce((a, b) => a + b, 0) || 1
-    const ranked = (Object.entries(tally) as [ProfileId, number][]).sort((a, b) => b[1] - a[1])
-    const [domId, domScore] = ranked[0]
-    const share = domScore / total
-    // Intensité "ressentie" : bornée pour rester crédible (55–94 %)
-    const intensity = Math.max(55, Math.min(94, Math.round(share * 100 * 1.8)))
-    return { tally, ranked, dominant: domId, secondary: ranked[1]?.[0] as ProfileId, intensity }
+    // 2. Dimension dominante + secondaire → archétype RÉEL (moteur Signature)
+    const { dominant, secondary } = getDominantDimensions(dims)
+    const archetype = getArchetype(dominant, secondary)
+
+    // Intensité "ressentie" : part de la dimension dominante, bornée (55–94 %)
+    const total = Object.values(dims).reduce((a, b) => a + b, 0) || 1
+    const share = (dims[dominant] || 0) / total
+    const intensity = Math.max(55, Math.min(94, Math.round(share * 100 * 3)))
+
+    return { archetype, intensity }
   }, [answers, questions])
 
   const selectSingle = (qid: number, idx: number) => {
@@ -356,7 +273,7 @@ export default function QuestionnaireTest() {
         )}
         {current.kind === 'calcul' && <CalculView onDone={goNext} />}
         {current.kind === 'mini' && <MiniView onNext={goNext} />}
-        {current.kind === 'profil' && <ProfilView profile={PROFILES[scoring.dominant]} intensity={scoring.intensity} onNext={goNext} />}
+        {current.kind === 'profil' && <ProfilView archetype={scoring.archetype} intensity={scoring.intensity} onNext={goNext} />}
         {current.kind === 'offre' && <OffreView onRestart={restart} />}
       </div>
     </main>
@@ -467,28 +384,35 @@ function MiniView({ onNext }: { onNext: () => void }) {
   )
 }
 
-// ── Profil complet ──
-function ProfilView({ profile, intensity, onNext }: { profile: Profile; intensity: number; onNext: () => void }) {
-  const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
-    <div style={{ marginTop: 26 }}>
-      <p style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: GOLD, marginBottom: 8 }}>{title}</p>
-      {children}
-    </div>
-  )
-  const List = ({ items }: { items: string[] }) => (
-    <ul style={{ margin: 0, paddingLeft: 0, listStyle: 'none' }}>
-      {items.map((it, i) => (
-        <li key={i} style={{ display: 'flex', gap: 10, margin: '0 0 7px', color: 'rgba(245,239,227,0.8)', fontSize: 15, lineHeight: 1.5 }}>
-          <span style={{ color: GOLD }}>◆</span><span>{it}</span>
-        </li>
-      ))}
-    </ul>
-  )
+// ── Profil complet : l'archétype réel, dévoilé section après section ──
+function ProfilView({ archetype, intensity, onNext }: { archetype: Archetype; intensity: number; onNext: () => void }) {
+  // Les 5 temps du récit (contenu déjà écrit par SOS Shine)
+  const parts = [
+    { label: 'On te reconnaît', text: archetype.reconnaissance },
+    { label: 'La vérité', text: archetype.verite },
+    { label: 'Le mécanisme profond', text: archetype.mecanique },
+    { label: 'Ce que ça te coûte', text: archetype.consequence },
+    { label: 'Le chemin', text: archetype.transition },
+  ]
+  const [revealed, setRevealed] = useState(1) // nombre de sections affichées
+  const bc = BLESSURE_COLORS[archetype.blessure]
+  const done = revealed >= parts.length
+
   return (
     <div>
-      <p style={{ fontSize: 12, letterSpacing: '0.25em', textTransform: 'uppercase', color: GOLD, marginBottom: 10, textAlign: 'center' }}>Ton fonctionnement dominant</p>
-      <h1 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontWeight: 500, fontSize: 34, textAlign: 'center', margin: '0 0 14px' }}>{profile.name}</h1>
-      <div style={{ maxWidth: 280, margin: '0 auto 6px' }}>
+      {/* En-tête : archétype réel + blessure + intensité */}
+      <p style={{ fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: GOLD, marginBottom: 10, textAlign: 'center' }}>
+        Ton fonctionnement dominant · Blessure de {archetype.blessure}
+      </p>
+      <h1 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontWeight: 500, fontSize: 32, lineHeight: 1.15, textAlign: 'center', margin: '0 0 14px' }}>
+        {archetype.name}
+      </h1>
+      <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginBottom: 18, flexWrap: 'wrap' }}>
+        {[archetype.emotion, archetype.mode].map((t, i) => (
+          <span key={i} style={{ fontSize: 12, padding: '5px 12px', borderRadius: 50, border: `1px solid ${bc?.border || 'rgba(201,169,97,0.3)'}`, color: bc?.text || GOLD }}>{t}</span>
+        ))}
+      </div>
+      <div style={{ maxWidth: 280, margin: '0 auto 8px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'rgba(245,239,227,0.6)', marginBottom: 6 }}>
           <span>Intensité</span><span style={{ color: GOLD }}>{intensity} %</span>
         </div>
@@ -497,16 +421,24 @@ function ProfilView({ profile, intensity, onNext }: { profile: Profile; intensit
         </div>
       </div>
 
-      <div style={{ border: '1px solid rgba(245,239,227,0.1)', borderRadius: 16, padding: '4px 20px 22px', marginTop: 24 }}>
-        <Section title="Ce que cela signifie"><p style={pStyle}>{profile.signification}</p></Section>
-        <Section title="Pourquoi ton cerveau fonctionne ainsi"><p style={pStyle}>{profile.pourquoi}</p></Section>
-        <Section title="Les bénéfices"><List items={profile.benefices} /></Section>
-        <Section title="Les coûts"><List items={profile.couts} /></Section>
-        <Section title="Les déclencheurs"><List items={profile.declencheurs} /></Section>
-        <Section title="Quand ce mécanisme prend le contrôle"><p style={pStyle}>{profile.controle}</p></Section>
+      {/* Récit dévoilé progressivement */}
+      <div style={{ marginTop: 26 }}>
+        {parts.slice(0, revealed).map((p, i) => (
+          <div key={i} style={{ marginBottom: 22, animation: 'fadeInUp .5s ease' }}>
+            <p style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: GOLD, marginBottom: 8 }}>{p.label}</p>
+            <p style={{ color: 'rgba(245,239,227,0.85)', fontSize: 15.5, lineHeight: 1.7, margin: 0, whiteSpace: 'pre-line' }}>{p.text}</p>
+          </div>
+        ))}
       </div>
 
-      <button onClick={onNext} style={{ ...btnGold, width: '100%', marginTop: 24 }}>Continuer</button>
+      <button
+        onClick={() => (done ? onNext() : setRevealed(r => r + 1))}
+        style={{ ...btnGold, width: '100%', marginTop: 10 }}
+      >
+        {done ? 'Continuer' : 'Continuer la lecture →'}
+      </button>
+
+      <style>{`@keyframes fadeInUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}`}</style>
     </div>
   )
 }
@@ -554,4 +486,3 @@ function OffreView({ onRestart }: { onRestart: () => void }) {
 }
 
 const btnGold: React.CSSProperties = { background: `linear-gradient(135deg,${GOLD},#B8960F)`, color: BG, border: 'none', padding: '15px 32px', borderRadius: 50, fontWeight: 600, fontSize: 15, cursor: 'pointer' }
-const pStyle: React.CSSProperties = { color: 'rgba(245,239,227,0.8)', fontSize: 15, lineHeight: 1.65, margin: 0 }

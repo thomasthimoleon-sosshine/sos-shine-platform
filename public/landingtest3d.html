@@ -114,6 +114,10 @@
     border:1px solid rgba(201,169,97,.4);background:rgba(201,169,97,.06);
     padding:9px 18px;border-radius:100px;transition:background .2s,border-color .2s,transform .15s}
   .rdv-julia:hover{background:rgba(201,169,97,.14);border-color:var(--gold-bright);transform:translateY(-1px)}
+  /* Phrase de positionnement — juste sous le bouton Julia, mise en avant */
+  .positioning{display:block;font-family:var(--sans);font-weight:600;font-size:clamp(13px,1.5vw,15px);
+    letter-spacing:.16em;text-transform:uppercase;color:var(--gold-bright);margin:0 auto 20px;
+    line-height:1.5;max-width:28ch;text-shadow:0 0 24px rgba(201,169,97,.35)}
 
   /* ---------- SECTIONS ---------- */
   section.band{padding:100px 0}
@@ -280,6 +284,8 @@
     .local{padding:30px}
     .hide-m{display:none}
     .sticky-cta{display:block}
+    /* Empêche le bouton flottant de recouvrir les derniers liens du footer */
+    footer{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
   }
   @media(max-width:520px){
     .foot-grid{grid-template-columns:1fr}
@@ -327,7 +333,7 @@
   <div class="glow"></div>
   <div class="container">
     <a href="https://julialaureau.com" target="_blank" rel="noopener noreferrer" class="rdv-julia">Prendre rendez-vous avec Julia <span aria-hidden="true">↗</span></a>
-    <span class="eyebrow">Tu n'es pas seul(e).</span>
+    <span class="positioning">La première plateforme de déconditionnement émotionnel</span>
     <h1>Tu traverses une période douloureuse… <span class="em">tu es au bon endroit pour retrouver ton bien-être intérieur.</span></h1>
     <p class="sub">Ici, tu vas comprendre ce qui se passe vraiment en toi et trouver un chemin concret pour t'en sortir.</p>
     <div class="hero-cta">
@@ -380,7 +386,7 @@
     </div>
     <div class="grid-4">
       <div class="space reveal"><div class="n">01</div><h3>Tu comprends enfin</h3><p>Le test révèle le schéma émotionnel qui te fait souffrir en boucle.</p></div>
-      <div class="space reveal"><div class="n">02</div><h3>Tu es guidé(e) étape par étape</h3><p>Nous t'accompagnons dans plus de 200 sujets de vie différents, grâce à des vidéos immersives de coaching, des méditations, de l'hypnose, des cahiers de travail et des outils concrets pour avancer à ton rythme.</p></div>
+      <div class="space reveal"><div class="n">02</div><h3>Tu es guidé(e) étape par étape</h3><p>Nous t'accompagnons à travers les grands sujets de vie, avec <b>5 nouveaux protocoles publiés chaque mois</b> : vidéos immersives de coaching, méditations, hypnose, cahiers de travail et outils concrets pour avancer à ton rythme.</p></div>
       <div class="space reveal"><div class="n">03</div><h3>Tu n'es plus seul(e)</h3><p>Une communauté bienveillante + la possibilité d'écrire anonymement ce que tu n'oses dire à personne.</p></div>
       <div class="space reveal"><div class="n">04</div><h3>Tu intègres durablement le changement</h3><p>Grâce à nos trois expertises et à l'ensemble de nos ressources.</p></div>
     </div>

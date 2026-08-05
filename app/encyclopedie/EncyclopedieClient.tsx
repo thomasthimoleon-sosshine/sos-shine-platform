@@ -413,6 +413,14 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
 
   const originalCount = topics.filter(t => t.original).length
 
+  // Protocoles déjà disponibles (contenu publié) — mis en avant en tête de liste
+  const availableTopics = useMemo(
+    () => filtered.filter(t => !!t.dbMatch).sort((a, b) => a.title.localeCompare(b.title)),
+    [filtered]
+  )
+  // On n'affiche la section "Disponibles" qu'en vue par défaut (sans recherche ni filtre)
+  const isDefaultView = search === '' && activeLetter === 'ALL' && activeCat === 'ALL' && !onlyOriginal
+
   return (
     <main className="min-h-screen watermark-container bg-[var(--surface)]">
       <div className="watermark" />
@@ -581,6 +589,42 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
             </p>
           </div>
         ) : (
+          <>
+          {/* ─── Disponibles maintenant (en tête, avant le déroulé alphabétique) ─── */}
+          {isDefaultView && availableTopics.length > 0 && (
+            <section className="mb-12">
+              <div className="flex items-baseline gap-4 mb-4">
+                <h2 className="font-display text-2xl font-medium" style={{ color: 'var(--success)' }}>
+                  Disponibles maintenant
+                </h2>
+                <div className="flex-1 h-px" style={{ background: 'rgba(85,239,196,0.25)' }} />
+                <span className="text-xs text-[var(--text-muted)]">{availableTopics.length}</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {availableTopics.map((topic, i) => (
+                  <Link key={`avail-${i}`} href={`/encyclopedie/${topic.slug}`} className="block">
+                    <div
+                      className="group rounded-lg p-4 transition-all duration-200 hover:-translate-y-0.5"
+                      style={{ background: 'rgba(85,239,196,0.05)', border: '1.5px solid rgba(85,239,196,0.25)', borderLeft: '2px solid rgba(85,239,196,0.5)', cursor: 'pointer' }}
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1 min-w-0">
+                          <span className="font-display text-base font-medium transition-colors group-hover:text-[var(--brand)]" style={{ color: 'var(--text-primary)', lineHeight: 1.2 }}>
+                            {topic.title}
+                          </span>
+                          <p className="text-[12px] leading-relaxed mt-1 mb-2 italic text-[var(--text-secondary)]">{topic.subtitle}</p>
+                          <span className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--brand)', opacity: 0.6 }}>{topic.cat}</span>
+                        </div>
+                        <svg className="w-4 h-4 flex-shrink-0 mt-1 transition-transform group-hover:translate-x-1 text-[var(--success)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                        </svg>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
           <div className="space-y-10">
             {Object.keys(grouped).sort().map((letter) => (
               <div key={letter} id={`letter-${letter}`}>
@@ -686,6 +730,7 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
               </div>
             ))}
           </div>
+          </>
         )}
 
         {/* CTA Banner */}

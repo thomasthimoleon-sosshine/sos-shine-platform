@@ -61,6 +61,7 @@ export async function GET() {
     let svWeekday: { day: string; count: number }[] = []
     let svAvgDuration = 0
     let svMedianDuration = 0
+    let svReturning = { uniqueVisitors: 0, returningVisitors: 0, returnRate: 0, avgVisits: 0, buckets: [] as { label: string; count: number }[] }
 
     try {
       const [
@@ -164,6 +165,41 @@ export async function GET() {
         svReferrers = Object.entries(refCounts)
           .map(([referrer, count]) => ({ referrer, count }))
           .sort((a, b) => b.count - a.count).slice(0, 12)
+
+        // ── Visiteurs récurrents (par IP hachée, sur 90 jours) ──
+        // On compte le nombre de SESSIONS distinctes par visiteur (ip_hash) :
+        // 1 = venu une fois, 2+ = revenu. Plus fiable que session_id (qui se
+        // réinitialise à chaque session) pour détecter un vrai retour.
+        const ninetyDaysAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 90).toISOString()
+        const returnRes = await admin.from('site_visits')
+          .select('ip_hash, session_id, created_at')
+          .gte('created_at', ninetyDaysAgo)
+          .not('ip_hash', 'is', null)
+          .limit(50000)
+        const byIp: Record<string, Set<string>> = {}
+        for (const row of (returnRes.data || [])) {
+          const ip = (row as { ip_hash?: string }).ip_hash
+          if (!ip) continue
+          const sess = (row as { session_id?: string }).session_id || (row as { created_at: string }).created_at.slice(0, 13)
+          ;(byIp[ip] ??= new Set()).add(sess)
+        }
+        const visitCounts = Object.values(byIp).map(s => s.size)
+        const uniqueVisitors = visitCounts.length
+        const returningVisitors = visitCounts.filter(c => c >= 2).length
+        const totalSessions = visitCounts.reduce((a, b) => a + b, 0)
+        svReturning = {
+          uniqueVisitors,
+          returningVisitors,
+          returnRate: uniqueVisitors ? Math.round((returningVisitors / uniqueVisitors) * 100) : 0,
+          avgVisits: uniqueVisitors ? Math.round((totalSessions / uniqueVisitors) * 10) / 10 : 0,
+          buckets: [
+            { label: '1 visite', count: visitCounts.filter(c => c === 1).length },
+            { label: '2 visites', count: visitCounts.filter(c => c === 2).length },
+            { label: '3 visites', count: visitCounts.filter(c => c === 3).length },
+            { label: '4-5 visites', count: visitCounts.filter(c => c >= 4 && c <= 5).length },
+            { label: '6+ visites', count: visitCounts.filter(c => c >= 6).length },
+          ],
+        }
       }
     } catch (e) {
       console.error('site_visits queries failed:', e)
@@ -284,6 +320,7 @@ export async function GET() {
       weekdayData: svWeekday,
       avgDuration: svAvgDuration,
       medianDuration: svMedianDuration,
+      returning: svReturning,
       _sources: {
         site_visits: siteVisitsOk ? svTotal : 'table_unavailable',
         ab_test_visits: abTotal,

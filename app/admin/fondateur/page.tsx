@@ -252,12 +252,14 @@ export default function FounderDashboard() {
     weekdayData: { day: string; count: number }[]
     avgDuration: number
     medianDuration: number
+    returning: { uniqueVisitors: number; returningVisitors: number; returnRate: number; avgVisits: number; buckets: { label: string; count: number }[] }
   }>({
     total: 0, today: 0, week: 0, month: 0,
     uniqueToday: 0, uniqueWeek: 0, uniqueMonth: 0,
     authenticatedMonth: 0,
     topPages: [], devices: [], dailyData: [], hourlyData: [],
     sources: [], referrers: [], weekdayData: [], avgDuration: 0, medianDuration: 0,
+    returning: { uniqueVisitors: 0, returningVisitors: 0, returnRate: 0, avgVisits: 0, buckets: [] },
   })
 
   // CRM stats
@@ -1110,6 +1112,29 @@ export default function FounderDashboard() {
               </div>
             )
           })()}
+
+          {/* ── Visiteurs qui reviennent (par IP hachée, 90 j) ── */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+            <StatCard icon="🧍" label="Visiteurs uniques (par IP, 90j)" value={fmt(visitStats.returning.uniqueVisitors)} color="#00CEC9" />
+            <StatCard icon="🔁" label="Reviennent (≥ 2 fois)" value={fmt(visitStats.returning.returningVisitors)} color="#55EFC4" />
+            <StatCard icon="💛" label="Taux de retour" value={`${visitStats.returning.returnRate}%`} color="#C9A961" />
+            <StatCard icon="📊" label="Visites moy. / visiteur" value={String(visitStats.returning.avgVisits)} color="#A29BFE" />
+          </div>
+          <div className="mt-6">
+            <Section title="Fidélité des visiteurs" subtitle="Combien de fois chaque visiteur (IP) est revenu — 90 derniers jours">
+              <div style={{ height: 260 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={visitStats.returning.buckets}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                    <XAxis dataKey="label" stroke="var(--text-muted)" tick={{ fontSize: 11 }} />
+                    <YAxis stroke="var(--text-muted)" tick={{ fontSize: 11 }} />
+                    <Tooltip content={<CustomTooltip />} />
+                    <Bar dataKey="count" name="Visiteurs" fill="#00CEC9" radius={[4, 4, 0, 0]} opacity={0.85} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </Section>
+          </div>
 
           {/* ── Plateforme d'origine + Jour de la semaine ── */}
           <div className="grid lg:grid-cols-2 gap-6 mt-6">

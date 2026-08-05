@@ -12,6 +12,25 @@
 // ══════════════════════════════════════════════════════════════
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
+import { QUESTIONS } from '@/lib/quiz-v2/questions'
+
+// ── Correspondance : dimensions du test Signature (10) → profils (6) ──
+// On score avec le VRAI moteur de dimensions (mêmes questions que le test
+// Signature), puis on regroupe la dimension dominante vers l'un des 6 profils.
+// (« L'Empathique » n'a pas de dimension propre dans les 10 : on lui rattache
+//  l'idéalisation/fusion à l'autre — ajustable ici à tout moment.)
+const DIM_TO_PROFILE: Record<string, ProfileId> = {
+  '1': 'analyseur',    // Analyse mentale
+  '2': 'intense',      // Fuite en action
+  '3': 'protecteur',   // Care-taking
+  '4': 'protecteur',   // Autonomie forcée (porter seul)
+  '5': 'controleur',   // Contrôle
+  '6': 'adaptateur',   // Adaptation / Masking
+  '7': 'controleur',   // Hypervigilance
+  '8': 'empathique',   // Idéalisation / fusion à l'autre
+  '9': 'adaptateur',   // Évitement du conflit
+  '10': 'intense',     // Intensité / Drame
+}
 
 // ── Profils émotionnels (6) ──────────────────────────────────
 type ProfileId = 'protecteur' | 'analyseur' | 'adaptateur' | 'controleur' | 'empathique' | 'intense'
@@ -272,12 +291,23 @@ export default function QuestionnaireTest() {
   const goNext = useCallback(() => setStep(s => Math.min(s + 1, STEPS.length - 1)), [])
   const restart = () => { setAnswers({}); setStep(0); try { localStorage.removeItem(STORAGE_KEY) } catch {} }
 
-  // ── Scoring : compte les points par profil ──
+  // ── Scoring : via le VRAI moteur de dimensions du test Signature ──
   const scoring = useMemo(() => {
-    const tally: Record<ProfileId, number> = { protecteur: 0, analyseur: 0, adaptateur: 0, controleur: 0, empathique: 0, intense: 0 }
+    // 1. Points par dimension (poids identiques au test Signature officiel)
+    const dims: Record<string, number> = {}
     for (const q of questions) {
+      const real = QUESTIONS.find(rq => rq.id === q.id)
       const sel = answers[q.id] || []
-      for (const i of sel) q.choices[i]?.s.forEach(p => { tally[p] += 1 })
+      for (const idx of sel) {
+        const sc = real?.choices?.[idx]?.scores || {}
+        for (const [d, v] of Object.entries(sc)) dims[d] = (dims[d] || 0) + (v as number)
+      }
+    }
+    // 2. Regroupement des dimensions vers les 6 profils
+    const tally: Record<ProfileId, number> = { protecteur: 0, analyseur: 0, adaptateur: 0, controleur: 0, empathique: 0, intense: 0 }
+    for (const [d, v] of Object.entries(dims)) {
+      const p = DIM_TO_PROFILE[d]
+      if (p) tally[p] += v
     }
     const total = Object.values(tally).reduce((a, b) => a + b, 0) || 1
     const ranked = (Object.entries(tally) as [ProfileId, number][]).sort((a, b) => b[1] - a[1])

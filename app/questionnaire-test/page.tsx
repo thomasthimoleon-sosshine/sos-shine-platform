@@ -13,7 +13,8 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { QUESTIONS } from '@/lib/quiz-v2/questions'
-import { getDominantDimensions } from '@/lib/quiz-v2/scoring'
+import { getDominantDimensions, calculateMatchScores } from '@/lib/quiz-v2/scoring'
+import { createClient } from '@/lib/supabase/client'
 import { getArchetype, BLESSURE_COLORS, type Archetype } from '@/lib/quiz-v2/archetypes.legacy'
 
 
@@ -232,7 +233,7 @@ export default function QuestionnaireTest() {
     const share = (dims[dominant] || 0) / total
     const intensity = Math.max(55, Math.min(94, Math.round(share * 100 * 3)))
 
-    return { archetype, intensity }
+    return { archetype, intensity, scores: dims }
   }, [answers, questions])
 
   const selectSingle = (qid: number, idx: number) => {
@@ -274,7 +275,7 @@ export default function QuestionnaireTest() {
         {current.kind === 'calcul' && <CalculView onDone={goNext} />}
         {current.kind === 'mini' && <MiniView onNext={goNext} />}
         {current.kind === 'profil' && <ProfilView archetype={scoring.archetype} intensity={scoring.intensity} onNext={goNext} />}
-        {current.kind === 'offre' && <OffreView onRestart={restart} />}
+        {current.kind === 'offre' && <OffreView scores={scoring.scores} onRestart={restart} />}
       </div>
     </main>
   )
@@ -444,10 +445,45 @@ function ProfilView({ archetype, intensity, onNext }: { archetype: Archetype; in
 }
 
 // ── Transition vers l'offre + email ──
-function OffreView({ onRestart }: { onRestart: () => void }) {
+type RecoProtocol = { title: string; slug: string; matchScore: number }
+
+function OffreView({ scores, onRestart }: { scores: Record<string, number>; onRestart: () => void }) {
   const [email, setEmail] = useState('')
   const [sent, setSent] = useState(false)
+  const [reco, setReco] = useState<RecoProtocol | null>(null)
   const valid = /.+@.+\..+/.test(email)
+
+  // Protocole recommandé : le protocole DISPONIBLE (contenu publié) qui matche
+  // le mieux le résultat — même logique que la page de résultat du test Signature.
+  useEffect(() => {
+    let cancelled = false
+    async function loadReco() {
+      try {
+        const supabase = createClient()
+        const [{ data: protocols }, { data: published }] = await Promise.all([
+          supabase.from('protocols').select('*'),
+          supabase.from('douleurs').select('slug').eq('is_published', true),
+        ])
+        if (cancelled || !protocols) return
+        const publishedSet = new Set((published || []).map((d: { slug: string }) => d.slug))
+        const scored = (protocols as Array<Record<string, unknown>>)
+          .map(p => ({
+            title: p.title as string,
+            slug: p.slug as string,
+            status: p.status as string,
+            matchScore: calculateMatchScores(scores, (p.dimension_weights as Record<string, number>) || {}),
+            published: publishedSet.has(p.slug as string),
+          }))
+          .sort((a, b) => b.matchScore - a.matchScore)
+        // Uniquement les DISPONIBLES avec contenu publié
+        const best = scored.find(p => p.status === 'available' && p.published)
+        if (best) setReco({ title: best.title, slug: best.slug, matchScore: best.matchScore })
+      } catch { /* maquette sans base : pas de reco */ }
+    }
+    loadReco()
+    return () => { cancelled = true }
+  }, [scores])
+
   return (
     <div style={{ textAlign: 'center' }}>
       <p style={{ fontSize: 12, letterSpacing: '0.25em', textTransform: 'uppercase', color: GOLD, marginBottom: 18 }}>Bonne nouvelle</p>
@@ -458,9 +494,22 @@ function OffreView({ onRestart }: { onRestart: () => void }) {
         Il est possible de le faire évoluer. À condition d’avoir un accompagnement adapté à ta Signature exacte.
       </p>
       <p style={{ color: 'rgba(245,239,227,0.75)', fontSize: 16, lineHeight: 1.7, margin: '0 0 10px' }}>C’est exactement ce que propose SOS Shine.</p>
-      <p style={{ color: 'rgba(245,239,227,0.55)', fontSize: 14, lineHeight: 1.6, margin: '0 0 28px' }}>
+      <p style={{ color: 'rgba(245,239,227,0.55)', fontSize: 14, lineHeight: 1.6, margin: '0 0 26px' }}>
         Nous ne te proposons pas une méthode générique. Nous t’accompagnons à partir de ton fonctionnement réel.
       </p>
+
+      {/* Protocole recommandé (disponible + % de correspondance) */}
+      {reco && (
+        <a href={`/signup?source=bilan&protocol=${encodeURIComponent(reco.slug)}`}
+          style={{ display: 'block', textDecoration: 'none', textAlign: 'left', border: `1px solid ${GOLD}`, borderRadius: 16, padding: '18px 20px', margin: '0 0 22px', background: 'rgba(201,169,97,0.06)' }}>
+          <p style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: GOLD, margin: '0 0 6px' }}>Ton protocole recommandé</p>
+          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 12 }}>
+            <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 21, color: IVORY }}>{reco.title}</span>
+            <span style={{ fontSize: 14, fontWeight: 600, color: GOLD, whiteSpace: 'nowrap' }}>{reco.matchScore}%</span>
+          </div>
+          <p style={{ fontSize: 12.5, color: 'rgba(245,239,227,0.55)', margin: '4px 0 0' }}>de correspondance avec ton fonctionnement · disponible maintenant</p>
+        </a>
+      )}
 
       <a href="/rejoindre" style={{ ...btnGold, display: 'inline-block', textDecoration: 'none' }}>Découvrir l’accompagnement adapté à mon bilan</a>
 

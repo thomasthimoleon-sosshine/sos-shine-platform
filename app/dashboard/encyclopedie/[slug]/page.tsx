@@ -81,6 +81,20 @@ function buildSteps(douleur: Douleur, dynamicSteps: DouleurStep[]): StepConfig[]
   ]
 }
 
+// En-tête d'outil : sépare visuellement chaque ressource d'une étape
+// (vidéo, séance audio, cahier…) pour qu'aucune ne passe inaperçue.
+function ToolHeader({ icon, label, color }: { icon: string; label: string; color: string }) {
+  return (
+    <div className="flex items-center gap-2.5 pt-3">
+      <span className="text-base flex-shrink-0" aria-hidden="true">{icon}</span>
+      <span className="text-[11px] font-semibold uppercase tracking-[0.12em] flex-shrink-0" style={{ color }}>
+        {label}
+      </span>
+      <div className="flex-1 h-px" style={{ background: `${color}22` }} />
+    </div>
+  )
+}
+
 export default function DouleurDetailPage() {
   const params = useParams()
   const slug = params.slug as string
@@ -991,6 +1005,7 @@ export default function DouleurDetailPage() {
 
           return (
             <div className="space-y-4">
+              {currentStep.video && <ToolHeader icon="🎬" label="Vidéo de coaching" color={currentStep.color} />}
               {currentStep.video && (
                 isPreviewMode
                   ? <PreviewVideo src={currentStep.video} poster={currentStep.video_cover || currentStep.image || undefined} label={currentStep.title} />
@@ -1010,6 +1025,7 @@ export default function DouleurDetailPage() {
               )}
 
               {/* Secondary video (optional) */}
+              {currentStep.video2 && <ToolHeader icon="🎬" label="Vidéo complémentaire" color={currentStep.color} />}
               {currentStep.video2 && (
                 isPreviewMode
                   ? <PreviewVideo src={currentStep.video2} poster={currentStep.video2_cover || undefined} label={currentStep.title} />
@@ -1035,6 +1051,7 @@ export default function DouleurDetailPage() {
                 </div>
               )}
 
+              {currentStep.audio && <ToolHeader icon="🎧" label="Séance audio guidée" color={currentStep.color} />}
               {currentStep.audio && (
                 isPreviewMode ? (() => {
                   function PreviewAudio({ src, title }: { src: string; title: string }) {
@@ -1096,6 +1113,7 @@ export default function DouleurDetailPage() {
                 )
               )}
 
+              {currentStep.audio2 && !isPreviewMode && <ToolHeader icon="🎧" label="Séance audio complémentaire" color={currentStep.color} />}
               {currentStep.audio2 && !isPreviewMode && (
                 <div className="rounded-xl overflow-hidden" style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${currentStep.color}20` }}>
                   {currentStep.audio2_cover && (
@@ -1116,6 +1134,7 @@ export default function DouleurDetailPage() {
                 </div>
               )}
 
+              {currentStep.pdf && <ToolHeader icon="📓" label="Cahier de travail" color={currentStep.color} />}
               {currentStep.pdf && (
                 isPreviewMode ? (
                   <div className="flex items-center gap-3 p-4 rounded-xl cursor-pointer" onClick={() => window.location.href = isFreeUser ? '/dashboard/tarifs' : '/signup'}

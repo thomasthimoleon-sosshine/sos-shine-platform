@@ -475,8 +475,10 @@ function OffreView({ scores, onRestart }: { scores: Record<string, number>; onRe
             published: publishedSet.has(p.slug as string),
           }))
           .sort((a, b) => b.matchScore - a.matchScore)
-        // Uniquement les DISPONIBLES avec contenu publié
+        // Recommande TOUJOURS un protocole DISPONIBLE (jamais un « à venir ») :
+        // 1) le meilleur match disponible + publié, sinon 2) n'importe quel disponible.
         const best = scored.find(p => p.status === 'available' && p.published)
+          || scored.find(p => p.status === 'available')
         if (best) setReco({ title: best.title, slug: best.slug, matchScore: best.matchScore })
       } catch { /* maquette sans base : pas de reco */ }
     }

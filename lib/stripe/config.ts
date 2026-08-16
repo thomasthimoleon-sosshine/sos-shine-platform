@@ -135,7 +135,7 @@ export const PLAN_INFO: Record<PlanId, { name: string; tagline: string; hasTrial
   serenite: {
     name: 'SOS Shine',
     tagline: 'Accès complet à toute la plateforme',
-    hasTrial: true,
+    hasTrial: false,
   },
   premium: {
     name: 'Premium (archivé)',
@@ -151,8 +151,8 @@ export const PLAN_NAMES: Record<PlanId, string> = {
 }
 
 export const PLAN_COLORS: Record<PlanId, string> = {
-  essential: '#74C0FC',
-  serenite: '#55EFC4',
+  essential: '#C9A961',
+  serenite: '#C9A961',
   premium: '#C9A961',
 }
 

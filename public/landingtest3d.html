@@ -64,7 +64,9 @@
   }
   .annonce b{color:var(--cream);font-weight:600}
   .annonce .live{color:var(--terra-soft);font-weight:600;margin-right:6px}
-  .annonce a.resa{color:var(--gold-bright);font-weight:600;border-bottom:1px solid rgba(238,201,116,.4);margin-left:8px}
+  .annonce a.resa{color:var(--gold-bright);font-weight:600;border-bottom:1px solid rgba(238,201,116,.4);margin-left:8px;display:inline-flex;align-items:center;gap:5px;transition:color .2s ease}
+  .annonce a.resa:hover{color:var(--cream)}
+  .annonce a.resa .ig-icon{vertical-align:middle;margin-bottom:1px}
   .annonce .hide-m{}
 
   /* ---------- HEADER ---------- */
@@ -302,11 +304,14 @@
 </head>
 <body>
 
-<!-- 02 · EVENT BANNER -->
+<!-- 02 · SOCIAL BANNER -->
 <div class="annonce">
-  <span class="live">● Live</span>
-  <b>Aimer sans se perdre</b> <span class="hide-m">· 1er août 2026 · Mandelieu</span>
-  <a href="/event" class="resa">Réserver →</a>
+  <span class="hide-m">Découvrez qui nous sommes ·</span>
+  <b>Suivez SOS Shine</b>
+  <a href="https://www.instagram.com/sos_shine" target="_blank" rel="noopener noreferrer" class="resa" aria-label="Suivre SOS Shine sur Instagram">
+    <svg class="ig-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.8"/><circle cx="17.4" cy="6.6" r="1.2" fill="currentColor"/></svg>
+    Instagram →
+  </a>
 </div>
 
 <!-- 01 · HEADER -->

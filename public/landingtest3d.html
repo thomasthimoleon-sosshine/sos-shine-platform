@@ -57,8 +57,8 @@
 
   /* ---------- EVENT BANNER ---------- */
   .annonce{
-    background:linear-gradient(90deg,#12100B,#1E1A12,#12100B);
-    border-bottom:1px solid var(--line);
+    background:transparent;
+    border-bottom:none;
     text-align:center;font-size:13.5px;color:var(--cream-dim);
     padding:9px 16px;letter-spacing:.2px;
   }
@@ -70,7 +70,9 @@
   .annonce .hide-m{}
 
   /* ---------- HEADER ---------- */
-  header{position:sticky;top:0;z-index:50;background:rgba(10,8,6,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(46,39,24,.7)}
+  /* Header fondu dans la page (aucun bandeau visible en haut) ; il se teinte seulement au scroll pour rester lisible */
+  header{position:sticky;top:0;z-index:50;background:transparent;border-bottom:1px solid transparent;transition:background .3s ease,backdrop-filter .3s ease,border-color .3s ease}
+  header.scrolled{background:rgba(10,8,6,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(46,39,24,.7)}
   .nav{display:flex;align-items:center;justify-content:space-between;height:70px}
   .brand{display:flex;align-items:center;gap:11px;font-family:var(--serif);font-size:20px;font-weight:600;color:var(--cream)}
   .brand-logo{height:60px;width:auto;display:block}
@@ -580,6 +582,13 @@
     burger.addEventListener('click', () => hdr.classList.toggle('nav-open'));
     hdr.querySelectorAll('.nav-links a').forEach(a =>
       a.addEventListener('click', () => hdr.classList.remove('nav-open')));
+  }
+
+  // Header fondu en haut, teinté au scroll (pour rester lisible)
+  if (hdr) {
+    const onScroll = () => hdr.classList.toggle('scrolled', window.scrollY > 24);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
   }
 
   // Scroll reveal

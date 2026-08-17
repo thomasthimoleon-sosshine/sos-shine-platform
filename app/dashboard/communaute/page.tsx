@@ -6,7 +6,6 @@ import dynamic from 'next/dynamic'
 import { createClient } from '@/lib/supabase/client'
 import SubscriptionGate from '@/components/SubscriptionGate'
 import ProfileDrawer from '@/components/community/ProfileDrawer'
-import CommunityStatsBar from '@/components/community/CommunityStatsBar'
 
 const MurTab = dynamic(() => import('@/app/dashboard/mur/page'), { ssr: false })
 const MonEclatTab = dynamic(() => import('@/app/dashboard/mon-eclat/page'), { ssr: false })
@@ -14,13 +13,13 @@ const RayonsFeedTab = dynamic(() => import('@/components/community/RayonsFeedTab
 const MessagesTab = dynamic(() => import('@/components/community/MessagesTab'), { ssr: false })
 const SavedPostsTab = dynamic(() => import('@/components/community/SavedPostsTab'), { ssr: false })
 
-type TabId = 'mur' | 'rayons' | 'eclat' | 'messages' | 'saved'
+type TabId = 'fil' | 'discussions' | 'moi'
+type MoiView = 'messages' | 'proches' | 'enregistres'
 
-const TABS: { id: TabId; label: string; mobileLabel: string; icon: React.ReactNode }[] = [
+const TABS: { id: TabId; label: string; icon: React.ReactNode }[] = [
   {
-    id: 'mur',
-    label: 'Mur Communautaire',
-    mobileLabel: 'Mur',
+    id: 'fil',
+    label: 'Le fil',
     icon: (
       <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z" />
@@ -28,29 +27,8 @@ const TABS: { id: TabId; label: string; mobileLabel: string; icon: React.ReactNo
     ),
   },
   {
-    id: 'rayons',
-    label: 'Mes Rayons',
-    mobileLabel: 'Rayons',
-    icon: (
-      <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
-      </svg>
-    ),
-  },
-  {
-    id: 'eclat',
-    label: 'Mon Éclat',
-    mobileLabel: 'Éclat',
-    icon: (
-      <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
-      </svg>
-    ),
-  },
-  {
-    id: 'messages',
-    label: 'Messages Privés',
-    mobileLabel: 'Messages',
+    id: 'discussions',
+    label: 'Discussions',
     icon: (
       <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
@@ -58,21 +36,40 @@ const TABS: { id: TabId; label: string; mobileLabel: string; icon: React.ReactNo
     ),
   },
   {
-    id: 'saved',
-    label: 'Posts Enregistrés',
-    mobileLabel: 'Enregistrés',
+    id: 'moi',
+    label: 'Moi',
     icon: (
       <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
       </svg>
     ),
   },
 ]
 
+const MOI_VIEWS: { id: MoiView; label: string }[] = [
+  { id: 'messages', label: 'Mes messages' },
+  { id: 'proches', label: 'Mes proches' },
+  { id: 'enregistres', label: 'Enregistrés' },
+]
+
+// Rétrocompatibilité avec les anciens liens ?tab=mur|rayons|eclat|messages|saved
+function resolveInitial(tab: string | null): { tab: TabId; moi: MoiView } {
+  switch (tab) {
+    case 'mur': return { tab: 'fil', moi: 'messages' }
+    case 'messages': return { tab: 'discussions', moi: 'messages' }
+    case 'eclat': return { tab: 'moi', moi: 'messages' }
+    case 'rayons': return { tab: 'moi', moi: 'proches' }
+    case 'saved': return { tab: 'moi', moi: 'enregistres' }
+    case 'fil': case 'discussions': case 'moi': return { tab: tab as TabId, moi: 'messages' }
+    default: return { tab: 'fil', moi: 'messages' }
+  }
+}
+
 export default function CommunautePage() {
   const searchParams = useSearchParams()
-  const initialTab = (searchParams.get('tab') as TabId) || 'mur'
-  const [activeTab, setActiveTab] = useState<TabId>(TABS.find(t => t.id === initialTab) ? initialTab : 'mur')
+  const initial = resolveInitial(searchParams.get('tab'))
+  const [activeTab, setActiveTab] = useState<TabId>(initial.tab)
+  const [moiView, setMoiView] = useState<MoiView>(initial.moi)
   const [profileDrawerUserId, setProfileDrawerUserId] = useState<string | null>(null)
   const [unreadMessages, setUnreadMessages] = useState(0)
 
@@ -95,7 +92,6 @@ export default function CommunautePage() {
 
   function handleTabChange(tabId: TabId) {
     setActiveTab(tabId)
-    // Update URL without navigation
     const url = new URL(window.location.href)
     url.searchParams.set('tab', tabId)
     window.history.replaceState({}, '', url.toString())
@@ -108,29 +104,24 @@ export default function CommunautePage() {
   return (
     <SubscriptionGate allowFree>
     <div className="max-w-4xl mx-auto">
-      {/* ── Community Stats Bar ── */}
-      <CommunityStatsBar />
-
-      {/* ── Top Tab Navigation ── */}
-      <div className="mb-6 overflow-x-auto scrollbar-hide">
-        <div className="flex gap-1 p-1 rounded-xl min-w-max" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
+      {/* ── 3 onglets ── */}
+      <div className="mb-6">
+        <div className="flex gap-1 p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
           {TABS.map(tab => {
             const isActive = activeTab === tab.id
             return (
               <button
                 key={tab.id}
                 onClick={() => handleTabChange(tab.id)}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-[13px] font-medium transition-all cursor-pointer whitespace-nowrap relative"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-[13px] font-medium transition-all cursor-pointer whitespace-nowrap relative"
                 style={{
                   background: isActive ? 'rgba(201,169,97,0.1)' : 'transparent',
                   color: isActive ? 'var(--brand)' : 'var(--text-muted)',
                 }}
               >
                 <span className={isActive ? 'opacity-100' : 'opacity-60'}>{tab.icon}</span>
-                <span className="hidden sm:inline">{tab.label}</span>
-                <span className="sm:hidden">{tab.mobileLabel}</span>
-                {/* Unread badge for messages */}
-                {tab.id === 'messages' && unreadMessages > 0 && (
+                <span>{tab.label}</span>
+                {tab.id === 'discussions' && unreadMessages > 0 && (
                   <span className="min-w-[18px] h-[18px] rounded-full flex items-center justify-center text-[10px] font-bold animate-pulse bg-[var(--danger)] text-white">
                     {unreadMessages > 9 ? '9+' : unreadMessages}
                   </span>
@@ -141,16 +132,38 @@ export default function CommunautePage() {
         </div>
       </div>
 
-      {/* ── Tab Content ── */}
+      {/* ── Sous-menu de l'onglet "Moi" ── */}
+      {activeTab === 'moi' && (
+        <div className="mb-5 flex gap-2 flex-wrap">
+          {MOI_VIEWS.map(v => {
+            const isActive = moiView === v.id
+            return (
+              <button
+                key={v.id}
+                onClick={() => setMoiView(v.id)}
+                className="px-3.5 py-1.5 rounded-full text-[12.5px] font-medium transition-all cursor-pointer"
+                style={{
+                  background: isActive ? 'var(--brand)' : 'rgba(255,255,255,0.03)',
+                  color: isActive ? 'var(--text-inverse)' : 'var(--text-muted)',
+                  border: '1px solid ' + (isActive ? 'transparent' : 'var(--border)'),
+                }}
+              >
+                {v.label}
+              </button>
+            )
+          })}
+        </div>
+      )}
+
+      {/* ── Contenu ── */}
       <div>
-        {activeTab === 'mur' && <MurTab />}
-        {activeTab === 'rayons' && <RayonsFeedTab onProfileClick={openProfileDrawer} />}
-        {activeTab === 'eclat' && <MonEclatTab />}
-        {activeTab === 'messages' && <MessagesTab onProfileClick={openProfileDrawer} />}
-        {activeTab === 'saved' && <SavedPostsTab onProfileClick={openProfileDrawer} />}
+        {activeTab === 'fil' && <MurTab />}
+        {activeTab === 'discussions' && <MessagesTab onProfileClick={openProfileDrawer} />}
+        {activeTab === 'moi' && moiView === 'messages' && <MonEclatTab />}
+        {activeTab === 'moi' && moiView === 'proches' && <RayonsFeedTab onProfileClick={openProfileDrawer} />}
+        {activeTab === 'moi' && moiView === 'enregistres' && <SavedPostsTab onProfileClick={openProfileDrawer} />}
       </div>
 
-      {/* ── Profile Drawer ── */}
       {profileDrawerUserId && (
         <ProfileDrawer
           userId={profileDrawerUserId}

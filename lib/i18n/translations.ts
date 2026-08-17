@@ -4,6 +4,7 @@ export const translations: Record<string, string> = {
   'nav.home': 'Accueil',
   'nav.encyclopedia': 'Encyclopédie',
   'nav.favorites': 'Favoris',
+  'nav.mediatheque': 'Médiathèque',
   'nav.shine_tv': 'Shine TV',
   'nav.shine_shorts': 'Shine Shorts',
   'nav.shine_audible': 'Shine Audible',

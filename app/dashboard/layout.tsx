@@ -42,6 +42,15 @@ const navItemDefs = [
     ),
   },
   {
+    href: '/dashboard/mediatheque',
+    labelKey: 'nav.mediatheque',
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125M3.375 19.5h1.5C5.496 19.5 6 18.996 6 18.375m-2.625 0V5.625m0 12.75v-12.75A1.125 1.125 0 014.5 4.5h15a1.125 1.125 0 011.125 1.125v12.75M3.375 19.5h17.25m0 0a1.125 1.125 0 001.125-1.125m-1.125 1.125h-1.5c-.621 0-1.125-.504-1.125-1.125m2.625 0V5.625m0 12.75h-2.625m2.625-12.75h-17.25m17.25 0v12.75M6 18.375v-1.5m0 1.5h12m-12 0V5.625m12 12.75V5.625m0 12.75h-1.5m1.5-12.75h-12m0 0v12.75M9 9l3 2.25L9 13.5V9z" />
+      </svg>
+    ),
+  },
+  {
     href: '/dashboard/shine-tv',
     labelKey: 'nav.shine_tv',
     icon: (
@@ -140,10 +149,20 @@ const navItemDefs = [
 const PRIMARY_NAV = [
   '/dashboard',
   '/dashboard/encyclopedie',
-  '/dashboard/shine-tv',
+  '/dashboard/mediatheque',
   '/dashboard/communaute',
   '/dashboard/evenements',
   '/dashboard/profil',
+]
+
+// Ces pages sont regroupées dans la Médiathèque : on ne les montre plus comme
+// entrées de menu séparées (elles restent accessibles via /dashboard/mediatheque).
+const HIDDEN_NAV = [
+  '/dashboard/shine-tv',
+  '/dashboard/shine-shorts',
+  '/dashboard/shine-audible',
+  '/dashboard/shine-librairie',
+  '/dashboard/blog',
 ]
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -320,7 +339,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* Navigation */}
         <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
           {/* Menu simplifié à 6 entrées (voir PRIMARY_NAV). Contenu en aperçu pour les gratuits. */}
-          {navItemDefs.filter((item) => PRIMARY_NAV.includes(item.href)).map((item) => {
+          {navItemDefs.filter((item) => PRIMARY_NAV.includes(item.href) && !HIDDEN_NAV.includes(item.href)).map((item) => {
             const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href))
             return (
               <Link
@@ -346,7 +365,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           })}
 
           {/* ── Entrées secondaires, dépliables via « Plus » (rien n'est perdu) ── */}
-          {showMoreNav && navItemDefs.filter((item) => !PRIMARY_NAV.includes(item.href)).map((item) => {
+          {showMoreNav && navItemDefs.filter((item) => !PRIMARY_NAV.includes(item.href) && !HIDDEN_NAV.includes(item.href)).map((item) => {
             const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href))
             return (
               <Link

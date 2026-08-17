@@ -409,7 +409,7 @@ export default function EvenementsPage() {
 
   function getEventTypeInfo(type: string) {
     const map: Record<string, { label: string; color: string }> = {
-      shine_walk: { label: 'Shine Walk', color: 'var(--success)' },
+      shine_walk: { label: 'Marche ensemble', color: 'var(--success)' },
       rencontre: { label: 'Rencontre', color: 'var(--accent-blue)' },
       atelier: { label: 'Atelier', color: '#FFEAA7' },
       soin_collectif: { label: 'Soin Collectif', color: '#DDA0DD' },
@@ -695,13 +695,13 @@ export default function EvenementsPage() {
         }}
       >
         <h3 className="font-display text-lg font-semibold mb-2 text-[var(--text-primary)]">
-          Devenez hôte certifié
+          Organisez vos propres rencontres
         </h3>
         <p className="text-sm mb-4 max-w-md mx-auto text-[var(--text-secondary)]">
-          Après 4 mois dans la communauté, vous pouvez organiser vos propres Shine Walks et devenir Éclaireur.
+          Après 4 mois avec nous, vous pouvez accueillir vos propres rencontres près de chez vous.
         </p>
         <span className="text-xs font-medium text-[var(--brand)]">
-          Programme Éclaireur - bientôt disponible
+          Bientôt disponible
         </span>
       </div>
     </div>

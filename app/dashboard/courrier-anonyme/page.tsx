@@ -230,7 +230,7 @@ export default function CourrierAnonymePage() {
                     Envoi en cours...
                   </span>
                 ) : (
-                  'Envoyer mon courrier anonyme'
+                  'Envoyer'
                 )}
               </button>
             </form>

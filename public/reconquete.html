@@ -2,50 +2,505 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="robots" content="noindex, nofollow">
-<title>Le voyage</title>
+<meta name="theme-color" content="#141B33">
+<title>Le fil rouge</title>
 <style>
-  *{margin:0;padding:0;box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    background:radial-gradient(ellipse at 50% 30%, #1a1730 0%, #0c0a18 60%, #060510 100%);
-    color:#EDE7FF;
-    font-family:Georgia, 'Times New Roman', serif;
-    display:flex;align-items:center;justify-content:center;
-    min-height:100svh;text-align:center;padding:0 24px;overflow:hidden;
+  :root{
+    --thread:#E63950; --thread-glow:#FF6B7A;
+    --lantern:#FFD8A8; --lantern-glow:#FFE9C7;
+    --cream:#F5F1EA; --peach:#F7B99C;
+    --serif:Georgia,'Times New Roman',serif;
+    --sans:system-ui,-apple-system,'Segoe UI',sans-serif;
+    --ease-draw:cubic-bezier(0.65,0,0.35,1);
+    --ease-soft:cubic-bezier(0.22,1,0.36,1);
+    --ease-cam:cubic-bezier(0.45,0,0.15,1);
+    --ease-pop:cubic-bezier(0.34,1.56,0.64,1);
   }
-  .wrap{position:relative;z-index:2;max-width:34ch}
-  .star{position:fixed;border-radius:50%;background:#fff;opacity:.6;animation:twinkle 4s ease-in-out infinite}
-  @keyframes twinkle{0%,100%{opacity:.2}50%{opacity:.9}}
-  h1{font-size:clamp(1.9rem,6vw,3rem);font-weight:400;line-height:1.25;letter-spacing:.01em}
-  h1 em{font-style:italic;color:#E7B7C6}
-  p{margin-top:1.4rem;font-size:1rem;line-height:1.7;color:rgba(237,231,255,.7);font-family:system-ui,-apple-system,sans-serif}
-  .glow{position:fixed;left:50%;top:32%;width:60vw;height:60vw;max-width:520px;max-height:520px;transform:translate(-50%,-50%);
-    background:radial-gradient(circle, rgba(231,183,198,.18), transparent 65%);z-index:1;filter:blur(10px);
-    animation:breathe 7s ease-in-out infinite}
-  @keyframes breathe{0%,100%{opacity:.7;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}}
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;overflow:hidden;background:#0c0a18}
+  body{font-family:var(--sans);color:var(--cream)}
+  .stage{position:fixed;inset:0;overflow:hidden}
+  #world{position:absolute;inset:0;width:100%;height:100%;display:block}
+  #fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
+  .grain{position:absolute;inset:0;z-index:4;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  .vignette{position:absolute;inset:0;z-index:3;pointer-events:none;
+    background:radial-gradient(ellipse 80% 70% at 50% 45%,transparent 40%,rgba(6,5,16,.75) 100%)}
+  .scrim{position:absolute;left:0;right:0;bottom:0;height:56%;z-index:4;pointer-events:none;
+    background:linear-gradient(to top,rgba(6,5,16,.94) 6%,rgba(6,5,16,.6) 42%,transparent 100%)}
+
+  /* ── UI premier plan ── */
+  .ui{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;justify-content:flex-end;
+    padding:0 22px calc(30px + env(safe-area-inset-bottom));pointer-events:none}
+  .progress{position:absolute;top:calc(18px + env(safe-area-inset-top));left:0;right:0;display:flex;gap:7px;justify-content:center}
+  .dot{width:7px;height:7px;border-radius:50%;background:rgba(245,241,234,.22);transition:.5s var(--ease-soft)}
+  .dot.done{background:var(--thread);box-shadow:0 0 8px var(--thread-glow)}
+  .dot.cur{background:var(--lantern);transform:scale(1.35);box-shadow:0 0 10px var(--lantern-glow)}
+
+  .world-line{font-family:var(--serif);font-style:italic;font-size:clamp(1rem,4.4vw,1.35rem);
+    line-height:1.4;text-align:center;color:rgba(245,241,234,.85);max-width:26ch;margin:0 auto 20px;
+    text-shadow:0 2px 24px rgba(0,0,0,.6);opacity:0;transform:translateY(10px);transition:.7s var(--ease-soft);min-height:2.6em}
+  .world-line.show{opacity:1;transform:none}
+
+  .card{max-width:560px;margin:0 auto;width:100%;pointer-events:auto;
+    transition:opacity .45s ease,transform .55s var(--ease-soft)}
+  .card.out{opacity:0;transform:translateY(-18px) scale(.98)}
+  .card.in{opacity:0;transform:translateY(18px) scale(.98)}
+  .q{font-family:var(--serif);font-size:clamp(1.35rem,5.6vw,2rem);line-height:1.25;text-align:center;
+    margin-bottom:20px;text-shadow:0 2px 30px rgba(0,0,0,.7)}
+  .answers{display:flex;flex-direction:column;gap:11px}
+  .ans{font-family:var(--sans);font-size:clamp(.95rem,4vw,1.05rem);color:var(--cream);text-align:center;
+    padding:15px 18px;border-radius:16px;cursor:pointer;line-height:1.35;
+    background:rgba(245,241,234,.06);border:1px solid rgba(245,241,234,.14);
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    transition:transform .18s var(--ease-soft),background .25s,border-color .25s}
+  .ans:hover,.ans:active{background:rgba(230,57,80,.16);border-color:var(--thread);transform:translateY(-2px)}
+
+  /* ── Intro & fin ── */
+  .screen{position:absolute;inset:0;z-index:6;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:0 28px;gap:18px;pointer-events:auto;
+    opacity:0;visibility:hidden;transition:opacity .9s ease,visibility .9s}
+  .screen.show{opacity:1;visibility:visible}
+  .screen h1{font-family:var(--serif);font-weight:400;font-size:clamp(2rem,8vw,3.2rem);line-height:1.2}
+  .screen h1 em{font-style:italic;color:var(--peach)}
+  .screen p{font-family:var(--serif);font-style:italic;font-size:clamp(1rem,4.4vw,1.25rem);
+    line-height:1.6;color:rgba(245,241,234,.82);max-width:30ch}
+  .btn{font-family:var(--sans);font-size:1rem;font-weight:600;color:#1a0e12;background:var(--peach);
+    border:none;border-radius:100px;padding:14px 30px;cursor:pointer;transition:transform .18s var(--ease-pop),filter .2s;margin-top:6px}
+  .btn:hover,.btn:active{transform:translateY(-2px) scale(1.03);filter:brightness(1.08)}
+  .btn.thread{background:var(--thread);color:#fff}
+  .mini{font-family:var(--sans);font-size:.82rem;color:rgba(245,241,234,.5)}
+  .email-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:100%;max-width:420px;margin-top:8px}
+  .email-row input{flex:1;min-width:180px;font-family:var(--sans);font-size:1rem;padding:13px 16px;border-radius:100px;
+    background:rgba(245,241,234,.08);border:1px solid rgba(245,241,234,.2);color:var(--cream);outline:none}
+  .email-row input::placeholder{color:rgba(245,241,234,.4)}
+  .subtle{display:flex;gap:22px;margin-top:14px}
+  .subtle a{font-family:var(--sans);font-size:.9rem;color:rgba(245,241,234,.6);cursor:pointer;border-bottom:1px solid rgba(245,241,234,.25);padding-bottom:2px}
+  .subtle a:hover{color:var(--cream)}
+
+  /* ── Personnage : marche & respiration ── */
+  #hero{transition:transform 2.2s var(--ease-cam)}
+  #hero .body{transform-box:fill-box;transform-origin:center bottom;animation:breathe 3.2s ease-in-out infinite}
+  @keyframes breathe{50%{transform:scaleY(1.02) translateY(-1px)}}
+  #hero.walking .legL{animation:step .5s ease-in-out infinite}
+  #hero.walking .legR{animation:step .5s ease-in-out infinite reverse}
+  #hero.walking .body{animation:bob .5s ease-in-out infinite}
+  @keyframes step{50%{transform:rotate(20deg)}}
+  @keyframes bob{50%{transform:translateY(-3px)}}
+  .legL,.legR{transform-box:fill-box;transform-origin:top center}
+
+  /* halos */
+  .pulse{transform-box:fill-box;transform-origin:center;animation:pulse 4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:.9;transform:scale(1.12)}}
+
+  .reveal{opacity:0;transition:opacity .9s var(--ease-soft)}
+  .reveal.on{opacity:1}
+  .draw{transition:stroke-dashoffset 1.5s var(--ease-draw)}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001s !important;transition-duration:.01s !important}
+  }
 </style>
 </head>
 <body>
-  <div class="glow"></div>
-  <div class="wrap">
-    <h1>Un <em>voyage</em> se prépare…</h1>
-    <p>Bientôt, un chemin s'ouvrira ici. Reviens dans un instant.</p>
+<div class="stage">
+  <svg id="world" viewBox="0 0 1000 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <radialGradient id="skyNight" cx="50%" cy="20%" r="90%">
+        <stop offset="0%" stop-color="#22284A"/><stop offset="55%" stop-color="#141B33"/><stop offset="100%" stop-color="#0b0f22"/>
+      </radialGradient>
+      <linearGradient id="skyDawn" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#3A2E52"/><stop offset="55%" stop-color="#C77E8A"/><stop offset="100%" stop-color="#F7B99C"/>
+      </linearGradient>
+      <radialGradient id="lanternGrad" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#FFE9C7" stop-opacity="0.95"/><stop offset="45%" stop-color="#FFD8A8" stop-opacity="0.5"/><stop offset="100%" stop-color="#FFD8A8" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="soulGrad" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#FFCADf" stop-opacity="0.9"/><stop offset="60%" stop-color="#E63950" stop-opacity="0.25"/><stop offset="100%" stop-color="#E63950" stop-opacity="0"/>
+      </radialGradient>
+      <linearGradient id="threadGrad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#FF6B7A"/><stop offset="100%" stop-color="#E63950"/>
+      </linearGradient>
+      <filter id="soft"><feGaussianBlur stdDeviation="2.2"/></filter>
+    </defs>
+
+    <!-- ciels (crossfade nuit -> aube) -->
+    <rect x="-200" y="0" width="3000" height="900" fill="url(#skyNight)"/>
+    <rect id="dawn" x="-200" y="0" width="3000" height="900" fill="url(#skyDawn)" opacity="0"/>
+
+    <!-- Groupe caméra : tout le monde vit dedans, on translate le viewBox -->
+    <g id="camera">
+      <!-- étoiles (step 2) -->
+      <g id="stars"></g>
+
+      <!-- horizon lointain (step 2) -->
+      <path class="reveal draw" data-step="2" id="horizon" d="M-100,560 Q400,540 900,555 T2600,548" fill="none" stroke="rgba(245,241,234,0.18)" stroke-width="2"/>
+
+      <!-- collines parallax (step 5) -->
+      <g data-step="5">
+        <path class="reveal" d="M-100,720 Q300,610 700,700 T1500,680 T2600,700 V900 H-100 Z" fill="#171d38"/>
+        <path class="reveal" d="M-100,760 Q500,660 1100,750 T2600,740 V900 H-100 Z" fill="#1c2340"/>
+      </g>
+
+      <!-- sol -->
+      <rect x="-200" y="700" width="3000" height="220" fill="#1B2138"/>
+      <path id="ground" d="M-200,700 Q400,690 1000,705 T2600,700 V920 H-200 Z" fill="#20264a"/>
+
+      <!-- rivière + pont (step 8) -->
+      <g data-step="8">
+        <path class="reveal" d="M1560,700 q40,60 0,120 q-40,-60 0,-120" fill="#2b3a63" opacity="0.9"/>
+        <ellipse class="reveal" cx="1600" cy="712" rx="120" ry="16" fill="#2b3a63"/>
+        <g id="bridge"></g>
+      </g>
+
+      <!-- arc-en-ciel doux (step 7) -->
+      <path class="reveal draw" data-step="7" id="rainbow" d="M700,700 A360,360 0 0 1 1420,700" fill="none" stroke="rgba(247,185,156,0.5)" stroke-width="10" stroke-linecap="round"/>
+
+      <!-- chemin invisible du héros -->
+      <path id="heroPath" d="M150,690 C420,700 560,640 760,675 C960,705 1120,600 1360,660 C1560,705 1760,660 2020,672" fill="none" stroke="none"/>
+
+      <!-- Fil rouge -->
+      <path id="thread" d="" fill="none" stroke="url(#threadGrad)" stroke-width="3.5" stroke-linecap="round"
+            filter="url(#soft)" opacity="0.9"/>
+
+      <!-- Seconde âme (l'autre moitié) -->
+      <g id="soul" transform="translate(2020,672)">
+        <circle class="reveal pulse" data-step="2" r="70" fill="url(#soulGrad)"/>
+        <ellipse class="reveal" data-step="2" cx="0" cy="-6" rx="15" ry="26" fill="#e8b7c6"/>
+        <circle class="reveal" data-step="2" cx="0" cy="-40" r="12" fill="#f2c79b"/>
+      </g>
+
+      <!-- Héros (marcheur-lanterne) -->
+      <g id="hero" transform="translate(150,690)">
+        <circle id="lanternHalo" cx="26" cy="-30" r="60" fill="url(#lanternGrad)" opacity="0"/>
+        <line class="legL" x1="-6" y1="-6" x2="-6" y2="14" stroke="#3A2E52" stroke-width="5" stroke-linecap="round"/>
+        <line class="legR" x1="6" y1="-6" x2="6" y2="14" stroke="#3A2E52" stroke-width="5" stroke-linecap="round"/>
+        <ellipse class="body" cx="0" cy="-20" rx="14" ry="20" fill="#6b6a86" id="heroBody"/>
+        <circle cx="0" cy="-46" r="11" fill="#8a889f" id="heroHead"/>
+        <line x1="12" y1="-30" x2="26" y2="-30" stroke="#caa" stroke-width="2.5" stroke-linecap="round"/>
+        <circle id="lantern" cx="26" cy="-30" r="7" fill="#5a5a6e"/>
+      </g>
+    </g>
+  </svg>
+
+  <canvas id="fx"></canvas>
+  <div class="vignette"></div>
+  <div class="scrim"></div>
+  <div class="grain"></div>
+
+  <!-- Intro -->
+  <div class="screen show" id="intro">
+    <h1>Le <em>fil rouge</em></h1>
+    <p>Un fil invisible relie ceux qui sont faits pour se rencontrer.<br>Suis-le. Il te ramène à elle. À lui.</p>
+    <button class="btn thread" id="start">Commencer le voyage</button>
+    <span class="mini">10 questions · 3 minutes · un voyage</span>
   </div>
-  <script>
-    // Quelques étoiles douces en fond
-    const N = 40;
-    for (let i = 0; i < N; i++) {
-      const s = document.createElement('div');
-      s.className = 'star';
-      const size = Math.random() * 2 + 1;
-      s.style.width = s.style.height = size + 'px';
-      s.style.left = Math.random() * 100 + 'vw';
-      s.style.top = Math.random() * 100 + 'vh';
-      s.style.animationDelay = (Math.random() * 4) + 's';
-      document.body.appendChild(s);
+
+  <!-- Jeu -->
+  <div class="ui" id="ui" style="display:none">
+    <div class="progress" id="progress"></div>
+    <p class="world-line" id="worldLine"></p>
+    <div class="card in" id="card"></div>
+  </div>
+
+  <!-- Fin -->
+  <div class="screen" id="end">
+    <h1>Vous voilà <em>réunis</em>.</h1>
+    <p id="endMsg">Le fil ne s'était jamais rompu — il attendait juste que tu avances.</p>
+    <div class="email-row">
+      <input id="email" type="email" inputmode="email" placeholder="Ton email (facultatif)">
+      <button class="btn" id="sendEmail">Recevoir mon premier pas</button>
+    </div>
+    <span class="mini">Un seul message, jamais de spam.</span>
+    <div class="subtle">
+      <a id="replay">↺ Rejouer le voyage</a>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── Données : 10 questions ── */
+  var SCENES = [
+    { q:"Avant tout… où en es-tu, là, maintenant ?",
+      a:[["Il y a quelqu'un qui me manque.","manque"],["Je me sens loin de la personne que j'aime.","manque"],["Je cherche encore ma moitié.","espoir"]],
+      line:"Tout commence dans le silence.", pos:5 },
+    { q:"Qu'est-ce qui te serre le cœur le plus fort ?",
+      a:[["Son rire, sa présence au quotidien.","tendresse"],["Les mots qu'on ne s'est pas dits.","pardon"],["L'idée de passer à côté de la bonne personne.","espoir"]],
+      line:"Là-bas, quelqu'un existe.", pos:14 },
+    { q:"Et si tu faisais le premier pas… qu'est-ce qui t'y pousse ?",
+      a:[["L'amour, tout simplement.","tendresse"],["Le regret de ne rien tenter.","courage"],["L'espoir que c'est réparable.","espoir"]],
+      line:"Une petite lumière, et le monde change de couleur.", pos:24 },
+    { q:"Quand tu penses à elle, à lui, tu ressens surtout…",
+      a:[["De la tendresse.","tendresse"],["De la nostalgie.","manque"],["Du courage neuf.","courage"]],
+      line:"Le premier pas est toujours le plus lourd. Il l'a fait.", pos:34 },
+    { q:"Sur le chemin, il y a des reliefs. Le tien ressemble à quoi ?",
+      a:[["Des habitudes à réinventer.","courage"],["Des silences à briser.","pardon"],["La peur de ne pas être à la hauteur.","courage"]],
+      line:"Aimer, c'est parfois gravir.", pos:45 },
+    { q:"Et quand ça devient difficile, tu fais quoi ?",
+      a:[["Je respire et je continue.","courage"],["Je demande de l'aide.","tendresse"],["Je m'accroche à un souvenir heureux.","tendresse"]],
+      line:"La pluie tombe. La lumière tient bon.", pos:56 },
+    { q:"Y a-t-il quelque chose à laisser derrière toi ?",
+      a:[["Une rancune, je la pose.","pardon"],["Une fierté, je la lâche.","pardon"],["Rien, je pars léger.","courage"]],
+      line:"Ce qu'on lâche allège le pas.", pos:66 },
+    { q:"Qu'est-ce que tu veux lui offrir en arrivant ?",
+      a:[["Ma présence, pleine et entière.","tendresse"],["Une promesse tenue.","courage"],["Un nouveau départ.","espoir"]],
+      line:"Entre deux rives, on bâtit un passage.", pos:77 },
+    { q:"Vous y êtes presque. Qu'est-ce que tu espères entendre ?",
+      a:[['« Tu m\'as manqué. »',"manque"],['« On recommence ? »',"espoir"],['« Je suis là, moi aussi. »',"tendresse"]],
+      line:"Le ciel se réchauffe. Elle l'a vu arriver.", pos:88 },
+    { q:"Il ne reste qu'un pas. Tu le fais avec…",
+      a:[["Tout mon cœur.","tendresse"],["Tous mes regrets pardonnés.","pardon"],["Toute ma confiance retrouvée.","courage"]],
+      line:"Plus qu'un pas…", pos:100 }
+  ];
+
+  var END_MSG = {
+    tendresse:"Tu portes en toi beaucoup de douceur. Offre-la sans attendre : un mot, un geste, aujourd'hui.",
+    courage:"Ton courage a tracé le chemin. Ce que tu as osé ici, ose-le pour de vrai.",
+    pardon:"Tu as su déposer ce qui pesait. C'est là que l'amour recommence : les mains libres.",
+    espoir:"Ton espoir est un fil solide. Suis-le jusqu'à elle, jusqu'à lui, dans la vraie vie.",
+    manque:"Ce manque dit à quel point ça compte. N'attends pas : dis-le, tant qu'il est temps."
+  };
+
+  /* ── Refs ── */
+  var world=document.getElementById('world'), cam=document.getElementById('camera');
+  var hero=document.getElementById('hero'), heroPath=document.getElementById('heroPath');
+  var thread=document.getElementById('thread'), lantern=document.getElementById('lantern');
+  var lanternHalo=document.getElementById('lanternHalo'), heroBody=document.getElementById('heroBody'), heroHead=document.getElementById('heroHead');
+  var ui=document.getElementById('ui'), card=document.getElementById('card'), worldLine=document.getElementById('worldLine');
+  var progress=document.getElementById('progress'), intro=document.getElementById('intro'), end=document.getElementById('end'), endMsg=document.getElementById('endMsg');
+  var fx=document.getElementById('fx'), fxc=fx.getContext('2d');
+
+  var soulPt={x:2020,y:672};
+  var pathLen=heroPath.getTotalLength();
+  var idx=0, answers=[];
+
+  /* dots */
+  for(var i=0;i<10;i++){var d=document.createElement('div');d.className='dot';progress.appendChild(d);}
+  var dots=progress.children;
+
+  /* étoiles */
+  var starsG=document.getElementById('stars');
+  for(var s=0;s<60;s++){
+    var st=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    st.setAttribute('cx', (Math.round(-50+Math.random()*2200)));
+    st.setAttribute('cy', (Math.round(30+Math.random()*430)));
+    st.setAttribute('r', (Math.random()*1.4+0.5).toFixed(2));
+    st.setAttribute('fill','#fff'); st.setAttribute('opacity',(0.2+Math.random()*0.6).toFixed(2));
+    st.setAttribute('class','reveal'); st.setAttribute('data-step','2');
+    starsG.appendChild(st);
+  }
+  /* planches du pont */
+  var bridge=document.getElementById('bridge');
+  for(var b=0;b<9;b++){
+    var pl=document.createElementNS('http://www.w3.org/2000/svg','rect');
+    pl.setAttribute('x', 1512+b*20); pl.setAttribute('y', 690-Math.sin(b/8*Math.PI)*10);
+    pl.setAttribute('width',16); pl.setAttribute('height',7); pl.setAttribute('rx',2);
+    pl.setAttribute('fill','#4a3b52'); pl.setAttribute('class','reveal');
+    bridge.appendChild(pl);
+  }
+
+  /* préparer path-drawing */
+  [].forEach.call(document.querySelectorAll('.draw'),function(p){
+    var L=p.getTotalLength(); p.style.strokeDasharray=L; p.style.strokeDashoffset=L;
+  });
+
+  /* helpers */
+  function heroPointAt(pct){ return heroPath.getPointAtLength(pathLen*Math.min(pct,100)/100); }
+  function setHero(pct){
+    var p=heroPointAt(pct);
+    hero.setAttribute('transform','translate('+p.x.toFixed(1)+','+p.y.toFixed(1)+')');
+    return p;
+  }
+  function updateThread(heroP){
+    // lanterne du héros = heroP + (26,-30) ; sag qui diminue avec la proximité
+    var hx=heroP.x+26, hy=heroP.y-30, sx=soulPt.x, sy=soulPt.y-20;
+    var mx=(hx+sx)/2, dist=Math.abs(sx-hx);
+    var sag=Math.min(120, dist*0.16); // moins de distance = fil plus tendu
+    thread.setAttribute('d','M'+hx+','+hy+' Q'+mx+','+(Math.max(hy,sy)+sag)+' '+sx+','+sy);
+  }
+
+  var camW=1000;
+  function panTo(heroP,dur){
+    // caméra : héros ~40% de l'écran, bornée
+    var target=Math.max(0, Math.min(1100, heroP.x-camW*0.40));
+    tweenViewBox(target,dur);
+  }
+  var curVB=0, vbAnim=null;
+  function tweenViewBox(to,dur){
+    if(reduce){ curVB=to; world.setAttribute('viewBox',to+' 0 '+camW+' 900'); return; }
+    var from=curVB, t0=performance.now();
+    cancelAnimationFrame(vbAnim);
+    function fr(now){
+      var k=Math.min(1,(now-t0)/dur), e=1-Math.pow(1-k,3);
+      curVB=from+(to-from)*e;
+      world.setAttribute('viewBox',curVB.toFixed(1)+' 0 '+camW+' 900');
+      if(k<1) vbAnim=requestAnimationFrame(fr);
     }
-  </script>
+    vbAnim=requestAnimationFrame(fr);
+  }
+
+  function revealWorld(step){
+    [].forEach.call(document.querySelectorAll('[data-step]'),function(el){
+      if(parseInt(el.getAttribute('data-step'),10)<=step){
+        el.classList.add('on');
+        if(el.classList.contains('draw')) el.style.strokeDashoffset=0;
+      }
+    });
+    // dawn crossfade selon l'avancement
+    var dawn=document.getElementById('dawn');
+    dawn.setAttribute('opacity', step>=9?0.85: step>=8?0.4: step>=7?0.18:0);
+    // lanterne s'allume à l'étape 3
+    if(step>=3){ lanternHalo.setAttribute('opacity','1'); lantern.setAttribute('fill','#FFE9C7');
+      heroBody.setAttribute('fill','#f2c79b'); heroHead.setAttribute('fill','#ffe0c0'); }
+    // pluie step 6 uniquement
+    rainOn = (step===6);
+  }
+
+  /* ── Pluie / pétales (Canvas) ── */
+  var DPR=Math.min(2, window.devicePixelRatio||1), rainOn=false, parts=[], petals=[], raf=null;
+  function sizeFx(){ fx.width=innerWidth*DPR; fx.height=innerHeight*DPR; }
+  sizeFx(); addEventListener('resize',sizeFx);
+  function loop(){
+    fxc.clearRect(0,0,fx.width,fx.height);
+    if(rainOn && !reduce){
+      if(parts.length<70) for(var i=0;i<3;i++) parts.push({x:Math.random()*fx.width,y:-20,v:6+Math.random()*6,l:12+Math.random()*14});
+      fxc.strokeStyle='rgba(200,215,255,0.25)'; fxc.lineWidth=1.2*DPR;
+      for(var p=parts.length-1;p>=0;p--){var r=parts[p];fxc.beginPath();fxc.moveTo(r.x,r.y);fxc.lineTo(r.x,r.y+r.l*DPR);fxc.stroke();r.y+=r.v*DPR;if(r.y>fx.height){parts.splice(p,1);}}
+    } else if(parts.length){ parts.length=0; }
+    for(var q=petals.length-1;q>=0;q--){
+      var m=petals[q]; m.x+=m.vx; m.y+=m.vy; m.vy+=0.05*DPR; m.life--; m.rot+=m.vr;
+      fxc.save(); fxc.translate(m.x,m.y); fxc.rotate(m.rot); fxc.globalAlpha=Math.max(0,m.life/m.max);
+      fxc.fillStyle=m.c; fxc.beginPath(); fxc.ellipse(0,0,m.s,m.s*0.55,0,0,7); fxc.fill(); fxc.restore();
+      if(m.life<=0) petals.splice(q,1);
+    }
+    raf=requestAnimationFrame(loop);
+  }
+  loop();
+  function burstPetals(cx,cy){
+    var cols=['#E63950','#FF6B7A','#F7B99C','#FFD8A8','#FFCADF'];
+    var n=reduce?30:120;
+    for(var i=0;i<n;i++){ var a=Math.random()*Math.PI*2, sp=(2+Math.random()*6)*DPR;
+      petals.push({x:cx*DPR,y:cy*DPR,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-3*DPR,s:(4+Math.random()*6)*DPR,
+        c:cols[i%cols.length],rot:Math.random()*6,vr:(Math.random()-0.5)*0.3,life:70+Math.random()*50,max:120}); }
+  }
+
+  /* ── Cartes / questions ── */
+  function loadCard(n){
+    var sc=SCENES[n]; if(!sc) return;
+    var html='<div class="q">'+sc.q+'</div><div class="answers">';
+    sc.a.forEach(function(opt,i){ html+='<button class="ans" data-i="'+i+'">'+opt[0]+'</button>'; });
+    html+='</div>';
+    card.innerHTML=html;
+    [].forEach.call(card.querySelectorAll('.ans'),function(btn){
+      btn.addEventListener('click',function(){ choose(n, parseInt(btn.getAttribute('data-i'),10)); });
+    });
+  }
+  function showCard(){ card.classList.remove('out'); card.classList.add('in');
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ card.classList.remove('in'); }); }); }
+  function setLine(txt){ worldLine.classList.remove('show'); worldLine.textContent=txt;
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ worldLine.classList.add('show'); }); }); }
+
+  function choose(n, ai){
+    answers.push(SCENES[n].a[ai][1]);
+    dots[n].classList.remove('cur'); dots[n].classList.add('done');
+    card.classList.add('out');
+    var sc=SCENES[n];
+    setTimeout(function(){
+      revealWorld(n+1);
+      setLine(sc.line);
+      var p=setHero(sc.pos);
+      updateThread(p);
+      hero.classList.add('walking'); setTimeout(function(){hero.classList.remove('walking');},2200);
+      panTo(p,2200);
+      idx=n+1;
+      if(idx<10){ dots[idx].classList.add('cur'); loadCard(idx); showCard(); }
+      else finale(p);
+    }, reduce?10:480);
+  }
+
+  /* fil animé en continu (respiration du lien) */
+  var breathT=0;
+  function threadBreath(){
+    if(!reduce){ var p=heroPointAt(idx<10?SCENES[Math.max(0,idx-1)].pos:100);
+      // léger tremblement vertical du fil
+    }
+    requestAnimationFrame(threadBreath);
+  }
+
+  /* ── Climax ── */
+  function finale(p){
+    ui.style.pointerEvents='none';
+    setLine('');
+    // rapprocher héros de l'âme
+    setTimeout(function(){
+      hero.style.transition='transform 1.4s '+getEase();
+      var target=heroPointAt(100);
+      hero.setAttribute('transform','translate('+(soulPt.x-40)+','+(soulPt.y+18)+')');
+      updateThread({x:soulPt.x-66,y:soulPt.y+18});
+      panTo({x:soulPt.x-camW*0.5+120},1400);
+    },300);
+    // cœur + flash + pétales
+    setTimeout(function(){
+      drawHeart(); flash(); burstPetals(centerXofSoul(), soulYcss());
+    },1700);
+    // écran de fin
+    setTimeout(function(){
+      var tone=dominant(answers);
+      endMsg.textContent='Le fil ne s\'était jamais rompu — il attendait juste que tu avances.  '+ (END_MSG[tone]||'');
+      end.classList.add('show');
+      try{ localStorage.setItem('fil_rouge', JSON.stringify({answers:answers, tone:tone, at:Date.now()})); }catch(e){}
+    }, reduce?400:3400);
+  }
+  function getEase(){ return 'cubic-bezier(0.34,1.56,0.64,1)'; }
+  function drawHeart(){
+    var hx=soulPt.x-30, hy=soulPt.y-30;
+    thread.setAttribute('stroke-width','5');
+    thread.setAttribute('d','M'+hx+','+hy+' c -18,-20 -46,2 0,34 c 46,-32 18,-54 0,-34 Z');
+    thread.setAttribute('fill','#E63950'); thread.setAttribute('opacity','1');
+  }
+  function flash(){
+    var c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',soulPt.x-30); c.setAttribute('cy',soulPt.y-14); c.setAttribute('r','8'); c.setAttribute('fill','#fff');
+    cam.appendChild(c);
+    var t0=performance.now();
+    (function fr(now){ var k=Math.min(1,(now-t0)/700); c.setAttribute('r',8+k*260); c.setAttribute('opacity',(0.9*(1-k)).toFixed(2));
+      if(k<1) requestAnimationFrame(fr); else c.remove(); })(t0);
+  }
+  // approx position écran de l'âme pour le canvas
+  function centerXofSoul(){ return (soulPt.x-30-curVB)/camW*innerWidth; }
+  function soulYcss(){ return (soulPt.y-20)/900*innerHeight; }
+
+  function dominant(arr){ var m={},best=null,bn=0; arr.forEach(function(t){m[t]=(m[t]||0)+1; if(m[t]>bn){bn=m[t];best=t;}}); return best||'tendresse'; }
+
+  /* ── Démarrage ── */
+  function start(){
+    intro.classList.remove('show');
+    setTimeout(function(){ intro.style.display='none'; },900);
+    ui.style.display='flex';
+    revealWorld(0);
+    var p=setHero(0); updateThread(p);
+    world.setAttribute('viewBox','0 0 '+camW+' 900');
+    dots[0].classList.add('cur');
+    loadCard(0); setLine('Suis le fil.'); showCard();
+  }
+  document.getElementById('start').addEventListener('click',start);
+
+  /* rejouer / email */
+  document.getElementById('replay').addEventListener('click',function(){ location.reload(); });
+  document.getElementById('sendEmail').addEventListener('click',function(){
+    var v=document.getElementById('email').value.trim();
+    if(v && v.indexOf('@')>0){
+      try{ var d=JSON.parse(localStorage.getItem('fil_rouge')||'{}'); d.email=v; localStorage.setItem('fil_rouge',JSON.stringify(d)); }catch(e){}
+      this.textContent='Merci 💌'; this.disabled=true;
+    } else { document.getElementById('email').focus(); }
+  });
+})();
+</script>
 </body>
 </html>

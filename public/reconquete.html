@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Le voyage</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    background:radial-gradient(ellipse at 50% 30%, #1a1730 0%, #0c0a18 60%, #060510 100%);
+    color:#EDE7FF;
+    font-family:Georgia, 'Times New Roman', serif;
+    display:flex;align-items:center;justify-content:center;
+    min-height:100svh;text-align:center;padding:0 24px;overflow:hidden;
+  }
+  .wrap{position:relative;z-index:2;max-width:34ch}
+  .star{position:fixed;border-radius:50%;background:#fff;opacity:.6;animation:twinkle 4s ease-in-out infinite}
+  @keyframes twinkle{0%,100%{opacity:.2}50%{opacity:.9}}
+  h1{font-size:clamp(1.9rem,6vw,3rem);font-weight:400;line-height:1.25;letter-spacing:.01em}
+  h1 em{font-style:italic;color:#E7B7C6}
+  p{margin-top:1.4rem;font-size:1rem;line-height:1.7;color:rgba(237,231,255,.7);font-family:system-ui,-apple-system,sans-serif}
+  .glow{position:fixed;left:50%;top:32%;width:60vw;height:60vw;max-width:520px;max-height:520px;transform:translate(-50%,-50%);
+    background:radial-gradient(circle, rgba(231,183,198,.18), transparent 65%);z-index:1;filter:blur(10px);
+    animation:breathe 7s ease-in-out infinite}
+  @keyframes breathe{0%,100%{opacity:.7;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}}
+</style>
+</head>
+<body>
+  <div class="glow"></div>
+  <div class="wrap">
+    <h1>Un <em>voyage</em> se prépare…</h1>
+    <p>Bientôt, un chemin s'ouvrira ici. Reviens dans un instant.</p>
+  </div>
+  <script>
+    // Quelques étoiles douces en fond
+    const N = 40;
+    for (let i = 0; i < N; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      const size = Math.random() * 2 + 1;
+      s.style.width = s.style.height = size + 'px';
+      s.style.left = Math.random() * 100 + 'vw';
+      s.style.top = Math.random() * 100 + 'vh';
+      s.style.animationDelay = (Math.random() * 4) + 's';
+      document.body.appendChild(s);
+    }
+  </script>
+</body>
+</html>

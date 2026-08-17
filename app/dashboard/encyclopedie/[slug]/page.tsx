@@ -9,6 +9,7 @@ import SubscriptionGate from '@/components/SubscriptionGate'
 import { useFeatureAccess } from '@/hooks/useFeatureAccess'
 import type { Douleur, DouleurStep, UserProgress, DouleurQuizQuestion } from '@/types/database'
 import { formatXP } from '@/lib/xp'
+import { SINGLE_PROTOCOL_LINK, buildProtocolRef } from '@/lib/stripe/config'
 import { getEncyclopediaPotentialXp, awardEncyclopediaXp } from '@/lib/XpEngine'
 import FavoriteButton from '@/components/FavoriteButton'
 
@@ -1804,9 +1805,21 @@ export default function DouleurDetailPage() {
             <p className="text-xs text-center" style={{ color: 'var(--text-muted)' }}>
               Shine TV · Lives · Communauté · Sans engagement
             </p>
-            <a
-              href="https://buy.stripe.com/9B600b2PycNtd7r98C5ZC0q"
-              className="block w-full py-3 rounded-full text-sm font-medium text-center transition-all hover:brightness-110"
+            <button
+              onClick={async () => {
+                const supabase = createClient()
+                const { data: { user } } = await supabase.auth.getUser()
+                if (!user || !douleur) {
+                  window.location.href = `/login?next=${encodeURIComponent(window.location.pathname)}`
+                  return
+                }
+                // Référence Stripe qui débloque UNIQUEMENT ce protocole (via le webhook -> protocol_unlocks).
+                const url = new URL(SINGLE_PROTOCOL_LINK)
+                if (user.email) url.searchParams.set('prefilled_email', user.email)
+                url.searchParams.set('client_reference_id', buildProtocolRef(user.id, douleur.slug))
+                window.location.href = url.toString()
+              }}
+              className="block w-full py-3 rounded-full text-sm font-medium text-center transition-all hover:brightness-110 cursor-pointer"
               style={{
                 background: 'rgba(201,169,97,0.08)',
                 border: '1px solid rgba(201,169,97,0.25)',
@@ -1814,7 +1827,7 @@ export default function DouleurDetailPage() {
               }}
             >
               Juste les étapes 2 &amp; 3 de ce protocole — 33€
-            </a>
+            </button>
             <button
               onClick={() => setShowProtocolPaywall(false)}
               className="block w-full py-3 text-xs text-center transition-colors cursor-pointer"

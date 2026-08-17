@@ -356,17 +356,20 @@ export default function EncyclopediePage() {
     load()
   }, [])
 
-  // Build topics from DB douleurs
+  // Build topics from DB douleurs — on n'affiche QUE les protocoles publiés (en ligne).
+  // Un sujet non encore publié reste invisible tant qu'il n'est pas prêt.
   const topics = useMemo(() => {
-    return allDouleurs.map((d): Topic => ({
-      letter: getFirstLetter(d.title),
-      title: d.title,
-      subtitle: d.subtitle || d.description || '',
-      cat: d.category || '',
-      original: d.is_original,
-      slug: d.slug,
-      dbMatch: d.is_published ? d : undefined,
-    }))
+    return allDouleurs
+      .filter((d) => d.is_published)
+      .map((d): Topic => ({
+        letter: getFirstLetter(d.title),
+        title: d.title,
+        subtitle: d.subtitle || d.description || '',
+        cat: d.category || '',
+        original: d.is_original,
+        slug: d.slug,
+        dbMatch: d,
+      }))
   }, [allDouleurs])
 
   const LETTERS = useMemo(() => [...new Set(topics.map(t => t.letter))].sort(), [topics])

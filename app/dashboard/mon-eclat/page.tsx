@@ -124,7 +124,7 @@ export default function MonEclatPage() {
 
       const { data: { user }, error: authError } = await supabase.auth.getUser()
       if (authError || !user) {
-        setError('Vous devez être connecté pour accéder à votre Éclat.')
+        setError('Vous devez être connecté pour accéder à vos messages.')
         setLoading(false)
         return
       }
@@ -273,15 +273,8 @@ export default function MonEclatPage() {
       })
 
       if (insertError) {
-        if (insertError.code === '23514') {
-          setCreateError('Erreur: le type "eclat" n\'est pas encore configuré dans la base. Appliquez la migration SQL : supabase/migrations/20260309_add_eclat_post_type.sql')
-        } else if (insertError.code === '42501' || insertError.message?.includes('policy')) {
-          setCreateError('Erreur de permission: la politique RLS pour les éclats n\'est pas configurée. Appliquez la migration SQL : supabase/migrations/20260309_add_eclat_post_type.sql')
-        } else if (insertError.code === '42703' || insertError.message?.includes('column')) {
-          setCreateError('Erreur: colonnes manquantes (visibility/delete_locked). Appliquez la migration SQL : supabase/migrations/20260309_add_eclat_post_type.sql')
-        } else {
-          setCreateError(`Erreur: ${insertError.message}`)
-        }
+        console.error('mon-eclat insert error:', insertError)
+        setCreateError('Oups, ça n\'a pas marché. Réessayez dans un instant.')
         setCreating(false)
         return
       }
@@ -439,7 +432,7 @@ export default function MonEclatPage() {
   }
 
   async function deletePost(postId: string) {
-    if (!confirm('Supprimer cette publication de votre Éclat ?')) return
+    if (!confirm('Supprimer ce message ?')) return
     const supabase = createClient()
     const { error } = await supabase.from('posts').delete().eq('id', postId).eq('author_id', currentUserId!)
     if (!error) {
@@ -485,12 +478,12 @@ export default function MonEclatPage() {
           <div className="w-px h-8 bg-[var(--border)]" />
           <div className="text-center">
             <p className="text-xl font-semibold text-[var(--brand)]">{shinesGiven}</p>
-            <p className="text-[11px] text-[var(--text-muted)]">shines transmis</p>
+            <p className="text-[11px] text-[var(--text-muted)]">soutiens envoyés</p>
           </div>
           <div className="w-px h-8 bg-[var(--border)]" />
           <div className="text-center">
             <p className="text-xl font-semibold text-[var(--brand)]">{totalLikes}</p>
-            <p className="text-[11px] text-[var(--text-muted)]">shines reçus</p>
+            <p className="text-[11px] text-[var(--text-muted)]">soutiens reçus</p>
           </div>
           <div className="w-px h-8 bg-[var(--border)]" />
           <div className="text-center">
@@ -525,7 +518,7 @@ export default function MonEclatPage() {
               border: showCreate ? '1px solid rgba(201,169,97,0.3)' : 'none',
             }}
           >
-            {showCreate ? 'Annuler' : '+ Faire briller'}
+            {showCreate ? 'Annuler' : '+ Écrire un message'}
           </button>
         )}
       </div>
@@ -547,7 +540,7 @@ export default function MonEclatPage() {
       {/* ── Create post form ── */}
       {showCreate && (
         <div className="rounded-2xl p-6 space-y-5 bg-[var(--surface-card)] border border-[var(--border)]">
-          <h2 className="font-semibold text-lg text-[var(--brand)]">Nouvelle publication sur votre Éclat</h2>
+          <h2 className="font-semibold text-lg text-[var(--brand)]">Nouveau message</h2>
 
           {createError && (
             <div className="rounded-xl p-3 text-xs" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', color: 'var(--danger)' }}>
@@ -651,7 +644,7 @@ export default function MonEclatPage() {
           <textarea
             value={createContent}
             onChange={e => setCreateContent(e.target.value)}
-            placeholder={createCategory === 'citation' ? 'Votre citation...' : 'Que souhaitez-vous faire briller aujourd\'hui ?'}
+            placeholder={createCategory === 'citation' ? 'Votre citation...' : 'Qu\'avez-vous sur le cœur aujourd\'hui ?'}
             rows={4}
             className="w-full px-4 py-3 rounded-xl text-sm outline-none resize-y"
             style={inputStyle}
@@ -692,7 +685,7 @@ export default function MonEclatPage() {
               className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer disabled:opacity-50"
               style={{ background: 'linear-gradient(135deg, var(--brand), #B8960F)', color: '#000000' }}
             >
-              {creating ? 'Publication...' : 'Publier sur mon Éclat'}
+              {creating ? 'Publication...' : 'Partager'}
             </button>
           </div>
         </div>

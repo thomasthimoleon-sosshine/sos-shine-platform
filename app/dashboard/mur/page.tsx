@@ -62,7 +62,7 @@ function getTypeLabel(type: string, category?: string) {
   if ((type === 'community' || type === 'eclat') && category) return getCategoryInfo(category)
   const map: Record<string, { label: string; color: string; icon: string }> = {
     announcement: { label: 'Annonce', color: 'var(--brand)', icon: '📢' },
-    douleur_published: { label: 'Nouveau challenge', color: 'var(--success)', icon: '📘' },
+    douleur_published: { label: 'Nouveau protocole', color: 'var(--success)', icon: '📘' },
     event_published: { label: 'Nouvel événement', color: 'var(--accent-blue)', icon: '📅' },
     general: { label: 'Publication', color: 'var(--text-secondary)', icon: '💬' },
   }
@@ -159,13 +159,13 @@ export default function MurPage() {
       const { data: { user }, error: authError } = await supabase.auth.getUser()
       if (authError) {
         console.error('[Mur] Auth error:', authError)
-        setError('Erreur d\'authentification. Veuillez vous reconnecter.')
+        setError('Reconnectez-vous pour continuer.')
         setLoading(false)
         return
       }
       if (!user) {
         console.error('[Mur] No user found')
-        setError('Vous devez être connecté pour accéder au mur.')
+        setError('Reconnectez-vous pour voir le fil.')
         setLoading(false)
         return
       }
@@ -205,7 +205,7 @@ export default function MurPage() {
 
       if (queryError) {
         console.error('[Mur] Posts query error:', queryError)
-        setError(`Erreur de chargement: ${queryError.message}`)
+        setError('Impossible de charger le fil pour le moment. Réessayez.')
         setLoading(false)
         return
       }
@@ -305,7 +305,7 @@ export default function MurPage() {
       setLoading(false)
     } catch (err) {
       console.error('[Mur] Unexpected error:', err)
-      setError(`Erreur inattendue: ${err instanceof Error ? err.message : 'inconnue'}`)
+      setError('Oups, une erreur est survenue. Réessayez.')
       setLoading(false)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -388,15 +388,7 @@ export default function MurPage() {
 
       if (insertError) {
         console.error('[Mur] Insert error:', insertError)
-        if (insertError.code === '42501') {
-          setCreateError('Permission refusée. Vérifiez que les politiques RLS sont bien appliquées dans Supabase. (Erreur 42501)')
-        } else if (insertError.code === '23503') {
-          setCreateError('Erreur de référence. Votre profil n\'existe peut-être pas encore dans la table profiles.')
-        } else if (insertError.code === '23514') {
-          setCreateError('Valeur invalide. Vérifiez que la contrainte post_type inclut "community".')
-        } else {
-          setCreateError(`Erreur: ${insertError.message} (code: ${insertError.code || 'inconnu'})`)
-        }
+        setCreateError('Oups, ça n\'a pas marché. Réessayez dans un instant.')
         setCreating(false)
         return
       }
@@ -415,7 +407,7 @@ export default function MurPage() {
       await loadPosts()
     } catch (err) {
       console.error('[Mur] Create error:', err)
-      setCreateError(`Erreur inattendue: ${err instanceof Error ? err.message : 'inconnue'}`)
+      setCreateError('Oups, ça n\'a pas marché. Réessayez dans un instant.')
     }
     setCreating(false)
   }
@@ -515,7 +507,7 @@ export default function MurPage() {
     })
     if (commentError) {
       console.error('[Mur] Comment error:', commentError)
-      setError(`Erreur lors de l'envoi du commentaire: ${commentError.message}`)
+      setError('Votre message n’a pas pu être envoyé. Réessayez.')
     } else {
       incrementAndCheckBadges(currentUserId, 'comments_left').catch(() => {})
       setCommentText('')
@@ -639,7 +631,7 @@ export default function MurPage() {
               border: showCreate ? '1px solid rgba(201,169,97,0.3)' : 'none',
             }}
           >
-            {showCreate ? 'Annuler' : '+ Publier'}
+            {showCreate ? 'Annuler' : '+ Partager quelque chose'}
           </button>
         )}
       </div>
@@ -789,7 +781,7 @@ export default function MurPage() {
               className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer disabled:opacity-50"
               style={{ background: 'linear-gradient(135deg, var(--brand), #B8960F)', color: '#000000' }}
             >
-              {creating ? 'Publication...' : 'Publier'}
+              {creating ? 'Publication…' : 'Partager'}
             </button>
           </div>
         </div>

@@ -19,43 +19,43 @@ type QuestInfo = {
 
 const QUEST_INFO: Record<string, QuestInfo> = {
   shines_given: {
-    action: 'Donne des Shines aux publications des membres',
-    xpLine: '+15 · +10 · +5 XP (max 3/jour)',
+    action: 'Soutenez les messages des membres',
+    xpLine: '+15 · +10 · +5 points (max 3/jour)',
     route: '/dashboard/communaute',
     unit: 'Shines donnés',
     color: '#C9A961',
   },
   shines_received: {
     action: 'Publie du contenu qui inspire les autres membres',
-    xpLine: '+3 XP par Shine reçu · illimité',
+    xpLine: '+3 points par soutien reçu · illimité',
     route: '/dashboard/mur',
     unit: 'Shines reçus',
     color: '#FFD700',
   },
   comments_left: {
     action: 'Commente les publications du Mur communautaire',
-    xpLine: '+50 XP (max 5/jour)',
+    xpLine: '+50 points (max 5/jour)',
     route: '/dashboard/mur',
     unit: 'Commentaires',
     color: '#6BCFA0',
   },
   publications_created: {
     action: 'Publie sur le Mur de la communauté',
-    xpLine: '+150 XP (max 2/jour)',
+    xpLine: '+150 points (max 2/jour)',
     route: '/dashboard/mur',
     unit: 'Publications',
     color: '#6B9FD4',
   },
   encyclopedia_completed: {
     action: 'Complète les quiz de l\'encyclopédie (score ≥ 80 %)',
-    xpLine: '+1 000 à 1 600 XP par module',
+    xpLine: '+1 000 à 1 600 points par module',
     route: '/dashboard/encyclopedie',
     unit: 'Modules complétés',
     color: '#D4A054',
   },
   media_consumed: {
     action: 'Regarde ou écoute du contenu (Shine TV, Audible, Shorts…)',
-    xpLine: '+25 XP (max 4/jour)',
+    xpLine: '+25 points (max 4/jour)',
     route: '/dashboard/shine-tv',
     unit: 'Médias consommés',
     color: '#A29BFE',
@@ -155,7 +155,7 @@ export default function BadgesQuestPage() {
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
           </svg>
-          Ma Légende
+          Ma progression
         </Link>
       </div>
 
@@ -178,7 +178,7 @@ export default function BadgesQuestPage() {
           </div>
           <div className="text-right">
             <p className="text-2xl font-bold" style={{ color: 'var(--brand)' }}>{formatXP(totalXp)}</p>
-            <p className="text-[11px] text-[var(--text-muted)]">XP total</p>
+            <p className="text-[11px] text-[var(--text-muted)]">points</p>
           </div>
         </div>
 
@@ -186,7 +186,7 @@ export default function BadgesQuestPage() {
           <>
             <div className="flex justify-between text-[11px] text-[var(--text-muted)] mb-1.5">
               <span>{currentLevel.name}</span>
-              <span>{nextLevel.icon} {nextLevel.name} — {formatXP(xpToNext)} XP manquants</span>
+              <span>{nextLevel.icon} {nextLevel.name} — {formatXP(xpToNext)} points restants</span>
             </div>
             <div className="h-2 rounded-full overflow-hidden" style={{ background: 'var(--border)' }}>
               <motion.div
@@ -219,8 +219,8 @@ export default function BadgesQuestPage() {
       {/* ── Quêtes ── */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-display text-xl font-semibold text-[var(--text-primary)]">Quêtes</h2>
-          <span className="text-sm text-[var(--text-muted)]">{unlockedCount} / {totalBadges} badges débloqués</span>
+          <h2 className="font-display text-xl font-semibold text-[var(--text-primary)]">Vos prochaines étapes</h2>
+          <span className="text-sm text-[var(--text-muted)]">{unlockedCount} / {totalBadges} badges obtenus</span>
         </div>
 
         <div className="space-y-3">

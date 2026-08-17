@@ -537,18 +537,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </div>
 
                 <h2 className="font-display text-xl sm:text-2xl font-semibold mb-3 text-[#C9A961]">
-                  Félicitations Shiner !
+                  Bienvenue chez vous
                 </h2>
 
                 <p className="text-[15px] leading-relaxed mb-8 text-[#a1a1aa]">
-                  Pour ta résilience, ta lumière est en train de se rallumer ✨
+                  Prenez le temps qu&apos;il vous faut. Vous êtes au bon endroit. ✨
                 </p>
 
                 <button
                   onClick={dismissWelcomePopup}
-                  className="w-full sm:w-auto px-8 py-3.5 rounded-full text-sm font-semibold tracking-wide cursor-pointer transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)] hover:scale-[1.02] active:scale-[0.98] bg-[#C9A961] text-[#0A0806] shadow-[0_0_30px_rgba(212,175,55,0.3)]"
+                  className="w-full sm:w-auto px-8 py-3.5 rounded-full text-sm font-semibold tracking-wide cursor-pointer transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)] hover:scale-[1.02] active:scale-[0.98] bg-[#C9A961] text-[#0A0806] shadow-[0_0_30px_rgba(201,169,97,0.3)]"
                 >
-                  Continuer à façonner mon diamant 💎
+                  Entrer en douceur
                 </button>
               </div>
             </motion.div>

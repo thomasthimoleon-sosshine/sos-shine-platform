@@ -55,7 +55,7 @@ function LevelXPSection({ xpData }: { xpData: UserXP | null }) {
             <svg className="w-4 h-4 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
             </svg>
-            MA LÉGENDE
+            VOTRE PROGRESSION
           </h2>
           <span className="text-xl">{level.icon}</span>
         </div>
@@ -66,7 +66,7 @@ function LevelXPSection({ xpData }: { xpData: UserXP | null }) {
             <p className="font-display text-2xl font-semibold text-[var(--brand)]">
               {level.name}
             </p>
-            <p className="text-[11px] text-[var(--text-muted)]">Rang</p>
+            <p className="text-[11px] text-[var(--text-muted)]">Votre étape</p>
           </div>
         </div>
 
@@ -131,7 +131,7 @@ function EnergyWeatherWidget({ profile }: { profile: Profile | null }) {
         <div className="flex items-center gap-2 mb-4">
           <span className="text-2xl">{info.symbol}</span>
           <h2 className="text-[11px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">
-            Météo Énergétique du jour
+            Votre météo du jour
           </h2>
         </div>
 
@@ -569,7 +569,7 @@ function ActuShineSection() {
         <svg className="w-4 h-4 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M9.348 14.651a3.75 3.75 0 010-5.303m5.304 0a3.75 3.75 0 010 5.303m-7.425 2.122a6.75 6.75 0 010-9.546m9.546 0a6.75 6.75 0 010 9.546M5.106 18.894c-3.808-3.808-3.808-9.98 0-13.789m13.788 0c3.808 3.808 3.808 9.981 0 13.79M12 12h.008v.007H12V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
         </svg>
-        ACTU - SHINE
+        NOUVEAUTÉS À DÉCOUVRIR
       </h2>
 
       {loading ? (
@@ -946,9 +946,9 @@ export default function DashboardHome() {
           className="glass relative overflow-hidden p-6 sm:p-8 text-center"
           style={{ background: 'linear-gradient(135deg, rgba(201,169,97,0.06), var(--surface-card))', borderColor: 'rgba(201,169,97,0.15)' }}
         >
-          <h2 className="font-display text-xl font-semibold text-[var(--text-primary)] mb-2">Commencez votre transformation</h2>
+          <h2 className="font-display text-xl font-semibold text-[var(--text-primary)] mb-2">Par où commencer ?</h2>
           <p className="text-sm text-[var(--text-secondary)] mb-5 max-w-md mx-auto">
-            Choisissez le protocole qui correspond à ce que vous traversez en ce moment.
+            Dites-nous ce que vous traversez, on vous accompagne pas à pas.
           </p>
           <Link href="/dashboard/encyclopedie"
             className="inline-block px-6 py-3 rounded-full text-sm font-semibold"

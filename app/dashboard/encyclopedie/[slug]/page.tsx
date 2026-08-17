@@ -73,20 +73,20 @@ function buildSteps(douleur: Douleur, dynamicSteps: DouleurStep[]): StepConfig[]
   const d = douleur as any
   return [
     {
-      num: 1, title: 'Comprendre', subtitle: 'Vidéo, audio & ressources', icon: '🎬', color: '#55EFC4',
-      description: 'Analyse émotionnelle. Explication du problème. Apaisement mental. Une approche humaine et directe.',
+      num: 1, title: 'Comprendre', subtitle: 'Une vidéo, un audio, à votre rythme', icon: '🎬', color: '#C9A961',
+      description: 'On met des mots simples sur ce que vous vivez. Vous n\'avez rien à faire d\'autre qu\'écouter.',
       video: douleur.video_url, video2: d.video_url_2 || null, audio: douleur.step1_audio_url, audio2: null, pdf: douleur.step1_pdf_url, image: douleur.step1_image_url,
       video_cover: null, video2_cover: null, audio_cover: null, audio2_cover: null, exercise_content: null,
     },
     {
-      num: 2, title: 'Libérer & Intégrer', subtitle: 'Audio, vidéo & ressources', icon: '✨', color: '#74C0FC',
-      description: 'Activation émotionnelle. Décharge des tensions. Nettoyage des empreintes qui vous bloquent. Stabilisation intérieure et reconnexion à soi.',
+      num: 2, title: 'Se libérer', subtitle: 'Un audio, une vidéo, en douceur', icon: '✨', color: '#E8C77D',
+      description: 'On relâche, en douceur, ce qui pèse à l\'intérieur. Laissez-vous guider, il n\'y a rien à réussir.',
       video: douleur.step2_video_url, video2: d.step2_video_url_2 || null, audio: douleur.audio_energy_url, audio2: d.audio_energy_url_2 || null, pdf: douleur.step2_pdf_url, image: douleur.step2_image_url,
       video_cover: null, video2_cover: null, audio_cover: null, audio2_cover: null, exercise_content: null,
     },
     {
-      num: 3, title: 'Agir', subtitle: 'Exercices, audio & ressources', icon: '⚡', color: '#E17055',
-      description: 'PDF d\'exercices pratiques et audio guidé. Passez à l\'action concrète. Reprogrammation émotionnelle. Ancrez vos transformations dans le quotidien.',
+      num: 3, title: 'Avancer', subtitle: 'Un petit exercice pour ancrer', icon: '⚡', color: '#A9822E',
+      description: 'Un petit exercice concret pour ancrer ce qui a bougé en vous, dans votre quotidien.',
       video: douleur.step3_video_url, video2: d.step3_video_url_2 || null, audio: douleur.audio_meditation_url, audio2: null, pdf: douleur.pdf_url, image: douleur.step3_image_url,
       video_cover: null, video2_cover: null, audio_cover: null, audio2_cover: null, exercise_content: douleur.exercise_content,
     },
@@ -892,7 +892,7 @@ export default function DouleurDetailPage() {
             ) : (
               <span className="text-lg">📝</span>
             )}
-            <span>Quiz</span>
+            <span>Bilan</span>
           </button>
         )}
       </div>
@@ -1428,7 +1428,7 @@ export default function DouleurDetailPage() {
                     )}
                     {quizPassed ? (
                       <p className="text-sm mt-2" style={{ color: 'var(--text-secondary)' }}>
-                        Vous avez validé ce challenge avec succès ! Votre compréhension est solide.
+                        Vous avez validé ce protocole avec succès ! Votre compréhension est solide.
                       </p>
                     ) : (
                       <div className="space-y-2 mt-2">
@@ -1501,7 +1501,7 @@ export default function DouleurDetailPage() {
         <div className="pt-8 mt-4 space-y-10" style={{ borderTop: '1px solid var(--border)' }}>
           <div>
             <h3 className="font-display text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-              Contenus liés à ce challenge
+              Pour aller plus loin
             </h3>
             <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
               Retrouvez tout ce qui traite de ce sujet sur la plateforme.
@@ -1519,7 +1519,7 @@ export default function DouleurDetailPage() {
                   </h4>
                   {!unlocked && (
                     <span className="text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(201,169,97,0.08)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.2)' }}>
-                      Réservé Sérénité
+                      Avec l'abonnement
                     </span>
                   )}
                 </div>
@@ -1571,7 +1571,7 @@ export default function DouleurDetailPage() {
                   </h4>
                   {!unlocked && (
                     <span className="text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(201,169,97,0.08)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.2)' }}>
-                      Réservé Sérénité
+                      Avec l'abonnement
                     </span>
                   )}
                 </div>
@@ -1621,7 +1621,7 @@ export default function DouleurDetailPage() {
                   </h4>
                   {!unlocked && (
                     <span className="text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(201,169,97,0.08)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.2)' }}>
-                      Réservé Sérénité
+                      Avec l'abonnement
                     </span>
                   )}
                 </div>
@@ -1673,7 +1673,7 @@ export default function DouleurDetailPage() {
                   </h4>
                   {!unlocked && (
                     <span className="text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(201,169,97,0.08)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.2)' }}>
-                      Réservé Sérénité
+                      Avec l'abonnement
                     </span>
                   )}
                 </div>
@@ -1770,18 +1770,18 @@ export default function DouleurDetailPage() {
         >
           <div className="space-y-3">
             <h2 className="font-display text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-              Tu viens de comprendre. Maintenant, il faut transformer.
+              Vous avez compris. Passons maintenant à la transformation.
             </h2>
             <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-              L&apos;étape 1 t&apos;a donné la clé intellectuelle. Les étapes 2 et 3 vont dans le corps, libèrent le schéma en profondeur, et ancrent de nouvelles réponses dans ta vie réelle.
+              L&apos;étape 1 vous a donné la clé. Les étapes 2 et 3 vont plus loin : elles libèrent le schéma en profondeur et ancrent de nouvelles réponses dans votre vie réelle.
             </p>
           </div>
 
           <ul className="space-y-2">
             {[
               'Libérer ce schéma à la racine',
-              'Reconnecter ton corps et ton histoire',
-              'Changer concrètement tes réactions au quotidien',
+              'Reconnecter votre corps et votre histoire',
+              'Changer concrètement vos réactions au quotidien',
             ].map((item) => (
               <li key={item} className="flex items-start gap-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
                 <span className="mt-0.5 flex-shrink-0" style={{ color: 'var(--brand)' }}>→</span>

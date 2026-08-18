@@ -4,172 +4,166 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<title>Braise · Avant l'expérience de ta vie, il y a toi</title>
+<title>Incarnat · On ne rencontre jamais que ce qu'on est prêt à recevoir</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
 <style>
   :root{
-    --noir:#0A0507;
-    --noir-2:#140809;
-    --bordeaux:#3A0E16;
-    --cramoisi:#7A121E;
-    --rouge:#B01B2B;
-    --or:#C9A15A;
-    --or-clair:#E7C888;
-    --or-mat:#A88743;
-    --chair:#E9C9BE;
-    --ivoire:#F3E7DC;
-    --ivoire-dim:rgba(243,231,220,.62);
-    --serif:'Cormorant Garamond',Georgia,serif;
+    --noir:#07060B;
+    --bordeaux:#2E0710;
+    --cramoisi:#7E1027;
+    --incarnat:#D2536A;
+    --or:#B08A4A;
+    --albatre:#E8DCCB;
+    --albatre-dim:rgba(232,220,203,.55);
+    --display:'Bodoni Moda',Didot,'Times New Roman',serif;
     --sans:'Jost',system-ui,-apple-system,sans-serif;
-    --p:0; /* progression scroll 0..1, pilotée en JS */
+    --p:0;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth}
-  body{
-    background:var(--noir);color:var(--ivoire);font-family:var(--sans);
-    font-weight:300;line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased;
-  }
-  ::selection{background:rgba(176,27,43,.4);color:var(--ivoire)}
+  body{background:var(--noir);color:var(--albatre);font-family:var(--sans);font-weight:300;
+    line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+  ::selection{background:rgba(210,83,106,.35);color:#fff}
 
-  /* ───── Couches de fond fixes ───── */
+  /* ── PAYSAGE (fixe, piloté par --p : nuit → aube incarnate) ── */
   #scene{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-  /* Ciel : nuit bordeaux qui s'ouvre vers une lueur en bas à mesure du scroll */
-  .ciel{position:absolute;inset:0;
+  .ciel{position:absolute;inset:0;transition:background .15s linear;
     background:
-      radial-gradient(120% 90% at 50% calc(112% - var(--p) * 46%),
-        rgba(201,161,90,.20) 0%,
-        rgba(176,27,43,.20) 14%,
-        rgba(58,14,22,.55) 38%,
-        var(--noir-2) 66%,
-        var(--noir) 100%);
-    transition:background .2s linear;
-  }
-  /* Halo doré lointain : la lumière au bout du chemin, grandit avec le scroll */
-  .lueur{position:absolute;left:50%;bottom:6%;transform:translateX(-50%) scale(calc(.5 + var(--p)*.9));
-    width:46vmin;height:46vmin;border-radius:50%;
-    background:radial-gradient(circle, rgba(231,200,136,calc(.10 + var(--p)*.5)) 0%, rgba(201,161,90,.12) 30%, transparent 68%);
-    filter:blur(6px);opacity:calc(.3 + var(--p)*.7);transition:transform .2s linear,opacity .2s linear}
-  /* Montagnes en parallaxe */
-  .mont{position:absolute;left:-5%;right:-5%;bottom:0;width:110%;opacity:.9}
-  .mont.loin{transform:translateY(calc(var(--p) * 3vh))}
-  .mont.pres{transform:translateY(calc(var(--p) * -4vh))}
-  .grain{position:absolute;inset:0;opacity:.05;mix-blend-mode:overlay;
-    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
-  #embers{position:fixed;inset:0;z-index:1;pointer-events:none}
+      radial-gradient(140% 100% at 50% calc(118% - var(--p) * 52%),
+        rgba(210,83,106,calc(.10 + var(--p)*.32)) 0%,
+        rgba(126,16,39,calc(.16 + var(--p)*.30)) 16%,
+        rgba(46,7,16,.62) 42%,
+        var(--noir) 72%,
+        var(--noir) 100%)}
+  /* lueur incarnate lointaine, grandit */
+  .lueur{position:absolute;left:50%;bottom:4%;transform:translateX(-50%) scale(calc(.45 + var(--p)*1));
+    width:52vmin;height:52vmin;border-radius:50%;
+    background:radial-gradient(circle,rgba(210,83,106,calc(.08 + var(--p)*.42)) 0%,rgba(126,16,39,.14) 34%,transparent 70%);
+    filter:blur(8px);opacity:calc(.25 + var(--p)*.75);transition:transform .15s linear,opacity .15s linear}
+  /* crêtes en parallaxe */
+  .crete{position:absolute;left:-4%;right:-4%;bottom:0;width:108%}
+  .crete.loin{transform:translateY(calc(var(--p) * 3.4vh));opacity:.95}
+  .crete.pres{transform:translateY(calc(var(--p) * -4.6vh))}
+  .voile{position:absolute;inset:0;opacity:calc(var(--p)*.5);
+    background:linear-gradient(0deg, rgba(126,16,39,.35), transparent 46%)}
+  .grain{position:absolute;inset:0;opacity:.055;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
   .vignette{position:fixed;inset:0;z-index:2;pointer-events:none;
-    background:radial-gradient(120% 120% at 50% 40%,transparent 55%,rgba(6,3,4,.85) 100%)}
+    background:radial-gradient(120% 120% at 50% 42%,transparent 54%,rgba(4,3,7,.9) 100%)}
 
   main{position:relative;z-index:3}
 
-  /* ───── Nav minimale ───── */
-  .brand{position:fixed;top:26px;left:0;right:0;z-index:6;text-align:center;
-    font-family:var(--serif);font-weight:400;font-size:15px;letter-spacing:.72em;text-transform:uppercase;
-    color:var(--or);text-indent:.72em;opacity:.9;pointer-events:none}
+  .brand{position:fixed;top:28px;left:0;right:0;z-index:6;text-align:center;pointer-events:none;
+    font-family:var(--sans);font-weight:400;font-size:13px;letter-spacing:.62em;text-transform:uppercase;
+    color:var(--or);text-indent:.62em;opacity:.92}
 
-  /* ───── HERO scroll (paysage vivant) ───── */
-  .hero-scroll{height:320vh;position:relative}
-  .hero-sticky{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
-    text-align:center;padding:0 8vw}
-  .eyebrow{font-size:.66rem;letter-spacing:.5em;text-transform:uppercase;color:var(--or-mat);margin-bottom:2rem;
-    opacity:calc(1 - var(--p)*2.2)}
-  h1{font-family:var(--serif);font-weight:300;font-size:clamp(2.6rem,7vw,5.4rem);line-height:1.06;letter-spacing:.01em;
-    max-width:16ch;opacity:calc(1 - var(--p)*2);transform:translateY(calc(var(--p) * -3vh))}
-  h1 em{font-style:italic;color:var(--or-clair)}
-  .hero-sub{margin-top:2rem;max-width:40ch;font-size:clamp(1rem,1.5vw,1.18rem);color:var(--ivoire-dim);
-    opacity:calc(1 - var(--p)*2.4)}
-  .scrollcue{position:absolute;bottom:5vh;left:50%;transform:translateX(-50%);font-family:var(--sans);
-    font-size:.6rem;letter-spacing:.42em;text-transform:uppercase;color:var(--ivoire-dim);opacity:calc(1 - var(--p)*3)}
-  .scrollcue::after{content:"";display:block;width:1px;height:46px;margin:14px auto 0;
-    background:linear-gradient(var(--or),transparent);animation:drip 2.6s ease-in-out infinite}
-  @keyframes drip{0%,100%{opacity:.25;transform:scaleY(.6)}50%{opacity:1;transform:scaleY(1)}}
+  /* ── HERO : le sentier qui se sépare en deux ── */
+  .hero-scroll{height:360vh;position:relative}
+  .hero-sticky{position:sticky;top:0;height:100vh;overflow:hidden}
 
-  /* Le chemin d'or qui se dessine au scroll (SVG au centre du hero) */
-  .chemin{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:calc(.15 + var(--p)*.85)}
-  .chemin path{fill:none;stroke:url(#gold);stroke-width:2;stroke-linecap:round;
-    filter:drop-shadow(0 0 6px rgba(201,161,90,.5))}
+  .trail{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  .trail path{fill:none;stroke:url(#orgrad);stroke-width:1.4;stroke-linecap:round;
+    filter:drop-shadow(0 0 5px rgba(176,138,74,.55))}
 
-  /* Phrase qui apparaît au cœur du scroll */
-  .revele{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 10vw;
-    opacity:calc((var(--p) - .34) * 3.4);pointer-events:none}
-  .revele p{font-family:var(--serif);font-style:italic;font-weight:300;font-size:clamp(1.5rem,3.6vw,2.6rem);
-    line-height:1.35;max-width:22ch;color:var(--chair);text-shadow:0 2px 40px rgba(10,5,7,.9)}
+  .accroche{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:0 9vw;opacity:calc(1 - var(--p)*2.3);transform:translateY(calc(var(--p) * -3vh))}
+  .accroche .eyebrow{font-size:.62rem;letter-spacing:.5em;text-transform:uppercase;color:var(--or);margin-bottom:2.2rem}
+  .accroche h1{font-family:var(--display);font-weight:400;font-size:clamp(2rem,5.4vw,3.9rem);line-height:1.18;
+    letter-spacing:.005em;max-width:17ch}
+  .accroche .sub{margin-top:2rem;max-width:38ch;font-size:clamp(.95rem,1.4vw,1.1rem);color:var(--albatre-dim);font-weight:200}
+  .cue{position:absolute;bottom:5vh;left:50%;transform:translateX(-50%);font-size:.56rem;letter-spacing:.42em;
+    text-transform:uppercase;color:var(--albatre-dim);opacity:calc(1 - var(--p)*3)}
+  .cue::after{content:"";display:block;width:1px;height:44px;margin:12px auto 0;
+    background:linear-gradient(var(--or),transparent);animation:drip 2.8s ease-in-out infinite}
+  @keyframes drip{0%,100%{opacity:.2;transform:scaleY(.6)}50%{opacity:1;transform:scaleY(1)}}
 
-  /* ───── Les deux portes ───── */
-  .portes{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
-    padding:14vh 7vw;text-align:center}
-  .portes .over{font-size:.66rem;letter-spacing:.5em;text-transform:uppercase;color:var(--or-mat);margin-bottom:1.4rem}
-  .portes h2{font-family:var(--serif);font-weight:300;font-size:clamp(2rem,5vw,3.4rem);line-height:1.15;max-width:20ch}
-  .portes h2 em{font-style:italic;color:var(--or-clair)}
-  .choix{margin-top:4rem;display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;width:100%;max-width:760px}
-  @media(max-width:680px){.choix{grid-template-columns:1fr;gap:1.1rem}}
-  .porte{position:relative;display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:.5rem;
-    padding:2.2rem 1.8rem 2rem;border-radius:2px;cursor:pointer;overflow:hidden;
-    background:linear-gradient(160deg,rgba(58,14,22,.5),rgba(20,8,9,.6));
-    border:1px solid rgba(201,161,90,.22);transition:transform .7s cubic-bezier(.16,1,.3,1),border-color .7s,box-shadow .7s}
-  .porte::before{content:"";position:absolute;inset:0;opacity:0;transition:opacity .7s;
-    background:radial-gradient(120% 120% at 20% 0%,rgba(176,27,43,.28),transparent 60%)}
-  .porte:hover{transform:translateY(-4px);border-color:rgba(231,200,136,.55);box-shadow:0 24px 60px -30px rgba(176,27,43,.8)}
-  .porte:hover::before{opacity:1}
-  .porte .p-over{font-size:.6rem;letter-spacing:.42em;text-transform:uppercase;color:var(--or-mat);position:relative}
-  .porte .p-title{font-family:var(--serif);font-size:1.5rem;font-weight:400;line-height:1.25;color:var(--ivoire);position:relative}
-  .porte .p-go{margin-top:.6rem;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--or-clair);
-    position:relative;display:inline-flex;align-items:center;gap:.5rem}
-  .footnote{margin-top:3.4rem;font-size:.72rem;letter-spacing:.05em;color:var(--ivoire-dim);max-width:44ch}
+  /* phrase de respiration au coeur du scroll */
+  .respire{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 11vw;
+    opacity:clamp(0, min((var(--p) - .32) * 7, (.64 - var(--p)) * 7), 1);pointer-events:none}
+  .respire p{font-family:var(--display);font-style:italic;font-weight:400;font-size:clamp(1.4rem,3.4vw,2.3rem);
+    line-height:1.4;max-width:20ch;color:var(--albatre);text-shadow:0 2px 44px rgba(4,3,7,.9)}
 
-  /* ───── Overlay questionnaire / couple ───── */
+  /* les deux seuils, apparaissent à la fin (là où le sentier s'est séparé) */
+  .seuils{position:absolute;left:0;right:0;bottom:0;padding:0 6vw 12vh;display:flex;gap:1.4rem;justify-content:center;
+    opacity:calc((var(--p) - .72) * 4);transform:translateY(calc((1 - var(--p)) * 4vh));pointer-events:auto}
+  .seuils.locked{pointer-events:none}
+  @media(max-width:720px){.seuils{flex-direction:column;padding-bottom:9vh;gap:1rem}}
+  .porte{flex:1;max-width:360px;text-align:left;padding:2rem 1.7rem;cursor:pointer;position:relative;overflow:hidden;
+    background:linear-gradient(165deg,rgba(46,7,16,.62),rgba(7,6,11,.72));border:1px solid rgba(176,138,74,.28);
+    transition:transform .8s cubic-bezier(.16,1,.3,1),border-color .8s,box-shadow .8s}
+  .porte::after{content:"";position:absolute;left:0;top:0;bottom:0;width:1px;background:var(--or);opacity:.5;transition:opacity .8s}
+  .porte:hover{transform:translateY(-4px);border-color:rgba(210,83,106,.6);box-shadow:0 26px 70px -34px rgba(126,16,39,.9)}
+  .porte:hover::after{opacity:1}
+  .porte .lab{font-family:var(--display);font-size:1.55rem;font-weight:400;color:var(--albatre);line-height:1.15}
+  .porte .sub{margin-top:.5rem;font-size:.92rem;color:var(--incarnat);font-weight:300}
+  .porte .micro{margin-top:1rem;font-size:.78rem;line-height:1.55;color:var(--albatre-dim);font-weight:200}
+  .porte .act{margin-top:1.3rem;font-size:.66rem;letter-spacing:.36em;text-transform:uppercase;color:var(--or);
+    display:inline-flex;align-items:center;gap:.5rem}
+
+  /* ── OVERLAY parcours ── */
   .overlay{position:fixed;inset:0;z-index:20;background:var(--noir);opacity:0;visibility:hidden;
     transition:opacity 1.1s cubic-bezier(.16,1,.3,1);display:flex;flex-direction:column}
   .overlay.on{opacity:1;visibility:visible}
-  .ov-top{display:flex;align-items:center;justify-content:space-between;padding:22px 24px;position:relative;z-index:2}
-  .ov-close{background:none;border:none;color:var(--ivoire-dim);font-family:var(--sans);font-size:.68rem;
-    letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:color .4s}
-  .ov-close:hover{color:var(--ivoire)}
-  /* Chemin de braise : progression du questionnaire */
-  .braise-bar{flex:1;height:1px;margin:0 24px;background:rgba(201,161,90,.14);position:relative;overflow:visible}
-  .braise-bar i{position:absolute;left:0;top:0;height:100%;width:0%;background:linear-gradient(90deg,var(--cramoisi),var(--or-clair));
-    box-shadow:0 0 12px rgba(231,200,136,.8);transition:width 1s cubic-bezier(.16,1,.3,1)}
-  .braise-bar i::after{content:"";position:absolute;right:-3px;top:50%;transform:translateY(-50%);
-    width:7px;height:7px;border-radius:50%;background:var(--or-clair);box-shadow:0 0 14px 3px rgba(231,200,136,.9)}
+  .ov-scene{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .ov-glow{position:absolute;left:50%;bottom:-24%;transform:translateX(-50%);width:74vmin;height:74vmin;border-radius:50%;
+    background:radial-gradient(circle,rgba(126,16,39,.26),transparent 66%);filter:blur(12px);transition:all 1.3s ease}
+  .ov-top{display:flex;align-items:center;gap:24px;padding:22px 26px;position:relative;z-index:2}
+  .ov-close{background:none;border:none;color:var(--albatre-dim);font-family:var(--sans);font-size:.64rem;
+    letter-spacing:.24em;text-transform:uppercase;cursor:pointer;transition:color .4s;white-space:nowrap}
+  .ov-close:hover{color:var(--albatre)}
+  .prog{flex:1;height:1px;background:rgba(176,138,74,.16);position:relative}
+  .prog i{position:absolute;left:0;top:0;height:100%;width:0;background:linear-gradient(90deg,var(--cramoisi),var(--incarnat));
+    box-shadow:0 0 12px rgba(210,83,106,.8);transition:width 1s cubic-bezier(.16,1,.3,1)}
+  .prog i::after{content:"";position:absolute;right:-3px;top:50%;transform:translateY(-50%);width:6px;height:6px;border-radius:50%;
+    background:var(--incarnat);box-shadow:0 0 12px 3px rgba(210,83,106,.9)}
 
-  .ov-stage{flex:1;display:flex;align-items:center;justify-content:center;padding:0 8vw 8vh;position:relative;z-index:2}
-  .q{max-width:640px;width:100%;text-align:center;opacity:0;transform:translateY(22px);
+  .ov-stage{flex:1;display:flex;align-items:center;justify-content:center;padding:0 8vw 9vh;position:relative;z-index:2}
+  .q{max-width:660px;width:100%;text-align:center;opacity:0;transform:translateY(20px);
     transition:opacity .9s ease,transform .9s cubic-bezier(.16,1,.3,1)}
   .q.show{opacity:1;transform:none}
-  .q .num{font-size:.62rem;letter-spacing:.44em;text-transform:uppercase;color:var(--or-mat);margin-bottom:1.6rem}
-  .q .recit{font-family:var(--serif);font-style:italic;font-weight:300;font-size:clamp(1.15rem,2.4vw,1.5rem);
-    line-height:1.55;color:var(--chair);max-width:32ch;margin:0 auto 2.2rem}
-  .q .ask{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,3.4vw,2.1rem);line-height:1.25;
-    color:var(--ivoire);margin-bottom:2.4rem;max-width:26ch;margin-left:auto;margin-right:auto}
-  .answers{display:flex;flex-direction:column;gap:.8rem;max-width:460px;margin:0 auto}
-  .answer{padding:1rem 1.4rem;border:1px solid rgba(201,161,90,.22);border-radius:2px;background:rgba(58,14,22,.3);
-    color:var(--ivoire);font-family:var(--sans);font-size:.98rem;font-weight:300;cursor:pointer;text-align:left;
-    transition:all .5s cubic-bezier(.16,1,.3,1)}
-  .answer:hover{border-color:rgba(231,200,136,.6);background:rgba(122,18,30,.32);transform:translateX(4px)}
-  .ov-scene{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
-  .ov-glow{position:absolute;left:50%;bottom:-20%;transform:translateX(-50%);width:70vmin;height:70vmin;border-radius:50%;
-    background:radial-gradient(circle,rgba(176,27,43,.22),transparent 65%);filter:blur(10px);
-    transition:transform 1.2s ease,opacity 1.2s ease}
+  .q .axe{font-size:.6rem;letter-spacing:.44em;text-transform:uppercase;color:var(--or);margin-bottom:1.8rem}
+  .q .recit{font-family:var(--display);font-style:italic;font-weight:400;font-size:clamp(1.12rem,2.3vw,1.5rem);
+    line-height:1.55;color:var(--albatre);max-width:34ch;margin:0 auto 2.4rem;opacity:.92}
+  .q .ask{font-family:var(--sans);font-weight:300;font-size:clamp(1.05rem,2vw,1.3rem);line-height:1.4;
+    color:var(--albatre);max-width:32ch;margin:0 auto 2.6rem}
+  /* échelle 1→7, deux ancres textuelles */
+  .scale{max-width:520px;margin:0 auto}
+  .dots{display:flex;align-items:center;justify-content:space-between;gap:2px;margin-bottom:1rem}
+  .dot{flex:1;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:none;border:none}
+  .dot span{width:12px;height:12px;border-radius:50%;border:1px solid rgba(176,138,74,.45);
+    transition:all .45s cubic-bezier(.16,1,.3,1)}
+  .dot:hover span{border-color:var(--incarnat);transform:scale(1.25)}
+  .dot.mid span{width:16px;height:16px}
+  .anchors{display:flex;justify-content:space-between;font-size:.78rem;color:var(--albatre-dim);font-weight:200;gap:1.4rem}
+  .anchors .l{text-align:left;max-width:44%}
+  .anchors .r{text-align:right;max-width:44%}
 
-  /* Écran final (le seuil) */
-  .final{text-align:center;max-width:560px}
-  .final .k{font-size:.62rem;letter-spacing:.44em;text-transform:uppercase;color:var(--or-mat);margin-bottom:1.8rem}
-  .final h3{font-family:var(--serif);font-weight:300;font-size:clamp(2rem,5vw,3rem);line-height:1.15;color:var(--ivoire);margin-bottom:1.6rem}
-  .final h3 em{font-style:italic;color:var(--or-clair)}
-  .final p{color:var(--ivoire-dim);font-size:1.02rem;max-width:40ch;margin:0 auto 2.4rem}
+  /* Sillage / écrans finaux */
+  .final{max-width:600px;text-align:center;margin:0 auto}
+  .final .k{font-size:.6rem;letter-spacing:.44em;text-transform:uppercase;color:var(--or);margin-bottom:1.8rem}
+  .final h3{font-family:var(--display);font-weight:400;font-size:clamp(1.8rem,4.4vw,2.7rem);line-height:1.2;color:var(--albatre);margin-bottom:1.4rem}
+  .final h3 em{font-style:italic;color:var(--incarnat)}
+  .final .blocs{text-align:left;margin:2rem auto 2.4rem;max-width:440px;display:flex;flex-direction:column;gap:1.3rem}
+  .bloc{padding-left:1rem;border-left:1px solid var(--or)}
+  .bloc .t{font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;color:var(--or);margin-bottom:.4rem}
+  .bloc .c{font-size:.95rem;color:var(--albatre);font-weight:200;line-height:1.6}
+  .final p{color:var(--albatre-dim);font-size:.98rem;max-width:40ch;margin:0 auto 2.2rem;font-weight:200}
   .field{display:flex;gap:.6rem;max-width:420px;margin:0 auto;flex-wrap:wrap;justify-content:center}
-  .field input{flex:1;min-width:200px;background:rgba(58,14,22,.3);border:1px solid rgba(201,161,90,.28);
-    color:var(--ivoire);padding:.95rem 1.2rem;border-radius:2px;font-family:var(--sans);font-size:.95rem;outline:none}
-  .field input:focus{border-color:var(--or-clair)}
-  .field input::placeholder{color:rgba(243,231,220,.4)}
-  .btn-or{background:linear-gradient(135deg,var(--or),var(--or-mat));color:#1a0d06;border:none;
-    padding:.95rem 1.8rem;border-radius:2px;font-family:var(--sans);font-weight:500;font-size:.82rem;
-    letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:filter .4s,transform .4s}
-  .btn-or:hover{filter:brightness(1.12);transform:translateY(-1px)}
+  .field input{flex:1;min-width:200px;background:rgba(46,7,16,.4);border:1px solid rgba(176,138,74,.32);color:var(--albatre);
+    padding:.9rem 1.2rem;font-family:var(--sans);font-size:.95rem;font-weight:300;outline:none}
+  .field input:focus{border-color:var(--incarnat)}
+  .field input::placeholder{color:rgba(232,220,203,.35)}
+  .btn{background:var(--incarnat);color:#1a060c;border:none;padding:.9rem 1.7rem;font-family:var(--sans);font-weight:400;
+    font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:filter .4s,transform .4s}
+  .btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
 
   @media (prefers-reduced-motion: reduce){
-    *{animation:none!important;scroll-behavior:auto!important;transition-duration:.001s!important}
+    .crete,.lueur{transform:none!important}
+    *{animation:none!important;scroll-behavior:auto!important}
+    .accroche,.respire,.seuils{opacity:1!important;transform:none!important}
+    .seuils{position:relative;padding-top:8vh}
   }
 </style>
 </head>
@@ -178,196 +172,220 @@
 <div id="scene">
   <div class="ciel"></div>
   <div class="lueur"></div>
-  <svg class="mont loin" viewBox="0 0 1440 320" preserveAspectRatio="none" style="height:34vh">
-    <path d="M0,320 L0,220 C180,180 320,240 480,200 C650,158 760,210 920,180 C1080,150 1240,210 1440,170 L1440,320 Z" fill="#1a090c"/>
+  <svg class="crete loin" viewBox="0 0 1440 320" preserveAspectRatio="none" style="height:34vh">
+    <path d="M0,320 L0,214 C190,176 330,236 500,196 C670,156 780,208 940,178 C1100,148 1260,206 1440,166 L1440,320 Z" fill="#160309"/>
   </svg>
-  <svg class="mont pres" viewBox="0 0 1440 320" preserveAspectRatio="none" style="height:26vh">
-    <path d="M0,320 L0,260 C220,300 360,250 560,270 C760,290 900,240 1080,260 C1240,278 1340,250 1440,262 L1440,320 Z" fill="#0d0405"/>
+  <svg class="crete pres" viewBox="0 0 1440 320" preserveAspectRatio="none" style="height:25vh">
+    <path d="M0,320 L0,258 C230,300 370,248 570,268 C770,288 910,238 1090,258 C1250,276 1350,248 1440,260 L1440,320 Z" fill="#0a0207"/>
   </svg>
+  <div class="voile"></div>
   <div class="grain"></div>
 </div>
-<canvas id="embers"></canvas>
 <div class="vignette"></div>
 
-<div class="brand">Braise</div>
+<div class="brand">Incarnat</div>
 
 <main>
-  <!-- HERO immersif au scroll -->
   <section class="hero-scroll">
     <div class="hero-sticky">
-      <svg class="chemin" viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice">
+      <svg class="trail" viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice">
         <defs>
-          <linearGradient id="gold" x1="0" y1="1" x2="0" y2="0">
-            <stop offset="0" stop-color="#7A121E"/>
-            <stop offset="0.5" stop-color="#C9A15A"/>
-            <stop offset="1" stop-color="#E7C888"/>
+          <linearGradient id="orgrad" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0" stop-color="#7E1027"/>
+            <stop offset="0.55" stop-color="#B08A4A"/>
+            <stop offset="1" stop-color="#D2536A"/>
           </linearGradient>
         </defs>
-        <path id="road" d="M200,800 C205,640 150,560 180,440 C210,320 250,300 210,190 C185,120 200,70 200,20"/>
+        <!-- tronc : bas-centre vers le point de séparation -->
+        <path id="trunk" d="M200,800 C206,660 168,580 190,470 C206,388 214,360 200,300"/>
+        <!-- deux branches depuis le point de séparation -->
+        <path id="branchL" d="M200,300 C182,236 120,210 78,150 C54,116 44,86 40,44"/>
+        <path id="branchR" d="M200,300 C218,236 280,210 322,150 C346,116 356,86 360,44"/>
       </svg>
 
-      <span class="eyebrow">Un chemin intérieur</span>
-      <h1>Avant l'expérience de ta vie,<br><em>il y a toi.</em></h1>
-      <p class="hero-sub">Deviens le terrain où ce que tu attends vraiment pourra enfin arriver — et être habité pleinement.</p>
-
-      <div class="revele"><p>Rien ne peut entrer là où il n'y a pas encore de place.<br>Alors on commence par faire de la place.</p></div>
-
-      <span class="scrollcue">Descends</span>
-    </div>
-  </section>
-
-  <!-- LES DEUX PORTES -->
-  <section class="portes">
-    <span class="over">Deux chemins</span>
-    <h2>Choisis par où <em>tu commences.</em></h2>
-    <div class="choix">
-      <div class="porte" data-go="solo">
-        <span class="p-over">Seul·e</span>
-        <span class="p-title">Me préparer à l'expérience de ma vie</span>
-        <span class="p-go">Entrer →</span>
+      <div class="accroche">
+        <span class="eyebrow">Incarnat</span>
+        <h1>On ne rencontre jamais que ce qu'on est prêt à recevoir.</h1>
+        <p class="sub">Un travail intérieur pour préparer le terrain. Le tien, ou le vôtre.</p>
       </div>
-      <div class="porte" data-go="couple">
-        <span class="p-over">À deux</span>
-        <span class="p-title">Nous redécouvrir, pour nous aimer à nouveau</span>
-        <span class="p-go">Entrer →</span>
+
+      <div class="respire"><p>Le sentier ne se sépare qu'à la fin.<br>D'abord, il n'y a que toi.</p></div>
+
+      <div class="seuils locked" id="seuils">
+        <div class="porte" data-go="solo">
+          <div class="lab">Entrer seul</div>
+          <div class="sub">Se préparer à l'expérience de sa vie</div>
+          <div class="micro">Pour celle ou celui qui sent que quelque chose approche, et qui veut être capable de l'habiter au lieu de la manquer.</div>
+          <div class="act">Commencer →</div>
+        </div>
+        <div class="porte" data-go="couple">
+          <div class="lab">Entrer à deux</div>
+          <div class="sub">Se redécouvrir pour retomber amoureux</div>
+          <div class="micro">Deux comptes, deux parcours séparés. Aucune réponse visible avant la fin. Puis la lecture croisée de ce que vous n'osiez plus vous dire.</div>
+          <div class="act">Commencer →</div>
+        </div>
       </div>
+
+      <span class="cue">Descends</span>
     </div>
-    <p class="footnote">Ce n'est pas un test. C'est un passage. Prends le temps qu'il te faut, réponds à voix basse, pour toi seul·e.</p>
   </section>
 </main>
 
-<!-- OVERLAY : parcours Solo (aperçu narratif) -->
+<!-- OVERLAY -->
 <div class="overlay" id="ov">
   <div class="ov-scene"><div class="ov-glow" id="ovglow"></div></div>
   <div class="ov-top">
     <button class="ov-close" onclick="closeOverlay()">← Revenir</button>
-    <div class="braise-bar"><i id="bar"></i></div>
-    <span class="ov-close" style="visibility:hidden">.</span>
+    <div class="prog"><i id="bar"></i></div>
   </div>
   <div class="ov-stage"><div class="q" id="qbox"></div></div>
 </div>
 
 <script>
-/* ───────── Braises (canvas) ───────── */
-(function(){
-  const c=document.getElementById('embers'),x=c.getContext('2d');let W,H,ps=[];
-  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function size(){W=c.width=innerWidth;H=c.height=innerHeight}
-  size();addEventListener('resize',size);
-  const N=reduce?0:Math.min(60,Math.floor(innerWidth/16));
-  for(let i=0;i<N;i++)ps.push(spawn(true));
-  function spawn(init){return{x:Math.random()*W,y:init?Math.random()*H:H+10,
-    r:.6+Math.random()*1.8,v:.2+Math.random()*.8,d:(Math.random()-.5)*.4,
-    a:.1+Math.random()*.6,tw:Math.random()*6.28}}
-  function loop(){x.clearRect(0,0,W,H);
-    for(const p of ps){p.y-=p.v;p.x+=p.d+Math.sin(p.tw)*.3;p.tw+=.02;
-      if(p.y<-10){Object.assign(p,spawn(false))}
-      const g=x.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*4);
-      g.addColorStop(0,'rgba(231,200,136,'+p.a+')');g.addColorStop(.4,'rgba(201,80,60,'+(p.a*.5)+')');
-      g.addColorStop(1,'rgba(176,27,43,0)');
-      x.fillStyle=g;x.beginPath();x.arc(p.x,p.y,p.r*4,0,6.28);x.fill();}
-    requestAnimationFrame(loop)}
-  if(!reduce)loop();
-})();
-
-/* ───────── Scroll → --p (paysage vivant) + tracé du chemin ───────── */
-const heroScroll=document.querySelector('.hero-scroll');
-const road=document.getElementById('road');
-const roadLen=road.getTotalLength();
-road.style.strokeDasharray=roadLen;
-road.style.strokeDashoffset=roadLen;
+/* ── scroll → --p + tracé du sentier qui se sépare ── */
+const hero=document.querySelector('.hero-scroll');
+const trunk=document.getElementById('trunk'),bL=document.getElementById('branchL'),bR=document.getElementById('branchR');
+[trunk,bL,bR].forEach(pth=>{const L=pth.getTotalLength();pth.dataset.len=L;pth.style.strokeDasharray=L;pth.style.strokeDashoffset=L});
+const seuils=document.getElementById('seuils');
+function clamp(v){return Math.max(0,Math.min(1,v))}
 function onScroll(){
-  const rect=heroScroll.getBoundingClientRect();
-  const total=heroScroll.offsetHeight-innerHeight;
-  const p=Math.min(1,Math.max(0,(-rect.top)/total));
-  document.documentElement.style.setProperty('--p',p.toFixed(3));
-  road.style.strokeDashoffset=roadLen*(1-p);
+  const rect=hero.getBoundingClientRect();
+  const total=hero.offsetHeight-innerHeight;
+  const p=clamp((-rect.top)/total);
+  document.documentElement.style.setProperty('--p',p.toFixed(4));
+  const tp=clamp(p/0.66);           // le tronc se dessine sur 0 → .66
+  const brp=clamp((p-0.62)/0.34);   // les branches sur .62 → .96
+  trunk.style.strokeDashoffset=trunk.dataset.len*(1-tp);
+  bL.style.strokeDashoffset=bL.dataset.len*(1-brp);
+  bR.style.strokeDashoffset=bR.dataset.len*(1-brp);
+  seuils.classList.toggle('locked', p < 0.72);   // cliquables seulement une fois révélés
 }
-addEventListener('scroll',onScroll,{passive:true});onScroll();
+addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',onScroll);onScroll();
 
-/* ───────── Parcours Solo (aperçu immersif) ───────── */
-const SOLO=[
-  {num:'I · Le seuil',
-   recit:"Il y a une chambre en toi que tu n'ouvres qu'à moitié. Tu y laisses la lumière, mais tu gardes un pied dehors, prêt à partir.",
-   ask:"Es-tu vraiment prêt·e à recevoir ce que tu attends ?",
-   answers:["Je crois que oui, sans en être certain·e","Je le dis, mais quelque chose se retient","Je m'y prépare, c'est pour ça que je suis là"]},
-  {num:'II · Le feu',
-   recit:"Une braise ne demande pas la permission de brûler. Elle brûle parce que c'est sa nature. La tienne aussi.",
-   ask:"Quand tu es seul·e avec toi, que ressens-tu ?",
-   answers:["Un vide que je cherche à remplir","Un calme que j'apprends à aimer","Une présence, entière, sans manque"]},
-  {num:'III · Le manque',
-   recit:"On confond souvent l'amour avec le besoin. L'un remplit un trou. L'autre déborde et donne.",
-   ask:"L'autre, tu le veux pour combler, ou pour partager ?",
-   answers:["Pour combler, je le sais","Un peu des deux, honnêtement","Pour partager ce que j'ai déjà en moi"]},
-  {num:'IV · Le corps',
-   recit:"Le désir n'est pas un supplément. C'est une langue. Ton corps la parle avant tes mots.",
-   ask:"Habites-tu ton corps, ou le regardes-tu de loin ?",
-   answers:["De loin, souvent","Ça dépend des jours","Je commence à l'habiter vraiment"]},
-  {num:'V · L\'ouverture',
-   recit:"L'expérience de ta vie ne frappera peut-être pas fort. Elle passera. La question n'est pas si — c'est si tu seras là pour la reconnaître.",
-   ask:"Es-tu disponible pour ce qui pourrait arriver ?",
-   answers:["Pas encore, je me protège","J'ouvre une porte à la fois","Grand ouvert·e, sans garantie"]},
+/* ── LE SEUIL — parcours Solo (7 axes) ── */
+const AXES=[
+  {axe:'I · Ancrage',
+   recit:"Il y a une pièce chez toi où tu n'entres jamais complètement. Tu passes devant, tu poses une main sur la porte, et tu continues. Elle n'est pas fermée à clé. Tu ne l'as simplement jamais ouverte en entier.",
+   ask:"Quand quelque chose de fort arrive dans ta vie, ta première réaction intérieure est de :",
+   l:"Vérifier si c'est solide", r:"Me laisser traverser", key:'ancrage'},
+  {axe:'II · Amour propre',
+   recit:"On t'a appris à te tenir droite. Personne ne t'a appris à t'habiter. Ce sont deux choses différentes, et l'une ne remplace jamais l'autre.",
+   ask:"Quand on te regarde longtemps, sans rien dire, ce que tu ressens en premier :",
+   l:"L'envie de me couvrir", r:"L'envie de rester", key:'amour_propre'},
+  {axe:'III · Autonomie affective',
+   recit:"Tu attends un message. Tu le sais, tu te connais, tu te trouves ridicule. Et pourtant ton attention entière est posée sur un écran éteint. Ce n'est pas de l'amour. C'est un ancien réflexe qui a trouvé un nouveau prétexte.",
+   ask:"Quand quelqu'un met du temps à répondre, ce qui se passe en toi :",
+   l:"Ma valeur se déplace vers lui", r:"Ma valeur reste là où elle est", key:'autonomie'},
+  {axe:'IV · Solitude habitée',
+   recit:"Un dimanche sans rien. Pas de projet, pas d'appel, pas de fuite disponible. Certains appellent ça le vide. D'autres finissent par comprendre que c'est le seul endroit où ils s'entendent penser.",
+   ask:"Un dimanche entier seul, sans écran :",
+   l:"Une épreuve à traverser", r:"Un lieu où je reviens", key:'solitude'},
+  {axe:'V · Ouverture',
+   recit:"Ce que tu attends depuis des années entre dans la pièce. Sans prévenir, sans correspondre à l'image que tu avais préparée. La question n'est pas de savoir si tu le reconnais. La question est de savoir si tu ouvres.",
+   ask:"Face à quelque chose de plus grand que ce que tu avais prévu :",
+   l:"Je cherche à comprendre avant", r:"Je réponds présent, je comprends après", key:'ouverture'},
+  {axe:'VI · Corps et désir',
+   recit:"Ton corps a un avis sur presque tout. Il se ferme, il s'ouvre, il se contracte avant que tu aies eu le temps de trouver une explication. Depuis combien de temps ne l'as-tu pas écouté avant de décider ?",
+   ask:"Ton désir, aujourd'hui :",
+   l:"Quelque chose que je gère", r:"Quelque chose que j'habite", key:'corps'},
+  {axe:'VII · Présence',
+   recit:"La plupart des conversations importantes de ta vie se sont jouées sur une seconde de silence. Celle où quelqu'un attendait que tu restes.",
+   ask:"Dans une conversation qui te touche :",
+   l:"Je prépare ma réponse", r:"Je reste dans ce qui se dit", key:'presence'},
 ];
-let idx=0;const ov=document.getElementById('ov'),qbox=document.getElementById('qbox'),bar=document.getElementById('bar'),ovglow=document.getElementById('ovglow');
+const LABELS={ancrage:'ton ancrage',amour_propre:'ton amour propre',autonomie:'ton autonomie affective',
+  solitude:'ta solitude habitée',ouverture:'ton ouverture',corps:'ton rapport au corps',presence:'ta présence'};
+const APPUI={ancrage:"tu laisses les choses fortes te traverser au lieu de les inspecter.",
+  amour_propre:"tu peux rester sous un regard sans avoir besoin de te couvrir.",
+  autonomie:"ta valeur ne se déplace pas vers l'autre quand il se tait.",
+  solitude:"la solitude est devenue un lieu où tu reviens, pas une épreuve.",
+  ouverture:"tu réponds présent à ce qui te dépasse avant de tout comprendre.",
+  corps:"tu habites ton désir au lieu de seulement le gérer.",
+  presence:"tu restes dans ce qui se dit plutôt que de préparer ta réponse."};
+const FREIN={ancrage:"vérifier que c'est solide avant de te laisser toucher — un réflexe de protection, pas un défaut.",
+  amour_propre:"l'envie de te couvrir quand on te regarde vraiment.",
+  autonomie:"ta valeur qui glisse vers l'autre dès qu'il met du temps à répondre.",
+  solitude:"le vide du dimanche que tu cherches encore à fuir.",
+  ouverture:"le besoin de comprendre avant d'oser répondre présent.",
+  corps:"un désir tenu à distance, géré plutôt qu'habité.",
+  presence:"l'attention qui part préparer la réponse au lieu de rester."};
 
-document.querySelectorAll('.porte').forEach(el=>{
-  el.addEventListener('click',()=>{
-    if(el.dataset.go==='solo'){openSolo()}else{openCouple()}
-  });
-});
-function openSolo(){idx=0;ov.classList.add('on');document.body.style.overflow='hidden';renderQ()}
+let idx=0, scores=[];
+const ov=document.getElementById('ov'),qbox=document.getElementById('qbox'),bar=document.getElementById('bar'),ovglow=document.getElementById('ovglow');
+
+document.querySelectorAll('.porte').forEach(el=>el.addEventListener('click',()=>{
+  el.dataset.go==='solo'?openSolo():openCouple();
+}));
+
+function openSolo(){idx=0;scores=[];ov.classList.add('on');document.body.style.overflow='hidden';renderQ()}
 function renderQ(){
-  const q=SOLO[idx];
-  bar.style.width=((idx)/(SOLO.length))*100+'%';
-  ovglow.style.transform='translateX(-50%) scale('+(1+idx*.16)+')';
-  ovglow.style.opacity=(.5+idx*.1);
+  const a=AXES[idx];
+  bar.style.width=(idx/AXES.length)*100+'%';
+  ovglow.style.transform='translateX(-50%) scale('+(1+idx*.14)+')';
+  ovglow.style.opacity=(.5+idx*.08);
   qbox.classList.remove('show');
   setTimeout(()=>{
-    qbox.innerHTML='<div class="num">'+q.num+'</div>'+
-      '<p class="recit">'+q.recit+'</p>'+
-      '<h2 class="ask">'+q.ask+'</h2>'+
-      '<div class="answers">'+q.answers.map((a,i)=>'<button class="answer" data-i="'+i+'">'+a+'</button>').join('')+'</div>';
-    qbox.querySelectorAll('.answer').forEach(b=>b.addEventListener('click',next));
+    let dots='';for(let v=1;v<=7;v++){dots+='<button class="dot'+(v===4?' mid':'')+'" data-v="'+v+'"><span></span></button>'}
+    qbox.innerHTML='<div class="axe">'+a.axe+'</div>'+
+      '<p class="recit">'+a.recit+'</p>'+
+      '<div class="ask">'+a.ask+'</div>'+
+      '<div class="scale"><div class="dots">'+dots+'</div>'+
+      '<div class="anchors"><span class="l">'+a.l+'</span><span class="r">'+a.r+'</span></div></div>';
+    qbox.querySelectorAll('.dot').forEach(d=>d.addEventListener('click',()=>choose(parseInt(d.dataset.v),a.key)));
     qbox.classList.add('show');
   },420);
 }
-function next(){
+function choose(v,key){
+  scores.push({key,v});
   idx++;
-  if(idx>=SOLO.length){renderFinal();return}
+  if(idx>=AXES.length){renderSillage();return}
   renderQ();
 }
-function renderFinal(){
+function renderSillage(){
   bar.style.width='100%';
+  ovglow.style.transform='translateX(-50%) scale(2.2)';ovglow.style.opacity=.7;
+  // axe le plus haut / le plus bas
+  const sorted=[...scores].sort((a,b)=>b.v-a.v);
+  const hi=sorted[0].key, lo=sorted[sorted.length-1].key;
   qbox.classList.remove('show');
   setTimeout(()=>{
     qbox.innerHTML='<div class="final">'+
-      '<div class="k">Le seuil</div>'+
-      '<h3>Tu viens de faire<br><em>de la place.</em></h3>'+
-      "<p>Ce n'était qu'un premier passage. Laisse-nous t'écrire quand le chemin complet s'ouvrira — 21 jours pour te préparer à l'expérience de ta vie.</p>"+
-      '<div class="field"><input type="email" id="mail" placeholder="Ton adresse, pour la suite" /><button class="btn-or" onclick="saveMail()">Garder ma place</button></div>'+
-      '</div>';
+      '<div class="k">Sillage</div>'+
+      '<h3>Voici la trace<br>que tu viens de <em>laisser.</em></h3>'+
+      '<div class="blocs">'+
+        '<div class="bloc"><div class="t">Ce qui est prêt</div><div class="c">Aujourd\'hui, '+LABELS[hi]+' est un appui réel : '+APPUI[hi]+'</div></div>'+
+        '<div class="bloc"><div class="t">Ce qui se referme</div><div class="c">Ce qui demande encore de la place, c\'est '+FREIN[lo]+'</div></div>'+
+        '<div class="bloc"><div class="t">Le terrain à préparer</div><div class="c">Trois gestes, sur les trente prochains jours — dans le corps, pas dans l\'intention. Ton Sillage complet te les écrit.</div></div>'+
+      '</div>'+
+      '<p>On t\'envoie ton Sillage complet, et le seuil des 30 jours quand il s\'ouvre.</p>'+
+      '<div class="field"><input type="email" id="mail" placeholder="Ton adresse, pour la suite"><button class="btn" onclick="saveMail()">Recevoir mon Sillage</button></div>'+
+    '</div>';
     qbox.classList.add('show');
-  },420);
+  },440);
+}
+function openCouple(){
+  ov.classList.add('on');document.body.style.overflow='hidden';bar.style.width='0';
+  ovglow.style.transform='translateX(-50%) scale(1.4)';ovglow.style.opacity=.6;
+  qbox.classList.remove('show');
+  setTimeout(()=>{
+    qbox.innerHTML='<div class="final">'+
+      '<div class="k">Braise</div>'+
+      '<h3>Vous répondrez<br><em>séparément.</em></h3>'+
+      '<div class="blocs">'+
+        '<div class="bloc"><div class="t">Deux comptes</div><div class="c">Chacun son parcours, à son rythme.</div></div>'+
+        '<div class="bloc"><div class="t">Rien n\'est visible</div><div class="c">Aucune réponse de l\'autre avant que vous ayez tous les deux terminé. Le verrou est dans la base, pas dans l\'écran.</div></div>'+
+        '<div class="bloc"><div class="t">Puis la lecture croisée</div><div class="c">Ce que vous voyez pareil, vos angles morts, et les non-dits, rendus tels quels.</div></div>'+
+      '</div>'+
+      '<p style="color:var(--or);font-size:.82rem;letter-spacing:.06em">Cet espace s\'ouvre bientôt. Laisse ton adresse pour être prévenu·e.</p>'+
+      '<div class="field"><input type="email" id="mail" placeholder="Ton adresse"><button class="btn" onclick="saveMail()">Être prévenu·e</button></div>'+
+    '</div>';
+    qbox.classList.add('show');
+  },440);
 }
 function saveMail(){
   const m=document.getElementById('mail');
-  if(!m.value||!m.value.includes('@')){m.style.borderColor='#B01B2B';return}
-  qbox.innerHTML='<div class="final"><div class="k">Merci</div><h3><em>À très vite.</em></h3><p>Ton chemin t\'attend. Reviens quand tu le sens.</p></div>';
-}
-function openCouple(){
-  idx=0;ov.classList.add('on');document.body.style.overflow='hidden';bar.style.width='0%';
-  ovglow.style.transform='translateX(-50%) scale(1.2)';ovglow.style.opacity=.55;
-  qbox.classList.remove('show');
-  setTimeout(()=>{
-    qbox.innerHTML='<div class="final">'+
-      '<div class="k">À deux</div>'+
-      '<h3>Vous répondrez<br><em>séparément.</em></h3>'+
-      "<p>Chacun sur son propre espace, sans voir les réponses de l'autre. Ce n'est qu'à la fin, quand vous aurez tous les deux terminé, que la révélation aura lieu.</p>"+
-      "<p style='color:var(--or-mat);font-size:.8rem;letter-spacing:.1em'>Cet espace s'ouvre bientôt. Laisse ton adresse pour être prévenu·e.</p>"+
-      '<div class="field"><input type="email" id="mail" placeholder="Ton adresse" /><button class="btn-or" onclick="saveMail()">Être prévenu·e</button></div>'+
-      '</div>';
-    qbox.classList.add('show');
-  },420);
+  if(!m.value||!m.value.includes('@')){m.style.borderColor='#D2536A';return}
+  qbox.innerHTML='<div class="final"><div class="k">C\'est noté</div><h3><em>À très bientôt.</em></h3><p>Le terrain t\'attend. Reviens quand tu le sens.</p></div>';
 }
 function closeOverlay(){ov.classList.remove('on');document.body.style.overflow=''}
 </script>

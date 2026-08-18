@@ -255,6 +255,8 @@ function PrelaunchContent() {
 
 /* ─── DURATION SELECTOR ─── */
 function DurationSelector({ selected, onChange }: { selected: DurationId; onChange: (d: DurationId) => void }) {
+  // Offre mensuelle unique : pas de sélecteur de durée.
+  if (DURATIONS.length <= 1) return null
   return (
     <div className="flex items-center justify-center gap-1 p-1 rounded-full mb-8 mx-auto max-w-fit"
       style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>

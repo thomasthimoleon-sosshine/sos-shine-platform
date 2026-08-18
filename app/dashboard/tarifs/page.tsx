@@ -165,11 +165,12 @@ export default function TarifsPage() {
           Choisissez votre abonnement
         </motion.h1>
         <p className="text-sm sm:text-[15px] text-[var(--text-secondary)]">
-          Sans engagement. Annulation en un clic. 7 jours gratuits inclus.
+          Sans engagement. Annulation en un clic.
         </p>
       </div>
 
-      {/* Duration selector */}
+      {/* Sélecteur de durée — masqué : offre mensuelle unique */}
+      {DURATIONS.length > 1 && (
       <div className="flex justify-center mb-10">
         <div
           className="inline-flex rounded-xl p-1 gap-1"
@@ -199,6 +200,7 @@ export default function TarifsPage() {
           ))}
         </div>
       </div>
+      )}
 
       {/* Plan cards */}
       <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">

@@ -117,11 +117,9 @@ export const ORIGINAL_PRICES: Record<string, Record<string, number>> = {
 
 // ── Durées ──
 
+// Offre unique : abonnement mensuel 49,90€ (les engagements 3/6/12 mois ont été retirés).
 export const DURATIONS: { id: DurationId; label: string; months: number; discount: string }[] = [
   { id: 'monthly', label: 'Mensuel', months: 1, discount: '' },
-  { id: 'quarterly', label: '3 mois', months: 3, discount: '-10%' },
-  { id: 'semiannual', label: '6 mois', months: 6, discount: '-20%' },
-  { id: 'annual', label: '1 an', months: 12, discount: '-30%' },
 ]
 
 // ── Infos plans ──

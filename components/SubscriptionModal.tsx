@@ -223,6 +223,7 @@ export default function SubscriptionModal({
                 </p>
 
                 {/* Duration selector */}
+                {DURATIONS.length > 1 && (
                 <div className="flex justify-center mb-6">
                   <div
                     className="inline-flex rounded-xl p-1 gap-1"
@@ -252,6 +253,7 @@ export default function SubscriptionModal({
                     ))}
                   </div>
                 </div>
+                )}
 
                 {/* Plan cards */}
                 <div className="grid gap-4 max-w-md mx-auto w-full">

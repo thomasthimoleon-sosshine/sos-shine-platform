@@ -229,7 +229,7 @@ const sections: SectionDef[] = [
       { label: 'Texte bouton', key: 'signup_button_text', type: 'text', default: 'Créer mon compte' },
       { label: 'Texte pied de page', key: 'signup_login_text', type: 'text', default: 'Déjà membre ?' },
       { label: 'Texte lien connexion', key: 'signup_login_link_text', type: 'text', default: 'Se connecter' },
-      { label: 'Texte essai gratuit', key: 'signup_trial_text', type: 'text', default: '7 jours gratuits - Puis 49,90€/mois - Sans engagement' },
+      { label: 'Texte offre', key: 'signup_trial_text', type: 'text', default: '49,90€/mois - Sans engagement - Annulable en 1 clic' },
       { label: 'Titre confirmation email', key: 'signup_confirm_title', type: 'text', default: 'Vérifiez votre email' },
       { label: 'Texte confirmation', key: 'signup_confirm_text', type: 'textarea', default: "Un lien de confirmation a été envoyé. Cliquez dessus pour activer votre compte." },
       sep('Style'),

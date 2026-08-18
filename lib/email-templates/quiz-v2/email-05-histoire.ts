@@ -26,7 +26,7 @@ export function generateEmail05(vars: Vars): { subject: string; html: string } {
     p(`Aujourd'hui, je t'écris ce mail depuis cette maison. Au bord de ce lac. Exactement celle que j'avais imaginée.`),
     p(`Parce que j'ai créé ce que je voulais. Et tout ça n'est pas arrivé parce que j'avais accumulé encore plus de connaissances. C'est arrivé le jour où j'ai commencé à les mettre en action. C'est ce jour-là que ma propre vie a changé.`),
     p(`Et c'est aussi de ce jour-là qu'est née la méthode qu'on déploie aujourd'hui dans SOS Shine. Pour que tu n'aies pas à faire ce chemin seule. Pour que tu aies l'endroit que je n'ai pas eu.`),
-    ctaButton('Rejoindre SOS Shine - 29,90€/mois', URL_SERENITE, { email }),
+    ctaButton('Rejoindre SOS Shine - 49,90€/mois', URL_SERENITE, { email }),
     ctaLink('Accéder à mon protocole uniquement - 33€ →', `${URL_PROTOCOLE}?prefilled_email=${encodeURIComponent(email)}`),
     p(`À demain.`),
     signature(),

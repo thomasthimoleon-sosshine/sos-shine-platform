@@ -661,7 +661,7 @@ function FullScreenPlayer({ video, onClose, onShowInfo, previewSeconds }: {
                 Revenir à la bibliothèque
               </button>
             </div>
-            <p className="text-[11px] mt-4" style={{ color: 'rgba(255,255,255,0.3)' }}>29,90€/mois · ou 33€ en accès unique</p>
+            <p className="text-[11px] mt-4" style={{ color: 'rgba(255,255,255,0.3)' }}>49,90€/mois · ou 33€ en accès unique</p>
           </div>
         </div>
       )}

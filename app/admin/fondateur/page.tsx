@@ -976,7 +976,7 @@ export default function FounderDashboard() {
             <h3 className="text-sm font-semibold mb-2" style={{ color: '#C9A961' }}>Méthodologie & hypothèses</h3>
             <div className="grid sm:grid-cols-2 gap-x-8 gap-y-1 text-xs" style={{ color: 'var(--text-secondary)' }}>
               <p>Croissance en courbe S (sigmoïde) vers 5 000 abonnés</p>
-              <p>Distribution: 100% SOS Shine (29,90€/mois)</p>
+              <p>Distribution: 100% SOS Shine (49,90€/mois)</p>
               <p>Taux de churn: 6%/mois (moyenne secteur bien-être)</p>
               <p>Affiliation: 30% des inscriptions, commission 10%</p>
               <p>Frais Stripe: ~2.5% moyen (cartes EU)</p>

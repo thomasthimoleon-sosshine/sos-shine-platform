@@ -244,7 +244,7 @@ export function getPlanDisplayName(plan: string): string {
 export function getPlanAmount(plan: string): string {
   switch (plan) {
     case 'essential': return '9,90€ (ancien tarif)'
-    case 'serenite': return '29,90€'
+    case 'serenite': return '49,90€'
     case 'premium': return '99,90€'
     default: return plan
   }

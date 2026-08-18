@@ -68,7 +68,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
   <li><strong style="color:#C9A961;">Communaut\u00e9</strong> \u2014 Un espace bienveillant pour \u00e9changer</li>
   <li><strong style="color:#C9A961;">D\u00e9fis Shine</strong> \u2014 Des challenges pour grandir chaque jour</li>
 </ul>
-<p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Tout cela vous attend d\u00e8s votre abonnement SOS Shine \u00e0 29,90\u20ac/mois.</p>
+<p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Tout cela vous attend d\u00e8s votre abonnement SOS Shine \u00e0 49,90\u20ac/mois.</p>
 <div style="text-align:center;margin:32px 0;">
   <a href="{site_url}/rejoindre" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#B8960F);">Voir les offres</a>
 </div>`,
@@ -107,7 +107,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
     html_content: `<h2 style="color:#C9A961;font-family:Georgia,serif;font-weight:300;margin:0 0 20px;">Votre lumi\u00e8re attend, {firstName}</h2>
 <p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Cela fait deux semaines que vous avez rejoint SOS Shine\u00ae. Nous esp\u00e9rons que vous avez pu d\u00e9couvrir votre Signature \u00c9motionnelle.</p>
 <p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Aujourd'hui, nous vous invitons \u00e0 franchir le pas et \u00e0 acc\u00e9der \u00e0 l'int\u00e9gralit\u00e9 de nos ressources. Des vid\u00e9os, des m\u00e9ditations, des protocoles, des d\u00e9fis... tout est pr\u00eat pour vous.</p>
-<p style="color:#E0E0E0;font-size:15px;line-height:1.8;"><strong>L'abonnement SOS Shine donne acc\u00e8s \u00e0 tout pour 29,90\u20ac/mois.</strong></p>
+<p style="color:#E0E0E0;font-size:15px;line-height:1.8;"><strong>L'abonnement SOS Shine donne acc\u00e8s \u00e0 tout pour 49,90\u20ac/mois.</strong></p>
 <div style="text-align:center;margin:32px 0;">
   <a href="{site_url}/rejoindre" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#B8960F);">Commencer maintenant</a>
 </div>

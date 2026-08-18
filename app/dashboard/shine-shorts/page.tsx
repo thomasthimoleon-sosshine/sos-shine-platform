@@ -355,7 +355,7 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate, previewSec
                   <h3 className="font-display text-xl font-light mb-2" style={{ color: '#D4AF37' }}>Aperçu terminé ✨</h3>
                   <p className="text-sm mb-5" style={{ color: 'rgba(255,255,255,0.6)' }}>Abonne-toi pour voir la suite et débloquer toute la plateforme.</p>
                   <a href="/rejoindre" className="inline-block px-7 py-3 rounded-full text-sm font-semibold" style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}>M&apos;abonner</a>
-                  <p className="text-[11px] mt-3" style={{ color: 'rgba(255,255,255,0.3)' }}>29,90€/mois · ou 33€ en accès unique</p>
+                  <p className="text-[11px] mt-3" style={{ color: 'rgba(255,255,255,0.3)' }}>49,90€/mois · ou 33€ en accès unique</p>
                 </div>
               </div>
             )}

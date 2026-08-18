@@ -198,7 +198,7 @@ const FAQ = [
   ["C'est vraiment gratuit pour commencer ?", 'Oui. Le test, ta Signature et la première étape de ton protocole sont 100% gratuits, sans carte bancaire.'],
   ['Combien de temps ça prend ?', 'Le test dure 3 à 5 minutes, avec un résultat immédiat. Ensuite, tu avances à ton rythme.'],
   ["C'est de la psychologie sérieuse ?", "C'est basé sur des années d'accompagnements et de recherche sur les schémas émotionnels. Un outil de prise de conscience, pas un test clinique validé."],
-  ['Combien ça coûte ensuite ?', "L'abonnement SOS Shine est à 29,90€/mois (7 jours offerts) et donne accès à tout. Tu peux aussi débloquer un seul protocole complet pour 33€."],
+  ['Combien ça coûte ensuite ?', "L'abonnement SOS Shine est à 49,90€/mois (7 jours offerts) et donne accès à tout. Tu peux aussi débloquer un seul protocole complet pour 33€."],
 ]
 
 function FaqItem({ q, a }: { q: string; a: string }) {
@@ -436,7 +436,7 @@ export default function LandingClaude() {
           <div className="pc feat">
             <span className="badge">7 JOURS OFFERTS</span>
             <div className="pl">SOS Shine</div>
-            <div className="amt">29,90€ <small>/mois</small></div>
+            <div className="amt">49,90€ <small>/mois</small></div>
             <ul><li>Encyclopédie complète — 200+ protocoles</li><li>Communauté &amp; Courrier Anonyme</li><li>Shine TV, Shorts, Audible, Librairie</li><li>Événements &amp; sessions live</li><li>Protocole complet (étapes 1 → 3)</li></ul>
             <a className="btn" href={JOIN_URL} style={{ width: '100%', justifyContent: 'center' }}>Essayer 7 jours gratuit</a>
           </div>

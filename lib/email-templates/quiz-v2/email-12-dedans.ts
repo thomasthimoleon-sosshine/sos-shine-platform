@@ -40,7 +40,7 @@ export function generateEmail12(vars: Vars): { subject: string; html: string } {
     p(`Pas de promesse de miracle. Pas de transformation instantanée. Pas de "ta vie va changer en 7 jours".`),
     p(`Mais 7 jours, c'est largement assez pour sentir si un endroit te fait du bien. Si la voix qu'on y entend te parle. Si la méthode te correspond. Si ton corps, ton mental et ton cœur ont envie de continuer.`),
     p(`Et si la réponse est oui, alors un vrai chemin peut commencer.`),
-    ctaButton('Rejoindre SOS Shine - 29,90€/mois', URL_SERENITE, { email }),
+    ctaButton('Rejoindre SOS Shine - 49,90€/mois', URL_SERENITE, { email }),
     ctaLink('Accéder à mon protocole uniquement - 33€ →', `${URL_PROTOCOLE}?prefilled_email=${encodeURIComponent(email)}`),
     p(`À demain.`),
     signature(),

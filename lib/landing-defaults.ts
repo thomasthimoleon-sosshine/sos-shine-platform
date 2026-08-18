@@ -415,7 +415,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
         {
           name: 'SOS Shine',
           tagline: "Accès complet à toute la plateforme.",
-          price: '29,90',
+          price: '49,90',
           period: '/mois',
           button_label: 'Commencer, 7 jours gratuits',
           button_href: '/signup',
@@ -490,7 +490,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       image_url: '',
       button_label: 'Rejoindre SOS Shine',
       button_href: '/signup',
-      trust_line: '29,90\u20ac/mois \u00b7 Sans engagement \u00b7 7 jours gratuits \u00b7 Tout inclus',
+      trust_line: '49,90\u20ac/mois \u00b7 Sans engagement \u00b7 7 jours gratuits \u00b7 Tout inclus',
     },
     styles: {
       title_font: 'Cormorant Garamond',
@@ -705,7 +705,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       pricing_subtitle: "Sans engagement. Annulable à tout instant.",
       pricing_plans: [
         { name: 'GRATUIT', price: '0', period: '', description: 'Découvrir la communauté SOS Shine.', features: ['Communauté & Mur', 'Shine Audible', 'Étape 1 protocole recommandé'], button_label: 'Créer mon compte gratuit', button_href: '/signup', highlight: false, badge: '' },
-        { name: 'SOS SHINE', price: '29,90', period: '/mois', description: 'Accès complet à toute la plateforme.', features: ['Encyclopédie complète (200+ protocoles)', 'Étapes 2 & 3 protocole recommandé', 'Shine TV, Shorts, Audible & Librairie', 'Communauté, soins collectifs, lives', '7 jours d\'essai gratuit'], button_label: 'Commencer, 7 jours gratuits', button_href: '/signup', highlight: true, badge: 'TOUT INCLUS' },
+        { name: 'SOS SHINE', price: '49,90', period: '/mois', description: 'Accès complet à toute la plateforme.', features: ['Encyclopédie complète (200+ protocoles)', 'Étapes 2 & 3 protocole recommandé', 'Shine TV, Shorts, Audible & Librairie', 'Communauté, soins collectifs, lives', '7 jours d\'essai gratuit'], button_label: 'Commencer, 7 jours gratuits', button_href: '/signup', highlight: true, badge: 'TOUT INCLUS' },
       ],
       pricing_footer_title: "7 jours pour tester l'intégralité de votre formule.",
       pricing_footer_text: "Si ce n'est pas pour vous, zéro prélèvement. Zéro justification.",
@@ -725,7 +725,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       cta_title: "Rejoignez-nous.\nNe soyez plus jamais seul(e) face à vos tempêtes.",
       cta_button: 'Rejoindre SOS Shine',
       cta_button_href: '/signup',
-      cta_details: '29,90\u20ac/mois \u00b7 Sans engagement \u00b7 7 jours gratuits \u00b7 Tout inclus',
+      cta_details: '49,90\u20ac/mois \u00b7 Sans engagement \u00b7 7 jours gratuits \u00b7 Tout inclus',
     },
     styles: {},
   },

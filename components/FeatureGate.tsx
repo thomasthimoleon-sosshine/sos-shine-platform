@@ -21,7 +21,7 @@ export const FREE_FEATURES = new Set<string>([
 ])
 
 // Gratuit (0€) : Communauté + Mur + Shine Audible + Étape 1 protocole
-// SOS Shine (29,90€/mois) : tout le reste
+// SOS Shine (49,90€/mois) : tout le reste
 const FEATURE_MIN_PLAN: Record<string, { plan: PlanId; label: string }> = {
   chat_douleur: { plan: 'serenite', label: 'SOS Shine' },
   encyclopedie: { plan: 'serenite', label: 'SOS Shine' },

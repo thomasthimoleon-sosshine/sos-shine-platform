@@ -1372,7 +1372,7 @@ export default function ShineLibrairiePage() {
                 « {readingBook.title} » fait partie de la bibliothèque SOS Shine. Abonne-toi pour l&apos;ouvrir en entier — et débloquer toute la plateforme.
               </p>
               <a href="/rejoindre" className="inline-block px-8 py-3.5 rounded-full text-sm font-semibold" style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}>M&apos;abonner pour lire</a>
-              <p className="text-[11px] mt-4" style={{ color: 'var(--text-muted)' }}>29,90€/mois · ou 33€ en accès unique</p>
+              <p className="text-[11px] mt-4" style={{ color: 'var(--text-muted)' }}>49,90€/mois · ou 33€ en accès unique</p>
               <button onClick={() => setReadingBook(null)} className="block mx-auto mt-4 text-xs cursor-pointer" style={{ color: 'var(--text-muted)' }}>Revenir à la bibliothèque</button>
             </div>
           </div>

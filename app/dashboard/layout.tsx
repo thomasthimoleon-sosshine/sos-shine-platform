@@ -431,7 +431,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 Tout débloquer
               </Link>
               <p className="text-[10px] text-center mt-1.5" style={{ color: 'var(--text-muted)' }}>
-                29,90€/mois · ou 33€ en accès unique
+                49,90€/mois · ou 33€ en accès unique
               </p>
             </div>
           )}

@@ -69,10 +69,10 @@ export const PRICES: Record<PlanId, Record<DurationId, number>> = {
     annual: 990,
   },
   serenite: {
-    monthly: 2990,
-    quarterly: 2691,     // -10%
-    semiannual: 2392,    // -20%
-    annual: 2093,        // -30%
+    monthly: 4990,
+    quarterly: 4491,     // -10%
+    semiannual: 3992,    // -20%
+    annual: 3493,        // -30%
   },
   premium: {
     monthly: 9990,
@@ -92,10 +92,10 @@ export const TOTAL_PRICES: Record<PlanId, Record<DurationId, number>> = {
     annual: 11880,
   },
   serenite: {
-    monthly: 2990,
-    quarterly: 8073,
-    semiannual: 14352,
-    annual: 25116,
+    monthly: 4990,
+    quarterly: 13473,
+    semiannual: 23952,
+    annual: 41916,
   },
   premium: {
     monthly: 9990,
@@ -158,7 +158,7 @@ export const PLAN_COLORS: Record<PlanId, string> = {
 
 export const PLAN_PRICES_EUR: Record<PlanId, number> = {
   essential: 9.90,
-  serenite: 29.90,
+  serenite: 49.90,
   premium: 99.90,
 }
 

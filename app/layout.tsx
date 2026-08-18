@@ -152,7 +152,7 @@ const jsonLd = {
         {
           '@type': 'Offer',
           name: 'Plan Sérénité',
-          price: '29.90', // SOS Shine
+          price: '49.90', // SOS Shine
           priceCurrency: 'EUR',
           description: 'Tout inclus - Shine TV, Lives, Événements',
         },

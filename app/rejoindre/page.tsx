@@ -154,7 +154,7 @@ function PrelaunchContent() {
           <div className="text-center mb-6">
             <p className="text-xs tracking-[0.25em] uppercase mb-3" style={{ color: '#55EFC4' }}>SOS Shine — Tout inclus</p>
             <div className="flex items-baseline justify-center gap-1.5 mb-1">
-              <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#55EFC4' }}>29,90&euro;</span>
+              <span className="font-display text-3xl sm:text-4xl font-light" style={{ color: '#55EFC4' }}>49,90&euro;</span>
               <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/mois</span>
             </div>
           </div>

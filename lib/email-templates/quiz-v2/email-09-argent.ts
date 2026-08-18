@@ -28,7 +28,7 @@ export function generateEmail09(vars: Vars): { subject: string; html: string } {
     p(`Tout part de là.`),
     p(`Et quand on regarde les choses honnêtement, la vraie question n'est plus "est-ce que ça coûte trop cher ?".`),
     p(`C'est <em>"combien ça me coûte, chaque jour, de continuer à fonctionner comme ça ?"</em>`),
-    ctaButton('Rejoindre SOS Shine - 29,90€/mois', URL_SERENITE, { email }),
+    ctaButton('Rejoindre SOS Shine - 49,90€/mois', URL_SERENITE, { email }),
     ctaLink('Accéder à mon protocole uniquement - 33€ →', `${URL_PROTOCOLE}?prefilled_email=${encodeURIComponent(email)}`),
     p(`À demain.`),
     signature(),

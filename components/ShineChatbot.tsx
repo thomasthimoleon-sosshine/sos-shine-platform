@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const FAQ_DATA: { keywords: string[]; answer: string }[] = [
   {
     keywords: ['prix', 'tarif', 'coût', 'combien', 'abonnement', 'payer', 'gratuit', 'cher'],
-    answer: "L'abonnement SOS Shine est à 29,90€/mois et donne accès à tout : encyclopédie, Shine TV, Shorts, Audible, Librairie, communauté, événements, soins collectifs et lives (7 jours d'essai gratuit). Les étapes 2 & 3 de votre protocole recommandé sont également disponibles en accès unique à 33€. 💎",
+    answer: "L'abonnement SOS Shine est à 49,90€/mois et donne accès à tout : encyclopédie, Shine TV, Shorts, Audible, Librairie, communauté, événements, soins collectifs et lives (7 jours d'essai gratuit). Les étapes 2 & 3 de votre protocole recommandé sont également disponibles en accès unique à 33€. 💎",
   },
   {
     keywords: ['essai', 'tester', 'essayer', 'période'],

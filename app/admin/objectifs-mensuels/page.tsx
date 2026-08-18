@@ -600,7 +600,7 @@ export default function ObjectifsMensuelsPage() {
               ))}
               {currentTarget.phase === 'Consolidation' && [
                 { text: 'Campagne "bonnes résolutions" bien-être', priority: 'Haute' },
-                { text: 'Conversion Gratuit → SOS Shine 29,90€/mois', priority: 'Haute' },
+                { text: 'Conversion Gratuit → SOS Shine 49,90€/mois', priority: 'Haute' },
                 { text: 'Optimisation de la rétention (réduire churn à < 3%)', priority: 'Moyenne' },
               ].map((l, i) => (
                 <div key={i} className="flex items-start gap-3 rounded-lg p-3" style={{ background: 'rgba(255,255,255,0.02)' }}>

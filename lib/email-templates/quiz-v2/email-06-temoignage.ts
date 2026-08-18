@@ -33,7 +33,7 @@ export function generateEmail06(vars: Vars): { subject: string; html: string } {
     p(`C'est ça, le chemin qu'on a construit dans SOS Shine.`),
     p(`Pas une promesse de transformation magique. Pas un programme de plus à empiler sur tous les autres. Une vraie méthode, le déconditionnement, déployée jour après jour, à travers des protocoles, des outils, une communauté et une structure qui te permettent enfin d'enlever ce qui ne t'appartient pas.`),
     p(`Tu peux faire exactement ce chemin-là.`),
-    ctaButton('Rejoindre SOS Shine - 29,90€/mois', URL_SERENITE, { email }),
+    ctaButton('Rejoindre SOS Shine - 49,90€/mois', URL_SERENITE, { email }),
     ctaLink('Accéder à mon protocole uniquement - 33€ →', `${URL_PROTOCOLE}?prefilled_email=${encodeURIComponent(email)}`),
     p(`À demain.`),
     signature(),

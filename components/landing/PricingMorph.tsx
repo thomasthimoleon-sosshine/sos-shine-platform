@@ -24,7 +24,7 @@ const PLANS = {
   },
   serenite: {
     name: 'SOS Shine',
-    price: '29,90',
+    price: '49,90',
     period: '/mois',
     badge: '7 JOURS GRATUIT',
     features: [

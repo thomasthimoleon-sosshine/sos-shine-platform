@@ -39,7 +39,7 @@ export function generateEmail14(vars: Vars): { subject: string; html: string } {
     goldDivider(),
     p(`Si tu es honnête avec toi-même, il y a probablement une de ces phrases qui résonne en toi en lisant ce mail. Et ce n'est pas grave. C'est même normal. Ces résistances font partie de tout chemin de changement. Mais peut-être qu'aujourd'hui, il est temps d'arrêter de laisser tes anciens schémas décider à ta place.`),
     p(`Tu n'as pas besoin d'être prêt(e) à 100%. Tu as juste besoin de faire un premier pas.`),
-    ctaButton('Rejoindre SOS Shine - 29,90€/mois', URL_SERENITE, { email }),
+    ctaButton('Rejoindre SOS Shine - 49,90€/mois', URL_SERENITE, { email }),
     ctaLink('Accéder à mon protocole uniquement - 33€ →', `${URL_PROTOCOLE}?prefilled_email=${encodeURIComponent(email)}`),
     p(`À demain.`),
     signature(),

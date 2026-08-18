@@ -26,7 +26,7 @@ export function generateEmail08(vars: Vars): { subject: string; html: string } {
     p(`Parce que ne pas avoir le temps pour soi, c'est déjà un symptôme. C'est déjà un mécanisme. C'est souvent ce vieux conditionnement qui dit qu'on doit faire passer tout le monde avant soi. Que se choisir, ce serait égoïste. Que mériter du repos, ça se gagne.`),
     p(`Rien de tout ça n'est vrai.`),
     p(`Tu mérites ce temps, simplement parce que tu existes.`),
-    ctaButton('Rejoindre SOS Shine - 29,90€/mois', URL_SERENITE, { email }),
+    ctaButton('Rejoindre SOS Shine - 49,90€/mois', URL_SERENITE, { email }),
     ctaLink('Accéder à mon protocole uniquement - 33€ →', `${URL_PROTOCOLE}?prefilled_email=${encodeURIComponent(email)}`),
     p(`À demain.`),
     signature(),

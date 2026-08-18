@@ -428,7 +428,7 @@ export default function ProfilPage() {
             <div className="flex items-center justify-between">
               <span className="text-sm text-[var(--text-secondary)]">{t('dashboard.plan_label')}</span>
               <span className="text-sm font-medium text-[var(--text-primary)]">
-                {subscription.plan === 'serenite' ? 'SOS Shine - 29,90€/mois' : subscription.plan === 'essential' ? 'Essentielle (ancien tarif)' : subscription.plan}
+                {subscription.plan === 'serenite' ? 'SOS Shine - 49,90€/mois' : subscription.plan === 'essential' ? 'Essentielle (ancien tarif)' : subscription.plan}
                 {subscription.waitlist_discount && (
                   <span className="ml-2 text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--brand)' }}>
                     -10€ fondateur
@@ -565,7 +565,7 @@ export default function ProfilPage() {
                     <p className="text-sm font-semibold text-[var(--brand)]">SOS Shine</p>
                     <p className="text-[11px] text-[var(--text-muted)]">Tout inclus — TV, Shorts, Librairie, encyclopédie, lives</p>
                   </div>
-                  <span className="text-sm font-semibold text-[var(--brand)]">29,90€/mois</span>
+                  <span className="text-sm font-semibold text-[var(--brand)]">49,90€/mois</span>
                 </a>
               </div>
             </div>

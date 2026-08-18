@@ -32,7 +32,7 @@ export function generateEmail11(vars: Vars): { subject: string; html: string } {
     p(`Et peut-être que ce n'est pas un hasard si tu lis encore ces mots aujourd'hui.`),
     p(`Tu peux essayer SOS Shine pendant 7 jours gratuitement. Sans pression. Sans engagement.`),
     p(`Juste pour voir ce que ça déclenche en toi.`),
-    ctaButton('Rejoindre SOS Shine - 29,90€/mois', URL_SERENITE, { email }),
+    ctaButton('Rejoindre SOS Shine - 49,90€/mois', URL_SERENITE, { email }),
     ctaLink('Accéder à mon protocole uniquement - 33€ →', `${URL_PROTOCOLE}?prefilled_email=${encodeURIComponent(email)}`),
     p(`À demain.`),
     signature(),

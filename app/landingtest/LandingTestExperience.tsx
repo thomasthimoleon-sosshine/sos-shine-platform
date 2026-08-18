@@ -222,7 +222,7 @@ const FAQ = [
   ['Combien de temps ça prend ?', 'Environ 3 minutes. Tu reçois ton résultat immédiatement.'],
   ["Dois-je m'inscrire pour commencer ?", 'Non. Tu commences tout de suite. On te demande ton email à mi-parcours pour t\'envoyer ton résultat.'],
   ["C'est de la psychologie sérieuse ?", "C'est basé sur des années d'accompagnements et de recherche sur les schémas émotionnels. Un outil de prise de conscience profonde, pas un test clinique validé."],
-  ['Combien coûte l\'abonnement ensuite ?', "29,90€/mois (7 jours offerts) pour tout débloquer. Ou 33€ en accès unique pour un protocole complet. Tu restes en gratuit aussi longtemps que tu veux."],
+  ['Combien coûte l\'abonnement ensuite ?', "49,90€/mois (7 jours offerts) pour tout débloquer. Ou 33€ en accès unique pour un protocole complet. Tu restes en gratuit aussi longtemps que tu veux."],
 ]
 
 function FaqItem({ q, a }: { q: string; a: string }) {
@@ -454,7 +454,7 @@ export default function LandingTestExperience() {
           </div>
           <div className="pc rv" style={{ transitionDelay: '.08s' }}>
             <div className="pl">Abonnement</div>
-            <div className="amt">29,90€ <small>/mois</small></div>
+            <div className="amt">49,90€ <small>/mois</small></div>
             <ul>
               <li>Encyclopédie — 200+ protocoles</li>
               <li>Communauté &amp; Courrier Anonyme</li>

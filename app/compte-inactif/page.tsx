@@ -125,7 +125,7 @@ export default function CompteInactifPage() {
             onClick={() => handleResubscribe('serenite')}
             className="w-full py-4 rounded-full font-semibold tracking-wide transition-all text-sm bg-[linear-gradient(135deg,var(--brand),var(--brand-deep))] text-[var(--text-inverse)]"
           >
-            S&apos;abonner SOS Shine - 29,90€/mois
+            S&apos;abonner SOS Shine - 49,90€/mois
           </button>
         </div>
 

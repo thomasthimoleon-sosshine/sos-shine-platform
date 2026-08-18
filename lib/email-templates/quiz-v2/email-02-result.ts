@@ -165,7 +165,7 @@ Tes protocoles personnalisés sont en préparation. Tu seras notifié(e) dès qu
     ctaButton('Accéder à mon étape 1 gratuite →', protocoleUrl, { email }),
 
     `<p style="text-align:center;font-size:12px;color:#737373;margin:8px 0 0 0;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
-Les étapes 2 &amp; 3 sont accessibles à partir de 29,90€/mois ou 33€ en accès unique.
+Les étapes 2 &amp; 3 sont accessibles à partir de 49,90€/mois ou 33€ en accès unique.
 </p>`,
 
     goldDivider(),

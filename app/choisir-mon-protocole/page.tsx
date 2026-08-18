@@ -106,7 +106,7 @@ export default function ChoisirProtocolePage() {
         {!isSubscribed && (
           <div style={{ border: '1px solid rgba(201,169,97,0.25)', borderRadius: 18, padding: '22px 24px', marginBottom: 36, display: 'flex', flexWrap: 'wrap', gap: 16, alignItems: 'center', justifyContent: 'space-between', background: 'rgba(201,169,97,0.05)' }}>
             <div>
-              <p style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 22, margin: '0 0 4px' }}>Tout SOS Shine — 29,90€/mois</p>
+              <p style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 22, margin: '0 0 4px' }}>Tout SOS Shine — 49,90€/mois</p>
               <p style={{ color: 'rgba(245,239,227,0.65)', fontSize: 13.5, margin: 0 }}>Tous les protocoles, Shine TV, Librairie, Audible, communauté, lives et événements.</p>
             </div>
             <Link href="/rejoindre" style={{ flexShrink: 0, background: 'linear-gradient(135deg,#C9A961,#B8960F)', color: '#0A0806', padding: '13px 26px', borderRadius: 50, fontWeight: 600, fontSize: 14, textDecoration: 'none' }}>

@@ -169,7 +169,7 @@ const sections: SectionDef[] = [
     fields: [
       { label: 'Titre de section', key: 'pricing_section_title', type: 'text', default: 'Choisissez votre accompagnement' },
       { label: 'Sous-titre', key: 'pricing_section_subtitle', type: 'text', default: 'Sans engagement - Annulable à tout instant' },
-      { label: 'Prix SOS Shine (EUR/mois)', key: 'price_serenite_display', type: 'text', default: '29.90' },
+      { label: 'Prix SOS Shine (EUR/mois)', key: 'price_serenite_display', type: 'text', default: '49.90' },
       
       { label: 'Jours d\'essai gratuit (Sérénité)', key: 'trial_days', type: 'text', default: '7' },
       
@@ -229,7 +229,7 @@ const sections: SectionDef[] = [
       { label: 'Texte bouton', key: 'signup_button_text', type: 'text', default: 'Créer mon compte' },
       { label: 'Texte pied de page', key: 'signup_login_text', type: 'text', default: 'Déjà membre ?' },
       { label: 'Texte lien connexion', key: 'signup_login_link_text', type: 'text', default: 'Se connecter' },
-      { label: 'Texte essai gratuit', key: 'signup_trial_text', type: 'text', default: '7 jours gratuits - Puis 29,90€/mois - Sans engagement' },
+      { label: 'Texte essai gratuit', key: 'signup_trial_text', type: 'text', default: '7 jours gratuits - Puis 49,90€/mois - Sans engagement' },
       { label: 'Titre confirmation email', key: 'signup_confirm_title', type: 'text', default: 'Vérifiez votre email' },
       { label: 'Texte confirmation', key: 'signup_confirm_text', type: 'textarea', default: "Un lien de confirmation a été envoyé. Cliquez dessus pour activer votre compte." },
       sep('Style'),

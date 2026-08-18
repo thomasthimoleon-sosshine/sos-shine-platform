@@ -543,7 +543,7 @@ export default function LandingMixClient({ nextEvent }: { nextEvent: NextEvent |
                   <h3 className="font-sans font-bold text-lg mb-1" style={{ color: '#F5F0E8' }}>Abonnement</h3>
                   <p className="text-sm mb-5" style={{ color: 'rgba(255,255,255,0.4)' }}>Accès illimité à toute la plateforme</p>
                   <div className="flex items-baseline gap-2 mb-1">
-                    <span className="text-4xl font-bold" style={{ color: '#C9A961' }}>29,90€</span>
+                    <span className="text-4xl font-bold" style={{ color: '#C9A961' }}>49,90€</span>
                     <span className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>/mois</span>
                   </div>
                 </div>

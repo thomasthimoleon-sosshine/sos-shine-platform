@@ -61,7 +61,7 @@ const sections: SectionDef[] = [
       { label: 'Prix early bird', key: 'prelaunch_price_early', type: 'text', default: '19,90' },
       { label: 'Label tarif early bird', key: 'prelaunch_price_early_label', type: 'text', default: 'Tarif fondateur - a vie' },
       sep('Tarif Standard'),
-      { label: 'Prix standard', key: 'prelaunch_price_standard', type: 'text', default: '29,90' },
+      { label: 'Prix standard', key: 'prelaunch_price_standard', type: 'text', default: '49,90' },
       { label: 'Label tarif standard', key: 'prelaunch_price_standard_label', type: 'text', default: 'Tarif standard apres lancement' },
       sep('Affichage'),
       { label: 'Suffixe prix (ex: /mois)', key: 'prelaunch_price_suffix', type: 'text', default: '/mois' },

@@ -42,7 +42,7 @@ export function generateEmail15(vars: Vars): { subject: string; html: string } {
     p(`Toi.`),
     p(`La porte est encore ouverte aujourd'hui.`),
     p(`Et peut-être que ce n'est vraiment pas un hasard si tu es encore là à lire ces mots, alors que tu aurais pu te désabonner il y a longtemps.`),
-    ctaButton('Rejoindre SOS Shine - 29,90€/mois', URL_SERENITE, { email }),
+    ctaButton('Rejoindre SOS Shine - 49,90€/mois', URL_SERENITE, { email }),
     ctaLink('Accéder à mon protocole uniquement - 33€ →', `${URL_PROTOCOLE}?prefilled_email=${encodeURIComponent(email)}`),
     p(`À demain.`),
     signature(),

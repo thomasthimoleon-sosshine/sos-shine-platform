@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const FAQ_DATA: { keywords: string[]; answer: string }[] = [
@@ -78,6 +79,9 @@ function findAnswer(input: string): string {
 type Message = { from: 'user' | 'bot'; text: string };
 
 export default function ShineChatbot() {
+  // L'univers Braise a sa propre identité : aucun élément SOS Shine ne s'y invite.
+  const pathname = usePathname();
+
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     { from: 'bot', text: "Bonjour ! Je suis Shine, votre petit guide. Posez-moi vos questions sur la plateforme, je suis là pour vous aider ! ✨" },
@@ -103,6 +107,8 @@ export default function ShineChatbot() {
       setTyping(false);
     }, 800 + Math.random() * 600);
   };
+
+  if (pathname?.startsWith('/royaume')) return null;
 
   return (
     <>

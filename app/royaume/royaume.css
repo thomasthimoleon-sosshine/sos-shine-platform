@@ -1,0 +1,387 @@
+/* ═══════════════════════════════════════════════════════════════
+   BRAISE — Design System
+   Noir profond · bordeaux → cramoisi · or mat · lumière chaude
+   Sensation cible : soie noire, lingerie chic, or discret, braise.
+   Tous les tokens sont scopés à .royaume pour ne jamais fuir
+   dans le design system SOS Shine.
+═══════════════════════════════════════════════════════════════ */
+
+.royaume {
+  /* ── Noirs ── */
+  --rm-void: #050303;
+  --rm-black: #0A0607;
+  --rm-ink: #120A0C;
+
+  /* ── Rouges : bordeaux → cramoisi ── */
+  --rm-wine-deep: #2A0B12;
+  --rm-wine: #4A1220;
+  --rm-blood: #6E1826;
+  --rm-crimson: #A81F32;
+  --rm-ember: #D8412F;
+
+  /* ── Or mat (jamais brillant, jamais doré-clinquant) ── */
+  --rm-gold: #C9A227;
+  --rm-gold-soft: #E3C77A;
+  --rm-gold-dim: #8C6F2A;
+
+  /* ── Lumière chaude ── */
+  --rm-warm: #F3D9B8;
+
+  /* ── Textes ── */
+  --rm-text: #EDE3DC;
+  --rm-text-soft: #B9A8A2;
+  --rm-text-mute: #7A6A66;
+
+  /* ── Traits ── */
+  --rm-line: rgba(237, 227, 220, 0.10);
+  --rm-line-strong: rgba(227, 199, 122, 0.28);
+
+  /* ── Rythme ── */
+  --rm-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --rm-slow: 1.4s;
+
+  position: relative;
+  z-index: 2;
+  color: var(--rm-text);
+  font-family: var(--font-dm-sans), "DM Sans", system-ui, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.01em;
+}
+
+/* Le décor est peint par <Scene />, le corps reste noir absolu dessous. */
+.royaume-body {
+  background: var(--rm-void);
+}
+
+/* ── Étanchéité ──────────────────────────────────────────────
+   Le design system global impose `h1…h6 { color: or !important }`.
+   Braise a sa propre voix : on referme la porte ici, une fois, plutôt
+   que de compenser couleur par couleur dans chaque composant. ── */
+
+.royaume h1,
+.royaume h2,
+.royaume h3,
+.royaume h4,
+.royaume h5,
+.royaume h6 {
+  color: var(--rm-text) !important;
+  -webkit-text-fill-color: var(--rm-text) !important;
+}
+
+/* L’or reste possible, mais seulement quand on le demande. */
+.royaume .rm-gold-text {
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+/* ── Typographie ────────────────────────────────────────────── */
+
+.rm-serif {
+  font-family: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  font-weight: 300;
+  letter-spacing: -0.015em;
+  line-height: 1.08;
+}
+
+.rm-display {
+  font-family: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  font-weight: 300;
+  font-size: clamp(2.6rem, 7.2vw, 5.75rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+
+.rm-kicker {
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--rm-gold-dim);
+}
+
+.rm-prose {
+  font-size: clamp(1rem, 1.35vw, 1.1rem);
+  line-height: 1.85;
+  color: var(--rm-text-soft);
+  font-weight: 300;
+}
+
+/* Italique sensuel réservé aux respirations narratives. */
+.rm-whisper {
+  font-family: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--rm-text-mute);
+}
+
+.rm-gold-text {
+  background: linear-gradient(
+    100deg,
+    var(--rm-gold-dim) 0%,
+    var(--rm-gold-soft) 42%,
+    var(--rm-gold) 68%,
+    var(--rm-gold-dim) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ── Filet d'or : séparateur rituel ─────────────────────────── */
+
+.rm-rule {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--rm-line-strong) 50%,
+    transparent
+  );
+}
+
+/* ── Portes (les deux CTA) ──────────────────────────────────── */
+
+.rm-door {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  padding: 1.65rem 1.9rem 1.5rem;
+  border: 1px solid var(--rm-line);
+  border-radius: 2px;
+  background:
+    linear-gradient(180deg, rgba(237, 227, 220, 0.035), rgba(237, 227, 220, 0));
+  backdrop-filter: blur(14px) saturate(130%);
+  -webkit-backdrop-filter: blur(14px) saturate(130%);
+  text-align: left;
+  transition:
+    border-color 0.9s var(--rm-ease),
+    transform 0.9s var(--rm-ease),
+    background 0.9s var(--rm-ease);
+}
+
+.rm-door::before {
+  /* Lueur de braise qui monte du bas au survol. */
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 160%;
+  background: radial-gradient(
+    ellipse 70% 100% at 50% 100%,
+    rgba(168, 31, 50, 0.30),
+    rgba(110, 24, 38, 0.10) 45%,
+    transparent 72%
+  );
+  opacity: 0;
+  transform: translateY(22%);
+  transition: opacity 1.1s var(--rm-ease), transform 1.1s var(--rm-ease);
+  pointer-events: none;
+}
+
+.rm-door > * {
+  position: relative;
+  z-index: 1;
+}
+
+.rm-door:hover,
+.rm-door:focus-visible {
+  border-color: var(--rm-line-strong);
+  transform: translateY(-2px);
+}
+
+.rm-door:hover::before,
+.rm-door:focus-visible::before {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.rm-door:focus-visible {
+  outline: 1px solid var(--rm-gold-dim);
+  outline-offset: 4px;
+}
+
+/* La porte « couple » brûle un ton plus haut. */
+.rm-door--duo::before {
+  background: radial-gradient(
+    ellipse 70% 100% at 50% 100%,
+    rgba(216, 65, 47, 0.28),
+    rgba(168, 31, 50, 0.10) 45%,
+    transparent 72%
+  );
+}
+
+/* ── Champs & choix (questionnaires) ────────────────────────── */
+
+.rm-choice {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 1.05rem 1.35rem;
+  border: 1px solid var(--rm-line);
+  border-radius: 2px;
+  background: rgba(237, 227, 220, 0.018);
+  color: var(--rm-text-soft);
+  text-align: left;
+  font-size: 0.975rem;
+  line-height: 1.6;
+  transition:
+    border-color 0.55s var(--rm-ease),
+    color 0.55s var(--rm-ease),
+    background 0.55s var(--rm-ease);
+}
+
+.rm-choice:hover {
+  border-color: rgba(227, 199, 122, 0.22);
+  color: var(--rm-text);
+  background: rgba(237, 227, 220, 0.04);
+}
+
+.rm-choice[data-selected="true"] {
+  border-color: var(--rm-line-strong);
+  color: var(--rm-text);
+  background: linear-gradient(
+    100deg,
+    rgba(110, 24, 38, 0.34),
+    rgba(42, 11, 18, 0.18)
+  );
+}
+
+.rm-choice[data-selected="true"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--rm-gold-soft), var(--rm-blood));
+}
+
+/* Case de curseur : un chiffre, centré, rien d'autre.
+   `text-align: left` de .rm-choice l'emporterait sur `text-center`
+   (royaume.css est chargé après Tailwind) — d'où ce modificateur. */
+.rm-choice--dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  height: 3.5rem;
+  text-align: center;
+}
+
+.rm-field {
+  width: 100%;
+  padding: 1rem 1.2rem;
+  border: 1px solid var(--rm-line);
+  border-radius: 2px;
+  background: rgba(237, 227, 220, 0.02);
+  color: var(--rm-text);
+  font-family: inherit;
+  font-size: 0.975rem;
+  line-height: 1.7;
+  resize: vertical;
+  transition: border-color 0.55s var(--rm-ease);
+}
+
+.rm-field::placeholder {
+  color: var(--rm-text-mute);
+  font-style: italic;
+}
+
+.rm-field:focus {
+  outline: none;
+  border-color: var(--rm-line-strong);
+}
+
+/* ── Jauge de progression : une braise qui avance ───────────── */
+
+.rm-progress {
+  height: 1px;
+  width: 100%;
+  background: var(--rm-line);
+  overflow: visible;
+}
+
+.rm-progress__fill {
+  position: relative;
+  height: 100%;
+  background: linear-gradient(90deg, var(--rm-wine), var(--rm-crimson), var(--rm-gold));
+  transition: width 1.1s var(--rm-ease);
+}
+
+.rm-progress__fill::after {
+  content: "";
+  position: absolute;
+  right: -3px;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  background: var(--rm-gold-soft);
+  box-shadow: 0 0 12px 2px rgba(216, 65, 47, 0.55);
+}
+
+/* ── Voile de vignettage : tenir le regard au centre ────────── */
+
+.rm-vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 120% 85% at 50% 45%,
+    transparent 48%,
+    rgba(5, 3, 3, 0.38) 84%,
+    rgba(5, 3, 3, 0.7) 100%
+  );
+}
+
+/* ── Respect du mouvement réduit ────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .royaume *,
+  .royaume *::before,
+  .royaume *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── Vie du paysage ─────────────────────────────────────────── */
+
+.rm-star {
+  animation: rm-breathe 7s ease-in-out infinite;
+}
+
+@keyframes rm-breathe {
+  0%, 100% { opacity: 0.22; }
+  50%      { opacity: 1; }
+}
+
+.rm-ember {
+  position: absolute;
+  bottom: -4%;
+  border-radius: 50%;
+  background: radial-gradient(circle, #F3D9B8 0%, #D8412F 55%, rgba(168, 31, 50, 0) 100%);
+  box-shadow: 0 0 6px 1px rgba(216, 65, 47, 0.5);
+  animation-name: rm-rise;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes rm-rise {
+  0%   { transform: translate3d(0, 0, 0) scale(1); opacity: 0; }
+  12%  { opacity: 1; }
+  70%  { opacity: 0.55; }
+  100% { transform: translate3d(var(--rm-drift, 0px), -78vh, 0) scale(0.45); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rm-star,
+  .rm-ember {
+    animation: none !important;
+  }
+}

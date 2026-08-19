@@ -653,11 +653,13 @@ export default function AdminDouleursPage() {
   function getStepMediaCount(s: StepForm | DouleurStep): number {
     let count = 0
     const vid = 'video_url' in s ? s.video_url : null
+    const vid2 = 'video_url_2' in s ? (s as any).video_url_2 : null
     const aud = 'audio_url' in s ? s.audio_url : null
     const aud2 = 'audio_url_2' in s ? s.audio_url_2 : null
     const pdf = 'pdf_url' in s ? s.pdf_url : null
     const img = 'image_url' in s ? s.image_url : null
     if (vid) count++
+    if (vid2) count++
     if (aud) count++
     if (aud2) count++
     if (pdf) count++
@@ -953,7 +955,7 @@ export default function AdminDouleursPage() {
                           </div>
                           <div className="flex items-center gap-2 mt-0.5">
                             <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>
-                              {mediaCount}/4 médias
+                              {mediaCount}/6 médias
                             </span>
                             {step.exercise_content && (
                               <span className="text-[10px]" style={{ color: step.color }}>+ exercice</span>
@@ -1397,7 +1399,7 @@ export default function AdminDouleursPage() {
           }).map((d) => {
             const totalMedia = getTotalMediaCount(d)
             const stepCount = d.dynamicSteps && d.dynamicSteps.length > 0 ? d.dynamicSteps.length : 3
-            const totalPossibleMedia = stepCount * 4 + 1
+            const totalPossibleMedia = (d.dynamicSteps && d.dynamicSteps.length > 0) ? stepCount * 6 : 13
             return (
               <div key={d.id} className="rounded-xl overflow-hidden transition-all duration-200"
                 style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
@@ -1522,10 +1524,10 @@ export default function AdminDouleursPage() {
                           </span>
                           <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full"
                             style={{
-                              background: mediaCount === 4 ? 'rgba(85,239,196,0.15)' : mediaCount > 0 ? 'rgba(201,169,97,0.15)' : 'rgba(90,83,71,0.2)',
-                              color: mediaCount === 4 ? '#55EFC4' : mediaCount > 0 ? '#C9A961' : 'var(--text-muted)',
+                              background: mediaCount >= 6 ? 'rgba(85,239,196,0.15)' : mediaCount > 0 ? 'rgba(201,169,97,0.15)' : 'rgba(90,83,71,0.2)',
+                              color: mediaCount >= 6 ? '#55EFC4' : mediaCount > 0 ? '#C9A961' : 'var(--text-muted)',
                             }}>
-                            {mediaCount}/4
+                            {mediaCount}/6
                           </span>
                         </div>
                         <p className="text-[10px] mt-0.5 truncate" style={{ color: 'var(--text-muted)' }}>

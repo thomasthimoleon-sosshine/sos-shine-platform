@@ -1399,7 +1399,8 @@ export default function AdminDouleursPage() {
           }).map((d) => {
             const totalMedia = getTotalMediaCount(d)
             const stepCount = d.dynamicSteps && d.dynamicSteps.length > 0 ? d.dynamicSteps.length : 3
-            const totalPossibleMedia = (d.dynamicSteps && d.dynamicSteps.length > 0) ? stepCount * 6 : 13
+            // Modèle standard d'un protocole : 2 vidéos (ét.1) + 3 audios (méditation, activation, hypnose) + 1 cahier de travail = 6
+            const totalPossibleMedia = 6
             return (
               <div key={d.id} className="rounded-xl overflow-hidden transition-all duration-200"
                 style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
@@ -1450,7 +1451,7 @@ export default function AdminDouleursPage() {
                             style={{ background: 'rgba(201,169,97,0.1)', color: '#C9A961' }}>
                             {stepCount} étape{stepCount > 1 ? 's' : ''}
                           </span>
-                          <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
+                          <span className="text-[11px]" style={{ color: totalMedia >= totalPossibleMedia ? '#55EFC4' : 'var(--text-muted)' }}>
                             {totalMedia}/{totalPossibleMedia} médias
                           </span>
                           <span className="text-[11px]" style={{ color: quizCounts[d.id] ? '#C9A961' : 'var(--text-muted)' }}>
@@ -1524,10 +1525,10 @@ export default function AdminDouleursPage() {
                           </span>
                           <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full"
                             style={{
-                              background: mediaCount >= 6 ? 'rgba(85,239,196,0.15)' : mediaCount > 0 ? 'rgba(201,169,97,0.15)' : 'rgba(90,83,71,0.2)',
-                              color: mediaCount >= 6 ? '#55EFC4' : mediaCount > 0 ? '#C9A961' : 'var(--text-muted)',
+                              background: mediaCount > 0 ? 'rgba(201,169,97,0.15)' : 'rgba(90,83,71,0.2)',
+                              color: mediaCount > 0 ? '#C9A961' : 'var(--text-muted)',
                             }}>
-                            {mediaCount}/6
+                            {mediaCount} fichier{mediaCount > 1 ? 's' : ''}
                           </span>
                         </div>
                         <p className="text-[10px] mt-0.5 truncate" style={{ color: 'var(--text-muted)' }}>

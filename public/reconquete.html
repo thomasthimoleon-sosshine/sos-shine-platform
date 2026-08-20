@@ -25,90 +25,79 @@
     line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
   ::selection{background:rgba(210,83,106,.35);color:#fff}
 
-  /* ═══ LE CONTRE-JOUR — une seule lumière sculpte des corps dans le noir ═══ */
+  /* ═══ LA BUÉE — on ne voit que ce qu'on accepte d'essuyer soi-même ═══ */
 
-  /* La scène : noir absolu. Le noir est la matière, pas un fond. */
   #stage{position:fixed;inset:0;z-index:0;background:
-    radial-gradient(120% 90% at 50% 120%, rgba(46,7,16,.35), #000 60%);pointer-events:none}
+    radial-gradient(120% 90% at 50% 120%, rgba(46,7,16,.28), #000 62%);pointer-events:none}
 
-  /* La source unique : une lueur incarnate qui se déplace avec le récit. */
-  .keylight{position:fixed;z-index:1;width:70vmin;height:70vmin;left:50%;top:50%;
-    transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;
-    background:radial-gradient(circle,
-      rgba(210,83,106,.30) 0%, rgba(126,16,39,.18) 32%, rgba(46,7,16,.10) 52%, transparent 70%);
-    filter:blur(6px);opacity:0;mix-blend-mode:screen;will-change:transform,opacity}
-
-  /* Grain vivant (matière, pas déco : très discret). */
-  .grain{position:fixed;inset:0;z-index:6;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+  .grain{position:fixed;inset:0;z-index:9;pointer-events:none;opacity:.045;mix-blend-mode:overlay;
     background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.86' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
-  .vignette{position:fixed;inset:0;z-index:7;pointer-events:none;
-    background:radial-gradient(125% 115% at 50% 46%,transparent 50%,rgba(0,0,0,.94) 100%)}
+  .vignette{position:fixed;inset:0;z-index:8;pointer-events:none;
+    background:radial-gradient(125% 115% at 50% 46%,transparent 55%,rgba(0,0,0,.9) 100%)}
 
-  /* Marque : minuscule, presque absente. */
-  .brand{position:fixed;top:26px;left:0;right:0;z-index:8;text-align:center;pointer-events:none;
+  .brand{position:fixed;top:26px;left:0;right:0;z-index:10;text-align:center;pointer-events:none;
     font-family:var(--sans);font-weight:300;font-size:11px;letter-spacing:.7em;text-transform:uppercase;
     color:var(--or);text-indent:.7em;opacity:.5}
 
-  /* Le film : une seule scène épinglée, le scroll fait avancer le temps. */
   .film-sticky{position:relative;height:100vh;width:100%;overflow:hidden;z-index:3}
 
-  /* Chaque plan occupe tout l'écran ; le montage les fait naître et disparaître. */
   .plan{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
-    justify-content:center;text-align:center;padding:0 8vw;opacity:0;will-change:opacity,transform}
+    justify-content:center;text-align:center;padding:0 8vw;opacity:0;will-change:opacity}
 
-  /* Emplacement d'un fragment de corps, révélé par la lumière rasante.
-     Tant que la vraie photo n'est pas shootée : un contour en contre-jour, jamais un gradient déco. */
-  .corps{position:relative;width:min(78vw,560px);height:min(64vh,560px);margin:0 auto;
-    -webkit-mask:radial-gradient(74% 66% at 50% 48%,#000 46%,transparent 100%);
-    mask:radial-gradient(74% 66% at 50% 48%,#000 46%,transparent 100%)}
-  .corps img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;
-    filter:brightness(.9) contrast(1.05)}
-  .corps img[src]:not([src=""]){opacity:1}         /* la vraie photo prend le dessus dès qu'elle existe */
-  .corps svg{position:absolute;inset:0;width:100%;height:100%}
-  .corps .rim{fill:none;stroke:url(#rimgrad);stroke-width:1.4;
-    filter:drop-shadow(0 0 7px rgba(210,83,106,.5))}
-  .corps .fillbody{fill:#050308}
-  .corps .skin{opacity:.5;mix-blend-mode:screen}
-  .corps .brief{position:absolute;left:0;right:0;bottom:-2.4rem;font-family:var(--sans);
-    font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:rgba(176,138,74,.45)}
+  /* Une scène = ce qu'il y a sous la buée. Plein cadre, jamais un panneau borné. */
+  .scene{position:absolute;inset:0;overflow:hidden}
+  .scene img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;
+    filter:brightness(.82) contrast(1.08) saturate(.7)}
+  .scene img[src]:not([src=""]){opacity:1}
+  .scene svg{position:absolute;inset:0;width:100%;height:100%}
+  .scene .rim{fill:none;stroke:url(#rimgrad);stroke-width:.55;vector-effect:non-scaling-stroke;
+    filter:drop-shadow(0 0 9px rgba(210,83,106,.4))}
+  .scene .skin{opacity:.34;mix-blend-mode:screen}
+  .scene .brief{position:absolute;left:0;right:0;bottom:1.6rem;font-family:var(--sans);
+    font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:rgba(176,138,74,.4);
+    text-align:center;pointer-events:none;z-index:2}
 
-  /* Texte = pensée intérieure, pas titre commercial. */
-  .pensee{font-family:var(--display);font-weight:400;color:var(--albatre);
+  /* La vitre : la buée qu'il faut essuyer pour voir la scène en dessous. */
+  .fog{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y}
+
+  /* Texte = pensée respirée sur la vitre, pas un titre commercial. */
+  .pensee{position:relative;z-index:4;font-family:var(--display);font-weight:400;color:var(--albatre);
     font-size:clamp(1.15rem,2.6vw,1.75rem);line-height:1.5;max-width:22ch;
-    text-shadow:0 2px 40px rgba(0,0,0,.9)}
+    text-shadow:0 2px 40px rgba(0,0,0,.9);opacity:0}
   .pensee.italic{font-style:italic}
-  .micro-open{position:absolute;left:0;right:0;bottom:14vh;font-family:var(--display);font-style:italic;
-    font-size:clamp(.92rem,1.7vw,1.1rem);color:var(--albatre-dim);letter-spacing:.01em;padding:0 12vw}
+  .pensee.bas{position:absolute;left:0;right:0;bottom:16vh;padding:0 10vw}
 
-  /* Un mot qui mange l'écran et traverse. */
-  .mot-geant{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);
-    font-family:var(--display);font-weight:500;font-size:clamp(3.4rem,17vw,13rem);
-    letter-spacing:.02em;color:rgba(232,220,203,.05);-webkit-text-stroke:1.3px rgba(232,220,203,.75);
-    white-space:nowrap;text-align:center;opacity:0;z-index:4}
+  /* Le mot tracé dans la buée elle-même — jamais un simple contour flottant. */
+  .mot-buee{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);z-index:5;
+    font-family:var(--display);font-weight:500;font-size:clamp(2.6rem,13.5vw,10.5rem);
+    letter-spacing:.02em;color:transparent;-webkit-text-stroke:1px rgba(232,220,203,.7);
+    white-space:nowrap;text-align:center;opacity:0;padding:0 4vw;overflow:hidden}
 
-  /* La chaleur entre deux corps (Acte III). */
-  .braise-entre{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-    width:34vmin;height:34vmin;border-radius:50%;opacity:0;pointer-events:none;
-    background:radial-gradient(circle,rgba(210,83,106,.5),rgba(126,16,39,.24) 45%,transparent 72%);
-    filter:blur(10px);mix-blend-mode:screen}
+  /* Acte III — deux vitres qui convergent, la chaleur entre les deux. */
+  .rencontre{position:absolute;inset:0;display:flex}
+  .rencontre .cote{position:relative;flex:1;overflow:hidden}
+  .fonte{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:30vmin;height:30vmin;border-radius:50%;opacity:0;pointer-events:none;z-index:6;
+    background:radial-gradient(circle,rgba(210,83,106,.45),rgba(126,16,39,.2) 45%,transparent 72%);
+    filter:blur(14px);mix-blend-mode:screen}
 
-  /* ═══ ACTE IV — le choix : deux couloirs de lumière, jamais des cartes ═══ */
+  /* ═══ ACTE IV — la vitre se fend en deux, chacune s'essuie à sa façon ═══ */
   .choix{position:absolute;inset:0;z-index:4;display:flex;opacity:0;pointer-events:none}
   .choix.live{pointer-events:auto}
   .voie{flex:1;position:relative;display:flex;flex-direction:column;align-items:center;
     justify-content:center;cursor:pointer;overflow:hidden;transition:flex .9s cubic-bezier(.16,1,.3,1)}
-  /* le couloir de lumière : un halo vertical rasant, pas de bordure, pas de fond de carte */
-  .voie::before{content:"";position:absolute;top:-10%;bottom:-10%;width:60%;left:20%;
-    background:radial-gradient(60% 80% at 50% 50%,rgba(210,83,106,.16),transparent 70%);
-    opacity:.5;transition:opacity .9s}
-  .voie.solo::before{background:radial-gradient(58% 78% at 50% 50%,rgba(176,138,74,.14),transparent 70%)}
-  .voie::after{content:"";position:absolute;top:8%;bottom:8%;width:1px;left:50%;
-    background:linear-gradient(transparent,rgba(210,83,106,.6),transparent);opacity:.45;transition:opacity .9s}
-  .voie.solo::after{background:linear-gradient(transparent,rgba(176,138,74,.55),transparent)}
-  .voie:hover{flex:1.25}
+  .voie .contenu{position:relative;z-index:3}
+  .voie::before{content:"";position:absolute;top:-10%;bottom:-10%;width:60%;left:20%;z-index:1;
+    background:radial-gradient(60% 80% at 50% 50%,rgba(210,83,106,.14),transparent 70%);
+    opacity:.4;transition:opacity .9s}
+  .voie.solo::before{background:radial-gradient(58% 78% at 50% 50%,rgba(176,138,74,.12),transparent 70%)}
+  .voie::after{content:"";position:absolute;top:8%;bottom:8%;width:1px;left:50%;z-index:1;
+    background:linear-gradient(transparent,rgba(210,83,106,.55),transparent);opacity:.4;transition:opacity .9s}
+  .voie.solo::after{background:linear-gradient(transparent,rgba(176,138,74,.5),transparent)}
+  .voie:hover{flex:1.2}
   .voie:hover::before,.voie:hover::after{opacity:1}
   .voie .titre{font-family:var(--display);font-weight:500;font-size:clamp(1.8rem,4.6vw,3rem);
-    color:var(--albatre);letter-spacing:.04em;line-height:1.1}
+    color:var(--albatre);letter-spacing:.04em;line-height:1.1;text-shadow:0 2px 30px rgba(0,0,0,.85)}
   .voie .etat{margin-top:.5rem;font-family:var(--sans);font-size:.66rem;letter-spacing:.42em;
     text-transform:uppercase;color:var(--incarnat)}
   .voie.solo .etat{color:var(--or)}
@@ -125,17 +114,20 @@
     .fente{top:50%;bottom:auto;left:0;right:0;width:auto;height:1px;transform:translateY(-50%);
       background:linear-gradient(90deg,transparent,rgba(0,0,0,.9),transparent)}
     .voie .dit{font-size:.82rem}
+    .scene .brief{bottom:3.4rem;padding:0 4.5rem 0 1rem}
   }
 
-  /* Indice de descente, discret, disparaît vite. */
-  .cue{position:fixed;bottom:4vh;left:50%;transform:translateX(-50%);z-index:8;font-size:.55rem;
-    letter-spacing:.44em;text-transform:uppercase;color:var(--albatre-dim);pointer-events:none;transition:opacity .6s}
-  .cue::after{content:"";display:block;width:1px;height:40px;margin:11px auto 0;
-    background:linear-gradient(var(--incarnat),transparent);animation:drip 3s ease-in-out infinite}
-  @keyframes drip{0%,100%{opacity:.2;transform:scaleY(.6)}50%{opacity:1;transform:scaleY(1)}}
+  /* Indice de geste : essuyer, pas descendre. */
+  .cue{position:fixed;bottom:4vh;left:50%;transform:translateX(-50%);z-index:10;text-align:center;
+    color:var(--albatre-dim);pointer-events:none;transition:opacity .6s}
+  .cue span{display:block;font-size:.55rem;letter-spacing:.44em;text-transform:uppercase;margin-bottom:.6rem}
+  .cue svg{width:52px;height:16px;opacity:.75}
+  .cue path{fill:none;stroke:var(--incarnat);stroke-width:1;stroke-linecap:round;
+    stroke-dasharray:60;stroke-dashoffset:60;animation:trace 2.6s ease-in-out infinite}
+  @keyframes trace{0%{stroke-dashoffset:60}45%{stroke-dashoffset:0}70%{stroke-dashoffset:0;opacity:1}
+    100%{stroke-dashoffset:-60;opacity:0}}
 
-  /* Entrer avec le son. */
-  .son{position:fixed;bottom:24px;right:22px;top:auto;z-index:9;font-family:var(--sans);font-size:.58rem;
+  .son{position:fixed;bottom:24px;right:22px;top:auto;z-index:10;font-family:var(--sans);font-size:.58rem;
     letter-spacing:.28em;text-transform:uppercase;color:var(--albatre-dim);background:none;border:none;
     cursor:pointer;transition:color .4s;padding:6px}
   .son:hover{color:var(--albatre)}
@@ -195,30 +187,31 @@
   .btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
 
   /* ═══ FALLBACK : sans JS / sans GSAP / prefers-reduced-motion ═══
-     Même récit, révélé franchement. Aussi puissant, zéro parallaxe. */
-  body.reduced .keylight,body.reduced .cue,body.reduced .mot-geant{display:none}
+     Même récit, révélé franchement, sans buée à essuyer. Aussi puissant, zéro parallaxe. */
+  body.reduced .fog,body.reduced .cue,body.reduced .mot-buee{display:none}
   body.reduced .film-sticky{height:auto}
   body.reduced .plan{position:relative;opacity:1;min-height:100vh;transform:none;
     border-bottom:1px solid rgba(176,138,74,.08)}
-  body.reduced .braise-entre{opacity:.5}
+  body.reduced .scene img[src]:not([src=""]),body.reduced .scene svg{opacity:1!important}
+  body.reduced .pensee{opacity:1}
+  body.reduced .pensee.bas{position:relative;bottom:auto;margin-top:2rem}
+  body.reduced .fonte{opacity:.5}
   body.reduced .choix{position:relative;opacity:1;pointer-events:auto;min-height:100vh}
-  body.reduced .micro-open{position:relative;bottom:auto;margin-top:2rem}
 
   @media (prefers-reduced-motion: reduce){
-    .keylight,.mot-geant{animation:none!important}
+    .cue path{animation:none!important}
   }
 </style>
 </head>
 <body>
 
 <div id="stage"></div>
-<div class="keylight" id="keylight"></div>
 <div class="grain"></div>
 <div class="vignette"></div>
 <div class="brand">Incarnat</div>
 <button class="son" id="son" aria-label="Entrer avec le son">Entrer avec <b>le son</b></button>
 
-<!-- Dégradés partagés pour les contours de corps en contre-jour -->
+<!-- Dégradés partagés pour les contours de corps -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
     <linearGradient id="rimgrad" x1="0" y1="1" x2="1" y2="0">
@@ -237,29 +230,30 @@
   <section class="film">
     <div class="film-sticky">
 
-      <!-- ACTE I — DISTANCE -->
+      <!-- 1.1 + 1.2 — DISTANCE : rien à essuyer encore, juste la règle du jeu -->
       <div class="plan" data-plan="0">
-        <div class="corps" data-asset="acte1-nuque"
-             data-brief="Nuque + épaule, profil, très gros plan 85mm, rim light incarnat unique, 90% ombre, respiration retenue — à shooter">
+        <p class="pensee italic">Ce que tu vas voir,<br>tu vas devoir l'essuyer toi-même.</p>
+      </div>
+
+      <!-- 1.3 + 1.4 — la nuque, lointaine, sous la buée -->
+      <div class="plan" data-plan="1">
+        <div class="scene" data-asset="acte1-nuque"
+             data-brief="Nuque + épaule de profil, 85mm, très hors-focus (sujet loin du plan de netteté), lumière ambiante froide, immobilité — doit rester lisible même voilée à 60% — à shooter">
           <img alt="" src="">
           <svg viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
-            <rect class="fillbody" x="0" y="0" width="400" height="400" opacity="0"/>
             <rect class="skin" x="0" y="0" width="400" height="400" fill="url(#skinglow)"/>
-            <!-- contour d'une nuque / épaule -->
             <path class="rim" d="M300,40 C250,70 232,120 236,170 C240,214 268,244 262,300 C258,344 300,372 356,384"/>
           </svg>
-          <span class="brief">Emplacement · nuque en contre-jour</span>
+          <span class="brief">Emplacement · nuque lointaine</span>
         </div>
+        <canvas class="fog" id="fog-1"></canvas>
+        <p class="pensee bas italic">Avant l'autre,<br>il y a ce que tu portes.</p>
       </div>
 
-      <div class="plan" data-plan="1">
-        <p class="pensee italic">Avant l'autre,<br>il y a ce que tu portes.</p>
-      </div>
-
-      <!-- ACTE II — LE CORPS -->
+      <!-- 2.1 + 2.2 — le grain de peau, RESPIRE tracé dans la buée -->
       <div class="plan" data-plan="2">
-        <div class="corps" data-asset="acte2-peau"
-             data-brief="Grain de peau / ride, macro 100mm, lumière rasante latérale, texture assumée — à shooter">
+        <div class="scene" data-asset="acte2-peau"
+             data-brief="Grain de peau / ride, macro 100mm, lumière rasante latérale chaude, texture assumée, aucun lissage — à shooter">
           <img alt="" src="">
           <svg viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
             <rect class="skin" x="0" y="0" width="400" height="400" fill="url(#skinglow)"/>
@@ -268,60 +262,89 @@
           </svg>
           <span class="brief">Emplacement · grain de peau</span>
         </div>
+        <canvas class="fog" id="fog-2"></canvas>
+        <div class="mot-buee" id="motbuee">RESPIRE</div>
       </div>
 
-      <div class="mot-geant" data-plan="2b">RESPIRE</div>
-
+      <!-- 2.3 — gorge, clavicule : la buée est plus épaisse ici -->
       <div class="plan" data-plan="3">
-        <div class="corps" data-asset="acte2-gorge"
-             data-brief="Gorge renversée + clavicule, tête légèrement en arrière, gros plan 85mm, lumière ponctuelle chaude rasante, vulnérabilité offerte — à shooter">
+        <div class="scene" data-asset="acte2-gorge"
+             data-brief="Gorge renversée + clavicule, 85mm, lumière ponctuelle chaude rasante, vulnérabilité offerte — à shooter">
           <img alt="" src="">
           <svg viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
             <rect class="skin" x="0" y="0" width="400" height="400" fill="url(#skinglow)"/>
-            <!-- ligne de la mâchoire descendant vers la gorge -->
             <path class="rim" d="M92,132 C150,128 198,150 228,196 C252,232 256,300 300,400"/>
-            <!-- clavicule -->
             <path class="rim" d="M60,318 C150,346 224,342 300,368 C348,382 372,388 420,404" opacity="0.72"/>
           </svg>
           <span class="brief">Emplacement · gorge et clavicule</span>
         </div>
+        <canvas class="fog" id="fog-3"></canvas>
         <p class="pensee" style="margin-top:2rem">Ce qui est prêt en toi.<br>Ce qui se referme encore.</p>
       </div>
 
-      <!-- ACTE III — LA RENCONTRE (ralenti) -->
+      <!-- 3.1 + 3.2 — LA RENCONTRE : deux vitres convergent, ralenti maximal -->
       <div class="plan" data-plan="4">
-        <div class="corps" data-asset="acte3-dos-a-dos"
-             data-brief="Deux corps dos à dos, plan taille 50mm, deux rim lights opposés, tension et distance — à shooter">
-          <img alt="" src="">
-          <svg viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
-            <rect class="skin" x="0" y="0" width="400" height="400" fill="url(#skinglow)"/>
-            <path class="rim" d="M150,40 C120,110 132,180 118,260 C110,320 128,360 150,392"/>
-            <path class="rim" d="M250,40 C280,110 268,180 282,260 C290,320 272,360 250,392"/>
-          </svg>
-          <span class="brief">Emplacement · dos à dos</span>
+        <div class="rencontre">
+          <div class="cote">
+            <div class="scene" data-asset="acte3-presence-a"
+                 data-brief="Buste, 50mm, lumière naturelle diffuse, regard porté vers le centre-droit du cadre — à shooter">
+              <img alt="" src="">
+              <svg viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
+                <rect class="skin" x="0" y="0" width="400" height="400" fill="url(#skinglow)"/>
+                <path class="rim" d="M150,40 C120,110 132,180 118,260 C110,320 128,360 150,392"/>
+              </svg>
+              <span class="brief">Emplacement · première présence</span>
+            </div>
+            <canvas class="fog" id="fog-4a"></canvas>
+          </div>
+          <div class="cote">
+            <div class="scene" data-asset="acte3-presence-b"
+                 data-brief="Buste, 50mm, même séance/lumière que la première présence, regard porté vers le centre-gauche — à shooter">
+              <img alt="" src="">
+              <svg viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
+                <rect class="skin" x="0" y="0" width="400" height="400" fill="url(#skinglow)"/>
+                <path class="rim" d="M250,40 C280,110 268,180 282,260 C290,320 272,360 250,392"/>
+              </svg>
+              <span class="brief">Emplacement · seconde présence</span>
+            </div>
+            <canvas class="fog" id="fog-4b"></canvas>
+          </div>
         </div>
+        <div class="fonte" id="fonte"></div>
       </div>
-
-      <div class="braise-entre" id="braise"></div>
 
       <div class="plan" data-plan="5">
         <p class="pensee italic">À deux, on ne se rencontre<br>qu'après s'être rencontré soi.</p>
       </div>
 
-      <!-- ACTE IV — LE CHOIX : deux couloirs de lumière -->
+      <!-- ACTE IV — la vitre se fend en deux, chacune s'essuie à sa façon -->
       <div class="choix" id="choix">
         <div class="voie solo" data-go="solo">
-          <div class="titre">Le Seuil</div>
-          <div class="etat">Seul</div>
-          <div class="dit">Se préparer, en soi, à l'expérience de sa vie — pour être capable de l'habiter au lieu de la manquer.</div>
-          <div class="entrer">Entrer</div>
+          <div class="scene" data-asset="acte4-seuil"
+               data-brief="Une main qui essuie un revers net sur une vitre, seule dans le cadre — à shooter">
+            <img alt="" src="">
+          </div>
+          <canvas class="fog" id="fog-seuil"></canvas>
+          <div class="contenu">
+            <div class="titre">Le Seuil</div>
+            <div class="etat">Seul</div>
+            <div class="dit">Se préparer, en soi, à l'expérience de sa vie — pour être capable de l'habiter au lieu de la manquer.</div>
+            <div class="entrer">Entrer</div>
+          </div>
         </div>
         <div class="fente"></div>
         <div class="voie couple" data-go="couple">
-          <div class="titre">Braise</div>
-          <div class="etat">À deux</div>
-          <div class="dit">Deux parcours séparés, aucune réponse visible avant la fin. Puis la lecture croisée de ce que vous n'osiez plus vous dire.</div>
-          <div class="entrer">Entrer</div>
+          <div class="scene" data-asset="acte4-braise"
+               data-brief="Deux mains, chacune sur sa moitié de vitre, qui n'essuient qu'un fragment tant que l'autre n'a pas agi — à shooter">
+            <img alt="" src="">
+          </div>
+          <canvas class="fog" id="fog-braise"></canvas>
+          <div class="contenu">
+            <div class="titre">Braise</div>
+            <div class="etat">À deux</div>
+            <div class="dit">Deux parcours séparés, aucune réponse visible avant la fin. Puis la lecture croisée de ce que vous n'osiez plus vous dire.</div>
+            <div class="entrer">Entrer</div>
+          </div>
         </div>
       </div>
 
@@ -329,7 +352,10 @@
   </section>
 </main>
 
-<span class="cue" id="cue">Descends</span>
+<div class="cue" id="cue">
+  <span>Essuie</span>
+  <svg viewBox="0 0 52 16" aria-hidden="true"><path d="M2,8 C14,2 22,14 34,8 C40,5 44,8 50,8"/></svg>
+</div>
 
 <!-- OVERLAY (préservé) -->
 <div class="overlay" id="ov">
@@ -343,8 +369,9 @@
 
 <script src="/incarnat/vendor/gsap.min.js"></script>
 <script src="/incarnat/vendor/ScrollTrigger.min.js"></script>
+<script src="/incarnat/vendor/lenis.min.js"></script>
 <script>
-/* ═══════════════ LE MONTAGE — contre-jour scrubbé ═══════════════ */
+/* ═══════════════ LA BUÉE — moteur de brume et de geste ═══════════════ */
 (function(){
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const hasGSAP = !!(window.gsap && window.ScrollTrigger);
@@ -353,86 +380,231 @@
 
   gsap.registerPlugin(ScrollTrigger);
 
-  const key = document.getElementById('keylight');
-  const plan = s => document.querySelector('.plan[data-plan="'+s+'"]');
-  const q = s => document.querySelector('[data-plan="'+s+'"]');
+  const hasLenis = !!window.Lenis;
+  let lenis = null;
+  if(hasLenis){
+    lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1, touchMultiplier: 1.1 });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time)=>{ lenis.raf(time*1000); });
+    gsap.ticker.lagSmoothing(0);
+  }
 
-  // Respiration : micro-battement organique de la lumière (le site respire).
-  gsap.to(key, {scale:1.06, duration:5.5, repeat:-1, yoyo:true, ease:'sine.inOut'});
+  /* ── Une vitre embuée : dessine, s'efface au passage d'un geste, se reforme lentement ──
+     Texture générée par touches radiales superposées (pas d'image tuilée : aucune
+     arête possible), pâle et chaude, volontairement transparente — le noir doit
+     rester la matière dominante, la buée n'est qu'un voile dessus. */
+  class FogLayer{
+    constructor(canvas){
+      this.canvas = canvas;
+      this.ctx = canvas.getContext('2d');
+      this.full = document.createElement('canvas');
+      this.fullCtx = this.full.getContext('2d');
+      this.active = false;
+      this.cursor = {x:.5,y:.5};
+      this.dpr = Math.min(window.devicePixelRatio||1, 1.6);
+      this.resize();
+    }
+    resize(){
+      const r = this.canvas.getBoundingClientRect();
+      const w = Math.max(1, Math.round(r.width*this.dpr)), h = Math.max(1, Math.round(r.height*this.dpr));
+      [this.canvas.width,this.full.width] = [w,w];
+      [this.canvas.height,this.full.height] = [h,h];
+      this.paintFull();
+    }
+    paintFull(){
+      const c = this.fullCtx, w=this.full.width, h=this.full.height;
+      c.clearRect(0,0,w,h);
+      c.globalCompositeOperation = 'source-over';
+      // un voile bas et pâle, sans jamais former un halo — le noir reste dominant.
+      // le vignettage de page (édition globale) fait déjà le travail d'assombrir les bords ;
+      // on ne le duplique pas ici, sous peine de recréer une lueur centrale.
+      c.fillStyle = 'rgba(206,193,180,.1)';
+      c.fillRect(0,0,w,h);
+      const blobs = 11;
+      for(let i=0;i<blobs;i++){
+        const bx = Math.random()*w, by = Math.random()*h;
+        const br = (0.16+Math.random()*0.16)*Math.max(w,h);
+        const a = 0.03 + Math.random()*0.04;
+        const g = c.createRadialGradient(bx,by,0,bx,by,br);
+        g.addColorStop(0,`rgba(206,193,180,${a})`);
+        g.addColorStop(1,'rgba(206,193,180,0)');
+        c.fillStyle = g;
+        c.beginPath(); c.arc(bx,by,br,0,Math.PI*2); c.fill();
+      }
+      this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
+      this.ctx.drawImage(this.full,0,0);
+    }
+    /* efface un rond doux à (xFrac,yFrac), rFrac = rayon relatif à la hauteur */
+    eraseAt(xFrac,yFrac,rFrac,strength){
+      const ctx=this.ctx, w=this.canvas.width, h=this.canvas.height;
+      const x=xFrac*w, y=yFrac*h, r=Math.max(6,rFrac*h);
+      ctx.save();
+      ctx.globalCompositeOperation='destination-out';
+      const g = ctx.createRadialGradient(x,y,0,x,y,r);
+      g.addColorStop(0,`rgba(0,0,0,${strength})`);
+      g.addColorStop(.7,`rgba(0,0,0,${strength*.55})`);
+      g.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();
+      ctx.restore();
+    }
+    /* geste de scroll : le curseur avance le long d'une vague, guidé par la vélocité */
+    autoWipe(delta){
+      if(!delta) return;
+      const step = Math.min(Math.abs(delta)*.0022, .05);
+      this.cursor.x = (this.cursor.x + step*(delta>0?1:-1)*.6 + 1)%1;
+      const wave = .5 + Math.sin(this.cursor.x*Math.PI*2.4)*.16;
+      this.cursor.y += (wave-this.cursor.y)*.4;
+      this.eraseAt(this.cursor.x, this.cursor.y, .3, Math.min(.9, Math.abs(delta)*.02));
+    }
+    /* geste tactile : on essuie littéralement là où est le doigt */
+    touchWipeAt(xFrac,yFrac){
+      this.eraseAt(xFrac,yFrac,.24,.85);
+    }
+    regrow(amount){
+      this.ctx.save();
+      this.ctx.globalAlpha = amount;
+      this.ctx.drawImage(this.full,0,0);
+      this.ctx.restore();
+    }
+    clearFully(){ this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height); }
+  }
 
-  // Timeline maîtresse — durée arbitraire ; le scroll la scrubbe.
-  // Beats nettement séparés (chaque plan disparaît avant le suivant), sauf
-  // les superpositions voulues : peau+RESPIRE, et dos-à-dos+braise.
-  // Les segments longs (Acte III) = plus de durée = plus de scroll = ralenti ressenti.
+  const layers = Array.from(document.querySelectorAll('canvas.fog')).map(c=>new FogLayer(c));
+  window.addEventListener('resize', ()=>layers.forEach(l=>l.resize()));
+
+  /* Boucle de regénération lente + halo de brume résiduel */
+  gsap.ticker.add(()=>{ layers.forEach(l=>{ if(l.active) l.regrow(.0022); }); });
+
+  /* ── quelle(s) vitre(s) sont actives : reçoivent le geste de scroll/tactile ── */
+  const byId = id => layers.find(l=>l.canvas.id===id);
+  let activeLayers = [];
+  function setActive(ids){ activeLayers = ids.map(byId).filter(Boolean); layers.forEach(l=>l.active=activeLayers.includes(l)); }
+
+  let lastScroll = window.scrollY;
+  function onRawScroll(){
+    const y = hasLenis && lenis.scroll!=null ? lenis.scroll : window.scrollY;
+    const d = y - lastScroll; lastScroll = y;
+    activeLayers.forEach(l=>l.autoWipe(d));
+  }
+  if(hasLenis) lenis.on('scroll', onRawScroll); else window.addEventListener('scroll', onRawScroll, {passive:true});
+
+  /* geste tactile : le doigt essuie directement sous lui, sur la vitre active */
+  function pointToFrac(canvas, clientX, clientY){
+    const r = canvas.getBoundingClientRect();
+    return { x:(clientX-r.left)/r.width, y:(clientY-r.top)/r.height };
+  }
+  window.addEventListener('pointermove', (e)=>{
+    if(e.pointerType!=='touch' && e.pointerType!=='pen') return;
+    activeLayers.forEach(l=>{
+      const r=l.canvas.getBoundingClientRect();
+      if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom) return;
+      const f = pointToFrac(l.canvas, e.clientX, e.clientY);
+      l.touchWipeAt(f.x,f.y);
+    });
+  }, {passive:true});
+
+  /* ═══ Le montage — la timeline scrubbe la buée, jamais une lumière ═══ */
+  const q = s => document.querySelector('.plan[data-plan="'+s+'"]');
   const tl = gsap.timeline({defaults:{ease:'none'}});
 
-  // ACTE I·1 — la lumière naît en bas-droite, presque rien ; la nuque affleure
-  tl.set(key,{left:'82vw',top:'88vh',scale:.5,opacity:0},0);
-  tl.to(key,{opacity:.7,duration:6,ease:'power1.out'},0);
-  tl.fromTo(q(0),{opacity:0,scale:1.05},{opacity:1,scale:1,duration:7,ease:'power2.out'},0);
-  tl.to(key,{left:'62vw',top:'56vh',scale:.72,duration:11,ease:'power1.inOut'},6);
-  tl.to(q(0),{opacity:0,duration:5,ease:'power1.in'},13);      // sort avant 18
+  // 1.1+1.2 — DISTANCE : la règle du jeu, rien d'autre
+  tl.set('#cue',{opacity:0},0);
+  tl.to('#cue',{opacity:.85,duration:4},0);
+  tl.fromTo(q(0),{opacity:0},{opacity:1,duration:7,ease:'power2.out'},0);
+  tl.to(q(0),{opacity:0,duration:5,ease:'power1.in'},13);
+  tl.to('#cue',{opacity:0,duration:2},6);
 
-  // ACTE I·2 — pensée intérieure (seule à l'écran)
-  tl.fromTo(q(1),{opacity:0,y:26},{opacity:1,y:0,duration:6,ease:'power2.out'},19);
-  tl.to(key,{left:'50vw',top:'46vh',scale:.85,opacity:.85,duration:9,ease:'power1.inOut'},19);
-  tl.to(q(1),{opacity:0,y:-18,duration:5,ease:'power1.in'},27);   // sort avant 32
+  // 1.3+1.4 — la nuque, sous la buée
+  tl.fromTo(q(1),{opacity:0},{opacity:1,duration:6,ease:'power2.out'},19);
+  tl.fromTo('.pensee.bas',{opacity:0,y:16},{opacity:1,y:0,duration:6,ease:'power2.out'},36);
+  tl.to(q(1),{opacity:0,duration:6,ease:'power1.in'},50);
 
-  // ACTE II·1 — la peau ; la lumière balaie ; le mot RESPIRE traverse (superposition voulue)
-  tl.fromTo(q(2),{opacity:0,scale:1.05},{opacity:1,scale:1,duration:6,ease:'power2.out'},33);
-  tl.fromTo(key,{left:'50vw'},{left:'30vw',top:'52vh',scale:.95,duration:13,ease:'sine.inOut'},33);
-  tl.fromTo(q('2b'),{opacity:0,x:'34vw'},{opacity:1,x:'0vw',duration:9,ease:'power2.out'},36); // pic net à ~45
-  tl.to(q('2b'),{opacity:0,x:'-34vw',duration:8,ease:'power1.in'},45);
-  tl.to(q(2),{opacity:0,duration:5,ease:'power1.in'},47);      // sort avant 52
+  // 2.1+2.2 — la peau ; RESPIRE se trace dans la buée puis s'y dissout
+  tl.fromTo(q(2),{opacity:0},{opacity:1,duration:6,ease:'power2.out'},58);
+  tl.fromTo('#motbuee',{opacity:0},{opacity:.85,duration:7,ease:'power2.out'},64);
+  tl.to('#motbuee',{opacity:0,duration:9,ease:'power1.in'},76);
+  tl.to(q(2),{opacity:0,duration:6,ease:'power1.in'},86);
 
-  // ACTE II·2 — la main s'ouvre (seule)
-  tl.fromTo(q(3),{opacity:0,y:24},{opacity:1,y:0,duration:6,ease:'power2.out'},53);
-  tl.to(key,{left:'58vw',top:'44vh',scale:1,duration:11,ease:'sine.inOut'},53);
-  tl.to(q(3),{opacity:0,duration:5,ease:'power1.in'},63);      // sort avant 68
+  // 2.3 — gorge et clavicule ; buée volontairement plus épaisse (regrow accentué géré côté FogLayer)
+  tl.fromTo(q(3),{opacity:0,y:20},{opacity:1,y:0,duration:7,ease:'power2.out'},94);
+  tl.to(q(3),{opacity:0,duration:6,ease:'power1.in'},109);
 
-  // ACTE III·1 — LA RENCONTRE, ralenti maximal (segment le plus long)
-  tl.fromTo(q(4),{opacity:0,scale:1.06},{opacity:1,scale:1,duration:10,ease:'power2.out'},69);
-  tl.to(key,{left:'34vw',top:'46vh',scale:1.05,duration:22,ease:'sine.inOut'},69);
-  tl.fromTo('#braise',{opacity:0,scale:.6},{opacity:.95,scale:1,duration:16,ease:'power2.out'},76);
-  tl.to(q(4),{opacity:0,duration:6,ease:'power1.in'},90);
-  tl.to('#braise',{opacity:0,duration:7,ease:'power1.in'},92);  // sort avant 99
+  // 3.1+3.2 — LA RENCONTRE, ralenti maximal, la chaleur fond la buée entre les deux
+  tl.fromTo(q(4),{opacity:0},{opacity:1,duration:10,ease:'power2.out'},117);
+  tl.fromTo('#fonte',{opacity:0,scale:.6},{opacity:.9,scale:1,duration:18,ease:'power2.out'},124);
+  tl.to(q(4),{opacity:0,duration:8,ease:'power1.in'},146);
+  tl.to('#fonte',{opacity:0,duration:8,ease:'power1.in'},148);
 
-  // ACTE III·2 — la pensée de la rencontre (seule)
-  tl.fromTo(q(5),{opacity:0,y:24},{opacity:1,y:0,duration:7,ease:'power2.out'},99);
-  tl.to(key,{left:'50vw',top:'50vh',scale:1.15,opacity:.9,duration:10,ease:'sine.inOut'},99);
-  tl.to(q(5),{opacity:0,y:-16,duration:5,ease:'power1.in'},111);  // sort avant 116
+  // 3.3 — pensée de la rencontre, seule
+  tl.fromTo(q(5),{opacity:0,y:20},{opacity:1,y:0,duration:7,ease:'power2.out'},157);
+  tl.to(q(5),{opacity:0,y:-14,duration:6,ease:'power1.in'},169);
 
-  // ACTE IV — l'espace se fend en deux couloirs de lumière
-  tl.to(key,{opacity:0,duration:7,ease:'power1.in'},112);
-  tl.fromTo('#choix',{opacity:0},{opacity:1,duration:8,ease:'power2.out'},116);
-  tl.fromTo('.voie.solo',{x:'-6vw',opacity:0},{x:'0vw',opacity:1,duration:9,ease:'power3.out'},117);
-  tl.fromTo('.voie.couple',{x:'6vw',opacity:0},{x:'0vw',opacity:1,duration:9,ease:'power3.out'},117);
-  tl.add(()=>{ document.getElementById('choix').classList.add('live'); }, 124);
+  // ACTE IV — la vitre se fend, chaque moitié s'essuie à sa façon
+  tl.fromTo('#choix',{opacity:0},{opacity:1,duration:8,ease:'power2.out'},177);
+  tl.fromTo('.voie.solo',{x:'-6vw',opacity:0},{x:'0vw',opacity:1,duration:9,ease:'power3.out'},178);
+  tl.fromTo('.voie.couple',{x:'6vw',opacity:0},{x:'0vw',opacity:1,duration:9,ease:'power3.out'},178);
+  tl.add(()=>{ document.getElementById('choix').classList.add('live'); }, 186);
 
+  /* Quelle(s) vitre(s) reçoivent le geste, selon le temps réel de la timeline —
+     recalculé à chaque frame pour rester juste dans les deux sens de scroll. */
+  const ACTS = [
+    {from:18,  to:56,  ids:['fog-1']},
+    {from:57,  to:92,  ids:['fog-2']},
+    {from:93,  to:115, ids:['fog-3']},
+    {from:116, to:156, ids:['fog-4a','fog-4b']},
+    {from:176, to:9999,ids:['fog-seuil','fog-braise']},
+  ];
+  let activeKey = '';
   ScrollTrigger.create({
     trigger:'.film-sticky',
     start:'top top',
-    end:'+=720%',
+    end:'+=760%',
     scrub:1,
     pin:true,
     animation:tl,
     onUpdate:self=>{
-      const c=document.getElementById('cue');
-      if(c) c.style.opacity = self.progress>0.04 ? '0':'0.8';
-      // désactive le choix tant qu'on n'est pas au bout
       const ch=document.getElementById('choix');
       if(self.progress<0.9) ch.classList.remove('live');
+      const t = tl.time();
+      const found = ACTS.find(a=>t>=a.from && t<=a.to);
+      const key = found ? found.ids.join(',') : '';
+      if(key!==activeKey){ activeKey=key; setActive(found?found.ids:[]); }
     }
   });
-})();
 
+  /* Le Seuil s'essuie d'un revers net et sec dès qu'un geste franc l'a touché ;
+     Braise ne se dévoile pleinement que si les deux moitiés ont chacune été essuyées —
+     jamais une seule main ne suffit. */
+  const origErase = FogLayer.prototype.eraseAt;
+
+  const seuilFog = byId('fog-seuil');
+  let seuilAmt = 0;
+  seuilFog.eraseAt = function(xFrac,yFrac,rFrac,strength){
+    origErase.call(this,xFrac,yFrac,rFrac,strength);
+    if(this._snapped) return;
+    seuilAmt += strength;
+    if(seuilAmt > .6){ this._snapped=true; gsap.to(this.canvas,{opacity:0,duration:1.1,ease:'power2.out'}); }
+  };
+
+  const braiseFog = byId('fog-braise');
+  let braiseL = 0, braiseR = 0;
+  braiseFog.eraseAt = function(xFrac,yFrac,rFrac,strength){
+    origErase.call(this,xFrac,yFrac,rFrac,strength);
+    if(this._snapped) return;
+    if(xFrac<.5) braiseL += strength; else braiseR += strength;
+    if(braiseL > 1 && braiseR > 1){ this._snapped=true; gsap.to(this.canvas,{opacity:0,duration:1.4,ease:'power2.out'}); }
+  };
+})();
+</script>
+
+<script>
 /* ═══════════════ SON (optionnel, jamais autoplay) ═══════════════ */
 (function(){
   const btn=document.getElementById('son'); if(!btn) return;
   let ctx,on=false;
   btn.addEventListener('click',()=>{
     if(on){ btn.innerHTML='Entrer avec <b>le son</b>'; if(ctx)ctx.suspend(); on=false; return; }
-    // paysage sonore ultra-subtil, synthétisé (souffle grave) — pas de fichier requis pour le prototype
     try{
       ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();
       if(ctx.state==='suspended')ctx.resume();
@@ -444,7 +616,6 @@
         noise.buffer=buf;noise.loop=true;
         const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=180;
         const g=ctx.createGain();g.gain.value=0.05;
-        // respiration : gain qui monte et descend lentement
         const lfo=ctx.createOscillator();lfo.frequency.value=0.12;
         const lfoG=ctx.createGain();lfoG.gain.value=0.035;
         lfo.connect(lfoG);lfoG.connect(g.gain);

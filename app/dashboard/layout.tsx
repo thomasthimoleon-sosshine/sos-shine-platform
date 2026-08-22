@@ -477,7 +477,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
           </div>
           <div className="flex items-center gap-2 px-3 py-1 mb-1">
-            <NotificationBell />
+            {/* Cloche masquée sur ordinateur : elle vit dans la barre du haut (topbar desktop). */}
+            <div className="lg:hidden">
+              <NotificationBell />
+            </div>
             <ThemeToggle />
           </div>
           <button
@@ -494,6 +497,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       {/* ── Main content area ── */}
       <div className="flex-1 flex flex-col min-w-0">
+        {/* Desktop topbar — notifications en haut à droite */}
+        <header className="hidden lg:flex items-center justify-end px-8 py-3 sticky top-0 z-30 bg-[rgba(9,9,11,0.85)] backdrop-blur-xl border-b border-white/[0.04]">
+          <NotificationBell />
+        </header>
+
         {/* Mobile topbar */}
         <header className="lg:hidden flex items-center justify-between px-4 py-3 sticky top-0 z-30 bg-[rgba(9,9,11,0.85)] backdrop-blur-xl border-b border-white/[0.04]">
           <button

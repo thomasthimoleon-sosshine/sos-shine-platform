@@ -100,3 +100,21 @@ export const MEDIA_TYPES: { value: 'text' | 'image' | 'video' | 'audio'; label: 
   { value: 'video', label: 'Vidéo', icon: 'video' },
   { value: 'audio', label: 'Audio', icon: 'audio' },
 ]
+
+/**
+ * ─────────────────────────────────────────────────────────────────────────────
+ *  PROPOSITION N°2 — « Les Souffles », palette Incarnat (chair → sang → or mat)
+ * ─────────────────────────────────────────────────────────────────────────────
+ *  Non branchée dans l'application : elle attend le choix de Julia et Thomas.
+ *  Pour basculer, il suffira de remplacer POST_CATEGORIES par SOUFFLE_CATEGORIES
+ *  et ShineIcon par SouffleIcon — la forme des données est identique.
+ *  Contraste vérifié ≥ 4.5:1 sur la carte (#16130D) pour les six.
+ */
+export const SOUFFLE_CATEGORIES: CategoryDef[] = [
+  { value: 'gratitude', label: 'Gratitude', colorName: 'Albâtre', color: '#E8DCCB', icon: 'gratitude', meaning: "L'expiration qui se répand — une graine, trois souffles" },
+  { value: 'partage', label: "Partage d'expériences", colorName: 'Rose poudré', color: '#E0A9A4', icon: 'partage', meaning: 'Deux souffles qui se frôlent, et ce qui passe entre eux' },
+  { value: 'temoignage', label: 'Témoignage', colorName: 'Or mat', color: '#B08A4A', icon: 'temoignage', meaning: "La voix qui se déploie — un point, puis tout s'ouvre" },
+  { value: 'question', label: 'Question', colorName: 'Vieux rose', color: '#C2687E', icon: 'question', meaning: "Le souffle qui s'enroule et s'arrête" },
+  { value: 'remerciements', label: 'Remerciements', colorName: 'Braise', color: '#C8785E', icon: 'remerciements', meaning: 'La paume ouverte — on remercie en recevant' },
+  { value: 'citation', label: 'Citation', colorName: 'Incarnat', color: '#D2536A', icon: 'citation', meaning: "La parole d'un autre — deux virgules, un vide au milieu" },
+]

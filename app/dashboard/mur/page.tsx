@@ -521,6 +521,18 @@ export default function MurPage() {
   }
 
   /* ── Share via DM ── */
+  /**
+   * Un partage vers l'extérieur, quel que soit le canal.
+   * Le compteur shares_external existait en base mais rien ne l'incrémentait :
+   * la catégorie de badges « L'Ambassadeur » (7 badges) était donc
+   * inatteignable, et le compteur « Partages » du profil affichait zéro pour
+   * tout le monde, indéfiniment.
+   */
+  function countShare() {
+    if (!currentUserId) return
+    incrementAndCheckBadges(currentUserId, 'shares_external').catch(() => {})
+  }
+
   async function openShareDM(postId: string) {
     setSharePostId(postId)
     setShareSearch('')
@@ -1090,6 +1102,7 @@ export default function MurPage() {
                           <a
                             href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(getPostUrl(post.id))}`}
                             target="_blank" rel="noopener noreferrer"
+                            onClick={countShare}
                             className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs transition-colors text-[var(--text-secondary)]"
                             onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
                             onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
@@ -1099,6 +1112,7 @@ export default function MurPage() {
                           <a
                             href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(getPostUrl(post.id))}&text=${encodeURIComponent(post.title || post.content.slice(0, 100))}`}
                             target="_blank" rel="noopener noreferrer"
+                            onClick={countShare}
                             className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs transition-colors text-[var(--text-secondary)]"
                             onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
                             onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
@@ -1108,6 +1122,7 @@ export default function MurPage() {
                           <a
                             href={`https://wa.me/?text=${encodeURIComponent((post.title || 'Publication SOS Shine') + ' ' + getPostUrl(post.id))}`}
                             target="_blank" rel="noopener noreferrer"
+                            onClick={countShare}
                             className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs transition-colors text-[var(--text-secondary)]"
                             onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
                             onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
@@ -1115,7 +1130,7 @@ export default function MurPage() {
                             <span className="text-sm">💬</span> WhatsApp
                           </a>
                           <button
-                            onClick={() => { navigator.clipboard.writeText(getPostUrl(post.id)); setSocialShareId(null) }}
+                            onClick={() => { navigator.clipboard.writeText(getPostUrl(post.id)); countShare(); setSocialShareId(null) }}
                             className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs transition-colors w-full text-left cursor-pointer text-[var(--text-secondary)]"
                             onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
                             onMouseLeave={e => e.currentTarget.style.background = 'transparent'}

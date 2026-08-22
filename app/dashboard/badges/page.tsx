@@ -25,6 +25,13 @@ const QUEST_INFO: Record<string, QuestInfo> = {
     unit: 'Shines donnés',
     color: '#C9A961',
   },
+  shares_external: {
+    action: 'Partagez une publication en dehors de SOS Shine',
+    xpLine: '+5 points par partage',
+    route: '/dashboard/communaute',
+    unit: 'Partages',
+    color: '#E3D5BE',
+  },
   shines_received: {
     action: 'Publie du contenu qui inspire les autres membres',
     xpLine: '+3 points par soutien reçu · illimité',
@@ -129,9 +136,11 @@ export default function BadgesQuestPage() {
   const totalBadges = Object.values(categories).reduce((s, c) => s + (c as CategoryConfig).badges.length, 0)
   const unlockedCount = unlockedBadgeIds.size
 
-  // Build quest list — skip shares_external (not implemented)
+  // « shares_external » n'était pas listé tant que rien ne l'incrémentait.
+  // Le partage est désormais compté (voir countShare dans le mur), donc la
+  // quête « L'Ambassadeur » et ses 7 badges redeviennent atteignables.
   const quests = Object.entries(categories)
-    .filter(([key]) => key !== 'shares_external' && QUEST_INFO[key])
+    .filter(([key]) => QUEST_INFO[key])
     .map(([key, cat]) => {
       const category = cat as CategoryConfig
       const info = QUEST_INFO[key]

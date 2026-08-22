@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import ShineIcon, { type ShineIconName } from '@/components/icons/ShineIcon'
 import BadgeStrip, { type Badge } from '@/components/community/BadgeStrip'
-import { getUserBadges, getAllCategories, unlockAllBadgesForUser, type CategoryConfig } from '@/lib/badgeService'
+import { getUserBadges, getUserActionCounters, getAllCategories, unlockAllBadgesForUser, type CategoryConfig } from '@/lib/badgeService'
 import { getLevelForXP, getNextLevel, getLevelProgress, formatXP } from '@/lib/xp'
 import type { Profile, UserXP } from '@/types/database'
 
@@ -103,9 +103,10 @@ export default function ProfileHeader() {
     setStats({ posts: postIds.length, rayons, shines })
 
     // ── Progression, activité et badges (repris de l'accueil) ──
-    const [{ data: xpRow }, { count: commentsLeft }] = await Promise.all([
+    const [{ data: xpRow }, { count: commentsLeft }, counters] = await Promise.all([
       supabase.from('user_xp').select('*').eq('user_id', user.id).maybeSingle(),
       supabase.from('post_comments').select('id', { count: 'exact', head: true }).eq('author_id', user.id),
+      getUserActionCounters(user.id).catch(() => null),
     ])
 
     if (xpRow) setXp(xpRow as UserXP)
@@ -113,10 +114,7 @@ export default function ProfileHeader() {
       given: (xpRow as UserXP | null)?.shines_given || 0,
       received: (xpRow as UserXP | null)?.shines_received || 0,
       comments: commentsLeft || 0,
-      // Les partages externes ne sont encore comptés nulle part : la valeur
-      // était écrite en dur à 0 sur l'accueil. On la garde visible mais on ne
-      // prétend pas qu'elle est alimentée.
-      shares: 0,
+      shares: counters?.shares_external || 0,
     })
 
     // Badges débloqués, du plus récent au plus ancien.

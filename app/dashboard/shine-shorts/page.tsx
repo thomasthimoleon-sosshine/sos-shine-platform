@@ -4,7 +4,6 @@ import { useEffect, useState, useRef, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
-import { useSubscription } from '@/hooks/useSubscription'
 import ReelsViewer, { type Reel } from '@/components/shorts/ReelsViewer'
 
 // ── Types ──
@@ -21,6 +20,9 @@ type ShineShort = {
   userRating: number
   isFavorite: boolean
   reviewCount: number
+  /** Shine donné par le membre courant (l'équivalent du « j'aime »). */
+  hasShined: boolean
+  shineCount: number
   douleurId: string | null
 }
 
@@ -579,8 +581,8 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate, previewSec
 
 // ── Main Page ──
 export default function ShineShortsPage() {
-  const { isActive: isSubscribed } = useSubscription()
-  const previewCap = isSubscribed ? undefined : 120
+  // Les formats courts sont entièrement gratuits : aucune limite d'aperçu,
+  // ni dans le fil vertical, ni dans la fiche détaillée.
   const searchParams = useSearchParams()
   const douleurParam = searchParams.get('douleur')
   const idParam = searchParams.get('id')
@@ -657,6 +659,26 @@ export default function ShineShortsPage() {
         reviewCountMap[r.short_id] = (reviewCountMap[r.short_id] || 0) + 1
       }
 
+      /**
+       * Shines : la table peut ne pas encore exister en base (migration
+       * 20260822_shine_shorts_shines.sql). Dans ce cas on affiche zéro plutôt
+       * que de casser la page — même approche que la cloche de notifications.
+       */
+      const shineCountMap: Record<string, number> = {}
+      let shinedIds = new Set<string>()
+      try {
+        const { data: shinesData } = await supabase
+          .from('shine_shorts_shines')
+          .select('short_id, user_id')
+          .in('short_id', shortIds)
+        for (const r of shinesData || []) {
+          shineCountMap[r.short_id] = (shineCountMap[r.short_id] || 0) + 1
+          if (user && r.user_id === user.id) shinedIds.add(r.short_id)
+        }
+      } catch {
+        // Table absente : on continue sans compteur.
+      }
+
       // Load user favorites
       let favoriteIds: string[] = []
       if (user) {
@@ -685,6 +707,8 @@ export default function ShineShortsPage() {
           userRating: userRatingsMap[s.id] || 0,
           isFavorite: favoriteIds.includes(s.id),
           reviewCount: reviewCountMap[s.id] || 0,
+          hasShined: shinedIds.has(s.id),
+          shineCount: shineCountMap[s.id] || 0,
           douleurId: s.douleur_id || null,
         }
       })
@@ -725,6 +749,35 @@ export default function ShineShortsPage() {
     setShorts(prev => prev.map(s => s.id === id ? { ...s, isFavorite: !s.isFavorite } : s))
     if (selectedShort?.id === id) {
       setSelectedShort(prev => prev ? { ...prev, isFavorite: !prev.isFavorite } : null)
+    }
+  }
+
+  /**
+   * Donner ou retirer un Shine. On met l'écran à jour tout de suite : dans un
+   * fil vertical, attendre l'aller-retour réseau donne l'impression que le
+   * bouton ne répond pas. Si l'écriture échoue, on revient en arrière.
+   */
+  const handleToggleShine = async (id: string) => {
+    const short = shorts.find(s => s.id === id)
+    if (!short) return
+    const next = !short.hasShined
+
+    setShorts(prev => prev.map(s => s.id === id
+      ? { ...s, hasShined: next, shineCount: Math.max(0, s.shineCount + (next ? 1 : -1)) }
+      : s))
+
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+
+    const { error } = next
+      ? await supabase.from('shine_shorts_shines').insert({ user_id: user.id, short_id: id })
+      : await supabase.from('shine_shorts_shines').delete().eq('user_id', user.id).eq('short_id', id)
+
+    if (error) {
+      setShorts(prev => prev.map(s => s.id === id
+        ? { ...s, hasShined: !next, shineCount: Math.max(0, s.shineCount + (next ? -1 : 1)) }
+        : s))
     }
   }
 
@@ -1204,17 +1257,19 @@ export default function ShineShortsPage() {
             thumbnail: s.thumbnail,
             category: CATEGORIES.find(c => c.id === s.category)?.label || s.category,
             isFavorite: s.isFavorite,
+            hasShined: s.hasShined,
+            shineCount: s.shineCount,
+            commentCount: s.reviewCount,
             rating: s.rating,
-            reviewCount: s.reviewCount,
           }))}
           startIndex={reelsAt}
           onClose={() => setReelsAt(null)}
           onToggleFavorite={handleToggleFavorite}
-          onOpenDetails={id => {
+          onToggleShine={handleToggleShine}
+          onOpenComments={(id: string) => {
             const found = shorts.find(s => s.id === id)
             if (found) { setReelsAt(null); setSelectedShort(found) }
           }}
-          previewSeconds={previewCap}
         />
       )}
 
@@ -1226,7 +1281,6 @@ export default function ShineShortsPage() {
             onClose={() => setSelectedShort(null)}
             onToggleFavorite={handleToggleFavorite}
             onRate={handleRate}
-            previewSeconds={previewCap}
           />
         )}
       </AnimatePresence>

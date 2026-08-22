@@ -31,19 +31,34 @@ export type Reel = {
   videoUrl: string
   thumbnail: string
   category: string
+  /** Enregistré : mis de côté pour soi. */
   isFavorite: boolean
+  /** Shine donné par le membre courant (l'équivalent du « j'aime »). */
+  hasShined: boolean
+  shineCount: number
+  commentCount: number
   rating: number
-  reviewCount: number
 }
 
 type Props = {
   reels: Reel[]
   startIndex?: number
   onClose: () => void
+  /** Enregistrer / retirer des enregistrés. */
   onToggleFavorite: (id: string) => void
-  onOpenDetails?: (id: string) => void
-  /** Secondes visibles pour un compte gratuit. undefined = pas de limite. */
-  previewSeconds?: number
+  /** Donner / retirer un Shine. */
+  onToggleShine: (id: string) => void
+  /** Ouvre le panneau des commentaires. */
+  onOpenComments?: (id: string) => void
+}
+
+
+/** 1 240 → « 1,2 k ». Un compteur à quatre chiffres casse l'alignement du rail. */
+function formatCount(n: number): string {
+  if (!n) return ''
+  if (n < 1000) return String(n)
+  const k = n / 1000
+  return `${k.toFixed(k < 10 ? 1 : 0).replace('.', ',')} k`
 }
 
 export default function ReelsViewer({
@@ -51,8 +66,8 @@ export default function ReelsViewer({
   startIndex = 0,
   onClose,
   onToggleFavorite,
-  onOpenDetails,
-  previewSeconds,
+  onToggleShine,
+  onOpenComments,
 }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
@@ -63,7 +78,7 @@ export default function ReelsViewer({
   const [paused, setPaused] = useState(false)
   const [progress, setProgress] = useState(0)
   const [expanded, setExpanded] = useState(false)
-  const [capped, setCapped] = useState(false)
+  const [shared, setShared] = useState(false)
 
   /* ── Positionnement initial : on saute sans animation sur le bon réel ── */
   useEffect(() => {
@@ -93,7 +108,6 @@ export default function ReelsViewer({
   useEffect(() => {
     setProgress(0)
     setExpanded(false)
-    setCapped(false)
     setPaused(false)
     videoRefs.current.forEach((v, i) => {
       if (!v) return
@@ -138,9 +152,22 @@ export default function ReelsViewer({
     return () => { document.body.style.overflow = prev }
   }, [])
 
+  /** Partage natif si le navigateur le propose, sinon copie du lien. */
+  async function share(reel: Reel) {
+    const url = `${window.location.origin}/dashboard/shine-shorts?id=${reel.id}`
+    try {
+      if (navigator.share) await navigator.share({ title: reel.title, url })
+      else {
+        await navigator.clipboard.writeText(url)
+        setShared(true)
+        setTimeout(() => setShared(false), 1800)
+      }
+    } catch {/* partage annulé par l'utilisateur : rien à signaler */}
+  }
+
   function togglePlay() {
     const v = videoRefs.current[index]
-    if (!v || capped) return
+    if (!v) return
     if (v.paused) { v.play().catch(() => {}); setPaused(false) }
     else { v.pause(); setPaused(true) }
   }
@@ -150,10 +177,6 @@ export default function ReelsViewer({
     const v = videoRefs.current[i]
     if (!v || !v.duration) return
     setProgress((v.currentTime / v.duration) * 100)
-    if (previewSeconds && v.currentTime >= previewSeconds) {
-      v.pause()
-      setCapped(true)
-    }
   }
 
   const current = reels[index]
@@ -232,7 +255,7 @@ export default function ReelsViewer({
             <div className="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-black/85 via-black/40 to-transparent pointer-events-none" />
 
             {/* Indicateur de pause */}
-            {paused && i === index && !capped && (
+            {paused && i === index && (
               <button
                 onClick={togglePlay}
                 aria-label="Reprendre"
@@ -246,25 +269,6 @@ export default function ReelsViewer({
               </button>
             )}
 
-            {/* Fin de l'aperçu gratuit */}
-            {capped && i === index && (
-              <div className="absolute inset-0 z-20 flex flex-col items-center justify-center px-8 text-center
-                              bg-black/80 backdrop-blur-md">
-                <ShineIcon name="gratitude" className="w-10 h-10 mb-5" color="#C9A961" strokeWidth={1.2} />
-                <p className="font-display text-2xl mb-2 text-[#F5EFE3]">La suite vous attend</p>
-                <p className="text-sm text-white/60 max-w-xs mb-7">
-                  Vous avez vu les {previewSeconds} premières secondes. L&apos;intégralité des formats
-                  courts est incluse dans l&apos;abonnement.
-                </p>
-                <a
-                  href="/rejoindre"
-                  className="px-7 py-3.5 rounded-full text-sm font-semibold"
-                  style={{ background: 'linear-gradient(135deg, #C9A961, #A88248)', color: '#0A0806' }}
-                >
-                  Débloquer — 49,90&nbsp;€/mois
-                </a>
-              </div>
-            )}
           </div>
         ))}
       </div>
@@ -275,58 +279,83 @@ export default function ReelsViewer({
       <div className="pointer-events-none absolute inset-0 z-30 flex justify-center">
         <div className="relative h-full w-full sm:max-w-[var(--reel-w)]">
 
-          {/* Rail d'actions */}
+          {/* Rail d'actions — même construction qu'Instagram :
+              Shines (le « j'aime » maison) · commentaires · partager · enregistrer */}
           {current && (
-            <div className="pointer-events-auto absolute right-3 sm:right-4 bottom-28 flex flex-col items-center gap-5">
+            <div className="pointer-events-auto absolute right-2 sm:right-3 bottom-28 flex flex-col items-center gap-5">
+
+              {/* Shines */}
               <button
-                onClick={() => onToggleFavorite(current.id)}
-                aria-label={current.isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}
-                className="flex flex-col items-center gap-1 cursor-pointer group"
+                onClick={() => onToggleShine(current.id)}
+                aria-label={current.hasShined ? 'Retirer mon Shine' : 'Donner un Shine'}
+                title={current.hasShined ? 'Retirer mon Shine' : 'Donner un Shine'}
+                className="flex flex-col items-center gap-1 w-[62px] cursor-pointer group"
               >
                 <span className="w-11 h-11 rounded-full bg-black/35 backdrop-blur-sm flex items-center justify-center
-                                 group-hover:bg-black/55 transition-colors">
+                                 group-hover:bg-black/55 group-active:scale-90 transition-all">
                   <ShineIcon
                     name="eclat"
-                    className="w-[22px] h-[22px]"
+                    className="w-[23px] h-[23px]"
+                    color={current.hasShined ? '#C9A961' : '#FFFFFF'}
+                    filled={current.hasShined}
+                  />
+                </span>
+                <span className="text-[11px] font-semibold text-white/90 tabular-nums leading-none">
+                  {formatCount(current.shineCount)}
+                </span>
+              </button>
+
+              {/* Commentaires */}
+              <button
+                onClick={() => onOpenComments?.(current.id)}
+                aria-label="Commentaires"
+                title="Commentaires"
+                className="flex flex-col items-center gap-1 w-[62px] cursor-pointer group"
+              >
+                <span className="w-11 h-11 rounded-full bg-black/35 backdrop-blur-sm flex items-center justify-center
+                                 group-hover:bg-black/55 group-active:scale-90 transition-all">
+                  <ShineIcon name="parole" className="w-[23px] h-[23px] text-white" />
+                </span>
+                <span className="text-[11px] font-semibold text-white/90 tabular-nums leading-none">
+                  {formatCount(current.commentCount)}
+                </span>
+              </button>
+
+              {/* Partager */}
+              <button
+                onClick={() => share(current)}
+                aria-label="Partager"
+                title="Partager"
+                className="flex flex-col items-center gap-1 w-[62px] cursor-pointer group"
+              >
+                <span className="w-11 h-11 rounded-full bg-black/35 backdrop-blur-sm flex items-center justify-center
+                                 group-hover:bg-black/55 group-active:scale-90 transition-all">
+                  <ShineIcon name="diffuser" className="w-[23px] h-[23px] text-white" />
+                </span>
+                <span className="text-[10.5px] font-medium text-white/70 leading-none">
+                  {shared ? 'Copié' : 'Partager'}
+                </span>
+              </button>
+
+              {/* Enregistrer */}
+              <button
+                onClick={() => onToggleFavorite(current.id)}
+                aria-label={current.isFavorite ? 'Retirer des enregistrés' : 'Enregistrer'}
+                title={current.isFavorite ? 'Retirer des enregistrés' : 'Enregistrer'}
+                className="flex flex-col items-center gap-1 w-[62px] cursor-pointer group"
+              >
+                <span className="w-11 h-11 rounded-full bg-black/35 backdrop-blur-sm flex items-center justify-center
+                                 group-hover:bg-black/55 group-active:scale-90 transition-all">
+                  <ShineIcon
+                    name="garder"
+                    className="w-[23px] h-[23px]"
                     color={current.isFavorite ? '#C9A961' : '#FFFFFF'}
                     filled={current.isFavorite}
                   />
                 </span>
-                <span className="text-[11px] font-medium text-white/85">
-                  {current.isFavorite ? 'Gardé' : 'Éclat'}
+                <span className="text-[10.5px] font-medium text-white/70 leading-none">
+                  {current.isFavorite ? 'Enregistré' : 'Enregistrer'}
                 </span>
-              </button>
-
-              {onOpenDetails && (
-                <button
-                  onClick={() => onOpenDetails(current.id)}
-                  aria-label="Voir les avis"
-                  className="flex flex-col items-center gap-1 cursor-pointer group"
-                >
-                  <span className="w-11 h-11 rounded-full bg-black/35 backdrop-blur-sm flex items-center justify-center
-                                   group-hover:bg-black/55 transition-colors">
-                    <ShineIcon name="parole" className="w-[22px] h-[22px] text-white" />
-                  </span>
-                  <span className="text-[11px] font-medium text-white/85">
-                    {current.reviewCount > 0 ? current.reviewCount : 'Avis'}
-                  </span>
-                </button>
-              )}
-
-              <button
-                onClick={() => {
-                  const url = `${window.location.origin}/dashboard/shine-shorts?id=${current.id}`
-                  if (navigator.share) navigator.share({ title: current.title, url }).catch(() => {})
-                  else navigator.clipboard?.writeText(url).catch(() => {})
-                }}
-                aria-label="Partager"
-                className="flex flex-col items-center gap-1 cursor-pointer group"
-              >
-                <span className="w-11 h-11 rounded-full bg-black/35 backdrop-blur-sm flex items-center justify-center
-                                 group-hover:bg-black/55 transition-colors">
-                  <ShineIcon name="diffuser" className="w-[22px] h-[22px] text-white" />
-                </span>
-                <span className="text-[11px] font-medium text-white/85">Partager</span>
               </button>
             </div>
           )}

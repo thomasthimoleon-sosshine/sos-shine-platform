@@ -545,6 +545,14 @@ export type ShineShortFavorite = {
   created_at: string
 }
 
+/** Un « Shine » donné à un format court — l'équivalent du j'aime. */
+export type ShineShortShine = {
+  id: string
+  user_id: string
+  short_id: string
+  created_at: string
+}
+
 export type ShineShortRating = {
   id: string
   user_id: string
@@ -848,6 +856,7 @@ export type Database = {
       user_goals: Table<UserGoal>
       shine_shorts: Table<ShineShort>
       shine_shorts_favorites: Table<ShineShortFavorite>
+      shine_shorts_shines: Table<ShineShortShine>
       shine_shorts_ratings: Table<ShineShortRating>
       shine_shorts_reviews: Table<ShineShortReview>
       shine_tv_videos: Table<ShineTvVideo>

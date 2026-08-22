@@ -9,6 +9,7 @@ import { createClient } from '@/lib/supabase/client'
 import type { Douleur, UserProgress } from '@/types/database'
 import FavoriteButton from '@/components/FavoriteButton'
 import { useTranslation } from '@/lib/i18n/useTranslation'
+import ShineIcon from '@/components/icons/ShineIcon'
 
 /* ─── Catégories & couleurs ─── */
 const CATEGORIES: Record<string, string> = {
@@ -293,7 +294,7 @@ export default function EncyclopediePage() {
   const [activeLetter, setActiveLetter] = useState('ALL')
   const [activeCat, setActiveCat] = useState('ALL')
   const [onlyOriginal, setOnlyOriginal] = useState(false)
-  const [onlyAvailable, setOnlyAvailable] = useState(false)
+  const [onlyTodo, setOnlyTodo] = useState(false)
   const [loading, setLoading] = useState(true)
   const [progressMap, setProgressMap] = useState<Record<string, UserProgress>>({})
   const [totalCompleted, setTotalCompleted] = useState(0)
@@ -382,19 +383,38 @@ export default function EncyclopediePage() {
       const matchLetter = activeLetter === 'ALL' || t.letter === activeLetter
       const matchCat = activeCat === 'ALL' || t.cat === activeCat
       const matchOriginal = !onlyOriginal || t.original
-      const matchAvailable = !onlyAvailable || !!t.dbMatch
-      return matchSearch && matchLetter && matchCat && matchOriginal && matchAvailable
+
+      /**
+       * « À faire » : les protocoles que la personne n'a pas encore terminés.
+       * On ne montre que ceux réellement en ligne — proposer « à faire » un
+       * protocole qui n'existe pas encore serait une promesse en l'air.
+       * Un protocole commencé mais non terminé reste à faire : c'est même
+       * celui-là qu'il faut voir en premier.
+       */
+      const matchTodo = !onlyTodo || (!!t.dbMatch && !progressMap[t.dbMatch.id]?.completed_at)
+
+      return matchSearch && matchLetter && matchCat && matchOriginal && matchTodo
     })
-  }, [topics, search, activeLetter, activeCat, onlyOriginal, onlyAvailable])
+  }, [topics, search, activeLetter, activeCat, onlyOriginal, onlyTodo, progressMap])
 
   const grouped = useMemo(() => {
     const g: Record<string, typeof filtered> = {}
-    // Sort: published (with dbMatch) first, then unpublished
     const sorted = [...filtered].sort((a, b) => {
       const aPublished = !!a.dbMatch
       const bPublished = !!b.dbMatch
       if (aPublished && !bPublished) return -1
       if (!aPublished && bPublished) return 1
+
+      /**
+       * En mode « À faire », un protocole déjà commencé passe devant : c'est
+       * une reprise, pas une découverte, et c'est ce qu'on cherche en premier.
+       */
+      if (onlyTodo) {
+        const aStarted = a.dbMatch ? !!progressMap[a.dbMatch.id] : false
+        const bStarted = b.dbMatch ? !!progressMap[b.dbMatch.id] : false
+        if (aStarted !== bStarted) return aStarted ? -1 : 1
+      }
+
       return a.title.localeCompare(b.title)
     })
     sorted.forEach((t) => {
@@ -402,10 +422,15 @@ export default function EncyclopediePage() {
       g[t.letter].push(t)
     })
     return g
-  }, [filtered])
+  }, [filtered, onlyTodo, progressMap])
 
   const originalCount = topics.filter(t => t.original).length
-  const publishedCount = allDouleurs.filter(d => d.is_published).length
+
+  /** Protocoles en ligne que la personne n'a pas encore terminés. */
+  const todoCount = useMemo(
+    () => topics.filter(t => !!t.dbMatch && !progressMap[t.dbMatch.id]?.completed_at).length,
+    [topics, progressMap]
+  )
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
@@ -418,7 +443,7 @@ export default function EncyclopediePage() {
           {t('dashboard.encyclopedia_subtitle')}
         </p>
         <p className="text-sm mt-1 text-[var(--text-muted)]">
-          {topics.length} sujets &middot; {originalCount} originaux &diams; &middot; {Object.keys(CATEGORIES).length} catégories &middot; {publishedCount} disponible{publishedCount > 1 ? 's' : ''}
+          {topics.length} sujets &middot; {originalCount} originaux &diams; &middot; {Object.keys(CATEGORIES).length} catégories &middot; {todoCount} à faire
         </p>
       </div>
 
@@ -508,18 +533,17 @@ export default function EncyclopediePage() {
         </p>
         <div className="flex items-center gap-4">
           <button
-            onClick={() => setOnlyAvailable(!onlyAvailable)}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-[12px] uppercase tracking-wider transition-all cursor-pointer"
+            onClick={() => setOnlyTodo(!onlyTodo)}
+            title="N'afficher que les protocoles que vous n'avez pas encore terminés"
+            className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[12px] uppercase tracking-wider transition-all cursor-pointer"
             style={{
-              background: onlyAvailable ? 'rgba(85,239,196,0.12)' : 'transparent',
-              border: `1px solid ${onlyAvailable ? 'rgba(85,239,196,0.4)' : 'var(--border)'}`,
-              color: onlyAvailable ? 'var(--success)' : 'var(--text-muted)',
+              background: onlyTodo ? 'rgba(201,169,97,0.14)' : 'transparent',
+              border: `1px solid ${onlyTodo ? 'rgba(201,169,97,0.42)' : 'var(--border)'}`,
+              color: onlyTodo ? 'var(--brand)' : 'var(--text-muted)',
             }}
           >
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            Disponibles ({publishedCount})
+            <ShineIcon name="question" className="w-3.5 h-3.5" />
+            À faire ({todoCount})
           </button>
         </div>
       </div>

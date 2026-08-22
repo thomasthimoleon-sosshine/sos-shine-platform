@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import { useSubscription } from '@/hooks/useSubscription'
+import ReelsViewer, { type Reel } from '@/components/shorts/ReelsViewer'
 
 // ── Types ──
 type ShineShort = {
@@ -586,6 +587,8 @@ export default function ShineShortsPage() {
   const [shorts, setShorts] = useState<ShineShort[]>([])
   const [search, setSearch] = useState('')
   const [selectedShort, setSelectedShort] = useState<ShineShort | null>(null)
+  /** Index dans la liste filtree du reel en cours de visionnage. null = fil ferme. */
+  const [reelsAt, setReelsAt] = useState<number | null>(null)
   const [activeFilter, setActiveFilter] = useState(douleurParam ? 'douleur' : 'all')
   const [loading, setLoading] = useState(true)
   const [douleurName, setDouleurName] = useState<string | null>(null)
@@ -741,6 +744,15 @@ export default function ShineShortsPage() {
     if (selectedShort?.id === id) {
       setSelectedShort(prev => prev ? { ...prev, userRating: rating } : null)
     }
+  }
+
+  /**
+   * Ouvrir un format court, c'est entrer dans le fil vertical a sa position —
+   * pas ouvrir une fiche. On peut ensuite faire defiler vers les suivants.
+   */
+  function openReels(short: ShineShort) {
+    const i = filteredShorts.findIndex(s => s.id === short.id)
+    setReelsAt(i >= 0 ? i : 0)
   }
 
   const filteredShorts = shorts.filter(s => {
@@ -1113,7 +1125,7 @@ export default function ShineShortsPage() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: i * 0.02, duration: 0.3 }}
                             className="group cursor-pointer"
-                            onClick={() => setSelectedShort(short)}
+                            onClick={() => openReels(short)}
                           >
                             <div className="relative overflow-hidden rounded-xl transition-all duration-300 group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-black/50">
                               <div className="relative aspect-[9/16]">
@@ -1161,7 +1173,7 @@ export default function ShineShortsPage() {
                   title={cat.label}
                   icon={cat.icon}
                   shorts={catShorts}
-                  onSelect={setSelectedShort}
+                  onSelect={openReels}
                 />
               )
             })}
@@ -1181,7 +1193,32 @@ export default function ShineShortsPage() {
         )}
       </div>
 
-      {/* Video Player Modal */}
+      {/* Fil vertical plein ecran (visionnage type reels) */}
+      {reelsAt !== null && filteredShorts.length > 0 && (
+        <ReelsViewer
+          reels={filteredShorts.map<Reel>(s => ({
+            id: s.id,
+            title: s.title,
+            description: s.description,
+            videoUrl: s.videoUrl,
+            thumbnail: s.thumbnail,
+            category: CATEGORIES.find(c => c.id === s.category)?.label || s.category,
+            isFavorite: s.isFavorite,
+            rating: s.rating,
+            reviewCount: s.reviewCount,
+          }))}
+          startIndex={reelsAt}
+          onClose={() => setReelsAt(null)}
+          onToggleFavorite={handleToggleFavorite}
+          onOpenDetails={id => {
+            const found = shorts.find(s => s.id === id)
+            if (found) { setReelsAt(null); setSelectedShort(found) }
+          }}
+          previewSeconds={previewCap}
+        />
+      )}
+
+      {/* Fiche detaillee (avis, notes) */}
       <AnimatePresence>
         {selectedShort && (
           <VideoPlayerModal

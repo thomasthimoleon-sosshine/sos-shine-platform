@@ -1095,3 +1095,14 @@ h1 .text-shimmer, h2 .text-shimmer, h3 .text-shimmer, .text-shimmer {
   --text-secondary: rgba(245,239,227,0.70);
   --text-muted: rgba(245,239,227,0.42);
 }
+
+
+/* Masque la barre de defilement sans desactiver le defilement
+   (fils horizontaux des rangees, et fil vertical des formats courts). */
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

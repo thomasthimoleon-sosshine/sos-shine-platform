@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import FileUpload from '@/components/FileUpload'
 import { SHINE_TV_CATEGORIES } from '@/lib/shine-tv/categories'
+import ShineIcon, { type ShineIconName } from '@/components/icons/ShineIcon'
 
 interface ShineVideo {
   id: string
@@ -179,7 +180,7 @@ export default function AdminShineTVPage() {
 
   const filteredVideos = filterCategory === 'all' ? videos : videos.filter((v) => v.category === filterCategory)
   const getCategoryLabel = (cat: string) => CATEGORIES.find((c) => c.id === cat)?.label || cat
-  const getCategoryIcon = (cat: string) => CATEGORIES.find((c) => c.id === cat)?.icon || '🎬'
+  const getCategoryIcon = (cat: string): ShineIconName => CATEGORIES.find((c) => c.id === cat)?.icon || 'video'
 
   const inputStyle: React.CSSProperties = {
     width: '100%', padding: '10px 14px', borderRadius: '8px',
@@ -233,7 +234,7 @@ export default function AdminShineTVPage() {
               <label htmlFor="category" style={labelStyle}>Catégorie *</label>
               <select id="category" name="category" value={form.category} onChange={handleChange} style={inputStyle}>
                 {CATEGORIES.map((c) => (
-                  <option key={c.id} value={c.id}>{c.icon} {c.label}</option>
+                  <option key={c.id} value={c.id}>{c.label}</option>
                 ))}
               </select>
             </div>
@@ -344,7 +345,8 @@ export default function AdminShineTVPage() {
                   color: filterCategory === c.id ? '#E17055' : 'var(--text-muted)',
                   border: `1px solid ${filterCategory === c.id ? 'rgba(225,112,85,0.3)' : 'var(--border)'}`,
                 }}>
-                {c.icon} {c.label} ({count})
+                <ShineIcon name={c.icon} className="w-4 h-4" />
+                {c.label} ({count})
               </button>
             )
           })}
@@ -394,9 +396,10 @@ export default function AdminShineTVPage() {
               <div className="p-4 space-y-2">
                 <h3 className="font-semibold text-sm truncate" style={{ color: 'var(--text-primary)' }}>{v.title}</h3>
                 <div className="flex items-center gap-2">
-                  <span className="text-[11px] px-2 py-0.5 rounded-full"
-                    style={{ background: 'rgba(225,112,85,0.1)', color: '#E17055' }}>
-                    {getCategoryIcon(v.category)} {getCategoryLabel(v.category)}
+                  <span className="inline-flex items-center gap-1.5 text-[11px] px-2 py-0.5 rounded-full"
+                    style={{ background: 'rgba(201,169,97,0.12)', color: '#C9A961' }}>
+                    <ShineIcon name={getCategoryIcon(v.category)} className="w-3.5 h-3.5" />
+                    {getCategoryLabel(v.category)}
                   </span>
                   <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{v.year}</span>
                 </div>

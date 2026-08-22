@@ -35,6 +35,15 @@ export type ShineIconName =
   | 'video'
   | 'shorts'
   | 'audio'
+  // Thèmes Shine TV
+  | 'healing'
+  | 'meditation'
+  | 'confidence'
+  | 'relationships'
+  | 'resilience'
+  | 'sleep'
+  | 'masterclass'
+  | 'children'
   // Actions
   | 'eclat'
   | 'parole'
@@ -170,6 +179,88 @@ const PATHS: Record<ShineIconName, React.ReactNode> = {
       <path d="M8.6 5.6 L12 12 L8.6 18.4 L5.2 12 Z" />
       <path d="M15.4 9.2 a4.2 4.2 0 0 1 0 5.6" />
       <path d="M18.4 6.8 a7.4 7.4 0 0 1 0 10.4" />
+    </>
+  ),
+
+  /* ══════════════ THÈMES SHINE TV ══════════════
+     Mêmes primitives : la facette et le rai. Rien d'emprunté à un clavier. */
+
+  /* ── Guérison intérieure — CE QUI SE REFERME. La forme extérieure est
+       encore ouverte ; le cœur, lui, est intact. ── */
+  healing: (
+    <>
+      <path d="M12 3.6 L20.4 12 L12 20.4" />
+      <path d="M12 3.6 L4.8 10.8" />
+      <path d="M12 20.4 L4.8 13.2" />
+      <path d="M12 9.4 L14.6 12 L12 14.6 L9.4 12 Z" />
+    </>
+  ),
+
+  /* ── Méditations guidées — CE QUI SE POSE. Une facette au repos, et le
+       souffle qui passe au-dessus. ── */
+  meditation: (
+    <>
+      <path d="M4.6 19.6 h14.8" />
+      <path d="M12 11 L15.6 15.3 L12 19.6 L8.4 15.3 Z" />
+      <path d="M7.4 7.8 a5.8 5.8 0 0 1 9.2 0" />
+    </>
+  ),
+
+  /* ── Confiance en soi — CE QUI SE TIENT DEBOUT. Une facette portée par
+       son propre axe, sur une base large. ── */
+  confidence: (
+    <>
+      <path d="M12 3.2 L16.2 8.4 L12 13.6 L7.8 8.4 Z" />
+      <path d="M12 13.6 v6.2" />
+      <path d="M6.4 19.8 h11.2" />
+    </>
+  ),
+
+  /* ── Relations saines — DEUX QUI TIENNENT ENSEMBLE. Deux facettes qui
+       partagent une arête, sans se confondre. ── */
+  relationships: (
+    <>
+      <path d="M8.8 5.4 L13.2 12 L8.8 18.6 L4.4 12 Z" />
+      <path d="M15.2 5.4 L19.6 12 L15.2 18.6 L10.8 12 Z" />
+    </>
+  ),
+
+  /* ── Résilience — CE QUI PLIE SANS ROMPRE. Le choc traverse la facette
+       et ne l'ouvre pas. ── */
+  resilience: (
+    <>
+      <path d="M12 3.4 L19.6 12 L12 20.6 L4.4 12 Z" />
+      <path d="M13.8 7.2 L10.2 11.6 h3.4 L10.2 16.6" />
+    </>
+  ),
+
+  /* ── Sommeil & Détente — LE REPOS. Le croissant, et une facette pour
+       veiller à côté. ── */
+  sleep: (
+    <>
+      <path d="M16.2 4 a8.4 8.4 0 1 0 3.6 11.6 a6.6 6.6 0 0 1 -3.6 -11.6 Z" />
+      <path d="M19.4 5.2 L20.9 6.7 L19.4 8.2 L17.9 6.7 Z" />
+    </>
+  ),
+
+  /* ── Masterclass — CE QUI SE TRANSMET. Une facette en hauteur, et ce
+       qu'elle envoie de part et d'autre. ── */
+  masterclass: (
+    <>
+      <path d="M12 3.6 L16.4 9 L12 14.4 L7.6 9 Z" />
+      <path d="M4.6 19.8 h14.8" />
+      <path d="M6.6 16.8 L9.2 14.2" />
+      <path d="M17.4 16.8 L14.8 14.2" />
+    </>
+  ),
+
+  /* ── Enfants — LE PETIT ET LE GRAND. Deux facettes de tailles
+       différentes, reliées. ── */
+  children: (
+    <>
+      <path d="M8.2 8.4 L12.4 14.2 L8.2 20 L4 14.2 Z" />
+      <path d="M17.2 4.2 L19.9 7.8 L17.2 11.4 L14.5 7.8 Z" />
+      <path d="M11.6 11.6 L14.8 8.8" />
     </>
   ),
 

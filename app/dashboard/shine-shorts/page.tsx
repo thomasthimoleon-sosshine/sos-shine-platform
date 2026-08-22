@@ -62,9 +62,9 @@ function StarRating({ rating, onRate, size = 'md', interactive = false }: {
         >
           <svg
             className={sizes[size]}
-            fill={(hover || rating) >= star ? '#A29BFE' : 'none'}
+            fill={(hover || rating) >= star ? '#C9A961' : 'none'}
             viewBox="0 0 24 24"
-            stroke={(hover || rating) >= star ? '#A29BFE' : 'rgba(255,255,255,0.2)'}
+            stroke={(hover || rating) >= star ? '#C9A961' : 'rgba(255,255,255,0.2)'}
             strokeWidth={1.5}
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
@@ -176,8 +176,8 @@ function ShortRow({ title, icon, shorts, onSelect }: {
                     loading="lazy"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center" style={{ background: 'rgba(162,155,254,0.08)' }}>
-                    <svg className="w-12 h-12 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} style={{ color: '#A29BFE' }}>
+                  <div className="w-full h-full flex items-center justify-center" style={{ background: 'rgba(201,169,97,0.08)' }}>
+                    <svg className="w-12 h-12 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} style={{ color: '#C9A961' }}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
                     </svg>
                   </div>
@@ -189,7 +189,7 @@ function ShortRow({ title, icon, shorts, onSelect }: {
                 </span>
                 {/* Hover overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <div className="w-14 h-14 rounded-full flex items-center justify-center" style={{ background: '#A29BFE', color: '#fff' }}>
+                  <div className="w-14 h-14 rounded-full flex items-center justify-center" style={{ background: '#C9A961', color: '#fff' }}>
                     <svg className="w-7 h-7 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                   </div>
                 </div>
@@ -366,7 +366,7 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate, previewSec
           ) : (
             <div className="w-full h-full flex items-center justify-center">
               <div className="w-20 h-20 rounded-full flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110"
-                style={{ background: 'rgba(162,155,254,0.9)', color: '#fff' }}>
+                style={{ background: 'rgba(201,169,97,0.9)', color: '#fff' }}>
                 <svg className="w-10 h-10 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
               </div>
             </div>
@@ -384,7 +384,7 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate, previewSec
               <div className="flex items-center gap-3 mt-1">
                 <span className="text-[13px]" style={{ color: 'var(--text-muted)' }}>{short.duration}</span>
                 <span className="px-2 py-0.5 rounded text-[11px] font-medium"
-                  style={{ background: 'rgba(162,155,254,0.12)', color: '#A29BFE' }}>
+                  style={{ background: 'rgba(201,169,97,0.12)', color: '#C9A961' }}>
                   Short
                 </span>
               </div>
@@ -397,9 +397,9 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate, previewSec
                 onClick={handleLike}
                 className="flex items-center gap-1.5 px-3 py-2 rounded-full cursor-pointer transition-all duration-200 hover:scale-105"
                 style={{
-                  background: liked ? 'rgba(162,155,254,0.15)' : 'rgba(255,255,255,0.06)',
-                  border: `1px solid ${liked ? 'rgba(162,155,254,0.3)' : 'rgba(255,255,255,0.1)'}`,
-                  color: liked ? '#A29BFE' : 'var(--text-muted)',
+                  background: liked ? 'rgba(201,169,97,0.15)' : 'rgba(255,255,255,0.06)',
+                  border: `1px solid ${liked ? 'rgba(201,169,97,0.3)' : 'rgba(255,255,255,0.1)'}`,
+                  color: liked ? '#C9A961' : 'var(--text-muted)',
                 }}
               >
                 <svg className="w-4.5 h-4.5" fill={liked ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -413,8 +413,8 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate, previewSec
                 className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110"
                 style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)' }}
               >
-                <svg className="w-5 h-5" fill={short.isFavorite ? '#A29BFE' : 'none'} viewBox="0 0 24 24"
-                  stroke={short.isFavorite ? '#A29BFE' : 'white'} strokeWidth={1.5}>
+                <svg className="w-5 h-5" fill={short.isFavorite ? '#C9A961' : 'none'} viewBox="0 0 24 24"
+                  stroke={short.isFavorite ? '#C9A961' : 'white'} strokeWidth={1.5}>
                   <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                 </svg>
               </button>
@@ -430,7 +430,7 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate, previewSec
 
           {/* Your rating */}
           <div className="glass p-4 rounded-xl mb-5 flex items-center gap-4 flex-wrap"
-            style={{ borderColor: 'rgba(162,155,254,0.1)' }}>
+            style={{ borderColor: 'rgba(201,169,97,0.1)' }}>
             <span className="text-[13px] font-medium" style={{ color: 'var(--text-muted)' }}>Votre note :</span>
             <StarRating
               rating={short.userRating}
@@ -439,7 +439,7 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate, previewSec
               onRate={(r) => onRate(short.id, r)}
             />
             {short.userRating > 0 && (
-              <span className="text-[13px] font-semibold" style={{ color: '#A29BFE' }}>
+              <span className="text-[13px] font-semibold" style={{ color: '#C9A961' }}>
                 {short.userRating}/5
               </span>
             )}
@@ -451,8 +451,8 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate, previewSec
               onClick={() => setTab('overview')}
               className="flex-1 py-2.5 rounded-lg text-[13px] font-medium cursor-pointer transition-all duration-200"
               style={{
-                background: tab === 'overview' ? 'rgba(162,155,254,0.12)' : 'transparent',
-                color: tab === 'overview' ? '#A29BFE' : 'var(--text-muted)',
+                background: tab === 'overview' ? 'rgba(201,169,97,0.12)' : 'transparent',
+                color: tab === 'overview' ? '#C9A961' : 'var(--text-muted)',
               }}
             >
               Aperçu
@@ -461,8 +461,8 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate, previewSec
               onClick={() => setTab('reviews')}
               className="flex-1 py-2.5 rounded-lg text-[13px] font-medium cursor-pointer transition-all duration-200"
               style={{
-                background: tab === 'reviews' ? 'rgba(162,155,254,0.12)' : 'transparent',
-                color: tab === 'reviews' ? '#A29BFE' : 'var(--text-muted)',
+                background: tab === 'reviews' ? 'rgba(201,169,97,0.12)' : 'transparent',
+                color: tab === 'reviews' ? '#C9A961' : 'var(--text-muted)',
               }}
             >
               Avis ({reviews.length})
@@ -474,7 +474,7 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate, previewSec
               <motion.div key="overview" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }}>
                 <div className="grid grid-cols-3 gap-3">
                   <div className="glass p-4 rounded-xl text-center">
-                    <div className="text-xl font-display font-semibold" style={{ color: '#A29BFE' }}>
+                    <div className="text-xl font-display font-semibold" style={{ color: '#C9A961' }}>
                       {short.rating.toFixed(1)}
                     </div>
                     <div className="flex justify-center mt-1">
@@ -483,13 +483,13 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate, previewSec
                     <p className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Note moyenne</p>
                   </div>
                   <div className="glass p-4 rounded-xl text-center">
-                    <div className="text-xl font-display font-semibold" style={{ color: '#A29BFE' }}>
+                    <div className="text-xl font-display font-semibold" style={{ color: '#C9A961' }}>
                       {likesCount}
                     </div>
                     <p className="text-[10px] mt-2" style={{ color: 'var(--text-muted)' }}>J&apos;aime</p>
                   </div>
                   <div className="glass p-4 rounded-xl text-center">
-                    <div className="text-xl font-display font-semibold" style={{ color: '#A29BFE' }}>
+                    <div className="text-xl font-display font-semibold" style={{ color: '#C9A961' }}>
                       {reviews.length}
                     </div>
                     <p className="text-[10px] mt-2" style={{ color: 'var(--text-muted)' }}>Commentaires</p>
@@ -499,7 +499,7 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate, previewSec
             ) : (
               <motion.div key="reviews" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }}>
                 {/* Write review */}
-                <div className="glass p-4 rounded-xl mb-4" style={{ borderColor: 'rgba(162,155,254,0.1)' }}>
+                <div className="glass p-4 rounded-xl mb-4" style={{ borderColor: 'rgba(201,169,97,0.1)' }}>
                   <div className="flex items-center gap-3 mb-3">
                     <span className="text-[13px] font-medium" style={{ color: 'var(--text-secondary)' }}>Votre avis :</span>
                     <StarRating rating={newRating} size="md" interactive onRate={setNewRating} />
@@ -515,7 +515,7 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate, previewSec
                       color: 'var(--text-primary)',
                       minHeight: 80,
                     }}
-                    onFocus={(e) => e.target.style.borderColor = 'rgba(162,155,254,0.4)'}
+                    onFocus={(e) => e.target.style.borderColor = 'rgba(201,169,97,0.4)'}
                     onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
                   />
                   <div className="flex justify-end mt-2">
@@ -523,7 +523,7 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate, previewSec
                       onClick={handleSubmitReview}
                       disabled={!newReview.trim() || newRating === 0 || isSubmitting}
                       className="px-5 py-2 rounded-xl text-[13px] font-semibold cursor-pointer transition-all duration-200 hover:scale-105 disabled:opacity-40 disabled:hover:scale-100"
-                      style={{ background: '#A29BFE', color: '#fff' }}
+                      style={{ background: '#C9A961', color: '#fff' }}
                     >
                       {isSubmitting ? 'Envoi...' : 'Publier'}
                     </button>
@@ -551,7 +551,7 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate, previewSec
                         <div className="flex items-center gap-3 mb-2">
                           <div
                             className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
-                            style={{ background: 'rgba(162,155,254,0.12)', color: '#A29BFE' }}
+                            style={{ background: 'rgba(201,169,97,0.12)', color: '#C9A961' }}
                           >
                             {review.author.charAt(0)}
                           </div>
@@ -826,12 +826,12 @@ export default function ShineShortsPage() {
         <div className="text-center space-y-4">
           <div className="relative w-16 h-16 mx-auto">
             <div className="absolute inset-0 rounded-2xl animate-pulse"
-              style={{ background: 'linear-gradient(135deg, #A29BFE, #6C5CE7)' }} />
+              style={{ background: 'linear-gradient(135deg, #C9A961, #A88248)' }} />
             <div className="absolute inset-0 flex items-center justify-center">
               <svg className="w-8 h-8" fill="#09090b" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
             </div>
           </div>
-          <p className="font-display text-xl font-semibold" style={{ color: '#A29BFE' }}>Shine Shorts</p>
+          <p className="font-display text-xl font-semibold" style={{ color: '#C9A961' }}>Shine Shorts</p>
           <p className="text-[13px]" style={{ color: 'var(--text-muted)' }}>Chargement de vos contenus...</p>
         </div>
       </div>
@@ -841,15 +841,15 @@ export default function ShineShortsPage() {
   return (
     <div className="-mx-4 sm:-mx-6 lg:-mx-8 -mt-4 sm:-mt-6 lg:-mt-8">
       {/* Header */}
-      <div className="px-4 sm:px-6 lg:px-8 pt-6 pb-4" style={{ background: 'linear-gradient(180deg, rgba(162,155,254,0.08) 0%, transparent 100%)' }}>
+      <div className="px-4 sm:px-6 lg:px-8 pt-6 pb-4" style={{ background: 'linear-gradient(180deg, rgba(201,169,97,0.08) 0%, transparent 100%)' }}>
         <div className="flex items-center gap-3 mb-1">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(162,155,254,0.15)' }}>
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="#A29BFE" strokeWidth={1.5}>
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(201,169,97,0.15)' }}>
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="#C9A961" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
             </svg>
           </div>
           <h1 className="font-display text-2xl sm:text-3xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-            Shine <span style={{ color: '#A29BFE' }}>Shorts</span>
+            Shine <span style={{ color: '#C9A961' }}>Shorts</span>
           </h1>
         </div>
         <p className="text-[14px] mt-1" style={{ color: 'var(--text-muted)' }}>
@@ -877,7 +877,7 @@ export default function ShineShortsPage() {
                 border: '1px solid var(--border)',
                 color: 'var(--text-primary)',
               }}
-              onFocus={(e) => e.target.style.borderColor = 'rgba(162,155,254,0.4)'}
+              onFocus={(e) => e.target.style.borderColor = 'rgba(201,169,97,0.4)'}
               onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
             />
             {search && (
@@ -899,7 +899,7 @@ export default function ShineShortsPage() {
               onClick={() => setActiveFilter('all')}
               className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200"
               style={{
-                background: activeFilter === 'all' ? '#A29BFE' : 'rgba(255,255,255,0.06)',
+                background: activeFilter === 'all' ? '#C9A961' : 'rgba(255,255,255,0.06)',
                 color: activeFilter === 'all' ? '#09090b' : 'var(--text-secondary)',
                 border: activeFilter === 'all' ? 'none' : '1px solid var(--border)',
               }}
@@ -911,7 +911,7 @@ export default function ShineShortsPage() {
                 onClick={() => setActiveFilter('douleur')}
                 className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200 flex items-center gap-1.5"
                 style={{
-                  background: activeFilter === 'douleur' ? '#A29BFE' : 'rgba(255,255,255,0.06)',
+                  background: activeFilter === 'douleur' ? '#C9A961' : 'rgba(255,255,255,0.06)',
                   color: activeFilter === 'douleur' ? '#09090b' : 'var(--text-secondary)',
                   border: activeFilter === 'douleur' ? 'none' : '1px solid var(--border)',
                 }}
@@ -926,7 +926,7 @@ export default function ShineShortsPage() {
               onClick={() => setActiveFilter('encyclopedie')}
               className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200 flex items-center gap-1.5"
               style={{
-                background: activeFilter === 'encyclopedie' ? '#A29BFE' : 'rgba(255,255,255,0.06)',
+                background: activeFilter === 'encyclopedie' ? '#C9A961' : 'rgba(255,255,255,0.06)',
                 color: activeFilter === 'encyclopedie' ? '#09090b' : 'var(--text-secondary)',
                 border: activeFilter === 'encyclopedie' ? 'none' : '1px solid var(--border)',
               }}
@@ -940,7 +940,7 @@ export default function ShineShortsPage() {
               onClick={() => setActiveFilter('favorites')}
               className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200 flex items-center gap-1.5"
               style={{
-                background: activeFilter === 'favorites' ? '#A29BFE' : 'rgba(255,255,255,0.06)',
+                background: activeFilter === 'favorites' ? '#C9A961' : 'rgba(255,255,255,0.06)',
                 color: activeFilter === 'favorites' ? '#09090b' : 'var(--text-secondary)',
                 border: activeFilter === 'favorites' ? 'none' : '1px solid var(--border)',
               }}
@@ -956,7 +956,7 @@ export default function ShineShortsPage() {
                 onClick={() => setActiveFilter(cat.id)}
                 className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200"
                 style={{
-                  background: activeFilter === cat.id ? '#A29BFE' : 'rgba(255,255,255,0.06)',
+                  background: activeFilter === cat.id ? '#C9A961' : 'rgba(255,255,255,0.06)',
                   color: activeFilter === cat.id ? '#09090b' : 'var(--text-secondary)',
                   border: activeFilter === cat.id ? 'none' : '1px solid var(--border)',
                 }}
@@ -973,7 +973,7 @@ export default function ShineShortsPage() {
           <div>
             <p className="text-[13px] mb-4" style={{ color: 'var(--text-muted)' }}>
               {filteredShorts.length} résultat{filteredShorts.length !== 1 ? 's' : ''}
-              {search && <> pour &ldquo;<span style={{ color: '#A29BFE' }}>{search}</span>&rdquo;</>}
+              {search && <> pour &ldquo;<span style={{ color: '#C9A961' }}>{search}</span>&rdquo;</>}
             </p>
             {filteredShorts.length === 0 ? (
               <div className="glass p-12 text-center rounded-xl">
@@ -1001,8 +1001,8 @@ export default function ShineShortsPage() {
                         {short.thumbnail ? (
                           <img src={short.thumbnail} alt={short.title} className="w-full h-full object-cover" loading="lazy" />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center" style={{ background: 'rgba(162,155,254,0.08)' }}>
-                            <svg className="w-10 h-10 opacity-20" fill="none" viewBox="0 0 24 24" stroke="#A29BFE" strokeWidth={1}>
+                          <div className="w-full h-full flex items-center justify-center" style={{ background: 'rgba(201,169,97,0.08)' }}>
+                            <svg className="w-10 h-10 opacity-20" fill="none" viewBox="0 0 24 24" stroke="#C9A961" strokeWidth={1}>
                               <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
                             </svg>
                           </div>
@@ -1012,7 +1012,7 @@ export default function ShineShortsPage() {
                           {short.duration}
                         </span>
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                          <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: '#A29BFE', color: '#fff' }}>
+                          <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: '#C9A961', color: '#fff' }}>
                             <svg className="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                           </div>
                         </div>
@@ -1030,7 +1030,7 @@ export default function ShineShortsPage() {
           // Favorites view
           <div>
             <h2 className="text-lg font-display font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-              <svg className="w-5 h-5" fill="#A29BFE" viewBox="0 0 24 24">
+              <svg className="w-5 h-5" fill="#C9A961" viewBox="0 0 24 24">
                 <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
               </svg>
               Mes Favoris
@@ -1061,8 +1061,8 @@ export default function ShineShortsPage() {
                         {short.thumbnail ? (
                           <img src={short.thumbnail} alt={short.title} className="w-full h-full object-cover" loading="lazy" />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center" style={{ background: 'rgba(162,155,254,0.08)' }}>
-                            <svg className="w-10 h-10 opacity-20" fill="none" viewBox="0 0 24 24" stroke="#A29BFE" strokeWidth={1}>
+                          <div className="w-full h-full flex items-center justify-center" style={{ background: 'rgba(201,169,97,0.08)' }}>
+                            <svg className="w-10 h-10 opacity-20" fill="none" viewBox="0 0 24 24" stroke="#C9A961" strokeWidth={1}>
                               <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
                             </svg>
                           </div>
@@ -1085,7 +1085,7 @@ export default function ShineShortsPage() {
           // Douleur-filtered view
           <div>
             <h2 className="text-lg font-display font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: '#A29BFE' }}>
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: '#C9A961' }}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.331 0 4.476.884 6.084 2.333M12 6.042A8.967 8.967 0 0118 3.75c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18c-2.331 0-4.476.884-6.084 2.333M12 6.042V20.333" />
               </svg>
               {douleurName || 'Contenu lié'}
@@ -1132,7 +1132,7 @@ export default function ShineShortsPage() {
           // Encyclopédie A-Z view
           <div className="space-y-6">
             <h2 className="text-lg font-display font-semibold flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: '#A29BFE' }}>
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: '#C9A961' }}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
               </svg>
               Encyclopédie A - Z
@@ -1157,7 +1157,7 @@ export default function ShineShortsPage() {
                         key={letter}
                         href={`#letter-shorts-${letter}`}
                         className="w-8 h-8 rounded-lg flex items-center justify-center text-[13px] font-semibold transition-colors hover:opacity-80"
-                        style={{ background: 'rgba(162,155,254,0.1)', color: '#A29BFE' }}
+                        style={{ background: 'rgba(201,169,97,0.1)', color: '#C9A961' }}
                       >
                         {letter}
                       </a>
@@ -1167,7 +1167,7 @@ export default function ShineShortsPage() {
                   {/* Letter groups */}
                   {letters.map(letter => (
                     <div key={letter} id={`letter-shorts-${letter}`} className="scroll-mt-24">
-                      <h3 className="font-display text-2xl font-bold mb-3 pb-2" style={{ color: '#A29BFE', borderBottom: '1px solid var(--border)' }}>
+                      <h3 className="font-display text-2xl font-bold mb-3 pb-2" style={{ color: '#C9A961', borderBottom: '1px solid var(--border)' }}>
                         {letter}
                       </h3>
                       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
@@ -1185,8 +1185,8 @@ export default function ShineShortsPage() {
                                 {short.thumbnail ? (
                                   <img src={short.thumbnail} alt={short.title} className="w-full h-full object-cover" loading="lazy" />
                                 ) : (
-                                  <div className="w-full h-full flex items-center justify-center" style={{ background: 'rgba(162,155,254,0.08)' }}>
-                                    <svg className="w-10 h-10 opacity-20" fill="none" viewBox="0 0 24 24" stroke="#A29BFE" strokeWidth={1}>
+                                  <div className="w-full h-full flex items-center justify-center" style={{ background: 'rgba(201,169,97,0.08)' }}>
+                                    <svg className="w-10 h-10 opacity-20" fill="none" viewBox="0 0 24 24" stroke="#C9A961" strokeWidth={1}>
                                       <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
                                     </svg>
                                   </div>
@@ -1196,7 +1196,7 @@ export default function ShineShortsPage() {
                                   {short.duration}
                                 </span>
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                  <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: '#A29BFE', color: '#fff' }}>
+                                  <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: '#C9A961', color: '#fff' }}>
                                     <svg className="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                                   </div>
                                 </div>

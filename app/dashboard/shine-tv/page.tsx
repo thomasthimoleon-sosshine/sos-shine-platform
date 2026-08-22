@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import { useSubscription } from '@/hooks/useSubscription'
 import { SHINE_TV_CATEGORIES, isKnownCategory, categoryLabel } from '@/lib/shine-tv/categories'
-import ShineIcon from '@/components/icons/ShineIcon'
+import ShineIcon, { type ShineIconName } from '@/components/icons/ShineIcon'
 
 // ── Types ──
 type ShineVideo = {
@@ -79,7 +79,7 @@ function StarRating({ rating, onRate, size = 'md', interactive = false }: {
 // ── Horizontal Scroll Row ──
 function VideoRow({ title, icon, videos, onSelect }: {
   title: string
-  icon: string
+  icon: ShineIconName
   videos: ShineVideo[]
   onSelect: (v: ShineVideo) => void
 }) {
@@ -111,7 +111,7 @@ function VideoRow({ title, icon, videos, onSelect }: {
   return (
     <div className="relative group/row">
       <h2 className="text-lg font-display font-semibold mb-3 px-1 flex items-center gap-2 text-[var(--text-primary)]">
-        <span className="text-xl">{icon}</span> {title}
+        <ShineIcon name={icon} className="w-5 h-5" color="#C9A961" /> {title}
       </h2>
 
       {/* Left arrow */}
@@ -1618,14 +1618,19 @@ export default function ShineTVPage() {
               <button
                 key={cat.id}
                 onClick={() => setActiveFilter(cat.id)}
-                className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200"
+                className="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200"
                 style={{
                   background: activeFilter === cat.id ? 'var(--brand)' : 'rgba(255,255,255,0.06)',
                   color: activeFilter === cat.id ? '#09090b' : 'var(--text-secondary)',
                   border: activeFilter === cat.id ? 'none' : '1px solid var(--border)',
                 }}
               >
-                {cat.icon} {cat.label}
+                <ShineIcon
+                  name={cat.icon}
+                  className="w-4 h-4"
+                  color={activeFilter === cat.id ? '#09090b' : undefined}
+                />
+                {cat.label}
               </button>
             ))}
           </div>
@@ -1889,7 +1894,7 @@ export default function ShineTVPage() {
             {trendingVideos.length > 0 && (
               <VideoRow
                 title="Tendances du moment"
-                icon="🔥"
+                icon="resilience"
                 videos={trendingVideos}
                 onSelect={setSelectedVideo}
               />
@@ -1918,7 +1923,7 @@ export default function ShineTVPage() {
             {uncategorizedVideos.length > 0 && (
               <VideoRow
                 title="Autres"
-                icon="🎬"
+                icon="video"
                 videos={uncategorizedVideos}
                 onSelect={setSelectedVideo}
               />

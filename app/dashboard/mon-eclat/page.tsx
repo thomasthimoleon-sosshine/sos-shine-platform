@@ -8,6 +8,8 @@ import { useTranslation } from '@/lib/i18n/useTranslation'
 import FileUpload from '@/components/FileUpload'
 import AudioPlayer from '@/components/AudioPlayer'
 import VoiceRecorder from '@/components/VoiceRecorder'
+import ShineIcon from '@/components/icons/ShineIcon'
+import { POST_CATEGORIES, MEDIA_TYPES } from '@/lib/community/categories'
 
 /* ── Types locaux ── */
 type PostRow = {
@@ -42,19 +44,24 @@ type CommentRow = {
 }
 
 /* ── Category config ── */
-const CATEGORIES: { value: PostCategory; label: string; icon: string; color: string }[] = [
-  { value: 'temoignage', label: 'Pensée', icon: '💭', color: 'var(--brand)' },
-  { value: 'partage', label: 'Partage', icon: '💫', color: 'var(--accent-blue)' },
-  { value: 'gratitude', label: 'Gratitude', icon: '✨', color: '#FFEAA7' },
-  { value: 'citation', label: 'Citation', icon: '💬', color: '#FD79A8' },
-  { value: 'remerciements', label: 'Moment de joie', icon: '🌟', color: 'var(--success)' },
-  { value: 'question', label: 'Réflexion', icon: '🔮', color: 'var(--accent-purple)' },
-]
+/**
+ * Le journal personnel garde ses propres libelles (« Pensee », « Reflexion »…)
+ * mais reprend les couleurs et les signes de la source unique, pour qu'une
+ * gratitude soit la meme couleur ici et sur le mur.
+ */
+const ECLAT_LABELS: Partial<Record<PostCategory, string>> = {
+  temoignage: 'Pensée',
+  partage: 'Partage',
+  remerciements: 'Moment de joie',
+  question: 'Réflexion',
+}
+
+const CATEGORIES = POST_CATEGORIES.map(c => ({ ...c, label: ECLAT_LABELS[c.value] || c.label }))
 
 const CATEGORY_MAP = Object.fromEntries(CATEGORIES.map(c => [c.value, c]))
 
 function getCategoryInfo(cat: string) {
-  return CATEGORY_MAP[cat] || CATEGORIES[1]
+  return CATEGORY_MAP[cat] || CATEGORY_MAP.partage
 }
 
 function formatDate(d: string) {
@@ -563,7 +570,8 @@ export default function MonEclatPage() {
                     color: createCategory === cat.value ? cat.color : 'var(--text-secondary)',
                   }}
                 >
-                  <span>{cat.icon}</span> {cat.label}
+                  <ShineIcon name={cat.icon} className="w-4 h-4" color={createCategory === cat.value ? cat.color : undefined} />
+                  {cat.label}
                 </button>
               ))}
             </div>
@@ -573,12 +581,7 @@ export default function MonEclatPage() {
           <div>
             <label className="block text-xs font-medium mb-2 text-[var(--text-secondary)]">Contenu</label>
             <div className="flex gap-2">
-              {([
-                { value: 'text' as const, label: 'Texte', icon: '📝' },
-                { value: 'image' as const, label: 'Image', icon: '🖼️' },
-                { value: 'video' as const, label: 'Vidéo', icon: '🎬' },
-                { value: 'audio' as const, label: 'Audio', icon: '🎙️' },
-              ]).map(mt => (
+              {MEDIA_TYPES.map(mt => (
                 <button
                   key={mt.value}
                   onClick={() => setCreateMediaType(mt.value)}
@@ -589,7 +592,7 @@ export default function MonEclatPage() {
                     color: createMediaType === mt.value ? 'var(--brand)' : 'var(--text-secondary)',
                   }}
                 >
-                  <span>{mt.icon}</span> {mt.label}
+                  <ShineIcon name={mt.icon} className="w-4 h-4" /> {mt.label}
                 </button>
               ))}
             </div>
@@ -724,8 +727,8 @@ export default function MonEclatPage() {
                   {/* Category badge + actions */}
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm">{catInfo.icon}</span>
-                      <span className="text-xs font-medium px-2.5 py-1 rounded-full" style={{ background: `${catInfo.color}15`, color: catInfo.color }}>
+                      <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full" style={{ background: `${catInfo.color}15`, color: catInfo.color }}>
+                        <ShineIcon name={catInfo.icon} className="w-3.5 h-3.5" />
                         {catInfo.label}
                       </span>
                       {post.visibility === 'rayons_only' && (

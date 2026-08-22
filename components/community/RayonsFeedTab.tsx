@@ -3,6 +3,8 @@
 import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import AudioPlayer from '@/components/AudioPlayer'
+import ShineIcon from '@/components/icons/ShineIcon'
+import { getCategory } from '@/lib/community/categories'
 
 type PostRow = {
   id: string
@@ -34,17 +36,10 @@ type CommentRow = {
   role: string
 }
 
-const CATEGORY_MAP: Record<string, { label: string; icon: string; color: string }> = {
-  temoignage: { label: 'Témoignage', icon: '🗣️', color: '#C9A961' },
-  partage: { label: 'Partage', icon: '💫', color: '#74C0FC' },
-  question: { label: 'Question', icon: '❓', color: '#A29BFE' },
-  remerciements: { label: 'Remerciements', icon: '🙏', color: '#55EFC4' },
-  gratitude: { label: 'Gratitude', icon: '✨', color: '#FFEAA7' },
-  citation: { label: 'Citation', icon: '💬', color: '#FD79A8' },
-}
+/* Catégories : lib/community/categories.ts (source unique) */
 
 function getCat(cat: string) {
-  return CATEGORY_MAP[cat] || { label: cat, icon: '📝', color: '#74C0FC' }
+  return getCategory(cat)
 }
 
 function formatDate(d: string) {
@@ -277,8 +272,9 @@ export default function RayonsFeedTab({ onProfileClick }: Props) {
                   </button>
                   <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{formatDate(post.created_at)}</p>
                 </div>
-                <span className="text-xs font-medium px-2.5 py-1 rounded-full" style={{ background: `${catInfo.color}15`, color: catInfo.color }}>
-                  {catInfo.icon} {catInfo.label}
+                <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full" style={{ background: `${catInfo.color}15`, color: catInfo.color }}>
+                  <ShineIcon name={catInfo.icon} className="w-3.5 h-3.5" />
+                  {catInfo.label}
                 </span>
               </div>
 

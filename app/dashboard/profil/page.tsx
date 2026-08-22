@@ -8,6 +8,8 @@ import type { Profile, Subscription } from '@/types/database'
 import type { PlanId } from '@/lib/stripe/config'
 import { PLAN_ORDER, PLAN_NAMES, PLAN_COLORS, PLAN_PRICES_EUR } from '@/lib/stripe/config'
 import { useTranslation } from '@/lib/i18n/useTranslation'
+import NotificationPreferences from '@/components/account/NotificationPreferences'
+import ShineIcon from '@/components/icons/ShineIcon'
 
 export default function ProfilPage() {
   const { t } = useTranslation()
@@ -375,13 +377,32 @@ export default function ProfilPage() {
               )}
             </div>
             <p className="text-sm text-[var(--text-secondary)]">{profile?.email}</p>
-            {profile?.bio && (
-              <p className="text-sm leading-relaxed text-[var(--text-secondary)]">{profile.bio}</p>
+
+            {/* La bio existait déjà mais n'apparaissait qu'en mode édition :
+                tant qu'elle était vide, personne ne savait qu'on pouvait en
+                écrire une. Elle a maintenant sa place en lecture, et une
+                invitation explicite quand elle manque. */}
+            {profile?.bio ? (
+              <div className="pt-1">
+                <p className="text-[11px] uppercase tracking-[0.16em] mb-1.5 text-[var(--text-muted)]">Bio</p>
+                <p className="text-sm leading-relaxed whitespace-pre-line text-[var(--text-secondary)]">{profile.bio}</p>
+              </div>
+            ) : (
+              <button
+                onClick={() => setEditing(true)}
+                className="flex items-center gap-2 text-sm cursor-pointer transition-colors text-[var(--brand)] hover:brightness-110"
+              >
+                <ShineIcon name="parole" className="w-4 h-4" />
+                Ajouter une bio — dites qui vous êtes à la communauté
+              </button>
             )}
             <p className="text-xs text-[var(--text-muted)]">{t('dashboard.member_since', { date: formatDate(profile?.created_at || '') })}</p>
           </div>
         )}
       </div>
+
+      {/* Notifications */}
+      <NotificationPreferences />
 
       {/* Vidéo de présentation */}
       <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>

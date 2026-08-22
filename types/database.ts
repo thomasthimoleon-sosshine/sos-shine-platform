@@ -545,6 +545,19 @@ export type ShineShortFavorite = {
   created_at: string
 }
 
+/** Réglages fins des notifications, une ligne par membre. */
+export type NotificationPreferences = {
+  user_id: string
+  all_enabled: boolean
+  new_protocols: boolean
+  new_media: boolean
+  shines_received: boolean
+  messages: boolean
+  friend_requests: boolean
+  comments: boolean
+  updated_at: string
+}
+
 /** Un « Shine » donné à un format court — l'équivalent du j'aime. */
 export type ShineShortShine = {
   id: string
@@ -857,6 +870,7 @@ export type Database = {
       shine_shorts: Table<ShineShort>
       shine_shorts_favorites: Table<ShineShortFavorite>
       shine_shorts_shines: Table<ShineShortShine>
+      notification_preferences: Table<NotificationPreferences>
       shine_shorts_ratings: Table<ShineShortRating>
       shine_shorts_reviews: Table<ShineShortReview>
       shine_tv_videos: Table<ShineTvVideo>

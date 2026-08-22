@@ -12,9 +12,8 @@ import { greetingsData, GREETINGS_PER_SLOT, type TimeSlot } from '@/data/greetin
 import { getDailyForecast, resolveZodiacSign, ZODIAC_INFO } from '@/data/energyWeather'
 import PushNotificationButton from '@/components/PushNotificationButton'
 import NpsWidget from '@/components/NpsWidget'
-import { getLevelForXP, getNextLevel, getLevelProgress, formatXP } from '@/lib/xp'
+import { getLevelForXP } from '@/lib/xp'
 import type { UserXP } from '@/types/database'
-import { getAllCategories, getUserBadges, unlockAllBadgesForUser, CATEGORY_ICONS, type CategoryConfig } from '@/lib/badgeService'
 
 const ease = [0.25, 0.46, 0.45, 0.94] as const
 
@@ -30,77 +29,6 @@ const fadeUp = {
 /* ─────────────────────────────────────────────
    Section: Niveau & XP (migrated from Profile)
    ───────────────────────────────────────────── */
-function LevelXPSection({ xpData }: { xpData: UserXP | null }) {
-  if (!xpData) return null
-
-  const level = getLevelForXP(xpData.total_xp)
-  const next = getNextLevel(level.level)
-  const progress = getLevelProgress(xpData.total_xp)
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.05, duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
-      className="glass relative overflow-hidden"
-      style={{
-        background: 'linear-gradient(135deg, rgba(201,169,97,0.06), var(--surface-card))',
-        borderColor: 'rgba(201,169,97,0.15)',
-      }}
-    >
-      <div className="p-5 sm:p-6">
-        {/* Title row */}
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-[11px] font-semibold uppercase tracking-widest flex items-center gap-2 text-[var(--text-muted)]">
-            <svg className="w-4 h-4 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
-            </svg>
-            VOTRE PROGRESSION
-          </h2>
-          <span className="text-xl">{level.icon}</span>
-        </div>
-
-        {/* Rank name + XP total */}
-        <div className="flex items-center justify-between mb-1">
-          <div>
-            <p className="font-display text-2xl font-semibold text-[var(--brand)]">
-              {level.name}
-            </p>
-            <p className="text-[11px] text-[var(--text-muted)]">Votre étape</p>
-          </div>
-        </div>
-
-        {/* Progress bar */}
-        {next ? (
-          <div className="mt-3">
-            <div className="h-3 rounded-full overflow-hidden bg-[var(--border)]">
-              <motion.div
-                className="h-full rounded-full"
-                style={{ background: 'linear-gradient(90deg, var(--brand), var(--brand-light))' }}
-                initial={{ width: 0 }}
-                animate={{ width: `${progress}%` }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              />
-            </div>
-            <div className="flex items-center justify-between mt-1.5">
-              <p className="text-[11px] font-medium text-[var(--text-primary)]">
-                XP: {formatXP(xpData.total_xp)} / {formatXP(next.minXP)} XP
-              </p>
-              <p className="text-[11px] text-[var(--brand)] opacity-80">
-                Encore {formatXP(next.minXP - xpData.total_xp)} XP
-              </p>
-            </div>
-          </div>
-        ) : (
-          <div className="mt-3 rounded-xl p-3 text-center bg-[var(--brand-alpha-weak)] border border-[var(--border-medium)]">
-            <p className="text-sm font-semibold text-[var(--brand)]">Rang maximum atteint !</p>
-          </div>
-        )}
-
-      </div>
-    </motion.div>
-  )
-}
 
 /* ─────────────────────────────────────────────
    Section: Météo Énergétique
@@ -177,276 +105,10 @@ function EnergyWeatherWidget({ profile }: { profile: Profile | null }) {
 /* ─────────────────────────────────────────────
    Section: Mes contributions
    ───────────────────────────────────────────── */
-function ContributionsSection({ xpData }: { xpData: UserXP | null }) {
-  const [showLog, setShowLog] = useState(false)
-  const [activityLog, setActivityLog] = useState<Array<{ id: string; action: string; detail: string; date: string }>>([])
-  const [logLoading, setLogLoading] = useState(false)
-  const [commentsLeftCount, setCommentsLeftCount] = useState(0)
-
-  useEffect(() => {
-    async function loadCommentsLeft() {
-      const supabase = createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
-      const { count } = await supabase
-        .from('post_comments')
-        .select('id', { count: 'exact', head: true })
-        .eq('author_id', user.id)
-      setCommentsLeftCount(count || 0)
-    }
-    loadCommentsLeft()
-  }, [])
-
-  async function loadActivityLog() {
-    if (activityLog.length > 0) { setShowLog(!showLog); return }
-    setLogLoading(true)
-    setShowLog(true)
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) { setLogLoading(false); return }
-
-    // Fetch recent activity from multiple sources
-    const [likesRes, commentsRes, postsRes] = await Promise.all([
-      supabase.from('post_likes').select('id, post_id, created_at').eq('user_id', user.id).order('created_at', { ascending: false }).limit(10),
-      supabase.from('post_comments').select('id, post_id, content, created_at').eq('author_id', user.id).order('created_at', { ascending: false }).limit(10),
-      supabase.from('posts').select('id, title, category, created_at').eq('author_id', user.id).order('created_at', { ascending: false }).limit(10),
-    ])
-
-    const log: Array<{ id: string; action: string; detail: string; date: string }> = []
-
-    // Likes = Shines donnés
-    for (const like of (likesRes.data || [])) {
-      log.push({
-        id: `like-${like.id}`,
-        action: 'Shine donné',
-        detail: 'Vous avez donné un Shine',
-        date: like.created_at,
-      })
-    }
-
-    // Comments
-    for (const comment of (commentsRes.data || [])) {
-      log.push({
-        id: `comment-${comment.id}`,
-        action: 'Commentaire',
-        detail: `Vous avez commenté : "${(comment.content || '').slice(0, 60)}${(comment.content || '').length > 60 ? '...' : ''}"`,
-        date: comment.created_at,
-      })
-    }
-
-    // Publications
-    for (const post of (postsRes.data || [])) {
-      log.push({
-        id: `post-${post.id}`,
-        action: 'Publication',
-        detail: `Vous avez publié : "${post.title}"`,
-        date: post.created_at,
-      })
-    }
-
-    // Sort by date descending
-    log.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    setActivityLog(log.slice(0, 20))
-    setLogLoading(false)
-  }
-
-  const counters = [
-    { label: 'Shines\nTransmis', value: xpData?.shines_given || 0, icon: '💛' },
-    { label: 'Shines\nReçus', value: xpData?.shines_received || 0, icon: '⭐' },
-    { label: 'Commentaires\nLaissés', value: commentsLeftCount, icon: '💬', key: 'comments' },
-    { label: 'Partages', value: 0, icon: '🔗', key: 'shares' },
-  ]
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.2, duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
-    >
-      {/* Section header */}
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-[11px] font-semibold uppercase tracking-widest flex items-center gap-2 text-[var(--text-muted)]">
-          <svg className="w-4 h-4 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
-          </svg>
-          PUBLIÉ
-        </h2>
-        <button
-          onClick={loadActivityLog}
-          className="text-[12px] font-medium flex items-center gap-1 cursor-pointer transition-colors hover:opacity-80 text-[var(--brand)]"
-        >
-          Afficher les détails
-          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-          </svg>
-        </button>
-      </div>
-
-      {/* Counters bandeau */}
-      <div className="glass p-4">
-        <div className="grid grid-cols-4 gap-3">
-          {counters.map((c, i) => (
-            <motion.div
-              key={i}
-              custom={i}
-              initial="hidden"
-              animate="visible"
-              variants={fadeUp}
-              className="text-center"
-            >
-              <p className="text-2xl sm:text-3xl font-semibold text-[var(--brand)]">
-                {c.value}
-              </p>
-              <p className="text-[10px] sm:text-[11px] mt-1 whitespace-pre-line leading-tight text-[var(--text-muted)]">
-                {c.label}
-              </p>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-
-      {/* Activity log (expandable) */}
-      {showLog && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          transition={{ duration: 0.3 }}
-          className="glass mt-3 p-4 max-h-80 overflow-y-auto"
-        >
-          <h3 className="text-[11px] font-semibold uppercase tracking-wider mb-3 text-[var(--text-muted)]">
-            Journal d&apos;activité
-          </h3>
-          {logLoading ? (
-            <div className="flex justify-center py-4">
-              <div className="w-5 h-5 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
-            </div>
-          ) : activityLog.length === 0 ? (
-            <p className="text-[13px] text-center py-4 text-[var(--text-muted)]">
-              Aucune activité récente
-            </p>
-          ) : (
-            <div className="space-y-2">
-              {activityLog.map((entry) => (
-                <div key={entry.id} className="flex items-start gap-3 py-2 border-b border-[var(--border)]">
-                  <div className="w-2 h-2 rounded-full mt-1.5 shrink-0 bg-[var(--brand)]" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[12px] text-[var(--text-primary)]">{entry.detail}</p>
-                    <p className="text-[10px] mt-0.5 text-[var(--text-muted)]">
-                      {new Date(entry.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}
-                    </p>
-                  </div>
-                  <span className="text-[10px] px-1.5 py-0.5 rounded-full shrink-0 bg-[var(--brand-alpha-medium)] text-[var(--brand)]">
-                    {entry.action}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </motion.div>
-      )}
-    </motion.div>
-  )
-}
 
 /* ─────────────────────────────────────────────
    Section: Badges (carrousel)
    ───────────────────────────────────────────── */
-function BadgesSection({ userId, role }: { userId: string | null; role?: string }) {
-  const [unlockedBadgeIds, setUnlockedBadgeIds] = useState<Set<string>>(new Set())
-  const [loading, setLoading] = useState(true)
-  const categories = getAllCategories()
-
-  useEffect(() => {
-    async function load() {
-      if (!userId) { setLoading(false); return }
-
-      // Auto-unlock all badges for founders
-      if (role === 'founder') {
-        await unlockAllBadgesForUser(userId)
-      }
-
-      const badges = await getUserBadges(userId)
-      setUnlockedBadgeIds(new Set(badges.map(b => b.badge_id)))
-      setLoading(false)
-    }
-    load()
-  }, [userId, role])
-
-  // Build flat list of ALL badges (unlocked + locked/grayed)
-  const allBadges = Object.entries(categories).flatMap(([, cat]) => {
-    const category = cat as CategoryConfig
-    return category.badges.map(badge => ({
-      ...badge,
-      categoryName: category.name,
-      categoryIcon: category.icon,
-      isUnlocked: unlockedBadgeIds.has(badge.id),
-    }))
-  })
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.25, duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
-    >
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-[11px] font-semibold uppercase tracking-widest flex items-center gap-2 text-[var(--text-muted)]">
-          <svg className="w-4 h-4 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M18.75 4.236c.982.143 1.954.317 2.916.52A6.003 6.003 0 0016.27 9.728M18.75 4.236V4.5c0 2.108-.966 3.99-2.48 5.228m0 0a6.023 6.023 0 01-3.52 1.14 6.023 6.023 0 01-3.52-1.14" />
-          </svg>
-          BADGES
-        </h2>
-        <Link
-          href="/dashboard/badges"
-          className="text-[12px] font-medium flex items-center gap-1 transition-colors hover:opacity-80 text-[var(--brand)]"
-        >
-          Voir tout
-          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-          </svg>
-        </Link>
-      </div>
-
-      {loading ? (
-        <div className="flex justify-center py-6">
-          <div className="w-5 h-5 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
-        </div>
-      ) : (
-        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide" style={{ scrollbarWidth: 'none' }}>
-          {allBadges.map((badge) => (
-            <div
-              key={badge.id}
-              className="shrink-0 w-28 rounded-xl p-3 text-center"
-              style={{
-                background: badge.isUnlocked ? 'rgba(201,169,97,0.06)' : 'rgba(255,255,255,0.02)',
-                border: badge.isUnlocked ? '1px solid rgba(201,169,97,0.15)' : '1px solid var(--border)',
-                opacity: badge.isUnlocked ? 1 : 0.4,
-                filter: badge.isUnlocked ? 'none' : 'grayscale(1)',
-              }}
-            >
-              <div className="w-12 h-12 mx-auto rounded-full flex items-center justify-center mb-2"
-                style={{
-                  background: badge.isUnlocked
-                    ? 'linear-gradient(135deg, rgba(201,169,97,0.2), rgba(201,169,97,0.05))'
-                    : 'rgba(255,255,255,0.03)',
-                  border: badge.isUnlocked ? '2px solid var(--brand)' : '2px solid var(--border)',
-                }}>
-                <span className="text-lg">{badge.emoji || CATEGORY_ICONS[badge.categoryIcon] || '🏆'}</span>
-              </div>
-              <h3 className="font-semibold text-[10px] leading-tight"
-                style={{ color: badge.isUnlocked ? 'var(--brand)' : 'var(--text-muted)' }}>
-                {badge.title}
-              </h3>
-              <p className="text-[9px] mt-0.5 text-[var(--text-muted)]">
-                {badge.categoryName}
-              </p>
-            </div>
-          ))}
-        </div>
-      )}
-    </motion.div>
-  )
-}
 
 /* ─────────────────────────────────────────────
    Section: Actu - Shine (5 pillars)
@@ -1066,14 +728,14 @@ export default function DashboardHome() {
             </p>
           </div>
 
-          {/* ── Niveau & XP détaillé ── */}
-          <LevelXPSection xpData={xpData} />
-
-          {/* ── Mes contributions ── */}
-          <ContributionsSection xpData={xpData} />
-
-          {/* ── Badges ── */}
-          <BadgesSection userId={currentUserId} role={profile?.role} />
+          {/*
+            Progression, contributions et badges ont été déplacés dans le
+            profil (Communauté → Moi). Ils occupaient ici trois blocs empilés
+            d'environ 700 px pour dire un niveau, quatre nombres et quelques
+            badges ; ils y tiennent maintenant en trois lignes, à l'endroit
+            où l'on va justement regarder qui l'on est.
+            Voir components/community/ProfileHeader.tsx.
+          */}
 
           {/* ── Actu - Shine ── */}
           <ActuShineSection />

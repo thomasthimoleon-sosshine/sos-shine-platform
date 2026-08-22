@@ -3,8 +3,26 @@
 import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
-import ShineIcon from '@/components/icons/ShineIcon'
-import type { Profile } from '@/types/database'
+import ShineIcon, { type ShineIconName } from '@/components/icons/ShineIcon'
+import BadgeStrip, { type Badge } from '@/components/community/BadgeStrip'
+import { getUserBadges, getAllCategories, unlockAllBadgesForUser, type CategoryConfig } from '@/lib/badgeService'
+import { getLevelForXP, getNextLevel, getLevelProgress, formatXP } from '@/lib/xp'
+import type { Profile, UserXP } from '@/types/database'
+
+/**
+ * Les catégories de badges sont décrites par un mot-clé d'icône dans
+ * data/badgesConfig.json. On le traduit en signe des Éclats — pas d'émoji.
+ */
+const CATEGORY_ICON: Record<string, ShineIconName> = {
+  heart: 'relationships',
+  star: 'gratitude',
+  pen: 'texte',
+  sparkles: 'eclat',
+  share: 'diffuser',
+  compass: 'question',
+  headphones: 'audio',
+  flame: 'resilience',
+}
 
 /**
  * ─────────────────────────────────────────────────────────────────────────────
@@ -21,9 +39,15 @@ import type { Profile } from '@/types/database'
 
 type Stats = { posts: number; rayons: number; shines: number }
 
+/** Les quatre compteurs d'activité, en haut à droite. */
+type Activity = { given: number; received: number; comments: number; shares: number }
+
 export default function ProfileHeader() {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [stats, setStats] = useState<Stats>({ posts: 0, rayons: 0, shines: 0 })
+  const [activity, setActivity] = useState<Activity>({ given: 0, received: 0, comments: 0, shares: 0 })
+  const [xp, setXp] = useState<UserXP | null>(null)
+  const [badges, setBadges] = useState<Badge[]>([])
   const [loading, setLoading] = useState(true)
 
   const [editing, setEditing] = useState(false)
@@ -77,6 +101,54 @@ export default function ProfileHeader() {
     } catch { /* table absente : on laisse zéro */ }
 
     setStats({ posts: postIds.length, rayons, shines })
+
+    // ── Progression, activité et badges (repris de l'accueil) ──
+    const [{ data: xpRow }, { count: commentsLeft }] = await Promise.all([
+      supabase.from('user_xp').select('*').eq('user_id', user.id).maybeSingle(),
+      supabase.from('post_comments').select('id', { count: 'exact', head: true }).eq('author_id', user.id),
+    ])
+
+    if (xpRow) setXp(xpRow as UserXP)
+    setActivity({
+      given: (xpRow as UserXP | null)?.shines_given || 0,
+      received: (xpRow as UserXP | null)?.shines_received || 0,
+      comments: commentsLeft || 0,
+      // Les partages externes ne sont encore comptés nulle part : la valeur
+      // était écrite en dur à 0 sur l'accueil. On la garde visible mais on ne
+      // prétend pas qu'elle est alimentée.
+      shares: 0,
+    })
+
+    // Badges débloqués, du plus récent au plus ancien.
+    try {
+      // Reprise du comportement de l'accueil : les fondateurs ont tous les badges.
+      if ((p as Profile | null)?.role === 'founder') {
+        await unlockAllBadgesForUser(user.id)
+      }
+      const unlocked = await getUserBadges(user.id)
+      const categories = getAllCategories()
+      const byId = new Map<string, { title: string; icon: ShineIconName; category: string }>()
+      for (const [, cat] of Object.entries(categories)) {
+        const c = cat as CategoryConfig
+        for (const b of c.badges) {
+          byId.set(b.id, { title: b.title, icon: CATEGORY_ICON[c.icon] || 'eclat', category: c.name })
+        }
+      }
+      const mapped = unlocked
+        .slice()
+        .sort((a, b) => new Date(b.unlocked_at).getTime() - new Date(a.unlocked_at).getTime())
+        .map(u => {
+          const meta = byId.get(u.badge_id)
+          return meta
+            ? { id: u.badge_id, name: meta.title, icon: meta.icon, description: meta.category }
+            : null
+        })
+        .filter(Boolean) as Badge[]
+      setBadges(mapped)
+    } catch {
+      // Table des badges indisponible : on n'affiche simplement pas le bandeau.
+    }
+
     setLoading(false)
   }, [])
 
@@ -113,6 +185,10 @@ export default function ProfileHeader() {
   if (!profile) return null
 
   const initial = (profile.prenom || 'M').charAt(0).toUpperCase()
+  const totalXp = xp?.total_xp || 0
+  const level = xp ? getLevelForXP(totalXp) : null
+  const next = level ? getNextLevel(level.level) : null
+  const progress = xp ? getLevelProgress(totalXp) : 0
 
   return (
     <div className="rounded-2xl p-6 sm:p-7 mb-6"
@@ -137,6 +213,8 @@ export default function ProfileHeader() {
         {/* ── Identité, compteurs, bio ── */}
         <div className="flex-1 min-w-0">
 
+          <div className="flex items-start justify-between gap-6">
+            <div className="min-w-0">
           <div className="flex items-center gap-2.5 flex-wrap mb-4">
             <h2 className="font-display text-xl font-semibold text-[var(--text-primary)]">
               {profile.prenom}
@@ -152,7 +230,7 @@ export default function ProfileHeader() {
             )}
           </div>
 
-          {/* ── Les trois compteurs ── */}
+          {/* ── Les trois compteurs de profil ── */}
           <div className="flex items-center gap-7 sm:gap-9 mb-4">
             {([
               { n: stats.posts, l: stats.posts > 1 ? 'publications' : 'publication' },
@@ -163,6 +241,41 @@ export default function ProfileHeader() {
                 <p className="font-semibold text-[17px] tabular-nums text-[var(--text-primary)]">{s.n}</p>
                 <p className="text-[11.5px] text-[var(--text-muted)]">{s.l}</p>
               </div>
+            ))}
+          </div>
+            </div>
+
+            {/* ── Activité, en haut à droite ── */}
+            <div className="hidden sm:flex items-start gap-5 shrink-0">
+              {([
+                { n: activity.given, l: 'transmis', i: 'eclat' as ShineIconName },
+                { n: activity.received, l: 'reçus', i: 'gratitude' as ShineIconName },
+                { n: activity.comments, l: 'commentaires', i: 'parole' as ShineIconName },
+                { n: activity.shares, l: 'partages', i: 'diffuser' as ShineIconName },
+              ]).map(a => (
+                <div key={a.l} className="text-right">
+                  <p className="flex items-center justify-end gap-1.5 font-semibold text-[16px] tabular-nums text-[#C9A961]">
+                    <ShineIcon name={a.i} className="w-3.5 h-3.5" /> {a.n}
+                  </p>
+                  <p className="text-[10.5px] text-[var(--text-muted)] leading-tight">{a.l}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Sur téléphone, l'activité passe sous les compteurs de profil :
+              quatre colonnes de plus à droite y seraient illisibles. */}
+          <div className="flex sm:hidden items-center gap-4 flex-wrap mb-4">
+            {([
+              { n: activity.given, l: 'transmis', i: 'eclat' as ShineIconName },
+              { n: activity.received, l: 'reçus', i: 'gratitude' as ShineIconName },
+              { n: activity.comments, l: 'commentaires', i: 'parole' as ShineIconName },
+              { n: activity.shares, l: 'partages', i: 'diffuser' as ShineIconName },
+            ]).map(a => (
+              <span key={a.l} className="flex items-center gap-1.5 text-[11.5px] text-[var(--text-muted)]">
+                <ShineIcon name={a.i} className="w-3.5 h-3.5" color="#C9A961" />
+                <b className="text-[13px] tabular-nums text-[var(--text-primary)]">{a.n}</b> {a.l}
+              </span>
             ))}
           </div>
 
@@ -232,6 +345,40 @@ export default function ProfileHeader() {
           )}
         </div>
       </div>
+
+      {/* ── Progression & badges ─────────────────────────────────────────
+          Repris de l'accueil, où ces informations occupaient trois blocs
+          empilés d'environ 700 px pour dire un niveau, quatre nombres et
+          quelques badges. Ici : une ligne de niveau, une barre, une ligne
+          de badges. ─────────────────────────────────────────────────── */}
+      {level && (
+        <div className="mt-5 pt-5 border-t border-[var(--border)]">
+          <div className="flex items-center justify-between gap-4 mb-2">
+            <span className="flex items-center gap-2 text-[13px] font-semibold text-[#C9A961]">
+              <ShineIcon name="gratitude" className="w-4 h-4" />
+              {level.name}
+            </span>
+            <span className="text-[11px] text-[var(--text-muted)] tabular-nums text-right">
+              {next
+                ? <>{formatXP(totalXp)} / {formatXP(next.minXP)} XP · encore {formatXP(next.minXP - totalXp)}</>
+                : <>{formatXP(totalXp)} XP · dernier palier atteint</>}
+            </span>
+          </div>
+
+          <div className="h-[5px] rounded-full bg-white/[0.07] overflow-hidden">
+            <div
+              className="h-full rounded-full transition-[width] duration-700"
+              style={{ width: `${progress}%`, background: 'linear-gradient(90deg,#E3C77E,#C9A961)' }}
+            />
+          </div>
+
+          {badges.length > 0 && (
+            <div className="mt-4">
+              <BadgeStrip badges={badges} />
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }

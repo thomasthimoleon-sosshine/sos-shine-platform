@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import { useSubscription } from '@/hooks/useSubscription'
+import { SHINE_TV_CATEGORIES, isKnownCategory } from '@/lib/shine-tv/categories'
 
 // ── Types ──
 type ShineVideo = {
@@ -34,17 +35,8 @@ type Review = {
   date: string
 }
 
-const CATEGORIES = [
-  { id: 'trending', label: 'Tendances du moment', icon: '🔥' },
-  { id: 'healing', label: 'Guérison intérieure', icon: '🌿' },
-  { id: 'meditation', label: 'Méditations guidées', icon: '🧘' },
-  { id: 'confidence', label: 'Confiance en soi', icon: '💪' },
-  { id: 'relationships', label: 'Relations saines', icon: '💛' },
-  { id: 'resilience', label: 'Résilience', icon: '🔥' },
-  { id: 'gratitude', label: 'Gratitude & Joie', icon: '✨' },
-  { id: 'sleep', label: 'Sommeil & Détente', icon: '🌙' },
-  { id: 'children', label: 'Enfants', icon: '👶' },
-]
+/* Catégories : voir lib/shine-tv/categories.ts (partagé avec l'admin) */
+const CATEGORIES = SHINE_TV_CATEGORIES
 
 // ── Stars Component ──
 function StarRating({ rating, onRate, size = 'md', interactive = false }: {
@@ -1465,6 +1457,12 @@ export default function ShineTVPage() {
   })
 
   const getVideosByCategory = (catId: string) => filteredVideos.filter(v => v.category === catId)
+
+  /** Les plus recentes, toutes categories confondues. `videos` arrive deja trie. */
+  const trendingVideos = filteredVideos.slice(0, 10)
+
+  /** Celles qu'aucune rangee ne recupererait : categorie inconnue ou vide. */
+  const uncategorizedVideos = filteredVideos.filter(v => !isKnownCategory(v.category))
   const heroVideo = videos[0]
 
   if (loading) {
@@ -1585,7 +1583,9 @@ export default function ShineTVPage() {
               </svg>
               Favoris
             </button>
-            {CATEGORIES.slice(0, 6).map(cat => (
+            {/* Toutes les categories, pas les 6 premieres : sinon Masterclass et
+                Temoignages restent inaccessibles au filtre. */}
+            {CATEGORIES.map(cat => (
               <button
                 key={cat.id}
                 onClick={() => setActiveFilter(cat.id)}
@@ -1849,8 +1849,23 @@ export default function ShineTVPage() {
             })()}
           </div>
         ) : (
-          // Netflix rows view
+          // Vue « Tout » : rangees par categorie
           <div className="space-y-8">
+            {/*
+              Rangee « Tendances du moment » : elle est CALCULEE (les plus
+              recentes), pas stockee. Avant, « trending » etait une categorie
+              du dashboard que l'admin ne pouvait jamais attribuer — le filtre
+              ne renvoyait donc jamais rien.
+            */}
+            {trendingVideos.length > 0 && (
+              <VideoRow
+                title="Tendances du moment"
+                icon="🔥"
+                videos={trendingVideos}
+                onSelect={setSelectedVideo}
+              />
+            )}
+
             {CATEGORIES.map(cat => {
               const catVideos = getVideosByCategory(cat.id)
               if (catVideos.length === 0) return null
@@ -1864,6 +1879,32 @@ export default function ShineTVPage() {
                 />
               )
             })}
+
+            {/*
+              Filet de securite : toute video dont la categorie ne correspond a
+              aucune rangee connue atterrit ici. Sans ca elle n'est affichee
+              NULLE PART dans l'onglet « Tout » — c'est exactement le bug qui
+              faisait disparaitre les masterclass.
+            */}
+            {uncategorizedVideos.length > 0 && (
+              <VideoRow
+                title="Autres"
+                icon="🎬"
+                videos={uncategorizedVideos}
+                onSelect={setSelectedVideo}
+              />
+            )}
+
+            {filteredVideos.length === 0 && (
+              <div className="glass p-12 text-center rounded-xl">
+                <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
+                  Aucune vidéo pour le moment
+                </h3>
+                <p className="text-[14px] text-[var(--text-muted)]">
+                  Les vidéos publiées apparaîtront ici.
+                </p>
+              </div>
+            )}
           </div>
         )}
       </div>

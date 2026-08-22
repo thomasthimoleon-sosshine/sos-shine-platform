@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import FileUpload from '@/components/FileUpload'
+import { SHINE_TV_CATEGORIES } from '@/lib/shine-tv/categories'
 
 interface ShineVideo {
   id: string
@@ -26,18 +27,8 @@ interface DouleurOption {
   slug: string
 }
 
-const CATEGORIES = [
-  { id: 'healing', label: 'Guérison intérieure', icon: '🌿' },
-  { id: 'meditation', label: 'Méditations guidées', icon: '🧘' },
-  { id: 'confidence', label: 'Confiance en soi', icon: '💪' },
-  { id: 'relationships', label: 'Relations saines', icon: '💛' },
-  { id: 'resilience', label: 'Résilience', icon: '🔥' },
-  { id: 'gratitude', label: 'Gratitude & Joie', icon: '✨' },
-  { id: 'sleep', label: 'Sommeil & Détente', icon: '🌙' },
-  { id: 'masterclass', label: 'Masterclass', icon: '🎓' },
-  { id: 'testimony', label: 'Témoignages', icon: '🗣️' },
-  { id: 'children', label: 'Enfants', icon: '👶' },
-]
+/* Catégories : voir lib/shine-tv/categories.ts (partagé avec le dashboard) */
+const CATEGORIES = SHINE_TV_CATEGORIES
 
 const emptyForm = {
   title: '',

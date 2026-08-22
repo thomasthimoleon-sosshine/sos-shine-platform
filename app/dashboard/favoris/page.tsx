@@ -46,6 +46,17 @@ const CATEGORIES: { id: Cat; label: string; icon: ShineIconName; color: string }
 
 const CAT_MAP = new Map(CATEGORIES.map(c => [c.id, c]))
 
+/** Proportions du visuel de remplacement, quand le contenu n'a pas d'image. */
+const ASPECT: Record<Cat, string> = {
+  protocoles: 'aspect-[4/3]',
+  publications: 'aspect-[4/3]',
+  shorts: 'aspect-[9/16]',
+  videos: 'aspect-video',
+  podcasts: 'aspect-square',
+  lectures: 'aspect-[2/3]',
+  blog: 'aspect-[4/3]',
+}
+
 function extract(content: string, max = 110) {
   const clean = content.replace(/\s+/g, ' ').trim()
   return clean.length > max ? clean.slice(0, max) + '…' : clean
@@ -66,13 +77,13 @@ export default function FavorisPage() {
     if (slugs.length > 0) {
       const { data } = await supabase
         .from('douleurs')
-        .select('id, title, slug, description')
+        .select('id, title, slug, description, image_url')
         .in('slug', slugs)
       for (const d of data || []) {
         collected.push({
           id: `p-${d.id}`, cat: 'protocoles', title: d.title,
           subtitle: extract(d.description || ''),
-          href: `/dashboard/encyclopedie/${d.slug}`, image: null, savedAt: null,
+          href: `/dashboard/encyclopedie/${d.slug}`, image: d.image_url, savedAt: null,
         })
       }
     }
@@ -274,7 +285,13 @@ export default function FavorisPage() {
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        /*
+          Galerie en colonnes plutôt qu'une grille : chaque contenu garde ses
+          proportions d'origine — une affiche de livre est haute, une vidéo est
+          large, un format court est vertical. Les forcer dans un cadre unique
+          les aurait tous rognés au mauvais endroit.
+        */
+        <div className="columns-2 sm:columns-3 lg:columns-4 gap-3">
           {shown.map((it, i) => {
             const c = CAT_MAP.get(it.cat)!
             return (
@@ -283,33 +300,50 @@ export default function FavorisPage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: Math.min(i * 0.03, 0.3), duration: 0.35 }}
+                className="break-inside-avoid mb-3"
               >
                 <Link
                   href={it.href}
-                  className="group flex gap-4 rounded-xl p-4 h-full transition-all duration-300 hover:-translate-y-0.5"
-                  style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
+                  title={it.subtitle || it.title}
+                  className="group block relative rounded-xl overflow-hidden transition-all duration-300
+                             hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(0,0,0,0.5)]"
+                  style={{ border: '1px solid var(--border)' }}
                 >
-                  <div className="w-16 h-16 rounded-lg shrink-0 overflow-hidden flex items-center justify-center"
-                    style={{ background: `${c.color}12`, border: `1px solid ${c.color}22` }}>
-                    {it.image
-                      ? <img src={it.image} alt="" className="w-full h-full object-cover" loading="lazy" />
-                      : <ShineIcon name={c.icon} className="w-6 h-6" color={c.color} strokeWidth={1.3} />}
-                  </div>
+                  {it.image ? (
+                    <img
+                      src={it.image}
+                      alt=""
+                      loading="lazy"
+                      className="w-full h-auto block transition-transform duration-500 group-hover:scale-[1.04]"
+                    />
+                  ) : (
+                    /* Sans visuel, on en fabrique un : le signe de la catégorie
+                       en grand sur un fond teinté. Jamais une carte de texte nu. */
+                    <div
+                      className={`w-full flex items-center justify-center ${ASPECT[it.cat]}`}
+                      style={{ background: `linear-gradient(150deg, ${c.color}1A, ${c.color}08 60%, transparent)` }}
+                    >
+                      <ShineIcon name={c.icon} className="w-10 h-10 opacity-70" color={c.color} strokeWidth={1.1} />
+                    </div>
+                  )}
 
-                  <div className="flex-1 min-w-0">
-                    <span className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.14em] mb-1.5"
-                      style={{ color: c.color }}>
-                      <ShineIcon name={c.icon} className="w-3 h-3" />
-                      {c.label}
-                    </span>
-                    <h3 className="font-semibold text-[15px] leading-tight mb-1 truncate
-                                   group-hover:text-[var(--brand)] transition-colors text-[var(--text-primary)]">
-                      {it.title}
-                    </h3>
-                    <p className="text-[13px] leading-relaxed line-clamp-2 text-[var(--text-secondary)]">
-                      {it.subtitle}
-                    </p>
-                  </div>
+                  {/* Voile bas : le titre reste lisible même sur une image claire */}
+                  <div className="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none"
+                    style={{ background: 'linear-gradient(to top, rgba(10,8,6,0.94) 12%, rgba(10,8,6,0.55) 45%, transparent)' }} />
+
+                  {/* Catégorie, en haut */}
+                  <span className="absolute top-2 left-2 inline-flex items-center gap-1.5 px-2 py-1 rounded-full
+                                   text-[9.5px] uppercase tracking-[0.12em] font-semibold backdrop-blur-sm"
+                    style={{ background: 'rgba(10,8,6,0.62)', color: c.color, border: `1px solid ${c.color}44` }}>
+                    <ShineIcon name={c.icon} className="w-3 h-3" />
+                    {c.label}
+                  </span>
+
+                  {/* Titre, en bas */}
+                  <h3 className="absolute inset-x-0 bottom-0 px-3 pb-3 text-[13px] font-semibold leading-snug
+                                 line-clamp-2 text-white">
+                    {it.title}
+                  </h3>
                 </Link>
               </motion.div>
             )

@@ -300,7 +300,6 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
   const [search, setSearch] = useState('')
   const [activeLetter, setActiveLetter] = useState('ALL')
   const [activeCat, setActiveCat] = useState('ALL')
-  const [onlyOriginal, setOnlyOriginal] = useState(false)
   const [loading, setLoading] = useState(!initialDouleurs || initialDouleurs.length === 0)
   const [shineMap, setShineMap] = useState<ShineMap>(initialShineMap ?? {})
 
@@ -390,10 +389,9 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
         t.subtitle.toLowerCase().includes(search.toLowerCase())
       const matchLetter = activeLetter === 'ALL' || t.letter === activeLetter
       const matchCat = activeCat === 'ALL' || t.cat === activeCat
-      const matchOriginal = !onlyOriginal || t.original
-      return matchSearch && matchLetter && matchCat && matchOriginal
+      return matchSearch && matchLetter && matchCat
     })
-  }, [topics, search, activeLetter, activeCat, onlyOriginal])
+  }, [topics, search, activeLetter, activeCat])
 
   const grouped = useMemo(() => {
     const g: Record<string, typeof filtered> = {}
@@ -411,15 +409,13 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
     return g
   }, [filtered])
 
-  const originalCount = topics.filter(t => t.original).length
-
   // Protocoles déjà disponibles (contenu publié) — mis en avant en tête de liste
   const availableTopics = useMemo(
     () => filtered.filter(t => !!t.dbMatch).sort((a, b) => a.title.localeCompare(b.title)),
     [filtered]
   )
   // On n'affiche la section "Disponibles" qu'en vue par défaut (sans recherche ni filtre)
-  const isDefaultView = search === '' && activeLetter === 'ALL' && activeCat === 'ALL' && !onlyOriginal
+  const isDefaultView = search === '' && activeLetter === 'ALL' && activeCat === 'ALL'
 
   return (
     <main className="min-h-screen watermark-container bg-[var(--surface)]">
@@ -469,7 +465,7 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
             Cartographie Universelle
           </h1>
           <p className="text-sm text-[var(--text-muted)]">
-            {topics.length} sujets &middot; {originalCount} originaux &diams; &middot; {Object.keys(CATEGORIES).length} catégories
+            {topics.length} sujets &middot; {Object.keys(CATEGORIES).length} catégories
           </p>
         </div>
       </div>
@@ -558,20 +554,10 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
           ))}
         </div>
 
-        {/* Count & original toggle */}
         <div className="flex justify-between items-center">
           <p className="text-[13px] text-[var(--text-muted)]">
             {filtered.length} sujet{filtered.length > 1 ? 's' : ''} affiché{filtered.length > 1 ? 's' : ''}
           </p>
-          <label className="flex items-center gap-2 cursor-pointer text-[12px] uppercase tracking-wider text-[var(--text-muted)]">
-            <input
-              type="checkbox"
-              checked={onlyOriginal}
-              onChange={(e) => setOnlyOriginal(e.target.checked)}
-              className="accent-[var(--brand)]"
-            />
-            <span>&diams; Liste originale uniquement</span>
-          </label>
         </div>
 
         {/* Topics list */}
@@ -652,7 +638,7 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
                           border: hasDbEntry
                             ? '1.5px solid rgba(85,239,196,0.2)'
                             : '1px solid var(--border)',
-                          borderLeft: topic.original ? '2px solid var(--brand)' : hasDbEntry ? '2px solid rgba(85,239,196,0.3)' : '2px solid transparent',
+                          borderLeft: hasDbEntry ? '2px solid rgba(85,239,196,0.3)' : '2px solid transparent',
                           cursor: 'pointer',
                         }}
                       >
@@ -665,9 +651,6 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
                               >
                                 {topic.title}
                               </span>
-                              {topic.original && (
-                                <span className="text-[11px] text-[var(--brand)]">&diams;</span>
-                              )}
                             </div>
                             <p
                               className="text-[12px] leading-relaxed mb-2 italic text-[var(--text-secondary)]"
@@ -761,10 +744,6 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
             border: '1px solid var(--border)',
           }}
         >
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-0.5" style={{ background: 'var(--brand)' }} />
-            <span className="text-xs text-[var(--text-secondary)]">&diams; Sujet de la liste originale</span>
-          </div>
           <div className="flex items-center gap-2">
             <svg className="w-3 h-3" fill="#55EFC4" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
             <span className="text-xs text-[var(--text-secondary)]">Shine TV</span>

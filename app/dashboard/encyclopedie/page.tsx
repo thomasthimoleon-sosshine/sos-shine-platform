@@ -293,7 +293,6 @@ export default function EncyclopediePage() {
   const [search, setSearch] = useState(searchParams.get('q') || '')
   const [activeLetter, setActiveLetter] = useState('ALL')
   const [activeCat, setActiveCat] = useState('ALL')
-  const [onlyOriginal, setOnlyOriginal] = useState(false)
   const [onlyTodo, setOnlyTodo] = useState(false)
   const [loading, setLoading] = useState(true)
   const [progressMap, setProgressMap] = useState<Record<string, UserProgress>>({})
@@ -382,8 +381,6 @@ export default function EncyclopediePage() {
         t.subtitle.toLowerCase().includes(search.toLowerCase())
       const matchLetter = activeLetter === 'ALL' || t.letter === activeLetter
       const matchCat = activeCat === 'ALL' || t.cat === activeCat
-      const matchOriginal = !onlyOriginal || t.original
-
       /**
        * « À faire » : les protocoles que la personne n'a pas encore terminés.
        * On ne montre que ceux réellement en ligne — proposer « à faire » un
@@ -393,9 +390,9 @@ export default function EncyclopediePage() {
        */
       const matchTodo = !onlyTodo || (!!t.dbMatch && !progressMap[t.dbMatch.id]?.completed_at)
 
-      return matchSearch && matchLetter && matchCat && matchOriginal && matchTodo
+      return matchSearch && matchLetter && matchCat && matchTodo
     })
-  }, [topics, search, activeLetter, activeCat, onlyOriginal, onlyTodo, progressMap])
+  }, [topics, search, activeLetter, activeCat, onlyTodo, progressMap])
 
   const grouped = useMemo(() => {
     const g: Record<string, typeof filtered> = {}
@@ -424,7 +421,6 @@ export default function EncyclopediePage() {
     return g
   }, [filtered, onlyTodo, progressMap])
 
-  const originalCount = topics.filter(t => t.original).length
 
   /** Protocoles en ligne que la personne n'a pas encore terminés. */
   const todoCount = useMemo(
@@ -443,7 +439,7 @@ export default function EncyclopediePage() {
           {t('dashboard.encyclopedia_subtitle')}
         </p>
         <p className="text-sm mt-1 text-[var(--text-muted)]">
-          {topics.length} sujets &middot; {originalCount} originaux &diams; &middot; {Object.keys(CATEGORIES).length} catégories &middot; {todoCount} à faire
+          {topics.length} sujets &middot; {Object.keys(CATEGORIES).length} catégories &middot; {todoCount} à faire
         </p>
       </div>
 
@@ -593,7 +589,7 @@ export default function EncyclopediePage() {
                         border: hasDbEntry
                           ? (prog?.completed_at ? '1.5px solid rgba(85,239,196,0.4)' : '1.5px solid rgba(85,239,196,0.2)')
                           : '1px solid var(--border)',
-                        borderLeft: topic.original ? '2px solid var(--brand)' : hasDbEntry ? '2px solid rgba(85,239,196,0.3)' : '2px solid transparent',
+                        borderLeft: hasDbEntry ? '2px solid rgba(85,239,196,0.3)' : '2px solid transparent',
                         cursor: 'pointer',
                       }}
                     >
@@ -606,9 +602,6 @@ export default function EncyclopediePage() {
                             >
                               {topic.title}
                             </span>
-                            {topic.original && (
-                              <span className="text-[11px] text-[var(--brand)]">&diams;</span>
-                            )}
                             {prog?.completed_at && (
                               <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="var(--success)" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -719,10 +712,6 @@ export default function EncyclopediePage() {
           border: '1px solid var(--border)',
         }}
       >
-        <div className="flex items-center gap-2">
-          <div className="w-4 h-0.5" style={{ background: 'var(--brand)' }} />
-          <span className="text-xs text-[var(--text-secondary)]">&diams; Originale</span>
-        </div>
         <div className="flex items-center gap-2">
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="var(--success)" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />

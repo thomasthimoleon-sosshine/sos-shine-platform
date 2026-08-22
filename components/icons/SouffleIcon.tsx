@@ -33,6 +33,7 @@ export type SouffleIconName =
   | 'texte'
   | 'image'
   | 'video'
+  | 'shorts'
   | 'audio'
   | 'eclat'
   | 'parole'
@@ -111,30 +112,44 @@ const PATHS: Record<SouffleIconName, React.ReactNode> = {
     </>
   ),
 
-  /* ── Texte — trois souffles posés, le dernier retenu. ── */
+  /* ── Texte — repris tel quel des Éclats (choix de Julia) : trois rais
+       posés, le dernier taillé en facette. ── */
   texte: (
     <>
-      <path d="M4 7.6 C 8.6 7, 15.4 7, 20 7.6" />
-      <path d="M4 12 C 7.6 11.5, 12.4 11.5, 15.6 12" />
-      <path d="M4 16.4 C 6.4 16, 8.6 16, 10.4 16.4" />
-      <path d={drop(17.4, 16.2, 2.6, 2.6)} />
+      <path d="M4 7.5 h16" />
+      <path d="M4 12 h11" />
+      <path d="M4 16.5 h6" />
+      <path d="M16.6 16.5 L18.6 14.5 L20.6 16.5 L18.6 18.5 Z" />
     </>
   ),
 
-  /* ── Image — une goutte sous la lumière. ── */
+  /* ── Image — CE QUI EST TENU. Une goutte dans un cadre large et adouci. ── */
   image: (
     <>
-      <path d="M2.8 8.4 C 2.8 6, 4 5, 6.4 5 L 17.6 5 C 20 5, 21.2 6, 21.2 8.4 L 21.2 15.6 C 21.2 18, 20 19, 17.6 19 L 6.4 19 C 4 19, 2.8 18, 2.8 15.6 Z" />
-      <path d={drop(11.2, 13.2, 3.6, 3.6)} />
-      <path d="M16.6 9.6 C 17.2 9.6, 17.4 9.9, 17.4 10.4" />
+      <path d="M1.4 9.4 C 1.4 7.4, 2.6 6.6, 4.6 6.6 L 19.4 6.6 C 21.4 6.6, 22.6 7.4, 22.6 9.4 L 22.6 14.6 C 22.6 16.6, 21.4 17.4, 19.4 17.4 L 4.6 17.4 C 2.6 17.4, 1.4 16.6, 1.4 14.6 Z" />
+      <path d={drop(9.6, 13, 3.4, 3.4)} />
+      <path d="M17 9.8 C 17.6 9.8, 17.9 10.1, 17.9 10.7" />
     </>
   ),
 
-  /* ── Vidéo — le souffle qui avance. ── */
+  /* ── Vidéo — CE QUI AVANCE. Le cadre disparaît, la traîne apparaît. ── */
   video: (
     <>
-      <path d="M2.8 8.4 C 2.8 6, 4 5, 6.4 5 L 17.6 5 C 20 5, 21.2 6, 21.2 8.4 L 21.2 15.6 C 21.2 18, 20 19, 17.6 19 L 6.4 19 C 4 19, 2.8 18, 2.8 15.6 Z" />
-      <path d="M10.2 8.8 C 13 10, 15.2 11.2, 15.8 12 C 15.2 12.8, 13 14, 10.2 15.2 C 10.6 13.4, 10.6 10.6, 10.2 8.8 Z" />
+      <path d="M9.6 5.4 C 14 7.6, 19 10.4, 20.8 12 C 19 13.6, 14 16.4, 9.6 18.6 C 11 15.6, 11 8.4, 9.6 5.4 Z" />
+      <path d="M6.4 8.8 C 7 8.8, 7.4 8.8, 7.8 8.8" />
+      <path d="M3 12 C 4.2 12, 5.4 12, 6.6 12" />
+      <path d="M6.4 15.2 C 7 15.2, 7.4 15.2, 7.8 15.2" />
+    </>
+  ),
+
+  /* ── Shorts — LE FIL VERTICAL. Un écran debout et le geste qui le fait
+       défiler, au-dessus et en dessous. ── */
+  shorts: (
+    <>
+      <path d="M6 7.4 C 6 5.4, 7 4.6, 9 4.6 L 15 4.6 C 17 4.6, 18 5.4, 18 7.4 L 18 16.6 C 18 18.6, 17 19.4, 15 19.4 L 9 19.4 C 7 19.4, 6 18.6, 6 16.6 Z" />
+      <path d="M10.4 9.2 C 12.4 10.2, 14.2 11.4, 14.8 12 C 14.2 12.6, 12.4 13.8, 10.4 14.8 C 11 13.2, 11 10.8, 10.4 9.2 Z" />
+      <path d="M9.4 2.2 C 10.6 1.9, 13.4 1.9, 14.6 2.2" />
+      <path d="M9.4 21.8 C 10.6 22.1, 13.4 22.1, 14.6 21.8" />
     </>
   ),
 
@@ -161,12 +176,13 @@ const PATHS: Record<SouffleIconName, React.ReactNode> = {
     </>
   ),
 
-  /* ── Rayon — envoyer. Une goutte lancée le long d'un souffle. ── */
+  /* ── Rayon — repris tel quel des Éclats (choix de Julia) : un rai lancé
+       depuis la facette. ── */
   rayon: (
     <>
-      <path d="M2.6 18.6 C 8.4 18, 16 14, 21.2 4.4" />
-      <path d="M21.2 4.4 C 18.2 5, 15.6 5.4, 13 5.4" />
-      <path d="M21.2 4.4 C 20.4 7.4, 19.8 10, 19 12.4" />
+      <path d="M5.4 8.6 L8.4 12 L5.4 15.4 L2.4 12 Z" />
+      <path d="M9.2 12 h11" />
+      <path d="M16.4 8.2 L20.6 12 L16.4 15.8" />
     </>
   ),
 

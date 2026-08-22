@@ -33,6 +33,7 @@ export type ShineIconName =
   | 'texte'
   | 'image'
   | 'video'
+  | 'shorts'
   | 'audio'
   // Actions
   | 'eclat'
@@ -132,20 +133,34 @@ const PATHS: Record<ShineIconName, React.ReactNode> = {
     </>
   ),
 
-  /* ── Image — une facette sous verre. ── */
+  /* ── Image — CE QUI EST TENU. Une facette sous verre, dans un cadre large. ── */
   image: (
     <>
-      <path d="M3.4 6.4 h17.2 a1.6 1.6 0 0 1 1.6 1.6 v8.4 a1.6 1.6 0 0 1 -1.6 1.6 h-17.2 a1.6 1.6 0 0 1 -1.6 -1.6 v-8.4 a1.6 1.6 0 0 1 1.6 -1.6 Z" />
-      <path d="M11 9.6 L13.8 12.6 L11 15.6 L8.2 12.6 Z" />
-      <path d="M17.4 9.6 v1.8" />
+      <path d="M2.2 7 h19.6 a1.5 1.5 0 0 1 1.5 1.5 v7 a1.5 1.5 0 0 1 -1.5 1.5 h-19.6 a1.5 1.5 0 0 1 -1.5 -1.5 v-7 a1.5 1.5 0 0 1 1.5 -1.5 Z" />
+      <path d="M10.4 9.4 L13.2 12 L10.4 14.6 L7.6 12 Z" />
+      <path d="M17.6 9.6 v1.6" />
     </>
   ),
 
-  /* ── Vidéo — la facette qui avance : une lecture, pas un triangle générique. ── */
+  /* ── Vidéo — CE QUI AVANCE. Pas de cadre : une image seule est tenue,
+       une vidéo se déplace. Deux rais de traîne disent le mouvement. ── */
   video: (
     <>
-      <path d="M3.4 6.4 h17.2 a1.6 1.6 0 0 1 1.6 1.6 v8.4 a1.6 1.6 0 0 1 -1.6 1.6 h-17.2 a1.6 1.6 0 0 1 -1.6 -1.6 v-8.4 a1.6 1.6 0 0 1 1.6 -1.6 Z" />
-      <path d="M10 9.2 L16 12.2 L10 15.2 L11.7 12.2 Z" />
+      <path d="M9.4 5.6 L20.6 12 L9.4 18.4 L12.4 12 Z" />
+      <path d="M5.8 8.6 h2.2" />
+      <path d="M3.2 12 h3.6" />
+      <path d="M5.8 15.4 h2.2" />
+    </>
+  ),
+
+  /* ── Shorts — LE FIL VERTICAL. Un écran debout, ce qui avance dedans, et
+       les deux repères du défilement au-dessus et en dessous. ── */
+  shorts: (
+    <>
+      <path d="M7.4 4.6 h9.2 a1.6 1.6 0 0 1 1.6 1.6 v11.6 a1.6 1.6 0 0 1 -1.6 1.6 h-9.2 a1.6 1.6 0 0 1 -1.6 -1.6 v-11.6 a1.6 1.6 0 0 1 1.6 -1.6 Z" />
+      <path d="M10.6 9 L15 12 L10.6 15 L11.8 12 Z" />
+      <path d="M9.6 2.2 h4.8" />
+      <path d="M9.6 21.8 h4.8" />
     </>
   ),
 

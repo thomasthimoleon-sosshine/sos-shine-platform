@@ -5,7 +5,8 @@ import { useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import { useSubscription } from '@/hooks/useSubscription'
-import { SHINE_TV_CATEGORIES, isKnownCategory } from '@/lib/shine-tv/categories'
+import { SHINE_TV_CATEGORIES, isKnownCategory, categoryLabel } from '@/lib/shine-tv/categories'
+import ShineIcon from '@/components/icons/ShineIcon'
 
 // ── Types ──
 type ShineVideo = {
@@ -282,52 +283,80 @@ function HeroBanner({ video, onOpen, onInfo }: { video: ShineVideo; onOpen: () =
         </div>
       </div>
 
-      {/* ─── Desktop: layout Netflix classique avec overlay ─── */}
-      <div className="hidden sm:block relative w-full overflow-hidden sm:rounded-2xl" style={{ height: 'clamp(400px, 55vh, 600px)' }}>
-        <img
-          src={video.thumbnailDesktop || video.thumbnail}
-          alt={video.title}
-          className="absolute inset-0 w-full h-full object-cover object-top"
-        />
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(9,9,11,0.92) 25%, rgba(9,9,11,0.5) 55%, rgba(9,9,11,0.15))' }} />
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(9,9,11,1) 0%, rgba(9,9,11,0.3) 25%, transparent 50%)' }} />
+      {/* ─── Ordinateur : « La Fenêtre » ─────────────────────────────────
+           L'image n'est plus un fond voilé à 92 % : c'est une pièce posée,
+           nette et entière, à droite. Aucun voile dessus — donc plus aucun
+           conflit avec un titre déjà incrusté dans la vignette, qui faisait
+           apparaître le titre deux fois. ──────────────────────────────── */}
+      <div className="hidden sm:block relative w-full overflow-hidden rounded-2xl bg-[#0d0b08] border border-[rgba(201,169,97,0.14)]"
+        style={{ height: 'clamp(420px, 52vh, 520px)' }}>
 
-        <div className="absolute bottom-0 left-0 p-10 max-w-xl z-10">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold mb-4"
-              style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.3)' }}>
-              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" /></svg>
-              Recommand&eacute; pour vous
+        {/* Lueur d'or, très basse, pour que le bloc ne soit pas un rectangle mort */}
+        <div className="absolute -left-40 top-1/2 -translate-y-1/2 w-[520px] h-[520px] rounded-full opacity-[0.13] blur-[110px] pointer-events-none"
+          style={{ background: '#C9A961' }} />
+
+        <div className="relative h-full grid grid-cols-[1fr_1.15fr] gap-10 lg:gap-12 items-center px-8 lg:px-12">
+
+          {/* Colonne texte */}
+          <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[10.5px] font-semibold uppercase tracking-[0.18em] mb-5"
+              style={{ background: 'rgba(201,169,97,0.14)', color: '#E3C77E', border: '1px solid rgba(201,169,97,0.32)' }}>
+              <ShineIcon name="gratitude" className="w-3.5 h-3.5" />
+              Recommandé pour vous
             </span>
-            <h1 className="font-display text-5xl font-semibold tracking-tight mb-3" style={{ color: '#fff' }}>
+
+            <h1 className="font-display font-semibold tracking-tight mb-4 text-white"
+              style={{ fontSize: 'clamp(30px, 3.2vw, 46px)', lineHeight: 1.06 }}>
               {video.title}
             </h1>
-            <p className="text-[15px] leading-relaxed mb-5 line-clamp-2" style={{ color: 'rgba(255,255,255,0.7)' }}>
+
+            <p className="text-[14.5px] leading-relaxed mb-6 line-clamp-3 text-white/65">
               {video.description}
             </p>
-            <div className="flex items-center gap-3 flex-wrap">
+
+            <div className="flex items-center gap-3 flex-wrap mb-5">
               <button onClick={onOpen}
-                className="flex items-center gap-2.5 px-6 py-3 rounded-xl text-[14px] font-semibold cursor-pointer transition-all duration-200 hover:scale-105"
-                style={{ background: 'var(--brand)', color: '#09090b' }}>
+                className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full text-[14px] font-semibold cursor-pointer transition-transform duration-200 hover:scale-[1.04]"
+                style={{ background: 'linear-gradient(135deg,#E3C77E,#C9A961)', color: '#0A0806' }}>
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                 Regarder
               </button>
               <button onClick={onInfo}
-                className="flex items-center gap-2 px-5 py-3 rounded-xl text-[14px] font-medium cursor-pointer transition-all duration-200 hover:bg-white/10"
-                style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.15)' }}>
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-                </svg>
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-full text-[14px] font-medium cursor-pointer transition-colors duration-200 hover:bg-white/[0.12]"
+                style={{ background: 'rgba(255,255,255,0.07)', color: '#fff', border: '1px solid rgba(255,255,255,0.18)' }}>
                 Plus d&apos;infos
               </button>
             </div>
-            <div className="flex items-center gap-4 mt-4">
-              <StarRating rating={Math.round(video.rating)} size="sm" />
-              <span className="text-[13px] font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>
-                {video.rating.toFixed(1)} / 5 · {video.reviewCount} avis · {video.duration}
-              </span>
-            </div>
+
+            <p className="text-[11.5px] uppercase tracking-[0.18em] text-white/40">
+              {categoryLabel(video.category)} · {video.duration}
+              {video.reviewCount > 0 && ` · ${video.rating.toFixed(1).replace('.', ',')} ★`}
+            </p>
           </motion.div>
+
+          {/* La fenêtre : l'image, entière et nette */}
+          <motion.button
+            onClick={onOpen}
+            initial={{ opacity: 0, scale: 0.97 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.08 }}
+            aria-label={`Regarder ${video.title}`}
+            className="group relative rounded-xl overflow-hidden aspect-video w-full cursor-pointer
+                       shadow-[0_30px_80px_rgba(0,0,0,0.65)] ring-1 ring-white/10"
+          >
+            <img
+              src={video.thumbnailDesktop || video.thumbnail}
+              alt={video.title}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            />
+            <span className="absolute inset-0 flex items-center justify-center">
+              <span className="w-16 h-16 rounded-full flex items-center justify-center backdrop-blur-sm
+                               transition-transform duration-300 group-hover:scale-110"
+                style={{ background: 'rgba(201,169,97,0.92)', color: '#0A0806' }}>
+                <svg className="w-7 h-7 translate-x-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+              </span>
+            </span>
+          </motion.button>
         </div>
       </div>
     </>

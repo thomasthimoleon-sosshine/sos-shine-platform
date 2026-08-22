@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic'
 import { createClient } from '@/lib/supabase/client'
 import SubscriptionGate from '@/components/SubscriptionGate'
 import ProfileDrawer from '@/components/community/ProfileDrawer'
+import ProfileHeader from '@/components/community/ProfileHeader'
 
 const MurTab = dynamic(() => import('@/app/dashboard/mur/page'), { ssr: false })
 const MonEclatTab = dynamic(() => import('@/app/dashboard/mon-eclat/page'), { ssr: false })
@@ -131,6 +132,9 @@ export default function CommunautePage() {
           })}
         </div>
       </div>
+
+      {/* ── Onglet "Moi" : on arrive sur son profil ── */}
+      {activeTab === 'moi' && <ProfileHeader />}
 
       {/* ── Sous-menu de l'onglet "Moi" ── */}
       {activeTab === 'moi' && (

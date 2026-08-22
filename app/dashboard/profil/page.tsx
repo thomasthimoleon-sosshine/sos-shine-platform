@@ -10,6 +10,7 @@ import { PLAN_ORDER, PLAN_NAMES, PLAN_COLORS, PLAN_PRICES_EUR } from '@/lib/stri
 import { useTranslation } from '@/lib/i18n/useTranslation'
 import NotificationPreferences from '@/components/account/NotificationPreferences'
 import ShineIcon from '@/components/icons/ShineIcon'
+import CourrierAnonyme from '@/components/account/CourrierAnonyme'
 
 export default function ProfilPage() {
   const { t } = useTranslation()
@@ -403,6 +404,23 @@ export default function ProfilPage() {
 
       {/* Notifications */}
       <NotificationPreferences />
+
+      {/* Courrier anonyme — retiré du menu de gauche, il vit ici */}
+      <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
+        <div className="flex items-start gap-3 mb-1">
+          <ShineIcon name="rayon" className="w-5 h-5 mt-0.5 shrink-0" color="var(--brand)" />
+          <div>
+            <h3 className="font-semibold text-base text-[var(--text-primary)]">Courrier anonyme</h3>
+            <p className="text-xs mt-1 text-[var(--text-muted)]">
+              Une question, une suggestion, un témoignage — l&apos;équipe fondatrice le lira,
+              sans jamais savoir de qui il vient.
+            </p>
+          </div>
+        </div>
+        <div className="mt-5">
+          <CourrierAnonyme compact />
+        </div>
+      </div>
 
       {/* Vidéo de présentation */}
       <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>

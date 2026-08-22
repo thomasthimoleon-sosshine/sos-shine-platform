@@ -158,6 +158,8 @@ const PRIMARY_NAV = [
 // Ces pages sont regroupées dans la Médiathèque : on ne les montre plus comme
 // entrées de menu séparées (elles restent accessibles via /dashboard/mediatheque).
 const HIDDEN_NAV = [
+  // Le courrier anonyme a rejoint « Mon compte » : il n'a plus d'entrée propre.
+  '/dashboard/courrier-anonyme',
   '/dashboard/shine-tv',
   '/dashboard/shine-shorts',
   '/dashboard/shine-audible',

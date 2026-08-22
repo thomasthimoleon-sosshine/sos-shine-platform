@@ -620,7 +620,7 @@ function FullScreenPlayer({ video, onClose, onShowInfo, previewSeconds }: {
           src={video.videoUrl}
           autoPlay
           playsInline
-          preload="auto"
+          preload="metadata"
           crossOrigin="anonymous"
           className="w-full h-full object-contain"
           controlsList="nodownload"

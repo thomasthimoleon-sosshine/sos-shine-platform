@@ -24,7 +24,11 @@ export async function uploadFile(
   const { error } = await supabase.storage
     .from(BUCKET)
     .upload(path, file, {
-      cacheControl: '3600',
+      // Type MIME explicite : garantit que la vidéo est servie avec le bon
+      // en-tête (sinon certains navigateurs refusent de la lire).
+      contentType: file.type || undefined,
+      // Cache long côté CDN : les fichiers sont immuables (nom unique par upload).
+      cacheControl: '31536000',
       upsert: false,
     })
 

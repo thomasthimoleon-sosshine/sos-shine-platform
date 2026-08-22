@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import SubscriptionGate from '@/components/SubscriptionGate'
+import SmartVideo from '@/components/SmartVideo'
 import { useFeatureAccess } from '@/hooks/useFeatureAccess'
 import type { Douleur, DouleurStep, UserProgress, DouleurQuizQuestion } from '@/types/database'
 import { formatXP } from '@/lib/xp'
@@ -1023,13 +1024,12 @@ export default function DouleurDetailPage() {
                   ? <PreviewVideo src={currentStep.video} poster={currentStep.video_cover || currentStep.image || undefined} label={currentStep.title} />
                   : (
                 <div className="rounded-xl overflow-hidden aspect-video" style={{ background: 'var(--dark)' }}>
-                  <video
+                  <SmartVideo
                     src={currentStep.video}
                     poster={currentStep.video_cover || currentStep.image || undefined}
                     controls
                     controlsList="nodownload"
                     onContextMenu={(e) => e.preventDefault()}
-                    preload="metadata"
                     className="w-full h-full"
                   />
                 </div>
@@ -1043,13 +1043,12 @@ export default function DouleurDetailPage() {
                   ? <PreviewVideo src={currentStep.video2} poster={currentStep.video2_cover || undefined} label={currentStep.title} />
                   : (
                 <div className="rounded-xl overflow-hidden aspect-video" style={{ background: 'var(--dark)' }}>
-                  <video
+                  <SmartVideo
                     src={currentStep.video2}
                     poster={currentStep.video2_cover || undefined}
                     controls
                     controlsList="nodownload"
                     onContextMenu={(e) => e.preventDefault()}
-                    preload="metadata"
                     className="w-full h-full"
                   />
                 </div>

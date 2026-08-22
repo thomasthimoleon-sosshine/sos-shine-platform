@@ -17,7 +17,7 @@ const SECTIONS = [
   },
   {
     href: '/dashboard/shine-shorts',
-    title: 'Formats courts',
+    title: 'Shorts',
     desc: 'De courtes vidéos, à regarder en quelques minutes.',
     icon: (
       <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>

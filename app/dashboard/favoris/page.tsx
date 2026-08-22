@@ -13,7 +13,7 @@ import { getFavorites } from '@/components/FavoriteButton'
  * ─────────────────────────────────────────────────────────────────────────────
  *
  *  Avant, cette page n'affichait QUE les protocoles de l'encyclopédie. Tout le
- *  reste — publications enregistrées, formats courts, vidéos, podcasts,
+ *  reste — publications enregistrées, Shorts, vidéos, podcasts,
  *  lectures — vivait dans sa propre section et n'apparaissait jamais ici. On
  *  pouvait enregistrer une vidéo et ne plus jamais la retrouver.
  *
@@ -37,7 +37,7 @@ type Item = {
 const CATEGORIES: { id: Cat; label: string; icon: ShineIconName; color: string }[] = [
   { id: 'protocoles', label: 'Protocoles', icon: 'healing', color: '#C9A961' },
   { id: 'publications', label: 'Publications', icon: 'parole', color: '#E3D5BE' },
-  { id: 'shorts', label: 'Formats courts', icon: 'shorts', color: '#D2536A' },
+  { id: 'shorts', label: 'Shorts', icon: 'shorts', color: '#D2536A' },
   { id: 'videos', label: 'Vidéos', icon: 'video', color: '#C78790' },
   { id: 'podcasts', label: 'Podcasts & audios', icon: 'audio', color: '#A88248' },
   { id: 'lectures', label: 'Lectures', icon: 'texte', color: '#F5DE9B' },
@@ -288,7 +288,7 @@ export default function FavorisPage() {
         /*
           Galerie en colonnes plutôt qu'une grille : chaque contenu garde ses
           proportions d'origine — une affiche de livre est haute, une vidéo est
-          large, un format court est vertical. Les forcer dans un cadre unique
+          large, un Short est vertical. Les forcer dans un cadre unique
           les aurait tous rognés au mauvais endroit.
         */
         <div className="columns-2 sm:columns-3 lg:columns-4 gap-3">

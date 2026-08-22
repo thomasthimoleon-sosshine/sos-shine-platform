@@ -4,6 +4,7 @@ import { useEffect, useState, useRef, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
+import ShineIcon, { type ShineIconName } from '@/components/icons/ShineIcon'
 // FeatureGate retiré : Shine Audible est accessible à tous les membres
 
 // ── Types ──
@@ -36,25 +37,26 @@ type Review = {
 }
 
 // ── Categories ──
-const CATEGORIES = [
-  { id: 'trending', label: 'Tendances', icon: '🔥' },
-  { id: 'meditation', label: 'Méditations guidées', icon: '🧘' },
-  { id: 'healing', label: 'Guérison intérieure', icon: '🌿' },
-  { id: 'confidence', label: 'Confiance en soi', icon: '💪' },
-  { id: 'sleep', label: 'Sommeil & Détente', icon: '🌙' },
-  { id: 'hypnosis', label: 'Hypnose douce', icon: '🌀' },
-  { id: 'stories', label: 'Histoires inspirantes', icon: '📖' },
-  { id: 'ambient', label: 'Sons & Ambiances', icon: '🎵' },
-  { id: 'children', label: 'Enfants', icon: '👶' },
+/* Signes du jeu « Les Éclats » — plus aucun émoji système. */
+const CATEGORIES: { id: string; label: string; icon: ShineIconName }[] = [
+  { id: 'trending', label: 'Tendances', icon: 'resilience' },
+  { id: 'meditation', label: 'Méditations guidées', icon: 'meditation' },
+  { id: 'healing', label: 'Guérison intérieure', icon: 'healing' },
+  { id: 'confidence', label: 'Confiance en soi', icon: 'confidence' },
+  { id: 'sleep', label: 'Sommeil & Détente', icon: 'sleep' },
+  { id: 'hypnosis', label: 'Hypnose douce', icon: 'hypnose' },
+  { id: 'stories', label: 'Histoires inspirantes', icon: 'histoire' },
+  { id: 'ambient', label: 'Sons & Ambiances', icon: 'ambiance' },
+  { id: 'children', label: 'Enfants', icon: 'children' },
 ]
 
-const CONTENT_TYPES = [
-  { id: 'all', label: 'Tout', icon: '' },
-  { id: 'podcast', label: 'Podcasts', icon: '🎙️' },
-  { id: 'audiobook', label: 'Audiobooks', icon: '📚' },
-  { id: 'meditation', label: 'Méditations', icon: '🧘' },
-  { id: 'hypnosis', label: 'Hypnose', icon: '🌀' },
-  { id: 'ambient', label: 'Ambiances', icon: '🎵' },
+const CONTENT_TYPES: { id: string; label: string; icon: ShineIconName | null }[] = [
+  { id: 'all', label: 'Tout', icon: null },
+  { id: 'podcast', label: 'Podcasts', icon: 'podcast' },
+  { id: 'audiobook', label: 'Livres audio', icon: 'audiobook' },
+  { id: 'meditation', label: 'Méditations', icon: 'meditation' },
+  { id: 'hypnosis', label: 'Hypnose', icon: 'hypnose' },
+  { id: 'ambient', label: 'Ambiances', icon: 'ambiance' },
 ]
 
 // ── Stars Component ──
@@ -190,7 +192,7 @@ function MiniPlayer({ audio, isPlaying, onToggle, progress, currentTime, duratio
 // ── Horizontal Scroll Row ──
 function AudioRow({ title, icon, audios, onSelect, nowPlayingId }: {
   title: string
-  icon: string
+  icon: ShineIconName
   audios: ShineAudio[]
   onSelect: (a: ShineAudio) => void
   nowPlayingId?: string
@@ -223,7 +225,7 @@ function AudioRow({ title, icon, audios, onSelect, nowPlayingId }: {
   return (
     <div className="relative group/row">
       <h2 className="text-lg font-display font-semibold mb-3 px-1 flex items-center gap-2 text-[var(--text-primary)]">
-        <span className="text-xl">{icon}</span> {title}
+        <ShineIcon name={icon} className="w-5 h-5" color="#C9A961" /> {title}
       </h2>
 
       {/* Left arrow */}
@@ -362,77 +364,105 @@ function AudioRow({ title, icon, audios, onSelect, nowPlayingId }: {
 // ── Hero Banner ──
 function HeroBanner({ audio, onOpen, onPlay }: { audio: ShineAudio; onOpen: () => void; onPlay: () => void }) {
   return (
-    <div className="relative w-full overflow-hidden rounded-2xl" style={{ height: 'clamp(300px, 50vh, 500px)' }}>
-      <img
-        src={audio.cover}
-        alt={audio.title}
-        className="absolute inset-0 w-full h-full object-cover"
-        style={{ filter: 'blur(40px) brightness(0.4)', transform: 'scale(1.2)' }}
-      />
-      <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(9,9,11,0.9) 20%, rgba(9,9,11,0.5) 60%, rgba(9,9,11,0.8))' }} />
+    /* ─── « La Fenêtre », comme sur Shine TV ─────────────────────────────
+       La pochette n'est plus un fond flouté à 40 px derrière un voile : c'est
+       une pièce posée, nette et entière, à droite du texte. On garde une trace
+       de la pochette en fond, très basse, pour la couleur — mais elle
+       n'écrase plus rien.
+       Adaptation à l'audio : la fenêtre est carrée, pas en 16/9. Une pochette
+       forcée dans un cadre large aurait été rognée sur les côtés. ────── */
+    <div className="relative w-full overflow-hidden rounded-2xl bg-[#0d0b08] border border-[rgba(201,169,97,0.14)]"
+      style={{ height: 'clamp(420px, 52vh, 520px)' }}>
 
-      <div className="absolute inset-0 flex items-center px-6 sm:px-10">
+      {audio.cover && (
+        <img
+          src={audio.cover}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+          style={{ filter: 'blur(64px)', transform: 'scale(1.3)', opacity: 0.18 }}
+        />
+      )}
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ background: 'linear-gradient(100deg, #0d0b08 22%, rgba(13,11,8,0.72) 55%, rgba(13,11,8,0.35))' }} />
+
+      <div className="relative h-full grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-8 sm:gap-12 items-center px-6 sm:px-10 lg:px-12">
+
+        {/* Colonne texte */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="flex flex-col sm:flex-row items-center sm:items-end gap-6 sm:gap-8 max-w-3xl"
+          className="min-w-0"
         >
-          {/* Large cover */}
-          <motion.img
-            src={audio.cover}
-            alt={audio.title}
-            className="w-40 h-40 sm:w-52 sm:h-52 rounded-2xl object-contain shadow-2xl shadow-black/60 ring-1 ring-white/10 shrink-0"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-          />
+          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[10.5px] font-semibold uppercase tracking-[0.18em] mb-5"
+            style={{ background: 'rgba(201,169,97,0.14)', color: '#E3C77E', border: '1px solid rgba(201,169,97,0.32)' }}>
+            <ShineIcon name="audio" className="w-3.5 h-3.5" />
+            Recommandé pour vous
+          </span>
 
-          <div className="text-center sm:text-left">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold mb-3"
-              style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.3)' }}>
-              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
-              </svg>
-              Recommandé pour vous
-            </span>
-            <h1 className="font-display text-2xl sm:text-4xl font-semibold tracking-tight mb-2" style={{ color: '#fff' }}>
-              {audio.title}
-            </h1>
-            <p className="text-[13px] sm:text-[14px] mb-1" style={{ color: 'rgba(255,255,255,0.6)' }}>
-              Narré par <span className="text-[var(--brand)]">{audio.narrator}</span>
+          <h1 className="font-display font-semibold tracking-tight mb-3 text-white"
+            style={{ fontSize: 'clamp(28px, 3.1vw, 44px)', lineHeight: 1.06 }}>
+            {audio.title}
+          </h1>
+
+          {audio.narrator && (
+            <p className="text-[13.5px] mb-3 text-white/55">
+              Narré par <span className="text-[#C9A961]">{audio.narrator}</span>
             </p>
-            <p className="text-[13px] leading-relaxed mb-5 line-clamp-2" style={{ color: 'rgba(255,255,255,0.5)' }}>
-              {audio.description}
-            </p>
-            <div className="flex items-center gap-3 flex-wrap justify-center sm:justify-start">
-              <button
-                onClick={onPlay}
-                className="flex items-center gap-2.5 px-6 py-3 rounded-xl text-[14px] font-semibold cursor-pointer transition-all duration-200 hover:scale-105"
-                style={{ background: 'var(--brand)', color: '#09090b' }}
-              >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-                Écouter
-              </button>
-              <button
-                onClick={onOpen}
-                className="flex items-center gap-2 px-5 py-3 rounded-xl text-[14px] font-medium cursor-pointer transition-all duration-200 hover:bg-white/10"
-                style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.15)' }}
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-                </svg>
-                Détails
-              </button>
-            </div>
-            <div className="flex items-center gap-4 mt-4 justify-center sm:justify-start">
-              <StarRating rating={Math.round(audio.rating)} size="sm" />
-              <span className="text-[13px] font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                {audio.rating.toFixed(1)} / 5 · {audio.reviewCount} avis · {audio.duration}
-              </span>
-            </div>
+          )}
+
+          <p className="text-[14.5px] leading-relaxed mb-6 line-clamp-3 text-white/65">
+            {audio.description}
+          </p>
+
+          <div className="flex items-center gap-3 flex-wrap mb-5">
+            <button onClick={onPlay}
+              className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full text-[14px] font-semibold cursor-pointer transition-transform duration-200 hover:scale-[1.04]"
+              style={{ background: 'linear-gradient(135deg,#E3C77E,#C9A961)', color: '#0A0806' }}>
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+              Écouter
+            </button>
+            <button onClick={onOpen}
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-full text-[14px] font-medium cursor-pointer transition-colors duration-200 hover:bg-white/[0.12]"
+              style={{ background: 'rgba(255,255,255,0.07)', color: '#fff', border: '1px solid rgba(255,255,255,0.18)' }}>
+              Détails
+            </button>
           </div>
+
+          <p className="text-[11.5px] uppercase tracking-[0.18em] text-white/40">
+            {CATEGORIES.find(c => c.id === audio.category)?.label || 'Audio'} · {audio.duration}
+            {audio.reviewCount > 0 && ` · ${audio.rating.toFixed(1).replace('.', ',')} ★`}
+          </p>
         </motion.div>
+
+        {/* La fenêtre : la pochette, entière et nette */}
+        <motion.button
+          onClick={onPlay}
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.08 }}
+          aria-label={`Écouter ${audio.title}`}
+          className="group relative hidden sm:block rounded-xl overflow-hidden aspect-square cursor-pointer
+                     shadow-[0_30px_80px_rgba(0,0,0,0.65)] ring-1 ring-white/10"
+          style={{ height: 'clamp(230px, 34vh, 320px)' }}
+        >
+          {audio.cover ? (
+            <img src={audio.cover} alt={audio.title}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center" style={{ background: 'rgba(201,169,97,0.08)' }}>
+              <ShineIcon name="audio" className="w-12 h-12" color="#C9A961" strokeWidth={1.1} />
+            </div>
+          )}
+          <span className="absolute inset-0 flex items-center justify-center">
+            <span className="w-16 h-16 rounded-full flex items-center justify-center backdrop-blur-sm
+                             transition-transform duration-300 group-hover:scale-110"
+              style={{ background: 'rgba(201,169,97,0.92)', color: '#0A0806' }}>
+              <svg className="w-7 h-7 translate-x-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+            </span>
+          </span>
+        </motion.button>
       </div>
     </div>
   )
@@ -1110,14 +1140,15 @@ export default function ShineAudiblePage() {
                 <button
                   key={type.id}
                   onClick={() => setActiveType(type.id)}
-                  className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200"
+                  className="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200"
                   style={{
                     background: activeType === type.id ? 'var(--brand)' : 'rgba(255,255,255,0.06)',
                     color: activeType === type.id ? '#09090b' : 'var(--text-secondary)',
                     border: activeType === type.id ? 'none' : '1px solid var(--border)',
                   }}
                 >
-                  {type.icon && <span className="mr-1">{type.icon}</span>}{type.label}
+                  {type.icon && <ShineIcon name={type.icon} className="w-4 h-4" />}
+                  {type.label}
                 </button>
               ))}
             </div>
@@ -1184,14 +1215,15 @@ export default function ShineAudiblePage() {
               <button
                 key={cat.id}
                 onClick={() => setActiveFilter(cat.id)}
-                className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200"
+                className="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200"
                 style={{
                   background: activeFilter === cat.id ? 'rgba(201,169,97,0.15)' : 'rgba(255,255,255,0.04)',
                   color: activeFilter === cat.id ? 'var(--brand)' : 'var(--text-secondary)',
                   border: `1px solid ${activeFilter === cat.id ? 'rgba(201,169,97,0.3)' : 'transparent'}`,
                 }}
               >
-                {cat.icon} {cat.label}
+                <ShineIcon name={cat.icon} className="w-4 h-4" />
+                {cat.label}
               </button>
             ))}
           </div>

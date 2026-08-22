@@ -201,7 +201,7 @@ export default function ReelsViewer({
         </button>
 
         <span className="pointer-events-none font-display text-[15px] tracking-wide text-[#C9A961]">
-          Formats courts
+          Shorts
         </span>
 
         <button

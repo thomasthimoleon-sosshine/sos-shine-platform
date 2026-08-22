@@ -45,7 +45,7 @@ const GROUPS: {
     color: '#C9A961',
     items: [
       { key: 'new_protocols', label: 'Nouveaux protocoles', desc: "Quand un protocole est mis en ligne dans l'encyclopédie" },
-      { key: 'new_media', label: 'Nouveaux contenus', desc: 'Vidéos Shine TV, formats courts, audios et lectures' },
+      { key: 'new_media', label: 'Nouveaux contenus', desc: 'Vidéos Shine TV, Shorts, audios et lectures' },
     ],
   },
   {

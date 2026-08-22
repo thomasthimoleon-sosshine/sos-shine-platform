@@ -44,6 +44,12 @@ export type ShineIconName =
   | 'sleep'
   | 'masterclass'
   | 'children'
+  // Familles Shine Audible
+  | 'podcast'
+  | 'audiobook'
+  | 'histoire'
+  | 'hypnose'
+  | 'ambiance'
   // Actions
   | 'eclat'
   | 'parole'
@@ -261,6 +267,58 @@ const PATHS: Record<ShineIconName, React.ReactNode> = {
       <path d="M8.2 8.4 L12.4 14.2 L8.2 20 L4 14.2 Z" />
       <path d="M17.2 4.2 L19.9 7.8 L17.2 11.4 L14.5 7.8 Z" />
       <path d="M11.6 11.6 L14.8 8.8" />
+    </>
+  ),
+
+  /* ══════════════ FAMILLES SHINE AUDIBLE ══════════════ */
+
+  /* ── Podcast — LA VOIX QUI PORTE. Une facette suspendue, tenue par son
+       arc, posée sur son pied. ── */
+  podcast: (
+    <>
+      <path d="M12 2.8 L14.9 8.4 L12 14 L9.1 8.4 Z" />
+      <path d="M6.6 10.2 a5.4 5.4 0 0 0 10.8 0" />
+      <path d="M12 15.6 v3.8" />
+      <path d="M8.6 19.4 h6.8" />
+    </>
+  ),
+
+  /* ── Livre audio — LE LIVRE QUI PARLE. Le livre ouvert, et ce qu'il
+       émet au-dessus. ── */
+  audiobook: (
+    <>
+      <path d="M3.4 7.4 L11.5 8.8 L11.5 19.2 L3.4 17.8 Z" />
+      <path d="M20.6 7.4 L12.5 8.8 L12.5 19.2 L20.6 17.8 Z" />
+      <path d="M12 2 L13.5 3.8 L12 5.6 L10.5 3.8 Z" />
+    </>
+  ),
+
+  /* ── Histoire — LE LIVRE OUVERT. Le même signe, sans la voix : ce qui
+       se lit et non ce qui s'entend. ── */
+  histoire: (
+    <>
+      <path d="M3.4 5.8 L11.5 7.2 L11.5 18.6 L3.4 17.2 Z" />
+      <path d="M20.6 5.8 L12.5 7.2 L12.5 18.6 L20.6 17.2 Z" />
+    </>
+  ),
+
+  /* ── Hypnose — CE QUI ENROULE. Une spirale taillée à angles droits,
+       pas une volute décorative. ── */
+  hypnose: (
+    <>
+      <path d="M12 12.6 L14.6 12.6 L14.6 9 L9 9 L9 16.2 L17.6 16.2 L17.6 5.6 L5.6 5.6" />
+    </>
+  ),
+
+  /* ── Ambiance — CE QUI EMPLIT L'ESPACE. Pas de source : le son vient
+       de partout. C'est ce qui la distingue d'« Audio ». ── */
+  ambiance: (
+    <>
+      <path d="M12 9.9 L13.5 12 L12 14.1 L10.5 12 Z" />
+      <path d="M9.2 9 a4.2 4.2 0 0 0 0 6" />
+      <path d="M14.8 9 a4.2 4.2 0 0 1 0 6" />
+      <path d="M6.2 6.6 a7.6 7.6 0 0 0 0 10.8" />
+      <path d="M17.8 6.6 a7.6 7.6 0 0 1 0 10.8" />
     </>
   ),
 

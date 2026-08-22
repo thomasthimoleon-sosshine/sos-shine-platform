@@ -581,7 +581,7 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate, previewSec
 
 // ── Main Page ──
 export default function ShineShortsPage() {
-  // Les formats courts sont entièrement gratuits : aucune limite d'aperçu,
+  // Les Shorts sont entièrement gratuits : aucune limite d'aperçu,
   // ni dans le fil vertical, ni dans la fiche détaillée.
   const searchParams = useSearchParams()
   const douleurParam = searchParams.get('douleur')
@@ -800,7 +800,7 @@ export default function ShineShortsPage() {
   }
 
   /**
-   * Ouvrir un format court, c'est entrer dans le fil vertical a sa position —
+   * Ouvrir un Short, c'est entrer dans le fil vertical a sa position —
    * pas ouvrir une fiche. On peut ensuite faire defiler vers les suivants.
    */
   function openReels(short: ShineShort) {

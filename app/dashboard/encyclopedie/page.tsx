@@ -563,15 +563,46 @@ export default function EncyclopediePage() {
           {Object.keys(grouped).sort().map((letter) => (
             <div key={letter} id={`letter-${letter}`}>
               {/* Letter header */}
-              <div className="flex items-baseline gap-4 mb-4">
-                <h2 className="font-display text-4xl font-light text-[var(--brand)]" style={{ opacity: 0.8, lineHeight: 1 }}>
-                  {letter}
-                </h2>
-                <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
-                <span className="text-xs text-[var(--text-muted)]">
-                  {grouped[letter].length}
-                </span>
-              </div>
+              {/* En-tete de lettre.
+                  Le compte etait un chiffre gris seul, a l'autre bout de la
+                  ligne : on ne savait ni ce qu'il comptait, ni qu'il se
+                  rapportait a la lettre. Il se colle desormais a la lettre et
+                  met en avant ce qui RESTE A FAIRE — la seule question que se
+                  pose le membre : par ou je continue ? */}
+              {(() => {
+                const total = grouped[letter].length
+                const todo = grouped[letter].filter(
+                  t => !!t.dbMatch && !progressMap[t.dbMatch.id]?.completed_at
+                ).length
+                return (
+                  <div className="flex items-center gap-4 mb-4">
+                    <h2 className="font-display text-4xl font-light text-[var(--brand)]" style={{ opacity: 0.8, lineHeight: 1 }}>
+                      {letter}
+                    </h2>
+                    <div className="flex items-center gap-2 shrink-0">
+                      {todo > 0 ? (
+                        <>
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11.5px] font-medium"
+                            style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.25)' }}>
+                            <b className="tabular-nums">{todo}</b> à faire
+                          </span>
+                          {/* « sur X » n'apparait que s'il apporte quelque chose :
+                              quand le filtre « A faire » est actif, les deux
+                              nombres sont egaux et le repeter n'aide personne. */}
+                          {total > todo && (
+                            <span className="text-[11.5px] text-[var(--text-muted)] tabular-nums">sur {total}</span>
+                          )}
+                        </>
+                      ) : (
+                        <span className="text-[11.5px] text-[var(--text-muted)] tabular-nums">
+                          {total} sujet{total > 1 ? 's' : ''}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
+                  </div>
+                )
+              })()}
 
               {/* Topic cards grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">

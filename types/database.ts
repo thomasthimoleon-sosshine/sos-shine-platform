@@ -545,6 +545,22 @@ export type ShineShortFavorite = {
   created_at: string
 }
 
+/** Une publication de la communauté mise de côté (le signet du mur). */
+export type PostBookmark = {
+  id: string
+  user_id: string
+  post_id: string
+  created_at: string
+}
+
+/** Un article de blog mis de côté. Clé par slug : les articles existent en base ET en dur. */
+export type BlogFavorite = {
+  id: string
+  user_id: string
+  article_slug: string
+  created_at: string
+}
+
 /** Réglages fins des notifications, une ligne par membre. */
 export type NotificationPreferences = {
   user_id: string
@@ -871,6 +887,8 @@ export type Database = {
       shine_shorts_favorites: Table<ShineShortFavorite>
       shine_shorts_shines: Table<ShineShortShine>
       notification_preferences: Table<NotificationPreferences>
+      blog_favorites: Table<BlogFavorite>
+      post_bookmarks: Table<PostBookmark>
       shine_shorts_ratings: Table<ShineShortRating>
       shine_shorts_reviews: Table<ShineShortReview>
       shine_tv_videos: Table<ShineTvVideo>

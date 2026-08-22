@@ -76,7 +76,6 @@ export const translations: Record<string, string> = {
   'journal.delete_confirm': 'Supprimer cette entrée ?',
 
   'favorites.title': 'Mes Favoris',
-  'favorites.subtitle': 'Les expériences de vie que vous avez sauvegardées pour y revenir facilement.',
   'favorites.empty': 'Aucun favori pour le moment',
   'favorites.empty_desc': "Cliquez sur l'étoile d'un article dans l'encyclopédie pour le sauvegarder ici.",
   'favorites.explore': "Explorer l'encyclopédie",

@@ -1795,7 +1795,7 @@ export default function DouleurDetailPage() {
               href="/rejoindre"
               className="block w-full py-4 rounded-full text-sm font-semibold text-center transition-all hover:brightness-110"
               style={{
-                background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))',
+                background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #A88248))',
                 color: '#000000',
                 boxShadow: '0 4px 24px rgba(201,169,97,0.3)',
               }}

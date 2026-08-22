@@ -129,7 +129,7 @@ export default function QuizFunnelPage() {
                       </span>
                     </div>
                     <div className="h-2.5 rounded-full overflow-hidden" style={{ background: 'var(--border)' }}>
-                      <div className="h-full rounded-full" style={{ width: `${Math.max(pct, 1)}%`, background: 'linear-gradient(90deg, #C9A961, #B8960F)' }} />
+                      <div className="h-full rounded-full" style={{ width: `${Math.max(pct, 1)}%`, background: 'linear-gradient(90deg, #C9A961, #A88248)' }} />
                     </div>
                   </div>
                 )

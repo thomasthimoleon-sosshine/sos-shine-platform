@@ -28,7 +28,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
 <p style="color:#a1a1aa;font-size:14px;line-height:1.8;">SOS Shine\u00ae est la premi\u00e8re encyclop\u00e9die mondiale du bien-\u00eatre \u00e9motionnel. Ici, vous trouverez des outils concrets pour transformer vos \u00e9motions en force.</p>
 <p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Pour profiter pleinement de l'exp\u00e9rience \u2014 vid\u00e9os exclusives, m\u00e9ditations guid\u00e9es, protocoles personnalis\u00e9s et communaut\u00e9 bienveillante \u2014 d\u00e9couvrez nos offres d'abonnement.</p>
 <div style="text-align:center;margin:32px 0;">
-  <a href="{site_url}/rejoindre" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#B8960F);">D\u00e9couvrir les offres</a>
+  <a href="{site_url}/rejoindre" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#A88248);">D\u00e9couvrir les offres</a>
 </div>
 <p style="color:#a1a1aa;font-size:14px;line-height:1.8;margin-top:24px;">Avec bienveillance,<br/><strong style="color:#C9A961;">Julia</strong> \u2014 Fondatrice SOS Shine\u00ae</p>`,
     trigger_type: 'registration',
@@ -46,7 +46,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
 <p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Bienvenue dans votre deuxi\u00e8me jour chez SOS Shine\u00ae ! Avez-vous d\u00e9j\u00e0 d\u00e9couvert votre <strong style="color:#C9A961;">Signature \u00c9motionnelle</strong> ?</p>
 <p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Ce test gratuit r\u00e9v\u00e8le votre profil \u00e9motionnel unique. C'est le point de d\u00e9part id\u00e9al pour comprendre comment SOS Shine peut vous accompagner.</p>
 <div style="text-align:center;margin:32px 0;">
-  <a href="{site_url}/signature-emotionnelle" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#B8960F);">D\u00e9couvrir ma Signature</a>
+  <a href="{site_url}/signature-emotionnelle" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#A88248);">D\u00e9couvrir ma Signature</a>
 </div>`,
     trigger_type: 'registration',
     trigger_delay_days: 1,
@@ -70,7 +70,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
 </ul>
 <p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Tout cela vous attend d\u00e8s votre abonnement SOS Shine \u00e0 49,90\u20ac/mois.</p>
 <div style="text-align:center;margin:32px 0;">
-  <a href="{site_url}/rejoindre" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#B8960F);">Voir les offres</a>
+  <a href="{site_url}/rejoindre" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#A88248);">Voir les offres</a>
 </div>`,
     trigger_type: 'registration',
     trigger_delay_days: 3,
@@ -91,7 +91,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
 </div>
 <p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Votre place vous attend dans cette communaut\u00e9 de lumi\u00e8re.</p>
 <div style="text-align:center;margin:32px 0;">
-  <a href="{site_url}/rejoindre" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#B8960F);">Rejoindre la famille</a>
+  <a href="{site_url}/rejoindre" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#A88248);">Rejoindre la famille</a>
 </div>`,
     trigger_type: 'registration',
     trigger_delay_days: 7,
@@ -109,7 +109,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
 <p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Aujourd'hui, nous vous invitons \u00e0 franchir le pas et \u00e0 acc\u00e9der \u00e0 l'int\u00e9gralit\u00e9 de nos ressources. Des vid\u00e9os, des m\u00e9ditations, des protocoles, des d\u00e9fis... tout est pr\u00eat pour vous.</p>
 <p style="color:#E0E0E0;font-size:15px;line-height:1.8;"><strong>L'abonnement SOS Shine donne acc\u00e8s \u00e0 tout pour 49,90\u20ac/mois.</strong></p>
 <div style="text-align:center;margin:32px 0;">
-  <a href="{site_url}/rejoindre" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#B8960F);">Commencer maintenant</a>
+  <a href="{site_url}/rejoindre" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#A88248);">Commencer maintenant</a>
 </div>
 <p style="color:#a1a1aa;font-size:14px;line-height:1.8;margin-top:24px;">Avec toute ma bienveillance,<br/><strong style="color:#C9A961;">Julia</strong> \u2014 Fondatrice SOS Shine\u00ae</p>`,
     trigger_type: 'registration',
@@ -144,7 +144,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
 <p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Il y a quelques jours, vous avez rejoint notre liste d'attente. Nous préparons quelque chose de <strong style="color:#C9A961;">magnifique</strong> pour vous.</p>
 <p style="color:#a1a1aa;font-size:14px;line-height:1.8;">En attendant, avez-vous découvert votre <strong>Signature Émotionnelle</strong> ? Ce test gratuit vous révèle votre profil émotionnel unique.</p>
 <div style="text-align:center;margin:32px 0;">
-  <a href="{site_url}/signature-emotionnelle" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#B8960F);">Découvrir ma Signature</a>
+  <a href="{site_url}/signature-emotionnelle" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#A88248);">Découvrir ma Signature</a>
 </div>`,
     trigger_type: 'waitlist_signup',
     trigger_delay_days: 3,
@@ -161,7 +161,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
 <p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Les inscriptions à <strong style="color:#C9A961;">SOS Shine®</strong> sont officiellement ouvertes. Votre place sur la liste d'attente vous donne un accès prioritaire.</p>
 <p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Rejoignez la première encyclopédie mondiale du bien-être émotionnel et commencez votre transformation dès aujourd'hui.</p>
 <div style="text-align:center;margin:32px 0;">
-  <a href="{site_url}/rejoindre" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#B8960F);">Rejoindre maintenant</a>
+  <a href="{site_url}/rejoindre" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#A88248);">Rejoindre maintenant</a>
 </div>`,
     trigger_type: 'manual',
     trigger_delay_days: 0,
@@ -194,7 +194,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
 <p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Depuis la découverte de votre Signature Émotionnelle, avez-vous pris un moment pour explorer votre profil en profondeur ?</p>
 <p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Chez SOS Shine®, nous proposons des protocoles personnalisés, des méditations guidées et des outils concrets pour transformer vos émotions en force.</p>
 <div style="text-align:center;margin:32px 0;">
-  <a href="{site_url}/rejoindre" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#B8960F);">Découvrir SOS Shine</a>
+  <a href="{site_url}/rejoindre" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#A88248);">Découvrir SOS Shine</a>
 </div>`,
     trigger_type: 'signature_test_complete',
     trigger_delay_days: 2,
@@ -211,7 +211,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
 <p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Votre Signature Émotionnelle a révélé un potentiel extraordinaire. Ne laissez pas cette découverte sans suite.</p>
 <p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Rejoignez SOS Shine® et accédez à l'ensemble de nos ressources : vidéos, méditations, protocoles, défis et communauté bienveillante.</p>
 <div style="text-align:center;margin:32px 0;">
-  <a href="{site_url}/rejoindre" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#B8960F);">Commencer maintenant</a>
+  <a href="{site_url}/rejoindre" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#A88248);">Commencer maintenant</a>
 </div>`,
     trigger_type: 'signature_test_complete',
     trigger_delay_days: 5,
@@ -236,7 +236,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
   <li>Communauté bienveillante</li>
 </ul>
 <div style="text-align:center;margin:32px 0;">
-  <a href="{site_url}/espace-membre" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#B8960F);">Accéder à mon espace</a>
+  <a href="{site_url}/espace-membre" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#A88248);">Accéder à mon espace</a>
 </div>`,
     trigger_type: 'subscription_created',
     trigger_delay_days: 0,
@@ -269,7 +269,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
 <p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Félicitations pour votre inscription ! Aujourd'hui est le premier jour de votre transformation émotionnelle.</p>
 <p style="color:#a1a1aa;font-size:14px;line-height:1.8;"><strong style="color:#C9A961;">Suggestion du jour :</strong> Prenez 5 minutes pour explorer la section Shine TV. Commencez par une vidéo courte qui vous inspire.</p>
 <div style="text-align:center;margin:32px 0;">
-  <a href="{site_url}/shine-tv" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#B8960F);">Explorer Shine TV</a>
+  <a href="{site_url}/shine-tv" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#A88248);">Explorer Shine TV</a>
 </div>`,
     trigger_type: 'subscription_created',
     trigger_delay_days: 1,
@@ -286,7 +286,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
 <p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Après quelques jours sur SOS Shine, il est temps de plonger dans <strong style="color:#C9A961;">Shine Audible</strong>.</p>
 <p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Nos méditations guidées sont conçues pour apaiser, recentrer et illuminer. Essayez une session de 10 minutes aujourd'hui.</p>
 <div style="text-align:center;margin:32px 0;">
-  <a href="{site_url}/shine-audible" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#B8960F);">Écouter Shine Audible</a>
+  <a href="{site_url}/shine-audible" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#A88248);">Écouter Shine Audible</a>
 </div>`,
     trigger_type: 'subscription_created',
     trigger_delay_days: 3,
@@ -303,7 +303,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
 <p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Cela fait déjà une semaine que vous avez rejoint SOS Shine®. Comment vous sentez-vous ?</p>
 <p style="color:#a1a1aa;font-size:14px;line-height:1.8;">N'oubliez pas d'explorer la <strong style="color:#C9A961;">communauté</strong>. Partagez votre ressenti, posez vos questions, et connectez-vous avec d'autres âmes lumineuses.</p>
 <div style="text-align:center;margin:32px 0;">
-  <a href="{site_url}/communaute" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#B8960F);">Rejoindre la communauté</a>
+  <a href="{site_url}/communaute" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#A88248);">Rejoindre la communauté</a>
 </div>`,
     trigger_type: 'subscription_created',
     trigger_delay_days: 7,
@@ -320,7 +320,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
 <p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Après deux semaines de découverte, il est temps de passer à l'action avec nos <strong style="color:#C9A961;">Défis SOS Shine</strong>.</p>
 <p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Chaque défi est conçu pour transformer un aspect précis de votre vie émotionnelle. Choisissez celui qui vous parle le plus !</p>
 <div style="text-align:center;margin:32px 0;">
-  <a href="{site_url}/defis" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#B8960F);">Découvrir les défis</a>
+  <a href="{site_url}/defis" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#A88248);">Découvrir les défis</a>
 </div>`,
     trigger_type: 'subscription_created',
     trigger_delay_days: 14,
@@ -367,7 +367,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
 <p style="color:#E0E0E0;font-size:15px;line-height:1.8;">{firstName}, nous n'avons pas pu renouveler votre abonnement <strong style="color:#C9A961;">{planName}</strong>.</p>
 <p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Veuillez vérifier vos informations de paiement dans votre espace membre. Nous réessaierons dans 3 jours.</p>
 <div style="text-align:center;margin:32px 0;">
-  <a href="{site_url}/espace-membre/abonnement" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#B8960F);">Mettre à jour mon paiement</a>
+  <a href="{site_url}/espace-membre/abonnement" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#A88248);">Mettre à jour mon paiement</a>
 </div>`,
     trigger_type: 'payment_failed',
     trigger_delay_days: 0,
@@ -400,7 +400,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
 <p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Cela fait une semaine que vous nous avez quittés, et nous espérons que tout va bien.</p>
 <p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Sachez que votre place est toujours réservée chez <strong style="color:#C9A961;">SOS Shine®</strong>. Revenez quand vous le souhaitez - votre lumière intérieure ne demande qu'à briller.</p>
 <div style="text-align:center;margin:32px 0;">
-  <a href="{site_url}/rejoindre" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#B8960F);">Revenir chez SOS Shine</a>
+  <a href="{site_url}/rejoindre" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#A88248);">Revenir chez SOS Shine</a>
 </div>`,
     trigger_type: 'subscription_cancelled',
     trigger_delay_days: 7,
@@ -419,7 +419,7 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
 <p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Vous faites maintenant partie du <strong style="color:#C9A961;">Programme Ambassadeur SOS Shine®</strong>. Partagez votre lumière et gagnez des commissions.</p>
 <p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Votre lien de parrainage unique est prêt dans votre espace membre. Chaque personne qui s'inscrit grâce à vous vous rapporte une commission récurrente.</p>
 <div style="text-align:center;margin:32px 0;">
-  <a href="{site_url}/espace-membre/parrainage" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#B8960F);">Mon espace ambassadeur</a>
+  <a href="{site_url}/espace-membre/parrainage" style="display:inline-block;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#A88248);">Mon espace ambassadeur</a>
 </div>`,
     trigger_type: 'affiliate_approved',
     trigger_delay_days: 0,

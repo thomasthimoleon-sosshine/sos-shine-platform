@@ -328,7 +328,7 @@ function getEmailContent(
   const buttonStyle = `
     display: inline-block;
     padding: 14px 32px;
-    background: linear-gradient(135deg, #C9A961, #B8960F);
+    background: linear-gradient(135deg, #C9A961, #A88248);
     color: #050505;
     text-decoration: none;
     border-radius: 50px;

@@ -115,7 +115,7 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
           <button
             onClick={onStart}
             className="w-full py-4 rounded-full text-sm font-semibold transition-all hover:brightness-110"
-            style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
+            style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #A88248))', color: '#000000' }}
           >
             Commencer le scanner →
           </button>
@@ -170,7 +170,7 @@ function NameCapture({ onSubmit }: { onSubmit: (name: string) => void }) {
           className="w-full py-4 rounded-full text-sm font-semibold transition-all"
           style={{
             background: name.trim()
-              ? 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))'
+              ? 'linear-gradient(135deg, var(--brand), var(--brand-deep, #A88248))'
               : 'rgba(255,255,255,0.08)',
             color: name.trim() ? '#000000' : 'var(--text-muted)',
             cursor: name.trim() ? 'pointer' : 'not-allowed',
@@ -224,7 +224,7 @@ function BirthdateCapture({ firstName, onSubmit }: { firstName: string; onSubmit
           <button
             onClick={() => onSubmit(date || undefined)}
             className="w-full py-4 rounded-full text-sm font-semibold transition-all hover:brightness-110"
-            style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
+            style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #A88248))', color: '#000000' }}
           >
             Continuer →
           </button>
@@ -285,7 +285,7 @@ function EmailCapture({ firstName, onSubmit }: { firstName: string; onSubmit: (e
           className="w-full py-4 rounded-full text-sm font-semibold transition-all"
           style={{
             background: valid
-              ? 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))'
+              ? 'linear-gradient(135deg, var(--brand), var(--brand-deep, #A88248))'
               : 'rgba(255,255,255,0.08)',
             color: valid ? '#000000' : 'var(--text-muted)',
             cursor: valid ? 'pointer' : 'not-allowed',
@@ -459,7 +459,7 @@ function ResultScreen({
             <a
               href={ctaUrl}
               className="block w-full py-4 rounded-full text-sm font-semibold transition-all hover:brightness-110"
-              style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
+              style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #A88248))', color: '#000000' }}
             >
               {protocolTitle ? `Commencer : ${protocolTitle}` : 'Créer mon espace et commencer'}
             </a>

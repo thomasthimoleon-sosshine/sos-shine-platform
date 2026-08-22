@@ -15,7 +15,7 @@ export default function BlogArticleNotFound() {
         <Link
           href="/blog"
           className="inline-block px-6 py-2.5 rounded-full text-sm font-semibold tracking-wide hover:scale-105 transition-transform"
-          style={{ background: `linear-gradient(135deg, ${gold}, #B8960F)`, color: '#000000' }}
+          style={{ background: `linear-gradient(135deg, ${gold}, #A88248)`, color: '#000000' }}
         >
           Voir tous les articles
         </Link>

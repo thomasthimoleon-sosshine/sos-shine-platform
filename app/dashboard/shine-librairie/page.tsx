@@ -1364,14 +1364,14 @@ export default function ShineLibrairiePage() {
         {readingBook && !isSubscribed && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(8px)' }} onClick={() => setReadingBook(null)}>
             <div className="max-w-md w-full text-center rounded-2xl p-8" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }} onClick={(e) => e.stopPropagation()}>
-              <div className="w-14 h-14 rounded-2xl mx-auto mb-5 flex items-center justify-center" style={{ background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
-                <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="#D4AF37" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
+              <div className="w-14 h-14 rounded-2xl mx-auto mb-5 flex items-center justify-center" style={{ background: 'rgba(201, 169, 97,0.12)', border: '1px solid rgba(201, 169, 97,0.3)' }}>
+                <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="#C9A961" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
               </div>
-              <h3 className="font-display text-2xl font-light mb-2" style={{ color: '#D4AF37' }}>Lecture réservée aux abonnés</h3>
+              <h3 className="font-display text-2xl font-light mb-2" style={{ color: '#C9A961' }}>Lecture réservée aux abonnés</h3>
               <p className="text-sm mb-6 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
                 « {readingBook.title} » fait partie de la bibliothèque SOS Shine. Abonne-toi pour l&apos;ouvrir en entier — et débloquer toute la plateforme.
               </p>
-              <a href="/rejoindre" className="inline-block px-8 py-3.5 rounded-full text-sm font-semibold" style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}>M&apos;abonner pour lire</a>
+              <a href="/rejoindre" className="inline-block px-8 py-3.5 rounded-full text-sm font-semibold" style={{ background: 'linear-gradient(135deg, #C9A961, #A88248)', color: '#050505' }}>M&apos;abonner pour lire</a>
               <p className="text-[11px] mt-4" style={{ color: 'var(--text-muted)' }}>49,90€/mois · ou 33€ en accès unique</p>
               <button onClick={() => setReadingBook(null)} className="block mx-auto mt-4 text-xs cursor-pointer" style={{ color: 'var(--text-muted)' }}>Revenir à la bibliothèque</button>
             </div>

@@ -238,7 +238,7 @@ export default function SignupPage() {
         backgroundSize: 'cover', backgroundPosition: 'center',
       }}>
         <div className="absolute inset-0 pointer-events-none" style={{
-          background: 'radial-gradient(ellipse 50% 40% at 50% 30%, rgba(212, 175, 55, 0.04), transparent)',
+          background: 'radial-gradient(ellipse 50% 40% at 50% 30%, rgba(201, 169, 97, 0.04), transparent)',
         }} />
         <motion.div
           initial={{ opacity: 0, scale: 0.96 }}
@@ -308,7 +308,7 @@ export default function SignupPage() {
     }}>
       {/* Ambient glow */}
       <div className="absolute inset-0 pointer-events-none" style={{
-        background: 'radial-gradient(ellipse 50% 40% at 50% 30%, rgba(212, 175, 55, 0.04), transparent)',
+        background: 'radial-gradient(ellipse 50% 40% at 50% 30%, rgba(201, 169, 97, 0.04), transparent)',
       }} />
 
       <motion.div

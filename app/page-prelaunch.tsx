@@ -36,8 +36,8 @@ function CountdownUnit({ value, label }: { value: number; label: string }) {
         className="relative w-[72px] h-[88px] sm:w-[90px] sm:h-[108px] flex items-center justify-center rounded-2xl overflow-hidden"
         style={{
           background: "rgba(255,255,255,0.03)",
-          border: "1px solid rgba(212,175,55,0.12)",
-          boxShadow: "0 0 40px rgba(212,175,55,0.04), inset 0 1px 0 rgba(255,255,255,0.04)",
+          border: "1px solid rgba(201, 169, 97,0.12)",
+          boxShadow: "0 0 40px rgba(201, 169, 97,0.04), inset 0 1px 0 rgba(255,255,255,0.04)",
         }}
       >
         <AnimatePresence mode="popLayout">
@@ -48,7 +48,7 @@ function CountdownUnit({ value, label }: { value: number; label: string }) {
             exit={{ y: 20, opacity: 0, filter: "blur(4px)" }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="font-display text-4xl sm:text-5xl font-light tabular-nums"
-            style={{ color: "#D4AF37" }}
+            style={{ color: "#C9A961" }}
           >
             {String(value).padStart(2, "0")}
           </motion.span>
@@ -69,7 +69,7 @@ function FloatingOrbs() {
     <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
       <div
         className="orb"
-        style={{ width: 600, height: 600, top: "5%", left: "-15%", background: "rgba(212,175,55,0.015)" }}
+        style={{ width: 600, height: 600, top: "5%", left: "-15%", background: "rgba(201, 169, 97,0.015)" }}
       />
       <div
         className="orb"
@@ -78,7 +78,7 @@ function FloatingOrbs() {
           height: 500,
           bottom: "10%",
           right: "-20%",
-          background: "rgba(212,175,55,0.01)",
+          background: "rgba(201, 169, 97,0.01)",
           animationDelay: "7s",
         }}
       />
@@ -89,7 +89,7 @@ function FloatingOrbs() {
           height: 300,
           top: "50%",
           left: "40%",
-          background: "rgba(212,175,55,0.008)",
+          background: "rgba(201, 169, 97,0.008)",
           animationDelay: "12s",
         }}
       />
@@ -253,11 +253,11 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
       <div className="absolute inset-0 pointer-events-none">
         <div
           className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[800px] rounded-full opacity-[0.03] blur-[200px]"
-          style={{ background: "#D4AF37" }}
+          style={{ background: "#C9A961" }}
         />
         <div
           className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] rounded-full opacity-[0.02] blur-[150px]"
-          style={{ background: "#D4AF37" }}
+          style={{ background: "#C9A961" }}
         />
       </div>
 
@@ -284,9 +284,9 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
           <span
             className="inline-block px-5 py-2 rounded-full text-[11px] tracking-[0.3em] uppercase font-medium"
             style={{
-              background: "rgba(212,175,55,0.08)",
-              color: "#D4AF37",
-              border: "1px solid rgba(212,175,55,0.15)",
+              background: "rgba(201, 169, 97,0.08)",
+              color: "#C9A961",
+              border: "1px solid rgba(201, 169, 97,0.15)",
             }}
           >
             {s(settings, 'prelaunch_badge', 'Lancement exclusif')}
@@ -295,7 +295,7 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
 
         {/* Hero Title */}
         <div className="text-center max-w-3xl mb-10">
-          <div className="font-display font-light leading-[1.1] mb-6" style={{ perspective: "1000px", fontSize: "clamp(2.5rem, 6vw, 4rem)", color: "#D4AF37" }}>
+          <div className="font-display font-light leading-[1.1] mb-6" style={{ perspective: "1000px", fontSize: "clamp(2.5rem, 6vw, 4rem)", color: "#C9A961" }}>
             {titleWords.map((word, i) => (
               <motion.span
                 key={i}
@@ -339,11 +339,11 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
           {!time.launched ? (
             <div className="flex items-center gap-3 sm:gap-5">
               <CountdownUnit value={time.days} label={s(settings, 'prelaunch_countdown_days', 'Jours')} />
-              <span className="font-display text-2xl sm:text-3xl font-light mt-[-24px]" style={{ color: "rgba(212,175,55,0.25)" }}>:</span>
+              <span className="font-display text-2xl sm:text-3xl font-light mt-[-24px]" style={{ color: "rgba(201, 169, 97,0.25)" }}>:</span>
               <CountdownUnit value={time.hours} label={s(settings, 'prelaunch_countdown_hours', 'Heures')} />
-              <span className="font-display text-2xl sm:text-3xl font-light mt-[-24px]" style={{ color: "rgba(212,175,55,0.25)" }}>:</span>
+              <span className="font-display text-2xl sm:text-3xl font-light mt-[-24px]" style={{ color: "rgba(201, 169, 97,0.25)" }}>:</span>
               <CountdownUnit value={time.minutes} label={s(settings, 'prelaunch_countdown_minutes', 'Minutes')} />
-              <span className="font-display text-2xl sm:text-3xl font-light mt-[-24px]" style={{ color: "rgba(212,175,55,0.25)" }}>:</span>
+              <span className="font-display text-2xl sm:text-3xl font-light mt-[-24px]" style={{ color: "rgba(201, 169, 97,0.25)" }}>:</span>
               <CountdownUnit value={time.seconds} label={s(settings, 'prelaunch_countdown_seconds', 'Secondes')} />
             </div>
           ) : (
@@ -374,13 +374,13 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
             {/* Essentiel */}
             <div
               className="glass p-6 sm:p-8 text-center relative overflow-hidden rounded-2xl"
-              style={{ borderColor: "rgba(212,175,55,0.08)" }}
+              style={{ borderColor: "rgba(201, 169, 97,0.08)" }}
             >
               <p className="text-[11px] tracking-[0.25em] uppercase font-medium mb-4" style={{ color: "var(--text-muted)" }}>
                 Essentiel
               </p>
               <div className="flex items-baseline justify-center gap-1 mb-2">
-                <span className="font-display text-4xl sm:text-5xl font-light" style={{ color: "#D4AF37" }}>
+                <span className="font-display text-4xl sm:text-5xl font-light" style={{ color: "#C9A961" }}>
                   {formatPrice(PRICES.essential.monthly)}
                 </span>
                 <span className="text-sm" style={{ color: "var(--text-muted)" }}>/mois</span>
@@ -393,23 +393,23 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
             {/* Sérénité */}
             <div
               className="glass p-6 sm:p-8 text-center relative overflow-hidden rounded-2xl"
-              style={{ borderColor: "rgba(212,175,55,0.2)" }}
+              style={{ borderColor: "rgba(201, 169, 97,0.2)" }}
             >
               <div
                 className="absolute top-0 left-0 right-0 h-px"
-                style={{ background: "linear-gradient(90deg, transparent, rgba(212,175,55,0.4), transparent)" }}
+                style={{ background: "linear-gradient(90deg, transparent, rgba(201, 169, 97,0.4), transparent)" }}
               />
               <span
                 className="absolute top-3 right-3 px-2 py-0.5 rounded-full text-[9px] tracking-wider uppercase font-medium"
-                style={{ background: "rgba(212,175,55,0.12)", color: "#D4AF37", border: "1px solid rgba(212,175,55,0.2)" }}
+                style={{ background: "rgba(201, 169, 97,0.12)", color: "#C9A961", border: "1px solid rgba(201, 169, 97,0.2)" }}
               >
                 Populaire
               </span>
-              <p className="text-[11px] tracking-[0.25em] uppercase font-medium mb-4" style={{ color: "#D4AF37" }}>
+              <p className="text-[11px] tracking-[0.25em] uppercase font-medium mb-4" style={{ color: "#C9A961" }}>
                 S&eacute;r&eacute;nit&eacute;
               </p>
               <div className="flex items-baseline justify-center gap-1 mb-2">
-                <span className="font-display text-4xl sm:text-5xl font-light" style={{ color: "#D4AF37" }}>
+                <span className="font-display text-4xl sm:text-5xl font-light" style={{ color: "#C9A961" }}>
                   {formatPrice(PRICES.serenite.monthly)}
                 </span>
                 <span className="text-sm" style={{ color: "var(--text-muted)" }}>/mois</span>
@@ -419,16 +419,16 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
               </p>
               <div className="space-y-1.5 text-left">
                 <div className="flex justify-between text-[11px]" style={{ color: "var(--text-secondary)" }}>
-                  <span>3 mois <span style={{ color: "#D4AF37" }}>-10%</span></span>
- <span className="font-medium line-through opacity-50"><span style={{ color: "#D4AF37" }}>{formatPrice(TOTAL_PRICES.serenite.quarterly)}</span> <span >{formatPrice(ORIGINAL_PRICES.serenite.quarterly)}</span></span>
+                  <span>3 mois <span style={{ color: "#C9A961" }}>-10%</span></span>
+ <span className="font-medium line-through opacity-50"><span style={{ color: "#C9A961" }}>{formatPrice(TOTAL_PRICES.serenite.quarterly)}</span> <span >{formatPrice(ORIGINAL_PRICES.serenite.quarterly)}</span></span>
                 </div>
                 <div className="flex justify-between text-[11px]" style={{ color: "var(--text-secondary)" }}>
-                  <span>6 mois <span style={{ color: "#D4AF37" }}>-20%</span></span>
- <span className="font-medium line-through opacity-50"><span style={{ color: "#D4AF37" }}>{formatPrice(TOTAL_PRICES.serenite.semiannual)}</span> <span >{formatPrice(ORIGINAL_PRICES.serenite.semiannual)}</span></span>
+                  <span>6 mois <span style={{ color: "#C9A961" }}>-20%</span></span>
+ <span className="font-medium line-through opacity-50"><span style={{ color: "#C9A961" }}>{formatPrice(TOTAL_PRICES.serenite.semiannual)}</span> <span >{formatPrice(ORIGINAL_PRICES.serenite.semiannual)}</span></span>
                 </div>
                 <div className="flex justify-between text-[11px]" style={{ color: "var(--text-secondary)" }}>
-                  <span>12 mois <span style={{ color: "#D4AF37" }}>-30%</span></span>
- <span className="font-medium line-through opacity-50"><span style={{ color: "#D4AF37" }}>{formatPrice(TOTAL_PRICES.serenite.annual)}</span> <span >{formatPrice(ORIGINAL_PRICES.serenite.annual)}</span></span>
+                  <span>12 mois <span style={{ color: "#C9A961" }}>-30%</span></span>
+ <span className="font-medium line-through opacity-50"><span style={{ color: "#C9A961" }}>{formatPrice(TOTAL_PRICES.serenite.annual)}</span> <span >{formatPrice(ORIGINAL_PRICES.serenite.annual)}</span></span>
                 </div>
               </div>
             </div>
@@ -436,13 +436,13 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
             {/* Premium */}
             <div
               className="glass p-6 sm:p-8 text-center relative overflow-hidden rounded-2xl"
-              style={{ borderColor: "rgba(212,175,55,0.08)" }}
+              style={{ borderColor: "rgba(201, 169, 97,0.08)" }}
             >
               <p className="text-[11px] tracking-[0.25em] uppercase font-medium mb-4" style={{ color: "var(--text-muted)" }}>
                 Premium
               </p>
               <div className="flex items-baseline justify-center gap-1 mb-2">
-                <span className="font-display text-4xl sm:text-5xl font-light" style={{ color: "#D4AF37" }}>
+                <span className="font-display text-4xl sm:text-5xl font-light" style={{ color: "#C9A961" }}>
                   {formatPrice(PRICES.premium.monthly)}
                 </span>
                 <span className="text-sm" style={{ color: "var(--text-muted)" }}>/mois</span>
@@ -452,16 +452,16 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
               </p>
               <div className="space-y-1.5 text-left">
                 <div className="flex justify-between text-[11px]" style={{ color: "var(--text-secondary)" }}>
-                  <span>3 mois <span style={{ color: "#D4AF37" }}>-10%</span></span>
- <span className="font-medium line-through opacity-50"><span style={{ color: "#D4AF37" }}>{formatPrice(TOTAL_PRICES.premium.quarterly)}</span> <span >{formatPrice(ORIGINAL_PRICES.premium.quarterly)}</span></span>
+                  <span>3 mois <span style={{ color: "#C9A961" }}>-10%</span></span>
+ <span className="font-medium line-through opacity-50"><span style={{ color: "#C9A961" }}>{formatPrice(TOTAL_PRICES.premium.quarterly)}</span> <span >{formatPrice(ORIGINAL_PRICES.premium.quarterly)}</span></span>
                 </div>
                 <div className="flex justify-between text-[11px]" style={{ color: "var(--text-secondary)" }}>
-                  <span>6 mois <span style={{ color: "#D4AF37" }}>-20%</span></span>
- <span className="font-medium line-through opacity-50"><span style={{ color: "#D4AF37" }}>{formatPrice(TOTAL_PRICES.premium.semiannual)}</span> <span >{formatPrice(ORIGINAL_PRICES.premium.semiannual)}</span></span>
+                  <span>6 mois <span style={{ color: "#C9A961" }}>-20%</span></span>
+ <span className="font-medium line-through opacity-50"><span style={{ color: "#C9A961" }}>{formatPrice(TOTAL_PRICES.premium.semiannual)}</span> <span >{formatPrice(ORIGINAL_PRICES.premium.semiannual)}</span></span>
                 </div>
                 <div className="flex justify-between text-[11px]" style={{ color: "var(--text-secondary)" }}>
-                  <span>12 mois <span style={{ color: "#D4AF37" }}>-30%</span></span>
- <span className="font-medium line-through opacity-50"><span style={{ color: "#D4AF37" }}>{formatPrice(TOTAL_PRICES.premium.annual)}</span> <span >{formatPrice(ORIGINAL_PRICES.premium.annual)}</span></span>
+                  <span>12 mois <span style={{ color: "#C9A961" }}>-30%</span></span>
+ <span className="font-medium line-through opacity-50"><span style={{ color: "#C9A961" }}>{formatPrice(TOTAL_PRICES.premium.annual)}</span> <span >{formatPrice(ORIGINAL_PRICES.premium.annual)}</span></span>
                 </div>
               </div>
             </div>
@@ -485,17 +485,17 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
-              style={{ borderColor: "rgba(212,175,55,0.15)" }}
+              style={{ borderColor: "rgba(201, 169, 97,0.15)" }}
             >
               <div
                 className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5"
-                style={{ background: "rgba(212,175,55,0.1)", border: "1px solid rgba(212,175,55,0.2)" }}
+                style={{ background: "rgba(201, 169, 97,0.1)", border: "1px solid rgba(201, 169, 97,0.2)" }}
               >
-                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="#D4AF37" strokeWidth={1.5}>
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="#C9A961" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                 </svg>
               </div>
-              <div className="font-display text-2xl font-light mb-3" style={{ color: "#D4AF37" }}>
+              <div className="font-display text-2xl font-light mb-3" style={{ color: "#C9A961" }}>
                 {s(settings, 'prelaunch_success_title', 'Bienvenue parmi les fondateurs')}
               </div>
               <p className="text-sm font-light leading-relaxed" style={{ color: "var(--text-secondary)" }}>
@@ -516,7 +516,7 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
                     border: "1px solid rgba(255,255,255,0.08)",
                     color: "var(--text-primary)",
                   }}
-                  onFocus={(e) => (e.target.style.borderColor = "rgba(212,175,55,0.3)")}
+                  onFocus={(e) => (e.target.style.borderColor = "rgba(201, 169, 97,0.3)")}
                   onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.08)")}
                 />
                 <input
@@ -531,7 +531,7 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
                     border: "1px solid rgba(255,255,255,0.08)",
                     color: "var(--text-primary)",
                   }}
-                  onFocus={(e) => (e.target.style.borderColor = "rgba(212,175,55,0.3)")}
+                  onFocus={(e) => (e.target.style.borderColor = "rgba(201, 169, 97,0.3)")}
                   onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.08)")}
                 />
               </div>
@@ -540,7 +540,7 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
                 type="submit"
                 disabled={status === "loading"}
                 className="magnetic-btn pulse-ring w-full py-4 rounded-full text-sm font-semibold tracking-wide transition-all disabled:opacity-50"
-                style={{ background: "linear-gradient(135deg, #D4AF37, #B8960F)", color: "#000000" }}
+                style={{ background: "linear-gradient(135deg, #C9A961, #A88248)", color: "#000000" }}
               >
                 {status === "loading" ? (
                   <span className="flex items-center justify-center gap-2">
@@ -557,7 +557,7 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
                   initial={{ opacity: 0, y: -5 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="text-center text-sm font-light"
-                  style={{ color: "#D4AF37" }}
+                  style={{ color: "#C9A961" }}
                 >
                   {s(settings, 'prelaunch_already_message', 'Vous \u00eates d\u00e9j\u00e0 inscrit(e). Nous vous contacterons le 22 mars.')}
                 </motion.p>
@@ -588,7 +588,7 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
               {s(settings, 'prelaunch_social_proof', '{count} personne(s) sur la liste d\'attente').split('{count}').map((part, i, arr) => (
                 <span key={i}>
                   {part}
-                  {i < arr.length - 1 && <span style={{ color: "#D4AF37" }}>{waitlistCount}</span>}
+                  {i < arr.length - 1 && <span style={{ color: "#C9A961" }}>{waitlistCount}</span>}
                 </span>
               ))}
             </motion.p>
@@ -617,9 +617,9 @@ export default function PreLaunchPage({ settings = {} }: { settings?: PrelaunchS
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 1.7 + i * 0.07, ease: [0.16, 1, 0.3, 1] }}
-                style={{ borderColor: "rgba(212,175,55,0.06)" }}
+                style={{ borderColor: "rgba(201, 169, 97,0.06)" }}
               >
-                <span className="block w-1.5 h-1.5 rotate-45 mx-auto mb-3" style={{ background: "#D4AF37", opacity: 0.5 }} />
+                <span className="block w-1.5 h-1.5 rotate-45 mx-auto mb-3" style={{ background: "#C9A961", opacity: 0.5 }} />
                 <span className="text-xs font-light leading-relaxed" style={{ color: "var(--text-secondary)" }}>
                   {feature}
                 </span>

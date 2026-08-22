@@ -55,7 +55,7 @@ ${dimInfo?.icon || ''} ${dimInfo?.name || 'Dimension ' + dominant}
 </p>
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
 <tr><td style="background:rgba(255,255,255,0.06);border-radius:99px;height:8px;width:100%;">
-<div style="background:linear-gradient(90deg,${BRAND},#B8960F);height:8px;border-radius:99px;width:${dominantScore}%;"></div>
+<div style="background:linear-gradient(90deg,${BRAND},#A88248);height:8px;border-radius:99px;width:${dominantScore}%;"></div>
 </td><td style="padding-left:8px;white-space:nowrap;font-size:13px;color:${BRAND};font-weight:600;">${dominantScore}%</td></tr>
 </table>
 </td></tr>

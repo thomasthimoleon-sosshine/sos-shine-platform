@@ -188,8 +188,8 @@ function ActuShineSection() {
       href: '/dashboard/shine-audible',
       data: latestContent.audible,
       image: latestContent.audible?.cover_url,
-      gradient: 'linear-gradient(135deg, rgba(162,155,254,0.15), rgba(120,100,220,0.05))',
-      accentColor: '#A29BFE',
+      gradient: 'linear-gradient(135deg, rgba(201,169,97,0.15), rgba(120,100,220,0.05))',
+      accentColor: '#C9A961',
     },
     {
       key: 'shorts',
@@ -247,7 +247,7 @@ function ActuShineSection() {
               className="group block overflow-hidden rounded-2xl transition-all duration-300 hover:scale-[1.03] hover:shadow-lg min-w-[130px] max-w-[160px] snap-start flex-shrink-0 sm:min-w-0 sm:max-w-none sm:flex-shrink"
               style={{
                 background: pillar.image ? 'var(--surface-card)' : pillar.gradient,
-                border: `1px solid rgba(${pillar.accentColor === '#C9A961' ? '212,175,55' : pillar.accentColor === '#74C0FC' ? '116,192,252' : pillar.accentColor === '#A29BFE' ? '162,155,254' : pillar.accentColor === '#55EFC4' ? '85,239,196' : '253,203,110'},0.15)`,
+                border: `1px solid rgba(${pillar.accentColor === '#C9A961' ? '201,169,97' : pillar.accentColor === '#74C0FC' ? '116,192,252' : pillar.accentColor === '#C9A961' ? '201,169,97' : pillar.accentColor === '#55EFC4' ? '85,239,196' : '253,203,110'},0.15)`,
               }}
             >
               {/* Thumbnail */}
@@ -716,10 +716,10 @@ export default function DashboardHome() {
           {/* ── Citation du jour ── */}
           <div
             className="glass glass-hover relative overflow-hidden p-6 sm:p-8"
-            style={{ background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.05), var(--surface-card))', borderColor: 'rgba(212, 175, 55, 0.1)' }}
+            style={{ background: 'linear-gradient(135deg, rgba(201, 169, 97, 0.05), var(--surface-card))', borderColor: 'rgba(201, 169, 97, 0.1)' }}
           >
             <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full opacity-30 pointer-events-none"
-              style={{ background: 'radial-gradient(circle, rgba(212, 175, 55, 0.08), transparent 70%)' }} />
+              style={{ background: 'radial-gradient(circle, rgba(201, 169, 97, 0.08), transparent 70%)' }} />
             <p className="font-display text-xl sm:text-2xl italic leading-relaxed relative text-[var(--text-primary)]">
               &ldquo;{siteSettings.dash_custom_quote || (quote ? quote.text.fr : t('quote.text'))}&rdquo;
             </p>

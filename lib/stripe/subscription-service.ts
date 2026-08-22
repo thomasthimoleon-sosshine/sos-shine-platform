@@ -180,7 +180,7 @@ export async function sendWelcomeEmail(
         Votre paiement a bien &eacute;t&eacute; confirm&eacute; pour l'offre <strong style="color:#C9A961;">${planName}</strong>.
       </p>
       <div style="text-align:center;margin:32px 0;">
-        <a href="${siteUrl}/login" style="display:inline-block;background:linear-gradient(135deg,#C9A961,#B8960F);color:#050505;padding:14px 40px;border-radius:50px;text-decoration:none;font-weight:600;font-size:15px;">
+        <a href="${siteUrl}/login" style="display:inline-block;background:linear-gradient(135deg,#C9A961,#A88248);color:#050505;padding:14px 40px;border-radius:50px;text-decoration:none;font-weight:600;font-size:15px;">
           Acc&eacute;der &agrave; mon espace
         </a>
       </div>

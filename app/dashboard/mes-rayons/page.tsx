@@ -136,7 +136,7 @@ export default function MesRayonsPage() {
             onClick={() => setActiveTab(tab.key)}
             className="flex-1 px-4 py-2.5 rounded-lg text-[13px] font-medium transition-all cursor-pointer"
             style={{
-              background: activeTab === tab.key ? 'rgba(212, 175, 55, 0.1)' : 'transparent',
+              background: activeTab === tab.key ? 'rgba(201, 169, 97, 0.1)' : 'transparent',
               color: activeTab === tab.key ? 'var(--brand)' : 'var(--text-muted)',
             }}
           >

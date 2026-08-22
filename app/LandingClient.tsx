@@ -126,7 +126,7 @@ function WordByWordReveal({ text, className = "", style = {} }: { text: string; 
 function InfiniteTickerBand({ items, speed = 30 }: { items: string[]; speed?: number }) {
   const doubled = [...items, ...items];
   return (
-    <div className="overflow-hidden py-6 border-y border-[var(--border)]" style={{ background: "rgba(212, 175, 55, 0.02)" }}>
+    <div className="overflow-hidden py-6 border-y border-[var(--border)]" style={{ background: "rgba(201, 169, 97, 0.02)" }}>
       <div className="ticker-track" style={{ animationDuration: `${speed}s` }}>
         {doubled.map((item, i) => (
           <span key={i} className="flex items-center gap-6 px-6 whitespace-nowrap">
@@ -141,7 +141,7 @@ function InfiniteTickerBand({ items, speed = 30 }: { items: string[]; speed?: nu
   );
 }
 
-function GlowingCard({ children, className = "", glowColor = "rgba(212, 175, 55, 0.15)", style }: { children: ReactNode; className?: string; glowColor?: string; style?: React.CSSProperties }) {
+function GlowingCard({ children, className = "", glowColor = "rgba(201, 169, 97, 0.15)", style }: { children: ReactNode; className?: string; glowColor?: string; style?: React.CSSProperties }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
@@ -196,8 +196,8 @@ function ScrollProgress() {
 function FloatingOrbs() {
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
-      <div className="orb" style={{ width: 500, height: 500, top: "10%", left: "-10%", background: "rgba(212, 175, 55, 0.012)" }} />
-      <div className="orb" style={{ width: 400, height: 400, top: "60%", right: "-15%", background: "rgba(212, 175, 55, 0.008)", animationDelay: "5s" }} />
+      <div className="orb" style={{ width: 500, height: 500, top: "10%", left: "-10%", background: "rgba(201, 169, 97, 0.012)" }} />
+      <div className="orb" style={{ width: 400, height: 400, top: "60%", right: "-15%", background: "rgba(201, 169, 97, 0.008)", animationDelay: "5s" }} />
     </div>
   );
 }
@@ -213,7 +213,7 @@ const DIAMONDS = [
 const DiamondSvg = memo(function DiamondSvg({ size }: { size: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <circle cx="12" cy="12" r="4" fill="#D4AF37" opacity="0.4" />
+      <circle cx="12" cy="12" r="4" fill="#C9A961" opacity="0.4" />
       <circle cx="12" cy="12" r="2" fill="#FFFBE6" opacity="0.9" />
     </svg>
   );
@@ -266,7 +266,7 @@ function FAQItem({ item, isOpen, onToggle }: { item: { q: string; a: string }; i
           animate={{ rotate: isOpen ? 45 : 0 }}
           transition={{ duration: 0.2 }}
           className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-lg"
-          style={{ color: 'var(--brand)', background: 'rgba(212, 175, 55, 0.08)' }}
+          style={{ color: 'var(--brand)', background: 'rgba(201, 169, 97, 0.08)' }}
         >
           +
         </motion.span>
@@ -459,7 +459,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
   function ord(key: string): number { return sectionPositions[key] ?? DEFAULT_ORDER[key] ?? 999; }
 
   const g = sty('_global');
-  const gold = g.color_primary || '#D4AF37';
+  const gold = g.color_primary || '#C9A961';
   const accent = g.color_secondary || '#74C0FC';
   const bg = g.color_bg || '#362038';
   const buttonBg = g.color_button || gold;
@@ -563,7 +563,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
       {/* ═══ FIXED HEADER - Le Club 10 style ═══ */}
       {headerVisible && (
           <header
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${headerScrolled ? 'py-3 bg-[#050505]/80 backdrop-blur-2xl border-b border-[rgba(212,175,55,0.06)]' : 'py-5 md:py-6'}`}
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${headerScrolled ? 'py-3 bg-[#050505]/80 backdrop-blur-2xl border-b border-[rgba(201, 169, 97,0.06)]' : 'py-5 md:py-6'}`}
           >
             <div className="flex items-center justify-between max-w-7xl mx-auto px-5 md:px-10">
               <Link href="/" className="flex items-center gap-3">

@@ -695,8 +695,8 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
                                       <svg className="w-3 h-3" fill={avail?.hasAudible ? '#74C0FC' : 'rgba(255,255,255,0.15)'} viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" /></svg>
                                     </span>
                                     {/* Shine Short */}
-                                    <span title="Shine Short" className="inline-flex items-center justify-center w-5 h-5 rounded" style={{ background: avail?.hasShort ? 'rgba(162,155,254,0.15)' : 'rgba(255,255,255,0.03)' }}>
-                                      <svg className="w-3 h-3" fill={avail?.hasShort ? '#A29BFE' : 'rgba(255,255,255,0.15)'} viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z" /></svg>
+                                    <span title="Shine Short" className="inline-flex items-center justify-center w-5 h-5 rounded" style={{ background: avail?.hasShort ? 'rgba(201,169,97,0.15)' : 'rgba(255,255,255,0.03)' }}>
+                                      <svg className="w-3 h-3" fill={avail?.hasShort ? '#C9A961' : 'rgba(255,255,255,0.15)'} viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z" /></svg>
                                     </span>
                                     {/* Shine Librairie */}
                                     <span title="Shine Librairie" className="inline-flex items-center justify-center w-5 h-5 rounded" style={{ background: avail?.hasLibrary ? 'rgba(201,169,97,0.15)' : 'rgba(255,255,255,0.03)' }}>
@@ -774,7 +774,7 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
             <span className="text-xs text-[var(--text-secondary)]">Shine Audible</span>
           </div>
           <div className="flex items-center gap-2">
-            <svg className="w-3 h-3" fill="#A29BFE" viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z" /></svg>
+            <svg className="w-3 h-3" fill="#C9A961" viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z" /></svg>
             <span className="text-xs text-[var(--text-secondary)]">Shine Short</span>
           </div>
           <div className="flex items-center gap-2">

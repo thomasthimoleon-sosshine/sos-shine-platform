@@ -481,7 +481,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, email }: Pr
                   }}
                   className="flex items-center justify-center gap-3 py-4 rounded-xl text-sm font-semibold transition-all hover:brightness-110 active:scale-[0.98]"
                   style={{
-                    background: `linear-gradient(135deg, ${bc.text}, #B8960F)`,
+                    background: `linear-gradient(135deg, ${bc.text}, #A88248)`,
                     color: '#000',
                     letterSpacing: '0.02em',
                   }}
@@ -501,7 +501,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, email }: Pr
             <Link
               href={signupUrl}
               className="flex items-center justify-center gap-3 w-full py-4 rounded-xl text-sm font-semibold transition-all hover:brightness-110"
-              style={{ background: `linear-gradient(135deg, ${bc.text}, #B8960F)`, color: '#000' }}
+              style={{ background: `linear-gradient(135deg, ${bc.text}, #A88248)`, color: '#000' }}
             >
               Créer mon compte gratuit
               <span>→</span>

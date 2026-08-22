@@ -205,7 +205,7 @@ export default function AdminShineShortsPage() {
         {!showForm && (
           <button onClick={() => { setEditingId(null); setForm(emptyForm); setShowForm(true); setError(null) }}
             className="px-5 py-2.5 rounded-lg text-sm font-semibold transition-all hover:opacity-90 self-start sm:self-auto"
-            style={{ background: '#A29BFE', color: '#fff' }}>
+            style={{ background: '#C9A961', color: '#fff' }}>
             Ajouter un short
           </button>
         )}
@@ -220,7 +220,7 @@ export default function AdminShineShortsPage() {
       {/* Form */}
       {showForm && (
         <form onSubmit={handleSave} className="rounded-xl p-6 space-y-5" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
-          <h2 className="font-semibold text-lg" style={{ color: '#A29BFE' }}>
+          <h2 className="font-semibold text-lg" style={{ color: '#C9A961' }}>
             {editingId ? 'Modifier le short' : 'Nouveau short'}
           </h2>
 
@@ -283,7 +283,7 @@ export default function AdminShineShortsPage() {
           <div className="flex items-center gap-3 pt-2">
             <button type="submit" disabled={saving || !form.title.trim()}
               className="px-6 py-2.5 rounded-lg text-sm font-semibold transition-all disabled:opacity-40"
-              style={{ background: '#A29BFE', color: '#fff' }}>
+              style={{ background: '#C9A961', color: '#fff' }}>
               {saving ? 'Enregistrement...' : editingId ? 'Mettre à jour' : 'Enregistrer'}
             </button>
             <button type="button" onClick={cancelForm}
@@ -301,9 +301,9 @@ export default function AdminShineShortsPage() {
           <button onClick={() => setFilterCategory('all')}
             className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
             style={{
-              background: filterCategory === 'all' ? 'rgba(162,155,254,0.15)' : 'transparent',
-              color: filterCategory === 'all' ? '#A29BFE' : 'var(--text-muted)',
-              border: `1px solid ${filterCategory === 'all' ? 'rgba(162,155,254,0.3)' : 'var(--border)'}`,
+              background: filterCategory === 'all' ? 'rgba(201,169,97,0.15)' : 'transparent',
+              color: filterCategory === 'all' ? '#C9A961' : 'var(--text-muted)',
+              border: `1px solid ${filterCategory === 'all' ? 'rgba(201,169,97,0.3)' : 'var(--border)'}`,
             }}>
             Tout ({shorts.length})
           </button>
@@ -314,9 +314,9 @@ export default function AdminShineShortsPage() {
               <button key={c.id} onClick={() => setFilterCategory(c.id)}
                 className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
                 style={{
-                  background: filterCategory === c.id ? 'rgba(162,155,254,0.15)' : 'transparent',
-                  color: filterCategory === c.id ? '#A29BFE' : 'var(--text-muted)',
-                  border: `1px solid ${filterCategory === c.id ? 'rgba(162,155,254,0.3)' : 'var(--border)'}`,
+                  background: filterCategory === c.id ? 'rgba(201,169,97,0.15)' : 'transparent',
+                  color: filterCategory === c.id ? '#C9A961' : 'var(--text-muted)',
+                  border: `1px solid ${filterCategory === c.id ? 'rgba(201,169,97,0.3)' : 'var(--border)'}`,
                 }}>
                 {c.icon} {c.label} ({count})
               </button>
@@ -328,7 +328,7 @@ export default function AdminShineShortsPage() {
       {/* List */}
       {loading ? (
         <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-2 border-[#A29BFE] border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-[#C9A961] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : filteredShorts.length === 0 ? (
         <div className="rounded-xl p-12 text-center" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
@@ -341,7 +341,7 @@ export default function AdminShineShortsPage() {
             <div key={s.id} className="rounded-xl overflow-hidden transition-all duration-200 hover:-translate-y-0.5"
               style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
               {/* Thumbnail */}
-              <div className="relative aspect-[9/16] max-h-64" style={{ background: 'rgba(162,155,254,0.08)' }}>
+              <div className="relative aspect-[9/16] max-h-64" style={{ background: 'rgba(201,169,97,0.08)' }}>
                 {s.thumbnail_url ? (
                   <img src={s.thumbnail_url} alt={s.title} className="w-full h-full object-contain" />
                 ) : (
@@ -369,7 +369,7 @@ export default function AdminShineShortsPage() {
                 <h3 className="font-semibold text-sm truncate" style={{ color: 'var(--text-primary)' }}>{s.title}</h3>
                 <div className="flex items-center gap-2">
                   <span className="text-[11px] px-2 py-0.5 rounded-full"
-                    style={{ background: 'rgba(162,155,254,0.1)', color: '#A29BFE' }}>
+                    style={{ background: 'rgba(201,169,97,0.1)', color: '#C9A961' }}>
                     {getCategoryIcon(s.category)} {getCategoryLabel(s.category)}
                   </span>
                 </div>

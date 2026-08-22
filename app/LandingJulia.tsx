@@ -55,7 +55,7 @@ export default function LandingJulia() {
   const heroScale = useTransform(heroProgress, [0, 1], [1, 0.95])
 
   return (
-    <main className="bg-[#050505] text-[#e0e0e0] overflow-hidden selection:bg-[#D4AF37]/25 selection:text-[#e0e0e0]">
+    <main className="bg-[#050505] text-[#e0e0e0] overflow-hidden selection:bg-[#C9A961]/25 selection:text-[#e0e0e0]">
 
       {/* ── Atmospheric layers ── */}
       <div
@@ -67,7 +67,7 @@ export default function LandingJulia() {
       <div
         className="fixed inset-0 pointer-events-none z-[1]"
         style={{
-          background: 'radial-gradient(ellipse 800px 500px at 50% 0%, rgba(212,175,55,0.05), transparent 60%)',
+          background: 'radial-gradient(ellipse 800px 500px at 50% 0%, rgba(201, 169, 97,0.05), transparent 60%)',
         }}
       />
 
@@ -85,7 +85,7 @@ export default function LandingJulia() {
             </Link>
             <Link
               href="/signup"
-              className="hidden sm:inline-flex px-5 py-2.5 rounded-full text-[13px] font-medium bg-[#e0e0e0] text-[#050505] hover:bg-[#D4AF37] transition-all duration-500"
+              className="hidden sm:inline-flex px-5 py-2.5 rounded-full text-[13px] font-medium bg-[#e0e0e0] text-[#050505] hover:bg-[#C9A961] transition-all duration-500"
             >
               Rejoindre
             </Link>
@@ -108,7 +108,7 @@ export default function LandingJulia() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 1, ease }}
-            className="text-[10px] sm:text-[11px] tracking-[0.4em] uppercase font-medium text-[#D4AF37] mb-6"
+            className="text-[10px] sm:text-[11px] tracking-[0.4em] uppercase font-medium text-[#C9A961] mb-6"
           >
             D&eacute;conditionnement &eacute;motionnel
           </motion.p>
@@ -120,7 +120,7 @@ export default function LandingJulia() {
             className="font-display font-light text-[2rem] sm:text-[3rem] md:text-[4rem] lg:text-[5rem] leading-[1.04] tracking-[-0.04em] mb-8 max-w-3xl"
           >
             Et si ce qui te fait souffrir &eacute;tait exactement{' '}
-            <em className="italic text-[#D4AF37]/70">ce qui doit briller&nbsp;?</em>
+            <em className="italic text-[#C9A961]/70">ce qui doit briller&nbsp;?</em>
           </motion.h1>
 
           <motion.p
@@ -156,7 +156,7 @@ export default function LandingJulia() {
           className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
         >
           <motion.div
-            className="w-px h-10 bg-gradient-to-b from-[#D4AF37]/40 to-transparent origin-top"
+            className="w-px h-10 bg-gradient-to-b from-[#C9A961]/40 to-transparent origin-top"
             animate={{ scaleY: [0, 1, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease }}
           />
@@ -190,12 +190,12 @@ export default function LandingJulia() {
       <section className="py-28 md:py-40 border-t border-white/[0.04]">
         <div className="max-w-6xl mx-auto px-6 md:px-10">
           <Reveal>
-            <p className="text-[10px] tracking-[0.4em] uppercase font-medium text-[#D4AF37]/80 mb-6 text-center">
+            <p className="text-[10px] tracking-[0.4em] uppercase font-medium text-[#C9A961]/80 mb-6 text-center">
               Le parcours
             </p>
             <h2 className="font-display text-[1.8rem] sm:text-[2.5rem] md:text-[3rem] font-light leading-[1.06] tracking-[-0.03em] text-center mb-20 md:mb-28 text-[#e0e0e0]">
               Tu ne te r&eacute;pareras pas.<br />
-              <span className="italic text-[#D4AF37]/60">Tu te r&eacute;v&egrave;les.</span>
+              <span className="italic text-[#C9A961]/60">Tu te r&eacute;v&egrave;les.</span>
             </h2>
           </Reveal>
 
@@ -207,7 +207,7 @@ export default function LandingJulia() {
               </div>
               <div className="w-full md:w-1/2">
                 <span className="block text-[11px] uppercase tracking-[0.4em] font-medium text-[#7DD3FC] mb-4">01</span>
-                <h3 className="font-display text-[1.5rem] sm:text-[2rem] font-light tracking-[-0.02em] text-[#D4AF37] mb-4 leading-[1.15]">Comprendre</h3>
+                <h3 className="font-display text-[1.5rem] sm:text-[2rem] font-light tracking-[-0.02em] text-[#C9A961] mb-4 leading-[1.15]">Comprendre</h3>
                 <p className="text-[15px] text-[#a1a1aa] leading-[1.8] font-light">
                   Identifier le sch&eacute;ma inconscient qui pilote tes r&eacute;actions. Pas de la th&eacute;orie.
                   Une lecture pr&eacute;cise de ce qui se joue en toi - depuis toujours.
@@ -224,7 +224,7 @@ export default function LandingJulia() {
               </div>
               <div className="w-full md:w-1/2">
                 <span className="block text-[11px] uppercase tracking-[0.4em] font-medium text-[#A78BFA] mb-4">02</span>
-                <h3 className="font-display text-[1.5rem] sm:text-[2rem] font-light tracking-[-0.02em] text-[#D4AF37] mb-4 leading-[1.15]">Lib&eacute;rer</h3>
+                <h3 className="font-display text-[1.5rem] sm:text-[2rem] font-light tracking-[-0.02em] text-[#C9A961] mb-4 leading-[1.15]">Lib&eacute;rer</h3>
                 <p className="text-[15px] text-[#a1a1aa] leading-[1.8] font-light">
                   D&eacute;charger l&apos;&eacute;motion stock&eacute;e dans le corps. Respiration ventrale,
                   lib&eacute;ration somatique. Ce qui doit sortir sort.
@@ -241,7 +241,7 @@ export default function LandingJulia() {
               </div>
               <div className="w-full md:w-1/2">
                 <span className="block text-[11px] uppercase tracking-[0.4em] font-medium text-[#FBCFE8] mb-4">03</span>
-                <h3 className="font-display text-[1.5rem] sm:text-[2rem] font-light tracking-[-0.02em] text-[#D4AF37] mb-4 leading-[1.15]">Agir</h3>
+                <h3 className="font-display text-[1.5rem] sm:text-[2rem] font-light tracking-[-0.02em] text-[#C9A961] mb-4 leading-[1.15]">Agir</h3>
                 <p className="text-[15px] text-[#a1a1aa] leading-[1.8] font-light">
                   Reprogrammer l&apos;automatisme. Miroir, ancrage, rituel du matin.
                   Chaque jour, un nouveau r&eacute;flexe remplace l&apos;ancien.
@@ -258,12 +258,12 @@ export default function LandingJulia() {
       <section className="py-32 md:py-44 border-t border-white/[0.04]">
         <div className="max-w-6xl mx-auto px-6 md:px-10">
           <Reveal>
-            <p className="text-[10px] tracking-[0.4em] uppercase font-medium text-[#D4AF37]/80 mb-6 text-center">
+            <p className="text-[10px] tracking-[0.4em] uppercase font-medium text-[#C9A961]/80 mb-6 text-center">
               Les co-cr&eacute;ateurs
             </p>
             <h2 className="font-display text-[2rem] sm:text-[2.8rem] md:text-[3.5rem] font-light leading-[1.06] tracking-[-0.03em] text-center mb-20 md:mb-28 text-[#e0e0e0]">
               Une table. Trois chaises.<br />
-              <span className="italic text-[#D4AF37]/60">La tienne attend.</span>
+              <span className="italic text-[#C9A961]/60">La tienne attend.</span>
             </h2>
           </Reveal>
 
@@ -293,7 +293,7 @@ export default function LandingJulia() {
             ].map((person, i) => (
               <Reveal key={person.name} delay={i * 0.15}>
                 <div className="group text-center">
-                  <div className="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden border border-[#D4AF37]/20 ring-4 ring-[#D4AF37]/05 relative">
+                  <div className="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden border border-[#C9A961]/20 ring-4 ring-[#C9A961]/05 relative">
                     {person.image ? (
                       <img src={person.image} alt={person.name} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
                     ) : (
@@ -305,7 +305,7 @@ export default function LandingJulia() {
                   <p className="text-[11px] tracking-[0.25em] uppercase font-medium mb-2" style={{ color: person.accent }}>
                     {person.role}
                   </p>
-                  <h3 className="font-display text-[1.5rem] font-light text-[#D4AF37] mb-3 tracking-[-0.02em]">
+                  <h3 className="font-display text-[1.5rem] font-light text-[#C9A961] mb-3 tracking-[-0.02em]">
                     {person.name}
                   </h3>
                   <p className="text-[13px] text-[#a1a1aa] leading-[1.7] font-light max-w-xs mx-auto">
@@ -324,12 +324,12 @@ export default function LandingJulia() {
       <section className="py-32 md:py-44 border-t border-white/[0.04]">
         <div className="max-w-6xl mx-auto px-6 md:px-10">
           <Reveal>
-            <p className="text-[10px] tracking-[0.4em] uppercase font-medium text-[#D4AF37]/80 mb-6 text-center">
+            <p className="text-[10px] tracking-[0.4em] uppercase font-medium text-[#C9A961]/80 mb-6 text-center">
               L&apos;&eacute;cosyst&egrave;me
             </p>
             <h2 className="font-display text-[2rem] sm:text-[2.8rem] font-light leading-[1.06] tracking-[-0.03em] text-center mb-20 text-[#e0e0e0]">
               Tout ce dont tu as besoin.<br />
-              <span className="italic text-[#D4AF37]/60">Rien de superflu.</span>
+              <span className="italic text-[#C9A961]/60">Rien de superflu.</span>
             </h2>
           </Reveal>
 
@@ -338,15 +338,15 @@ export default function LandingJulia() {
             {/* Encyclopédie - large */}
             <Reveal className="col-span-2 row-span-2">
               <div
-                className="h-full rounded-[24px] p-8 flex flex-col justify-end relative overflow-hidden group border border-[#D4AF37]/08 transition-all duration-500 hover:border-[#D4AF37]/20"
+                className="h-full rounded-[24px] p-8 flex flex-col justify-end relative overflow-hidden group border border-[#C9A961]/08 transition-all duration-500 hover:border-[#C9A961]/20"
                 style={{
-                  background: 'linear-gradient(160deg, rgba(212,175,55,0.06) 0%, rgba(5,5,5,0.95) 60%)',
+                  background: 'linear-gradient(160deg, rgba(201, 169, 97,0.06) 0%, rgba(5,5,5,0.95) 60%)',
                   backdropFilter: 'blur(16px)',
                 }}
               >
-                <div className="absolute top-6 right-6 text-[11px] tracking-[0.25em] uppercase text-[#D4AF37]/60">203 protocoles</div>
-                <div className="w-8 h-8 mb-4" style={{ background: '#D4AF37', transform: 'rotate(45deg)', boxShadow: '0 0 20px rgba(212,175,55,0.4)' }} />
-                <h3 className="font-display text-[1.3rem] font-light text-[#D4AF37] mb-2">L&apos;Encyclop&eacute;die</h3>
+                <div className="absolute top-6 right-6 text-[11px] tracking-[0.25em] uppercase text-[#C9A961]/60">203 protocoles</div>
+                <div className="w-8 h-8 mb-4" style={{ background: '#C9A961', transform: 'rotate(45deg)', boxShadow: '0 0 20px rgba(201, 169, 97,0.4)' }} />
+                <h3 className="font-display text-[1.3rem] font-light text-[#C9A961] mb-2">L&apos;Encyclop&eacute;die</h3>
                 <p className="text-[12px] text-[#a1a1aa] font-light leading-relaxed">
                   De A &agrave; Z, chaque exp&eacute;rience &eacute;motionnelle d&eacute;cod&eacute;e.
                   Protocoles guid&eacute;s : Comprendre &middot; Lib&eacute;rer &middot; Agir.
@@ -387,13 +387,13 @@ export default function LandingJulia() {
             {/* Librairie */}
             <Reveal delay={0.2}>
               <div
-                className="h-full rounded-[24px] p-6 flex flex-col justify-end border border-[#D4AF37]/06 transition-all duration-500 hover:border-[#D4AF37]/20"
+                className="h-full rounded-[24px] p-6 flex flex-col justify-end border border-[#C9A961]/06 transition-all duration-500 hover:border-[#C9A961]/20"
                 style={{
-                  background: 'linear-gradient(160deg, rgba(212,175,55,0.05) 0%, rgba(5,5,5,0.95) 60%)',
+                  background: 'linear-gradient(160deg, rgba(201, 169, 97,0.05) 0%, rgba(5,5,5,0.95) 60%)',
                   backdropFilter: 'blur(16px)',
                 }}
               >
-                <span className="text-xl mb-2 text-[#D4AF37]">&#9733;</span>
+                <span className="text-xl mb-2 text-[#C9A961]">&#9733;</span>
                 <h3 className="text-[14px] font-medium text-[#e0e0e0] mb-1">Librairie</h3>
                 <p className="text-[11px] text-[#52525b] font-light">eBooks &amp; guides</p>
               </div>
@@ -414,7 +414,7 @@ export default function LandingJulia() {
 
           {/* Mockup */}
           <Reveal delay={0.3}>
-            <div className="mt-20 rounded-[24px] overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.6),0_0_60px_rgba(212,175,55,0.04)] ring-1 ring-[#D4AF37]/08">
+            <div className="mt-20 rounded-[24px] overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.6),0_0_60px_rgba(201, 169, 97,0.04)] ring-1 ring-[#C9A961]/08">
               <img src={MOCKUP} alt="SOS Shine - Application" className="w-full" />
             </div>
           </Reveal>
@@ -427,12 +427,12 @@ export default function LandingJulia() {
       <section className="py-32 md:py-44 border-t border-white/[0.04]">
         <div className="max-w-5xl mx-auto px-6 md:px-10">
           <Reveal>
-            <p className="text-[10px] tracking-[0.4em] uppercase font-medium text-[#D4AF37]/80 mb-6 text-center">
+            <p className="text-[10px] tracking-[0.4em] uppercase font-medium text-[#C9A961]/80 mb-6 text-center">
               T&eacute;moignages v&eacute;rifi&eacute;s
             </p>
             <h2 className="font-display text-[2rem] sm:text-[2.8rem] font-light leading-[1.06] tracking-[-0.03em] text-center mb-20 text-[#e0e0e0]">
               Ils et elles ont travers&eacute;.<br />
-              <span className="italic text-[#D4AF37]/60">Ils et elles t&eacute;moignent.</span>
+              <span className="italic text-[#C9A961]/60">Ils et elles t&eacute;moignent.</span>
             </h2>
           </Reveal>
 
@@ -451,7 +451,7 @@ export default function LandingJulia() {
                     background: 'rgba(255,255,255,0.025)',
                     border: '1px solid rgba(255,255,255,0.06)',
                     backdropFilter: 'blur(16px)',
-                    boxShadow: '0 0 40px rgba(212,175,55,0.03)',
+                    boxShadow: '0 0 40px rgba(201, 169, 97,0.03)',
                   }}
                 >
                   <p className="text-[14px] text-[#a1a1aa] leading-[1.8] font-light italic mb-5">
@@ -482,7 +482,7 @@ export default function LandingJulia() {
             <img src="/images/logo-shine.png" alt="SOS Shine" className="h-10 mx-auto mb-8 object-contain opacity-25" />
           </Reveal>
           <Reveal delay={0.1}>
-            <p className="font-display text-[1.2rem] italic text-[#D4AF37]/30 font-light mb-12">
+            <p className="font-display text-[1.2rem] italic text-[#C9A961]/30 font-light mb-12">
               Julia &middot; William &middot; Thomas
             </p>
           </Reveal>

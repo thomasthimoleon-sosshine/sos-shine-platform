@@ -109,7 +109,7 @@ function WordByWordReveal({ text, className = "", style = {} }: { text: string; 
 function InfiniteTickerBand({ items, speed = 30 }: { items: string[]; speed?: number }) {
   const doubled = [...items, ...items];
   return (
-    <div className="overflow-hidden py-6 border-y border-[var(--border)]" style={{ background: "rgba(212, 175, 55, 0.02)" }}>
+    <div className="overflow-hidden py-6 border-y border-[var(--border)]" style={{ background: "rgba(201, 169, 97, 0.02)" }}>
       <div className="ticker-track" style={{ animationDuration: `${speed}s` }}>
         {doubled.map((item, i) => (
           <span key={i} className="flex items-center gap-6 px-6 whitespace-nowrap">
@@ -124,7 +124,7 @@ function InfiniteTickerBand({ items, speed = 30 }: { items: string[]; speed?: nu
   );
 }
 
-function GlowingCard({ children, className = "", glowColor = "rgba(212, 175, 55, 0.15)", style }: { children: ReactNode; className?: string; glowColor?: string; style?: React.CSSProperties }) {
+function GlowingCard({ children, className = "", glowColor = "rgba(201, 169, 97, 0.15)", style }: { children: ReactNode; className?: string; glowColor?: string; style?: React.CSSProperties }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
@@ -179,8 +179,8 @@ function ScrollProgress() {
 function FloatingOrbs() {
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
-      <div className="orb" style={{ width: 500, height: 500, top: "10%", left: "-10%", background: "rgba(212, 175, 55, 0.012)" }} />
-      <div className="orb" style={{ width: 400, height: 400, top: "60%", right: "-15%", background: "rgba(212, 175, 55, 0.008)", animationDelay: "5s" }} />
+      <div className="orb" style={{ width: 500, height: 500, top: "10%", left: "-10%", background: "rgba(201, 169, 97, 0.012)" }} />
+      <div className="orb" style={{ width: 400, height: 400, top: "60%", right: "-15%", background: "rgba(201, 169, 97, 0.008)", animationDelay: "5s" }} />
     </div>
   );
 }
@@ -204,8 +204,8 @@ function DiamondSvg({ size, className, style }: { size: number; className?: stri
       <defs>
         <radialGradient id={`glow-${size}`} cx="50%" cy="50%" r="50%">
           <stop offset="0%" stopColor="#F5E6A3" stopOpacity="1" />
-          <stop offset="40%" stopColor="#D4AF37" stopOpacity="0.6" />
-          <stop offset="100%" stopColor="#D4AF37" stopOpacity="0" />
+          <stop offset="40%" stopColor="#C9A961" stopOpacity="0.6" />
+          <stop offset="100%" stopColor="#C9A961" stopOpacity="0" />
         </radialGradient>
       </defs>
       <circle cx="12" cy="12" r="10" fill={`url(#glow-${size})`} />
@@ -315,7 +315,7 @@ export default function Home() {
   function vis(key: string): boolean { return sections[key]?.is_visible !== false; }
 
   const g = sty('_global');
-  const gold = g.color_primary || '#D4AF37';
+  const gold = g.color_primary || '#C9A961';
   const accent = g.color_secondary || '#74C0FC';
   const bg = g.color_bg || '#362038';
   const buttonBg = g.color_button || gold;
@@ -819,7 +819,7 @@ export default function Home() {
                 <RevealOnScroll delay={0.15}>
                   <div className="flex-shrink-0 group">
                     <a href={hist.book_url || '#'} target="_blank" rel="noopener noreferrer" className="block relative">
-                      <div className="w-56 md:w-64 rounded-lg overflow-hidden border border-[var(--brand)]/20 group-hover:border-[var(--brand)]/60 transition-all duration-500 shadow-lg group-hover:shadow-[0_0_30px_rgba(212,175,55,0.2)]">
+                      <div className="w-56 md:w-64 rounded-lg overflow-hidden border border-[var(--brand)]/20 group-hover:border-[var(--brand)]/60 transition-all duration-500 shadow-lg group-hover:shadow-[0_0_30px_rgba(201, 169, 97,0.2)]">
                         <img
                           src={hist.book_image || '/images/book-cover.jpeg'}
                           alt="SOS Shine - Briller Comme un Diamant"

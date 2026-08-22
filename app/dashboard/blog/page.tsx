@@ -8,7 +8,7 @@ import { blogArticles as staticArticles, BLOG_CATEGORIES } from '@/data/blog/art
 import type { BlogArticle } from '@/data/blog/articles'
 
 const gold = 'var(--brand)'
-const goldRgb = '212,175,55'
+const goldRgb = '201,169,97'
 
 function formatDate(dateStr: string) {
   const d = new Date(dateStr)

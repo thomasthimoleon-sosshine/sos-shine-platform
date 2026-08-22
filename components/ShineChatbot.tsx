@@ -142,7 +142,7 @@ export default function ShineChatbot() {
             className={`fixed right-4 z-[9998] w-[340px] max-w-[calc(100vw-2rem)] rounded-2xl overflow-hidden transition-all duration-300 ${miniPlayerActive ? 'bottom-[5.5rem]' : 'bottom-14'}`}
             style={{
               background: 'linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 100%)',
-              border: '1px solid rgba(212, 175, 55, 0.3)',
+              border: '1px solid rgba(201, 169, 97, 0.3)',
               boxShadow: '0 20px 60px rgba(0,0,0,0.6), 0 0 30px rgba(201,169,97,0.1)',
             }}
           >
@@ -230,14 +230,14 @@ export default function ShineChatbot() {
         onClick={() => setOpen(!open)}
         className={`fixed right-4 z-[9998] cursor-pointer rounded-full w-10 h-10 flex items-center justify-center transition-all duration-300 ${miniPlayerActive ? 'bottom-[5rem]' : 'bottom-4'}`}
         style={{
-          border: '1.5px solid rgba(212, 175, 55, 0.4)',
+          border: '1.5px solid rgba(201, 169, 97, 0.4)',
           boxShadow: '0 2px 12px rgba(0,0,0,0.4), 0 0 8px rgba(201,169,97,0.1)',
         }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
       >
         {open ? (
-          <div className="w-full h-full rounded-full flex items-center justify-center" style={{ background: 'rgba(212, 175, 55, 0.15)' }}>
+          <div className="w-full h-full rounded-full flex items-center justify-center" style={{ background: 'rgba(201, 169, 97, 0.15)' }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--brand)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </div>
         ) : (

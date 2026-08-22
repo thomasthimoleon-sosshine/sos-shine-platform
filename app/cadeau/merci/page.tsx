@@ -47,7 +47,7 @@ export default function CadeauMerciPage() {
             display: 'block',
             width: '100%',
             padding: '22px',
-            background: 'linear-gradient(135deg, #C9A961 0%, #B8960F 100%)',
+            background: 'linear-gradient(135deg, #C9A961 0%, #A88248 100%)',
             color: '#0A0A0A',
             textDecoration: 'none',
             borderRadius: '999px',

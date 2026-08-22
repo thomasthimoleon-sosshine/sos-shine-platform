@@ -150,7 +150,7 @@ export default function CadeauPage() {
               width: '100%',
               padding: '20px',
               marginTop: '6px',
-              background: (!consent || loading) ? 'rgba(201,169,97,0.25)' : 'linear-gradient(135deg, #C9A961 0%, #B8960F 100%)',
+              background: (!consent || loading) ? 'rgba(201,169,97,0.25)' : 'linear-gradient(135deg, #C9A961 0%, #A88248 100%)',
               color: (!consent || loading) ? 'rgba(245,241,232,0.3)' : '#0A0A0A',
               border: 'none',
               borderRadius: '999px',

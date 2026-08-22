@@ -8,7 +8,7 @@ const STATUS_CONFIG: Record<CourrierAnonymeStatus, { label: string; color: strin
   new: { label: 'Nouveau', color: '#55EFC4', bg: 'rgba(85,239,196,0.1)' },
   read: { label: 'Lu', color: '#74C0FC', bg: 'rgba(116,192,252,0.1)' },
   planned: { label: 'Planifié', color: '#C9A961', bg: 'rgba(201,169,97,0.1)' },
-  answered: { label: 'Répondu', color: '#A29BFE', bg: 'rgba(162,155,254,0.1)' },
+  answered: { label: 'Répondu', color: '#C9A961', bg: 'rgba(201,169,97,0.1)' },
   archived: { label: 'Archivé', color: 'var(--text-muted)', bg: 'rgba(255,255,255,0.03)' },
 }
 
@@ -138,7 +138,7 @@ export default function AdminCourrierPage() {
           { label: 'Total', value: stats.total, color: 'var(--text-primary)' },
           { label: 'Nouveaux', value: stats.new, color: '#55EFC4' },
           { label: 'Planifiés', value: stats.planned, color: '#C9A961' },
-          { label: 'Répondus', value: stats.answered, color: '#A29BFE' },
+          { label: 'Répondus', value: stats.answered, color: '#C9A961' },
         ].map((s, i) => (
           <div key={i} className="rounded-xl p-4 text-center" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
             <p className="text-2xl font-display font-semibold" style={{ color: s.color }}>{s.value}</p>
@@ -204,7 +204,7 @@ export default function AdminCourrierPage() {
                       {STATUS_CONFIG[c.status]?.label}
                     </span>
                     {c.answered_via && (
-                      <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(162,155,254,0.1)', color: '#A29BFE' }}>
+                      <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(201,169,97,0.1)', color: '#C9A961' }}>
                         {ANSWERED_VIA_OPTIONS.find(o => o.value === c.answered_via)?.icon} {ANSWERED_VIA_OPTIONS.find(o => o.value === c.answered_via)?.label}
                       </span>
                     )}
@@ -311,8 +311,8 @@ export default function AdminCourrierPage() {
                     <button key={opt.value} onClick={() => setAnsweredVia(answeredVia === opt.value ? '' : opt.value)}
                       className="text-xs px-3 py-1.5 rounded-lg transition-all"
                       style={{
-                        background: answeredVia === opt.value ? 'rgba(162,155,254,0.1)' : 'var(--dark)',
-                        color: answeredVia === opt.value ? '#A29BFE' : 'var(--text-secondary)',
+                        background: answeredVia === opt.value ? 'rgba(201,169,97,0.1)' : 'var(--dark)',
+                        color: answeredVia === opt.value ? '#C9A961' : 'var(--text-secondary)',
                         border: '1px solid var(--border)',
                       }}>
                       {opt.icon} {opt.label}

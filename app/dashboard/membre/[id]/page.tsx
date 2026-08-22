@@ -26,7 +26,7 @@ const ECLAT_CATEGORIES: Record<string, { label: string; icon: string; color: str
   gratitude: { label: 'Gratitude', icon: '✨', color: '#FFEAA7' },
   citation: { label: 'Citation', icon: '💬', color: '#FD79A8' },
   remerciements: { label: 'Moment de joie', icon: '🌟', color: '#55EFC4' },
-  question: { label: 'Réflexion', icon: '🔮', color: '#A29BFE' },
+  question: { label: 'Réflexion', icon: '🔮', color: '#C9A961' },
 }
 
 export default function MembreProfilPage() {

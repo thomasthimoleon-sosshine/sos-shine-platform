@@ -165,7 +165,7 @@ export default function PhysicalEventsAdmin() {
         </div>
         <button onClick={openNew}
           className="px-5 py-2.5 rounded-full text-sm font-semibold transition-all"
-          style={{ background: 'linear-gradient(135deg, #C9A961, #B8960F)', color: '#000' }}>
+          style={{ background: 'linear-gradient(135deg, #C9A961, #A88248)', color: '#000' }}>
           + Nouvel événement
         </button>
       </div>
@@ -268,7 +268,7 @@ export default function PhysicalEventsAdmin() {
           <div className="flex gap-3 mt-6">
             <button onClick={save} disabled={saving}
               className="px-6 py-2.5 rounded-full text-sm font-semibold transition-all disabled:opacity-50"
-              style={{ background: 'linear-gradient(135deg, #C9A961, #B8960F)', color: '#000' }}>
+              style={{ background: 'linear-gradient(135deg, #C9A961, #A88248)', color: '#000' }}>
               {saving ? 'Enregistrement...' : 'Enregistrer'}
             </button>
             <button onClick={() => setEditing(null)}

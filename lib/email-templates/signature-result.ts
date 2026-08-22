@@ -91,7 +91,7 @@ export function generateSignatureResultEmail(
               <p style="margin:0 0 24px;font-size:18px;color:#C9A961;font-weight:300;font-family:Georgia,'Times New Roman',serif;">
                 Prêt(e) à transformer votre signature émotionnelle en force&nbsp;?
               </p>
-              <a href="${siteUrl}/rejoindre" style="display:inline-block;padding:16px 40px;border-radius:50px;font-size:14px;font-weight:600;letter-spacing:0.05em;text-decoration:none;color:#000000;background:linear-gradient(135deg,#C9A961,#B8960F);">
+              <a href="${siteUrl}/rejoindre" style="display:inline-block;padding:16px 40px;border-radius:50px;font-size:14px;font-weight:600;letter-spacing:0.05em;text-decoration:none;color:#000000;background:linear-gradient(135deg,#C9A961,#A88248);">
                 Rejoindre SOS Shine
               </a>
             </td>

@@ -4,7 +4,7 @@
  */
 
 const BRAND = '#C9A961'
-const BRAND_DEEP = '#B8960F'
+const BRAND_DEEP = '#A88248'
 const BG = '#000000'
 const CARD_BG = '#111111'
 const BORDER = 'rgba(201,169,97,0.15)'

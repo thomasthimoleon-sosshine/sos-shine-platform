@@ -173,7 +173,7 @@ function ProtocolPreviewContent() {
             href={`/signup?source=quiz&protocol=${encodeURIComponent(slug)}&email=${encodeURIComponent(email)}`}
             onClick={() => track('protocol_signup_clicked', { protocolSlug: slug, email })}
             className="block w-full py-4 rounded-full text-sm font-semibold text-center transition-all hover:brightness-110"
-            style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
+            style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #A88248))', color: '#000000' }}
           >
             Commencer mon protocole →
           </a>

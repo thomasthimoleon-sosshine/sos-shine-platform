@@ -65,7 +65,7 @@ const QUEST_INFO: Record<string, QuestInfo> = {
     xpLine: '+25 points (max 4/jour)',
     route: '/dashboard/shine-tv',
     unit: 'Médias consommés',
-    color: '#A29BFE',
+    color: '#C9A961',
   },
   login_streak: {
     action: 'Connecte-toi chaque jour sans interruption',

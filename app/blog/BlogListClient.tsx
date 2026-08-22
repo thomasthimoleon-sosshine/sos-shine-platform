@@ -9,7 +9,7 @@ import ThemeToggle from '@/components/ThemeToggle'
 import { createClient } from '@/lib/supabase/client'
 
 const gold = 'var(--brand)'
-const goldRgb = '212,175,55'
+const goldRgb = '201,169,97'
 
 interface BlogListClientProps {
   initialArticles?: BlogArticle[]

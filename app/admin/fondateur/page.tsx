@@ -163,7 +163,7 @@ const TRAFFIC_SOURCES = [
   { name: 'Bouche à oreille', value: 25, color: '#55EFC4' },
   { name: 'Affiliation', value: 20, color: '#C9A961' },
   { name: 'Google (SEO)', value: 12, color: '#74C0FC' },
-  { name: 'YouTube', value: 7, color: '#A29BFE' },
+  { name: 'YouTube', value: 7, color: '#C9A961' },
   { name: 'Facebook Ads', value: 4, color: '#FF6B35' },
 ]
 
@@ -364,7 +364,7 @@ export default function FounderDashboard() {
   const costBreakdown5k = getMonthlyOperatingCosts(5000)
   const costPieData = [
     { name: 'Serveurs & Infra', value: costBreakdown5k.server, color: '#74C0FC' },
-    { name: 'CDN / Vidéo Hosting', value: costBreakdown5k.videoHosting, color: '#A29BFE' },
+    { name: 'CDN / Vidéo Hosting', value: costBreakdown5k.videoHosting, color: '#C9A961' },
     { name: 'Production Contenu', value: costBreakdown5k.contentProduction, color: '#E17055' },
     { name: 'Marketing', value: costBreakdown5k.marketing, color: '#55EFC4' },
     { name: 'Email / CRM', value: costBreakdown5k.emailCrm, color: '#C9A961' },
@@ -403,7 +403,7 @@ export default function FounderDashboard() {
       <div>
         <div className="flex items-center gap-3 mb-2">
           <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg"
-            style={{ background: 'linear-gradient(135deg, #C9A961, #B8960F)', color: '#000000' }}>
+            style={{ background: 'linear-gradient(135deg, #C9A961, #A88248)', color: '#000000' }}>
             F
           </div>
           <div>
@@ -460,7 +460,7 @@ export default function FounderDashboard() {
               <StatCard icon="👥" label="Membres inscrits" value={fmt(liveStats.totalMembers)} color="#74C0FC" />
               <StatCard icon="💳" label="Abonnements actifs" value={fmt(liveStats.activeSubscriptions)} color="#55EFC4" />
               <StatCard icon="💰" label="MRR actuel" value={fmtEur(liveMRR)} sub={`ARR: ${fmtEur(liveMRR * 12)}`} color="#C9A961" />
-              <StatCard icon="⏳" label="En période d'essai" value={fmt(liveStats.trialingCount)} color="#A29BFE" />
+              <StatCard icon="⏳" label="En période d'essai" value={fmt(liveStats.trialingCount)} color="#C9A961" />
               <StatCard icon="⚠️" label="Paiement en retard" value={fmt(liveStats.pastDueCount)} color="#E17055" />
               <StatCard icon="🤝" label="Affiliés actifs" value={fmt(liveStats.totalAffiliates)} sub={`En attente: ${fmtEur(liveStats.pendingPayouts / 100)}`} color="#FF6B35" />
             </div>
@@ -502,7 +502,7 @@ export default function FounderDashboard() {
             <StatCard icon="📧" label="Campagnes" value={fmt(crmStats.totalCampaigns)} color="#74C0FC" />
             <StatCard icon="✉️" label="Emails envoyés" value={fmt(crmStats.totalSent)} color="#55EFC4" />
             <StatCard icon="📊" label="Taux d'ouverture" value={`${crmStats.avgOpenRate}%`} color="#E8A87C" />
-            <StatCard icon="🔄" label="Séquences" value={fmt(crmStats.totalSequences)} color="#A29BFE" />
+            <StatCard icon="🔄" label="Séquences" value={fmt(crmStats.totalSequences)} color="#C9A961" />
             <StatCard icon="🧬" label="Emails résultats" value={fmt(crmStats.signatureEmailsSent)} color="#C4A0E8" />
           </div>
 
@@ -521,9 +521,9 @@ export default function FounderDashboard() {
               <div className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Créer et planifier</div>
             </Link>
             <Link href="/admin/crm" className="rounded-xl p-4 text-center transition-all hover:scale-[1.02]"
-              style={{ background: 'rgba(162,155,254,0.06)', border: '1px solid rgba(162,155,254,0.15)' }}>
+              style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.15)' }}>
               <div className="text-2xl mb-2">🔄</div>
-              <div className="text-sm font-medium" style={{ color: '#A29BFE' }}>Séquences</div>
+              <div className="text-sm font-medium" style={{ color: '#C9A961' }}>Séquences</div>
               <div className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>Emails automatiques</div>
             </Link>
             <Link href="/admin/crm" className="rounded-xl p-4 text-center transition-all hover:scale-[1.02]"
@@ -596,7 +596,7 @@ export default function FounderDashboard() {
             <StatCard icon="📈" label="MRR à M12" value={fmtEur(month12.mrr)} sub={`ARR: ${fmtEur(month12.arr)}`} color="#C9A961" />
             <StatCard icon="💵" label="CA cumulé (12 mois)" value={fmtEur(yearlyRevenue)} color="#55EFC4" />
             <StatCard icon="🏛️" label="IS Chypre (12.5%)" value={fmtEur(yearlyTax)} sub="Impôt sur les sociétés" color="#E17055" />
-            <StatCard icon="✨" label="Net distribuable" value={fmtEur(yearlyDistributable)} sub="Après IS + prélèvements" color="#A29BFE" />
+            <StatCard icon="✨" label="Net distribuable" value={fmtEur(yearlyDistributable)} sub="Après IS + prélèvements" color="#C9A961" />
             <StatCard icon="👤" label="Par associé / an" value={fmtEur(yearlyPerPartner)} sub={`~${fmtEur(yearlyPerPartner / 12)}/mois`} color="#C9A961" />
           </div>
 
@@ -676,7 +676,7 @@ export default function FounderDashboard() {
                   { name: 'Fondation 5%', value: -month12.fondationContrib, color: '#E84393' },
                   { name: 'Événements 10%', value: -month12.eventOrganization, color: '#00CEC9' },
                   { name: 'Coûts Opé.', value: -month12.operatingCosts, color: '#74C0FC' },
-                  { name: 'IS Chypre 12.5%', value: -month12.corporateTax, color: '#A29BFE' },
+                  { name: 'IS Chypre 12.5%', value: -month12.corporateTax, color: '#C9A961' },
                   { name: 'Profit Net', value: month12.netProfit, color: '#55EFC4' },
                   { name: 'Par Associé', value: month12.perPartner, color: '#C9A961' },
                 ]}>
@@ -688,7 +688,7 @@ export default function FounderDashboard() {
                     {[
                       { color: '#C9A961' }, { color: '#E17055' }, { color: '#FF6B35' },
                       { color: '#E84393' }, { color: '#00CEC9' },
-                      { color: '#74C0FC' }, { color: '#A29BFE' }, { color: '#55EFC4' }, { color: '#C9A961' },
+                      { color: '#74C0FC' }, { color: '#C9A961' }, { color: '#55EFC4' }, { color: '#C9A961' },
                     ].map((entry, i) => (
                       <Cell key={i} fill={entry.color} opacity={0.85} />
                     ))}
@@ -791,7 +791,7 @@ export default function FounderDashboard() {
                   <Tooltip content={<CustomTooltip />} />
                   <Legend wrapperStyle={{ fontSize: 11 }} />
                   <Bar dataKey="affiliateCommissions" name="Commissions affiliés (€)" fill="#FF6B35" radius={[4, 4, 0, 0]} opacity={0.85} />
-                  <Bar dataKey="stripeFees" name="Frais Stripe (€)" fill="#A29BFE" radius={[4, 4, 0, 0]} opacity={0.85} />
+                  <Bar dataKey="stripeFees" name="Frais Stripe (€)" fill="#C9A961" radius={[4, 4, 0, 0]} opacity={0.85} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -800,9 +800,9 @@ export default function FounderDashboard() {
                 <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Commissions annuelles</p>
                 <p className="text-lg font-semibold" style={{ color: '#FF6B35' }}>{fmtEur(yearlyAffiliate)}</p>
               </div>
-              <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(162,155,254,0.05)' }}>
+              <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(201,169,97,0.05)' }}>
                 <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Frais Stripe annuels</p>
-                <p className="text-lg font-semibold" style={{ color: '#A29BFE' }}>{fmtEur(yearlyStripe)}</p>
+                <p className="text-lg font-semibold" style={{ color: '#C9A961' }}>{fmtEur(yearlyStripe)}</p>
               </div>
               <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(232,67,147,0.05)' }}>
                 <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Fondation humanitaire</p>
@@ -841,7 +841,7 @@ export default function FounderDashboard() {
                 { label: 'Résultat brut avant impôt', value: yearlyRevenue - yearlyStripe - yearlyAffiliate - yearlyFondation - yearlyEvents - yearlyCosts, color: '#55EFC4', icon: '📊', bold: true },
                 { label: 'Impôt sur les sociétés (12.5%)', value: -yearlyTax, color: '#E17055', icon: '🏛️' },
                 { label: 'Résultat net après IS', value: yearlyNetProfit, color: '#55EFC4', icon: '✅' },
-                { label: 'Contribution défense (17%)', value: -(yearlyNetProfit * CYPRUS.defenceContribDividend), color: '#A29BFE', icon: '🛡️' },
+                { label: 'Contribution défense (17%)', value: -(yearlyNetProfit * CYPRUS.defenceContribDividend), color: '#C9A961', icon: '🛡️' },
                 { label: 'GHS / Santé (2.65%)', value: -(yearlyNetProfit * CYPRUS.ghsDividend), color: '#9B59B6', icon: '🏥' },
                 { label: 'Net distribuable aux associés', value: yearlyDistributable, color: '#C9A961', icon: '✨', bold: true },
               ].map((row) => (
@@ -910,7 +910,7 @@ export default function FounderDashboard() {
                   <Tooltip content={<CustomTooltip />} />
                   <Legend wrapperStyle={{ fontSize: 11 }} />
                   <Area type="monotone" dataKey="serverCost" name="Serveurs & Infra" stroke="#74C0FC" fill="rgba(116,192,252,0.1)" stackId="1" />
-                  <Area type="monotone" dataKey="videoCost" name="CDN / Vidéo" stroke="#A29BFE" fill="rgba(162,155,254,0.1)" stackId="1" />
+                  <Area type="monotone" dataKey="videoCost" name="CDN / Vidéo" stroke="#C9A961" fill="rgba(201,169,97,0.1)" stackId="1" />
                   <Area type="monotone" dataKey="contentCost" name="Production contenu" stroke="#E17055" fill="rgba(225,112,85,0.1)" stackId="1" />
                   <Area type="monotone" dataKey="marketingCost" name="Marketing" stroke="#55EFC4" fill="rgba(85,239,196,0.1)" stackId="1" />
                 </AreaChart>
@@ -944,7 +944,7 @@ export default function FounderDashboard() {
                       <td className="py-2 px-2" style={{ color: 'var(--text-secondary)' }}>{fmtEur(m.operatingCosts)}</td>
                       <td className="py-2 px-2" style={{ color: 'var(--text-secondary)' }}>{fmtEur(m.stripeFees)}</td>
                       <td className="py-2 px-2" style={{ color: '#FF6B35' }}>{fmtEur(m.affiliateCommissions)}</td>
-                      <td className="py-2 px-2" style={{ color: '#A29BFE' }}>{fmtEur(m.corporateTax)}</td>
+                      <td className="py-2 px-2" style={{ color: '#C9A961' }}>{fmtEur(m.corporateTax)}</td>
                       <td className="py-2 px-2 font-semibold" style={{ color: m.netProfit >= 0 ? '#55EFC4' : '#E17055' }}>{fmtEur(m.netProfit)}</td>
                       <td className="py-2 px-2 font-semibold" style={{ color: m.perPartner >= 0 ? '#C9A961' : '#E17055' }}>{fmtEur(m.perPartner)}</td>
                     </tr>
@@ -962,7 +962,7 @@ export default function FounderDashboard() {
                     <td className="py-3 px-2 font-semibold" style={{ color: 'var(--text-secondary)' }}>{fmtEur(yearlyCosts)}</td>
                     <td className="py-3 px-2 font-semibold" style={{ color: 'var(--text-secondary)' }}>{fmtEur(yearlyStripe)}</td>
                     <td className="py-3 px-2 font-semibold" style={{ color: '#FF6B35' }}>{fmtEur(yearlyAffiliate)}</td>
-                    <td className="py-3 px-2 font-semibold" style={{ color: '#A29BFE' }}>{fmtEur(yearlyTax)}</td>
+                    <td className="py-3 px-2 font-semibold" style={{ color: '#C9A961' }}>{fmtEur(yearlyTax)}</td>
                     <td className="py-3 px-2 font-bold" style={{ color: '#55EFC4' }}>{fmtEur(yearlyNetProfit)}</td>
                     <td className="py-3 px-2 font-bold" style={{ color: '#C9A961' }}>{fmtEur(yearlyPerPartner)}</td>
                   </tr>
@@ -1007,7 +1007,7 @@ export default function FounderDashboard() {
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
             <StatCard icon="👁️" label="Visites aujourd'hui" value={fmt(visitStats.today)} color="#74C0FC" />
             <StatCard icon="👤" label="Visiteurs uniques (jour)" value={fmt(visitStats.uniqueToday)} color="#55EFC4" />
-            <StatCard icon="📅" label="Visites (7 jours)" value={fmt(visitStats.week)} color="#A29BFE" />
+            <StatCard icon="📅" label="Visites (7 jours)" value={fmt(visitStats.week)} color="#C9A961" />
             <StatCard icon="👥" label="Uniques (7 jours)" value={fmt(visitStats.uniqueWeek)} color="#E8A87C" />
             <StatCard icon="📊" label="Visites ce mois" value={fmt(visitStats.month)} color="#C9A961" />
             <StatCard icon="🌟" label="Uniques ce mois" value={fmt(visitStats.uniqueMonth)} color="#FF6B35" />
@@ -1057,13 +1057,13 @@ export default function FounderDashboard() {
                       data={visitStats.devices.map(d => ({
                         name: d.type === 'desktop' ? 'Desktop' : d.type === 'mobile' ? 'Mobile' : 'Tablette',
                         value: d.count,
-                        color: d.type === 'desktop' ? '#74C0FC' : d.type === 'mobile' ? '#55EFC4' : '#A29BFE',
+                        color: d.type === 'desktop' ? '#74C0FC' : d.type === 'mobile' ? '#55EFC4' : '#C9A961',
                       }))}
                       cx="50%" cy="50%" innerRadius={50} outerRadius={90} paddingAngle={4} dataKey="value"
                       label={(props: { name?: string; value?: number }) => `${props.name}: ${fmt(props.value ?? 0)}`}
                     >
                       {visitStats.devices.map((d, i) => (
-                        <Cell key={i} fill={d.type === 'desktop' ? '#74C0FC' : d.type === 'mobile' ? '#55EFC4' : '#A29BFE'} />
+                        <Cell key={i} fill={d.type === 'desktop' ? '#74C0FC' : d.type === 'mobile' ? '#55EFC4' : '#C9A961'} />
                       ))}
                     </Pie>
                     <Tooltip content={<CustomTooltip />} />
@@ -1118,7 +1118,7 @@ export default function FounderDashboard() {
             <StatCard icon="🧍" label="Visiteurs uniques (par IP, 90j)" value={fmt(visitStats.returning.uniqueVisitors)} color="#00CEC9" />
             <StatCard icon="🔁" label="Reviennent (≥ 2 fois)" value={fmt(visitStats.returning.returningVisitors)} color="#55EFC4" />
             <StatCard icon="💛" label="Taux de retour" value={`${visitStats.returning.returnRate}%`} color="#C9A961" />
-            <StatCard icon="📊" label="Visites moy. / visiteur" value={String(visitStats.returning.avgVisits)} color="#A29BFE" />
+            <StatCard icon="📊" label="Visites moy. / visiteur" value={String(visitStats.returning.avgVisits)} color="#C9A961" />
           </div>
           <div className="mt-6">
             <Section title="Fidélité des visiteurs" subtitle="Combien de fois chaque visiteur (IP) est revenu — 90 derniers jours">
@@ -1173,7 +1173,7 @@ export default function FounderDashboard() {
                     <XAxis dataKey="day" stroke="var(--text-muted)" tick={{ fontSize: 11 }} />
                     <YAxis stroke="var(--text-muted)" tick={{ fontSize: 11 }} />
                     <Tooltip content={<CustomTooltip />} />
-                    <Bar dataKey="count" name="Visites" fill="#A29BFE" radius={[4, 4, 0, 0]} opacity={0.85} />
+                    <Bar dataKey="count" name="Visites" fill="#C9A961" radius={[4, 4, 0, 0]} opacity={0.85} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>

@@ -67,7 +67,7 @@ function TopNav() {
         </Link>
         <Link href={QUIZ_URL} onClick={() => trackCta('nav')}
           className="text-sm font-semibold px-5 py-2 rounded-full transition-all hover:brightness-110"
-          style={{ background: 'linear-gradient(135deg, #C9A961, #B8960F)', color: '#000' }}>
+          style={{ background: 'linear-gradient(135deg, #C9A961, #A88248)', color: '#000' }}>
           Commencer →
         </Link>
       </div>
@@ -94,7 +94,7 @@ function CtaButton({ position, label = 'DÉCOUVRIR MA SIGNATURE →', large = fa
       className={`inline-block text-center font-semibold rounded-full transition-all hover:brightness-110 hover:scale-[1.02] active:scale-[0.98] ${large ? 'w-full px-10 py-4 text-sm' : 'px-8 py-4 text-sm'}`}
       style={ghost
         ? { background: 'transparent', color: '#C9A961', border: '1px solid rgba(201,169,97,0.4)' }
-        : { background: 'linear-gradient(135deg, #C9A961, #B8960F)', color: '#000000' }}>
+        : { background: 'linear-gradient(135deg, #C9A961, #A88248)', color: '#000000' }}>
       {label}
     </Link>
   )
@@ -276,7 +276,7 @@ export default function LandingMixClient({ nextEvent }: { nextEvent: NextEvent |
                 title: 'Contenu Exclusif',
                 desc: "Shine TV, Interviews, Podcasts, Audible, Livres. Un accès illimité à l'essentiel.",
                 badge: 'Exclusif',
-                color: '#A29BFE',
+                color: '#C9A961',
               },
             ].map((pilier, i) => (
               <Reveal key={i} delay={i * 0.1}>

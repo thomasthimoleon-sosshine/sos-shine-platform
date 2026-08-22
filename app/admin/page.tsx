@@ -101,7 +101,7 @@ export default function AdminDashboard() {
               {[
                 { href: '/admin/douleurs', label: 'Créer un challenge émotionnel', desc: 'Ajouter une nouvelle page à l\'encyclopédie', icon: '📘', color: '#74C0FC' },
                 { href: '/admin/shine-tv', label: 'Publier une vidéo', desc: 'Ajouter du contenu sur Shine TV', icon: '🎬', color: '#E17055' },
-                { href: '/admin/shine-shorts', label: 'Publier un short', desc: 'Ajouter un cours ou vidéo courte', icon: '📱', color: '#A29BFE' },
+                { href: '/admin/shine-shorts', label: 'Publier un short', desc: 'Ajouter un cours ou vidéo courte', icon: '📱', color: '#C9A961' },
                 { href: '/admin/shine-audible', label: 'Publier un audio', desc: 'Ajouter un podcast, méditation ou livre audio', icon: '🎧', color: '#9B59B6' },
                 { href: '/admin/shine-librairie', label: 'Publier un livre', desc: 'Ajouter un eBook ou guide à la librairie', icon: '📚', color: '#C9A961' },
                 { href: '/admin/evenements', label: 'Créer un événement', desc: 'Planifier un soin collectif ou une Shine Walk', icon: '📅', color: '#55EFC4' },

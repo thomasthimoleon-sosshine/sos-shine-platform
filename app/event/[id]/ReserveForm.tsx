@@ -46,7 +46,7 @@ export default function ReserveForm({ ctaLabel, stripeUrl, isFree, eventId, even
           display: 'inline-block',
           padding: '16px 40px',
           borderRadius: '999px',
-          background: 'linear-gradient(135deg, #C9A961, #B8960F)',
+          background: 'linear-gradient(135deg, #C9A961, #A88248)',
           color: '#000',
           fontWeight: '700',
           fontSize: '15px',
@@ -117,7 +117,7 @@ export default function ReserveForm({ ctaLabel, stripeUrl, isFree, eventId, even
               style={{
                 padding: '14px 32px',
                 borderRadius: '999px',
-                background: 'linear-gradient(135deg, #C9A961, #B8960F)',
+                background: 'linear-gradient(135deg, #C9A961, #A88248)',
                 color: '#000',
                 fontWeight: '700',
                 fontSize: '14px',

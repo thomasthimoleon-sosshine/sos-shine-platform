@@ -601,5 +601,5 @@ function OffreView({ firstName, scores, onRestart }: { firstName: string; scores
   )
 }
 
-const btnGold: React.CSSProperties = { background: `linear-gradient(135deg,${GOLD},#B8960F)`, color: BG, border: 'none', padding: '15px 32px', borderRadius: 50, fontWeight: 600, fontSize: 15, cursor: 'pointer' }
+const btnGold: React.CSSProperties = { background: `linear-gradient(135deg,${GOLD},#A88248)`, color: BG, border: 'none', padding: '15px 32px', borderRadius: 50, fontWeight: 600, fontSize: 15, cursor: 'pointer' }
 const inputStyle: React.CSSProperties = { padding: '13px 16px', borderRadius: 12, background: 'rgba(245,239,227,0.05)', border: '1px solid rgba(245,239,227,0.14)', color: IVORY, fontSize: 15, outline: 'none', textAlign: 'center' }

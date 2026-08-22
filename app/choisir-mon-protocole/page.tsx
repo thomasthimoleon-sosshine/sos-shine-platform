@@ -109,7 +109,7 @@ export default function ChoisirProtocolePage() {
               <p style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 22, margin: '0 0 4px' }}>Tout SOS Shine — 49,90€/mois</p>
               <p style={{ color: 'rgba(245,239,227,0.65)', fontSize: 13.5, margin: 0 }}>Tous les protocoles, Shine TV, Librairie, Audible, communauté, lives et événements.</p>
             </div>
-            <Link href="/rejoindre" style={{ flexShrink: 0, background: 'linear-gradient(135deg,#C9A961,#B8960F)', color: '#0A0806', padding: '13px 26px', borderRadius: 50, fontWeight: 600, fontSize: 14, textDecoration: 'none' }}>
+            <Link href="/rejoindre" style={{ flexShrink: 0, background: 'linear-gradient(135deg,#C9A961,#A88248)', color: '#0A0806', padding: '13px 26px', borderRadius: 50, fontWeight: 600, fontSize: 14, textDecoration: 'none' }}>
               Voir l'abonnement
             </Link>
           </div>
@@ -147,7 +147,7 @@ export default function ChoisirProtocolePage() {
                       ✓ Débloqué — Ouvrir
                     </Link>
                   ) : (
-                    <button onClick={() => unlockProtocol(p.slug)} style={{ marginTop: 'auto', background: 'linear-gradient(135deg,#C9A961,#B8960F)', color: '#0A0806', padding: '13px', borderRadius: 50, fontWeight: 600, fontSize: 14, border: 'none', cursor: 'pointer' }}>
+                    <button onClick={() => unlockProtocol(p.slug)} style={{ marginTop: 'auto', background: 'linear-gradient(135deg,#C9A961,#A88248)', color: '#0A0806', padding: '13px', borderRadius: 50, fontWeight: 600, fontSize: 14, border: 'none', cursor: 'pointer' }}>
                       Débloquer ce protocole — {SINGLE_PROTOCOL_PRICE_EUR}€
                     </button>
                   )}

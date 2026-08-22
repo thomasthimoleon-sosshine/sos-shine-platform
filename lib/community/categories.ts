@@ -12,7 +12,7 @@ import type { ShineIconName } from '@/components/icons/ShineIcon'
  *  Ordre de l'arc :  Lumière → Albâtre → Or → Bronze → Rose fané → Incarnat
  *
  *  Charte respectée : aucun bleu / vert / violet décoratif, aucun faux-or
- *  (#D4AF37, #B8960F). Contraste vérifié ≥ 4.5:1 sur la carte (#16130D).
+ *  (#C9A961, #A88248). Contraste vérifié ≥ 4.5:1 sur la carte (#16130D).
  */
 
 export type PostCategory =

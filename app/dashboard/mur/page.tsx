@@ -628,7 +628,7 @@ export default function MurPage() {
             onClick={() => setShowCreate(!showCreate)}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all shrink-0 cursor-pointer"
             style={{
-              background: showCreate ? 'rgba(201,169,97,0.1)' : 'linear-gradient(135deg, var(--brand), #B8960F)',
+              background: showCreate ? 'rgba(201,169,97,0.1)' : 'linear-gradient(135deg, var(--brand), #A88248)',
               color: showCreate ? 'var(--brand)' : '#000000',
               border: showCreate ? '1px solid rgba(201,169,97,0.3)' : 'none',
             }}
@@ -781,7 +781,7 @@ export default function MurPage() {
               onClick={handleCreate}
               disabled={creating || !createContent.trim()}
               className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer disabled:opacity-50"
-              style={{ background: 'linear-gradient(135deg, var(--brand), #B8960F)', color: '#000000' }}
+              style={{ background: 'linear-gradient(135deg, var(--brand), #A88248)', color: '#000000' }}
             >
               {creating ? 'Publication…' : 'Partager'}
             </button>

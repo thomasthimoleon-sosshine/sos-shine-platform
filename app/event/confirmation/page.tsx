@@ -56,7 +56,7 @@ export default function EventConfirmationPage() {
             href="/event"
             style={{
               display: 'block', padding: '14px 32px', borderRadius: '999px',
-              background: 'linear-gradient(135deg, #C9A961, #B8960F)',
+              background: 'linear-gradient(135deg, #C9A961, #A88248)',
               color: '#000', fontWeight: 700, fontSize: '14px', textDecoration: 'none',
               letterSpacing: '0.03em',
             }}

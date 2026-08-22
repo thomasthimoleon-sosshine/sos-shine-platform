@@ -16,13 +16,13 @@ const POST_TYPE_CONFIG: Record<string, { label: string; color: string; icon: str
   douleur_published: { label: 'Challenge publié', color: '#55EFC4', icon: '📘' },
   event_published: { label: 'Événement publié', color: '#74C0FC', icon: '📅' },
   general: { label: 'Général', color: '#9A9080', icon: '💬' },
-  community: { label: 'Communauté', color: '#A29BFE', icon: '🌟' },
+  community: { label: 'Communauté', color: '#C9A961', icon: '🌟' },
 }
 
 const CATEGORY_CONFIG: Record<string, { label: string; color: string; icon: string }> = {
   temoignage: { label: 'Témoignage', color: '#C9A961', icon: '🗣️' },
   partage: { label: "Partage d'exp.", color: '#74C0FC', icon: '💫' },
-  question: { label: 'Question', color: '#A29BFE', icon: '❓' },
+  question: { label: 'Question', color: '#C9A961', icon: '❓' },
   remerciements: { label: 'Remerciements', color: '#55EFC4', icon: '🙏' },
   gratitude: { label: 'Gratitude', color: '#FFEAA7', icon: '✨' },
   citation: { label: 'Citation', color: '#FD79A8', icon: '💬' },
@@ -432,7 +432,7 @@ export default function AdminPublications() {
       <div className="flex flex-wrap gap-2">
         {[
           { value: 'all', label: 'Tout', color: 'var(--text-secondary)' },
-          { value: 'community', label: 'Communauté', color: '#A29BFE' },
+          { value: 'community', label: 'Communauté', color: '#C9A961' },
           { value: 'announcement', label: 'Annonces', color: '#C9A961' },
           { value: 'general', label: 'General', color: '#9A9080' },
         ].map(f => (

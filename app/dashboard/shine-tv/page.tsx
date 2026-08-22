@@ -667,15 +667,15 @@ function FullScreenPlayer({ video, onClose, onShowInfo, previewSeconds }: {
       {previewEnded && (
         <div className="absolute inset-0 z-30 flex items-center justify-center px-6" style={{ background: 'rgba(5,5,5,0.92)', backdropFilter: 'blur(6px)' }} onClick={(e) => e.stopPropagation()}>
           <div className="max-w-md w-full text-center">
-            <div className="w-14 h-14 rounded-2xl mx-auto mb-5 flex items-center justify-center" style={{ background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
-              <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="#D4AF37" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
+            <div className="w-14 h-14 rounded-2xl mx-auto mb-5 flex items-center justify-center" style={{ background: 'rgba(201, 169, 97,0.12)', border: '1px solid rgba(201, 169, 97,0.3)' }}>
+              <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="#C9A961" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
             </div>
-            <h3 className="font-display text-2xl font-light mb-2" style={{ color: '#D4AF37' }}>Tu as vu l&apos;aperçu ✨</h3>
+            <h3 className="font-display text-2xl font-light mb-2" style={{ color: '#C9A961' }}>Tu as vu l&apos;aperçu ✨</h3>
             <p className="text-sm mb-7 leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
               Abonne-toi à SOS Shine pour regarder cette vidéo en entier — et débloquer toute la plateforme.
             </p>
             <div className="flex flex-col gap-3 items-center">
-              <a href="/rejoindre" className="w-full sm:w-auto px-8 py-3.5 rounded-full text-sm font-semibold" style={{ background: 'linear-gradient(135deg, #D4AF37, #B8960F)', color: '#050505' }}>
+              <a href="/rejoindre" className="w-full sm:w-auto px-8 py-3.5 rounded-full text-sm font-semibold" style={{ background: 'linear-gradient(135deg, #C9A961, #A88248)', color: '#050505' }}>
                 M&apos;abonner pour voir en entier
               </a>
               <button onClick={onClose} className="text-xs cursor-pointer" style={{ color: 'rgba(255,255,255,0.4)' }}>

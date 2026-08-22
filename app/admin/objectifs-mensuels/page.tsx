@@ -38,7 +38,7 @@ const PHASE_COLORS: Record<string, string> = {
   'Lancement': '#74C0FC',
   'Croissance': '#55EFC4',
   'Accélération': '#C9A961',
-  'Consolidation': '#A29BFE',
+  'Consolidation': '#C9A961',
 }
 
 const fmt = (n: number) => new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 }).format(n)
@@ -319,7 +319,7 @@ export default function ObjectifsMensuelsPage() {
               <ProgressRing
                 value={stats.canceledThisMonth}
                 max={currentTarget.churn}
-                color={stats.canceledThisMonth > currentTarget.churn ? '#EF4444' : '#A29BFE'}
+                color={stats.canceledThisMonth > currentTarget.churn ? '#EF4444' : '#C9A961'}
                 label="Churn ce mois"
                 sublabel={`Budget : ${fmt(currentTarget.churn)} max`}
               />
@@ -396,7 +396,7 @@ export default function ObjectifsMensuelsPage() {
                 { label: 'MRR actuel', value: fmtEur(stats.mrr), target: fmtEur(currentTarget.mrr), color: '#C9A961', icon: '💰' },
                 { label: 'ARR projeté', value: fmtEur(stats.mrr * 12), target: fmtEur(currentTarget.mrr * 12), color: '#55EFC4', icon: '📊' },
                 { label: 'ARPU', value: stats.totalActive > 0 ? fmtEur(stats.mrr / stats.totalActive) : '-', target: '~37€', color: '#74C0FC', icon: '👤' },
-                { label: 'En essai', value: fmt(stats.trialingCount), target: '', color: '#A29BFE', icon: '⏳' },
+                { label: 'En essai', value: fmt(stats.trialingCount), target: '', color: '#C9A961', icon: '⏳' },
                 { label: 'Impayés', value: fmt(stats.pastDueCount), target: '', color: stats.pastDueCount > 0 ? '#EF4444' : '#55EFC4', icon: '⚠️' },
                 { label: 'Early adopters', value: fmt(stats.waitlistDiscountCount), target: '-10€/mois', color: '#C9A961', icon: '⭐' },
               ].map(kpi => (
@@ -434,7 +434,7 @@ export default function ObjectifsMensuelsPage() {
                   Objectif : {fmtEur(currentTarget.mrr)} &mdash; {projectedMrr >= currentTarget.mrr ? 'Objectif atteignable' : 'En dessous de la trajectoire'}
                 </p>
               </div>
-              <div className="rounded-lg p-4" style={{ background: 'rgba(162,155,254,0.05)' }}>
+              <div className="rounded-lg p-4" style={{ background: 'rgba(201,169,97,0.05)' }}>
                 <p className="text-[11px] mb-1" style={{ color: 'var(--text-muted)' }}>Taux de rétention estimé</p>
                 <p className="font-display text-2xl font-bold" style={{
                   color: stats.totalActive > 0 && stats.canceledThisMonth / stats.totalActive < 0.05 ? '#55EFC4' : '#E17055'

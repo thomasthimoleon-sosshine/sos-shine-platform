@@ -628,7 +628,7 @@ export default function EncyclopediePage() {
                                     </span>
                                   )}
                                   {avail?.hasShort ? (
-                                    <Link href={`/dashboard/shine-shorts?douleur=${douleurId}`} title="Shine Short" className="inline-flex items-center justify-center w-5 h-5 rounded hover:scale-110 transition-transform" style={{ background: 'rgba(162,155,254,0.15)' }} onClick={(e) => e.stopPropagation()}>
+                                    <Link href={`/dashboard/shine-shorts?douleur=${douleurId}`} title="Shine Short" className="inline-flex items-center justify-center w-5 h-5 rounded hover:scale-110 transition-transform" style={{ background: 'rgba(201,169,97,0.15)' }} onClick={(e) => e.stopPropagation()}>
                                       <svg className="w-3 h-3" fill="var(--accent-purple)" viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z" /></svg>
                                     </Link>
                                   ) : (

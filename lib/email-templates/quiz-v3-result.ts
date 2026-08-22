@@ -127,7 +127,7 @@ export function generateQuizV3ResultEmail(
           <tr>
             <td align="center" style="padding-bottom:12px;">
               <a href="${ctaUrl}"
-                style="display:inline-block;padding:16px 40px;border-radius:50px;font-size:14px;font-weight:600;letter-spacing:0.05em;text-decoration:none;color:#000000;background:linear-gradient(135deg,#C9A961,#B8960F);">
+                style="display:inline-block;padding:16px 40px;border-radius:50px;font-size:14px;font-weight:600;letter-spacing:0.05em;text-decoration:none;color:#000000;background:linear-gradient(135deg,#C9A961,#A88248);">
                 ${ctaLabel}
               </a>
             </td>

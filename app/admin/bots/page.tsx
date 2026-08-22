@@ -160,7 +160,7 @@ export default function AdminBotsPage() {
           onClick={schedulePosts}
           disabled={loading}
           className="px-6 py-2.5 rounded-lg text-sm font-medium"
-          style={{ background: 'rgba(212, 175, 55, 0.15)', border: '1px solid rgba(212, 175, 55, 0.3)', color: 'var(--brand)', opacity: loading ? 0.5 : 1 }}
+          style={{ background: 'rgba(201, 169, 97, 0.15)', border: '1px solid rgba(201, 169, 97, 0.3)', color: 'var(--brand)', opacity: loading ? 0.5 : 1 }}
         >
           {loading ? 'Planification...' : 'Planifier les publications jusqu\'au 22 mars'}
         </button>
@@ -198,7 +198,7 @@ export default function AdminBotsPage() {
             <button
               onClick={startAutoMode}
               className="px-5 py-2.5 rounded-lg text-sm font-medium"
-              style={{ background: 'rgba(212, 175, 55, 0.15)', border: '1px solid rgba(212, 175, 55, 0.3)', color: 'var(--brand)' }}
+              style={{ background: 'rgba(201, 169, 97, 0.15)', border: '1px solid rgba(201, 169, 97, 0.3)', color: 'var(--brand)' }}
             >
               Démarrer le mode auto
             </button>

@@ -59,7 +59,7 @@ function TopNav() {
       <Link
         href={QUIZ_URL}
         className="text-sm font-semibold px-5 py-2 rounded-full transition-all hover:brightness-110"
-        style={{ background: 'linear-gradient(135deg, var(--brand), var(--gold-deep, #B8960F))', color: '#000' }}
+        style={{ background: 'linear-gradient(135deg, var(--brand), var(--gold-deep, #A88248))', color: '#000' }}
       >
         S'inscrire
       </Link>
@@ -99,7 +99,7 @@ function CtaButton({ position, label = 'DÉCOUVRIR MA SIGNATURE →', large = fa
       href={QUIZ_URL}
       onClick={() => trackCta(position)}
       className={`inline-block text-center font-semibold rounded-full transition-all hover:brightness-110 hover:scale-[1.02] active:scale-[0.98] ${large ? 'w-full px-10 py-4 text-sm' : 'px-8 py-4 text-sm'}`}
-      style={{ background: 'linear-gradient(135deg, var(--brand), var(--gold-deep, #B8960F))', color: '#000000' }}
+      style={{ background: 'linear-gradient(135deg, var(--brand), var(--gold-deep, #A88248))', color: '#000000' }}
     >
       {label}
     </Link>

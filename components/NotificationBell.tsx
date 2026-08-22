@@ -263,7 +263,7 @@ export default function NotificationBell() {
                     key={notif.id}
                     className="px-4 py-3 transition-colors cursor-pointer"
                     style={{
-                      background: notif.is_read ? 'transparent' : 'rgba(212, 175, 55, 0.04)',
+                      background: notif.is_read ? 'transparent' : 'rgba(201, 169, 97, 0.04)',
                       borderBottom: '1px solid var(--border)',
                     }}
                     onClick={() => {

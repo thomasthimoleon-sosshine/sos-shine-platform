@@ -294,7 +294,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#0A0806]">
         <div className="text-center space-y-4">
-          <div className="w-10 h-10 rounded-2xl mx-auto flex items-center justify-center bg-[rgba(212,175,55,0.12)] border border-[#C9A961]/30">
+          <div className="w-10 h-10 rounded-2xl mx-auto flex items-center justify-center bg-[rgba(201, 169, 97,0.12)] border border-[#C9A961]/30">
             <div className="w-5 h-5 border-2 border-[#0A0806] border-t-[#C9A961] rounded-full animate-spin" />
           </div>
           <p className="text-sm text-[#52525b]">{t('common.loading')}</p>
@@ -323,7 +323,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {logoUrl ? (
               <img src={logoUrl} alt="SOS Shine" className="w-9 h-9 rounded-xl object-contain" />
             ) : (
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center font-display text-base font-semibold bg-[rgba(212,175,55,0.12)] text-[#C9A961] border border-[#C9A961]/30">
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center font-display text-base font-semibold bg-[rgba(201, 169, 97,0.12)] text-[#C9A961] border border-[#C9A961]/30">
                 S
               </div>
             )}
@@ -346,7 +346,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 key={item.href}
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
-                className={`nav-item flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium relative group transition-colors duration-[var(--transition-base)] ${isActive ? 'bg-[rgba(212,175,55,0.07)] text-[#C9A961]' : 'text-[#a1a1aa] hover:text-[#e0e0e0] hover:bg-white/[0.03]'}`}
+                className={`nav-item flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium relative group transition-colors duration-[var(--transition-base)] ${isActive ? 'bg-[rgba(201, 169, 97,0.07)] text-[#C9A961]' : 'text-[#a1a1aa] hover:text-[#e0e0e0] hover:bg-white/[0.03]'}`}
               >
                 {isActive && (
                   <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-full bg-[#C9A961]" />
@@ -372,7 +372,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 key={item.href}
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
-                className={`nav-item flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium relative group transition-colors duration-[var(--transition-base)] ${isActive ? 'bg-[rgba(212,175,55,0.07)] text-[#C9A961]' : 'text-[#a1a1aa] hover:text-[#e0e0e0] hover:bg-white/[0.03]'}`}
+                className={`nav-item flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium relative group transition-colors duration-[var(--transition-base)] ${isActive ? 'bg-[rgba(201, 169, 97,0.07)] text-[#C9A961]' : 'text-[#a1a1aa] hover:text-[#e0e0e0] hover:bg-white/[0.03]'}`}
               >
                 {isActive && (
                   <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-full bg-[#C9A961]" />
@@ -423,7 +423,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 href="/rejoindre"
                 onClick={() => setSidebarOpen(false)}
                 className="flex items-center justify-center gap-2 w-full px-3 py-3 rounded-[var(--radius-lg)] text-[13px] font-semibold transition-all hover:brightness-110"
-                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #B8960F))', color: '#000000' }}
+                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep, #A88248))', color: '#000000' }}
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -464,7 +464,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* ── User section ── */}
         <div className="px-3 py-4 border-t border-white/[0.04]">
           <div className="flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] mb-2 bg-[rgba(255,255,255,0.025)] border border-white/[0.05]">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 ring-1 ring-[#C9A961]/20 bg-[rgba(212,175,55,0.12)] text-[#C9A961]">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 ring-1 ring-[#C9A961]/20 bg-[rgba(201, 169, 97,0.12)] text-[#C9A961]">
               {profile?.prenom?.charAt(0).toUpperCase() || 'M'}
             </div>
             <div className="flex-1 min-w-0">
@@ -551,7 +551,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               transition={{ type: 'spring', damping: 22, stiffness: 260 }}
-              className="w-full max-w-md rounded-[var(--radius-2xl)] overflow-hidden text-center relative bg-[rgba(12,12,15,0.95)] border border-white/[0.08] shadow-[0_25px_60px_rgba(0,0,0,0.7),0_0_40px_rgba(212,175,55,0.06)]"
+              className="w-full max-w-md rounded-[var(--radius-2xl)] overflow-hidden text-center relative bg-[rgba(12,12,15,0.95)] border border-white/[0.08] shadow-[0_25px_60px_rgba(0,0,0,0.7),0_0_40px_rgba(201, 169, 97,0.06)]"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Glow */}
@@ -559,7 +559,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
               <div className="relative z-10 px-6 sm:px-8 py-8 sm:py-10">
                 {/* Diamond icon */}
-                <div className="w-16 h-16 rounded-[var(--radius-xl)] mx-auto mb-5 flex items-center justify-center bg-[rgba(212,175,55,0.07)] border border-[#C9A961]/20">
+                <div className="w-16 h-16 rounded-[var(--radius-xl)] mx-auto mb-5 flex items-center justify-center bg-[rgba(201, 169, 97,0.07)] border border-[#C9A961]/20">
                   <span className="text-3xl">✨</span>
                 </div>
 

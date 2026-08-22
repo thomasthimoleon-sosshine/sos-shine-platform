@@ -62,11 +62,11 @@ function AffiliateLanding({ onApply }: { onApply: () => void }) {
         className="text-center relative"
       >
         <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full pointer-events-none opacity-20"
-          style={{ background: 'radial-gradient(circle, rgba(212, 175, 55, 0.15), transparent 70%)' }}
+          style={{ background: 'radial-gradient(circle, rgba(201, 169, 97, 0.15), transparent 70%)' }}
         />
         <span
           className="inline-block px-4 py-1.5 rounded-full text-[11px] font-semibold uppercase tracking-widest mb-6"
-          style={{ background: 'rgba(212, 175, 55, 0.1)', color: 'var(--brand)', border: '1px solid rgba(212, 175, 55, 0.15)' }}
+          style={{ background: 'rgba(201, 169, 97, 0.1)', color: 'var(--brand)', border: '1px solid rgba(201, 169, 97, 0.15)' }}
         >
           {t('affiliate.hero_badge')}
         </span>
@@ -85,7 +85,7 @@ function AffiliateLanding({ onApply }: { onApply: () => void }) {
           style={{
             background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
             color: '#09090b',
-            boxShadow: '0 4px 24px rgba(212, 175, 55, 0.25)',
+            boxShadow: '0 4px 24px rgba(201, 169, 97, 0.25)',
           }}
         >
           {t('affiliate.apply_cta')}
@@ -221,7 +221,7 @@ function AffiliateLanding({ onApply }: { onApply: () => void }) {
             <div
               key={i}
               className="glass overflow-hidden transition-all duration-300"
-              style={{ borderColor: openFaq === i ? 'rgba(212, 175, 55, 0.15)' : undefined }}
+              style={{ borderColor: openFaq === i ? 'rgba(201, 169, 97, 0.15)' : undefined }}
             >
               <button
                 onClick={() => setOpenFaq(openFaq === i ? null : i)}
@@ -262,10 +262,10 @@ function AffiliateLanding({ onApply }: { onApply: () => void }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.55, duration: 0.5, ease: easeArr }}
         className="glass p-8 sm:p-10 text-center relative overflow-hidden"
-        style={{ background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.06), rgba(255, 255, 255, 0.02))', borderColor: 'rgba(212, 175, 55, 0.12)' }}
+        style={{ background: 'linear-gradient(135deg, rgba(201, 169, 97, 0.06), rgba(255, 255, 255, 0.02))', borderColor: 'rgba(201, 169, 97, 0.12)' }}
       >
         <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full pointer-events-none opacity-25"
-          style={{ background: 'radial-gradient(circle, rgba(212, 175, 55, 0.1), transparent 70%)' }}
+          style={{ background: 'radial-gradient(circle, rgba(201, 169, 97, 0.1), transparent 70%)' }}
         />
         <h2 className="font-display text-2xl sm:text-3xl font-semibold tracking-tight relative text-[var(--text-primary)]">
           {t('affiliate.hero_title')}{' '}
@@ -282,7 +282,7 @@ function AffiliateLanding({ onApply }: { onApply: () => void }) {
           style={{
             background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
             color: '#09090b',
-            boxShadow: '0 4px 24px rgba(212, 175, 55, 0.25)',
+            boxShadow: '0 4px 24px rgba(201, 169, 97, 0.25)',
           }}
         >
           {t('affiliate.apply_cta')}
@@ -412,8 +412,8 @@ function AffiliateApplicationForm({ userId, onSuccess }: { userId: string; onSuc
                 onClick={() => toggleChannel(ch)}
                 className="px-4 py-2 rounded-xl text-[13px] font-medium cursor-pointer transition-all duration-200"
                 style={{
-                  background: channels.includes(ch) ? 'rgba(212, 175, 55, 0.12)' : 'var(--surface-card)',
-                  border: `1px solid ${channels.includes(ch) ? 'rgba(212, 175, 55, 0.3)' : 'var(--border)'}`,
+                  background: channels.includes(ch) ? 'rgba(201, 169, 97, 0.12)' : 'var(--surface-card)',
+                  border: `1px solid ${channels.includes(ch) ? 'rgba(201, 169, 97, 0.3)' : 'var(--border)'}`,
                   color: channels.includes(ch) ? 'var(--brand)' : 'var(--text-secondary)',
                 }}
               >
@@ -474,7 +474,7 @@ function AffiliateApplicationForm({ userId, onSuccess }: { userId: string; onSuc
           style={{
             background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
             color: '#09090b',
-            boxShadow: '0 4px 24px rgba(212, 175, 55, 0.25)',
+            boxShadow: '0 4px 24px rgba(201, 169, 97, 0.25)',
           }}
         >
           {submitting ? t('affiliate.form_submitting') : t('affiliate.form_submit')}
@@ -499,7 +499,7 @@ function AffiliatePending() {
     >
       <div
         className="w-20 h-20 rounded-3xl mx-auto flex items-center justify-center mb-6"
-        style={{ background: 'rgba(212, 175, 55, 0.1)' }}
+        style={{ background: 'rgba(201, 169, 97, 0.1)' }}
       >
         <svg className="w-10 h-10 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -783,7 +783,7 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1, duration: 0.5, ease: easeArr }}
         className="glass p-5 sm:p-6"
-        style={{ borderColor: 'rgba(212, 175, 55, 0.1)' }}
+        style={{ borderColor: 'rgba(201, 169, 97, 0.1)' }}
       >
         <p className="text-[12px] font-semibold uppercase tracking-wider mb-3 text-[var(--text-muted)]">
           {t('affiliate.your_link')}
@@ -930,7 +930,7 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
                           className="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold"
                           style={{
                             background: conv.status === 'confirmed' ? 'rgba(85, 239, 196, 0.12)' :
-                              conv.status === 'paid' ? 'rgba(212, 175, 55, 0.12)' :
+                              conv.status === 'paid' ? 'rgba(201, 169, 97, 0.12)' :
                               conv.status === 'cancelled' ? 'rgba(239, 68, 68, 0.12)' :
                               'rgba(255, 255, 255, 0.06)',
                             color: conv.status === 'confirmed' ? 'var(--success)' :
@@ -998,9 +998,9 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
               onClick={() => setShowWithdrawal(true)}
               className="px-4 py-2 rounded-xl text-[12px] font-semibold cursor-pointer transition-all duration-200"
               style={{
-                background: 'rgba(212, 175, 55, 0.1)',
+                background: 'rgba(201, 169, 97, 0.1)',
                 color: 'var(--brand)',
-                border: '1px solid rgba(212, 175, 55, 0.2)',
+                border: '1px solid rgba(201, 169, 97, 0.2)',
               }}
             >
               {t('affiliate.request_payout')}

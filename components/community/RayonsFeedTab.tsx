@@ -279,7 +279,7 @@ export default function RayonsFeedTab({ onProfileClick }: Props) {
               </div>
 
               {/* Content */}
-              {post.title && <h3 className="font-semibold text-base mb-1.5" style={{ color: 'var(--text-primary)' }}>{post.title}</h3>}
+              {post.title && <h3 className="font-semibold text-base mb-1.5" style={{ color: catInfo.color }}>{post.title}</h3>}
               <p className="text-sm leading-relaxed whitespace-pre-line" style={{ color: 'var(--text-secondary)' }}>{post.content}</p>
 
               {/* Media */}

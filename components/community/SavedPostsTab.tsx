@@ -155,7 +155,7 @@ export default function SavedPostsTab({ onProfileClick }: Props) {
               color: activeFilter === f.id ? 'var(--brand)' : 'var(--text-muted)',
             }}
           >
-            <span>{f.icon}</span> {f.label}
+            {f.label}
           </button>
         ))}
       </div>

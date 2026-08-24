@@ -464,8 +464,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           )}
         </nav>
 
-        {/* ── User section ── */}
-        <div className="px-3 py-4 border-t border-white/[0.04]">
+        {/* ── User section ──
+            Sur ordinateur, tout ceci vit désormais dans la barre du haut, à droite.
+            Ce bloc ne subsiste que dans le tiroir mobile. */}
+        <div className="lg:hidden px-3 py-4 border-t border-white/[0.04]">
           <div className="flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] mb-2 bg-[rgba(255,255,255,0.025)] border border-white/[0.05]">
             <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 ring-1 ring-[#C9A961]/20 bg-[rgba(201, 169, 97,0.12)] text-[#C9A961]">
               {profile?.prenom?.charAt(0).toUpperCase() || 'M'}
@@ -500,9 +502,42 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       {/* ── Main content area ── */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Desktop topbar — notifications en haut à droite */}
-        <header className="hidden lg:flex items-center justify-end px-8 py-3 sticky top-0 z-30 bg-[rgba(9,9,11,0.85)] backdrop-blur-xl border-b border-white/[0.04]">
+        {/* Desktop topbar — notifications, thème, compte et déconnexion, en haut à droite */}
+        <header className="hidden lg:flex items-center justify-end gap-3 px-8 py-3 sticky top-0 z-30 bg-[rgba(9,9,11,0.85)] backdrop-blur-xl border-b border-white/[0.04]">
           <NotificationBell />
+          <ThemeToggle />
+
+          {/* Séparateur discret entre les commandes et l'identité */}
+          <span className="w-px h-6 bg-white/[0.07]" aria-hidden="true" />
+
+          <Link
+            href="/dashboard/profil"
+            title={profile?.email || undefined}
+            className="flex items-center gap-2.5 pl-1.5 pr-3 py-1.5 rounded-full transition-colors hover:bg-white/[0.04]"
+          >
+            <span className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 ring-1 ring-[#C9A961]/20 bg-[rgba(201,169,97,0.12)] text-[#C9A961]">
+              {profile?.prenom?.charAt(0).toUpperCase() || 'M'}
+            </span>
+            <span className="min-w-0 text-left">
+              <span className="block text-[13px] font-medium leading-tight truncate max-w-[160px] text-[#e0e0e0]">
+                {profile?.prenom || 'Membre'}
+              </span>
+              <span className="block text-[11px] leading-tight truncate max-w-[160px] text-[#52525b]">
+                {profile?.email}
+              </span>
+            </span>
+          </Link>
+
+          <button
+            onClick={handleSignOut}
+            title={t('nav.signout')}
+            aria-label={t('nav.signout')}
+            className="w-9 h-9 flex items-center justify-center rounded-full cursor-pointer text-[#52525b] hover:text-[#a1a1aa] hover:bg-white/[0.04] transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+            </svg>
+          </button>
         </header>
 
         {/* Mobile topbar */}

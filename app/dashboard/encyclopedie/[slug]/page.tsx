@@ -12,6 +12,34 @@ import type { Douleur, DouleurStep, UserProgress, DouleurQuizQuestion } from '@/
 import { formatXP } from '@/lib/xp'
 import { SINGLE_PROTOCOL_LINK, buildProtocolRef } from '@/lib/stripe/config'
 import { getEncyclopediaPotentialXp, awardEncyclopediaXp } from '@/lib/XpEngine'
+
+// Le quiz de validation tire ce nombre de questions au hasard dans la banque du
+// protocole, pour qu'il soit différent à chaque passage.
+const QUESTIONS_PER_ATTEMPT = 10
+
+/**
+ * Tire `n` questions au hasard dans `pool`, en évitant autant que possible celles
+ * du dernier passage (`excludeIds`). Si la banque est trop petite, on complète
+ * avec les questions exclues pour toujours proposer un quiz complet.
+ */
+function pickQuizQuestions<T extends { id: string }>(pool: T[], n: number, excludeIds: string[]): T[] {
+  const shuffle = (arr: T[]) => {
+    const a = [...arr]
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[a[i], a[j]] = [a[j], a[i]]
+    }
+    return a
+  }
+  if (pool.length <= n) return shuffle(pool)
+  const fresh = shuffle(pool.filter(q => !excludeIds.includes(q.id)))
+  const picked = fresh.slice(0, n)
+  if (picked.length < n) {
+    const fillers = shuffle(pool.filter(q => !picked.includes(q))).slice(0, n - picked.length)
+    picked.push(...fillers)
+  }
+  return shuffle(picked)
+}
 import FavoriteButton from '@/components/FavoriteButton'
 
 type StepConfig = {
@@ -132,7 +160,10 @@ export default function DouleurDetailPage() {
   const [showProtocolPaywall, setShowProtocolPaywall] = useState(false)
 
   // Quiz state
+  // quizQuestions = la banque complète du protocole (≈40 questions).
+  // selectedQuestions = les 10 tirées au sort pour la tentative en cours.
   const [quizQuestions, setQuizQuestions] = useState<DouleurQuizQuestion[]>([])
+  const [selectedQuestions, setSelectedQuestions] = useState<DouleurQuizQuestion[]>([])
   const [quizAnswers, setQuizAnswers] = useState<Record<string, number[]>>({})
   const [quizSubmitted, setQuizSubmitted] = useState(false)
   const [quizScore, setQuizScore] = useState<number | null>(null)
@@ -415,7 +446,9 @@ export default function DouleurDetailPage() {
         .order('sort_order', { ascending: true })
 
       if (questions && questions.length > 0) {
-        setQuizQuestions(questions as DouleurQuizQuestion[])
+        const pool = questions as DouleurQuizQuestion[]
+        setQuizQuestions(pool)
+        setSelectedQuestions(pickQuizQuestions(pool, QUESTIONS_PER_ATTEMPT, []))
       }
 
       // Load best attempt
@@ -494,9 +527,11 @@ export default function DouleurDetailPage() {
         steps_completed: newCompleted,
       }
 
-      // Check if all steps are now complete
+      // Valider le protocole à la fin des étapes SEULEMENT s'il n'a pas de quiz.
+      // Quand un quiz existe, la validation est portée par sa réussite (submitQuiz).
       const allComplete = steps.every((s) => newCompleted[String(s.num)])
-      if (allComplete) {
+      const validateNow = allComplete && quizQuestions.length === 0
+      if (validateNow) {
         updates.completed_at = new Date().toISOString()
       }
 
@@ -505,7 +540,7 @@ export default function DouleurDetailPage() {
         ...progress,
         ...legacyUpdates,
         steps_completed: newCompleted,
-        completed_at: allComplete ? new Date().toISOString() : progress.completed_at,
+        completed_at: validateNow ? new Date().toISOString() : progress.completed_at,
       } as UserProgress)
 
       // No per-step XP in V2 - XP is awarded via Boss Quest quiz
@@ -540,7 +575,7 @@ export default function DouleurDetailPage() {
     setSubmittingQuiz(true)
 
     let score = 0
-    for (const q of quizQuestions) {
+    for (const q of selectedQuestions) {
       const userSelected = quizAnswers[q.id] || []
       const correct = q.correct_indices as number[]
       const isCorrect = correct.length === userSelected.length &&
@@ -549,7 +584,7 @@ export default function DouleurDetailPage() {
       if (isCorrect) score++
     }
 
-    const total = quizQuestions.length
+    const total = selectedQuestions.length
     const threshold = Math.ceil(total * 0.8)
     const passed = score >= threshold
 
@@ -564,10 +599,18 @@ export default function DouleurDetailPage() {
       score,
       total,
       passed,
-      answers: quizQuestions.map(q => quizAnswers[q.id] || []),
+      answers: selectedQuestions.map(q => quizAnswers[q.id] || []),
     })
 
     setBestAttempt({ score, total, passed })
+
+    // Réussir le quiz = valider le protocole. On ne pose completed_at qu'ici
+    // (quand un quiz existe), pas à la fin de l'étape 3.
+    if (passed && progress && !progress.completed_at) {
+      const now = new Date().toISOString()
+      await supabase.from('user_progress').update({ completed_at: now }).eq('id', progress.id)
+      setProgress({ ...progress, completed_at: now } as UserProgress)
+    }
 
     // Award encyclopedia XP via Boss Quest system (with delta logic)
     const scorePercentage = Math.round((score / total) * 100)
@@ -583,6 +626,9 @@ export default function DouleurDetailPage() {
     setQuizAnswers({})
     setQuizSubmitted(false)
     setQuizScore(null)
+    // Nouveau passage : on retire un nouveau lot, différent du précédent.
+    setSelectedQuestions(prev =>
+      pickQuizQuestions(quizQuestions, QUESTIONS_PER_ATTEMPT, prev.map(q => q.id)))
   }
 
   function toggleQuizAnswer(questionId: string, optionIndex: number) {
@@ -1268,7 +1314,7 @@ export default function DouleurDetailPage() {
                 Quiz de compréhension
               </h2>
               <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                {quizQuestions.length} questions - Minimum {Math.ceil(quizQuestions.length * 0.8)}/{quizQuestions.length} pour valider
+                {selectedQuestions.length} questions - Minimum {Math.ceil(selectedQuestions.length * 0.8)}/{selectedQuestions.length} pour valider
               </p>
             </div>
           </div>
@@ -1311,7 +1357,7 @@ export default function DouleurDetailPage() {
                 </div>
               )}
 
-              {quizQuestions.map((q, qIdx) => {
+              {selectedQuestions.map((q, qIdx) => {
                 const userSelected = quizAnswers[q.id] || []
                 const correct = q.correct_indices as number[]
                 const isCorrectAnswer = quizSubmitted && correct.length === userSelected.length &&
@@ -1394,7 +1440,7 @@ export default function DouleurDetailPage() {
                       {quizPassed ? 'Félicitations !' : 'Continuez vos efforts'}
                     </h3>
                     <p className="text-2xl font-display font-bold mb-2" style={{ color: quizPassed ? '#55EFC4' : '#FF6B6B' }}>
-                      {quizScore}/{quizQuestions.length}
+                      {quizScore}/{selectedQuestions.length}
                     </p>
                     {/* XP Result Display */}
                     {encXpResult && (
@@ -1444,10 +1490,10 @@ export default function DouleurDetailPage() {
                 </div>
               ) : (
                 <button onClick={submitQuiz}
-                  disabled={submittingQuiz || Object.keys(quizAnswers).length < quizQuestions.length}
+                  disabled={submittingQuiz || Object.keys(quizAnswers).length < selectedQuestions.length}
                   className="w-full py-3.5 rounded-xl text-sm font-semibold cursor-pointer transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                   style={{ background: '#C9A961', color: '#09090b' }}>
-                  {submittingQuiz ? 'Validation en cours...' : `Valider mes réponses (${Object.keys(quizAnswers).length}/${quizQuestions.length})`}
+                  {submittingQuiz ? 'Validation en cours...' : `Valider mes réponses (${Object.keys(quizAnswers).length}/${selectedQuestions.length})`}
                 </button>
               )}
 

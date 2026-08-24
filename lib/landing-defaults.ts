@@ -40,7 +40,6 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     content: {
       site_name: 'SOS Shine',
       logo_url: '',
-      trial_days: 7,
       header_login_label: 'Se connecter',
       header_login_href: '/login',
       header_cta_label: 'Commencer gratuitement',
@@ -79,8 +78,8 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       cta_secondary_href: '#parcours',
       trust_items: [
         '200+ protocoles',
-        '7 jours gratuits',
         'Sans engagement',
+        'Annulable en 1 clic',
       ],
       buttons: [
         { label: "Découvrir ma signature émotionnelle", href: '/signature-emotionnelle', variant: 'primary' },
@@ -393,7 +392,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       title: "Choisissez votre niveau\nd'engagement.",
       subtitle: "Sans engagement. Annulable à tout instant.",
       footer: "Parce que si on doit vous retenir par un contrat, c'est qu'on n'a pas fait notre travail.",
-      guarantee_title: "7 jours pour tester l'intégralité de votre formule.",
+      guarantee_title: "Sans engagement, annulable en 1 clic.",
       guarantee_description: "Si ce n'est pas pour vous, zéro prélèvement. Zéro justification.\n\nOn croit en ce qu'on fait. On vous laisse vérifier.",
       trust_badges: ['Paiement sécurisé Stripe', 'Données chiffrées', 'Annulation en 1 clic'],
       plans: [
@@ -417,7 +416,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
           tagline: "Accès complet à toute la plateforme.",
           price: '49,90',
           period: '/mois',
-          button_label: 'Commencer, 7 jours gratuits',
+          button_label: 'Commencer maintenant',
           button_href: '/signup',
           highlight: true,
           badge: 'Populaire',
@@ -427,7 +426,6 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
             'Shine TV, Shorts, Audible & Librairie',
             'Communauté & Feu de Camp',
             'Soins collectifs, lives & événements',
-            '7 jours d\'essai gratuit',
           ],
         },
       ],
@@ -445,8 +443,8 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     is_visible: false,
     content: {
       label: 'Notre engagement',
-      title: "7 jours pour juger\npar vous-même.",
-      description: "Accédez à tout le contenu de votre formule pendant 7 jours. Si ça ne vous correspond pas, annulez en un clic, zéro prélèvement, zéro justification. On croit en ce qu'on fait. Et on vous laisse vérifier.",
+      title: "Libre de partir\nquand vous voulez.",
+      description: "Aucun engagement de durée. Si ça ne vous correspond pas, annulez en un clic, sans justification. On croit en ce qu'on fait. Et on préfère que vous restiez parce que ça marche.",
     },
     styles: {
       title_font: 'Cormorant Garamond',
@@ -490,7 +488,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       image_url: '',
       button_label: 'Rejoindre SOS Shine',
       button_href: '/signup',
-      trust_line: '49,90\u20ac/mois \u00b7 Sans engagement \u00b7 7 jours gratuits \u00b7 Tout inclus',
+      trust_line: '49,90\u20ac/mois \u00b7 Sans engagement \u00b7 Annulable en 1 clic \u00b7 Tout inclus',
     },
     styles: {
       title_font: 'Cormorant Garamond',
@@ -705,9 +703,9 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       pricing_subtitle: "Sans engagement. Annulable à tout instant.",
       pricing_plans: [
         { name: 'GRATUIT', price: '0', period: '', description: 'Découvrir la communauté SOS Shine.', features: ['Communauté & Mur', 'Shine Audible', 'Étape 1 protocole recommandé'], button_label: 'Créer mon compte gratuit', button_href: '/signup', highlight: false, badge: '' },
-        { name: 'SOS SHINE', price: '49,90', period: '/mois', description: 'Accès complet à toute la plateforme.', features: ['Encyclopédie complète (200+ protocoles)', 'Étapes 2 & 3 protocole recommandé', 'Shine TV, Shorts, Audible & Librairie', 'Communauté, soins collectifs, lives', '7 jours d\'essai gratuit'], button_label: 'Commencer, 7 jours gratuits', button_href: '/signup', highlight: true, badge: 'TOUT INCLUS' },
+        { name: 'SOS SHINE', price: '49,90', period: '/mois', description: 'Accès complet à toute la plateforme.', features: ['Encyclopédie complète (200+ protocoles)', 'Étapes 2 & 3 protocole recommandé', 'Shine TV, Shorts, Audible & Librairie', 'Communauté, soins collectifs, lives'], button_label: 'Commencer maintenant', button_href: '/signup', highlight: true, badge: 'TOUT INCLUS' },
       ],
-      pricing_footer_title: "7 jours pour tester l'intégralité de votre formule.",
+      pricing_footer_title: "Sans engagement, annulable en 1 clic.",
       pricing_footer_text: "Si ce n'est pas pour vous, zéro prélèvement. Zéro justification.",
       pricing_footer_quote: "On croit en ce qu'on fait. On vous laisse vérifier.\nParce que si on doit vous retenir par un contrat, c'est qu'on n'a pas fait notre travail.",
       pourqui_title: 'SOS Shine est fait pour vous si...',
@@ -725,7 +723,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       cta_title: "Rejoignez-nous.\nNe soyez plus jamais seul(e) face à vos tempêtes.",
       cta_button: 'Rejoindre SOS Shine',
       cta_button_href: '/signup',
-      cta_details: '49,90\u20ac/mois \u00b7 Sans engagement \u00b7 7 jours gratuits \u00b7 Tout inclus',
+      cta_details: '49,90\u20ac/mois \u00b7 Sans engagement \u00b7 Annulable en 1 clic \u00b7 Tout inclus',
     },
     styles: {},
   },

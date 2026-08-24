@@ -518,7 +518,6 @@ export default function LandingClient({ initialSections, initialPositions, initi
   const ctaDark = sec('cta_dark');
   const foot = sec('footer');
 
-  const trialDays = globalContent.trial_days || 7;
   const logoUrl = globalContent.logo_url || '';
 
   const cssVars = {

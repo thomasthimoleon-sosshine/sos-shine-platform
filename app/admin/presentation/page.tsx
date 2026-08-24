@@ -67,7 +67,7 @@ const PLANS = [
     name: 'SOS Shine',
     price: '49,90',
     period: '/mois',
-    badge: '7 JOURS GRATUIT',
+    badge: 'SANS ENGAGEMENT',
     highlight: true,
     features: [
       'Encyclopédie complète — 200+ protocoles',
@@ -77,7 +77,7 @@ const PLANS = [
       'Soins collectifs, lives & événements',
       'Support prioritaire',
     ],
-    cta: 'Essayer 7 jours gratuit',
+    cta: 'Commencer maintenant',
   },
 ]
 

@@ -13,7 +13,7 @@ export function generateEmail12(vars: Vars): { subject: string; html: string } {
   const subject = `Voilà ce qui va se passer concrètement.`
 
   const content = [
-    p(`Si aujourd'hui tu décides de commencer tes 7 jours gratuits sur SOS Shine, voilà concrètement ce qu'il va se passer.`),
+    p(`Si aujourd'hui tu décides de rejoindre SOS Shine, voilà concrètement ce qu'il va se passer.`),
     p(`Pas une promesse vague. Pas un "tu vas voir, tu seras transformé·e". Du concret.`),
     goldDivider(),
     h3(`Minute 1`),
@@ -31,20 +31,20 @@ export function generateEmail12(vars: Vars): { subject: string; html: string } {
     h3(`Jour 5`),
     p(`Tu commences à te déplacer dans la plateforme avec aisance. Tu connais ton protocole. Tu sais où aller quand une émotion monte. Tu peux ouvrir l'application à 2h du matin si tu en as besoin, et trouver une réponse, une voix, un exercice. C'est ce moment où SOS Shine cesse d'être "un truc qu'on essaie" pour devenir un compagnon de quotidien.`),
     h3(`Jour 7`),
-    p(`Soit tu sens que cet espace te fait du bien et tu continues, dans la formule que tu auras choisie.`),
-    p(`Soit tu décides que ce n'est pas pour toi à ce moment de ta vie, et tu arrêtes simplement.`),
+    p(`Soit tu sens que cet espace te fait du bien et tu continues, à ton rythme.`),
+    p(`Soit tu décides que ce n'est pas pour toi à ce moment de ta vie, et tu annules en un clic.`),
     p(`Sans piège. Sans engagement caché. Sans relance insistante. Sans pression.`),
-    p(`Juste l'opportunité d'avoir essayé enfin quelque chose de différent. De savoir, par toi-même, si c'est l'endroit qui peut t'accompagner.`),
+    p(`Juste l'occasion d'avoir enfin essayé quelque chose de différent. De savoir, par toi-même, si c'est l'endroit qui peut t'accompagner.`),
     goldDivider(),
     p(`C'est tout.`),
-    p(`Pas de promesse de miracle. Pas de transformation instantanée. Pas de "ta vie va changer en 7 jours".`),
-    p(`Mais 7 jours, c'est largement assez pour sentir si un endroit te fait du bien. Si la voix qu'on y entend te parle. Si la méthode te correspond. Si ton corps, ton mental et ton cœur ont envie de continuer.`),
+    p(`Pas de promesse de miracle. Pas de transformation instantanée. Pas de "ta vie va changer en une semaine".`),
+    p(`Mais une première semaine, c'est largement assez pour sentir si un endroit te fait du bien. Si la voix qu'on y entend te parle. Si la méthode te correspond. Si ton corps, ton mental et ton cœur ont envie de continuer.`),
     p(`Et si la réponse est oui, alors un vrai chemin peut commencer.`),
     ctaButton('Rejoindre SOS Shine - 49,90€/mois', URL_SERENITE, { email }),
     ctaLink('Accéder à mon protocole uniquement - 33€ →', `${URL_PROTOCOLE}?prefilled_email=${encodeURIComponent(email)}`),
     p(`À demain.`),
     signature(),
-    p(`<br><em style="font-size:12px;color:#737373;">P.S. : Une chose que je veux que tu saches. Les 7 jours gratuits ne sont pas un piège commercial. C'est moi qui ai voulu cette formule, dès le début, parce que je trouve normal qu'on puisse voir avant de s'engager. On ne te demande pas de croire sur parole. On te demande juste de venir voir.</em>`),
+    p(`<br><em style="font-size:12px;color:#737373;">P.S. : Une chose que je veux que tu saches. Il n'y a aucun engagement de durée, et c'est moi qui ai voulu cette formule dès le début. Je trouve normal qu'on reste parce que ça fait du bien, pas parce qu'on est retenu par un contrat. On ne te demande pas de croire sur parole. On te demande juste de venir voir.</em>`),
   ].join('')
 
   return { subject, html: wrapEmail(content, { email }) }

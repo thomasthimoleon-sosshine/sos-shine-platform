@@ -375,7 +375,6 @@ export default function Home() {
   const ctaLight = sec('cta_light');
   const foot = sec('footer');
 
-  const trialDays = globalContent.trial_days || 7;
   const logoUrl = globalContent.logo_url || '';
 
   const cssVars = {
@@ -547,7 +546,7 @@ export default function Home() {
                   <Link key={i} href={btn.href === '/signup' || btn.href === '/login' ? '/signup' : btn.href}>
                     {btn.variant === 'primary' ? (
                       <button className="magnetic-btn pulse-ring px-8 py-4 rounded-full text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}>
-                        {btn.label} - {trialDays} jours d&apos;essai
+                        {btn.label}
                       </button>
                     ) : (
                       <button className="magnetic-btn px-8 py-4 rounded-full text-base font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.3)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>

@@ -30,7 +30,6 @@ const PLAN_FEATURES: Record<PlanId, string[]> = {
     'Communauté & Feu de Camp 24/7',
     'Courrier Anonyme',
     'Soins collectifs, lives & événements',
-    '7 jours d\'essai gratuit',
   ],
   premium: [],
 }
@@ -298,11 +297,6 @@ export default function TarifsPage() {
                           </span>
                           <span className="text-sm text-[var(--text-muted)]">/mois</span>
                         </div>
-                        {info.hasTrial && (
-                          <p className="text-xs mt-2 font-medium" style={{ color: 'var(--success)' }}>
-                            7 jours d&apos;essai gratuit inclus
-                          </p>
-                        )}
                       </>
                     ) : (
                       <>
@@ -326,11 +320,6 @@ export default function TarifsPage() {
                               </p>
                             )}
                           </div>
-                        )}
-                        {info.hasTrial && (
-                          <p className="text-xs mt-2 font-medium" style={{ color: 'var(--success)' }}>
-                            7 jours gratuits
-                          </p>
                         )}
                       </>
                     )}
@@ -361,7 +350,7 @@ export default function TarifsPage() {
                       boxShadow: isHighlight ? `0 4px 20px rgba(${hexToRgb(color)}, 0.25)` : undefined,
                     }}
                   >
-                    {info.hasTrial ? 'Essayer gratuitement - 7 jours' : 'Commencer maintenant'}
+                    Commencer maintenant
                   </button>
                 </div>
               </motion.div>

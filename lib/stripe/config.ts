@@ -124,21 +124,18 @@ export const DURATIONS: { id: DurationId; label: string; months: number; discoun
 
 // ── Infos plans ──
 
-export const PLAN_INFO: Record<PlanId, { name: string; tagline: string; hasTrial: boolean }> = {
+export const PLAN_INFO: Record<PlanId, { name: string; tagline: string }> = {
   essential: {
     name: 'Essentielle (archivé)',
     tagline: "Plan archivé - non disponible à la vente",
-    hasTrial: false,
   },
   serenite: {
     name: 'SOS Shine',
     tagline: 'Accès complet à toute la plateforme',
-    hasTrial: false,
   },
   premium: {
     name: 'Premium (archivé)',
     tagline: "Plan archivé - non disponible à la vente",
-    hasTrial: false,
   },
 }
 

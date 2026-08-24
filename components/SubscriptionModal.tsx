@@ -32,7 +32,6 @@ const PLAN_FEATURES: Record<PlanId, string[]> = {
     'Communauté & Feu de Camp',
     'Courrier Anonyme',
     'Événements, soins collectifs, lives',
-    '7 jours d\'essai gratuit',
   ],
   premium: [],
 }
@@ -309,7 +308,7 @@ export default function SubscriptionModal({
                                   <span className="text-xs text-[var(--text-muted)]">/mois</span>
                                 </div>
                                 <p className="text-[11px] mt-1 font-medium text-[var(--success)]">
-                                  code {PROMO.code} · + 7 jours gratuits
+                                  code {PROMO.code}
                                 </p>
                                 <div className="mt-1.5">
                                   <PromoCountdown className="text-xs" />
@@ -329,11 +328,6 @@ export default function SubscriptionModal({
                                     {originalPrice && (
                                       <span className="ml-1 font-semibold text-[var(--success)]">-{savings}%</span>
                                     )}
-                                  </p>
-                                )}
-                                {info.hasTrial && (
-                                  <p className="text-[11px] mt-1 font-medium text-[var(--success)]">
-                                    7 jours gratuits
                                   </p>
                                 )}
                               </>
@@ -364,7 +358,7 @@ export default function SubscriptionModal({
                               border: (isHighlight || isSuggested) ? 'none' : `1px solid ${color}`,
                             }}
                           >
-                            {info.hasTrial ? 'Essayer 7 jours' : 'Choisir'}
+                            Choisir
                           </button>
                         </div>
                       </div>

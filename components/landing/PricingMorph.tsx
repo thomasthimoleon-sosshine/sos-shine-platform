@@ -26,7 +26,7 @@ const PLANS = {
     name: 'SOS Shine',
     price: '49,90',
     period: '/mois',
-    badge: '7 JOURS GRATUIT',
+    badge: 'SANS ENGAGEMENT',
     features: [
       'Encyclopédie complète - 200+ protocoles',
       'Shine TV - Vidéos guidées par Julia',
@@ -37,7 +37,7 @@ const PLANS = {
       'Sessions de groupe avec Julia',
       'Support prioritaire',
     ],
-    cta: 'Essayer 7 jours gratuit',
+    cta: 'Commencer maintenant',
     href: '/rejoindre',
   },
 }

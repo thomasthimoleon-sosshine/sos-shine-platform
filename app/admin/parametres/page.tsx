@@ -171,7 +171,6 @@ const sections: SectionDef[] = [
       { label: 'Sous-titre', key: 'pricing_section_subtitle', type: 'text', default: 'Sans engagement - Annulable à tout instant' },
       { label: 'Prix SOS Shine (EUR/mois)', key: 'price_serenite_display', type: 'text', default: '49.90' },
       
-      { label: 'Jours d\'essai gratuit (Sérénité)', key: 'trial_days', type: 'text', default: '7' },
       
       
       { label: 'Texte sous les offres', key: 'pricing_footer', type: 'text', default: "Parce que si on doit vous retenir par un contrat, c'est qu'on n'a pas fait notre travail." },

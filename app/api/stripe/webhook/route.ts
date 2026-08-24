@@ -8,6 +8,7 @@ import { getStripe } from '@/lib/stripe/client'
 import type Stripe from 'stripe'
 import { sendRawEmail } from '@/lib/email-templates/automated-emails'
 import { parseProtocolRef } from '@/lib/stripe/config'
+import { discoveryEndsAt } from '@/lib/discovery-access'
 import {
   detectPlanFromSession,
   processSuccessfulPayment,
@@ -94,13 +95,16 @@ export async function POST(request: Request) {
               process.env.SUPABASE_SERVICE_ROLE_KEY!,
               { auth: { autoRefreshToken: false, persistSession: false } }
             )
-            // Débloquage idempotent (unique user_id + protocol_slug)
+            // Débloquage idempotent (unique user_id + protocol_slug).
+            // discovery_until ouvre toute la plateforme pendant 30 jours : c'est
+            // le « goût » offert avec l'achat. Le protocole, lui, reste acquis.
             const { error: unlockErr } = await supabase
               .from('protocol_unlocks')
               .upsert({
                 user_id: parsed.userId,
                 protocol_slug: parsed.slug,
                 stripe_session_id: session.id,
+                discovery_until: discoveryEndsAt(),
               }, { onConflict: 'user_id,protocol_slug', ignoreDuplicates: true })
 
             if (unlockErr) {

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
+import { DISCOVERY_PLAN } from '@/lib/discovery-access'
 
 // Features offertes à TOUS les membres inscrits (plan gratuit)
 // La communauté (mur + chat général) et Shine Audible sont offerts sans abonnement
@@ -60,7 +61,26 @@ export async function GET(request: Request) {
         .single()
 
       const isActive = sub && (sub.status === 'active' || sub.status === 'trialing')
-      const userPlan = isActive ? sub.plan : null
+
+      // Accès découverte : l'achat d'un protocole seul (33€) ouvre toute la
+      // plateforme pendant 30 jours. Passé l'échéance, il ne reste que le
+      // protocole acheté (géré ailleurs, via protocol_unlocks).
+      let discoveryUntil: string | null = null
+      if (!isActive) {
+        try {
+          const { data: unlock } = await supabase
+            .from('protocol_unlocks')
+            .select('discovery_until')
+            .eq('user_id', userId)
+            .gt('discovery_until', new Date().toISOString())
+            .order('discovery_until', { ascending: false })
+            .limit(1)
+            .maybeSingle()
+          discoveryUntil = unlock?.discovery_until ?? null
+        } catch { /* colonne/table absente : pas d'accès découverte */ }
+      }
+
+      const userPlan = isActive ? sub.plan : (discoveryUntil ? DISCOVERY_PLAN : null)
 
       // Free tier - accès gratuit à la communauté et Shine Audible pour tous les membres inscrits
       const freeFeatureMap = FREE_FEATURES.reduce(
@@ -107,6 +127,8 @@ export async function GET(request: Request) {
       return NextResponse.json({
         plan: userPlan,
         is_active: true,
+        access_source: discoveryUntil ? 'discovery' : 'subscription',
+        discovery_until: discoveryUntil,
         features: featureMap,
       })
     }

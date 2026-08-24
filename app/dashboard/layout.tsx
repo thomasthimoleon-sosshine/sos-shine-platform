@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
+import DiscoveryBanner from '@/components/DiscoveryBanner'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -529,7 +530,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </header>
 
         {/* Page content */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">{children}</main>
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto"><DiscoveryBanner />{children}</main>
 
         {/* Floating crisis button + chatbot - abonnés et admins */}
         {(isSubscribed || isAdmin) && <CrisisButton />}

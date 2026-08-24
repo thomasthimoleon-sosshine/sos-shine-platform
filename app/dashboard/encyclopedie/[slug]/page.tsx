@@ -1891,6 +1891,9 @@ export default function DouleurDetailPage() {
             >
               Juste les étapes 2 &amp; 3 de ce protocole — 33€
             </button>
+            <p className="text-xs text-center" style={{ color: 'var(--brand)' }}>
+              + 1 mois d&apos;accès à toute la plateforme offert
+            </p>
             <button
               onClick={() => setShowProtocolPaywall(false)}
               className="block w-full py-3 text-xs text-center transition-colors cursor-pointer"

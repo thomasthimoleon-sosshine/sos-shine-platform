@@ -151,6 +151,11 @@ export default function ChoisirProtocolePage() {
                       Débloquer ce protocole — {SINGLE_PROTOCOL_PRICE_EUR}€
                     </button>
                   )}
+                  {!isUnlocked && (
+                    <p style={{ marginTop: 10, fontSize: 12, textAlign: 'center', color: '#C9A961' }}>
+                      + 1 mois d&apos;accès à toute la plateforme offert
+                    </p>
+                  )}
                 </div>
               )
             })}

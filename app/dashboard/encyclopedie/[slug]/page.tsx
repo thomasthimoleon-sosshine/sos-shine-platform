@@ -527,20 +527,14 @@ export default function DouleurDetailPage() {
         steps_completed: newCompleted,
       }
 
-      // Valider le protocole à la fin des étapes SEULEMENT s'il n'a pas de quiz.
-      // Quand un quiz existe, la validation est portée par sa réussite (submitQuiz).
-      const allComplete = steps.every((s) => newCompleted[String(s.num)])
-      const validateNow = allComplete && quizQuestions.length === 0
-      if (validateNow) {
-        updates.completed_at = new Date().toISOString()
-      }
-
+      // Terminer les étapes ne valide JAMAIS le protocole : cela ne fait qu'ouvrir
+      // l'accès au quiz. Seule la réussite du quiz pose completed_at (cf. submitQuiz),
+      // et ce pour tous les protocoles, sans exception.
       await supabase.from('user_progress').update(updates).eq('id', progress.id)
       setProgress({
         ...progress,
         ...legacyUpdates,
         steps_completed: newCompleted,
-        completed_at: validateNow ? new Date().toISOString() : progress.completed_at,
       } as UserProgress)
 
       // No per-step XP in V2 - XP is awarded via Boss Quest quiz
@@ -920,9 +914,8 @@ export default function DouleurDetailPage() {
             </button>
           )
         })}
-        {/* Quiz step button */}
-        {hasQuiz && (
-          <button
+        {/* Quiz step button - toujours affiché : c'est le passage obligé de validation */}
+        <button
             onClick={() => setActiveStep(quizStepNum)}
             className="flex items-center gap-2.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer whitespace-nowrap flex-shrink-0"
             style={{
@@ -940,8 +933,7 @@ export default function DouleurDetailPage() {
               <span className="text-lg">📝</span>
             )}
             <span>Bilan</span>
-          </button>
-        )}
+        </button>
       </div>
 
       {/* Active step content */}
@@ -1260,15 +1252,14 @@ export default function DouleurDetailPage() {
             </button>
             <button
               onClick={() => {
-                const nextStep = Math.min(hasQuiz ? quizStepNum : totalSteps, activeStep + 1)
+                const nextStep = Math.min(quizStepNum, activeStep + 1)
                 if (isFreeUser && nextStep > 1) { setShowProtocolPaywall(true); return }
                 setActiveStep(nextStep)
               }}
-              disabled={activeStep === totalSteps && !hasQuiz && !isFreeUser}
               className="flex items-center gap-2 text-sm transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
               style={{ color: currentStep.color }}
             >
-              {activeStep === totalSteps && hasQuiz ? 'Passer au Quiz' : 'Étape suivante'}
+              {activeStep === totalSteps ? 'Passer au Quiz' : 'Étape suivante'}
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
               </svg>
@@ -1300,7 +1291,7 @@ export default function DouleurDetailPage() {
       )}
 
       {/* ── Quiz Section ── */}
-      {activeStep === quizStepNum && hasQuiz && (
+      {activeStep === quizStepNum && (
         <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'rgba(201,169,97,0.04)', border: '1px solid rgba(201,169,97,0.15)' }}>
           <div className="flex items-center gap-4 mb-6">
             <div className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl" style={{ background: 'rgba(201,169,97,0.12)' }}>
@@ -1314,12 +1305,25 @@ export default function DouleurDetailPage() {
                 Quiz de compréhension
               </h2>
               <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                {selectedQuestions.length} questions - Minimum {Math.ceil(selectedQuestions.length * 0.8)}/{selectedQuestions.length} pour valider
+                {hasQuiz
+                  ? `${selectedQuestions.length} questions - Minimum ${Math.ceil(selectedQuestions.length * 0.8)}/${selectedQuestions.length} pour valider`
+                  : 'Obligatoire pour valider le protocole'}
               </p>
             </div>
           </div>
 
-          {!allStepsCompleted ? (
+          {!hasQuiz ? (
+            <div className="rounded-xl p-8 text-center" style={{ background: 'rgba(0,0,0,0.2)', border: '1px dashed rgba(201,169,97,0.3)' }}>
+              <div className="text-4xl mb-3">📝</div>
+              <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                Quiz en préparation
+              </h3>
+              <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+                Les questions de ce protocole arrivent très bientôt. La validation passe
+                par ce quiz : vos étapes terminées sont bien enregistrées en attendant.
+              </p>
+            </div>
+          ) : !allStepsCompleted ? (
             <div className="rounded-xl p-8 text-center" style={{ background: 'rgba(0,0,0,0.2)', border: '1px dashed rgba(201,169,97,0.3)' }}>
               <div className="text-4xl mb-3">🔒</div>
               <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>

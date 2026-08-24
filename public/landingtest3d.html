@@ -55,20 +55,6 @@
   /* ---------- FOCUS / A11Y ---------- */
   a:focus-visible,button:focus-visible{outline:2px solid var(--gold-bright);outline-offset:3px;border-radius:6px}
 
-  /* ---------- EVENT BANNER ---------- */
-  .annonce{
-    background:transparent;
-    border-bottom:none;
-    text-align:center;font-size:13.5px;color:var(--cream-dim);
-    padding:9px 16px;letter-spacing:.2px;
-  }
-  .annonce b{color:var(--cream);font-weight:600}
-  .annonce .live{color:var(--terra-soft);font-weight:600;margin-right:6px}
-  .annonce a.resa{color:var(--gold-bright);font-weight:600;border-bottom:1px solid rgba(238,201,116,.4);margin-left:8px;display:inline-flex;align-items:center;gap:5px;transition:color .2s ease}
-  .annonce a.resa:hover{color:var(--cream)}
-  .annonce a.resa .ig-icon{vertical-align:middle;margin-bottom:1px}
-  .annonce .hide-m{}
-
   /* ---------- HEADER ---------- */
   /* Header fondu dans la page (aucun bandeau visible en haut) ; il se teinte seulement au scroll pour rester lisible */
   header{position:sticky;top:0;z-index:50;background:transparent;border-bottom:1px solid transparent;transition:background .3s ease,backdrop-filter .3s ease,border-color .3s ease}
@@ -85,6 +71,8 @@
     padding:10px 18px;border-radius:10px;transition:transform .15s,box-shadow .2s;
     box-shadow:0 6px 20px -8px rgba(217,169,75,.6);
   }
+  .nav-links a.nav-cta,
+  .nav-links a.nav-cta:hover{color:#0A0806}
   .nav-cta:hover{transform:translateY(-1px);box-shadow:0 10px 26px -8px rgba(217,169,75,.75)}
   .burger{display:none;background:none;border:none;color:var(--cream);cursor:pointer}
 
@@ -258,6 +246,9 @@
   .foot-grid a:hover{color:var(--cream)}
   .foot-brand .brand{margin-bottom:14px}
   .foot-brand p{font-size:13.5px;color:var(--muted);max-width:34ch}
+  .foot-social{display:flex;gap:12px;margin-top:20px}
+  .foot-social a{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;margin:0;border:1px solid var(--line);border-radius:50%;color:var(--gold);transition:color .2s ease,border-color .2s ease,transform .2s ease}
+  .foot-social a:hover{color:var(--cream);border-color:var(--gold);transform:translateY(-2px)}
   .avert{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:18px 0;font-size:12.5px;color:var(--muted);text-align:center;margin-bottom:22px}
   .legal{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12.5px;color:var(--muted)}
 
@@ -311,16 +302,6 @@
 </style>
 </head>
 <body>
-
-<!-- 02 · SOCIAL BANNER -->
-<div class="annonce">
-  <span class="hide-m">Découvrez qui nous sommes ·</span>
-  <b>Suivez SOS Shine</b>
-  <a href="https://www.instagram.com/sos_shine" target="_blank" rel="noopener noreferrer" class="resa" aria-label="Suivre SOS Shine sur Instagram">
-    <svg class="ig-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.8"/><circle cx="17.4" cy="6.6" r="1.2" fill="currentColor"/></svg>
-    Instagram →
-  </a>
-</div>
 
 <!-- 01 · HEADER -->
 <header>
@@ -553,6 +534,17 @@
       <div class="foot-brand">
         <a href="/" class="brand"><img class="brand-logo" src="/images/logo-shine.png" alt="SOS Shine" /></a>
         <p>En ligne partout en France, et dans le Sud en présentiel.</p>
+        <div class="foot-social">
+          <a href="https://www.instagram.com/julia_laureau_sosshine/" target="_blank" rel="noopener noreferrer" aria-label="SOS Shine sur Instagram">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.4" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="4.1" stroke="currentColor" stroke-width="1.7"/><circle cx="17.5" cy="6.5" r="1.25" fill="currentColor"/></svg>
+          </a>
+          <a href="https://www.facebook.com/sosshinejulia" target="_blank" rel="noopener noreferrer" aria-label="SOS Shine sur Facebook">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14.6 21.5v-8.2h2.8l.42-3.25H14.6V7.97c0-.94.26-1.58 1.61-1.58h1.72V3.48A23 23 0 0 0 15.42 3.35c-2.48 0-4.18 1.51-4.18 4.29v2.41H8.42v3.25h2.82v8.2Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="https://www.youtube.com/@SOS-Shine" target="_blank" rel="noopener noreferrer" aria-label="SOS Shine sur YouTube">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2.3" y="5.3" width="19.4" height="13.4" rx="4.2" stroke="currentColor" stroke-width="1.7"/><path d="M10.4 9.4v5.2l4.5-2.6Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
       </div>
       <div><h4>Découvrir</h4><a href="#methode">La méthode</a><a href="#plateforme">La plateforme</a><a href="#equipe">L'équipe</a><a href="/event">Événements</a></div>
       <div><h4>Ressources</h4><a href="/signature-emotionnelle?start=1">Signature Émotionnelle</a><a href="/encyclopedie">Encyclopédie</a><a href="#faq">FAQ</a><a href="/contact">Contact</a></div>

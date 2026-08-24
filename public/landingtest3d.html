@@ -33,7 +33,10 @@
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth}
   body{
-    background:var(--bg);
+    /* Voile chaud en haut de page : fond le header dans la teinte du hero,
+       sans bande noire visible. S'estompe vers le noir profond plus bas. */
+    background:linear-gradient(180deg,rgba(201,169,97,.13) 0,rgba(201,169,97,.10) 90px,rgba(224,174,154,.06) 200px,rgba(10,8,6,0) 480px),var(--bg);
+    background-repeat:no-repeat;
     color:var(--cream);
     font-family:var(--sans);
     font-size:17px;

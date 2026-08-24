@@ -219,7 +219,10 @@
   .price h3{font-size:22px;margin-bottom:6px}
   .price .amt{font-family:var(--serif);font-size:40px;color:var(--cream);margin:6px 0 4px}
   .price .amt small{font-size:16px;color:var(--muted);font-family:var(--sans)}
-  .price p{font-size:14.5px;color:var(--cream-dim);margin:14px 0 22px}
+  .price p{font-size:14.5px;color:var(--cream-dim);margin:14px 0 16px}
+  .price .feat{list-style:none;margin:0 0 24px;padding:0;text-align:left;display:flex;flex-direction:column;gap:11px}
+  .price .feat li{position:relative;padding-left:26px;font-size:14px;color:var(--cream-dim);line-height:1.45}
+  .price .feat li:before{content:"✓";position:absolute;left:0;top:0;color:var(--gold);font-weight:700}
   .price .btn{width:100%}
   .price-note{text-align:center;color:var(--muted);font-size:14px;margin-top:26px}
   .price-note b{color:var(--cream-dim);font-weight:500}
@@ -490,14 +493,26 @@
         <span class="badge">Recommandé</span>
         <h3>L'Abonnement</h3>
         <div class="amt">49,90 € <small>/ mois</small></div>
-        <p>Accès à tout. Sans engagement.</p>
+        <p>Tout SOS Shine, sans limite.</p>
+        <ul class="feat">
+          <li>Les 200+ protocoles, en entier</li>
+          <li>Shine TV, Shorts, Audible &amp; Librairie</li>
+          <li>Communauté &amp; entraide, 24h/24</li>
+          <li>Lives &amp; événements en ligne</li>
+          <li>Sans engagement, annulable en 1 clic</li>
+        </ul>
         <a href="/rejoindre" class="btn btn-gold">Rejoindre SOS Shine</a>
       </div>
       <div class="price reveal">
         <h3>À la carte</h3>
-        <div class="amt">33 € <small>/ module</small></div>
-        <p>Un protocole complet à toi pour toujours.</p>
-        <a href="/choisir-mon-protocole" class="btn btn-ghost">Choisir mon module</a>
+        <div class="amt">33 € <small>/ protocole</small></div>
+        <p>Un seul protocole, sans abonnement.</p>
+        <ul class="feat">
+          <li>Un protocole complet, débloqué à vie</li>
+          <li>+ 30 jours d'accès à toute la plateforme, offerts</li>
+          <li>La 1re étape reste gratuite pour essayer</li>
+        </ul>
+        <a href="/choisir-mon-protocole" class="btn btn-ghost">Choisir mon protocole</a>
       </div>
     </div>
     <p class="price-note"><b>Pas sûr(e) ?</b> Commence par le test gratuit.</p>

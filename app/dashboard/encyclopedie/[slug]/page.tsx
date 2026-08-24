@@ -643,6 +643,18 @@ export default function DouleurDetailPage() {
   const hasQuiz = quizQuestions.length > 0
   const quizStepNum = totalSteps + 1
 
+  /**
+   * Une étape est *terminée* dès que le membre a cliqué sur le bouton de fin
+   * d'étape. Elle n'est *validée* que lorsque plus rien ne manque : pour la
+   * dernière étape, cela suppose d'avoir réussi le quiz. Terminer la dernière
+   * étape ouvre donc le quiz, mais ne la valide pas à elle seule.
+   */
+  function isStepValidated(stepNum: number): boolean {
+    if (!isStepCompleted(stepNum)) return false
+    if (stepNum === totalSteps && hasQuiz) return quizPassed
+    return true
+  }
+
   if (loading) {
     return (
       <div className="flex justify-center py-20">
@@ -879,7 +891,7 @@ export default function DouleurDetailPage() {
       {/* Steps navigation */}
       <div className="grid grid-cols-3 gap-2">
         {steps.map((step) => {
-          const completed = isStepCompleted(step.num)
+          const completed = isStepValidated(step.num)
           return (
             <button
               key={step.num}
@@ -1222,11 +1234,25 @@ export default function DouleurDetailPage() {
               onClick={() => {
                 if (isFreeUser && currentStep.num === 1) { setShowProtocolPaywall(true); return }
                 markStepComplete(currentStep.num)
+                // Dernière étape : on enchaîne directement sur le quiz, qui porte la validation.
+                if (currentStep.num === totalSteps && hasQuiz) setActiveStep(quizStepNum)
               }}
               className="w-full py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer"
               style={{ background: `${currentStep.color}15`, color: currentStep.color, border: `1px solid ${currentStep.color}30` }}
             >
-              {isFreeUser && currentStep.num === 1 ? "J'ai compris - passer à l'étape 2 →" : `Marquer l'étape ${currentStep.num} comme terminée`}
+              {isFreeUser && currentStep.num === 1
+                ? "J'ai compris - passer à l'étape 2 →"
+                : currentStep.num === totalSteps && hasQuiz
+                  ? `Terminer l'étape ${currentStep.num} et passer au quiz`
+                  : `Marquer l'étape ${currentStep.num} comme terminée`}
+            </button>
+          ) : !isStepValidated(currentStep.num) ? (
+            <button
+              onClick={() => setActiveStep(quizStepNum)}
+              className="w-full py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer"
+              style={{ background: 'rgba(201,169,97,0.12)', color: '#C9A961', border: '1px solid rgba(201,169,97,0.3)' }}
+            >
+              Étape terminée - réussissez le quiz pour la valider →
             </button>
           ) : (
             <div className="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium"

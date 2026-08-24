@@ -44,7 +44,7 @@ export default function CompteInactifPage() {
 
   const handleResubscribe = (plan: 'essential' | 'serenite' | 'premium') => {
     const paymentLinks: Record<string, string> = {
-      serenite: 'https://buy.stripe.com/4gM6oz4XGdRx4AV3Oi5ZC0r',
+      serenite: 'https://buy.stripe.com/14AbIT89ScNtffz84y5ZC0t',
       essential: 'https://buy.stripe.com/3cIcMXducdRx3wResW5ZC0e',
     }
     const link = paymentLinks[plan]

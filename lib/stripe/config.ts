@@ -33,7 +33,7 @@ export const PRODUCT_TO_PLAN: Record<string, { plan: PlanId; duration: DurationI
 
 export const PAYMENT_LINKS: Record<string, string> = {
   essential_monthly:    'https://buy.stripe.com/3cIcMXducdRx3wResW5ZC0e',
-  serenite_monthly:     'https://buy.stripe.com/4gM6oz4XGdRx4AV3Oi5ZC0r',
+  serenite_monthly:     'https://buy.stripe.com/14AbIT89ScNtffz84y5ZC0t',
   serenite_quarterly:   'https://buy.stripe.com/eVq8wH2PyeVBc3ngB45ZC0h',
   serenite_semiannual:  'https://buy.stripe.com/6oU5kv61K9Bh6J3doS5ZC0i',
   serenite_annual:      'https://buy.stripe.com/aFafZ93TC00H6J3esW5ZC0j',

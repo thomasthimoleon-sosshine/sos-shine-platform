@@ -9,7 +9,7 @@ import type { DimensionScores } from '@/lib/quiz-v2/dimensions'
 
 const BRAND = '#C9A961'
 const SERIF = "Georgia, 'Times New Roman', serif"
-const URL_PLATEFORME = 'https://buy.stripe.com/4gM6oz4XGdRx4AV3Oi5ZC0r'
+const URL_PLATEFORME = 'https://buy.stripe.com/14AbIT89ScNtffz84y5ZC0t'
 
 type Vars = {
   firstName: string

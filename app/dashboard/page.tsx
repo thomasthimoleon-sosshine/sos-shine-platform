@@ -7,9 +7,7 @@ import { motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import type { Profile } from '@/types/database'
 import { useTranslation } from '@/lib/i18n/useTranslation'
-import { getNextRotatingQuote, type Quote } from '@/lib/quotes'
 import { greetingsData, GREETINGS_PER_SLOT, type TimeSlot } from '@/data/greetingsData'
-import { getDailyForecast, resolveZodiacSign, ZODIAC_INFO } from '@/data/energyWeather'
 import PushNotificationButton from '@/components/PushNotificationButton'
 import NpsWidget from '@/components/NpsWidget'
 import { getLevelForXP } from '@/lib/xp'
@@ -29,78 +27,6 @@ const fadeUp = {
 /* ─────────────────────────────────────────────
    Section: Niveau & XP (migrated from Profile)
    ───────────────────────────────────────────── */
-
-/* ─────────────────────────────────────────────
-   Section: Météo Énergétique
-   ───────────────────────────────────────────── */
-function EnergyWeatherWidget({ profile }: { profile: Profile | null }) {
-  const p = profile as (Profile & { zodiac_sign?: string | null; birth_date?: string | null }) | null
-  const sign = p ? resolveZodiacSign(p.prenom, p.zodiac_sign, p.birth_date) : null
-  if (!sign) return null
-
-  const forecast = getDailyForecast(sign)
-  const info = ZODIAC_INFO[sign]
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.08, duration: 0.5, ease: ease as unknown as [number, number, number, number] }}
-      className="glass relative overflow-hidden"
-      style={{
-        background: `linear-gradient(135deg, ${forecast.color}08, var(--surface-card))`,
-        borderColor: `${forecast.color}20`,
-      }}
-    >
-      <div className="absolute -top-16 -left-16 w-48 h-48 rounded-full opacity-20 pointer-events-none"
-        style={{ background: `radial-gradient(circle, ${forecast.color}30, transparent 70%)` }}
-      />
-      <div className="p-5 sm:p-6 relative">
-        <div className="flex items-center gap-2 mb-4">
-          <span className="text-2xl">{info.symbol}</span>
-          <h2 className="text-[11px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">
-            Votre météo du jour
-          </h2>
-        </div>
-
-        <div className="flex flex-col sm:flex-row sm:items-start gap-4">
-          <div className="flex items-center gap-3 shrink-0">
-            <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl"
-              style={{ background: `${forecast.color}15` }}>
-              {forecast.element}
-            </div>
-            <div>
-              <p className="font-display text-lg font-semibold text-[var(--text-primary)]">{info.label}</p>
-              <div className="flex items-center gap-2 mt-0.5">
-                <span className="inline-block w-2 h-2 rounded-full animate-pulse" style={{ background: forecast.color }} />
-                <span className="text-[13px] font-medium" style={{ color: forecast.color }}>Énergie {forecast.energy}</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex-1 space-y-2">
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">Ambiance</span>
-              <span className="text-[13px] font-medium text-[var(--text-primary)]">{forecast.mood}</span>
-            </div>
-            <p className="text-[14px] leading-relaxed italic text-[var(--text-secondary)]">
-              &ldquo;{forecast.advice}&rdquo;
-            </p>
-            <div className="flex items-center gap-4 pt-1">
-              <span className="text-[11px] flex items-center gap-1 text-[var(--text-muted)]">
-                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Heure favorable : <span className="font-medium text-[var(--text-primary)]">{forecast.luckyHour}</span>
-              </span>
-              <span className="text-[11px] text-[var(--text-muted)]">{info.dates}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  )
-}
 
 /* ─────────────────────────────────────────────
    Section: Mes contributions
@@ -358,7 +284,6 @@ export default function DashboardHome() {
   const [search, setSearch] = useState('')
   const [profile, setProfile] = useState<Profile | null>(null)
   const [greeting, setGreeting] = useState('')
-  const [quote, setQuote] = useState<Quote | null>(null)
   const [siteSettings, setSiteSettings] = useState<Record<string, string>>({})
   const [xpData, setXpData] = useState<UserXP | null>(null)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
@@ -368,8 +293,6 @@ export default function DashboardHome() {
   const [streak, setStreak] = useState<{ current: number; longest: number }>({ current: 0, longest: 0 })
 
   useEffect(() => {
-    setQuote(getNextRotatingQuote())
-
     const supabase = createClient()
     const currentSlot = getTimeSlot()
 
@@ -710,24 +633,6 @@ export default function DashboardHome() {
 
       {showMore && (
         <div className="space-y-6">
-          {/* ── Météo Énergétique ── */}
-          <EnergyWeatherWidget profile={profile} />
-
-          {/* ── Citation du jour ── */}
-          <div
-            className="glass glass-hover relative overflow-hidden p-6 sm:p-8"
-            style={{ background: 'linear-gradient(135deg, rgba(201, 169, 97, 0.05), var(--surface-card))', borderColor: 'rgba(201, 169, 97, 0.1)' }}
-          >
-            <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full opacity-30 pointer-events-none"
-              style={{ background: 'radial-gradient(circle, rgba(201, 169, 97, 0.08), transparent 70%)' }} />
-            <p className="font-display text-xl sm:text-2xl italic leading-relaxed relative text-[var(--text-primary)]">
-              &ldquo;{siteSettings.dash_custom_quote || (quote ? quote.text.fr : t('quote.text'))}&rdquo;
-            </p>
-            <p className="mt-4 text-[13px] font-medium relative text-[var(--brand)]">
-              - {siteSettings.dash_custom_quote_author || (quote ? quote.author.fr : t('quote.author'))}
-            </p>
-          </div>
-
           {/*
             Progression, contributions et badges ont été déplacés dans le
             profil (Communauté → Moi). Ils occupaient ici trois blocs empilés

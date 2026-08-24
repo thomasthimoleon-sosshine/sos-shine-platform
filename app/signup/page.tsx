@@ -120,7 +120,6 @@ export default function SignupPage() {
 
   const [prenom, setPrenom] = useState('')
   const [email, setEmail] = useState('')
-  const [birthDate, setBirthDate] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -189,7 +188,7 @@ export default function SignupPage() {
         email,
         password,
         options: {
-          data: { prenom, ...(birthDate ? { birth_date: birthDate } : {}) },
+          data: { prenom },
           emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(nextPath)}`,
         },
       })
@@ -345,14 +344,6 @@ export default function SignupPage() {
               <label htmlFor="email" className="block text-[13px] text-[var(--text-secondary)] mb-2 font-medium">Email</label>
               <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
                 placeholder="votre@email.com"
-                className="w-full px-4 py-3 rounded-[var(--radius-lg)] text-sm transition-all duration-[var(--transition-base)] bg-[var(--surface-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] outline-none focus:border-[var(--brand-alpha-strong)] focus:shadow-[0_0_0_3px_var(--brand-alpha-weak)] placeholder:text-[var(--text-muted)]"
-                 />
-            </div>
-            <div>
-              <label htmlFor="birthDate" className="block text-[13px] text-[var(--text-secondary)] mb-2 font-medium">
-                Date de naissance <span className="text-[11px] text-[var(--text-muted)] font-normal">(optionnel - pour votre météo énergétique)</span>
-              </label>
-              <input id="birthDate" type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)}
                 className="w-full px-4 py-3 rounded-[var(--radius-lg)] text-sm transition-all duration-[var(--transition-base)] bg-[var(--surface-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] outline-none focus:border-[var(--brand-alpha-strong)] focus:shadow-[0_0_0_3px_var(--brand-alpha-weak)] placeholder:text-[var(--text-muted)]"
                  />
             </div>

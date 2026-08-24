@@ -8,7 +8,6 @@ import { createClient } from '@/lib/supabase/client'
 import type { Profile } from '@/types/database'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 import { greetingsData, GREETINGS_PER_SLOT, type TimeSlot } from '@/data/greetingsData'
-import PushNotificationButton from '@/components/PushNotificationButton'
 import NpsWidget from '@/components/NpsWidget'
 import { getLevelForXP } from '@/lib/xp'
 import type { UserXP } from '@/types/database'
@@ -464,17 +463,17 @@ export default function DashboardHome() {
         >
           Continuer mon protocole du jour →
         </Link>
-        {/* Éléments discrets : streak + notifications */}
-        <div className="mt-4 flex items-center justify-center gap-3 flex-wrap">
-          {streak.current > 0 && (
+        {/* Série en cours. L'activation des notifications a rejoint Mon compte,
+            à côté du réglage de ce qu'on souhaite recevoir. */}
+        {streak.current > 0 && (
+          <div className="mt-4 flex items-center justify-center">
             <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold"
               style={{ background: 'rgba(255,107,53,0.12)', border: '1px solid rgba(255,107,53,0.3)', color: '#FF6B35' }}
               title={`Plus longue série : ${streak.longest} jours`}>
               🔥 {streak.current} {streak.current > 1 ? 'jours' : 'jour'}
             </span>
-          )}
-          <PushNotificationButton />
-        </div>
+          </div>
+        )}
       </motion.section>
 
       {/* ══════════ 2. CARTE PRINCIPALE — Protocole du jour (mise en avant forte) ══════════ */}

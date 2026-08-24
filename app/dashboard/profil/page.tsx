@@ -282,6 +282,8 @@ export default function ProfilPage() {
         <p className="mt-2 text-[var(--text-secondary)]">{t('dashboard.profile_subtitle')}</p>
       </div>
 
+
+      <p className="pt-5 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--brand)]">Mon profil</p>
       {/* Photo de profil */}
       <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         <h3 className="font-semibold text-base mb-4 text-[var(--text-primary)]">{t('dashboard.profile_photo')}</h3>
@@ -402,26 +404,6 @@ export default function ProfilPage() {
         )}
       </div>
 
-      {/* Notifications */}
-      <NotificationPreferences />
-
-      {/* Courrier anonyme — retiré du menu de gauche, il vit ici */}
-      <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
-        <div className="flex items-start gap-3 mb-1">
-          <ShineIcon name="rayon" className="w-5 h-5 mt-0.5 shrink-0" color="var(--brand)" />
-          <div>
-            <h3 className="font-semibold text-base text-[var(--text-primary)]">Courrier anonyme</h3>
-            <p className="text-xs mt-1 text-[var(--text-muted)]">
-              Une question, une suggestion, un témoignage — l&apos;équipe fondatrice le lira,
-              sans jamais savoir de qui il vient.
-            </p>
-          </div>
-        </div>
-        <div className="mt-5">
-          <CourrierAnonyme compact />
-        </div>
-      </div>
-
       {/* Vidéo de présentation */}
       <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         <h3 className="font-semibold text-base mb-4 text-[var(--text-primary)]">{t('dashboard.presentation_video')}</h3>
@@ -452,6 +434,8 @@ export default function ProfilPage() {
         )}
       </div>
 
+
+      <p className="pt-5 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--brand)]">Mon abonnement</p>
       {/* Subscription */}
       <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         <h3 className="font-semibold text-base mb-4 text-[var(--text-primary)]">{t('dashboard.subscription')}</h3>
@@ -612,6 +596,30 @@ export default function ProfilPage() {
         )}
       </div>
 
+
+      <p className="pt-5 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--brand)]">Réglages</p>
+      {/* Notifications */}
+      <NotificationPreferences />
+
+      {/* Courrier anonyme — retiré du menu de gauche, il vit ici */}
+      <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
+        <div className="flex items-start gap-3 mb-1">
+          <ShineIcon name="rayon" className="w-5 h-5 mt-0.5 shrink-0" color="var(--brand)" />
+          <div>
+            <h3 className="font-semibold text-base text-[var(--text-primary)]">Courrier anonyme</h3>
+            <p className="text-xs mt-1 text-[var(--text-muted)]">
+              Une question, une suggestion, un témoignage — l&apos;équipe fondatrice le lira,
+              sans jamais savoir de qui il vient.
+            </p>
+          </div>
+        </div>
+        <div className="mt-5">
+          <CourrierAnonyme compact />
+        </div>
+      </div>
+
+
+      <p className="pt-5 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--brand)]">Sécurité du compte</p>
       {/* E-mail & Sécurité */}
       <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         <h3 className="font-semibold text-base mb-5 text-[var(--text-primary)]">E-mail & Sécurité</h3>

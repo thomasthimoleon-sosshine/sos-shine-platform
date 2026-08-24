@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import ShineIcon, { type ShineIconName } from '@/components/icons/ShineIcon'
+import PushNotificationButton from '@/components/PushNotificationButton'
 import type { NotificationPreferences as Prefs } from '@/types/database'
 
 /**
@@ -170,6 +171,20 @@ export default function NotificationPreferences() {
           </p>
         </div>
         {saved && <span className="text-xs shrink-0 mt-1" style={{ color: 'var(--success)' }}>Enregistré</span>}
+      </div>
+
+      {/* ── Autorisation de l'appareil ──
+          Sans elle, aucune alerte ne peut arriver quand l'application est fermée,
+          quels que soient les réglages ci-dessous. D'où sa place, en tête. */}
+      <div className="flex flex-wrap items-center justify-between gap-4 mt-5 p-4 rounded-xl"
+        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
+        <div className="min-w-0">
+          <p className="text-sm font-medium text-[var(--text-primary)]">Sur cet appareil</p>
+          <p className="text-xs mt-0.5 text-[var(--text-muted)]">
+            À autoriser pour être prévenu même quand SOS Shine est fermé.
+          </p>
+        </div>
+        <PushNotificationButton />
       </div>
 
       {unavailable ? (

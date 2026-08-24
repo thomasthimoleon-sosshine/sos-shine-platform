@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useSubscription } from '@/hooks/useSubscription'
 import { createClient } from '@/lib/supabase/client'
-import SubscriptionModal from './SubscriptionModal'
+import { getPaymentLink } from '@/lib/stripe'
 
 interface SubscriptionGateProps {
   children: React.ReactNode
@@ -22,23 +22,28 @@ interface SubscriptionGateProps {
  * (utilisé pour la communauté et Shine Audible qui sont gratuits).
  */
 export default function SubscriptionGate({ children, loadingText, allowFree = false }: SubscriptionGateProps) {
-  const { loading, isActive, userId, refresh } = useSubscription()
-  const [showModal, setShowModal] = useState(false)
+  const { loading, isActive, userId } = useSubscription()
   const [userEmail, setUserEmail] = useState('')
-  const [userPrenom, setUserPrenom] = useState('')
 
   useEffect(() => {
     async function loadUser() {
       const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
-      if (user) {
-        setUserEmail(user.email || '')
-        const { data: profile } = await supabase.from('profiles').select('prenom').eq('id', user.id).single()
-        setUserPrenom(profile?.prenom || user.user_metadata?.prenom || '')
-      }
+      if (user) setUserEmail(user.email || '')
     }
     loadUser()
   }, [])
+
+  // Abonnement : on redirige vers le Payment Link Stripe (source unique du prix),
+  // avec email et identifiant pré-remplis pour rattacher le paiement au compte.
+  function goToCheckout() {
+    const link = getPaymentLink('serenite', 'monthly')
+    if (!link) return
+    const url = new URL(link)
+    if (userEmail) url.searchParams.set('prefilled_email', userEmail)
+    if (userId) url.searchParams.set('client_reference_id', userId)
+    window.location.href = url.toString()
+  }
 
   if (loading) {
     return (
@@ -105,7 +110,7 @@ export default function SubscriptionGate({ children, loadingText, allowFree = fa
             </p>
 
             <button
-              onClick={() => setShowModal(true)}
+              onClick={goToCheckout}
               className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-sm font-semibold tracking-wide transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
               style={{
                 background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
@@ -125,17 +130,6 @@ export default function SubscriptionGate({ children, loadingText, allowFree = fa
           </div>
         </motion.div>
       </div>
-
-      {userId && (
-        <SubscriptionModal
-          isOpen={showModal}
-          onClose={() => setShowModal(false)}
-          onSubscribed={refresh}
-          userId={userId}
-          userEmail={userEmail}
-          userPrenom={userPrenom}
-        />
-      )}
     </>
   )
 }

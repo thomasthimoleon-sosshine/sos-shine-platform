@@ -835,10 +835,6 @@ export default function DouleurDetailPage() {
             </span>
           )}
         </div>
-        <p className="mt-2 text-sm md:text-base leading-relaxed whitespace-pre-line" style={{ color: 'var(--text-secondary)' }}>
-          {douleur.description}
-        </p>
-
         {/* Tags */}
         {Array.isArray(douleur.tags) && douleur.tags.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-2">

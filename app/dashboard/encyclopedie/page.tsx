@@ -639,11 +639,6 @@ export default function EncyclopediePage() {
                               </svg>
                             )}
                           </div>
-                          <p
-                            className="text-[12px] leading-relaxed mb-2 italic text-[var(--text-secondary)]"
-                          >
-                            {topic.subtitle}
-                          </p>
                           <div className="flex items-center gap-2 flex-wrap">
                             <span
                               className="text-[10px] uppercase tracking-wider text-[var(--brand)]"

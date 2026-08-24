@@ -911,7 +911,6 @@ export default function DouleurDetailPage() {
             <h2 className="font-display text-xl font-semibold" style={{ color: currentStep.color }}>
               {currentStep.title}
             </h2>
-            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{currentStep.subtitle}</p>
           </div>
         </div>
 
@@ -1062,8 +1061,8 @@ export default function DouleurDetailPage() {
                 </div>
               )}
 
-              {currentStep.audio && <ToolHeader icon="🎧" label={currentStep.audioTitle || "Séance audio guidée"} color={currentStep.color} />}
-              {currentStep.audio && (
+              {currentStep.audio && currentStep.num !== 3 && <ToolHeader icon="🎧" label={currentStep.audioTitle || "Séance audio guidée"} color={currentStep.color} />}
+              {currentStep.audio && currentStep.num !== 3 && (
                 isPreviewMode ? (() => {
                   function PreviewAudio({ src, title }: { src: string; title: string }) {
                     const audioRef = React.useRef<HTMLAudioElement>(null)
@@ -1081,7 +1080,6 @@ export default function DouleurDetailPage() {
 
                     return (
                       <div className="rounded-xl p-4 space-y-3" style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(201,169,97,0.15)' }}>
-                        <p className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>Audio - {title}</p>
                         <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.12)' }}>
                           <span className="text-lg flex-shrink-0 mt-0.5">🎧</span>
                           <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
@@ -1109,9 +1107,6 @@ export default function DouleurDetailPage() {
                     <img src={currentStep.audio_cover} alt={`Audio - ${currentStep.title}`} className="w-full" />
                   )}
                   <div className="p-4 space-y-3">
-                    <p className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>
-                      Audio - {currentStep.title}
-                    </p>
                     <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.12)' }}>
                       <span className="text-lg flex-shrink-0 mt-0.5">🎧</span>
                       <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
@@ -1124,16 +1119,13 @@ export default function DouleurDetailPage() {
                 )
               )}
 
-              {currentStep.audio2 && !isPreviewMode && <ToolHeader icon="🎧" label={currentStep.audio2Title || "Séance audio complémentaire"} color={currentStep.color} />}
-              {currentStep.audio2 && !isPreviewMode && (
+              {currentStep.audio2 && !isPreviewMode && currentStep.num !== 3 && <ToolHeader icon="🎧" label={currentStep.audio2Title || "Séance audio complémentaire"} color={currentStep.color} />}
+              {currentStep.audio2 && !isPreviewMode && currentStep.num !== 3 && (
                 <div className="rounded-xl overflow-hidden" style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${currentStep.color}20` }}>
                   {currentStep.audio2_cover && (
                     <img src={currentStep.audio2_cover} alt={`Audio 2 - ${currentStep.title}`} className="w-full" />
                   )}
                   <div className="p-4 space-y-3">
-                    <p className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>
-                      Audio 2 - {currentStep.title}
-                    </p>
                     <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.12)' }}>
                       <span className="text-lg flex-shrink-0 mt-0.5">🎧</span>
                       <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>

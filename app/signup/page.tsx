@@ -107,14 +107,9 @@ export default function SignupPage() {
           return
         }
         signupRouter.replace(protocolSlug ? `/mon-chemin?protocol=${protocolSlug}` : '/dashboard')
-      } else {
-        // Not logged in → enforce quiz funnel
-        let storedSlug: string | null = null
-        try { storedSlug = sessionStorage.getItem('sos_protocol_slug') } catch {}
-        if (source !== 'quiz' && source !== 'rejoindre' && !urlSlug && !storedSlug) {
-          signupRouter.replace('/signature-emotionnelle')
-        }
       }
+      // Visiteur non connecté : on le laisse créer son compte directement.
+      // Le questionnaire (Signature Émotionnelle) reste proposé, jamais imposé.
     })
   }, [signupRouter])
 

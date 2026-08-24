@@ -1,90 +1,15 @@
 'use client'
 
 import { useEffect, useState, useRef, useCallback } from 'react'
+import dynamic from 'next/dynamic'
 import { useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import { useSubscription } from '@/hooks/useSubscription'
 
-// ── PDF Reader Modal (anti-download) ──
-function PdfReaderModal({ url, title, onClose }: { url: string; title: string; onClose: () => void }) {
-  useEffect(() => {
-    // Block keyboard shortcuts for download/print
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'p' || e.key === 'S' || e.key === 'P')) {
-        e.preventDefault()
-        e.stopPropagation()
-      }
-    }
-    // Block right-click
-    const handleContextMenu = (e: MouseEvent) => {
-      e.preventDefault()
-    }
-    document.addEventListener('keydown', handleKeyDown, true)
-    document.addEventListener('contextmenu', handleContextMenu, true)
-    // Lock body scroll
-    document.body.style.overflow = 'hidden'
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown, true)
-      document.removeEventListener('contextmenu', handleContextMenu, true)
-      document.body.style.overflow = ''
-    }
-  }, [])
+// Lecteur « livre » (feuilletage) — chargé côté client uniquement.
+const BookFlipReader = dynamic(() => import('@/components/BookFlipReader'), { ssr: false })
 
-  // Add #toolbar=0&navpanes=0 to hide PDF viewer controls (download, print)
-  const safeUrl = `${url}#toolbar=0&navpanes=0&scrollbar=1&view=FitH`
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[200] flex flex-col"
-      style={{ background: '#09090b' }}
-    >
-      {/* Header bar */}
-      <div className="flex items-center justify-between px-4 sm:px-6 py-3 shrink-0 bg-[var(--surface-card)] border-b border-[var(--border)]">
-        <div className="flex items-center gap-3 min-w-0">
-          <svg className="w-5 h-5 shrink-0 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-          </svg>
-          <h2 className="font-display text-[15px] font-semibold truncate text-[var(--text-primary)]">
-            {title}
-          </h2>
-        </div>
-        <button
-          onClick={onClose}
-          className="w-9 h-9 rounded-full flex items-center justify-center cursor-pointer transition-colors hover:bg-white/10 shrink-0"
-          style={{ background: 'rgba(255,255,255,0.06)', color: 'var(--text-secondary)' }}
-        >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-
-      {/* PDF iframe - fills remaining space */}
-      <div className="flex-1 relative select-none">
-        <iframe
-          src={safeUrl}
-          className="w-full h-full border-0"
-          title={title}
-          style={{ pointerEvents: 'auto' }}
-        />
-        {/* Invisible overlay on corners to block download button clicks in some browsers */}
-        <div className="absolute top-0 right-0 w-14 h-14" style={{ background: 'transparent' }}
-          onContextMenu={(e) => e.preventDefault()} />
-      </div>
-
-      {/* Bottom info bar */}
-      <div className="flex items-center justify-center px-4 py-2 shrink-0 bg-[var(--surface-card)] border-t border-[var(--border)]">
-        <p className="text-[11px] text-[var(--text-muted)]">
-          Lecture en ligne uniquement - Téléchargement non autorisé
-        </p>
-      </div>
-    </motion.div>
-  )
-}
 
 // ── Types ──
 type ShineBook = {
@@ -1355,7 +1280,7 @@ export default function ShineLibrairiePage() {
       {/* PDF Reader Modal (anti-download) */}
       <AnimatePresence>
         {readingBook && isSubscribed && (
-          <PdfReaderModal
+          <BookFlipReader
             url={readingBook.pdfUrl}
             title={readingBook.title}
             onClose={() => setReadingBook(null)}

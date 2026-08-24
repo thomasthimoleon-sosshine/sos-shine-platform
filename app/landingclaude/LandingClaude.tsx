@@ -154,7 +154,7 @@ const HOW = [
 ]
 const FEAT = [
   ['🧭', 'Signature Émotionnelle', 'Un test qui décode ton fonctionnement profond et te donne une carte pour te comprendre.', 'Gratuit'],
-  ['📚', 'Encyclopédie', 'De A à Z, chaque expérience émotionnelle décodée en protocole guidé.', '200+ protocoles'],
+  ['📚', 'Encyclopédie', 'De A à Z, chaque expérience émotionnelle décodée en protocole guidé.', 'Encyclopédie complète'],
   ['🎬', 'Shine TV', 'Vidéos & soins guidés, chaque semaine.', null],
   ['🎧', 'Shine Audible', 'Méditations, podcasts & libérations sonores à emporter partout.', null],
   ['📖', 'Shine Librairie', 'eBooks, guides et rituels à ton rythme.', null],
@@ -437,7 +437,7 @@ export default function LandingClaude() {
             <span className="badge">SANS ENGAGEMENT</span>
             <div className="pl">SOS Shine</div>
             <div className="amt">49,90€ <small>/mois</small></div>
-            <ul><li>Encyclopédie complète — 200+ protocoles</li><li>Communauté &amp; Courrier Anonyme</li><li>Shine TV, Shorts, Audible, Librairie</li><li>Événements &amp; sessions live</li><li>Protocole complet (étapes 1 → 3)</li></ul>
+            <ul><li>Encyclopédie complète</li><li>Communauté &amp; Courrier Anonyme</li><li>Shine TV, Shorts, Audible, Librairie</li><li>Événements &amp; sessions live</li><li>Protocole complet (étapes 1 → 3)</li></ul>
             <a className="btn" href={JOIN_URL} style={{ width: '100%', justifyContent: 'center' }}>Commencer maintenant</a>
           </div>
         </div>

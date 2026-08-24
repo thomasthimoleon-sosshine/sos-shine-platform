@@ -253,8 +253,8 @@ export default function LandingMixClient({ nextEvent }: { nextEvent: NextEvent |
               {
                 icon: '📚',
                 title: 'Encyclopédie',
-                desc: 'De A à Z, chaque expérience émotionnelle décodée. 200+ protocoles guidés.',
-                badge: '200+ protocoles',
+                desc: 'De A à Z, chaque expérience émotionnelle décodée. des protocoles guidés.',
+                badge: 'Encyclopédie complète',
                 color: '#C9A961',
               },
               {
@@ -548,7 +548,7 @@ export default function LandingMixClient({ nextEvent }: { nextEvent: NextEvent |
                   </div>
                 </div>
                 <ul className="space-y-2 flex-1">
-                  {['Encyclopédie complète (200+ protocoles)', 'Communauté & Feu de Camp 24/7', 'Shine TV, Audible, Librairie', 'Courrier Anonyme', 'Événements & sessions live'].map(f => (
+                  {['Encyclopédie complète', 'Communauté & Feu de Camp 24/7', 'Shine TV, Audible, Librairie', 'Courrier Anonyme', 'Événements & sessions live'].map(f => (
                     <li key={f} className="flex items-start gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
                       <span style={{ color: '#55EFC4', flexShrink: 0 }}>◆</span> {f}
                     </li>

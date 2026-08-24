@@ -77,7 +77,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       cta_secondary_label: "Découvrir comment ça fonctionne",
       cta_secondary_href: '#parcours',
       trust_items: [
-        '200+ protocoles',
+        'Encyclopédie complète',
         'Sans engagement',
         'Annulable en 1 clic',
       ],
@@ -102,7 +102,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
     is_visible: false,
     content: {
       items: [
-        { value: '200+', label: 'PROTOCOLES DE DÉCONDITIONNEMENT' },
+        { value: "A → Z", label: 'PROTOCOLES DE DÉCONDITIONNEMENT' },
         { value: '5', label: 'UNIVERS DE CONTENU' },
         { value: '24/7', label: 'ACCESSIBLE À TOUT MOMENT' },
       ],
@@ -308,7 +308,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
         "Le protocole d'urgence, si vous êtes en crise ce soir, allez-y directement",
         "La communauté Feu de Camp, des gens qui comprennent, maintenant",
         "Shine TV, Shine Audible, Shine Journal, Shine Shorts, le format qui vous convient",
-        "200+ protocoles guidés, construits sur des années d'accompagnement réel",
+        "des protocoles guidés, construits sur des années d'accompagnement réel",
       ],
       features: [],
       cta_label: '',
@@ -421,7 +421,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
           highlight: true,
           badge: 'Populaire',
           features: [
-            'Encyclopédie complète (200+ protocoles)',
+            'Encyclopédie complète',
             'Étapes 2 & 3 de votre protocole recommandé',
             'Shine TV, Shorts, Audible & Librairie',
             'Communauté & Feu de Camp',
@@ -690,7 +690,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
         "Le protocole d'urgence : si vous êtes en crise ce soir, allez-y directement",
         'La communauté Feu de Camp : des gens qui comprennent, maintenant',
         'Shine TV, Shine Audible, Shine Journal, Shine Shorts : le format qui vous convient',
-        "200+ protocoles guidés, construits sur des années d'accompagnement réel",
+        "des protocoles guidés, construits sur des années d'accompagnement réel",
       ],
       notus_title: "SOS Shine n'est pas une plateforme de développement personnel.\nC'est un espace de déconditionnement.",
       notus_quote: "On ne vous répète pas que tout est possible.\nOn vous montre pourquoi vous faites ce que vous faites.\nEt comment faire autrement.",
@@ -703,7 +703,7 @@ export const LANDING_DEFAULTS: LandingSectionDefault[] = [
       pricing_subtitle: "Sans engagement. Annulable à tout instant.",
       pricing_plans: [
         { name: 'GRATUIT', price: '0', period: '', description: 'Découvrir la communauté SOS Shine.', features: ['Communauté & Mur', 'Shine Audible', 'Étape 1 protocole recommandé'], button_label: 'Créer mon compte gratuit', button_href: '/signup', highlight: false, badge: '' },
-        { name: 'SOS SHINE', price: '49,90', period: '/mois', description: 'Accès complet à toute la plateforme.', features: ['Encyclopédie complète (200+ protocoles)', 'Étapes 2 & 3 protocole recommandé', 'Shine TV, Shorts, Audible & Librairie', 'Communauté, soins collectifs, lives'], button_label: 'Commencer maintenant', button_href: '/signup', highlight: true, badge: 'TOUT INCLUS' },
+        { name: 'SOS SHINE', price: '49,90', period: '/mois', description: 'Accès complet à toute la plateforme.', features: ['Encyclopédie complète', 'Étapes 2 & 3 protocole recommandé', 'Shine TV, Shorts, Audible & Librairie', 'Communauté, soins collectifs, lives'], button_label: 'Commencer maintenant', button_href: '/signup', highlight: true, badge: 'TOUT INCLUS' },
       ],
       pricing_footer_title: "Sans engagement, annulable en 1 clic.",
       pricing_footer_text: "Si ce n'est pas pour vous, zéro prélèvement. Zéro justification.",

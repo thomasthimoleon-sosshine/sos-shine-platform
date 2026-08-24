@@ -28,7 +28,7 @@ const PLANS = {
     period: '/mois',
     badge: 'SANS ENGAGEMENT',
     features: [
-      'Encyclopédie complète - 200+ protocoles',
+      'Encyclopédie complète',
       'Shine TV - Vidéos guidées par Julia',
       'Shine Librairie - eBooks & guides',
       'Shine Shorts - Capsules bien-être',

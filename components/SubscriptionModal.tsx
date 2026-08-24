@@ -26,7 +26,7 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY 
 const PLAN_FEATURES: Record<PlanId, string[]> = {
   essential: [],
   serenite: [
-    'Encyclopédie complète (200+ protocoles)',
+    'Encyclopédie complète',
     'Étapes 2 & 3 de votre protocole recommandé',
     'Shine TV, Shorts, Audible, Librairie',
     'Communauté & Feu de Camp',

@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "SOS Shine - Plateforme de déconditionnement émotionnel",
   description:
-    "Comprenez pourquoi vous répétez les mêmes schémas émotionnels - et sortez-en. 200+ protocoles guidés par Julia Laureau, auteure du Déconditionnement. Test gratuit en 20 questions.",
+    "Comprenez pourquoi vous répétez les mêmes schémas émotionnels - et sortez-en. des protocoles guidés par Julia Laureau, auteure du Déconditionnement. Test gratuit en 20 questions.",
   keywords: [
     "déconditionnement émotionnel",
     "schémas émotionnels",
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "SOS Shine - Comprendre vos schémas. Les transformer.",
     description:
-      "200+ protocoles guidés pour décoder vos réactions émotionnelles et reprendre les commandes de votre vie. Pas du bien-être. Du déconditionnement. Par Julia Laureau.",
+      "des protocoles guidés pour décoder vos réactions émotionnelles et reprendre les commandes de votre vie. Pas du bien-être. Du déconditionnement. Par Julia Laureau.",
     url: siteUrl,
     images: [
       {
@@ -75,7 +75,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "SOS Shine - Déconditionnement émotionnel",
     description:
-      "Comprenez pourquoi vous répétez les mêmes schémas. 200+ protocoles par Julia Laureau. Test gratuit.",
+      "Comprenez pourquoi vous répétez les mêmes schémas. des protocoles guidés par Julia Laureau. Test gratuit.",
     images: ["/api/og"],
   },
   appleWebApp: {
@@ -103,7 +103,7 @@ const jsonLd = {
       '@id': `${siteUrl}/#website`,
       url: siteUrl,
       name: 'SOS Shine',
-      description: 'Plateforme de déconditionnement émotionnel. 200+ protocoles guidés pour comprendre et transformer vos schémas.',
+      description: 'Plateforme de déconditionnement émotionnel. des protocoles guidés pour comprendre et transformer vos schémas.',
       inLanguage: 'fr-FR',
       potentialAction: {
         '@type': 'SearchAction',
@@ -132,7 +132,7 @@ const jsonLd = {
       '@type': 'Product',
       '@id': `${siteUrl}/#product`,
       name: 'SOS Shine',
-      description: 'Accès à 200+ protocoles de déconditionnement émotionnel, chats communautaires, lives hebdomadaires avec Julia Laureau.',
+      description: 'Accès à des protocoles de déconditionnement émotionnel, chats communautaires, lives hebdomadaires avec Julia Laureau.',
       brand: { '@type': 'Brand', name: 'SOS Shine' },
       offers: [
         {

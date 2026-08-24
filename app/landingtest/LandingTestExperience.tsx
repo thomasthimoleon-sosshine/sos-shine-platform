@@ -202,7 +202,7 @@ const HOW = [
   ['03', 'Suis ton protocole', 'Un parcours guidé fait pour ton profil : comprendre, libérer, puis agir — à ton rythme.', null],
 ]
 const PLAT = [
-  ['📚', 'Encyclopédie', 'De A à Z, chaque expérience émotionnelle décodée en protocole guidé.', '200+ protocoles'],
+  ['📚', 'Encyclopédie', 'De A à Z, chaque expérience émotionnelle décodée en protocole guidé.', 'Encyclopédie complète'],
   ['🔥', 'Communauté', 'Un Feu de Camp permanent. Des membres qui comprennent vraiment.', '24/7'],
   ['✉️', 'Courrier Anonyme', 'Exprime ce que tu ne dis à personne. Reçois une réponse bienveillante.', 'Anonyme'],
   ['🎬', 'Contenu exclusif', 'Shine TV, méditations, podcasts, livres. Un accès illimité.', 'Illimité'],
@@ -456,7 +456,7 @@ export default function LandingTestExperience() {
             <div className="pl">Abonnement</div>
             <div className="amt">49,90€ <small>/mois</small></div>
             <ul>
-              <li>Encyclopédie — 200+ protocoles</li>
+              <li>Encyclopédie complète</li>
               <li>Communauté &amp; Courrier Anonyme</li>
               <li>Shine TV, Shorts, Audible, Librairie</li>
               <li>Événements &amp; lives · Sans engagement</li>

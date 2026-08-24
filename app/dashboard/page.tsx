@@ -555,7 +555,7 @@ export default function DashboardHome() {
           className="glass p-5 rounded-2xl flex flex-col gap-3 sm:col-span-2">
           <div className="flex items-center gap-2">
             <span className="text-[15px] font-semibold text-[var(--text-primary)]">Encyclopédie</span>
-            <span className="text-[12px] text-[var(--text-muted)]">· 200+ protocoles</span>
+            <span className="text-[12px] text-[var(--text-muted)]">· encyclopédie complète</span>
           </div>
           <div className="flex gap-2">
             <input

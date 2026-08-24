@@ -98,7 +98,7 @@ const NOT_THIS_BUT_THAT = [
 
 const INCLUDED = [
   'Votre Signature Émotionnelle complète',
-  'L\'encyclopédie : 200+ protocoles guidés',
+  'L\'encyclopédie : des protocoles guidés',
   'Un protocole d\'urgence accessible 24/7',
   'La communauté privée « Le Feu de Camp »',
   'Shine TV, Audible, Journal & Shorts',

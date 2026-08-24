@@ -40,7 +40,7 @@ const STEPS = [
 ]
 
 const PILLARS = [
-  { name: 'Encyclopédie', desc: '200+ protocoles guidés, classés par expérience de vie.', icon: '📘' },
+  { name: 'Encyclopédie', desc: 'des protocoles guidés, classés par expérience de vie.', icon: '📘' },
   { name: 'Shine TV', desc: 'Vidéos & soins guidés par Julia, chaque semaine.', icon: '🎬' },
   { name: 'Shine Audible', desc: 'Méditations et libérations sonores à emporter partout.', icon: '🎧' },
   { name: 'Shine Librairie', desc: 'eBooks, guides et rituels à télécharger.', icon: '📚' },
@@ -70,7 +70,7 @@ const PLANS = [
     badge: 'SANS ENGAGEMENT',
     highlight: true,
     features: [
-      'Encyclopédie complète — 200+ protocoles',
+      'Encyclopédie complète',
       'Étapes 2 & 3 de votre protocole recommandé',
       'Shine TV, Shorts, Audible & Librairie',
       'Communauté & Feu de Camp',

@@ -538,7 +538,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
   const ticker1Speed = ticker1Data.speed || 35;
   const ticker2Items = (Array.isArray(ticker2Data.items) && ticker2Data.items.length > 0)
     ? ticker2Data.items
-    : ['Accessible 24/7', 'Communauté bienveillante', '200+ protocoles', 'Sessions collectives', 'Chat dédié', 'Événements live', 'Séances guidées', "Cahiers d'exercices"];
+    : ['Accessible 24/7', 'Communauté bienveillante', 'Encyclopédie complète', 'Sessions collectives', 'Chat dédié', 'Événements live', 'Séances guidées', "Cahiers d'exercices"];
   const ticker2Speed = ticker2Data.speed || 40;
 
   // Show loading while checking prelaunch, then prelaunch page if enabled
@@ -2035,7 +2035,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
               <div className="max-w-4xl mx-auto">
                 <div className="grid grid-cols-3 gap-4 md:gap-8">
                   {[
-                    { value: '200+', label: 'PROTOCOLES DE DÉCONDITIONNEMENT' },
+                    { value: "A → Z", label: 'PROTOCOLES DE DÉCONDITIONNEMENT' },
                     { value: '5', label: 'UNIVERS DE CONTENU' },
                     { value: '24/7', label: 'ACCESSIBLE À TOUT MOMENT' },
                   ].map((stat, i) => (

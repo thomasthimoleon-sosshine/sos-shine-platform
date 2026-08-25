@@ -2,6 +2,7 @@
  * Email 8 - "Je n'ai pas le temps." (J+6)
  */
 import { wrapEmail, p, ctaButton, ctaLink, signature } from './wrapper'
+import { resumeCadeaux } from './cadeaux'
 
 const URL_SERENITE  = 'https://buy.stripe.com/14AbIT89ScNtffz84y5ZC0t'
 const URL_PROTOCOLE = 'https://buy.stripe.com/9B600b2PycNtd7r98C5ZC0q'
@@ -26,6 +27,7 @@ export function generateEmail08(vars: Vars): { subject: string; html: string } {
     p(`Parce que ne pas avoir le temps pour soi, c'est déjà un symptôme. C'est déjà un mécanisme. C'est souvent ce vieux conditionnement qui dit qu'on doit faire passer tout le monde avant soi. Que se choisir, ce serait égoïste. Que mériter du repos, ça se gagne.`),
     p(`Rien de tout ça n'est vrai.`),
     p(`Tu mérites ce temps, simplement parce que tu existes.`),
+    p(`Et si tu n'as ouvert aucun des cadeaux que je t'ai envoyés cette semaine, ce n'est pas de la négligence. C'est exactement le même mécanisme. Tu as ${resumeCadeaux()} qui t'attendent, ils sont à toi, ils ne périment pas. Commence par dix minutes. Aujourd'hui, pas à la rentrée.`),
     ctaButton('Rejoindre SOS Shine - 49,90€/mois', URL_SERENITE, { email }),
     ctaLink('Accéder à mon protocole uniquement - 33€ →', `${URL_PROTOCOLE}?prefilled_email=${encodeURIComponent(email)}`),
     p(`À demain.`),

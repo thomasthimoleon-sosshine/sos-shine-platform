@@ -2,6 +2,7 @@
  * Email 9 - Combien vaut le fait de respirer enfin (J+7)
  */
 import { wrapEmail, p, ctaButton, ctaLink, signature } from './wrapper'
+import { resumeCadeaux } from './cadeaux'
 
 const URL_SERENITE  = 'https://buy.stripe.com/14AbIT89ScNtffz84y5ZC0t'
 const URL_PROTOCOLE = 'https://buy.stripe.com/9B600b2PycNtd7r98C5ZC0q'
@@ -21,9 +22,10 @@ export function generateEmail09(vars: Vars): { subject: string; html: string } {
     p(`Pas parce qu'elles n'investissaient pas. Pas parce qu'elles n'étaient pas sérieuses. Mais parce qu'il manquait une chose essentielle : une structure quotidienne, suivie, cohérente. Pas un coup de motivation tous les six mois. Une présence régulière.`),
     p(`C'est exactement pour cette raison que j'ai pensé SOS Shine différemment. Pas comme un programme à acheter. Pas comme une cure ponctuelle. Pas comme un coaching intensif qui te laisse seul(e) après trois mois.`),
     p(`Comme un espace vivant. Quotidien. Disponible 24h/24. Dans lequel tu avances à ton rythme, avec des outils concrets, sans avoir à attendre la prochaine séance, le prochain stage, la prochaine semaine.`),
+    p(`Et tu as déjà une partie de la réponse entre les mains. Cette semaine, je t'ai offert ${resumeCadeaux()}, sans te demander ta carte bancaire, sans te demander quoi que ce soit. Ce n'est pas une stratégie. C'est ma façon de travailler : je donne d'abord, tu décides ensuite, en connaissance de cause.`),
     p(`Pour moins que le prix d'une seule séance classique avec un thérapeute, tu retrouves chaque mois :`),
     p(`Des protocoles guidés, personnalisés selon ton profil. Des exercices émotionnels et cognitifs. Des méditations et des audios à fréquences spécifiques. Des lives mensuels. Une encyclopédie complète des défis émotionnels. Une communauté de personnes qui traversent souvent les mêmes choses que toi. Et surtout, un espace où tu peux enfin arrêter de tout porter seul·e.`),
-    p(`Sans engagement. Sans carte de crédit obligatoire si tu hésites. Juste pour ressentir si cet endroit te fait du bien.`),
+    p(`Sans engagement de durée. Tu pars quand tu veux, en un clic. Et si l'abonnement fait trop pour l'instant, il y a la plus petite porte : un protocole à 33€, avec un mois complet de plateforme offert pour ressentir si cet endroit te fait du bien.`),
     p(`Parce qu'au fond, ta paix intérieure influence toute ta vie. Tes relations. Ton énergie. Ton sommeil. Ton travail. Ta santé. Tes décisions. Ta capacité à profiter de tes enfants. Ta façon d'aimer. Ta façon de te montrer au monde.`),
     p(`Tout part de là.`),
     p(`Et quand on regarde les choses honnêtement, la vraie question n'est plus "est-ce que ça coûte trop cher ?".`),

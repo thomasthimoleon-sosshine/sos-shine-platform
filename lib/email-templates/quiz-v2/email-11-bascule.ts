@@ -36,7 +36,7 @@ export function generateEmail11(vars: Vars): { subject: string; html: string } {
     ctaLink('Accéder à mon protocole uniquement - 33€ →', `${URL_PROTOCOLE}?prefilled_email=${encodeURIComponent(email)}`),
     p(`À demain.`),
     signature(),
-    p(`<br><em style="font-size:12px;color:#737373;">P.S. : Si tu choisis d'attendre, ce n'est pas grave. Vraiment. Mais fais-moi une promesse : ne laisse pas ce "plus tard" devenir un "jamais". Pose-toi simplement une question dans 6 mois : "Est-ce que la vie que je vis aujourd'hui est différente de celle que je vivais en lisant ce mail ?" Et écoute honnêtement ta réponse.</em>`),
+    p(`<br><em style="font-size:12px;color:#737373;">P.S. : Si tu choisis d'attendre, ce n'est pas grave. Vraiment. Garde au moins les cadeaux, ils sont à toi pour toujours. Mais fais-moi une promesse : ne laisse pas ce "plus tard" devenir un "jamais". Pose-toi simplement une question dans 6 mois : "Est-ce que la vie que je vis aujourd'hui est différente de celle que je vivais en lisant ce mail ?" Et écoute honnêtement ta réponse.</em>`),
   ].join('')
 
   return { subject, html: wrapEmail(content, { email }) }

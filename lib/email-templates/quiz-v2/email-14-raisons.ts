@@ -2,6 +2,7 @@
  * Email 14 - Les 3 phrases qu'on se dit pour ne pas commencer (J+12)
  */
 import { wrapEmail, p, h3, ctaButton, ctaLink, signature, goldDivider } from './wrapper'
+import { resumeCadeaux } from './cadeaux'
 
 const URL_SERENITE  = 'https://buy.stripe.com/14AbIT89ScNtffz84y5ZC0t'
 const URL_PROTOCOLE = 'https://buy.stripe.com/9B600b2PycNtd7r98C5ZC0q'
@@ -20,7 +21,7 @@ export function generateEmail14(vars: Vars): { subject: string; html: string } {
     p(`Quand on a déjà essayé énormément de choses, des thérapies, des stages, des livres, des podcasts, on finit par se protéger pour éviter d'être encore déçu·e. C'est même une intelligence du système nerveux : il essaie de t'éviter une nouvelle frustration.`),
     p(`Mais cette protection peut aussi devenir une prison.`),
     p(`Parce qu'à force d'éviter d'être déçue, on finit par ne plus rien essayer du tout. On reste exactement là où on est, en se disant qu'on a "trop d'expérience pour y croire encore".`),
-    p(`C'est justement pour ça qu'il n'y a aucun engagement de durée sur SOS Shine. Pour que tu ressentes par toi-même, sans pression, si cet endroit te parle vraiment. Si la voix qu'on y entend résonne avec ce que tu cherches. Si la méthode du déconditionnement parle à ton corps autant qu'à ton mental.`),
+    p(`C'est justement pour ça qu'il n'y a aucun engagement de durée sur SOS Shine. Et c'est pour ça que je t'ai donné ${resumeCadeaux()} avant même de te demander quoi que ce soit : tu as déjà pu juger sur pièces. Pour que tu ressentes par toi-même, sans pression, si cet endroit te parle vraiment. Si la voix qu'on y entend résonne avec ce que tu cherches. Si la méthode du déconditionnement parle à ton corps autant qu'à ton mental.`),
     goldDivider(),
     h3(`2. "Ce n'est pas le bon moment."`),
     p(`Je vais être honnête avec toi. Le cerveau trouve toujours une raison d'attendre.`),

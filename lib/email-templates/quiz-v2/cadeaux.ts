@@ -74,6 +74,21 @@ export function cadeauxLivres(): Array<{ titre: string; url: string }> {
 }
 
 /**
+ * Comment nommer les cadeaux déjà offerts, en toutes lettres, dans le corps
+ * d'un email de la deuxième semaine (« je t'ai offert … »). La formule suit
+ * ce qui est réellement livrable : inutile de promettre une méditation que
+ * personne n'a reçue.
+ */
+export function resumeCadeaux(): string {
+  const livres = cadeauxLivres()
+  const ebooks = livres.filter((c) => c.url.endsWith('.pdf')).length
+  const avecMeditation = livres.some((c) => c.titre === CADEAUX.meditation.titre)
+  const motsEbooks =
+    ebooks === 1 ? 'un ebook' : ebooks === 2 ? 'deux ebooks' : `${ebooks === 3 ? 'trois' : ebooks} ebooks`
+  return avecMeditation ? `${motsEbooks} et une méditation` : motsEbooks
+}
+
+/**
  * L'encadré doré « CADEAU N SUR 4 » : un bloc à part dans le fil de l'email,
  * pour que le don se distingue nettement du reste du propos.
  */

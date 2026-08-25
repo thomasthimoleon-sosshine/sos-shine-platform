@@ -197,12 +197,12 @@ def grille(bloc):
         # Une colonne numérotée : tout ce qui n'a pas de numéro est la suite
         # de l'acte précédent, coupé par la largeur de la colonne. La proportion
         # de lignes de suite ne dit rien — une colonne étroite en produit beaucoup.
-        numerote = sum(1 for e in colonnes[x] if re.match(r'^[IVXLC]+\.', e['texte']))
+        numerote = sum(1 for e in colonnes[x] if re.match(r'^[0-9IVXLC]+\.', e['texte']))
         if numerote < 2:
             continue
         fusion = []
         for e in colonnes[x]:
-            if fusion and not re.match(r'^[IVXLC]+\.', e['texte']):
+            if fusion and not re.match(r'^[0-9IVXLC]+\.', e['texte']):
                 fusion[-1] = dict(fusion[-1], texte=fusion[-1]['texte'] + ' ' + e['texte'])
             else:
                 fusion.append(e)
@@ -239,8 +239,9 @@ def grille(bloc):
         cellules = []
         for x in xs:
             e = par_x.get(x)
-            cellules.append('<td>%s</td><td class="case"></td>'
-                            % (esc(e['texte']) if e else ''))
+            # Pas d'acte, pas de case : une colonne plus courte s'arrête net.
+            cellules.append('<td>%s</td><td class="%s"></td>'
+                            % (esc(e['texte']) if e else '', 'case' if e else 'vide'))
         rangs.append('<tr>%s</tr>' % "".join(cellules))
     # Une grille très haute doit tenir sous son titre : on la resserre.
     dense = ' dense' if len(rangs) >= 16 else ''

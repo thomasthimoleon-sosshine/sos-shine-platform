@@ -138,6 +138,7 @@ table.grille td{
   border-bottom:.5pt solid var(--filet);padding:2.1mm 2mm 2.1mm 0;vertical-align:middle;
 }
 table.grille td.case{width:5mm;padding-right:4mm}
+table.grille td.vide{width:5mm;padding-right:4mm}
 table.grille td.case::after{
   content:"";display:block;width:3.4mm;height:3.4mm;border:.6pt solid var(--or);
 }

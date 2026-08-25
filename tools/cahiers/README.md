@@ -43,6 +43,9 @@ deuxième page et bascule de table.
   composés — reconnus à ce qu'ils apparaissent ailleurs sans césure.
 - Les grilles de suivi sont relues dans leur géométrie et recomposées en
   tableaux (deux ou trois colonnes, ou matrice habitudes × jours).
+- Les numérotations en chiffres romains passent en chiffres arabes, comme sur
+  la plateforme — mais seulement là où le signe est bien un nombre : un « C »
+  isolé, c'est « C'est », pas cent (`romains.py`).
 - Micro-typographie française : apostrophes courbes, espaces insécables devant
   la ponctuation double et autour des guillemets.
 - Règles de page : un titre de chapitre emmène le début de son texte, un

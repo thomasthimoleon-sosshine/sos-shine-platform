@@ -4,7 +4,7 @@
    Le contrôle de perte est fait à chaque étape : aucun mot ne doit disparaître."""
 import json, re, subprocess, sys, unicodedata, os
 import pymupdf
-import extract, compose
+import extract, compose, romains
 
 RACINE = os.path.dirname(os.path.abspath(__file__))
 
@@ -21,6 +21,11 @@ def fabriquer(source, couverture, titre, sortie, cle):
     # La couverture est refaite à part : ses signatures ne concernent pas le corps.
     inconnus = [u for u in inconnus if u[0] > 1]
     assert not inconnus, "fragments non classés : %r" % inconnus[:5]
+
+    # Les cahiers numérotent en chiffres romains : on rétablit les chiffres
+    # arabes, comme sur la plateforme. Fait ici, avant tout contrôle, pour que
+    # les deux côtés de la comparaison parlent la même langue.
+    romains.convertir_pages(pages)
 
     html_path = os.path.join(RACINE, 'cahier_%s.html' % cle)
     css_path  = os.path.join(RACINE, 'cahier_%s.css'  % cle)

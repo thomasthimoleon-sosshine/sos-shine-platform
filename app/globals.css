@@ -1058,6 +1058,22 @@ h1 .text-shimmer, h2 .text-shimmer, h3 .text-shimmer, .text-shimmer {
 .blog-html-content pre { background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; }
 .blog-html-content pre code { background: none; padding: 0; }
 
+/* Encadré d'un article : la note sur la plateforme, l'avertissement d'un
+   sujet sensible. Sans cette règle, <p class="note"> rendait comme un
+   paragraphe ordinaire et l'encadré passait inaperçu. */
+.blog-html-content p.note {
+  background: rgba(201, 169, 97, 0.06);
+  border: 1px solid rgba(201, 169, 97, 0.18);
+  border-left: 2px solid #C9A961;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin: 1.75rem 0;
+  font-size: 0.875rem;
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+.blog-html-content p.note strong { color: #C9A961; }
+
 /* ============================================================
    QUIZ « Signature Émotionnelle » — charte SOS Shine scopée.
    Redéfinit les tokens couleur UNIQUEMENT dans le quiz pour

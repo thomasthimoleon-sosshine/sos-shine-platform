@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { blogArticles as staticArticles } from '@/data/blog/articles'
 import type { BlogArticle } from '@/data/blog/articles'
 import BlogListClient from './BlogListClient'
+import { aujourdhui } from '@/lib/blog-parution'
 
 export default async function BlogPage() {
   let articles: BlogArticle[] = staticArticles
@@ -13,6 +14,7 @@ export default async function BlogPage() {
       .from('blog_articles')
       .select('*')
       .eq('is_published', true)
+      .lte('published_at', aujourdhui())
       .order('published_at', { ascending: false })
 
     if (data && data.length > 0) {

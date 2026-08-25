@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { createClient } from '@/lib/supabase/server'
+import { aujourdhui } from '@/lib/blog-parution'
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ||
@@ -35,6 +36,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .from('blog_articles')
       .select('slug, updated_at')
       .eq('is_published', true)
+      .lte('published_at', aujourdhui())
       .order('updated_at', { ascending: false })
 
     if (articles) {

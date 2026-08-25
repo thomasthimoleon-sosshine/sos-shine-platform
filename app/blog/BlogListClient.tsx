@@ -7,6 +7,7 @@ import { blogArticles as staticArticles, BLOG_CATEGORIES } from '@/data/blog/art
 import type { BlogArticle } from '@/data/blog/articles'
 import ThemeToggle from '@/components/ThemeToggle'
 import { createClient } from '@/lib/supabase/client'
+import { aujourdhui } from '@/lib/blog-parution'
 
 const gold = 'var(--brand)'
 const goldRgb = '201,169,97'
@@ -27,6 +28,7 @@ export default function BlogListClient({ initialArticles }: BlogListClientProps)
           .from('blog_articles')
           .select('*')
           .eq('is_published', true)
+          .lte('published_at', aujourdhui())
           .order('published_at', { ascending: false })
         if (data && data.length > 0) {
           const dbArticles: BlogArticle[] = data.map((a: Record<string, unknown>) => ({

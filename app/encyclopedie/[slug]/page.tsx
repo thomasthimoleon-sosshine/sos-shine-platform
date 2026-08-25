@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import type { Douleur, DouleurStep } from '@/types/database'
+import { aujourdhui } from '@/lib/blog-parution'
 
 // Page récapitulative avant paiement
 const SIGNUP_URL = '/signup'
@@ -163,6 +164,7 @@ export default function PublicDouleurDetailPage() {
           .select('slug, title, excerpt, cover_image, read_time')
           .eq('douleur_slug', douleurSlug)
           .eq('is_published', true)
+          .lte('published_at', aujourdhui())
           .limit(1)
           .maybeSingle()
         if (data) {

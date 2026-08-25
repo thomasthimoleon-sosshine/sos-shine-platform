@@ -4,6 +4,7 @@ import { blogArticles } from '@/data/blog/articles'
 import type { BlogArticle } from '@/data/blog/articles'
 import { createClient } from '@/lib/supabase/server'
 import BlogArticleContent from './BlogArticleContent'
+import { aujourdhui } from '@/lib/blog-parution'
 
 // Force dynamic rendering - articles come from Supabase, not static
 export const dynamic = 'force-dynamic'
@@ -26,6 +27,7 @@ async function findArticle(slug: string): Promise<BlogArticle | undefined> {
       .select('*')
       .eq('slug', slug)
       .eq('is_published', true)
+      .lte('published_at', aujourdhui())
       .single()
     if (error || !data) {
       return undefined

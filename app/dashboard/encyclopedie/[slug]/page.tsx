@@ -12,6 +12,7 @@ import type { Douleur, DouleurStep, UserProgress, DouleurQuizQuestion } from '@/
 import { formatXP } from '@/lib/xp'
 import { SINGLE_PROTOCOL_LINK, buildProtocolRef } from '@/lib/stripe/config'
 import { getEncyclopediaPotentialXp, awardEncyclopediaXp } from '@/lib/XpEngine'
+import { aujourdhui } from '@/lib/blog-parution'
 
 // Le quiz de validation tire ce nombre de questions au hasard dans la banque du
 // protocole, pour qu'il soit différent à chaque passage.
@@ -383,6 +384,7 @@ export default function DouleurDetailPage() {
           .select('slug, title, excerpt, cover_image, read_time')
           .eq('douleur_slug', douleur.slug)
           .eq('is_published', true)
+          .lte('published_at', aujourdhui())
           .limit(1)
           .maybeSingle()
         if (data) {

@@ -2,6 +2,7 @@
  * Email 4 - Ce qui se passe en toi depuis 48h (J+2)
  */
 import { wrapEmail, p, goldDivider, signature } from './wrapper'
+import { giftBox, CADEAUX } from './cadeaux'
 
 type Vars = { firstName: string; email: string }
 
@@ -23,6 +24,21 @@ export function generateEmail04(vars: Vars): { subject: string; html: string } {
     p(`Tu peux savoir parfaitement que ton ex n'était pas la bonne personne. Et y retourner trois mois plus tard. Tu peux savoir que tu te sabotes au travail. Et continuer à le faire. Tu peux savoir d'où vient ta peur du rejet. Et continuer à fuir dès qu'on s'approche trop de toi.`),
     p(`Pourquoi ?`),
     p(`Parce que la connaissance s'installe dans une partie du cerveau. Et les automatismes vivent dans une autre. Et tant qu'on ne va pas reprogrammer cette deuxième partie, par le corps, par la répétition, par la sécurité émotionnelle, par des protocoles précis, rien ne change durablement.`),
+
+    // ── Cadeau 2 sur 4 — lien direct vers le fichier ──
+    giftBox({
+      eyebrow: 'Cadeau 2 sur 4 · offert, aujourd’hui',
+      titre: `L'ebook ${CADEAUX.confiance.titre}`,
+      paragraphes: [
+        `Et il y a un endroit précis où ce mécanisme se voit mieux qu'ailleurs : la confiance en soi.`,
+        `On te répète qu'il faut la travailler comme un muscle, se lancer, positiver. Sauf que la confiance n'est pas une qualité qu'on aurait ou qu'on n'aurait pas. C'est une trace. La trace de la façon dont on t'a regardée, tenue, reprise, encouragée ou ignorée quand tu étais petit(e). Et une trace, ça se travaille autrement qu'avec des affirmations devant un miroir.`,
+        `C'est ce que j'ai mis dans ce deuxième ebook. Il est à toi aussi, aujourd'hui, sans condition.`,
+      ],
+      cta: 'Télécharger Cultiver la confiance en soi',
+      url: CADEAUX.confiance.url,
+      email,
+    }),
+
     p(`C'est exactement ce qu'on a construit dans SOS Shine.`),
     p(`Quand j'ai imaginé la plateforme, je voulais une chose précise. Quelque chose qui soit disponible 24h/24. Pour que les personnes n'aient plus à attendre le prochain rendez-vous. Pour qu'au moment exact où l'urgence émotionnelle frappe - à 2h du matin, un dimanche, en plein milieu d'une nuit blanche ou juste après une dispute - elles trouvent une réponse. Un protocole. Une voix.`),
     p(`Un soir, j'étais dans ma chambre après une journée entière de rendez-vous. Et la seule chose que je voulais, c'était créer cet endroit. Un espace où les gens puissent se prendre en main au moment précis où ils en ont besoin.`),

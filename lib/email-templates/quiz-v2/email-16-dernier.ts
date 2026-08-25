@@ -1,15 +1,15 @@
 /**
- * Email 16 - Le dernier mail. Avec un cadeau. (J+14)
+ * Email 16 - Le dernier mail. Et tout ce qui reste à toi. (J+14)
  */
 import { wrapEmail, p, ctaButton, goldDivider, signature } from './wrapper'
+import { giftBox, cadeauxLivres, CADEAUX, URL_RECAP_CADEAUX } from './cadeaux'
 
-const URL_CADEAU = 'https://sosshine.com/api/download/5min-protocol'
 
 type Vars = { firstName: string; email: string }
 
 export function generateEmail16(vars: Vars): { subject: string; html: string } {
   const { firstName, email } = vars
-  const subject = `Le dernier mail. Avec un cadeau.`
+  const subject = `Le dernier mail. Et tout ce qui reste à toi.`
 
   const content = [
     p(`Voilà, c'est le dernier email de cette séquence, si tu n'as pas rejoint SOS Shine, je ne t'en veux absolument pas. Parce que ce que je veux pour toi, ce n'est pas que tu rejoignes une plateforme. C'est que tu te choisisses, peu importe la forme que ça prendra. Avant de terminer cette séquence, j'ai envie de te dire deux choses importantes.`),
@@ -23,11 +23,29 @@ export function generateEmail16(vars: Vars): { subject: string; html: string } {
     p(`<strong style="color:#e0e0e0;">La deuxième.</strong>`),
     p(`Si un jour tu ressens l'envie de commencer ce travail plus profondément, la porte de SOS Shine restera ouverte. Parce que cette plateforme n'a pas été créée pour plaire à tout le monde. Elle a été créée pour les personnes qui sentent, au fond, qu'elles ne veulent plus continuer à vivre en mode survie toute leur vie. Et si un jour tu reconnais cette voix intérieure, tu sauras où me trouver.`),
     goldDivider(),
-    p(`Avant de te laisser, j'ai envie de t'offrir quelque chose.`),
-    p(`Pour te remercier d'avoir pris le temps de lire tous ces emails. D'avoir accepté de te poser certaines questions difficiles. D'être encore là aujourd'hui, malgré tout ce qui aurait pu te faire fermer cet onglet bien avant.`),
+
+    // ── Récapitulatif : c'est le SEUL email de la séquence qui mène à la page
+    //    /mes-cadeaux. Avant celui-ci, chaque cadeau a son lien direct, pour
+    //    que personne ne découvre à l'avance ce qui lui sera offert plus tard.
+    giftBox({
+      eyebrow: 'Tout ce qui est à toi, sans condition',
+      titre: `Tes cadeaux, rassemblés ici`,
+      paragraphes: [
+        `Avant de te laisser, je remets tout au même endroit. Ces outils t'appartiennent, même si tu ne mets jamais un euro dans SOS Shine, même si tu te désabonnes ce soir.`,
+        `<ul style="margin:4px 0 0 0;padding-left:20px;color:#d4d4d4;font-size:15px;line-height:1.9;">${cadeauxLivres()
+          .map((c) => `<li>${c.titre}</li>`)
+          .join('')}</ul>`,
+      ],
+      cta: 'Retrouver mes cadeaux',
+      url: URL_RECAP_CADEAUX,
+      email,
+      apres: `Télécharge-les et garde-les sur ton téléphone. Le jour où ça ira moins bien, tu seras contente de les avoir sous la main.`,
+    }),
+
+    p(`Et j'ajoute une dernière chose, juste pour te remercier d'avoir pris le temps de lire tous ces emails. D'avoir accepté de te poser certaines questions difficiles. D'être encore là aujourd'hui, malgré tout ce qui aurait pu te faire fermer cet onglet bien avant.`),
     p(`<strong style="color:#e0e0e0;">Un protocole offert : "5 minutes pour réaligner ta journée."</strong>`),
     p(`Quelque chose de simple. Concret. Réellement efficace quand on commence à l'intégrer au quotidien. Pas une théorie de plus. Un outil que tu peux utiliser dès demain matin, en sortant du lit, avant même d'avoir ouvert ton téléphone.`),
-    ctaButton('Télécharger le protocole offert', URL_CADEAU, { email }),
+    ctaButton('Télécharger le protocole offert', CADEAUX.protocole5min.url, { email }),
     p(`Et si un jour nos chemins se recroisent sur SOS Shine, alors ce sera probablement au bon moment.`),
     p(`Prends soin de toi.`),
     p(`Avec tout, mon amour et ma bienveillance`),

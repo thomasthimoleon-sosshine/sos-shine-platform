@@ -4,6 +4,7 @@
  */
 
 import { wrapEmail, h2, p, goldDivider, ctaButton, ctaLink, signature, spacer } from './wrapper'
+import { giftBox, CADEAUX } from './cadeaux'
 import { DIMENSIONS } from '@/lib/quiz-v2/dimensions'
 import type { DimensionScores } from '@/lib/quiz-v2/dimensions'
 
@@ -30,7 +31,7 @@ export function generateEmail02(vars: Vars): { subject: string; html: string } {
   const dimInfo = DIMENSIONS[parseInt(dominant) as keyof typeof DIMENSIONS]
   const secInfo = DIMENSIONS[parseInt(secondary) as keyof typeof DIMENSIONS]
 
-  const subject = `${firstName ? firstName + ', v' : 'V'}oilà ce que tes 15 réponses ont révélé`
+  const subject = `${firstName ? firstName + ', v' : 'V'}oilà ce que tes 15 réponses ont révélé (et ton premier cadeau)`
 
   const dominantScore = scores[dominant] || 0
   const secondaryScore = scores[secondary] || 0
@@ -101,6 +102,21 @@ ${secInfo?.icon || ''} ${secInfo?.name || 'Dimension ' + secondary}
     p(`Pas pour faire du développement personnel "instagrammable". Pas pour t'offrir des phrases lumineuses qui s'évaporent au bout de trois jours.`),
     p(`Mais pour te donner une vraie méthode, structurée en trois étapes : Comprendre. Libérer. Agir.`),
     p(`J'ai 22 ans d'expérience que je peux te transmettre. Pour que tu n'aies pas à perdre le temps que j'ai perdu, moi.`),
+
+    // ── Cadeau 1 sur 4 — lien direct vers le fichier, jamais vers la page récap ──
+    giftBox({
+      eyebrow: 'Cadeau 1 sur 4 · offert, maintenant',
+      titre: `L'ebook ${CADEAUX.deconditionnement.titre}`,
+      paragraphes: [
+        `Et je vais commencer par te donner, pas par te vendre.`,
+        `Voilà mon livre, <em>Le Déconditionnement</em>. Une trentaine de pages qui expliquent d'où viennent réellement les mécanismes que ton test vient de révéler : comment ils s'installent, phase par phase, entre la conception et l'âge adulte, et pourquoi ils continuent de décider à ta place aujourd'hui.`,
+        `Ce n'est pas un extrait. Ce n'est pas un aperçu pour te donner envie d'acheter la suite. C'est le socle entier de la méthode, celui sur lequel repose toute la plateforme, et il est à toi.`,
+      ],
+      cta: 'Télécharger mon ebook (offert)',
+      url: CADEAUX.deconditionnement.url,
+      email,
+      apres: `Lis-le avec ta Signature Émotionnelle à côté. Les deux se répondent. Et ce n'est que le premier : trois autres cadeaux arrivent dans les jours qui viennent.`,
+    }),
 
     goldDivider(),
 

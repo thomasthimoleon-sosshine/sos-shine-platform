@@ -1,7 +1,8 @@
 /**
  * Email 3 - Une question qui va peut-être te déranger (J+1)
  */
-import { wrapEmail, p, signature } from './wrapper'
+import { wrapEmail, p, ctaButton, signature } from './wrapper'
+import { CADEAUX } from './cadeaux'
 
 type Vars = { firstName: string; email: string }
 
@@ -20,7 +21,9 @@ export function generateEmail03(vars: Vars): { subject: string; html: string } {
     p(`Parce que je vois trop de personnes qui ont la connaissance, qui ont lu, qui ont compris, qui ont fait des thérapies pendant des années, et qui restent bloquées. Pas parce qu'elles manquent de volonté. Mais parce que les automatismes installés par le conditionnement sont plus forts que la compréhension intellectuelle.`),
     p(`<strong style="color:#e0e0e0;">Comprendre n'est pas suffisant.</strong>`),
     p(`Le cerveau a besoin de répétition. Le système nerveux a besoin de sécurité. Le corps a besoin de vivre autre chose pour arrêter de reproduire les mêmes schémas. C'est précisément ce qu'on construit chaque jour dans SOS Shine®, avec William, Thomas.`),
-    p(`Et demain, je vais te dire pourquoi tant de personnes restent bloquées, même après des années de thérapie ou de développement personnel. Ce que je vais t'expliquer, peu de coachs ou de thérapeutes osent le dire clairement.`),
+    p(`Au passage : hier je t'ai offert l'ebook <em>Le Déconditionnement</em>. Si tu ne l'as pas encore ouvert, il t'attend. Ce n'est pas grave si tu le lis dans trois semaines, mais télécharge-le maintenant, tant que le lien est sous tes yeux.`),
+    ctaButton('Récupérer mon ebook offert', CADEAUX.deconditionnement.url, { email }),
+    p(`Et demain, je vais te dire pourquoi tant de personnes restent bloquées, même après des années de thérapie ou de développement personnel. Ce que je vais t'expliquer, peu de coachs ou de thérapeutes osent le dire clairement. Et je t'offrirai un deuxième cadeau en même temps.`),
     p(`À demain.`),
     signature(),
     p(`<br><em style="font-size:12px;color:#737373;">P.S. : Si tu te reconnais dans ce que je viens d'écrire, fais-toi une petite faveur ce soir. Reprends ton résultat. Relis-le calmement. Et observe juste ce qui se passe en toi à cette lecture. C'est déjà un premier mouvement intérieur.</em>`),

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { verifyAdminAccess } from '@/lib/crm/auth'
 import { generateEmail01 } from '@/lib/email-templates/quiz-v2/email-01-capture'
 import { generateEmail02 } from '@/lib/email-templates/quiz-v2/email-02-result'
 import { generateEmail03 } from '@/lib/email-templates/quiz-v2/email-03-question'
@@ -52,11 +53,29 @@ const EMAILS = [
   { order: 16, delay: 14, label: 'Dernier + cadeau', gen: () => generateEmail16(PLACEHOLDER) },
 ]
 
-export async function POST() {
+/**
+ * Cette route efface les 16 étapes de la séquence puis les réécrit depuis le
+ * code. Sans contrôle d'accès, n'importe qui connaissant l'URL pourrait
+ * remplacer toute la séquence email. On exige donc soit une session admin
+ * (bouton du back-office), soit le secret partagé des crons.
+ */
+async function verifierAcces(request: Request): Promise<boolean> {
+  const secret = process.env.CRON_SECRET || process.env.BOT_SECRET
+  if (secret && request.headers.get('authorization') === `Bearer ${secret}`) return true
+  return verifyAdminAccess()
+}
+
+export async function POST(request: Request) {
+  if (!await verifierAcces(request)) {
+    return NextResponse.json({ error: 'Non autorisé' }, { status: 403 })
+  }
   return seedEmails()
 }
 
-export async function GET() {
+export async function GET(request: Request) {
+  if (!await verifierAcces(request)) {
+    return NextResponse.json({ error: 'Non autorisé' }, { status: 403 })
+  }
   return seedEmails()
 }
 

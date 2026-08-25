@@ -12,6 +12,13 @@ function getAdminClient() {
   return createClient(url, key, { auth: { autoRefreshToken: false, persistSession: false } })
 }
 
+// Adresses de test : reçoivent volontairement chaque email, sans dédoublonnage.
+// Même liste que /api/cron/quiz-emails.
+const TEST_EMAILS = new Set([
+  'julialaureau@sosshine.com',
+  'ttse335@gmail.com',
+])
+
 export async function POST(request: NextRequest) {
   try {
     const { sessionId, responseId, email, firstName, scores, dominant, q15Response } = await request.json()
@@ -96,6 +103,26 @@ export async function POST(request: NextRequest) {
     }
 
     // Send Email 2 (résultat complet)
+    // Dédoublonnage : la page de résultats peut être rechargée ou revalidée
+    // (rafraîchissement, retour arrière, double clic). Sans ce garde-fou, l'email
+    // repartait à chaque appel. Même logique que le cron des étapes suivantes.
+    let alreadySentEmail02 = false
+    if (!TEST_EMAILS.has(cleanEmail)) {
+      const { data: previousSend } = await supabase
+        .from('crm_campaign_events')
+        .select('id')
+        .eq('contact_email', cleanEmail)
+        .eq('event_type', 'quiz_v2_email_02_sent')
+        .limit(1)
+
+      alreadySentEmail02 = !!previousSend && previousSend.length > 0
+    }
+
+    if (alreadySentEmail02) {
+      console.info(`[quiz/complete] Email 02 déjà envoyé à ${cleanEmail}, renvoi ignoré`)
+      return NextResponse.json({ ok: true, emailSent: false, reason: 'already_sent' })
+    }
+
     try {
       const { subject, html } = generateEmail02({
         firstName: cleanName || '',

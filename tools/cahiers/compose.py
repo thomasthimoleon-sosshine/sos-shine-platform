@@ -166,6 +166,11 @@ def recoller(els):
             continue
         if b['pg'] != a['pg'] or b['x'] != a['x']:
             continue
+        # Deux tranches d'une même ligne de base : un intitulé en gras suivi de
+        # son texte en romain. C'est une seule phrase, elle se lit d'un trait.
+        if b['y'] - a['y'] < 0.5:
+            b['role'] = a['role']
+            continue
         if not 0 < b['y'] - a['y'] <= lead + 1.5:
             continue
         if (LARGEUR - a['x']) - a['x1'] > 22:
@@ -189,8 +194,11 @@ def grille(bloc):
     xs = sorted(colonnes)
     for x in xs:
         colonnes[x].sort(key=lambda e: e['y'])
+        # Une colonne numérotée : tout ce qui n'a pas de numéro est la suite
+        # de l'acte précédent, coupé par la largeur de la colonne. La proportion
+        # de lignes de suite ne dit rien — une colonne étroite en produit beaucoup.
         numerote = sum(1 for e in colonnes[x] if re.match(r'^[IVXLC]+\.', e['texte']))
-        if numerote < len(colonnes[x]) * 0.6:
+        if numerote < 2:
             continue
         fusion = []
         for e in colonnes[x]:
@@ -199,9 +207,6 @@ def grille(bloc):
             else:
                 fusion.append(e)
         colonnes[x] = fusion
-    hauteur = max(len(c) for c in colonnes.values())
-    if len(xs) > 1 and any(abs(len(colonnes[x]) - hauteur) > 1 for x in xs):
-        return None
 
     # Une seule colonne d'actes, mais une case par jour : c'est une matrice.
     if len(xs) == 1 and len(entetes) >= 5:
@@ -213,15 +218,33 @@ def grille(bloc):
         return ('<table class="matrice"><tr><th class="acte"></th>%s</tr>%s</table>'
                 % (th, rangs))
 
+    if len(xs) < 2:
+        return None
+
+    # Les rangs se lisent à la hauteur : les colonnes n'ont pas toujours le même
+    # nombre d'actes, mais un rang aligne toujours ses entrées sur la même ligne.
+    tous = sorted((e for c in colonnes.values() for e in c), key=lambda e: e['y'])
+    rangs_items, cour = [], [tous[0]]
+    for e in tous[1:]:
+        if e['y'] - cour[0]['y'] > 8:
+            rangs_items.append(cour); cour = []
+        cour.append(e)
+    rangs_items.append(cour)
+    if any(len(r) > len(xs) for r in rangs_items):
+        return None
+
     rangs = []
-    for k in range(hauteur):
+    for r in rangs_items:
+        par_x = {e['x']: e for e in r}
         cellules = []
         for x in xs:
-            e = colonnes[x][k] if k < len(colonnes[x]) else None
+            e = par_x.get(x)
             cellules.append('<td>%s</td><td class="case"></td>'
                             % (esc(e['texte']) if e else ''))
         rangs.append('<tr>%s</tr>' % "".join(cellules))
-    return '<table class="grille">%s</table>' % "".join(rangs)
+    # Une grille très haute doit tenir sous son titre : on la resserre.
+    dense = ' dense' if len(rangs) >= 16 else ''
+    return '<table class="grille%s">%s</table>' % (dense, "".join(rangs))
 
 def compose(pages, titre_cahier):
     els = []

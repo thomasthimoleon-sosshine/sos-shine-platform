@@ -134,12 +134,15 @@ def extraire(chemin):
                     txt = txt.replace('\xa0', ' ').strip()
                     if r == 'chrome' or not txt:
                         continue
-                    # Seule la première tranche commence à gauche ; les suivantes
-                    # ne servent qu'à porter leur texte, la mise en page les suit.
+                    # Une tranche qui n'est pas la dernière de sa ligne est suivie
+                    # d'une autre : on la marque comme atteignant la marge, pour
+                    # que la composition la lise comme une phrase qui se poursuit.
+                    x0 = round(l["bbox"][0], 1)
                     elements.append({'role': r, 'texte': txt,
                                      'y': round(l["bbox"][1], 1) + k * 0.01,
-                                     'x': round(l["bbox"][0], 1),
-                                     'x1': round(l["bbox"][2], 1) if k == len(tranches)-1 else 0})
+                                     'x': x0,
+                                     'x1': round(l["bbox"][2], 1) if k == len(tranches)-1
+                                           else round(595.3 - x0, 1)})
         # filets d'écriture de la page
         # Une ligne d'écriture est beige (#C5B896) et court sur toute la colonne.
         # Les ornements du titre sont dorés (#C9A961) et bien plus courts : on les écarte,

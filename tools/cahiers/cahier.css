@@ -142,6 +142,8 @@ table.grille td.case::after{
   content:"";display:block;width:3.4mm;height:3.4mm;border:.6pt solid var(--or);
 }
 table.grille tr:last-child td{border-bottom:0}
+table.grille.dense{font-size:8.2pt;margin:4mm 0 3mm}
+table.grille.dense td{padding:1.4mm 1.6mm 1.4mm 0}
 
 /* La matrice du suivi : une habitude par ligne, un jour par colonne. */
 table.matrice{

@@ -11,6 +11,7 @@ import { greetingsData, GREETINGS_PER_SLOT, type TimeSlot } from '@/data/greetin
 import NpsWidget from '@/components/NpsWidget'
 import { getLevelForXP } from '@/lib/xp'
 import type { UserXP } from '@/types/database'
+import { resoudreProtocoleActif, CHEMIN_SIGNATURE } from '@/lib/protocole-actif'
 
 const ease = [0.25, 0.46, 0.45, 0.94] as const
 
@@ -286,7 +287,8 @@ export default function DashboardHome() {
   const [siteSettings, setSiteSettings] = useState<Record<string, string>>({})
   const [xpData, setXpData] = useState<UserXP | null>(null)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
-  const [firstGoal, setFirstGoal] = useState<{ title: string; description: string | null; recommended_slug: string | null; douleur: { title: string; subtitle: string | null; image_url: string | null } | null } | null>(null)
+  // Le protocole actif, résolu comme partout ailleurs (lib/protocole-actif).
+  const [protocole, setProtocole] = useState<{ slug: string; titre: string; douleur: { title: string; subtitle: string | null; image_url: string | null } } | null>(null)
   const [hasStartedAny, setHasStartedAny] = useState(false)
   const [affiliateStatus, setAffiliateStatus] = useState<{ exists: boolean; approved: boolean; referral_code: string | null; total_referrals: number; pending_earnings: number }>({ exists: false, approved: false, referral_code: null, total_referrals: 0, pending_earnings: 0 })
   const [streak, setStreak] = useState<{ current: number; longest: number }>({ current: 0, longest: 0 })
@@ -351,31 +353,25 @@ export default function DashboardHome() {
         .eq('user_id', user.id)
       setHasStartedAny((progressCount || 0) > 0)
 
-      // Load first active goal with its linked douleur (for the "first step" widget)
-      const { data: goal } = await supabase
-        .from('user_goals')
-        .select('title, description, recommended_slug')
-        .eq('user_id', user.id)
-        .eq('status', 'active')
-        .eq('source', 'onboarding')
-        .not('recommended_slug', 'is', null)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle()
-
-      if (goal && goal.recommended_slug) {
+      // Le protocole actif — même résolution que « Mon parcours guidé ».
+      const actif = await resoudreProtocoleActif(supabase)
+      if (actif.slug) {
         const { data: douleur } = await supabase
           .from('douleurs')
           .select('title, subtitle, image_url')
-          .eq('slug', goal.recommended_slug)
+          .eq('slug', actif.slug)
           .eq('is_published', true)
           .maybeSingle()
-        setFirstGoal({
-          title: goal.title,
-          description: goal.description,
-          recommended_slug: goal.recommended_slug,
-          douleur: (douleur as { title: string; subtitle: string | null; image_url: string | null } | null),
-        })
+        if (douleur) {
+          const d = douleur as { title: string; subtitle: string | null; image_url: string | null }
+          setProtocole({
+            slug: actif.slug,
+            // L'intitulé de l'objectif quand c'est lui qui a désigné le
+            // protocole ; sinon le nom du protocole lui-même.
+            titre: actif.titreObjectif || d.title,
+            douleur: d,
+          })
+        }
       }
 
       // Log today's visit (for streak tracking) + get streak
@@ -421,10 +417,11 @@ export default function DashboardHome() {
     loadSettings()
   }, [])
 
-  // Cible du CTA principal : le protocole recommandé si l'utilisateur en a un, sinon l'encyclopédie.
-  const protocolHref = firstGoal?.recommended_slug
-    ? `/dashboard/encyclopedie/${firstGoal.recommended_slug}`
-    : '/dashboard/encyclopedie'
+  // Cible du CTA principal. Sans protocole résolu, on ne devine pas : on
+  // propose la signature émotionnelle, qui en désignera un.
+  const protocolHref = protocole
+    ? `/dashboard/encyclopedie/${protocole.slug}`
+    : CHEMIN_SIGNATURE
 
   // Recherche encyclopédie : simple navigation (aucune logique métier ajoutée).
   function handleSearch(e: FormEvent<HTMLFormElement>) {
@@ -477,7 +474,7 @@ export default function DashboardHome() {
       </motion.section>
 
       {/* ══════════ 2. CARTE PRINCIPALE — Protocole du jour (mise en avant forte) ══════════ */}
-      {firstGoal && firstGoal.douleur ? (
+      {protocole ? (
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -495,19 +492,19 @@ export default function DashboardHome() {
               {hasStartedAny ? 'Votre protocole' : 'Votre premier pas'}
             </p>
             <h2 className="font-display text-xl sm:text-2xl font-semibold text-[var(--text-primary)] mb-4">
-              {firstGoal.title}
+              {protocole.titre}
             </h2>
-            <Link href={`/dashboard/encyclopedie/${firstGoal.recommended_slug}`}
+            <Link href={`/dashboard/encyclopedie/${protocole.slug}`}
               className="block rounded-xl p-4 transition-all hover:scale-[1.005]"
               style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.06)' }}>
               <div className="flex items-center gap-4">
-                {firstGoal.douleur.image_url && (
-                  <img src={firstGoal.douleur.image_url} alt="" className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />
+                {protocole.douleur.image_url && (
+                  <img src={protocole.douleur.image_url} alt="" className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-sm text-[var(--brand)]">{firstGoal.douleur.title}</p>
-                  {firstGoal.douleur.subtitle && (
-                    <p className="text-xs mt-0.5 truncate text-[var(--text-muted)]">{firstGoal.douleur.subtitle}</p>
+                  <p className="font-semibold text-sm text-[var(--brand)]">{protocole.douleur.title}</p>
+                  {protocole.douleur.subtitle && (
+                    <p className="text-xs mt-0.5 truncate text-[var(--text-muted)]">{protocole.douleur.subtitle}</p>
                   )}
                 </div>
                 <div className="flex-shrink-0 px-4 py-2 rounded-full text-xs font-semibold"
@@ -522,7 +519,8 @@ export default function DashboardHome() {
           </div>
         </motion.div>
       ) : (
-        /* Fallback : aucun protocole choisi → invitation à explorer l'encyclopédie */
+        /* Rien d'exprimé encore : on propose la signature émotionnelle plutôt
+           qu'un protocole choisi au hasard. */
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -532,12 +530,16 @@ export default function DashboardHome() {
         >
           <h2 className="font-display text-xl font-semibold text-[var(--text-primary)] mb-2">Par où commencer ?</h2>
           <p className="text-sm text-[var(--text-secondary)] mb-5 max-w-md mx-auto">
-            Dites-nous ce que vous traversez, on vous accompagne pas à pas.
+            Quelques questions, et nous saurons quel protocole vous correspond.
           </p>
-          <Link href="/dashboard/encyclopedie"
+          <Link href={CHEMIN_SIGNATURE}
             className="inline-block px-6 py-3 rounded-full text-sm font-semibold"
             style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000' }}>
-            Explorer l&apos;encyclopédie →
+            Découvrir ma signature émotionnelle →
+          </Link>
+          <Link href="/dashboard/encyclopedie"
+            className="block mt-4 text-xs underline text-[var(--text-muted)]">
+            ou parcourir l&apos;encyclopédie
           </Link>
         </motion.div>
       )}

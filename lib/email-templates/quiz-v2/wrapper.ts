@@ -13,8 +13,11 @@ const TEXT_MUTED = '#737373'
 const SERIF = "Georgia, 'Times New Roman', serif"
 const SANS = "'Helvetica Neue', Helvetica, Arial, sans-serif"
 
-export function wrapEmail(content: string, vars: { email?: string; trackingId?: string } = {}): string {
+export function wrapEmail(content: string, vars: { email?: string; trackingId?: string; reason?: string } = {}): string {
   const unsubUrl = `https://sosshine.com/api/unsubscribe?email=${encodeURIComponent(vars.email || '')}`
+  // Ligne « pourquoi tu reçois ça » : neutre et vraie pour tout le monde par défaut
+  // (membre, acheteur, lead, newsletter). Peut être précisée via vars.reason.
+  const reason = vars.reason || 'Tu reçois cet email de la part de SOS Shine.'
   const trackingPixel = vars.trackingId
     ? `<img src="https://sosshine.com/api/crm/track/open?cid=${vars.trackingId}&uid=${encodeURIComponent(vars.email || '')}" width="1" height="1" style="display:none" alt="" />`
     : ''
@@ -66,7 +69,7 @@ SOS Shine® - La première encyclopédie mondiale du bien-être émotionnel<br>
 <a href="https://sosshine.com" style="color:${TEXT_MUTED};">sosshine.com</a>
 </p>
 <p style="font-size:11px;color:${TEXT_MUTED};line-height:1.8;margin:12px 0 0 0;">
-Tu reçois cet email parce que tu as fait le test Signature Émotionnelle.<br>
+${reason}<br>
 <a href="${unsubUrl}" style="color:${TEXT_MUTED};text-decoration:underline;">Se désinscrire</a>
 </p>
 </td></tr>

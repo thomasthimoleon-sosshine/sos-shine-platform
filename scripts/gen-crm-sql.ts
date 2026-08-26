@@ -93,6 +93,14 @@ $DOBLK$;
 }
 
 const cleanup = `-- ═══ NETTOYAGE DES DOUBLONS ═══
+-- D'abord vider les e-mails programmés qui référencent ces templates
+-- (contrainte de clé étrangère scheduled_emails.template_key).
+DELETE FROM scheduled_emails WHERE template_key IN (
+  'quiz_result', 'quiz_followup_j2', 'quiz_conversion_j5',
+  'nurturing_j1', 'nurturing_j3', 'nurturing_j7', 'nurturing_j14',
+  'subscription_welcome'
+);
+
 -- Anciens templates remplacés par la séquence Signature V2 et par la File A.
 DELETE FROM email_templates WHERE template_key IN (
   'quiz_result', 'quiz_followup_j2', 'quiz_conversion_j5',

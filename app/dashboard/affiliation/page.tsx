@@ -4,16 +4,15 @@ import { useEffect, useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import { useTranslation } from '@/lib/i18n/useTranslation'
+import { useSubscription } from '@/hooks/useSubscription'
 import type { Affiliate, AffiliateConversion, AffiliatePayout } from '@/types/database'
 
 const ease = [0.25, 0.46, 0.45, 0.94] as const
 const easeArr = ease as unknown as [number, number, number, number]
 
+// Un seul niveau : 30% récurrent, tant que le filleul reste abonné.
 const TIERS = [
-  { key: 'bronze', rate: 10, min: 0, max: 10, color: '#CD7F32', gradient: 'linear-gradient(135deg, #CD7F32, #A0522D)' },
-  { key: 'silver', rate: 15, min: 11, max: 50, color: '#C0C0C0', gradient: 'linear-gradient(135deg, #C0C0C0, #A8A8A8)' },
-  { key: 'gold', rate: 20, min: 51, max: 100, color: 'var(--brand)', gradient: 'linear-gradient(135deg, var(--brand), var(--brand-deep))' },
-  { key: 'diamond', rate: 25, min: 101, max: Infinity, color: '#B9F2FF', gradient: 'linear-gradient(135deg, #B9F2FF, #7EC8E3)' },
+  { key: 'ambassadeur', rate: 30, min: 0, max: Infinity, color: 'var(--brand)', gradient: 'linear-gradient(135deg, var(--brand), var(--brand-deep))' },
 ] as const
 
 const CHANNELS = ['instagram', 'youtube', 'tiktok', 'blog', 'email', 'podcast', 'facebook', 'other'] as const
@@ -123,7 +122,7 @@ function AffiliateLanding({ onApply }: { onApply: () => void }) {
         </div>
       </motion.div>
 
-      {/* ── Commission Tiers ── */}
+      {/* ── Commission : 30% récurrent, un seul niveau ── */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -137,41 +136,26 @@ function AffiliateLanding({ onApply }: { onApply: () => void }) {
             {t('affiliate.tiers_subtitle')}
           </p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {TIERS.map((tier, i) => (
-            <motion.div
-              key={tier.key}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.35 + i * 0.08, duration: 0.5, ease: easeArr }}
-              className="glass glass-hover p-6 text-center relative overflow-hidden group"
+        <div className="max-w-lg mx-auto glass p-8 sm:p-10 text-center relative overflow-hidden">
+          <div className="absolute inset-0 pointer-events-none opacity-60"
+            style={{ background: 'radial-gradient(circle at center, rgba(201,169,97,0.10), transparent 70%)' }}
+          />
+          <div className="relative">
+            <div className="font-display font-semibold leading-none text-shimmer" style={{ fontSize: 'clamp(64px, 16vw, 104px)' }}>
+              30%
+            </div>
+            <p className="mt-3 text-[15px] font-medium text-[var(--text-primary)]">
+              {t('affiliate.rate_headline')}
+            </p>
+            <p className="mt-2 text-[13px] leading-relaxed max-w-sm mx-auto text-[var(--text-secondary)]">
+              {t('affiliate.rate_desc')}
+            </p>
+            <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full text-[12px] font-medium"
+              style={{ background: 'rgba(201, 169, 97, 0.1)', color: 'var(--brand)', border: '1px solid rgba(201, 169, 97, 0.2)' }}
             >
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                style={{ background: `radial-gradient(circle at center, ${tier.color}08, transparent 70%)` }}
-              />
-              {/* Tier icon */}
-              <div
-                className="w-14 h-14 rounded-2xl mx-auto flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110"
-                style={{ background: `${tier.color}15` }}
-              >
-                <span className="font-display text-xl font-bold" style={{ color: tier.color }}>
-                  {tier.rate}%
-                </span>
-              </div>
-              <h3 className="font-semibold text-[15px] mb-1" style={{ color: tier.color }}>
-                {t(`affiliate.tier_${tier.key}`)}
-              </h3>
-              <p className="text-[12px] mb-3 text-[var(--text-muted)]">
-                {t(`affiliate.tier_${tier.key}_range`)}
-              </p>
-              <p className="text-[11px] font-medium uppercase tracking-wider text-[var(--text-secondary)]">
-                {t('affiliate.commission')}
-              </p>
-              <p className="text-[11px] mt-1 text-[var(--text-muted)]">
-                {t('affiliate.recurring')}
-              </p>
-            </motion.div>
-          ))}
+              <span aria-hidden>✦</span>{t('affiliate.eligibility_note')}
+            </div>
+          </div>
         </div>
       </motion.div>
 
@@ -718,8 +702,8 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
   const [showWithdrawal, setShowWithdrawal] = useState(false)
   const [withdrawalSuccess, setWithdrawalSuccess] = useState(false)
 
-  const currentTier = TIERS.find(t => t.key === affiliate.current_tier) || TIERS[0]
-  const nextTier = TIERS[TIERS.indexOf(currentTier) + 1]
+  // Un seul niveau : 30% récurrent. (Plus de paliers ni de palier suivant.)
+  const currentTier = TIERS[0]
   const referralUrl = typeof window !== 'undefined'
     ? `${window.location.origin}/signup?ref=${affiliate.referral_code}`
     : `https://sosshine.com/signup?ref=${affiliate.referral_code}`
@@ -749,9 +733,6 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
     setTimeout(() => setCopied(false), 2500)
   }
 
-  const progressToNext = nextTier
-    ? Math.min(100, ((affiliate.total_referrals - currentTier.min) / (nextTier.min - currentTier.min)) * 100)
-    : 100
 
   return (
     <div className="max-w-5xl mx-auto space-y-8">
@@ -839,41 +820,21 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
         </div>
       </motion.div>
 
-      {/* Tier Progress */}
-      {nextTier && (
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5, ease: easeArr }}
-          className="glass p-5 sm:p-6"
-        >
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-3">
-              <span className="text-[13px] font-semibold" style={{ color: currentTier.color }}>
-                {t(`affiliate.tier_${currentTier.key}`)}
-              </span>
-              <svg className="w-4 h-4 text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-              </svg>
-              <span className="text-[13px] font-semibold" style={{ color: nextTier.color }}>
-                {t(`affiliate.tier_${nextTier.key}`)} ({nextTier.rate}%)
-              </span>
-            </div>
-            <span className="text-[12px] text-[var(--text-muted)]">
-              {affiliate.total_referrals}/{nextTier.min} filleuls
-            </span>
-          </div>
-          <div className="w-full h-2 rounded-full overflow-hidden bg-[var(--surface-card)]">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${progressToNext}%` }}
-              transition={{ delay: 0.5, duration: 0.8, ease: easeArr }}
-              className="h-full rounded-full"
-              style={{ background: currentTier.gradient }}
-            />
-          </div>
-        </motion.div>
-      )}
+      {/* Rappel du modèle : 30% récurrent, un seul niveau */}
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.5, ease: easeArr }}
+        className="glass p-5 sm:p-6 flex items-center gap-4"
+      >
+        <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
+          style={{ background: `${currentTier.color}15` }}>
+          <span className="font-display text-[15px] font-bold" style={{ color: currentTier.color }}>30%</span>
+        </div>
+        <p className="text-[13px] leading-relaxed text-[var(--text-secondary)]">
+          {t('affiliate.rate_desc')}
+        </p>
+      </motion.div>
 
       {/* Recent Conversions */}
       <motion.div
@@ -1169,12 +1130,52 @@ function SupportContact() {
 // ═══════════════════════════════════════════════════════
 // Main Page Component
 // ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════
+// Écran « réservé aux abonnés » — condition pour postuler
+// ═══════════════════════════════════════════════════════
+function AffiliateNeedSubscription({ onBack }: { onBack: () => void }) {
+  const { t } = useTranslation()
+  return (
+    <div className="max-w-lg mx-auto text-center py-16 px-4">
+      <div className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center"
+        style={{ background: 'rgba(201, 169, 97, 0.12)', border: '1px solid rgba(201, 169, 97, 0.25)' }}>
+        <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="var(--brand)" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+        </svg>
+      </div>
+      <h2 className="font-display text-2xl sm:text-3xl font-semibold tracking-tight text-[var(--text-primary)]">
+        {t('affiliate.need_sub_title')}
+      </h2>
+      <p className="mt-3 text-[15px] leading-relaxed text-[var(--text-secondary)]">
+        {t('affiliate.need_sub_desc')}
+      </p>
+      <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="/rejoindre"
+          className="px-8 py-3.5 rounded-xl font-semibold text-[15px] cursor-pointer transition-all duration-300"
+          style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#09090b', boxShadow: '0 4px 24px rgba(201, 169, 97, 0.25)' }}>
+          {t('affiliate.need_sub_cta')}
+        </a>
+        <button onClick={onBack}
+          className="px-8 py-3.5 rounded-xl font-medium text-[15px] cursor-pointer transition-colors"
+          style={{ background: 'var(--surface-card)', color: 'var(--text-secondary)', border: '1px solid var(--border)' }}>
+          {t('common.back') || 'Retour'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export default function AffiliationPage() {
   const { t } = useTranslation()
+  const { isAdmin, accessSource } = useSubscription()
+  const isSubscriber = isAdmin || accessSource === 'subscription'
   const [loading, setLoading] = useState(true)
   const [userId, setUserId] = useState<string | null>(null)
   const [affiliate, setAffiliate] = useState<Affiliate | null>(null)
-  const [view, setView] = useState<'landing' | 'form' | 'pending' | 'rejected' | 'dashboard'>('landing')
+  const [view, setView] = useState<'landing' | 'need_sub' | 'form' | 'pending' | 'rejected' | 'dashboard'>('landing')
+
+  // Condition d'entrée : il faut être abonné pour devenir ambassadeur.
+  const handleApply = () => setView(isSubscriber ? 'form' : 'need_sub')
 
   const loadAffiliate = useCallback(async () => {
     const supabase = createClient()
@@ -1227,7 +1228,12 @@ export default function AffiliationPage() {
     <AnimatePresence mode="wait">
       {view === 'landing' && (
         <motion.div key="landing" exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
-          <AffiliateLanding onApply={() => setView('form')} />
+          <AffiliateLanding onApply={handleApply} />
+        </motion.div>
+      )}
+      {view === 'need_sub' && (
+        <motion.div key="need_sub" exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
+          <AffiliateNeedSubscription onBack={() => setView('landing')} />
         </motion.div>
       )}
       {view === 'form' && userId && (

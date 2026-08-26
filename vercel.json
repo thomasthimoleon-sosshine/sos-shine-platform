@@ -23,6 +23,10 @@
     {
       "path": "/api/cron/quiz-abandon",
       "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/cron/newsletter-weekly",
+      "schedule": "0 18 * * 0"
     }
   ]
 }

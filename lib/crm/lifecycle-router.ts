@@ -95,6 +95,26 @@ export async function enrollInLifecycle(
   return { enrolled: true, cancelledOthers }
 }
 
+/**
+ * Renvoie le trigger de la file de cycle de vie où le contact est ACTIF, ou null.
+ * Sert de garde-fou : ne jamais enrôler en File C quelqu'un déjà dans A ou B.
+ */
+export async function activeLifecycleTrigger(supabase: DB, email: string): Promise<LifecycleTrigger | null> {
+  const clean = email.trim().toLowerCase()
+  if (!clean) return null
+  const { data } = await supabase
+    .from('crm_sequence_enrollments')
+    .select('sequence_id, crm_sequences!inner(trigger_type)')
+    .eq('contact_email', clean)
+    .eq('status', 'active')
+  if (!data || data.length === 0) return null
+  for (const row of data as Array<{ crm_sequences?: { trigger_type?: string } }>) {
+    const t = row.crm_sequences?.trigger_type
+    if (t && (LIFECYCLE_TRIGGERS as readonly string[]).includes(t)) return t as LifecycleTrigger
+  }
+  return null
+}
+
 /** Sort un contact de toutes les files de cycle de vie (ex. résiliation, désabonnement). */
 export async function exitAllLifecycle(supabase: DB, email: string): Promise<number> {
   const clean = email.trim().toLowerCase()

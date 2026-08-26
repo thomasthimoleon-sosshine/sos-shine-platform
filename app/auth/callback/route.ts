@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { sendTemplateEmail, scheduleEmail } from '@/lib/email-templates/automated-emails'
-import { enrollInSequence } from '@/lib/crm/enroll'
 import { cookies } from 'next/headers'
 
 export async function GET(request: Request) {
@@ -132,9 +131,9 @@ export async function GET(request: Request) {
             scheduleEmail('registration_conversion_j3', userEmail, vars, 3, { recipientName: firstName }).catch(() => {})
             scheduleEmail('registration_conversion_j7', userEmail, vars, 7, { recipientName: firstName }).catch(() => {})
             scheduleEmail('registration_conversion_j14', userEmail, vars, 14, { recipientName: firstName }).catch(() => {})
-
-            // Enrôlement CRM
-            enrollInSequence('registration', userEmail, firstName).catch(() => {})
+            // NB : pas d'enrollInSequence('registration') ici — les 4 conversions
+            // ci-dessus SONT la séquence d'inscription. Un enrôlement CRM en
+            // parallèle ferait partir chaque e-mail en double.
           } catch {}
         }
 

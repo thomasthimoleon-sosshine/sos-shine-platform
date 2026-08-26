@@ -9,6 +9,7 @@ import type Stripe from 'stripe'
 import { sendRawEmail } from '@/lib/email-templates/automated-emails'
 import { parseProtocolRef } from '@/lib/stripe/config'
 import { discoveryEndsAt } from '@/lib/discovery-access'
+import { enrollInLifecycle } from '@/lib/crm/lifecycle-router'
 import {
   detectPlanFromSession,
   processSuccessfulPayment,
@@ -111,6 +112,33 @@ export async function POST(request: Request) {
               console.error('[Webhook] protocol_unlock upsert failed:', unlockErr, parsed)
             } else {
               console.log(`[Webhook] Protocole débloqué - user ${parsed.userId}, slug ${parsed.slug}`)
+            }
+
+            // File B (achat 33€) — SEULEMENT si la personne n'est pas déjà abonnée.
+            // Un abonné qui achète un protocole en plus reste dans son parcours membre.
+            try {
+              const { data: sub } = await supabase
+                .from('subscriptions')
+                .select('status')
+                .eq('user_id', parsed.userId)
+                .maybeSingle()
+              const isMember = sub && (sub.status === 'active' || sub.status === 'trialing')
+              if (!isMember) {
+                const buyerEmail = session.customer_details?.email || session.customer_email || ''
+                let firstName: string | null = null
+                const { data: prof } = await supabase
+                  .from('profiles')
+                  .select('prenom, email')
+                  .eq('id', parsed.userId)
+                  .maybeSingle()
+                if (prof) firstName = (prof as { prenom?: string }).prenom || null
+                const email = buyerEmail || (prof as { email?: string } | null)?.email || ''
+                if (email) {
+                  await enrollInLifecycle(supabase, { email, firstName, trigger: 'protocol_33' })
+                }
+              }
+            } catch (e) {
+              console.error('[Webhook] Enrôlement File B échoué:', e)
             }
           } else {
             console.error('[Webhook] client_reference_id protocole illisible:', session.client_reference_id)

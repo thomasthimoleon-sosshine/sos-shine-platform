@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { getResendClient } from '@/lib/crm/resend'
 import { withTrackingPixel } from '@/lib/crm/tracking-pixel'
+import { enrollInLifecycle, activeLifecycleTrigger } from '@/lib/crm/lifecycle-router'
 
 function getAdminClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -109,11 +110,29 @@ export async function GET(request: Request) {
       }
     } catch { /* non-critical */ }
 
-    // 6. Transfer leads at J+15 to newsletter weekly
+    // 6. Fin de séquence Signature (J+14) : aiguillage vers la File C (silence)
+    //    pour les leads qui n'ont RIEN pris (ni abo, ni 33€). Ceux qui ont
+    //    converti sont déjà actifs en File A ou B → l'aiguilleur les ignore.
+    //    À J+15, transfert vers la newsletter hebdomadaire.
     for (const response of allResponses) {
+      if (!response.email) continue
       const capturedAt = new Date(response.email_captured_at)
       const daysSince = Math.floor((now.getTime() - capturedAt.getTime()) / (1000 * 60 * 60 * 24))
-      if (daysSince >= 15 && response.email) {
+
+      if (daysSince === 14) {
+        try {
+          const active = await activeLifecycleTrigger(supabase as any, response.email)
+          if (!active) {
+            await enrollInLifecycle(supabase as any, {
+              email: response.email,
+              firstName: response.first_name || null,
+              trigger: 'nurture_silence',
+            })
+          }
+        } catch { /* non-critical */ }
+      }
+
+      if (daysSince >= 15) {
         try {
           await (supabase as any).from('newsletter_weekly_subscribers').upsert({
             email: response.email.toLowerCase(),

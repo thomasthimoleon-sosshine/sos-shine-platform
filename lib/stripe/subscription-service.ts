@@ -23,6 +23,7 @@ import {
   getPlanDisplayName,
   getPlanAmount,
 } from '@/lib/email-templates/automated-emails'
+import { enrollInLifecycle } from '@/lib/crm/lifecycle-router'
 import { enrollInSequence } from '@/lib/crm/enroll'
 
 // ── Supabase Admin Client ──
@@ -309,12 +310,28 @@ export async function processSuccessfulPayment(params: ProcessPaymentParams): Pr
     source,
   })
 
-  // Étape 3 : Envoyer l'email de confirmation d'abonnement
+  // Étape 3 : Enrôlement dans la File A (nouveau membre).
+  // Son premier e-mail (A1 « Tu viens de te choisir ») EST le mot de bienvenue,
+  // dans la voix de Julia. L'aiguilleur sort automatiquement le contact des
+  // Files B (33€) et C (silence) s'il y était — donc aucun doublon.
   const firstName = prenom || 'Membre'
-  const emailSent = await sendWelcomeEmail(email, firstName, plan)
-
-  // Étape 4 : Programmer les emails de nurturing
-  await scheduleNurturingEmails(email, firstName, plan)
+  let emailSent = false
+  try {
+    const admin = getAdminSupabase()
+    if (admin) {
+      // On annule aussi les relances de conversion encore programmées (avant paiement).
+      await cancelScheduledEmails(email, [
+        'waitlist_reminder_j3', 'waitlist_opening',
+        'quiz_followup_j2', 'quiz_conversion_j5',
+        'registration_conversion_j1', 'registration_conversion_j3',
+        'registration_conversion_j7', 'registration_conversion_j14',
+      ])
+      const r = await enrollInLifecycle(admin, { email, firstName, trigger: 'member_onboarding' })
+      emailSent = r.enrolled
+    }
+  } catch (e) {
+    console.error('[SubscriptionService] Enrôlement File A échoué:', e)
+  }
 
   console.log(`[SubscriptionService] Abonnement activé - userId: ${userId}, email: ${emailSent}`)
 

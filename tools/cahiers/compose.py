@@ -80,7 +80,9 @@ def blocs(items):
             suite = manque <= 2.0 or (saute <= lead + 1.5
                                       and (manque < 22
                                            or (rempli > 0.55
-                                               and av['texte'].rstrip()[-1:] not in '.?!»:;')))
+                                               # Une parenthèse fermante clôt aussi bien qu'un point :
+                                               # les listes de ressources se terminent souvent ainsi.
+                                               and av['texte'].rstrip()[-1:] not in '.?!»:;)]')))
             if not suite:
                 out.append(cour); cour = []
             cour.append(items[i])

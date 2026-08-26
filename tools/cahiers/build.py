@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Refait la couverture des cahiers 2 à 6 sur le modèle du cahier 1.
+"""Refait la couverture des cahiers 2 à 7 sur le modèle du cahier 1.
 Le modèle est réutilisé tel quel (logo, ornement, signature, photo, pied de page) :
 seuls le titre et le sous-titre sont retirés puis réécrits."""
 import pymupdf, os
@@ -43,6 +43,9 @@ CAHIERS = [
     ('0827ba77-06_Apres_La_Rupture.pdf', '06_Apres_La_Rupture.pdf',
      'APRÈS LA RUPTURE', ['APRÈS', 'LA RUPTURE'],
      ['21 jours pour se détacher, sans effacer.', "Redevenir soi, après l'autre."]),
+    ('9f9d444f-07_Apres_Le_Deuil.pdf', '07_Apres_Le_Deuil.pdf',
+     'APRÈS LE DEUIL', ['APRÈS', 'LE DEUIL'],
+     ['49 jours pour traverser les sept étapes.', 'Et continuer à vivre. Autrement.']),
 ]
 
 def centre_x(texte, police, taille):

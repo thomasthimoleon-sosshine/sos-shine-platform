@@ -4,19 +4,21 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 
-// ── Palette (doré SOS Shine en principal, crème lumineux, touche de violet) ──
+// ── Charte SOS Meet — « couture après minuit » (indépendante de SOS Shine) ──
 const C = {
-  cream: '#FAF7F2',
-  violet: '#9C7C1E',   // (nom conservé) doré profond, lisible comme texte sur crème
-  lavender: '#C9A961', // (nom conservé) doré vif — partenaire de dégradé
-  gold: '#C9A961',     // doré SOS Shine
-  goldSoft: '#E2CB86',
-  ink: '#2B2733',
-  dark: '#0A0A0F',     // section "avantage SOS Shine"
-  accent: '#9B7EC8',   // la touche de violet (halos)
+  ink: '#0A090B',
+  velvet: '#120E11',
+  card: '#151016',
+  garnet: '#9B1B2E',
+  garnetSoft: '#7d1723',
+  ember: '#C1121F',
+  alabaster: '#F2EBE4',
+  smoke: '#A99A96',
+  smoke2: '#6E6360',
+  line: 'rgba(242,235,228,0.12)',
 }
-const serif = { fontFamily: 'var(--font-fraunces), Georgia, "Times New Roman", serif' }
-const sans = { fontFamily: 'var(--font-figtree), -apple-system, system-ui, sans-serif' }
+const serif = { fontFamily: "var(--sm-serif), Georgia, serif" }
+const sans = { fontFamily: "var(--sm-sans), system-ui, sans-serif" }
 const ease = [0.16, 1, 0.3, 1] as [number, number, number, number]
 
 function Reveal({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
@@ -25,7 +27,7 @@ function Reveal({ children, delay = 0, className = '' }: { children: React.React
       initial={{ opacity: 0, y: 22 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.7, delay, ease }}
+      transition={{ duration: 0.8, delay, ease }}
       className={className}
     >
       {children}
@@ -33,46 +35,35 @@ function Reveal({ children, delay = 0, className = '' }: { children: React.React
   )
 }
 
-const PILIERS = [
-  { icon: '🌱', title: 'Slow dating', body: '3 à 5 profils qualifiés par jour, pas plus. On privilégie la qualité de la rencontre à la quantité des swipes.' },
-  { icon: '🤍', title: 'Authenticité radicale', body: 'Vérification manuelle des profils et modération humaine. Ici, on rencontre de vraies personnes, alignées et présentes.' },
-  { icon: '🧘', title: 'Profondeur sans dogme', body: 'Une spiritualité inclusive : méditation, yoga, tantra, non-dualité… Chacun son chemin, sans jugement ni prosélytisme.' },
-  { icon: '🔥', title: 'Communauté hybride', body: 'Des cercles thématiques, des événements virtuels et en présentiel. Rencontrer devient une expérience vivante.' },
-]
 const ETAPES = [
-  { n: '01', title: 'Créez votre profil en conscience', body: 'Un questionnaire profond et un mini-test émotionnel SOS Shine révèlent qui vous êtes vraiment — au-delà des apparences.' },
-  { n: '02', title: 'Recevez des profils vraiment compatibles', body: 'Chaque jour, quelques rencontres réellement alignées sur vos valeurs, votre chemin et vos schémas émotionnels.' },
-  { n: '03', title: 'Connectez-vous en profondeur', body: 'Notes vocales, cercles de parole, événements. On se rencontre en présence, pas en performance.' },
+  { n: '01', title: 'Se révéler', body: 'Un profil d’une profondeur rare — tes intentions, tes valeurs, ton monde intérieur, tes non-négociables. On te connaît par cœur avant de te montrer.' },
+  { n: '02', title: 'Être compris', body: 'Notre lecture de compatibilité rapproche ce qui compte vraiment. Pas des apparences : des âmes qui cherchent la même chose.' },
+  { n: '03', title: 'Se rencontrer', body: 'Quand le désir est réciproque, le visage se dévoile et la conversation s’ouvre. Le trouble d’un vrai commencement.' },
 ]
+
 const FAQ = [
-  { q: "Quand l'application sort-elle ?", a: "Nous préparons le lancement de la bêta. En rejoignant la liste d'attente, vous serez parmi les premiers invités, en avant-première." },
-  { q: 'Est-ce que c\'est religieux ?', a: "Non. SOS Meet accueille une spiritualité inclusive et sans dogme : méditation, yoga, tantra, non-dualité, développement personnel… Aucune appartenance requise, aucun prosélytisme." },
-  { q: 'Quel sera le prix ?', a: "Le modèle sera freemium, avec une version gratuite généreuse. L'idée n'est pas de vous enfermer, mais de vous accompagner." },
-  { q: 'Que deviennent mes données ?', a: "RGPD strict, hébergement en Europe, et localisation volontairement floutée. Vos données vous appartiennent, et vous pouvez vous désinscrire en un clic." },
-  { q: 'Quel est le lien avec SOS Shine ?', a: "SOS Meet est porté par l'équipe de SOS Shine, plateforme de déconditionnement émotionnel. Vous arrivez déjà en travail sur vous — c'est ce qui change tout." },
-  { q: 'Où l\'app sera-t-elle disponible d\'abord ?', a: 'La bêta démarrera à Paris, Lyon et Bordeaux, puis s\'étendra progressivement dans tout l\'espace francophone.' },
+  { q: 'Pourquoi on ne voit pas les photos tout de suite ?', a: 'Parce qu’ici, l’émotionnel passe avant l’apparence. Tu découvres qui est la personne — ses valeurs, son monde intérieur — et la photo se dévoile seulement quand l’intérêt est réciproque. Le trouble d’un vrai commencement.' },
+  { q: 'Comment savez-vous si quelqu’un est sincère ?', a: 'Notre lecture analyse la cohérence des réponses entre elles. Les profils incohérents sont mis en retrait ; les plus sincères reçoivent un badge « Profil cohérent ». On protège la qualité des rencontres.' },
+  { q: 'Quel est le lien avec SOS Shine ?', a: 'SOS Meet est porté par l’équipe de SOS Shine, plateforme de déconditionnement émotionnel. Le travail intérieur que tu y accomplis — les protocoles traversés — apparaît sur ton profil. Ici, avoir fait le chemin, c’est ce qui rend attirant.' },
+  { q: 'Combien ça coûte ?', a: 'Gratuit au lancement. On veut d’abord réunir les bonnes personnes.' },
+  { q: 'Que deviennent mes données ?', a: 'RGPD strict, hébergement en Europe, consentement explicite pour les questions sensibles, et localisation volontairement floutée. Tes données t’appartiennent, désinscription en un clic.' },
 ]
 
 function FaqItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false)
   return (
-    <div className="border-b" style={{ borderColor: 'rgba(43,39,51,0.1)' }}>
+    <div className="border-b" style={{ borderColor: C.line }}>
       <button
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         className="w-full flex items-center justify-between gap-4 py-5 text-left cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4"
-        style={{ outlineColor: C.violet }}
+        style={{ outlineColor: C.garnet }}
       >
-        <span className="text-[16px] sm:text-[17px] font-medium pr-2" style={{ ...sans, color: C.ink }}>{q}</span>
-        <span className="shrink-0 text-2xl leading-none transition-transform duration-300" style={{ color: C.violet, transform: open ? 'rotate(45deg)' : 'none' }}>+</span>
+        <span className="text-[16px] sm:text-[17px] font-normal pr-2" style={{ ...sans, color: C.alabaster }}>{q}</span>
+        <span className="shrink-0 text-2xl leading-none transition-transform duration-300" style={{ color: C.garnet, transform: open ? 'rotate(45deg)' : 'none' }}>+</span>
       </button>
-      <motion.div
-        initial={false}
-        animate={{ height: open ? 'auto' : 0, opacity: open ? 1 : 0 }}
-        transition={{ duration: 0.4, ease }}
-        className="overflow-hidden"
-      >
-        <p className="pb-5 text-[15px] leading-relaxed" style={{ ...sans, color: 'rgba(43,39,51,0.7)' }}>{a}</p>
+      <motion.div initial={false} animate={{ height: open ? 'auto' : 0, opacity: open ? 1 : 0 }} transition={{ duration: 0.4, ease }} className="overflow-hidden">
+        <p className="pb-5 text-[15px] leading-relaxed" style={{ ...sans, color: C.smoke }}>{a}</p>
       </motion.div>
     </div>
   )
@@ -91,10 +82,7 @@ export default function SosMeetClient() {
   const hpRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    fetch('/api/sosmeet/waitlist')
-      .then((r) => r.json())
-      .then((d) => setCount(typeof d.count === 'number' ? d.count : null))
-      .catch(() => {})
+    fetch('/api/sosmeet/waitlist').then((r) => r.json()).then((d) => setCount(typeof d.count === 'number' ? d.count : null)).catch(() => {})
   }, [])
 
   async function handleSubmit(e: React.FormEvent) {
@@ -121,7 +109,7 @@ export default function SosMeetClient() {
 
   function share() {
     const url = typeof window !== 'undefined' ? window.location.href : ''
-    const text = 'Rencontrez en conscience — je rejoins la liste d\'attente de SOS Meet ✨'
+    const text = 'La rencontre en conscience — je rejoins SOS Meet.'
     if (typeof navigator !== 'undefined' && (navigator as Navigator).share) {
       ;(navigator as Navigator).share({ title: 'SOS Meet', text, url }).catch(() => {})
     } else {
@@ -129,244 +117,218 @@ export default function SosMeetClient() {
     }
   }
 
-  const inputCls = 'w-full px-4 py-3.5 rounded-2xl text-[15px] outline-none transition-all border'
-  const inputStyle: React.CSSProperties = { ...sans, background: '#fff', borderColor: 'rgba(43,39,51,0.12)', color: C.ink }
-
+  const inputCls = 'w-full px-4 py-3.5 rounded-xl text-[15px] outline-none transition-all border'
+  const inputStyle: React.CSSProperties = { ...sans, background: 'rgba(255,255,255,0.03)', borderColor: C.line, color: C.alabaster }
   const done = status === 'success' || status === 'already'
 
   return (
-    <main style={{ ...sans, background: C.cream, color: C.ink }} className="min-h-screen overflow-x-hidden">
-      {/* halos lumineux */}
-      <div aria-hidden className="pointer-events-none fixed inset-0 -z-0">
-        <div className="absolute rounded-full blur-[120px] opacity-40" style={{ width: 520, height: 520, top: -120, left: -80, background: 'radial-gradient(circle,#9B7EC8,transparent 70%)' }} />
-        <div className="absolute rounded-full blur-[130px] opacity-30" style={{ width: 480, height: 480, top: 200, right: -120, background: 'radial-gradient(circle,#C9A96E,transparent 70%)' }} />
-      </div>
+    <main style={{ ...sans, background: C.ink, color: C.alabaster }} className="min-h-screen overflow-x-hidden">
+      {/* grain + halo grenat ambiant */}
+      <div aria-hidden className="pointer-events-none fixed inset-0 z-0" style={{
+        background: 'radial-gradient(120% 70% at 50% -10%, rgba(155,27,46,0.20), transparent 55%), radial-gradient(70% 50% at 90% 108%, rgba(155,27,46,0.10), transparent 60%)',
+      }} />
 
       <div className="relative z-10">
         {/* NAV */}
-        <header className="max-w-6xl mx-auto px-5 sm:px-8 py-5 flex items-center justify-between">
-          <span className="text-[19px] font-semibold" style={{ ...serif, color: C.violet }}>SOS Meet</span>
-          <a href="#waitlist" className="text-[13px] sm:text-[14px] font-semibold px-5 py-2.5 rounded-full transition-transform hover:scale-[1.03]"
-            style={{ background: C.gold, color: '#2b220e' }}>
-            Liste d&apos;attente
+        <header className="max-w-6xl mx-auto px-5 sm:px-8 py-6 flex items-center justify-between">
+          <span className="text-[22px]" style={{ ...serif, fontWeight: 500 }}>SOS Meet<span style={{ color: C.garnet }}>.</span></span>
+          <a href="#waitlist" className="text-[12px] tracking-[0.16em] uppercase px-5 py-2.5 rounded-full transition-colors"
+            style={{ border: `1px solid ${C.line}`, color: C.alabaster }}>
+            Créer mon profil
           </a>
         </header>
 
         {/* 1. HERO */}
-        <section className="max-w-4xl mx-auto px-5 sm:px-8 pt-12 sm:pt-20 pb-16 text-center">
-          <Reveal>
-            <span className="inline-block text-[11px] tracking-[0.2em] uppercase font-semibold px-4 py-1.5 rounded-full mb-8"
-              style={{ background: 'rgba(201,169,97,0.08)', color: C.violet }}>
-              Par l&apos;équipe SOS Shine
-            </span>
-          </Reveal>
-          <Reveal delay={0.05}>
-            <h1 className="font-normal leading-[1.05] tracking-[-0.02em] mb-6" style={{ ...serif, fontSize: 'clamp(2.6rem,7vw,4.6rem)', color: C.ink }}>
-              Rencontrez <span style={{ color: C.violet }}>en conscience.</span>
-            </h1>
-          </Reveal>
-          <Reveal delay={0.12}>
-            <p className="mx-auto max-w-2xl text-[17px] sm:text-[19px] leading-relaxed mb-9" style={{ color: 'rgba(43,39,51,0.72)' }}>
-              SOS Meet — l&apos;app de rencontres pour celles et ceux qui ont déjà commencé le chemin.
-              Slow dating, profondeur spirituelle, zéro superficialité.
-            </p>
-          </Reveal>
-          <Reveal delay={0.2}>
-            <a href="#waitlist" className="inline-flex items-center gap-2 text-[16px] font-semibold px-8 py-4 rounded-full transition-transform hover:scale-[1.03] active:scale-[0.98]"
-              style={{ background: `linear-gradient(135deg, ${C.violet}, ${C.lavender})`, color: '#2b220e', boxShadow: '0 16px 40px -14px rgba(201,169,97,0.6)' }}>
-              Rejoindre la liste d&apos;attente <span aria-hidden>→</span>
-            </a>
-            {count !== null && count > 0 && (
-              <p className="mt-5 text-[13px]" style={{ color: 'rgba(43,39,51,0.5)' }}>
-                Déjà <b style={{ color: C.violet }}>{count.toLocaleString('fr-FR')}</b> personne{count > 1 ? 's' : ''} en conscience sur la liste.
-              </p>
-            )}
-          </Reveal>
-        </section>
-
-        {/* 2. LE PROBLÈME */}
-        <section className="max-w-5xl mx-auto px-5 sm:px-8 py-16 sm:py-24">
-          <Reveal className="text-center max-w-2xl mx-auto mb-14">
-            <p className="text-[11px] tracking-[0.22em] uppercase font-semibold mb-3" style={{ color: C.gold }}>Le constat</p>
-            <h2 className="font-normal leading-tight" style={{ ...serif, fontSize: 'clamp(1.8rem,4.5vw,2.6rem)' }}>
-              Les apps de rencontre nous ont épuisés.
-            </h2>
-          </Reveal>
-          <div className="grid sm:grid-cols-3 gap-5">
-            {[
-              ['🌀', 'La fatigue du swipe', 'Des heures à faire défiler des visages, pour un vide qui grandit. Le jeu est conçu pour ne jamais s\'arrêter.'],
-              ['🪞', 'La superficialité', 'Des profils réduits à trois photos et une punchline. On ne rencontre plus des êtres, mais des vitrines.'],
-              ['🧭', "L'absence d'alignement", 'Difficile de croiser des personnes qui cheminent vraiment — sur la présence, le sens, la conscience.'],
-            ].map(([ic, t, b], i) => (
-              <Reveal key={i} delay={i * 0.08}>
-                <div className="h-full rounded-[26px] p-7" style={{ background: '#fff', border: '1px solid rgba(43,39,51,0.07)' }}>
-                  <div className="text-3xl mb-4">{ic}</div>
-                  <h3 className="text-[18px] font-semibold mb-2" style={{ color: C.ink }}>{t}</h3>
-                  <p className="text-[14.5px] leading-relaxed" style={{ color: 'rgba(43,39,51,0.65)' }}>{b}</p>
-                </div>
-              </Reveal>
-            ))}
+        <section className="relative">
+          <div className="absolute inset-0 overflow-hidden">
+            <img src="/sosmeet/hero-silhouettes.png" alt="" className="w-full h-full object-cover object-center opacity-70" />
+            <div className="absolute inset-0" style={{ background: 'radial-gradient(90% 70% at 50% 45%, transparent, rgba(10,9,11,0.72) 78%), linear-gradient(180deg, rgba(10,9,11,0.55), rgba(10,9,11,0.2) 30%, rgba(10,9,11,0.85))' }} />
           </div>
-        </section>
-
-        {/* 3. LA SOLUTION */}
-        <section className="max-w-5xl mx-auto px-5 sm:px-8 py-16 sm:py-24">
-          <Reveal className="text-center max-w-2xl mx-auto mb-14">
-            <p className="text-[11px] tracking-[0.22em] uppercase font-semibold mb-3" style={{ color: C.violet }}>Notre approche</p>
-            <h2 className="font-normal leading-tight" style={{ ...serif, fontSize: 'clamp(1.8rem,4.5vw,2.6rem)' }}>
-              Une autre manière de se rencontrer.
-            </h2>
-          </Reveal>
-          <div className="grid sm:grid-cols-2 gap-5">
-            {PILIERS.map((p, i) => (
-              <Reveal key={i} delay={(i % 2) * 0.08}>
-                <div className="h-full rounded-[28px] p-8 transition-transform hover:-translate-y-1"
-                  style={{ background: 'linear-gradient(160deg,#fff,#FBF8F3)', border: '1px solid rgba(201,169,97,0.12)' }}>
-                  <div className="text-3xl mb-4">{p.icon}</div>
-                  <h3 className="text-[20px] font-semibold mb-2.5" style={{ ...serif, color: C.violet }}>{p.title}</h3>
-                  <p className="text-[15px] leading-relaxed" style={{ color: 'rgba(43,39,51,0.68)' }}>{p.body}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </section>
-
-        {/* 4. AVANTAGE SOS SHINE */}
-        <section className="py-16 sm:py-24" style={{ background: 'linear-gradient(160deg,#0A0A0F,#1a1510)' }}>
-          <div className="max-w-4xl mx-auto px-5 sm:px-8 text-center" style={{ color: C.cream }}>
+          <div className="relative max-w-4xl mx-auto px-5 sm:px-8 min-h-[92vh] flex flex-col items-center justify-center text-center">
             <Reveal>
-              <p className="text-[11px] tracking-[0.22em] uppercase font-semibold mb-4" style={{ color: C.gold }}>L&apos;avantage SOS Shine</p>
-              <h2 className="font-normal leading-tight mb-6" style={{ ...serif, fontSize: 'clamp(1.9rem,5vw,3rem)' }}>
-                Briller avant de rencontrer.
-              </h2>
-              <p className="mx-auto max-w-2xl text-[16px] sm:text-[17px] leading-relaxed" style={{ color: 'rgba(250,247,242,0.82)' }}>
-                Vous n&apos;arrivez pas de nulle part : vous êtes déjà en travail sur vous. SOS Meet s&apos;appuie sur SOS Shine
-                pour aller plus loin qu&apos;aucune app de rencontre.
+              <span className="text-[11px] tracking-[0.4em] uppercase" style={{ color: C.ember }}>La rencontre en conscience</span>
+            </Reveal>
+            <Reveal delay={0.08}>
+              <h1 className="mt-5 mb-6" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(3rem,8.5vw,6rem)', lineHeight: 0.98, letterSpacing: '-0.01em' }}>
+                On ne te regarde pas.<br />On te <em style={{ color: C.garnet, fontStyle: 'italic' }}>comprend</em>.
+              </h1>
+            </Reveal>
+            <Reveal delay={0.16}>
+              <p className="mx-auto max-w-md text-[17px] sm:text-[19px] leading-relaxed" style={{ color: C.smoke, fontWeight: 300 }}>
+                Ici, pas de photo qu’on juge en une seconde. D’abord, qui tu es vraiment — et la personne faite pour ça.
               </p>
             </Reveal>
-            <div className="grid sm:grid-cols-3 gap-5 mt-12 text-left">
-              {[
-                ['🧠', 'Mini-test émotionnel', 'Intégré à votre profil : il révèle vos schémas, pas seulement vos goûts.'],
-                ['🧩', 'Matching en profondeur', 'On tient compte de vos schémas de protection pour des liens plus justes.'],
-                ['✨', 'Contenus « Relations Conscientes »', 'Des ressources co-brandées pour aimer mieux, à deux comme seul·e.'],
-              ].map(([ic, t, b], i) => (
-                <Reveal key={i} delay={i * 0.08}>
-                  <div className="h-full rounded-[24px] p-6" style={{ background: 'rgba(250,247,242,0.08)', border: '1px solid rgba(250,247,242,0.14)' }}>
-                    <div className="text-2xl mb-3">{ic}</div>
-                    <h3 className="text-[16px] font-semibold mb-1.5">{t}</h3>
-                    <p className="text-[14px] leading-relaxed" style={{ color: 'rgba(250,247,242,0.72)' }}>{b}</p>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
+            <Reveal delay={0.24}>
+              <a href="#waitlist" className="inline-flex items-center gap-2 mt-9 text-[14px] tracking-[0.14em] uppercase px-9 py-4 rounded-full transition-transform hover:-translate-y-0.5"
+                style={{ background: `linear-gradient(135deg, ${C.garnet}, ${C.garnetSoft})`, color: '#F7EEE9', boxShadow: '0 14px 44px -12px rgba(155,27,46,0.6)' }}>
+                Créer mon profil <span aria-hidden>→</span>
+              </a>
+              <p className="mt-5 text-[12.5px]" style={{ color: C.smoke2 }}>
+                Gratuit au lancement · réservé aux âmes sincères
+                {count !== null && count > 0 && <> · déjà <b style={{ color: C.smoke }}>{count.toLocaleString('fr-FR')}</b> inscrit{count > 1 ? 's' : ''}</>}
+              </p>
+            </Reveal>
           </div>
         </section>
 
-        {/* 5. COMMENT ÇA MARCHE */}
-        <section className="max-w-5xl mx-auto px-5 sm:px-8 py-16 sm:py-24">
+        {/* 2. LE PRINCIPE */}
+        <section className="max-w-5xl mx-auto px-5 sm:px-8 py-24">
           <Reveal className="text-center max-w-2xl mx-auto mb-14">
-            <p className="text-[11px] tracking-[0.22em] uppercase font-semibold mb-3" style={{ color: C.gold }}>Comment ça marche</p>
-            <h2 className="font-normal leading-tight" style={{ ...serif, fontSize: 'clamp(1.8rem,4.5vw,2.6rem)' }}>
-              Trois étapes, en présence.
-            </h2>
+            <p className="text-[11px] tracking-[0.34em] uppercase mb-3" style={{ color: C.smoke2 }}>Le principe</p>
+            <h2 style={{ ...serif, fontWeight: 400, fontSize: 'clamp(2rem,5vw,3.2rem)' }}>Trois temps, une vérité</h2>
           </Reveal>
-          <div className="grid sm:grid-cols-3 gap-5">
+          <div className="grid sm:grid-cols-3" style={{ gap: 1, background: C.line, border: `1px solid ${C.line}`, borderRadius: 6, overflow: 'hidden' }}>
             {ETAPES.map((s, i) => (
               <Reveal key={i} delay={i * 0.08}>
-                <div className="h-full rounded-[26px] p-7" style={{ background: '#fff', border: '1px solid rgba(43,39,51,0.07)' }}>
-                  <div className="text-[30px] font-semibold mb-3" style={{ ...serif, color: C.lavender }}>{s.n}</div>
-                  <h3 className="text-[18px] font-semibold mb-2" style={{ color: C.ink }}>{s.title}</h3>
-                  <p className="text-[14.5px] leading-relaxed" style={{ color: 'rgba(43,39,51,0.65)' }}>{s.body}</p>
+                <div className="h-full p-10" style={{ background: C.velvet }}>
+                  <div style={{ ...serif, fontStyle: 'italic', fontSize: 34, color: C.garnet }}>{s.n}</div>
+                  <h3 className="mt-4 mb-2.5 text-[22px]" style={{ ...serif, fontWeight: 500 }}>{s.title}</h3>
+                  <p className="text-[14.5px] leading-relaxed" style={{ color: C.smoke }}>{s.body}</p>
                 </div>
               </Reveal>
             ))}
+          </div>
+        </section>
+
+        {/* 3. RÉVÉLATION PROGRESSIVE */}
+        <section className="max-w-5xl mx-auto px-5 sm:px-8 py-20">
+          <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
+            <Reveal className="flex gap-4">
+              <img src="/sosmeet/masked-she.png" alt="" className="w-1/2 rounded-2xl object-cover aspect-square" style={{ border: `1px solid ${C.line}` }} />
+              <img src="/sosmeet/masked-he.png" alt="" className="w-1/2 rounded-2xl object-cover aspect-square mt-8" style={{ border: `1px solid ${C.line}` }} />
+            </Reveal>
+            <Reveal delay={0.1}>
+              <span className="text-[11px] tracking-[0.3em] uppercase" style={{ color: C.ember }}>La révélation</span>
+              <h2 className="mt-3 mb-4" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(1.9rem,4.6vw,2.8rem)', lineHeight: 1.05 }}>
+                Le visage vient après l’âme
+              </h2>
+              <p className="text-[15.5px] leading-relaxed" style={{ color: C.smoke }}>
+                Tu découvres d’abord ce qui ne ment pas : les valeurs, les intentions, le monde intérieur. La photo reste voilée — et ne se dévoile qu’au moment où le désir devient réciproque. On ne swipe pas des visages. On rencontre des présences.
+              </p>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* 4. COMPATIBILITÉ + SINCÉRITÉ */}
+        <section className="max-w-5xl mx-auto px-5 sm:px-8 py-20">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <Reveal className="flex items-center justify-center">
+              <div className="relative aspect-square w-full max-w-[320px] flex items-center justify-center">
+                <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full" style={{ transform: 'rotate(-90deg)' }}>
+                  <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(242,235,228,0.08)" strokeWidth="1.5" />
+                  <circle cx="50" cy="50" r="45" fill="none" stroke="url(#smg)" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="282.7" strokeDashoffset="17" />
+                  <defs><linearGradient id="smg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor={C.garnet} /><stop offset="1" stopColor={C.ember} /></linearGradient></defs>
+                </svg>
+                <div className="text-center">
+                  <div style={{ ...serif, fontSize: 'clamp(3.4rem,9vw,5rem)', lineHeight: 1 }}>94<span style={{ fontSize: '1.4rem', color: C.smoke }}>%</span></div>
+                  <span className="text-[11px] tracking-[0.34em] uppercase" style={{ color: C.smoke2 }}>Compatibilité</span>
+                </div>
+              </div>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <span className="text-[11px] tracking-[0.3em] uppercase" style={{ color: C.ember }}>La lecture de compatibilité</span>
+              <h2 className="mt-3 mb-4" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(1.9rem,4.6vw,2.8rem)', lineHeight: 1.05 }}>
+                Un profil qui se dévoile, question après question
+              </h2>
+              <p className="text-[15.5px] leading-relaxed" style={{ color: C.smoke }}>
+                On commence par l’essentiel — assez pour te présenter tes premières rencontres. Puis ton profil s’approfondit à ton rythme, et chaque réponse affine ce que la vie t’envoie.
+              </p>
+              <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full text-[12px]"
+                style={{ background: 'rgba(155,27,46,0.12)', color: C.ember, border: '1px solid rgba(155,27,46,0.25)' }}>
+                <span aria-hidden>✦</span> Les réponses incohérentes sont repérées — les profils sincères, mis en avant
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* 5. AVANTAGE SOS SHINE — velours */}
+        <section className="relative py-24 my-8 overflow-hidden">
+          <img src="/sosmeet/velvet.png" alt="" className="absolute inset-0 w-full h-full object-cover opacity-45" />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(10,9,11,0.85), rgba(10,9,11,0.5))' }} />
+          <div className="relative max-w-3xl mx-auto px-5 sm:px-8 text-center">
+            <Reveal>
+              <p className="text-[11px] tracking-[0.34em] uppercase mb-4" style={{ color: C.ember }}>Le chemin accompli</p>
+              <h2 className="mb-5" style={{ ...serif, fontWeight: 400, fontStyle: 'italic', fontSize: 'clamp(2rem,5.5vw,3.4rem)', lineHeight: 1.05 }}>
+                Ici, avoir fait le travail rend attirant
+              </h2>
+              <p className="mx-auto max-w-xl text-[16px] leading-relaxed" style={{ color: C.smoke }}>
+                SOS Meet est relié à SOS Shine. Les protocoles émotionnels que tu traverses apparaissent sur ton profil — un signal rare de sincérité et de maturité. Pas une bio : un chemin réel.
+              </p>
+            </Reveal>
           </div>
         </section>
 
         {/* 6. WAITLIST */}
-        <section id="waitlist" className="max-w-xl mx-auto px-5 sm:px-8 py-16 sm:py-24 scroll-mt-8">
-          <div className="rounded-[32px] p-7 sm:p-10" style={{ background: '#fff', border: '1px solid rgba(201,169,97,0.15)', boxShadow: '0 40px 90px -50px rgba(201,169,97,0.4)' }}>
+        <section id="waitlist" className="max-w-xl mx-auto px-5 sm:px-8 py-24 scroll-mt-8">
+          <div className="rounded-3xl p-7 sm:p-10" style={{ background: C.card, border: `1px solid ${C.line}`, boxShadow: '0 50px 100px -60px rgba(155,27,46,0.5)' }}>
             {!done ? (
               <>
                 <Reveal>
-                  <h2 className="font-normal leading-tight text-center mb-2" style={{ ...serif, fontSize: 'clamp(1.7rem,4.4vw,2.3rem)' }}>
-                    Rejoignez la liste d&apos;attente
-                  </h2>
-                  <p className="text-center text-[15px] leading-relaxed mb-8" style={{ color: 'rgba(43,39,51,0.62)' }}>
-                    Soyez parmi les premiers invités à la bêta. Aucune carte bancaire, désinscription en un clic.
+                  <h2 className="text-center mb-2" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(1.7rem,4.4vw,2.3rem)' }}>Rejoindre SOS Meet</h2>
+                  <p className="text-center text-[15px] leading-relaxed mb-8" style={{ color: C.smoke }}>
+                    Gratuit au lancement. Aucune carte bancaire, désinscription en un clic.
                   </p>
                 </Reveal>
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  {/* honeypot */}
                   <input ref={hpRef} type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden className="hidden" />
-
                   <div>
-                    <label htmlFor="sm-first" className="block text-[13px] font-medium mb-1.5" style={{ color: C.ink }}>Prénom</label>
-                    <input id="sm-first" required value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Votre prénom"
-                      className={inputCls} style={inputStyle} />
+                    <label htmlFor="sm-first" className="block text-[13px] mb-1.5" style={{ color: C.smoke }}>Prénom</label>
+                    <input id="sm-first" required value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Votre prénom" className={inputCls} style={inputStyle} />
                   </div>
                   <div>
-                    <label htmlFor="sm-email" className="block text-[13px] font-medium mb-1.5" style={{ color: C.ink }}>Email</label>
-                    <input id="sm-email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="vous@email.com"
-                      className={inputCls} style={inputStyle} />
+                    <label htmlFor="sm-email" className="block text-[13px] mb-1.5" style={{ color: C.smoke }}>Email</label>
+                    <input id="sm-email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="vous@email.com" className={inputCls} style={inputStyle} />
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="sm-city" className="block text-[13px] font-medium mb-1.5" style={{ color: C.ink }}>Ville <span style={{ color: 'rgba(43,39,51,0.4)' }}>(optionnel)</span></label>
+                      <label htmlFor="sm-city" className="block text-[13px] mb-1.5" style={{ color: C.smoke }}>Ville <span style={{ color: C.smoke2 }}>(optionnel)</span></label>
                       <select id="sm-city" value={city} onChange={(e) => setCity(e.target.value)} className={inputCls} style={inputStyle}>
-                        <option value="">Choisir…</option>
-                        <option>Paris</option><option>Lyon</option><option>Bordeaux</option><option>Autre</option>
+                        <option value="" style={{ color: '#111' }}>Choisir…</option>
+                        <option style={{ color: '#111' }}>Paris</option><option style={{ color: '#111' }}>Lyon</option><option style={{ color: '#111' }}>Bordeaux</option><option style={{ color: '#111' }}>Autre</option>
                       </select>
                     </div>
                     <div>
-                      <label htmlFor="sm-stage" className="block text-[13px] font-medium mb-1.5" style={{ color: C.ink }}>Où en êtes-vous ? <span style={{ color: 'rgba(43,39,51,0.4)' }}>(optionnel)</span></label>
+                      <label htmlFor="sm-stage" className="block text-[13px] mb-1.5" style={{ color: C.smoke }}>Où en êtes-vous ? <span style={{ color: C.smoke2 }}>(optionnel)</span></label>
                       <select id="sm-stage" value={stage} onChange={(e) => setStage(e.target.value)} className={inputCls} style={inputStyle}>
-                        <option value="">Choisir…</option>
-                        <option>Je débute mon chemin</option>
-                        <option>Je pratique régulièrement</option>
-                        <option>C&apos;est au cœur de ma vie</option>
+                        <option value="" style={{ color: '#111' }}>Choisir…</option>
+                        <option style={{ color: '#111' }}>Je débute mon chemin</option>
+                        <option style={{ color: '#111' }}>Je pratique régulièrement</option>
+                        <option style={{ color: '#111' }}>C&apos;est au cœur de ma vie</option>
                       </select>
                     </div>
                   </div>
                   <label className="flex items-start gap-3 pt-1 cursor-pointer">
-                    <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} required
-                      className="mt-1 w-4 h-4 shrink-0" style={{ accentColor: C.violet }} />
-                    <span className="text-[13px] leading-relaxed" style={{ color: 'rgba(43,39,51,0.62)' }}>
-                      J&apos;accepte de recevoir des nouvelles de SOS Meet. Désinscription en un clic.
-                    </span>
+                    <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} required className="mt-1 w-4 h-4 shrink-0" style={{ accentColor: C.garnet }} />
+                    <span className="text-[13px] leading-relaxed" style={{ color: C.smoke }}>J&apos;accepte de recevoir des nouvelles de SOS Meet. Désinscription en un clic.</span>
                   </label>
-
-                  {error && <p className="text-[13px]" style={{ color: '#c0392b' }}>{error}</p>}
-
-                  <button type="submit" disabled={status === 'loading'} className="w-full py-4 rounded-full text-[15px] font-semibold transition-transform hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60"
-                    style={{ background: `linear-gradient(135deg, ${C.violet}, ${C.lavender})`, color: '#2b220e', boxShadow: '0 14px 34px -14px rgba(201,169,97,0.6)' }}>
-                    {status === 'loading' ? 'Un instant…' : 'Rejoindre la liste d\'attente'}
+                  {error && <p className="text-[13px]" style={{ color: C.ember }}>{error}</p>}
+                  <button type="submit" disabled={status === 'loading'} className="w-full py-4 rounded-full text-[14px] tracking-[0.12em] uppercase transition-transform hover:-translate-y-0.5 disabled:opacity-60"
+                    style={{ background: `linear-gradient(135deg, ${C.garnet}, ${C.garnetSoft})`, color: '#F7EEE9', boxShadow: '0 14px 34px -14px rgba(155,27,46,0.6)' }}>
+                    {status === 'loading' ? 'Un instant…' : 'Rejoindre SOS Meet'}
                   </button>
                 </form>
               </>
             ) : (
               <div className="text-center py-4">
-                <div className="text-5xl mb-4">{status === 'already' ? '✨' : '🤍'}</div>
-                <h2 className="font-normal leading-tight mb-3" style={{ ...serif, fontSize: 'clamp(1.6rem,4.2vw,2.1rem)' }}>
-                  {status === 'already' ? 'Vous êtes déjà sur la liste ✨' : 'Bienvenue sur le chemin.'}
+                <div style={{ ...serif, fontSize: 44, color: C.garnet }}>{status === 'already' ? '✦' : '♥'}</div>
+                <h2 className="mt-2 mb-3" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(1.6rem,4.2vw,2.1rem)' }}>
+                  {status === 'already' ? 'Tu es déjà des nôtres' : 'Bienvenue.'}
                 </h2>
-                <p className="text-[15px] leading-relaxed mb-8" style={{ color: 'rgba(43,39,51,0.66)' }}>
+                <p className="text-[15px] leading-relaxed mb-8" style={{ color: C.smoke }}>
                   {status === 'already'
-                    ? 'Votre place est bien réservée. Nous vous préviendrons dès l\'ouverture de la bêta.'
-                    : 'Votre place est réservée. Vous ferez partie des premiers invités à la bêta.'}
-                  <br />Envie de faire venir les bonnes personnes ? Partagez SOS Meet.
+                    ? 'Ta place est réservée. On te prévient dès l’ouverture.'
+                    : 'Ta place est réservée. Tu feras partie des premiers.'}
+                  <br />Prends de l’avance : commence ton profil.
                 </p>
                 <div className="flex flex-col items-center gap-3">
-                  <Link
-                    href={`/sos-meet/profil?email=${encodeURIComponent(email)}`}
-                    className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-[15px] font-semibold transition-transform hover:scale-[1.03]"
-                    style={{ background: `linear-gradient(135deg, ${C.violet}, ${C.lavender})`, color: '#2b220e', boxShadow: '0 14px 34px -14px rgba(201,169,97,0.6)' }}
-                  >
-                    Préparer mon profil de compatibilité <span aria-hidden>→</span>
+                  <Link href={`/sos-meet/profil?email=${encodeURIComponent(email)}`}
+                    className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-[14px] tracking-[0.1em] uppercase transition-transform hover:-translate-y-0.5"
+                    style={{ background: `linear-gradient(135deg, ${C.garnet}, ${C.garnetSoft})`, color: '#F7EEE9', boxShadow: '0 14px 34px -14px rgba(155,27,46,0.6)' }}>
+                    Commencer mon profil <span aria-hidden>→</span>
                   </Link>
-                  <span className="text-[12px]" style={{ color: 'rgba(43,39,51,0.45)' }}>~10 min · vous prenez de l&apos;avance sur vos futures rencontres</span>
-                  <button onClick={share} className="inline-flex items-center gap-2 mt-2 px-6 py-3 rounded-full text-[14px] font-semibold transition-transform hover:scale-[1.03]"
-                    style={{ background: 'transparent', color: C.violet, border: `1px solid rgba(201,169,97,0.3)` }}>
+                  <span className="text-[12px]" style={{ color: C.smoke2 }}>~10 min · tu prends de l’avance sur tes futures rencontres</span>
+                  <button onClick={share} className="inline-flex items-center gap-2 mt-2 px-6 py-3 rounded-full text-[13px] tracking-[0.08em] uppercase transition-colors"
+                    style={{ background: 'transparent', color: C.alabaster, border: `1px solid ${C.line}` }}>
                     {copied ? 'Lien copié ✓' : 'Partager SOS Meet'} <span aria-hidden>↗</span>
                   </button>
                 </div>
@@ -376,23 +338,23 @@ export default function SosMeetClient() {
         </section>
 
         {/* 7. FAQ */}
-        <section className="max-w-2xl mx-auto px-5 sm:px-8 py-16 sm:py-24">
+        <section className="max-w-2xl mx-auto px-5 sm:px-8 py-20">
           <Reveal className="text-center mb-10">
-            <h2 className="font-normal leading-tight" style={{ ...serif, fontSize: 'clamp(1.7rem,4.4vw,2.4rem)' }}>Questions fréquentes</h2>
+            <h2 style={{ ...serif, fontWeight: 400, fontSize: 'clamp(1.7rem,4.4vw,2.4rem)' }}>Questions fréquentes</h2>
           </Reveal>
           <div>{FAQ.map((f, i) => <FaqItem key={i} q={f.q} a={f.a} />)}</div>
         </section>
 
         {/* 8. FOOTER */}
-        <footer className="py-12" style={{ borderTop: '1px solid rgba(43,39,51,0.08)' }}>
+        <footer className="py-12" style={{ borderTop: `1px solid ${C.line}` }}>
           <div className="max-w-5xl mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-            <span className="text-[18px] font-semibold" style={{ ...serif, color: C.violet }}>SOS Meet</span>
-            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[13px]" style={{ color: 'rgba(43,39,51,0.6)' }}>
+            <span className="text-[20px]" style={{ ...serif, fontWeight: 500 }}>SOS Meet<span style={{ color: C.garnet }}>.</span></span>
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[13px]" style={{ color: C.smoke }}>
               <a href="https://sosshine.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-70">SOS Shine ↗</a>
               <Link href="/mentions-legales" className="hover:opacity-70">Mentions légales</Link>
               <Link href="/confidentialite" className="hover:opacity-70">Confidentialité</Link>
             </div>
-            <span className="text-[12px]" style={{ color: 'rgba(43,39,51,0.4)' }}>© {new Date().getFullYear()} SOS Meet</span>
+            <span className="text-[12px]" style={{ color: C.smoke2 }}>© {new Date().getFullYear()} SOS Meet</span>
           </div>
         </footer>
       </div>

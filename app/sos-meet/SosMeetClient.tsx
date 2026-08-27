@@ -168,7 +168,7 @@ export default function SosMeetClient() {
               <div className="grid sm:grid-cols-2 gap-5 mt-12 text-left">
                 {/* Porte 1 — Solo */}
                 <Link href="/sos-meet/profil" className="group relative rounded-2xl overflow-hidden flex flex-col justify-end min-h-[300px] transition-transform hover:-translate-y-1" style={{ border: `1px solid ${C.line}` }}>
-                  <img src="/sosmeet/hero-silhouettes.png" alt="" className="absolute inset-0 w-full h-full object-cover opacity-55 transition-opacity duration-500 group-hover:opacity-75" />
+                  <img src="/sosmeet/hero-silhouettes.png" alt="" className="absolute inset-0 w-full h-full object-cover opacity-55 transition-opacity duration-500 group-hover:opacity-75" style={{ objectPosition: 'center 12%' }} />
                   <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(10,9,11,.2), rgba(10,9,11,.55) 55%, rgba(10,9,11,.92))' }} />
                   <div className="relative p-7">
                     <div className="text-[11px] tracking-[0.3em] uppercase" style={{ color: C.ember }}>Seul·e</div>

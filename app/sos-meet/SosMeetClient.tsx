@@ -158,7 +158,7 @@ export default function SosMeetClient() {
           {/* Voile pour la lisibilité — assombrit le centre, laisse respirer la dentelle sur les bords */}
           <div aria-hidden className="absolute inset-0" style={{ zIndex: 1, background: 'radial-gradient(60% 48% at 50% 46%, rgba(10,9,11,0.60), rgba(10,9,11,0.20) 80%, transparent), linear-gradient(180deg, rgba(10,9,11,0.30), transparent 32%, rgba(10,9,11,0.62))' }} />
 
-          <div className="relative max-w-5xl mx-auto px-5 sm:px-8 min-h-screen flex flex-col justify-center py-24 text-center" style={{ zIndex: 2 }}>
+          <div className="relative max-w-6xl mx-auto px-5 sm:px-8 min-h-screen flex flex-col justify-center py-24 text-center" style={{ zIndex: 2 }}>
             <Reveal>
               <span className="text-[11px] tracking-[0.42em] uppercase" style={{ color: C.ember }}>La rencontre en conscience</span>
             </Reveal>
@@ -173,9 +173,9 @@ export default function SosMeetClient() {
               </p>
             </Reveal>
             <Reveal delay={0.24}>
-              <div className="grid sm:grid-cols-2 gap-5 mt-12 text-left">
+              <div className="grid sm:grid-cols-2 gap-5 sm:gap-7 mt-12 text-left">
                 {/* Porte 1 — Solo */}
-                <Link href="/sos-meet/profil" className="group relative rounded-2xl overflow-hidden flex flex-col justify-end min-h-[300px] transition-transform hover:-translate-y-1" style={{ border: `1px solid ${C.line}` }}>
+                <Link href="/sos-meet/profil" className="group relative rounded-2xl overflow-hidden flex flex-col justify-end min-h-[340px] md:min-h-[460px] lg:min-h-[520px] transition-transform hover:-translate-y-1" style={{ border: `1px solid ${C.line}` }}>
                   <img src="/sosmeet/hero-silhouettes.png" alt="" className="absolute inset-0 w-full h-full object-cover opacity-55 transition-opacity duration-500 group-hover:opacity-75" style={{ objectPosition: 'center 12%' }} />
                   <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(10,9,11,.2), rgba(10,9,11,.55) 55%, rgba(10,9,11,.92))' }} />
                   <div className="relative p-7">
@@ -186,7 +186,7 @@ export default function SosMeetClient() {
                   </div>
                 </Link>
                 {/* Porte 2 — Couple */}
-                <Link href="/sos-meet/couple" className="group relative rounded-2xl overflow-hidden flex flex-col justify-end min-h-[300px] transition-transform hover:-translate-y-1" style={{ border: `1px solid ${C.line}` }}>
+                <Link href="/sos-meet/couple" className="group relative rounded-2xl overflow-hidden flex flex-col justify-end min-h-[340px] md:min-h-[460px] lg:min-h-[520px] transition-transform hover:-translate-y-1" style={{ border: `1px solid ${C.line}` }}>
                   <img src="/sosmeet/couple.png" alt="" className="absolute inset-0 w-full h-full object-cover opacity-55 transition-opacity duration-500 group-hover:opacity-75" />
                   <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(10,9,11,.2), rgba(10,9,11,.55) 55%, rgba(10,9,11,.92))' }} />
                   <div className="relative p-7">

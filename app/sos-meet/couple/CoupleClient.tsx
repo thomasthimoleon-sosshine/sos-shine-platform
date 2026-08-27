@@ -60,10 +60,11 @@ export default function CoupleClient() {
           <p className="mx-auto max-w-lg text-[17px] leading-relaxed" style={{ color: C.smoke, fontWeight: 300 }}>
             Vous vous êtes aimés. Quelque chose s’est endormi. Avant de tout défaire, et si vous vous re-rencontriez vraiment ?
           </p>
-          <a href="#rejoindre" className="inline-flex items-center gap-2 mt-9 text-[14px] tracking-[0.14em] uppercase px-9 py-4 rounded-full transition-transform hover:-translate-y-0.5"
+          <Link href="/sos-meet/couple/duo" className="inline-flex items-center gap-2 mt-9 text-[14px] tracking-[0.14em] uppercase px-9 py-4 rounded-full transition-transform hover:-translate-y-0.5"
             style={{ background: `linear-gradient(135deg, ${C.garnet}, ${C.garnetSoft})`, color: '#F7EEE9', boxShadow: '0 14px 44px -12px rgba(155,27,46,0.6)' }}>
-            Commencer à deux <span aria-hidden>→</span>
-          </a>
+            Ouvrir notre duo <span aria-hidden>→</span>
+          </Link>
+          <span className="block mt-4 text-[12.5px]" style={{ color: C.smoke2 }}>Gratuit. Une vingtaine de minutes chacun, séparément.</span>
         </div>
       </section>
 
@@ -89,9 +90,30 @@ export default function CoupleClient() {
         <div className="rounded-3xl p-7 sm:p-10" style={{ background: C.card, border: `1px solid ${C.line}`, boxShadow: '0 50px 100px -60px rgba(155,27,46,0.5)' }}>
           {!done ? (
             <>
-              <h2 className="text-center mb-2" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(1.7rem,4.4vw,2.3rem)' }}>Prévenez-moi à l’ouverture</h2>
-              <p className="text-center text-[15px] leading-relaxed mb-8" style={{ color: C.smoke }}>
-                Le parcours à deux arrive très bientôt. Laissez-nous un e-mail, on vous invite en premier.
+              <h2 className="text-center mb-2" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(1.7rem,4.4vw,2.3rem)' }}>Commencer, à deux</h2>
+              <p className="text-center text-[15px] leading-relaxed mb-7" style={{ color: C.smoke }}>
+                L’un de vous ouvre le duo et transmet un lien. L’autre le rejoint. Ensuite chacun répond
+                de son côté, sans se relire. Votre lecture est préparée par l’équipe, nous vous écrivons
+                dès qu’elle est prête.
+              </p>
+              <Link href="/sos-meet/couple/duo" className="block w-full text-center py-4 rounded-full text-[14px] tracking-[0.12em] uppercase transition-transform hover:-translate-y-0.5"
+                style={{ background: `linear-gradient(135deg, ${C.garnet}, ${C.garnetSoft})`, color: '#F7EEE9' }}>
+                Ouvrir notre duo →
+              </Link>
+              <Link href="/sos-meet/couple/duo" className="block w-full text-center mt-3 py-3.5 rounded-full text-[13.5px] tracking-[0.1em] uppercase"
+                style={{ border: `1px solid ${C.line}`, color: C.alabaster }}>
+                J’ai reçu un lien
+              </Link>
+
+              <div className="my-9 flex items-center gap-4" aria-hidden>
+                <span className="flex-1 h-px" style={{ background: C.line }} />
+                <span className="text-[11px] tracking-[0.18em] uppercase" style={{ color: C.smoke2 }}>ou</span>
+                <span className="flex-1 h-px" style={{ background: C.line }} />
+              </div>
+
+              <h3 className="text-center mb-2" style={{ ...serif, fontWeight: 400, fontSize: '1.3rem' }}>Pas encore le moment</h3>
+              <p className="text-center text-[14.5px] leading-relaxed mb-7" style={{ color: C.smoke }}>
+                Laissez-nous un e-mail. On vous écrira quand vous serez prêts, sans insister.
               </p>
               <form onSubmit={submit} className="space-y-4">
                 <input ref={hpRef} type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden className="hidden" />
@@ -117,9 +139,9 @@ export default function CoupleClient() {
                 {status === 'already' ? 'Vous êtes déjà des nôtres' : 'C’est noté.'}
               </h2>
               <p className="text-[15px] leading-relaxed" style={{ color: C.smoke }}>
-                On vous écrit dès l’ouverture du parcours à deux. En attendant, prenez soin de ce lien.
+                On vous écrit bientôt. Le parcours à deux vous attend quand vous le voudrez.
               </p>
-              <Link href="/sos-meet" className="inline-block mt-6 text-[13px] tracking-[0.08em] uppercase" style={{ color: C.smoke }}>← Revenir à l’accueil</Link>
+              <Link href="/sos-meet/couple/duo" className="inline-block mt-6 text-[13px] tracking-[0.08em] uppercase" style={{ color: C.ember }}>Ouvrir notre duo maintenant →</Link>
             </div>
           )}
         </div>

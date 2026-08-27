@@ -138,17 +138,10 @@ export default function SosMeetClient() {
           </a>
         </header>
 
-        {/* 1. HERO — deux portes + phare */}
+        {/* 1. HERO — deux portes */}
         <section className="relative overflow-hidden" style={{ minHeight: '100vh' }}>
-          <style>{`
-            @keyframes sm-sweep{0%{left:-35%;opacity:.35}25%{opacity:.9}50%{left:65%;opacity:.9}75%{opacity:.9}100%{left:-35%;opacity:.35}}
-            @keyframes sm-phare{0%{transform:translateX(-30vw) rotate(-16deg);opacity:.5}25%{opacity:.85}50%{transform:translateX(30vw) rotate(16deg);opacity:.85}75%{opacity:.85}100%{transform:translateX(-30vw) rotate(-16deg);opacity:.5}}
-            .sm-beam{position:absolute;top:-20%;left:-30%;width:70vw;height:140vh;pointer-events:none;z-index:0;background:radial-gradient(closest-side, rgba(193,18,31,0.24), rgba(155,27,46,0.12) 40%, transparent 72%);filter:blur(30px);mix-blend-mode:screen;animation:sm-sweep 16s cubic-bezier(.45,0,.55,1) infinite}
-            .sm-phare{position:absolute;top:-40%;left:50%;width:40vw;height:180vh;pointer-events:none;z-index:0;transform-origin:top center;background:conic-gradient(from 180deg at 50% 0%, transparent 335deg, rgba(193,18,31,0.10) 350deg, rgba(193,18,31,0.16) 360deg, rgba(193,18,31,0.10) 370deg, transparent 385deg);filter:blur(6px);mix-blend-mode:screen;animation:sm-phare 16s ease-in-out infinite}
-            @media(prefers-reduced-motion:reduce){.sm-beam,.sm-phare{animation:none}}
-          `}</style>
-          <div className="sm-beam" aria-hidden />
-          <div className="sm-phare" aria-hidden />
+          {/* Fond statique et chic — profondeur par un dégradé grenat doux (aucune animation) */}
+          <div aria-hidden className="absolute inset-0" style={{ zIndex: 0, background: 'radial-gradient(75% 50% at 50% 0%, rgba(155,27,46,0.16), transparent 62%), radial-gradient(55% 45% at 88% 104%, rgba(155,27,46,0.08), transparent 60%)' }} />
 
           <div className="relative max-w-5xl mx-auto px-5 sm:px-8 min-h-screen flex flex-col justify-center py-24 text-center" style={{ zIndex: 2 }}>
             <Reveal>

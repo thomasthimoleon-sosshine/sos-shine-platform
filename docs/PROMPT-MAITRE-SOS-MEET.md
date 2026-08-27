@@ -14,6 +14,13 @@ match réciproque**, et le **travail intérieur réel** (protocoles SOS Shine tr
 
 Porté par l'équipe **SOS Shine** (fondatrice **Julia Laureau**, co-fondateur **Thomas**).
 
+### OBJECTIF
+Lancer une plateforme de rencontre haut de gamme et sûre, où la profondeur émotionnelle et la
+**sincérité** priment sur l'apparence. Deux entrées : **« Rencontrer »** (solo) — **opérationnelle** —
+et **« Se retrouver »** (couples, à construire). SOS Meet sert aussi de **canal d'acquisition** vers
+SOS Shine (chaque inscription = un compte/lead). Univers visuel « couture après minuit » (noir/grenat),
+voix de Julia, RGPD strict, +18.
+
 ---
 
 ## 1. DÉCISIONS PRODUIT (validées par le client — ne pas re-débattre)
@@ -204,14 +211,17 @@ app/sos-meet/
   profil/ (page + ProfilClient)      # Phase 1 — « Mes infos » (authed)
   questionnaire/ (page + QuestionnaireClient)  # Phase 2 — le questionnaire
   opengraph-image.tsx
-app/api/sosmeet/{waitlist,me,questionnaire,profile,admin}/route.ts
-app/admin/sosmeet/page.tsx   # console admin (à enrichir Phase 6)
+app/sos-meet/decouverte/ (page + DecouverteClient)     # Phase 4 — découverte
+app/sos-meet/messages/ (page + MessagesClient)         # Phase 5 — matchs + messagerie
+app/sos-meet/couple/ (page + CoupleClient)             # porte couple (concept + liste d'attente)
+app/api/sosmeet/{waitlist,me,questionnaire,photo,discover,interest,matches,messages,safety,profile,admin}/route.ts
+app/admin/sosmeet/page.tsx   # console admin (À ENRICHIR : modération)
 lib/sosmeet/
   essentiel.ts               # banque de questions Essentiel + métadonnées
   matching.ts                # computeProfile + compatibility
   coherence.ts               # computeSincerity + règles + désirabilité
-  questions.ts, scoring.ts   # LEGACY (ancien questionnaire)
-public/sosmeet/*.png         # images de la charte
+  questions.ts, scoring.ts   # LEGACY (ancien questionnaire, à retirer)
+public/sosmeet/*.png         # images de la charte (hero-silhouettes, masked-*, couple, velvet, wordmark)
 supabase/schema.sql          # schéma SOS Meet documenté
 supabase/migrations/20260827_sosmeet_account_link.sql  # à appliquer
 scripts/sosmeet-*-demo.ts    # démos des moteurs
@@ -219,19 +229,39 @@ scripts/sosmeet-*-demo.ts    # démos des moteurs
 
 ---
 
-## 10. CE QUI EST FAIT / CE QUI RESTE
+## 10. CE QUI EST FAIT ✅
 
-**Fait & en ligne (branche)** : fondations DB, moteurs sincérité + matching, identité couture,
-landing reskinnée + liste d'attente fonctionnelle, Phases 1 & 2 (inscription reliée au compte, Mes infos,
-questionnaire calculé + sincérité), inscription qui honore `?next=`.
+**Le parcours SOLO est OPÉRATIONNEL de bout en bout (Phases 0→6) :**
+- Fondations : base complète (RLS fermée), bucket photos privé, moteurs **matching** + **sincérité**
+  (anti-triche) + questionnaire **Essentiel** (~30 q), identité couture noir/grenat.
+- **Accueil à deux portes** (« Rencontrer » / « Se retrouver ») avec les images. (Fond statique désormais —
+  l'animation « phare » a été retirée car jugée disgracieuse ; **prévoir un vrai graphisme de fond**.)
+- **Inscription/connexion** reliée au compte SOS Shine (`?next=` honoré).
+- **Mes infos** + **photo voilée** + **Chemin accompli** (protocoles).
+- **Questionnaire** (temps capté, profil + sincérité calculés, badge « Profil cohérent »).
+- **Découverte** (compat pondérée sincérité, orientation double sens, photo voilée).
+- **Connexion → match réciproque → révélation de la photo → messagerie** (+ signaler/bloquer).
+- Landing/porte **couple** : concept + « prévenez-moi » (liste d'attente taguée).
+- Docs : ce prompt + `PROMPT-COUPLE-SOS-MEET.md` (piste couple pour travail parallèle).
 
-**Reste** : Phases **3 → 7**. Appliquer la migration `20260827_sosmeet_account_link.sql`. Étendre le
-questionnaire au-delà de l'Essentiel (paliers). Notifications. Modération.
+## 11. CE QU'IL RESTE À FAIRE (par priorité)
+
+1. **Un vrai graphisme de fond** pour le hero (profondeur, chic/lingerie, sexy sans vulgaire) — image à
+   générer, puis remplacer le dégradé statique dans `app/sos-meet/SosMeetClient.tsx`.
+2. **Appliquer la migration** `supabase/migrations/20260827_sosmeet_account_link.sql` (Supabase MCP
+   instable ; API robuste sans).
+3. **Console de modération admin** (`app/admin/sosmeet`) : profils, drapeaux de sincérité, signalements.
+4. **Notifications** (nouveau match / nouveau message) — e-mail et/ou in-app.
+5. **Approfondir le questionnaire** au-delà de l'Essentiel (les ~170 autres questions, par paliers) +
+   étendre les règles de cohérence/désirabilité en conséquence.
+6. **Nettoyage** : retirer le legacy `lib/sosmeet/questions.ts` + `scoring.ts` + `/api/sosmeet/profile`.
+7. **Le parcours COUPLE** « Se retrouver » (voir `PROMPT-COUPLE-SOS-MEET.md`) — construit en parallèle
+   par Julia + son Claude, dans des dossiers/tables séparés.
+8. **Polish & tests** de bout en bout sur le déploiement (le parcours complet est derrière connexion).
 
 ---
 
-## 11. PROCHAINE ACTION RECOMMANDÉE
-
-**Phase 3** : upload de la **photo** (bucket privé, voilée avant match) + section **« Chemin accompli »**
-(lire `user_progress`) + **aperçu du profil**. Puis **Phase 4 (découverte)** qui rend le produit vivant.
-Cap : atteindre « opérationnel » (Phases 1 → 5).
+## 12. PROCHAINE ACTION RECOMMANDÉE
+Le solo est opérationnel. Priorité immédiate : **(1)** intégrer un vrai **graphisme de fond** du hero
+(profondeur, chic/lingerie, sexy sans vulgaire), **(2)** la **console de modération admin**, **(3)** les
+**notifications**. En parallèle, Julia + son Claude construisent la piste **couple**.

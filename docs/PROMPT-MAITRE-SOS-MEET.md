@@ -2,7 +2,12 @@
 
 > Document de reprise **dédié à SOS Meet** (site de rencontre « en conscience », produit sœur de
 > SOS Shine). À donner tel quel à un assistant (Claude) pour continuer le développement sans perdre
-> de contexte. Dernière mise à jour : 27 août 2026 (accueil deux portes complet + fond couture + splash retiré).
+> de contexte. Dernière mise à jour : 27 août 2026 (accueil deux portes + fond couture + **nav connexion/déconnexion** + **seed de profils de démo**).
+>
+> **⚠️ LIMITE D'ENVIRONNEMENT** : le bac à sable de dev ne peut PAS joindre Supabase (le `fetch` Node ne
+> passe pas par le proxy). Donc : impossible de **seeder / lire / écrire** en base depuis ici. Tout ce qui
+> touche Supabase (seed de démo, tests bout-en-bout, application de migration) doit se faire **sur le
+> déploiement**. Le code, lui, est validé par `npx tsc --noEmit` + captures via Chromium (voir §2).
 
 ---
 
@@ -155,6 +160,11 @@ par email, **plus utilisé par l'UI**.
 
 ## 6. PARCOURS UTILISATEUR (ordre)
 
+**Navigation** : `app/sos-meet/MeetNav.tsx` (client, consciente de la connexion via `GET /api/sosmeet/me`)
+est présente sur landing/profil/découverte/messages/demo. Déconnecté → « Me connecter » + « Créer mon
+profil ». Connecté → « Mon profil · Découvrir · Mes rencontres · **Déconnexion** » (`supabase.auth.signOut()`
+côté client puis redirection). Le compte SOS Meet = le compte SOS Shine (même `/login`, même `/signup`).
+
 1. **Découverte** — `/sos-meet` (landing couture, liste d'attente fonctionnelle).
 2. **Inscription / connexion** — nouveau venu → `/signup?next=/sos-meet/profil` (l'inscription honore
    `?next=`) ; abonné → `/login?next=…`.
@@ -198,6 +208,11 @@ par email, **plus utilisé par l'UI**.
 - `GET/POST /api/sosmeet/me` — infos de base du compte connecté (authed). Upsert robuste par user_id.
 - `GET/POST /api/sosmeet/questionnaire` — réponses + temps ; calcule profil + sincérité ; marque
   `completed`/`is_visible`. (authed)
+- `POST/DELETE /api/sosmeet/dev-seed?token=SEED_MEET_2026` — **SEED DE DÉMO** (à retirer avant public).
+  POST crée ~10 faux profils réalistes (scores via les vrais moteurs), `is_visible+completed` ; body
+  `{likeEmail}` → 2 profils créent un intérêt vers toi (match instantané au clic). DELETE purge les
+  démos (`%@demo.sosmeet.test`). Déclenchable sans technique via la page `/sos-meet/demo` (2 boutons).
+  ⚠️ Ne marche que sur le **déploiement** (Supabase injoignable depuis le dev — voir en-tête).
 - `/api/sosmeet/admin` — liste (admin).
 - `/api/sosmeet/profile` — **legacy** (ancien flux email).
 
@@ -210,16 +225,18 @@ pour ces requêtes (comme ailleurs dans le projet), et compat FK via insertion w
 
 ```
 app/sos-meet/
-  layout.tsx                 # polices Bodoni/Jost + variables charte
+  layout.tsx                 # polices Bodoni/Jost + variables charte + masque splash SOS Shine
+  MeetNav.tsx                # NAV consciente de la connexion (login/logout + liens sections)
   page.tsx + SosMeetClient   # landing couture (hero DEUX PORTES + fond couche, comparatif deux chemins,
                              #   principe 3 temps solo+couple, révélation, compat, chemin accompli, waitlist, FAQ)
   profil/ (page + ProfilClient)      # Phase 1 — « Mes infos » (authed)
-  questionnaire/ (page + QuestionnaireClient)  # Phase 2 — le questionnaire
+  questionnaire/ (page + QuestionnaireClient)  # Phase 2 — questionnaire ESSENTIEL (seul palier existant)
+  demo/page.tsx              # page DÉMO (boutons peupler/vider) — À RETIRER avant public
   opengraph-image.tsx
 app/sos-meet/decouverte/ (page + DecouverteClient)     # Phase 4 — découverte
 app/sos-meet/messages/ (page + MessagesClient)         # Phase 5 — matchs + messagerie
 app/sos-meet/couple/ (page + CoupleClient)             # porte couple (concept + liste d'attente)
-app/api/sosmeet/{waitlist,me,questionnaire,photo,discover,interest,matches,messages,safety,profile,admin}/route.ts
+app/api/sosmeet/{waitlist,me,questionnaire,photo,discover,interest,matches,messages,safety,profile,admin,dev-seed}/route.ts
 app/admin/sosmeet/page.tsx   # console admin (À ENRICHIR : modération)
 lib/sosmeet/
   essentiel.ts               # banque de questions Essentiel + métadonnées
@@ -251,32 +268,66 @@ scripts/sosmeet-*-demo.ts    # démos des moteurs
 - **Questionnaire** (temps capté, profil + sincérité calculés, badge « Profil cohérent »).
 - **Découverte** (compat pondérée sincérité, orientation double sens, photo voilée).
 - **Connexion → match réciproque → révélation de la photo → messagerie** (+ signaler/bloquer).
+- **Navigation complète** : `MeetNav` (connexion / **déconnexion** / accès à toutes les sections) sur
+  toutes les pages. Le compte SOS Meet = compte SOS Shine.
+- **Outil de démo** : seed de ~10 faux profils réalistes + page `/sos-meet/demo` (peupler/vider en un
+  clic) pour se projeter. (À utiliser sur le déploiement ; à retirer avant l'ouverture publique.)
 - Landing/porte **couple** : concept + « prévenez-moi » (liste d'attente taguée).
 - Docs : ce prompt + `PROMPT-COUPLE-SOS-MEET.md` (piste couple pour travail parallèle).
 
-## 11. CE QU'IL RESTE À FAIRE (par priorité)
+## 11. CE QU'IL RESTE À FAIRE — CAHIER DES CHARGES (par priorité)
 
-1. **Le parcours COUPLE** « Se retrouver » (voir `PROMPT-COUPLE-SOS-MEET.md`) : aujourd'hui seule la
-   **porte/landing** couple existe (concept + liste d'attente) ; **tout le parcours reste à construire**
-   (questionnaire de couple, `buildCoupleReport`, tables `sosmeet_couple*`, restitution). Prévu en
-   parallèle par Julia + son Claude, dans des dossiers/tables séparés pour éviter les collisions.
-2. **Appliquer la migration** `supabase/migrations/20260827_sosmeet_account_link.sql` (Supabase MCP
-   instable ; API robuste sans, mais à appliquer pour propreté).
-3. **Console de modération admin** (`app/admin/sosmeet`) : profils, drapeaux de sincérité, signalements
-   (`sosmeet_reports`), blocages, mise en retrait de profils.
-4. **Notifications** (nouveau match / nouveau message) — e-mail et/ou in-app.
-5. **Approfondir le questionnaire** au-delà de l'Essentiel (les ~170 autres questions, par paliers) +
-   étendre les règles de cohérence/désirabilité en conséquence.
-6. **Nettoyage** : retirer le legacy `lib/sosmeet/questions.ts` + `scoring.ts` + `/api/sosmeet/profile`.
-7. **Polish & tests** de bout en bout sur le déploiement (le parcours complet est derrière connexion) :
-   vérifier signup→profil→questionnaire→découverte→match→messagerie sur mobile réel.
+> Le squelette du parcours solo est debout. La mission du prochain Claude : **le développer EN
+> PROFONDEUR** — d'abord la richesse du questionnaire et du matching, puis la modération, les
+> notifications, et le nettoyage. Chaque item ci-dessous est un chantier livrable indépendamment.
 
-**Note finition** : le hero est finalisé (fond couture, deux portes, responsive). Réglages restants
-= goût du client uniquement (intensité de la soie via `opacity` de la couche 2, force des halos grenat).
+### 🎯 PRIORITÉ 1 — Approfondir le questionnaire & le matching (le cœur du produit)
+Aujourd'hui il n'existe **qu'UN seul palier** : `lib/sosmeet/essentiel.ts` (~30 q). Le doc de Julia en
+compte ~200. À faire :
+- **Ajouter les paliers suivants** (ex. « Approfondissement 1/2/3 ») : nouvelles questions taguées
+  comme dans `essentiel.ts` (`type`, `role`, `dimension`, `weight`, `choices[].value`, `desirable`,
+  `sensitive`, `filterKey`). Garder le **stockage `{qid: valeur}`** et le calcul incrémental.
+- **UI** : après l'Essentiel, proposer de « continuer à se dévoiler » (paliers optionnels qui affinent
+  le profil et le matching). Le stepper `QuestionnaireClient` doit accepter un **paramètre de palier**.
+- **Enrichir `matching.ts`** : plus de dimensions/préférences, pondérations plus fines, nouveaux
+  filtres durs si les questions l'exigent.
+- **Enrichir `coherence.ts`** : ajouter des `COHERENCE_RULES` et des entrées `DESIRABILITY` pour les
+  nouvelles questions (c'est ce qui rend l'anti-triche crédible — priorité forte du client).
+- Mettre à jour les démos `scripts/sosmeet-*-demo.ts` en conséquence.
+- **Astuce démo** : le seed (`app/api/sosmeet/dev-seed`) contient des personas ; enrichir leurs
+  `answers` pour couvrir les nouveaux paliers et garder une Découverte réaliste.
+
+### PRIORITÉ 2 — Console de modération admin (`app/admin/sosmeet`)
+Lister profils, **drapeaux de sincérité** (`scores.sincerity.flags`), **signalements**
+(`sosmeet_reports`), **blocages** (`sosmeet_blocks`) ; actions : mettre un profil en retrait
+(`is_visible=false`), voir les incohérences. Indispensable avant ouverture large.
+
+### PRIORITÉ 3 — Notifications (nouveau match / nouveau message)
+E-mail et/ou in-app. Réutiliser l'infra e-mail existante de SOS Shine si présente.
+
+### PRIORITÉ 4 — Migration & nettoyage
+- **Appliquer** `supabase/migrations/20260827_sosmeet_account_link.sql` (sur le déploiement ; l'API est
+  robuste sans, mais la contrainte FK email→waitlist est une verrue).
+- **Retirer le legacy** : `lib/sosmeet/questions.ts` + `scoring.ts` + `app/api/sosmeet/profile`.
+- **Retirer l'outil de démo** avant l'ouverture publique : `app/api/sosmeet/dev-seed`, `app/sos-meet/demo`.
+
+### PRIORITÉ 5 — Photos & finitions
+- **Photos des profils de démo** (aujourd'hui aucune ; l'avatar au match est vide) : optionnel, pour un
+  rendu plus vivant après match — déposer des images dans le bucket privé `sosmeet-photos`.
+- **Tests bout-en-bout sur le déploiement** : signup→profil→questionnaire→découverte→match→messagerie,
+  mobile réel. (Impossible depuis le dev — Supabase injoignable.)
+- Hero finalisé : réglages restants = **goût client** seulement (intensité soie = `opacity` couche 2 du
+  fond dans `SosMeetClient`, force des halos grenat).
+
+### EN PARALLÈLE (Julia + son Claude) — parcours COUPLE « Se retrouver »
+Seule la **porte/landing** couple existe. Tout le parcours reste à construire (questionnaire de couple,
+`buildCoupleReport`, tables `sosmeet_couple*`, restitution). Voir **`docs/PROMPT-COUPLE-SOS-MEET.md`**.
+Dossiers/tables séparés pour éviter les collisions avec le solo.
 
 ---
 
 ## 12. PROCHAINE ACTION RECOMMANDÉE
-Le **solo est opérationnel ET l'accueil deux portes est complet/raffiné**. Priorités immédiates :
-**(1)** construire le **parcours couple** (parallèle Julia), **(2)** la **console de modération admin**,
-**(3)** les **notifications** (match/message). La migration Supabase est à appliquer dès que le MCP répond.
+Le **solo est opérationnel**, l'accueil deux portes est raffiné, la nav (connexion/déconnexion) et l'outil
+de démo sont en place. **Cap suivant : la PROFONDEUR** — commencer par la **PRIORITÉ 1** (paliers de
+questionnaire + enrichissement matching/cohérence), qui est le vrai différenciateur du produit. Puis
+modération admin et notifications. Tout ce qui touche Supabase se teste **sur le déploiement**.

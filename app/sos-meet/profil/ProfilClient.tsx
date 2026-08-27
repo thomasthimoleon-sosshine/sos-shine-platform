@@ -1,244 +1,190 @@
 'use client'
 
-import { useEffect, useRef, useState, useCallback } from 'react'
-import Link from 'next/link'
-import { motion, AnimatePresence } from 'framer-motion'
-import { QUESTIONS, DIMENSIONS, SCALE, TOTAL_QUESTIONS, type Question } from '@/lib/sosmeet/questions'
-import { computeScores, type Answers } from '@/lib/sosmeet/scoring'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
-const C = { cream: '#FAF7F2', violet: '#9C7C1E', lavender: '#C9A961', gold: '#C9A961', goldSoft: '#E2CB86', ink: '#2B2733' }
-const serif = { fontFamily: 'var(--font-fraunces), Georgia, serif' }
-const sans = { fontFamily: 'var(--font-figtree), -apple-system, system-ui, sans-serif' }
-const ease = [0.16, 1, 0.3, 1] as [number, number, number, number]
+// Charte SOS Meet
+const C = {
+  ink: '#0A090B', velvet: '#120E11', card: '#151016', line: 'rgba(242,235,228,0.12)',
+  garnet: '#9B1B2E', garnetSoft: '#7d1723', ember: '#C1121F',
+  alabaster: '#F2EBE4', smoke: '#A99A96', smoke2: '#6E6360',
+}
+const serif = { fontFamily: "var(--sm-serif), Georgia, serif" }
+const sans = { fontFamily: "var(--sm-sans), system-ui, sans-serif" }
 
-const dimOf = (key: string) => DIMENSIONS.find((d) => d.key === key)!
+const GENDERS = [
+  { v: 'femme', l: 'Femme' }, { v: 'homme', l: 'Homme' },
+  { v: 'non-binaire', l: 'Non-binaire' }, { v: 'autre', l: 'Autre' },
+]
+const SEEKING = [
+  { v: 'femmes', l: 'Des femmes' }, { v: 'hommes', l: 'Des hommes' }, { v: 'tout', l: 'Tout le monde' },
+]
 
 export default function ProfilClient() {
-  const [email, setEmail] = useState('')
-  const [emailInput, setEmailInput] = useState('')
-  const [phase, setPhase] = useState<'email' | 'intro' | 'quiz' | 'done'>('email')
-  const [sensitiveConsent, setSensitiveConsent] = useState(false)
-  const [answers, setAnswers] = useState<Answers>({})
-  const [idx, setIdx] = useState(0)
-  const [saveNote, setSaveNote] = useState('')
-  const [gateError, setGateError] = useState<string | null>(null)
-  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const router = useRouter()
+  const [loading, setLoading] = useState(true)
+  const [authed, setAuthed] = useState(false)
+  const [firstName, setFirstName] = useState('')
+  const [birthdate, setBirthdate] = useState('')
+  const [gender, setGender] = useState('')
+  const [seeking, setSeeking] = useState<string[]>([])
+  const [city, setCity] = useState('')
+  const [headline, setHeadline] = useState('')
+  const [ageOk, setAgeOk] = useState(false)
+  const [sensitive, setSensitive] = useState(false)
+  const [status, setStatus] = useState<'idle' | 'loading'>('idle')
+  const [error, setError] = useState<string | null>(null)
 
-  // Init : email depuis l'URL ou localStorage, puis reprise des réponses
   useEffect(() => {
-    let e = ''
-    try {
-      e = new URLSearchParams(window.location.search).get('email') || localStorage.getItem('sosmeet_email') || ''
-    } catch {}
-    if (e) {
-      setEmail(e)
-      setPhase('intro')
-      fetch(`/api/sosmeet/profile?email=${encodeURIComponent(e)}`)
-        .then((r) => r.json())
-        .then((d) => {
-          if (d.answers && Object.keys(d.answers).length) {
-            setAnswers(d.answers)
-            // reprendre à la première question non répondue
-            const firstUnanswered = QUESTIONS.findIndex((q) => typeof d.answers[q.id] !== 'number')
-            setIdx(firstUnanswered === -1 ? QUESTIONS.length - 1 : firstUnanswered)
-          }
-        })
-        .catch(() => {})
-    }
+    fetch('/api/sosmeet/me')
+      .then(async (r) => {
+        if (r.status === 401) { setAuthed(false); setLoading(false); return }
+        const d = await r.json()
+        setAuthed(true)
+        const p = d.profile
+        if (p) {
+          setFirstName(p.first_name || ''); setBirthdate(p.birthdate || ''); setGender(p.gender || '')
+          setSeeking(Array.isArray(p.seeking) ? p.seeking : []); setCity(p.city || ''); setHeadline(p.headline || '')
+          setAgeOk(!!p.age_confirmed); setSensitive(!!p.sensitive_consent)
+        }
+        setLoading(false)
+      })
+      .catch(() => { setAuthed(false); setLoading(false) })
   }, [])
 
-  const save = useCallback((next: Answers, completed = false) => {
-    try { localStorage.setItem('sosmeet_answers', JSON.stringify(next)) } catch {}
-    if (saveTimer.current) clearTimeout(saveTimer.current)
-    saveTimer.current = setTimeout(() => {
-      fetch('/api/sosmeet/profile', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, answers: next, sensitiveConsent, completed }),
-      })
-        .then((r) => r.json())
-        .then((d) => {
-          if (d.error) setSaveNote(d.error)
-          else { setSaveNote('Enregistré ✓'); setTimeout(() => setSaveNote(''), 1500) }
-        })
-        .catch(() => {})
-    }, completed ? 0 : 900)
-  }, [email, sensitiveConsent])
-
-  function answer(q: Question, value: number) {
-    const next = { ...answers, [q.id]: value }
-    setAnswers(next)
-    save(next)
-    setTimeout(() => {
-      if (idx < QUESTIONS.length - 1) setIdx(idx + 1)
-      else { save(next, true); setPhase('done') }
-    }, 180)
+  function toggleSeeking(v: string) {
+    setSeeking((s) => (s.includes(v) ? s.filter((x) => x !== v) : [...s, v]))
   }
 
-  function startQuiz() {
-    setPhase('quiz')
-  }
-
-  function submitEmail(e: React.FormEvent) {
+  async function submit(e: React.FormEvent) {
     e.preventDefault()
-    setGateError(null)
-    const v = emailInput.toLowerCase().trim()
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { setGateError('Adresse email invalide.'); return }
-    try { localStorage.setItem('sosmeet_email', v) } catch {}
-    setEmail(v)
-    setPhase('intro')
+    setError(null)
+    if (!ageOk) { setError('Confirme que tu es majeur·e.'); return }
+    if (!sensitive) { setError('Le consentement est nécessaire (le profil touche des sujets intimes).'); return }
+    setStatus('loading')
+    try {
+      const res = await fetch('/api/sosmeet/me', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ firstName, birthdate, gender, seeking, city, headline, ageConfirmed: ageOk, sensitiveConsent: sensitive }),
+      })
+      const d = await res.json().catch(() => ({}))
+      if (res.ok) { router.push('/sos-meet/questionnaire'); return }
+      setError(d.error || 'Une erreur est survenue.')
+      setStatus('idle')
+    } catch { setError('Connexion impossible.'); setStatus('idle') }
   }
 
-  const answeredN = QUESTIONS.filter((q) => typeof answers[q.id] === 'number').length
-  const pct = Math.round((answeredN / TOTAL_QUESTIONS) * 100)
+  const wrap = 'min-h-screen'
+  const inputCls = 'w-full px-4 py-3.5 rounded-xl text-[15px] outline-none border'
+  const inputStyle: React.CSSProperties = { ...sans, background: 'rgba(255,255,255,0.03)', borderColor: C.line, color: C.alabaster }
 
-  const wrap = 'min-h-screen overflow-x-hidden'
-  const bg = { ...sans, background: C.cream, color: C.ink }
+  if (loading) {
+    return <main className={wrap} style={{ ...sans, background: C.ink, color: C.smoke }}>
+      <div className="flex items-center justify-center min-h-screen text-[14px]">Un instant…</div>
+    </main>
+  }
 
-  // ── PHASE : email ──
-  if (phase === 'email') {
+  // ── Gate : pas connecté ──
+  if (!authed) {
     return (
-      <main style={bg} className={wrap}>
-        <div className="max-w-md mx-auto px-6 py-24">
-          <Link href="/sos-meet" className="text-[13px]" style={{ color: C.violet }}>← SOS Meet</Link>
-          <h1 className="font-normal leading-tight mt-6 mb-3" style={{ ...serif, fontSize: 'clamp(1.8rem,5vw,2.4rem)' }}>Votre profil de compatibilité</h1>
-          <p className="text-[15px] leading-relaxed mb-8" style={{ color: 'rgba(43,39,51,0.66)' }}>
-            Entrez l&apos;email utilisé pour la liste d&apos;attente. Vos réponses seront sauvegardées : vous pourrez reprendre plus tard.
+      <main className={wrap} style={{ ...sans, background: C.ink, color: C.alabaster }}>
+        <div className="max-w-md mx-auto px-6 min-h-screen flex flex-col items-center justify-center text-center">
+          <span className="text-[11px] tracking-[0.4em] uppercase" style={{ color: C.ember }}>Créer mon profil</span>
+          <h1 className="mt-4 mb-4" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(2rem,7vw,3rem)', lineHeight: 1.05 }}>
+            Un compte, d’abord
+          </h1>
+          <p className="text-[15px] leading-relaxed mb-8" style={{ color: C.smoke }}>
+            Ton profil SOS Meet est rattaché à ton compte SOS Shine — c’est ce qui garde tout sûr et sincère. Connecte-toi, ou crée ton compte en une minute.
           </p>
-          <form onSubmit={submitEmail} className="space-y-4">
-            <input type="email" required value={emailInput} onChange={(e) => setEmailInput(e.target.value)} placeholder="vous@email.com"
-              className="w-full px-4 py-3.5 rounded-2xl text-[15px] outline-none border" style={{ background: '#fff', borderColor: 'rgba(43,39,51,0.12)', color: C.ink }} />
-            {gateError && <p className="text-[13px]" style={{ color: '#c0392b' }}>{gateError}</p>}
-            <button type="submit" className="w-full py-4 rounded-full text-[15px] font-semibold" style={{ background: `linear-gradient(135deg,${C.violet},${C.lavender})`, color: '#2b220e' }}>Continuer</button>
-          </form>
-          <p className="text-[13px] mt-6" style={{ color: 'rgba(43,39,51,0.5)' }}>
-            Pas encore inscrit·e ? <Link href="/sos-meet#waitlist" style={{ color: C.violet }}>Rejoindre la liste d&apos;attente</Link>
-          </p>
+          <div className="w-full flex flex-col gap-3">
+            <a href="/login?next=/sos-meet/profil" className="w-full py-4 rounded-full text-[14px] tracking-[0.12em] uppercase"
+              style={{ background: `linear-gradient(135deg, ${C.garnet}, ${C.garnetSoft})`, color: '#F7EEE9' }}>Me connecter</a>
+            <a href="/signup?next=/sos-meet/profil" className="w-full py-4 rounded-full text-[14px] tracking-[0.12em] uppercase"
+              style={{ border: `1px solid ${C.line}`, color: C.alabaster }}>Créer mon compte</a>
+          </div>
         </div>
       </main>
     )
   }
 
-  // ── PHASE : intro + consentement sensible ──
-  if (phase === 'intro') {
-    return (
-      <main style={bg} className={wrap}>
-        <div className="max-w-xl mx-auto px-6 py-20">
-          <span className="text-[11px] tracking-[0.2em] uppercase font-semibold px-4 py-1.5 rounded-full" style={{ background: 'rgba(201,169,97,0.08)', color: C.violet }}>~10–15 minutes</span>
-          <h1 className="font-normal leading-tight mt-6 mb-4" style={{ ...serif, fontSize: 'clamp(2rem,5.5vw,2.8rem)' }}>Créons votre profil, en profondeur.</h1>
-          <p className="text-[16px] leading-relaxed mb-6" style={{ color: 'rgba(43,39,51,0.7)' }}>
-            {TOTAL_QUESTIONS} questions pour cerner qui vous êtes vraiment — vos intentions, votre chemin, vos schémas émotionnels,
-            vos valeurs — afin de vous faire rencontrer des personnes réellement alignées. Aucune bonne ou mauvaise réponse.
-            Vous pouvez vous arrêter et reprendre à tout moment.
-          </p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-8">
-            {DIMENSIONS.map((d) => (
-              <div key={d.key} className="rounded-2xl px-3 py-2.5 text-[13px] flex items-center gap-2" style={{ background: '#fff', border: '1px solid rgba(43,39,51,0.07)' }}>
-                <span>{d.emoji}</span><span style={{ color: 'rgba(43,39,51,0.7)' }}>{d.label}</span>
-              </div>
-            ))}
+  // ── Formulaire « Mes infos » ──
+  return (
+    <main className={wrap} style={{ ...sans, background: C.ink, color: C.alabaster }}>
+      <div className="pointer-events-none fixed inset-0" style={{ background: 'radial-gradient(110% 55% at 50% -8%, rgba(155,27,46,0.16), transparent 55%)' }} />
+      <div className="relative max-w-lg mx-auto px-6 py-16">
+        <span className="text-[11px] tracking-[0.4em] uppercase" style={{ color: C.ember }}>Étape 1 · Mes infos</span>
+        <h1 className="mt-4 mb-2" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(2rem,6vw,3rem)', lineHeight: 1.03 }}>
+          Faisons connaissance
+        </h1>
+        <p className="text-[15px] leading-relaxed mb-9" style={{ color: C.smoke }}>
+          L’essentiel pour commencer. Juste après, le questionnaire de compatibilité — c’est lui qui débloque tes premières rencontres.
+        </p>
+
+        <form onSubmit={submit} className="space-y-6">
+          <div>
+            <label htmlFor="fn" className="block text-[13px] mb-1.5" style={{ color: C.smoke }}>Prénom</label>
+            <input id="fn" required value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Ton prénom" className={inputCls} style={inputStyle} />
           </div>
-          <label className="flex items-start gap-3 mb-6 cursor-pointer">
-            <input type="checkbox" checked={sensitiveConsent} onChange={(e) => setSensitiveConsent(e.target.checked)} className="mt-1 w-4 h-4 shrink-0" style={{ accentColor: C.violet }} />
-            <span className="text-[13px] leading-relaxed" style={{ color: 'rgba(43,39,51,0.65)' }}>
-              Certaines questions touchent votre spiritualité et votre intimité (données sensibles, RGPD art. 9).
-              J&apos;accepte qu&apos;elles soient traitées, en Europe, dans le seul but d&apos;améliorer mes futures rencontres. Je peux tout supprimer à tout moment.
+
+          <div>
+            <label htmlFor="bd" className="block text-[13px] mb-1.5" style={{ color: C.smoke }}>Date de naissance</label>
+            <input id="bd" type="date" required value={birthdate} onChange={(e) => setBirthdate(e.target.value)} className={inputCls} style={inputStyle} />
+          </div>
+
+          <div>
+            <span className="block text-[13px] mb-2.5" style={{ color: C.smoke }}>Je suis…</span>
+            <div className="flex flex-wrap gap-2.5">
+              {GENDERS.map((g) => (
+                <button type="button" key={g.v} onClick={() => setGender(g.v)}
+                  className="px-4 py-2.5 rounded-full text-[14px] transition-colors"
+                  style={{ border: `1px solid ${gender === g.v ? C.garnet : C.line}`, background: gender === g.v ? 'rgba(155,27,46,0.18)' : 'transparent', color: gender === g.v ? C.alabaster : C.smoke }}>
+                  {g.l}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <span className="block text-[13px] mb-2.5" style={{ color: C.smoke }}>Je cherche…</span>
+            <div className="flex flex-wrap gap-2.5">
+              {SEEKING.map((s) => (
+                <button type="button" key={s.v} onClick={() => toggleSeeking(s.v)}
+                  className="px-4 py-2.5 rounded-full text-[14px] transition-colors"
+                  style={{ border: `1px solid ${seeking.includes(s.v) ? C.garnet : C.line}`, background: seeking.includes(s.v) ? 'rgba(155,27,46,0.18)' : 'transparent', color: seeking.includes(s.v) ? C.alabaster : C.smoke }}>
+                  {s.l}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="city" className="block text-[13px] mb-1.5" style={{ color: C.smoke }}>Ville <span style={{ color: C.smoke2 }}>(optionnel)</span></label>
+            <input id="city" value={city} onChange={(e) => setCity(e.target.value)} placeholder="Où vis-tu ?" className={inputCls} style={inputStyle} />
+          </div>
+
+          <div>
+            <label htmlFor="hl" className="block text-[13px] mb-1.5" style={{ color: C.smoke }}>Une phrase pour te présenter <span style={{ color: C.smoke2 }}>(optionnel)</span></label>
+            <input id="hl" value={headline} maxLength={160} onChange={(e) => setHeadline(e.target.value)} placeholder="Ce qui te définit en une phrase…" className={inputCls} style={inputStyle} />
+          </div>
+
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input type="checkbox" checked={ageOk} onChange={(e) => setAgeOk(e.target.checked)} className="mt-1 w-4 h-4 shrink-0" style={{ accentColor: C.garnet }} />
+            <span className="text-[13px] leading-relaxed" style={{ color: C.smoke }}>Je certifie être majeur·e (18 ans ou plus).</span>
+          </label>
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input type="checkbox" checked={sensitive} onChange={(e) => setSensitive(e.target.checked)} className="mt-1 w-4 h-4 shrink-0" style={{ accentColor: C.garnet }} />
+            <span className="text-[13px] leading-relaxed" style={{ color: C.smoke }}>
+              J’accepte que mon profil aborde des sujets intimes (attachement, sexualité, valeurs) pour améliorer la justesse des rencontres. Données hébergées en Europe, effaçables à tout moment.
             </span>
           </label>
-          <button disabled={!sensitiveConsent} onClick={startQuiz} className="w-full py-4 rounded-full text-[15px] font-semibold disabled:opacity-50"
-            style={{ background: `linear-gradient(135deg,${C.violet},${C.lavender})`, color: '#2b220e' }}>
-            {answeredN > 0 ? 'Reprendre mon profil' : 'Commencer'}
+
+          {error && <p className="text-[13px]" style={{ color: C.ember }}>{error}</p>}
+
+          <button type="submit" disabled={status === 'loading'} className="w-full py-4 rounded-full text-[14px] tracking-[0.12em] uppercase transition-transform hover:-translate-y-0.5 disabled:opacity-60"
+            style={{ background: `linear-gradient(135deg, ${C.garnet}, ${C.garnetSoft})`, color: '#F7EEE9', boxShadow: '0 14px 34px -14px rgba(155,27,46,0.6)' }}>
+            {status === 'loading' ? 'Un instant…' : 'Continuer vers le questionnaire →'}
           </button>
-        </div>
-      </main>
-    )
-  }
-
-  // ── PHASE : done ──
-  if (phase === 'done') {
-    const scores = computeScores(answers)
-    return (
-      <main style={bg} className={wrap}>
-        <div className="max-w-lg mx-auto px-6 py-20 text-center">
-          <div className="text-5xl mb-4">🌟</div>
-          <h1 className="font-normal leading-tight mb-3" style={{ ...serif, fontSize: 'clamp(1.9rem,5vw,2.6rem)' }}>Votre profil est prêt.</h1>
-          <p className="text-[15px] leading-relaxed mb-10" style={{ color: 'rgba(43,39,51,0.66)' }}>
-            Merci pour votre présence et votre sincérité. Dès l&apos;ouverture de la bêta, nous vous présenterons des personnes
-            réellement alignées sur qui vous êtes.
-          </p>
-          <div className="text-left space-y-3 mb-10">
-            {DIMENSIONS.map((d) => (
-              <div key={d.key}>
-                <div className="flex justify-between text-[13px] mb-1"><span style={{ color: 'rgba(43,39,51,0.7)' }}>{d.emoji} {d.label}</span><span style={{ color: C.violet }}>{scores[d.key]}</span></div>
-                <div className="h-2 rounded-full" style={{ background: 'rgba(201,169,97,0.1)' }}>
-                  <div className="h-2 rounded-full" style={{ width: `${scores[d.key]}%`, background: `linear-gradient(90deg,${C.violet},${C.lavender})` }} />
-                </div>
-              </div>
-            ))}
-          </div>
-          <Link href="/sos-meet" className="inline-block px-7 py-3.5 rounded-full text-[15px] font-semibold" style={{ background: C.gold, color: '#3a2f14' }}>
-            Revenir à SOS Meet
-          </Link>
-        </div>
-      </main>
-    )
-  }
-
-  // ── PHASE : quiz ──
-  const q = QUESTIONS[idx]
-  const d = dimOf(q.dim)
-  const options = q.type === 'choice' ? q.choices! : SCALE
-  const current = answers[q.id]
-
-  return (
-    <main style={bg} className={wrap}>
-      {/* progress bar */}
-      <div className="sticky top-0 z-20" style={{ background: C.cream }}>
-        <div className="max-w-xl mx-auto px-6 pt-5 pb-3">
-          <div className="flex items-center justify-between text-[12px] mb-2" style={{ color: 'rgba(43,39,51,0.55)' }}>
-            <span>{d.emoji} {d.label}</span>
-            <span>{answeredN}/{TOTAL_QUESTIONS}{saveNote && <span style={{ color: C.violet }}> · {saveNote}</span>}</span>
-          </div>
-          <div className="h-1.5 rounded-full" style={{ background: 'rgba(201,169,97,0.12)' }}>
-            <div className="h-1.5 rounded-full transition-all duration-500" style={{ width: `${pct}%`, background: `linear-gradient(90deg,${C.violet},${C.lavender})` }} />
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-xl mx-auto px-6 py-10 sm:py-16">
-        <AnimatePresence mode="wait">
-          <motion.div key={q.id}
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }} transition={{ duration: 0.35, ease }}>
-            <h2 className="font-normal leading-snug mb-8" style={{ ...serif, fontSize: 'clamp(1.5rem,4.4vw,2.1rem)' }}>{q.text}</h2>
-            <div className="space-y-2.5">
-              {options.map((o, i) => {
-                const active = current === o.value
-                return (
-                  <button key={i} onClick={() => answer(q, o.value)}
-                    className="w-full text-left px-5 py-4 rounded-2xl text-[15px] transition-all hover:scale-[1.01]"
-                    style={{
-                      background: active ? `linear-gradient(135deg,${C.violet},${C.lavender})` : '#fff',
-                      color: active ? '#2b220e' : C.ink,
-                      border: `1px solid ${active ? 'transparent' : 'rgba(43,39,51,0.1)'}`,
-                    }}>
-                    {o.label}
-                  </button>
-                )
-              })}
-            </div>
-
-            <div className="flex items-center justify-between mt-8">
-              <button onClick={() => setIdx(Math.max(0, idx - 1))} disabled={idx === 0}
-                className="text-[14px] disabled:opacity-30" style={{ color: 'rgba(43,39,51,0.6)' }}>← Précédent</button>
-              {typeof current === 'number' && (
-                <button onClick={() => { if (idx < QUESTIONS.length - 1) setIdx(idx + 1); else { save(answers, true); setPhase('done') } }}
-                  className="text-[14px] font-semibold" style={{ color: C.violet }}>
-                  {idx < QUESTIONS.length - 1 ? 'Suivant →' : 'Terminer →'}
-                </button>
-              )}
-            </div>
-          </motion.div>
-        </AnimatePresence>
+        </form>
       </div>
     </main>
   )

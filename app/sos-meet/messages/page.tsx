@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import MessagesClient from './MessagesClient'
 
 export const metadata: Metadata = {
-  title: 'Mes rencontres — SOS Meet',
+  title: 'Mes rencontres, SOS Meet',
   description: 'Vos connexions et vos conversations.',
   robots: { index: false, follow: false },
 }

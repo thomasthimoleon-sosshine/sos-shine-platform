@@ -30,7 +30,7 @@ function buildCeremonieConfirmationEmail(prenom: string): string {
   </p>
   <div style="background: #f9f6f0; border-left: 3px solid #C9A961; padding: 20px 24px; margin: 28px 0; border-radius: 4px;">
     <p style="margin: 0 0 8px; font-size: 15px;">📅 <strong>Samedi 13 juin 2026</strong></p>
-    <p style="margin: 0 0 8px; font-size: 15px;">🕕 <strong>18h00 — 21h30</strong></p>
+    <p style="margin: 0 0 8px; font-size: 15px;">🕕 <strong>18h00, 21h30</strong></p>
     <p style="margin: 0; font-size: 15px;">📍 <strong>Lac de Saint-Cassien</strong></p>
     <p style="margin: 8px 0 0; font-size: 14px; color: #666;">L'adresse exacte te sera communiquée 24h avant 🙂</p>
   </div>
@@ -38,7 +38,7 @@ function buildCeremonieConfirmationEmail(prenom: string): string {
   <ul style="font-size: 15px; line-height: 1.9; color: #333; padding-left: 20px;">
     <li>Le solde de <strong>90€</strong> se règle en espèces sur place le soir de l'événement</li>
     <li>Prévois une tenue dans laquelle tu te sens à l'aise pour bouger et t'asseoir dehors</li>
-    <li>Le lieu est en plein air au bord du lac — une petite laine pour le soir peut être utile</li>
+    <li>Le lieu est en plein air au bord du lac, une petite laine pour le soir peut être utile</li>
     <li>Pense à prendre tes précautions contre les moustiques 🌿</li>
   </ul>
   <p style="font-size: 15px; line-height: 1.7; margin-top: 28px;">
@@ -168,7 +168,7 @@ export async function POST(request: Request) {
             const email = (reservation as { prenom: string; email: string }).email
             sendRawEmail(
               email,
-              "Ta place est confirmée — L'Éveil · 13 juin au lac ✨",
+              "Ta place est confirmée, L'Éveil · 13 juin au lac ✨",
               buildCeremonieConfirmationEmail(prenom),
               { recipientName: prenom, eventType: 'ceremonie_payment_confirmed' }
             ).catch(err => console.error('[Webhook] Ceremonie email error:', err))

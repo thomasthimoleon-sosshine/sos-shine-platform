@@ -70,7 +70,7 @@ export default function LeadsCadeauAdmin() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="font-display text-2xl sm:text-3xl font-light text-[var(--text-primary)] mb-1">
-          Leads — Le Couple Vivant
+          Leads, Le Couple Vivant
         </h1>
         <p className="text-sm text-[var(--text-muted)]">
           {leads.length} contact{leads.length !== 1 ? 's' : ''} · guide PDF offert

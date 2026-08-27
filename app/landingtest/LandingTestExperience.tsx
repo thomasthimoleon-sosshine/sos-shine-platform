@@ -192,14 +192,14 @@ const CSS = `
 
 const EMP = [
   ['💛', 'En amour', 'Tu attires les mêmes histoires, tu donnes trop, ou tu gardes tes distances sans vraiment savoir pourquoi.', 'Et si ce n\'était pas toi, mais un schéma appris&nbsp;?'],
-  ['💼', 'Au travail', 'Tu en fais toujours plus, tu doutes de ta valeur, ou tu n\'oses pas prendre ta place.', 'Ce réflexe a une origine — et il se transforme.'],
+  ['💼', 'Au travail', 'Tu en fais toujours plus, tu doutes de ta valeur, ou tu n\'oses pas prendre ta place.', 'Ce réflexe a une origine, et il se transforme.'],
   ['🌙', 'Fatigue émotionnelle', 'Tu comprends tout de toi… mais tu te sens épuisée, comme si rien ne changeait vraiment.', 'Comprendre ne suffit pas. On va plus loin.'],
 ]
 const SIGCHIPS = ['🧠 L\'Analyste', '💗 Le Pilier', '🏰 La Citadelle', '⚡ L\'Électron Libre', '🦎 Le Caméléon', '🔥 Le Catalyseur']
 const HOW = [
-  ['01', 'Passe le test', 'Réponds à 12 questions, en 3 minutes. Aucune bonne ou mauvaise réponse — juste toi.', 'Gratuit · sans carte'],
+  ['01', 'Passe le test', 'Réponds à 12 questions, en 3 minutes. Aucune bonne ou mauvaise réponse, juste toi.', 'Gratuit · sans carte'],
   ['02', 'Reçois ta Signature', 'Ta lumière, ton ombre, et la phrase inconsciente qui te dirige. Immédiatement.', null],
-  ['03', 'Suis ton protocole', 'Un parcours guidé fait pour ton profil : comprendre, libérer, puis agir — à ton rythme.', null],
+  ['03', 'Suis ton protocole', 'Un parcours guidé fait pour ton profil : comprendre, libérer, puis agir, à ton rythme.', null],
 ]
 const PLAT = [
   ['📚', 'Encyclopédie', 'De A à Z, chaque expérience émotionnelle décodée en protocole guidé.', 'Encyclopédie complète'],
@@ -210,7 +210,7 @@ const PLAT = [
 const TESTI = [
   ['Camille', '41 ans · Lyon', "J'ai pleuré en lisant ma Signature. Pas de tristesse. De soulagement. Quelqu'un voyait enfin ce que je portais."],
   ['Sophie', '34 ans · Paris', "10 ans en thérapie. Et en 3 minutes, j'ai compris un truc que personne n'avait réussi à me dire."],
-  ['Nadia', '29 ans · Marseille', "Mon couple a changé. Pas parce que lui a changé — parce que j'ai arrêté de rejouer le même film."],
+  ['Nadia', '29 ans · Marseille', "Mon couple a changé. Pas parce que lui a changé, parce que j'ai arrêté de rejouer le même film."],
 ]
 const CREATORS = [
   ['Julia', 'Fondatrice · Énergie', "Autrice du livre fondateur de SOS Shine. Elle a créé la méthode et reconnecte chacun à sa vibration authentique.", '#C79A3D', '/images/julia.jpeg'],
@@ -260,7 +260,7 @@ export default function LandingTestExperience() {
       {/* 1. BANNIÈRE URGENCE */}
       <div className="banner">
         <span className="pill">C&apos;est demain</span>
-        Événement SOS Shine — Plage du Palm Beach, Cannes. <a href={EVENT_URL}>Réserver ma place →</a>
+        Événement SOS Shine, Plage du Palm Beach, Cannes. <a href={EVENT_URL}>Réserver ma place →</a>
       </div>
 
       {/* 2. NAV STICKY */}
@@ -283,7 +283,7 @@ export default function LandingTestExperience() {
         <div>
           <p className="eyebrow" style={{ marginBottom: 20 }}>Signature Émotionnelle · Gratuit</p>
           <h1>Et si la phrase qui te protège depuis toujours <em>dirigeait encore ta vie</em>&nbsp;?</h1>
-          <p className="sub">Nous portons tous un schéma émotionnel inconscient — appris tôt, pour nous protéger. Il façonne notre amour, notre travail, notre énergie. En 3 minutes, découvre le tien.</p>
+          <p className="sub">Nous portons tous un schéma émotionnel inconscient, appris tôt, pour nous protéger. Il façonne notre amour, notre travail, notre énergie. En 3 minutes, découvre le tien.</p>
           <div className="cta">
             <a className="btn pulse" href={TEST_URL}>Découvrir ma Signature →</a>
             <a className="btn ghost" href="#comment">▶&nbsp; Comment ça marche</a>
@@ -336,7 +336,7 @@ export default function LandingTestExperience() {
           <p className="eyebrow">La clé de tout</p>
           <h2 style={{ margin: '12px 0 16px' }}>Ta Signature Émotionnelle</h2>
           <p className="muted" style={{ fontWeight: 300, lineHeight: 1.7, fontSize: '1.05rem' }}>
-            C&apos;est le schéma inconscient — souvent résumé par une seule phrase — que ton cerveau a construit très tôt pour te protéger. Il pilote encore aujourd&apos;hui tes réactions, tes choix, tes relations. Le révéler, c&apos;est reprendre les commandes.
+            C&apos;est le schéma inconscient, souvent résumé par une seule phrase, que ton cerveau a construit très tôt pour te protéger. Il pilote encore aujourd&apos;hui tes réactions, tes choix, tes relations. Le révéler, c&apos;est reprendre les commandes.
           </p>
           <div className="sigchips">
             {SIGCHIPS.map((c, i) => <span className="chip" key={i}>{c}</span>)}
@@ -349,7 +349,7 @@ export default function LandingTestExperience() {
           <p className="q">« Ton cœur a une antenne ultra-sensible. »</p>
           <div className="lo">
             <div><div className="k">Ta lumière</div><div className="v">Une empathie rare. Tu crées des espaces de sécurité pour les autres.</div></div>
-            <div><div className="k">Ton ombre</div><div className="v">Tu t&apos;oublies. Tu portes tout — jusqu&apos;à t&apos;épuiser.</div></div>
+            <div><div className="k">Ton ombre</div><div className="v">Tu t&apos;oublies. Tu portes tout, jusqu&apos;à t&apos;épuiser.</div></div>
           </div>
         </div>
       </div></div></section>
@@ -396,7 +396,7 @@ export default function LandingTestExperience() {
       <section id="temoignages"><div className="wrap">
         <div className="rating rv">
           <div className="stars" aria-hidden>★★★★★</div>
-          <div className="val"><b>4,9/5</b> — des milliers de personnes se sont reconnues</div>
+          <div className="val"><b>4,9/5</b>, des milliers de personnes se sont reconnues</div>
         </div>
         <div className="tgrid">
           {TESTI.map((t, i) => (
@@ -533,7 +533,7 @@ export default function LandingTestExperience() {
             <a href="/contact">Contact</a>
           </div>
         </div>
-        <div className="bottom">© {new Date().getFullYear()} SOS Shine — Briller comme un diamant. Cet outil ne remplace pas un suivi médical ou psychologique.</div>
+        <div className="bottom">© {new Date().getFullYear()} SOS Shine, Briller comme un diamant. Cet outil ne remplace pas un suivi médical ou psychologique.</div>
       </div></footer>
     </div>
   )

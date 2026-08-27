@@ -285,7 +285,7 @@ function HeroBanner({ video, onOpen, onInfo }: { video: ShineVideo; onOpen: () =
 
       {/* ─── Ordinateur : « La Fenêtre » ─────────────────────────────────
            L'image n'est plus un fond voilé à 92 % : c'est une pièce posée,
-           nette et entière, à droite. Aucun voile dessus — donc plus aucun
+           nette et entière, à droite. Aucun voile dessus, donc plus aucun
            conflit avec un titre déjà incrusté dans la vignette, qui faisait
            apparaître le titre deux fois. ──────────────────────────────── */}
       <div className="hidden sm:block relative w-full overflow-hidden rounded-2xl bg-[#0d0b08] border border-[rgba(201,169,97,0.14)]"
@@ -672,7 +672,7 @@ function FullScreenPlayer({ video, onClose, onShowInfo, previewSeconds }: {
             </div>
             <h3 className="font-display text-2xl font-light mb-2" style={{ color: '#C9A961' }}>Tu as vu l&apos;aperçu ✨</h3>
             <p className="text-sm mb-7 leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
-              Abonne-toi à SOS Shine pour regarder cette vidéo en entier — et débloquer toute la plateforme.
+              Abonne-toi à SOS Shine pour regarder cette vidéo en entier, et débloquer toute la plateforme.
             </p>
             <div className="flex flex-col gap-3 items-center">
               <a href="/rejoindre" className="w-full sm:w-auto px-8 py-3.5 rounded-full text-sm font-semibold" style={{ background: 'linear-gradient(135deg, #C9A961, #A88248)', color: '#050505' }}>
@@ -1888,7 +1888,7 @@ export default function ShineTVPage() {
             {/*
               Rangee « Tendances du moment » : elle est CALCULEE (les plus
               recentes), pas stockee. Avant, « trending » etait une categorie
-              du dashboard que l'admin ne pouvait jamais attribuer — le filtre
+              du dashboard que l'admin ne pouvait jamais attribuer, le filtre
               ne renvoyait donc jamais rien.
             */}
             {trendingVideos.length > 0 && (
@@ -1917,7 +1917,7 @@ export default function ShineTVPage() {
             {/*
               Filet de securite : toute video dont la categorie ne correspond a
               aucune rangee connue atterrit ici. Sans ca elle n'est affichee
-              NULLE PART dans l'onglet « Tout » — c'est exactement le bug qui
+              NULLE PART dans l'onglet « Tout », c'est exactement le bug qui
               faisait disparaitre les masterclass.
             */}
             {uncategorizedVideos.length > 0 && (

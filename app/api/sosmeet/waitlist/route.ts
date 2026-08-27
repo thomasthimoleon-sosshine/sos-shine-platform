@@ -53,7 +53,7 @@ export async function POST(request: Request) {
 
     // Fallback dev : pas d'env Supabase -> succès simulé (permet de tester l'UI)
     if (!supabase) {
-      console.log('[sosmeet/waitlist] DEV fallback (pas de Supabase) — inscription simulée :', {
+      console.log('[sosmeet/waitlist] DEV fallback (pas de Supabase), inscription simulée :', {
         email: cleanEmail, firstName: cleanFirst, city: cleanCity, stage: cleanStage,
       })
       return NextResponse.json({ message: 'success', simulated: true }, { status: 201 })
@@ -72,7 +72,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ message: 'already_registered' }, { status: 200 })
       }
       if (error.code === '42P01') {
-        console.error('[sosmeet/waitlist] Table sosmeet_waitlist absente — exécutez supabase/schema.sql')
+        console.error('[sosmeet/waitlist] Table sosmeet_waitlist absente, exécutez supabase/schema.sql')
         return NextResponse.json({ error: 'Service temporairement indisponible.' }, { status: 503 })
       }
       console.error('[sosmeet/waitlist] insert error:', error.code, error.message)
@@ -87,7 +87,7 @@ export async function POST(request: Request) {
       const body = `
         <h2 style="color:#C9A961;font-family:Georgia,serif;font-weight:400;margin:0 0 16px;">Bienvenue sur le chemin, ${cleanFirst} 🤍</h2>
         <p style="color:#E0E0E0;font-size:15px;line-height:1.8;">Votre place sur la liste d'attente de <strong>SOS Meet</strong> est réservée. Vous serez parmi les premiers invités à la bêta des rencontres conscientes.</p>
-        <p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Envie de prendre de l'avance ? Préparez dès maintenant votre <strong>profil de compatibilité</strong> — un questionnaire profond qui nous permettra de vous présenter des personnes réellement alignées.</p>
+        <p style="color:#a1a1aa;font-size:14px;line-height:1.8;">Envie de prendre de l'avance ? Préparez dès maintenant votre <strong>profil de compatibilité</strong>, un questionnaire profond qui nous permettra de vous présenter des personnes réellement alignées.</p>
         <div style="text-align:center;margin:28px 0;">
           <a href="${profileUrl}" style="display:inline-block;padding:14px 32px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;color:#050505;background:linear-gradient(135deg,#C9A961,#E2CB86);">Préparer mon profil</a>
         </div>

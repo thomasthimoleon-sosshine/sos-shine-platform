@@ -287,7 +287,7 @@ export default function FavorisPage() {
       ) : (
         /*
           Galerie en colonnes plutôt qu'une grille : chaque contenu garde ses
-          proportions d'origine — une affiche de livre est haute, une vidéo est
+          proportions d'origine, une affiche de livre est haute, une vidéo est
           large, un Short est vertical. Les forcer dans un cadre unique
           les aurait tous rognés au mauvais endroit.
         */

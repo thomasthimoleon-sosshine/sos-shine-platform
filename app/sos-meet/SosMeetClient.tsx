@@ -39,8 +39,8 @@ function Reveal({ children, delay = 0, className = '' }: { children: React.React
 const ETAPES = [
   {
     n: '01', soloTitle: 'Se révéler', coupleTitle: 'Se raconter',
-    solo: 'Un profil d’une profondeur rare — tes intentions, tes valeurs, ton monde intérieur, tes non-négociables. On te connaît par cœur avant de te montrer.',
-    couple: 'Chacun répond de son côté, en vérité — ce qu’on n’ose plus se dire, ce qui manque, ce qu’on espère encore. Deux regards honnêtes sur le même lien.',
+    solo: 'Un profil d’une profondeur rare : tes intentions, tes valeurs, ton monde intérieur, tes non-négociables. On te connaît par cœur avant de te montrer.',
+    couple: 'Chacun répond de son côté, en vérité : ce qu’on n’ose plus se dire, ce qui manque, ce qu’on espère encore. Deux regards honnêtes sur le même lien.',
   },
   {
     n: '02', soloTitle: 'Être compris', coupleTitle: 'Se comprendre',
@@ -55,10 +55,10 @@ const ETAPES = [
 ]
 
 const FAQ = [
-  { q: 'Pourquoi on ne voit pas les photos tout de suite ?', a: 'Parce qu’ici, l’émotionnel passe avant l’apparence. Tu découvres qui est la personne — ses valeurs, son monde intérieur — et la photo se dévoile seulement quand l’intérêt est réciproque. Le trouble d’un vrai commencement.' },
+  { q: 'Pourquoi on ne voit pas les photos tout de suite ?', a: 'Parce qu’ici, l’émotionnel passe avant l’apparence. Tu découvres qui est la personne (ses valeurs, son monde intérieur), et la photo se dévoile seulement quand l’intérêt est réciproque. Le trouble d’un vrai commencement.' },
   { q: 'Comment savez-vous si quelqu’un est sincère ?', a: 'Notre lecture analyse la cohérence des réponses entre elles. Les profils incohérents sont mis en retrait ; les plus sincères reçoivent un badge « Profil cohérent ». On protège la qualité des rencontres.' },
-  { q: 'Je suis en couple — c’est aussi pour nous ?', a: 'Oui. À côté du chemin solo « Rencontrer », il y a la porte « Se retrouver » : un parcours pensé pour les couples qui veulent se redécouvrir l’un l’autre et raviver ce qui s’est endormi. Même exigence de vérité, à deux cette fois — et bien moins cher qu’une rupture.' },
-  { q: 'Quel est le lien avec SOS Shine ?', a: 'SOS Meet est porté par l’équipe de SOS Shine, plateforme de déconditionnement émotionnel. Le travail intérieur que tu y accomplis — les protocoles traversés — apparaît sur ton profil. Ici, avoir fait le chemin, c’est ce qui rend attirant.' },
+  { q: 'Je suis en couple, c’est aussi pour nous ?', a: 'Oui. À côté du chemin solo « Rencontrer », il y a la porte « Se retrouver » : un parcours pensé pour les couples qui veulent se redécouvrir l’un l’autre et raviver ce qui s’est endormi. Même exigence de vérité, à deux cette fois. Et bien moins cher qu’une rupture.' },
+  { q: 'Quel est le lien avec SOS Shine ?', a: 'SOS Meet est porté par l’équipe de SOS Shine, plateforme de déconditionnement émotionnel. Le travail intérieur que tu y accomplis, les protocoles traversés, apparaît sur ton profil. Ici, avoir fait le chemin, c’est ce qui rend attirant.' },
   { q: 'Combien ça coûte ?', a: 'Gratuit au lancement. On veut d’abord réunir les bonnes personnes.' },
   { q: 'Que deviennent mes données ?', a: 'RGPD strict, hébergement en Europe, consentement explicite pour les questions sensibles, et localisation volontairement floutée. Tes données t’appartiennent, désinscription en un clic.' },
 ]
@@ -123,7 +123,7 @@ export default function SosMeetClient() {
 
   function share() {
     const url = typeof window !== 'undefined' ? window.location.href : ''
-    const text = 'La rencontre en conscience — je rejoins SOS Meet.'
+    const text = 'La rencontre en conscience. Je rejoins SOS Meet.'
     if (typeof navigator !== 'undefined' && (navigator as Navigator).share) {
       ;(navigator as Navigator).share({ title: 'SOS Meet', text, url }).catch(() => {})
     } else {
@@ -167,7 +167,7 @@ export default function SosMeetClient() {
             </Reveal>
             <Reveal delay={0.16}>
               <p className="mx-auto max-w-md text-[16px] sm:text-[18px] leading-relaxed" style={{ color: C.smoke, fontWeight: 300 }}>
-                Que tu cherches à rencontrer, ou à te retrouver — ici, tout commence par la vérité de qui vous êtes.
+                Que tu cherches à rencontrer ou à te retrouver, ici tout commence par la vérité de qui vous êtes.
               </p>
             </Reveal>
             <Reveal delay={0.24}>
@@ -182,7 +182,7 @@ export default function SosMeetClient() {
                   <div className="relative p-7 md:p-8 flex flex-col flex-1">
                     <div className="text-[10.5px] tracking-[0.34em] uppercase" style={{ color: C.ember }}>Seul·e</div>
                     <h3 className="mt-2.5 mb-2.5" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(1.7rem,2.6vw,2.4rem)', lineHeight: 1.05 }}>Rencontrer</h3>
-                    <p className="text-[14.5px] leading-relaxed mb-6" style={{ color: C.smoke }}>Je me découvre, et je m’ouvre à une rencontre juste — en conscience.</p>
+                    <p className="text-[14.5px] leading-relaxed mb-6" style={{ color: C.smoke }}>Je me découvre, et je m’ouvre à une rencontre juste, en conscience.</p>
                     <span className="mt-auto inline-flex items-center gap-2 self-start text-[12.5px] tracking-[0.14em] uppercase px-7 py-3.5 rounded-full transition-transform group-hover:translate-x-0.5" style={{ background: `linear-gradient(135deg, ${C.garnet}, ${C.garnetSoft})`, color: '#F7EEE9', boxShadow: '0 16px 34px -16px rgba(155,27,46,0.7)' }}>Créer mon profil <span aria-hidden>→</span></span>
                   </div>
                 </Link>
@@ -222,7 +222,7 @@ export default function SosMeetClient() {
             {/* Chemin solo */}
             <Reveal>
               <div className="h-full rounded-2xl p-8 flex flex-col" style={{ background: C.velvet, border: `1px solid ${C.line}` }}>
-                <div className="text-[11px] tracking-[0.3em] uppercase" style={{ color: C.ember }}>Seul·e — Rencontrer</div>
+                <div className="text-[11px] tracking-[0.3em] uppercase" style={{ color: C.ember }}>Seul·e · Rencontrer</div>
                 <h3 className="mt-3 mb-3" style={{ ...serif, fontWeight: 500, fontSize: 'clamp(1.5rem,3.4vw,2rem)' }}>Se découvrir, puis rencontrer</h3>
                 <p className="text-[14.5px] leading-relaxed mb-5" style={{ color: C.smoke }}>
                   Un profil d’une profondeur rare, une lecture de compatibilité qui va au-delà des visages, et la rencontre qui se dévoile quand le désir devient réciproque.
@@ -233,7 +233,7 @@ export default function SosMeetClient() {
             {/* Chemin couple */}
             <Reveal delay={0.08}>
               <div className="h-full rounded-2xl p-8 flex flex-col" style={{ background: C.velvet, border: `1px solid ${C.line}` }}>
-                <div className="text-[11px] tracking-[0.3em] uppercase" style={{ color: C.ember }}>À deux — Se retrouver</div>
+                <div className="text-[11px] tracking-[0.3em] uppercase" style={{ color: C.ember }}>À deux · Se retrouver</div>
                 <h3 className="mt-3 mb-3" style={{ ...serif, fontWeight: 500, fontSize: 'clamp(1.5rem,3.4vw,2rem)' }}>Se re-rencontrer, vraiment</h3>
                 <p className="text-[14.5px] leading-relaxed mb-5" style={{ color: C.smoke }}>
                   Pour les couples qui sentent la routine s’installer : un parcours pour se redécouvrir l’un l’autre et raviver ce qui s’est endormi. <b style={{ color: C.smoke }}>Bien moins cher qu’une rupture.</b>
@@ -249,7 +249,7 @@ export default function SosMeetClient() {
           <Reveal className="text-center max-w-2xl mx-auto mb-14">
             <p className="text-[11px] tracking-[0.34em] uppercase mb-3" style={{ color: C.smoke2 }}>Le principe</p>
             <h2 style={{ ...serif, fontWeight: 400, fontSize: 'clamp(2rem,5vw,3.2rem)' }}>Trois temps, une vérité</h2>
-            <p className="mt-4 text-[14.5px]" style={{ color: C.smoke2 }}>Le même mouvement pour les deux portes — que vous veniez rencontrer, ou vous retrouver.</p>
+            <p className="mt-4 text-[14.5px]" style={{ color: C.smoke2 }}>Le même mouvement pour les deux portes, que vous veniez rencontrer ou vous retrouver.</p>
           </Reveal>
           <div className="grid sm:grid-cols-3" style={{ gap: 1, background: C.line, border: `1px solid ${C.line}`, borderRadius: 6, overflow: 'hidden' }}>
             {ETAPES.map((s, i) => (
@@ -288,7 +288,7 @@ export default function SosMeetClient() {
                 <b style={{ color: C.alabaster }}>Pour rencontrer :</b> on découvre d’abord les valeurs, les intentions, le monde intérieur. La photo reste voilée et ne se dévoile qu’au moment où le désir devient réciproque. On ne swipe pas des visages, on rencontre des présences.
               </p>
               <p className="text-[15.5px] leading-relaxed mt-4" style={{ color: C.smoke }}>
-                <b style={{ color: C.alabaster }}>Pour se retrouver :</b> chacun répond en vérité, sans masque et sans jugement. Ce qu’on n’ose plus se dire trouve enfin un espace — et redevient un point de départ.
+                <b style={{ color: C.alabaster }}>Pour se retrouver :</b> chacun répond en vérité, sans masque et sans jugement. Ce qu’on n’ose plus se dire trouve enfin un espace, et redevient un point de départ.
               </p>
             </Reveal>
           </div>
@@ -316,14 +316,14 @@ export default function SosMeetClient() {
                 Une lecture juste, question après question
               </h2>
               <p className="text-[15.5px] leading-relaxed" style={{ color: C.smoke }}>
-                <b style={{ color: C.alabaster }}>Seul·e :</b> on commence par l’essentiel — assez pour présenter tes premières rencontres — puis ton profil s’approfondit à ton rythme, et chaque réponse affine ce que la vie t’envoie.
+                <b style={{ color: C.alabaster }}>Seul·e :</b> on commence par l’essentiel, assez pour présenter tes premières rencontres. Puis ton profil s’approfondit à ton rythme, et chaque réponse affine ce que la vie t’envoie.
               </p>
               <p className="text-[15.5px] leading-relaxed mt-4" style={{ color: C.smoke }}>
-                <b style={{ color: C.alabaster }}>À deux :</b> la même lecture révèle où vous vous rejoignez encore et où le lien s’est distendu — une carte claire pour rouvrir le dialogue et vous retrouver.
+                <b style={{ color: C.alabaster }}>À deux :</b> la même lecture révèle où vous vous rejoignez encore et où le lien s’est distendu, une carte claire pour rouvrir le dialogue et vous retrouver.
               </p>
               <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full text-[12px]"
                 style={{ background: 'rgba(155,27,46,0.12)', color: C.ember, border: '1px solid rgba(155,27,46,0.25)' }}>
-                <span aria-hidden>✦</span> Les réponses incohérentes sont repérées — les profils sincères, mis en avant
+                <span aria-hidden>✦</span> Les réponses incohérentes sont repérées, les profils sincères mis en avant
               </div>
             </Reveal>
           </div>
@@ -340,7 +340,7 @@ export default function SosMeetClient() {
                 Ici, avoir fait le travail rend attirant
               </h2>
               <p className="mx-auto max-w-xl text-[16px] leading-relaxed" style={{ color: C.smoke }}>
-                SOS Meet est relié à SOS Shine. Les protocoles émotionnels que tu traverses apparaissent sur ton profil — un signal rare de sincérité et de maturité. Pas une bio : un chemin réel.
+                SOS Meet est relié à SOS Shine. Les protocoles émotionnels que tu traverses apparaissent sur ton profil, un signal rare de sincérité et de maturité. Pas une bio : un chemin réel.
               </p>
             </Reveal>
           </div>

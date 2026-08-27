@@ -18,7 +18,7 @@ export type Dimension = { key: DimensionKey; label: string; emoji: string; intro
 export const DIMENSIONS: Dimension[] = [
   { key: 'intentions', label: 'Vos intentions', emoji: '🎯', intro: 'Ce que vous cherchez vraiment, aujourd\'hui.' },
   { key: 'spiritualite', label: 'Votre chemin', emoji: '🧘', intro: 'Vos pratiques et votre rapport à la conscience.' },
-  { key: 'signature', label: 'Votre monde intérieur', emoji: '🫀', intro: 'Vos schémas émotionnels — l\'empreinte SOS Shine.' },
+  { key: 'signature', label: 'Votre monde intérieur', emoji: '🫀', intro: 'Vos schémas émotionnels, l\'empreinte SOS Shine.' },
   { key: 'attachement', label: 'Vos liens', emoji: '🪢', intro: 'Comment vous vous attachez et vous rassurez.' },
   { key: 'valeurs', label: 'Vos valeurs', emoji: '🧭', intro: 'Ce qui compte le plus dans votre vie.' },
   { key: 'communication', label: 'Votre présence', emoji: '💬', intro: 'Votre manière de dire et d\'écouter.' },

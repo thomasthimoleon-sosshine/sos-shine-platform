@@ -45,7 +45,7 @@ export default function AdminSosMeetPage() {
   return (
     <div className="max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-        <h1 className="font-display text-2xl" style={{ color: '#C9A961' }}>SOS Meet — Waitlist</h1>
+        <h1 className="font-display text-2xl" style={{ color: '#C9A961' }}>SOS Meet · Waitlist</h1>
         <button onClick={exportCsv} disabled={!rows.length}
           className="text-sm font-semibold px-4 py-2 rounded-lg disabled:opacity-40"
           style={{ background: 'linear-gradient(135deg,#C9A961,#E2CB86)', color: '#050505' }}>

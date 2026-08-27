@@ -199,7 +199,7 @@ export default function NotificationPreferences() {
             <div>
               <p className="text-sm font-medium text-[var(--text-primary)]">Toutes les notifications</p>
               <p className="text-xs mt-0.5 text-[var(--text-muted)]">
-                {prefs.all_enabled ? 'Activées' : 'Coupées — vous ne recevrez plus rien'}
+                {prefs.all_enabled ? 'Activées' : 'Coupées, vous ne recevrez plus rien'}
               </p>
             </div>
             <Switch on={prefs.all_enabled} onChange={() => toggle('all_enabled')} label="Toutes les notifications" />

@@ -111,7 +111,7 @@ export default function ProfilClient() {
             Un compte, d’abord
           </h1>
           <p className="text-[15px] leading-relaxed mb-8" style={{ color: C.smoke }}>
-            Ton profil SOS Meet est rattaché à ton compte SOS Shine — c’est ce qui garde tout sûr et sincère. Connecte-toi, ou crée ton compte en une minute.
+            Ton profil SOS Meet est rattaché à ton compte SOS Shine, c’est ce qui garde tout sûr et sincère. Connecte-toi, ou crée ton compte en une minute.
           </p>
           <div className="w-full flex flex-col gap-3">
             <a href="/login?next=/sos-meet/profil" className="w-full py-4 rounded-full text-[14px] tracking-[0.12em] uppercase"
@@ -135,7 +135,7 @@ export default function ProfilClient() {
           Faisons connaissance
         </h1>
         <p className="text-[15px] leading-relaxed mb-9" style={{ color: C.smoke }}>
-          L’essentiel pour commencer. Juste après, le questionnaire de compatibilité — c’est lui qui débloque tes premières rencontres.
+          L’essentiel pour commencer. Juste après, le questionnaire de compatibilité, c’est lui qui débloque tes premières rencontres.
         </p>
 
         {/* Photo — privée, voilée pour les autres jusqu'au match */}
@@ -150,7 +150,7 @@ export default function ProfilClient() {
           </button>
           <div>
             <div className="text-[14px]" style={{ color: C.alabaster }}>{photoUrl ? 'Changer ma photo' : 'Ajouter une photo'}</div>
-            <div className="text-[12.5px]" style={{ color: C.smoke2 }}>Voilée pour les autres — elle se dévoile au match.</div>
+            <div className="text-[12.5px]" style={{ color: C.smoke2 }}>Voilée pour les autres, elle se dévoile au match.</div>
           </div>
           <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden"
             onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadPhoto(f) }} />
@@ -161,7 +161,7 @@ export default function ProfilClient() {
           <div className="mb-8 p-4 rounded-2xl" style={{ background: 'rgba(155,27,46,0.08)', border: '1px solid rgba(155,27,46,0.2)' }}>
             <div className="text-[11px] tracking-[0.24em] uppercase mb-2" style={{ color: C.ember }}>Chemin accompli</div>
             <p className="text-[13.5px] leading-relaxed" style={{ color: C.smoke }}>
-              {protocols.length} protocole{protocols.length > 1 ? 's' : ''} traversé{protocols.length > 1 ? 's' : ''} sur SOS Shine — <span style={{ color: C.alabaster }}>{protocols.map((p) => p.title).join(' · ')}</span>. Ce travail apparaîtra sur ton profil.
+              {protocols.length} protocole{protocols.length > 1 ? 's' : ''} traversé{protocols.length > 1 ? 's' : ''} sur SOS Shine, <span style={{ color: C.alabaster }}>{protocols.map((p) => p.title).join(' · ')}</span>. Ce travail apparaîtra sur ton profil.
             </p>
           </div>
         )}

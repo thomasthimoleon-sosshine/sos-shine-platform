@@ -121,7 +121,7 @@ export default function QuestionnaireClient({ palier = 'essentiel' }: { palier?:
             {nextStep.sensitive && (
               <p className="text-[12px] leading-relaxed mb-4" style={{ color: C.smoke2 }}>
                 Ces questions touchent à ta vie intime. Elles restent privées et ne servent qu’à
-                affiner tes rencontres — tu peux les passer.
+                affiner tes rencontres, tu peux les passer.
               </p>
             )}
             <a href={`/sos-meet/questionnaire?palier=${nextStep.id}`}

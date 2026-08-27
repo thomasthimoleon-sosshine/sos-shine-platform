@@ -1865,7 +1865,7 @@ export default function DouleurDetailPage() {
                 boxShadow: '0 4px 24px rgba(201,169,97,0.3)',
               }}
             >
-              Accès complet à la plateforme — 49,90€/mois
+              Accès complet à la plateforme, 49,90€/mois
             </a>
             <p className="text-xs text-center" style={{ color: 'var(--text-muted)' }}>
               Shine TV · Lives · Communauté · Sans engagement
@@ -1891,7 +1891,7 @@ export default function DouleurDetailPage() {
                 color: 'var(--brand)',
               }}
             >
-              Juste les étapes 2 &amp; 3 de ce protocole — 33€
+              Juste les étapes 2 &amp; 3 de ce protocole, 33€
             </button>
             <p className="text-xs text-center" style={{ color: 'var(--brand)' }}>
               + 1 mois d&apos;accès à toute la plateforme offert

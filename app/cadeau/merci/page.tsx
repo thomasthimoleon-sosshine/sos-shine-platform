@@ -2,7 +2,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Le Couple Vivant — Telechargement',
+  title: 'Le Couple Vivant, Telechargement',
   robots: { index: false },
 }
 

@@ -279,7 +279,7 @@ export default function ReelsViewer({
       <div className="pointer-events-none absolute inset-0 z-30 flex justify-center">
         <div className="relative h-full w-full sm:max-w-[var(--reel-w)]">
 
-          {/* Rail d'actions — même construction qu'Instagram :
+          {/* Rail d'actions, même construction qu'Instagram :
               Shines (le « j'aime » maison) · commentaires · partager · enregistrer */}
           {current && (
             <div className="pointer-events-auto absolute right-2 sm:right-3 bottom-28 flex flex-col items-center gap-5">

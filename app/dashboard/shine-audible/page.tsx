@@ -367,7 +367,7 @@ function HeroBanner({ audio, onOpen, onPlay }: { audio: ShineAudio; onOpen: () =
     /* ─── « La Fenêtre », comme sur Shine TV ─────────────────────────────
        La pochette n'est plus un fond flouté à 40 px derrière un voile : c'est
        une pièce posée, nette et entière, à droite du texte. On garde une trace
-       de la pochette en fond, très basse, pour la couleur — mais elle
+       de la pochette en fond, très basse, pour la couleur, mais elle
        n'écrase plus rien.
        Adaptation à l'audio : la fenêtre est carrée, pas en 16/9. Une pochette
        forcée dans un cadre large aurait été rognée sur les côtés. ────── */

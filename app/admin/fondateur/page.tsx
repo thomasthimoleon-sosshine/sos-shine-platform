@@ -1121,7 +1121,7 @@ export default function FounderDashboard() {
             <StatCard icon="📊" label="Visites moy. / visiteur" value={String(visitStats.returning.avgVisits)} color="#C9A961" />
           </div>
           <div className="mt-6">
-            <Section title="Fidélité des visiteurs" subtitle="Combien de fois chaque visiteur (IP) est revenu — 90 derniers jours">
+            <Section title="Fidélité des visiteurs" subtitle="Combien de fois chaque visiteur (IP) est revenu, 90 derniers jours">
               <div style={{ height: 260 }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={visitStats.returning.buckets}>
@@ -1138,7 +1138,7 @@ export default function FounderDashboard() {
 
           {/* ── Plateforme d'origine + Jour de la semaine ── */}
           <div className="grid lg:grid-cols-2 gap-6 mt-6">
-            <Section title="D'où viennent tes visiteurs" subtitle="Plateforme d'origine (30 j) — nécessite des liens taggés (utm_source)">
+            <Section title="D'où viennent tes visiteurs" subtitle="Plateforme d'origine (30 j), nécessite des liens taggés (utm_source)">
               <div className="space-y-2">
                 {visitStats.sources.length === 0 && (
                   <p className="text-xs py-6 text-center" style={{ color: 'var(--text-muted)' }}>Aucune donnée de source pour le moment.</p>

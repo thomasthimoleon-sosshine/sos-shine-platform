@@ -2,7 +2,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Tes cadeaux — SOS Shine',
+  title: 'Tes cadeaux, SOS Shine',
   description:
     'Les outils offerts par Julia Laureau pendant la séquence Signature Émotionnelle. Ils sont à toi, sans condition.',
   robots: { index: false, follow: false },
@@ -27,7 +27,7 @@ const GIFTS: Gift[] = [
   {
     n: '02',
     title: 'Cultiver la confiance en soi',
-    line: "La confiance n'est pas une qualité qu'on aurait ou pas. C'est une trace — celle de la façon dont on t'a regardée, tenue, reprise ou ignorée. Une trace se travaille autrement qu'avec des affirmations devant un miroir.",
+    line: "La confiance n'est pas une qualité qu'on aurait ou pas. C'est une trace, celle de la façon dont on t'a regardée, tenue, reprise ou ignorée. Une trace se travaille autrement qu'avec des affirmations devant un miroir.",
     href: '/cadeaux/sos-shine-cultiver-la-confiance-en-soi.pdf',
     meta: 'Ebook · 21 pages · PDF',
   },
@@ -240,7 +240,7 @@ export default function MesCadeauxPage() {
         >
           Tout est réuni ici. Ces outils t&apos;appartiennent, même si tu ne mets jamais un euro
           dans SOS Shine, même si tu te désabonnes ce soir. Télécharge-les et garde-les sur ton
-          téléphone — le jour où ça ira moins bien, tu seras contente de les avoir sous la main.
+          téléphone, le jour où ça ira moins bien, tu seras contente de les avoir sous la main.
         </p>
 
         <section style={{ marginTop: 'clamp(24px, 6vw, 40px)' }}>

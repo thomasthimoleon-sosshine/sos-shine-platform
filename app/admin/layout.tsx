@@ -25,7 +25,7 @@ const adminNav = [
   { href: '/admin/evenements', label: 'Événements', icon: '📅' },
   { href: '/admin/inscrits-evenements', label: 'Inscrits Événements', icon: '🏕️' },
   { href: '/admin/physical-events', label: 'Événements /event', icon: '🎪' },
-  { href: '/admin/leads-cadeau', label: 'Leads — Guide PDF', icon: '📩' },
+  { href: '/admin/leads-cadeau', label: 'Leads, Guide PDF', icon: '📩' },
   { href: '/admin/publications', label: 'Publications', icon: '📢' },
   { href: '/admin/membres', label: 'Membres', icon: '👥' },
   { href: '/admin/abonnements', label: 'Abonnements', icon: '💳' },
@@ -40,7 +40,7 @@ const adminNav = [
   { href: '/admin/blog', label: 'Blog', icon: '✍️' },
   { href: '/admin/anciennes-clientes', label: 'Anciennes clientes', icon: '💎' },
   { href: '/admin/fondateur', label: 'Fondateur', icon: '👑' },
-  { href: '/admin/sosmeet', label: 'SOS Meet — Waitlist', icon: '💞' },
+  { href: '/admin/sosmeet', label: 'SOS Meet · Waitlist', icon: '💞' },
 ]
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

@@ -47,19 +47,19 @@ const PILLARS = [
     n: '01',
     title: 'Comprendre',
     color: '#6BCFA0',
-    desc: 'Décoder le schéma émotionnel qui pilote vos réactions. Pas pour vous juger — pour enfin voir clair. Quand on comprend pourquoi on répète, on arrête de subir.',
+    desc: 'Décoder le schéma émotionnel qui pilote vos réactions. Pas pour vous juger, pour enfin voir clair. Quand on comprend pourquoi on répète, on arrête de subir.',
   },
   {
     n: '02',
     title: 'Libérer',
     color: '#6B9FD4',
-    desc: 'Une libération physique et émotionnelle immédiate. Pour les crises à 2h du matin, quand penser positif ne suffit pas. Le corps a sa propre mémoire — on travaille avec lui.',
+    desc: 'Une libération physique et émotionnelle immédiate. Pour les crises à 2h du matin, quand penser positif ne suffit pas. Le corps a sa propre mémoire, on travaille avec lui.',
   },
   {
     n: '03',
     title: 'Agir',
     color: '#D4A054',
-    desc: 'Reprogrammer les réflexes automatiques par l\'hypnose et des protocoles concrets. Pour que le changement ne soit pas un effort de volonté — mais une nouvelle nature.',
+    desc: 'Reprogrammer les réflexes automatiques par l\'hypnose et des protocoles concrets. Pour que le changement ne soit pas un effort de volonté, mais une nouvelle nature.',
   },
 ]
 
@@ -72,7 +72,7 @@ const FOUNDERS = [
   {
     name: 'William',
     role: 'Approche corporelle & Hypnose',
-    desc: 'L\'émotion ne se règle pas qu\'avec la tête. William apporte le travail du corps et l\'hypnose — pour aller là où les mots seuls n\'atteignent pas.',
+    desc: 'L\'émotion ne se règle pas qu\'avec la tête. William apporte le travail du corps et l\'hypnose, pour aller là où les mots seuls n\'atteignent pas.',
   },
   {
     name: 'Thomas',
@@ -84,7 +84,7 @@ const FOUNDERS = [
 const NOT_THIS_BUT_THAT = [
   {
     not: 'Pas des affirmations positives',
-    that: 'On ne vous répète pas que « tout est possible ». On vous montre pourquoi vous faites ce que vous faites — et comment faire autrement.',
+    that: 'On ne vous répète pas que « tout est possible ». On vous montre pourquoi vous faites ce que vous faites, et comment faire autrement.',
   },
   {
     not: 'Pas une nième méthode miracle',
@@ -92,7 +92,7 @@ const NOT_THIS_BUT_THAT = [
   },
   {
     not: 'Pas du contenu à consommer',
-    that: 'Des protocoles à pratiquer. Vous ne regardez pas — vous traversez. Et quelqu\'un est là, à chaque étape.',
+    that: 'Des protocoles à pratiquer. Vous ne regardez pas, vous traversez. Et quelqu\'un est là, à chaque étape.',
   },
 ]
 
@@ -174,7 +174,7 @@ export default function DecouvrirClient() {
             className="text-base sm:text-lg font-light leading-relaxed max-w-xl mx-auto mb-12"
             style={{ color: 'var(--text-secondary, #A8A29E)' }}
           >
-            SOS Shine décode les schémas émotionnels qui pilotent votre vie — et vous
+            SOS Shine décode les schémas émotionnels qui pilotent votre vie, et vous
             donne les outils concrets pour en sortir. Pas du développement personnel.
             Du déconditionnement.
           </motion.p>
@@ -479,7 +479,7 @@ export default function DecouvrirClient() {
               className="text-base sm:text-lg font-light leading-relaxed max-w-lg mx-auto mb-10"
               style={{ color: 'var(--text-secondary, #A8A29E)' }}
             >
-              En 5 minutes, découvrez la signature émotionnelle qui explique vos schémas —
+              En 5 minutes, découvrez la signature émotionnelle qui explique vos schémas,
               et le premier protocole pour en sortir.
             </p>
           </Reveal>

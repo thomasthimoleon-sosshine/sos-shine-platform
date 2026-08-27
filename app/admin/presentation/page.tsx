@@ -22,7 +22,7 @@ const STEPS = [
   {
     num: '01',
     title: 'Comprendre',
-    body: "Identifier le schéma inconscient qui pilote tes réactions. Pas de la théorie — une lecture précise de ce qui se joue en toi depuis toujours.",
+    body: "Identifier le schéma inconscient qui pilote tes réactions. Pas de la théorie, une lecture précise de ce qui se joue en toi depuis toujours.",
     accent: '#7DD3FC',
   },
   {
@@ -34,7 +34,7 @@ const STEPS = [
   {
     num: '03',
     title: 'Agir',
-    body: "Reprogrammer l'automatisme. Miroir, ancrage, rituel du matin. Chaque jour, un nouveau réflexe remplace l'ancien. Tu ne te répares pas — tu te révèles.",
+    body: "Reprogrammer l'automatisme. Miroir, ancrage, rituel du matin. Chaque jour, un nouveau réflexe remplace l'ancien. Tu ne te répares pas, tu te révèles.",
     accent: '#FBCFE8',
   },
 ]
@@ -57,7 +57,7 @@ const PLANS = [
     highlight: false,
     features: [
       'Communauté & Mur',
-      'Shine Audible — méditations',
+      'Shine Audible, méditations',
       'Étape 1 de votre protocole recommandé',
       'Quiz Signature Émotionnelle',
     ],
@@ -169,7 +169,7 @@ export default function PresentationPage() {
             className="mt-8 text-[16px] sm:text-[18px] text-[#FAFAF7]/55 font-light leading-[1.8] max-w-xl mx-auto"
           >
             Un accompagnement émotionnel guidé, pensé pour les femmes. Comprendre,
-            libérer, agir — un protocole à la fois, à ton rythme.
+            libérer, agir, un protocole à la fois, à ton rythme.
           </motion.p>
 
           <motion.div
@@ -367,7 +367,7 @@ export default function PresentationPage() {
             <span className="italic text-[#D4C99A]">en deux minutes.</span>
           </h2>
           <p className="mt-8 text-[16px] text-[#FAFAF7]/55 font-light leading-[1.8]">
-            Réponds au quiz et découvre ta signature émotionnelle — le point de départ
+            Réponds au quiz et découvre ta signature émotionnelle, le point de départ
             de ton parcours sur SOS Shine.
           </p>
           <div className="mt-12">

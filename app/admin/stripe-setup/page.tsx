@@ -62,7 +62,7 @@ export default function StripeSetupPage() {
             Cliquez sur le bouton ci-dessous pour créer les 9 prix dans Stripe :
           </p>
           <ul style={{ textAlign: 'left', color: '#999', marginBottom: 24, lineHeight: 2 }}>
-            <li>Essentielle - Mensuel (9,90 EUR/mois) — ARCHIVÉ</li>
+            <li>Essentielle - Mensuel (9,90 EUR/mois), ARCHIVÉ</li>
             <li>SOS Shine / Sérénité - Mensuel (49,90 EUR/mois)</li>
             <li>Sérénité - 3 mois, 6 mois, Annuel</li>
             <li>Premium - Mensuel (99,90 EUR/mois)</li>

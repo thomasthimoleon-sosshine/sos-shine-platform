@@ -126,7 +126,7 @@ export async function POST(request: NextRequest) {
         await client.emails.send({
           from: fromEmail,
           to: email.trim().toLowerCase(),
-          subject: `Inscription confirmée — ${eventTitle || 'Événement SOS Shine'}`,
+          subject: `Inscription confirmée, ${eventTitle || 'Événement SOS Shine'}`,
           html: wrapInEmailLayout(bodyContent),
         })
       } catch (emailErr) {

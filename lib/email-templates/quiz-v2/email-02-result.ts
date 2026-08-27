@@ -168,9 +168,9 @@ Tes protocoles personnalisés sont en préparation. Tu seras notifié(e) dès qu
     goldDivider(),
 
     // ── CTA - étape 1 gratuite ──
-    h2(`Commence par l'étape 1 — c'est gratuit`),
+    h2(`Commence par l'étape 1, c'est gratuit`),
 
-    p(`Ton protocole est prêt. L'étape 1 — Comprendre — t'est offerte. Elle seule peut déjà changer quelque chose dans ta façon de te voir.`),
+    p(`Ton protocole est prêt. L'étape 1, Comprendre, t'est offerte. Elle seule peut déjà changer quelque chose dans ta façon de te voir.`),
 
     `<table role="presentation" width="100%" cellspacing="0" cellpadding="0">
 <tr><td align="center" style="padding:4px 0 8px 0;">

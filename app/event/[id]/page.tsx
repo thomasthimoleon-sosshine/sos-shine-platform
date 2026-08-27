@@ -42,10 +42,10 @@ async function getEvent(id: string): Promise<PhysicalEvent | null> {
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
   const event = await getEvent(id)
-  if (!event) return { title: 'Événement — SOS Shine®' }
+  if (!event) return { title: 'Événement, SOS Shine®' }
   const desc = event.description || event.subtitle || 'Un événement physique SOS Shine.'
   return {
-    title: `${event.title} — SOS Shine®`,
+    title: `${event.title}, SOS Shine®`,
     description: desc,
     openGraph: {
       title: `${event.title} 🌿`,
@@ -82,7 +82,7 @@ function formatTime(iso: string | null, endTime: string | null): string {
   if (!iso) return ''
   const d = new Date(iso)
   const start = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', timeZone: TZ })
-  return endTime ? `${start} — ${endTime}` : start
+  return endTime ? `${start}, ${endTime}` : start
 }
 
 export default async function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {

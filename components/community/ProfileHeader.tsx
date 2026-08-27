@@ -286,7 +286,7 @@ export default function ProfileHeader() {
                 rows={3}
                 maxLength={500}
                 autoFocus
-                placeholder="Quelques mots sur vous — ce que vous traversez, ce que vous cherchez, ce que vous offrez."
+                placeholder="Quelques mots sur vous, ce que vous traversez, ce que vous cherchez, ce que vous offrez."
                 className="w-full rounded-xl px-4 py-3 text-sm outline-none resize-y"
                 style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
               />

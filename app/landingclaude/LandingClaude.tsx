@@ -149,7 +149,7 @@ const CSS = `
 
 const HOW = [
   ['01', 'Révèle ta Signature', 'Un test de 3 minutes révèle le schéma émotionnel inconscient qui pilote tes réactions. Gratuit, résultat immédiat.'],
-  ['02', 'Suis ton protocole', 'Un parcours guidé en 3 étapes — Comprendre, Libérer, Agir — conçu pour ton profil. La première étape est offerte.'],
+  ['02', 'Suis ton protocole', 'Un parcours guidé en 3 étapes (Comprendre, Libérer, Agir) conçu pour ton profil. La première étape est offerte.'],
   ['03', 'Ne reste jamais seule', 'Une communauté 24/7, des contenus illimités et des rendez-vous en direct pour ancrer le changement dans la durée.'],
 ]
 const FEAT = [
@@ -346,7 +346,7 @@ export default function LandingClaude() {
         <div className="shead center rv">
           <p className="eyebrow">Le principe</p>
           <h2>Une méthode claire, en trois temps.</h2>
-          <p>Pas de théorie infinie. Tu comprends, tu libères, tu agis — accompagnée à chaque étape.</p>
+          <p>Pas de théorie infinie. Tu comprends, tu libères, tu agis, accompagnée à chaque étape.</p>
         </div>
         <div className="how">
           {HOW.map((h, i) => (
@@ -362,7 +362,7 @@ export default function LandingClaude() {
         <div className="shead center rv">
           <p className="eyebrow">La plateforme</p>
           <h2>Tout ce dont tu as besoin, au même endroit.</h2>
-          <p>Un écosystème complet pour comprendre, apaiser et transformer — pas juste du contenu à consommer.</p>
+          <p>Un écosystème complet pour comprendre, apaiser et transformer, pas juste du contenu à consommer.</p>
         </div>
         <div className="fgrid">
           {FEAT.map((f, i) => (
@@ -400,7 +400,7 @@ export default function LandingClaude() {
           <div className="shead rv">
             <p className="eyebrow">Une communauté, pas une app de plus</p>
             <h2>Tu n&apos;es plus jamais seule.</h2>
-            <p>Là où les autres plateformes te laissent seule face à ton écran, SOS Shine te connecte à des humains — à toute heure.</p>
+            <p>Là où les autres plateformes te laissent seule face à ton écran, SOS Shine te connecte à des humains, à toute heure.</p>
           </div>
           <div className="rgrid">
             {REF.map((r, i) => (
@@ -441,7 +441,7 @@ export default function LandingClaude() {
             <a className="btn" href={JOIN_URL} style={{ width: '100%', justifyContent: 'center' }}>Commencer maintenant</a>
           </div>
         </div>
-        <p className="oneshot rv">Pas prête pour l&apos;abonnement&nbsp;? Débloque les étapes 2 &amp; 3 d&apos;un protocole en accès unique — <b>33€</b>.</p>
+        <p className="oneshot rv">Pas prête pour l&apos;abonnement&nbsp;? Débloque les étapes 2 &amp; 3 d&apos;un protocole en accès unique, <b>33€</b>.</p>
       </div></section>
 
       {/* L'ÉQUIPE (petit) */}
@@ -474,7 +474,7 @@ export default function LandingClaude() {
         <div className="rv"><a className="btn big pulse" href={QUIZ_URL}>Découvrir ma Signature →</a></div>
       </div></section>
 
-      <footer>© {new Date().getFullYear()} SOS Shine — Plateforme de déconditionnement émotionnel</footer>
+      <footer>© {new Date().getFullYear()} SOS Shine, Plateforme de déconditionnement émotionnel</footer>
     </div>
   )
 }

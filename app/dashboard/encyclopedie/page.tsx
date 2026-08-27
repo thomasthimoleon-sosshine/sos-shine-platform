@@ -567,7 +567,7 @@ export default function EncyclopediePage() {
                   Le compte etait un chiffre gris seul, a l'autre bout de la
                   ligne : on ne savait ni ce qu'il comptait, ni qu'il se
                   rapportait a la lettre. Il se colle desormais a la lettre et
-                  met en avant ce qui RESTE A FAIRE — la seule question que se
+                  met en avant ce qui RESTE A FAIRE, la seule question que se
                   pose le membre : par ou je continue ? */}
               {(() => {
                 const total = grouped[letter].length

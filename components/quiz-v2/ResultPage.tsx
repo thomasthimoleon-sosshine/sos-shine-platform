@@ -288,7 +288,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, email }: Pr
               Objet
             </p>
             <p className="text-base font-light" style={{ color: 'rgba(255,255,255,0.55)' }}>
-              Ta Signature Émotionnelle — {archetype.name}
+              Ta Signature Émotionnelle, {archetype.name}
             </p>
           </FadeIn>
 
@@ -491,7 +491,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, email }: Pr
                 </Link>
                 {/* Réassurance collée au bouton */}
                 <p className="text-[11px] text-center mt-3" style={{ color: 'rgba(255,255,255,0.35)' }}>
-                  Gratuit · 20 secondes · sans carte bancaire — tu retrouves ta lettre et ton protocole dans ton espace.
+                  Gratuit · 20 secondes · sans carte bancaire, tu retrouves ta lettre et ton protocole dans ton espace.
                 </p>
               </div>
             </div>
@@ -507,7 +507,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, email }: Pr
               <span>→</span>
             </Link>
             <p className="text-[11px] text-center mt-3" style={{ color: 'rgba(255,255,255,0.35)' }}>
-              Gratuit · 20 secondes · sans carte bancaire — tu retrouves ta lettre dans ton espace.
+              Gratuit · 20 secondes · sans carte bancaire, tu retrouves ta lettre dans ton espace.
             </p>
           </FadeIn>
         )}

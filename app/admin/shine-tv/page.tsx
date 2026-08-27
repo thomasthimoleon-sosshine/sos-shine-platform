@@ -281,7 +281,7 @@ export default function AdminShineTVPage() {
             accept="image/*"
             folder="shine-tv"
             currentUrl={form.thumbnail_desktop_url || null}
-            hint="Image 16:9 paysage pour desktop — si vide, utilise l'image mobile"
+            hint="Image 16:9 paysage pour desktop, si vide, utilise l'image mobile"
             onUploaded={(url) => setForm((prev) => ({ ...prev, thumbnail_desktop_url: url }))}
             onRemoved={() => setForm((prev) => ({ ...prev, thumbnail_desktop_url: '' }))}
           />

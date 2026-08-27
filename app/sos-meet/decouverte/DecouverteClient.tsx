@@ -77,7 +77,7 @@ export default function DecouverteClient() {
       <MeetNav active="decouverte" />
       <div className="relative max-w-5xl mx-auto px-5 sm:px-8 py-8">
         <h1 className="mb-2" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(2rem,5.5vw,3.2rem)' }}>Celles et ceux qui te correspondent</h1>
-        <p className="text-[15px] mb-10" style={{ color: C.smoke }}>Le visage reste voilé — l’émotionnel d’abord. Quand l’intérêt devient réciproque, il se dévoile.</p>
+        <p className="text-[15px] mb-10" style={{ color: C.smoke }}>Le visage reste voilé, l’émotionnel d’abord. Quand l’intérêt devient réciproque, il se dévoile.</p>
 
         {list.length === 0 ? (
           <div className="text-center py-20" style={{ color: C.smoke }}>

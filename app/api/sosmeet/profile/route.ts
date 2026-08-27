@@ -37,7 +37,7 @@ export async function POST(request: Request) {
 
     const supabase = getSupabase()
     if (!supabase) {
-      console.log('[sosmeet/profile] DEV fallback — profil simulé :', { email: cleanEmail, count: Object.keys(answers).length })
+      console.log('[sosmeet/profile] DEV fallback, profil simulé :', { email: cleanEmail, count: Object.keys(answers).length })
       return NextResponse.json({ message: 'success', simulated: true, scores }, { status: 200 })
     }
 

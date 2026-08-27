@@ -2,7 +2,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Inscription confirmée — SOS Shine®',
+  title: 'Inscription confirmée, SOS Shine®',
   description: 'Votre inscription à l\'événement SOS Shine est confirmée.',
 }
 

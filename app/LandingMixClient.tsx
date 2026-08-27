@@ -379,7 +379,7 @@ export default function LandingMixClient({ nextEvent }: { nextEvent: NextEvent |
                 num: '01',
                 title: 'COMPRENDRE',
                 subtitle: 'Tu réponds à 12 questions.',
-                desc: "Identifier le schéma inconscient qui pilote tes réactions. Pas de jugement, pas de bonne ou mauvaise réponse. Certaines questions vont te toucher — c'est normal.",
+                desc: "Identifier le schéma inconscient qui pilote tes réactions. Pas de jugement, pas de bonne ou mauvaise réponse. Certaines questions vont te toucher, c'est normal.",
                 color: '#C9A961',
               },
               {
@@ -476,7 +476,7 @@ export default function LandingMixClient({ nextEvent }: { nextEvent: NextEvent |
                 Créé par ceux qui le vivent.
               </h2>
               <p className="text-sm max-w-md mx-auto leading-relaxed" style={{ color: 'rgba(255,255,255,0.35)' }}>
-                Nous ne guérissons pas. Nous révélons. Ce que tu cherches est déjà en toi — enfoui sous des années de conditionnements.
+                Nous ne guérissons pas. Nous révélons. Ce que tu cherches est déjà en toi, enfoui sous des années de conditionnements.
               </p>
             </div>
           </Reveal>
@@ -570,7 +570,7 @@ export default function LandingMixClient({ nextEvent }: { nextEvent: NextEvent |
                   </div>
                 </div>
                 <ul className="space-y-2 flex-1">
-                  {['Étape 2 : Libérer — déconditionner les schémas', 'Étape 3 : Agir — ancrer les nouveaux comportements', 'Protocoles téléchargeables', 'Accès à vie au module'].map(f => (
+                  {['Étape 2 : Libérer (déconditionner les schémas', 'Étape 3 : Agir) ancrer les nouveaux comportements', 'Protocoles téléchargeables', 'Accès à vie au module'].map(f => (
                     <li key={f} className="flex items-start gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.45)' }}>
                       <span style={{ color: 'rgba(255,255,255,0.3)', flexShrink: 0 }}>◆</span> {f}
                     </li>

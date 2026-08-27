@@ -90,7 +90,7 @@ export const VIE: Question[] = [
   { id: 'q304', module: 30, type: 'choice', text: 'Comment vis-tu l’idée d’aimer quelqu’un qui a déjà des enfants ?', role: 'similarity', dimension: 'famille', weight: 1.1,
     choices: [{ label: 'Très bien, ça ne change rien', value: 100 }, { label: 'Bien, avec du temps', value: 75 }, { label: 'Ça me freine', value: 35 }, { label: 'Je préfère éviter', value: 10 }] },
   { id: 'q305', module: 30, type: 'choice', text: 'Les animaux à la maison ?', role: 'filter', filterKey: 'pets',
-    choices: [{ label: 'J’en ai et j’y tiens' }, { label: 'J’aime, sans en avoir' }, { label: 'Indifférent' }, { label: 'Non — allergie ou refus' }] },
+    choices: [{ label: 'J’en ai et j’y tiens' }, { label: 'J’aime, sans en avoir' }, { label: 'Indifférent' }, { label: 'Non, allergie ou refus' }] },
 
   // ── Argent, travail, ambition ──
   { id: 'q306', module: 31, type: 'choice', text: 'Ton rapport à l’argent ?', role: 'similarity', dimension: 'materiel', weight: 1.1,

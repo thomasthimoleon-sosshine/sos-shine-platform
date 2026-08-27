@@ -3,7 +3,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Événements SOS Shine® — Soirées, ateliers & cérémonies',
+  title: 'Événements SOS Shine®, Soirées, ateliers & cérémonies',
   description: 'Rejoins-nous en vrai : soirées au bord du lac, ateliers, cérémonies. Découvrez les prochains événements physiques SOS Shine.',
   openGraph: {
     title: 'Événements SOS Shine® 🌿',
@@ -65,7 +65,7 @@ function formatTime(iso: string | null, endTime: string | null): string {
   if (!iso) return ''
   const d = new Date(iso)
   const start = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', timeZone: TZ })
-  return endTime ? `${start} — ${endTime}` : start
+  return endTime ? `${start}, ${endTime}` : start
 }
 
 export default async function EventPage() {

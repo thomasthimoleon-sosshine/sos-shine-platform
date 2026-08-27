@@ -55,7 +55,7 @@ const C4 = (v: StepVars) => ({
   html: wrapEmail([
     p(`Pas de longue lettre.`),
     p(`Je passais. Ta Signature est toujours là. Les cadeaux aussi.`),
-    p(`Si un jour ça devient urgent — une rupture, un burn-out, une nuit trop blanche, un oui de trop — tu sauras où revenir. SOS Shine n'est pas une promotion. C'est un endroit.`),
+    p(`Si un jour ça devient urgent (une rupture, un burn-out, une nuit trop blanche, un oui de trop), tu sauras où revenir. SOS Shine n'est pas une promotion. C'est un endroit.`),
     ctaButton('Revenir quand c\'est le moment', URLS.rejoindre, { email: v.email }),
     signature(),
     ps(`Prochain dans deux semaines. Puis J+90. Puis un dernier à six mois.`),

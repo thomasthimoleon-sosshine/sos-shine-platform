@@ -1294,7 +1294,7 @@ export default function ShineLibrairiePage() {
               </div>
               <h3 className="font-display text-2xl font-light mb-2" style={{ color: '#C9A961' }}>Lecture réservée aux abonnés</h3>
               <p className="text-sm mb-6 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                « {readingBook.title} » fait partie de la bibliothèque SOS Shine. Abonne-toi pour l&apos;ouvrir en entier — et débloquer toute la plateforme.
+                « {readingBook.title} » fait partie de la bibliothèque SOS Shine. Abonne-toi pour l&apos;ouvrir en entier, et débloquer toute la plateforme.
               </p>
               <a href="/rejoindre" className="inline-block px-8 py-3.5 rounded-full text-sm font-semibold" style={{ background: 'linear-gradient(135deg, #C9A961, #A88248)', color: '#050505' }}>M&apos;abonner pour lire</a>
               <p className="text-[11px] mt-4" style={{ color: 'var(--text-muted)' }}>49,90€/mois · ou 33€ en accès unique</p>

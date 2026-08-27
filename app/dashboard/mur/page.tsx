@@ -1018,7 +1018,7 @@ export default function MurPage() {
                             name={cat.icon}
                             color={cat.color}
                             className="w-[18px] h-[18px] shrink-0 mt-[6px]"
-                            title={`${cat.label} — ${cat.meaning}`}
+                            title={`${cat.label}, ${cat.meaning}`}
                           />
                           <h3 className="font-semibold text-lg text-[var(--text-primary)]">
                             {post.title && post.title !== cat.label

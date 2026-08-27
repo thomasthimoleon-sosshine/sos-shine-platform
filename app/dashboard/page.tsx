@@ -235,7 +235,7 @@ function ActuShineSection() {
 }
 
 /* ─────────────────────────────────────────────
-   Carte rapide (présentational — simple lien)
+   Carte rapide (présentational, simple lien)
    Ajout léger pour la grille simplifiée. Aucune logique métier.
    ───────────────────────────────────────────── */
 function QuickCard({ href, title, subtitle, accent, icon }: {

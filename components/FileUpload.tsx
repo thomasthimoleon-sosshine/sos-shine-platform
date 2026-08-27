@@ -47,7 +47,7 @@ export default function FileUpload({
       if (badContainer || !(webSafeType || webSafeExt)) {
         setError(
           "Format non lisible sur le web (souvent une vidéo iPhone .MOV/HEVC). " +
-            "Convertissez-la en MP4 (H.264) avant de l'importer — sinon elle s'affichera « barrée » chez les membres."
+            "Convertissez-la en MP4 (H.264) avant de l'importer, sinon elle s'affichera « barrée » chez les membres."
         )
         return
       }

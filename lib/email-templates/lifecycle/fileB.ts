@@ -48,7 +48,7 @@ const B4 = (v: StepVars) => ({
   subject: `Il te reste 16 jours de plateforme`,
   html: wrapEmail([
     p(`Je te le dis sans dramatiser. Pour que le temps existe.`),
-    p(`Deux questions : est-ce que le protocole t'a déjà donné un vrai moment, même petit ? Est-ce que le cadre de la plateforme t'a aidée — pouvoir ouvrir une voix, une méditation, la communauté ?`),
+    p(`Deux questions : est-ce que le protocole t'a déjà donné un vrai moment, même petit ? Est-ce que le cadre de la plateforme t'a aidée, pouvoir ouvrir une voix, une méditation, la communauté ?`),
     p(`Si oui à la deuxième, retiens-le. Dans deux semaines tu choisiras : garder seulement le protocole, ou tout SOS Shine à 49,90€/mois.`),
     p(`Aujourd'hui tu n'as pas à choisir. Tu as à continuer.`),
     ctaButton('Continuer mon protocole', URLS.protocole, { email: v.email }),

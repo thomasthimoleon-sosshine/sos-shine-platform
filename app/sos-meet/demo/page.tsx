@@ -55,7 +55,7 @@ export default function DemoPage() {
           </button>
         </div>
         {msg && <p className="mt-6 text-[14px] p-4 rounded-xl" style={{ background: C.card, border: `1px solid ${C.line}`, color: C.alabaster }}>{msg}</p>}
-        <p className="mt-8 text-[12px]" style={{ color: C.smoke }}>⚠️ Page technique — à retirer avant l’ouverture publique.</p>
+        <p className="mt-8 text-[12px]" style={{ color: C.smoke }}>⚠️ Page technique, à retirer avant l’ouverture publique.</p>
       </div>
     </main>
   )

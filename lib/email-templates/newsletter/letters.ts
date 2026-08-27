@@ -38,7 +38,7 @@ const L2 = (v: StepVars) => ({
   subject: `Cette fatigue n'est pas la météo.`,
   html: wrapEmail([
     p(`En février, on met tout sur le dos de l'hiver. Le manque de lumière, le froid, les jours courts. Et parfois c'est vrai.`),
-    p(`Mais souvent, cette fatigue-là n'est pas dehors. Elle est dans un système nerveux qui n'a pas eu un vrai moment de sécurité depuis longtemps. Un corps qui tient, qui gère, qui avance — et qui n'a jamais le droit de se poser.`),
+    p(`Mais souvent, cette fatigue-là n'est pas dehors. Elle est dans un système nerveux qui n'a pas eu un vrai moment de sécurité depuis longtemps. Un corps qui tient, qui gère, qui avance, et qui n'a jamais le droit de se poser.`),
     p(`<strong style="color:#e0e0e0;">Un geste, ce soir.</strong> Avant de dormir, allonge-toi. Une main sur le ventre. Respire lentement pour que ce soit la main qui se soulève, pas la poitrine. Cinq respirations. C'est le signal le plus simple qu'on puisse envoyer au corps : « tu peux relâcher, je suis là. »`),
     p(`Le sommeil ne se force pas. Il vient quand le corps arrête de monter la garde.`),
     signature(),
@@ -51,7 +51,7 @@ const L3 = (v: StepVars) => ({
   html: wrapEmail([
     p(`On croit souvent que l'amour de soi, c'est se regarder dans le miroir et se trouver formidable. Ce n'est pas ça. Pas pour moi, en tout cas.`),
     p(`L'amour propre, c'est arrêter de se traiter comme la seule personne au monde à qui on ne doit rien. Celle qu'on fait passer en dernier. Celle à qui on parle plus durement qu'à n'importe qui d'autre.`),
-    p(`<strong style="color:#e0e0e0;">Un geste, aujourd'hui.</strong> La prochaine fois qu'une phrase intérieure te tombe dessus — « tu es nulle », « tu n'y arriveras jamais » — demande-toi juste : est-ce que je dirais ça à quelqu'un que j'aime ? Si non, ce n'est pas la vérité. C'est un vieux disque.`),
+    p(`<strong style="color:#e0e0e0;">Un geste, aujourd'hui.</strong> La prochaine fois qu'une phrase intérieure te tombe dessus (« tu es nulle », « tu n'y arriveras jamais ») demande-toi juste : est-ce que je dirais ça à quelqu'un que j'aime ? Si non, ce n'est pas la vérité. C'est un vieux disque.`),
     p(`On n'éteint pas ce disque en un jour. On apprend juste à ne plus le prendre pour sa propre voix.`),
     signature(),
     ps(`Une trace se travaille autrement qu'avec des affirmations devant un miroir. Elle se travaille en se traitant, une fois, avec la douceur qu'on n'a pas reçue.`),
@@ -64,7 +64,7 @@ const L4 = (v: StepVars) => ({
     p(`Il y a une phrase qui revient chez presque toutes les femmes que j'accompagne : « je n'arrive pas à dire non ».`),
     p(`Moi non plus, longtemps. Je disais oui à tout. Oui par peur de décevoir, oui pour être aimée, oui pour éviter le conflit. Et chaque oui de trop me coûtait un petit morceau de moi.`),
     p(`Le care-taking, c'est ça : prendre soin de tout le monde, tout le temps, jusqu'à s'oublier complètement. Et se dire que c'est de la générosité, alors que c'est souvent de la survie.`),
-    p(`Un non calme n'est pas une agression. C'est une frontière. Et une personne qui pose ses frontières n'est pas égoïste — elle est enfin disponible pour de vrai, parce qu'elle ne se sacrifie plus en secret.`),
+    p(`Un non calme n'est pas une agression. C'est une frontière. Et une personne qui pose ses frontières n'est pas égoïste, elle est enfin disponible pour de vrai, parce qu'elle ne se sacrifie plus en secret.`),
     p(`C'est un travail. C'est même l'un des cœurs de la plateforme. Si tu sens que ce sujet-là est le tien, tu sais où me trouver.`),
     ctaButton('Découvrir SOS Shine · 49,90€/mois', URLS.rejoindre, { email: v.email }),
     signature(),
@@ -89,7 +89,7 @@ const L6 = (v: StepVars) => ({
   subject: `Toujours le même genre de personnes ?`,
   html: wrapEmail([
     p(`Tu as peut-être déjà remarqué ça : les mêmes histoires qui se rejouent. Les mêmes types de personnes qui reviennent. Les mêmes fins qui se répètent, comme si tu attirais toujours le même scénario.`),
-    p(`Ce n'est pas une malédiction. Ce n'est pas « pas de chance en amour » ou « en amitié ». C'est un pattern. Quelque chose qui s'est installé très tôt et qui cherche, encore et encore, à rejouer ce qu'il connaît — même quand ça fait mal.`),
+    p(`Ce n'est pas une malédiction. Ce n'est pas « pas de chance en amour » ou « en amitié ». C'est un pattern. Quelque chose qui s'est installé très tôt et qui cherche, encore et encore, à rejouer ce qu'il connaît, même quand ça fait mal.`),
     p(`<strong style="color:#e0e0e0;">Un geste, cette semaine.</strong> Repense à deux ou trois relations qui se sont mal finies de la même façon. Ne cherche pas le coupable. Cherche juste le point commun. Souvent, il n'est pas chez les autres. Il est dans ce que tu acceptais, toi, sans t'en rendre compte.`),
     p(`Voir le pattern, c'est déjà commencer à ne plus le subir.`),
     signature(),
@@ -118,7 +118,7 @@ const L8 = (v: StepVars) => ({
     p(`Si tu ne l'as pas encore écoutée, la méditation de l'enfant intérieur t'attend dans tes cadeaux. Mets un casque, un moment au calme, et laisse-toi guider. Ce n'est pas une relaxation. C'est une rencontre.`),
     ctaButton('Retrouver mes cadeaux', URLS.cadeaux, { email: v.email }),
     signature(),
-    ps(`Ce que tu peux offrir aujourd'hui à cette petite fille — ou ce petit garçon — c'est exactement ce que personne ne lui a donné à ce moment-là.`),
+    ps(`Ce que tu peux offrir aujourd'hui à cette petite fille, ou ce petit garçon, c'est exactement ce que personne ne lui a donné à ce moment-là.`),
   ].join(''), { email: v.email }),
 })
 

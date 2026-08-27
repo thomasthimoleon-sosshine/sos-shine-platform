@@ -42,7 +42,7 @@ export const POST_CATEGORIES: CategoryDef[] = [
     colorName: 'Lumière',
     color: '#F5DE9B',
     icon: 'gratitude',
-    meaning: 'Le grand éclat — ce qui rayonne sans rien demander',
+    meaning: 'Le grand éclat, ce qui rayonne sans rien demander',
   },
   {
     value: 'partage',
@@ -50,7 +50,7 @@ export const POST_CATEGORIES: CategoryDef[] = [
     colorName: 'Albâtre',
     color: '#E3D5BE',
     icon: 'partage',
-    meaning: "Le passage — ce que l'un traverse, l'autre le reçoit",
+    meaning: "Le passage, ce que l'un traverse, l'autre le reçoit",
   },
   {
     value: 'temoignage',
@@ -58,7 +58,7 @@ export const POST_CATEGORIES: CategoryDef[] = [
     colorName: 'Or',
     color: '#C9A961',
     icon: 'temoignage',
-    meaning: 'La voix — une parole qui porte au-delà de soi',
+    meaning: 'La voix, une parole qui porte au-delà de soi',
   },
   {
     value: 'question',
@@ -66,7 +66,7 @@ export const POST_CATEGORIES: CategoryDef[] = [
     colorName: 'Bronze',
     color: '#A88248',
     icon: 'question',
-    meaning: "La facette ouverte — ce qui n'est pas encore refermé",
+    meaning: "La facette ouverte, ce qui n'est pas encore refermé",
   },
   {
     value: 'remerciements',
@@ -74,7 +74,7 @@ export const POST_CATEGORIES: CategoryDef[] = [
     colorName: 'Rose fané',
     color: '#C78790',
     icon: 'remerciements',
-    meaning: 'Ce qui revient — on reçoit ce qu\'on a donné',
+    meaning: 'Ce qui revient, on reçoit ce qu\'on a donné',
   },
   {
     value: 'citation',
@@ -82,7 +82,7 @@ export const POST_CATEGORIES: CategoryDef[] = [
     colorName: 'Incarnat',
     color: '#D2536A',
     icon: 'citation',
-    meaning: 'La parole gardée — les mots d\'un autre, tenus comme une pierre',
+    meaning: 'La parole gardée, les mots d\'un autre, tenus comme une pierre',
   },
 ]
 
@@ -111,10 +111,10 @@ export const MEDIA_TYPES: { value: 'text' | 'image' | 'video' | 'audio'; label: 
  *  Contraste vérifié ≥ 4.5:1 sur la carte (#16130D) pour les six.
  */
 export const SOUFFLE_CATEGORIES: CategoryDef[] = [
-  { value: 'gratitude', label: 'Gratitude', colorName: 'Albâtre', color: '#E8DCCB', icon: 'gratitude', meaning: "L'expiration qui se répand — une graine, trois souffles" },
+  { value: 'gratitude', label: 'Gratitude', colorName: 'Albâtre', color: '#E8DCCB', icon: 'gratitude', meaning: "L'expiration qui se répand, une graine, trois souffles" },
   { value: 'partage', label: "Partage d'expériences", colorName: 'Rose poudré', color: '#E0A9A4', icon: 'partage', meaning: 'Deux souffles qui se frôlent, et ce qui passe entre eux' },
-  { value: 'temoignage', label: 'Témoignage', colorName: 'Or mat', color: '#B08A4A', icon: 'temoignage', meaning: "La voix qui se déploie — un point, puis tout s'ouvre" },
+  { value: 'temoignage', label: 'Témoignage', colorName: 'Or mat', color: '#B08A4A', icon: 'temoignage', meaning: "La voix qui se déploie, un point, puis tout s'ouvre" },
   { value: 'question', label: 'Question', colorName: 'Vieux rose', color: '#C2687E', icon: 'question', meaning: "Le souffle qui s'enroule et s'arrête" },
-  { value: 'remerciements', label: 'Remerciements', colorName: 'Braise', color: '#C8785E', icon: 'remerciements', meaning: 'La paume ouverte — on remercie en recevant' },
-  { value: 'citation', label: 'Citation', colorName: 'Incarnat', color: '#D2536A', icon: 'citation', meaning: "La parole d'un autre — deux virgules, un vide au milieu" },
+  { value: 'remerciements', label: 'Remerciements', colorName: 'Braise', color: '#C8785E', icon: 'remerciements', meaning: 'La paume ouverte, on remercie en recevant' },
+  { value: 'citation', label: 'Citation', colorName: 'Incarnat', color: '#D2536A', icon: 'citation', meaning: "La parole d'un autre, deux virgules, un vide au milieu" },
 ]

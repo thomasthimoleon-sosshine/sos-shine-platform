@@ -145,7 +145,7 @@ export default function InscritsEvenementsAdmin() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="font-display text-2xl sm:text-3xl font-light text-[var(--text-primary)] mb-1">
-          Inscrits — Événements
+          Inscrits, Événements
         </h1>
         <p className="text-sm text-[var(--text-muted)]">
           {reservations.length} inscription{reservations.length !== 1 ? 's' : ''} au total · {events.length} événement{events.length !== 1 ? 's' : ''}

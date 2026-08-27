@@ -3,7 +3,7 @@ import QuestionnaireClient from './QuestionnaireClient'
 import { getPalier, type PalierId } from '@/lib/sosmeet/paliers'
 
 export const metadata: Metadata = {
-  title: 'Mon profil de compatibilité — SOS Meet',
+  title: 'Mon profil de compatibilité, SOS Meet',
   description: 'Le questionnaire de compatibilité SOS Meet.',
   robots: { index: false, follow: false },
 }

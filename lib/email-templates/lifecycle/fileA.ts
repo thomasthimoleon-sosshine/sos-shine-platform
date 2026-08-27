@@ -39,7 +39,7 @@ const A3 = (v: StepVars) => ({
     p(`<strong style="color:#e0e0e0;">C'est exactement là que ça commence.</strong>`),
     p(`Le conditionnement ne lâche pas parce qu'on a été brillante un mardi. Il lâche parce qu'on revient mercredi. Même quand « ça n'a l'air de rien ».`),
     p(`Ce que tu cherches n'est pas une émotion forte. C'est un système nerveux qui apprend qu'il n'est plus en danger.`),
-    p(`Si quelque chose remonte — larmes, fatigue, colère — souvent, c'est bon signe. Le corps parle parce qu'il se sent un peu plus en sécurité.`),
+    p(`Si quelque chose remonte souvent (larmes, fatigue, colère), c'est bon signe. Le corps parle parce qu'il se sent un peu plus en sécurité.`),
     ctaButton('Reprendre mon protocole', URLS.protocole, { email: v.email }),
     signature(),
     ps(`Ce soir. Une main sur le cœur. Trois respirations. « J'ai le droit d'y aller lentement. »`),
@@ -93,7 +93,7 @@ const A7 = (v: StepVars) => ({
     p(`À partir de demain, tu recevras surtout ma lettre. Plus cette file-là.`),
     ctaButton('Choisir mon axe du mois', URLS.encyclopedie, { email: v.email }),
     signature(),
-    ps(`Si tu veux me dire ce qui a bougé — ou pas — réponds. Les messages du premier mois, je les garde.`),
+    ps(`Si tu veux me dire ce qui a bougé, ou pas, réponds. Les messages du premier mois, je les garde.`),
   ].join(''), { email: v.email }),
 })
 

@@ -34,9 +34,9 @@ async function getVideo(id: string): Promise<VideoRow | null> {
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
   const video = await getVideo(id)
-  if (!video) return { title: 'Shine TV — SOS Shine®' }
+  if (!video) return { title: 'Shine TV, SOS Shine®' }
   return {
-    title: `${video.title} — Shine TV · SOS Shine®`,
+    title: `${video.title}, Shine TV · SOS Shine®`,
     description: video.description || 'Aperçu exclusif sur Shine TV',
     openGraph: {
       title: video.title,

@@ -396,7 +396,7 @@ export default function ProfilPage() {
                 className="flex items-center gap-2 text-sm cursor-pointer transition-colors text-[var(--brand)] hover:brightness-110"
               >
                 <ShineIcon name="parole" className="w-4 h-4" />
-                Ajouter une bio — dites qui vous êtes à la communauté
+                Ajouter une bio, dites qui vous êtes à la communauté
               </button>
             )}
             <p className="text-xs text-[var(--text-muted)]">{t('dashboard.member_since', { date: formatDate(profile?.created_at || '') })}</p>
@@ -586,7 +586,7 @@ export default function ProfilPage() {
                   style={{ background: 'rgba(201,169,97,0.05)', border: '1px solid rgba(201,169,97,0.2)' }}>
                   <div>
                     <p className="text-sm font-semibold text-[var(--brand)]">SOS Shine</p>
-                    <p className="text-[11px] text-[var(--text-muted)]">Tout inclus — TV, Shorts, Librairie, encyclopédie, lives</p>
+                    <p className="text-[11px] text-[var(--text-muted)]">Tout inclus, TV, Shorts, Librairie, encyclopédie, lives</p>
                   </div>
                   <span className="text-sm font-semibold text-[var(--brand)]">49,90€/mois</span>
                 </a>
@@ -608,7 +608,7 @@ export default function ProfilPage() {
           <div>
             <h3 className="font-semibold text-base text-[var(--text-primary)]">Courrier anonyme</h3>
             <p className="text-xs mt-1 text-[var(--text-muted)]">
-              Une question, une suggestion, un témoignage — l&apos;équipe fondatrice le lira,
+              Une question, une suggestion, un témoignage, l&apos;équipe fondatrice le lira,
               sans jamais savoir de qui il vient.
             </p>
           </div>

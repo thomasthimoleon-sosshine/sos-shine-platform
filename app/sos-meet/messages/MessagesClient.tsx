@@ -147,7 +147,7 @@ export default function MessagesClient() {
                 <div className="min-w-0 flex-1">
                   <div style={{ ...serif, fontSize: 17 }}>{m.other.firstName}{m.other.age ? `, ${m.other.age}` : ''}</div>
                   <div className="text-[13px] truncate" style={{ color: C.smoke }}>
-                    {m.lastMessage ? (m.lastMessage.fromMe ? 'Vous : ' : '') + m.lastMessage.body : 'Vous vous êtes trouvés — écrivez le premier mot.'}
+                    {m.lastMessage ? (m.lastMessage.fromMe ? 'Vous : ' : '') + m.lastMessage.body : 'Vous vous êtes trouvés, écrivez le premier mot.'}
                   </div>
                 </div>
               </button>

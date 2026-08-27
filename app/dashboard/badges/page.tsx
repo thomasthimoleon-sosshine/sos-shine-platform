@@ -195,7 +195,7 @@ export default function BadgesQuestPage() {
           <>
             <div className="flex justify-between text-[11px] text-[var(--text-muted)] mb-1.5">
               <span>{currentLevel.name}</span>
-              <span>{nextLevel.icon} {nextLevel.name} — {formatXP(xpToNext)} points restants</span>
+              <span>{nextLevel.icon} {nextLevel.name}, {formatXP(xpToNext)} points restants</span>
             </div>
             <div className="h-2 rounded-full overflow-hidden" style={{ background: 'var(--border)' }}>
               <motion.div
@@ -214,7 +214,7 @@ export default function BadgesQuestPage() {
         {/* Levels overview */}
         <div className="flex gap-1 mt-4">
           {LEVEL_THRESHOLDS.map(lvl => (
-            <div key={lvl.level} title={`${lvl.name} — ${formatXP(lvl.minXP)} XP`}
+            <div key={lvl.level} title={`${lvl.name}, ${formatXP(lvl.minXP)} XP`}
               className="flex-1 h-1 rounded-full transition-all"
               style={{ background: totalXp >= lvl.minXP ? 'var(--brand)' : 'var(--border)' }}
             />
@@ -301,7 +301,7 @@ export default function BadgesQuestPage() {
                   {category.badges.map(b => {
                     const unlocked = unlockedBadgeIds.has(b.id)
                     return (
-                      <div key={b.id} title={`${b.emoji ?? ''} ${b.title} — ${b.threshold} ${info.unit}`}
+                      <div key={b.id} title={`${b.emoji ?? ''} ${b.title}, ${b.threshold} ${info.unit}`}
                         className="w-7 h-7 rounded-full flex items-center justify-center text-xs transition-all"
                         style={{
                           background: unlocked ? `${info.color}20` : 'var(--border)',

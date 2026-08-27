@@ -13,7 +13,7 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { computeProfile, type Answers } from '@/lib/sosmeet/matching'
 import { computeSincerity, type Timings } from '@/lib/sosmeet/coherence'
-import { ESSENTIEL_COUNT } from '@/lib/sosmeet/essentiel'
+import { nextPalier, palierProgress, depth } from '@/lib/sosmeet/paliers'
 
 async function getUser() {
   const supabase = await createClient()
@@ -27,7 +27,14 @@ export async function GET() {
   const admin = createAdminClient()
   if (!admin) return NextResponse.json({ error: 'Config' }, { status: 500 })
   const { data } = await (admin as any).from('sosmeet_profiles').select('answers, completed').eq('user_id', user.id).maybeSingle()
-  return NextResponse.json({ answers: (data?.answers as Answers) || {}, completed: !!data?.completed })
+  const answers = (data?.answers as Answers) || {}
+  return NextResponse.json({
+    answers,
+    completed: !!data?.completed,
+    depth: depth(answers),
+    paliers: palierProgress(answers),
+    next: nextPalier(answers),
+  })
 }
 
 export async function POST(request: Request) {
@@ -36,7 +43,7 @@ export async function POST(request: Request) {
   const admin = createAdminClient()
   if (!admin) return NextResponse.json({ error: 'Config' }, { status: 500 })
 
-  let body: { answers?: Answers; timings?: Timings }
+  let body: { answers?: Answers; timings?: Timings; palier?: string }
   try { body = await request.json() } catch { return NextResponse.json({ error: 'Requête invalide.' }, { status: 400 }) }
   const answers: Answers = body.answers && typeof body.answers === 'object' ? body.answers : {}
   const timings: Timings = body.timings && typeof body.timings === 'object' ? body.timings : {}
@@ -47,7 +54,12 @@ export async function POST(request: Request) {
 
   const scored = computeProfile(answers)
   const sincerity = computeSincerity(answers, timings)
-  const completed = scored.answered >= Math.ceil(ESSENTIEL_COUNT * 0.7)
+  const progress = palierProgress(answers)
+
+  // Seul l'Essentiel débloque la découverte. Les paliers suivants ne font
+  // qu'affiner — les avoir sautés ne doit jamais rendre un profil invisible.
+  const essentiel = progress.find(p => p.id === 'essentiel')
+  const completed = !!essentiel?.done
 
   const { error } = await (admin as any).from('sosmeet_profiles').update({
     answers,
@@ -55,6 +67,8 @@ export async function POST(request: Request) {
       dimensions: scored.dimensions,
       filters: scored.filters,
       answered: scored.answered,
+      depth: depth(answers),
+      paliers: progress.map(p => ({ id: p.id, answered: p.answered, total: p.total, done: p.done })),
       sincerity: { score: sincerity.score, band: sincerity.band, coherent: sincerity.coherent, flags: sincerity.flags },
     },
     completed,
@@ -69,6 +83,9 @@ export async function POST(request: Request) {
   return NextResponse.json({
     message: 'success',
     completed,
+    depth: depth(answers),
+    paliers: progress,
+    next: nextPalier(answers),
     sincerity: { score: sincerity.score, band: sincerity.band, coherent: sincerity.coherent },
   })
 }

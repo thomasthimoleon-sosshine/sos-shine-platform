@@ -18,7 +18,7 @@
  * Temps : { [questionId]: millisecondes passées sur la question } (optionnel).
  */
 
-import { ESSENTIEL } from './essentiel'
+import { ALL_QUESTIONS } from './paliers'
 
 export type Answers = Record<string, number>
 export type Timings = Record<string, number>
@@ -99,6 +99,161 @@ export const COHERENCE_RULES: CoherenceRule[] = [
     // q140: 4 = 9-10 · q120: 2 = pas complètement
     penalty: clash([4], [2]),
   },
+
+  // ══ Palier « Le lien » ══════════════════════════════════════════════════
+  // Dit tout dire calmement, mais garde tout pour soi.
+  {
+    id: 'dit_vs_tait', a: 'q201', b: 'q202',
+    label: 'Dit exprimer ses blessures aussitôt mais se décrit comme pudique',
+    // q201: 0 = je le dis vite · q202: 2 = pudique
+    penalty: clash([0], [2]),
+  },
+  // Sait demander, mais attend qu'on devine.
+  {
+    id: 'demande_vs_devine', a: 'q205', b: 'q201',
+    label: 'Se dit à l’aise pour demander mais rumine sans rien dire',
+    weight: 0.9,
+    // q205: 0 = je sais demander · q201: 3 = je garde pour moi
+    penalty: clash([0], [3]),
+  },
+  // Reste et parle jusqu'au bout, mais met plusieurs jours à revenir.
+  {
+    id: 'reste_vs_boude', a: 'q206', b: 'q207',
+    label: 'Dit rester pour parler mais met plusieurs jours à revenir',
+    // q206: 0 = rester et parler · q207: 3 = plusieurs jours
+    penalty: clash([0], [3]),
+  },
+  // Ne s'emporte jamais… mais son réflexe est de hausser le ton.
+  {
+    id: 'calme_vs_ton', a: 'q210', b: 'q206',
+    label: 'Se dit incapable de s’emporter mais hausse le ton en dispute',
+    // q210: 3 = jamais · q206: 3 = hausser le ton
+    penalty: clash([3], [3]),
+  },
+  // Jalousie quasi absente mais besoin d'être rassuré·e en permanence.
+  {
+    id: 'jalousie_vs_rassurance', a: 'q212', b: 'q213',
+    label: 'Se dit sans jalousie mais a besoin d’être rassuré·e en permanence',
+    weight: 0.9,
+    // q212: 3 = quasi absente · q213: 0 = oui souvent
+    penalty: clash([3], [0]),
+  },
+  // « Sécure » (Essentiel) mais envie de fuir dès que ça devient sérieux.
+  {
+    id: 'secure_vs_fuite', a: 'q83', b: 'q214',
+    label: 'Se dit « sécure » mais veut fuir dès qu’une relation devient sérieuse',
+    // q83: 0 = sécure · q214: 2 = envie de fuir
+    penalty: clash([0], [2]),
+  },
+  // Confiance immédiate mais méfiance dès que ça s'engage.
+  {
+    id: 'confiance_vs_mefiance', a: 'q215', b: 'q214',
+    label: 'Dit faire confiance d’emblée mais réagit par la méfiance',
+    weight: 0.8,
+    // q215: 0 = d'emblée · q214: 3 = méfiance
+    penalty: clash([0], [3]),
+  },
+  // Veut vivre ensemble très vite (Essentiel) mais cache ses relations à ses proches.
+  {
+    id: 'emmenager_vs_cacher', a: 'q133', b: 'q217',
+    label: 'Veut vivre ensemble très vite mais présente ses partenaires le plus tard possible',
+    weight: 0.8,
+    // q133: 0 = vivre ensemble vite · q217: 3 = le plus tard possible
+    penalty: clash([0], [3]),
+  },
+  // Se projette très vite mais refuse tout engagement formel et vit au présent.
+  {
+    id: 'projection_vs_present', a: 'q219', b: 'q148',
+    label: 'Dit se projeter très vite mais ne sait pas quel engagement il·elle cherche',
+    weight: 0.6,
+    // q219: 0 = oui très vite · q148: 3 = je ne sais pas encore
+    penalty: clash([0], [3]),
+  },
+
+  // ══ Palier « La vie » ═══════════════════════════════════════════════════
+  // Famille centrale mais ne veut pas que l'autre s'en approche.
+  {
+    id: 'famille_vs_integration', a: 'q301', b: 'q302',
+    label: 'Famille décrite comme centrale mais refuse d’y intégrer son/sa partenaire',
+    weight: 0.8,
+    // q301: 0 = centrale · q302: 3 = non je sépare
+    penalty: clash([0], [3]),
+  },
+  // Épargne et prévoit, mais l'argent est un sujet difficile et incontrôlé.
+  {
+    id: 'epargne_vs_depense', a: 'q306', b: 'q307',
+    label: 'Se dit prévoyant·e mais ne veut aucune mise en commun ni discussion',
+    weight: 0.5,
+    penalty: clash([0], [2]),
+  },
+  // Ne fume jamais mais juge le tabac indifférent parce qu'« il·elle fume aussi ».
+  {
+    id: 'tabac_incoherent', a: 'q315', b: 'q316',
+    label: 'Déclare ne jamais fumer mais répond « je fume aussi »',
+    // q315: 0 = jamais · q316: 3 = je fume aussi
+    penalty: clash([0], [3]),
+  },
+  // Sport presque tous les jours mais ne sort jamais et déteste bouger.
+  {
+    id: 'sport_vs_sedentaire', a: 'q317', b: 'q319',
+    label: 'Sport quotidien déclaré mais ne quitte jamais son domicile',
+    weight: 0.4,
+    penalty: clash([0], [3]),
+  },
+  // Va spontanément vers les gens mais n'a aucun ami proche et fuit les soirées.
+  {
+    id: 'sociable_vs_isole', a: 'q320', b: 'q321',
+    label: 'Se décrit très sociable mais déclare n’avoir aucun ami proche',
+    weight: 0.6,
+    penalty: clash([0], [3]),
+  },
+  // Écologie structurante mais rythme de vie qui la contredit frontalement.
+  {
+    id: 'ecolo_vs_voyages', a: 'q313', b: 'q319',
+    label: 'Écologie décrite comme structurante mais voyages très fréquents',
+    weight: 0.3,
+    penalty: clash([0], [0]),
+  },
+
+  // ══ Palier « L'intime » ═════════════════════════════════════════════════
+  // Parle très librement de sexualité mais n'ose rien dire de ses envies.
+  {
+    id: 'parle_vs_ose', a: 'q403', b: 'q404',
+    label: 'Dit parler très librement de sexualité mais n’ose pas dire ce qu’il·elle aime',
+    // q403: 0 = très librement · q404: 3 = non
+    penalty: clash([0], [3]),
+  },
+  // Désir très fréquent mais peut s'en passer très longtemps sans que ça compte.
+  {
+    id: 'desir_vs_abstinence', a: 'q401', b: 'q407',
+    label: 'Déclare un désir très fréquent mais dit pouvoir s’en passer indéfiniment',
+    weight: 0.8,
+    penalty: clash([0], [3]),
+  },
+  // Aucune pudeur revendiquée mais rapport au corps très difficile.
+  {
+    id: 'pudeur_vs_corps', a: 'q410', b: 'q409',
+    label: 'Se dit sans pudeur mais décrit un rapport très difficile à son corps',
+    weight: 0.6,
+    penalty: clash([0], [3]),
+  },
+  // L'intimité ne fait pas peur, mais la sexualité est déclarée essentielle
+  // ET l'attachement est désorganisé — signal faible, poids réduit.
+  {
+    id: 'intimite_vs_peur', a: 'q412', b: 'q214',
+    label: 'Dit n’avoir aucune peur de l’intimité mais veut fuir dès que ça devient sérieux',
+    weight: 0.7,
+    // q412: 0 = non · q214: 2 = envie de fuir
+    penalty: clash([0], [2]),
+  },
+  // Sexualité « très importante » (Essentiel) mais désir déclaré très rare.
+  {
+    id: 'sexe_important_vs_desir_rare', a: 'q96', b: 'q401',
+    label: 'Dit la sexualité très importante mais déclare un désir très rare',
+    weight: 0.9,
+    // q96: 0 = très importante · q401: 3 = peu
+    penalty: clash([0], [3]),
+  },
 ]
 
 // ── 3. Désirabilité sociale ────────────────────────────────────────────────
@@ -115,7 +270,7 @@ const DESIRABILITY_EXTRA: DesirabilityFlag[] = [
 // pour rester automatiquement synchronisés quand on ajoute des questions.
 export const DESIRABILITY: DesirabilityFlag[] = [
   ...DESIRABILITY_EXTRA,
-  ...ESSENTIEL.filter(q => q.desirable && q.desirable.length)
+  ...ALL_QUESTIONS.filter(q => q.desirable && q.desirable.length)
     .map(q => ({ q: q.id, flattering: q.desirable as number[] })),
 ]
 

@@ -17,6 +17,8 @@
 export type Dimension =
   | 'intentions' | 'engagement' | 'securite' | 'independance'
   | 'spiritualite' | 'sexualite' | 'lifestyle' | 'social' | 'valeurs'
+  // Ajoutées avec les paliers d'approfondissement (voir paliers.ts) :
+  | 'communication' | 'conflit' | 'famille' | 'materiel'
 
 export type Role = 'similarity' | 'preference' | 'filter' | 'info'
 

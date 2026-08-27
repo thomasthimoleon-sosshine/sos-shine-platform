@@ -36,9 +36,21 @@ function Reveal({ children, delay = 0, className = '' }: { children: React.React
 }
 
 const ETAPES = [
-  { n: '01', title: 'Se révéler', body: 'Un profil d’une profondeur rare — tes intentions, tes valeurs, ton monde intérieur, tes non-négociables. On te connaît par cœur avant de te montrer.' },
-  { n: '02', title: 'Être compris', body: 'Notre lecture de compatibilité rapproche ce qui compte vraiment. Pas des apparences : des âmes qui cherchent la même chose.' },
-  { n: '03', title: 'Se rencontrer', body: 'Quand le désir est réciproque, le visage se dévoile et la conversation s’ouvre. Le trouble d’un vrai commencement.' },
+  {
+    n: '01', soloTitle: 'Se révéler', coupleTitle: 'Se raconter',
+    solo: 'Un profil d’une profondeur rare — tes intentions, tes valeurs, ton monde intérieur, tes non-négociables. On te connaît par cœur avant de te montrer.',
+    couple: 'Chacun répond de son côté, en vérité — ce qu’on n’ose plus se dire, ce qui manque, ce qu’on espère encore. Deux regards honnêtes sur le même lien.',
+  },
+  {
+    n: '02', soloTitle: 'Être compris', coupleTitle: 'Se comprendre',
+    solo: 'Notre lecture de compatibilité rapproche ce qui compte vraiment. Pas des apparences : des âmes qui cherchent la même chose.',
+    couple: 'Notre lecture révèle où vous vous rejoignez encore et où le lien s’est distendu. Pas un verdict : une carte pour se retrouver.',
+  },
+  {
+    n: '03', soloTitle: 'Se rencontrer', coupleTitle: 'Se retrouver',
+    solo: 'Quand le désir est réciproque, le visage se dévoile et la conversation s’ouvre. Le trouble d’un vrai commencement.',
+    couple: 'Un chemin guidé pour raviver ce qui s’est endormi, rouvrir le dialogue et vous redécouvrir. Le trouble d’un recommencement.',
+  },
 ]
 
 const FAQ = [
@@ -226,20 +238,28 @@ export default function SosMeetClient() {
           </div>
         </section>
 
-        {/* 2. LE PRINCIPE */}
+        {/* 2. LE PRINCIPE — les deux parcours, temps par temps */}
         <section className="max-w-5xl mx-auto px-5 sm:px-8 py-24">
           <Reveal className="text-center max-w-2xl mx-auto mb-14">
-            <p className="text-[11px] tracking-[0.34em] uppercase mb-3" style={{ color: C.smoke2 }}>Le principe — chemin solo</p>
+            <p className="text-[11px] tracking-[0.34em] uppercase mb-3" style={{ color: C.smoke2 }}>Le principe</p>
             <h2 style={{ ...serif, fontWeight: 400, fontSize: 'clamp(2rem,5vw,3.2rem)' }}>Trois temps, une vérité</h2>
-            <p className="mt-4 text-[14.5px]" style={{ color: C.smoke2 }}>Vous êtes seul·e et vous cherchez à rencontrer ? Voici comment se déroule votre parcours.</p>
+            <p className="mt-4 text-[14.5px]" style={{ color: C.smoke2 }}>Le même mouvement pour les deux portes — que vous veniez rencontrer, ou vous retrouver.</p>
           </Reveal>
           <div className="grid sm:grid-cols-3" style={{ gap: 1, background: C.line, border: `1px solid ${C.line}`, borderRadius: 6, overflow: 'hidden' }}>
             {ETAPES.map((s, i) => (
               <Reveal key={i} delay={i * 0.08}>
-                <div className="h-full p-10" style={{ background: C.velvet }}>
+                <div className="h-full p-9 flex flex-col" style={{ background: C.velvet }}>
                   <div style={{ ...serif, fontStyle: 'italic', fontSize: 34, color: C.garnet }}>{s.n}</div>
-                  <h3 className="mt-4 mb-2.5 text-[22px]" style={{ ...serif, fontWeight: 500 }}>{s.title}</h3>
-                  <p className="text-[14.5px] leading-relaxed" style={{ color: C.smoke }}>{s.body}</p>
+                  <div className="mt-5">
+                    <div className="text-[10px] tracking-[0.28em] uppercase mb-1.5" style={{ color: C.ember }}>Seul·e</div>
+                    <h3 className="mb-2 text-[20px]" style={{ ...serif, fontWeight: 500 }}>{s.soloTitle}</h3>
+                    <p className="text-[13.5px] leading-relaxed" style={{ color: C.smoke }}>{s.solo}</p>
+                  </div>
+                  <div className="mt-6 pt-5" style={{ borderTop: `1px solid ${C.line}` }}>
+                    <div className="text-[10px] tracking-[0.28em] uppercase mb-1.5" style={{ color: C.ember }}>À deux</div>
+                    <h3 className="mb-2 text-[20px]" style={{ ...serif, fontWeight: 500 }}>{s.coupleTitle}</h3>
+                    <p className="text-[13.5px] leading-relaxed" style={{ color: C.smoke }}>{s.couple}</p>
+                  </div>
                 </div>
               </Reveal>
             ))}
@@ -254,12 +274,15 @@ export default function SosMeetClient() {
               <img src="/sosmeet/masked-he.png" alt="" className="w-1/2 rounded-2xl object-cover aspect-square mt-8" style={{ border: `1px solid ${C.line}` }} />
             </Reveal>
             <Reveal delay={0.1}>
-              <span className="text-[11px] tracking-[0.3em] uppercase" style={{ color: C.ember }}>La révélation</span>
+              <span className="text-[11px] tracking-[0.3em] uppercase" style={{ color: C.ember }}>La vérité d’abord</span>
               <h2 className="mt-3 mb-4" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(1.9rem,4.6vw,2.8rem)', lineHeight: 1.05 }}>
-                Le visage vient après l’âme
+                On commence par ce qui ne ment pas
               </h2>
               <p className="text-[15.5px] leading-relaxed" style={{ color: C.smoke }}>
-                Tu découvres d’abord ce qui ne ment pas : les valeurs, les intentions, le monde intérieur. La photo reste voilée — et ne se dévoile qu’au moment où le désir devient réciproque. On ne swipe pas des visages. On rencontre des présences.
+                <b style={{ color: C.alabaster }}>Pour rencontrer :</b> on découvre d’abord les valeurs, les intentions, le monde intérieur. La photo reste voilée et ne se dévoile qu’au moment où le désir devient réciproque. On ne swipe pas des visages, on rencontre des présences.
+              </p>
+              <p className="text-[15.5px] leading-relaxed mt-4" style={{ color: C.smoke }}>
+                <b style={{ color: C.alabaster }}>Pour se retrouver :</b> chacun répond en vérité, sans masque et sans jugement. Ce qu’on n’ose plus se dire trouve enfin un espace — et redevient un point de départ.
               </p>
             </Reveal>
           </div>
@@ -284,10 +307,13 @@ export default function SosMeetClient() {
             <Reveal delay={0.1}>
               <span className="text-[11px] tracking-[0.3em] uppercase" style={{ color: C.ember }}>La lecture de compatibilité</span>
               <h2 className="mt-3 mb-4" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(1.9rem,4.6vw,2.8rem)', lineHeight: 1.05 }}>
-                Un profil qui se dévoile, question après question
+                Une lecture juste, question après question
               </h2>
               <p className="text-[15.5px] leading-relaxed" style={{ color: C.smoke }}>
-                On commence par l’essentiel — assez pour te présenter tes premières rencontres. Puis ton profil s’approfondit à ton rythme, et chaque réponse affine ce que la vie t’envoie.
+                <b style={{ color: C.alabaster }}>Seul·e :</b> on commence par l’essentiel — assez pour présenter tes premières rencontres — puis ton profil s’approfondit à ton rythme, et chaque réponse affine ce que la vie t’envoie.
+              </p>
+              <p className="text-[15.5px] leading-relaxed mt-4" style={{ color: C.smoke }}>
+                <b style={{ color: C.alabaster }}>À deux :</b> la même lecture révèle où vous vous rejoignez encore et où le lien s’est distendu — une carte claire pour rouvrir le dialogue et vous retrouver.
               </p>
               <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full text-[12px]"
                 style={{ background: 'rgba(155,27,46,0.12)', color: C.ember, border: '1px solid rgba(155,27,46,0.25)' }}>

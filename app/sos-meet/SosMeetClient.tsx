@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import MeetNav from './MeetNav'
 
 // ── Charte SOS Meet — « couture après minuit » (indépendante de SOS Shine) ──
 const C = {
@@ -142,14 +143,8 @@ export default function SosMeetClient() {
       }} />
 
       <div className="relative z-10">
-        {/* NAV */}
-        <header className="max-w-6xl mx-auto px-5 sm:px-8 py-6 flex items-center justify-between">
-          <span className="text-[22px]" style={{ ...serif, fontWeight: 500 }}>SOS Meet<span style={{ color: C.garnet }}>.</span></span>
-          <a href="#waitlist" className="text-[12px] tracking-[0.16em] uppercase px-5 py-2.5 rounded-full transition-colors"
-            style={{ border: `1px solid ${C.line}`, color: C.alabaster }}>
-            Créer mon profil
-          </a>
-        </header>
+        {/* NAV — consciente de la connexion (login / logout / accès aux sections) */}
+        <MeetNav />
 
         {/* 1. HERO — deux portes */}
         <section className="relative overflow-hidden" style={{ minHeight: '100vh' }}>

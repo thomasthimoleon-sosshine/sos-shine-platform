@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import MeetNav from '../MeetNav'
 
 // Charte SOS Meet
 const C = {
@@ -127,7 +128,8 @@ export default function ProfilClient() {
   return (
     <main className={wrap} style={{ ...sans, background: C.ink, color: C.alabaster }}>
       <div className="pointer-events-none fixed inset-0" style={{ background: 'radial-gradient(110% 55% at 50% -8%, rgba(155,27,46,0.16), transparent 55%)' }} />
-      <div className="relative max-w-lg mx-auto px-6 py-16">
+      <MeetNav active="profil" />
+      <div className="relative max-w-lg mx-auto px-6 py-8">
         <span className="text-[11px] tracking-[0.4em] uppercase" style={{ color: C.ember }}>Étape 1 · Mes infos</span>
         <h1 className="mt-4 mb-2" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(2rem,6vw,3rem)', lineHeight: 1.03 }}>
           Faisons connaissance

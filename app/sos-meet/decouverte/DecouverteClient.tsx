@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import MeetNav from '../MeetNav'
 
 const C = {
   ink: '#0A090B', card: '#151016', line: 'rgba(242,235,228,0.12)',
@@ -73,12 +74,8 @@ export default function DecouverteClient() {
   return (
     <main className={shell} style={bg}>
       <div className="pointer-events-none fixed inset-0" style={{ background: 'radial-gradient(110% 45% at 50% -8%, rgba(155,27,46,0.14), transparent 55%)' }} />
-      <div className="relative max-w-5xl mx-auto px-5 sm:px-8 py-14">
-        <div className="flex items-center justify-between mb-10">
-          <Link href="/sos-meet" className="text-[12px] tracking-[0.12em] uppercase" style={{ color: C.smoke }}>← SOS Meet</Link>
-          <span className="text-[11px] tracking-[0.3em] uppercase" style={{ color: C.ember }}>Découverte</span>
-        </div>
-
+      <MeetNav active="decouverte" />
+      <div className="relative max-w-5xl mx-auto px-5 sm:px-8 py-8">
         <h1 className="mb-2" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(2rem,5.5vw,3.2rem)' }}>Celles et ceux qui te correspondent</h1>
         <p className="text-[15px] mb-10" style={{ color: C.smoke }}>Le visage reste voilé — l’émotionnel d’abord. Quand l’intérêt devient réciproque, il se dévoile.</p>
 

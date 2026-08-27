@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import MeetNav from '../MeetNav'
 
 const C = {
   ink: '#0A090B', card: '#151016', velvet: '#120E11', line: 'rgba(242,235,228,0.12)',
@@ -126,11 +127,8 @@ export default function MessagesClient() {
   // Liste des matchs
   return (
     <main className={shell} style={bg}>
-      <div className="max-w-2xl mx-auto px-5 sm:px-6 py-14">
-        <div className="flex items-center justify-between mb-8">
-          <Link href="/sos-meet/decouverte" className="text-[12px] tracking-[0.12em] uppercase" style={{ color: C.smoke }}>← Découverte</Link>
-          <span className="text-[11px] tracking-[0.3em] uppercase" style={{ color: C.ember }}>Mes rencontres</span>
-        </div>
+      <MeetNav active="messages" />
+      <div className="max-w-2xl mx-auto px-5 sm:px-6 py-8">
         <h1 className="mb-8" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(2rem,5.5vw,3rem)' }}>Vos connexions</h1>
 
         {matches.length === 0 ? (

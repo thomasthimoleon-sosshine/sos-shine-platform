@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 // Charte SOS Meet
@@ -34,6 +34,10 @@ export default function ProfilClient() {
   const [sensitive, setSensitive] = useState(false)
   const [status, setStatus] = useState<'idle' | 'loading'>('idle')
   const [error, setError] = useState<string | null>(null)
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null)
+  const [photoBusy, setPhotoBusy] = useState(false)
+  const [protocols, setProtocols] = useState<{ title: string }[]>([])
+  const fileRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     fetch('/api/sosmeet/me')
@@ -45,12 +49,24 @@ export default function ProfilClient() {
         if (p) {
           setFirstName(p.first_name || ''); setBirthdate(p.birthdate || ''); setGender(p.gender || '')
           setSeeking(Array.isArray(p.seeking) ? p.seeking : []); setCity(p.city || ''); setHeadline(p.headline || '')
-          setAgeOk(!!p.age_confirmed); setSensitive(!!p.sensitive_consent)
+          setAgeOk(!!p.age_confirmed); setSensitive(!!p.sensitive_consent); setPhotoUrl(p.photoUrl || null)
         }
+        setProtocols(Array.isArray(d.protocols) ? d.protocols : [])
         setLoading(false)
       })
       .catch(() => { setAuthed(false); setLoading(false) })
   }, [])
+
+  async function uploadPhoto(file: File) {
+    setError(null); setPhotoBusy(true)
+    try {
+      const fd = new FormData(); fd.append('photo', file)
+      const res = await fetch('/api/sosmeet/photo', { method: 'POST', body: fd })
+      const d = await res.json().catch(() => ({}))
+      if (res.ok) setPhotoUrl(d.url || null)
+      else setError(d.error || 'Photo non enregistrée.')
+    } catch { setError('Envoi impossible.') } finally { setPhotoBusy(false) }
+  }
 
   function toggleSeeking(v: string) {
     setSeeking((s) => (s.includes(v) ? s.filter((x) => x !== v) : [...s, v]))
@@ -119,6 +135,34 @@ export default function ProfilClient() {
         <p className="text-[15px] leading-relaxed mb-9" style={{ color: C.smoke }}>
           L’essentiel pour commencer. Juste après, le questionnaire de compatibilité — c’est lui qui débloque tes premières rencontres.
         </p>
+
+        {/* Photo — privée, voilée pour les autres jusqu'au match */}
+        <div className="flex items-center gap-4 mb-8">
+          <button type="button" onClick={() => fileRef.current?.click()} disabled={photoBusy}
+            className="relative w-20 h-20 rounded-2xl overflow-hidden shrink-0 flex items-center justify-center"
+            style={{ border: `1px solid ${C.line}`, background: C.card }}>
+            {photoUrl
+              ? <img src={photoUrl} alt="" className="w-full h-full object-cover" />
+              : <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke={C.smoke2} strokeWidth={1.4}><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M6 18h12a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0018 4.5H6a2.25 2.25 0 00-2.25 2.25v9A2.25 2.25 0 006 18z" /></svg>}
+            {photoBusy && <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(10,9,11,.6)' }}><div className="w-5 h-5 border-2 rounded-full animate-spin" style={{ borderColor: C.garnet, borderTopColor: 'transparent' }} /></div>}
+          </button>
+          <div>
+            <div className="text-[14px]" style={{ color: C.alabaster }}>{photoUrl ? 'Changer ma photo' : 'Ajouter une photo'}</div>
+            <div className="text-[12.5px]" style={{ color: C.smoke2 }}>Voilée pour les autres — elle se dévoile au match.</div>
+          </div>
+          <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden"
+            onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadPhoto(f) }} />
+        </div>
+
+        {/* Chemin accompli — protocoles SOS Shine traversés */}
+        {protocols.length > 0 && (
+          <div className="mb-8 p-4 rounded-2xl" style={{ background: 'rgba(155,27,46,0.08)', border: '1px solid rgba(155,27,46,0.2)' }}>
+            <div className="text-[11px] tracking-[0.24em] uppercase mb-2" style={{ color: C.ember }}>Chemin accompli</div>
+            <p className="text-[13.5px] leading-relaxed" style={{ color: C.smoke }}>
+              {protocols.length} protocole{protocols.length > 1 ? 's' : ''} traversé{protocols.length > 1 ? 's' : ''} sur SOS Shine — <span style={{ color: C.alabaster }}>{protocols.map((p) => p.title).join(' · ')}</span>. Ce travail apparaîtra sur ton profil.
+            </p>
+          </div>
+        )}
 
         <form onSubmit={submit} className="space-y-6">
           <div>

@@ -39,14 +39,36 @@ export async function GET() {
 
   const { data } = await (admin as any)
     .from('sosmeet_profiles')
-    .select('first_name, birthdate, gender, seeking, city, headline, age_confirmed, sensitive_consent, completed')
+    .select('first_name, birthdate, gender, seeking, city, headline, age_confirmed, sensitive_consent, completed, photo_path')
     .eq('user_id', user.id)
     .maybeSingle()
+
+  // Photo : URL signée pour l'aperçu par le propriétaire uniquement.
+  let photoUrl: string | null = null
+  if (data?.photo_path) {
+    const { data: signed } = await (admin as any).storage.from('sosmeet-photos').createSignedUrl(data.photo_path, 3600)
+    photoUrl = signed?.signedUrl || null
+  }
+
+  // Chemin accompli : protocoles SOS Shine terminés (table user_progress → douleurs).
+  let protocols: { title: string; completedAt: string | null }[] = []
+  try {
+    const { data: prog } = await (admin as any)
+      .from('user_progress')
+      .select('completed_at, douleurs(title)')
+      .eq('user_id', user.id)
+      .not('completed_at', 'is', null)
+      .order('completed_at', { ascending: false })
+    protocols = (prog || [])
+      .map((p: { completed_at: string | null; douleurs?: { title?: string } }) => ({ title: p.douleurs?.title || '', completedAt: p.completed_at }))
+      .filter((p: { title: string }) => p.title)
+  } catch { /* non-bloquant */ }
 
   return NextResponse.json({
     authenticated: true,
     email: user.email,
-    profile: data || null,
+    profile: data ? { ...data, photoUrl } : null,
+    protocols,
     infosDone: !!(data && data.first_name && data.birthdate && data.gender && data.age_confirmed),
   })
 }

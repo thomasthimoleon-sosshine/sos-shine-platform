@@ -45,6 +45,25 @@ export default function DuoClient({ initialCode }: { initialCode: string }) {
 
   useEffect(() => { load() }, [load])
 
+  // Arrivé par un lien d'invitation, connecté, et sans duo : on relie tout seul.
+  const [autoTente, setAutoTente] = useState(false)
+  useEffect(() => {
+    if (phase !== 'ready' || couple || !initialCode || autoTente) return
+    setAutoTente(true)
+    ;(async () => {
+      setBusy(true)
+      try {
+        const r = await fetch('/api/sosmeet/couple/join', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: initialCode }),
+        })
+        if (r.ok) { await load(); return }
+        const d = await r.json().catch(() => ({}))
+        setError(d.error || null)   // on laisse la personne réessayer à la main
+      } catch { /* le formulaire reste disponible */ } finally { setBusy(false) }
+    })()
+  }, [phase, couple, initialCode, autoTente, load])
+
   // Tant que le/la partenaire n'a pas rejoint ou scellé, on rafraîchit doucement.
   useEffect(() => {
     if (phase !== 'ready' || !couple) return
@@ -82,6 +101,12 @@ export default function DuoClient({ initialCode }: { initialCode: string }) {
     catch { setError('Copie impossible. Sélectionne le lien à la main.') }
   }
 
+  // Le lien d'invitation doit survivre à la connexion : sans cela, le
+  // partenaire revient sans son code et doit le redemander.
+  const retour = encodeURIComponent(
+    code ? `/sos-meet/couple/duo?code=${encodeURIComponent(code)}` : '/sos-meet/couple/duo'
+  )
+
   const shell = 'min-h-screen relative'
   const bg = { ...sans, background: C.ink, color: C.alabaster } as React.CSSProperties
   const halo = <div className="pointer-events-none fixed inset-0" style={{ background: 'radial-gradient(110% 55% at 50% -8%, rgba(155,27,46,0.14), transparent 55%)' }} />
@@ -100,9 +125,14 @@ export default function DuoClient({ initialCode }: { initialCode: string }) {
           Votre duo est rattaché à vos comptes. Chacun le sien : c’est ce qui garantit que personne ne lit les réponses de l’autre.
         </p>
         <div className="w-full flex flex-col gap-3">
-          <a href="/login?next=/sos-meet/couple/duo" className="w-full py-4 rounded-full text-[14px] tracking-[0.12em] uppercase text-center" style={cta}>Me connecter</a>
-          <a href="/signup?next=/sos-meet/couple/duo" className="w-full py-4 rounded-full text-[14px] tracking-[0.12em] uppercase text-center" style={ghost}>Créer mon compte</a>
+          <a href={`/login?next=${retour}`} className="w-full py-4 rounded-full text-[14px] tracking-[0.12em] uppercase text-center" style={cta}>Me connecter</a>
+          <a href={`/signup?next=${retour}`} className="w-full py-4 rounded-full text-[14px] tracking-[0.12em] uppercase text-center" style={ghost}>Créer mon compte</a>
         </div>
+        {code && (
+          <p className="mt-6 text-[13px] leading-relaxed" style={{ color: C.smoke2 }}>
+            Ton invitation est bien reçue. On te ramène ici juste après, et vous serez reliés automatiquement.
+          </p>
+        )}
       </div>
     </main>
   )

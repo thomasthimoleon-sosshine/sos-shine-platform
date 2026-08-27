@@ -175,25 +175,31 @@ export default function SosMeetClient() {
             <Reveal delay={0.24}>
               <div className="grid sm:grid-cols-2 gap-5 sm:gap-7 mt-12 text-left">
                 {/* Porte 1 — Solo */}
-                <Link href="/sos-meet/profil" className="group relative rounded-2xl overflow-hidden flex flex-col justify-end min-h-[340px] md:min-h-[460px] lg:min-h-[520px] transition-transform hover:-translate-y-1" style={{ border: `1px solid ${C.line}` }}>
-                  <img src="/sosmeet/hero-silhouettes.png" alt="" className="absolute inset-0 w-full h-full object-cover opacity-55 transition-opacity duration-500 group-hover:opacity-75" style={{ objectPosition: 'center 12%' }} />
-                  <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(10,9,11,.2), rgba(10,9,11,.55) 55%, rgba(10,9,11,.92))' }} />
-                  <div className="relative p-7">
-                    <div className="text-[11px] tracking-[0.3em] uppercase" style={{ color: C.ember }}>Seul·e</div>
-                    <h3 className="mt-2 mb-2" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(1.6rem,3.4vw,2.2rem)' }}>Rencontrer</h3>
-                    <p className="text-[14px] mb-4" style={{ color: C.smoke }}>Je me découvre, et je m’ouvre à une rencontre juste — en conscience.</p>
-                    <span className="inline-flex items-center gap-2 text-[13px] tracking-[0.12em] uppercase px-6 py-3 rounded-full" style={{ background: `linear-gradient(135deg, ${C.garnet}, ${C.garnetSoft})`, color: '#F7EEE9' }}>Créer mon profil <span aria-hidden>→</span></span>
+                <Link href="/sos-meet/profil" className="group relative rounded-[20px] overflow-hidden flex flex-col transition-transform duration-500 hover:-translate-y-1"
+                  style={{ border: `1px solid rgba(242,235,228,0.14)`, background: 'rgba(16,12,15,0.55)', backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)', boxShadow: '0 40px 90px -55px rgba(0,0,0,0.9)' }}>
+                  <div className="relative overflow-hidden" style={{ aspectRatio: '16 / 9' }}>
+                    <img src="/sosmeet/hero-silhouettes.png" alt="" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" style={{ objectPosition: 'center 14%' }} />
+                    <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, transparent 55%, rgba(16,12,15,0.85) 96%)' }} />
+                  </div>
+                  <div className="relative p-7 md:p-8 flex flex-col flex-1">
+                    <div className="text-[10.5px] tracking-[0.34em] uppercase" style={{ color: C.ember }}>Seul·e</div>
+                    <h3 className="mt-2.5 mb-2.5" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(1.7rem,2.6vw,2.4rem)', lineHeight: 1.05 }}>Rencontrer</h3>
+                    <p className="text-[14.5px] leading-relaxed mb-6" style={{ color: C.smoke }}>Je me découvre, et je m’ouvre à une rencontre juste — en conscience.</p>
+                    <span className="mt-auto inline-flex items-center gap-2 self-start text-[12.5px] tracking-[0.14em] uppercase px-7 py-3.5 rounded-full transition-transform group-hover:translate-x-0.5" style={{ background: `linear-gradient(135deg, ${C.garnet}, ${C.garnetSoft})`, color: '#F7EEE9', boxShadow: '0 16px 34px -16px rgba(155,27,46,0.7)' }}>Créer mon profil <span aria-hidden>→</span></span>
                   </div>
                 </Link>
                 {/* Porte 2 — Couple */}
-                <Link href="/sos-meet/couple" className="group relative rounded-2xl overflow-hidden flex flex-col justify-end min-h-[340px] md:min-h-[460px] lg:min-h-[520px] transition-transform hover:-translate-y-1" style={{ border: `1px solid ${C.line}` }}>
-                  <img src="/sosmeet/couple.png" alt="" className="absolute inset-0 w-full h-full object-cover opacity-55 transition-opacity duration-500 group-hover:opacity-75" />
-                  <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(10,9,11,.2), rgba(10,9,11,.55) 55%, rgba(10,9,11,.92))' }} />
-                  <div className="relative p-7">
-                    <div className="text-[11px] tracking-[0.3em] uppercase" style={{ color: C.ember }}>À deux</div>
-                    <h3 className="mt-2 mb-2" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(1.6rem,3.4vw,2.2rem)' }}>Se retrouver</h3>
-                    <p className="text-[14px] mb-4" style={{ color: C.smoke }}>Nous sommes deux, et nous voulons nous re-rencontrer. Raviver ce qui s’est endormi.</p>
-                    <span className="inline-flex items-center gap-2 text-[13px] tracking-[0.12em] uppercase px-6 py-3 rounded-full" style={{ border: `1px solid rgba(242,235,228,.28)`, color: C.alabaster }}>Commencer à deux <span aria-hidden>→</span></span>
+                <Link href="/sos-meet/couple" className="group relative rounded-[20px] overflow-hidden flex flex-col transition-transform duration-500 hover:-translate-y-1"
+                  style={{ border: `1px solid rgba(242,235,228,0.14)`, background: 'rgba(16,12,15,0.55)', backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)', boxShadow: '0 40px 90px -55px rgba(0,0,0,0.9)' }}>
+                  <div className="relative overflow-hidden" style={{ aspectRatio: '16 / 9' }}>
+                    <img src="/sosmeet/couple.png" alt="" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" />
+                    <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, transparent 55%, rgba(16,12,15,0.85) 96%)' }} />
+                  </div>
+                  <div className="relative p-7 md:p-8 flex flex-col flex-1">
+                    <div className="text-[10.5px] tracking-[0.34em] uppercase" style={{ color: C.ember }}>À deux</div>
+                    <h3 className="mt-2.5 mb-2.5" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(1.7rem,2.6vw,2.4rem)', lineHeight: 1.05 }}>Se retrouver</h3>
+                    <p className="text-[14.5px] leading-relaxed mb-6" style={{ color: C.smoke }}>Nous sommes deux, et nous voulons nous re-rencontrer. Raviver ce qui s’est endormi.</p>
+                    <span className="mt-auto inline-flex items-center gap-2 self-start text-[12.5px] tracking-[0.14em] uppercase px-7 py-3.5 rounded-full transition-transform group-hover:translate-x-0.5" style={{ border: `1px solid rgba(242,235,228,.3)`, color: C.alabaster }}>Commencer à deux <span aria-hidden>→</span></span>
                   </div>
                 </Link>
               </div>

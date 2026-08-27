@@ -140,7 +140,8 @@ export default function DecouverteClient() {
             <p className="text-[14.5px] leading-relaxed" style={{ color: C.smoke }}>
               L’intérêt est réciproque avec <b style={{ color: C.alabaster }}>{matched}</b>. Le visage se dévoile, et la conversation peut commencer.
             </p>
-            <button onClick={() => setMatched(null)} className="mt-6 text-[12px] tracking-[0.1em] uppercase" style={{ color: C.smoke }}>Continuer</button>
+            <a href="/sos-meet/messages" className="inline-block mt-6 px-7 py-3 rounded-full text-[13px] tracking-[0.1em] uppercase" style={{ background: `linear-gradient(135deg, ${C.garnet}, ${C.garnetSoft})`, color: '#F7EEE9' }}>Ouvrir la conversation →</a>
+            <button onClick={() => setMatched(null)} className="block mx-auto mt-4 text-[12px] tracking-[0.1em] uppercase" style={{ color: C.smoke }}>Continuer à découvrir</button>
           </div>
         </div>
       )}

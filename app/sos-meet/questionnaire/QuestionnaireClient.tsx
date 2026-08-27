@@ -107,10 +107,9 @@ export default function QuestionnaireClient() {
           Merci pour ta sincérité. Ton profil de compatibilité est enregistré.
           {result?.coherent && <><br /><span style={{ color: C.ember }}>✦ Profil cohérent</span></>}
         </p>
-        <div className="px-6 py-4 rounded-2xl text-[14px]" style={{ background: 'rgba(155,27,46,0.1)', border: '1px solid rgba(155,27,46,0.25)', color: C.alabaster }}>
-          La découverte de tes compatibilités ouvre très bientôt.
-        </div>
-        <a href="/sos-meet" className="mt-6 text-[13px] tracking-[0.08em] uppercase" style={{ color: C.smoke }}>Revenir à l’accueil</a>
+        <a href="/sos-meet/decouverte" className="px-8 py-4 rounded-full text-[14px] tracking-[0.12em] uppercase" style={{ background: `linear-gradient(135deg, ${C.garnet}, ${C.garnetSoft})`, color: '#F7EEE9', boxShadow: '0 14px 34px -14px rgba(155,27,46,0.6)' }}>
+          Découvrir mes compatibilités →
+        </a>
         <span className="mt-4 text-[12px]" style={{ color: C.smoke2 }}>Tu pourras approfondir ton profil à tout moment pour des matchs plus fins.</span>
       </div>
     </main>

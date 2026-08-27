@@ -73,3 +73,10 @@ const emprise = repondant(bon, 60, { v_peur: 10, v_isolement: 10, v_argent: 20 }
 const r = assessSafety(emprise)
 console.log('signaux d\'emprise    :', r.level, '| indice', r.score)
 console.log('  signaux            :', r.signals.join(' · '))
+
+// ── 5. Le texte généré ────────────────────────────────────────────────────
+import { buildNarrative, narrativeToText } from '../lib/sosmeet/couple/narrative'
+console.log('\n\n' + '='.repeat(72))
+console.log('LE TEXTE GÉNÉRÉ — cas 2 (B souffre en silence)')
+console.log('='.repeat(72) + '\n')
+console.log(narrativeToText(buildNarrative(buildCrossing(aVaBien, bVaMal), 'Camille', 'Alex')))

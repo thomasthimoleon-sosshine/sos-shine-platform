@@ -175,9 +175,11 @@ export default function SignupPage() {
       const supabase = createClient()
       let protocolSlug: string | null = null
       try { protocolSlug = sessionStorage.getItem('sos_protocol_slug') } catch {}
-      const nextPath = protocolSlug
+      const npRaw = new URLSearchParams(window.location.search).get('next')
+      const safeNext = npRaw && npRaw.startsWith('/') && !npRaw.startsWith('//') ? npRaw : null
+      const nextPath = safeNext || (protocolSlug
         ? `/mon-chemin?protocol=${protocolSlug}`
-        : '/dashboard'
+        : '/dashboard')
 
       const { error: signUpError } = await supabase.auth.signUp({
         email,
@@ -209,9 +211,11 @@ export default function SignupPage() {
     }
     let protocolSlug: string | null = null
     try { protocolSlug = sessionStorage.getItem('sos_protocol_slug') } catch {}
-    const nextPath = protocolSlug
+    const npRaw = new URLSearchParams(window.location.search).get('next')
+    const safeNext = npRaw && npRaw.startsWith('/') && !npRaw.startsWith('//') ? npRaw : null
+    const nextPath = safeNext || (protocolSlug
       ? `/mon-chemin?protocol=${protocolSlug}`
-      : '/dashboard'
+      : '/dashboard')
     const supabase = createClient()
     await supabase.auth.signInWithOAuth({
       provider: 'google',

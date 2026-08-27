@@ -2,7 +2,7 @@
 
 > Document de reprise **dédié à SOS Meet** (site de rencontre « en conscience », produit sœur de
 > SOS Shine). À donner tel quel à un assistant (Claude) pour continuer le développement sans perdre
-> de contexte. Dernière mise à jour : 27 août 2026.
+> de contexte. Dernière mise à jour : 27 août 2026 (accueil deux portes complet + fond couture + splash retiré).
 
 ---
 
@@ -74,10 +74,14 @@ voix de Julia, RGPD strict, +18.
   `<link>` Google Fonts runtime dans `app/sos-meet/layout.tsx` (variables `--sm-serif`, `--sm-sans`).
 - Ambiance : beaucoup de vide, lenteur, grain subtil, halo grenat en haut. Le raffinement vient de
   l'espace, pas de la surcharge.
+- **Splash SOS Shine masqué** : le `page-loader` doré du layout racine (`app/layout.tsx`) est neutralisé
+  sur les routes SOS Meet via un `<style>{'.page-loader{display:none!important}'}</style>` dans
+  `app/sos-meet/layout.tsx` (charte propre, pas de doré SOS Shine sur SOS Meet).
 - **Images** (fournies par le client, générées via ChatGPT) dans `public/sosmeet/` :
-  `hero-silhouettes.png` (hero, silhouettes qui s'effleurent), `masked-she.png` / `masked-he.png`
-  (portraits voilés « à travers la vitre » pour la révélation progressive), `wordmark.png`
-  (« SOS Meet. » + « LA RENCONTRE EN CONSCIENCE »), `velvet.png` (velours noir/rouge).
+  `hero-bg.png` (**fond couture du hero** : soie noire + dentelle/ruban grenat, centre sombre),
+  `hero-silhouettes.png` (carte porte solo, silhouettes qui s'effleurent), `couple.png` (carte porte
+  couple), `masked-she.png` / `masked-he.png` (portraits voilés pour la révélation progressive),
+  `wordmark.png`, `velvet.png` (velours noir/rouge, section « Chemin accompli »).
   Pour de nouvelles images, prompt type : *très sombre, grenat #9B1B2E, « vast dark negative space
   for text overlay », film grain, couture campaign at midnight, no text/faces* — hero 16:9 **et** 3:4,
   portraits 1:1, carte sociale 1200×630.
@@ -207,7 +211,8 @@ pour ces requêtes (comme ailleurs dans le projet), et compat FK via insertion w
 ```
 app/sos-meet/
   layout.tsx                 # polices Bodoni/Jost + variables charte
-  page.tsx + SosMeetClient   # landing couture (hero, révélation, chemin accompli, liste d'attente, FAQ)
+  page.tsx + SosMeetClient   # landing couture (hero DEUX PORTES + fond couche, comparatif deux chemins,
+                             #   principe 3 temps solo+couple, révélation, compat, chemin accompli, waitlist, FAQ)
   profil/ (page + ProfilClient)      # Phase 1 — « Mes infos » (authed)
   questionnaire/ (page + QuestionnaireClient)  # Phase 2 — le questionnaire
   opengraph-image.tsx
@@ -234,8 +239,13 @@ scripts/sosmeet-*-demo.ts    # démos des moteurs
 **Le parcours SOLO est OPÉRATIONNEL de bout en bout (Phases 0→6) :**
 - Fondations : base complète (RLS fermée), bucket photos privé, moteurs **matching** + **sincérité**
   (anti-triche) + questionnaire **Essentiel** (~30 q), identité couture noir/grenat.
-- **Accueil à deux portes** (« Rencontrer » / « Se retrouver ») avec les images. (Fond statique désormais —
-  l'animation « phare » a été retirée car jugée disgracieuse ; **prévoir un vrai graphisme de fond**.)
+- **Accueil à deux portes COMPLET** (« Rencontrer » solo / « Se retrouver » couple) : **toute la page**
+  reflète les deux portes — hero deux cartes, section comparative « Deux portes », principe « 3 temps »
+  avec ligne solo **et** couple par étape, sections révélation/compatibilité en double lecture, FAQ couple.
+  Cartes éditoriales (fenêtre-image 16:9 + panneau verre dépoli), responsive mobile/desktop vérifié.
+- **Fond couture du hero intégré** (`public/sosmeet/hero-bg.png`) : composé en **couches** — base
+  noir + halos grenat (insensible au format) + soie en texture (opacité ~0.62) + voile de lisibilité.
+  L'ancienne animation « phare » et le dégradé plat sont supprimés. Splash SOS Shine masqué sur SOS Meet.
 - **Inscription/connexion** reliée au compte SOS Shine (`?next=` honoré).
 - **Mes infos** + **photo voilée** + **Chemin accompli** (protocoles).
 - **Questionnaire** (temps capté, profil + sincérité calculés, badge « Profil cohérent »).
@@ -246,22 +256,27 @@ scripts/sosmeet-*-demo.ts    # démos des moteurs
 
 ## 11. CE QU'IL RESTE À FAIRE (par priorité)
 
-1. **Un vrai graphisme de fond** pour le hero (profondeur, chic/lingerie, sexy sans vulgaire) — image à
-   générer, puis remplacer le dégradé statique dans `app/sos-meet/SosMeetClient.tsx`.
+1. **Le parcours COUPLE** « Se retrouver » (voir `PROMPT-COUPLE-SOS-MEET.md`) : aujourd'hui seule la
+   **porte/landing** couple existe (concept + liste d'attente) ; **tout le parcours reste à construire**
+   (questionnaire de couple, `buildCoupleReport`, tables `sosmeet_couple*`, restitution). Prévu en
+   parallèle par Julia + son Claude, dans des dossiers/tables séparés pour éviter les collisions.
 2. **Appliquer la migration** `supabase/migrations/20260827_sosmeet_account_link.sql` (Supabase MCP
-   instable ; API robuste sans).
-3. **Console de modération admin** (`app/admin/sosmeet`) : profils, drapeaux de sincérité, signalements.
+   instable ; API robuste sans, mais à appliquer pour propreté).
+3. **Console de modération admin** (`app/admin/sosmeet`) : profils, drapeaux de sincérité, signalements
+   (`sosmeet_reports`), blocages, mise en retrait de profils.
 4. **Notifications** (nouveau match / nouveau message) — e-mail et/ou in-app.
 5. **Approfondir le questionnaire** au-delà de l'Essentiel (les ~170 autres questions, par paliers) +
    étendre les règles de cohérence/désirabilité en conséquence.
 6. **Nettoyage** : retirer le legacy `lib/sosmeet/questions.ts` + `scoring.ts` + `/api/sosmeet/profile`.
-7. **Le parcours COUPLE** « Se retrouver » (voir `PROMPT-COUPLE-SOS-MEET.md`) — construit en parallèle
-   par Julia + son Claude, dans des dossiers/tables séparés.
-8. **Polish & tests** de bout en bout sur le déploiement (le parcours complet est derrière connexion).
+7. **Polish & tests** de bout en bout sur le déploiement (le parcours complet est derrière connexion) :
+   vérifier signup→profil→questionnaire→découverte→match→messagerie sur mobile réel.
+
+**Note finition** : le hero est finalisé (fond couture, deux portes, responsive). Réglages restants
+= goût du client uniquement (intensité de la soie via `opacity` de la couche 2, force des halos grenat).
 
 ---
 
 ## 12. PROCHAINE ACTION RECOMMANDÉE
-Le solo est opérationnel. Priorité immédiate : **(1)** intégrer un vrai **graphisme de fond** du hero
-(profondeur, chic/lingerie, sexy sans vulgaire), **(2)** la **console de modération admin**, **(3)** les
-**notifications**. En parallèle, Julia + son Claude construisent la piste **couple**.
+Le **solo est opérationnel ET l'accueil deux portes est complet/raffiné**. Priorités immédiates :
+**(1)** construire le **parcours couple** (parallèle Julia), **(2)** la **console de modération admin**,
+**(3)** les **notifications** (match/message). La migration Supabase est à appliquer dès que le MCP répond.

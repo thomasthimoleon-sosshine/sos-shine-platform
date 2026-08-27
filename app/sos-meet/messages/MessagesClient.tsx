@@ -43,6 +43,18 @@ export default function MessagesClient() {
 
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }) }, [msgs])
 
+  const [menu, setMenu] = useState(false)
+  async function safety(action: 'block' | 'report') {
+    if (!active) return
+    if (action === 'block' && !confirm('Bloquer cette personne ? Vous ne verrez plus son profil et votre lien sera coupé.')) return
+    let reason: string | undefined
+    if (action === 'report') { reason = prompt('Que veux-tu signaler ? (facultatif)') || undefined }
+    await fetch('/api/sosmeet/safety', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action, userId: active.other.userId, reason }) }).catch(() => {})
+    setMenu(false)
+    if (action === 'block') { setMatches((ms) => ms.filter((x) => x.matchId !== active.matchId)); setActive(null) }
+    else alert('Merci, c’est signalé. Notre équipe regarde.')
+  }
+
   async function send(e: React.FormEvent) {
     e.preventDefault()
     if (!active || !text.trim()) return
@@ -73,9 +85,18 @@ export default function MessagesClient() {
             <div className="w-10 h-10 rounded-full overflow-hidden shrink-0" style={{ background: C.velvet }}>
               {o.photoUrl && <img src={o.photoUrl} alt="" className="w-full h-full object-cover" />}
             </div>
-            <div>
+            <div className="flex-1">
               <div style={{ ...serif, fontSize: 16 }}>{o.firstName}{o.age ? `, ${o.age}` : ''}</div>
               {o.city && <div className="text-[11.5px]" style={{ color: C.smoke2 }}>{o.city}</div>}
+            </div>
+            <div className="relative">
+              <button onClick={() => setMenu((v) => !v)} aria-label="Options" className="px-3 py-2 text-[18px]" style={{ color: C.smoke }}>⋯</button>
+              {menu && (
+                <div className="absolute right-0 top-10 z-10 rounded-xl overflow-hidden" style={{ background: C.card, border: `1px solid ${C.line}`, minWidth: 160 }}>
+                  <button onClick={() => safety('report')} className="block w-full text-left px-4 py-3 text-[13.5px]" style={{ color: C.alabaster }}>Signaler</button>
+                  <button onClick={() => safety('block')} className="block w-full text-left px-4 py-3 text-[13.5px]" style={{ color: C.ember, borderTop: `1px solid ${C.line}` }}>Bloquer</button>
+                </div>
+              )}
             </div>
           </div>
 

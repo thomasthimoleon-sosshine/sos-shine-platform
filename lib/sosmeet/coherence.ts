@@ -18,6 +18,8 @@
  * Temps : { [questionId]: millisecondes passées sur la question } (optionnel).
  */
 
+import { ESSENTIEL } from './essentiel'
+
 export type Answers = Record<string, number>
 export type Timings = Record<string, number>
 
@@ -76,18 +78,45 @@ export const COHERENCE_RULES: CoherenceRule[] = [
     // q33: 0 beaucoup de calme · q20: 1 social/sorties
     penalty: clash([0], [1]),
   },
+  // Attachement (M6) : se dit « sécure » mais déclare une peur forte
+  {
+    id: 'secure_vs_abandon', a: 'q83', b: 'q87',
+    label: 'Se dit « sécure » mais déclare une peur d’abandon très forte',
+    // q83: 0 sécure · q87: 0 oui fortement
+    penalty: clash([0], [0]),
+  },
+  {
+    id: 'secure_vs_envahissement', a: 'q83', b: 'q88',
+    label: 'Se dit « sécure » mais forte peur de l’envahissement',
+    weight: 0.8,
+    penalty: clash([0], [0]),
+  },
+  // Prêt·e « 9-10 » mais deuil des ex pas terminé
+  {
+    id: 'pret_vs_deuil', a: 'q140', b: 'q120',
+    label: 'Se dit totalement prêt·e mais n’a pas fait le deuil de ses relations',
+    weight: 0.7,
+    // q140: 4 = 9-10 · q120: 2 = pas complètement
+    penalty: clash([4], [2]),
+  },
 ]
 
 // ── 3. Désirabilité sociale ────────────────────────────────────────────────
 // Pour certaines questions, une option est « la plus flatteuse ». Cocher
 // TOUJOURS la flatteuse trahit une image idéalisée plutôt qu'honnête.
 export type DesirabilityFlag = { q: string; flattering: number[] } // options flatteuses
-export const DESIRABILITY: DesirabilityFlag[] = [
+// Drapeaux hérités des modules non retenus au palier Essentiel…
+const DESIRABILITY_EXTRA: DesirabilityFlag[] = [
   { q: 'q31', flattering: [0, 1] },   // ponctualité : « toujours en avance / ponctuel »
   { q: 'q10', flattering: [0] },      // « clairement satisfait de ma vie pro »
   { q: 'q25', flattering: [0, 1] },   // « très planifié / organisé »
-  // (s'étoffe avec le reste du questionnaire : émotions parfaitement gérées,
-  //  communication idéale, jamais de conflit, etc.)
+]
+// …fusionnés avec ceux déclarés directement sur la banque Essentiel (champ `desirable`),
+// pour rester automatiquement synchronisés quand on ajoute des questions.
+export const DESIRABILITY: DesirabilityFlag[] = [
+  ...DESIRABILITY_EXTRA,
+  ...ESSENTIEL.filter(q => q.desirable && q.desirable.length)
+    .map(q => ({ q: q.id, flattering: q.desirable as number[] })),
 ]
 
 // ── Paramètres ─────────────────────────────────────────────────────────────

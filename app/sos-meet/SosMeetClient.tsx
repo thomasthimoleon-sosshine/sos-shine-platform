@@ -153,8 +153,10 @@ export default function SosMeetClient() {
 
         {/* 1. HERO — deux portes */}
         <section className="relative overflow-hidden" style={{ minHeight: '100vh' }}>
-          {/* Fond statique et chic — profondeur par un dégradé grenat doux (aucune animation) */}
-          <div aria-hidden className="absolute inset-0" style={{ zIndex: 0, background: 'radial-gradient(75% 50% at 50% 0%, rgba(155,27,46,0.16), transparent 62%), radial-gradient(55% 45% at 88% 104%, rgba(155,27,46,0.08), transparent 60%)' }} />
+          {/* Fond couture — soie noire & dentelle grenat, centre sombre pour le texte */}
+          <div aria-hidden className="absolute inset-0" style={{ zIndex: 0, backgroundImage: 'url(/sosmeet/hero-bg.png)', backgroundSize: 'cover', backgroundPosition: 'center' }} />
+          {/* Voile pour la lisibilité — assombrit le centre, laisse respirer la dentelle sur les bords */}
+          <div aria-hidden className="absolute inset-0" style={{ zIndex: 1, background: 'radial-gradient(60% 48% at 50% 46%, rgba(10,9,11,0.60), rgba(10,9,11,0.20) 80%, transparent), linear-gradient(180deg, rgba(10,9,11,0.30), transparent 32%, rgba(10,9,11,0.62))' }} />
 
           <div className="relative max-w-5xl mx-auto px-5 sm:px-8 min-h-screen flex flex-col justify-center py-24 text-center" style={{ zIndex: 2 }}>
             <Reveal>

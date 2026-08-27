@@ -65,6 +65,9 @@ export default function CoupleClient() {
             Ouvrir notre duo <span aria-hidden>→</span>
           </Link>
           <span className="block mt-4 text-[12.5px]" style={{ color: C.smoke2 }}>Gratuit. Une vingtaine de minutes chacun, séparément.</span>
+          <Link href="/sos-meet/couple/apercu" className="block mt-3 text-[13px] tracking-[0.06em]" style={{ color: C.ember }}>
+            Voir un exemple de lecture
+          </Link>
         </div>
       </section>
 

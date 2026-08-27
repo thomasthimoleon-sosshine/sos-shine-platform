@@ -207,25 +207,117 @@ export default function DuoClient({ initialCode }: { initialCode: string }) {
             </p>
           </div>
         ) : couple.me.sealed ? (
-          <div className="rounded-2xl p-7" style={{ background: C.card, border: `1px solid ${C.line}` }}>
-            <h2 className="mb-2" style={{ ...serif, fontWeight: 400, fontSize: '1.3rem' }}>
-              {couple.partner.sealed ? 'Vous avez tous les deux terminé' : 'Tu as terminé'}
-            </h2>
-            <p className="text-[14.5px] leading-relaxed" style={{ color: C.smoke }}>
-              {couple.partner.sealed
-                ? 'Votre carte est en préparation. Nous vous prévenons dès qu’elle est prête.'
-                : 'On attend maintenant ses réponses. Tu peux fermer cette page, on te préviendra.'}
-            </p>
-          </div>
+          couple.partner.sealed ? (
+            <div className="rounded-2xl p-7 text-center" style={{ background: 'rgba(155,27,46,0.10)', border: `1px solid ${C.garnet}` }}>
+              <div style={{ ...serif, fontSize: 40, color: C.garnet }}>♥</div>
+              <h2 className="mt-1 mb-2" style={{ ...serif, fontWeight: 400, fontSize: '1.45rem' }}>Votre lecture est prête</h2>
+              <p className="text-[14.5px] leading-relaxed mb-6" style={{ color: C.smoke }}>
+                Vous avez répondu tous les deux. Voici ce que vos réponses disent de votre lien.
+              </p>
+              <Link href="/sos-meet/couple/carte" className="inline-block px-8 py-4 rounded-full text-[14px] tracking-[0.12em] uppercase" style={cta}>
+                Lire notre carte →
+              </Link>
+            </div>
+          ) : (
+            <div className="rounded-2xl p-7" style={{ background: C.card, border: `1px solid ${C.line}` }}>
+              <h2 className="mb-2" style={{ ...serif, fontWeight: 400, fontSize: '1.3rem' }}>Tu as terminé</h2>
+              <p className="text-[14.5px] leading-relaxed" style={{ color: C.smoke }}>
+                On attend maintenant ses réponses. Tu peux fermer cette page, la carte apparaîtra ici dès que vous
+                aurez répondu tous les deux.
+              </p>
+            </div>
+          )
         ) : couple.partnerJoined ? (
           <Link href="/sos-meet/couple/questionnaire" className="block w-full py-4 rounded-full text-[14px] tracking-[0.12em] uppercase text-center" style={cta}>
             {couple.me.answered > 0 ? 'Reprendre mon questionnaire →' : 'Commencer mon questionnaire →'}
           </Link>
         ) : null}
 
+        {couple.partnerJoined && <Naissance />}
+
         {error && <p className="mt-5 text-[13.5px]" style={{ color: C.ember }}>{error}</p>}
       </div>
     </main>
+  )
+}
+
+/**
+ * Date de naissance, pour la lecture énergétique. Entièrement facultative :
+ * sans elle, le couple a quand même sa carte, sans la couche complémentarité.
+ */
+function Naissance() {
+  const [ouvert, setOuvert] = useState(false)
+  const [date, setDate] = useState('')
+  const [heure, setHeure] = useState('')
+  const [lieu, setLieu] = useState('')
+  const [ok, setOk] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetch('/api/sosmeet/couple/birth').then(r => r.json()).then(d => {
+      if (d.naissance?.birth_date) {
+        setDate(d.naissance.birth_date); setHeure(d.naissance.birth_time?.slice(0, 5) || '')
+        setLieu(d.naissance.birth_place || ''); setOk(true)
+      }
+    }).catch(() => {})
+  }, [])
+
+  async function envoyer(e: React.FormEvent) {
+    e.preventDefault(); setBusy(true); setErr(null)
+    try {
+      const r = await fetch('/api/sosmeet/couple/birth', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ date, heure: heure || undefined, lieu: lieu || undefined, consent: true }),
+      })
+      const d = await r.json()
+      if (!r.ok) { setErr(d.error || 'Enregistrement impossible.'); return }
+      setOk(true); setOuvert(false)
+    } catch { setErr('Connexion impossible.') } finally { setBusy(false) }
+  }
+
+  const champ = 'w-full px-4 py-3 rounded-xl text-[16px] outline-none border'
+  const styleChamp = { background: 'rgba(255,255,255,0.03)', borderColor: C.line, color: C.alabaster } as React.CSSProperties
+
+  return (
+    <div className="mt-5 rounded-2xl p-6" style={{ background: C.card, border: `1px solid ${C.line}` }}>
+      <div className="flex items-baseline justify-between gap-3">
+        <h3 style={{ ...serif, fontWeight: 400, fontSize: '1.2rem' }}>Lecture énergétique</h3>
+        <span className="text-[11px] tracking-[0.12em] uppercase" style={{ color: ok ? C.ember : C.smoke2 }}>
+          {ok ? 'Enregistrée' : 'Facultatif'}
+        </span>
+      </div>
+      <p className="mt-2 text-[14px] leading-relaxed" style={{ color: C.smoke }}>
+        Ta date de naissance permet d’ajouter à votre carte une lecture de vos complémentarités.
+        Sans elle, vous aurez quand même votre carte.
+      </p>
+
+      {!ouvert ? (
+        <button onClick={() => setOuvert(true)} className="mt-4 text-[13px] tracking-[0.08em] uppercase" style={{ color: C.ember }}>
+          {ok ? 'Modifier ma date' : 'Ajouter ma date de naissance →'}
+        </button>
+      ) : (
+        <form onSubmit={envoyer} className="mt-5 flex flex-col gap-3">
+          <label className="text-[13px]" style={{ color: C.smoke }}>Date de naissance
+            <input type="date" required value={date} onChange={e => setDate(e.target.value)} className={champ + ' mt-1.5'} style={styleChamp} />
+          </label>
+          <label className="text-[13px]" style={{ color: C.smoke }}>Heure, si tu la connais
+            <input type="time" value={heure} onChange={e => setHeure(e.target.value)} className={champ + ' mt-1.5'} style={styleChamp} />
+          </label>
+          <label className="text-[13px]" style={{ color: C.smoke }}>Ville de naissance
+            <input value={lieu} onChange={e => setLieu(e.target.value)} placeholder="Toulouse" className={champ + ' mt-1.5'} style={styleChamp} />
+          </label>
+          <p className="text-[12px] leading-relaxed" style={{ color: C.smoke2 }}>
+            En validant, tu acceptes que cette donnée serve uniquement à la lecture énergétique de votre carte.
+            Ton/ta partenaire ne la verra pas.
+          </p>
+          {err && <p className="text-[13px]" style={{ color: C.ember }}>{err}</p>}
+          <button type="submit" disabled={busy || !date} className="w-full py-3.5 rounded-full text-[13.5px] tracking-[0.12em] uppercase disabled:opacity-40" style={cta}>
+            {busy ? 'Un instant…' : 'Valider'}
+          </button>
+        </form>
+      )}
+    </div>
   )
 }
 

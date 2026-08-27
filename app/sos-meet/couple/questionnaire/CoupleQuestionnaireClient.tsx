@@ -168,7 +168,9 @@ export default function CoupleQuestionnaireClient() {
           ? 'Vous avez répondu tous les deux. Votre carte est en préparation, nous vous prévenons dès qu’elle est prête.'
           : 'Tes réponses sont scellées. On attend maintenant celles de ton/ta partenaire.'}
       </p>
-      <Link href="/sos-meet/couple/duo" className="px-8 py-4 rounded-full text-[14px] tracking-[0.12em] uppercase" style={cta}>Voir où vous en êtes</Link>
+      <Link href={bothDone ? '/sos-meet/couple/carte' : '/sos-meet/couple/duo'} className="px-8 py-4 rounded-full text-[14px] tracking-[0.12em] uppercase" style={cta}>
+        {bothDone ? 'Lire notre carte →' : 'Voir où vous en êtes'}
+      </Link>
     </div></main>
   )
 

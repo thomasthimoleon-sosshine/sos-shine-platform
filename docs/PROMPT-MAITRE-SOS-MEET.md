@@ -164,19 +164,20 @@ par email, **plus utilisé par l'UI**.
 - **Phase 2 — Le questionnaire** ✅ : stepper couture (capte le temps, reprise) + calcul serveur
   (profil + sincérité, stockés dans `answers`/`scores`, `completed`+`is_visible`, badge « Profil cohérent »).
   → `app/sos-meet/questionnaire/*`, `app/api/sosmeet/questionnaire/route.ts`.
-- **Phase 3 — Profil vitrine** ⏳ **(PROCHAINE)** : **photo** (upload bucket privé `sosmeet-photos`, voilée)
-  + section **« Chemin accompli »** (lire `user_progress` du compte) + aperçu de son profil.
-- **Phase 4 — Découverte** ⏳ : fil de profils compatibles, tri par **compatibilité pondérée par la
-  sincérité**, filtres genre/âge/localisation (`is_visible`, `gender`, `seeking`, `birthdate`).
-  Exclure blocages/déjà-vus. Route type `GET /api/sosmeet/discover` + page `/sos-meet/decouverte`.
-- **Phase 5 — Connexion & révélation** ⏳ : intérêt (`sosmeet_interests`) → si réciproque, créer
-  `sosmeet_matches` → **dévoiler la photo** (signed URL du bucket privé) → **messagerie**
-  (`sosmeet_messages`, route d'envoi + fil). ← plateforme **opérationnelle** ici.
-- **Phase 6 — Sécurité & modération** ⏳ : signaler/bloquer + console admin `app/admin/sosmeet`
-  (profils, drapeaux de sincérité, signalements).
-- **Phase 7 — Approfondir** ⏳ : le reste des 200 questions en paliers, affinage matching, notifications.
+- **Phase 3 — Profil vitrine** ✅ : **photo** privée voilée (`/api/sosmeet/photo`) + « Chemin accompli »
+  (protocoles via `user_progress`→`douleurs`, exposés par `/api/sosmeet/me`).
+- **Phase 4 — Découverte** ✅ : `GET /api/sosmeet/discover` (orientation double sens, exclusions,
+  tri compat pondéré sincérité) + page `/sos-meet/decouverte`. Photo jamais servie (voilée).
+- **Phase 5 — Connexion & révélation** ✅ : `/api/sosmeet/interest` (match réciproque),
+  `/api/sosmeet/matches` (photo dévoilée), `/api/sosmeet/messages` (GET/POST) + page
+  `/sos-meet/messages` (liste + conversation, refresh 5 s).
+- **Phase 6 — Sécurité** ✅ : `/api/sosmeet/safety` (bloquer/signaler) + menu dans la conversation.
+  RESTE : console de modération admin (`app/admin/sosmeet`) à enrichir (drapeaux sincérité, signalements).
+- **Phase 7 — Approfondir** ⏳ : le reste des 200 questions en paliers, affinage matching, notifications
+  (nouveau match / message), et la piste **couple** (`docs/PROMPT-COUPLE-SOS-MEET.md`).
 
-**« Opérationnel » = Phases 1 → 5.**
+**Le parcours solo est OPÉRATIONNEL (Phases 1→6).** À appliquer quand Supabase MCP répond :
+`supabase/migrations/20260827_sosmeet_account_link.sql` (l'API reste robuste sans).
 
 ---
 

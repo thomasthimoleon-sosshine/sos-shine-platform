@@ -44,6 +44,7 @@ const ETAPES = [
 const FAQ = [
   { q: 'Pourquoi on ne voit pas les photos tout de suite ?', a: 'Parce qu’ici, l’émotionnel passe avant l’apparence. Tu découvres qui est la personne — ses valeurs, son monde intérieur — et la photo se dévoile seulement quand l’intérêt est réciproque. Le trouble d’un vrai commencement.' },
   { q: 'Comment savez-vous si quelqu’un est sincère ?', a: 'Notre lecture analyse la cohérence des réponses entre elles. Les profils incohérents sont mis en retrait ; les plus sincères reçoivent un badge « Profil cohérent ». On protège la qualité des rencontres.' },
+  { q: 'Je suis en couple — c’est aussi pour nous ?', a: 'Oui. À côté du chemin solo « Rencontrer », il y a la porte « Se retrouver » : un parcours pensé pour les couples qui veulent se redécouvrir l’un l’autre et raviver ce qui s’est endormi. Même exigence de vérité, à deux cette fois — et bien moins cher qu’une rupture.' },
   { q: 'Quel est le lien avec SOS Shine ?', a: 'SOS Meet est porté par l’équipe de SOS Shine, plateforme de déconditionnement émotionnel. Le travail intérieur que tu y accomplis — les protocoles traversés — apparaît sur ton profil. Ici, avoir fait le chemin, c’est ce qui rend attirant.' },
   { q: 'Combien ça coûte ?', a: 'Gratuit au lancement. On veut d’abord réunir les bonnes personnes.' },
   { q: 'Que deviennent mes données ?', a: 'RGPD strict, hébergement en Europe, consentement explicite pour les questions sensibles, et localisation volontairement floutée. Tes données t’appartiennent, désinscription en un clic.' },
@@ -190,11 +191,47 @@ export default function SosMeetClient() {
           </div>
         </section>
 
+        {/* 1bis. LES DEUX CHEMINS — comparatif */}
+        <section className="max-w-5xl mx-auto px-5 sm:px-8 py-24">
+          <Reveal className="text-center max-w-2xl mx-auto mb-14">
+            <p className="text-[11px] tracking-[0.34em] uppercase mb-3" style={{ color: C.smoke2 }}>Deux portes, une même exigence</p>
+            <h2 style={{ ...serif, fontWeight: 400, fontSize: 'clamp(2rem,5vw,3.2rem)' }}>Selon là où vous en êtes</h2>
+            <p className="mt-4 text-[15.5px] leading-relaxed" style={{ color: C.smoke }}>
+              La même conviction traverse les deux chemins : l’amour vrai commence par la vérité de qui l’on est. À vous de choisir votre porte.
+            </p>
+          </Reveal>
+          <div className="grid md:grid-cols-2 gap-5">
+            {/* Chemin solo */}
+            <Reveal>
+              <div className="h-full rounded-2xl p-8 flex flex-col" style={{ background: C.velvet, border: `1px solid ${C.line}` }}>
+                <div className="text-[11px] tracking-[0.3em] uppercase" style={{ color: C.ember }}>Seul·e — Rencontrer</div>
+                <h3 className="mt-3 mb-3" style={{ ...serif, fontWeight: 500, fontSize: 'clamp(1.5rem,3.4vw,2rem)' }}>Se découvrir, puis rencontrer</h3>
+                <p className="text-[14.5px] leading-relaxed mb-5" style={{ color: C.smoke }}>
+                  Un profil d’une profondeur rare, une lecture de compatibilité qui va au-delà des visages, et la rencontre qui se dévoile quand le désir devient réciproque.
+                </p>
+                <Link href="/sos-meet/profil" className="mt-auto inline-flex items-center gap-2 text-[13px] tracking-[0.12em] uppercase px-6 py-3 rounded-full self-start" style={{ background: `linear-gradient(135deg, ${C.garnet}, ${C.garnetSoft})`, color: '#F7EEE9' }}>Créer mon profil <span aria-hidden>→</span></Link>
+              </div>
+            </Reveal>
+            {/* Chemin couple */}
+            <Reveal delay={0.08}>
+              <div className="h-full rounded-2xl p-8 flex flex-col" style={{ background: C.velvet, border: `1px solid ${C.line}` }}>
+                <div className="text-[11px] tracking-[0.3em] uppercase" style={{ color: C.ember }}>À deux — Se retrouver</div>
+                <h3 className="mt-3 mb-3" style={{ ...serif, fontWeight: 500, fontSize: 'clamp(1.5rem,3.4vw,2rem)' }}>Se re-rencontrer, vraiment</h3>
+                <p className="text-[14.5px] leading-relaxed mb-5" style={{ color: C.smoke }}>
+                  Pour les couples qui sentent la routine s’installer : un parcours pour se redécouvrir l’un l’autre et raviver ce qui s’est endormi. <b style={{ color: C.smoke }}>Bien moins cher qu’une rupture.</b>
+                </p>
+                <Link href="/sos-meet/couple" className="mt-auto inline-flex items-center gap-2 text-[13px] tracking-[0.12em] uppercase px-6 py-3 rounded-full self-start" style={{ border: `1px solid rgba(242,235,228,.28)`, color: C.alabaster }}>Commencer à deux <span aria-hidden>→</span></Link>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
         {/* 2. LE PRINCIPE */}
         <section className="max-w-5xl mx-auto px-5 sm:px-8 py-24">
           <Reveal className="text-center max-w-2xl mx-auto mb-14">
-            <p className="text-[11px] tracking-[0.34em] uppercase mb-3" style={{ color: C.smoke2 }}>Le principe</p>
+            <p className="text-[11px] tracking-[0.34em] uppercase mb-3" style={{ color: C.smoke2 }}>Le principe — chemin solo</p>
             <h2 style={{ ...serif, fontWeight: 400, fontSize: 'clamp(2rem,5vw,3.2rem)' }}>Trois temps, une vérité</h2>
+            <p className="mt-4 text-[14.5px]" style={{ color: C.smoke2 }}>Vous êtes seul·e et vous cherchez à rencontrer ? Voici comment se déroule votre parcours.</p>
           </Reveal>
           <div className="grid sm:grid-cols-3" style={{ gap: 1, background: C.line, border: `1px solid ${C.line}`, borderRadius: 6, overflow: 'hidden' }}>
             {ETAPES.map((s, i) => (

@@ -13,6 +13,7 @@ const VALID_STAGES = [
   'Je débute mon chemin',
   'Je pratique régulièrement',
   "C'est au cœur de ma vie",
+  'En couple, on veut se retrouver',
 ]
 
 export async function POST(request: Request) {

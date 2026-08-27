@@ -138,33 +138,59 @@ export default function SosMeetClient() {
           </a>
         </header>
 
-        {/* 1. HERO */}
-        <section className="relative">
-          <div className="absolute inset-0 overflow-hidden">
-            <img src="/sosmeet/hero-silhouettes.png" alt="" className="w-full h-full object-cover object-center opacity-70" />
-            <div className="absolute inset-0" style={{ background: 'radial-gradient(90% 70% at 50% 45%, transparent, rgba(10,9,11,0.72) 78%), linear-gradient(180deg, rgba(10,9,11,0.55), rgba(10,9,11,0.2) 30%, rgba(10,9,11,0.85))' }} />
-          </div>
-          <div className="relative max-w-4xl mx-auto px-5 sm:px-8 min-h-[92vh] flex flex-col items-center justify-center text-center">
+        {/* 1. HERO — deux portes + phare */}
+        <section className="relative overflow-hidden" style={{ minHeight: '100vh' }}>
+          <style>{`
+            @keyframes sm-sweep{0%{left:-35%;opacity:.35}25%{opacity:.9}50%{left:65%;opacity:.9}75%{opacity:.9}100%{left:-35%;opacity:.35}}
+            @keyframes sm-phare{0%{transform:translateX(-30vw) rotate(-16deg);opacity:.5}25%{opacity:.85}50%{transform:translateX(30vw) rotate(16deg);opacity:.85}75%{opacity:.85}100%{transform:translateX(-30vw) rotate(-16deg);opacity:.5}}
+            .sm-beam{position:absolute;top:-20%;left:-30%;width:70vw;height:140vh;pointer-events:none;z-index:0;background:radial-gradient(closest-side, rgba(193,18,31,0.24), rgba(155,27,46,0.12) 40%, transparent 72%);filter:blur(30px);mix-blend-mode:screen;animation:sm-sweep 16s cubic-bezier(.45,0,.55,1) infinite}
+            .sm-phare{position:absolute;top:-40%;left:50%;width:40vw;height:180vh;pointer-events:none;z-index:0;transform-origin:top center;background:conic-gradient(from 180deg at 50% 0%, transparent 335deg, rgba(193,18,31,0.10) 350deg, rgba(193,18,31,0.16) 360deg, rgba(193,18,31,0.10) 370deg, transparent 385deg);filter:blur(6px);mix-blend-mode:screen;animation:sm-phare 16s ease-in-out infinite}
+            @media(prefers-reduced-motion:reduce){.sm-beam,.sm-phare{animation:none}}
+          `}</style>
+          <div className="sm-beam" aria-hidden />
+          <div className="sm-phare" aria-hidden />
+
+          <div className="relative max-w-5xl mx-auto px-5 sm:px-8 min-h-screen flex flex-col justify-center py-24 text-center" style={{ zIndex: 2 }}>
             <Reveal>
-              <span className="text-[11px] tracking-[0.4em] uppercase" style={{ color: C.ember }}>La rencontre en conscience</span>
+              <span className="text-[11px] tracking-[0.42em] uppercase" style={{ color: C.ember }}>La rencontre en conscience</span>
             </Reveal>
             <Reveal delay={0.08}>
-              <h1 className="mt-5 mb-6" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(3rem,8.5vw,6rem)', lineHeight: 0.98, letterSpacing: '-0.01em' }}>
-                On ne te regarde pas.<br />On te <em style={{ color: C.garnet, fontStyle: 'italic' }}>comprend</em>.
+              <h1 className="mt-4 mb-5" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(2.6rem,7.5vw,5rem)', lineHeight: 1, letterSpacing: '-0.01em' }}>
+                Deux chemins<br />vers l’amour <em style={{ color: C.garnet, fontStyle: 'italic' }}>vrai</em>.
               </h1>
             </Reveal>
             <Reveal delay={0.16}>
-              <p className="mx-auto max-w-md text-[17px] sm:text-[19px] leading-relaxed" style={{ color: C.smoke, fontWeight: 300 }}>
-                Ici, pas de photo qu’on juge en une seconde. D’abord, qui tu es vraiment — et la personne faite pour ça.
+              <p className="mx-auto max-w-md text-[16px] sm:text-[18px] leading-relaxed" style={{ color: C.smoke, fontWeight: 300 }}>
+                Que tu cherches à rencontrer, ou à te retrouver — ici, tout commence par la vérité de qui vous êtes.
               </p>
             </Reveal>
             <Reveal delay={0.24}>
-              <a href="#waitlist" className="inline-flex items-center gap-2 mt-9 text-[14px] tracking-[0.14em] uppercase px-9 py-4 rounded-full transition-transform hover:-translate-y-0.5"
-                style={{ background: `linear-gradient(135deg, ${C.garnet}, ${C.garnetSoft})`, color: '#F7EEE9', boxShadow: '0 14px 44px -12px rgba(155,27,46,0.6)' }}>
-                Créer mon profil <span aria-hidden>→</span>
-              </a>
-              <p className="mt-5 text-[12.5px]" style={{ color: C.smoke2 }}>
-                Gratuit au lancement · réservé aux âmes sincères
+              <div className="grid sm:grid-cols-2 gap-5 mt-12 text-left">
+                {/* Porte 1 — Solo */}
+                <Link href="/sos-meet/profil" className="group relative rounded-2xl overflow-hidden flex flex-col justify-end min-h-[300px] transition-transform hover:-translate-y-1" style={{ border: `1px solid ${C.line}` }}>
+                  <img src="/sosmeet/hero-silhouettes.png" alt="" className="absolute inset-0 w-full h-full object-cover opacity-55 transition-opacity duration-500 group-hover:opacity-75" />
+                  <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(10,9,11,.2), rgba(10,9,11,.55) 55%, rgba(10,9,11,.92))' }} />
+                  <div className="relative p-7">
+                    <div className="text-[11px] tracking-[0.3em] uppercase" style={{ color: C.ember }}>Seul·e</div>
+                    <h3 className="mt-2 mb-2" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(1.6rem,3.4vw,2.2rem)' }}>Rencontrer</h3>
+                    <p className="text-[14px] mb-4" style={{ color: C.smoke }}>Je me découvre, et je m’ouvre à une rencontre juste — en conscience.</p>
+                    <span className="inline-flex items-center gap-2 text-[13px] tracking-[0.12em] uppercase px-6 py-3 rounded-full" style={{ background: `linear-gradient(135deg, ${C.garnet}, ${C.garnetSoft})`, color: '#F7EEE9' }}>Créer mon profil <span aria-hidden>→</span></span>
+                  </div>
+                </Link>
+                {/* Porte 2 — Couple */}
+                <Link href="/sos-meet/couple" className="group relative rounded-2xl overflow-hidden flex flex-col justify-end min-h-[300px] transition-transform hover:-translate-y-1" style={{ border: `1px solid ${C.line}` }}>
+                  <img src="/sosmeet/couple.png" alt="" className="absolute inset-0 w-full h-full object-cover opacity-55 transition-opacity duration-500 group-hover:opacity-75" />
+                  <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(10,9,11,.2), rgba(10,9,11,.55) 55%, rgba(10,9,11,.92))' }} />
+                  <div className="relative p-7">
+                    <div className="text-[11px] tracking-[0.3em] uppercase" style={{ color: C.ember }}>À deux</div>
+                    <h3 className="mt-2 mb-2" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(1.6rem,3.4vw,2.2rem)' }}>Se retrouver</h3>
+                    <p className="text-[14px] mb-4" style={{ color: C.smoke }}>Nous sommes deux, et nous voulons nous re-rencontrer. Raviver ce qui s’est endormi.</p>
+                    <span className="inline-flex items-center gap-2 text-[13px] tracking-[0.12em] uppercase px-6 py-3 rounded-full" style={{ border: `1px solid rgba(242,235,228,.28)`, color: C.alabaster }}>Commencer à deux <span aria-hidden>→</span></span>
+                  </div>
+                </Link>
+              </div>
+              <p className="mt-7 text-[12.5px]" style={{ color: C.smoke2 }}>
+                Gratuit au lancement · <b style={{ color: C.smoke }}>Se retrouver coûte bien moins qu’une rupture.</b>
                 {count !== null && count > 0 && <> · déjà <b style={{ color: C.smoke }}>{count.toLocaleString('fr-FR')}</b> inscrit{count > 1 ? 's' : ''}</>}
               </p>
             </Reveal>

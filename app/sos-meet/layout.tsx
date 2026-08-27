@@ -11,6 +11,8 @@ export default function SosMeetLayout({ children }: { children: React.ReactNode 
         rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400;1,6..96,500&family=Jost:wght@300;400;500&display=swap"
       />
+      {/* SOS Meet a sa propre charte : on masque le splash doré SOS Shine du layout racine. */}
+      <style>{`.page-loader{display:none!important}`}</style>
       <div
         style={
           {

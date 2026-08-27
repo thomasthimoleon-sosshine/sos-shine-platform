@@ -153,17 +153,20 @@ export default function SosMeetClient() {
 
         {/* 1. HERO — deux portes */}
         <section className="relative overflow-hidden" style={{ minHeight: '100vh' }}>
-          {/* Fond couture — soie noire & dentelle grenat, centre sombre pour le texte */}
-          <div aria-hidden className="absolute inset-0" style={{ zIndex: 0, backgroundImage: 'url(/sosmeet/hero-bg.png)', backgroundSize: 'cover', backgroundPosition: 'center' }} />
-          {/* Voile pour la lisibilité — assombrit le centre, laisse respirer la dentelle sur les bords */}
-          <div aria-hidden className="absolute inset-0" style={{ zIndex: 1, background: 'radial-gradient(60% 48% at 50% 46%, rgba(10,9,11,0.60), rgba(10,9,11,0.20) 80%, transparent), linear-gradient(180deg, rgba(10,9,11,0.30), transparent 32%, rgba(10,9,11,0.62))' }} />
+          {/* Fond composé — robuste mobile ET desktop */}
+          {/* 1. Base : noir profond + halos grenat (insensible au format d'écran) */}
+          <div aria-hidden className="absolute inset-0" style={{ zIndex: 0, background: `radial-gradient(80% 55% at 50% -6%, rgba(155,27,46,0.22), transparent 60%), radial-gradient(60% 45% at 88% 106%, rgba(155,27,46,0.14), transparent 62%), radial-gradient(50% 40% at 8% 96%, rgba(155,27,46,0.10), transparent 60%), ${C.ink}` }} />
+          {/* 2. Texture couture : la soie en fond, atténuée pour rester chic sans dominer */}
+          <div aria-hidden className="absolute inset-0" style={{ zIndex: 1, backgroundImage: 'url(/sosmeet/hero-bg.png)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.62 }} />
+          {/* 3. Voile de lisibilité — assombrit le centre, laisse respirer la dentelle sur les bords */}
+          <div aria-hidden className="absolute inset-0" style={{ zIndex: 2, background: 'radial-gradient(62% 50% at 50% 46%, rgba(10,9,11,0.62), rgba(10,9,11,0.22) 80%, transparent), linear-gradient(180deg, rgba(10,9,11,0.34), transparent 30%, rgba(10,9,11,0.66))' }} />
 
-          <div className="relative max-w-6xl mx-auto px-5 sm:px-8 min-h-screen flex flex-col justify-center py-24 text-center" style={{ zIndex: 2 }}>
+          <div className="relative max-w-6xl mx-auto px-5 sm:px-8 min-h-screen flex flex-col justify-center py-24 text-center" style={{ zIndex: 3 }}>
             <Reveal>
               <span className="text-[11px] tracking-[0.42em] uppercase" style={{ color: C.ember }}>La rencontre en conscience</span>
             </Reveal>
             <Reveal delay={0.08}>
-              <h1 className="mt-4 mb-5" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(2.6rem,7.5vw,5rem)', lineHeight: 1, letterSpacing: '-0.01em' }}>
+              <h1 className="mt-4 mb-5" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(2.1rem,7.5vw,5rem)', lineHeight: 1.02, letterSpacing: '-0.01em' }}>
                 Deux chemins<br />vers l’amour <em style={{ color: C.garnet, fontStyle: 'italic' }}>vrai</em>.
               </h1>
             </Reveal>

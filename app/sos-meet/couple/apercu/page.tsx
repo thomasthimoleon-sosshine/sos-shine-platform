@@ -3,7 +3,7 @@ import { previewReport } from '@/lib/sosmeet/couple/preview'
 import CoupleReportView from '@/components/sosmeet/CoupleReportView'
 
 export const metadata: Metadata = {
-  title: 'Démonstration de la lecture — SOS Meet',
+  title: 'Démonstration de la lecture, SOS Meet',
   description: 'À quoi ressemble le livrable du parcours à deux.',
   robots: { index: false, follow: false },
 }

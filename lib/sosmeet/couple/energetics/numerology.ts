@@ -1,5 +1,5 @@
 /**
- * SOS Meet Couple — numérologie.
+ * SOS Meet Couple, numérologie.
  * Arithmétique pure et déterministe : cette couche est entièrement exacte,
  * elle ne dépend d'aucune éphéméride et ne demande que la date de naissance.
  * Convention retenue : les nombres maîtres 11, 22 et 33 ne sont pas réduits.

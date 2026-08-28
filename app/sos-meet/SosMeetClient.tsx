@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import MeetNav from './MeetNav'
 
-// ── Charte SOS Meet — « couture après minuit » (indépendante de SOS Shine) ──
+// ── Charte SOS Meet, « couture après minuit » (indépendante de SOS Shine) ──
 const C = {
   ink: '#0A090B',
   velvet: '#120E11',
@@ -143,17 +143,17 @@ export default function SosMeetClient() {
       }} />
 
       <div className="relative z-10">
-        {/* NAV — consciente de la connexion (login / logout / accès aux sections) */}
+        {/* NAV, consciente de la connexion (login / logout / accès aux sections) */}
         <MeetNav />
 
-        {/* 1. HERO — deux portes */}
+        {/* 1. HERO, deux portes */}
         <section className="relative overflow-hidden" style={{ minHeight: '100vh' }}>
-          {/* Fond composé — robuste mobile ET desktop */}
+          {/* Fond composé, robuste mobile ET desktop */}
           {/* 1. Base : noir profond + halos grenat (insensible au format d'écran) */}
           <div aria-hidden className="absolute inset-0" style={{ zIndex: 0, background: `radial-gradient(80% 55% at 50% -6%, rgba(155,27,46,0.22), transparent 60%), radial-gradient(60% 45% at 88% 106%, rgba(155,27,46,0.14), transparent 62%), radial-gradient(50% 40% at 8% 96%, rgba(155,27,46,0.10), transparent 60%), ${C.ink}` }} />
           {/* 2. Texture couture : la soie en fond, atténuée pour rester chic sans dominer */}
           <div aria-hidden className="absolute inset-0" style={{ zIndex: 1, backgroundImage: 'url(/sosmeet/hero-bg.png)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.62 }} />
-          {/* 3. Voile de lisibilité — assombrit le centre, laisse respirer la dentelle sur les bords */}
+          {/* 3. Voile de lisibilité, assombrit le centre, laisse respirer la dentelle sur les bords */}
           <div aria-hidden className="absolute inset-0" style={{ zIndex: 2, background: 'radial-gradient(62% 50% at 50% 46%, rgba(10,9,11,0.62), rgba(10,9,11,0.22) 80%, transparent), linear-gradient(180deg, rgba(10,9,11,0.34), transparent 30%, rgba(10,9,11,0.66))' }} />
 
           <div className="relative max-w-6xl mx-auto px-5 sm:px-8 min-h-screen flex flex-col justify-center py-24 text-center" style={{ zIndex: 3 }}>
@@ -172,7 +172,7 @@ export default function SosMeetClient() {
             </Reveal>
             <Reveal delay={0.24}>
               <div className="grid sm:grid-cols-2 gap-5 sm:gap-7 mt-12 text-left">
-                {/* Porte 1 — Solo */}
+                {/* Porte 1, Solo */}
                 <Link href="/sos-meet/profil" className="group relative rounded-[20px] overflow-hidden flex flex-col transition-transform duration-500 hover:-translate-y-1"
                   style={{ border: `1px solid rgba(242,235,228,0.14)`, background: 'rgba(16,12,15,0.55)', backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)', boxShadow: '0 40px 90px -55px rgba(0,0,0,0.9)' }}>
                   <div className="relative overflow-hidden" style={{ aspectRatio: '16 / 9' }}>
@@ -186,7 +186,7 @@ export default function SosMeetClient() {
                     <span className="mt-auto inline-flex items-center gap-2 self-start text-[12.5px] tracking-[0.14em] uppercase px-7 py-3.5 rounded-full transition-transform group-hover:translate-x-0.5" style={{ background: `linear-gradient(135deg, ${C.garnet}, ${C.garnetSoft})`, color: '#F7EEE9', boxShadow: '0 16px 34px -16px rgba(155,27,46,0.7)' }}>Créer mon profil <span aria-hidden>→</span></span>
                   </div>
                 </Link>
-                {/* Porte 2 — Couple */}
+                {/* Porte 2, Couple */}
                 <Link href="/sos-meet/couple" className="group relative rounded-[20px] overflow-hidden flex flex-col transition-transform duration-500 hover:-translate-y-1"
                   style={{ border: `1px solid rgba(242,235,228,0.14)`, background: 'rgba(16,12,15,0.55)', backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)', boxShadow: '0 40px 90px -55px rgba(0,0,0,0.9)' }}>
                   <div className="relative overflow-hidden" style={{ aspectRatio: '16 / 9' }}>
@@ -209,7 +209,7 @@ export default function SosMeetClient() {
           </div>
         </section>
 
-        {/* 1bis. LES DEUX CHEMINS — comparatif */}
+        {/* 1bis. LES DEUX CHEMINS, comparatif */}
         <section className="max-w-5xl mx-auto px-5 sm:px-8 py-24">
           <Reveal className="text-center max-w-2xl mx-auto mb-14">
             <p className="text-[11px] tracking-[0.34em] uppercase mb-3" style={{ color: C.smoke2 }}>Deux portes, une même exigence</p>
@@ -244,7 +244,7 @@ export default function SosMeetClient() {
           </div>
         </section>
 
-        {/* 2. LE PRINCIPE — les deux parcours, temps par temps */}
+        {/* 2. LE PRINCIPE, les deux parcours, temps par temps */}
         <section className="max-w-5xl mx-auto px-5 sm:px-8 py-24">
           <Reveal className="text-center max-w-2xl mx-auto mb-14">
             <p className="text-[11px] tracking-[0.34em] uppercase mb-3" style={{ color: C.smoke2 }}>Le principe</p>
@@ -329,7 +329,7 @@ export default function SosMeetClient() {
           </div>
         </section>
 
-        {/* 5. AVANTAGE SOS SHINE — velours */}
+        {/* 5. AVANTAGE SOS SHINE, velours */}
         <section className="relative py-24 my-8 overflow-hidden">
           <img src="/sosmeet/velvet.png" alt="" className="absolute inset-0 w-full h-full object-cover opacity-45" />
           <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(10,9,11,0.85), rgba(10,9,11,0.5))' }} />

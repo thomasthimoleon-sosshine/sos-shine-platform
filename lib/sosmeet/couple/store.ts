@@ -1,5 +1,5 @@
 /**
- * SOS Meet Couple — accès à la base, côté serveur uniquement.
+ * SOS Meet Couple, accès à la base, côté serveur uniquement.
  * Toutes les tables sont en RLS fermée : on passe par le client admin, après
  * avoir authentifié la personne. Ce fichier centralise les garde-fous pour
  * qu'aucune route ne puisse les contourner par inadvertance.

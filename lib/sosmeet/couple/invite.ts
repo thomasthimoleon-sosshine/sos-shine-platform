@@ -1,5 +1,5 @@
 /**
- * SOS Meet Couple — le code d'invitation.
+ * SOS Meet Couple, le code d'invitation.
  * Ce code donne accès à un espace intime : il est traité comme un secret.
  * Alphabet sans ambiguïté visuelle (ni I, ni O, ni 0, ni 1), tirage
  * cryptographique, 8 caractères, soit environ 40 bits d'entropie.

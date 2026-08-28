@@ -1,5 +1,5 @@
 /**
- * SOS Meet Couple — positions célestes.
+ * SOS Meet Couple, positions célestes.
  * ---------------------------------------------------------------------------
  * Astronomie réelle, sans dépendance externe : formules classiques de Meeus,
  * « Astronomical Algorithms ». Ce qui est calculé ici est vrai, avec les

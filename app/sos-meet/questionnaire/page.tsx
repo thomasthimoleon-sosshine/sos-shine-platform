@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 }
 
-/** `?palier=lien|vie|intime` — sans paramètre, on commence par l'Essentiel. */
+/** `?palier=lien|vie|intime`, sans paramètre, on commence par l'Essentiel. */
 export default async function QuestionnairePage({
   searchParams,
 }: {

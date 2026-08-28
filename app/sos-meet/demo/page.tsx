@@ -1,6 +1,6 @@
 'use client'
 
-// Page utilitaire de DÉMO (projection) — à retirer avant l'ouverture publique.
+// Page utilitaire de DÉMO (projection), à retirer avant l'ouverture publique.
 // Permet de peupler / vider des faux profils en un clic sur le site déployé.
 
 import { useEffect, useState } from 'react'

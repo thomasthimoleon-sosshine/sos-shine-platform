@@ -1,9 +1,9 @@
 /**
- * SOS Meet — Les PALIERS du questionnaire.
+ * SOS Meet, Les PALIERS du questionnaire.
  * ---------------------------------------------------------------------------
  * L'« Essentiel » (~30 q) débloque la découverte. Ensuite, on ne force personne :
  * on propose de « continuer à se dévoiler ». Chaque palier franchi affine le
- * profil, le matching, et l'indice de sincérité — sans jamais rien invalider
+ * profil, le matching, et l'indice de sincérité, sans jamais rien invalider
  * de ce qui a déjà été répondu (le stockage reste `{ qid: valeur }`).
  *
  * ⚠️ NUMÉROTATION : les questions ci-dessous sont numérotées q2xx / q3xx / q4xx
@@ -18,7 +18,7 @@
 import { ESSENTIEL, type Question } from './essentiel'
 
 // ════════════════════════════════════════════════════════════════════════════
-// PALIER 2 — « Le lien » : comment tu aimes, comment tu te disputes, comment
+// PALIER 2, « Le lien » : comment tu aimes, comment tu te disputes, comment
 // tu répares. C'est ici que se joue la vraie compatibilité de couple.
 // ════════════════════════════════════════════════════════════════════════════
 export const LIEN: Question[] = [
@@ -76,7 +76,7 @@ export const LIEN: Question[] = [
 ]
 
 // ════════════════════════════════════════════════════════════════════════════
-// PALIER 3 — « La vie » : d'où tu viens, ce que tu construis, ce qui t'entoure.
+// PALIER 3, « La vie » : d'où tu viens, ce que tu construis, ce qui t'entoure.
 // Ce qui fait qu'on tient dans la durée, ou pas.
 // ════════════════════════════════════════════════════════════════════════════
 export const VIE: Question[] = [
@@ -136,8 +136,8 @@ export const VIE: Question[] = [
 ]
 
 // ════════════════════════════════════════════════════════════════════════════
-// PALIER 4 — « L'intime » : le désir, le corps, ce qu'on ose dire.
-// Entièrement sensible (RGPD art. 9) — proposé en dernier, jamais imposé.
+// PALIER 4, « L'intime » : le désir, le corps, ce qu'on ose dire.
+// Entièrement sensible (RGPD art. 9), proposé en dernier, jamais imposé.
 // ════════════════════════════════════════════════════════════════════════════
 export const INTIME: Question[] = [
   { id: 'q401', module: 40, type: 'choice', text: 'À quelle fréquence le désir te traverse-t-il ?', sensitive: true, role: 'similarity', dimension: 'sexualite', weight: 1.2,
@@ -219,7 +219,7 @@ export type PalierProgress = {
 
 /**
  * Avancement palier par palier, à partir des réponses déjà données.
- * Un palier se débloque quand le précédent est fait — on ne saute pas
+ * Un palier se débloque quand le précédent est fait, on ne saute pas
  * l'Essentiel pour aller directement à l'intime.
  */
 export function palierProgress(answers: Record<string, number>): PalierProgress[] {
@@ -242,7 +242,7 @@ export function nextPalier(answers: Record<string, number>): PalierProgress | nu
   return palierProgress(answers).find(p => p.unlocked && !p.done) || null
 }
 
-/** Profondeur du profil, 0..100 — sert à valoriser ceux qui se dévoilent. */
+/** Profondeur du profil, 0..100, sert à valoriser ceux qui se dévoilent. */
 export function depth(answers: Record<string, number>): number {
   const total = ALL_QUESTIONS.length
   const answered = ALL_QUESTIONS.filter(q => answers[q.id] != null).length

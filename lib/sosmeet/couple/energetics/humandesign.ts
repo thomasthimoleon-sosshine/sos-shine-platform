@@ -1,5 +1,5 @@
 /**
- * SOS Meet Couple — Human Design.
+ * SOS Meet Couple, Human Design.
  * ---------------------------------------------------------------------------
  * CE QUI EST CALCULÉ ICI, ET CE QUI NE L'EST PAS.
  *

@@ -1,5 +1,5 @@
 /**
- * SOS Meet — Profil de compatibilité + matching par paire.
+ * SOS Meet, Profil de compatibilité + matching par paire.
  * Trois mécaniques : similarité (dimensions), préférences (ce que je cherche),
  * filtres durs (enfants, exclusivité). Réponses = { qid: index d'option | nombre }.
  */
@@ -20,18 +20,18 @@ export type Profile = {
     wantSpiritual?: number // index q149
     wantMaturity?: number  // index q144
     // ── palier « Le lien » ──
-    mobility?: number        // q220 — prêt·e à déménager
+    mobility?: number        // q220, prêt·e à déménager
     // ── palier « La vie » ──
-    pets?: number            // q305 — animaux
-    faith?: number           // q311 — rapport à la foi
-    smoking?: number         // q315 — tabac
-    wantSameFaith?: number   // q312 — l'autre doit partager mes convictions
-    wantSmokeFree?: number   // q316 — le tabac chez l'autre
-    wantAmbition?: number    // q309 — ambition chez l'autre
-    wantFamilyClose?: number // q302 — intégration à ma famille
+    pets?: number            // q305, animaux
+    faith?: number           // q311, rapport à la foi
+    smoking?: number         // q315, tabac
+    wantSameFaith?: number   // q312, l'autre doit partager mes convictions
+    wantSmokeFree?: number   // q316, le tabac chez l'autre
+    wantAmbition?: number    // q309, ambition chez l'autre
+    wantFamilyClose?: number // q302, intégration à ma famille
   }
   answered: number
-  /** Profondeur du profil 0..100 (paliers franchis) — sert à nuancer la confiance. */
+  /** Profondeur du profil 0..100 (paliers franchis), sert à nuancer la confiance. */
   depth?: number
 }
 
@@ -72,7 +72,7 @@ const DIM_WEIGHT: Record<Dimension, number> = {
   intentions: 1.5, engagement: 1.3, securite: 1.2, valeurs: 1.1, spiritualite: 1.1,
   sexualite: 1.0, independance: 0.9, lifestyle: 0.7, social: 0.7,
   // Paliers d'approfondissement : la façon de se parler et de se réparer
-  // pèse autant que les intentions — c'est là que les couples tiennent ou cassent.
+  // pèse autant que les intentions, c'est là que les couples tiennent ou cassent.
   communication: 1.4, conflit: 1.4, famille: 1.0, materiel: 0.9,
 }
 
@@ -176,7 +176,7 @@ export function compatibility(a: Profile, b: Profile): Compatibility {
   applyPref(a, b); applyPref(b, a)
 
   // Mobilité : deux personnes également enracinées ne bougeront ni l'une ni l'autre.
-  // Ce n'est pas rédhibitoire (elles peuvent être voisines) — juste à dire.
+  // Ce n'est pas rédhibitoire (elles peuvent être voisines), juste à dire.
   if (a.filters.mobility === 3 && b.filters.mobility === 3) {
     score -= 5; frictions.push('Aucun des deux ne se voit déménager')
   }

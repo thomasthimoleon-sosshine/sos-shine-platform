@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import DuoClient from './DuoClient'
 
 export const metadata: Metadata = {
-  title: 'Notre duo — SOS Meet',
+  title: 'Notre duo, SOS Meet',
   description: 'Créer ou rejoindre votre duo.',
   robots: { index: false, follow: false },
 }

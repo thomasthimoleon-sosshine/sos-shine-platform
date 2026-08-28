@@ -1,5 +1,5 @@
 /**
- * SOS Meet Couple — le couple d'exemple.
+ * SOS Meet Couple, le couple d'exemple.
  * Sert UNIQUEMENT à se projeter sur le rendu du livrable avant d'avoir de
  * vrais couples. Les réponses sont fabriquées, jamais présentées comme
  * réelles, et la page d'aperçu le dit en haut.

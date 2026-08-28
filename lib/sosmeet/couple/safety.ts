@@ -1,5 +1,5 @@
 /**
- * SOS Meet Couple — vigilance.
+ * SOS Meet Couple, vigilance.
  * ---------------------------------------------------------------------------
  * Un diagnostic de couple rencontrera des situations d'emprise. Répondre à
  * cela par un « rituel de reconnexion » ferait du mal. Ce module décide quand

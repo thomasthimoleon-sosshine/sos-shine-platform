@@ -1,5 +1,5 @@
 /**
- * SOS Meet Couple — astrologie.
+ * SOS Meet Couple, astrologie.
  * ---------------------------------------------------------------------------
  * Ce qui est calculé ici est réellement calculé, à partir des positions de
  * ephemeris.ts. Ce qui ne l'est pas est déclaré indéterminé, jamais deviné.

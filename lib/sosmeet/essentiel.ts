@@ -1,5 +1,5 @@
 /**
- * SOS Meet — Questionnaire, palier ESSENTIEL (~30 questions).
+ * SOS Meet, Questionnaire, palier ESSENTIEL (~30 questions).
  * Sélection des questions les plus scorables/discriminantes des 200, avec les
  * métadonnées qui rendent le matching ET la détection d'incohérences possibles.
  *
@@ -10,7 +10,7 @@
  *   - 'filter'     : donnée dure (âge, enfants, monogamie) → peut éliminer.
  *   - 'info'       : affiché sur le profil, non scoré.
  *
- * À prioriser/affiner ensuite avec Julia — la structure est prête à s'étendre
+ * À prioriser/affiner ensuite avec Julia, la structure est prête à s'étendre
  * au palier « Approfondir » (les ~170 autres) sans rien casser.
  */
 
@@ -40,8 +40,8 @@ export type Question = {
 
 // Échelle 1-10 → valeur 0..100 (question q140)
 const READY: Choice[] = [
-  { label: '1–2', value: 10 }, { label: '3–4', value: 30 }, { label: '5–6', value: 50 },
-  { label: '7–8', value: 75 }, { label: '9–10', value: 95 },
+  { label: '1 à 2', value: 10 }, { label: '3 à 4', value: 30 }, { label: '5 à 6', value: 50 },
+  { label: '7 à 8', value: 75 }, { label: '9 à 10', value: 95 },
 ]
 
 export const ESSENTIEL: Question[] = [
@@ -64,7 +64,7 @@ export const ESSENTIEL: Question[] = [
   { id: 'q133', module: 9, type: 'choice', text: 'Vivre ensemble assez vite, ou garder des espaces séparés longtemps ?', role: 'similarity', dimension: 'engagement',
     choices: [{ label: 'Vivre ensemble assez vite', value: 100 }, { label: 'Progression lente', value: 65 }, { label: 'Espaces séparés longtemps OK', value: 35 }, { label: 'Flexible', value: 55 }] },
 
-  // ── Attachement (M6) — sécurité & indépendance ──
+  // ── Attachement (M6), sécurité & indépendance ──
   { id: 'q83', module: 6, type: 'choice', text: 'Ton style d’attachement dominant ?', sensitive: true, role: 'similarity', dimension: 'securite', weight: 1.3, desirable: [0],
     choices: [{ label: 'Sécure', value: 100 }, { label: 'Anxieux', value: 45 }, { label: 'Évitant', value: 45 }, { label: 'Désorganisé / oscillant', value: 25 }, { label: 'Je ne sais pas', value: 55 }] },
   { id: 'q80', module: 6, type: 'choice', text: 'Besoin d’indépendance dans une relation ?', role: 'similarity', dimension: 'independance',
@@ -94,13 +94,13 @@ export const ESSENTIEL: Question[] = [
   { id: 'q144', module: 10, type: 'choice', text: 'Niveau de maturité émotionnelle recherché chez l’autre ?', role: 'preference', filterKey: 'wantMaturity',
     choices: [{ label: 'Beaucoup déjà travaillé sur soi' }, { label: 'En chemin sérieux' }, { label: 'La maturité se verra dans le lien' }, { label: 'Ouvert à différents niveaux' }] },
 
-  // ── Lifestyle & rythme (M2) — servent aussi à la cohérence ──
+  // ── Lifestyle & rythme (M2), servent aussi à la cohérence ──
   { id: 'q16', module: 2, type: 'choice', text: 'Es-tu du matin ou du soir ?', role: 'similarity', dimension: 'lifestyle',
     choices: [{ label: 'Vrai lève-tôt', value: 100 }, { label: 'Plutôt matin', value: 75 }, { label: 'Neutre', value: 50 }, { label: 'Vrai couche-tard', value: 10 }, { label: 'Très variable', value: 45 }] },
   { id: 'q17', module: 2, type: 'choice', text: 'Heure de coucher en semaine ?', role: 'info',
-    choices: [{ label: 'Avant 22h30' }, { label: '22h30–00h' }, { label: '00h–1h30' }, { label: 'Après 1h30' }, { label: 'Irrégulier' }] },
+    choices: [{ label: 'Avant 22h30' }, { label: '22h30 à 00h' }, { label: '00h à 1h30' }, { label: 'Après 1h30' }, { label: 'Irrégulier' }] },
   { id: 'q21', module: 2, type: 'choice', text: 'Fréquence de sorties le soir ?', role: 'similarity', dimension: 'social',
-    choices: [{ label: '≥3×/semaine', value: 100 }, { label: '1–2×/semaine', value: 70 }, { label: 'Quelques×/mois', value: 45 }, { label: 'Rarement', value: 20 }, { label: 'Presque jamais', value: 10 }] },
+    choices: [{ label: '≥3×/semaine', value: 100 }, { label: '1 à 2×/semaine', value: 70 }, { label: 'Quelques×/mois', value: 45 }, { label: 'Rarement', value: 20 }, { label: 'Presque jamais', value: 10 }] },
   { id: 'q23', module: 2, type: 'choice', text: 'Besoin de solitude dans une semaine type ?', role: 'similarity', dimension: 'independance',
     choices: [{ label: 'Beaucoup', value: 100 }, { label: 'Moyen', value: 60 }, { label: 'Peu', value: 25 }, { label: 'Très variable', value: 50 }] },
   { id: 'q32', module: 2, type: 'choice', text: 'Aimes-tu recevoir des gens chez toi ?', role: 'similarity', dimension: 'social',

@@ -1,5 +1,5 @@
 /**
- * SOS Meet Couple — les types partagés du parcours « Se retrouver ».
+ * SOS Meet Couple, les types partagés du parcours « Se retrouver ».
  * Aucune dépendance : ce fichier est lisible côté client comme côté serveur.
  */
 

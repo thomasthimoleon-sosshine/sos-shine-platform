@@ -1,5 +1,5 @@
 /**
- * SOS Meet — banque de questions du profil de compatibilité.
+ * SOS Meet, banque de questions du profil de compatibilité.
  * Structurée par dimensions. Facile à étendre vers 100+ questions :
  * ajoutez des entrées dans QUESTIONS avec la bonne `dim`.
  *
@@ -162,7 +162,7 @@ const RAW_QUESTIONS: Question[] = [
   { id: 'deal3', dim: 'dealbreakers', type: S, text: 'Un mode de vie très différent du vôtre (rythme, valeurs) serait bloquant.' },
   { id: 'deal4', dim: 'dealbreakers', type: S, text: 'L\'honnêteté est pour vous la condition absolue de tout lien.' },
 
-  // ══ Compléments (jusqu'à 100 questions) — triées par dimension à l'export ══
+  // ══ Compléments (jusqu'à 100 questions), triées par dimension à l'export ══
 
   // Intentions
   { id: 'int6', dim: 'intentions', type: S, text: 'Vous êtes prêt·e à faire évoluer vos habitudes de célibataire pour construire à deux.' },

@@ -1,5 +1,5 @@
 /**
- * SOS Meet Couple — le rapport complet.
+ * SOS Meet Couple, le rapport complet.
  * Assemble le croisement des réponses, la lecture écrite, et la couche
  * énergétique quand les dates de naissance sont disponibles.
  *

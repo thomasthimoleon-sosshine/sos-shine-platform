@@ -1,4 +1,4 @@
-// Identité SOS Meet — indépendante de SOS Shine.
+// Identité SOS Meet, indépendante de SOS Shine.
 // Univers « couture après minuit » : noir & grenat, serif Bodoni Moda + sans Jost.
 // Polices chargées via <link> runtime (pas de next/font → aucun impact build).
 

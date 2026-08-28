@@ -138,7 +138,7 @@ export default function ProfilClient() {
           L’essentiel pour commencer. Juste après, le questionnaire de compatibilité, c’est lui qui débloque tes premières rencontres.
         </p>
 
-        {/* Photo — privée, voilée pour les autres jusqu'au match */}
+        {/* Photo, privée, voilée pour les autres jusqu'au match */}
         <div className="flex items-center gap-4 mb-8">
           <button type="button" onClick={() => fileRef.current?.click()} disabled={photoBusy}
             className="relative w-20 h-20 rounded-2xl overflow-hidden shrink-0 flex items-center justify-center"
@@ -156,7 +156,7 @@ export default function ProfilClient() {
             onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadPhoto(f) }} />
         </div>
 
-        {/* Chemin accompli — protocoles SOS Shine traversés */}
+        {/* Chemin accompli, protocoles SOS Shine traversés */}
         {protocols.length > 0 && (
           <div className="mb-8 p-4 rounded-2xl" style={{ background: 'rgba(155,27,46,0.08)', border: '1px solid rgba(155,27,46,0.2)' }}>
             <div className="text-[11px] tracking-[0.24em] uppercase mb-2" style={{ color: C.ember }}>Chemin accompli</div>

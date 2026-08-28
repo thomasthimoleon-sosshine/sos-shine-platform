@@ -1,5 +1,5 @@
 /**
- * SOS Meet Couple — la banque de questions.
+ * SOS Meet Couple, la banque de questions.
  * ---------------------------------------------------------------------------
  * PRINCIPE : sur chaque dimension, deux questions jumelles.
  *   « moi »    : comment JE vis cette dimension.

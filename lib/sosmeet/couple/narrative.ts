@@ -1,5 +1,5 @@
 /**
- * SOS Meet Couple — le texte du diagnostic.
+ * SOS Meet Couple, le texte du diagnostic.
  * ---------------------------------------------------------------------------
  * Transforme les chiffres du croisement en une lecture écrite, adressée au
  * couple. Trois règles de ton, tenues dans le code :

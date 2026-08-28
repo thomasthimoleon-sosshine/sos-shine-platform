@@ -1,5 +1,5 @@
 /**
- * SOS Meet Couple — la lecture énergétique.
+ * SOS Meet Couple, la lecture énergétique.
  * ---------------------------------------------------------------------------
  * SON BUT, ET RIEN D'AUTRE : montrer en quoi ces deux personnes sont
  * COMPLÉMENTAIRES, et quels points demandent de l'ATTENTION.

@@ -1,16 +1,16 @@
 /**
- * SOS Meet — Moteur de sincérité / détection d'incohérences (« anti-triche »)
+ * SOS Meet, Moteur de sincérité / détection d'incohérences (« anti-triche »)
  * ---------------------------------------------------------------------------
  * But : à partir des seules réponses (et du temps de réponse), estimer si une
- * personne répond honnêtement et de façon cohérente — SANS jamais l'accuser
+ * personne répond honnêtement et de façon cohérente, SANS jamais l'accuser
  * publiquement. Le score sert (1) à ta modération, (2) à pondérer le matching,
  * (3) à décerner un badge POSITIF « Profil cohérent » aux hauts scores.
  *
  * Quatre signaux :
- *   1. Paires de cohérence   — deux réponses qui se contredisent logiquement.
- *   2. Redondance déguisée   — un même trait demandé autrement, réponses qui divergent.
- *   3. Désirabilité sociale  — cocher systématiquement l'option la plus flatteuse.
- *   4. Anti-bâclage          — réponses toutes identiques (straight-lining) + temps.
+ *   1. Paires de cohérence  , deux réponses qui se contredisent logiquement.
+ *   2. Redondance déguisée  , un même trait demandé autrement, réponses qui divergent.
+ *   3. Désirabilité sociale , cocher systématiquement l'option la plus flatteuse.
+ *   4. Anti-bâclage         , réponses toutes identiques (straight-lining) + temps.
  *
  * Format des réponses : { [questionId]: number }
  *   - question 'choice' : index de l'option choisie (0-based)
@@ -238,7 +238,7 @@ export const COHERENCE_RULES: CoherenceRule[] = [
     penalty: clash([0], [3]),
   },
   // L'intimité ne fait pas peur, mais la sexualité est déclarée essentielle
-  // ET l'attachement est désorganisé — signal faible, poids réduit.
+  // ET l'attachement est désorganisé, signal faible, poids réduit.
   {
     id: 'intimite_vs_peur', a: 'q412', b: 'q214',
     label: 'Dit n’avoir aucune peur de l’intimité mais veut fuir dès que ça devient sérieux',
@@ -299,7 +299,7 @@ export function computeSincerity(answers: Answers, timings?: Timings): Sincerity
   const flags: string[] = []
   const keys = Object.keys(answers)
 
-  // 1 & 2 — cohérence & redondance
+  // 1 & 2, cohérence & redondance
   let penSum = 0, wSum = 0
   for (const r of COHERENCE_RULES) {
     if (answers[r.a] == null || answers[r.b] == null) continue
@@ -310,7 +310,7 @@ export function computeSincerity(answers: Answers, timings?: Timings): Sincerity
   }
   const coherence = wSum > 0 ? 1 - penSum / wSum : 1
 
-  // 3 — désirabilité sociale
+  // 3, désirabilité sociale
   let flatter = 0, flatterTotal = 0
   for (const d of DESIRABILITY) {
     if (answers[d.q] == null) continue
@@ -322,13 +322,13 @@ export function computeSincerity(answers: Answers, timings?: Timings): Sincerity
   const desirability = flatterRatio <= 0.7 ? 1 : 1 - (flatterRatio - 0.7) / 0.3
   if (flatterTotal >= 3 && flatterRatio >= 0.9) flags.push('Profil « trop parfait » (désirabilité sociale élevée)')
 
-  // 4a — straight-lining (peu de variété dans les réponses)
+  // 4a, straight-lining (peu de variété dans les réponses)
   const values = keys.map(k => answers[k])
   const distinct = new Set(values).size
   const variety = keys.length >= 6 ? Math.min(1, distinct / Math.max(4, keys.length * 0.35)) : 1
   if (keys.length >= 10 && distinct <= 2) flags.push('Réponses quasi identiques (straight-lining)')
 
-  // 4b — rythme (temps de réponse)
+  // 4b, rythme (temps de réponse)
   let pace = 0.85
   if (timings && keys.length > 0) {
     const t = keys.map(k => timings[k]).filter(v => typeof v === 'number' && v > 0).sort((a, b) => a - b)

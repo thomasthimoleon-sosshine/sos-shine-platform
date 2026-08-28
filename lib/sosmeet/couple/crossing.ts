@@ -1,5 +1,5 @@
 /**
- * SOS Meet Couple — le croisement des réponses.
+ * SOS Meet Couple, le croisement des réponses.
  * ---------------------------------------------------------------------------
  * Trois métriques par dimension, et non une seule. C'est ce qui sépare ce
  * diagnostic d'un questionnaire de magazine.

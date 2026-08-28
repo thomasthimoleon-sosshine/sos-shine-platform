@@ -92,10 +92,7 @@ export async function GET() {
       ranked,
       reasons: compat.reasons,
       coherent: !!c.scores?.sincerity?.coherent,
-      narrative: portrait.narrative,
-      signature: portrait.signature,
-      portrait: portrait.sections,
-      wants: portrait.wants,
+      prose: portrait.prose,
       sincerity: sincPublic,
       protocols: Array.isArray(c.scores?.protocols) ? c.scores.protocols.slice(0, 4) : [],
     })

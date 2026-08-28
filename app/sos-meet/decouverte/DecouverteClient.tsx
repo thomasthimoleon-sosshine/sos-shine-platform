@@ -12,13 +12,11 @@ const C = {
 const serif = { fontFamily: 'var(--sm-serif), Georgia, serif' }
 const sans = { fontFamily: 'var(--sm-sans), system-ui, sans-serif' }
 
-type PortraitSection = { title: string; body: string }
 type Sincerity = { label: string; tone: 'high' | 'medium' | 'low'; note: string }
 type Candidate = {
   userId: string; firstName: string; age: number | null; city: string | null
   score: number; reasons: string[]; coherent: boolean
-  narrative: string; signature: string; portrait: PortraitSection[]; wants: string | null; sincerity: Sincerity
-  protocols: string[]
+  prose: string; sincerity: Sincerity; protocols: string[]
 }
 
 // Couleurs charte SOS Meet (pas d'or ni de vert) : clair = sûr, fumé = neutre, braise = à confirmer.
@@ -116,25 +114,13 @@ export default function DecouverteClient() {
                     <span aria-hidden>{c.sincerity.tone === 'high' ? '✓' : c.sincerity.tone === 'medium' ? '◐' : '⚠'}</span>{c.sincerity.label}
                   </div>
 
-                  {/* Portrait narratif généré (aucune saisie libre) */}
-                  {c.narrative && <p className="text-[14.5px] leading-relaxed mt-3" style={{ ...serif, color: C.alabaster }}>{c.narrative}</p>}
-
-                  {/* Le détail, section par section */}
-                  {c.portrait?.length > 0 && (
-                    <div className="mt-4 pt-3 flex flex-col gap-2.5" style={{ borderTop: `1px solid ${C.line}` }}>
-                      {c.portrait.map((s, i) => (
-                        <div key={i}>
-                          <div className="text-[10px] tracking-[0.24em] uppercase" style={{ color: C.smoke2 }}>{s.title}</div>
-                          <p className="text-[13px] leading-relaxed" style={{ color: C.alabaster, opacity: 0.86 }}>{s.body}</p>
-                        </div>
+                  {/* Portrait généré : un seul texte fluide, en paragraphes */}
+                  {c.prose && (
+                    <div className="mt-3 flex flex-col gap-3">
+                      {c.prose.split('\n\n').map((para, i) => (
+                        <p key={i} className="text-[14px] leading-relaxed" style={{ ...serif, color: C.alabaster, opacity: 0.92 }}>{para}</p>
                       ))}
                     </div>
-                  )}
-
-                  {c.wants && (
-                    <p className="text-[12.5px] leading-relaxed mt-3 pt-3" style={{ color: C.smoke, borderTop: `1px solid ${C.line}` }}>
-                      <span style={{ color: C.ember }}>Recherche · </span>{c.wants}
-                    </p>
                   )}
 
                   {/* Chemin accompli, protocoles SOS Shine traversés */}

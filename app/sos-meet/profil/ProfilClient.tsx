@@ -5,9 +5,7 @@ import { useRouter } from 'next/navigation'
 import MeetNav from '../MeetNav'
 
 type Preview = {
-  narrative: string
-  sections: { title: string; body: string }[]
-  wants: string | null
+  prose: string
   sincerity: { label: string; tone: 'high' | 'medium' | 'low'; note: string }
 }
 const SINC_COLOR: Record<Preview['sincerity']['tone'], string> = { high: '#F2EBE4', medium: '#A99A96', low: '#C1121F' }
@@ -187,17 +185,11 @@ export default function ProfilClient() {
                 {preview.sincerity.tone === 'high' ? '✓' : preview.sincerity.tone === 'medium' ? '◐' : '⚠'} {preview.sincerity.label}
               </span>
             </div>
-            <p className="text-[16px] leading-relaxed" style={{ ...serif, color: C.alabaster }}>{preview.narrative}</p>
-            {preview.sections.length > 0 && (
-              <div className="mt-4 pt-4 flex flex-col gap-2.5" style={{ borderTop: `1px solid ${C.line}` }}>
-                {preview.sections.map((s, i) => (
-                  <div key={i}>
-                    <div className="text-[10px] tracking-[0.24em] uppercase" style={{ color: C.smoke2 }}>{s.title}</div>
-                    <p className="text-[13px] leading-relaxed" style={{ color: C.smoke }}>{s.body}</p>
-                  </div>
-                ))}
-              </div>
-            )}
+            <div className="flex flex-col gap-3">
+              {preview.prose.split('\n\n').map((para, i) => (
+                <p key={i} className="text-[15px] leading-relaxed" style={{ ...serif, color: C.alabaster }}>{para}</p>
+              ))}
+            </div>
             <p className="mt-4 text-[12px] italic" style={{ color: C.smoke2 }}>Ce portrait s’écrit tout seul à partir de tes réponses, et s’approfondit à mesure que tu avances. Tu ne peux pas le retoucher, c’est ce qui le rend vrai.</p>
           </div>
         )}

@@ -16,9 +16,10 @@ import type { SincerityResult } from './coherence'
 
 export type PortraitSection = { title: string; body: string }
 export type Portrait = {
-  narrative: string            // le portrait en une phrase fluide (généré)
+  prose: string                // LE portrait : un seul texte fluide, en paragraphes
+  narrative: string            // variante courte en une phrase (accroche)
   signature: string            // une ligne d'accroche générée
-  sections: PortraitSection[]  // le portrait, section par section
+  sections: PortraitSection[]  // le portrait, section par section (usage interne)
   wants: string | null         // ce qu'elle/il cherche chez l'autre
 }
 
@@ -105,11 +106,86 @@ function buildNarrative(answers: Answers, firstName: string, gender: Gender): st
   return `${firstName} est ${noun}${adjPart}, ${tail.join(', ')}.`
 }
 
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
+
+/**
+ * LE portrait : un seul texte fluide en paragraphes, prénom cité une seule
+ * fois puis repris par le pronom, avec des transitions. C'est ce que les
+ * autres lisent. S'enrichit à mesure que la personne répond aux paliers.
+ */
+function buildProse(answers: Answers, firstName: string, gender: Gender): string {
+  const name = firstName || 'Cette personne'
+  const noun = gender === 'femme' ? 'une femme' : gender === 'homme' ? 'un homme' : 'une personne'
+  const pr = gender === 'femme' ? 'elle' : gender === 'homme' ? 'il' : 'iel'
+
+  // Adjectifs d'ouverture
+  const adj: string[] = []
+  if (answers.q83 === 0) adj.push(agree(gender, 'posé') + ' et sécure')
+  else if (answers.q83 === 1) adj.push('sensible')
+  else if (answers.q83 === 2) adj.push(agree(gender, 'indépendant'))
+  if (answers.q125 != null && answers.q125 <= 1) adj.push(agree(gender, 'loyal'))
+  else if (answers.q95 != null && answers.q95 >= 2 && adj.length < 2) adj.push(agree(gender, 'apaisé'))
+  const adjPart = adj.length ? ' ' + adj.slice(0, 2).join(', ') : ''
+
+  const paras: string[] = []
+
+  // § 1 — identité + intentions
+  const sIntent = line(pr, [
+    pick(answers, 'q127', { 0: 'fait aujourd’hui de la vie amoureuse une vraie priorité', 1: 'y tient, sans sacrifier son propre chemin', 2: 'la place plutôt au second plan en ce moment', 3: 'reste ' + agree(gender, 'ouvert') + ', sans pression' }),
+    pick(answers, 'q148', { 0: ', et cherche assez vite un lien engagé et exclusif', 1: ', et préfère construire les choses progressivement', 2: ', en quête de profondeur même hors du cadre classique', 3: '' }),
+    pick(answers, 'q133', { 0: ', ' + agree(gender, 'prêt') + ' à vivre à deux assez vite', 2: ', tout en gardant des espaces séparés un temps' }),
+  ])
+  paras.push([`${name} est ${noun}${adjPart}.`, sIntent].filter(Boolean).join(' '))
+
+  // § 2 — manière d'aimer + désir
+  const sLove = line(`Dans le lien, ${pr}`, [
+    pick(answers, 'q83', { 0: 'avance depuis une base sécure', 1: 'compose avec un attachement plutôt anxieux, en conscience', 2: 'compose avec un attachement plutôt évitant, et le sait', 3: 'a un attachement encore en travail', 4: 'explore encore son attachement' }),
+    pick(answers, 'q87', { 0: ', avec une peur de l’abandon encore présente', 3: ', sans réelle crainte de l’abandon' }),
+    pick(answers, 'q80', { 0: '; un besoin marqué d’indépendance', 3: '; une recherche de proximité' }),
+    pick(answers, 'q95', { 2: '. Le contrôle a été travaillé', 3: '. Le contrôle n’est pas un enjeu' }),
+  ])
+  const sDesir = line(`Côté désir, ${pr}`, [
+    pick(answers, 'q96', { 0: 'vit l’intimité comme essentielle', 1: 'accorde de l’importance à l’intimité sans en faire le centre', 2: 'place l’intimité au second plan si le lien est fort', 3: 'met l’intimité au cœur du lien', 4: 'a un rapport variable à l’intimité' }),
+    pick(answers, 'q105', { 0: ', le lien émotionnel précédant toujours le désir physique', 1: ', le lien émotionnel précédant souvent le désir', 2: ', sans en faire un prérequis' }),
+  ])
+  const sMono = pick(answers, 'q104', { 0: 'Monogame par conviction.', 3: cap(agree(gender, 'ouvert')) + ' à d’autres formes de relation.' })
+  const p2 = [sLove, sDesir, sMono].filter(Boolean).join(' ')
+  if (p2) paras.push(p2)
+
+  // § 3 — monde intérieur + rythme
+  const sInner = line(`Au fond, ${pr}`, [
+    pick(answers, 'q166', { 0: 'place le chemin intérieur au centre de sa vie', 1: 'accorde une vraie place au développement de soi', 3: 'explore le développement personnel à sa façon', 4: 'est peu ' + agree(gender, 'tourné') + ' vers le développement personnel' }),
+    pick(answers, 'q168', { 0: ', en quête de stabilité et d’ancrage', 1: ', en quête de transformation continue', 2: ', entre ancrage et transformation', 3: ', en quête de simplicité et de présence' }),
+    pick(answers, 'q116', { 2: '. Un vrai travail sur ses blessures a été fait', 1: '. Lucide sur ses blessures, ' + pr + ' avance avec' }),
+    pick(answers, 'q120', { 0: '; le deuil du passé est fait', 2: '; le passé n’est pas tout à fait refermé' }),
+  ])
+  const sRythme = line(`Au quotidien, ${pr}`, [
+    pick(answers, 'q16', { 0: 'est plutôt lève-tôt', 1: 'est plutôt du matin', 3: 'est plutôt couche-tard', 4: 'a un rythme très variable' }),
+    pick(answers, 'q23', { 0: ', avec un grand besoin de solitude', 2: ', avec peu de besoin de solitude' }),
+    pick(answers, 'q21', { 0: '; sort très souvent', 3: '; sort rarement', 4: '; sort presque jamais' }),
+    pick(answers, 'q32', { 0: ', mais aime recevoir du monde' }),
+  ])
+  const p3 = [sInner, sRythme].filter(Boolean).join(' ')
+  if (p3) paras.push(p3)
+
+  // § 4 — ce qu'iel cherche chez l'autre
+  const sWants = line(`Chez l’autre, ${pr}`, [
+    pick(answers, 'q144', { 0: 'cherche quelqu’un qui a déjà fait un vrai travail sur soi', 1: 'cherche quelqu’un en chemin sincère' }),
+    pick(answers, 'q149', { 0: ', et un vrai partage du chemin intérieur' }),
+    pick(answers, 'q131', { 0: '. Un projet d’enfants fait partie de ses envies', 2: '. Pas d’enfants au programme' }),
+  ])
+  if (sWants) paras.push(sWants)
+
+  const clean = paras.filter((p) => p && p.length > 3)
+  if (clean.length === 0) return `${name} se dévoile peu à peu, dans la vérité de ses réponses, sans rien mettre en scène.`
+  return clean.join('\n\n')
+}
+
 /**
  * Construit le portrait à partir des réponses.
  * @param answers  { qid: index | nombre }
  * @param firstName sujet des phrases (sinon « Cette personne »)
- * @param gender    pour l'accord des adjectifs du portrait narratif
+ * @param gender    pour l'accord des adjectifs
  */
 export function buildPortrait(answers: Answers, firstName?: string, gender?: Gender): Portrait {
   const who = (firstName && firstName.trim()) || 'Cette personne'
@@ -167,7 +243,7 @@ export function buildPortrait(answers: Answers, firstName?: string, gender?: Gen
     pick(answers, 'q131', { 0: '. Un projet d’enfants fait partie des envies', 2: '. Ne souhaite pas (ou plus) d’enfants' }),
   ]) || null
 
-  return { narrative: buildNarrative(answers, who, gender), signature: buildSignature(answers), sections, wants }
+  return { prose: buildProse(answers, who, gender), narrative: buildNarrative(answers, who, gender), signature: buildSignature(answers), sections, wants }
 }
 
 /** Une ligne d'accroche, dérivée des traits dominants (sans genre). */

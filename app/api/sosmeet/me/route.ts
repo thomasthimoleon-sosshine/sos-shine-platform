@@ -45,10 +45,10 @@ export async function GET() {
     .maybeSingle()
 
   // Aperçu « ce que les autres voient » : portrait généré + sincérité publique.
-  let preview: { narrative: string; sections: { title: string; body: string }[]; wants: string | null; sincerity: ReturnType<typeof publicSincerity> } | null = null
+  let preview: { prose: string; sincerity: ReturnType<typeof publicSincerity> } | null = null
   if (data?.completed && data?.answers) {
     const p = buildPortrait(data.answers as Record<string, number>, data.first_name || '', data.gender)
-    preview = { narrative: p.narrative, sections: p.sections, wants: p.wants, sincerity: publicSincerity(data.scores?.sincerity) }
+    preview = { prose: p.prose, sincerity: publicSincerity(data.scores?.sincerity) }
   }
 
   // Photo : URL signée pour l'aperçu par le propriétaire uniquement.

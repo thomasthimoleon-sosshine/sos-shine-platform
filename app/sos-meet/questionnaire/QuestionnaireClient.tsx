@@ -19,16 +19,24 @@ export default function QuestionnaireClient({ palier = 'essentiel' }: { palier?:
   const [answers, setAnswers] = useState<Record<string, number>>({})
   const [timings, setTimings] = useState<Record<string, number>>({})
   const [ageInput, setAgeInput] = useState('')
-  const [phase, setPhase] = useState<'loading' | 'auth' | 'run' | 'saving' | 'done'>('loading')
+  const [phase, setPhase] = useState<'loading' | 'auth' | 'needInfos' | 'run' | 'saving' | 'done'>('loading')
   const [result, setResult] = useState<{ coherent: boolean; band: string } | null>(null)
   const [nextStep, setNextStep] = useState<PalierProgress | null>(null)
   const [error, setError] = useState<string | null>(null)
   const shownAt = useRef<number>(0)
 
-  // Reprise + garde d'auth
+  // Garde d'auth + garde « infos remplies d'abord » + reprise
   useEffect(() => {
-    fetch('/api/sosmeet/questionnaire')
-      .then(async (r) => {
+    (async () => {
+      try {
+        // 1) Les infos de base (identité) doivent être faites avant le questionnaire.
+        const me = await fetch('/api/sosmeet/me')
+        if (me.status === 401) { setPhase('auth'); return }
+        const md = await me.json().catch(() => ({}))
+        if (!md.infosDone) { setPhase('needInfos'); return }
+
+        // 2) Reprise des réponses déjà enregistrées.
+        const r = await fetch('/api/sosmeet/questionnaire')
         if (r.status === 401) { setPhase('auth'); return }
         const d = await r.json()
         if (d.answers && typeof d.answers === 'object') {
@@ -37,8 +45,8 @@ export default function QuestionnaireClient({ palier = 'essentiel' }: { palier?:
           setIdx(answered === -1 ? 0 : answered)
         }
         setPhase('run')
-      })
-      .catch(() => setPhase('auth'))
+      } catch { setPhase('auth') }
+    })()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -110,6 +118,20 @@ export default function QuestionnaireClient({ palier = 'essentiel' }: { palier?:
         <h1 style={{ ...serif, fontWeight: 400, fontSize: '2rem' }}>Connecte-toi d’abord</h1>
         <p className="mt-3 mb-7 text-[15px]" style={{ color: C.smoke }}>Ton questionnaire est rattaché à ton compte.</p>
         <a href={`/login?next=/sos-meet/questionnaire%3Fpalier%3D${palier}`} className="px-8 py-4 rounded-full text-[14px] tracking-[0.12em] uppercase" style={{ background: `linear-gradient(135deg, ${C.garnet}, ${C.garnetSoft})`, color: '#F7EEE9' }}>Me connecter</a>
+      </div>
+    </main>
+  )
+
+  if (phase === 'needInfos') return (
+    <main className={shell} style={bg}>
+      <div className="pointer-events-none fixed inset-0" style={{ background: 'radial-gradient(110% 55% at 50% -8%, rgba(155,27,46,0.16), transparent 55%)' }} />
+      <div className="relative max-w-md mx-auto px-6 min-h-screen flex flex-col items-center justify-center text-center">
+        <span className="text-[11px] tracking-[0.4em] uppercase" style={{ color: C.ember }}>Avant de commencer</span>
+        <h1 className="mt-4 mb-3" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(1.9rem,6vw,2.6rem)', lineHeight: 1.05 }}>D’abord, faisons connaissance</h1>
+        <p className="text-[15px] leading-relaxed mb-8" style={{ color: C.smoke }}>
+          Renseigne tes infos de base (prénom, âge, qui tu cherches) : c’est ce qui rattache ton questionnaire à ton profil. Ensuite, place au dévoilement.
+        </p>
+        <a href="/sos-meet/profil" className="px-8 py-4 rounded-full text-[14px] tracking-[0.12em] uppercase" style={{ background: `linear-gradient(135deg, ${C.garnet}, ${C.garnetSoft})`, color: '#F7EEE9' }}>Compléter mes infos →</a>
       </div>
     </main>
   )

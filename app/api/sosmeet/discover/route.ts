@@ -8,6 +8,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { compatibility, type Profile } from '@/lib/sosmeet/matching'
+import { buildPortrait, publicSincerity } from '@/lib/sosmeet/portrait'
 
 function toSeek(gender: string): string | null {
   if (gender === 'femme') return 'femmes'
@@ -60,7 +61,7 @@ export async function GET() {
 
   // Candidats visibles
   const { data: rows } = await (admin as any).from('sosmeet_profiles')
-    .select('user_id, first_name, birthdate, gender, seeking, city, headline, scores')
+    .select('user_id, first_name, birthdate, gender, seeking, city, answers, scores')
     .eq('is_visible', true)
     .limit(300)
 
@@ -77,16 +78,24 @@ export async function GET() {
     // Pondération : un profil peu sincère remonte moins.
     const ranked = Math.round(compat.score * (0.6 + 0.4 * (sincerity / 100)))
 
+    // Portrait ENTIÈREMENT généré depuis les réponses (aucune saisie libre) +
+    // sincérité affichée en transparence.
+    const portrait = buildPortrait((c.answers || {}) as Record<string, number>, c.first_name || '')
+    const sincPublic = publicSincerity(c.scores?.sincerity)
+
     out.push({
       userId: c.user_id,
       firstName: c.first_name || '',
       age: ageFrom(c.birthdate),
       city: c.city || null,
-      headline: c.headline || null,
       score: compat.score,
       ranked,
       reasons: compat.reasons,
       coherent: !!c.scores?.sincerity?.coherent,
+      signature: portrait.signature,
+      portrait: portrait.sections,
+      wants: portrait.wants,
+      sincerity: sincPublic,
     })
   }
 

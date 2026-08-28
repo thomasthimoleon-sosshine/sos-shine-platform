@@ -208,10 +208,11 @@ export default function ProfilClient() {
             <input id="city" value={city} onChange={(e) => setCity(e.target.value)} placeholder="Où vis-tu ?" className={inputCls} style={inputStyle} />
           </div>
 
-          <div>
-            <label htmlFor="hl" className="block text-[13px] mb-1.5" style={{ color: C.smoke }}>Une phrase pour te présenter <span style={{ color: C.smoke2 }}>(optionnel)</span></label>
-            <input id="hl" value={headline} maxLength={160} onChange={(e) => setHeadline(e.target.value)} placeholder="Ce qui te définit en une phrase…" className={inputCls} style={inputStyle} />
-          </div>
+          {/* Pas d'accroche à écrire : ton profil public est ENTIÈREMENT généré à
+              partir de tes réponses au questionnaire. Rien à rédiger, rien à embellir. */}
+          <p className="text-[13px] leading-relaxed p-4 rounded-xl" style={{ background: 'rgba(155,27,46,0.08)', border: `1px solid ${C.line}`, color: C.smoke }}>
+            <span style={{ color: C.ember }}>✦ </span>Ton profil se rédige tout seul, à partir de tes réponses au questionnaire. Personne ne peut se mettre en scène : ce que les autres liront reflète vraiment qui tu es, et ta sincérité s’affiche en transparence.
+          </p>
 
           <label className="flex items-start gap-3 cursor-pointer">
             <input type="checkbox" checked={ageOk} onChange={(e) => setAgeOk(e.target.checked)} className="mt-1 w-4 h-4 shrink-0" style={{ accentColor: C.garnet }} />

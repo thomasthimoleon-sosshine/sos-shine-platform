@@ -12,10 +12,15 @@ const C = {
 const serif = { fontFamily: 'var(--sm-serif), Georgia, serif' }
 const sans = { fontFamily: 'var(--sm-sans), system-ui, sans-serif' }
 
+type PortraitSection = { title: string; body: string }
+type Sincerity = { label: string; tone: 'high' | 'medium' | 'low'; note: string }
 type Candidate = {
   userId: string; firstName: string; age: number | null; city: string | null
-  headline: string | null; score: number; reasons: string[]; coherent: boolean
+  score: number; reasons: string[]; coherent: boolean
+  signature: string; portrait: PortraitSection[]; wants: string | null; sincerity: Sincerity
 }
+
+const SINC_COLOR: Record<Sincerity['tone'], string> = { high: '#7FB08A', medium: '#C9A961', low: '#C1121F' }
 
 export default function DecouverteClient() {
   const [phase, setPhase] = useState<'loading' | 'auth' | 'incomplete' | 'ready'>('loading')
@@ -99,10 +104,37 @@ export default function DecouverteClient() {
                 <div className="p-5 flex flex-col flex-1">
                   <div className="flex items-baseline gap-2">
                     <h3 style={{ ...serif, fontWeight: 500, fontSize: '19px' }}>{c.firstName}{c.age ? `, ${c.age}` : ''}</h3>
-                    {c.coherent && <span className="text-[10px]" style={{ color: C.ember }}>✦ cohérent</span>}
+                    {c.city && <span className="text-[12px]" style={{ color: C.smoke2 }}>· {c.city}</span>}
                   </div>
-                  {c.city && <div className="text-[12.5px]" style={{ color: C.smoke2 }}>{c.city}</div>}
-                  {c.headline && <p className="text-[13.5px] mt-2 italic" style={{ ...serif, color: C.smoke }}>« {c.headline} »</p>}
+
+                  {/* Sincérité, affichée en transparence (dérivée de la cohérence des réponses) */}
+                  <div className="mt-2 inline-flex items-center gap-1.5 self-start text-[11px] px-2.5 py-1 rounded-full"
+                    title={c.sincerity.note}
+                    style={{ color: SINC_COLOR[c.sincerity.tone], background: 'rgba(255,255,255,0.04)', border: `1px solid ${SINC_COLOR[c.sincerity.tone]}44` }}>
+                    <span aria-hidden>{c.sincerity.tone === 'high' ? '✓' : c.sincerity.tone === 'medium' ? '◐' : '⚠'}</span>{c.sincerity.label}
+                  </div>
+
+                  {/* Accroche générée (aucune saisie libre) */}
+                  {c.signature && <p className="text-[13.5px] mt-3 italic" style={{ ...serif, color: C.smoke }}>{c.signature}</p>}
+
+                  {/* Portrait généré, section par section */}
+                  {c.portrait?.length > 0 && (
+                    <div className="mt-3 flex flex-col gap-2.5">
+                      {c.portrait.map((s, i) => (
+                        <div key={i}>
+                          <div className="text-[10px] tracking-[0.24em] uppercase" style={{ color: C.smoke2 }}>{s.title}</div>
+                          <p className="text-[13px] leading-relaxed" style={{ color: C.alabaster, opacity: 0.86 }}>{s.body}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {c.wants && (
+                    <p className="text-[12.5px] leading-relaxed mt-3 pt-3" style={{ color: C.smoke, borderTop: `1px solid ${C.line}` }}>
+                      <span style={{ color: C.ember }}>Recherche · </span>{c.wants}
+                    </p>
+                  )}
+
                   {c.reasons.length > 0 && (
                     <div className="flex flex-wrap gap-1.5 mt-3">
                       {c.reasons.slice(0, 3).map((r, i) => (

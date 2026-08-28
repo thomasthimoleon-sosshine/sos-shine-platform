@@ -191,6 +191,7 @@ export default function ProfilClient() {
               ))}
             </div>
             <p className="mt-4 text-[12px] italic" style={{ color: C.smoke2 }}>Ce portrait s’écrit tout seul à partir de tes réponses, et s’approfondit à mesure que tu avances. Tu ne peux pas le retoucher, c’est ce qui le rend vrai.</p>
+            <a href="/sos-meet/miroir" className="inline-flex items-center gap-2 mt-4 text-[13px] tracking-[0.06em]" style={{ color: C.ember }}>Et pour toi seul·e, découvre ton miroir <span aria-hidden>→</span></a>
           </div>
         )}
         {!preview && (

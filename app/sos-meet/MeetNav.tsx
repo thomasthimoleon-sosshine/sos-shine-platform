@@ -13,7 +13,7 @@ type State = { authed: boolean; completed: boolean; infosDone: boolean } | null
 /** Barre de navigation SOS Meet, consciente de la connexion.
  *  Déconnecté : Me connecter · Créer mon profil.
  *  Connecté : Mon profil · Découvrir · Mes rencontres · Déconnexion. */
-export default function MeetNav({ active }: { active?: 'profil' | 'questionnaire' | 'decouverte' | 'messages' }) {
+export default function MeetNav({ active }: { active?: 'profil' | 'questionnaire' | 'decouverte' | 'messages' | 'miroir' }) {
   const [state, setState] = useState<State>(null)
   const [open, setOpen] = useState(false)
   const router = useRouter()
@@ -39,6 +39,7 @@ export default function MeetNav({ active }: { active?: 'profil' | 'questionnaire
   const authedLinks = (
     <>
       <Link href="/sos-meet/profil" className={linkCls(active === 'profil')} style={linkStyle(active === 'profil')}>Mon profil</Link>
+      <Link href="/sos-meet/miroir" className={linkCls(active === 'miroir')} style={linkStyle(active === 'miroir')}>Mon miroir</Link>
       <Link href="/sos-meet/decouverte" className={linkCls(active === 'decouverte')} style={linkStyle(active === 'decouverte')}>Découvrir</Link>
       <Link href="/sos-meet/messages" className={linkCls(active === 'messages')} style={linkStyle(active === 'messages')}>Mes rencontres</Link>
       <button onClick={logout} className="text-[12.5px] tracking-[0.08em] opacity-70 hover:opacity-100" style={{ color: C.smoke }}>Déconnexion</button>

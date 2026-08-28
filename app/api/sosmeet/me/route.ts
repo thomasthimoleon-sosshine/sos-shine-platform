@@ -11,6 +11,8 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { buildPortrait, publicSincerity } from '@/lib/sosmeet/portrait'
+import { buildMirror } from '@/lib/sosmeet/mirror'
+import { nextPalier, depth } from '@/lib/sosmeet/paliers'
 
 const GENDERS = ['femme', 'homme', 'non-binaire', 'autre']
 const SEEKING = ['femmes', 'hommes', 'tout']
@@ -46,9 +48,14 @@ export async function GET() {
 
   // Aperçu « ce que les autres voient » : portrait généré + sincérité publique.
   let preview: { prose: string; sincerity: ReturnType<typeof publicSincerity> } | null = null
+  let mirror: ReturnType<typeof buildMirror> | null = null
+  let deepen: { next: ReturnType<typeof nextPalier>; depth: number } | null = null
   if (data?.completed && data?.answers) {
-    const p = buildPortrait(data.answers as Record<string, number>, data.first_name || '', data.gender)
+    const ans = data.answers as Record<string, number>
+    const p = buildPortrait(ans, data.first_name || '', data.gender)
     preview = { prose: p.prose, sincerity: publicSincerity(data.scores?.sincerity) }
+    mirror = buildMirror(ans)
+    deepen = { next: nextPalier(ans), depth: depth(ans) }
   }
 
   // Photo : URL signée pour l'aperçu par le propriétaire uniquement.
@@ -78,6 +85,8 @@ export async function GET() {
     profile: data ? { ...data, photoUrl } : null,
     protocols,
     preview,
+    mirror,
+    deepen,
     infosDone: !!(data && data.first_name && data.birthdate && data.gender && data.age_confirmed),
   })
 }

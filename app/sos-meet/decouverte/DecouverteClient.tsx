@@ -81,8 +81,9 @@ export default function DecouverteClient() {
       <div className="pointer-events-none fixed inset-0" style={{ background: 'radial-gradient(110% 45% at 50% -8%, rgba(155,27,46,0.14), transparent 55%)' }} />
       <MeetNav active="decouverte" />
       <div className="relative max-w-5xl mx-auto px-5 sm:px-8 py-8">
-        <h1 className="mb-2" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(2rem,5.5vw,3.2rem)' }}>Celles et ceux qui te correspondent</h1>
-        <p className="text-[15px] mb-10" style={{ color: C.smoke }}>Le visage reste voilé, l’émotionnel d’abord. Quand l’intérêt devient réciproque, il se dévoile.</p>
+        <span className="text-[11px] tracking-[0.34em] uppercase" style={{ color: C.ember }}>Tes présentations</span>
+        <h1 className="mt-3 mb-2" style={{ ...serif, fontWeight: 400, fontSize: 'clamp(2rem,5.5vw,3.2rem)' }}>Quelques rencontres, choisies pour toi</h1>
+        <p className="text-[15px] mb-10" style={{ color: C.smoke }}>Pas un défilement sans fin : peu de profils, mais justes. Le visage reste voilé, l’émotionnel d’abord, et il se dévoile quand l’intérêt devient réciproque.</p>
 
         {list.length === 0 ? (
           <div className="text-center py-20" style={{ color: C.smoke }}>

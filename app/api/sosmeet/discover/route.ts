@@ -98,6 +98,7 @@ export async function GET() {
     })
   }
 
+  // La rencontre rare : on présente peu de profils, choisis, plutôt qu'un flux infini.
   out.sort((a, b) => b.ranked - a.ranked)
-  return NextResponse.json({ candidates: out.slice(0, 24) })
+  return NextResponse.json({ candidates: out.slice(0, 8) })
 }

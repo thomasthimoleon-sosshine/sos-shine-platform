@@ -12,7 +12,8 @@ const C = {
 const serif = { fontFamily: 'var(--sm-serif), Georgia, serif' }
 const sans = { fontFamily: 'var(--sm-sans), system-ui, sans-serif' }
 
-type Match = { matchId: string; other: { userId: string; firstName: string; age: number | null; city: string | null; headline: string | null; photoUrl: string | null }; lastMessage: { body: string; fromMe: boolean; at: string } | null }
+type Icebreaker = { commonGround: string | null; question: string }
+type Match = { matchId: string; other: { userId: string; firstName: string; age: number | null; city: string | null; headline: string | null; photoUrl: string | null }; lastMessage: { body: string; fromMe: boolean; at: string } | null; icebreaker?: Icebreaker }
 type Msg = { id: string; body: string; fromMe: boolean; at: string }
 
 export default function MessagesClient() {
@@ -103,6 +104,20 @@ export default function MessagesClient() {
 
           <div className="flex-1 overflow-y-auto py-5 flex flex-col gap-2.5">
             <div className="text-center text-[12px] mb-3" style={{ color: C.smoke2 }}>Vous vous êtes trouvés. Le visage s’est dévoilé. À vous d’écrire la suite.</div>
+
+            {/* Amorce de conversation consciente, tant que rien n'a été dit */}
+            {msgs.length === 0 && active.icebreaker && (
+              <div className="mx-auto max-w-[92%] rounded-2xl p-5 mb-2 text-center" style={{ background: C.card, border: `1px solid ${C.line}` }}>
+                {active.icebreaker.commonGround && (
+                  <p className="text-[12.5px] mb-2" style={{ color: C.ember }}>✦ {active.icebreaker.commonGround}</p>
+                )}
+                <p className="text-[15px] leading-relaxed" style={{ ...serif, color: C.alabaster }}>« {active.icebreaker.question} »</p>
+                <button onClick={() => setText(active.icebreaker!.question)} className="mt-3 text-[11.5px] tracking-[0.08em] uppercase px-4 py-2 rounded-full" style={{ border: `1px solid ${C.line}`, color: C.smoke }}>
+                  Commencer par là
+                </button>
+              </div>
+            )}
+
             {msgs.map((m) => (
               <div key={m.id} className="max-w-[78%] px-4 py-2.5 rounded-2xl text-[14.5px]" style={{
                 alignSelf: m.fromMe ? 'flex-end' : 'flex-start',

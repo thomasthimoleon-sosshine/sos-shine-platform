@@ -97,6 +97,7 @@ export async function GET() {
       portrait: portrait.sections,
       wants: portrait.wants,
       sincerity: sincPublic,
+      protocols: Array.isArray(c.scores?.protocols) ? c.scores.protocols.slice(0, 4) : [],
     })
   }
 

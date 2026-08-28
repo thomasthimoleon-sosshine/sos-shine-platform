@@ -4,6 +4,14 @@ import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import MeetNav from '../MeetNav'
 
+type Preview = {
+  narrative: string
+  sections: { title: string; body: string }[]
+  wants: string | null
+  sincerity: { label: string; tone: 'high' | 'medium' | 'low'; note: string }
+}
+const SINC_COLOR: Record<Preview['sincerity']['tone'], string> = { high: '#F2EBE4', medium: '#A99A96', low: '#C1121F' }
+
 // Charte SOS Meet
 const C = {
   ink: '#0A090B', velvet: '#120E11', card: '#151016', line: 'rgba(242,235,228,0.12)',
@@ -38,6 +46,7 @@ export default function ProfilClient() {
   const [photoUrl, setPhotoUrl] = useState<string | null>(null)
   const [photoBusy, setPhotoBusy] = useState(false)
   const [protocols, setProtocols] = useState<{ title: string }[]>([])
+  const [preview, setPreview] = useState<Preview | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -53,6 +62,7 @@ export default function ProfilClient() {
           setAgeOk(!!p.age_confirmed); setSensitive(!!p.sensitive_consent); setPhotoUrl(p.photoUrl || null)
         }
         setProtocols(Array.isArray(d.protocols) ? d.protocols : [])
+        setPreview(d.preview || null)
         setLoading(false)
       })
       .catch(() => { setAuthed(false); setLoading(false) })
@@ -163,6 +173,38 @@ export default function ProfilClient() {
             <p className="text-[13.5px] leading-relaxed" style={{ color: C.smoke }}>
               {protocols.length} protocole{protocols.length > 1 ? 's' : ''} traversé{protocols.length > 1 ? 's' : ''} sur SOS Shine, <span style={{ color: C.alabaster }}>{protocols.map((p) => p.title).join(' · ')}</span>. Ce travail apparaîtra sur ton profil.
             </p>
+          </div>
+        )}
+
+        {/* Aperçu, ce que les autres découvriront de toi (généré, non modifiable) */}
+        {preview && (
+          <div className="mb-9 p-6 rounded-2xl" style={{ background: C.velvet, border: `1px solid ${C.line}` }}>
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[11px] tracking-[0.28em] uppercase" style={{ color: C.ember }}>Ce que les autres voient</span>
+              <span className="inline-flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full"
+                title={preview.sincerity.note}
+                style={{ color: SINC_COLOR[preview.sincerity.tone], background: 'rgba(255,255,255,0.04)', border: `1px solid ${SINC_COLOR[preview.sincerity.tone]}44` }}>
+                {preview.sincerity.tone === 'high' ? '✓' : preview.sincerity.tone === 'medium' ? '◐' : '⚠'} {preview.sincerity.label}
+              </span>
+            </div>
+            <p className="text-[16px] leading-relaxed" style={{ ...serif, color: C.alabaster }}>{preview.narrative}</p>
+            {preview.sections.length > 0 && (
+              <div className="mt-4 pt-4 flex flex-col gap-2.5" style={{ borderTop: `1px solid ${C.line}` }}>
+                {preview.sections.map((s, i) => (
+                  <div key={i}>
+                    <div className="text-[10px] tracking-[0.24em] uppercase" style={{ color: C.smoke2 }}>{s.title}</div>
+                    <p className="text-[13px] leading-relaxed" style={{ color: C.smoke }}>{s.body}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+            <p className="mt-4 text-[12px] italic" style={{ color: C.smoke2 }}>Ce portrait s’écrit tout seul à partir de tes réponses, et s’approfondit à mesure que tu avances. Tu ne peux pas le retoucher, c’est ce qui le rend vrai.</p>
+          </div>
+        )}
+        {!preview && (
+          <div className="mb-9 p-5 rounded-2xl text-[13px] leading-relaxed" style={{ background: C.velvet, border: `1px solid ${C.line}`, color: C.smoke }}>
+            <span className="text-[11px] tracking-[0.28em] uppercase block mb-2" style={{ color: C.ember }}>Ce que les autres verront</span>
+            Ton portrait s’écrira tout seul à partir de tes réponses au questionnaire, personne ne se met en scène ici. Termine-le pour découvrir l’aperçu, et ta sincérité qui s’affiche en transparence.
           </div>
         )}
 

@@ -22,29 +22,30 @@ const BASE: Answers = { q1: 32, q131: 0, q134: 0, q127: 0, q140: 4, q148: 0, q13
 
 type Persona = {
   slug: string; first_name: string; gender: string; seeking: string[]
-  city: string; birthYear: number; headline: string; a: Answers
+  city: string; birthYear: number; headline: string; a: Answers; protocols?: string[]
 }
 
 const PERSONAS: Persona[] = [
-  { slug: 'lea', first_name: 'Léa', gender: 'femme', seeking: ['hommes'], city: 'Paris', birthYear: 1993, headline: 'Je cherche du vrai, pas du bruit.', a: { ...BASE, q1: 31, q87: 3, q88: 3, q149: 0, q144: 0 } },
-  { slug: 'chloe', first_name: 'Chloé', gender: 'femme', seeking: ['tout'], city: 'Lyon', birthYear: 1990, headline: 'Douce le jour, intense la nuit.', a: { ...BASE, q1: 34, q95: 4, q96: 2, q116: 3, q120: 1 } },
-  { slug: 'ines', first_name: 'Inès', gender: 'femme', seeking: ['hommes'], city: 'Bordeaux', birthYear: 1996, headline: 'Le silence à deux, c’est déjà beaucoup.', a: { ...BASE, q1: 28, q83: 1, q168: 2, q127: 1, q140: 3 } },
-  { slug: 'marie', first_name: 'Marie', gender: 'femme', seeking: ['femmes', 'hommes'], city: 'Paris', birthYear: 1988, headline: 'J’ai fait le travail. Je suis prête.', a: { ...BASE, q1: 37, q140: 4, q144: 0, q149: 0, q88: 3 } },
-  { slug: 'sarah', first_name: 'Sarah', gender: 'femme', seeking: ['hommes'], city: 'Autre', birthYear: 1994, headline: 'Curieuse de tout, exigeante sur l’essentiel.', a: { ...BASE, q1: 30, q116: 3, q125: 1, q166: 1, q168: 2 } },
-  { slug: 'thomas-d', first_name: 'Thomas', gender: 'homme', seeking: ['femmes'], city: 'Paris', birthYear: 1989, headline: 'Présent, entier, sans jeu.', a: { ...BASE, q1: 36, q87: 3, q88: 2, q83: 0, q140: 4 } },
-  { slug: 'julien', first_name: 'Julien', gender: 'homme', seeking: ['femmes'], city: 'Lyon', birthYear: 1992, headline: 'La tendresse est un courage.', a: { ...BASE, q1: 33, q95: 3, q96: 1, q149: 0, q144: 0 } },
-  { slug: 'adam', first_name: 'Adam', gender: 'homme', seeking: ['tout'], city: 'Bordeaux', birthYear: 1995, headline: 'On construit ou on ne commence pas.', a: { ...BASE, q1: 29, q131: 0, q140: 4, q168: 1, q127: 0 } },
-  { slug: 'nathan', first_name: 'Nathan', gender: 'homme', seeking: ['femmes'], city: 'Paris', birthYear: 1987, headline: 'Libre, mais fidèle à ce qui compte.', a: { ...BASE, q1: 38, q133: 1, q105: 1, q116: 2, q120: 1 } },
-  { slug: 'gabriel', first_name: 'Gabriel', gender: 'homme', seeking: ['hommes'], city: 'Autre', birthYear: 1991, headline: 'Deux présences valent mille promesses.', a: { ...BASE, q1: 35, q87: 2, q88: 3, q149: 0, q168: 1 } },
+  { slug: 'lea', first_name: 'Léa', gender: 'femme', seeking: ['hommes'], city: 'Paris', birthYear: 1993, headline: '', a: { ...BASE, q1: 31, q87: 3, q88: 3, q149: 0, q144: 0 }, protocols: ['La peur de l’abandon', 'La dépendance affective'] },
+  { slug: 'chloe', first_name: 'Chloé', gender: 'femme', seeking: ['tout'], city: 'Lyon', birthYear: 1990, headline: '', a: { ...BASE, q1: 34, q95: 4, q96: 2, q116: 3, q120: 1 } },
+  { slug: 'ines', first_name: 'Inès', gender: 'femme', seeking: ['hommes'], city: 'Bordeaux', birthYear: 1996, headline: '', a: { ...BASE, q1: 28, q83: 1, q168: 2, q127: 1, q140: 3 }, protocols: ['Le manque de confiance'] },
+  { slug: 'marie', first_name: 'Marie', gender: 'femme', seeking: ['femmes', 'hommes'], city: 'Paris', birthYear: 1988, headline: '', a: { ...BASE, q1: 37, q140: 4, q144: 0, q149: 0, q88: 3 }, protocols: ['La peur de l’abandon', 'La reconstruction après rupture', 'Le pardon'] },
+  { slug: 'sarah', first_name: 'Sarah', gender: 'femme', seeking: ['hommes'], city: 'Autre', birthYear: 1994, headline: '', a: { ...BASE, q1: 30, q116: 3, q125: 1, q166: 1, q168: 2 } },
+  { slug: 'thomas-d', first_name: 'Thomas', gender: 'homme', seeking: ['femmes'], city: 'Paris', birthYear: 1989, headline: '', a: { ...BASE, q1: 36, q87: 3, q88: 2, q83: 0, q140: 4 }, protocols: ['La dépendance affective', 'La confiance en soi'] },
+  { slug: 'julien', first_name: 'Julien', gender: 'homme', seeking: ['femmes'], city: 'Lyon', birthYear: 1992, headline: '', a: { ...BASE, q1: 33, q95: 3, q96: 1, q149: 0, q144: 0 } },
+  { slug: 'adam', first_name: 'Adam', gender: 'homme', seeking: ['tout'], city: 'Bordeaux', birthYear: 1995, headline: '', a: { ...BASE, q1: 29, q131: 0, q140: 4, q168: 1, q127: 0 }, protocols: ['La reconstruction après rupture'] },
+  { slug: 'nathan', first_name: 'Nathan', gender: 'homme', seeking: ['femmes'], city: 'Paris', birthYear: 1987, headline: '', a: { ...BASE, q1: 38, q133: 1, q105: 1, q116: 2, q120: 1 }, protocols: ['Le deuil', 'La peur de l’engagement'] },
+  { slug: 'gabriel', first_name: 'Gabriel', gender: 'homme', seeking: ['hommes'], city: 'Autre', birthYear: 1991, headline: '', a: { ...BASE, q1: 35, q87: 2, q88: 3, q149: 0, q168: 1 } },
 ]
 
 function birthdate(year: number): string { return `${year}-06-15` }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function buildScores(a: Answers): any {
+function buildScores(a: Answers, protocols?: string[]): any {
   const p = computeProfile(a)
   const s = computeSincerity(a)
-  return { dimensions: p.dimensions, filters: p.filters, answered: p.answered, sincerity: s }
+  // `protocols` : « Chemin accompli » de démo (les vrais viennent de user_progress).
+  return { dimensions: p.dimensions, filters: p.filters, answered: p.answered, sincerity: s, protocols: protocols || [] }
 }
 
 export async function POST(request: Request) {
@@ -83,7 +84,7 @@ export async function POST(request: Request) {
     await (admin as any).from('sosmeet_profiles').upsert({
       email, user_id: userId, first_name: p.first_name, birthdate: birthdate(p.birthYear),
       gender: p.gender, seeking: p.seeking, city: p.city, headline: p.headline,
-      answers: p.a, scores: buildScores(p.a),
+      answers: p.a, scores: buildScores(p.a, p.protocols),
       age_confirmed: true, is_visible: true, completed: true, sensitive_consent: true,
     }, { onConflict: 'email' })
 

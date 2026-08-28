@@ -101,7 +101,7 @@ function buildNarrative(answers: Answers, firstName: string, gender: Gender): st
 
   const middle = clauses.slice(0, 3)
   const tail = [...middle, value].filter(Boolean)
-  if (tail.length === 0) return `${firstName} se dévoile à travers ses réponses, sans mise en scène.`
+  if (tail.length === 0) return `${firstName} se dévoile peu à peu, dans la vérité de ses réponses, sans rien mettre en scène.`
   return `${firstName} est ${noun}${adjPart}, ${tail.join(', ')}.`
 }
 

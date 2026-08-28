@@ -10,6 +10,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { buildPortrait, publicSincerity } from '@/lib/sosmeet/portrait'
 
 const GENDERS = ['femme', 'homme', 'non-binaire', 'autre']
 const SEEKING = ['femmes', 'hommes', 'tout']
@@ -39,9 +40,16 @@ export async function GET() {
 
   const { data } = await (admin as any)
     .from('sosmeet_profiles')
-    .select('first_name, birthdate, gender, seeking, city, headline, age_confirmed, sensitive_consent, completed, photo_path')
+    .select('first_name, birthdate, gender, seeking, city, headline, age_confirmed, sensitive_consent, completed, photo_path, answers, scores')
     .eq('user_id', user.id)
     .maybeSingle()
+
+  // Aperçu « ce que les autres voient » : portrait généré + sincérité publique.
+  let preview: { narrative: string; sections: { title: string; body: string }[]; wants: string | null; sincerity: ReturnType<typeof publicSincerity> } | null = null
+  if (data?.completed && data?.answers) {
+    const p = buildPortrait(data.answers as Record<string, number>, data.first_name || '', data.gender)
+    preview = { narrative: p.narrative, sections: p.sections, wants: p.wants, sincerity: publicSincerity(data.scores?.sincerity) }
+  }
 
   // Photo : URL signée pour l'aperçu par le propriétaire uniquement.
   let photoUrl: string | null = null
@@ -69,6 +77,7 @@ export async function GET() {
     email: user.email,
     profile: data ? { ...data, photoUrl } : null,
     protocols,
+    preview,
     infosDone: !!(data && data.first_name && data.birthdate && data.gender && data.age_confirmed),
   })
 }

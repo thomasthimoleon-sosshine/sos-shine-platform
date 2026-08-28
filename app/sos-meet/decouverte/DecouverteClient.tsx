@@ -18,9 +18,11 @@ type Candidate = {
   userId: string; firstName: string; age: number | null; city: string | null
   score: number; reasons: string[]; coherent: boolean
   narrative: string; signature: string; portrait: PortraitSection[]; wants: string | null; sincerity: Sincerity
+  protocols: string[]
 }
 
-const SINC_COLOR: Record<Sincerity['tone'], string> = { high: '#7FB08A', medium: '#C9A961', low: '#C1121F' }
+// Couleurs charte SOS Meet (pas d'or ni de vert) : clair = sûr, fumé = neutre, braise = à confirmer.
+const SINC_COLOR: Record<Sincerity['tone'], string> = { high: '#F2EBE4', medium: '#A99A96', low: '#C1121F' }
 
 export default function DecouverteClient() {
   const [phase, setPhase] = useState<'loading' | 'auth' | 'incomplete' | 'ready'>('loading')
@@ -133,6 +135,18 @@ export default function DecouverteClient() {
                     <p className="text-[12.5px] leading-relaxed mt-3 pt-3" style={{ color: C.smoke, borderTop: `1px solid ${C.line}` }}>
                       <span style={{ color: C.ember }}>Recherche · </span>{c.wants}
                     </p>
+                  )}
+
+                  {/* Chemin accompli, protocoles SOS Shine traversés */}
+                  {c.protocols?.length > 0 && (
+                    <div className="mt-3">
+                      <div className="text-[10px] tracking-[0.24em] uppercase mb-1.5" style={{ color: C.ember }}>✦ Chemin accompli</div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {c.protocols.map((p, i) => (
+                          <span key={i} className="text-[11px] px-2.5 py-1 rounded-full" style={{ background: 'rgba(155,27,46,0.12)', color: C.alabaster, border: '1px solid rgba(155,27,46,0.3)' }}>{p}</span>
+                        ))}
+                      </div>
+                    </div>
                   )}
 
                   {c.reasons.length > 0 && (

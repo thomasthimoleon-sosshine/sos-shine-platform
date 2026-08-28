@@ -114,11 +114,11 @@ export default function DecouverteClient() {
                     <span aria-hidden>{c.sincerity.tone === 'high' ? '✓' : c.sincerity.tone === 'medium' ? '◐' : '⚠'}</span>{c.sincerity.label}
                   </div>
 
-                  {/* Portrait généré : un seul texte fluide, en paragraphes */}
+                  {/* Portrait généré : un seul texte fluide, en paragraphes (corps en sans, lisible) */}
                   {c.prose && (
                     <div className="mt-3 flex flex-col gap-3">
                       {c.prose.split('\n\n').map((para, i) => (
-                        <p key={i} className="text-[14px] leading-relaxed" style={{ ...serif, color: C.alabaster, opacity: 0.92 }}>{para}</p>
+                        <p key={i} className="text-[14.5px]" style={{ ...sans, color: C.alabaster, opacity: 0.9, lineHeight: 1.7 }}>{para}</p>
                       ))}
                     </div>
                   )}

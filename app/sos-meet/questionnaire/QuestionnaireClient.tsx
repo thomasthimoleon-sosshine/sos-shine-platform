@@ -46,11 +46,26 @@ export default function QuestionnaireClient({ palier = 'essentiel' }: { palier?:
 
   useEffect(() => { shownAt.current = typeof performance !== 'undefined' ? performance.now() : Date.now() }, [idx, phase])
 
+  // Sauvegarde silencieuse à chaque réponse : on ne perd plus rien au rafraîchissement.
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  function autosave(nextA: Record<string, number>, nextT: Record<string, number>) {
+    if (saveTimer.current) clearTimeout(saveTimer.current)
+    saveTimer.current = setTimeout(() => {
+      fetch('/api/sosmeet/questionnaire', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ answers: nextA, timings: nextT, palier, partial: true }),
+      }).catch(() => {})
+    }, 400)
+  }
+
   function record(qid: string, value: number) {
     const now = typeof performance !== 'undefined' ? performance.now() : Date.now()
     const ms = Math.max(0, Math.round(now - shownAt.current))
-    setTimings((t) => ({ ...t, [qid]: ms }))
-    setAnswers((a) => ({ ...a, [qid]: value }))
+    const nextT = { ...timings, [qid]: ms }
+    const nextA = { ...answers, [qid]: value }
+    setTimings(nextT)
+    setAnswers(nextA)
+    autosave(nextA, nextT)
   }
 
   function next() { if (idx < total - 1) setIdx(idx + 1); else finish() }

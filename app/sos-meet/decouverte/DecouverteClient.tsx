@@ -17,7 +17,7 @@ type Sincerity = { label: string; tone: 'high' | 'medium' | 'low'; note: string 
 type Candidate = {
   userId: string; firstName: string; age: number | null; city: string | null
   score: number; reasons: string[]; coherent: boolean
-  signature: string; portrait: PortraitSection[]; wants: string | null; sincerity: Sincerity
+  narrative: string; signature: string; portrait: PortraitSection[]; wants: string | null; sincerity: Sincerity
 }
 
 const SINC_COLOR: Record<Sincerity['tone'], string> = { high: '#7FB08A', medium: '#C9A961', low: '#C1121F' }
@@ -114,12 +114,12 @@ export default function DecouverteClient() {
                     <span aria-hidden>{c.sincerity.tone === 'high' ? '✓' : c.sincerity.tone === 'medium' ? '◐' : '⚠'}</span>{c.sincerity.label}
                   </div>
 
-                  {/* Accroche générée (aucune saisie libre) */}
-                  {c.signature && <p className="text-[13.5px] mt-3 italic" style={{ ...serif, color: C.smoke }}>{c.signature}</p>}
+                  {/* Portrait narratif généré (aucune saisie libre) */}
+                  {c.narrative && <p className="text-[14.5px] leading-relaxed mt-3" style={{ ...serif, color: C.alabaster }}>{c.narrative}</p>}
 
-                  {/* Portrait généré, section par section */}
+                  {/* Le détail, section par section */}
                   {c.portrait?.length > 0 && (
-                    <div className="mt-3 flex flex-col gap-2.5">
+                    <div className="mt-4 pt-3 flex flex-col gap-2.5" style={{ borderTop: `1px solid ${C.line}` }}>
                       {c.portrait.map((s, i) => (
                         <div key={i}>
                           <div className="text-[10px] tracking-[0.24em] uppercase" style={{ color: C.smoke2 }}>{s.title}</div>

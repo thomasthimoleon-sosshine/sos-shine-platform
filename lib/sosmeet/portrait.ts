@@ -16,10 +16,13 @@ import type { SincerityResult } from './coherence'
 
 export type PortraitSection = { title: string; body: string }
 export type Portrait = {
+  narrative: string            // le portrait en une phrase fluide (généré)
   signature: string            // une ligne d'accroche générée
   sections: PortraitSection[]  // le portrait, section par section
   wants: string | null         // ce qu'elle/il cherche chez l'autre
 }
+
+export type Gender = 'femme' | 'homme' | string | null | undefined
 export type PublicSincerity = {
   label: string
   tone: 'high' | 'medium' | 'low'
@@ -53,12 +56,62 @@ export function publicSincerity(s?: SincerityResult | null): PublicSincerity {
   return { label: 'Cohérence à confirmer', tone: 'low', note: 'Quelques réponses semblent se contredire, à explorer ensemble.' }
 }
 
+/** Accord des adjectifs selon le genre : femme → +e, homme → rien, autre → ·e. */
+function agree(gender: Gender, base: string): string {
+  if (gender === 'homme') return base
+  if (gender === 'femme') return base + 'e'
+  return base + '·e'
+}
+
+/**
+ * Portrait NARRATIF en une phrase fluide, façon « Marina est une femme
+ * attentionnée, qui désire encore des enfants… pour qui la loyauté ne se
+ * négocie pas ». S'enrichit à mesure que la personne répond aux paliers.
+ */
+function buildNarrative(answers: Answers, firstName: string, gender: Gender): string {
+  const noun = gender === 'femme' ? 'une femme' : gender === 'homme' ? 'un homme' : 'une personne'
+
+  // 1) Adjectifs d'ouverture (0 à 2), selon l'attachement / le contrôle / la loyauté
+  const adj: string[] = []
+  const a83 = answers.q83
+  if (a83 === 0) adj.push(agree(gender, 'posé') + ' et sécure')
+  else if (a83 === 1) adj.push('sensible') // invariable
+  else if (a83 === 2) adj.push(agree(gender, 'indépendant'))
+  if (answers.q125 != null && answers.q125 <= 1) adj.push(agree(gender, 'loyal'))
+  else if (answers.q95 != null && answers.q95 >= 2 && adj.length < 2) adj.push(agree(gender, 'apaisé'))
+  const adjPart = adj.length ? ' ' + adj.slice(0, 2).join(', ') : ''
+
+  // 2) Clauses « qui … » selon les réponses (on garde les plus parlantes)
+  const clauses: string[] = []
+  const kids = answers.q131
+  if (kids === 0) clauses.push('qui désire encore fonder une famille')
+  else if (kids === 2 || kids === 4) clauses.push('qui ne cherche pas à (re)fonder de famille')
+  const sorties = answers.q21
+  if (sorties != null && sorties >= 3) clauses.push('qui aime les soirées tranquilles')
+  else if (sorties != null && sorties <= 1) clauses.push('qui aime sortir et voir du monde')
+  if (answers.q166 != null && answers.q166 <= 1) clauses.push('qui avance sur un vrai chemin intérieur')
+  if (answers.q96 === 0 || answers.q96 === 3) clauses.push('pour qui l’intimité compte vraiment')
+
+  // 3) La valeur non négociable (une seule, la plus forte)
+  let value = ''
+  if (answers.q125 === 0) value = 'pour qui la loyauté ne se négocie pas'
+  else if (answers.q104 === 0) value = 'pour qui la fidélité est sacrée'
+  else if (answers.q149 === 0) value = 'pour qui le partage du chemin intérieur est essentiel'
+  else if (answers.q140 != null && answers.q140 >= 3) value = agree(gender, 'prêt') + ' à s’engager pour de vrai'
+
+  const middle = clauses.slice(0, 3)
+  const tail = [...middle, value].filter(Boolean)
+  if (tail.length === 0) return `${firstName} se dévoile à travers ses réponses, sans mise en scène.`
+  return `${firstName} est ${noun}${adjPart}, ${tail.join(', ')}.`
+}
+
 /**
  * Construit le portrait à partir des réponses.
  * @param answers  { qid: index | nombre }
  * @param firstName sujet des phrases (sinon « Cette personne »)
+ * @param gender    pour l'accord des adjectifs du portrait narratif
  */
-export function buildPortrait(answers: Answers, firstName?: string): Portrait {
+export function buildPortrait(answers: Answers, firstName?: string, gender?: Gender): Portrait {
   const who = (firstName && firstName.trim()) || 'Cette personne'
 
   // ── Ce qu'iel cherche (intentions / engagement) ──
@@ -114,7 +167,7 @@ export function buildPortrait(answers: Answers, firstName?: string): Portrait {
     pick(answers, 'q131', { 0: '. Un projet d’enfants fait partie des envies', 2: '. Ne souhaite pas (ou plus) d’enfants' }),
   ]) || null
 
-  return { signature: buildSignature(answers), sections, wants }
+  return { narrative: buildNarrative(answers, who, gender), signature: buildSignature(answers), sections, wants }
 }
 
 /** Une ligne d'accroche, dérivée des traits dominants (sans genre). */

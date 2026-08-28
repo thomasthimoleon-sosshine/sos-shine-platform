@@ -80,7 +80,7 @@ export async function GET() {
 
     // Portrait ENTIÈREMENT généré depuis les réponses (aucune saisie libre) +
     // sincérité affichée en transparence.
-    const portrait = buildPortrait((c.answers || {}) as Record<string, number>, c.first_name || '')
+    const portrait = buildPortrait((c.answers || {}) as Record<string, number>, c.first_name || '', c.gender)
     const sincPublic = publicSincerity(c.scores?.sincerity)
 
     out.push({
@@ -92,6 +92,7 @@ export async function GET() {
       ranked,
       reasons: compat.reasons,
       coherent: !!c.scores?.sincerity?.coherent,
+      narrative: portrait.narrative,
       signature: portrait.signature,
       portrait: portrait.sections,
       wants: portrait.wants,

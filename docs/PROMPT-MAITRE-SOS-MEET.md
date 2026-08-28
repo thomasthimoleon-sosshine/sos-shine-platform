@@ -239,6 +239,9 @@ app/sos-meet/couple/ (page + CoupleClient)             # porte couple (concept +
 app/api/sosmeet/{waitlist,me,questionnaire,photo,discover,interest,matches,messages,safety,profile,admin,dev-seed}/route.ts
 app/admin/sosmeet/page.tsx   # console admin (À ENRICHIR : modération)
 lib/sosmeet/
+  portrait.ts                # PORTRAIT généré du profil solo (narratif + sections + sincérité
+                             #   publique) — 100% dérivé des réponses, AUCUNE saisie libre. À
+                             #   enrichir avec chaque nouveau palier de questions.
   essentiel.ts               # banque de questions Essentiel + métadonnées
   matching.ts                # computeProfile + compatibility
   coherence.ts               # computeSincerity + règles + désirabilité

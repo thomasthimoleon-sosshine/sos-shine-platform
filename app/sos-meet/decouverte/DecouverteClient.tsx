@@ -118,7 +118,7 @@ export default function DecouverteClient() {
                   {c.prose && (
                     <div className="mt-3 flex flex-col gap-3">
                       {c.prose.split('\n\n').map((para, i) => (
-                        <p key={i} className="text-[14.5px]" style={{ ...sans, color: C.alabaster, opacity: 0.9, lineHeight: 1.7 }}>{para}</p>
+                        <p key={i} className="text-[15px]" style={{ ...sans, color: '#CBC1B8', lineHeight: 1.78 }}>{para}</p>
                       ))}
                     </div>
                   )}

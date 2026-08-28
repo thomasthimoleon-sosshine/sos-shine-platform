@@ -187,7 +187,7 @@ export default function ProfilClient() {
             </div>
             <div className="flex flex-col gap-3">
               {preview.prose.split('\n\n').map((para, i) => (
-                <p key={i} className="text-[15px]" style={{ ...sans, color: C.alabaster, opacity: 0.92, lineHeight: 1.7 }}>{para}</p>
+                <p key={i} className="text-[15px]" style={{ ...sans, color: '#CBC1B8', lineHeight: 1.78 }}>{para}</p>
               ))}
             </div>
             <p className="mt-4 text-[12px] italic" style={{ color: C.smoke2 }}>Ce portrait s’écrit tout seul à partir de tes réponses, et s’approfondit à mesure que tu avances. Tu ne peux pas le retoucher, c’est ce qui le rend vrai.</p>

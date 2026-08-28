@@ -11,7 +11,12 @@
  */
 import type { Answers } from './matching'
 
-export type MirrorSchema = { title: string; body: string; protocol?: string }
+export type MirrorSchema = {
+  title: string
+  body: string
+  keywords: string[]                          // pour retrouver un VRAI protocole publié
+  protocol?: { title: string; slug: string }  // résolu côté serveur si un protocole existe
+}
 export type Mirror = {
   intro: string
   forces: string[]
@@ -38,37 +43,37 @@ export function buildMirror(answers: Answers): Mirror {
   if (a.q87 === 0 || a.q87 === 1) schemas.push({
     title: 'La peur de l’abandon',
     body: 'Quand un lien devient sérieux, une peur d’être quitté·e peut s’activer, et te pousser à trop donner, ou à te crisper au moindre silence. La reconnaître, c’est déjà lui retirer du pouvoir.',
-    protocol: 'la peur de l’abandon',
+    keywords: ['abandon', 'peur de perdre', 'rejet'],
   })
   if (a.q88 === 0 || a.q80 === 0) schemas.push({
     title: 'La peur de perdre ta liberté',
     body: 'L’engagement peut réveiller la crainte d’être envahi·e. Tu protèges ton espace, parfois au prix de la proximité que tu désires pourtant.',
-    protocol: 'le besoin de liberté dans le couple',
+    keywords: ['liberte', 'engagement', 'fusion', 'etouff', 'independance'],
   })
   if (a.q95 != null && a.q95 <= 1) schemas.push({
     title: 'Le besoin de contrôle',
     body: 'Tu aimes maîtriser ce qui t’entoure. Dans le lien, lâcher prise et faire confiance à l’autre demande un effort conscient, mais c’est là que la vraie intimité commence.',
-    protocol: 'le besoin de contrôle',
+    keywords: ['controle', 'lacher prise', 'maitrise', 'perfection'],
   })
   if (a.q83 === 1) schemas.push({
     title: 'Un attachement plutôt anxieux',
     body: 'Tu peux avoir besoin de réassurance ; les silences de l’autre pèsent plus lourd qu’ils ne le devraient. Ce n’est pas un défaut, c’est une sensibilité à apprivoiser.',
-    protocol: 'l’attachement anxieux',
+    keywords: ['anxieu', 'dependance affective', 'insecurite', 'attachement', 'jalousie'],
   })
   if (a.q83 === 2) schemas.push({
     title: 'Un attachement plutôt évitant',
     body: 'Quand ça se rapproche trop, une part de toi peut vouloir reprendre de la distance. Comprendre ce réflexe, c’est pouvoir choisir la proximité au lieu de la fuir.',
-    protocol: 'l’attachement évitant',
+    keywords: ['evitant', 'evitement', 'fuite', 'distance', 'attachement', 'engagement'],
   })
   if (a.q120 === 2) schemas.push({
     title: 'Un passé encore ouvert',
     body: 'Une histoire précédente n’est pas tout à fait refermée ; elle peut colorer tes prochaines rencontres sans que tu t’en rendes compte.',
-    protocol: 'le deuil amoureux',
+    keywords: ['deuil', 'rupture', 'oublier', 'passe', 'ex'],
   })
   if (a.q116 === 0) schemas.push({
     title: 'Des blessures encore vives',
     body: 'Certaines blessures influencent encore ta façon d’entrer en lien. Les reconnaître, ici, c’est le premier pas pour ne plus les rejouer.',
-    protocol: 'les blessures relationnelles',
+    keywords: ['blessure', 'confiance en soi', 'estime', 'trahison'],
   })
 
   const top = schemas.slice(0, 3)

@@ -12,7 +12,7 @@ const C = {
 const serif = { fontFamily: 'var(--sm-serif), Georgia, serif' }
 const sans = { fontFamily: 'var(--sm-sans), system-ui, sans-serif' }
 
-type Schema = { title: string; body: string; protocol?: string }
+type Schema = { title: string; body: string; protocol?: { title: string; slug: string } }
 type Mirror = { intro: string; forces: string[]; schemas: Schema[]; edge: string | null }
 type Next = { id: string; title: string; tagline: string; minutes: number; sensitive: boolean } | null
 type Deepen = { next: Next; depth: number } | null
@@ -94,9 +94,9 @@ export default function MiroirClient() {
                   <h3 className="mb-2" style={{ ...serif, fontWeight: 500, fontSize: '1.3rem', color: C.alabaster }}>{s.title}</h3>
                   <p className="text-[14.5px] mb-4" style={{ ...sans, color: C.body, lineHeight: 1.7 }}>{s.body}</p>
                   {s.protocol && (
-                    <Link href="/encyclopedie" className="inline-flex items-center gap-2 text-[12.5px] tracking-[0.08em] px-4 py-2.5 rounded-full" style={{ border: `1px solid ${C.line}`, color: C.alabaster }}>
-                      Traverser {s.protocol} sur SOS Shine <span aria-hidden>→</span>
-                    </Link>
+                    <a href={`/encyclopedie/${s.protocol.slug}`} className="inline-flex items-center gap-2 text-[12.5px] tracking-[0.08em] px-4 py-2.5 rounded-full" style={{ border: `1px solid ${C.line}`, color: C.alabaster }}>
+                      Le protocole « {s.protocol.title} » sur SOS Shine <span aria-hidden>→</span>
+                    </a>
                   )}
                 </div>
               ))}

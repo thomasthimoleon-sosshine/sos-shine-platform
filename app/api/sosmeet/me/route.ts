@@ -56,6 +56,17 @@ export async function GET() {
     preview = { prose: p.prose, sincerity: publicSincerity(data.scores?.sincerity) }
     mirror = buildMirror(ans)
     deepen = { next: nextPalier(ans), depth: depth(ans) }
+
+    // Ne recommander que des protocoles RÉELLEMENT publiés (douleurs actives).
+    if (mirror.schemas.length) {
+      const norm = (s: string) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      const { data: douleurs } = await (admin as any).from('douleurs').select('slug, title').eq('is_active', true)
+      const pub = (douleurs || []).map((d: any) => ({ slug: d.slug as string, title: d.title as string, n: norm(d.title || '') }))
+      for (const s of mirror.schemas) {
+        const hit = pub.find((d: any) => d.slug && s.keywords.some((k) => d.n.includes(norm(k))))
+        if (hit) s.protocol = { title: hit.title, slug: hit.slug }
+      }
+    }
   }
 
   // Photo : URL signée pour l'aperçu par le propriétaire uniquement.

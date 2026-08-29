@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import ShineIcon, { type ShineIconName } from '@/components/icons/ShineIcon'
 import { getFavorites } from '@/components/FavoriteButton'
+import PublicationsSauvegardees from '@/components/favoris/PublicationsSauvegardees'
 
 /**
  * ─────────────────────────────────────────────────────────────────────────────
@@ -30,6 +31,8 @@ type Item = {
   title: string
   subtitle: string
   href: string
+  /** Publications seulement : ouvre le feed des enregistrées au lieu de naviguer. */
+  postId?: string
   image: string | null
   savedAt: string | null
 }
@@ -62,10 +65,52 @@ function extract(content: string, max = 110) {
   return clean.length > max ? clean.slice(0, max) + '…' : clean
 }
 
+/**
+ * L'enveloppe d'une carte. Une vidéo, un protocole ou une lecture vivent dans
+ * leur propre section : on y va. Une publication enregistrée, elle, s'ouvre
+ * sur place — la ramener au mur de la communauté lui ferait perdre sa
+ * sélection au moment même où elle veut la lire.
+ */
+function Carte({
+  item,
+  onOuvrir,
+  children,
+}: {
+  item: Item
+  onOuvrir: (postId: string) => void
+  children: React.ReactNode
+}) {
+  const habillage = `group block w-full text-left relative rounded-xl overflow-hidden transition-all duration-300
+                     hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(0,0,0,0.5)]
+                     focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand)]`
+  const bordure = { border: '1px solid var(--border)' }
+
+  if (item.postId) {
+    return (
+      <button
+        type="button"
+        onClick={() => onOuvrir(item.postId!)}
+        title={item.subtitle || item.title}
+        className={habillage + ' cursor-pointer'}
+        style={bordure}
+      >
+        {children}
+      </button>
+    )
+  }
+
+  return (
+    <Link href={item.href} title={item.subtitle || item.title} className={habillage} style={bordure}>
+      {children}
+    </Link>
+  )
+}
+
 export default function FavorisPage() {
   const [items, setItems] = useState<Item[]>([])
   const [active, setActive] = useState<Cat | 'all'>('all')
   const [loading, setLoading] = useState(true)
+  const [publicationOuverte, setPublicationOuverte] = useState<string | null>(null)
 
   const load = useCallback(async () => {
     const supabase = createClient()
@@ -108,7 +153,9 @@ export default function FavorisPage() {
           id: `c-${p.id}`, cat: 'publications' as Cat,
           title: p.title || 'Publication',
           subtitle: extract(p.content || ''),
-          href: `/dashboard/mur?post=${p.id}`,
+          // Les publications ne sortent pas des favoris : elles s'ouvrent ici,
+          // dans le feed de ce que la personne a elle-même mis de côté.
+          href: '', postId: p.id,
           image: p.image_url, savedAt: when.get(p.id) || null,
         }))
       }),
@@ -216,6 +263,17 @@ export default function FavorisPage() {
 
   const shown = active === 'all' ? items : items.filter(i => i.cat === active)
 
+  if (publicationOuverte) {
+    return (
+      <div className="max-w-5xl mx-auto">
+        <PublicationsSauvegardees
+          focusId={publicationOuverte}
+          onClose={() => setPublicationOuverte(null)}
+        />
+      </div>
+    )
+  }
+
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       <h1 className="font-display text-3xl sm:text-4xl font-semibold text-[var(--text-primary)]">
@@ -302,13 +360,7 @@ export default function FavorisPage() {
                 transition={{ delay: Math.min(i * 0.03, 0.3), duration: 0.35 }}
                 className="break-inside-avoid mb-3"
               >
-                <Link
-                  href={it.href}
-                  title={it.subtitle || it.title}
-                  className="group block relative rounded-xl overflow-hidden transition-all duration-300
-                             hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(0,0,0,0.5)]"
-                  style={{ border: '1px solid var(--border)' }}
-                >
+                <Carte item={it} onOuvrir={setPublicationOuverte}>
                   {it.image ? (
                     <img
                       src={it.image}
@@ -344,7 +396,7 @@ export default function FavorisPage() {
                                  line-clamp-2 text-white">
                     {it.title}
                   </h3>
-                </Link>
+                </Carte>
               </motion.div>
             )
           })}

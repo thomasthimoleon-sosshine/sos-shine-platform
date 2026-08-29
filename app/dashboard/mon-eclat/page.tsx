@@ -83,7 +83,6 @@ export default function MonEclatPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
-  const [currentProfile, setCurrentProfile] = useState<{ prenom: string; avatar_url: string | null } | null>(null)
 
   // Create post
   const [showCreate, setShowCreate] = useState(false)
@@ -115,12 +114,6 @@ export default function MonEclatPage() {
   const [isBanned, setIsBanned] = useState(false)
   const [banUntil, setBanUntil] = useState<string | null>(null)
 
-  // Stats
-  const [totalLikes, setTotalLikes] = useState(0)
-  const [totalComments, setTotalComments] = useState(0)
-  const [shinesGiven, setShinesGiven] = useState(0)
-  const [commentsLeft, setCommentsLeft] = useState(0)
-
   const menuRef = useRef<HTMLDivElement>(null)
 
   /* ── Load posts ── */
@@ -146,20 +139,11 @@ export default function MonEclatPage() {
         .single()
 
       if (profile) {
-        setCurrentProfile({ prenom: profile.prenom, avatar_url: profile.avatar_url })
         if (profile.publish_banned_until && new Date(profile.publish_banned_until) > new Date()) {
           setIsBanned(true)
           setBanUntil(profile.publish_banned_until)
         }
       }
-
-      // Load shines given (from user_xp) and comments left (from post_comments)
-      const [xpRes, commentsLeftRes] = await Promise.all([
-        supabase.from('user_xp').select('shines_given').eq('user_id', user.id).maybeSingle(),
-        supabase.from('post_comments').select('id', { count: 'exact', head: true }).eq('author_id', user.id),
-      ])
-      setShinesGiven(xpRes.data?.shines_given || 0)
-      setCommentsLeft(commentsLeftRes.count || 0)
 
       // Load user's eclat posts
       const { data: rawPostsData, error: queryError } = await supabase
@@ -193,12 +177,9 @@ export default function MonEclatPage() {
         .in('post_id', postIds)
       const likeCounts = (likeData || []) as { post_id: string }[]
       const likeCountMap = new Map<string, number>()
-      let totalL = 0
       for (const l of likeCounts) {
         likeCountMap.set(l.post_id, (likeCountMap.get(l.post_id) || 0) + 1)
-        totalL++
       }
-      setTotalLikes(totalL)
 
       // Load comment counts
       const { data: commentData } = await supabase
@@ -207,12 +188,9 @@ export default function MonEclatPage() {
         .in('post_id', postIds)
       const commentCounts = (commentData || []) as { post_id: string }[]
       const commentCountMap = new Map<string, number>()
-      let totalC = 0
       for (const c of commentCounts) {
         commentCountMap.set(c.post_id, (commentCountMap.get(c.post_id) || 0) + 1)
-        totalC++
       }
-      setTotalComments(totalC)
 
       // User likes
       const { data: userLikeData } = await supabase
@@ -452,59 +430,6 @@ export default function MonEclatPage() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
-      {/* ── Header with shine theme ── */}
-      <div className="rounded-2xl p-6 sm:p-8 text-center relative overflow-hidden"
-        style={{ background: 'linear-gradient(135deg, rgba(201,169,97,0.08), rgba(201,169,97,0.02))', border: '1px solid rgba(201,169,97,0.15)' }}>
-        {/* Decorative glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 rounded-full blur-3xl opacity-20"
-          style={{ background: 'var(--brand)' }} />
-
-        {/* Avatar */}
-        {currentProfile?.avatar_url ? (
-          <img src={currentProfile.avatar_url} alt="" className="w-20 h-20 rounded-2xl object-cover mx-auto mb-4 ring-2 ring-[var(--brand)]/20" />
-        ) : (
-          <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl font-display font-semibold ring-2 ring-[var(--brand)]/20"
-            style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}>
-            {currentProfile?.prenom?.charAt(0).toUpperCase() || '?'}
-          </div>
-        )}
-
-        <h1 className="font-display text-3xl sm:text-4xl font-semibold relative text-[var(--brand)]">
-          {t('dashboard.eclat_title')}
-        </h1>
-        <p className="mt-2 text-sm max-w-md mx-auto relative text-[var(--text-secondary)]">
-          {t('dashboard.eclat_subtitle')}
-        </p>
-
-        {/* Stats */}
-        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 mt-5 relative">
-          <div className="text-center">
-            <p className="text-xl font-semibold text-[var(--brand)]">{posts.length}</p>
-            <p className="text-[11px] text-[var(--text-muted)]">publications</p>
-          </div>
-          <div className="w-px h-8 bg-[var(--border)]" />
-          <div className="text-center">
-            <p className="text-xl font-semibold text-[var(--brand)]">{shinesGiven}</p>
-            <p className="text-[11px] text-[var(--text-muted)]">soutiens envoyés</p>
-          </div>
-          <div className="w-px h-8 bg-[var(--border)]" />
-          <div className="text-center">
-            <p className="text-xl font-semibold text-[var(--brand)]">{totalLikes}</p>
-            <p className="text-[11px] text-[var(--text-muted)]">soutiens reçus</p>
-          </div>
-          <div className="w-px h-8 bg-[var(--border)]" />
-          <div className="text-center">
-            <p className="text-xl font-semibold text-[var(--brand)]">{commentsLeft}</p>
-            <p className="text-[11px] text-[var(--text-muted)]">commentaires laissés</p>
-          </div>
-          <div className="w-px h-8 bg-[var(--border)]" />
-          <div className="text-center">
-            <p className="text-xl font-semibold text-[var(--brand)]">{totalComments}</p>
-            <p className="text-[11px] text-[var(--text-muted)]">commentaires reçus</p>
-          </div>
-        </div>
-      </div>
-
       {/* ── Publish button ── */}
       <div className="flex justify-end">
         {isBanned ? (

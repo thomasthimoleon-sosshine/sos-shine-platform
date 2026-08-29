@@ -418,12 +418,6 @@ export default function DashboardHome() {
     loadSettings()
   }, [])
 
-  // Cible du CTA principal. Sans protocole résolu, on ne devine pas : on
-  // propose la signature émotionnelle, qui en désignera un.
-  const protocolHref = protocole
-    ? `/dashboard/encyclopedie/${protocole.slug}`
-    : CHEMIN_SIGNATURE
-
   // Recherche encyclopédie : simple navigation (aucune logique métier ajoutée).
   function handleSearch(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -451,14 +445,19 @@ export default function DashboardHome() {
             {greeting}
           </p>
         )}
-        {/* CTA principal unique, très visible */}
-        <Link
-          href={protocolHref}
-          className="mt-6 inline-flex items-center gap-2 px-7 py-4 rounded-full text-[15px] font-semibold transition-all hover:scale-[1.03]"
-          style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000' }}
-        >
-          Continuer mon protocole du jour →
-        </Link>
+        {/* CTA principal unique, très visible. Sans protocole à reprendre, il
+            disparaît : il promettait « continuer » et menait au questionnaire,
+            et doublait le bouton de la carte « Par où commencer ? » juste en
+            dessous, qui dit la même chose au bon moment. */}
+        {protocole && (
+          <Link
+            href={`/dashboard/encyclopedie/${protocole.slug}`}
+            className="mt-6 inline-flex items-center gap-2 px-7 py-4 rounded-full text-[15px] font-semibold transition-all hover:scale-[1.03]"
+            style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#000000' }}
+          >
+            Continuer mon protocole du jour →
+          </Link>
+        )}
         {/* Série en cours. L'activation des notifications a rejoint Mon compte,
             à côté du réglage de ce qu'on souhaite recevoir. */}
         {streak.current > 0 && (

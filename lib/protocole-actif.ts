@@ -8,9 +8,12 @@
 //
 // Ordre de priorité :
 //   1. un lien explicite (?protocol=…) — la personne a cliqué sur ce protocole
-//   2. sa signature émotionnelle, par identifiant puis par e-mail
-//   3. à défaut, l'objectif choisi à l'inscription
-//   4. rien : on l'invite à passer la signature émotionnelle, jamais un
+//   2. un protocole commencé et pas encore terminé : « continuer mon protocole
+//      du jour » ne peut désigner que celui-là. Un quiz passé il y a trois
+//      semaines ne prime pas sur un travail en cours.
+//   3. sa signature émotionnelle, par identifiant puis par e-mail
+//   4. à défaut, l'objectif choisi à l'inscription
+//   5. rien : on l'invite à passer la signature émotionnelle, jamais un
 //      protocole tiré au hasard.
 // ═══════════════════════════════════════════════════════════════
 
@@ -19,7 +22,7 @@ import { calculateMatchScores } from '@/lib/quiz-v2/scoring'
 /** Où mener quelqu'un dont on ne sait encore rien. */
 export const CHEMIN_SIGNATURE = '/signature-emotionnelle'
 
-export type OrigineProtocole = 'lien' | 'signature' | 'objectif'
+export type OrigineProtocole = 'lien' | 'progression' | 'signature' | 'objectif'
 
 export type ProtocoleActif = {
   /** Slug du protocole, ou null si la personne n'a encore rien exprimé. */
@@ -55,11 +58,14 @@ export async function resoudreProtocoleActif(
   const { data: { user } } = await supabase.auth.getUser()
 
   const [{ data: douleurs }, { data: protocoles }] = await Promise.all([
-    supabase.from('douleurs').select('slug').eq('is_published', true),
+    supabase.from('douleurs').select('id, slug').eq('is_published', true),
     supabase.from('protocols').select('slug, dimension_weights').eq('status', 'available'),
   ])
 
-  const publiés = new Set<string>((douleurs || []).map((d: { slug: string }) => d.slug))
+  const parDouleur = new Map<string, string>(
+    (douleurs || []).map((d: { id: string; slug: string }) => [d.id, d.slug]),
+  )
+  const publiés = new Set<string>(parDouleur.values())
   const accessible = (slug?: string | null): slug is string => !!slug && publiés.has(slug)
 
   /** Le protocole dont les poids collent le mieux à la signature. */
@@ -77,7 +83,28 @@ export async function resoudreProtocoleActif(
     return { slug: slugLien, origine: 'lien', titreObjectif: null }
   }
 
-  // 2. La signature émotionnelle — par identifiant, puis par e-mail (le quiz
+  // 2. Un protocole commencé et pas terminé. C'est le plus fort des signaux :
+  //    la personne y a déjà posé des étapes. Le tableau de bord renvoyait vers
+  //    la signature émotionnelle alors qu'un protocole était en cours.
+  if (user?.id) {
+    const { data: avancement } = await supabase
+      .from('user_progress')
+      .select('douleur_id, completed_at, updated_at')
+      .eq('user_id', user.id)
+      .is('completed_at', null)
+      .order('updated_at', { ascending: false })
+      // Départage deux protocoles touchés dans la même seconde : sans cela
+      // l'ordre change d'un chargement à l'autre, et le protocole affiché avec.
+      .order('douleur_id', { ascending: true })
+      .limit(20)
+
+    for (const ligne of (avancement || []) as { douleur_id: string }[]) {
+      const slug = parDouleur.get(ligne.douleur_id)
+      if (slug) return { slug, origine: 'progression', titreObjectif: null }
+    }
+  }
+
+  // 3. La signature émotionnelle — par identifiant, puis par e-mail (le quiz
   //    peut avoir été passé avant l'inscription).
   function lireSignature(reponse: ReponseQuiz | undefined): string | null {
     if (!reponse) return null
@@ -100,7 +127,7 @@ export async function resoudreProtocoleActif(
     if (slug) return { slug, origine: 'signature', titreObjectif: null }
   }
 
-  // 3. À défaut, l'objectif choisi à l'inscription. On départage les objectifs
+  // 4. À défaut, l'objectif choisi à l'inscription. On départage les objectifs
   //    cochés d'un même geste par leur identifiant : sinon l'ordre change d'un
   //    chargement à l'autre, et le protocole affiché avec.
   if (user?.id) {
@@ -121,7 +148,7 @@ export async function resoudreProtocoleActif(
     }
   }
 
-  // 4. Le slug mémorisé avant l'inscription, s'il vaut encore quelque chose.
+  // 5. Le slug mémorisé avant l'inscription, s'il vaut encore quelque chose.
   if (accessible(slugRepli)) {
     return { slug: slugRepli, origine: 'signature', titreObjectif: null }
   }

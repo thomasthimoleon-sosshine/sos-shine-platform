@@ -377,6 +377,7 @@ export const translations: Record<string, string> = {
   'dashboard.photo_hint': 'JPG, PNG. Max 10 Mo.',
   'dashboard.encyclopedia_subtitle': 'Chaque thème a sa page dédiée. Trouvez le vôtre, accédez à votre protocole en 3 étapes.',
   'dashboard.search_thème': 'Rechercher un thème...',
+  'dashboard.search_challenge': 'Rechercher un thème...',
   'dashboard.no_thème_found': 'Aucun thème trouvé pour "{search}"',
   'dashboard.new_thèmes_coming': 'De nouveaux épreuves sont ajoutés régulièrement.',
   'dashboard.coming_soon': 'Bientôt',

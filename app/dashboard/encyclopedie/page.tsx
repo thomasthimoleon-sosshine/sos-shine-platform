@@ -574,6 +574,15 @@ export default function EncyclopediePage() {
                 const todo = grouped[letter].filter(
                   t => !!t.dbMatch && !progressMap[t.dbMatch.id]?.completed_at
                 ).length
+                const termines = grouped[letter].filter(
+                  t => !!t.dbMatch && !!progressMap[t.dbMatch.id]?.completed_at
+                ).length
+                /* Les deux etats portent la meme pastille, a la meme taille :
+                   le nombre de sujets disponibles se lisait a peine a cote de
+                   « a faire », alors qu'il repond a la meme question. La
+                   couleur seule les distingue — l'or appelle a agir, l'ivoire
+                   informe. */
+                const pastille = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11.5px] font-medium'
                 return (
                   <div className="flex items-center gap-4 mb-4">
                     <h2 className="font-display text-4xl font-light text-[var(--brand)]" style={{ opacity: 0.8, lineHeight: 1 }}>
@@ -582,7 +591,7 @@ export default function EncyclopediePage() {
                     <div className="flex items-center gap-2 shrink-0">
                       {todo > 0 ? (
                         <>
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11.5px] font-medium"
+                          <span className={pastille}
                             style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.25)' }}>
                             <b className="tabular-nums">{todo}</b> à faire
                           </span>
@@ -594,8 +603,17 @@ export default function EncyclopediePage() {
                           )}
                         </>
                       ) : (
-                        <span className="text-[11.5px] text-[var(--text-muted)] tabular-nums">
-                          {total} sujet{total > 1 ? 's' : ''}
+                        <span className={pastille}
+                          style={{ background: 'rgba(245,239,227,0.05)', color: 'var(--text-secondary)', border: '1px solid var(--border-medium)' }}>
+                          {/* La coche n'apparait que si tout est reellement
+                              termine — un sujet pas encore ouvert ne compte ni
+                              comme « a faire », ni comme fait. */}
+                          {termines === total && total > 0 && (
+                            <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="var(--success)" strokeWidth={2} aria-hidden="true">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                          )}
+                          <b className="tabular-nums">{total}</b> sujet{total > 1 ? 's' : ''}
                         </span>
                       )}
                     </div>

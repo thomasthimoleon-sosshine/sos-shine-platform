@@ -42,6 +42,7 @@ function pickQuizQuestions<T extends { id: string }>(pool: T[], n: number, exclu
   return shuffle(picked)
 }
 import FavoriteButton from '@/components/FavoriteButton'
+import ShineIcon, { type ShineIconName } from '@/components/icons/ShineIcon'
 
 type StepConfig = {
   num: number
@@ -125,10 +126,10 @@ function buildSteps(douleur: Douleur, dynamicSteps: DouleurStep[]): StepConfig[]
 
 // En-tête d'outil : sépare visuellement chaque ressource d'une étape
 // (vidéo, séance audio, cahier…) pour qu'aucune ne passe inaperçue.
-function ToolHeader({ icon, label, color }: { icon: string; label: string; color: string }) {
+function ToolHeader({ icon, label, color }: { icon: ShineIconName; label: string; color: string }) {
   return (
     <div className="flex items-center gap-2.5 pt-3">
-      <span className="text-base flex-shrink-0" aria-hidden="true">{icon}</span>
+      <span className="flex-shrink-0" aria-hidden="true" style={{ color }}><ShineIcon name={icon} className="w-4 h-4" /></span>
       <span className="text-[11px] font-semibold uppercase tracking-[0.12em] flex-shrink-0" style={{ color }}>
         {label}
       </span>
@@ -698,7 +699,7 @@ export default function DouleurDetailPage() {
         }}>
           <div className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center"
             style={{ background: 'rgba(201,169,97,0.1)', border: '1px solid rgba(201,169,97,0.2)' }}>
-            <span className="text-3xl">💛</span>
+            <span style={{ color: 'var(--brand)' }}><ShineIcon name="relationships" className="w-8 h-8" /></span>
           </div>
 
           <h2 className="font-display text-xl sm:text-2xl font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
@@ -940,7 +941,7 @@ export default function DouleurDetailPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             ) : (
-              <span className="text-lg">📝</span>
+              <span style={{ color: 'var(--brand)' }}><ShineIcon name="texte" className="w-5 h-5" /></span>
             )}
             <span>Bilan</span>
         </button>
@@ -1065,7 +1066,7 @@ export default function DouleurDetailPage() {
 
           return (
             <div className="space-y-4">
-              {currentStep.video && <ToolHeader icon="🎬" label={currentStep.videoTitle || "Vidéo de coaching"} color={currentStep.color} />}
+              {currentStep.video && <ToolHeader icon="video" label={currentStep.videoTitle || "Vidéo de coaching"} color={currentStep.color} />}
               {currentStep.video && (
                 isPreviewMode
                   ? <PreviewVideo src={currentStep.video} poster={currentStep.video_cover || currentStep.image || undefined} label={currentStep.title} />
@@ -1084,7 +1085,7 @@ export default function DouleurDetailPage() {
               )}
 
               {/* Secondary video (optional) */}
-              {currentStep.video2 && <ToolHeader icon="🎬" label={currentStep.video2Title || "Vidéo complémentaire"} color={currentStep.color} />}
+              {currentStep.video2 && <ToolHeader icon="video" label={currentStep.video2Title || "Vidéo complémentaire"} color={currentStep.color} />}
               {currentStep.video2 && (
                 isPreviewMode
                   ? <PreviewVideo src={currentStep.video2} poster={currentStep.video2_cover || undefined} label={currentStep.title} />
@@ -1109,7 +1110,7 @@ export default function DouleurDetailPage() {
                 </div>
               )}
 
-              {currentStep.audio && currentStep.num !== 3 && <ToolHeader icon="🎧" label={currentStep.audioTitle || "Séance audio guidée"} color={currentStep.color} />}
+              {currentStep.audio && currentStep.num !== 3 && <ToolHeader icon="audio" label={currentStep.audioTitle || "Séance audio guidée"} color={currentStep.color} />}
               {currentStep.audio && currentStep.num !== 3 && (
                 isPreviewMode ? (() => {
                   function PreviewAudio({ src, title }: { src: string; title: string }) {
@@ -1129,7 +1130,7 @@ export default function DouleurDetailPage() {
                     return (
                       <div className="rounded-xl p-4 space-y-3" style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(201,169,97,0.15)' }}>
                         <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.12)' }}>
-                          <span className="text-lg flex-shrink-0 mt-0.5">🎧</span>
+                          <span className="flex-shrink-0 mt-0.5" style={{ color: 'var(--brand)' }}><ShineIcon name="audio" className="w-5 h-5" /></span>
                           <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
                             Avant de lancer cet audio, installez-vous confortablement dans un endroit calme et détendu. Mettez votre casque audio, respirez profondément et laissez-vous guider en toute sérénité.
                           </p>
@@ -1156,7 +1157,7 @@ export default function DouleurDetailPage() {
                   )}
                   <div className="p-4 space-y-3">
                     <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.12)' }}>
-                      <span className="text-lg flex-shrink-0 mt-0.5">🎧</span>
+                      <span className="flex-shrink-0 mt-0.5" style={{ color: 'var(--brand)' }}><ShineIcon name="audio" className="w-5 h-5" /></span>
                       <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
                         Avant de lancer cet audio, installez-vous confortablement dans un endroit calme et détendu. Mettez votre casque audio, respirez profondément et laissez-vous guider en toute sérénité.
                       </p>
@@ -1167,7 +1168,7 @@ export default function DouleurDetailPage() {
                 )
               )}
 
-              {currentStep.audio2 && !isPreviewMode && currentStep.num !== 3 && <ToolHeader icon="🎧" label={currentStep.audio2Title || "Séance audio complémentaire"} color={currentStep.color} />}
+              {currentStep.audio2 && !isPreviewMode && currentStep.num !== 3 && <ToolHeader icon="audio" label={currentStep.audio2Title || "Séance audio complémentaire"} color={currentStep.color} />}
               {currentStep.audio2 && !isPreviewMode && currentStep.num !== 3 && (
                 <div className="rounded-xl overflow-hidden" style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${currentStep.color}20` }}>
                   {currentStep.audio2_cover && (
@@ -1175,7 +1176,7 @@ export default function DouleurDetailPage() {
                   )}
                   <div className="p-4 space-y-3">
                     <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.12)' }}>
-                      <span className="text-lg flex-shrink-0 mt-0.5">🎧</span>
+                      <span className="flex-shrink-0 mt-0.5" style={{ color: 'var(--brand)' }}><ShineIcon name="audio" className="w-5 h-5" /></span>
                       <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
                         Avant de lancer cet audio, installez-vous confortablement dans un endroit calme et détendu. Mettez votre casque audio, respirez profondément et laissez-vous guider en toute sérénité.
                       </p>
@@ -1185,7 +1186,7 @@ export default function DouleurDetailPage() {
                 </div>
               )}
 
-              {currentStep.pdf && <ToolHeader icon="📓" label={currentStep.pdfTitle || "Cahier de travail"} color={currentStep.color} />}
+              {currentStep.pdf && <ToolHeader icon="journal" label={currentStep.pdfTitle || "Cahier de travail"} color={currentStep.color} />}
               {currentStep.pdf && (
                 isPreviewMode ? (
                   <div className="flex items-center gap-3 p-4 rounded-xl cursor-pointer" onClick={() => window.location.href = isFreeUser ? '/dashboard/tarifs' : '/signup'}
@@ -1318,8 +1319,8 @@ export default function DouleurDetailPage() {
       {activeStep === quizStepNum && (
         <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'rgba(201,169,97,0.04)', border: '1px solid rgba(201,169,97,0.15)' }}>
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl" style={{ background: 'rgba(201,169,97,0.12)' }}>
-              📝
+            <div className="w-14 h-14 rounded-xl flex items-center justify-center" style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}>
+              <ShineIcon name="texte" className="w-7 h-7" />
             </div>
             <div>
               <span className="text-xs font-medium block" style={{ color: '#C9A961', opacity: 0.7 }}>
@@ -1338,7 +1339,7 @@ export default function DouleurDetailPage() {
 
           {!hasQuiz ? (
             <div className="rounded-xl p-8 text-center" style={{ background: 'rgba(0,0,0,0.2)', border: '1px dashed rgba(201,169,97,0.3)' }}>
-              <div className="text-4xl mb-3">📝</div>
+              <div className="mb-3 flex justify-center" style={{ color: 'var(--brand)' }}><ShineIcon name="texte" className="w-9 h-9" /></div>
               <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
                 Quiz en préparation
               </h3>
@@ -1550,8 +1551,8 @@ export default function DouleurDetailPage() {
           border: '1px solid rgba(255, 107, 53, 0.15)',
         }}
       >
-        <div className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 text-2xl transition-transform group-hover:scale-110" style={{ background: 'rgba(255, 107, 53, 0.12)' }}>
-          🔥
+        <div className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 transition-transform group-hover:scale-110" style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}>
+          <ShineIcon name="resilience" className="w-7 h-7" />
         </div>
         <h3 className="font-display text-lg font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
           Accéder au Feu de Camp - {douleur.title}
@@ -1580,7 +1581,7 @@ export default function DouleurDetailPage() {
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="font-semibold text-sm tracking-wide uppercase" style={{ color: 'var(--brand)' }}>
-                    🎬 Shine TV ({relatedTvVideos.length})
+                    <ShineIcon name="video" className="w-4 h-4 inline-block align-[-2px] mr-1.5" />Shine TV ({relatedTvVideos.length})
                   </h4>
                   {!unlocked && (
                     <span className="text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(201,169,97,0.08)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.2)' }}>
@@ -1632,7 +1633,7 @@ export default function DouleurDetailPage() {
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="font-semibold text-sm tracking-wide uppercase" style={{ color: 'var(--brand)' }}>
-                    📱 Shine Shorts ({relatedShorts.length})
+                    <ShineIcon name="shorts" className="w-4 h-4 inline-block align-[-2px] mr-1.5" />Shine Shorts ({relatedShorts.length})
                   </h4>
                   {!unlocked && (
                     <span className="text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(201,169,97,0.08)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.2)' }}>
@@ -1682,7 +1683,7 @@ export default function DouleurDetailPage() {
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="font-semibold text-sm tracking-wide uppercase" style={{ color: 'var(--brand)' }}>
-                    🎧 Shine Audible ({relatedAudible.length})
+                    <ShineIcon name="audio" className="w-4 h-4 inline-block align-[-2px] mr-1.5" />Shine Audible ({relatedAudible.length})
                   </h4>
                   {!unlocked && (
                     <span className="text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(201,169,97,0.08)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.2)' }}>
@@ -1734,7 +1735,7 @@ export default function DouleurDetailPage() {
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="font-semibold text-sm tracking-wide uppercase" style={{ color: 'var(--brand)' }}>
-                    📚 Shine Librairie ({relatedBooks.length})
+                    <ShineIcon name="livre" className="w-4 h-4 inline-block align-[-2px] mr-1.5" />Shine Librairie ({relatedBooks.length})
                   </h4>
                   {!unlocked && (
                     <span className="text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(201,169,97,0.08)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.2)' }}>

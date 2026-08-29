@@ -88,8 +88,14 @@
 
   /* ---------- HERO ---------- */
   .hero{position:relative;text-align:center;padding:96px 0 70px;overflow:hidden}
+  /* Le halo mesurait 900 px de haut dans une section qui le rogne (overflow:hidden).
+     Il dépassait de 93 px en haut sur ordinateur, 232 px sur mobile : son arc
+     supérieur était tranché net, en travers de la page. Sa hauteur suit désormais
+     celle du hero — 88 %, pour que la respiration (×1.08) tienne elle aussi dans
+     le cadre — et le rapport 1:1 garde le cercle rond quelle que soit la largeur. */
   .glow{
-    position:absolute;left:50%;top:36%;width:900px;height:900px;transform:translate(-50%,-50%);
+    position:absolute;left:50%;top:50%;height:min(900px,88%);width:auto;aspect-ratio:1;
+    transform:translate(-50%,-50%);
     background:radial-gradient(circle,rgba(201,169,97,.22) 0%,rgba(224,174,154,.12) 34%,rgba(10,8,6,0) 66%);
     pointer-events:none;z-index:0;animation:breathe 11s ease-in-out infinite;
   }

@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { blogArticles as staticArticles, BLOG_CATEGORIES } from '@/data/blog/articles'
 import type { BlogArticle } from '@/data/blog/articles'
 import { aujourdhui } from '@/lib/blog-parution'
+import ShineIcon from '@/components/icons/ShineIcon'
 
 const gold = 'var(--brand)'
 const goldRgb = '201,169,97'
@@ -333,7 +334,7 @@ export default function DashboardBlogPage() {
 
       {filteredArticles.length === 0 && (
         <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
-          <p className="text-3xl mb-3">📝</p>
+          <p className="mb-3 flex justify-center" style={{ color: 'var(--brand)' }}><ShineIcon name="texte" className="w-8 h-8" /></p>
           <p className="text-sm text-[var(--text-muted)]">Aucun article dans cette cat&eacute;gorie</p>
         </div>
       )}

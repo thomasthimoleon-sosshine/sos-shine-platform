@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
+import ShineIcon from '@/components/icons/ShineIcon'
 
 interface SosData {
   id: string
@@ -90,7 +91,7 @@ export default function DouleurSosPage() {
     return (
       <div className="max-w-xl mx-auto py-20 px-5 text-center space-y-6">
         <div className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center" style={{ background: 'rgba(255,107,107,0.12)', border: '1px solid rgba(255,107,107,0.3)' }}>
-          <span className="text-3xl">🫂</span>
+          <span style={{ color: 'var(--brand)' }}><ShineIcon name="relationships" className="w-8 h-8" /></span>
         </div>
         <h1 className="font-display text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>
           Pas de méditation SOS pour ce sujet
@@ -131,7 +132,7 @@ export default function DouleurSosPage() {
         {/* Header */}
         <div className="text-center space-y-4">
           <div className="w-20 h-20 rounded-2xl mx-auto flex items-center justify-center" style={{ background: 'rgba(255,107,107,0.12)', border: '2px solid rgba(255,107,107,0.35)' }}>
-            <span className="text-4xl">🫂</span>
+            <span style={{ color: 'var(--brand)' }}><ShineIcon name="relationships" className="w-9 h-9" /></span>
           </div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.3em]" style={{ color: '#FF6B6B' }}>
             Méditation SOS

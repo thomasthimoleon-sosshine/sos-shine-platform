@@ -8,6 +8,7 @@ import type { MessageWithProfile } from '@/types/database'
 import AudioPlayer from '@/components/AudioPlayer'
 import VoiceRecorder from '@/components/VoiceRecorder'
 import { useTranslation } from '@/lib/i18n/useTranslation'
+import ShineIcon from '@/components/icons/ShineIcon'
 
 export default function ChatGeneralPage() {
   const { t } = useTranslation()
@@ -124,7 +125,7 @@ export default function ChatGeneralPage() {
           ) : messages.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center py-16 text-center">
               <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 text-2xl" style={{ background: 'rgba(201,169,97,0.1)' }}>
-                💬
+                <ShineIcon name="parole" className="w-7 h-7" color="var(--brand)" />
               </div>
               <h3 className="font-display text-lg font-semibold mb-2 text-[var(--text-primary)]">
                 {t('dashboard.chat_empty_title')}

@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useFeatureAccess } from '@/hooks/useFeatureAccess'
 import type { Event, EventRegistration } from '@/types/database'
 import { useTranslation } from '@/lib/i18n/useTranslation'
+import ShineIcon from '@/components/icons/ShineIcon'
 
 const FOUNDERS_MAP: Record<string, { name: string; image: string }> = {
   julia: { name: 'Julia', image: '/images/julia.jpeg' },
@@ -479,7 +480,7 @@ export default function EvenementsPage() {
       ) : events.length === 0 ? (
         <div className="text-center py-16">
           <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-5 text-3xl" style={{ background: 'rgba(201,169,97,0.08)' }}>
-            📅
+            <ShineIcon name="calendrier" className="w-8 h-8" color="var(--brand)" />
           </div>
           <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
             {t('dashboard.events_empty_title')}

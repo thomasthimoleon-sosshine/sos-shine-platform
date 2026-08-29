@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import type { Challenge, ChallengeParticipation, ChallengePhase, ChallengePhaseProgress, UserGoal } from '@/types/database'
 import { XP_REWARDS } from '@/lib/xp'
 import { useTranslation } from '@/lib/i18n/useTranslation'
+import ShineIcon from '@/components/icons/ShineIcon'
 
 interface Goal {
   id: string
@@ -324,7 +325,7 @@ export default function ObjectifsPage() {
         >
           <div className="w-12 h-12 rounded-2xl mx-auto mb-3 flex items-center justify-center"
             style={{ background: 'rgba(201,169,97,0.1)' }}>
-            <span className="text-2xl">✨</span>
+            <span style={{ color: 'var(--brand)' }}><ShineIcon name="eclat" className="w-7 h-7" /></span>
           </div>
           <h3 className="font-display text-lg font-semibold mb-1 text-[var(--text-primary)]">
             Personnalisez votre parcours

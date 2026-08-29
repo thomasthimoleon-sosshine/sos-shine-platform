@@ -628,7 +628,7 @@ export default function MonEclatPage() {
         <div className="text-center py-16">
           <div className="w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-5 text-4xl"
             style={{ background: 'rgba(201,169,97,0.08)' }}>
-            ✨
+            <ShineIcon name="eclat" className="w-9 h-9" color="var(--brand)" />
           </div>
           <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
             {t('dashboard.eclat_empty_title')}

@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import type { Profile } from '@/types/database'
 import AudioPlayer from '@/components/AudioPlayer'
+import ShineIcon, { type ShineIconName } from '@/components/icons/ShineIcon'
 
 type EclatPost = {
   id: string
@@ -20,13 +21,13 @@ type EclatPost = {
   post_comments: { count: number }[]
 }
 
-const ECLAT_CATEGORIES: Record<string, { label: string; icon: string; color: string }> = {
-  temoignage: { label: 'Pensée', icon: '💭', color: '#C9A961' },
-  partage: { label: 'Partage', icon: '💫', color: '#74C0FC' },
-  gratitude: { label: 'Gratitude', icon: '✨', color: '#FFEAA7' },
-  citation: { label: 'Citation', icon: '💬', color: '#FD79A8' },
-  remerciements: { label: 'Moment de joie', icon: '🌟', color: '#55EFC4' },
-  question: { label: 'Réflexion', icon: '🔮', color: '#C9A961' },
+const ECLAT_CATEGORIES: Record<string, { label: string; icon: ShineIconName; color: string }> = {
+  temoignage: { label: 'Pensée', icon: 'temoignage', color: '#C9A961' },
+  partage: { label: 'Partage', icon: 'partage', color: '#C9A961' },
+  gratitude: { label: 'Gratitude', icon: 'gratitude', color: '#C9A961' },
+  citation: { label: 'Citation', icon: 'citation', color: '#C9A961' },
+  remerciements: { label: 'Moment de joie', icon: 'remerciements', color: '#C9A961' },
+  question: { label: 'Réflexion', icon: 'question', color: '#C9A961' },
 }
 
 export default function MembreProfilPage() {
@@ -435,7 +436,7 @@ export default function MembreProfilPage() {
       {/* Éclat - Personal Wall */}
       <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         <h3 className="font-display text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--brand)' }}>
-          <span className="text-xl">✨</span>
+          <span style={{ color: 'var(--brand)' }}><ShineIcon name="eclat" className="w-5 h-5" /></span>
           Éclat de {displayName}
         </h3>
 
@@ -454,7 +455,7 @@ export default function MembreProfilPage() {
               return (
                 <div key={post.id} className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="text-sm">{cat.icon}</span>
+                    <span style={{ color: cat.color }}><ShineIcon name={cat.icon} className="w-4 h-4" /></span>
                     <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ background: `${cat.color}15`, color: cat.color }}>
                       {cat.label}
                     </span>

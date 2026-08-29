@@ -8,6 +8,7 @@ import FeatureGate from '@/components/FeatureGate'
 import type { MessageWithProfile, Douleur } from '@/types/database'
 import AudioPlayer from '@/components/AudioPlayer'
 import VoiceRecorder from '@/components/VoiceRecorder'
+import ShineIcon from '@/components/icons/ShineIcon'
 
 export default function ChatDouleurPage() {
   const params = useParams()
@@ -124,7 +125,7 @@ export default function ChatDouleurPage() {
           <span style={{ color: 'var(--text-primary)' }}>Chat</span>
         </div>
         <h1 className="font-display text-2xl font-semibold flex items-center gap-3" style={{ color: 'var(--text-primary)' }}>
-          <span className="text-xl">🔥</span> Feu de Camp - {displayTitle}
+          <span style={{ color: 'var(--brand)' }}><ShineIcon name="resilience" className="w-5 h-5" /></span> Feu de Camp - {displayTitle}
         </h1>
         <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
           Échangez avec ceux qui traversent la même épreuve.
@@ -147,7 +148,7 @@ export default function ChatDouleurPage() {
       <div className="flex-1 rounded-2xl overflow-hidden flex flex-col min-h-0"
         style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         <div className="px-5 py-3" style={{ borderBottom: '1px solid var(--border)' }}>
-          <span className="text-sm font-medium" style={{ color: '#FF6B35' }}>🔥 {displayTitle}</span>
+          <span className="text-sm font-medium inline-flex items-center gap-1.5" style={{ color: 'var(--brand)' }}><ShineIcon name="resilience" className="w-4 h-4" /> {displayTitle}</span>
         </div>
 
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -158,7 +159,7 @@ export default function ChatDouleurPage() {
           ) : messages.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center py-16 text-center">
               <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 text-2xl" style={{ background: 'rgba(255,107,53,0.1)' }}>
-                🔥
+                <ShineIcon name="resilience" className="w-7 h-7" color="var(--brand)" />
               </div>
               <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
                 Ce feu attend d&apos;être allumé

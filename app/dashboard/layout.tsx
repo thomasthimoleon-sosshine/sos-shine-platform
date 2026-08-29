@@ -13,6 +13,7 @@ import CrisisButton from '@/components/CrisisButton'
 import ShineChatbot from '@/components/ShineChatbot'
 
 import { useTranslation } from '@/lib/i18n/useTranslation'
+import ShineIcon from '@/components/icons/ShineIcon'
 
 const navItemDefs = [
   {
@@ -598,7 +599,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <div className="relative z-10 px-6 sm:px-8 py-8 sm:py-10">
                 {/* Diamond icon */}
                 <div className="w-16 h-16 rounded-[var(--radius-xl)] mx-auto mb-5 flex items-center justify-center bg-[rgba(201, 169, 97,0.07)] border border-[#C9A961]/20">
-                  <span className="text-3xl">✨</span>
+                  <span style={{ color: 'var(--brand)' }}><ShineIcon name="eclat" className="w-8 h-8" /></span>
                 </div>
 
                 <h2 className="font-display text-xl sm:text-2xl font-semibold mb-3 text-[#C9A961]">

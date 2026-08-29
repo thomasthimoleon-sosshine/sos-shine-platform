@@ -68,6 +68,7 @@ export type ShineIconName =
   | 'astuce'
   | 'respiration'
   | 'defi'
+  | 'calendrier'
   // Emblèmes de niveaux (Étincelle → Diamant)
   | 'niveau1'
   | 'niveau2'
@@ -477,6 +478,16 @@ const PATHS: Record<ShineIconName, React.ReactNode> = {
     <>
       <circle cx="12" cy="12" r="8.5" />
       <path d="M12 8 L14 12 L12 16 L10 12 Z" />
+    </>
+  ),
+
+  /* ── Calendrier — la date, un jour marqué d'une facette. ── */
+  calendrier: (
+    <>
+      <path d="M4.5 6 h15 v14 h-15 Z" />
+      <path d="M4.5 10 h15" />
+      <path d="M8 3.5 v4" /><path d="M16 3.5 v4" />
+      <path d="M12 13 L13.4 15 L12 17 L10.6 15 Z" />
     </>
   ),
 

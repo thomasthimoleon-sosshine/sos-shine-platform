@@ -79,7 +79,7 @@ const ENCYCLOPEDIE_CATEGORIES = [
   "Développement Personnel",
   "Corps & Somatique",
   "Spiritualité & Énergie",
-  "Soins & Thérapies",
+  "Approches & Méthodes",
   "Identité & Mission",
   "Vie & Expériences",
   "Pratiques & Outils",

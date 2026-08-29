@@ -56,6 +56,18 @@ export type ShineIconName =
   | 'rayon'
   | 'garder'
   | 'diffuser'
+  // Concepts de contenu & thèmes (bibliothèque, shorts, audible)
+  | 'livre'
+  | 'guide'
+  | 'journal'
+  | 'protocole'
+  | 'deuil'
+  | 'amourpropre'
+  | 'anxiete'
+  | 'cours'
+  | 'astuce'
+  | 'respiration'
+  | 'defi'
   // Emblèmes de niveaux (Étincelle → Diamant)
   | 'niveau1'
   | 'niveau2'
@@ -373,6 +385,98 @@ const PATHS: Record<ShineIconName, React.ReactNode> = {
       <path d="M5 8.8 L8.2 12 L5 15.2 L1.8 12 Z" />
       <path d="M8.8 10.6 L14.6 7.6" />
       <path d="M8.8 13.4 L14.6 16.4" />
+    </>
+  ),
+
+  /* ── Livre — un ouvrage ouvert. ── */
+  livre: (
+    <>
+      <path d="M12 6 C 9 4.5, 5 4.5, 3.5 5.5 V18 C 5 17, 9 17, 12 18.5 C 15 17, 19 17, 20.5 18 V5.5 C 19 4.5, 15 4.5, 12 6 Z" />
+      <path d="M12 6 V18.5" />
+    </>
+  ),
+
+  /* ── Guide — un document qui montre le chemin. ── */
+  guide: (
+    <>
+      <path d="M6 3.5 h9 l4 4 V20.5 H6 Z" />
+      <path d="M15 3.5 V7.5 H19" />
+      <path d="M9 12 h7" /><path d="M9 15 h7" />
+    </>
+  ),
+
+  /* ── Journal — le carnet que l'on tient. ── */
+  journal: (
+    <>
+      <path d="M7 4 h11 v16 H7 Z" />
+      <path d="M7 4 v16" />
+      <path d="M4.5 6 h3" /><path d="M4.5 10 h3" /><path d="M4.5 14 h3" /><path d="M4.5 18 h3" />
+    </>
+  ),
+
+  /* ── Protocole — les étapes cochées, une à une. ── */
+  protocole: (
+    <>
+      <path d="M4.5 6.5 L6 8 L9 5" /><path d="M4.5 12 L6 13.5 L9 10.5" /><path d="M4.5 17.5 L6 19 L9 16" />
+      <path d="M12 6.5 h7.5" /><path d="M12 12 h7.5" /><path d="M12 17.5 h7.5" />
+    </>
+  ),
+
+  /* ── Deuil — la colombe qui s'apaise. ── */
+  deuil: (
+    <>
+      <path d="M5 15 C 5 9, 11 5, 19 5 C 19 12, 14 17, 8 17 C 8 17, 6.5 16.5 5 15 Z" />
+      <path d="M9.5 12.5 C 12 11, 14.5 9.5, 17 8" />
+    </>
+  ),
+
+  /* ── Amour de soi — le cœur et sa facette. ── */
+  amourpropre: (
+    <>
+      <path d="M12 20 C 4 14.5, 4 8, 8 7 C 10 6.5, 11.5 8, 12 9 C 12.5 8, 14 6.5, 16 7 C 20 8, 20 14.5, 12 20 Z" />
+      <path d="M12 12 L13.4 14 L12 16 L10.6 14 Z" />
+    </>
+  ),
+
+  /* ── Anxiété — l'esprit que l'on apaise. ── */
+  anxiete: (
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M7.5 13 C 9 10.5, 10.5 15.5, 12 13 C 13.5 10.5, 15 15.5, 16.5 13" />
+    </>
+  ),
+
+  /* ── Cours — apprendre, la toque. ── */
+  cours: (
+    <>
+      <path d="M12 5 L21 9 L12 13 L3 9 Z" />
+      <path d="M6.5 10.6 V15 C 6.5 15, 9 17 12 17 C 15 17, 17.5 15 17.5 15 V10.6" />
+      <path d="M21 9 V13.5" />
+    </>
+  ),
+
+  /* ── Astuce — l'idée qui s'allume. ── */
+  astuce: (
+    <>
+      <path d="M9 15 C 6.5 13.5, 6 9, 9 7 C 11 5.7, 13 5.7, 15 7 C 18 9, 17.5 13.5 15 15 Z" />
+      <path d="M9.5 15 v2 h5 v-2" />
+      <path d="M10.5 19.5 h3" />
+    </>
+  ),
+
+  /* ── Respiration — le souffle qui va et vient. ── */
+  respiration: (
+    <>
+      <path d="M3.5 9 C 8 9, 8 6, 12 6 C 15.5 6, 15.5 9.5 18.5 9.5 A 2.5 2.5 0 1 0 16 7" />
+      <path d="M3.5 15 C 9 15, 9 18, 13 18 A 2.3 2.3 0 1 0 10.7 15.7" />
+    </>
+  ),
+
+  /* ── Défi — la cible, au centre une facette. ── */
+  defi: (
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M12 8 L14 12 L12 16 L10 12 Z" />
     </>
   ),
 

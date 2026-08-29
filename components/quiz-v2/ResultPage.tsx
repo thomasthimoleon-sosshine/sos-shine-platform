@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import Link from 'next/link'
-import { DIMENSIONS, type DimensionScores } from '@/lib/quiz-v2/dimensions'
+import { type DimensionScores } from '@/lib/quiz-v2/dimensions'
 import { calculateMatchScores } from '@/lib/quiz-v2/scoring'
 import { createClient } from '@/lib/supabase/client'
 import { getArchetype, BLESSURE_COLORS } from '@/lib/quiz-v2/archetypes.legacy'
@@ -417,20 +417,12 @@ export function ResultPage({ firstName, scores, dominant, secondary, email }: Pr
               }}
             >
               <div className="p-7 pb-5">
-                <div className="flex justify-between items-start gap-4 mb-4">
-                  <h3
-                    className="text-lg font-semibold leading-snug"
-                    style={{ color: '#fff', letterSpacing: '-0.01em' }}
-                  >
-                    {topProtocol.title}
-                  </h3>
-                  <div
-                    className="w-11 h-11 rounded-xl flex items-center justify-center text-xl shrink-0"
-                    style={{ background: bc.bg, border: `1px solid ${bc.border}` }}
-                  >
-                    {DIMENSIONS[parseInt(dominant) as keyof typeof DIMENSIONS]?.icon}
-                  </div>
-                </div>
+                <h3
+                  className="text-lg font-semibold leading-snug mb-4"
+                  style={{ color: '#fff', letterSpacing: '-0.01em' }}
+                >
+                  {topProtocol.title}
+                </h3>
                 <div className="flex items-center gap-3">
                   <span
                     className="text-[9px] tracking-[0.2em] uppercase px-3 py-1.5 rounded-full font-semibold"
@@ -529,7 +521,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, email }: Pr
           <div className="flex gap-3">
             <button
               onClick={() => {
-                const text = `Je viens de découvrir ma Signature Émotionnelle sur SOS Shine. Et toi ? 👉 https://sosshine.com/signature-emotionnelle`
+                const text = `Je viens de découvrir ma Signature Émotionnelle sur SOS Shine. Et toi ? https://sosshine.com/signature-emotionnelle`
                 if (navigator.share) {
                   navigator.share({ title: 'Ma Signature Émotionnelle', text, url: 'https://sosshine.com/signature-emotionnelle' }).catch(() => {})
                 } else {
@@ -543,10 +535,10 @@ export function ResultPage({ firstName, scores, dominant, secondary, email }: Pr
                 color: 'var(--brand, #C9A961)',
               }}
             >
-              📤 Partager
+              Partager
             </button>
             <a
-              href={`https://wa.me/?text=${encodeURIComponent('Je viens de découvrir ma Signature Émotionnelle sur SOS Shine 🔥 → https://sosshine.com/signature-emotionnelle')}`}
+              href={`https://wa.me/?text=${encodeURIComponent('Je viens de découvrir ma Signature Émotionnelle sur SOS Shine → https://sosshine.com/signature-emotionnelle')}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex-1 py-3 rounded-xl text-xs font-medium text-center transition-all hover:brightness-110"
@@ -556,7 +548,7 @@ export function ResultPage({ firstName, scores, dominant, secondary, email }: Pr
                 color: '#25D366',
               }}
             >
-              💬 WhatsApp
+              WhatsApp
             </a>
           </div>
         </FadeIn>

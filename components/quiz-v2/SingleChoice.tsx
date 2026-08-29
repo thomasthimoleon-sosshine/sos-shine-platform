@@ -63,7 +63,6 @@ export function SingleChoice({
           }}
           whileTap={{ scale: 0.975, transition: { duration: 0.08 } }}
         >
-          <span className="text-base flex-shrink-0 w-7 text-center">{choice.emoji}</span>
           <span
             className="text-[15px] font-sans leading-snug flex-1"
             style={{ color: selected === i ? 'var(--text-primary)' : 'rgba(245,239,227,0.72)' }}
@@ -97,7 +96,6 @@ export function SingleChoice({
             className="flex items-center gap-3 w-full text-left cursor-pointer"
             style={{ minHeight: '48px' }}
           >
-            <span className="text-base flex-shrink-0 w-7 text-center">✍️</span>
             <span className="text-[15px] font-sans" style={{ color: 'rgba(245,239,227,0.6)' }}>
               {otherText || 'Autre chose…'}
             </span>

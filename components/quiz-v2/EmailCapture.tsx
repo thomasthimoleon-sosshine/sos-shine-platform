@@ -20,8 +20,6 @@ export function EmailCapture({ onSubmit, loading, firstName }: Props) {
       exit={{ opacity: 0, y: -20 }}
       className="max-w-lg mx-auto text-center px-6 py-16"
     >
-      <span className="text-4xl mb-6 block">✨</span>
-
       <h2 className="font-display text-2xl sm:text-3xl font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
         {firstName ? `${firstName}, ton profil est presque prêt.` : 'Ton profil est presque prêt.'}
       </h2>

@@ -45,14 +45,14 @@ export function generateEmail02(vars: Vars): { subject: string; html: string } {
     goldDivider(),
 
     // ── Signature scores ──
-    h2(`${dimInfo?.icon || '✨'} Ta Signature Émotionnelle`),
+    h2(`Ta Signature Émotionnelle`),
 
     // Dominant dimension
     `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-bottom:12px;">
 <tr><td style="padding:16px 20px;background:rgba(201,169,97,0.08);border:1px solid rgba(201,169,97,0.15);border-radius:12px;">
 <p style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:${BRAND};font-weight:600;margin:0 0 6px 0;">Dimension dominante</p>
 <p style="font-family:${SERIF};font-size:20px;color:#e0e0e0;font-weight:400;margin:0 0 8px 0;">
-${dimInfo?.icon || ''} ${dimInfo?.name || 'Dimension ' + dominant}
+${dimInfo?.name || 'Dimension ' + dominant}
 </p>
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
 <tr><td style="background:rgba(255,255,255,0.06);border-radius:99px;height:8px;width:100%;">
@@ -67,7 +67,7 @@ ${dimInfo?.icon || ''} ${dimInfo?.name || 'Dimension ' + dominant}
 <tr><td style="padding:14px 20px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;">
 <p style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:#a1a1aa;font-weight:600;margin:0 0 6px 0;">Dimension secondaire</p>
 <p style="font-size:15px;color:#d4d4d4;margin:0 0 8px 0;">
-${secInfo?.icon || ''} ${secInfo?.name || 'Dimension ' + secondary}
+${secInfo?.name || 'Dimension ' + secondary}
 </p>
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
 <tr><td style="background:rgba(255,255,255,0.06);border-radius:99px;height:6px;width:100%;">

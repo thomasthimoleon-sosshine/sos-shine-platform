@@ -9,8 +9,8 @@ import type { Profile } from '@/types/database'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 import { greetingsData, GREETINGS_PER_SLOT, type TimeSlot } from '@/data/greetingsData'
 import NpsWidget from '@/components/NpsWidget'
-import { getLevelForXP } from '@/lib/xp'
-import ShineIcon, { type ShineIconName } from '@/components/icons/ShineIcon'
+import CarteProgression from '@/components/progression/CarteProgression'
+import ShineIcon from '@/components/icons/ShineIcon'
 import type { UserXP } from '@/types/database'
 import { resoudreProtocoleActif, CHEMIN_SIGNATURE } from '@/lib/protocole-actif'
 
@@ -431,8 +431,6 @@ export default function DashboardHome() {
     router.push(q ? `/dashboard/encyclopedie?q=${encodeURIComponent(q)}` : '/dashboard/encyclopedie')
   }
 
-  // Niveau courant (déjà chargé via xpData) — affiché en version compacte.
-  const level = xpData ? getLevelForXP(xpData.total_xp) : null
 
   return (
     <div className="shine-home max-w-3xl mx-auto space-y-6">
@@ -604,20 +602,27 @@ export default function DashboardHome() {
         />
       </motion.div>
 
-      {/* ══════════ 4. AVANCÉE SIMPLE (léger) ══════════ */}
-      {(level || streak.current > 0) && (
-        <div className="glass p-4 flex items-center justify-center gap-6 text-center flex-wrap">
-          {level && (
-            <span className="flex items-center gap-2">
-              <span style={{ color: 'var(--brand)' }}><ShineIcon name={level.emblem as ShineIconName} className="w-5 h-5" /></span>
-              <span className="text-sm font-semibold text-[var(--brand)]">{level.name}</span>
-            </span>
-          )}
-          {streak.current > 0 && (
-            <span className="text-sm text-[var(--text-muted)] inline-flex items-center gap-1"><ShineIcon name="resilience" className="w-3.5 h-3.5" /> Série de {streak.current} {streak.current > 1 ? 'jours' : 'jour'}</span>
-          )}
-          <Link href="/dashboard/badges" className="text-sm font-medium text-[var(--brand)] gold-underline">Mes badges →</Link>
-        </div>
+      {/* ══════════ 4. MA PROGRESSION ══════════ */}
+      {/* La bande ne disait que le nom du niveau. La place gagnée plus haut
+          permet d'afficher la carte entière : niveau, points, et ce qu'il reste
+          à parcourir avant le palier suivant. */}
+      {xpData && (
+        <CarteProgression
+          totalXp={xpData.total_xp}
+          pied={
+            <>
+              {streak.current > 0 ? (
+                <span className="text-[12.5px] text-[var(--text-muted)] inline-flex items-center gap-1.5">
+                  <ShineIcon name="resilience" className="w-3.5 h-3.5" />
+                  Série de {streak.current} {streak.current > 1 ? 'jours' : 'jour'}
+                </span>
+              ) : <span />}
+              <Link href="/dashboard/badges" className="text-[12.5px] font-medium text-[var(--brand)] gold-underline">
+                Mes badges →
+              </Link>
+            </>
+          }
+        />
       )}
 
       {/* ══════════ 5. AFFICHER PLUS — widgets détaillés CONSERVÉS, masqués par défaut ══════════ */}

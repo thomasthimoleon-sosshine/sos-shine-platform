@@ -5,8 +5,8 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import { getAllCategories, getUserBadges, getUserActionCounters, unlockAllBadgesForUser, CATEGORY_SHINE_ICON, type CategoryConfig, type BadgeConfig } from '@/lib/badgeService'
-import ShineIcon, { type ShineIconName } from '@/components/icons/ShineIcon'
-import { getLevelForXP, getNextLevel, getLevelProgress, formatXP, LEVEL_THRESHOLDS } from '@/lib/xp'
+import ShineIcon from '@/components/icons/ShineIcon'
+import CarteProgression from '@/components/progression/CarteProgression'
 
 const ease = [0.25, 0.46, 0.45, 0.94] as const
 
@@ -129,11 +129,6 @@ export default function BadgesQuestPage() {
     )
   }
 
-  const currentLevel = getLevelForXP(totalXp)
-  const nextLevel = getNextLevel(currentLevel.level)
-  const progress = getLevelProgress(totalXp)
-  const xpToNext = nextLevel ? nextLevel.minXP - totalXp : 0
-
   const totalBadges = Object.values(categories).reduce((s, c) => s + (c as CategoryConfig).badges.length, 0)
   const unlockedCount = unlockedBadgeIds.size
 
@@ -169,62 +164,7 @@ export default function BadgesQuestPage() {
         </Link>
       </div>
 
-      {/* ── XP Level Card ── */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="rounded-2xl p-6"
-        style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
-      >
-        <div className="flex items-center gap-4 mb-4">
-          <div className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0"
-            style={{ background: 'rgba(201,169,97,0.12)', border: '2px solid rgba(201,169,97,0.3)', color: 'var(--brand)' }}>
-            <ShineIcon name={currentLevel.emblem as ShineIconName} className="w-7 h-7" />
-          </div>
-          <div className="flex-1">
-            <p className="text-[10px] tracking-[0.25em] uppercase text-[var(--text-muted)] mb-0.5">Niveau {currentLevel.level}</p>
-            <h2 className="font-display text-2xl font-light text-[var(--text-primary)]">{currentLevel.name}</h2>
-          </div>
-          <div className="text-right">
-            <p className="text-2xl font-bold" style={{ color: 'var(--brand)' }}>{formatXP(totalXp)}</p>
-            <p className="text-[11px] text-[var(--text-muted)]">points</p>
-          </div>
-        </div>
-
-        {nextLevel ? (
-          <>
-            <div className="flex justify-between text-[11px] text-[var(--text-muted)] mb-1.5">
-              <span>{currentLevel.name}</span>
-              <span className="inline-flex items-center gap-1"><ShineIcon name={nextLevel.emblem as ShineIconName} className="w-3 h-3" /> {nextLevel.name}, {formatXP(xpToNext)} points restants</span>
-            </div>
-            <div className="h-2 rounded-full overflow-hidden" style={{ background: 'var(--border)' }}>
-              <motion.div
-                className="h-full rounded-full"
-                style={{ background: 'linear-gradient(90deg, var(--brand), var(--brand-light))' }}
-                initial={{ width: 0 }}
-                animate={{ width: `${progress}%` }}
-                transition={{ duration: 0.9, ease: ease as unknown as [number, number, number, number] }}
-              />
-            </div>
-          </>
-        ) : (
-          <p className="text-sm text-center" style={{ color: 'var(--brand)' }}>Niveau maximum atteint 💠</p>
-        )}
-
-        {/* Levels overview */}
-        <div className="flex gap-1 mt-4">
-          {LEVEL_THRESHOLDS.map(lvl => (
-            <div key={lvl.level} title={`${lvl.name}, ${formatXP(lvl.minXP)} XP`}
-              className="flex-1 h-1 rounded-full transition-all"
-              style={{ background: totalXp >= lvl.minXP ? 'var(--brand)' : 'var(--border)' }}
-            />
-          ))}
-        </div>
-        <div className="flex justify-between text-[9px] text-[var(--text-muted)] mt-1">
-          <span>Étincelle ✨</span><span>Diamant 💠</span>
-        </div>
-      </motion.div>
+      <CarteProgression totalXp={totalXp} />
 
       {/* ── Quêtes ── */}
       <div>

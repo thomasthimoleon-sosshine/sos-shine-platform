@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import ReelsViewer, { type Reel } from '@/components/shorts/ReelsViewer'
+import ShineIcon, { type ShineIconName } from '@/components/icons/ShineIcon'
 
 // ── Types ──
 type ShineShort = {
@@ -26,16 +27,16 @@ type ShineShort = {
   douleurId: string | null
 }
 
-const CATEGORIES = [
-  { id: 'trending', label: 'Tendances', icon: '🔥' },
-  { id: 'cours', label: 'Cours', icon: '🎓' },
-  { id: 'astuce', label: 'Astuces rapides', icon: '💡' },
-  { id: 'exercice', label: 'Exercices', icon: '🧘' },
-  { id: 'motivation', label: 'Motivation', icon: '🔥' },
-  { id: 'temoignage', label: 'Témoignages', icon: '🗣️' },
-  { id: 'meditation', label: 'Mini-méditations', icon: '🌙' },
-  { id: 'respiration', label: 'Respirations', icon: '🌬️' },
-  { id: 'defi', label: 'Défis', icon: '⚡' },
+const CATEGORIES: { id: string; label: string; icon: ShineIconName }[] = [
+  { id: 'trending', label: 'Tendances', icon: 'eclat' },
+  { id: 'cours', label: 'Cours', icon: 'cours' },
+  { id: 'astuce', label: 'Astuces rapides', icon: 'astuce' },
+  { id: 'exercice', label: 'Exercices', icon: 'confidence' },
+  { id: 'motivation', label: 'Motivation', icon: 'resilience' },
+  { id: 'temoignage', label: 'Témoignages', icon: 'temoignage' },
+  { id: 'meditation', label: 'Mini-méditations', icon: 'meditation' },
+  { id: 'respiration', label: 'Respirations', icon: 'respiration' },
+  { id: 'defi', label: 'Défis', icon: 'defi' },
 ]
 
 // ── Stars Component ──
@@ -78,7 +79,7 @@ function StarRating({ rating, onRate, size = 'md', interactive = false }: {
 // ── Horizontal Scroll Row ──
 function ShortRow({ title, icon, shorts, onSelect }: {
   title: string
-  icon: string
+  icon: ShineIconName
   shorts: ShineShort[]
   onSelect: (s: ShineShort) => void
 }) {
@@ -110,7 +111,7 @@ function ShortRow({ title, icon, shorts, onSelect }: {
   return (
     <div className="relative group/row">
       <h2 className="text-lg font-display font-semibold mb-3 px-1 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-        <span className="text-xl">{icon}</span> {title}
+        <span style={{ color: 'var(--brand)' }}><ShineIcon name={icon} className="w-5 h-5 inline-block align-[-3px]" /></span> {title}
       </h2>
 
       {/* Left arrow */}
@@ -533,7 +534,7 @@ function VideoPlayerModal({ short, onClose, onToggleFavorite, onRate, previewSec
                 {/* Reviews list */}
                 {reviews.length === 0 ? (
                   <div className="text-center py-6">
-                    <p className="text-3xl mb-2">💬</p>
+                    <p className="mb-2 flex justify-center" style={{ color: 'var(--brand)' }}><ShineIcon name="parole" className="w-8 h-8" /></p>
                     <p className="text-[13px]" style={{ color: 'var(--text-muted)' }}>
                       Aucun avis pour le moment. Soyez le premier !
                     </p>
@@ -961,7 +962,7 @@ export default function ShineShortsPage() {
                   border: activeFilter === cat.id ? 'none' : '1px solid var(--border)',
                 }}
               >
-                {cat.icon} {cat.label}
+                <ShineIcon name={cat.icon} className="w-3.5 h-3.5 inline-block align-[-2px] mr-1" />{cat.label}
               </button>
             ))}
           </div>
@@ -977,7 +978,7 @@ export default function ShineShortsPage() {
             </p>
             {filteredShorts.length === 0 ? (
               <div className="glass p-12 text-center rounded-xl">
-                <div className="text-4xl mb-3">🔍</div>
+                <div className="mb-3 flex justify-center" style={{ color: 'var(--brand)' }}><ShineIcon name="question" className="w-9 h-9" /></div>
                 <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
                   Aucun résultat
                 </h3>
@@ -1037,7 +1038,7 @@ export default function ShineShortsPage() {
             </h2>
             {filteredShorts.length === 0 ? (
               <div className="glass p-12 text-center rounded-xl">
-                <div className="text-4xl mb-3">💜</div>
+                <div className="mb-3 flex justify-center" style={{ color: 'var(--brand)' }}><ShineIcon name="relationships" className="w-9 h-9" /></div>
                 <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
                   Aucun favori
                 </h3>
@@ -1092,7 +1093,7 @@ export default function ShineShortsPage() {
             </h2>
             {filteredShorts.length === 0 ? (
               <div className="glass p-12 text-center rounded-xl">
-                <div className="text-4xl mb-3">🎬</div>
+                <div className="mb-3 flex justify-center" style={{ color: 'var(--brand)' }}><ShineIcon name="video" className="w-9 h-9" /></div>
                 <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
                   Aucun short lié
                 </h3>
@@ -1233,7 +1234,7 @@ export default function ShineShortsPage() {
 
             {shorts.length === 0 && (
               <div className="glass p-12 text-center rounded-xl">
-                <div className="text-4xl mb-3">📱</div>
+                <div className="mb-3 flex justify-center" style={{ color: 'var(--brand)' }}><ShineIcon name="shorts" className="w-9 h-9" /></div>
                 <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
                   Bientôt disponible
                 </h3>

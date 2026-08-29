@@ -1646,7 +1646,7 @@ export default function ShineTVPage() {
             </p>
             {filteredVideos.length === 0 ? (
               <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-12 text-center rounded-xl">
-                <div className="text-4xl mb-3">🔍</div>
+                <div className="mb-3 flex justify-center" style={{ color: 'var(--brand)' }}><ShineIcon name="question" className="w-9 h-9" /></div>
                 <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
                   Aucun résultat
                 </h3>
@@ -1707,7 +1707,7 @@ export default function ShineTVPage() {
             </h2>
             {filteredVideos.length === 0 ? (
               <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-12 text-center rounded-xl">
-                <div className="text-4xl mb-3">💛</div>
+                <div className="mb-3 flex justify-center" style={{ color: 'var(--brand)' }}><ShineIcon name="relationships" className="w-9 h-9" /></div>
                 <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
                   Aucun favori
                 </h3>
@@ -1763,7 +1763,7 @@ export default function ShineTVPage() {
             </h2>
             {filteredVideos.length === 0 ? (
               <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-12 text-center rounded-xl">
-                <div className="text-4xl mb-3">📺</div>
+                <div className="mb-3 flex justify-center" style={{ color: 'var(--brand)' }}><ShineIcon name="video" className="w-9 h-9" /></div>
                 <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
                   Aucune vidéo liée
                 </h3>

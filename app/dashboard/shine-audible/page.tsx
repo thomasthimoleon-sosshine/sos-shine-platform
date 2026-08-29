@@ -324,7 +324,7 @@ function AudioRow({ title, icon, audios, onSelect, nowPlayingId }: {
                 {/* Content type badge */}
                 <span className="absolute top-2 left-2 text-[9px] font-bold uppercase px-1.5 py-0.5 rounded"
                   style={{ background: 'rgba(201,169,97,0.9)', color: '#09090b' }}>
-                  {audio.contentType === 'podcast' ? '🎙️' : audio.contentType === 'audiobook' ? '📚' : audio.contentType === 'meditation' ? '🧘' : audio.contentType === 'hypnosis' ? '🌀' : '🎵'}
+                  <ShineIcon name={audio.contentType === 'podcast' ? 'podcast' : audio.contentType === 'audiobook' ? 'audiobook' : audio.contentType === 'meditation' ? 'meditation' : audio.contentType === 'hypnosis' ? 'hypnose' : 'audio'} className="w-3 h-3" />
                 </span>
                 {/* Hover overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 flex items-center justify-center">
@@ -1239,7 +1239,7 @@ export default function ShineAudiblePage() {
             </p>
             {filteredAudios.length === 0 ? (
               <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-12 text-center rounded-xl">
-                <div className="text-4xl mb-3">🔍</div>
+                <div className="mb-3 flex justify-center" style={{ color: 'var(--brand)' }}><ShineIcon name="question" className="w-9 h-9" /></div>
                 <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
                   Aucun résultat
                 </h3>
@@ -1315,7 +1315,7 @@ export default function ShineAudiblePage() {
             </h2>
             {filteredAudios.length === 0 ? (
               <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-12 text-center rounded-xl">
-                <div className="text-4xl mb-3">🎧</div>
+                <div className="mb-3 flex justify-center" style={{ color: 'var(--brand)' }}><ShineIcon name="audio" className="w-9 h-9" /></div>
                 <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
                   Aucun favori
                 </h3>
@@ -1375,7 +1375,7 @@ export default function ShineAudiblePage() {
             </h2>
             {filteredAudios.length === 0 ? (
               <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-12 text-center rounded-xl">
-                <div className="text-4xl mb-3">🎧</div>
+                <div className="mb-3 flex justify-center" style={{ color: 'var(--brand)' }}><ShineIcon name="audio" className="w-9 h-9" /></div>
                 <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
                   Aucun audio lié
                 </h3>
@@ -1552,7 +1552,7 @@ export default function ShineAudiblePage() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="text-center">
-                <span className="text-4xl">🎧</span>
+                <span style={{ color: 'var(--brand)' }}><ShineIcon name="audio" className="w-9 h-9" /></span>
                 <h3 className="font-display text-lg font-semibold mt-3 text-[var(--text-primary)]">
                   {audioDisclaimer.contentType === 'hypnosis' ? 'Séance d\'hypnose' : 'Méditation guidée'}
                 </h3>

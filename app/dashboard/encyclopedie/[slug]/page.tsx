@@ -1110,6 +1110,23 @@ export default function DouleurDetailPage() {
                 </div>
               )}
 
+              {/* La consigne d'écoute précédait chaque lecteur, mot pour mot. Deux fois
+                  de suite, elle repoussait les séances vers le bas sans rien dire de
+                  plus : elle est donnée une fois, avant elles. */}
+              {(() => {
+                const seance1 = !!currentStep.audio && currentStep.num !== 3
+                const seance2 = !!currentStep.audio2 && !isPreviewMode && currentStep.num !== 3
+                if (!seance1 && !seance2) return null
+                return (
+                  <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.12)' }}>
+                    <span className="flex-shrink-0 mt-0.5" style={{ color: 'var(--brand)' }}><ShineIcon name="audio" className="w-5 h-5" /></span>
+                    <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                      Avant de lancer {seance1 && seance2 ? 'ces séances' : 'cet audio'}, installez-vous confortablement dans un endroit calme et détendu. Mettez votre casque audio, respirez profondément et laissez-vous guider en toute sérénité.
+                    </p>
+                  </div>
+                )
+              })()}
+
               {currentStep.audio && currentStep.num !== 3 && <ToolHeader icon="audio" label={currentStep.audioTitle || "Séance audio guidée"} color={currentStep.color} />}
               {currentStep.audio && currentStep.num !== 3 && (
                 isPreviewMode ? (() => {
@@ -1128,13 +1145,7 @@ export default function DouleurDetailPage() {
                     }, [])
 
                     return (
-                      <div className="rounded-xl p-4 space-y-3" style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(201,169,97,0.15)' }}>
-                        <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.12)' }}>
-                          <span className="flex-shrink-0 mt-0.5" style={{ color: 'var(--brand)' }}><ShineIcon name="audio" className="w-5 h-5" /></span>
-                          <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                            Avant de lancer cet audio, installez-vous confortablement dans un endroit calme et détendu. Mettez votre casque audio, respirez profondément et laissez-vous guider en toute sérénité.
-                          </p>
-                        </div>
+                      <div className="rounded-xl p-4" style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(201,169,97,0.15)' }}>
                         {audioLocked ? (
                           <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'rgba(201,169,97,0.08)', border: '1px solid rgba(201,169,97,0.2)' }}>
                             <p className="text-sm" style={{ color: 'var(--brand)' }}>Vous aimez ? Accédez à la suite</p>
@@ -1155,13 +1166,7 @@ export default function DouleurDetailPage() {
                   {currentStep.audio_cover && (
                     <img src={currentStep.audio_cover} alt={`Audio - ${currentStep.title}`} className="w-full" />
                   )}
-                  <div className="p-4 space-y-3">
-                    <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.12)' }}>
-                      <span className="flex-shrink-0 mt-0.5" style={{ color: 'var(--brand)' }}><ShineIcon name="audio" className="w-5 h-5" /></span>
-                      <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                        Avant de lancer cet audio, installez-vous confortablement dans un endroit calme et détendu. Mettez votre casque audio, respirez profondément et laissez-vous guider en toute sérénité.
-                      </p>
-                    </div>
+                  <div className="p-4">
                     <audio src={currentStep.audio} controls className="w-full" />
                   </div>
                 </div>
@@ -1174,13 +1179,7 @@ export default function DouleurDetailPage() {
                   {currentStep.audio2_cover && (
                     <img src={currentStep.audio2_cover} alt={`Audio 2 - ${currentStep.title}`} className="w-full" />
                   )}
-                  <div className="p-4 space-y-3">
-                    <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.12)' }}>
-                      <span className="flex-shrink-0 mt-0.5" style={{ color: 'var(--brand)' }}><ShineIcon name="audio" className="w-5 h-5" /></span>
-                      <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                        Avant de lancer cet audio, installez-vous confortablement dans un endroit calme et détendu. Mettez votre casque audio, respirez profondément et laissez-vous guider en toute sérénité.
-                      </p>
-                    </div>
+                  <div className="p-4">
                     <audio src={currentStep.audio2} controls className="w-full" />
                   </div>
                 </div>

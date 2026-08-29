@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import { useSubscription } from '@/hooks/useSubscription'
+import ShineIcon, { type ShineIconName } from '@/components/icons/ShineIcon'
 
 // Lecteur « livre » (feuilletage) — chargé côté client uniquement.
 const BookFlipReader = dynamic(() => import('@/components/BookFlipReader'), { ssr: false })
@@ -41,28 +42,28 @@ type Review = {
 }
 
 // ── Categories ──
-const CATEGORIES = [
-  { id: 'featured', label: 'En vedette', icon: '⭐' },
-  { id: 'healing', label: 'Guérison intérieure', icon: '🌿' },
-  { id: 'confidence', label: 'Confiance en soi', icon: '💪' },
-  { id: 'relationships', label: 'Relations saines', icon: '💛' },
-  { id: 'resilience', label: 'Résilience', icon: '🔥' },
-  { id: 'anxiety', label: 'Anxiété & Stress', icon: '🧠' },
-  { id: 'grief', label: 'Deuil & Perte', icon: '🕊️' },
-  { id: 'trauma', label: 'Trauma', icon: '💎' },
-  { id: 'self-love', label: 'Amour de soi', icon: '🩷' },
-  { id: 'spirituality', label: 'Spiritualité', icon: '🙏' },
-  { id: 'gratitude', label: 'Gratitude & Joie', icon: '✨' },
-  { id: 'children', label: 'Enfants', icon: '👶' },
+const CATEGORIES: { id: string; label: string; icon: ShineIconName }[] = [
+  { id: 'featured', label: 'En vedette', icon: 'gratitude' },
+  { id: 'healing', label: 'Guérison intérieure', icon: 'healing' },
+  { id: 'confidence', label: 'Confiance en soi', icon: 'confidence' },
+  { id: 'relationships', label: 'Relations saines', icon: 'relationships' },
+  { id: 'resilience', label: 'Résilience', icon: 'resilience' },
+  { id: 'anxiety', label: 'Anxiété & Stress', icon: 'anxiete' },
+  { id: 'grief', label: 'Deuil & Perte', icon: 'deuil' },
+  { id: 'trauma', label: 'Trauma', icon: 'resilience' },
+  { id: 'self-love', label: 'Amour de soi', icon: 'amourpropre' },
+  { id: 'spirituality', label: 'Spiritualité', icon: 'meditation' },
+  { id: 'gratitude', label: 'Gratitude & Joie', icon: 'gratitude' },
+  { id: 'children', label: 'Enfants', icon: 'children' },
 ]
 
-const CONTENT_TYPES = [
+const CONTENT_TYPES: { id: string; label: string; icon: ShineIconName | '' }[] = [
   { id: 'all', label: 'Tout', icon: '' },
-  { id: 'ebook', label: 'eBooks', icon: '📖' },
-  { id: 'guide', label: 'Guides', icon: '📋' },
-  { id: 'workbook', label: 'Cahiers', icon: '✍️' },
-  { id: 'journal', label: 'Journaux', icon: '📓' },
-  { id: 'protocol', label: 'Protocoles', icon: '🩺' },
+  { id: 'ebook', label: 'eBooks', icon: 'livre' },
+  { id: 'guide', label: 'Guides', icon: 'guide' },
+  { id: 'workbook', label: 'Cahiers', icon: 'texte' },
+  { id: 'journal', label: 'Journaux', icon: 'journal' },
+  { id: 'protocol', label: 'Protocoles', icon: 'protocole' },
 ]
 
 // ── Stars Component ──
@@ -105,7 +106,7 @@ function StarRating({ rating, onRate, size = 'md', interactive = false }: {
 // ── Horizontal Scroll Row ──
 function BookRow({ title, icon, books, onSelect }: {
   title: string
-  icon: string
+  icon: ShineIconName
   books: ShineBook[]
   onSelect: (b: ShineBook) => void
 }) {
@@ -137,7 +138,7 @@ function BookRow({ title, icon, books, onSelect }: {
   return (
     <div className="relative group/row">
       <h2 className="text-lg font-display font-semibold mb-3 px-1 flex items-center gap-2 text-[var(--text-primary)]">
-        <span className="text-xl">{icon}</span> {title}
+        <span style={{ color: 'var(--brand)' }}><ShineIcon name={icon} className="w-5 h-5 inline-block align-[-3px]" /></span> {title}
       </h2>
 
       {/* Left arrow */}
@@ -205,7 +206,7 @@ function BookRow({ title, icon, books, onSelect }: {
                 ) : (
                   <div className="w-full h-full flex flex-col items-center justify-center p-3 gap-1"
                     style={{ background: 'linear-gradient(135deg, rgba(201,169,97,0.08), rgba(201,169,97,0.02))' }}>
-                    <span className="text-4xl opacity-20">📖</span>
+                    <span className="opacity-20" style={{ color: 'var(--brand)' }}><ShineIcon name="livre" className="w-9 h-9" /></span>
                     <span className="text-[10px] text-center font-medium opacity-30 text-[var(--text-muted)]">{book.title}</span>
                   </div>
                 )}
@@ -445,9 +446,9 @@ function BookModal({ book, onClose, onToggleFavorite, onRate, onRead }: {
               {book.cover ? (
                 <img src={book.cover} alt={book.title} className="w-full h-full object-cover" />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-5xl opacity-20"
-                  style={{ background: 'linear-gradient(135deg, rgba(201,169,97,0.1), rgba(201,169,97,0.02))' }}>
-                  📖
+                <div className="w-full h-full flex items-center justify-center opacity-20"
+                  style={{ background: 'linear-gradient(135deg, rgba(201,169,97,0.1), rgba(201,169,97,0.02))', color: 'var(--brand)' }}>
+                  <ShineIcon name="livre" className="w-12 h-12" />
                 </div>
               )}
             </div>
@@ -853,7 +854,7 @@ export default function ShineLibrairiePage() {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="text-center space-y-4 max-w-md">
-          <div className="text-6xl">📚</div>
+          <div style={{ color: 'var(--brand)' }}><ShineIcon name="livre" className="w-14 h-14" /></div>
           <h2 className="font-display text-2xl font-semibold text-[var(--text-primary)]">Shine Librairie</h2>
           <p className="text-[14px] leading-relaxed text-[var(--text-muted)]">
             La librairie arrive bientôt ! Nos eBooks, guides pratiques et protocoles de soin seront disponibles ici.
@@ -920,7 +921,7 @@ export default function ShineLibrairiePage() {
                     border: activeType === ct.id ? 'none' : '1px solid var(--border)',
                   }}
                 >
-                  {ct.icon} {ct.label}
+                  {ct.icon && <ShineIcon name={ct.icon} className="w-3.5 h-3.5 inline-block align-[-2px] mr-1" />}{ct.label}
                 </button>
               ))}
             </div>
@@ -994,7 +995,7 @@ export default function ShineLibrairiePage() {
                   border: activeFilter === cat.id ? 'none' : '1px solid var(--border)',
                 }}
               >
-                {cat.icon} {cat.label}
+                <ShineIcon name={cat.icon} className="w-3.5 h-3.5 inline-block align-[-2px] mr-1" />{cat.label}
               </button>
             ))}
           </div>
@@ -1010,7 +1011,7 @@ export default function ShineLibrairiePage() {
             </p>
             {filteredBooks.length === 0 ? (
               <div className="glass p-12 text-center rounded-xl">
-                <div className="text-4xl mb-3">🔍</div>
+                <div className="mb-3 flex justify-center" style={{ color: 'var(--brand)' }}><ShineIcon name="question" className="w-9 h-9" /></div>
                 <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
                   Aucun résultat
                 </h3>
@@ -1034,7 +1035,7 @@ export default function ShineLibrairiePage() {
                         {book.cover ? (
                           <img src={book.cover} alt={book.title} className="w-full h-full object-cover" loading="lazy" />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-3xl opacity-20">📖</div>
+                          <div className="w-full h-full flex items-center justify-center opacity-20" style={{ color: 'var(--brand)' }}><ShineIcon name="livre" className="w-8 h-8" /></div>
                         )}
                         {book.pageCount > 0 && (
                           <span className="absolute bottom-2 right-2 text-[10px] font-semibold px-1.5 py-0.5 rounded"
@@ -1080,7 +1081,7 @@ export default function ShineLibrairiePage() {
             </h2>
             {filteredBooks.length === 0 ? (
               <div className="glass p-12 text-center rounded-xl">
-                <div className="text-4xl mb-3">💛</div>
+                <div className="mb-3 flex justify-center" style={{ color: 'var(--brand)' }}><ShineIcon name="relationships" className="w-9 h-9" /></div>
                 <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
                   Aucun favori
                 </h3>
@@ -1104,7 +1105,7 @@ export default function ShineLibrairiePage() {
                         {book.cover ? (
                           <img src={book.cover} alt={book.title} className="w-full h-full object-cover" loading="lazy" />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-3xl opacity-20">📖</div>
+                          <div className="w-full h-full flex items-center justify-center opacity-20" style={{ color: 'var(--brand)' }}><ShineIcon name="livre" className="w-8 h-8" /></div>
                         )}
                       </div>
                     </div>
@@ -1128,7 +1129,7 @@ export default function ShineLibrairiePage() {
             </h2>
             {filteredBooks.length === 0 ? (
               <div className="glass p-12 text-center rounded-xl">
-                <div className="text-4xl mb-3">📚</div>
+                <div className="mb-3 flex justify-center" style={{ color: 'var(--brand)' }}><ShineIcon name="livre" className="w-9 h-9" /></div>
                 <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
                   Aucun livre lié
                 </h3>
@@ -1218,7 +1219,7 @@ export default function ShineLibrairiePage() {
                                 {book.cover ? (
                                   <img src={book.cover} alt={book.title} className="w-full h-full object-cover" loading="lazy" />
                                 ) : (
-                                  <div className="w-full h-full flex items-center justify-center text-3xl opacity-20">📖</div>
+                                  <div className="w-full h-full flex items-center justify-center opacity-20" style={{ color: 'var(--brand)' }}><ShineIcon name="livre" className="w-8 h-8" /></div>
                                 )}
                               </div>
                             </div>
@@ -1242,7 +1243,7 @@ export default function ShineLibrairiePage() {
             {books.some(b => b.isFeatured) && (
               <BookRow
                 title="En vedette"
-                icon="⭐"
+                icon="gratitude"
                 books={books.filter(b => b.isFeatured)}
                 onSelect={setSelectedBook}
               />

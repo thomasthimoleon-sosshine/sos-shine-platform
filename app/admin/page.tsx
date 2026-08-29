@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import ShineIcon from '@/components/icons/ShineIcon'
 
 interface Stats {
   totalMembers: number
@@ -51,14 +52,14 @@ export default function AdminDashboard() {
   }, [])
 
   const cards = [
-    { label: 'Membres total', value: stats.totalMembers, color: '#C9A961', icon: '👥' },
-    { label: 'Nouveaux ce mois', value: stats.newThisMonth, color: '#55EFC4', icon: '📈' },
-    { label: 'Challenges publiés', value: stats.totalDouleurs, color: '#74C0FC', icon: '📘' },
-    { label: 'Vidéos Shine TV', value: stats.totalVideos, color: '#E17055', icon: '🎬' },
-    { label: 'Audios Audible', value: stats.totalTracks, color: '#9B59B6', icon: '🎧' },
-    { label: 'Livres Librairie', value: stats.totalBooks, color: '#C9A961', icon: '📚' },
-    { label: 'Événements', value: stats.totalEvents, color: '#55EFC4', icon: '📅' },
-    { label: 'Messages chat', value: stats.totalMessages, color: '#FF6B35', icon: '💬' },
+    { label: 'Membres total', value: stats.totalMembers, color: '#C9A961', icon: 'membres' as const },
+    { label: 'Nouveaux ce mois', value: stats.newThisMonth, color: '#55EFC4', icon: 'courbe' as const },
+    { label: 'Challenges publiés', value: stats.totalDouleurs, color: '#74C0FC', icon: 'protocole' as const },
+    { label: 'Vidéos Shine TV', value: stats.totalVideos, color: '#E17055', icon: 'video' as const },
+    { label: 'Audios Audible', value: stats.totalTracks, color: '#9B59B6', icon: 'audio' as const },
+    { label: 'Livres Librairie', value: stats.totalBooks, color: '#C9A961', icon: 'livre' as const },
+    { label: 'Événements', value: stats.totalEvents, color: '#55EFC4', icon: 'calendrier' as const },
+    { label: 'Messages chat', value: stats.totalMessages, color: '#FF6B35', icon: 'parole' as const },
   ]
 
   return (
@@ -84,7 +85,7 @@ export default function AdminDashboard() {
               <div key={card.label} className="rounded-xl p-5"
                 style={{ background: `${card.color}08`, border: `1px solid ${card.color}20` }}>
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-xl">{card.icon}</span>
+                  <ShineIcon name={card.icon} className="w-5 h-5" color={card.color} />
                 </div>
                 <p className="font-display text-3xl font-semibold mb-1" style={{ color: card.color }}>
                   {card.value}
@@ -99,18 +100,18 @@ export default function AdminDashboard() {
             <h2 className="font-semibold text-lg mb-4" style={{ color: 'var(--text-primary)' }}>Actions rapides</h2>
             <div className="grid sm:grid-cols-3 gap-4">
               {[
-                { href: '/admin/douleurs', label: 'Créer un challenge émotionnel', desc: 'Ajouter une nouvelle page à l\'encyclopédie', icon: '📘', color: '#74C0FC' },
-                { href: '/admin/shine-tv', label: 'Publier une vidéo', desc: 'Ajouter du contenu sur Shine TV', icon: '🎬', color: '#E17055' },
-                { href: '/admin/shine-shorts', label: 'Publier un short', desc: 'Ajouter un cours ou vidéo courte', icon: '📱', color: '#C9A961' },
-                { href: '/admin/shine-audible', label: 'Publier un audio', desc: 'Ajouter un podcast, méditation ou livre audio', icon: '🎧', color: '#9B59B6' },
-                { href: '/admin/shine-librairie', label: 'Publier un livre', desc: 'Ajouter un eBook ou guide à la librairie', icon: '📚', color: '#C9A961' },
-                { href: '/admin/evenements', label: 'Créer un événement', desc: 'Planifier un soin collectif ou une Shine Walk', icon: '📅', color: '#55EFC4' },
-                { href: '/admin/publications', label: 'Publier sur le mur', desc: 'Annoncer une nouvelle à la communauté', icon: '📢', color: '#FF6B35' },
+                { href: '/admin/douleurs', label: 'Créer un challenge émotionnel', desc: 'Ajouter une nouvelle page à l\'encyclopédie', icon: 'protocole' as const, color: '#74C0FC' },
+                { href: '/admin/shine-tv', label: 'Publier une vidéo', desc: 'Ajouter du contenu sur Shine TV', icon: 'video' as const, color: '#E17055' },
+                { href: '/admin/shine-shorts', label: 'Publier un short', desc: 'Ajouter un cours ou vidéo courte', icon: 'shorts' as const, color: '#C9A961' },
+                { href: '/admin/shine-audible', label: 'Publier un audio', desc: 'Ajouter un podcast, méditation ou livre audio', icon: 'audio' as const, color: '#9B59B6' },
+                { href: '/admin/shine-librairie', label: 'Publier un livre', desc: 'Ajouter un eBook ou guide à la librairie', icon: 'livre' as const, color: '#C9A961' },
+                { href: '/admin/evenements', label: 'Créer un événement', desc: 'Planifier un soin collectif ou une Shine Walk', icon: 'calendrier' as const, color: '#55EFC4' },
+                { href: '/admin/publications', label: 'Publier sur le mur', desc: 'Annoncer une nouvelle à la communauté', icon: 'diffuser' as const, color: '#FF6B35' },
               ].map((action) => (
                 <a key={action.href} href={action.href}
                   className="rounded-xl p-5 transition-all duration-200 hover:-translate-y-0.5 block"
                   style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
-                  <span className="text-2xl mb-3 block">{action.icon}</span>
+                  <ShineIcon name={action.icon} className="w-6 h-6 mb-3" color={action.color} />
                   <h3 className="font-semibold text-sm mb-1" style={{ color: action.color }}>{action.label}</h3>
                   <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{action.desc}</p>
                 </a>

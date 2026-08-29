@@ -81,6 +81,44 @@ export type ShineIconName =
   | 'niveau9'
   | 'niveau10'
 
+  // Back-office — les notions propres à l’administration
+  | 'tableau'
+  | 'courbe'
+  | 'boussole'
+  | 'palette'
+  | 'maison'
+  | 'laboratoire'
+  | 'envol'
+  | 'membres'
+  | 'carte'
+  | 'automate'
+  | 'enveloppe'
+  | 'dossier'
+  | 'virement'
+  | 'cible'
+  | 'plume'
+  | 'couronne'
+  | 'coeur'
+  | 'tente'
+  | 'chapiteau'
+  | 'entree'
+  | 'cle'
+  | 'balance'
+  | 'cadenas'
+  | 'reglages'
+  | 'monnaie'
+  | 'alerte'
+  | 'oeil'
+  | 'globe'
+  | 'horloge'
+  | 'bouclier'
+  | 'sante'
+  | 'institution'
+  | 'chantier'
+  | 'valide'
+  | 'epingle'
+  | 'corbeille'
+
 type Props = {
   name: ShineIconName
   className?: string
@@ -575,6 +613,346 @@ const PATHS: Record<ShineIconName, React.ReactNode> = {
       <path d="M6 4 L9 10 L12 21" />
       <path d="M18 4 L15 10 L12 21" />
       <path d="M9 10 H15" />
+    </>
+  ),
+
+  /* ═══════════════════════════════════════════════════════════════
+     BACK-OFFICE — même grammaire : facette taillée, rai droit.
+     Le back-office était le seul écran encore en émojis système.
+     ═══════════════════════════════════════════════════════════════ */
+
+  /* ── Tableau de bord — CE QU'ON MESURE. Trois colonnes, une facette au sommet. ── */
+  tableau: (
+    <>
+      <path d="M3.4 4.4 h7 v6.2 h-7 Z" />
+      <path d="M13.6 4.4 h7 v6.2 h-7 Z" />
+      <path d="M3.4 13.4 h7 v6.2 h-7 Z" />
+      <path d="M13.6 13.4 h7 v6.2 h-7 Z" />
+      <path d="M17.1 15.2 L18.7 16.5 L17.1 17.8 L15.5 16.5 Z" />
+    </>
+  ),
+
+  /* ── Analytique — LA PENTE. Le trait monte, la facette marque où il arrive. ── */
+  courbe: (
+    <>
+      <path d="M3.4 20.4 h17.2" />
+      <path d="M4.6 16.8 L9 12.4 L12.4 15 L16.6 9.8" />
+      <path d="M19 4.6 L21 7.4 L19 10.2 L17 7.4 Z" />
+    </>
+  ),
+
+  /* ── Parcours — L'AIGUILLE. Elle cherche le nord dans un cercle fermé. ── */
+  boussole: (
+    <>
+      <circle cx="12" cy="12" r="8.4" />
+      <path d="M15.6 8.4 L13.4 13.4 L8.4 15.6 L10.6 10.6 Z" />
+    </>
+  ),
+
+  /* ── Mise en forme — LA PALETTE. Deux facettes posées, comme deux teintes. ── */
+  palette: (
+    <>
+      <path d="M12 3.6 a8.4 8.4 0 1 0 0 16.8 c1.3 0 2-.8 2-1.8 0-1.4 1-2.1 2.1-2.1 h1.5 a2.8 2.8 0 0 0 2.8-2.8 C20.4 7.5 16.6 3.6 12 3.6 Z" />
+      <path d="M8.4 9.2 L9.7 11 L8.4 12.8 L7.1 11 Z" />
+      <path d="M13.2 7.4 L14.5 9.2 L13.2 11 L11.9 9.2 Z" />
+    </>
+  ),
+
+  /* ── Page d'accueil — LE TOIT. Ce qu'on montre d'abord. ── */
+  maison: (
+    <>
+      <path d="M3.6 10.6 L12 3.8 L20.4 10.6 V20.4 H3.6 Z" />
+      <path d="M12 12.2 L13.8 14.6 L12 17 L10.2 14.6 Z" />
+    </>
+  ),
+
+  /* ── Essai comparé — L'ÉPROUVETTE. On verse, on regarde, on tranche. ── */
+  laboratoire: (
+    <>
+      <path d="M9.6 3.8 v5.2 L5 18.2 a1.7 1.7 0 0 0 1.5 2.4 h11 a1.7 1.7 0 0 0 1.5 -2.4 L14.4 9 V3.8 Z" />
+      <path d="M8.6 3.8 h6.8" />
+      <path d="M7.2 14.6 h9.6" />
+    </>
+  ),
+
+  /* ── Lancement — L'ENVOL. La facette part, deux rais restent au sol. ── */
+  envol: (
+    <>
+      <path d="M12 2.8 L15.3 9.6 L12 13.2 L8.7 9.6 Z" />
+      <path d="M12 13.2 v4.2" />
+      <path d="M8.9 20.4 L10.5 16.8" />
+      <path d="M15.1 20.4 L13.5 16.8" />
+    </>
+  ),
+
+  /* ── Membres — LES PRÉSENCES. Deux facettes, deux arcs qui les portent. ── */
+  membres: (
+    <>
+      <path d="M8.8 4.4 L11.2 7.6 L8.8 10.8 L6.4 7.6 Z" />
+      <path d="M16.8 6.6 L18.8 9.2 L16.8 11.8 L14.8 9.2 Z" />
+      <path d="M2.8 20 a6 6 0 0 1 12 0" />
+      <path d="M16.6 15 a4.6 4.6 0 0 1 4.6 5" />
+    </>
+  ),
+
+  /* ── Abonnement — LA CARTE. Une bande, une facette pour la signature. ── */
+  carte: (
+    <>
+      <path d="M3.6 6.4 h16.8 a1.5 1.5 0 0 1 1.5 1.5 v8.2 a1.5 1.5 0 0 1 -1.5 1.5 h-16.8 a1.5 1.5 0 0 1 -1.5 -1.5 v-8.2 a1.5 1.5 0 0 1 1.5 -1.5 Z" />
+      <path d="M2.1 10.4 h19.8" />
+      <path d="M17 13.4 L18.5 15 L17 16.6 L15.5 15 Z" />
+    </>
+  ),
+
+  /* ── Automate — CE QUI PARLE SANS PERSONNE. Une facette en guise d'antenne. ── */
+  automate: (
+    <>
+      <path d="M6.6 8.2 h10.8 a1.6 1.6 0 0 1 1.6 1.6 v6.8 a1.6 1.6 0 0 1 -1.6 1.6 h-10.8 a1.6 1.6 0 0 1 -1.6 -1.6 v-6.8 a1.6 1.6 0 0 1 1.6 -1.6 Z" />
+      <path d="M12 2.8 L13.2 4.6 L12 6.4 L10.8 4.6 Z" />
+      <path d="M12 6.4 v1.8" />
+      <path d="M9.6 12 v1.6" />
+      <path d="M14.4 12 v1.6" />
+      <path d="M3.4 11.6 v3.2" />
+      <path d="M20.6 11.6 v3.2" />
+    </>
+  ),
+
+  /* ── Courrier — LE PLI. Ce qui arrive fermé. ── */
+  enveloppe: (
+    <>
+      <path d="M3 6 h18 v12 H3 Z" />
+      <path d="M3 6 L12 13.2 L21 6" />
+    </>
+  ),
+
+  /* ── Candidature — LE DOSSIER. Ce qu'on dépose et qu'on relit. ── */
+  dossier: (
+    <>
+      <path d="M3.2 6.4 h6 l1.8 2.4 h9.8 v11.2 H3.2 Z" />
+      <path d="M9 13.6 h6" />
+      <path d="M9 16.4 h6" />
+    </>
+  ),
+
+  /* ── Retrait — CE QUI SORT. La facette descend et quitte le plateau. ── */
+  virement: (
+    <>
+      <path d="M12 3.4 L14 6.4 L12 9.4 L10 6.4 Z" />
+      <path d="M12 9.4 v6" />
+      <path d="M8.8 12.4 L12 15.6 L15.2 12.4" />
+      <path d="M4.4 19.6 h15.2" />
+    </>
+  ),
+
+  /* ── Objectif — LA CIBLE. Deux cercles, la facette au centre. ── */
+  cible: (
+    <>
+      <circle cx="12" cy="12" r="8.4" />
+      <circle cx="12" cy="12" r="4.2" />
+      <path d="M12 10.1 L13.5 12 L12 13.9 L10.5 12 Z" />
+    </>
+  ),
+
+  /* ── Écrire — LA PLUME. Le trait d'un seul geste. ── */
+  plume: (
+    <>
+      <path d="M4.2 19.8 C 4.2 12.2, 10 5.4, 19.8 4.2 C 18.6 14, 11.8 19.8, 4.2 19.8 Z" />
+      <path d="M4.2 19.8 L12.4 11.6" />
+    </>
+  ),
+
+  /* ── Fondation — LA COURONNE. Trois pointes, dont une facette. ── */
+  couronne: (
+    <>
+      <path d="M3.4 17.6 L5.4 7.4 L9.4 12 L12 5.8 L14.6 12 L18.6 7.4 L20.6 17.6 Z" />
+      <path d="M6.2 20.4 h11.6" />
+    </>
+  ),
+
+  /* ── Lien humain — LE CŒUR. Une facette battante à l'intérieur. ── */
+  coeur: (
+    <>
+      <path d="M12 20.2 C 4.6 15.4, 3.4 10.8, 5.7 8.2 C 7.6 6, 10.6 6.6, 12 9.1 C 13.4 6.6, 16.4 6, 18.3 8.2 C 20.6 10.8, 19.4 15.4, 12 20.2 Z" />
+      <path d="M12 11.6 L13.5 13.6 L12 15.6 L10.5 13.6 Z" />
+    </>
+  ),
+
+  /* ── Rassemblement — LA TENTE. On s'abrite ensemble, autour du même feu. ── */
+  tente: (
+    <>
+      <path d="M12 3.8 L20.6 19.8 H3.4 Z" />
+      <path d="M12 3.8 V19.8" />
+      <path d="M9 19.8 L12 13.4 L15 19.8" />
+    </>
+  ),
+
+  /* ── Rencontre réelle — LE CHAPITEAU. Ce qui se monte pour un jour. ── */
+  chapiteau: (
+    <>
+      <path d="M3.4 11.2 C 3.4 6.6, 7.2 3.6, 12 3.6 C 16.8 3.6, 20.6 6.6, 20.6 11.2 Z" />
+      <path d="M3.4 11.2 V20.4 H20.6 V11.2" />
+      <path d="M12 3.6 V11.2" />
+      <path d="M9.4 20.4 L12 14.2 L14.6 20.4" />
+    </>
+  ),
+
+  /* ── Ce qui entre — LA CORBEILLE D'ARRIVÉE. La facette tombe dedans. ── */
+  entree: (
+    <>
+      <path d="M3.4 13.4 h4.6 l1.4 2.4 h5.2 l1.4 -2.4 h4.6 v6.4 H3.4 Z" />
+      <path d="M12 3.6 v6.8" />
+      <path d="M9 7.6 L12 10.6 L15 7.6" />
+    </>
+  ),
+
+  /* ── Accès — LA CLÉ. Elle ouvre, elle ne force pas. ── */
+  cle: (
+    <>
+      <circle cx="15.4" cy="8.6" r="4.2" />
+      <path d="M12.4 11.6 L3.6 20.4" />
+      <path d="M6.2 17.8 L8.4 20" />
+      <path d="M8.6 15.4 L10.8 17.6" />
+    </>
+  ),
+
+  /* ── Mentions légales — LA BALANCE. Deux plateaux, un axe. ── */
+  balance: (
+    <>
+      <path d="M12 4.4 v15.2" />
+      <path d="M5.4 7 h13.2" />
+      <path d="M8.4 19.8 h7.2" />
+      <path d="M5.4 7 L2.8 13 h5.2 Z" />
+      <path d="M18.6 7 L16 13 h5.2 Z" />
+    </>
+  ),
+
+  /* ── Confidentialité — LE CADENAS. Ce qui reste à l'intérieur. ── */
+  cadenas: (
+    <>
+      <path d="M5.6 10.4 h12.8 v9.8 H5.6 Z" />
+      <path d="M8.4 10.4 V7.6 a3.6 3.6 0 0 1 7.2 0 v2.8" />
+      <path d="M12 13.6 L13.4 15.3 L12 17 L10.6 15.3 Z" />
+    </>
+  ),
+
+  /* ── Réglages — LES CURSEURS. Trois rais, trois facettes qu'on déplace. ── */
+  reglages: (
+    <>
+      <path d="M3.6 7.4 h16.8" />
+      <path d="M3.6 12 h16.8" />
+      <path d="M3.6 16.6 h16.8" />
+      <path d="M8.6 5.6 L10.4 7.4 L8.6 9.2 L6.8 7.4 Z" />
+      <path d="M15.4 10.2 L17.2 12 L15.4 13.8 L13.6 12 Z" />
+      <path d="M10.6 14.8 L12.4 16.6 L10.6 18.4 L8.8 16.6 Z" />
+    </>
+  ),
+
+  /* ── Recette — LA PIÈCE. Ce qui entre vraiment. ── */
+  monnaie: (
+    <>
+      <path d="M12 4.4 c 4.2 0 6.6 1.1 6.6 2.4 s -2.4 2.4 -6.6 2.4 s -6.6 -1.1 -6.6 -2.4 s 2.4 -2.4 6.6 -2.4 Z" />
+      <path d="M5.4 6.8 v4.4 c 0 1.3 2.4 2.4 6.6 2.4 s 6.6 -1.1 6.6 -2.4 V6.8" />
+      <path d="M5.4 11.2 v4.4 c 0 1.3 2.4 2.4 6.6 2.4 s 6.6 -1.1 6.6 -2.4 v-4.4" />
+    </>
+  ),
+
+  /* ── Alerte — CE QUI NE PEUT PAS ATTENDRE. ── */
+  alerte: (
+    <>
+      <path d="M12 3.6 L21.4 20 H2.6 Z" />
+      <path d="M12 9.6 v4.4" />
+      <path d="M12 16.2 L12.9 17.2 L12 18.2 L11.1 17.2 Z" />
+    </>
+  ),
+
+  /* ── Suivi — L'ŒIL. Une facette pour pupille : on regarde, on ne surveille pas. ── */
+  oeil: (
+    <>
+      <path d="M2.4 12 C 5.4 7.2, 8.8 5.4, 12 5.4 C 15.2 5.4, 18.6 7.2, 21.6 12 C 18.6 16.8, 15.2 18.6, 12 18.6 C 8.8 18.6, 5.4 16.8, 2.4 12 Z" />
+      <path d="M12 9 L14.2 12 L12 15 L9.8 12 Z" />
+    </>
+  ),
+
+  /* ── Portée — LE GLOBE. Jusqu'où ça va. ── */
+  globe: (
+    <>
+      <circle cx="12" cy="12" r="8.4" />
+      <path d="M3.6 12 h16.8" />
+      <path d="M12 3.6 C 14.9 6.4, 14.9 17.6, 12 20.4 C 9.1 17.6, 9.1 6.4, 12 3.6 Z" />
+    </>
+  ),
+
+  /* ── Durée — L'HORLOGE. Le temps passé, pas le temps qui presse. ── */
+  horloge: (
+    <>
+      <circle cx="12" cy="12" r="8.4" />
+      <path d="M12 7.2 V12 l3.4 2.4" />
+    </>
+  ),
+
+  /* ── Protection — LE BOUCLIER. Une facette gardée au centre. ── */
+  bouclier: (
+    <>
+      <path d="M12 3.4 L19.6 6.2 v6 C 19.6 16.6, 16.2 19.6, 12 20.6 C 7.8 19.6, 4.4 16.6, 4.4 12.2 v-6 Z" />
+      <path d="M12 9.4 L13.8 12 L12 14.6 L10.2 12 Z" />
+    </>
+  ),
+
+  /* ── Santé — LA CROIX. Deux rais qui se croisent, rien de plus. ── */
+  sante: (
+    <>
+      <circle cx="12" cy="12" r="8.4" />
+      <path d="M12 7.8 v8.4" />
+      <path d="M7.8 12 h8.4" />
+    </>
+  ),
+
+  /* ── Institution — LE FRONTON. Ce qui est dû à la collectivité. ── */
+  institution: (
+    <>
+      <path d="M3.4 9.4 L12 4.4 L20.6 9.4 Z" />
+      <path d="M5.8 9.4 v8.2" />
+      <path d="M10 9.4 v8.2" />
+      <path d="M14 9.4 v8.2" />
+      <path d="M18.2 9.4 v8.2" />
+      <path d="M3.4 20.4 h17.2" />
+    </>
+  ),
+
+  /* ── Charges — CE QU'ON BÂTIT. Deux volumes, une facette posée. ── */
+  chantier: (
+    <>
+      <path d="M3.4 20.4 h17.2" />
+      <path d="M5.8 20.4 V11 h5.4 v9.4" />
+      <path d="M11.2 20.4 V6.6 h6.8 v13.8" />
+      <path d="M14.6 10.4 L15.9 12 L14.6 13.6 L13.3 12 Z" />
+    </>
+  ),
+
+  /* ── Acquis — LA MARQUE. Ce qui est fait ne se rediscute pas. ── */
+  valide: (
+    <>
+      <circle cx="12" cy="12" r="8.4" />
+      <path d="M8.2 12.2 L10.9 14.9 L15.8 9.6" />
+    </>
+  ),
+
+  /* ── Épinglé — CE QU'ON GARDE EN HAUT. ── */
+  epingle: (
+    <>
+      <path d="M9.4 3.6 h5.2 v6 l2.6 3.4 H6.8 l2.6 -3.4 Z" />
+      <path d="M12 13 v7.4" />
+    </>
+  ),
+
+  /* ── Supprimer — CE QU'ON RETIRE. Jamais dessiné en rouge : la couleur vient du contexte. ── */
+  corbeille: (
+    <>
+      <path d="M4.4 6.6 h15.2" />
+      <path d="M9.4 6.6 V4.2 h5.2 v2.4" />
+      <path d="M6.6 6.6 L7.6 20.4 h8.8 L17.4 6.6" />
+      <path d="M10.4 10.2 v6.2" />
+      <path d="M13.6 10.2 v6.2" />
     </>
   ),
 }

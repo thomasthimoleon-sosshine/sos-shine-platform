@@ -8,40 +8,40 @@ import type { Profile } from '@/types/database'
 import LogoSite from '@/components/LogoSite'
 
 const adminNav = [
-  { href: '/admin', label: 'Dashboard', icon: '📊' },
-  { href: '/admin/analytics', label: 'Analytics', icon: '📈' },
-  { href: '/admin/quiz-funnel', label: 'Parcours Quiz', icon: '🧭' },
-  { href: '/admin/dashboard-edit', label: 'Espace Membre', icon: '🎨' },
-  { href: '/admin/messages-encouragement', label: 'Encouragements', icon: '💬' },
-  { href: '/admin/landing-julia', label: 'Landing Julia', icon: '🏠' },
-  { href: '/admin/landing-thomas', label: 'Landing Page', icon: '🏠' },
-  { href: '/admin/presentation', label: 'Présentation', icon: '🌟' },
-  { href: '/admin/ab-testing', label: 'A/B Testing', icon: '🔬' },
-  { href: '/admin/prelaunch', label: 'Pre-lancement', icon: '🚀' },
-  { href: '/admin/douleurs', label: 'Challenges', icon: '📘' },
-  { href: '/admin/shine-tv', label: 'Shine TV', icon: '🎬' },
-  { href: '/admin/shine-audible', label: 'Shine Audible', icon: '🎧' },
-  { href: '/admin/shine-librairie', label: 'Shine Librairie', icon: '📚' },
-  { href: '/admin/shine-shorts', label: 'Shine Shorts', icon: '📱' },
-  { href: '/admin/evenements', label: 'Événements', icon: '📅' },
-  { href: '/admin/inscrits-evenements', label: 'Inscrits Événements', icon: '🏕️' },
-  { href: '/admin/physical-events', label: 'Événements /event', icon: '🎪' },
-  { href: '/admin/leads-cadeau', label: 'Leads, Guide PDF', icon: '📩' },
-  { href: '/admin/publications', label: 'Publications', icon: '📢' },
-  { href: '/admin/membres', label: 'Membres', icon: '👥' },
-  { href: '/admin/abonnements', label: 'Abonnements', icon: '💳' },
-  { href: '/admin/bots', label: 'Bots', icon: '🤖' },
-  { href: '/admin/crm', label: 'CRM', icon: '📧' },
-  { href: '/admin/defis', label: 'Défis', icon: '🏆' },
-  { href: '/admin/courrier', label: 'Courrier', icon: '✉️' },
-  { href: '/admin/candidatures', label: 'Candidatures', icon: '📋' },
-  { href: '/admin/retraits', label: 'Retraits', icon: '💸' },
-  { href: '/admin/objectifs-mensuels', label: 'Objectifs', icon: '🎯' },
-  { href: '/admin/ressource-edition', label: 'Ressource Édition', icon: '📖' },
-  { href: '/admin/blog', label: 'Blog', icon: '✍️' },
-  { href: '/admin/anciennes-clientes', label: 'Anciennes clientes', icon: '💎' },
-  { href: '/admin/fondateur', label: 'Fondateur', icon: '👑' },
-  { href: '/admin/sosmeet', label: 'SOS Meet · Waitlist', icon: '💞' },
+  { href: '/admin', label: 'Dashboard' },
+  { href: '/admin/analytics', label: 'Analytics' },
+  { href: '/admin/quiz-funnel', label: 'Parcours Quiz' },
+  { href: '/admin/dashboard-edit', label: 'Espace Membre' },
+  { href: '/admin/messages-encouragement', label: 'Encouragements' },
+  { href: '/admin/landing-julia', label: 'Landing Julia' },
+  { href: '/admin/landing-thomas', label: 'Landing Page' },
+  { href: '/admin/presentation', label: 'Présentation' },
+  { href: '/admin/ab-testing', label: 'A/B Testing' },
+  { href: '/admin/prelaunch', label: 'Pre-lancement' },
+  { href: '/admin/douleurs', label: 'Challenges' },
+  { href: '/admin/shine-tv', label: 'Shine TV' },
+  { href: '/admin/shine-audible', label: 'Shine Audible' },
+  { href: '/admin/shine-librairie', label: 'Shine Librairie' },
+  { href: '/admin/shine-shorts', label: 'Shine Shorts' },
+  { href: '/admin/evenements', label: 'Événements' },
+  { href: '/admin/inscrits-evenements', label: 'Inscrits Événements' },
+  { href: '/admin/physical-events', label: 'Événements /event' },
+  { href: '/admin/leads-cadeau', label: 'Leads, Guide PDF' },
+  { href: '/admin/publications', label: 'Publications' },
+  { href: '/admin/membres', label: 'Membres' },
+  { href: '/admin/abonnements', label: 'Abonnements' },
+  { href: '/admin/bots', label: 'Bots' },
+  { href: '/admin/crm', label: 'CRM' },
+  { href: '/admin/defis', label: 'Défis' },
+  { href: '/admin/courrier', label: 'Courrier' },
+  { href: '/admin/candidatures', label: 'Candidatures' },
+  { href: '/admin/retraits', label: 'Retraits' },
+  { href: '/admin/objectifs-mensuels', label: 'Objectifs' },
+  { href: '/admin/ressource-edition', label: 'Ressource Édition' },
+  { href: '/admin/blog', label: 'Blog' },
+  { href: '/admin/anciennes-clientes', label: 'Anciennes clientes' },
+  { href: '/admin/fondateur', label: 'Fondateur' },
+  { href: '/admin/sosmeet', label: 'SOS Meet · Waitlist' },
 ]
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -105,7 +105,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               }}>
               {adminNav.map((item) => (
                 <option key={item.href} value={item.href} style={{ background: '#0a0a0a', color: '#e0e0e0' }}>
-                  {item.icon} {item.label}
+                  {item.label}
                 </option>
               ))}
             </select>

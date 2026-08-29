@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import ReserveForm from './ReserveForm'
+import LogoSite from '@/components/LogoSite'
 
 export const revalidate = 60
 
@@ -99,7 +100,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
       <header style={{ padding: '24px 24px 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', maxWidth: '960px', margin: '0 auto' }}>
         <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/logo-shine.png" alt="SOS Shine®" style={{ height: '40px', width: 'auto' }} />
+          <LogoSite alt="SOS Shine®" style={{ height: '40px', width: 'auto' }} />
         </Link>
         <Link href="/event" style={{ fontSize: '13px', color: 'rgba(245,241,232,0.4)', textDecoration: 'none', letterSpacing: '0.05em' }}>
           ← Tous les événements

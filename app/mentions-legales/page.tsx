@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import LogoSite from '@/components/LogoSite'
 
 export default function MentionsLegalesPage() {
   const [title, setTitle] = useState('Mentions légales')
@@ -64,7 +65,7 @@ export default function MentionsLegalesPage() {
           Retour à l&apos;accueil
         </Link>
 
-        <Link href="/"><img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-10 mb-6 object-contain" /></Link>
+        <Link href="/"><LogoSite className="h-10 mb-6 object-contain" /></Link>
 
         <h1 className="font-display text-3xl md:text-4xl font-semibold mb-8" style={{ color: 'var(--text-primary)' }}>
           {title}

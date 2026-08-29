@@ -14,6 +14,7 @@ import ShineChatbot from '@/components/ShineChatbot'
 
 import { useTranslation } from '@/lib/i18n/useTranslation'
 import ShineIcon from '@/components/icons/ShineIcon'
+import LogoSite from '@/components/LogoSite'
 
 const navItemDefs = [
   {
@@ -179,7 +180,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [isAdmin, setIsAdmin] = useState(false)
   const [isSubscribed, setIsSubscribed] = useState(false)
   const [unreadMessages, setUnreadMessages] = useState(0)
-  const [logoUrl, setLogoUrl] = useState<string | null>(null)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
   const [showWelcomePopup, setShowWelcomePopup] = useState(false)
   // Déplie les entrées secondaires du menu (Shorts, Audible, Librairie, Blog, Favoris…).
@@ -204,10 +204,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         return
       }
       setCurrentUserId(user.id)
-
-      // Charger le logo
-      const { data: logoData } = await supabase.from('site_settings').select('value').eq('key', 'logo_url').maybeSingle()
-      if (logoData?.value) setLogoUrl(logoData.value)
 
       const { data: profileData } = await supabase.from('profiles').select('*').eq('id', user.id).single()
 
@@ -324,13 +320,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* Logo */}
         <div className="px-5 py-5 flex items-center gap-3 border-b border-white/[0.04]">
           <Link href="/dashboard" className="flex items-center gap-3 group" onClick={() => setSidebarOpen(false)}>
-            {logoUrl ? (
-              <img src={logoUrl} alt="SOS Shine" className="w-9 h-9 rounded-xl object-contain" />
-            ) : (
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center font-display text-base font-semibold bg-[rgba(201, 169, 97,0.12)] text-[var(--brand)] border border-[#C9A961]/30">
-                S
-              </div>
-            )}
+            <LogoSite className="w-9 h-9 rounded-xl object-contain" />
             <div>
               <h1 className="font-display text-base font-semibold tracking-tight text-[var(--brand)]">
                 SOS Shine
@@ -551,13 +541,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
             </svg>
           </button>
-          {logoUrl ? (
-            <img src={logoUrl} alt="SOS Shine" className="h-7 object-contain" />
-          ) : (
-            <span className="font-display text-base font-semibold tracking-tight text-[var(--brand)]">
-              SOS Shine
-            </span>
-          )}
+          <LogoSite className="h-7 object-contain" />
           <div className="flex items-center gap-2">
             <NotificationBell />
 

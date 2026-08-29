@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { QUESTIONS } from '@/lib/quiz-v3/questions'
 import { calculateProfile } from '@/lib/quiz-v3/scoring'
 import type { Answers } from '@/lib/quiz-v3/types'
+import LogoSite from '@/components/LogoSite'
 
 // ─── Types ─────────────────────────────────────────────────────────────
 type Stage =
@@ -75,7 +76,7 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
     >
       <div className="max-w-sm w-full space-y-10">
         <Link href="/" className="inline-block">
-          <img src="/images/logo-shine.png" alt="SOS Shine" className="h-10 mx-auto" />
+          <LogoSite className="h-10 mx-auto" />
         </Link>
 
         <div className="space-y-6">

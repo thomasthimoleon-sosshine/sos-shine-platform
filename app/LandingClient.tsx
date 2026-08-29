@@ -12,6 +12,7 @@ import type { PrelaunchSettings } from "./page-prelaunch";
 
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import type { LandingVariant } from "@/lib/landing-defaults";
+import LogoSite from '@/components/LogoSite'
 
 function matchCase(original: string, replacement: string): string {
   if (original === original.toUpperCase()) return replacement.toUpperCase();
@@ -566,7 +567,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
           >
             <div className="flex items-center justify-between max-w-7xl mx-auto px-5 md:px-10">
               <Link href="/" className="flex items-center gap-3">
-                <img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className={`transition-all duration-700 w-auto object-contain ${headerScrolled ? 'h-10 md:h-12' : 'h-12 md:h-16'}`} />
+                <LogoSite className={`transition-all duration-700 w-auto object-contain ${headerScrolled ? 'h-10 md:h-12' : 'h-12 md:h-16'}`} />
               </Link>
               <div className="flex items-center gap-4 sm:gap-6">
                 <Link
@@ -2604,7 +2605,7 @@ export default function LandingClient({ initialSections, initialPositions, initi
           <div className="max-w-6xl mx-auto">
             <div className="flex flex-col items-center gap-8 md:gap-10">
               <div className="flex items-center gap-3">
-                <img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-12 sm:h-14 md:h-16 w-auto object-contain" />
+                <LogoSite className="h-12 sm:h-14 md:h-16 w-auto object-contain" />
               </div>
 
               <div className="flex flex-wrap justify-center gap-x-5 sm:gap-x-8 gap-y-3">

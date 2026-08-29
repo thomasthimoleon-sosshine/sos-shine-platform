@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import LogoSite from '@/components/LogoSite'
 
 export const metadata: Metadata = {
   title: 'Le Couple Vivant, Telechargement',
@@ -15,7 +16,7 @@ export default function CadeauMerciPage() {
       {/* Logo */}
       <Link href="/" style={{ display: 'block', marginBottom: '52px' }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/logo-shine.png" alt="SOS Shine" style={{ height: '52px', width: 'auto' }} />
+        <LogoSite style={{ height: '52px', width: 'auto' }} />
       </Link>
 
       <div style={{ width: '100%', maxWidth: '400px' }}>

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useTranslation } from '@/lib/i18n/useTranslation'
+import LogoSite from '@/components/LogoSite'
 
 export default function ContactPage() {
   const { t } = useTranslation()
@@ -77,7 +78,7 @@ export default function ContactPage() {
           {t('contact.back')}
         </Link>
 
-        <Link href="/"><img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-10 mb-6 object-contain" /></Link>
+        <Link href="/"><LogoSite className="h-10 mb-6 object-contain" /></Link>
 
         <h1 className="font-display text-3xl md:text-4xl font-semibold mb-8 text-[var(--text-primary)]">
           {title}

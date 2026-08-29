@@ -8,6 +8,7 @@ import type { BlogArticle } from '@/data/blog/articles'
 import ThemeToggle from '@/components/ThemeToggle'
 import { createClient } from '@/lib/supabase/client'
 import { aujourdhui } from '@/lib/blog-parution'
+import LogoSite from '@/components/LogoSite'
 
 const gold = 'var(--brand)'
 const goldRgb = '201,169,97'
@@ -69,7 +70,7 @@ export default function BlogListClient({ initialArticles }: BlogListClientProps)
       <header className="fixed top-0 left-0 right-0 z-50 py-3 md:py-4 header-animate header-scrolled">
         <div className="flex items-center justify-between px-4 md:px-8 max-w-7xl mx-auto">
           <Link href="/" className="flex items-center gap-3">
-            <img src="/images/logo-shine.png" alt="SOS Shine" className="h-10 sm:h-14 md:h-16 w-auto object-contain" />
+            <LogoSite className="h-10 sm:h-14 md:h-16 w-auto object-contain" />
           </Link>
           <div className="flex items-center gap-3">
             <Link
@@ -288,7 +289,7 @@ export default function BlogListClient({ initialArticles }: BlogListClientProps)
       <footer className="px-5 md:px-8 py-8 md:py-12 border-t" style={{ borderColor: 'var(--border)', background: 'rgba(0,0,0,0.3)' }}>
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
           <Link href="/">
-            <img src="/images/logo-shine.png" alt="SOS Shine" className="h-10 md:h-12 w-auto object-contain" />
+            <LogoSite className="h-10 md:h-12 w-auto object-contain" />
           </Link>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
             <Link href="/" className="text-[10px] tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors">Accueil</Link>

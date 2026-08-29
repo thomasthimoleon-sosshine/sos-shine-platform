@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import LogoSite from '@/components/LogoSite'
 
 export default function NotreHistoirePage() {
   const [logoUrl, setLogoUrl] = useState('')
@@ -56,7 +57,7 @@ export default function NotreHistoirePage() {
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
           Retour à l&apos;accueil
         </Link>
-        <Link href="/"><img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-10 mt-4 object-contain" /></Link>
+        <Link href="/"><LogoSite className="h-10 mt-4 object-contain" /></Link>
       </div>
 
       {/* ── L'Histoire / Le Livre ── */}

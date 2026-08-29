@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import type { Douleur, DouleurStep } from '@/types/database'
 import { aujourdhui } from '@/lib/blog-parution'
+import LogoSite from '@/components/LogoSite'
 
 // Page récapitulative avant paiement
 const SIGNUP_URL = '/signup'
@@ -200,7 +201,7 @@ export default function PublicDouleurDetailPage() {
       <main className="min-h-screen bg-[var(--surface)]">
         <header className="px-6 md:px-20 py-5 flex items-center justify-between border-b border-[var(--border)]">
           <Link href="/" className="flex items-center">
-            <img src="/images/logo-shine.png" alt="SOS Shine" className="h-10" />
+            <LogoSite className="h-10" />
           </Link>
         </header>
         <div className="max-w-2xl mx-auto py-16 px-4">

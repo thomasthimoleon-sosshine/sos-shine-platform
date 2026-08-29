@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { getReleaseDate } from '@/lib/release-schedule'
 import { createClient } from '@/lib/supabase/client'
 import type { Douleur } from '@/types/database'
+import LogoSite, { LOGO_LIVRE_TRANSPARENT } from '@/components/LogoSite'
 
 /* ─── Catégories & couleurs ─── */
 const CATEGORIES: Record<string, string> = {
@@ -425,13 +426,9 @@ export default function EncyclopedieClient({ initialDouleurs, initialShineMap }:
         className="px-6 md:px-12 lg:px-20 py-5 flex items-center justify-between border-b border-[var(--border)]"
       >
         <Link href="/" className="flex items-center gap-3 group">
-          <Image
-            src="/images/logo-shine-transparent.png"
-            alt="SOS Shine"
-            width={36}
-            height={36}
+          <LogoSite
+            repli={LOGO_LIVRE_TRANSPARENT}
             className="w-9 h-9 rounded-full object-cover ring-1 ring-white/10"
-            priority
           />
           <span className="font-display text-base font-semibold tracking-tight text-[var(--text-primary)]">
             SOS Shine

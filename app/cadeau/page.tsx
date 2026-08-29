@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import LogoSite from '@/components/LogoSite'
 
 const INPUT_STYLE: React.CSSProperties = {
   width: '100%',
@@ -52,7 +53,7 @@ export default function CadeauPage() {
       {/* Logo */}
       <Link href="/" style={{ display: 'block', marginBottom: '52px' }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/logo-shine.png" alt="SOS Shine" style={{ height: '52px', width: 'auto' }} />
+        <LogoSite style={{ height: '52px', width: 'auto' }} />
       </Link>
 
       <div style={{ width: '100%', maxWidth: '400px' }}>

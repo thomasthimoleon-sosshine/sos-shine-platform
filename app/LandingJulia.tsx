@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 import MagneticButton from '@/components/landing/MagneticButton'
 import PricingMorph from '@/components/landing/PricingMorph'
+import LogoSite from '@/components/LogoSite'
 
 const IMG = 'https://krdfvggmfswbohuevzlb.supabase.co/storage/v1/object/public/uploads'
 const HERO     = `${IMG}/616ED53A-03A5-4368-9C3E-15655CE75A3A.png`
@@ -77,7 +78,7 @@ export default function LandingJulia() {
       <header className="fixed top-0 left-0 right-0 z-50 py-5 md:py-6 mix-blend-difference">
         <div className="flex items-center justify-between max-w-7xl mx-auto px-6 md:px-10">
           <Link href="/">
-            <img src="/images/logo-shine.png" alt="SOS Shine" className="h-10 md:h-12 w-auto object-contain invert" />
+            <LogoSite className="h-10 md:h-12 w-auto object-contain invert" />
           </Link>
           <nav className="flex items-center gap-6">
             <Link href="/login" className="text-[13px] text-[#e0e0e0]/50 hover:text-[#e0e0e0] transition-colors duration-500">
@@ -479,7 +480,7 @@ export default function LandingJulia() {
       <footer className="py-20 border-t border-white/[0.04]">
         <div className="max-w-4xl mx-auto px-6 md:px-10 text-center">
           <Reveal>
-            <img src="/images/logo-shine.png" alt="SOS Shine" className="h-10 mx-auto mb-8 object-contain opacity-25" />
+            <LogoSite className="h-10 mx-auto mb-8 object-contain opacity-25" />
           </Reveal>
           <Reveal delay={0.1}>
             <p className="font-display text-[1.2rem] italic text-[#C9A961]/30 font-light mb-12">

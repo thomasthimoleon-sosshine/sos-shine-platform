@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import LogoSite from '@/components/LogoSite'
 
 export const metadata: Metadata = {
   title: 'Tes cadeaux, SOS Shine',
@@ -187,12 +188,7 @@ export default function MesCadeauxPage() {
           href="/"
           style={{ display: 'inline-block', marginBottom: 'clamp(48px, 9vw, 78px)' }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/images/logo-shine.png"
-            alt="SOS Shine"
-            style={{ height: '46px', width: 'auto' }}
-          />
+          <LogoSite style={{ height: '46px', width: 'auto' }} />
         </Link>
 
         <div

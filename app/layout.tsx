@@ -5,6 +5,7 @@ import "./globals.css";
 import ThemeProvider from "@/components/ThemeProvider";
 import SecurityProvider from "@/components/SecurityProvider";
 import VisitTracker from "@/components/VisitTracker";
+import LogoSite from '@/components/LogoSite'
 
 const cormorant = localFont({
   variable: "--font-cormorant",
@@ -178,11 +179,7 @@ export default function RootLayout({
         className={`${cormorant.variable} ${dmSans.variable} antialiased grain`}
       >
         <div className="page-loader" aria-hidden="true">
-          <img
-            src="/images/logo-shine.png"
-            alt="SOS Shine"
-            className="loader-logo"
-          />
+          <LogoSite className="loader-logo" />
         </div>
         <div className="ambient-glow" />
         <SecurityProvider>

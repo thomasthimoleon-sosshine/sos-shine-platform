@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import type { NextEvent } from './page'
+import LogoSite from '@/components/LogoSite'
 
 const QUIZ_URL = '/signature-emotionnelle?start=1'
 
@@ -150,7 +151,7 @@ export default function QuizLandingClient({ nextEvent }: { nextEvent: NextEvent 
         <div className="relative z-10 max-w-sm lg:max-w-3xl w-full text-center space-y-10 lg:space-y-12">
           <Reveal>
             <Link href="/" className="inline-block">
-              <img src="/images/logo-shine.png" alt="SOS Shine" className="h-24 lg:h-32 mx-auto" />
+              <LogoSite className="h-24 lg:h-32 mx-auto" />
             </Link>
           </Reveal>
 
@@ -389,7 +390,7 @@ export default function QuizLandingClient({ nextEvent }: { nextEvent: NextEvent 
       {/* ══════════ FOOTER ══════════ */}
       <footer className="px-6 py-10 text-center" style={{ borderTop: '1px solid rgba(201,169,97,0.08)' }}>
         <div className="flex items-center justify-center mb-4">
-          <img src="/images/logo-shine.png" alt="SOS Shine" className="h-8 opacity-40" />
+          <LogoSite className="h-8 opacity-40" />
         </div>
         <div className="flex items-center justify-center gap-4 text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>
           <Link href="/mentions-legales" className="hover:opacity-60 transition-opacity">Mentions légales</Link>

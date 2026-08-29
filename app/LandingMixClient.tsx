@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { NextEvent } from './quiz/page'
+import LogoSite from '@/components/LogoSite'
 
 const QUIZ_URL = '/signature-emotionnelle?start=1'
 
@@ -59,7 +60,7 @@ function TopNav() {
     <nav className="fixed left-0 right-0 z-50 flex items-center justify-between px-6 py-4"
       style={{ top: '36px', background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(14px)', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
       <Link href="/">
-        <img src="/images/logo-shine.png" alt="SOS Shine" className="h-8" />
+        <LogoSite className="h-8" />
       </Link>
       <div className="flex items-center gap-3">
         <Link href="/login" className="text-sm font-medium px-4 py-2 rounded-full transition-colors hover:bg-white/5" style={{ color: 'rgba(255,255,255,0.4)' }}>
@@ -150,7 +151,7 @@ export default function LandingMixClient({ nextEvent }: { nextEvent: NextEvent |
 
           <Reveal>
             <Link href="/">
-              <img src="/images/logo-shine.png" alt="SOS Shine" className="h-24 lg:h-32 mx-auto" />
+              <LogoSite className="h-24 lg:h-32 mx-auto" />
             </Link>
           </Reveal>
 
@@ -334,7 +335,7 @@ export default function LandingMixClient({ nextEvent }: { nextEvent: NextEvent |
                 />
               ) : (
                 <>
-                  <img src="/images/logo-shine.png" alt="SOS Shine présentation"
+                  <LogoSite alt="SOS Shine présentation"
                     className="absolute inset-0 w-full h-full object-contain p-16 opacity-20" />
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="w-20 h-20 rounded-full flex items-center justify-center transition-transform duration-200 group-hover:scale-110"
@@ -645,7 +646,7 @@ export default function LandingMixClient({ nextEvent }: { nextEvent: NextEvent |
       {/* ══ FOOTER ══ */}
       <footer className="px-6 py-10 text-center" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
         <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <img src="/images/logo-shine.png" alt="SOS Shine" className="h-8 opacity-40" />
+          <LogoSite className="h-8 opacity-40" />
           <div className="flex items-center gap-6 flex-wrap justify-center">
             <Link href="/contact" className="text-xs hover:opacity-70 transition-opacity" style={{ color: 'rgba(255,255,255,0.25)' }}>Contact</Link>
             <Link href="/notre-histoire" className="text-xs hover:opacity-70 transition-opacity" style={{ color: 'rgba(255,255,255,0.25)' }}>Notre histoire</Link>

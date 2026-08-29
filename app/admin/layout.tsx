@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import type { Profile } from '@/types/database'
+import LogoSite from '@/components/LogoSite'
 
 const adminNav = [
   { href: '/admin', label: 'Dashboard', icon: '📊' },
@@ -83,8 +84,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         style={{ background: 'var(--surface-card)', borderBottom: '1px solid var(--border)' }}>
         <div className="flex items-center gap-4">
           <Link href="/admin" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-semibold"
-              style={{ background: 'linear-gradient(135deg, #74C0FC, #4DA3E8)', color: '#fff' }}>A</div>
+            {/* Le back-office affichait une pastille « A » : il portait le seul
+                en-tête de la plateforme à ne pas montrer le logo réglé ici même. */}
+            <LogoSite className="w-8 h-8 rounded-lg object-contain" />
             <span className="font-display text-lg font-semibold" style={{ color: '#74C0FC' }}>Back-office</span>
           </Link>
 

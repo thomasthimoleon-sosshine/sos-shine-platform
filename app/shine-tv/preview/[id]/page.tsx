@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import PreviewPlayer from './PreviewPlayer'
+import LogoSite from '@/components/LogoSite'
 
 export const revalidate = 3600
 
@@ -58,7 +59,7 @@ export default async function PreviewPage({ params }: { params: Promise<{ id: st
       <header style={{ padding: '20px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
         <a href="https://www.sosshine.com" style={{ textDecoration: 'none' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/logo-shine.png" alt="SOS Shine®" style={{ height: '36px', width: 'auto' }} />
+          <LogoSite alt="SOS Shine®" style={{ height: '36px', width: 'auto' }} />
         </a>
         <a
           href="/login"

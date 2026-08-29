@@ -5,6 +5,7 @@
 
 import { createClient } from '@/lib/supabase/client'
 import badgesConfig from '@/data/badgesConfig.json'
+import type { ShineIconName } from '@/components/icons/ShineIcon'
 
 export type BadgeCategory = keyof typeof badgesConfig.categories
 export type BadgeConfig = { id: string; threshold: number; title: string; emoji?: string }
@@ -217,4 +218,20 @@ export const CATEGORY_ICONS: Record<string, string> = {
   compass: '🧭',
   headphones: '🎧',
   flame: '🔥',
+}
+
+/**
+ * Source unique des icônes maison par catégorie de badge (icônes ShineIcon).
+ * Utilisée à la fois par le profil ET la page Badges → mêmes emblèmes partout,
+ * jamais d'emoji standard qui « change » d'un écran à l'autre.
+ */
+export const CATEGORY_SHINE_ICON: Record<string, ShineIconName> = {
+  heart: 'relationships',
+  star: 'gratitude',
+  pen: 'texte',
+  sparkles: 'eclat',
+  share: 'diffuser',
+  compass: 'question',
+  headphones: 'audio',
+  flame: 'resilience',
 }

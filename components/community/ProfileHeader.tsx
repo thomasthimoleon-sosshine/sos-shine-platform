@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import ShineIcon, { type ShineIconName } from '@/components/icons/ShineIcon'
 import BadgeStrip, { type Badge } from '@/components/community/BadgeStrip'
-import { getUserBadges, getUserActionCounters, getAllCategories, unlockAllBadgesForUser, type CategoryConfig } from '@/lib/badgeService'
+import { getUserBadges, getUserActionCounters, getAllCategories, unlockAllBadgesForUser, CATEGORY_SHINE_ICON, type CategoryConfig } from '@/lib/badgeService'
 import { getLevelForXP, getNextLevel, getLevelProgress, formatXP } from '@/lib/xp'
 import type { Profile, UserXP } from '@/types/database'
 
@@ -13,16 +13,8 @@ import type { Profile, UserXP } from '@/types/database'
  * Les catégories de badges sont décrites par un mot-clé d'icône dans
  * data/badgesConfig.json. On le traduit en signe des Éclats — pas d'émoji.
  */
-const CATEGORY_ICON: Record<string, ShineIconName> = {
-  heart: 'relationships',
-  star: 'gratitude',
-  pen: 'texte',
-  sparkles: 'eclat',
-  share: 'diffuser',
-  compass: 'question',
-  headphones: 'audio',
-  flame: 'resilience',
-}
+// Icônes maison par catégorie : source unique partagée avec la page Badges.
+const CATEGORY_ICON = CATEGORY_SHINE_ICON
 
 /**
  * ─────────────────────────────────────────────────────────────────────────────

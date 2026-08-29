@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
-import { getAllCategories, getUserBadges, getUserActionCounters, unlockAllBadgesForUser, CATEGORY_ICONS, type CategoryConfig, type BadgeConfig } from '@/lib/badgeService'
+import { getAllCategories, getUserBadges, getUserActionCounters, unlockAllBadgesForUser, CATEGORY_SHINE_ICON, type CategoryConfig, type BadgeConfig } from '@/lib/badgeService'
+import ShineIcon from '@/components/icons/ShineIcon'
 import { getLevelForXP, getNextLevel, getLevelProgress, formatXP, LEVEL_THRESHOLDS } from '@/lib/xp'
 
 const ease = [0.25, 0.46, 0.45, 0.94] as const
@@ -245,9 +246,9 @@ export default function BadgesQuestPage() {
               <div className="p-5">
                 <div className="flex items-start gap-3">
                   {/* Icon */}
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0"
-                    style={{ background: `${info.color}18`, border: `1px solid ${info.color}30` }}>
-                    {completed ? '✅' : (CATEGORY_ICONS[category.icon] || '🏅')}
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{ background: `${info.color}18`, border: `1px solid ${info.color}30`, color: info.color }}>
+                    <ShineIcon name={CATEGORY_SHINE_ICON[category.icon] ?? 'eclat'} className="w-5 h-5" filled={completed} />
                   </div>
 
                   <div className="flex-1 min-w-0">
@@ -255,7 +256,7 @@ export default function BadgesQuestPage() {
                       <h3 className="font-semibold text-sm text-[var(--text-primary)]">{category.name}</h3>
                       {completed
                         ? <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(85,239,196,0.12)', color: '#55EFC4' }}>Complété</span>
-                        : nextBadge && <span className="text-[10px] flex-shrink-0" style={{ color: info.color }}>{nextBadge.emoji} {nextBadge.title}</span>
+                        : nextBadge && <span className="text-[10px] flex-shrink-0" style={{ color: info.color }}>{nextBadge.title}</span>
                       }
                     </div>
                     <p className="text-[12px] text-[var(--text-muted)] mb-3">{info.action}</p>
@@ -301,15 +302,15 @@ export default function BadgesQuestPage() {
                   {category.badges.map(b => {
                     const unlocked = unlockedBadgeIds.has(b.id)
                     return (
-                      <div key={b.id} title={`${b.emoji ?? ''} ${b.title}, ${b.threshold} ${info.unit}`}
-                        className="w-7 h-7 rounded-full flex items-center justify-center text-xs transition-all"
+                      <div key={b.id} title={`${b.title}, ${b.threshold} ${info.unit}`}
+                        className="w-7 h-7 rounded-full flex items-center justify-center transition-all"
                         style={{
                           background: unlocked ? `${info.color}20` : 'var(--border)',
                           border: unlocked ? `1.5px solid ${info.color}` : '1.5px solid transparent',
                           opacity: unlocked ? 1 : 0.35,
-                          filter: unlocked ? 'none' : 'grayscale(1)',
+                          color: unlocked ? info.color : 'var(--text-muted)',
                         }}>
-                        {b.emoji ?? '🏅'}
+                        <ShineIcon name={CATEGORY_SHINE_ICON[category.icon] ?? 'eclat'} className="w-3.5 h-3.5" filled={unlocked} />
                       </div>
                     )
                   })}
@@ -343,8 +344,8 @@ export default function BadgesQuestPage() {
               const route = QUEST_INFO[catKey]?.route || '/dashboard'
               return (
                 <div key={catKey} className="rounded-2xl p-5" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
-                  <div className="flex items-center gap-2 mb-4">
-                    <span>{CATEGORY_ICONS[category.icon] || '🏆'}</span>
+                  <div className="flex items-center gap-2 mb-4" style={{ color: 'var(--brand)' }}>
+                    <ShineIcon name={CATEGORY_SHINE_ICON[category.icon] ?? 'eclat'} className="w-4 h-4" />
                     <h3 className="font-semibold text-[var(--text-primary)] text-sm">{category.name}</h3>
                     <span className="ml-auto text-[11px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(201,169,97,0.08)', color: 'var(--brand)' }}>
                       {catUnlocked}/{category.badges.length}
@@ -361,8 +362,8 @@ export default function BadgesQuestPage() {
                             border: isUnlocked ? '1px solid rgba(201,169,97,0.2)' : '1px solid var(--border)',
                             opacity: isUnlocked ? 1 : 0.45,
                           }}>
-                          <div className="text-xl mb-1" style={{ filter: isUnlocked ? 'none' : 'grayscale(1)' }}>
-                            {badge.emoji ?? CATEGORY_ICONS[category.icon] ?? '🏅'}
+                          <div className="mb-1.5 flex justify-center" style={{ color: isUnlocked ? 'var(--brand)' : 'var(--text-muted)' }}>
+                            <ShineIcon name={CATEGORY_SHINE_ICON[category.icon] ?? 'eclat'} className="w-5 h-5" filled={isUnlocked} />
                           </div>
                           <p className="text-[10px] font-medium leading-tight" style={{ color: isUnlocked ? 'var(--brand)' : 'var(--text-muted)' }}>
                             {badge.title}

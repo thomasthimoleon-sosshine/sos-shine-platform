@@ -10,6 +10,7 @@ import { useTranslation } from '@/lib/i18n/useTranslation'
 import { greetingsData, GREETINGS_PER_SLOT, type TimeSlot } from '@/data/greetingsData'
 import NpsWidget from '@/components/NpsWidget'
 import { getLevelForXP } from '@/lib/xp'
+import ShineIcon from '@/components/icons/ShineIcon'
 import type { UserXP } from '@/types/database'
 import { resoudreProtocoleActif, CHEMIN_SIGNATURE } from '@/lib/protocole-actif'
 
@@ -467,7 +468,7 @@ export default function DashboardHome() {
             <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold"
               style={{ background: 'rgba(255,107,53,0.12)', border: '1px solid rgba(255,107,53,0.3)', color: '#FF6B35' }}
               title={`Plus longue série : ${streak.longest} jours`}>
-              🔥 {streak.current} {streak.current > 1 ? 'jours' : 'jour'}
+              <ShineIcon name="resilience" className="w-3.5 h-3.5 inline-block align-[-2px] mr-1" /> {streak.current} {streak.current > 1 ? 'jours' : 'jour'}
             </span>
           </div>
         )}
@@ -613,7 +614,7 @@ export default function DashboardHome() {
             </span>
           )}
           {streak.current > 0 && (
-            <span className="text-sm text-[var(--text-muted)]">🔥 Série de {streak.current} {streak.current > 1 ? 'jours' : 'jour'}</span>
+            <span className="text-sm text-[var(--text-muted)] inline-flex items-center gap-1"><ShineIcon name="resilience" className="w-3.5 h-3.5" /> Série de {streak.current} {streak.current > 1 ? 'jours' : 'jour'}</span>
           )}
           <Link href="/dashboard/badges" className="text-sm font-medium text-[var(--brand)] gold-underline">Mes badges →</Link>
         </div>
@@ -660,7 +661,7 @@ export default function DashboardHome() {
               {affiliateStatus.approved && affiliateStatus.referral_code ? (
                 <>
                   <div className="flex items-start gap-3 mb-4">
-                    <span className="text-2xl">💛</span>
+                    <span className="shrink-0" style={{ color: 'var(--brand)' }}><ShineIcon name="relationships" className="w-6 h-6" /></span>
                     <div className="flex-1 min-w-0">
                       <p className="text-[11px] font-semibold uppercase tracking-wider mb-1 text-[var(--brand)]">
                         Votre lien d&apos;affiliation
@@ -712,7 +713,7 @@ export default function DashboardHome() {
               ) : (
                 <>
                   <div className="flex items-start gap-3 mb-3">
-                    <span className="text-2xl">💛</span>
+                    <span className="shrink-0" style={{ color: 'var(--brand)' }}><ShineIcon name="relationships" className="w-6 h-6" /></span>
                     <div className="flex-1 min-w-0">
                       <p className="text-[11px] font-semibold uppercase tracking-wider mb-1 text-[var(--brand)]">
                         Programme d&apos;affiliation

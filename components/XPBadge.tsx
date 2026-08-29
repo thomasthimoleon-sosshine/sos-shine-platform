@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import { getLevelForXP, getNextLevel, getLevelProgress, formatXP, LEVEL_THRESHOLDS } from '@/lib/xp'
 import type { UserXP } from '@/types/database'
+import ShineIcon, { type ShineIconName } from '@/components/icons/ShineIcon'
 
 type Size = 'sm' | 'md' | 'lg'
 
@@ -58,7 +59,7 @@ export default function XPBadge({ userId, size = 'md', showDetails = false }: XP
         className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-medium ${sizeClasses[size]}`}
         style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.15)' }}
       >
-        <span>{level.icon}</span>
+        <ShineIcon name={level.emblem as ShineIconName} className="w-3.5 h-3.5" />
         <span>{level.name}</span>
       </span>
     )
@@ -68,7 +69,7 @@ export default function XPBadge({ userId, size = 'md', showDetails = false }: XP
     <div className="rounded-2xl p-6" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-semibold text-base text-[var(--text-primary)]">Niveau &amp; XP</h3>
-        <span className="text-xl">{level.icon}</span>
+        <span style={{ color: 'var(--brand)' }}><ShineIcon name={level.emblem as ShineIconName} className="w-6 h-6" /></span>
       </div>
 
       {/* Level name + XP */}
@@ -90,7 +91,7 @@ export default function XPBadge({ userId, size = 'md', showDetails = false }: XP
         <div className="mb-4">
           <div className="flex items-center justify-between mb-1.5">
             <span className="text-[11px] text-[var(--text-muted)]">
-              Progression vers {next.icon} {next.name}
+              Progression vers <ShineIcon name={next.emblem as ShineIconName} className="w-3 h-3 inline-block align-[-1px]" /> {next.name}
             </span>
             <span className="text-[11px] font-medium text-[var(--brand)]">{progress}%</span>
           </div>
@@ -151,7 +152,7 @@ export default function XPBadge({ userId, size = 'md', showDetails = false }: XP
                     opacity: isReached ? 1 : 0.4,
                     border: isCurrent ? '1px solid rgba(201,169,97,0.2)' : '1px solid transparent',
                   }}>
-                  <span className="text-sm">{t.icon}</span>
+                  <ShineIcon name={t.emblem as ShineIconName} className="w-4 h-4" />
                   <span className="font-medium">{t.name}</span>
                   <span className="ml-auto font-mono">{formatXP(t.minXP)} XP</span>
                   {isCurrent && (

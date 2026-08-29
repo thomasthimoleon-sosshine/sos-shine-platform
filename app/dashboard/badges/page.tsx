@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import { getAllCategories, getUserBadges, getUserActionCounters, unlockAllBadgesForUser, CATEGORY_SHINE_ICON, type CategoryConfig, type BadgeConfig } from '@/lib/badgeService'
-import ShineIcon from '@/components/icons/ShineIcon'
+import ShineIcon, { type ShineIconName } from '@/components/icons/ShineIcon'
 import { getLevelForXP, getNextLevel, getLevelProgress, formatXP, LEVEL_THRESHOLDS } from '@/lib/xp'
 
 const ease = [0.25, 0.46, 0.45, 0.94] as const
@@ -178,9 +178,9 @@ export default function BadgesQuestPage() {
         style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
       >
         <div className="flex items-center gap-4 mb-4">
-          <div className="w-14 h-14 rounded-full flex items-center justify-center text-2xl flex-shrink-0"
-            style={{ background: 'rgba(201,169,97,0.12)', border: '2px solid rgba(201,169,97,0.3)' }}>
-            {currentLevel.icon}
+          <div className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0"
+            style={{ background: 'rgba(201,169,97,0.12)', border: '2px solid rgba(201,169,97,0.3)', color: 'var(--brand)' }}>
+            <ShineIcon name={currentLevel.emblem as ShineIconName} className="w-7 h-7" />
           </div>
           <div className="flex-1">
             <p className="text-[10px] tracking-[0.25em] uppercase text-[var(--text-muted)] mb-0.5">Niveau {currentLevel.level}</p>
@@ -196,7 +196,7 @@ export default function BadgesQuestPage() {
           <>
             <div className="flex justify-between text-[11px] text-[var(--text-muted)] mb-1.5">
               <span>{currentLevel.name}</span>
-              <span>{nextLevel.icon} {nextLevel.name}, {formatXP(xpToNext)} points restants</span>
+              <span className="inline-flex items-center gap-1"><ShineIcon name={nextLevel.emblem as ShineIconName} className="w-3 h-3" /> {nextLevel.name}, {formatXP(xpToNext)} points restants</span>
             </div>
             <div className="h-2 rounded-full overflow-hidden" style={{ background: 'var(--border)' }}>
               <motion.div

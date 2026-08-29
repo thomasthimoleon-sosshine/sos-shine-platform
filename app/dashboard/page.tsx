@@ -10,7 +10,7 @@ import { useTranslation } from '@/lib/i18n/useTranslation'
 import { greetingsData, GREETINGS_PER_SLOT, type TimeSlot } from '@/data/greetingsData'
 import NpsWidget from '@/components/NpsWidget'
 import { getLevelForXP } from '@/lib/xp'
-import ShineIcon from '@/components/icons/ShineIcon'
+import ShineIcon, { type ShineIconName } from '@/components/icons/ShineIcon'
 import type { UserXP } from '@/types/database'
 import { resoudreProtocoleActif, CHEMIN_SIGNATURE } from '@/lib/protocole-actif'
 
@@ -609,7 +609,7 @@ export default function DashboardHome() {
         <div className="glass p-4 flex items-center justify-center gap-6 text-center flex-wrap">
           {level && (
             <span className="flex items-center gap-2">
-              <span className="text-lg">{level.icon}</span>
+              <span style={{ color: 'var(--brand)' }}><ShineIcon name={level.emblem as ShineIconName} className="w-5 h-5" /></span>
               <span className="text-sm font-semibold text-[var(--brand)]">{level.name}</span>
             </span>
           )}

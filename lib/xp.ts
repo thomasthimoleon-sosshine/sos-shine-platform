@@ -5,17 +5,18 @@
  */
 
 // ── Level thresholds (exponential) ──
+// `emblem` = icône maison (ShineIcon). `icon` (emoji) reste en repli.
 export const LEVEL_THRESHOLDS = [
-  { level: 1,  name: 'Étincelle',     minXP: 0,        icon: '✨' },
-  { level: 2,  name: 'Lueur',         minXP: 2500,     icon: '🌟' },
-  { level: 3,  name: 'Flamme',        minXP: 10000,    icon: '🔥' },
-  { level: 4,  name: 'Rayon',         minXP: 35000,    icon: '☀️' },
-  { level: 5,  name: 'Éclat',         minXP: 80000,    icon: '💎' },
-  { level: 6,  name: 'Lumière',       minXP: 160000,   icon: '🌈' },
-  { level: 7,  name: 'Aura',          minXP: 300000,   icon: '👑' },
-  { level: 8,  name: 'Prisme',        minXP: 550000,   icon: '🔮' },
-  { level: 9,  name: 'Constellation', minXP: 750000,   icon: '🌌' },
-  { level: 10, name: 'Diamant',       minXP: 1000000,  icon: '💠' },
+  { level: 1,  name: 'Étincelle',     minXP: 0,        icon: '✨', emblem: 'niveau1' },
+  { level: 2,  name: 'Lueur',         minXP: 2500,     icon: '🌟', emblem: 'niveau2' },
+  { level: 3,  name: 'Flamme',        minXP: 10000,    icon: '🔥', emblem: 'niveau3' },
+  { level: 4,  name: 'Rayon',         minXP: 35000,    icon: '☀️', emblem: 'niveau4' },
+  { level: 5,  name: 'Éclat',         minXP: 80000,    icon: '💎', emblem: 'niveau5' },
+  { level: 6,  name: 'Lumière',       minXP: 160000,   icon: '🌈', emblem: 'niveau6' },
+  { level: 7,  name: 'Aura',          minXP: 300000,   icon: '👑', emblem: 'niveau7' },
+  { level: 8,  name: 'Prisme',        minXP: 550000,   icon: '🔮', emblem: 'niveau8' },
+  { level: 9,  name: 'Constellation', minXP: 750000,   icon: '🌌', emblem: 'niveau9' },
+  { level: 10, name: 'Diamant',       minXP: 1000000,  icon: '💠', emblem: 'niveau10' },
 ] as const
 
 export type LevelInfo = typeof LEVEL_THRESHOLDS[number]

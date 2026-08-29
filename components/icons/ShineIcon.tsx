@@ -56,6 +56,17 @@ export type ShineIconName =
   | 'rayon'
   | 'garder'
   | 'diffuser'
+  // Emblèmes de niveaux (Étincelle → Diamant)
+  | 'niveau1'
+  | 'niveau2'
+  | 'niveau3'
+  | 'niveau4'
+  | 'niveau5'
+  | 'niveau6'
+  | 'niveau7'
+  | 'niveau8'
+  | 'niveau9'
+  | 'niveau10'
 
 type Props = {
   name: ShineIconName
@@ -362,6 +373,93 @@ const PATHS: Record<ShineIconName, React.ReactNode> = {
       <path d="M5 8.8 L8.2 12 L5 15.2 L1.8 12 Z" />
       <path d="M8.8 10.6 L14.6 7.6" />
       <path d="M8.8 13.4 L14.6 16.4" />
+    </>
+  ),
+
+  /* ── Niveau 1 · Étincelle — une étincelle à quatre rais. ── */
+  niveau1: (
+    <path d="M12 4 L13.4 10.6 L20 12 L13.4 13.4 L12 20 L10.6 13.4 L4 12 L10.6 10.6 Z" />
+  ),
+
+  /* ── Niveau 2 · Lueur — l'étincelle et son halo. ── */
+  niveau2: (
+    <>
+      <path d="M12 6.6 L13 11 L17.4 12 L13 13 L12 17.4 L11 13 L6.6 12 L11 11 Z" />
+      <circle cx="12" cy="12" r="9.4" />
+    </>
+  ),
+
+  /* ── Niveau 3 · Flamme — le feu qui prend. ── */
+  niveau3: (
+    <>
+      <path d="M12 3.4 C 15 8, 16.6 10.6, 15.6 14 A 3.6 3.6 0 1 1 8.4 14 C 8 11.4, 10 9, 12 3.4 Z" />
+      <path d="M12 11.8 C 12.9 13.4, 11.7 15.6, 12 17.2" />
+    </>
+  ),
+
+  /* ── Niveau 4 · Rayon — la facette et ses rais. ── */
+  niveau4: (
+    <>
+      <path d="M12 8.4 L14 12 L12 15.6 L10 12 Z" />
+      <path d="M12 2.6 V5" /><path d="M12 19 V21.4" /><path d="M2.6 12 H5" /><path d="M19 12 H21.4" />
+      <path d="M5.4 5.4 l1.7 1.7" /><path d="M16.9 16.9 l1.7 1.7" /><path d="M18.6 5.4 l-1.7 1.7" /><path d="M7.1 16.9 l-1.7 1.7" />
+    </>
+  ),
+
+  /* ── Niveau 5 · Éclat — le brillant taillé. ── */
+  niveau5: (
+    <>
+      <path d="M7 5 H17 L21 9 L12 20.5 L3 9 Z" />
+      <path d="M3 9 H21" />
+      <path d="M7 5 L9.5 9 L12 20.5" />
+      <path d="M17 5 L14.5 9 L12 20.5" />
+    </>
+  ),
+
+  /* ── Niveau 6 · Lumière — le rayonnement plein. ── */
+  niveau6: (
+    <>
+      <path d="M12 9.4 L13.5 12 L12 14.6 L10.5 12 Z" />
+      <path d="M12 2.4 V4.4" /><path d="M12 19.6 V21.6" /><path d="M2.4 12 H4.4" /><path d="M19.6 12 H21.6" />
+      <path d="M4.9 4.9 l1.4 1.4" /><path d="M17.7 17.7 l1.4 1.4" /><path d="M19.1 4.9 l-1.4 1.4" /><path d="M6.3 17.7 l-1.4 1.4" />
+      <path d="M7.8 3.4 l0.8 1.8" /><path d="M15.4 18.8 l0.8 1.8" /><path d="M3.4 16.2 l1.8-0.8" /><path d="M18.8 8.6 l1.8-0.8" />
+    </>
+  ),
+
+  /* ── Niveau 7 · Aura — la couronne de facettes. ── */
+  niveau7: (
+    <>
+      <path d="M4 16.5 L6 8.5 L9.5 13.5 L12 6.5 L14.5 13.5 L18 8.5 L20 16.5 Z" />
+      <path d="M4.6 19.4 H19.4" />
+    </>
+  ),
+
+  /* ── Niveau 8 · Prisme — la lumière qui se sépare. ── */
+  niveau8: (
+    <>
+      <path d="M12 3.6 L20.4 18.4 H3.6 Z" />
+      <path d="M12 3.6 V18.4" />
+      <path d="M8 18.4 L14 11" />
+    </>
+  ),
+
+  /* ── Niveau 9 · Constellation — les points reliés. ── */
+  niveau9: (
+    <>
+      <path d="M5 7 L11 11 L17 6 L19 13 L13 17 L7 15 Z" />
+      <circle cx="5" cy="7" r="1.1" /><circle cx="11" cy="11" r="1.1" /><circle cx="17" cy="6" r="1.1" />
+      <circle cx="19" cy="13" r="1.1" /><circle cx="13" cy="17" r="1.1" /><circle cx="7" cy="15" r="1.1" />
+    </>
+  ),
+
+  /* ── Niveau 10 · Diamant — le brillant achevé. ── */
+  niveau10: (
+    <>
+      <path d="M6 4 H18 L22 10 L12 21 L2 10 Z" />
+      <path d="M2 10 H22" />
+      <path d="M6 4 L9 10 L12 21" />
+      <path d="M18 4 L15 10 L12 21" />
+      <path d="M9 10 H15" />
     </>
   ),
 }

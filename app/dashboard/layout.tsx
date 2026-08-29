@@ -301,7 +301,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <div className="w-10 h-10 rounded-2xl mx-auto flex items-center justify-center bg-[rgba(201, 169, 97,0.12)] border border-[#C9A961]/30">
             <div className="w-5 h-5 border-2 border-[#0A0806] border-t-[#C9A961] rounded-full animate-spin" />
           </div>
-          <p className="text-sm text-[#52525b]">{t('common.loading')}</p>
+          <p className="text-sm text-[var(--text-muted)]">{t('common.loading')}</p>
         </div>
       </div>
     )
@@ -319,7 +319,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       {/* ── Sidebar ── */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-[16.5rem] flex flex-col transition-transform duration-300 ease-out lg:translate-x-0 bg-[rgba(9,9,11,0.4)] backdrop-blur-xl border-r border-white/[0.04] ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-[16.5rem] flex flex-col transition-transform duration-300 ease-out lg:translate-x-0 bg-[rgba(9,9,11,0.4)] backdrop-blur-xl border-r border-[var(--border)] ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         {/* Logo */}
         <div className="px-5 py-5 flex items-center gap-3 border-b border-white/[0.04]">
@@ -327,15 +327,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {logoUrl ? (
               <img src={logoUrl} alt="SOS Shine" className="w-9 h-9 rounded-xl object-contain" />
             ) : (
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center font-display text-base font-semibold bg-[rgba(201, 169, 97,0.12)] text-[#C9A961] border border-[#C9A961]/30">
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center font-display text-base font-semibold bg-[rgba(201, 169, 97,0.12)] text-[var(--brand)] border border-[#C9A961]/30">
                 S
               </div>
             )}
             <div>
-              <h1 className="font-display text-base font-semibold tracking-tight text-[#C9A961]">
+              <h1 className="font-display text-base font-semibold tracking-tight text-[var(--brand)]">
                 SOS Shine
               </h1>
-              <p className="text-[11px] leading-none text-[#52525b]">{t('nav.your_space')}</p>
+              <p className="text-[11px] leading-none text-[var(--text-muted)]">{t('nav.your_space')}</p>
             </div>
           </Link>
         </div>
@@ -350,7 +350,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 key={item.href}
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
-                className={`nav-item flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium relative group transition-colors duration-[var(--transition-base)] ${isActive ? 'bg-[rgba(201, 169, 97,0.07)] text-[#C9A961]' : 'text-[#a1a1aa] hover:text-[#e0e0e0] hover:bg-white/[0.03]'}`}
+                className={`nav-item flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium relative group transition-colors duration-[var(--transition-base)] ${isActive ? 'bg-[rgba(201, 169, 97,0.07)] text-[var(--brand)]' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-elevated)]'}`}
               >
                 {isActive && (
                   <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-full bg-[#C9A961]" />
@@ -376,7 +376,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 key={item.href}
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
-                className={`nav-item flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium relative group transition-colors duration-[var(--transition-base)] ${isActive ? 'bg-[rgba(201, 169, 97,0.07)] text-[#C9A961]' : 'text-[#a1a1aa] hover:text-[#e0e0e0] hover:bg-white/[0.03]'}`}
+                className={`nav-item flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium relative group transition-colors duration-[var(--transition-base)] ${isActive ? 'bg-[rgba(201, 169, 97,0.07)] text-[var(--brand)]' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-elevated)]'}`}
               >
                 {isActive && (
                   <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-full bg-[#C9A961]" />
@@ -396,7 +396,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <button
             type="button"
             onClick={() => setShowMoreNav((v) => !v)}
-            className="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium text-[#a1a1aa] hover:text-[#e0e0e0] hover:bg-white/[0.03] transition-colors cursor-pointer"
+            className="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-elevated)] transition-colors cursor-pointer"
           >
             <span className="opacity-70">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -410,7 +410,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <Link
             href="/mon-chemin"
             onClick={() => setSidebarOpen(false)}
-            className="nav-item flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium relative group transition-colors duration-[var(--transition-base)] text-[#a1a1aa] hover:text-[#e0e0e0] hover:bg-white/[0.03]"
+            className="nav-item flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium relative group transition-colors duration-[var(--transition-base)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-elevated)]"
           >
             <span className="opacity-70 group-hover:opacity-100 transition-opacity">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -444,14 +444,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {isAdmin && (
             <>
               <div className="pt-5 pb-1.5 px-3">
-                <span className="text-[10px] font-semibold uppercase tracking-widest text-[#52525b]">
+                <span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">
                   {t('nav.administration')}
                 </span>
               </div>
               <Link
                 href="/admin"
                 onClick={() => setSidebarOpen(false)}
-                className="nav-item flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium group text-[#60a5fa] hover:bg-white/[0.03] transition-colors"
+                className="nav-item flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] text-[13px] font-medium group text-[#60a5fa] hover:bg-[var(--surface-elevated)] transition-colors"
               >
                 <span className="opacity-70 group-hover:opacity-100 transition-opacity">
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -470,14 +470,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             Ce bloc ne subsiste que dans le tiroir mobile. */}
         <div className="lg:hidden px-3 py-4 border-t border-white/[0.04]">
           <div className="flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-lg)] mb-2 bg-[rgba(255,255,255,0.025)] border border-white/[0.05]">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 ring-1 ring-[#C9A961]/20 bg-[rgba(201, 169, 97,0.12)] text-[#C9A961]">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 ring-1 ring-[#C9A961]/20 bg-[rgba(201, 169, 97,0.12)] text-[var(--brand)]">
               {profile?.prenom?.charAt(0).toUpperCase() || 'M'}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-[13px] font-medium truncate text-[#e0e0e0]">
+              <p className="text-[13px] font-medium truncate text-[var(--text-primary)]">
                 {profile?.prenom || 'Membre'}
               </p>
-              <p className="text-[11px] truncate text-[#52525b]">
+              <p className="text-[11px] truncate text-[var(--text-muted)]">
                 {profile?.email}
               </p>
             </div>
@@ -491,7 +491,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
           <button
             onClick={handleSignOut}
-            className="nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-[var(--radius-lg)] text-[13px] cursor-pointer text-[#52525b] hover:text-[#a1a1aa] hover:bg-white/[0.03] transition-colors"
+            className="nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-[var(--radius-lg)] text-[13px] cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-secondary)] hover:bg-[var(--surface-elevated)] transition-colors"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
@@ -504,26 +504,26 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* ── Main content area ── */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Desktop topbar — notifications, thème, compte et déconnexion, en haut à droite */}
-        <header className="hidden lg:flex items-center justify-end gap-3 px-8 py-3 sticky top-0 z-30 bg-[rgba(9,9,11,0.85)] backdrop-blur-xl border-b border-white/[0.04]">
+        <header className="hidden lg:flex items-center justify-end gap-3 px-8 py-3 sticky top-0 z-30 bg-[var(--surface-overlay)] backdrop-blur-xl border-b border-[var(--border)]">
           <NotificationBell />
           <ThemeToggle />
 
           {/* Séparateur discret entre les commandes et l'identité */}
-          <span className="w-px h-6 bg-white/[0.07]" aria-hidden="true" />
+          <span className="w-px h-6 bg-[var(--border)]" aria-hidden="true" />
 
           <Link
             href="/dashboard/profil"
             title={profile?.email || undefined}
-            className="flex items-center gap-2.5 pl-1.5 pr-3 py-1.5 rounded-full transition-colors hover:bg-white/[0.04]"
+            className="flex items-center gap-2.5 pl-1.5 pr-3 py-1.5 rounded-full transition-colors hover:bg-[var(--surface-elevated)]"
           >
-            <span className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 ring-1 ring-[#C9A961]/20 bg-[rgba(201,169,97,0.12)] text-[#C9A961]">
+            <span className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 ring-1 ring-[#C9A961]/20 bg-[rgba(201,169,97,0.12)] text-[var(--brand)]">
               {profile?.prenom?.charAt(0).toUpperCase() || 'M'}
             </span>
             <span className="min-w-0 text-left">
-              <span className="block text-[13px] font-medium leading-tight truncate max-w-[160px] text-[#e0e0e0]">
+              <span className="block text-[13px] font-medium leading-tight truncate max-w-[160px] text-[var(--text-primary)]">
                 {profile?.prenom || 'Membre'}
               </span>
-              <span className="block text-[11px] leading-tight truncate max-w-[160px] text-[#52525b]">
+              <span className="block text-[11px] leading-tight truncate max-w-[160px] text-[var(--text-muted)]">
                 {profile?.email}
               </span>
             </span>
@@ -533,7 +533,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             onClick={handleSignOut}
             title={t('nav.signout')}
             aria-label={t('nav.signout')}
-            className="w-9 h-9 flex items-center justify-center rounded-full cursor-pointer text-[#52525b] hover:text-[#a1a1aa] hover:bg-white/[0.04] transition-colors"
+            className="w-9 h-9 flex items-center justify-center rounded-full cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-elevated)] transition-colors"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
@@ -542,10 +542,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </header>
 
         {/* Mobile topbar */}
-        <header className="lg:hidden flex items-center justify-between px-4 py-3 sticky top-0 z-30 bg-[rgba(9,9,11,0.85)] backdrop-blur-xl border-b border-white/[0.04]">
+        <header className="lg:hidden flex items-center justify-between px-4 py-3 sticky top-0 z-30 bg-[var(--surface-overlay)] backdrop-blur-xl border-b border-[var(--border)]">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="p-2 rounded-[var(--radius-md)] cursor-pointer transition-colors text-[#a1a1aa] hover:text-[#e0e0e0]"
+            className="p-2 rounded-[var(--radius-md)] cursor-pointer transition-colors text-[var(--text-muted)] hover:text-[var(--text-primary)]"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
@@ -554,7 +554,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {logoUrl ? (
             <img src={logoUrl} alt="SOS Shine" className="h-7 object-contain" />
           ) : (
-            <span className="font-display text-base font-semibold tracking-tight text-[#C9A961]">
+            <span className="font-display text-base font-semibold tracking-tight text-[var(--brand)]">
               SOS Shine
             </span>
           )}
@@ -602,11 +602,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   <span style={{ color: 'var(--brand)' }}><ShineIcon name="eclat" className="w-8 h-8" /></span>
                 </div>
 
-                <h2 className="font-display text-xl sm:text-2xl font-semibold mb-3 text-[#C9A961]">
+                <h2 className="font-display text-xl sm:text-2xl font-semibold mb-3 text-[var(--brand)]">
                   Bienvenue chez vous
                 </h2>
 
-                <p className="text-[15px] leading-relaxed mb-8 text-[#a1a1aa]">
+                <p className="text-[15px] leading-relaxed mb-8 text-[var(--text-secondary)]">
                   Prenez le temps qu&apos;il vous faut. Vous êtes au bon endroit. ✨
                 </p>
 

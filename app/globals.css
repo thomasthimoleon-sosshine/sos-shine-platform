@@ -10,6 +10,10 @@
 :root {
   /* ── Brand — Or SOS Shine (aligné sur la landing) ── */
   --brand: #C9A961;
+  /* L'or en couleur de texte. Sur le noir, l'or de marque suffit ; le thème
+     clair le redéfinit, où il tombe sinon à 2,1:1. Défini ici pour qu'un
+     composant qui s'en sert n'hérite jamais du vide. */
+  --brand-ink: #C9A961;
   --brand-light: #E8C77D;
   --brand-deep: #A9822E;
   --brand-muted: #B0A084;
@@ -112,25 +116,101 @@
   --gold-gradient: linear-gradient(135deg, var(--brand), var(--brand-deep));
 }
 
-/* ── Light Theme ── */
+/* ── Light Theme ──
+   Le thème clair ne redéfinissait que les alias hérités (--dark, --dark-card,
+   --dark-border) et les couleurs de texte. Les jetons de surface et de bordure
+   du système actuel — ceux qu'utilise tout le code récent — gardaient leurs
+   valeurs sombres : une carte restait noire pendant que son texte passait au
+   noir. D'où les publications, les descriptions d'événements et la page « Mon
+   compte » devenues illisibles. Tous les jetons sont désormais redéfinis. */
 [data-theme="light"] {
-  --dark: #FAFAF9;
-  --dark-card: rgba(0, 0, 0, 0.03);
-  --dark-card-hover: rgba(0, 0, 0, 0.06);
-  --dark-border: rgba(0, 0, 0, 0.08);
-  --dark-border-hover: rgba(0, 0, 0, 0.14);
-  --surface-elevated: rgba(0, 0, 0, 0.04);
-  --text-primary: #1a1a1a;
-  --text-secondary: #52525b;
-  --text-muted: #a1a1aa;
-  --text-bold: #3f3f46;
+  /* L'or de la charte est réglé pour le noir : sur l'ivoire il tombe à 3,4:1,
+     insuffisant pour du texte courant. --brand reste tel quel pour les fonds
+     (boutons dorés, pastilles), et l'encre dorée s'écrit avec --brand-ink. */
+  --brand-ink: #8A6B22;
+
+  /* ── Surfaces ── */
+  --surface: #FAF8F4;
+  --surface-raised: #FFFFFF;
+  --surface-card: #FFFFFF;
+  --surface-elevated: #F3F0E9;
+  --surface-overlay: rgba(255, 255, 255, 0.88);
+
+  /* ── Bordures — l'or à 10 % est invisible sur blanc ── */
+  --border: rgba(26, 22, 14, 0.10);
+  --border-subtle: rgba(26, 22, 14, 0.06);
+  --border-medium: rgba(169, 130, 46, 0.30);
+  --border-strong: rgba(169, 130, 46, 0.48);
+  --border-hover: rgba(169, 130, 46, 0.38);
+
+  /* ── Texte ── */
+  --text-primary: #1A1712;
+  --text-secondary: #55503F;
+  --text-muted: #6F6959;
+  --text-bold: #0F0D0A;
+  --text-inverse: #FFFFFF;
+
+  /* ── Ombres — noires et lourdes en sombre, à peine posées en clair ── */
+  --shadow-xs: 0 1px 2px rgba(26, 22, 14, 0.05);
+  --shadow-sm: 0 2px 8px rgba(26, 22, 14, 0.06);
+  --shadow-md: 0 4px 16px rgba(26, 22, 14, 0.08);
+  --shadow-lg: 0 8px 32px rgba(26, 22, 14, 0.10);
+  --shadow-xl: 0 16px 48px rgba(26, 22, 14, 0.12);
+  --shadow-brand: 0 2px 12px rgba(169, 130, 46, 0.14);
   --glow-gold: 0 0 40px rgba(201, 169, 97, 0.08), 0 0 80px rgba(201, 169, 97, 0.03);
   --glow-gold-hover: 0 0 60px rgba(201, 169, 97, 0.15), 0 0 120px rgba(201, 169, 97, 0.05);
+
+  /* ── Alias hérités ── */
+  --dark: #FAF8F4;
+  --dark-card: #FFFFFF;
+  --dark-card-hover: #F3F0E9;
+  --dark-border: rgba(26, 22, 14, 0.10);
+  --dark-border-hover: rgba(169, 130, 46, 0.38);
 }
 
 [data-theme="light"] body {
-  background: #FAFAF9;
-  color: #1a1a1a;
+  background: var(--surface);
+  color: var(--text-primary);
+}
+
+/* L'or clair passe à l'encre dorée dès qu'il sert de couleur de texte, qu'il
+   soit écrit en style en ligne ou par la classe Tailwind. */
+[data-theme="light"] .text-\[var\(--brand\)\],
+[data-theme="light"] .gold-underline {
+  color: var(--brand-ink);
+}
+
+/* Écrit en style en ligne, l'or ne cède qu'à !important. */
+[data-theme="light"] [style*="color: var(--brand)"],
+[data-theme="light"] [style*="color:var(--brand)"] {
+  color: var(--brand-ink) !important;
+}
+
+/* Le soulignement doré est peint par un dégradé de fond, pas par la couleur du
+   texte : sans cela il resterait en or clair sur l'ivoire. Cette règle ne vaut
+   que pour .gold-underline — appliquée plus largement, elle remplit le fond de
+   tout élément écrit en or. */
+[data-theme="light"] .gold-underline {
+  background-image: linear-gradient(var(--brand-ink), var(--brand-ink));
+}
+
+/* Fonds sombres écrits en dur dans les composants : ils restaient noirs
+   pendant que le texte passait au noir. */
+[data-theme="light"] [style*="rgba(0,0,0,0.2)"],
+[data-theme="light"] [style*="rgba(0, 0, 0, 0.2)"],
+[data-theme="light"] [style*="rgba(0,0,0,0.25)"],
+[data-theme="light"] [style*="rgba(0,0,0,0.3)"],
+[data-theme="light"] [style*="rgba(0, 0, 0, 0.3)"] {
+  background: rgba(26, 22, 14, 0.035) !important;
+}
+
+/* Texte ivoire écrit en dur (questionnaires, cartes de choix) : invisible
+   sur fond clair. */
+[data-theme="light"] [style*="rgba(245,239,227,0.72)"],
+[data-theme="light"] [style*="rgba(245,239,227,0.6)"],
+[data-theme="light"] [style*="rgba(245,239,227,0.8)"],
+[data-theme="light"] [style*="rgba(245,239,227,0.9)"] {
+  color: var(--text-secondary) !important;
 }
 
 [data-theme="light"] .glass-dense {
@@ -148,7 +228,7 @@
 }
 
 [data-theme="light"] .page-loader {
-  background: #FAFAF9;
+  background: var(--surface);
 }
 
 [data-theme="light"] h1, [data-theme="light"] h2, [data-theme="light"] h3,
@@ -269,9 +349,6 @@
   color: inherit;
 }
 
-[data-theme="light"] aside .nav-item {
-  color: #4a4a4a;
-}
 [data-theme="light"] aside .nav-item:hover {
   background: rgba(201, 169, 97, 0.06);
 }
@@ -288,28 +365,28 @@
 }
 
 [data-theme="light"] .prose {
-  color: #3a3a3a;
+  color: var(--text-secondary);
 }
 [data-theme="light"] .prose h1,
 [data-theme="light"] .prose h2,
 [data-theme="light"] .prose h3 {
-  color: #A9822E !important;
+  color: var(--brand-ink) !important;
 }
 
 /* ── Light mode: force backgrounds on layout containers ── */
 [data-theme="light"] [style*="background: var(--dark)"],
 [data-theme="light"] [style*="background:var(--dark)"] {
-  background: #FAFAF9 !important;
+  background: var(--surface) !important;
 }
 
 [data-theme="light"] .min-h-screen {
-  background-color: #FAFAF9;
+  background-color: var(--surface);
 }
 
 /* Sidebar in light mode */
 [data-theme="light"] aside {
-  background: rgba(255, 255, 255, 0.92) !important;
-  border-color: rgba(0, 0, 0, 0.08) !important;
+  background: var(--surface-overlay) !important;
+  border-color: var(--border) !important;
 }
 
 /* Sidebar user section */
@@ -334,17 +411,6 @@
 
 [data-theme="light"] [style*="rgba(201, 169, 97, 0.08)"] {
   background: rgba(201, 169, 97, 0.06) !important;
-}
-
-/* Ensure inline color styles are overridden in light mode */
-[data-theme="light"] [style*="color: var(--text-primary)"] {
-  color: #1a1a1a !important;
-}
-[data-theme="light"] [style*="color: var(--text-secondary)"] {
-  color: #52525b !important;
-}
-[data-theme="light"] [style*="color: var(--text-muted)"] {
-  color: #a1a1aa !important;
 }
 
 /* ── 2. Tailwind v4 Theme ── */

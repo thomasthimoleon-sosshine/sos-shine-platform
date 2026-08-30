@@ -43,6 +43,7 @@ function pickQuizQuestions<T extends { id: string }>(pool: T[], n: number, exclu
 }
 import FavoriteButton from '@/components/FavoriteButton'
 import ShineIcon, { type ShineIconName } from '@/components/icons/ShineIcon'
+import { signeEtape } from '@/lib/signes-etapes'
 
 type StepConfig = {
   num: number
@@ -77,7 +78,7 @@ function buildSteps(douleur: Douleur, dynamicSteps: DouleurStep[]): StepConfig[]
       num: i + 1,
       title: s.title,
       subtitle: s.subtitle || 'Vidéo, audio & ressources',
-      icon: s.icon || '📋',
+      icon: s.icon || '',
       color: s.color || '#C9A961',
       description: s.description || '',
       video: s.video_url,
@@ -104,19 +105,19 @@ function buildSteps(douleur: Douleur, dynamicSteps: DouleurStep[]): StepConfig[]
   const d = douleur as any
   return [
     {
-      num: 1, title: 'Comprendre', subtitle: 'Une vidéo, un audio, à votre rythme', icon: '🎬', color: '#C9A961',
+      num: 1, title: 'Comprendre', subtitle: 'Une vidéo, un audio, à votre rythme', icon: 'oeil', color: '#C9A961',
       description: 'On met des mots simples sur ce que vous vivez. Vous n\'avez rien à faire d\'autre qu\'écouter.',
       video: douleur.video_url, video2: d.video_url_2 || null, audio: douleur.step1_audio_url, audio2: null, pdf: douleur.step1_pdf_url, image: douleur.step1_image_url,
       video_cover: null, video2_cover: null, audio_cover: null, audio2_cover: null, exercise_content: null,
     },
     {
-      num: 2, title: 'Se libérer', subtitle: 'Un audio, une vidéo, en douceur', icon: '✨', color: '#E8C77D',
+      num: 2, title: 'Se libérer', subtitle: 'Un audio, une vidéo, en douceur', icon: 'envol', color: '#E8C77D',
       description: 'On relâche, en douceur, ce qui pèse à l\'intérieur. Laissez-vous guider, il n\'y a rien à réussir.',
       video: douleur.step2_video_url, video2: d.step2_video_url_2 || null, audio: douleur.audio_energy_url, audio2: d.audio_energy_url_2 || null, pdf: douleur.step2_pdf_url, image: douleur.step2_image_url,
       video_cover: null, video2_cover: null, audio_cover: null, audio2_cover: null, exercise_content: null,
     },
     {
-      num: 3, title: 'Avancer', subtitle: 'Un petit exercice pour ancrer', icon: '⚡', color: '#A9822E',
+      num: 3, title: 'Avancer', subtitle: 'Un petit exercice pour ancrer', icon: 'cible', color: '#A9822E',
       description: 'Un petit exercice concret pour ancrer ce qui a bougé en vous, dans votre quotidien.',
       video: douleur.step3_video_url, video2: d.step3_video_url_2 || null, audio: douleur.audio_meditation_url, audio2: null, pdf: douleur.pdf_url, image: douleur.step3_image_url,
       video_cover: null, video2_cover: null, audio_cover: null, audio2_cover: null, exercise_content: douleur.exercise_content,
@@ -919,7 +920,7 @@ export default function DouleurDetailPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                 </svg>
               ) : (
-                <span className="text-lg">{step.icon}</span>
+                <ShineIcon name={signeEtape(step.icon, step.num)} className="w-5 h-5" />
               )}
               <span>Étape {step.num}</span>
             </button>
@@ -950,8 +951,8 @@ export default function DouleurDetailPage() {
       {/* Active step content */}
       {activeStep <= totalSteps && currentStep && <div className="rounded-2xl p-6 sm:p-8" style={{ background: `${currentStep.color}06`, border: `1px solid ${currentStep.color}15` }}>
         <div className="flex items-center gap-4 mb-6">
-          <div className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl" style={{ background: `${currentStep.color}15` }}>
-            {currentStep.icon}
+          <div className="w-14 h-14 rounded-xl flex items-center justify-center" style={{ background: `${currentStep.color}15`, color: currentStep.color }}>
+            <ShineIcon name={signeEtape(currentStep.icon, currentStep.num)} className="w-7 h-7" />
           </div>
           <div>
             <span className="text-xs font-medium block" style={{ color: currentStep.color, opacity: 0.7 }}>
@@ -978,7 +979,7 @@ export default function DouleurDetailPage() {
               <div className="rounded-xl p-8 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.3)', border: `1px dashed ${currentStep.color}30` }}>
                 <div className="text-center">
                   <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3" style={{ background: `${currentStep.color}15` }}>
-                    <span className="text-2xl">{currentStep.icon}</span>
+                    <ShineIcon name={signeEtape(currentStep.icon, currentStep.num)} className="w-8 h-8" color={currentStep.color} />
                   </div>
                   <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Contenu bientôt disponible</p>
                 </div>

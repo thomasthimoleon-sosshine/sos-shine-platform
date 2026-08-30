@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import FileUpload from '@/components/FileUpload'
 import type { Douleur, DouleurStep, DouleurQuizQuestion } from '@/types/database'
+import ShineIcon, { type ShineIconName } from '@/components/icons/ShineIcon'
+import { signeEtape, SIGNES_ETAPE_PAR_DEFAUT } from '@/lib/signes-etapes'
 
 function generateSlug(title: string): string {
   return title
@@ -17,7 +19,30 @@ function generateSlug(title: string): string {
 }
 
 const DEFAULT_STEP_COLORS = ['#55EFC4', '#74C0FC', '#E17055', '#BA92FF', '#F8C291', '#FDA7DF', '#78E08F']
-const DEFAULT_STEP_ICONS = ['🎬', '✨', '⚡', '🌊', '🔥', '💎', '🌟']
+/* Les étapes portaient un émoji système : chaque téléphone dessinait le sien.
+   Elles naissent désormais avec un signe SOS Shine, du même trait que le reste. */
+const DEFAULT_STEP_ICONS: string[] = [...SIGNES_ETAPE_PAR_DEFAUT]
+
+/* Les signes proposés pour une étape : le mouvement de l'étape, pas son média
+   (la vidéo, l'audio et le cahier ont déjà leur propre en-tête dans la page). */
+const SIGNES_ETAPE_DISPONIBLES: { nom: ShineIconName; label: string }[] = [
+  { nom: 'oeil', label: 'Voir clair' },
+  { nom: 'envol', label: 'Laisser partir' },
+  { nom: 'cible', label: 'Passer \u00e0 l\u2019acte' },
+  { nom: 'boussole', label: 'S\u2019orienter' },
+  { nom: 'respiration', label: 'Souffler' },
+  { nom: 'meditation', label: 'M\u00e9diter' },
+  { nom: 'coeur', label: 'Le c\u0153ur' },
+  { nom: 'eclat', label: 'Ce qui s\u2019allume' },
+  { nom: 'cle', label: 'La cl\u00e9' },
+  { nom: 'bouclier', label: 'Se prot\u00e9ger' },
+  { nom: 'resilience', label: 'Tenir bon' },
+  { nom: 'sante', label: 'Reprendre vie' },
+  { nom: 'plume', label: '\u00c9crire' },
+  { nom: 'membres', label: 'Avec les autres' },
+  { nom: 'sleep', label: 'Se reposer' },
+  { nom: 'couronne', label: 'Aboutir' },
+]
 
 type StepForm = {
   id?: string
@@ -67,9 +92,9 @@ function createEmptyStep(num: number): StepForm {
 }
 
 const DEFAULT_STEPS: StepForm[] = [
-  { title: 'Comprendre', subtitle: 'Vidéo, audio & ressources', description: '', icon: '🎬', color: '#55EFC4', video_url: '', video_url_2: '', audio_url: '', audio_url_2: '', pdf_url: '', image_url: '', video_cover: '', video2_cover: '', audio_cover: '', audio2_cover: '', exercise_content: '' },
-  { title: 'Libérer & Intégrer', subtitle: 'Audio, vidéo & ressources', description: '', icon: '✨', color: '#74C0FC', video_url: '', video_url_2: '', audio_url: '', audio_url_2: '', pdf_url: '', image_url: '', video_cover: '', video2_cover: '', audio_cover: '', audio2_cover: '', exercise_content: '' },
-  { title: 'Agir', subtitle: 'Exercices, audio & ressources', description: '', icon: '⚡', color: '#E17055', video_url: '', video_url_2: '', audio_url: '', audio_url_2: '', pdf_url: '', image_url: '', video_cover: '', video2_cover: '', audio_cover: '', audio2_cover: '', exercise_content: '' },
+  { title: 'Comprendre', subtitle: 'Vidéo, audio & ressources', description: '', icon: 'oeil', color: '#55EFC4', video_url: '', video_url_2: '', audio_url: '', audio_url_2: '', pdf_url: '', image_url: '', video_cover: '', video2_cover: '', audio_cover: '', audio2_cover: '', exercise_content: '' },
+  { title: 'Libérer & Intégrer', subtitle: 'Audio, vidéo & ressources', description: '', icon: 'envol', color: '#74C0FC', video_url: '', video_url_2: '', audio_url: '', audio_url_2: '', pdf_url: '', image_url: '', video_cover: '', video2_cover: '', audio_cover: '', audio2_cover: '', exercise_content: '' },
+  { title: 'Agir', subtitle: 'Exercices, audio & ressources', description: '', icon: 'cible', color: '#E17055', video_url: '', video_url_2: '', audio_url: '', audio_url_2: '', pdf_url: '', image_url: '', video_cover: '', video2_cover: '', audio_cover: '', audio2_cover: '', exercise_content: '' },
 ]
 
 const ENCYCLOPEDIE_CATEGORIES = [
@@ -278,21 +303,21 @@ export default function AdminDouleursPage() {
     const anyD = d as any
     return [
       {
-        title: 'Comprendre', subtitle: 'Vidéo, audio & ressources', description: '', icon: '🎬', color: '#55EFC4',
+        title: 'Comprendre', subtitle: 'Vidéo, audio & ressources', description: '', icon: 'oeil', color: '#55EFC4',
         video_url: d.video_url || '', video_url_2: anyD.video_url_2 || '',
         audio_url: d.step1_audio_url || '', audio_url_2: '',
         pdf_url: d.step1_pdf_url || '', image_url: d.step1_image_url || '',
         video_cover: '', video2_cover: '', audio_cover: '', audio2_cover: '', exercise_content: '',
       },
       {
-        title: 'Libérer & Intégrer', subtitle: 'Audio, vidéo & ressources', description: '', icon: '✨', color: '#74C0FC',
+        title: 'Libérer & Intégrer', subtitle: 'Audio, vidéo & ressources', description: '', icon: 'envol', color: '#74C0FC',
         video_url: d.step2_video_url || '', video_url_2: '',
         audio_url: d.audio_energy_url || '', audio_url_2: anyD.audio_energy_url_2 || '',
         pdf_url: d.step2_pdf_url || '', image_url: d.step2_image_url || '',
         video_cover: '', video2_cover: '', audio_cover: '', audio2_cover: '', exercise_content: '',
       },
       {
-        title: 'Agir', subtitle: 'Exercices, audio & ressources', description: '', icon: '⚡', color: '#E17055',
+        title: 'Agir', subtitle: 'Exercices, audio & ressources', description: '', icon: 'cible', color: '#E17055',
         video_url: d.step3_video_url || '', video_url_2: '',
         audio_url: d.audio_meditation_url || '', audio_url_2: '',
         pdf_url: d.pdf_url || '', image_url: d.step3_image_url || '',
@@ -942,7 +967,7 @@ export default function AdminDouleursPage() {
                       style={{ background: isExpanded ? `${step.color}08` : 'transparent' }}
                     >
                       <div className="flex items-center gap-3 min-w-0">
-                        <span className="text-lg flex-shrink-0">{step.icon}</span>
+                        <span className="flex-shrink-0" style={{ color: step.color }}><ShineIcon name={signeEtape(step.icon, i + 1)} className="w-5 h-5" /></span>
                         <div className="min-w-0">
                           <div className="flex items-center gap-2">
                             <span className="text-xs font-bold px-2 py-0.5 rounded-full"
@@ -1003,9 +1028,33 @@ export default function AdminDouleursPage() {
                               placeholder="Vidéo, audio & ressources" style={inputStyle} />
                           </div>
                           <div>
-                            <label style={labelStyle}>Icône</label>
-                            <input type="text" value={step.icon} onChange={e => updateStep(i, 'icon', e.target.value)}
-                              placeholder="🎬" style={inputStyle} />
+                            <label style={labelStyle}>Signe de l'étape</label>
+                            {/* Champ texte libre auparavant : on y tapait un émoji, que chaque
+                                téléphone redessinait à sa façon. On choisit maintenant parmi
+                                les signes SOS Shine, du même trait que le reste de la plateforme. */}
+                            <div className="flex flex-wrap gap-1.5">
+                              {SIGNES_ETAPE_DISPONIBLES.map(signe => {
+                                const actif = signeEtape(step.icon, i + 1) === signe.nom
+                                return (
+                                  <button
+                                    key={signe.nom}
+                                    type="button"
+                                    title={signe.label}
+                                    aria-label={signe.label}
+                                    aria-pressed={actif}
+                                    onClick={() => updateStep(i, 'icon', signe.nom)}
+                                    className="w-9 h-9 rounded-lg flex items-center justify-center transition-all"
+                                    style={{
+                                      background: actif ? `${step.color}20` : 'var(--surface-card)',
+                                      border: actif ? `1px solid ${step.color}` : '1px solid var(--border)',
+                                      color: actif ? step.color : 'var(--text-secondary)',
+                                    }}
+                                  >
+                                    <ShineIcon name={signe.nom} className="w-[18px] h-[18px]" />
+                                  </button>
+                                )
+                              })}
+                            </div>
                           </div>
                           <div>
                             <label style={labelStyle}>Couleur</label>
@@ -1520,7 +1569,7 @@ export default function AdminDouleursPage() {
                         style={{ background: mediaCount > 0 ? `${step.color}06` : 'var(--surface-card)' }}>
                         <div className="flex items-center justify-between">
                           <span className="text-[10px] font-semibold flex items-center gap-1" style={{ color: mediaCount > 0 ? step.color : 'var(--text-muted)' }}>
-                            <span className="text-xs">{step.icon}</span>
+                            <ShineIcon name={signeEtape(step.icon, i + 1)} className="w-3.5 h-3.5" />
                             Ét. {i + 1}
                           </span>
                           <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full"

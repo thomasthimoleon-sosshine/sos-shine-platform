@@ -957,6 +957,18 @@ const PATHS: Record<ShineIconName, React.ReactNode> = {
   ),
 }
 
+/**
+ * Tous les signes disponibles, dans l'ordre où ils sont dessinés.
+ * Sert à valider un nom qui vient de la base : le back-office peut y ranger
+ * un nom de signe maison, jamais un émoji système.
+ */
+export const NOMS_SIGNES = Object.keys(PATHS) as ShineIconName[]
+
+/** Vrai si `nom` désigne un signe maison existant. */
+export function estSigneShine(nom: string | null | undefined): nom is ShineIconName {
+  return typeof nom === 'string' && Object.prototype.hasOwnProperty.call(PATHS, nom)
+}
+
 export default function ShineIcon({
   name,
   className = 'w-4 h-4',

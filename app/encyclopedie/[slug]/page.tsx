@@ -7,6 +7,8 @@ import { createClient } from '@/lib/supabase/client'
 import type { Douleur, DouleurStep } from '@/types/database'
 import { aujourdhui } from '@/lib/blog-parution'
 import LogoSite from '@/components/LogoSite'
+import ShineIcon from '@/components/icons/ShineIcon'
+import { signeEtape } from '@/lib/signes-etapes'
 
 // Page récapitulative avant paiement
 const SIGNUP_URL = '/signup'
@@ -31,7 +33,7 @@ function buildSteps(douleur: Douleur, dynamicSteps: DouleurStep[]): StepConfig[]
       num: i + 1,
       title: s.title,
       subtitle: s.subtitle || 'Vidéo, audio & ressources',
-      icon: s.icon || '📋',
+      icon: s.icon || '',
       color: s.color || 'var(--brand)',
       description: s.description || '',
       video: s.video_url,
@@ -45,17 +47,17 @@ function buildSteps(douleur: Douleur, dynamicSteps: DouleurStep[]): StepConfig[]
   // Legacy fallback
   return [
     {
-      num: 1, title: 'Comprendre', subtitle: 'Vidéo, audio & ressources', icon: '\u{1F3AC}', color: '#55EFC4',
+      num: 1, title: 'Comprendre', subtitle: 'Vidéo, audio & ressources', icon: 'oeil', color: '#55EFC4',
       description: 'Analyse émotionnelle. Explication du problème. Apaisement mental. Une approche humaine et directe.',
       video: douleur.video_url, audio: douleur.step1_audio_url, pdf: douleur.step1_pdf_url, image: douleur.step1_image_url, exercise_content: null,
     },
     {
-      num: 2, title: 'Libérer & Intégrer', subtitle: 'Audio, vidéo & ressources', icon: '\u2728', color: '#74C0FC',
+      num: 2, title: 'Libérer & Intégrer', subtitle: 'Audio, vidéo & ressources', icon: 'envol', color: '#74C0FC',
       description: 'Activation émotionnelle. Décharge des tensions. Nettoyage des empreintes qui vous bloquent. Stabilisation intérieure et reconnexion à soi.',
       video: douleur.step2_video_url, audio: douleur.audio_energy_url, pdf: douleur.step2_pdf_url, image: douleur.step2_image_url, exercise_content: null,
     },
     {
-      num: 3, title: 'Agir', subtitle: 'Exercices, audio & ressources', icon: '\u26A1', color: '#E17055',
+      num: 3, title: 'Agir', subtitle: 'Exercices, audio & ressources', icon: 'cible', color: '#E17055',
       description: 'PDF d\'exercices pratiques et audio guidé. Passez à l\'action concrète. Reprogrammation émotionnelle. Ancrez vos transformations dans le quotidien.',
       video: douleur.step3_video_url, audio: douleur.audio_meditation_url, pdf: douleur.pdf_url, image: douleur.step3_image_url, exercise_content: douleur.exercise_content,
     },
@@ -305,7 +307,7 @@ export default function PublicDouleurDetailPage() {
                 color: activeStep === step.num ? step.color : 'var(--text-secondary)',
               }}
             >
-              <span className="text-lg">{step.icon}</span>
+              <ShineIcon name={signeEtape(step.icon, step.num)} className="w-5 h-5" />
               <span>Étape {step.num}</span>
               {hasContent(step) && (
                 <span className="w-1.5 h-1.5 rounded-full" style={{ background: step.color }} />
@@ -318,8 +320,8 @@ export default function PublicDouleurDetailPage() {
         {currentStep && (
           <div className="rounded-2xl p-6 sm:p-8" style={{ background: `${currentStep.color}06`, border: `1px solid ${currentStep.color}15` }}>
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl" style={{ background: `${currentStep.color}15` }}>
-                {currentStep.icon}
+              <div className="w-14 h-14 rounded-xl flex items-center justify-center" style={{ background: `${currentStep.color}15`, color: currentStep.color }}>
+                <ShineIcon name={signeEtape(currentStep.icon, currentStep.num)} className="w-7 h-7" />
               </div>
               <div>
                 <span className="text-xs font-medium block" style={{ color: currentStep.color, opacity: 0.7 }}>
@@ -346,7 +348,7 @@ export default function PublicDouleurDetailPage() {
                   <div className="rounded-xl p-8 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.3)', border: `1px dashed ${currentStep.color}30` }}>
                     <div className="text-center">
                       <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3" style={{ background: `${currentStep.color}15` }}>
-                        <span className="text-2xl">{currentStep.icon}</span>
+                        <ShineIcon name={signeEtape(currentStep.icon, currentStep.num)} className="w-8 h-8" color={currentStep.color} />
                       </div>
                       <p className="text-sm text-[var(--text-muted)]">Contenu bientôt disponible</p>
                     </div>

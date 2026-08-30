@@ -414,7 +414,13 @@ export default function Home() {
 
       {/* ═══ HERO - Word by word reveal ═══ */}
       {vis('hero') && (
-        <motion.section ref={heroRef} className="relative min-h-screen flex items-center pt-24" style={{ opacity: heroOpacity, scale: heroScale }}>
+        <motion.section ref={heroRef} className="relative min-h-screen flex items-center pt-24" style={{
+          opacity: heroOpacity,
+          scale: heroScale,
+          backgroundImage: "linear-gradient(180deg, rgba(10,7,4,0.72) 0%, rgba(10,7,4,0.84) 100%), url('/fond-hero.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}>
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full opacity-[0.04] blur-[150px]" style={{ background: gold }} />
           </div>

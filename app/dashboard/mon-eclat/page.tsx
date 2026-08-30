@@ -62,12 +62,12 @@ const CATEGORIES = POST_CATEGORIES.map(c => ({ ...c, label: ECLAT_LABELS[c.value
 const CATEGORY_MAP = Object.fromEntries(CATEGORIES.map(c => [c.value, c]))
 
 /**
- * Où s'ouvre une publication du journal. Pas sur le fil : celui-ci écarte
- * explicitement les éclats. C'est le profil de son auteur qui les montre,
- * en respectant leur visibilité.
+ * L'adresse d'une publication du journal, partageable telle quelle.
+ * /publication/<id> est publique et porte ses propres métadonnées, puis
+ * renvoie vers le profil de l'auteur — le fil, lui, écarte les éclats.
  */
-function lienPublication(auteurId: string | null) {
-  const chemin = auteurId ? `/dashboard/membre/${auteurId}` : '/dashboard'
+function lienPublication(postId: string) {
+  const chemin = `/publication/${postId}`
   if (typeof window !== 'undefined') return `${window.location.origin}${chemin}`
   return chemin
 }
@@ -786,7 +786,7 @@ export default function MonEclatPage() {
                         Rayons ne part pas au dehors : le lien ouvrirait une page
                         vide pour qui n'est pas un proche. */}
                     <ActionsPartage
-                      lien={lienPublication(currentUserId)}
+                      lien={lienPublication(post.id)}
                       titre={post.title || catInfo.label}
                       introMessage="Je te partage ce que j'ai écrit dans mon Éclat :"
                       utilisateurId={currentUserId}

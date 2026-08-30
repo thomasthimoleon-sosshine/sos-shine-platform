@@ -75,9 +75,15 @@ function formatDate(d: string) {
   return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })
 }
 
+/**
+ * L'adresse partagée à l'extérieur. Pas /dashboard/mur, qui est derrière
+ * l'authentification : Facebook n'y voyait que la page de connexion et
+ * reprenait les métadonnées du site, d'où la même vignette pour toutes les
+ * publications. /publication/<id> est publique et porte les siennes.
+ */
 function getPostUrl(postId: string) {
-  if (typeof window !== 'undefined') return `${window.location.origin}/dashboard/mur?post=${postId}`
-  return `/dashboard/mur?post=${postId}`
+  if (typeof window !== 'undefined') return `${window.location.origin}/publication/${postId}`
+  return `/publication/${postId}`
 }
 
 /* ── Composant principal ── */

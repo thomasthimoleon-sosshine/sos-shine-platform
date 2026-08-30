@@ -88,18 +88,10 @@
 
   /* ---------- HERO ---------- */
   .hero{position:relative;text-align:center;padding:96px 0 70px;overflow:hidden;background-image:linear-gradient(rgba(10,7,4,0.3),rgba(10,7,4,0.3)),radial-gradient(circle at 50% 46%,rgba(10,7,4,0.55) 0%,rgba(10,7,4,0.28) 30%,rgba(10,7,4,0) 55%),url('/fond-hero-diamants.jpg');background-size:cover;background-position:center}
-  /* Le halo mesurait 900 px de haut dans une section qui le rogne (overflow:hidden).
-     Il dépassait de 93 px en haut sur ordinateur, 232 px sur mobile : son arc
-     supérieur était tranché net, en travers de la page. Sa hauteur suit désormais
-     celle du hero — 88 %, pour que la respiration (×1.08) tienne elle aussi dans
-     le cadre — et le rapport 1:1 garde le cercle rond quelle que soit la largeur. */
-  .glow{
-    position:absolute;left:50%;top:50%;height:min(900px,88%);width:auto;aspect-ratio:1;
-    transform:translate(-50%,-50%);
-    background:radial-gradient(circle,rgba(201,169,97,.22) 0%,rgba(224,174,154,.12) 34%,rgba(10,8,6,0) 66%);
-    pointer-events:none;z-index:0;animation:breathe 11s ease-in-out infinite;
-  }
-  @keyframes breathe{0%,100%{opacity:.75;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}}
+  /* Le halo doré a été retiré : la photo du hero porte déjà sa propre
+     lumière au centre, et un second halo par-dessus la redoublait.
+     Les règles .glow et @keyframes breathe partaient avec, elles ne
+     servaient plus qu'à lui. */
   .hero .container{position:relative;z-index:1}
   .hero h1{font-size:clamp(2.9rem,7.2vw,4.9rem);max-width:15ch;margin:0 auto 20px}
   .hero .sub{font-size:clamp(.88rem,1.15vw,.98rem);color:var(--muted);max-width:46ch;margin:0 auto 20px;line-height:1.6}
@@ -340,7 +332,6 @@
 
 <!-- 03 · HERO -->
 <section class="hero" id="test">
-  <div class="glow"></div>
   <div class="container">
     <a href="https://julialaureau.com" target="_blank" rel="noopener noreferrer" class="rdv-julia">Prendre rendez-vous avec Julia Laureau <span aria-hidden="true">↗</span></a>
     <span class="positioning">Plateforme de déconditionnement émotionnel</span>

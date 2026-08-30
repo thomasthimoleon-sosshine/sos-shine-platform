@@ -1,15 +1,34 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import ShineIcon from '@/components/icons/ShineIcon'
+
+/**
+ * iOS n'accorde les notifications web qu'aux applications installées sur
+ * l'écran d'accueil. Dans Safari, `Notification` n'existe même pas : le bouton
+ * se retirait alors sans un mot, et la personne n'avait aucun moyen de savoir
+ * qu'il lui manquait une étape. C'est le cas de figure le plus courant sur
+ * iPhone — il fallait le dire.
+ */
+function surIphoneNonInstalle() {
+  if (typeof window === 'undefined') return false
+  const nav = navigator as Navigator & { standalone?: boolean }
+  const installee = window.matchMedia?.('(display-mode: standalone)')?.matches || nav.standalone === true
+  const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+    || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+  return iOS && !installee
+}
 
 export default function PushNotificationButton() {
   const [permission, setPermission] = useState<NotificationPermission | 'unsupported'>('default')
   const [loading, setLoading] = useState(false)
   const [subscribed, setSubscribed] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [aInstaller, setAInstaller] = useState(false)
 
   useEffect(() => {
     if (!('Notification' in window) || !('serviceWorker' in navigator)) {
+      setAInstaller(surIphoneNonInstalle())
       setPermission('unsupported')
       return
     }
@@ -39,7 +58,7 @@ export default function PushNotificationButton() {
 
       const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
       if (!vapidKey) {
-        setError('Configuration manquante (VAPID)')
+        setError("Les notifications ne sont pas encore activées sur la plateforme. Nous nous en occupons.")
         setLoading(false)
         return
       }
@@ -99,7 +118,26 @@ export default function PushNotificationButton() {
     setLoading(false)
   }
 
-  if (permission === 'unsupported') return null
+  if (permission === 'unsupported') {
+    if (!aInstaller) return null
+    return (
+      <div className="flex items-start gap-2.5 px-3.5 py-3 rounded-xl text-[12.5px] leading-relaxed"
+        style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.18)', color: 'var(--text-secondary)' }}>
+        <span className="shrink-0 mt-0.5" style={{ color: 'var(--brand)' }}>
+          <ShineIcon name="astuce" className="w-4 h-4" />
+        </span>
+        <span>
+          <span className="block font-medium" style={{ color: 'var(--text-primary)' }}>
+            Encore une étape sur iPhone
+          </span>
+          Ajoutez d&apos;abord SOS Shine à votre écran d&apos;accueil — bouton Partager, puis
+          « Sur l&apos;écran d&apos;accueil ». Ouvrez l&apos;application depuis cette icône et revenez
+          ici : le bouton d&apos;activation apparaîtra. Apple ne permet les notifications
+          qu&apos;aux applications installées.
+        </span>
+      </div>
+    )
+  }
   if (permission === 'denied') {
     return (
       <div className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs" style={{

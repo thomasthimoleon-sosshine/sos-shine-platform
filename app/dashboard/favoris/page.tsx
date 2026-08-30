@@ -60,7 +60,7 @@ const ASPECT: Record<Cat, string> = {
   blog: 'aspect-[4/3]',
 }
 
-function extract(content: string, max = 110) {
+function extract(content: string, max = 175) {
   const clean = content.replace(/\s+/g, ' ').trim()
   return clean.length > max ? clean.slice(0, max) + '…' : clean
 }
@@ -362,40 +362,66 @@ export default function FavorisPage() {
               >
                 <Carte item={it} onOuvrir={setPublicationOuverte}>
                   {it.image ? (
-                    <img
-                      src={it.image}
-                      alt=""
-                      loading="lazy"
-                      className="w-full h-auto block transition-transform duration-500 group-hover:scale-[1.04]"
-                    />
+                    <>
+                      <img
+                        src={it.image}
+                        alt=""
+                        loading="lazy"
+                        className="w-full h-auto block transition-transform duration-500 group-hover:scale-[1.04]"
+                      />
+
+                      {/* Voile bas : le titre reste lisible même sur une image claire */}
+                      <div className="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none"
+                        style={{ background: 'linear-gradient(to top, rgba(10,8,6,0.94) 12%, rgba(10,8,6,0.55) 45%, transparent)' }} />
+
+                      <h3 className="absolute inset-x-0 bottom-0 px-3 pb-3 text-[13px] font-semibold leading-snug
+                                     line-clamp-2 text-white">
+                        {it.title}
+                      </h3>
+                    </>
                   ) : (
-                    /* Sans visuel, on en fabrique un : le signe de la catégorie
-                       en grand sur un fond teinté. Jamais une carte de texte nu. */
+                    /*
+                      Sans visuel, on ne pose plus un signe de catégorie au
+                      milieu du vide : on montre le contenu lui-même. Le début
+                      du texte fait l'aperçu — c'est ce qu'on a enregistré, et
+                      c'est ce qui permet de le reconnaître d'un coup d'œil.
+                    */
                     <div
-                      className={`w-full flex items-center justify-center ${ASPECT[it.cat]}`}
-                      style={{ background: `linear-gradient(150deg, ${c.color}1A, ${c.color}08 60%, transparent)` }}
+                      className={`w-full flex flex-col ${ASPECT[it.cat]}`}
+                      style={{ background: `linear-gradient(150deg, ${c.color}1F, ${c.color}0A 55%, var(--surface-card))` }}
                     >
-                      <ShineIcon name={c.icon} className="w-10 h-10 opacity-70" color={c.color} strokeWidth={1.1} />
+                      <div className="flex-1 min-h-0 overflow-hidden px-3.5 pt-9 pb-2 flex items-start">
+                        {it.subtitle ? (
+                          <p className="font-display text-[14px] leading-[1.45] line-clamp-4 text-[var(--text-secondary)]">
+                            {it.subtitle}
+                          </p>
+                        ) : (
+                          <ShineIcon name={c.icon} className="w-8 h-8 mx-auto my-auto opacity-60"
+                            color={c.color} strokeWidth={1.1} />
+                        )}
+                      </div>
+                      <h3 className="px-3.5 pb-3 pt-1 text-[12.5px] font-semibold leading-snug line-clamp-2 shrink-0
+                                     text-[var(--text-primary)]"
+                        style={{ borderTop: `1px solid ${c.color}22` }}>
+                        <span className="block pt-2">{it.title}</span>
+                      </h3>
                     </div>
                   )}
 
-                  {/* Voile bas : le titre reste lisible même sur une image claire */}
-                  <div className="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none"
-                    style={{ background: 'linear-gradient(to top, rgba(10,8,6,0.94) 12%, rgba(10,8,6,0.55) 45%, transparent)' }} />
-
                   {/* Catégorie, en haut */}
-                  <span className="absolute top-2 left-2 inline-flex items-center gap-1.5 px-2 py-1 rounded-full
-                                   text-[9.5px] uppercase tracking-[0.12em] font-semibold backdrop-blur-sm"
-                    style={{ background: 'rgba(10,8,6,0.62)', color: c.color, border: `1px solid ${c.color}44` }}>
+                  <span className="pastille-favori absolute top-2 left-2 inline-flex items-center gap-1.5 px-2 py-1
+                                   rounded-full text-[9.5px] uppercase tracking-[0.12em] font-semibold backdrop-blur-sm"
+                    style={{
+                      // La teinte de la catégorie, lue par la feuille de style :
+                      // en thème clair elle doit être assombrie pour rester lisible.
+                      ['--cat' as string]: c.color,
+                      background: it.image ? 'rgba(10,8,6,0.62)' : `${c.color}1A`,
+                      color: c.color,
+                      border: `1px solid ${c.color}44`,
+                    }}>
                     <ShineIcon name={c.icon} className="w-3 h-3" />
                     {c.label}
                   </span>
-
-                  {/* Titre, en bas */}
-                  <h3 className="absolute inset-x-0 bottom-0 px-3 pb-3 text-[13px] font-semibold leading-snug
-                                 line-clamp-2 text-white">
-                    {it.title}
-                  </h3>
                 </Carte>
               </motion.div>
             )

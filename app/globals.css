@@ -244,6 +244,15 @@
   -webkit-text-fill-color: var(--text-primary) !important;
 }
 
+/* Les teintes de catégorie des favoris (ivoire, or clair, rose) sont réglées
+   pour le noir : posées sur une carte blanche elles tombent sous 1,5:1. On les
+   assombrit sans leur retirer leur teinte, pour que chaque catégorie reste
+   reconnaissable au premier coup d'oeil. */
+[data-theme="light"] .pastille-favori {
+  color: color-mix(in srgb, var(--cat, var(--brand)) 38%, #241F14);
+  border-color: color-mix(in srgb, var(--cat, var(--brand)) 50%, #241F14 25%);
+}
+
 [data-theme="light"] strong, [data-theme="light"] b {
   color: var(--text-bold);
 }

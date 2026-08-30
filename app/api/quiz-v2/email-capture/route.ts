@@ -14,7 +14,11 @@ export async function POST(request: NextRequest) {
     const { allowed } = rateLimit(getIp(request), { maxRequests: 30, windowMs: 60_000 })
     if (!allowed) return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
 
-    const { sessionId, responseId, email, firstName } = await request.json()
+    const { sessionId, responseId, email, firstName, accepteSuite } = await request.json()
+    // Le consentement à la prospection est désormais recueilli au formulaire.
+    // Sans lui, on n'inscrit personne : l'adresse ne sert qu'à envoyer le
+    // bilan demandé, ce que le texte affiché promet.
+    const prospection = accepteSuite === true
 
     if (!email) return NextResponse.json({ error: 'Email required' }, { status: 400 })
 
@@ -32,16 +36,31 @@ export async function POST(request: NextRequest) {
       quiz_version: 'v2',
     }, { onConflict: 'email' })
 
-    // Upsert into CRM contacts
+    // Upsert into CRM contacts — uniquement si la personne a accepté d'être
+    // recontactée. La fiche porte la date du consentement : sans trace
+    // horodatée, il est impossible de prouver qu'il a été donné.
     const abVariant = request.cookies.get('ab_variant')?.value
-    try {
-      await (supabase as any).from('crm_contacts').upsert({
-        email: cleanEmail,
-        first_name: cleanName,
-        source: 'signature_test_v2',
-        ...(abVariant === 'julia' || abVariant === 'thomas' ? { ab_variant: abVariant } : {}),
-      }, { onConflict: 'email', ignoreDuplicates: true })
-    } catch { /* non-critical */ }
+    if (prospection) {
+      try {
+        await (supabase as any).from('crm_contacts').upsert({
+          email: cleanEmail,
+          first_name: cleanName,
+          source: 'signature_test_v2',
+          consent_at: new Date().toISOString(),
+          ...(abVariant === 'julia' || abVariant === 'thomas' ? { ab_variant: abVariant } : {}),
+        }, { onConflict: 'email', ignoreDuplicates: true })
+      } catch {
+        // La colonne consent_at peut ne pas exister encore : on retente sans
+        // elle plutôt que de perdre un consentement réellement donné.
+        try {
+          await (supabase as any).from('crm_contacts').upsert({
+            email: cleanEmail,
+            first_name: cleanName,
+            source: 'signature_test_v2',
+          }, { onConflict: 'email', ignoreDuplicates: true })
+        } catch { /* non-critical */ }
+      }
+    }
 
     // Email-01 (abandon) is NOT sent here — it's sent by /api/cron/quiz-abandon
     // after 1h if completed_at is still null, so completers never receive it.

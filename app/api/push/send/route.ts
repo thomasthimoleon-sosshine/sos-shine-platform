@@ -24,7 +24,11 @@ async function autoriser(request: Request, supabase: any) {
   const cronSecret = process.env.CRON_SECRET || process.env.BOT_SECRET
   const isVercelCron = request.headers.get('x-vercel-cron') === '1'
 
-  if (isVercelCron || (cronSecret && authHeader === `Bearer ${cronSecret}`)) return true
+  // L'en-tête x-vercel-cron ne suffit plus : il se forge depuis n'importe où,
+  // et il autorisait à lui seul l'envoi d'une notification à tous les abonnés.
+  // Seul le secret partagé fait foi.
+  if (cronSecret && authHeader === `Bearer ${cronSecret}`) return true
+  void isVercelCron
 
   const userAuth = request.headers.get('x-user-token')
   if (!userAuth) return false

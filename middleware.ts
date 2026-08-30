@@ -53,6 +53,29 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(`/login?next=${next}`, request.url))
   }
 
+  // ── Back-office ──────────────────────────────────────────────────────────
+  // Le contrôle du rôle ne vivait que dans un composant exécuté chez le
+  // visiteur : il ne protégeait que l'affichage. On le pose ici, avant que la
+  // page ne soit servie.
+  //
+  // En cas d'incident de lecture du profil, on laisse passer : le contraire
+  // enfermerait l'équipe dehors sur une simple panne réseau, alors que les
+  // écrans d'administration ont chacun leurs propres garde-fous côté base.
+  if (user && request.nextUrl.pathname.startsWith('/admin')) {
+    const { data: profil, error } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .maybeSingle()
+
+    const role = (profil as { role?: string } | null)?.role
+    const estEquipe = role === 'founder' || role === 'admin_content' || role === 'admin_support'
+
+    if (!error && profil && !estEquipe) {
+      return NextResponse.redirect(new URL('/dashboard', request.url))
+    }
+  }
+
   return response
 }
 

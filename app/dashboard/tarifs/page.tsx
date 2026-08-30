@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useSubscription } from '@/hooks/useSubscription'
 import Link from 'next/link'
 import { PromoCountdown, PROMO } from '@/components/PromoCountdown'
+import MentionAchat from '@/components/legal/MentionAchat'
 import {
   type PlanId,
   type DurationId,
@@ -352,6 +353,7 @@ export default function TarifsPage() {
                   >
                     Commencer maintenant
                   </button>
+                  <MentionAchat />
                 </div>
               </motion.div>
             )

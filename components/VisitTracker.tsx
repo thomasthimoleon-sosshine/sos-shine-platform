@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { usePathname, useSearchParams } from 'next/navigation'
+import { mesureAutorisee, EVENEMENT_CONSENTEMENT } from '@/lib/consentement'
 
 function getSessionId(): string {
   if (typeof window === 'undefined') return ''
@@ -31,7 +32,20 @@ export default function VisitTracker() {
   const pageStartTime = useRef<number>(Date.now())
   const currentPage = useRef<string>('')
 
+  // Redémarre la mesure au moment où la personne accepte, sans qu'elle ait
+  // à recharger la page.
+  const [autorise, setAutorise] = useState(false)
   useEffect(() => {
+    setAutorise(mesureAutorisee())
+    const surChoix = () => setAutorise(mesureAutorisee())
+    window.addEventListener(EVENEMENT_CONSENTEMENT, surChoix)
+    return () => window.removeEventListener(EVENEMENT_CONSENTEMENT, surChoix)
+  }, [])
+
+  useEffect(() => {
+    // Tant que rien n'a été accepté, rien n'est mesuré et rien n'est écrit
+    // dans le navigateur : le silence n'est pas un accord.
+    if (!autorise) return
     if (pathname === lastTracked.current) return
     lastTracked.current = pathname
     if (pathname.startsWith('/api/') || pathname.startsWith('/_next/')) return
@@ -60,7 +74,7 @@ export default function VisitTracker() {
     }, 500)
 
     return () => clearTimeout(timer)
-  }, [pathname, searchParams])
+  }, [pathname, searchParams, autorise])
 
   // Send duration on tab close / background
   useEffect(() => {

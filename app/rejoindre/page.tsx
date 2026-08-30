@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, Suspense } from 'react'
 import Link from 'next/link'
+import MentionAchat from '@/components/legal/MentionAchat'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { loadStripe } from '@stripe/stripe-js'
@@ -592,6 +593,8 @@ function PaymentContent() {
             >
               Rejoindre SOS Shine
             </button>
+
+            <MentionAchat />
           </div>
         </Reveal>
 

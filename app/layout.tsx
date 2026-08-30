@@ -5,6 +5,7 @@ import "./globals.css";
 import ThemeProvider from "@/components/ThemeProvider";
 import SecurityProvider from "@/components/SecurityProvider";
 import VisitTracker from "@/components/VisitTracker";
+import BanniereConsentement from "@/components/BanniereConsentement";
 import LogoSite from '@/components/LogoSite'
 
 const cormorant = localFont({
@@ -185,6 +186,7 @@ export default function RootLayout({
         <SecurityProvider>
           <ThemeProvider>{children}</ThemeProvider>
           <Suspense fallback={null}><VisitTracker /></Suspense>
+          <BanniereConsentement />
         </SecurityProvider>
       </body>
     </html>

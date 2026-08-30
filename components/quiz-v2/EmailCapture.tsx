@@ -4,13 +4,19 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 
 type Props = {
-  onSubmit: (email: string) => void
+  /** `accepteSuite` : la personne accepte la prospection commerciale. */
+  onSubmit: (email: string, accepteSuite: boolean) => void
   loading?: boolean
   firstName?: string
 }
 
 export function EmailCapture({ onSubmit, loading, firstName }: Props) {
   const [email, setEmail] = useState('')
+  // Le consentement à la prospection n'était jamais demandé : l'adresse
+  // partait dans une séquence de seize e-mails commerciaux, sous une phrase
+  // qui promettait le contraire. La case n'est pas pré-cochée, et le résultat
+  // du questionnaire s'obtient sans la cocher.
+  const [accepteSuite, setAccepteSuite] = useState(false)
   const isValid = email.includes('@') && email.includes('.')
 
   return (
@@ -43,7 +49,7 @@ export function EmailCapture({ onSubmit, loading, firstName }: Props) {
           enterKeyHint="go"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Enter' && isValid && !loading) onSubmit(email) }}
+          onKeyDown={(e) => { if (e.key === 'Enter' && isValid && !loading) onSubmit(email, accepteSuite) }}
           placeholder="ton@email.com"
           className="w-full px-5 py-4 rounded-xl text-base text-center outline-none transition-all focus:ring-2 focus:ring-[var(--brand)]"
           style={{
@@ -55,7 +61,7 @@ export function EmailCapture({ onSubmit, loading, firstName }: Props) {
         />
 
         <button
-          onClick={() => isValid && onSubmit(email)}
+          onClick={() => isValid && onSubmit(email, accepteSuite)}
           disabled={!isValid || loading}
           className="w-full py-4 rounded-full text-sm font-semibold transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
           style={{
@@ -65,13 +71,28 @@ export function EmailCapture({ onSubmit, loading, firstName }: Props) {
         >
           {loading ? 'Envoi...' : 'RÉVÉLER MON PROFIL →'}
         </button>
+
+        <label className="flex items-start gap-3 text-left cursor-pointer">
+          <input
+            type="checkbox"
+            checked={accepteSuite}
+            onChange={e => setAccepteSuite(e.target.checked)}
+            className="mt-0.5 w-4 h-4 flex-shrink-0 cursor-pointer"
+            style={{ accentColor: 'var(--brand)' }}
+          />
+          <span className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+            J&apos;accepte de recevoir les e-mails de SOS Shine : des conseils, et parfois
+            une offre. Je peux me désinscrire en un clic, depuis n&apos;importe lequel
+            d&apos;entre eux.
+          </span>
+        </label>
       </div>
 
       <p className="text-xs mt-4 flex items-center justify-center gap-1.5" style={{ color: 'var(--text-muted)' }}>
         <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
         </svg>
-        Données confidentielles. Aucun spam - uniquement ton résultat.
+        Ton résultat t&apos;est envoyé par e-mail. Rien d&apos;autre si tu ne coches pas.
       </p>
     </motion.div>
   )

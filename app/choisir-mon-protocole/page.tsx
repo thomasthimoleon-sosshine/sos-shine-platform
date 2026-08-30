@@ -9,6 +9,7 @@ import {
   SINGLE_PROTOCOL_PRICE_EUR,
   buildProtocolRef,
 } from '@/lib/stripe/config'
+import MentionAchat from '@/components/legal/MentionAchat'
 
 interface Protocol {
   slug: string
@@ -152,9 +153,12 @@ export default function ChoisirProtocolePage() {
                     </button>
                   )}
                   {!isUnlocked && (
-                    <p style={{ marginTop: 10, fontSize: 12, textAlign: 'center', color: '#C9A961' }}>
-                      + 1 mois d&apos;accès à toute la plateforme offert
-                    </p>
+                    <>
+                      <p style={{ marginTop: 10, fontSize: 12, textAlign: 'center', color: '#C9A961' }}>
+                        + 1 mois d&apos;accès à toute la plateforme offert
+                      </p>
+                      <MentionAchat recurrent={false} />
+                    </>
                   )}
                 </div>
               )

@@ -296,7 +296,7 @@ export default function BilanExperience() {
   }
 
   // ── Capture email (après le mini-bilan) → alimente la séquence des 16 mails ──
-  const handleEmailSubmit = useCallback(async (name: string, capturedEmail: string) => {
+  const handleEmailSubmit = useCallback(async (name: string, capturedEmail: string, accepteSuite: boolean) => {
     setEmailLoading(true)
     setFirstName(name)
     setEmail(capturedEmail)
@@ -307,7 +307,9 @@ export default function BilanExperience() {
     try {
       await fetch('/api/quiz-v2/email-capture', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionId: sid, responseId: rid, email: capturedEmail, firstName: name }),
+        // `accepteSuite` décide de l'inscription à la prospection. Sans lui,
+        // le serveur inscrivait tout le monde d'office.
+        body: JSON.stringify({ sessionId: sid, responseId: rid, email: capturedEmail, firstName: name, accepteSuite }),
       })
     } catch { /* non-critical */ }
     try {
@@ -456,11 +458,16 @@ function MiniView({ onNext }: { onNext: () => void }) {
 }
 
 // ── Capture email (porte vers le profil complet) ──
-function EmailGateView({ loading, onSubmit }: { loading: boolean; onSubmit: (name: string, email: string) => void }) {
+function EmailGateView({ loading, onSubmit }: { loading: boolean; onSubmit: (name: string, email: string, accepteSuite: boolean) => void }) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  // Le consentement à la prospection n'était jamais demandé : l'adresse
+  // partait dans une séquence de seize e-mails commerciaux, puis dans la
+  // newsletter, sous une phrase qui laissait entendre le contraire. La case
+  // n'est pas pré-cochée, et le bilan s'obtient sans la cocher.
+  const [accepteSuite, setAccepteSuite] = useState(false)
   const valid = /.+@.+\..+/.test(email)
-  const submit = () => { if (valid && !loading) onSubmit(name.trim(), email.trim()) }
+  const submit = () => { if (valid && !loading) onSubmit(name.trim(), email.trim(), accepteSuite) }
   return (
     <div style={{ textAlign: 'center' }}>
       <p style={{ fontSize: 12, letterSpacing: '0.25em', textTransform: 'uppercase', color: GOLD, marginBottom: 18 }}>Ton bilan est prêt</p>
@@ -480,8 +487,21 @@ function EmailGateView({ loading, onSubmit }: { loading: boolean; onSubmit: (nam
           style={{ ...btnGold, width: '100%', opacity: valid && !loading ? 1 : 0.4, cursor: valid && !loading ? 'pointer' : 'not-allowed' }}>
           {loading ? 'Un instant…' : 'Découvrir mon bilan complet →'}
         </button>
+
+        <label style={{ display: 'flex', alignItems: 'flex-start', gap: 10, textAlign: 'left', cursor: 'pointer', marginTop: 4 }}>
+          <input
+            type="checkbox"
+            checked={accepteSuite}
+            onChange={e => setAccepteSuite(e.target.checked)}
+            style={{ marginTop: 3, width: 16, height: 16, flexShrink: 0, accentColor: GOLD, cursor: 'pointer' }}
+          />
+          <span style={{ fontSize: 12.5, lineHeight: 1.55, color: 'rgba(245,239,227,0.65)' }}>
+            J&apos;accepte de recevoir les e-mails de SOS Shine : des conseils, et parfois une
+            offre. Je peux me désinscrire en un clic, depuis n&apos;importe lequel d&apos;entre eux.
+          </span>
+        </label>
       </div>
-      <p style={{ fontSize: 12, color: 'rgba(245,239,227,0.4)', marginTop: 16 }}>Gratuit · tes données restent confidentielles</p>
+      <p style={{ fontSize: 12, color: 'rgba(245,239,227,0.4)', marginTop: 16 }}>Gratuit · ton bilan t&apos;est envoyé par email. Rien d&apos;autre si tu ne coches pas.</p>
     </div>
   )
 }

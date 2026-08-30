@@ -120,6 +120,10 @@ export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [acceptCgv, setAcceptCgv] = useState(false)
+  // Aucun âge minimum n'était demandé nulle part, sur une plateforme dont les
+  // contenus portent sur l'abus, le deuil et le trauma. Déclaration simple,
+  // non pré-cochée, bloquante — comme celle des conditions générales.
+  const [majeur, setMajeur] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -420,12 +424,22 @@ export default function SignupPage() {
               </label>
             </div>
 
+            {/* Âge minimum */}
+            <div className="flex items-start gap-3">
+              <input id="majeur" type="checkbox" checked={majeur} onChange={(e) => setMajeur(e.target.checked)}
+                className="mt-0.5 w-4 h-4 rounded border-2 cursor-pointer accent-[var(--brand)]" />
+              <label htmlFor="majeur" className="text-[12px] text-[var(--text-muted)] leading-relaxed cursor-pointer">
+                Je certifie avoir 18 ans ou plus. Les contenus de SOS Shine abordent
+                le deuil, l&apos;abus et le traumatisme.
+              </label>
+            </div>
+
             {error && (
               <p className="text-[13px] px-4 py-3 rounded-[var(--radius-lg)] text-[var(--danger)] bg-[var(--danger-alpha-weak)] border border-[var(--danger-alpha-medium)]" >
                 {error}
               </p>
             )}
-            <button type="submit" disabled={loading || !acceptCgv}
+            <button type="submit" disabled={loading || !acceptCgv || !majeur}
               className="w-full py-3.5 rounded-full font-medium tracking-wide transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)] disabled:opacity-40 disabled:cursor-not-allowed text-sm bg-[var(--brand)] text-[var(--text-inverse)] shadow-[var(--glow-gold)] hover:shadow-[var(--glow-gold-hover)] hover:brightness-110 active:scale-[0.98] cursor-pointer"
               >
               {loading ? t('auth.creating') : s('signup_button_text')}

@@ -12,6 +12,7 @@ import NotificationPreferences from '@/components/account/NotificationPreference
 import ShineIcon from '@/components/icons/ShineIcon'
 import CourrierAnonyme from '@/components/account/CourrierAnonyme'
 import CadrageAvatar from '@/components/profil/CadrageAvatar'
+import MesDonnees from '@/components/compte/MesDonnees'
 
 export default function ProfilPage() {
   const { t } = useTranslation()
@@ -746,6 +747,9 @@ export default function ProfilPage() {
           )}
         </div>
       </div>
+
+      {/* Accès, portabilité, effacement — droits RGPD, exerçables ici */}
+      <MesDonnees />
 
       {/* Account */}
       <div className="rounded-2xl p-6" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>

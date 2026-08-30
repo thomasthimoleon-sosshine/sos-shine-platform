@@ -73,7 +73,11 @@ async function seedSequence(supabase: any, seq: LifecycleSequence) {
 async function run(request: Request) {
   const cronSecret = process.env.CRON_SECRET || process.env.BOT_SECRET
   const authHeader = request.headers.get('authorization')
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+  // Garde fermée par défaut. Elle était écrite « si un secret est défini ET
+  // que l'en-tête ne correspond pas, refuser » : quand la variable n'était
+  // pas définie en production, la condition était fausse et la route
+  // s'ouvrait à tout le monde. Un secret absent doit fermer, pas ouvrir.
+  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

@@ -115,7 +115,7 @@ function MiniPlayer({ audio, isPlaying, onToggle, progress, currentTime, duratio
       exit={{ y: 100, opacity: 0 }}
       className="fixed bottom-0 left-0 right-0 z-[90] lg:left-[17rem]"
       style={{
-        background: 'linear-gradient(to top, rgba(9,9,11,0.98), rgba(9,9,11,0.95))',
+        background: 'var(--surface-overlay)',
         backdropFilter: 'blur(20px)',
         borderTop: '1px solid var(--border)',
       }}

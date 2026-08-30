@@ -231,8 +231,15 @@
   background: var(--surface);
 }
 
-[data-theme="light"] h1, [data-theme="light"] h2, [data-theme="light"] h3,
-[data-theme="light"] h4, [data-theme="light"] h5, [data-theme="light"] h6 {
+/* Les titres passent à l'encre sombre en thème clair — sauf ceux qui se
+   déclarent en blanc : ils reposent sur une bannière noire (Shine TV, Audible,
+   Librairie), et les noircir les rendait illisibles. */
+[data-theme="light"] h1:not([class*="text-white"]),
+[data-theme="light"] h2:not([class*="text-white"]),
+[data-theme="light"] h3:not([class*="text-white"]),
+[data-theme="light"] h4:not([class*="text-white"]),
+[data-theme="light"] h5:not([class*="text-white"]),
+[data-theme="light"] h6:not([class*="text-white"]) {
   color: var(--text-primary) !important;
   -webkit-text-fill-color: var(--text-primary) !important;
 }
@@ -337,16 +344,6 @@
 
 [data-theme="light"] .encyclo-item {
   color: #1a1a1a !important;
-}
-
-[data-theme="light"] p,
-[data-theme="light"] span,
-[data-theme="light"] li,
-[data-theme="light"] label,
-[data-theme="light"] td,
-[data-theme="light"] th,
-[data-theme="light"] a {
-  color: inherit;
 }
 
 [data-theme="light"] aside .nav-item:hover {
@@ -498,16 +495,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Fix spécifique pour le mode clair */
-[data-theme="light"] h1, 
-[data-theme="light"] h2, 
-[data-theme="light"] h3, 
-[data-theme="light"] h4, 
-[data-theme="light"] h5, 
-[data-theme="light"] h6 {
-  color: #1a1a1a !important;
-  -webkit-text-fill-color: #1a1a1a !important;
-}
-
 /* Effet Shimmer (Brillance) - Désactivé en mode clair pour la lisibilité */
 h1 .text-shimmer, h2 .text-shimmer, h3 .text-shimmer, .text-shimmer {
   background: linear-gradient(90deg, #C9A961, #E8C77D, #C9A961) !important;

@@ -251,7 +251,7 @@ function HeroBanner({ video, onOpen, onInfo }: { video: ShineVideo; onOpen: () =
         {/* Infos sous l'image */}
         <div className="px-4 -mt-10 relative z-10 pb-2">
           <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-            <h1 className="font-display text-2xl font-semibold tracking-tight mb-2" style={{ color: '#fff' }}>
+            <h1 className="font-display text-2xl font-semibold tracking-tight mb-2 text-white">
               {video.title}
             </h1>
             <p className="text-[13px] leading-relaxed mb-4 line-clamp-2" style={{ color: 'rgba(255,255,255,0.7)' }}>

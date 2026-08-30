@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import type { Post, PostCategory, PostMediaType } from '@/types/database'
 import ShineIcon from '@/components/icons/ShineIcon'
+import ActionsPartage from '@/components/publications/ActionsPartage'
 import { CATEGORIES_MUR, MEDIA_TYPES, getCategory, valeursCategorie } from '@/lib/community/categories'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 import { incrementAndCheckBadges } from '@/lib/badgeService'
@@ -117,13 +118,8 @@ export default function MurPage() {
   const [sendingComment, setSendingComment] = useState(false)
 
   // Share DM
-  const [sharePostId, setSharePostId] = useState<string | null>(null)
-  const [shareMembers, setShareMembers] = useState<{ id: string; prenom: string; avatar_url: string | null }[]>([])
-  const [shareSearch, setShareSearch] = useState('')
-  const [shareSending, setShareSending] = useState<string | null>(null)
 
   // Social share
-  const [socialShareId, setSocialShareId] = useState<string | null>(null)
 
   // Profile drawer
   const [profileDrawerUserId, setProfileDrawerUserId] = useState<string | null>(null)
@@ -526,48 +522,6 @@ export default function MurPage() {
   }
 
   /* ── Share via DM ── */
-  /**
-   * Un partage vers l'extérieur, quel que soit le canal.
-   * Le compteur shares_external existait en base mais rien ne l'incrémentait :
-   * la catégorie de badges « L'Ambassadeur » (7 badges) était donc
-   * inatteignable, et le compteur « Partages » du profil affichait zéro pour
-   * tout le monde, indéfiniment.
-   */
-  function countShare() {
-    if (!currentUserId) return
-    incrementAndCheckBadges(currentUserId, 'shares_external').catch(() => {})
-  }
-
-  async function openShareDM(postId: string) {
-    setSharePostId(postId)
-    setShareSearch('')
-    const supabase = createClient()
-    const { data } = await supabase
-      .from('profiles')
-      .select('id, prenom, avatar_url')
-      .neq('id', currentUserId!)
-      .order('prenom')
-      .limit(50)
-    if (data) setShareMembers(data as { id: string; prenom: string; avatar_url: string | null }[])
-  }
-
-  async function sendShareDM(receiverId: string, postId: string) {
-    setShareSending(receiverId)
-    const supabase = createClient()
-    const post = posts.find(p => p.id === postId)
-    const url = getPostUrl(postId)
-    const msg = `Je te partage cette publication du mur communautaire :\n\n"${post?.title || 'Publication'}"\n${url}`
-    await supabase.from('private_messages').insert({
-      sender_id: currentUserId!,
-      receiver_id: receiverId,
-      content: msg,
-      message_type: 'text',
-      is_read: false // Correction apportée pour répondre aux exigences du schéma
-    })
-    setShareSending(null)
-    setSharePostId(null)
-  }
-
   /* ── Edit / Delete ── */
   function startEdit(post: PostRow) {
     setEditingPost(post.id)
@@ -608,11 +562,6 @@ export default function MurPage() {
     setPosts(prev => prev.filter(p => p.id !== postId))
     setMenuOpen(null)
   }
-
-  /* ── Filtered members for DM share ── */
-  const filteredShareMembers = shareMembers.filter(m =>
-    m.prenom.toLowerCase().includes(shareSearch.toLowerCase())
-  )
 
   const inputStyle = { background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', color: 'var(--text-primary)' }
 
@@ -1078,73 +1027,23 @@ export default function MurPage() {
                       {commentCount > 0 && <span>{commentCount}</span>}
                     </button>
 
-                    {/* Share DM */}
-                    <button onClick={() => openShareDM(post.id)}
-                      title="Envoyer à un proche" aria-label="Envoyer à un proche"
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer text-[var(--text-muted)]">
-                      <ShineIcon name="rayon" className="w-4 h-4" />
-                    </button>
-
-                    {/* Bookmark */}
-                    <button onClick={() => toggleBookmark(post.id)}
-                      title={bookmarkedPosts.has(post.id) ? 'Retirer des enregistrés' : 'Garder'}
-                      aria-label={bookmarkedPosts.has(post.id) ? 'Retirer des enregistrés' : 'Garder'}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
-                      style={{ color: bookmarkedPosts.has(post.id) ? 'var(--brand)' : 'var(--text-muted)' }}>
-                      <ShineIcon name="garder" className="w-4 h-4" filled={bookmarkedPosts.has(post.id)} />
-                    </button>
-
-                    {/* Share Social */}
-                    <div className="ml-auto relative">
-                      <button onClick={() => setSocialShareId(socialShareId === post.id ? null : post.id)}
-                        title="Partager en dehors de SOS Shine" aria-label="Partager en dehors de SOS Shine"
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer text-[var(--text-muted)]">
-                        <ShineIcon name="diffuser" className="w-4 h-4" />
+                    {/* Envoyer à un proche · Partager — voir components/publications/ActionsPartage */}
+                    <ActionsPartage
+                      lien={getPostUrl(post.id)}
+                      titre={post.title || post.content.slice(0, 100)}
+                      introMessage="Je te partage cette publication du mur communautaire :"
+                      utilisateurId={currentUserId}
+                      style={inputStyle}
+                    >
+                      {/* Garder */}
+                      <button onClick={() => toggleBookmark(post.id)}
+                        title={bookmarkedPosts.has(post.id) ? 'Retirer des enregistrés' : 'Garder'}
+                        aria-label={bookmarkedPosts.has(post.id) ? 'Retirer des enregistrés' : 'Garder'}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
+                        style={{ color: bookmarkedPosts.has(post.id) ? 'var(--brand)' : 'var(--text-muted)' }}>
+                        <ShineIcon name="garder" className="w-4 h-4" filled={bookmarkedPosts.has(post.id)} />
                       </button>
-
-                      {socialShareId === post.id && (
-                        <div className="absolute right-0 bottom-full mb-2 rounded-xl py-2 px-1 z-30 shadow-xl min-w-[160px] bg-[var(--surface-card)] border border-[var(--border)]">
-                          <a
-                            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(getPostUrl(post.id))}`}
-                            target="_blank" rel="noopener noreferrer"
-                            onClick={countShare}
-                            className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs transition-colors text-[var(--text-secondary)]"
-                            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
-                            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                          >
-                            <span className="text-sm">📘</span> Facebook
-                          </a>
-                          <a
-                            href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(getPostUrl(post.id))}&text=${encodeURIComponent(post.title || post.content.slice(0, 100))}`}
-                            target="_blank" rel="noopener noreferrer"
-                            onClick={countShare}
-                            className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs transition-colors text-[var(--text-secondary)]"
-                            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
-                            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                          >
-                            <span className="text-sm">🐦</span> X (Twitter)
-                          </a>
-                          <a
-                            href={`https://wa.me/?text=${encodeURIComponent((post.title || 'Publication SOS Shine') + ' ' + getPostUrl(post.id))}`}
-                            target="_blank" rel="noopener noreferrer"
-                            onClick={countShare}
-                            className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs transition-colors text-[var(--text-secondary)]"
-                            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
-                            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                          >
-                            <span className="text-sm">💬</span> WhatsApp
-                          </a>
-                          <button
-                            onClick={() => { navigator.clipboard.writeText(getPostUrl(post.id)); countShare(); setSocialShareId(null) }}
-                            className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs transition-colors w-full text-left cursor-pointer text-[var(--text-secondary)]"
-                            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
-                            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                          >
-                            <span className="text-sm">🔗</span> Copier le lien
-                          </button>
-                        </div>
-                      )}
-                    </div>
+                    </ActionsPartage>
                   </div>
                 )}
 
@@ -1210,62 +1109,6 @@ export default function MurPage() {
       )}
 
       {/* ── Share DM Modal ── */}
-      {sharePostId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
-          <div className="w-full max-w-sm rounded-2xl p-6 space-y-4 bg-[var(--surface-card)] border border-[var(--border)]">
-            <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-[var(--text-primary)]">Envoyer en message privé</h3>
-              <button onClick={() => setSharePostId(null)} className="p-1 cursor-pointer text-[var(--text-muted)]">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            <input
-              type="text"
-              value={shareSearch}
-              onChange={e => setShareSearch(e.target.value)}
-              placeholder="Rechercher un membre..."
-              className="w-full px-3 py-2.5 rounded-xl text-sm outline-none"
-              style={inputStyle}
-            />
-
-            <div className="max-h-60 overflow-y-auto space-y-1">
-              {filteredShareMembers.map(member => (
-                <button
-                  key={member.id}
-                  onClick={() => sendShareDM(member.id, sharePostId!)}
-                  disabled={shareSending === member.id}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all cursor-pointer disabled:opacity-50 text-[var(--text-primary)]"
-                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                >
-                  {member.avatar_url ? (
-                    <img src={member.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover" />
-                  ) : (
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
-                      style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}>
-                      {member.prenom?.charAt(0).toUpperCase() || '?'}
-                    </div>
-                  )}
-                  <span className="flex-1 text-left">{member.prenom}</span>
-                  {shareSending === member.id ? (
-                    <div className="w-4 h-4 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
-                  ) : (
-                    <svg className="w-4 h-4 text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                    </svg>
-                  )}
-                </button>
-              ))}
-              {filteredShareMembers.length === 0 && (
-                <p className="text-center text-xs py-4 text-[var(--text-muted)]">Aucun membre trouvé</p>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
       {/* ── Profile Drawer ── */}
       {profileDrawerUserId && (
         <ProfileDrawer

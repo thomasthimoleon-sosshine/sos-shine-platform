@@ -9,6 +9,7 @@ import FileUpload from '@/components/FileUpload'
 import AudioPlayer from '@/components/AudioPlayer'
 import VoiceRecorder from '@/components/VoiceRecorder'
 import ShineIcon from '@/components/icons/ShineIcon'
+import ActionsPartage from '@/components/publications/ActionsPartage'
 import { POST_CATEGORIES, MEDIA_TYPES } from '@/lib/community/categories'
 
 /* ── Types locaux ── */
@@ -59,6 +60,17 @@ const ECLAT_LABELS: Partial<Record<PostCategory, string>> = {
 const CATEGORIES = POST_CATEGORIES.map(c => ({ ...c, label: ECLAT_LABELS[c.value] || c.label }))
 
 const CATEGORY_MAP = Object.fromEntries(CATEGORIES.map(c => [c.value, c]))
+
+/**
+ * Où s'ouvre une publication du journal. Pas sur le fil : celui-ci écarte
+ * explicitement les éclats. C'est le profil de son auteur qui les montre,
+ * en respectant leur visibilité.
+ */
+function lienPublication(auteurId: string | null) {
+  const chemin = auteurId ? `/dashboard/membre/${auteurId}` : '/dashboard'
+  if (typeof window !== 'undefined') return `${window.location.origin}${chemin}`
+  return chemin
+}
 
 function getCategoryInfo(cat: string) {
   return CATEGORY_MAP[cat] || CATEGORY_MAP.partage
@@ -450,7 +462,7 @@ export default function MonEclatPage() {
               border: showCreate ? '1px solid rgba(201,169,97,0.3)' : 'none',
             }}
           >
-            {showCreate ? 'Annuler' : '+ Écrire un message'}
+            {showCreate ? 'Annuler' : '+ Publier'}
           </button>
         )}
       </div>
@@ -768,6 +780,20 @@ export default function MonEclatPage() {
                       </svg>
                       {commentCount > 0 && <span>{commentCount}</span>}
                     </button>
+
+                    {/* Envoyer à un proche · Partager — les mêmes gestes que sur
+                        le fil, le même composant. Une publication réservée aux
+                        Rayons ne part pas au dehors : le lien ouvrirait une page
+                        vide pour qui n'est pas un proche. */}
+                    <ActionsPartage
+                      lien={lienPublication(currentUserId)}
+                      titre={post.title || catInfo.label}
+                      introMessage="Je te partage ce que j'ai écrit dans mon Éclat :"
+                      utilisateurId={currentUserId}
+                      prochesUniquement={post.visibility === 'rayons_only'}
+                      partageExterne={post.visibility === 'public'}
+                      style={inputStyle}
+                    />
                   </div>
                 )}
 

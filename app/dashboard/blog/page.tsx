@@ -8,6 +8,7 @@ import { blogArticles as staticArticles, BLOG_CATEGORIES } from '@/data/blog/art
 import type { BlogArticle } from '@/data/blog/articles'
 import { aujourdhui } from '@/lib/blog-parution'
 import ShineIcon from '@/components/icons/ShineIcon'
+import BoutonFavoriBlog from '@/components/blog/BoutonFavoriBlog'
 
 const gold = 'var(--brand)'
 const goldRgb = '201,169,97'
@@ -157,6 +158,7 @@ export default function DashboardBlogPage() {
             </span>
             <span className="text-xs text-[var(--text-muted)]">{formatDate(selectedArticle.publishedAt)}</span>
             <span className="text-xs text-[var(--text-muted)]">{selectedArticle.readTime} min de lecture</span>
+            <span className="ml-auto"><BoutonFavoriBlog slug={selectedArticle.slug} /></span>
           </div>
 
           <h1 className="font-display text-2xl sm:text-3xl font-light leading-[1.15] mb-3">{selectedArticle.title}</h1>
@@ -252,6 +254,8 @@ export default function DashboardBlogPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
         >
+          <div className="relative">
+          <span className="absolute top-4 right-4 z-10"><BoutonFavoriBlog slug={featured.slug} forme="pastille" /></span>
           <button
             onClick={() => setSelectedArticle(featured)}
             className="w-full text-left cursor-pointer"
@@ -288,6 +292,7 @@ export default function DashboardBlogPage() {
               </div>
             </article>
           </button>
+          </div>
         </motion.div>
       )}
 
@@ -301,9 +306,11 @@ export default function DashboardBlogPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.05 + i * 0.05 }}
             >
+              <div className="relative h-full">
+              <span className="absolute top-3 right-3 z-10"><BoutonFavoriBlog slug={article.slug} forme="pastille" /></span>
               <button
                 onClick={() => setSelectedArticle(article)}
-                className="w-full text-left cursor-pointer"
+                className="w-full h-full text-left cursor-pointer"
               >
                 <article
                   className="group rounded-xl p-5 h-full transition-all duration-300 hover:shadow-lg"
@@ -313,7 +320,7 @@ export default function DashboardBlogPage() {
                     style={{ color: BLOG_CATEGORIES.find(c => c.slug === article.category)?.color || gold }}>
                     {BLOG_CATEGORIES.find(c => c.slug === article.category)?.label || article.category}
                   </span>
-                  <h3 className="font-display text-base font-light mt-2 mb-2 leading-snug group-hover:text-[var(--brand)] transition-colors">
+                  <h3 className="font-display text-base font-light mt-2 mb-2 pr-9 leading-snug group-hover:text-[var(--brand)] transition-colors">
                     {article.title}
                   </h3>
                   <p className="text-xs font-light leading-relaxed mb-3 line-clamp-2 text-[var(--text-secondary)]">
@@ -327,6 +334,7 @@ export default function DashboardBlogPage() {
                   </div>
                 </article>
               </button>
+              </div>
             </motion.div>
           ))}
         </div>

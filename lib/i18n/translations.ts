@@ -374,7 +374,7 @@ export const translations: Record<string, string> = {
   'dashboard.free_trial': 'Essai gratuit de 7 jours',
   'dashboard.sign_out': 'Se déconnecter',
   'dashboard.member_since': 'Membre depuis {date}',
-  'dashboard.photo_hint': 'JPG, PNG. Max 10 Mo.',
+  'dashboard.photo_hint': 'JPG ou PNG. Vous pourrez cadrer votre photo.',
   'dashboard.encyclopedia_subtitle': 'Chaque thème a sa page dédiée. Trouvez le vôtre, accédez à votre protocole en 3 étapes.',
   'dashboard.search_thème': 'Rechercher un thème...',
   'dashboard.search_challenge': 'Rechercher un thème...',

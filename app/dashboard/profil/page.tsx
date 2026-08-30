@@ -11,6 +11,7 @@ import { useTranslation } from '@/lib/i18n/useTranslation'
 import NotificationPreferences from '@/components/account/NotificationPreferences'
 import ShineIcon from '@/components/icons/ShineIcon'
 import CourrierAnonyme from '@/components/account/CourrierAnonyme'
+import CadrageAvatar from '@/components/profil/CadrageAvatar'
 
 export default function ProfilPage() {
   const { t } = useTranslation()
@@ -22,6 +23,8 @@ export default function ProfilPage() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [uploadingAvatar, setUploadingAvatar] = useState(false)
+  /** Photo choisie, en attente de cadrage. */
+  const [fichierACadrer, setFichierACadrer] = useState<File | null>(null)
   const [uploadingVideo, setUploadingVideo] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
   const [upgrading, setUpgrading] = useState(false)
@@ -100,22 +103,39 @@ export default function ProfilPage() {
     setSaving(false)
   }
 
-  async function handleAvatarUpload(e: React.ChangeEvent<HTMLInputElement>) {
+  /**
+   * Choisir un fichier n'envoie plus rien : on ouvre d'abord le cadrage.
+   * L'avatar est carré et rond, et une photo de téléphone est presque
+   * toujours en portrait — sans cette étape, le carré prenait le milieu
+   * de l'image et coupait le visage.
+   */
+  function handleAvatarUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file || !profile) return
+    setUploadError(null)
+    setFichierACadrer(file)
+    // On vide le champ tout de suite : sans ça, rechoisir la même photo
+    // après avoir annulé ne déclencherait aucun événement.
+    if (avatarRef.current) avatarRef.current.value = ''
+  }
+
+  /** Reçoit l'image déjà découpée par le cadrage, et l'envoie. */
+  async function envoyerAvatar(image: File) {
+    if (!profile) return
     setUploadingAvatar(true)
     setUploadError(null)
     try {
-      const url = await uploadFile(file, 'avatars')
+      const url = await uploadFile(image, 'avatars')
       const supabase = createClient()
       const { error } = await supabase.from('profiles').update({ avatar_url: url }).eq('id', profile.id)
       if (error) throw new Error(error.message)
       setProfile({ ...profile, avatar_url: url })
+      setFichierACadrer(null)
     } catch (err) {
       setUploadError(err instanceof Error ? err.message : "Erreur lors de l'envoi de la photo")
+      setFichierACadrer(null)
     }
     setUploadingAvatar(false)
-    if (avatarRef.current) avatarRef.current.value = ''
   }
 
   async function handleRemoveAvatar() {
@@ -317,6 +337,15 @@ export default function ProfilPage() {
           </p>
         )}
       </div>
+
+      {fichierACadrer && (
+        <CadrageAvatar
+          fichier={fichierACadrer}
+          onValider={envoyerAvatar}
+          onAnnuler={() => setFichierACadrer(null)}
+          envoiEnCours={uploadingAvatar}
+        />
+      )}
 
       {/* Informations */}
       <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>

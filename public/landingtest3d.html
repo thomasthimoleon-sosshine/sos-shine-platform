@@ -291,8 +291,8 @@
     .foot-grid{grid-template-columns:1fr 1fr}
     section.band,.reco,.final{padding:66px 0}
     .local{padding:0}
-    /* Mobile : montrer toute la largeur du fond hero pour garder les diamants des bords */
-    .hero{background-image:linear-gradient(rgba(10,7,4,0.22),rgba(10,7,4,0.22)),url('/fond-hero-diamants.jpg');background-size:cover,contain;background-position:center,center;background-repeat:no-repeat;background-color:var(--bg)}
+    /* Mobile : image portrait dédiée (diamants répartis dans la colonne centrale) */
+    .hero{background-image:linear-gradient(rgba(10,7,4,0.3),rgba(10,7,4,0.3)),radial-gradient(circle at 50% 44%,rgba(10,7,4,0.55) 0%,rgba(10,7,4,0.28) 30%,rgba(10,7,4,0) 55%),url('/fond-hero-diamants-mobile.jpg');background-size:cover;background-position:center;background-repeat:no-repeat;background-color:var(--bg)}
     .hide-m{display:none}
     .sticky-cta{display:block}
     /* Empêche le bouton flottant de recouvrir les derniers liens du footer */

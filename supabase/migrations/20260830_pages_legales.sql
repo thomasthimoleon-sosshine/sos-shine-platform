@@ -3,41 +3,36 @@
 --
 -- ⚠️  DEUX CHOSES À FAIRE AVANT D'EXÉCUTER CE FICHIER
 --
---  1. Remplacer les quatre mentions « À COMPLÉTER » ci-dessous. Elles
---     n'existent nulle part dans le dépôt et personne d'autre que vous ne
---     les connaît.
---  2. Faire relire par un juriste. Ce texte est rédigé à partir de ce que
---     fait réellement le code — c'est sa force — mais rédiger n'est pas
---     conseiller, et le produit touche au deuil et au trauma.
+--  1. Remplacer les quatre mentions « À COMPLÉTER ». Elles n'existent nulle
+--     part dans le dépôt et personne d'autre que vous ne les connaît.
+--  2. Faire relire par un juriste. Ce texte est rédigé à partir de ce que fait
+--     réellement le code — c'est sa force — mais rédiger n'est pas conseiller.
 --
--- La page /mentions-legales n'avait jamais reçu de contenu : contrairement
--- aux CGV et à la confidentialité, aucun texte source n'existait, et son
--- contenu par défaut était une chaîne vide. Le visiteur lisait « Cette page
--- n'a pas encore été renseignée ».
+-- La page /mentions-legales n'avait jamais reçu de contenu : contrairement aux
+-- CGV et à la confidentialité, aucun texte source n'existait, et son contenu
+-- par défaut était une chaîne vide.
 --
--- La politique de confidentialité, elle, existait mais décrivait une collecte
--- bien plus étroite que la réalité : elle ne nommait ni Supabase, ni Resend,
--- ni Anthropic, ne mentionnait aucun transfert hors UE, aucune base légale,
--- et ignorait la mesure d'audience comme les réponses aux questionnaires
--- émotionnels. Ce qui suit décrit ce que le code fait vraiment.
+-- La politique de confidentialité existait mais décrivait une collecte bien
+-- plus étroite que la réalité : ni Supabase, ni Resend, ni Anthropic, aucun
+-- transfert hors UE, aucune base légale, ni la mesure d'audience.
+--
+-- ── Pourquoi ni INSERT ... ON CONFLICT, ni UPSERT ──────────────────────────
+--
+-- La contrainte d'unicité de landing_sections diffère selon les bases. Le
+-- dépôt dit (section_key, variant) depuis la migration d'avril sur l'A/B
+-- testing ; en production, l'ancienne contrainte sur section_key seul est
+-- toujours là — SUPABASE_FULL_SETUP.sql la recrée, et il a dû être rejoué
+-- après. Un ON CONFLICT doit nommer une contrainte qui existe : quel que soit
+-- le nom choisi, il échoue sur l'une des deux bases.
+--
+-- On met donc à jour si la ligne existe, on insère sinon. Cela fonctionne
+-- avec l'une comme avec l'autre, et met à jour toutes les variantes — le
+-- texte légal est le même pour toutes.
 -- ═══════════════════════════════════════════════════════════════════════════
 
--- La contrainte d'unicité porte sur (section_key, variant) depuis la migration
--- d'avril sur l'A/B testing, et non sur section_key seul : un ON CONFLICT
--- (section_key) échouerait. La variante 'julia' est celle par défaut.
-
--- ── 1. Mentions légales ────────────────────────────────────────────────────
-
-INSERT INTO public.landing_sections (section_key, variant, label, position, is_visible, content, styles)
-VALUES (
-  'legal_mentions',
-  'julia',
-  'Page - Mentions légales',
-  60,
-  true,
-  jsonb_build_object(
-    'title', 'Mentions légales',
-    'html_content', $HTML$
+DO $MAJ$
+DECLARE
+  contenu TEXT := $HTML$
 <h2>Éditeur du site</h2>
 <p>
   <strong>Julia LAUREAU</strong> — Entrepreneuse individuelle (EI)<br>
@@ -93,26 +88,24 @@ VALUES (
   professionnel de santé. En cas de détresse, contactez le 3114 (numéro
   national de prévention du suicide, gratuit, 24 h/24) ou le 15.
 </p>
-$HTML$
-  ),
-  '{}'::jsonb
-)
-ON CONFLICT (section_key, variant) DO UPDATE
-  SET content = EXCLUDED.content,
-      is_visible = true;
+$HTML$;
+BEGIN
+  IF EXISTS (SELECT 1 FROM public.landing_sections WHERE section_key = 'legal_mentions') THEN
+    UPDATE public.landing_sections
+       SET content = jsonb_build_object('title', 'Mentions légales', 'html_content', contenu),
+           is_visible = true
+     WHERE section_key = 'legal_mentions';
+  ELSE
+    INSERT INTO public.landing_sections (section_key, label, position, is_visible, content, styles)
+    VALUES ('legal_mentions', 'Page - Mentions légales', 60, true,
+            jsonb_build_object('title', 'Mentions légales', 'html_content', contenu), '{}'::jsonb);
+  END IF;
+END
+$MAJ$;
 
--- ── 2. Politique de confidentialité ────────────────────────────────────────
-
-INSERT INTO public.landing_sections (section_key, variant, label, position, is_visible, content, styles)
-VALUES (
-  'legal_privacy',
-  'julia',
-  'Page - Confidentialité',
-  61,
-  true,
-  jsonb_build_object(
-    'title', 'Politique de confidentialité',
-    'html_content', $HTML$
+DO $MAJ$
+DECLARE
+  contenu TEXT := $HTML$
 <p><em>Dernière mise à jour : 30 août 2026</em></p>
 
 <h2>Qui traite vos données</h2>
@@ -245,12 +238,19 @@ VALUES (
   lire que ce qui vous appartient. Si un incident affectait vos données, vous en
   seriez informé, ainsi que la CNIL, dans les délais prévus par le RGPD.
 </p>
-$HTML$
-  ),
-  '{}'::jsonb
-)
-ON CONFLICT (section_key, variant) DO UPDATE
-  SET content = EXCLUDED.content,
-      is_visible = true;
+$HTML$;
+BEGIN
+  IF EXISTS (SELECT 1 FROM public.landing_sections WHERE section_key = 'legal_privacy') THEN
+    UPDATE public.landing_sections
+       SET content = jsonb_build_object('title', 'Politique de confidentialité', 'html_content', contenu),
+           is_visible = true
+     WHERE section_key = 'legal_privacy';
+  ELSE
+    INSERT INTO public.landing_sections (section_key, label, position, is_visible, content, styles)
+    VALUES ('legal_privacy', 'Page - Confidentialité', 61, true,
+            jsonb_build_object('title', 'Politique de confidentialité', 'html_content', contenu), '{}'::jsonb);
+  END IF;
+END
+$MAJ$;
 
 NOTIFY pgrst, 'reload schema';

@@ -1066,6 +1066,24 @@ export default function DouleurDetailPage() {
 
           return (
             <div className="space-y-4">
+              {/* La consigne d'écoute ouvre l'étape, juste après sa description.
+                  Placée avant les seules séances, elle se retrouvait sous la vidéo
+                  de coaching dès qu'il y en avait une : on la lisait après avoir
+                  regardé, c'est-à-dire trop tard. */}
+              {(() => {
+                const seance1 = !!currentStep.audio && currentStep.num !== 3
+                const seance2 = !!currentStep.audio2 && !isPreviewMode && currentStep.num !== 3
+                if (!seance1 && !seance2) return null
+                return (
+                  <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.12)' }}>
+                    <span className="flex-shrink-0 mt-0.5" style={{ color: 'var(--brand)' }}><ShineIcon name="audio" className="w-5 h-5" /></span>
+                    <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                      Avant de lancer {seance1 && seance2 ? 'ces séances' : 'cet audio'}, installez-vous confortablement dans un endroit calme et détendu. Mettez votre casque audio, respirez profondément et laissez-vous guider en toute sérénité.
+                    </p>
+                  </div>
+                )
+              })()}
+
               {currentStep.video && <ToolHeader icon="video" label={currentStep.videoTitle || "Vidéo de coaching"} color={currentStep.color} />}
               {currentStep.video && (
                 isPreviewMode
@@ -1109,23 +1127,6 @@ export default function DouleurDetailPage() {
                   <img src={currentStep.image} alt={`${douleur?.title} - Étape ${currentStep.num}`} className="w-full h-auto rounded-xl" />
                 </div>
               )}
-
-              {/* La consigne d'écoute précédait chaque lecteur, mot pour mot. Deux fois
-                  de suite, elle repoussait les séances vers le bas sans rien dire de
-                  plus : elle est donnée une fois, avant elles. */}
-              {(() => {
-                const seance1 = !!currentStep.audio && currentStep.num !== 3
-                const seance2 = !!currentStep.audio2 && !isPreviewMode && currentStep.num !== 3
-                if (!seance1 && !seance2) return null
-                return (
-                  <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(201,169,97,0.06)', border: '1px solid rgba(201,169,97,0.12)' }}>
-                    <span className="flex-shrink-0 mt-0.5" style={{ color: 'var(--brand)' }}><ShineIcon name="audio" className="w-5 h-5" /></span>
-                    <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                      Avant de lancer {seance1 && seance2 ? 'ces séances' : 'cet audio'}, installez-vous confortablement dans un endroit calme et détendu. Mettez votre casque audio, respirez profondément et laissez-vous guider en toute sérénité.
-                    </p>
-                  </div>
-                )
-              })()}
 
               {currentStep.audio && currentStep.num !== 3 && <ToolHeader icon="audio" label={currentStep.audioTitle || "Séance audio guidée"} color={currentStep.color} />}
               {currentStep.audio && currentStep.num !== 3 && (

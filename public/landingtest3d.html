@@ -196,7 +196,7 @@
   .member p{font-size:14.5px;color:var(--cream-dim);max-width:32ch;margin:0 auto}
 
   /* ---------- ACCOMPANIMENT / LOCAL ---------- */
-  .local{background:linear-gradient(150deg,var(--surface),var(--bg-2));border:1px solid var(--line);border-radius:var(--radius);padding:44px;display:grid;grid-template-columns:1.2fr .8fr;gap:36px;align-items:center}
+  .local{padding:0;display:grid;grid-template-columns:1.2fr .8fr;gap:36px;align-items:center}
   .local h2{font-size:clamp(1.7rem,3vw,2.3rem)}
   .local p{color:var(--cream-dim);margin-top:14px}
   .local .zones{margin-top:20px;display:flex;flex-wrap:wrap;gap:8px}
@@ -290,7 +290,7 @@
     .grid-4,.steps,.team,.quotes,.prices{grid-template-columns:1fr}
     .foot-grid{grid-template-columns:1fr 1fr}
     section.band,.reco,.final{padding:66px 0}
-    .local{padding:30px}
+    .local{padding:0}
     .hide-m{display:none}
     .sticky-cta{display:block}
     /* Empêche le bouton flottant de recouvrir les derniers liens du footer */
@@ -431,7 +431,7 @@
 </section>
 
 <!-- 12 · ACCOMPANIMENT + LOCAL -->
-<section class="band alt" id="accompagnement" style="background-image:linear-gradient(rgba(10,7,4,0.3),rgba(10,7,4,0.3)),url('/fond-bougies.jpg');background-size:cover;background-position:center">
+<section class="band alt" id="accompagnement" style="background-image:linear-gradient(90deg,rgba(10,7,4,0.78) 0%,rgba(10,7,4,0.35) 45%,rgba(10,7,4,0.15) 100%),url('/fond-bougies.jpg');background-size:cover;background-position:right center;min-height:70vh;display:flex;align-items:center">
   <div class="container">
     <div class="local reveal">
       <div>

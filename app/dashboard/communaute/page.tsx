@@ -13,8 +13,9 @@ const MonEclatTab = dynamic(() => import('@/app/dashboard/mon-eclat/page'), { ss
 const RayonsFeedTab = dynamic(() => import('@/components/community/RayonsFeedTab'), { ssr: false })
 const MessagesTab = dynamic(() => import('@/components/community/MessagesTab'), { ssr: false })
 const SavedPostsTab = dynamic(() => import('@/components/community/SavedPostsTab'), { ssr: false })
+const MembresTab = dynamic(() => import('@/components/community/MembresTab'), { ssr: false })
 
-type TabId = 'fil' | 'discussions' | 'moi'
+type TabId = 'fil' | 'discussions' | 'membres' | 'moi'
 type MoiView = 'messages' | 'proches' | 'enregistres'
 
 const TABS: { id: TabId; label: string; icon: React.ReactNode }[] = [
@@ -33,6 +34,15 @@ const TABS: { id: TabId; label: string; icon: React.ReactNode }[] = [
     icon: (
       <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+      </svg>
+    ),
+  },
+  {
+    id: 'membres',
+    label: 'Membres',
+    icon: (
+      <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M11 18a7 7 0 110-14 7 7 0 010 14z" />
       </svg>
     ),
   },
@@ -61,6 +71,7 @@ function resolveInitial(tab: string | null): { tab: TabId; moi: MoiView } {
     case 'eclat': return { tab: 'moi', moi: 'messages' }
     case 'rayons': return { tab: 'moi', moi: 'proches' }
     case 'saved': return { tab: 'moi', moi: 'enregistres' }
+    case 'membres': return { tab: 'membres', moi: 'messages' }
     case 'fil': case 'discussions': case 'moi': return { tab: tab as TabId, moi: 'messages' }
     default: return { tab: 'fil', moi: 'messages' }
   }
@@ -105,7 +116,7 @@ export default function CommunautePage() {
   return (
     <SubscriptionGate allowFree>
     <div className="max-w-4xl mx-auto">
-      {/* ── 3 onglets ── */}
+      {/* ── Les onglets ── */}
       <div className="mb-6">
         <div className="flex gap-1 p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
           {TABS.map(tab => {
@@ -163,6 +174,7 @@ export default function CommunautePage() {
       <div>
         {activeTab === 'fil' && <MurTab />}
         {activeTab === 'discussions' && <MessagesTab onProfileClick={openProfileDrawer} />}
+        {activeTab === 'membres' && <MembresTab onProfileClick={openProfileDrawer} />}
         {activeTab === 'moi' && moiView === 'messages' && <MonEclatTab />}
         {activeTab === 'moi' && moiView === 'proches' && <RayonsFeedTab onProfileClick={openProfileDrawer} />}
         {activeTab === 'moi' && moiView === 'enregistres' && <SavedPostsTab onProfileClick={openProfileDrawer} />}

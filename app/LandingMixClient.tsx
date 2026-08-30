@@ -129,7 +129,12 @@ export default function LandingMixClient({ nextEvent }: { nextEvent: NextEvent |
       <TopNav />
 
       {/* ══ HERO ══ */}
-      <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden text-center" style={{ paddingTop: '100px' }}>
+      <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden text-center" style={{
+        paddingTop: '100px',
+        backgroundImage: "linear-gradient(180deg, rgba(10,7,4,0.72) 0%, rgba(10,7,4,0.84) 100%), url('/fond-hero.jpg')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}>
         {/* Glow */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full opacity-[0.06] blur-[120px]" style={{ background: '#C9A961' }} />

@@ -27,6 +27,7 @@ const adminNav = [
   { href: '/admin/inscrits-evenements', label: 'Inscrits Événements' },
   { href: '/admin/physical-events', label: 'Événements /event' },
   { href: '/admin/leads-cadeau', label: 'Leads, Guide PDF' },
+  { href: '/admin/notifications', label: 'Notifications' },
   { href: '/admin/publications', label: 'Publications' },
   { href: '/admin/membres', label: 'Membres' },
   { href: '/admin/abonnements', label: 'Abonnements' },

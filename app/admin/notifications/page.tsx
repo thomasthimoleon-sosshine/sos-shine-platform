@@ -61,6 +61,9 @@ export default function AdminNotifications() {
   const [moiSeul, setMoiSeul] = useState(true)
   const [envoi, setEnvoi] = useState(false)
   const [resultat, setResultat] = useState<Resultat | null>(null)
+  const [cles, setCles] = useState<{ publicKey: string; privateKey: string } | null>(null)
+  const [fabrique, setFabrique] = useState(false)
+  const [copie, setCopie] = useState<string | null>(null)
 
   const jeton = useCallback(async () => {
     const supabase = createClient()
@@ -78,6 +81,25 @@ export default function AdminNotifications() {
   }, [jeton])
 
   useEffect(() => { lireEtat() }, [lireEtat])
+
+  async function fabriquerCles() {
+    if (fabrique) return
+    setFabrique(true)
+    try {
+      const t = await jeton()
+      const r = await fetch('/api/push/vapid', { method: 'POST', headers: { 'x-user-token': t || '' } })
+      if (r.ok) setCles(await r.json())
+    } catch { /* silencieux : le bouton reste disponible */ }
+    setFabrique(false)
+  }
+
+  async function copier(valeur: string, nom: string) {
+    try {
+      await navigator.clipboard.writeText(valeur)
+      setCopie(nom)
+      setTimeout(() => setCopie(null), 1800)
+    } catch { /* certains navigateurs refusent le presse-papiers */ }
+  }
 
   async function envoyer() {
     if (!titre.trim() || !message.trim() || envoi) return
@@ -147,11 +169,48 @@ export default function AdminNotifications() {
               non=""
             />
             {!etat.vapid && (
-              <p className="pt-2 text-[12.5px] leading-relaxed" style={{ color: 'var(--text-muted)' }}>
-                Sans les clés VAPID, la cloche fonctionne quand même : la notification s&apos;enregistre
-                et la pastille rouge apparaît. Seul l&apos;envoi vers le téléphone, application fermée,
-                est impossible.
-              </p>
+              <div className="pt-3 space-y-3" style={{ borderTop: '1px solid var(--border)' }}>
+                <p className="text-[12.5px] leading-relaxed" style={{ color: 'var(--text-muted)' }}>
+                  Sans les clés VAPID, la cloche fonctionne quand même : la notification s&apos;enregistre
+                  et la pastille rouge apparaît. Seul l&apos;envoi vers le téléphone, application fermée,
+                  est impossible.
+                </p>
+                <p className="text-[12.5px] leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                  Ces clés ne se récupèrent nulle part : ce sont deux nombres tirés au hasard qui
+                  prouvent aux serveurs d&apos;Apple et de Google que les notifications viennent bien
+                  de SOS Shine. On les fabrique une fois, et on n&apos;y revient plus.
+                </p>
+
+                {!cles ? (
+                  <button onClick={fabriquerCles} disabled={fabrique}
+                    className="px-4 py-2.5 rounded-lg text-[13px] font-semibold transition-all"
+                    style={{
+                      background: 'linear-gradient(135deg, #74C0FC, #4DA3E8)',
+                      color: '#0a0a0a',
+                      cursor: fabrique ? 'wait' : 'pointer',
+                    }}>
+                    {fabrique ? 'Fabrication…' : 'Fabriquer mes clés'}
+                  </button>
+                ) : (
+                  <div className="space-y-3">
+                    <p className="text-[12.5px] font-medium" style={{ color: 'var(--text-primary)' }}>
+                      Copiez ces deux valeurs dans Vercel → Settings → Environment Variables,
+                      puis redéployez.
+                    </p>
+                    <Cle nom="NEXT_PUBLIC_VAPID_PUBLIC_KEY" valeur={cles.publicKey}
+                      copie={copie === 'pub'} onCopier={() => copier(cles.publicKey, 'pub')} />
+                    <Cle nom="VAPID_PRIVATE_KEY" valeur={cles.privateKey} secrete
+                      copie={copie === 'priv'} onCopier={() => copier(cles.privateKey, 'priv')} />
+                    <Cle nom="VAPID_EMAIL" valeur="mailto:contact@sosshine.com"
+                      copie={copie === 'mail'} onCopier={() => copier('mailto:contact@sosshine.com', 'mail')} />
+                    <p className="text-[12px] leading-relaxed" style={{ color: 'var(--text-muted)' }}>
+                      Elles ne sont enregistrées nulle part : si vous quittez cette page sans les
+                      copier, il faudra en fabriquer d&apos;autres. La clé privée ne se partage avec
+                      personne — ni par message, ni par e-mail.
+                    </p>
+                  </div>
+                )}
+              </div>
             )}
           </div>
         )}
@@ -280,6 +339,28 @@ function Ligne({ ok, titre, oui, non }: { ok: boolean; titre: string; oui: strin
           {ok ? oui : non}
         </span>
       </span>
+    </div>
+  )
+}
+
+function Cle({ nom, valeur, secrete, copie, onCopier }: {
+  nom: string; valeur: string; secrete?: boolean; copie: boolean; onCopier: () => void
+}) {
+  return (
+    <div className="rounded-lg p-3" style={{ background: 'rgba(0,0,0,0.25)', border: '1px solid var(--border)' }}>
+      <div className="flex items-center justify-between gap-3 mb-1.5">
+        <span className="text-[11px] font-mono" style={{ color: secrete ? 'var(--danger)' : 'var(--text-muted)' }}>
+          {nom}{secrete && ' · à garder secrète'}
+        </span>
+        <button onClick={onCopier}
+          className="text-[11px] font-medium px-2.5 py-1 rounded-md cursor-pointer shrink-0"
+          style={{ background: 'rgba(116,192,252,0.12)', color: '#74C0FC', border: '1px solid rgba(116,192,252,0.25)' }}>
+          {copie ? 'Copié' : 'Copier'}
+        </button>
+      </div>
+      <p className="text-[11.5px] font-mono break-all leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+        {valeur}
+      </p>
     </div>
   )
 }

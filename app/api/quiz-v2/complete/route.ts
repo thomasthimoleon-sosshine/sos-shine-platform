@@ -134,7 +134,7 @@ export async function POST(request: NextRequest) {
         protocols: matchedProtocols,
         protocolSlug: topProtocolSlug,
       })
-      const { client: resend, fromEmail } = await getResendClient()
+      const { client: resend, fromEmail } = await getResendClient({ transactionnel: true }) // résultat du questionnaire demandé
       await resend.emails.send({
         from: `Julia Laureau <${fromEmail}>`,
         to: cleanEmail,

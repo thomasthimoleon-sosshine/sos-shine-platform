@@ -6,19 +6,26 @@
 import { NextResponse } from 'next/server'
 import { getStripe } from '@/lib/stripe/client'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
+import { createClient as createServerClient } from '@/lib/supabase/server'
 import { getSiteUrl } from '@/lib/stripe/config'
 
-export async function POST(request: Request) {
+export async function POST() {
   try {
     const stripe = getStripe()
     if (!stripe) {
       return NextResponse.json({ error: 'Stripe non configuré' }, { status: 500 })
     }
 
-    const { user_id } = await request.json()
-    if (!user_id) {
-      return NextResponse.json({ error: 'Utilisateur requis' }, { status: 400 })
+    // L'identité vient de la session, jamais du corps de la requête.
+    // Auparavant la route acceptait n'importe quel user_id et ouvrait le
+    // portail de facturation correspondant : factures, moyen de paiement et
+    // résiliation d'un autre membre, sans aucune authentification.
+    const session_supabase = await createServerClient()
+    const { data: { user } } = await session_supabase.auth.getUser()
+    if (!user) {
+      return NextResponse.json({ error: 'Connexion requise' }, { status: 401 })
     }
+    const user_id = user.id
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY

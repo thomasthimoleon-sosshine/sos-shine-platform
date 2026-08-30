@@ -39,7 +39,11 @@ export default function CourrierAnonyme({ compact = false }: { compact?: boolean
       const { data: { user } } = await supabase.auth.getUser()
 
       const { error: insertError } = await supabase.from('courrier_anonyme').insert({
-        user_id: user?.id || null,
+        // L'écran promet : « l'équipe fondatrice le lira, sans jamais savoir
+        // de qui il vient ». On enregistrait pourtant l'identifiant du membre
+        // à côté du message. Rien ne le lisait — ni le back-office, ni aucun
+        // autre écran — il ne servait donc qu'à démentir la promesse.
+        user_id: null,
         category,
         subject: subject.trim() || null,
         content: content.trim(),

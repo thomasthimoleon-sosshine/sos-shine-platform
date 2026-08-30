@@ -14,12 +14,15 @@ const SERIF = "Georgia, 'Times New Roman', serif"
 const SANS = "'Helvetica Neue', Helvetica, Arial, sans-serif"
 
 export function wrapEmail(content: string, vars: { email?: string; trackingId?: string; reason?: string } = {}): string {
-  const unsubUrl = `https://sosshine.com/api/unsubscribe?email=${encodeURIComponent(vars.email || '')}`
+  // Domaine lu dans la configuration : en dur, le lien pointait vers
+  // sosshine.com quel que soit le site réellement déployé.
+  const base = process.env.NEXT_PUBLIC_SITE_URL || 'https://sosshine.com'
+  const unsubUrl = `${base}/api/unsubscribe?email=${encodeURIComponent(vars.email || '')}`
   // Ligne « pourquoi tu reçois ça » : neutre et vraie pour tout le monde par défaut
   // (membre, acheteur, lead, newsletter). Peut être précisée via vars.reason.
   const reason = vars.reason || 'Tu reçois cet email de la part de SOS Shine.'
   const trackingPixel = vars.trackingId
-    ? `<img src="https://sosshine.com/api/crm/track/open?cid=${vars.trackingId}&uid=${encodeURIComponent(vars.email || '')}" width="1" height="1" style="display:none" alt="" />`
+    ? `<img src="${base}/api/crm/track/open?cid=${vars.trackingId}&uid=${encodeURIComponent(vars.email || '')}" width="1" height="1" style="display:none" alt="" />`
     : ''
 
   return `<!DOCTYPE html>

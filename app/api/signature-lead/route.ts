@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
         const displayName = cleanName || 'Cher(e) membre'
         const { subject, html } = generateSignatureResultEmail(displayName, profile, siteUrl)
 
-        const { client: resend, fromEmail } = await getResendClient()
+        const { client: resend, fromEmail } = await getResendClient({ transactionnel: true }) // résultat du questionnaire demandé
         const { error: sendErr } = await resend.emails.send({
           from: `SOS Shine® <${fromEmail}>`,
           to: cleanEmail,

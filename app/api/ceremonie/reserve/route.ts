@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
 
     if (isFree) {
       try {
-        const { client, fromEmail } = await getResendClient()
+        const { client, fromEmail } = await getResendClient({ transactionnel: true }) // confirmation de réservation
         const dateLabel = eventDate
           ? new Date(eventDate).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
           : null
@@ -127,7 +127,7 @@ export async function POST(request: NextRequest) {
           from: fromEmail,
           to: email.trim().toLowerCase(),
           subject: `Inscription confirmée, ${eventTitle || 'Événement SOS Shine'}`,
-          html: wrapInEmailLayout(bodyContent),
+          html: wrapInEmailLayout(bodyContent, email.trim().toLowerCase()),
         })
       } catch (emailErr) {
         console.error('[ceremonie/reserve] Email send error:', emailErr)

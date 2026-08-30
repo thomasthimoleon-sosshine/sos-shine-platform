@@ -24,7 +24,12 @@ function getSiteUrl(): string {
 // Wrapping HTML en layout SOS Shine
 // ============================================================
 
-export function wrapInEmailLayout(bodyContent: string): string {
+/**
+ * @param unsubEmail  adresse du destinataire, pour que le lien « Se
+ *   désinscrire » sache qui retirer. Sans elle, le lien menait à /unsubscribe
+ *   — une page qui n'a jamais existé — et ne désabonnait donc personne.
+ */
+export function wrapInEmailLayout(bodyContent: string, unsubEmail?: string): string {
   return `<!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -53,7 +58,7 @@ export function wrapInEmailLayout(bodyContent: string): string {
             <td align="center" style="padding-top:32px;color:#666;font-size:12px;line-height:1.6;">
               <p style="margin:0;">SOS Shine® · hello@sosshine.com</p>
               <p style="margin:4px 0 0;">La première encyclopédie mondiale du bien-être émotionnel</p>
-              <p style="margin:12px 0 0;"><a href="${getSiteUrl()}/unsubscribe" style="color:#C9A961;text-decoration:underline;">Se désinscrire</a></p>
+              <p style="margin:12px 0 0;"><a href="${getSiteUrl()}/api/unsubscribe?email=${encodeURIComponent(unsubEmail || '')}" style="color:#C9A961;text-decoration:underline;">Se désinscrire</a></p>
             </td>
           </tr>
         </table>
@@ -114,9 +119,9 @@ export async function sendTemplateEmail(
 
     const subject = renderTemplate(template.subject, allVars)
     const bodyHtml = renderTemplate(template.html_content, allVars)
-    const fullHtml = withTrackingPixel(wrapInEmailLayout(bodyHtml), recipientEmail, templateKey)
+    const fullHtml = withTrackingPixel(wrapInEmailLayout(bodyHtml, recipientEmail), recipientEmail, templateKey)
 
-    const { client: resend, fromEmail } = await getResendClient()
+    const { client: resend, fromEmail } = await getResendClient({ transactionnel: true }) // messages liés au compte et à l’abonnement
     const { error: sendErr } = await resend.emails.send({
       from: `SOS Shine® <${fromEmail}>`,
       to: recipientEmail,
@@ -261,8 +266,8 @@ export async function sendRawEmail(
   options?: { recipientName?: string; eventType?: string }
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const fullHtml = withTrackingPixel(wrapInEmailLayout(bodyHtml), recipientEmail, options?.eventType || 'raw')
-    const { client: resend, fromEmail } = await getResendClient()
+    const fullHtml = withTrackingPixel(wrapInEmailLayout(bodyHtml, recipientEmail), recipientEmail, options?.eventType || 'raw')
+    const { client: resend, fromEmail } = await getResendClient({ transactionnel: true }) // messages liés au compte et à l’abonnement
 
     const { error: sendErr } = await resend.emails.send({
       from: `SOS Shine® <${fromEmail}>`,

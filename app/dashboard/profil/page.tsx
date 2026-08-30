@@ -568,11 +568,9 @@ export default function ProfilPage() {
                   if (portalLoading) return
                   setPortalLoading(true)
                   try {
-                    const res = await fetch('/api/stripe/portal', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ user_id: profile?.id }),
-                    })
+                    // Plus de user_id dans le corps : la route lit désormais
+                    // l'identité dans la session.
+                    const res = await fetch('/api/stripe/portal', { method: 'POST' })
                     const data = await res.json()
                     if (res.ok && data.url) {
                       window.location.href = data.url

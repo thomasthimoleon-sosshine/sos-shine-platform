@@ -252,7 +252,7 @@ async function sendReminder(
   let emailError: string | null = null
 
   try {
-    const { client: resend, fromEmail } = await getResendClient()
+    const { client: resend, fromEmail } = await getResendClient({ transactionnel: true }) // avis de paiement et de renouvellement
 
     const { error } = await resend.emails.send({
       from: `SOS Shine® <${fromEmail}>`,

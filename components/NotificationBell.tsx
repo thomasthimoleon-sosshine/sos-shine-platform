@@ -4,7 +4,9 @@ import { useEffect, useState, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import { useTranslation } from '@/lib/i18n/useTranslation'
+import { useRouter } from 'next/navigation'
 import type { Notification } from '@/types/database'
+import ShineIcon, { type ShineIconName } from '@/components/icons/ShineIcon'
 
 const READ_STORAGE_KEY = 'sos-shine-read-notifications'
 
@@ -22,12 +24,48 @@ function saveLocalReadIds(ids: Set<string>) {
   localStorage.setItem(READ_STORAGE_KEY, JSON.stringify(arr))
 }
 
+/**
+ * Le signe de chaque type de notification, dans le jeu maison — le panneau
+ * était le dernier endroit de l'espace membre encore en émojis système.
+ */
+const SIGNES: Record<string, ShineIconName> = {
+  new_douleur: 'protocole',
+  new_protocol: 'protocole',
+  new_event: 'calendrier',
+  new_post: 'parole',
+  new_soin: 'eclat',
+  warning: 'alerte',
+  new_video: 'video',
+  new_audio: 'audio',
+  new_book: 'livre',
+}
+
+/**
+ * Où mène une notification qui n'a pas de lien.
+ *
+ * Le lien est facultatif : une annonce envoyée depuis le back-office sans
+ * adresse arrivait avec `link: null`. Cliquer dessus ne menait donc nulle
+ * part — et comme la ligne changeait d'état au passage, on croyait à un
+ * rafraîchissement raté. À défaut de lien, le type dit au moins la section.
+ */
+const SECTIONS: Record<string, string> = {
+  new_douleur: '/dashboard/encyclopedie',
+  new_protocol: '/dashboard/encyclopedie',
+  new_event: '/dashboard/evenements',
+  new_post: '/dashboard/communaute',
+  new_video: '/dashboard/shine-tv',
+  new_audio: '/dashboard/shine-audible',
+  new_book: '/dashboard/shine-librairie',
+}
+
 export default function NotificationBell() {
   const { t } = useTranslation()
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
   const [open, setOpen] = useState(false)
   const [userId, setUserId] = useState<string | null>(null)
+  const router = useRouter()
+  const [depliee, setDepliee] = useState<string | null>(null)
   const panelRef = useRef<HTMLDivElement>(null)
   const localReadIdsRef = useRef<Set<string>>(new Set())
 
@@ -173,6 +211,32 @@ export default function NotificationBell() {
     }
   }
 
+  /**
+   * Ce que fait un clic. Avant : on posait `window.location.href = lien`, et
+   * rien d'autre. Sans lien, il ne se passait rien du tout — le panneau restait
+   * ouvert, la ligne changeait seulement d'état.
+   *
+   * Désormais il se passe toujours quelque chose : on va à la destination si
+   * elle existe (par le routeur, sans recharger la page), sinon on déplie le
+   * message, puisqu'il est coupé à deux lignes.
+   */
+  function ouvrir(notif: Notification) {
+    if (!notif.is_read) markAsRead(notif.id)
+
+    const destination = notif.link || SECTIONS[notif.notification_type] || null
+    if (!destination) {
+      setDepliee(prev => (prev === notif.id ? null : notif.id))
+      return
+    }
+
+    setOpen(false)
+    if (/^https?:\/\//i.test(destination)) {
+      window.open(destination, '_blank', 'noopener,noreferrer')
+    } else {
+      router.push(destination)
+    }
+  }
+
   function formatTime(dateStr: string) {
     const date = new Date(dateStr)
     const now = new Date()
@@ -187,17 +251,6 @@ export default function NotificationBell() {
     return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })
   }
 
-  const typeIcons: Record<string, string> = {
-    new_douleur: '📖',
-    new_event: '📅',
-    new_post: '📝',
-    new_soin: '✨',
-    warning: '⚠️',
-    new_video: '🎬',
-    new_audio: '🎧',
-    new_book: '📚',
-    new_protocol: '📖',
-  }
 
   return (
     <div className="relative" ref={panelRef}>
@@ -205,8 +258,8 @@ export default function NotificationBell() {
         onClick={() => setOpen(!open)}
         className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 cursor-pointer relative"
         style={{
-          background: 'rgba(255,255,255,0.05)',
-          border: '1px solid rgba(255,255,255,0.08)',
+          background: 'var(--surface-elevated)',
+          border: '1px solid var(--border)',
         }}
         aria-label={t('notifications.title')}
       >
@@ -234,10 +287,10 @@ export default function NotificationBell() {
             transition={{ duration: 0.2 }}
             className="absolute right-0 top-12 w-80 sm:w-96 max-h-[70vh] rounded-2xl overflow-hidden z-50"
             style={{
-              background: 'rgba(15, 15, 18, 0.95)',
+              background: 'var(--surface-overlay)',
               backdropFilter: 'blur(24px)',
               border: '1px solid var(--border)',
-              boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+              boxShadow: 'var(--shadow-xl)',
             }}
           >
             <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: '1px solid var(--border)' }}>
@@ -266,13 +319,12 @@ export default function NotificationBell() {
                       background: notif.is_read ? 'transparent' : 'rgba(201, 169, 97, 0.04)',
                       borderBottom: '1px solid var(--border)',
                     }}
-                    onClick={() => {
-                      if (!notif.is_read) markAsRead(notif.id)
-                      if (notif.link) window.location.href = notif.link
-                    }}
+                    onClick={() => ouvrir(notif)}
                   >
                     <div className="flex items-start gap-3">
-                      <span className="text-lg mt-0.5">{typeIcons[notif.notification_type] || '🔔'}</span>
+                      <span className="mt-0.5 shrink-0" style={{ color: 'var(--brand)' }}>
+                        <ShineIcon name={SIGNES[notif.notification_type] || 'eclat'} className="w-4 h-4" />
+                      </span>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <p className="text-[13px] font-medium truncate text-[var(--text-primary)]">
@@ -282,7 +334,7 @@ export default function NotificationBell() {
                             <span className="w-2 h-2 rounded-full shrink-0" style={{ background: 'var(--brand)' }} />
                           )}
                         </div>
-                        <p className="text-[12px] mt-0.5 line-clamp-2 text-[var(--text-secondary)]">
+                        <p className={`text-[12px] mt-0.5 text-[var(--text-secondary)] ${depliee === notif.id ? '' : 'line-clamp-2'}`}>
                           {notif.body}
                         </p>
                         <p className="text-[11px] mt-1 text-[var(--text-muted)]">

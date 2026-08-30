@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import type { Post, PostCategory, PostMediaType } from '@/types/database'
 import ShineIcon from '@/components/icons/ShineIcon'
-import { POST_CATEGORIES, MEDIA_TYPES, getCategory } from '@/lib/community/categories'
+import { CATEGORIES_MUR, MEDIA_TYPES, getCategory, valeursCategorie } from '@/lib/community/categories'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 import { incrementAndCheckBadges } from '@/lib/badgeService'
 import FileUpload from '@/components/FileUpload'
@@ -44,8 +44,11 @@ type CommentRow = {
   profiles: { prenom: string; role: string; avatar_url: string | null } | null
 }
 
-/* ── Catégories : voir lib/community/categories.ts (source unique) ── */
-const CATEGORIES = POST_CATEGORIES
+/* ── Catégories : voir lib/community/categories.ts (source unique) ──
+   CATEGORIES_MUR et non POST_CATEGORIES : « Remerciements » a rejoint
+   « Gratitude », on ne le propose plus à l'écriture. Les publications déjà
+   écrites sous ce sujet restent visibles, rangées avec les gratitudes. */
+const CATEGORIES = CATEGORIES_MUR
 
 /**
  * Contenus publiés par l'équipe : eux gardent un bandeau de type, car
@@ -188,7 +191,9 @@ export default function MurPage() {
         .limit(100)
 
       if (filterCategory !== 'all') {
-        query = query.eq('category', filterCategory)
+        // .in et non .eq : « Gratitude » doit aussi ramener les publications
+        // écrites du temps où « Remerciements » était un sujet à part.
+        query = query.in('category', valeursCategorie(filterCategory))
       }
 
       const { data: rawPostsData, error: queryError } = await query

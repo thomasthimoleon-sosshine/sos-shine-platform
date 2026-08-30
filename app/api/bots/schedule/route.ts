@@ -82,7 +82,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'No bot profiles found. Run /api/bots/seed first.' }, { status: 400 })
     }
 
-    const categories = ['temoignage', 'partage', 'question', 'remerciements', 'gratitude', 'citation'] as const
+    // « remerciements » retiré : le sujet a fusionné avec « gratitude ».
+    const categories = ['temoignage', 'partage', 'question', 'gratitude', 'citation'] as const
     const now = new Date()
     const endDate = new Date('2026-03-22T23:59:59+01:00')
     const totalDays = Math.ceil((endDate.getTime() - now.getTime()) / 86400000)

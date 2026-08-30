@@ -4,6 +4,8 @@ import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import FileUpload from '@/components/FileUpload'
 import type { Post, PostCategory, PostCommentWithAuthor } from '@/types/database'
+import ShineIcon, { type ShineIconName } from '@/components/icons/ShineIcon'
+import { CATEGORIES_MUR, getCategory, valeursCategorie } from '@/lib/community/categories'
 
 type PostWithProfile = Post & {
   profiles: { prenom: string; role: string; avatar_url: string | null } | null
@@ -19,14 +21,16 @@ const POST_TYPE_CONFIG: Record<string, { label: string; color: string; icon: str
   community: { label: 'Communauté', color: '#C9A961', icon: '🌟' },
 }
 
-const CATEGORY_CONFIG: Record<string, { label: string; color: string; icon: string }> = {
-  temoignage: { label: 'Témoignage', color: '#C9A961', icon: '🗣️' },
-  partage: { label: "Partage d'exp.", color: '#74C0FC', icon: '💫' },
-  question: { label: 'Question', color: '#C9A961', icon: '❓' },
-  remerciements: { label: 'Remerciements', color: '#55EFC4', icon: '🙏' },
-  gratitude: { label: 'Gratitude', color: '#FFEAA7', icon: '✨' },
-  citation: { label: 'Citation', color: '#FD79A8', icon: '💬' },
-}
+/**
+ * Le back-office tenait sa propre liste de sujets — avec ses couleurs à lui
+ * (un bleu, un vert, un rose vif) et des émojis système. Elle dérive désormais
+ * de lib/community/categories.ts, comme le mur : mêmes sujets, mêmes couleurs,
+ * mêmes signes. « Remerciements » n'y figure donc plus, il a rejoint
+ * « Gratitude » — et une publication déjà écrite sous ce sujet reste lisible,
+ * getCategory la range avec les gratitudes.
+ */
+const CATEGORY_CONFIG: Record<string, { label: string; color: string; icon: ShineIconName }> =
+  Object.fromEntries(CATEGORIES_MUR.map(c => [c.value, { label: c.label, color: c.color, icon: c.icon }]))
 
 const POST_TYPES: Post['post_type'][] = ['community', 'announcement', 'douleur_published', 'event_published', 'general']
 
@@ -92,7 +96,7 @@ export default function AdminPublications() {
 
     if (filterType !== 'all') {
       if (Object.keys(CATEGORY_CONFIG).includes(filterType)) {
-        query = query.eq('category', filterType as PostCategory)
+        query = query.in('category', valeursCategorie(filterType as PostCategory))
       } else {
         query = query.eq('post_type', filterType as Post['post_type'])
       }
@@ -455,7 +459,10 @@ export default function AdminPublications() {
               border: `1px solid ${filterType === key ? `${cat.color}50` : 'var(--border)'}`,
               color: filterType === key ? cat.color : 'var(--text-muted)',
             }}>
-            {cat.icon} {cat.label}
+            <span className="inline-flex items-center gap-1.5">
+              <ShineIcon name={cat.icon} className="w-3.5 h-3.5" />
+              {cat.label}
+            </span>
           </button>
         ))}
       </div>
@@ -502,7 +509,10 @@ export default function AdminPublications() {
                       border: `1px solid ${form.category === key ? `${cat.color}50` : 'var(--border)'}`,
                       color: form.category === key ? cat.color : 'var(--text-muted)',
                     }}>
-                    {cat.icon} {cat.label}
+                    <span className="inline-flex items-center gap-1.5">
+                      <ShineIcon name={cat.icon} className="w-3.5 h-3.5" />
+                      {cat.label}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -535,7 +545,7 @@ export default function AdminPublications() {
         <div className="space-y-3">
           {posts.map((post) => {
             const config = POST_TYPE_CONFIG[post.post_type] || POST_TYPE_CONFIG.general
-            const catConfig = post.post_type === 'community' && post.category ? CATEGORY_CONFIG[post.category] : null
+            const catConfig = post.post_type === 'community' && post.category ? getCategory(post.category) : null
             const likeCount = post.post_likes?.[0]?.count || 0
             const commentCount = post.post_comments?.[0]?.count || 0
 
@@ -598,7 +608,7 @@ export default function AdminPublications() {
                   {catConfig && (
                     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium"
                       style={{ background: `${catConfig.color}15`, color: catConfig.color }}>
-                      <span className="text-[10px]">{catConfig.icon}</span>
+                      <ShineIcon name={catConfig.icon} className="w-3 h-3" />
                       {catConfig.label}
                     </span>
                   )}

@@ -263,7 +263,7 @@ export default function AdminDefisPage() {
           title: `Défi "${challenge.title}" - Vainqueur !`,
           content: `Félicitations au vainqueur du défi "${challenge.title}" ! Bravo pour votre engagement et votre persévérance.`,
           post_type: 'announcement',
-          category: 'remerciements',
+          category: 'gratitude',
           media_type: 'text',
           visibility: 'public',
           is_published: true,

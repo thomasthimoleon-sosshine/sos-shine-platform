@@ -39,7 +39,9 @@ const CATEGORIES: Record<string, string> = {
   temoignage: 'Témoignage',
   partage: 'Partage',
   question: 'Question',
-  remerciements: 'Remerciements',
+  // « Remerciements » a rejoint « Gratitude » : une publication d'avant la
+  // fusion s'affiche sous le sujet où elle est désormais rangée.
+  remerciements: 'Gratitude',
   gratitude: 'Gratitude',
   citation: 'Citation',
 }

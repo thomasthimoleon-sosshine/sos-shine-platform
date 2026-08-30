@@ -86,11 +86,49 @@ export const POST_CATEGORIES: CategoryDef[] = [
   },
 ]
 
+/**
+ * ─────────────────────────────────────────────────────────────────────────
+ *  FUSIONS — deux sujets qui disaient la même chose
+ * ─────────────────────────────────────────────────────────────────────────
+ *
+ *  « Remerciements » et « Gratitude » se chevauchaient : au moment d'écrire on
+ *  hésitait entre les deux, et le mur finissait avec deux tas de la même chose.
+ *  « Gratitude » absorbe l'autre : c'est le mot le plus large et le plus chaud.
+ *
+ *  On ne touche pas à la base. La valeur `remerciements` reste reconnue — les
+ *  publications déjà écrites gardent la leur — mais elle s'affiche et se filtre
+ *  sous « Gratitude ». Rien ne disparaît du mur, tout se retrouve au même endroit.
+ *
+ *  Le journal personnel (« Mon éclat ») n'est pas concerné : `remerciements` y
+ *  porte le libellé « Moment de joie », qui n'est pas la même chose, et il lit
+ *  POST_CATEGORIES directement.
+ */
+const FUSIONS: Partial<Record<PostCategory, PostCategory>> = {
+  remerciements: 'gratitude',
+}
+
+/** Les sujets proposés au moment d'écrire et de filtrer sur le mur. */
+export const CATEGORIES_MUR: CategoryDef[] = POST_CATEGORIES.filter(c => !FUSIONS[c.value])
+
+/**
+ * Toutes les valeurs qu'un filtre doit interroger pour un sujet du mur :
+ * choisir « Gratitude » doit aussi ramener les anciens « Remerciements ».
+ */
+export function valeursCategorie(value: PostCategory): PostCategory[] {
+  const absorbees = (Object.keys(FUSIONS) as PostCategory[]).filter(k => FUSIONS[k] === value)
+  return [value, ...absorbees]
+}
+
 const BY_VALUE = new Map(POST_CATEGORIES.map(c => [c.value, c]))
 
-/** Repli sur « Partage » : c'est la catégorie la plus neutre du jeu. */
+/**
+ * Le sujet à afficher pour une publication du mur, fusions appliquées.
+ * Repli sur « Partage » : c'est la catégorie la plus neutre du jeu.
+ */
 export function getCategory(value: string | null | undefined): CategoryDef {
-  return (value && BY_VALUE.get(value as PostCategory)) || BY_VALUE.get('partage')!
+  const brut = (value || '') as PostCategory
+  const apresFusion = FUSIONS[brut] || brut
+  return BY_VALUE.get(apresFusion) || BY_VALUE.get('partage')!
 }
 
 /** Types de contenu d'une publication (texte / image / vidéo / audio). */

@@ -13,14 +13,11 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { CourrierAnonymeCategory } from '@/types/database'
+import ShineIcon from '@/components/icons/ShineIcon'
+// Les types de message vivaient ici ET dans le back-office, avec des émojis
+// système de part et d'autre. Une seule liste désormais, en signes maison.
+import { TYPES_COURRIER as CATEGORIES } from '@/lib/courrier/categories'
 
-const CATEGORIES: { value: CourrierAnonymeCategory; label: string; icon: string; desc: string }[] = [
-  { value: 'question', label: 'Question', icon: '❓', desc: 'Posez une question que vous aimeriez voir traitée en vidéo ou en podcast' },
-  { value: 'recommandation', label: 'Recommandation', icon: '💡', desc: 'Suggérez un sujet, un thème ou un format de contenu' },
-  { value: 'temoignage', label: 'Témoignage', icon: '💎', desc: 'Partagez votre vécu de manière anonyme pour inspirer les autres' },
-  { value: 'suggestion', label: 'Suggestion', icon: '✨', desc: 'Proposez une amélioration pour la plateforme ou la communauté' },
-  { value: 'autre', label: 'Autre', icon: '💬', desc: 'Tout ce qui vous tient à cœur et que vous souhaitez partager' },
-]
 
 export default function CourrierAnonyme({ compact = false }: { compact?: boolean }) {
   const [category, setCategory] = useState<CourrierAnonymeCategory>('question')
@@ -93,9 +90,9 @@ export default function CourrierAnonyme({ compact = false }: { compact?: boolean
             exit={{ opacity: 0 }}
             className="rounded-2xl p-8 md:p-12 text-center bg-[var(--surface-card)] border border-[var(--border)]"
           >
-            <div className="w-16 h-16 rounded-full flex items-center justify-center text-3xl mx-auto mb-6"
-              style={{ background: 'rgba(201,169,97,0.1)' }}>
-              ✉️
+            <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
+              style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--brand)' }}>
+              <ShineIcon name="enveloppe" className="w-8 h-8" />
             </div>
             <h2 className="font-display text-2xl font-light mb-3 text-[var(--brand)]">
               Message envoyé avec succès
@@ -126,7 +123,7 @@ export default function CourrierAnonyme({ compact = false }: { compact?: boolean
             <div className="rounded-2xl p-5 mb-6"
               style={{ background: 'rgba(201,169,97,0.04)', border: '1px solid rgba(201,169,97,0.1)' }}>
               <div className="flex items-start gap-3">
-                <span className="text-lg mt-0.5">🔒</span>
+                <span className="mt-0.5" style={{ color: 'var(--brand)' }}><ShineIcon name="cadenas" className="w-5 h-5" /></span>
                 <div>
                   <p className="text-sm font-medium mb-1 text-[var(--text-primary)]">
                     100% anonyme et confidentiel
@@ -159,7 +156,9 @@ export default function CourrierAnonyme({ compact = false }: { compact?: boolean
                         border: category === cat.value ? '1px solid rgba(201,169,97,0.25)' : '1px solid var(--border)',
                       }}
                     >
-                      <span className="text-lg">{cat.icon}</span>
+                      <span style={{ color: category === cat.value ? 'var(--brand)' : 'var(--text-secondary)' }}>
+                        <ShineIcon name={cat.icon} className="w-5 h-5" />
+                      </span>
                       <p className="text-xs font-medium mt-1" style={{ color: category === cat.value ? 'var(--brand)' : 'var(--text-primary)' }}>
                         {cat.label}
                       </p>

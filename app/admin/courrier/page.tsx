@@ -3,6 +3,10 @@
 import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { CourrierAnonyme, CourrierAnonymeStatus, CourrierAnonymeCategory } from '@/types/database'
+import ShineIcon from '@/components/icons/ShineIcon'
+// Les types de message et les canaux de réponse vivaient ici en double du
+// formulaire des membres, avec des émojis système de part et d'autre.
+import { TYPES_COURRIER, typeCourrier, CANAUX_REPONSE as ANSWERED_VIA_OPTIONS } from '@/lib/courrier/categories'
 
 const STATUS_CONFIG: Record<CourrierAnonymeStatus, { label: string; color: string; bg: string }> = {
   new: { label: 'Nouveau', color: '#55EFC4', bg: 'rgba(85,239,196,0.1)' },
@@ -12,20 +16,6 @@ const STATUS_CONFIG: Record<CourrierAnonymeStatus, { label: string; color: strin
   archived: { label: 'Archivé', color: 'var(--text-muted)', bg: 'rgba(255,255,255,0.03)' },
 }
 
-const CATEGORY_CONFIG: Record<CourrierAnonymeCategory, { label: string; icon: string }> = {
-  question: { label: 'Question', icon: '❓' },
-  recommandation: { label: 'Recommandation', icon: '💡' },
-  temoignage: { label: 'Témoignage', icon: '💎' },
-  suggestion: { label: 'Suggestion', icon: '✨' },
-  autre: { label: 'Autre', icon: '💬' },
-}
-
-const ANSWERED_VIA_OPTIONS = [
-  { value: 'shine_tv', label: 'Shine TV', icon: '🎬' },
-  { value: 'podcast', label: 'Podcast / Audible', icon: '🎧' },
-  { value: 'article', label: 'Article / Librairie', icon: '📖' },
-  { value: 'direct', label: 'Réponse directe', icon: '💬' },
-]
 
 export default function AdminCourrierPage() {
   const [courriers, setCourriers] = useState<CourrierAnonyme[]>([])
@@ -124,7 +114,7 @@ export default function AdminCourrierPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl font-display font-semibold" style={{ color: '#74C0FC' }}>
-            ✉️ Courrier des Membres
+            <span className="inline-flex items-center gap-2"><ShineIcon name="enveloppe" className="w-6 h-6" /> Courrier des Membres</span>
           </h1>
           <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
             Demandes, recommandations et témoignages anonymes
@@ -162,15 +152,18 @@ export default function AdminCourrierPage() {
           </button>
         ))}
         <span className="text-xs ml-3" style={{ color: 'var(--text-muted)' }}>Type :</span>
-        {(['all', 'question', 'recommandation', 'temoignage', 'suggestion', 'autre'] as const).map((c) => (
-          <button key={c} onClick={() => setFilterCategory(c)}
+        {([{ value: 'all' as const, label: 'Tous', icon: null }, ...TYPES_COURRIER]).map((c) => (
+          <button key={c.value} onClick={() => setFilterCategory(c.value)}
             className="px-3 py-1.5 rounded-lg text-xs transition-all"
             style={{
-              background: filterCategory === c ? 'rgba(116,192,252,0.15)' : 'var(--surface-card)',
-              color: filterCategory === c ? '#74C0FC' : 'var(--text-secondary)',
+              background: filterCategory === c.value ? 'rgba(116,192,252,0.15)' : 'var(--surface-card)',
+              color: filterCategory === c.value ? '#74C0FC' : 'var(--text-secondary)',
               border: '1px solid var(--border)',
             }}>
-            {c === 'all' ? 'Tous' : CATEGORY_CONFIG[c].label}
+            <span className="inline-flex items-center gap-1.5">
+              {c.icon && <ShineIcon name={c.icon} className="w-3.5 h-3.5" />}
+              {c.label}
+            </span>
           </button>
         ))}
       </div>
@@ -181,7 +174,7 @@ export default function AdminCourrierPage() {
         <div className="lg:col-span-2 space-y-2 max-h-[70vh] overflow-y-auto pr-1">
           {courriers.length === 0 ? (
             <div className="rounded-xl p-8 text-center" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
-              <p className="text-3xl mb-3">📭</p>
+              <p className="flex justify-center mb-3" style={{ color: 'var(--text-muted)' }}><ShineIcon name="enveloppe" className="w-8 h-8" /></p>
               <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Aucun courrier pour le moment</p>
             </div>
           ) : courriers.map((c) => (
@@ -195,17 +188,19 @@ export default function AdminCourrierPage() {
               }}
             >
               <div className="flex items-start gap-3">
-                <span className="text-lg">{CATEGORY_CONFIG[c.category]?.icon || '💬'}</span>
+                <span style={{ color: 'var(--brand)' }}><ShineIcon name={typeCourrier(c.category).icon} className="w-5 h-5" /></span>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    {c.is_pinned && <span className="text-xs">📌</span>}
+                    {c.is_pinned && <span style={{ color: 'var(--brand)' }}><ShineIcon name="epingle" className="w-3.5 h-3.5" /></span>}
                     <span className="text-xs px-2 py-0.5 rounded-full"
                       style={{ background: STATUS_CONFIG[c.status]?.bg, color: STATUS_CONFIG[c.status]?.color }}>
                       {STATUS_CONFIG[c.status]?.label}
                     </span>
                     {c.answered_via && (
                       <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(201,169,97,0.1)', color: '#C9A961' }}>
-                        {ANSWERED_VIA_OPTIONS.find(o => o.value === c.answered_via)?.icon} {ANSWERED_VIA_OPTIONS.find(o => o.value === c.answered_via)?.label}
+                        <span className="inline-flex items-center gap-1">
+                          {(() => { const o = ANSWERED_VIA_OPTIONS.find(o => o.value === c.answered_via); return o ? <><ShineIcon name={o.icon} className="w-3 h-3" /> {o.label}</> : null })()}
+                        </span>
                       </span>
                     )}
                   </div>
@@ -227,14 +222,14 @@ export default function AdminCourrierPage() {
               {/* Header */}
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <span className="text-xl">{CATEGORY_CONFIG[selected.category]?.icon}</span>
+                  <span style={{ color: 'var(--brand)' }}><ShineIcon name={typeCourrier(selected.category).icon} className="w-6 h-6" /></span>
                   <div>
                     <span className="text-xs px-2 py-0.5 rounded-full"
                       style={{ background: STATUS_CONFIG[selected.status]?.bg, color: STATUS_CONFIG[selected.status]?.color }}>
                       {STATUS_CONFIG[selected.status]?.label}
                     </span>
                     <span className="text-xs ml-2" style={{ color: 'var(--text-muted)' }}>
-                      {CATEGORY_CONFIG[selected.category]?.label}
+                      {typeCourrier(selected.category).label}
                     </span>
                   </div>
                 </div>
@@ -242,7 +237,7 @@ export default function AdminCourrierPage() {
                   <button onClick={() => togglePin(selected.id, selected.is_pinned)}
                     className="text-xs px-3 py-1.5 rounded-lg transition-all"
                     style={{ background: selected.is_pinned ? 'rgba(201,169,97,0.1)' : 'var(--dark)', border: '1px solid var(--border)', color: selected.is_pinned ? '#C9A961' : 'var(--text-muted)' }}>
-                    📌 {selected.is_pinned ? 'Désépingler' : 'Épingler'}
+                    <span className="inline-flex items-center gap-1.5"><ShineIcon name="epingle" className="w-3.5 h-3.5" /> {selected.is_pinned ? 'Désépingler' : 'Épingler'}</span>
                   </button>
                 </div>
               </div>
@@ -315,7 +310,7 @@ export default function AdminCourrierPage() {
                         color: answeredVia === opt.value ? '#C9A961' : 'var(--text-secondary)',
                         border: '1px solid var(--border)',
                       }}>
-                      {opt.icon} {opt.label}
+                      <span className="inline-flex items-center gap-1.5"><ShineIcon name={opt.icon} className="w-3.5 h-3.5" /> {opt.label}</span>
                     </button>
                   ))}
                 </div>
@@ -340,7 +335,7 @@ export default function AdminCourrierPage() {
             </div>
           ) : (
             <div className="rounded-xl p-12 text-center" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
-              <p className="text-4xl mb-4">✉️</p>
+              <p className="flex justify-center mb-4" style={{ color: 'var(--text-muted)' }}><ShineIcon name="enveloppe" className="w-10 h-10" /></p>
               <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
                 Sélectionnez un courrier pour le consulter
               </p>

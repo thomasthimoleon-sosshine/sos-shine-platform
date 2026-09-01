@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent, type MouseEvent as ReactMouseEvent } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
@@ -276,6 +276,91 @@ function getTimeSlot(): TimeSlot {
   return 'evening'
 }
 
+/* ─────────────────────────────────────────────
+   Section: Bandeau Live YouTube (Permanence avec Julia)
+   ───────────────────────────────────────────── */
+const YOUTUBE_LIVE_URL = 'https://www.youtube.com/@SOS-Shine'
+
+function YouTubeLiveBanner() {
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    // On affiche le bandeau une fois par jour (il se referme d'un clic sur la croix).
+    try {
+      const today = new Date().toISOString().slice(0, 10)
+      if (localStorage.getItem('sos_yt_live_dismissed') !== today) setVisible(true)
+    } catch {
+      setVisible(true)
+    }
+  }, [])
+
+  function dismiss(e: ReactMouseEvent) {
+    e.preventDefault()
+    e.stopPropagation()
+    setVisible(false)
+    try {
+      localStorage.setItem('sos_yt_live_dismissed', new Date().toISOString().slice(0, 10))
+    } catch {
+      /* stockage indisponible : le bandeau se refermera juste pour cette visite */
+    }
+  }
+
+  if (!visible) return null
+
+  return (
+    <motion.a
+      href={YOUTUBE_LIVE_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: ease as unknown as [number, number, number, number] }}
+      className="relative flex items-center gap-3 rounded-2xl px-4 py-3 sm:px-5 sm:py-3.5 transition-all hover:scale-[1.01]"
+      style={{
+        background: 'linear-gradient(135deg, rgba(201,169,97,0.14), rgba(201,169,97,0.05))',
+        border: '1px solid rgba(201,169,97,0.35)',
+      }}
+    >
+      {/* Pastille YouTube + pulse "en direct" */}
+      <span className="relative flex-none flex items-center justify-center w-10 h-10 rounded-full" style={{ background: '#FF0000' }}>
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="#fff" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
+        <span className="absolute -top-0.5 -right-0.5 flex h-3 w-3">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ background: '#FF0000' }} />
+          <span className="relative inline-flex rounded-full h-3 w-3" style={{ background: '#FF3B30', border: '2px solid var(--bg, #0A0806)' }} />
+        </span>
+      </span>
+
+      <span className="min-w-0 flex-1">
+        <span className="flex items-center gap-2">
+          <span className="text-[10px] font-bold tracking-[0.14em] uppercase px-1.5 py-0.5 rounded" style={{ background: 'rgba(255,0,0,0.15)', color: '#FF3B30' }}>
+            En direct
+          </span>
+          <span className="text-[13px] sm:text-[14px] font-semibold text-[var(--text-primary)] truncate">
+            Permanence intime avec Julia
+          </span>
+        </span>
+        <span className="block mt-0.5 text-[12px] sm:text-[13px] text-[var(--text-secondary)]">
+          4 matins/semaine sur YouTube · 8h30 – 10h. Pose tes questions en direct.
+        </span>
+      </span>
+
+      <span className="hidden sm:inline-flex flex-none items-center gap-1 text-[13px] font-semibold text-[var(--brand)]">
+        Regarder →
+      </span>
+
+      <button
+        type="button"
+        onClick={dismiss}
+        aria-label="Fermer"
+        className="flex-none flex items-center justify-center w-7 h-7 rounded-full text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+        style={{ background: 'rgba(255,255,255,0.04)' }}
+      >
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+      </button>
+    </motion.a>
+  )
+}
+
 export default function DashboardHome() {
   const { t } = useTranslation()
   const router = useRouter()
@@ -428,6 +513,9 @@ export default function DashboardHome() {
 
   return (
     <div className="shine-home max-w-3xl mx-auto space-y-6">
+
+      {/* ══════════ 0. BANDEAU LIVE YOUTUBE — Permanence avec Julia ══════════ */}
+      <YouTubeLiveBanner />
 
       {/* ══════════ 1. HERO PERSO — message court + un seul gros CTA ══════════ */}
       <motion.section

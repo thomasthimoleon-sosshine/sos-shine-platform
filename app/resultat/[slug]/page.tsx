@@ -44,17 +44,8 @@ const CSS = `
 .rz .offer li{color:#C9BEA6;font-size:15px}
 .rz .cta{display:inline-block;margin-top:6px;padding:18px 40px;border-radius:100px;font-weight:500;font-size:16.5px;color:#0A0806;background:#C9A961;box-shadow:0 12px 32px -12px rgba(201,169,97,.6)}
 .rz .offer .micro{margin-top:18px;font-size:13px;color:#8C8271}
+.rz .offer .live{margin-top:10px;font-size:13px;color:#C9BEA6}
 .rz .safety{margin-top:18px;font-size:12.5px;color:#9a9484;line-height:1.55;border:1px solid rgba(245,239,227,.08);border-radius:10px;padding:16px 20px}
-.rz .safety b{color:#C9BEA6;font-weight:500}
-.rz .human{margin-top:24px;border:1px solid rgba(201,169,97,.12);border-radius:12px;background:#12100B;padding:26px 30px;text-align:center}
-.rz .human .k{font-weight:500;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#C9A961;margin-bottom:16px}
-.rz .human .faces{display:flex;justify-content:center;margin-bottom:14px}
-.rz .human .face{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-family:'Cormorant Garamond',Georgia,serif;font-size:18px;color:#0A0806;border:2px solid #12100B;margin-left:-9px}
-.rz .human .face:first-child{margin-left:0}
-.rz .human .face.j{background:#E4C888}.rz .human .face.w{background:#C9A961}.rz .human .face.t{background:#B9915A}
-.rz .human p{color:#C9BEA6;font-size:14.5px;max-width:48ch;margin:0 auto}
-.rz .human p b{color:#F5EFE3;font-weight:500}
-.rz .human .names{margin-top:10px;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:16px;color:#E4C888}
 .rz .secondary{text-align:center;padding:30px 0 12px;color:#C9BEA6;font-size:15px}
 .rz .secondary a{color:#F5EFE3;border-bottom:1px solid rgba(201,169,97,.3);padding-bottom:1px}
 .rz footer{margin-top:52px;border-top:1px solid rgba(201,169,97,.12)}
@@ -110,9 +101,8 @@ export default async function ResultatPage({
         </section>
 
         <section className="why">
-          <span className="eyebrow">Pourquoi ça fait si mal</span>
-          <h2>{p.pourquoi}</h2>
-          <p>Le schéma n’est pas un défaut de caractère. C’est une protection devenue prison. Le nommer, c’est déjà commencer à s’en défaire.</p>
+          <h2>Pourquoi ça fait mal</h2>
+          <p>{p.pourquoi}</p>
 
           <div className="duo">
             <div className="c"><h3>Ce que ça produit</h3><p>{p.produit}</p></div>
@@ -132,23 +122,9 @@ export default async function ResultatPage({
             {/* TODO câblage : ce CTA ouvrira le Checkout Stripe 9,90 € (phase essai). */}
             <a href="#" className="cta">Commencer les 7 jours →</a>
             <p className="micro">Carte requise · tu n’es pas débité à 49,90 € aujourd’hui</p>
+            <p className="live">Julia · William · Thomas. Live mercredi. Le protocole commence aujourd’hui.</p>
 
-            {p.safety ? (
-              <p className="safety">
-                Ce protocole est un <b>compagnon</b>. Il ne remplace pas un professionnel.
-                En détresse aiguë : <b>3114</b> (prévention suicide, 24h/24).
-                Traumatisme : <b>France Victimes 116 006</b>.
-              </p>
-            ) : null}
-          </div>
-
-          <div className="human">
-            <div className="k">Qui t’accompagne</div>
-            <div className="faces">
-              <span className="face j">J</span><span className="face w">W</span><span className="face t">T</span>
-            </div>
-            <p>Derrière SOS Shine, on est <b>trois vraies personnes</b> — et chaque <b>mercredi 21h</b>, on est en live, tous les trois. Pour répondre, nommer, avancer avec toi. Tu vois qui on est. On est là.</p>
-            <div className="names">Julia · William · Thomas</div>
+            {p.safetyText ? <p className="safety">{p.safetyText}</p> : null}
           </div>
 
           <p className="secondary">Pour cette fois, le résultat te suffit. <a href="/">Garder ma signature et partir</a></p>

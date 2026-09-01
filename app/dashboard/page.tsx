@@ -281,13 +281,25 @@ function getTimeSlot(): TimeSlot {
    ───────────────────────────────────────────── */
 const YOUTUBE_LIVE_URL = 'https://www.youtube.com/@SOS-Shine'
 
+// Jours de live : lundi(1), mardi(2), jeudi(4), vendredi(5). Créneau 8h30–10h.
+const LIVE_DAYS = [1, 2, 4, 5]
+const LIVE_START_MIN = 8 * 60 + 30 // 8h30
+const LIVE_END_MIN = 10 * 60       // 10h00
+
 function YouTubeLiveBanner() {
   const [visible, setVisible] = useState(false)
+  const [live, setLive] = useState(false)
 
   useEffect(() => {
-    // On affiche le bandeau une fois par jour (il se referme d'un clic sur la croix).
+    const now = new Date()
+    const minutes = now.getHours() * 60 + now.getMinutes()
+    // On n'affiche que les matins de live, et jusqu'à la fin du direct (10h).
+    const isLiveMorning = LIVE_DAYS.includes(now.getDay()) && minutes < LIVE_END_MIN
+    if (!isLiveMorning) return
+    setLive(minutes >= LIVE_START_MIN)
+    // Le bandeau se referme d'un clic sur la croix, et ne réapparaît pas de la journée.
     try {
-      const today = new Date().toISOString().slice(0, 10)
+      const today = now.toISOString().slice(0, 10)
       if (localStorage.getItem('sos_yt_live_dismissed') !== today) setVisible(true)
     } catch {
       setVisible(true)
@@ -333,19 +345,21 @@ function YouTubeLiveBanner() {
       <span className="min-w-0 flex-1">
         <span className="flex items-center gap-2">
           <span className="text-[10px] font-bold tracking-[0.14em] uppercase px-1.5 py-0.5 rounded" style={{ background: 'rgba(255,0,0,0.15)', color: '#FF3B30' }}>
-            En direct
+            {live ? 'En direct' : 'Ce matin · 8h30'}
           </span>
           <span className="text-[13px] sm:text-[14px] font-semibold text-[var(--text-primary)] truncate">
             Permanence intime avec Julia
           </span>
         </span>
         <span className="block mt-0.5 text-[12px] sm:text-[13px] text-[var(--text-secondary)]">
-          4 matins/semaine sur YouTube · 8h30 – 10h. Pose tes questions en direct.
+          {live
+            ? 'Julia est en live sur YouTube. Pose tes questions en direct.'
+            : 'Live sur YouTube ce matin de 8h30 à 10h. Pose tes questions en direct.'}
         </span>
       </span>
 
       <span className="hidden sm:inline-flex flex-none items-center gap-1 text-[13px] font-semibold text-[var(--brand)]">
-        Regarder →
+        {live ? 'Regarder →' : 'Voir →'}
       </span>
 
       <button

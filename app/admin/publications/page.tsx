@@ -4,6 +4,8 @@ import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import FileUpload from '@/components/FileUpload'
 import type { Post, PostCategory, PostCommentWithAuthor } from '@/types/database'
+import ShineIcon, { type ShineIconName } from '@/components/icons/ShineIcon'
+import { CATEGORIES_MUR, getCategory, valeursCategorie } from '@/lib/community/categories'
 
 type PostWithProfile = Post & {
   profiles: { prenom: string; role: string; avatar_url: string | null } | null
@@ -12,21 +14,23 @@ type PostWithProfile = Post & {
 }
 
 const POST_TYPE_CONFIG: Record<string, { label: string; color: string; icon: string }> = {
-  announcement: { label: 'Annonce', color: '#D4AF37', icon: '📢' },
-  douleur_published: { label: 'Challenge publie', color: '#55EFC4', icon: '📘' },
-  event_published: { label: 'Evenement publie', color: '#74C0FC', icon: '📅' },
-  general: { label: 'General', color: '#9A9080', icon: '💬' },
-  community: { label: 'Communaute', color: '#A29BFE', icon: '🌟' },
+  announcement: { label: 'Annonce', color: '#C9A961', icon: '📢' },
+  douleur_published: { label: 'Challenge publié', color: '#55EFC4', icon: '📘' },
+  event_published: { label: 'Événement publié', color: '#74C0FC', icon: '📅' },
+  general: { label: 'Général', color: '#9A9080', icon: '💬' },
+  community: { label: 'Communauté', color: '#C9A961', icon: '🌟' },
 }
 
-const CATEGORY_CONFIG: Record<string, { label: string; color: string; icon: string }> = {
-  temoignage: { label: 'Temoignage', color: '#D4AF37', icon: '🗣️' },
-  partage: { label: "Partage d'exp.", color: '#74C0FC', icon: '💫' },
-  question: { label: 'Question', color: '#A29BFE', icon: '❓' },
-  remerciements: { label: 'Remerciements', color: '#55EFC4', icon: '🙏' },
-  gratitude: { label: 'Gratitude', color: '#FFEAA7', icon: '✨' },
-  citation: { label: 'Citation', color: '#FD79A8', icon: '💬' },
-}
+/**
+ * Le back-office tenait sa propre liste de sujets — avec ses couleurs à lui
+ * (un bleu, un vert, un rose vif) et des émojis système. Elle dérive désormais
+ * de lib/community/categories.ts, comme le mur : mêmes sujets, mêmes couleurs,
+ * mêmes signes. « Remerciements » n'y figure donc plus, il a rejoint
+ * « Gratitude » — et une publication déjà écrite sous ce sujet reste lisible,
+ * getCategory la range avec les gratitudes.
+ */
+const CATEGORY_CONFIG: Record<string, { label: string; color: string; icon: ShineIconName }> =
+  Object.fromEntries(CATEGORIES_MUR.map(c => [c.value, { label: c.label, color: c.color, icon: c.icon }]))
 
 const POST_TYPES: Post['post_type'][] = ['community', 'announcement', 'douleur_published', 'event_published', 'general']
 
@@ -92,7 +96,7 @@ export default function AdminPublications() {
 
     if (filterType !== 'all') {
       if (Object.keys(CATEGORY_CONFIG).includes(filterType)) {
-        query = query.eq('category', filterType as PostCategory)
+        query = query.in('category', valeursCategorie(filterType as PostCategory))
       } else {
         query = query.eq('post_type', filterType as Post['post_type'])
       }
@@ -337,7 +341,7 @@ export default function AdminPublications() {
       return
     }
     setPosts(prev => prev.map(p => p.id === post.id ? { ...p, delete_locked: newLocked } : p))
-    setActionSuccess(newLocked ? 'Suppression verrouillee — le membre ne peut plus supprimer cette publication.' : 'Suppression deverrouillee — le membre peut supprimer sa publication.')
+    setActionSuccess(newLocked ? 'Suppression verrouillee - le membre ne peut plus supprimer cette publication.' : 'Suppression deverrouillee - le membre peut supprimer sa publication.')
     setTimeout(() => setActionSuccess(null), 4000)
     setLockingId(null)
   }
@@ -371,7 +375,7 @@ export default function AdminPublications() {
       setActionSuccess('Avertissement envoye au membre.')
       setTimeout(() => setActionSuccess(null), 4000)
     } catch {
-      setActionError("Erreur reseau lors de l'envoi de l'avertissement.")
+      setActionError("Erreur réseau lors de l'envoi de l'avertissement.")
     }
     setSendingWarning(false)
   }
@@ -380,7 +384,7 @@ export default function AdminPublications() {
     return new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
   }
 
-  const inputStyle = { background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }
+  const inputStyle = { background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)' }
 
   return (
     <div className="max-w-6xl mx-auto space-y-8">
@@ -432,37 +436,40 @@ export default function AdminPublications() {
       <div className="flex flex-wrap gap-2">
         {[
           { value: 'all', label: 'Tout', color: 'var(--text-secondary)' },
-          { value: 'community', label: 'Communaute', color: '#A29BFE' },
-          { value: 'announcement', label: 'Annonces', color: '#D4AF37' },
+          { value: 'community', label: 'Communauté', color: '#C9A961' },
+          { value: 'announcement', label: 'Annonces', color: '#C9A961' },
           { value: 'general', label: 'General', color: '#9A9080' },
         ].map(f => (
           <button key={f.value} onClick={() => setFilterType(f.value)}
             className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
             style={{
               background: filterType === f.value ? `${f.color}20` : 'rgba(255,255,255,0.03)',
-              border: `1px solid ${filterType === f.value ? `${f.color}50` : 'var(--dark-border)'}`,
+              border: `1px solid ${filterType === f.value ? `${f.color}50` : 'var(--border)'}`,
               color: filterType === f.value ? f.color : 'var(--text-muted)',
             }}>
             {f.label}
           </button>
         ))}
-        <span className="mx-1" style={{ color: 'var(--dark-border)' }}>|</span>
+        <span className="mx-1" style={{ color: 'var(--border)' }}>|</span>
         {Object.entries(CATEGORY_CONFIG).map(([key, cat]) => (
           <button key={key} onClick={() => setFilterType(key)}
             className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
             style={{
               background: filterType === key ? `${cat.color}20` : 'rgba(255,255,255,0.03)',
-              border: `1px solid ${filterType === key ? `${cat.color}50` : 'var(--dark-border)'}`,
+              border: `1px solid ${filterType === key ? `${cat.color}50` : 'var(--border)'}`,
               color: filterType === key ? cat.color : 'var(--text-muted)',
             }}>
-            {cat.icon} {cat.label}
+            <span className="inline-flex items-center gap-1.5">
+              <ShineIcon name={cat.icon} className="w-3.5 h-3.5" />
+              {cat.label}
+            </span>
           </button>
         ))}
       </div>
 
       {/* Form */}
       {showForm && (
-        <form onSubmit={handleCreate} className="rounded-xl p-6 space-y-5" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <form onSubmit={handleCreate} className="rounded-xl p-6 space-y-5" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <h2 className="font-semibold text-lg" style={{ color: '#74C0FC' }}>Nouvelle publication</h2>
           <div>
             <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>Titre</label>
@@ -499,10 +506,13 @@ export default function AdminPublications() {
                     className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
                     style={{
                       background: form.category === key ? `${cat.color}20` : 'rgba(255,255,255,0.03)',
-                      border: `1px solid ${form.category === key ? `${cat.color}50` : 'var(--dark-border)'}`,
+                      border: `1px solid ${form.category === key ? `${cat.color}50` : 'var(--border)'}`,
                       color: form.category === key ? cat.color : 'var(--text-muted)',
                     }}>
-                    {cat.icon} {cat.label}
+                    <span className="inline-flex items-center gap-1.5">
+                      <ShineIcon name={cat.icon} className="w-3.5 h-3.5" />
+                      {cat.label}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -524,7 +534,7 @@ export default function AdminPublications() {
           <div className="w-8 h-8 border-2 border-[#74C0FC] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : posts.length === 0 ? (
-        <div className="text-center py-16 rounded-xl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <div className="text-center py-16 rounded-xl" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <p className="text-4xl mb-3">📢</p>
           <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>Aucune publication</p>
           <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
@@ -535,13 +545,13 @@ export default function AdminPublications() {
         <div className="space-y-3">
           {posts.map((post) => {
             const config = POST_TYPE_CONFIG[post.post_type] || POST_TYPE_CONFIG.general
-            const catConfig = post.post_type === 'community' && post.category ? CATEGORY_CONFIG[post.category] : null
+            const catConfig = post.post_type === 'community' && post.category ? getCategory(post.category) : null
             const likeCount = post.post_likes?.[0]?.count || 0
             const commentCount = post.post_comments?.[0]?.count || 0
 
             return (
               <div key={post.id} className="rounded-xl p-5 transition-all duration-200"
-                style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
 
                 {/* Author row with avatar */}
                 <div className="flex items-center gap-3 mb-3">
@@ -549,17 +559,17 @@ export default function AdminPublications() {
                     <img src={post.profiles.avatar_url} alt="" className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
                   ) : (
                     <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0"
-                      style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                      style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}>
                       {post.profiles?.prenom?.charAt(0).toUpperCase() || '?'}
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold truncate" style={{ color: post.profiles?.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)' }}>
+                      <span className="text-sm font-semibold truncate" style={{ color: post.profiles?.role === 'founder' ? 'var(--brand)' : 'var(--text-primary)' }}>
                         {post.profiles?.prenom || 'Inconnu'}
                       </span>
                       {post.profiles?.role === 'founder' && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>Fondateur</span>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)' }}>Fondateur</span>
                       )}
                     </div>
                     <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{formatDate(post.created_at)}</span>
@@ -598,7 +608,7 @@ export default function AdminPublications() {
                   {catConfig && (
                     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium"
                       style={{ background: `${catConfig.color}15`, color: catConfig.color }}>
-                      <span className="text-[10px]">{catConfig.icon}</span>
+                      <ShineIcon name={catConfig.icon} className="w-3 h-3" />
                       {catConfig.label}
                     </span>
                   )}
@@ -621,14 +631,14 @@ export default function AdminPublications() {
                   )}
                   {/* Stats */}
                   {likeCount > 0 && (
-                    <span className="text-[11px] flex items-center gap-1" style={{ color: '#D4AF37' }}>
+                    <span className="text-[11px] flex items-center gap-1" style={{ color: '#C9A961' }}>
                       ⭐ {likeCount} Shines
                     </span>
                   )}
                   {commentCount > 0 && (
                     <button onClick={() => openComments(post.id)}
                       className="text-[11px] flex items-center gap-1 cursor-pointer underline"
-                      style={{ color: 'var(--gold)' }}>
+                      style={{ color: 'var(--brand)' }}>
                       💬 {commentCount} commentaire{commentCount > 1 ? 's' : ''}
                     </button>
                   )}
@@ -637,7 +647,7 @@ export default function AdminPublications() {
                 {/* Content preview */}
                 <div className="flex items-start gap-3 mb-3">
                   {post.image_url && (
-                    <img src={post.image_url} alt="" className="w-16 h-16 object-cover rounded-lg flex-shrink-0" />
+                    <img src={post.image_url} alt="" className="w-16 h-16 object-contain rounded-lg flex-shrink-0" />
                   )}
                   <div className="min-w-0">
                     <h3 className="font-semibold text-sm truncate" style={{ color: 'var(--text-primary)' }}>{post.title}</h3>
@@ -646,7 +656,7 @@ export default function AdminPublications() {
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center gap-2 pt-2 flex-wrap" style={{ borderTop: '1px solid var(--dark-border)' }}>
+                <div className="flex items-center gap-2 pt-2 flex-wrap" style={{ borderTop: '1px solid var(--border)' }}>
                   <button onClick={() => togglePublish(post)} disabled={togglingId === post.id}
                     className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all disabled:opacity-50 cursor-pointer"
                     style={{
@@ -657,14 +667,14 @@ export default function AdminPublications() {
                     {togglingId === post.id ? '...' : post.is_published ? 'Masquer' : 'Rendre visible'}
                   </button>
 
-                  {/* Lock/Unlock delete — only for non-founder posts */}
+                  {/* Lock/Unlock delete - only for non-founder posts */}
                   {post.profiles?.role !== 'founder' && (
                     <button onClick={() => toggleDeleteLock(post)} disabled={lockingId === post.id}
                       className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all disabled:opacity-50 cursor-pointer flex items-center gap-1.5"
                       style={{
                         background: post.delete_locked ? 'rgba(245,158,11,0.1)' : 'rgba(255,255,255,0.03)',
                         color: post.delete_locked ? '#F59E0B' : 'var(--text-muted)',
-                        border: `1px solid ${post.delete_locked ? 'rgba(245,158,11,0.25)' : 'var(--dark-border)'}`,
+                        border: `1px solid ${post.delete_locked ? 'rgba(245,158,11,0.25)' : 'var(--border)'}`,
                       }}
                       title={post.delete_locked ? 'Deverrouiller la suppression' : 'Verrouiller la suppression (empecher le membre de supprimer)'}>
                       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -681,7 +691,7 @@ export default function AdminPublications() {
                   {commentCount > 0 && (
                     <button onClick={() => openComments(post.id)}
                       className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
-                      style={{ background: 'rgba(212,175,55,0.08)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                      style={{ background: 'rgba(201,169,97,0.08)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.2)' }}>
                       Moderer les commentaires
                     </button>
                   )}
@@ -709,7 +719,7 @@ export default function AdminPublications() {
       {/* ── Comments moderation modal ── */}
       {commentsPostId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
-          <div className="w-full max-w-lg rounded-2xl p-6 space-y-4 max-h-[80vh] overflow-y-auto" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+          <div className="w-full max-w-lg rounded-2xl p-6 space-y-4 max-h-[80vh] overflow-y-auto" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
             <div className="flex items-center justify-between">
               <h3 className="font-semibold text-lg" style={{ color: 'var(--text-primary)' }}>Moderation des commentaires</h3>
               <button onClick={() => setCommentsPostId(null)} className="p-1 cursor-pointer" style={{ color: 'var(--text-muted)' }}>
@@ -721,26 +731,26 @@ export default function AdminPublications() {
 
             {loadingComments ? (
               <div className="flex justify-center py-8">
-                <div className="w-6 h-6 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+                <div className="w-6 h-6 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
               </div>
             ) : comments.length === 0 ? (
               <p className="text-center text-sm py-6" style={{ color: 'var(--text-muted)' }}>Aucun commentaire</p>
             ) : (
               <div className="space-y-3">
                 {comments.map(comment => (
-                  <div key={comment.id} className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
+                  <div key={comment.id} className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}>
                     <div className="flex items-start gap-3">
                       {comment.profiles?.avatar_url ? (
                         <img src={comment.profiles.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
                       ) : (
                         <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0"
-                          style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                          style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}>
                           {comment.profiles?.prenom?.charAt(0).toUpperCase() || '?'}
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="text-xs font-semibold" style={{ color: comment.profiles?.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)' }}>
+                          <span className="text-xs font-semibold" style={{ color: comment.profiles?.role === 'founder' ? 'var(--brand)' : 'var(--text-primary)' }}>
                             {comment.profiles?.prenom || 'Membre'}
                           </span>
                           <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{formatDate(comment.created_at)}</span>
@@ -767,7 +777,7 @@ export default function AdminPublications() {
       {/* ── Ban modal ── */}
       {banUserId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
-          <div className="w-full max-w-sm rounded-2xl p-6 space-y-5" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+          <div className="w-full max-w-sm rounded-2xl p-6 space-y-5" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
             <div className="flex items-center justify-between">
               <h3 className="font-semibold text-lg" style={{ color: 'var(--text-primary)' }}>Bloquer {banUserName}</h3>
               <button onClick={() => setBanUserId(null)} className="p-1 cursor-pointer" style={{ color: 'var(--text-muted)' }}>
@@ -812,7 +822,7 @@ export default function AdminPublications() {
       {/* ── Warning modal ── */}
       {warningUserId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
-          <div className="w-full max-w-md rounded-2xl p-6 space-y-5" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+          <div className="w-full max-w-md rounded-2xl p-6 space-y-5" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
             <div className="flex items-center justify-between">
               <h3 className="font-semibold text-lg flex items-center gap-2" style={{ color: '#F59E0B' }}>
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -837,7 +847,7 @@ export default function AdminPublications() {
                 rows={4}
                 value={warningMessage}
                 onChange={(e) => setWarningMessage(e.target.value)}
-                placeholder="Votre publication ne respecte pas les regles de la communaute. Merci de corriger..."
+                placeholder="Votre publication ne respecte pas les règles de la communauté. Merci de corriger..."
                 className="w-full rounded-lg px-4 py-2.5 text-sm outline-none resize-y"
                 style={inputStyle}
               />
@@ -847,7 +857,7 @@ export default function AdminPublications() {
               <button
                 onClick={() => { setWarningUserId(null); setWarningMessage('') }}
                 className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-muted)' }}
+                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-muted)' }}
               >
                 Annuler
               </button>

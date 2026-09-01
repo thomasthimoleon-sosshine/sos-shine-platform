@@ -7,7 +7,7 @@ interface AudioPlayerProps {
   accentColor?: string
 }
 
-export default function AudioPlayer({ src, accentColor = 'var(--gold)' }: AudioPlayerProps) {
+export default function AudioPlayer({ src, accentColor = 'var(--brand)' }: AudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null)
   const [playing, setPlaying] = useState(false)
   const [duration, setDuration] = useState(0)

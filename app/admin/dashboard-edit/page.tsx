@@ -43,21 +43,21 @@ const sections: SectionDef[] = [
     ],
   },
   {
-    title: 'Section Acces rapide', icon: '⚡',
+    title: 'Section Accès rapide', icon: '⚡',
     fields: [
-      { label: 'Titre de section', key: 'dash_quick_title', type: 'text', default: 'Acces rapide' },
+      { label: 'Titre de section', key: 'dash_quick_title', type: 'text', default: 'Accès rapide' },
       { label: 'Texte au survol des cartes', key: 'dash_explore_label', type: 'text', default: 'Explorer' },
-      sep('Carte 1 — Encyclopedie'),
-      { label: 'Titre', key: 'dash_quick1_title', type: 'text', default: 'Encyclopedie' },
-      { label: 'Description', key: 'dash_quick1_desc', type: 'textarea', default: 'Explorez les challenges emotionnels de A a Z' },
-      sep('Carte 2 — Feu de Camp'),
+      sep('Carte 1 - Encyclopédie'),
+      { label: 'Titre', key: 'dash_quick1_title', type: 'text', default: 'Encyclopédie' },
+      { label: 'Description', key: 'dash_quick1_desc', type: 'textarea', default: 'Explorez les challenges émotionnels de A à Z' },
+      sep('Carte 2 - Feu de Camp'),
       { label: 'Titre', key: 'dash_quick2_title', type: 'text', default: 'Feu de Camp' },
-      { label: 'Description', key: 'dash_quick2_desc', type: 'textarea', default: 'Echangez avec la communaute' },
-      sep('Carte 3 — Mur communautaire'),
+      { label: 'Description', key: 'dash_quick2_desc', type: 'textarea', default: 'Échangez avec la communauté' },
+      sep('Carte 3 - Mur communautaire'),
       { label: 'Titre', key: 'dash_quick3_title', type: 'text', default: 'Le Mur' },
-      { label: 'Description', key: 'dash_quick3_desc', type: 'textarea', default: 'Publications et partages de la communaute' },
-      sep('Carte 4 — Evenements'),
-      { label: 'Titre', key: 'dash_quick4_title', type: 'text', default: 'Evenements' },
+      { label: 'Description', key: 'dash_quick3_desc', type: 'textarea', default: 'Publications et partages de la communauté' },
+      sep('Carte 4 - Événements'),
+      { label: 'Titre', key: 'dash_quick4_title', type: 'text', default: 'Événements' },
       { label: 'Description', key: 'dash_quick4_desc', type: 'textarea', default: 'Soins collectifs, ateliers et rencontres' },
     ],
   },
@@ -164,13 +164,13 @@ export default function DashboardEditPage() {
       }
       setSaving(false); setSaved(true); setTimeout(() => setSaved(false), 4000)
     } catch (err) {
-      setError(`Erreur: ${err instanceof Error ? err.message : 'Veuillez reessayer'}`); setSaving(false)
+      setError(`Erreur: ${err instanceof Error ? err.message : 'Veuillez réessayer'}`); setSaving(false)
     }
   }
 
-  if (loading) return <div className="flex justify-center py-20"><div className="w-8 h-8 border-2 border-[#74C0FC] border-t-transparent rounded-full animate-spin" /></div>
+ if (loading) return <div className="flex justify-center py-20 w-8 h-8 border-2 border-[#74C0FC] border-t-transparent rounded-full animate-spin" ><div /></div>
 
-  const inputStyle: React.CSSProperties = { background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }
+  const inputStyle: React.CSSProperties = { background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)' }
 
   return (
     <div className="max-w-4xl mx-auto space-y-4">
@@ -194,7 +194,7 @@ export default function DashboardEditPage() {
       {sections.map((section) => {
         const isOpen = openSections[section.title]
         return (
-          <div key={section.title} className="rounded-xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+          <div key={section.title} className="rounded-xl overflow-hidden" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
             <button onClick={() => toggleSection(section.title)} className="w-full flex items-center justify-between p-5 cursor-pointer text-left">
               <h2 className="font-semibold text-base flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
                 <span>{section.icon}</span> {section.title}
@@ -209,7 +209,7 @@ export default function DashboardEditPage() {
                 {section.fields.map((field, fi) => (
                   <div key={field.key || `sep-${fi}`}>
                     {field.type === 'separator' ? (
-                      <div className="pt-3 mt-1" style={{ borderTop: '1px solid var(--dark-border)' }}>
+                      <div className="pt-3 mt-1" style={{ borderTop: '1px solid var(--border)' }}>
                         <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>{field.label}</p>
                       </div>
                     ) : field.type === 'upload' ? (

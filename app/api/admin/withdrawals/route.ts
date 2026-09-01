@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { createServerClient } from '@supabase/ssr'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { sendTemplateEmail } from '@/lib/email-templates/automated-emails'
 import type { Database } from '@/types/database'
 
 async function getCallerProfile(): Promise<{ id: string; role: string } | null> {
@@ -34,7 +35,7 @@ function isAdmin(role: string): boolean {
   return role === 'founder' || role === 'admin_content' || role === 'admin_support'
 }
 
-// GET — list all withdrawal requests
+// GET - list all withdrawal requests
 export async function GET() {
   const caller = await getCallerProfile()
   if (!caller || !isAdmin(caller.role)) {
@@ -49,7 +50,7 @@ export async function GET() {
       .order('created_at', { ascending: false })
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+      return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
     }
 
     return NextResponse.json({ withdrawals: data || [] })
@@ -59,7 +60,7 @@ export async function GET() {
   }
 }
 
-// PATCH — process a withdrawal request (approve/complete/reject)
+// PATCH - process a withdrawal request (approve/complete/reject)
 export async function PATCH(request: Request) {
   const caller = await getCallerProfile()
   if (!caller || !isAdmin(caller.role)) {
@@ -96,7 +97,7 @@ export async function PATCH(request: Request) {
         })
         .eq('id', withdrawalId)
 
-      if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+      if (error) return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
       return NextResponse.json({ success: true, status: 'processing' })
     }
 
@@ -112,7 +113,7 @@ export async function PATCH(request: Request) {
         })
         .eq('id', withdrawalId)
 
-      if (updateError) return NextResponse.json({ error: updateError.message }, { status: 500 })
+      if (updateError) return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
 
       // Deduct from pending_earnings and add to paid_earnings
       const { data: affiliate } = await admin
@@ -131,6 +132,30 @@ export async function PATCH(request: Request) {
           .eq('id', withdrawal.affiliate_id)
       }
 
+      // ── Email automatique : notification virement affilié ──
+      const { data: affiliateData } = await admin
+        .from('affiliates')
+        .select('user_id')
+        .eq('id', withdrawal.affiliate_id)
+        .single()
+
+      if (affiliateData) {
+        const { data: prof } = await admin
+          .from('profiles')
+          .select('prenom, email')
+          .eq('id', affiliateData.user_id)
+          .single()
+
+        if (prof?.email) {
+          const amountFormatted = `${withdrawal.amount.toFixed(2).replace('.', ',')}€`
+          sendTemplateEmail('affiliate_payout', prof.email, {
+            firstName: prof.prenom || 'Ambassadeur',
+            email: prof.email,
+            payoutAmount: amountFormatted,
+          }, { recipientName: prof.prenom || 'Ambassadeur' }).catch(() => {})
+        }
+      }
+
       return NextResponse.json({ success: true, status: 'completed' })
     }
 
@@ -145,7 +170,7 @@ export async function PATCH(request: Request) {
         })
         .eq('id', withdrawalId)
 
-      if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+      if (error) return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
       return NextResponse.json({ success: true, status: 'rejected' })
     }
 
@@ -156,7 +181,7 @@ export async function PATCH(request: Request) {
   }
 }
 
-// POST — user creates a withdrawal request
+// POST - user creates a withdrawal request
 export async function POST(request: Request) {
   try {
     const cookieStore = await cookies()
@@ -243,7 +268,7 @@ export async function POST(request: Request) {
       .single()
 
     if (insertError) {
-      return NextResponse.json({ error: insertError.message }, { status: 500 })
+      return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
     }
 
     return NextResponse.json({ success: true, withdrawal: newRequest })

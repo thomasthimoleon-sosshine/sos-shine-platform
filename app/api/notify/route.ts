@@ -1,5 +1,66 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { createClient as createAdminClient } from '@supabase/supabase-js'
+import webpush from 'web-push'
+
+/**
+ * Send push notifications to all active subscribers (fire-and-forget).
+ */
+async function sendPushToAll(title: string, body: string, url?: string, notificationType?: string) {
+  try {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+    const publicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
+    const privateKey = process.env.VAPID_PRIVATE_KEY
+    if (!supabaseUrl || !serviceKey || !publicKey || !privateKey) return
+
+    webpush.setVapidDetails(
+      process.env.VAPID_EMAIL || 'mailto:noreply@sosshine.com',
+      publicKey,
+      privateKey
+    )
+
+    const admin = createAdminClient(supabaseUrl, serviceKey)
+    const { data: subscriptions } = await admin
+      .from('push_subscriptions')
+      .select('endpoint, p256dh, auth')
+      .eq('is_active', true)
+
+    if (!subscriptions || subscriptions.length === 0) return
+
+    const payload = JSON.stringify({
+      title,
+      body,
+      icon: '/icon-192.png',
+      badge: '/icon-192.png',
+      url: url || '/dashboard',
+      type: notificationType || 'new_post',
+    })
+
+    const expiredEndpoints: string[] = []
+
+    for (const sub of subscriptions) {
+      const s = sub as { endpoint: string; p256dh: string; auth: string }
+      try {
+        await webpush.sendNotification(
+          { endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } },
+          payload
+        )
+      } catch (err: unknown) {
+        const statusCode = (err as { statusCode?: number })?.statusCode
+        if (statusCode === 404 || statusCode === 410) {
+          expiredEndpoints.push(s.endpoint)
+        }
+      }
+    }
+
+    if (expiredEndpoints.length > 0) {
+      await admin.from('push_subscriptions').delete().in('endpoint', expiredEndpoints)
+    }
+  } catch {
+    // Push is best-effort, don't block the response
+  }
+}
 
 /**
  * POST /api/notify
@@ -92,6 +153,9 @@ export async function POST(request: NextRequest) {
       console.error('Error creating notifications:', error)
       return NextResponse.json({ error: 'Erreur lors de la création des notifications' }, { status: 500 })
     }
+
+    // Also send push notification to all subscribers (fire-and-forget)
+    sendPushToAll(title, notifBody, link || undefined, type)
 
     return NextResponse.json({
       success: true,

@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import LogoSite from '@/components/LogoSite'
 
 export default function ConfidentialitePage() {
   const [title, setTitle] = useState('Politique de confidentialité')
@@ -54,7 +55,7 @@ export default function ConfidentialitePage() {
 
   useEffect(() => { load() }, [load])
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" /></div>
+ if (loading) return <div className="min-h-screen flex items-center justify-center w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" ><div /></div>
 
   return (
     <main className="min-h-screen px-6 py-16" style={{ background: 'var(--dark)' }}>
@@ -64,9 +65,7 @@ export default function ConfidentialitePage() {
           Retour à l&apos;accueil
         </Link>
 
-        {logoUrl && (
-          <Link href="/"><img src={logoUrl} alt="SOS Shine" className="h-10 mb-6 rounded-lg object-cover" /></Link>
-        )}
+        <Link href="/"><LogoSite className="h-10 mb-6 object-contain" /></Link>
 
         <h1 className="font-display text-3xl md:text-4xl font-semibold mb-8" style={{ color: 'var(--text-primary)' }}>
           {title}

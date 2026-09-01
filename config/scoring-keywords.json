@@ -1,0 +1,45 @@
+{
+  "dimensions": {
+    "1": {
+      "name": "Analyse mentale",
+      "keywords": ["comprends", "comprendre", "pourquoi", "logique", "analyser", "raison", "réfléchir", "penser", "tête", "mental", "cerveau", "intellectualiser"]
+    },
+    "2": {
+      "name": "Fuite en action",
+      "keywords": ["bouge", "bouger", "activité", "occupée", "occupé", "remplir", "courir", "fuir", "ennui", "projet", "action", "mouvement", "avancer", "sport"]
+    },
+    "3": {
+      "name": "Care-taking",
+      "keywords": ["aider", "autres", "donner", "famille", "enfants", "parent", "utile", "protéger", "sauver", "porter", "charge", "responsable", "tout le monde"]
+    },
+    "4": {
+      "name": "Autonomie forcée",
+      "keywords": ["seule", "seul", "personne", "aide", "demander", "porter", "gérer", "indépendant", "indépendante", "moi-même", "tout seul", "toute seule", "compter sur"]
+    },
+    "5": {
+      "name": "Contrôle",
+      "keywords": ["contrôle", "perdre", "effondrer", "imprévu", "sécurité", "planifier", "organiser", "maîtriser", "prévoir", "ordre", "structure", "rigide", "lâcher"]
+    },
+    "6": {
+      "name": "Adaptation/Masking",
+      "keywords": ["plaire", "rejetée", "rejeté", "différent", "différente", "masque", "vraie", "vrai", "authentique", "adapter", "caméléon", "rôle", "personnage", "accepté"]
+    },
+    "7": {
+      "name": "Hypervigilance",
+      "keywords": ["peur", "danger", "anticiper", "surprise", "guetter", "alerte", "vigilant", "vigilante", "méfiance", "confiance", "trahison", "abandonné", "abandonnée"]
+    },
+    "8": {
+      "name": "Idéalisation",
+      "keywords": ["rêve", "meilleur", "parfait", "parfaite", "futur", "espoir", "idéal", "déçue", "déçu", "déception", "attente", "imaginaire", "un jour", "plus tard"]
+    },
+    "9": {
+      "name": "Évitement du conflit",
+      "keywords": ["conflit", "dispute", "calme", "paix", "éviter", "déranger", "silence", "taire", "céder", "renoncer", "harmonie", "gentil", "gentille"]
+    },
+    "10": {
+      "name": "Intensité/Drame",
+      "keywords": ["intense", "passion", "vivant", "vivante", "vide", "sentir", "fort", "forte", "drame", "explosion", "crier", "pleurer", "émotion", "chaos", "tempête"]
+    }
+  },
+  "points_per_keyword": 2
+}

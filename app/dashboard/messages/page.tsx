@@ -96,36 +96,36 @@ export default function MessagesPage() {
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <div>
-        <h1 className="font-display text-3xl sm:text-4xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold text-[var(--text-primary)]">
           {t('dashboard.messages_title')}
         </h1>
-        <p className="mt-2" style={{ color: 'var(--text-secondary)' }}>
+        <p className="mt-2 text-[var(--text-secondary)]">
           {t('dashboard.messages_subtitle')}
         </p>
       </div>
 
       {loading ? (
         <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : conversations.length === 0 ? (
         <div className="text-center py-16">
-          <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-5 text-3xl" style={{ background: 'rgba(212,175,55,0.08)' }}>
+          <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-5 text-3xl" style={{ background: 'rgba(201,169,97,0.08)' }}>
             <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" style={{ color: 'var(--gold)' }} />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" style={{ color: 'var(--brand)' }} />
             </svg>
           </div>
-          <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+          <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
             {t('dashboard.no_conversations')}
           </h3>
-          <p className="text-sm max-w-sm mx-auto" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-sm max-w-sm mx-auto text-[var(--text-secondary)]">
             {t('dashboard.no_conversations_desc')}
           </p>
         </div>
       ) : (
-        <div className="rounded-2xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <div className="rounded-2xl overflow-hidden bg-[var(--surface-card)] border border-[var(--border)]">
           {conversations.map((convo, i) => {
-            const name = convo.partner.pseudo || convo.partner.prenom
+            const name = convo.partner?.pseudo || convo.partner?.prenom || 'Utilisateur'
             const isOwnMessage = convo.lastMessage.sender_id === userId
             const msgText = convo.lastMessage.message_type === 'audio' ? `🎤 ${t('dashboard.voice_message')}` : (convo.lastMessage.content || '')
             const preview = isOwnMessage ? `${t('dashboard.you')} : ${msgText}` : msgText
@@ -133,15 +133,15 @@ export default function MessagesPage() {
               <Link key={convo.partner.id} href={`/dashboard/messages/${convo.partner.id}`}
                 className="flex items-center gap-4 px-5 py-4 transition-all"
                 style={{
-                  borderBottom: i < conversations.length - 1 ? '1px solid var(--dark-border)' : 'none',
-                  background: convo.unreadCount > 0 ? 'rgba(212,175,55,0.04)' : 'transparent',
+                  borderBottom: i < conversations.length - 1 ? '1px solid var(--border)' : 'none',
+                  background: convo.unreadCount > 0 ? 'rgba(201,169,97,0.04)' : 'transparent',
                 }}>
                 {/* Avatar */}
                 {convo.partner.avatar_url ? (
                   <img src={convo.partner.avatar_url} alt={name} className="w-12 h-12 rounded-full object-cover flex-shrink-0" />
                 ) : (
                   <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 text-lg font-semibold"
-                    style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                    style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}>
                     {name.charAt(0).toUpperCase()}
                   </div>
                 )}
@@ -150,11 +150,11 @@ export default function MessagesPage() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-0.5">
                     <span className="text-sm font-semibold truncate" style={{
-                      color: convo.partner.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)',
+                      color: convo.partner.role === 'founder' ? 'var(--brand)' : 'var(--text-primary)',
                     }}>
                       {name}
                     </span>
-                    <span className="text-xs flex-shrink-0 ml-2" style={{ color: 'var(--text-muted)' }}>
+                    <span className="text-xs flex-shrink-0 ml-2 text-[var(--text-muted)]">
                       {formatTime(convo.lastMessage.created_at)}
                     </span>
                   </div>
@@ -167,7 +167,7 @@ export default function MessagesPage() {
                     </p>
                     {convo.unreadCount > 0 && (
                       <span className="flex-shrink-0 ml-2 w-5 h-5 rounded-full flex items-center justify-center text-xs font-semibold"
-                        style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
+                        style={{ background: 'var(--brand)', color: 'var(--surface)' }}>
                         {convo.unreadCount > 9 ? '9+' : convo.unreadCount}
                       </span>
                     )}

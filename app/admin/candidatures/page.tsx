@@ -29,9 +29,9 @@ type Candidature = {
 }
 
 const statusStyles: Record<string, { bg: string; color: string; label: string }> = {
-  pending:   { bg: 'rgba(212,175,55,0.12)',  color: '#D4AF37', label: 'En attente' },
-  approved:  { bg: 'rgba(85,239,196,0.12)',  color: '#55EFC4', label: 'Approuvee' },
-  rejected:  { bg: 'rgba(239,68,68,0.12)',   color: '#ef4444', label: 'Refusee' },
+  pending:   { bg: 'rgba(201,169,97,0.12)',  color: '#C9A961', label: 'En attente' },
+  approved:  { bg: 'rgba(85,239,196,0.12)',  color: '#55EFC4', label: 'Approuvée' },
+  rejected:  { bg: 'rgba(239,68,68,0.12)',   color: '#ef4444', label: 'Refusée' },
   suspended: { bg: 'rgba(225,112,85,0.12)',  color: '#E17055', label: 'Suspendue' },
 }
 
@@ -136,11 +136,11 @@ export default function AdminCandidatures() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
             { label: 'Total', value: stats.total, color: 'var(--text-primary)' },
-            { label: 'En attente', value: stats.pending, color: '#D4AF37' },
-            { label: 'Approuvees', value: stats.approved, color: '#55EFC4' },
-            { label: 'Refusees', value: stats.rejected, color: '#ef4444' },
+            { label: 'En attente', value: stats.pending, color: '#C9A961' },
+            { label: 'Approuvées', value: stats.approved, color: '#55EFC4' },
+            { label: 'Refusées', value: stats.rejected, color: '#ef4444' },
           ].map(s => (
-            <div key={s.label} className="rounded-xl p-4 text-center" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+            <div key={s.label} className="rounded-xl p-4 text-center" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
               <p className="font-display text-2xl font-light" style={{ color: s.color }}>{s.value}</p>
               <p className="text-[11px] mt-1" style={{ color: 'var(--text-muted)' }}>{s.label}</p>
             </div>
@@ -164,16 +164,16 @@ export default function AdminCandidatures() {
             type="text" placeholder="Rechercher par nom, email ou motivation..."
             value={search} onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-10 pr-4 py-2.5 rounded-xl text-sm outline-none"
-            style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+            style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
           />
         </div>
         <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}
           className="px-4 py-2.5 rounded-xl text-sm outline-none cursor-pointer"
-          style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}>
+          style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}>
           <option value="all">Toutes</option>
           <option value="pending">En attente</option>
-          <option value="approved">Approuvees</option>
-          <option value="rejected">Refusees</option>
+          <option value="approved">Approuvées</option>
+          <option value="rejected">Refusées</option>
         </select>
       </div>
 
@@ -183,7 +183,7 @@ export default function AdminCandidatures() {
           <div className="w-8 h-8 border-2 border-[#74C0FC] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-16 rounded-xl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <div className="text-center py-16 rounded-xl" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
             {search.trim() ? 'Aucune candidature ne correspond.' : 'Aucune candidature pour le moment.'}
           </p>
@@ -195,14 +195,14 @@ export default function AdminCandidatures() {
             const isExpanded = expandedId === c.id
             return (
               <div key={c.id} className="rounded-xl overflow-hidden transition-all"
-                style={{ background: 'var(--dark-card)', border: `1px solid ${c.status === 'pending' ? 'rgba(212,175,55,0.2)' : 'var(--dark-border)'}` }}>
+                style={{ background: 'var(--surface-card)', border: `1px solid ${c.status === 'pending' ? 'rgba(201,169,97,0.2)' : 'var(--border)'}` }}>
                 {/* Header row */}
                 <div className="flex items-center gap-3 p-4 cursor-pointer" onClick={() => setExpandedId(isExpanded ? null : c.id)}>
                   {c.profiles?.avatar_url ? (
                     <img src={c.profiles.avatar_url} alt="" className="w-10 h-10 rounded-full object-cover shrink-0" />
                   ) : (
                     <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold shrink-0"
-                      style={{ background: 'rgba(212,175,55,0.12)', color: '#D4AF37' }}>
+                      style={{ background: 'rgba(201,169,97,0.12)', color: '#C9A961' }}>
                       {c.profiles?.prenom?.charAt(0).toUpperCase() || '?'}
                     </div>
                   )}
@@ -234,7 +234,7 @@ export default function AdminCandidatures() {
 
                 {/* Expanded detail */}
                 {isExpanded && (
-                  <div className="px-4 pb-4 space-y-4" style={{ borderTop: '1px solid var(--dark-border)' }}>
+                  <div className="px-4 pb-4 space-y-4" style={{ borderTop: '1px solid var(--border)' }}>
                     {/* Motivation */}
                     <div className="pt-4">
                       <p className="text-[11px] font-semibold uppercase tracking-wider mb-1.5" style={{ color: 'var(--text-muted)' }}>Motivation</p>
@@ -260,7 +260,7 @@ export default function AdminCandidatures() {
                       )}
                       {c.social_links?.main && (
                         <div>
-                          <p className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Reseau social</p>
+                          <p className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Réseau social</p>
                           <a href={c.social_links.main} target="_blank" rel="noopener noreferrer"
                             className="text-sm underline" style={{ color: '#74C0FC' }}>
                             Voir le profil
@@ -269,7 +269,7 @@ export default function AdminCandidatures() {
                       )}
                       <div>
                         <p className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Code parrainage</p>
-                        <p className="text-sm font-mono" style={{ color: 'var(--gold)' }}>{c.referral_code}</p>
+                        <p className="text-sm font-mono" style={{ color: 'var(--brand)' }}>{c.referral_code}</p>
                       </div>
                     </div>
 
@@ -280,8 +280,8 @@ export default function AdminCandidatures() {
                           <p className="font-display text-lg font-light" style={{ color: '#55EFC4' }}>{c.total_referrals}</p>
                           <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>Filleuls</p>
                         </div>
-                        <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(212,175,55,0.05)' }}>
-                          <p className="font-display text-lg font-light" style={{ color: '#D4AF37' }}>{c.total_earnings.toFixed(2)}&#8364;</p>
+                        <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(201,169,97,0.05)' }}>
+                          <p className="font-display text-lg font-light" style={{ color: '#C9A961' }}>{c.total_earnings.toFixed(2)}&#8364;</p>
                           <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>Gains totaux</p>
                         </div>
                         <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(116,192,252,0.05)' }}>
@@ -315,7 +315,7 @@ export default function AdminCandidatures() {
                               type="text" placeholder="Motif du refus (optionnel)"
                               value={rejectReason} onChange={e => setRejectReason(e.target.value)}
                               className="flex-1 px-3 py-2 rounded-lg text-sm outline-none"
-                              style={{ background: 'var(--dark)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                              style={{ background: 'var(--dark)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                             />
                             <button onClick={() => handleAction(c.id, 'reject', rejectReason)}
                               disabled={processing === c.id}

@@ -40,7 +40,7 @@ function isAdmin(role: string): boolean {
   return role === 'founder' || role === 'admin_content' || role === 'admin_support'
 }
 
-// GET — list all profiles (admin only)
+// GET - list all profiles (admin only)
 export async function GET() {
   const caller = await getCallerProfile()
   if (!caller || !isAdmin(caller.role)) {
@@ -55,7 +55,7 @@ export async function GET() {
       .order('created_at', { ascending: false })
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+      return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
     }
 
     // Fetch subscriptions for all users
@@ -90,7 +90,7 @@ export async function GET() {
   }
 }
 
-// PUT — toggle member active status (admin)
+// PUT - toggle member active status (admin)
 export async function PUT(request: Request) {
   const caller = await getCallerProfile()
   if (!caller || !isAdmin(caller.role)) {
@@ -110,7 +110,7 @@ export async function PUT(request: Request) {
       .eq('id', memberId)
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+      return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
     }
 
     return NextResponse.json({ success: true })
@@ -120,7 +120,7 @@ export async function PUT(request: Request) {
   }
 }
 
-// POST — toggle publish ban (admin only)
+// POST - toggle publish ban (admin only)
 export async function POST(request: Request) {
   const caller = await getCallerProfile()
   if (!caller || !isAdmin(caller.role)) {
@@ -145,7 +145,7 @@ export async function POST(request: Request) {
         .eq('id', memberId)
 
       if (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 })
+        return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
       }
       return NextResponse.json({ success: true, publish_banned_until: until.toISOString() })
     }
@@ -157,7 +157,7 @@ export async function POST(request: Request) {
         .eq('id', memberId)
 
       if (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 })
+        return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
       }
       return NextResponse.json({ success: true, publish_banned_until: null })
     }
@@ -169,7 +169,45 @@ export async function POST(request: Request) {
   }
 }
 
-// PATCH — update a member's role (founder only)
+// DELETE - permanently delete a member (founder only)
+export async function DELETE(request: Request) {
+  const caller = await getCallerProfile()
+  if (!caller || caller.role !== 'founder') {
+    return NextResponse.json({ error: 'Seuls les fondateurs peuvent supprimer des membres' }, { status: 403 })
+  }
+
+  try {
+    const { memberId } = await request.json()
+    if (!memberId) {
+      return NextResponse.json({ error: 'memberId requis' }, { status: 400 })
+    }
+
+    const admin = createAdminClient()
+
+    // Delete subscription data
+    await admin.from('subscriptions').delete().eq('user_id', memberId)
+
+    // Delete payment logs
+    await admin.from('subscription_payment_logs').delete().eq('user_id', memberId)
+
+    // Delete profile
+    await admin.from('profiles').delete().eq('id', memberId)
+
+    // Delete the auth user via Supabase Admin API
+    const { error: authError } = await admin.auth.admin.deleteUser(memberId)
+    if (authError) {
+      console.error('[Admin] Erreur suppression auth user:', authError)
+      // Profile/subscription already deleted, log but don't fail
+    }
+
+    return NextResponse.json({ success: true })
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Unknown error'
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
+}
+
+// PATCH - update a member's role (founder only)
 export async function PATCH(request: Request) {
   const caller = await getCallerProfile()
   if (!caller || caller.role !== 'founder') {
@@ -194,7 +232,7 @@ export async function PATCH(request: Request) {
       .eq('id', memberId)
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+      return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
     }
 
     return NextResponse.json({ success: true })

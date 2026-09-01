@@ -93,7 +93,7 @@ export default function Whiteboard({ roomId, userId }: WhiteboardProps) {
   if (loadError) {
     return (
       <div className="w-full h-full flex flex-col items-center justify-center gap-3"
-        style={{ background: 'var(--dark-card)' }}>
+        style={{ background: 'var(--surface-card)' }}>
         <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}
           style={{ color: 'var(--text-muted)' }}>
           <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Z" />
@@ -110,9 +110,9 @@ export default function Whiteboard({ roomId, userId }: WhiteboardProps) {
 
   if (!ExcalidrawComp) {
     return (
-      <div className="w-full h-full flex items-center justify-center" style={{ background: 'var(--dark-card)' }}>
+      <div className="w-full h-full flex items-center justify-center" style={{ background: 'var(--surface-card)' }}>
         <div className="text-center">
-          <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+          <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
           <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Chargement du tableau blanc...</p>
         </div>
       </div>

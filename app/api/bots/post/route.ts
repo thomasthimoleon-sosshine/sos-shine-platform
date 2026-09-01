@@ -46,7 +46,7 @@ export async function POST(req: Request) {
       })
 
       if (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 })
+        return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
       }
 
       return NextResponse.json({ success: true, action: 'wall', bot: bot.prenom, title: post.title })
@@ -64,7 +64,7 @@ export async function POST(req: Request) {
     })
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+      return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
     }
 
     return NextResponse.json({ success: true, action: 'chat', bot: bot.prenom, message })

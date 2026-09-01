@@ -2,8 +2,10 @@
 
 import { useEffect, useState, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { useFeatureAccess } from '@/hooks/useFeatureAccess'
 import type { Event, EventRegistration } from '@/types/database'
 import { useTranslation } from '@/lib/i18n/useTranslation'
+import ShineIcon from '@/components/icons/ShineIcon'
 
 const FOUNDERS_MAP: Record<string, { name: string; image: string }> = {
   julia: { name: 'Julia', image: '/images/julia.jpeg' },
@@ -93,23 +95,23 @@ function WorldGlobe({ events, selectedEvent, onSelect, dragLabel }: {
 
       // Globe background sphere
       const sphereGrad = ctx.createRadialGradient(cx - R * 0.3, cy - R * 0.3, R * 0.1, cx, cy, R)
-      sphereGrad.addColorStop(0, 'rgba(212,175,55,0.06)')
-      sphereGrad.addColorStop(0.7, 'rgba(212,175,55,0.02)')
-      sphereGrad.addColorStop(1, 'rgba(212,175,55,0)')
+      sphereGrad.addColorStop(0, 'rgba(201,169,97,0.06)')
+      sphereGrad.addColorStop(0.7, 'rgba(201,169,97,0.02)')
+      sphereGrad.addColorStop(1, 'rgba(201,169,97,0)')
       ctx.fillStyle = sphereGrad
       ctx.beginPath()
       ctx.arc(cx, cy, R, 0, Math.PI * 2)
       ctx.fill()
 
       // Globe outline
-      ctx.strokeStyle = 'rgba(212,175,55,0.15)'
+      ctx.strokeStyle = 'rgba(201,169,97,0.15)'
       ctx.lineWidth = 1
       ctx.beginPath()
       ctx.arc(cx, cy, R, 0, Math.PI * 2)
       ctx.stroke()
 
       // Latitude lines
-      ctx.strokeStyle = 'rgba(212,175,55,0.04)'
+      ctx.strokeStyle = 'rgba(201,169,97,0.04)'
       ctx.lineWidth = 0.5
       for (let lat = -60; lat <= 60; lat += 30) {
         ctx.beginPath()
@@ -154,9 +156,9 @@ function WorldGlobe({ events, selectedEvent, onSelect, dragLabel }: {
         })
         if (visiblePoints.length > 2) {
           ctx.closePath()
-          ctx.fillStyle = 'rgba(212,175,55,0.12)'
+          ctx.fillStyle = 'rgba(201,169,97,0.12)'
           ctx.fill()
-          ctx.strokeStyle = 'rgba(212,175,55,0.25)'
+          ctx.strokeStyle = 'rgba(201,169,97,0.25)'
           ctx.lineWidth = 0.8
           ctx.stroke()
         }
@@ -181,8 +183,8 @@ function WorldGlobe({ events, selectedEvent, onSelect, dragLabel }: {
         // Glow
         const glowR = size + 10 + pulse * 8
         const glow = ctx.createRadialGradient(x, y, 0, x, y, glowR)
-        glow.addColorStop(0, `rgba(212,175,55,${(isSelected ? 0.5 : 0.3) * depthFade})`)
-        glow.addColorStop(1, 'rgba(212,175,55,0)')
+        glow.addColorStop(0, `rgba(201,169,97,${(isSelected ? 0.5 : 0.3) * depthFade})`)
+        glow.addColorStop(1, 'rgba(201,169,97,0)')
         ctx.fillStyle = glow
         ctx.beginPath()
         ctx.arc(x, y, glowR, 0, Math.PI * 2)
@@ -194,7 +196,7 @@ function WorldGlobe({ events, selectedEvent, onSelect, dragLabel }: {
         ctx.rotate(Math.PI / 4)
         const s = size + (isSelected ? Math.sin(time * 3) * 2 : 0)
 
-        ctx.fillStyle = isSelected ? '#D4AF37' : `rgba(212,175,55,${(0.7 + pulse * 0.3) * depthFade})`
+        ctx.fillStyle = isSelected ? 'var(--brand)' : `rgba(201,169,97,${(0.7 + pulse * 0.3) * depthFade})`
         ctx.fillRect(-s / 2, -s / 2, s, s)
 
         ctx.strokeStyle = `rgba(255,255,255,${(0.4 + pulse * 0.4) * depthFade})`
@@ -213,16 +215,16 @@ function WorldGlobe({ events, selectedEvent, onSelect, dragLabel }: {
           ctx.textAlign = 'center'
           ctx.fillStyle = 'rgba(0,0,0,0.5)'
           ctx.fillText(event.location_name, x + 1, y - size - 9)
-          ctx.fillStyle = '#D4AF37'
+          ctx.fillStyle = 'var(--brand)'
           ctx.fillText(event.location_name, x, y - size - 10)
         }
       })
 
       // Atmosphere edge glow
       const atmoGrad = ctx.createRadialGradient(cx, cy, R * 0.95, cx, cy, R * 1.15)
-      atmoGrad.addColorStop(0, 'rgba(212,175,55,0.05)')
-      atmoGrad.addColorStop(0.5, 'rgba(212,175,55,0.02)')
-      atmoGrad.addColorStop(1, 'rgba(212,175,55,0)')
+      atmoGrad.addColorStop(0, 'rgba(201,169,97,0.05)')
+      atmoGrad.addColorStop(0.5, 'rgba(201,169,97,0.02)')
+      atmoGrad.addColorStop(1, 'rgba(201,169,97,0)')
       ctx.fillStyle = atmoGrad
       ctx.beginPath()
       ctx.arc(cx, cy, R * 1.15, 0, Math.PI * 2)
@@ -277,7 +279,7 @@ function WorldGlobe({ events, selectedEvent, onSelect, dragLabel }: {
   }
 
   return (
-    <div ref={containerRef} className="relative w-full rounded-2xl overflow-hidden" style={{ height: 380, background: 'radial-gradient(ellipse at center, rgba(212,175,55,0.03) 0%, transparent 70%)', border: '1px solid rgba(212,175,55,0.1)' }}>
+    <div ref={containerRef} className="relative w-full rounded-2xl overflow-hidden" style={{ height: 380, background: 'radial-gradient(ellipse at center, rgba(201,169,97,0.03) 0%, transparent 70%)', border: '1px solid rgba(201,169,97,0.1)' }}>
       <canvas
         ref={canvasRef}
         className="w-full h-full cursor-grab active:cursor-grabbing"
@@ -288,8 +290,8 @@ function WorldGlobe({ events, selectedEvent, onSelect, dragLabel }: {
         onPointerCancel={onPointerUp}
       />
       <div className="absolute bottom-3 left-3 flex items-center gap-2">
-        <span className="w-2 h-2 rotate-45 inline-block" style={{ background: '#D4AF37' }} />
-        <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{dragLabel}</span>
+        <span className="w-2 h-2 rotate-45 inline-block" style={{ background: 'var(--brand)' }} />
+        <span className="text-[10px] text-[var(--text-muted)]">{dragLabel}</span>
       </div>
     </div>
   )
@@ -297,12 +299,20 @@ function WorldGlobe({ events, selectedEvent, onSelect, dragLabel }: {
 
 export default function EvenementsPage() {
   const { t } = useTranslation()
+  const { plan } = useFeatureAccess()
   const [events, setEvents] = useState<Event[]>([])
   const [registrations, setRegistrations] = useState<EventRegistration[]>([])
   const [loading, setLoading] = useState(true)
   const [userId, setUserId] = useState<string | null>(null)
   const [registering, setRegistering] = useState<string | null>(null)
   const [selectedEvent, setSelectedEvent] = useState<string | null>(null)
+
+  const STRIPE_EVENT_LINK = 'https://buy.stripe.com/bJecMXfCkfZF4AVbgK5ZC0o'
+
+  function getEventPrice(): { label: string; amount: number } {
+    if (plan === 'serenite' || plan === 'premium') return { label: 'Inclus dans votre abonnement', amount: 0 }
+    return { label: '19,90 €', amount: 1990 }
+  }
 
   useEffect(() => {
     async function init() {
@@ -355,18 +365,21 @@ export default function EvenementsPage() {
     if (!userId || registering) return
     setRegistering(eventId)
 
-    const supabase = createClient()
-    const { error } = await supabase.from('event_registrations').insert({
-      event_id: eventId,
-      user_id: userId,
-      status: 'registered',
-    })
+    try {
+      const res = await fetch('/api/events/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ eventId }),
+      })
 
-    if (!error) {
-      setRegistrations((prev) => [
-        ...prev,
-        { id: crypto.randomUUID(), event_id: eventId, user_id: userId, status: 'registered', created_at: new Date().toISOString() },
-      ])
+      if (res.ok) {
+        setRegistrations((prev) => [
+          ...prev,
+          { id: crypto.randomUUID(), event_id: eventId, user_id: userId, status: 'registered', created_at: new Date().toISOString() },
+        ])
+      }
+    } catch {
+      // Silent fail
     }
     setRegistering(null)
   }
@@ -397,11 +410,11 @@ export default function EvenementsPage() {
 
   function getEventTypeInfo(type: string) {
     const map: Record<string, { label: string; color: string }> = {
-      shine_walk: { label: 'Shine Walk', color: '#55EFC4' },
-      rencontre: { label: 'Rencontre', color: '#74C0FC' },
+      shine_walk: { label: 'Marche ensemble', color: 'var(--success)' },
+      rencontre: { label: 'Rencontre', color: 'var(--accent-blue)' },
       atelier: { label: 'Atelier', color: '#FFEAA7' },
       soin_collectif: { label: 'Soin Collectif', color: '#DDA0DD' },
-      live: { label: 'Live', color: '#E17055' },
+      live: { label: 'Live', color: 'var(--warning)' },
     }
     return map[type] || { label: type, color: 'var(--text-secondary)' }
   }
@@ -416,15 +429,18 @@ export default function EvenementsPage() {
     <div className="max-w-5xl mx-auto space-y-8">
       {/* Header */}
       <div>
-        <h1 className="font-display text-3xl sm:text-4xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold text-[var(--text-primary)]">
           {t('dashboard.events_title')}
         </h1>
-        <p className="mt-2" style={{ color: 'var(--text-secondary)' }}>
+        <p className="mt-2 text-[var(--text-secondary)]">
           {t('dashboard.events_subtitle_detail')}
+        </p>
+        <p className="mt-2 text-sm text-[var(--text-muted)]">
+          Rejoignez-nous le temps d&apos;un événement pour vivre l&apos;expérience SOS Shine en direct, rencontrer Julia, William et Thomas, et découvrir la force d&apos;une communauté qui avance ensemble.
         </p>
       </div>
 
-      {/* World Map — only if events with coordinates exist */}
+      {/* World Map - only if events with coordinates exist */}
       {!loading && mapEvents.length > 0 && (
         <WorldGlobe events={mapEvents} selectedEvent={selectedEvent} onSelect={scrollToEvent} dragLabel={t('dashboard.drag_globe')} />
       )}
@@ -439,7 +455,7 @@ export default function EvenementsPage() {
       >
         <div
           className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-          style={{ background: 'rgba(85, 239, 196, 0.12)', color: '#55EFC4' }}
+          style={{ background: 'rgba(85, 239, 196, 0.12)', color: 'var(--success)' }}
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -447,10 +463,10 @@ export default function EvenementsPage() {
           </svg>
         </div>
         <div>
-          <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+          <p className="text-sm font-medium text-[var(--text-primary)]">
             {t('dashboard.real_meetings')}
           </p>
-          <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-sm mt-1 text-[var(--text-secondary)]">
             {t('dashboard.events_free_desc')}
           </p>
         </div>
@@ -459,17 +475,17 @@ export default function EvenementsPage() {
       {/* Events list */}
       {loading ? (
         <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : events.length === 0 ? (
         <div className="text-center py-16">
-          <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-5 text-3xl" style={{ background: 'rgba(212,175,55,0.08)' }}>
-            📅
+          <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-5 text-3xl" style={{ background: 'rgba(201,169,97,0.08)' }}>
+            <ShineIcon name="calendrier" className="w-8 h-8" color="var(--brand)" />
           </div>
-          <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+          <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
             {t('dashboard.events_empty_title')}
           </h3>
-          <p className="text-sm max-w-sm mx-auto" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-sm max-w-sm mx-auto text-[var(--text-secondary)]">
             {t('dashboard.events_empty_desc')}
           </p>
         </div>
@@ -486,21 +502,28 @@ export default function EvenementsPage() {
                 id={`event-${event.id}`}
                 className="rounded-2xl p-6 transition-all duration-300"
                 style={{
-                  background: 'var(--dark-card)',
-                  border: isSelected ? '1px solid rgba(212,175,55,0.4)' : '1px solid var(--dark-border)',
-                  boxShadow: isSelected ? '0 0 20px rgba(212,175,55,0.08)' : 'none',
+                  background: 'var(--surface-card)',
+                  border: isSelected ? '1px solid rgba(201,169,97,0.4)' : '1px solid var(--border)',
+                  boxShadow: isSelected ? '0 0 20px rgba(201,169,97,0.08)' : 'none',
                 }}
               >
+                {/* Cover image */}
+                {(event as any).cover_image && (
+                  <div className="-mx-6 -mt-6 mb-4">
+                    <img src={(event as any).cover_image} alt={event.title} className="w-full rounded-t-2xl" />
+                  </div>
+                )}
+
                 <div className="flex flex-col sm:flex-row sm:items-start gap-4">
                   {/* Date badge */}
                   <div
                     className="w-16 h-16 rounded-xl flex flex-col items-center justify-center flex-shrink-0"
                     style={{ background: 'rgba(212, 168, 67, 0.1)' }}
                   >
-                    <span className="text-lg font-bold" style={{ color: 'var(--gold)' }}>
+                    <span className="text-lg font-bold text-[var(--brand)]">
                       {new Date(event.event_date).getDate()}
                     </span>
-                    <span className="text-xs uppercase" style={{ color: 'var(--gold-deep, var(--gold))' }}>
+                    <span className="text-xs uppercase" style={{ color: 'var(--brand-deep, var(--brand))' }}>
                       {new Date(event.event_date).toLocaleDateString('fr-FR', { month: 'short' })}
                     </span>
                   </div>
@@ -510,7 +533,7 @@ export default function EvenementsPage() {
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-semibold text-base" style={{ color: 'var(--text-primary)' }}>
+                          <h3 className="font-semibold text-base text-[var(--text-primary)]">
                             {event.title}
                           </h3>
                           <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: `${typeInfo.color}15`, color: typeInfo.color }}>
@@ -519,7 +542,7 @@ export default function EvenementsPage() {
                         </div>
                         <div className="flex flex-wrap items-center gap-3 mt-1">
                           {event.location_name && (
-                            <span className="text-xs flex items-center gap-1" style={{ color: 'var(--text-muted)' }}>
+                            <span className="text-xs flex items-center gap-1 text-[var(--text-muted)]">
                               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
@@ -527,7 +550,7 @@ export default function EvenementsPage() {
                               {event.location_name}
                             </span>
                           )}
-                          <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                          <span className="text-xs text-[var(--text-muted)]">
                             {formatDate(event.event_date)} à {formatTime(event.event_date)}
                           </span>
                         </div>
@@ -535,7 +558,7 @@ export default function EvenementsPage() {
 
                       <span
                         className="text-xs px-2.5 py-1 rounded-full flex-shrink-0"
-                        style={{ background: 'rgba(85, 239, 196, 0.1)', color: '#55EFC4' }}
+                        style={{ background: 'rgba(85, 239, 196, 0.1)', color: 'var(--success)' }}
                       >
                         {daysUntil(event.event_date)}
                       </span>
@@ -544,7 +567,7 @@ export default function EvenementsPage() {
                     {/* Hosts avatars */}
                     {event.hosts && event.hosts.length > 0 && (
                       <div className="flex items-center gap-2 mt-2">
-                        <span className="text-xs" style={{ color: 'var(--text-muted)' }}>Avec</span>
+                        <span className="text-xs text-[var(--text-muted)]">Avec</span>
                         <div className="flex -space-x-2">
                           {event.hosts.map((h: string) => {
                             const founder = FOUNDERS_MAP[h]
@@ -556,19 +579,19 @@ export default function EvenementsPage() {
                                 alt={founder.name}
                                 title={founder.name}
                                 className="w-7 h-7 rounded-full object-cover"
-                                style={{ border: '2px solid var(--dark-card)' }}
+                                style={{ border: '2px solid var(--surface-card)' }}
                               />
                             )
                           })}
                         </div>
-                        <span className="text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>
+                        <span className="text-xs font-medium text-[var(--text-secondary)]">
                           {event.hosts.map((h: string) => FOUNDERS_MAP[h]?.name).filter(Boolean).join(' & ')}
                         </span>
                       </div>
                     )}
 
                     {event.description && (
-                      <p className="text-sm mt-3 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                      <p className="text-sm mt-3 leading-relaxed text-[var(--text-secondary)]">
                         {event.description}
                       </p>
                     )}
@@ -599,9 +622,9 @@ export default function EvenementsPage() {
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 mt-4 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:-translate-y-0.5 w-fit"
                         style={{
-                          background: 'rgba(212, 175, 55, 0.1)',
-                          color: 'var(--gold)',
-                          border: '1px solid rgba(212, 175, 55, 0.25)',
+                          background: 'rgba(201, 169, 97, 0.1)',
+                          color: 'var(--brand)',
+                          border: '1px solid rgba(201, 169, 97, 0.25)',
                         }}
                       >
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -613,11 +636,16 @@ export default function EvenementsPage() {
 
                     <div className="flex items-center justify-between mt-4">
                       <div className="flex items-center gap-4">
-                        <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                          {event.price === 0 ? t('dashboard.free') : `${event.price}€`}
-                        </span>
+                        {(() => {
+                          const pricing = getEventPrice()
+                          return (
+                            <span className="text-xs font-medium" style={{ color: pricing.amount === 0 ? 'var(--success)' : 'var(--brand)' }}>
+                              {pricing.label}
+                            </span>
+                          )
+                        })()}
                         {event.max_participants && (
-                          <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                          <span className="text-xs text-[var(--text-muted)]">
                             {t('dashboard.max_places', { n: event.max_participants })}
                           </span>
                         )}
@@ -626,19 +654,29 @@ export default function EvenementsPage() {
                       {registered ? (
                         <span
                           className="text-xs px-4 py-2 rounded-xl font-medium"
-                          style={{ background: 'rgba(85, 239, 196, 0.1)', color: '#55EFC4' }}
+                          style={{ background: 'rgba(85, 239, 196, 0.1)', color: 'var(--success)' }}
                         >
                           {t('dashboard.registered_check')}
                         </span>
-                      ) : (
+                      ) : getEventPrice().amount === 0 ? (
                         <button
                           onClick={() => handleRegister(event.id)}
                           disabled={registering === event.id}
                           className="text-xs px-4 py-2 rounded-xl font-semibold transition-all duration-200 cursor-pointer disabled:opacity-50"
-                          style={{ background: 'var(--gold)', color: 'var(--dark)' }}
+                          style={{ background: 'var(--brand)', color: 'var(--surface)' }}
                         >
                           {registering === event.id ? t('common.loading') : t('dashboard.register')}
                         </button>
+                      ) : (
+                        <a
+                          href={STRIPE_EVENT_LINK}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs px-4 py-2 rounded-xl font-semibold transition-all duration-200 cursor-pointer inline-flex items-center gap-1.5"
+                          style={{ background: 'var(--brand)', color: 'var(--surface)' }}
+                        >
+                          Réserver - {getEventPrice().label}
+                        </a>
                       )}
                     </div>
                   </div>
@@ -657,14 +695,14 @@ export default function EvenementsPage() {
           border: '1px solid rgba(212, 168, 67, 0.12)',
         }}
       >
-        <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
-          Devenez hôte certifié
+        <h3 className="font-display text-lg font-semibold mb-2 text-[var(--text-primary)]">
+          Organisez vos propres rencontres
         </h3>
-        <p className="text-sm mb-4 max-w-md mx-auto" style={{ color: 'var(--text-secondary)' }}>
-          Après 4 mois dans la communauté, vous pouvez organiser vos propres Shine Walks et devenir Éclaireur.
+        <p className="text-sm mb-4 max-w-md mx-auto text-[var(--text-secondary)]">
+          Après 4 mois avec nous, vous pouvez accueillir vos propres rencontres près de chez vous.
         </p>
-        <span className="text-xs font-medium" style={{ color: 'var(--gold)' }}>
-          Programme Éclaireur — bientôt disponible
+        <span className="text-xs font-medium text-[var(--brand)]">
+          Bientôt disponible
         </span>
       </div>
     </div>

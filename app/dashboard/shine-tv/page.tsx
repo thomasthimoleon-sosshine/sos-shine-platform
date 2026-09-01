@@ -1,8 +1,12 @@
 'use client'
 
 import { useEffect, useState, useRef, useCallback } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
+import { useSubscription } from '@/hooks/useSubscription'
+import { SHINE_TV_CATEGORIES, isKnownCategory, categoryLabel } from '@/lib/shine-tv/categories'
+import ShineIcon, { type ShineIconName } from '@/components/icons/ShineIcon'
 
 // ── Types ──
 type ShineVideo = {
@@ -10,7 +14,9 @@ type ShineVideo = {
   title: string
   description: string
   thumbnail: string
+  thumbnailDesktop: string | null
   videoUrl: string
+  subtitleUrl: string
   category: string
   duration: string
   year: number
@@ -18,6 +24,7 @@ type ShineVideo = {
   userRating: number
   isFavorite: boolean
   reviewCount: number
+  douleurId: string | null
 }
 
 type Review = {
@@ -29,110 +36,8 @@ type Review = {
   date: string
 }
 
-// ── Simulation data ──
-const CATEGORIES = [
-  { id: 'trending', label: 'Tendances du moment', icon: '🔥' },
-  { id: 'healing', label: 'Guérison intérieure', icon: '🌿' },
-  { id: 'meditation', label: 'Méditations guidées', icon: '🧘' },
-  { id: 'confidence', label: 'Confiance en soi', icon: '💪' },
-  { id: 'relationships', label: 'Relations saines', icon: '💛' },
-  { id: 'resilience', label: 'Résilience', icon: '🔥' },
-  { id: 'gratitude', label: 'Gratitude & Joie', icon: '✨' },
-  { id: 'sleep', label: 'Sommeil & Détente', icon: '🌙' },
-]
-
-const THUMBNAILS = [
-  'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1528715471579-d1bcf0ba5e83?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1477346611705-65d1883cee1e?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1495344517868-8ebaf0a2044a?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1602192509154-0b900ee1f851?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1508672019048-805c876b67e2?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=225&fit=crop',
-  'https://images.unsplash.com/photo-1510797215324-95aa89f43c33?w=400&h=225&fit=crop',
-]
-
-const VIDEO_TITLES = [
-  'Se relever après une rupture',
-  'Méditation du matin - 15 min',
-  'Retrouver la confiance',
-  'Gérer l\'anxiété au quotidien',
-  'L\'art du lâcher-prise',
-  'Comprendre ses émotions',
-  'Rituels bien-être du soir',
-  'Surmonter le deuil',
-  'Affirmations positives',
-  'Yoga doux pour l\'âme',
-  'Respiration anti-stress',
-  'Pardonner pour avancer',
-  'S\'aimer inconditionnellement',
-  'Reconstruire après un trauma',
-  'La force du silence',
-  'Créer des relations saines',
-  'Méditation pleine conscience',
-  'Écriture thérapeutique',
-  'Sophrologie guidée',
-  'Trouver sa paix intérieure',
-  'Accepter le changement',
-  'Libérer les blocages',
-  'Énergie positive du matin',
-  'Détox émotionnelle',
-  'Le pouvoir de la gratitude',
-  'Visualisation créatrice',
-  'Ancrage et recentrage',
-  'Hypnose douce - Confiance',
-  'Sons de la nature - Forêt',
-  'Méditation du lac calme',
-  'Reprogrammer ses pensées',
-  'Le courage d\'être soi',
-]
-
-const DESCRIPTIONS = [
-  'Un guide complet pour traverser les moments difficiles avec bienveillance et retrouver votre lumière intérieure.',
-  'Découvrez des techniques puissantes pour transformer votre quotidien et accéder à un état de bien-être profond.',
-  'Cette session vous accompagne pas à pas vers la guérison émotionnelle et la reconstruction personnelle.',
-  'Apprenez à développer une relation saine avec vous-même grâce à des exercices pratiques et accessibles.',
-  'Une immersion sonore et visuelle pour vous reconnecter à votre essence et libérer les tensions accumulées.',
-]
-
-function generateVideos(): ShineVideo[] {
-  const videos: ShineVideo[] = []
-  for (let i = 0; i < 48; i++) {
-    const catIndex = i % CATEGORIES.length
-    const mins = 5 + Math.floor(Math.random() * 55)
-    videos.push({
-      id: `video-${i}`,
-      title: VIDEO_TITLES[i % VIDEO_TITLES.length],
-      description: DESCRIPTIONS[i % DESCRIPTIONS.length],
-      thumbnail: THUMBNAILS[i % THUMBNAILS.length],
-      videoUrl: '',
-      category: CATEGORIES[catIndex].id,
-      duration: `${mins} min`,
-      year: 2024 + Math.floor(Math.random() * 3),
-      rating: 3.5 + Math.random() * 1.5,
-      userRating: 0,
-      isFavorite: Math.random() > 0.7,
-      reviewCount: Math.floor(Math.random() * 120),
-    })
-  }
-  return videos
-}
-
-const SAMPLE_REVIEWS: Review[] = [
-  { id: 'r1', author: 'Marie L.', avatar: '', rating: 5, text: 'Incroyable ! Cette vidéo m\'a vraiment aidée à traverser un moment difficile. Je recommande à 100%.', date: '12 mars 2026' },
-  { id: 'r2', author: 'Sarah K.', avatar: '', rating: 4, text: 'Très beau contenu, apaisant et profond. J\'aurais aimé que ce soit un peu plus long.', date: '8 mars 2026' },
-  { id: 'r3', author: 'Camille D.', avatar: '', rating: 5, text: 'Je l\'ai regardé 3 fois déjà. Chaque visionnage m\'apporte quelque chose de nouveau.', date: '5 mars 2026' },
-  { id: 'r4', author: 'Léa M.', avatar: '', rating: 4, text: 'La voix est tellement apaisante. Parfait avant de dormir.', date: '2 mars 2026' },
-  { id: 'r5', author: 'Nadia B.', avatar: '', rating: 5, text: 'Un bijou. Merci SOS Shine pour ce contenu de qualité.', date: '28 fév 2026' },
-]
+/* Catégories : voir lib/shine-tv/categories.ts (partagé avec l'admin) */
+const CATEGORIES = SHINE_TV_CATEGORIES
 
 // ── Stars Component ──
 function StarRating({ rating, onRate, size = 'md', interactive = false }: {
@@ -158,9 +63,9 @@ function StarRating({ rating, onRate, size = 'md', interactive = false }: {
         >
           <svg
             className={sizes[size]}
-            fill={(hover || rating) >= star ? '#D4AF37' : 'none'}
+            fill={(hover || rating) >= star ? 'var(--brand)' : 'none'}
             viewBox="0 0 24 24"
-            stroke={(hover || rating) >= star ? '#D4AF37' : 'rgba(255,255,255,0.2)'}
+            stroke={(hover || rating) >= star ? 'var(--brand)' : 'rgba(255,255,255,0.2)'}
             strokeWidth={1.5}
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
@@ -174,7 +79,7 @@ function StarRating({ rating, onRate, size = 'md', interactive = false }: {
 // ── Horizontal Scroll Row ──
 function VideoRow({ title, icon, videos, onSelect }: {
   title: string
-  icon: string
+  icon: ShineIconName
   videos: ShineVideo[]
   onSelect: (v: ShineVideo) => void
 }) {
@@ -205,8 +110,8 @@ function VideoRow({ title, icon, videos, onSelect }: {
 
   return (
     <div className="relative group/row">
-      <h2 className="text-lg font-display font-semibold mb-3 px-1 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-        <span className="text-xl">{icon}</span> {title}
+      <h2 className="text-lg font-display font-semibold mb-3 px-1 flex items-center gap-2 text-[var(--text-primary)]">
+        <ShineIcon name={icon} className="w-5 h-5" color="#C9A961" /> {title}
       </h2>
 
       {/* Left arrow */}
@@ -267,7 +172,7 @@ function VideoRow({ title, icon, videos, onSelect }: {
                 <img
                   src={video.thumbnail}
                   alt={video.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain bg-black/40"
                   loading="lazy"
                 />
                 {/* Duration badge */}
@@ -280,7 +185,7 @@ function VideoRow({ title, icon, videos, onSelect }: {
                 {/* Favorite heart */}
                 {video.isFavorite && (
                   <span className="absolute top-2 right-2">
-                    <svg className="w-4 h-4" fill="#D4AF37" viewBox="0 0 24 24" stroke="none">
+                    <svg className="w-4 h-4" fill="var(--brand)" viewBox="0 0 24 24" stroke="none">
                       <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                     </svg>
                   </span>
@@ -290,7 +195,7 @@ function VideoRow({ title, icon, videos, onSelect }: {
                   <div className="flex items-center gap-2">
                     <div
                       className="w-9 h-9 rounded-full flex items-center justify-center"
-                      style={{ background: 'var(--gold)', color: '#09090b' }}
+                      style={{ background: 'var(--brand)', color: '#09090b' }}
                     >
                       <svg className="w-4 h-4 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M8 5v14l11-7z" />
@@ -303,15 +208,15 @@ function VideoRow({ title, icon, videos, onSelect }: {
             </div>
             {/* Title + rating below card */}
             <div className="mt-2 px-0.5">
-              <h3 className="text-[13px] font-medium truncate" style={{ color: 'var(--text-primary)' }}>
+              <h3 className="text-[13px] font-medium truncate text-[var(--text-primary)]">
                 {video.title}
               </h3>
               <div className="flex items-center gap-2 mt-1">
                 <StarRating rating={Math.round(video.rating)} size="sm" />
-                <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
+                <span className="text-[11px] text-[var(--text-muted)]">
                   {video.rating.toFixed(1)}
                 </span>
-                <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>
+                <span className="text-[10px] text-[var(--text-muted)]">
                   {video.year}
                 </span>
               </div>
@@ -324,83 +229,765 @@ function VideoRow({ title, icon, videos, onSelect }: {
 }
 
 // ── Hero Banner ──
-function HeroBanner({ video, onOpen }: { video: ShineVideo; onOpen: () => void }) {
+function HeroBanner({ video, onOpen, onInfo }: { video: ShineVideo; onOpen: () => void; onInfo: () => void }) {
   return (
-    <div className="relative w-full overflow-hidden rounded-2xl" style={{ height: 'clamp(300px, 50vh, 550px)' }}>
-      <img
-        src={video.thumbnail}
-        alt={video.title}
-        className="absolute inset-0 w-full h-full object-cover"
-      />
-      <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(9,9,11,0.95) 30%, rgba(9,9,11,0.4) 60%, transparent)' }} />
-      <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(9,9,11,1) 0%, transparent 40%)' }} />
-
-      <div className="absolute bottom-0 left-0 p-6 sm:p-10 max-w-xl z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold mb-4"
-            style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.3)' }}>
+    <>
+      {/* ─── Mobile: image compl\u00e8te en haut + infos en dessous ─── */}
+      <div className="sm:hidden w-full">
+        {/* Image compl\u00e8te visible */}
+        <div className="relative w-full">
+          <img
+            src={video.thumbnail}
+            alt={video.title}
+            className="w-full h-auto object-contain"
+          />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(9,9,11,1) 0%, rgba(9,9,11,0.3) 30%, transparent 60%)' }} />
+          <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold"
+            style={{ background: 'rgba(9,9,11,0.7)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.3)', backdropFilter: 'blur(8px)' }}>
             <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" /></svg>
-            Recommandé pour vous
+            Recommand&eacute; pour vous
           </span>
-          <h1 className="font-display text-3xl sm:text-5xl font-semibold tracking-tight mb-3" style={{ color: '#fff' }}>
-            {video.title}
-          </h1>
-          <p className="text-[14px] sm:text-[15px] leading-relaxed mb-5 line-clamp-2" style={{ color: 'rgba(255,255,255,0.7)' }}>
-            {video.description}
-          </p>
-          <div className="flex items-center gap-3 flex-wrap">
-            <button
-              onClick={onOpen}
-              className="flex items-center gap-2.5 px-6 py-3 rounded-xl text-[14px] font-semibold cursor-pointer transition-all duration-200 hover:scale-105"
-              style={{ background: 'var(--gold)', color: '#09090b' }}
-            >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-              Regarder
-            </button>
-            <button
-              onClick={onOpen}
-              className="flex items-center gap-2 px-5 py-3 rounded-xl text-[14px] font-medium cursor-pointer transition-all duration-200 hover:bg-white/10"
-              style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.15)' }}
-            >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-              </svg>
-              Plus d&apos;infos
-            </button>
+        </div>
+        {/* Infos sous l'image */}
+        <div className="px-4 -mt-10 relative z-10 pb-2">
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+            <h1 className="font-display text-2xl font-semibold tracking-tight mb-2 text-white">
+              {video.title}
+            </h1>
+            <p className="text-[13px] leading-relaxed mb-4 line-clamp-2" style={{ color: 'rgba(255,255,255,0.7)' }}>
+              {video.description}
+            </p>
+            <div className="flex items-center gap-3">
+              <button onClick={onOpen}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-semibold cursor-pointer transition-all duration-200 hover:scale-105"
+                style={{ background: 'var(--brand)', color: '#09090b' }}>
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                Regarder
+              </button>
+              <button onClick={onInfo}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-medium cursor-pointer transition-all duration-200"
+                style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.15)' }}>
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                </svg>
+                Plus d&apos;infos
+              </button>
+            </div>
+            <div className="flex items-center gap-3 mt-3">
+              <StarRating rating={Math.round(video.rating)} size="sm" />
+              <span className="text-[12px] font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                {video.rating.toFixed(1)} / 5 · {video.reviewCount} avis · {video.duration}
+              </span>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* ─── Ordinateur : « La Fenêtre » ─────────────────────────────────
+           L'image n'est plus un fond voilé à 92 % : c'est une pièce posée,
+           nette et entière, à droite. Aucun voile dessus, donc plus aucun
+           conflit avec un titre déjà incrusté dans la vignette, qui faisait
+           apparaître le titre deux fois. ──────────────────────────────── */}
+      <div className="hidden sm:block relative w-full overflow-hidden rounded-2xl bg-[#0d0b08] border border-[rgba(201,169,97,0.14)]"
+        style={{ height: 'clamp(420px, 52vh, 520px)' }}>
+
+        {/* Lueur d'or, très basse, pour que le bloc ne soit pas un rectangle mort */}
+        <div className="absolute -left-40 top-1/2 -translate-y-1/2 w-[520px] h-[520px] rounded-full opacity-[0.13] blur-[110px] pointer-events-none"
+          style={{ background: '#C9A961' }} />
+
+        <div className="relative h-full grid grid-cols-[1fr_1.15fr] gap-10 lg:gap-12 items-center px-8 lg:px-12">
+
+          {/* Colonne texte */}
+          <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[10.5px] font-semibold uppercase tracking-[0.18em] mb-5"
+              style={{ background: 'rgba(201,169,97,0.14)', color: '#E3C77E', border: '1px solid rgba(201,169,97,0.32)' }}>
+              <ShineIcon name="gratitude" className="w-3.5 h-3.5" />
+              Recommandé pour vous
+            </span>
+
+            <h1 className="font-display font-semibold tracking-tight mb-4 text-white"
+              style={{ fontSize: 'clamp(30px, 3.2vw, 46px)', lineHeight: 1.06 }}>
+              {video.title}
+            </h1>
+
+            <p className="text-[14.5px] leading-relaxed mb-6 line-clamp-3 text-white/65">
+              {video.description}
+            </p>
+
+            <div className="flex items-center gap-3 flex-wrap mb-5">
+              <button onClick={onOpen}
+                className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full text-[14px] font-semibold cursor-pointer transition-transform duration-200 hover:scale-[1.04]"
+                style={{ background: 'linear-gradient(135deg,#E3C77E,#C9A961)', color: '#0A0806' }}>
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                Regarder
+              </button>
+              <button onClick={onInfo}
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-full text-[14px] font-medium cursor-pointer transition-colors duration-200 hover:bg-white/[0.12]"
+                style={{ background: 'rgba(255,255,255,0.07)', color: '#fff', border: '1px solid rgba(255,255,255,0.18)' }}>
+                Plus d&apos;infos
+              </button>
+            </div>
+
+            <p className="text-[11.5px] uppercase tracking-[0.18em] text-white/40">
+              {categoryLabel(video.category)} · {video.duration}
+              {video.reviewCount > 0 && ` · ${video.rating.toFixed(1).replace('.', ',')} ★`}
+            </p>
+          </motion.div>
+
+          {/* La fenêtre : l'image, entière et nette */}
+          <motion.button
+            onClick={onOpen}
+            initial={{ opacity: 0, scale: 0.97 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.08 }}
+            aria-label={`Regarder ${video.title}`}
+            className="group relative rounded-xl overflow-hidden aspect-video w-full cursor-pointer
+                       shadow-[0_30px_80px_rgba(0,0,0,0.65)] ring-1 ring-white/10"
+          >
+            <img
+              src={video.thumbnailDesktop || video.thumbnail}
+              alt={video.title}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            />
+            <span className="absolute inset-0 flex items-center justify-center">
+              <span className="w-16 h-16 rounded-full flex items-center justify-center backdrop-blur-sm
+                               transition-transform duration-300 group-hover:scale-110"
+                style={{ background: 'rgba(201,169,97,0.92)', color: '#0A0806' }}>
+                <svg className="w-7 h-7 translate-x-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+              </span>
+            </span>
+          </motion.button>
+        </div>
+      </div>
+    </>
+  )
+}
+
+// ── Netflix-Style Full Screen Player ──
+function FullScreenPlayer({ video, onClose, onShowInfo, previewSeconds }: {
+  video: ShineVideo
+  onClose: () => void
+  onShowInfo: () => void
+  /** Si défini, la lecture est coupée après ce nombre de secondes (membre non abonné). */
+  previewSeconds?: number
+}) {
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const [previewEnded, setPreviewEnded] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [isPlaying, setIsPlaying] = useState(true)
+  const [progress, setProgress] = useState(0)
+  const [currentTime, setCurrentTime] = useState(0)
+  const [duration, setDuration] = useState(0)
+  const [volume, setVolume] = useState(1)
+  const [isMuted, setIsMuted] = useState(false)
+  const [showControls, setShowControls] = useState(true)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const [subtitlesOn, setSubtitlesOn] = useState(true)
+  const [showSubtitleMenu, setShowSubtitleMenu] = useState(false)
+  const [isCasting, setIsCasting] = useState(false)
+  const hideTimer = useRef<NodeJS.Timeout | null>(null)
+
+  const formatTime = (s: number) => {
+    const m = Math.floor(s / 60)
+    const sec = Math.floor(s % 60)
+    return `${m}:${sec.toString().padStart(2, '0')}`
+  }
+
+  const resetHideTimer = useCallback(() => {
+    setShowControls(true)
+    if (hideTimer.current) clearTimeout(hideTimer.current)
+    hideTimer.current = setTimeout(() => {
+      if (isPlaying) setShowControls(false)
+    }, 3000)
+  }, [isPlaying])
+
+  useEffect(() => {
+    resetHideTimer()
+    return () => { if (hideTimer.current) clearTimeout(hideTimer.current) }
+  }, [resetHideTimer])
+
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('fullscreen-player-toggle', { detail: true }))
+    return () => {
+      window.dispatchEvent(new CustomEvent('fullscreen-player-toggle', { detail: false }))
+    }
+  }, [])
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+      if (e.key === ' ' || e.key === 'k') {
+        e.preventDefault()
+        togglePlay()
+      }
+      if (e.key === 'f') toggleFullscreen()
+      if (e.key === 'm') toggleMute()
+      if (e.key === 'ArrowRight') skip(10)
+      if (e.key === 'ArrowLeft') skip(-10)
+    }
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  }, [isPlaying])
+
+  const togglePlay = () => {
+    const v = videoRef.current
+    if (!v) return
+    if (v.paused) { v.play(); setIsPlaying(true) }
+    else { v.pause(); setIsPlaying(false) }
+  }
+
+  const toggleMute = () => {
+    const v = videoRef.current
+    if (!v) return
+    v.muted = !v.muted
+    setIsMuted(v.muted)
+  }
+
+  const toggleFullscreen = async () => {
+    const v = videoRef.current as any
+    const el = containerRef.current
+    if (!el) return
+
+    // Check if already fullscreen
+    const isFS = !!(document.fullscreenElement || (document as any).webkitFullscreenElement)
+
+    if (isFS) {
+      try {
+        if (document.exitFullscreen) await document.exitFullscreen()
+        else if ((document as any).webkitExitFullscreen) (document as any).webkitExitFullscreen()
+      } catch {}
+      setIsFullscreen(false)
+    } else {
+      try {
+        // Try container first (desktop browsers)
+        if (el.requestFullscreen) {
+          await el.requestFullscreen()
+        } else if ((el as any).webkitRequestFullscreen) {
+          (el as any).webkitRequestFullscreen()
+        // Fallback to video element (iOS Safari)
+        } else if (v?.webkitEnterFullscreen) {
+          v.webkitEnterFullscreen()
+        } else if (v?.requestFullscreen) {
+          await v.requestFullscreen()
+        }
+        setIsFullscreen(true)
+      } catch {
+        // Last resort: try video element directly
+        try {
+          if (v?.webkitEnterFullscreen) v.webkitEnterFullscreen()
+        } catch {}
+      }
+    }
+  }
+
+  const skip = (seconds: number) => {
+    const v = videoRef.current
+    if (v) v.currentTime = Math.max(0, Math.min(v.duration, v.currentTime + seconds))
+  }
+
+  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
+    const v = videoRef.current
+    if (!v) return
+    const rect = e.currentTarget.getBoundingClientRect()
+    const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width))
+    v.currentTime = pct * v.duration
+  }
+
+  const handleVolumeChange = (e: React.MouseEvent<HTMLDivElement>) => {
+    const v = videoRef.current
+    if (!v) return
+    const rect = e.currentTarget.getBoundingClientRect()
+    const val = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width))
+    v.volume = val
+    v.muted = val === 0
+    setVolume(val)
+    setIsMuted(val === 0)
+  }
+
+  const toggleSubtitles = () => {
+    const v = videoRef.current
+    if (!v) return
+    const track = v.textTracks[0]
+    if (track) {
+      const newState = !subtitlesOn
+      track.mode = newState ? 'showing' : 'hidden'
+      setSubtitlesOn(newState)
+    }
+    setShowSubtitleMenu(false)
+  }
+
+  // AirPlay (Safari / Apple TV)
+  const startAirPlay = () => {
+    const v = videoRef.current as any
+    if (!v) return
+    if (v.webkitShowPlaybackTargetPicker) {
+      v.webkitShowPlaybackTargetPicker()
+    } else {
+      alert('AirPlay est disponible uniquement sur Safari (Mac, iPhone, iPad).\n\nSur Chrome, utilisez le bouton Chromecast à côté.')
+    }
+  }
+
+  // Chromecast only (AirPlay has its own dedicated button)
+  const startCast = async () => {
+    const v = videoRef.current as any
+    if (!v) return
+
+    // 1. Try Google Cast Framework API (if SDK loaded)
+    const castCtx = (window as any).cast?.framework?.CastContext?.getInstance()
+    if (castCtx) {
+      try {
+        await castCtx.requestSession()
+        const session = castCtx.getCurrentSession()
+        if (session) {
+          const chrome = (window as any).chrome
+          const mediaInfo = new chrome.cast.media.MediaInfo(video.videoUrl, 'video/mp4')
+          mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata()
+          mediaInfo.metadata.title = video.title
+          if (video.thumbnail) mediaInfo.metadata.images = [{ url: video.thumbnail }]
+          const request = new chrome.cast.media.LoadRequest(mediaInfo)
+          await session.loadMedia(request)
+          setIsCasting(true)
+          return
+        }
+      } catch {
+        // User cancelled or no device
+      }
+    }
+
+    // 2. Try Remote Playback API (Chrome/Edge)
+    if (v.remote && typeof v.remote.prompt === 'function') {
+      try {
+        await v.remote.prompt()
+        setIsCasting(true)
+        v.remote.onconnecting = () => setIsCasting(true)
+        v.remote.onconnect = () => setIsCasting(true)
+        v.remote.ondisconnect = () => setIsCasting(false)
+        return
+      } catch {
+        setIsCasting(false)
+      }
+    }
+
+    // 3. No Chromecast method available - guide the user
+    const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent)
+    if (isSafari) {
+      alert('Chromecast n\'est pas supporté sur Safari.\n\nPour caster sur Apple TV, utilisez le bouton AirPlay juste à côté.\n\nPour Chromecast, ouvrez cette page dans Google Chrome.')
+    } else {
+      alert('Pour caster sur Chromecast :\n\n1. Cliquez sur les 3 points (⋮) en haut à droite de Chrome\n2. Sélectionnez "Caster..."\n3. Choisissez votre appareil Chromecast')
+    }
+  }
+
+  // Sync fullscreen state when user exits via Escape or browser UI
+  useEffect(() => {
+    const handler = () => {
+      const isFS = !!(document.fullscreenElement || (document as any).webkitFullscreenElement)
+      setIsFullscreen(isFS)
+    }
+    document.addEventListener('fullscreenchange', handler)
+    document.addEventListener('webkitfullscreenchange', handler)
+    return () => {
+      document.removeEventListener('fullscreenchange', handler)
+      document.removeEventListener('webkitfullscreenchange', handler)
+    }
+  }, [])
+
+  // Listen for AirPlay availability
+  useEffect(() => {
+    const v = videoRef.current as any
+    if (!v) return
+    const handlePlaying = () => {
+      if (v.webkitCurrentPlaybackTargetIsWireless) setIsCasting(true)
+    }
+    v.addEventListener('webkitcurrentplaybacktargetiswirelesschanged', handlePlaying)
+    return () => v.removeEventListener('webkitcurrentplaybacktargetiswirelesschanged', handlePlaying)
+  }, [])
+
+  return (
+    <motion.div
+      ref={containerRef}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[200] bg-black flex items-center justify-center cursor-none"
+      style={{ cursor: showControls ? 'default' : 'none' }}
+      onMouseMove={resetHideTimer}
+      onClick={togglePlay}
+    >
+      {/* Video */}
+      {video.videoUrl ? (
+        <video
+          ref={videoRef}
+          src={video.videoUrl}
+          autoPlay
+          playsInline
+          preload="metadata"
+          crossOrigin="anonymous"
+          className="w-full h-full object-contain"
+          controlsList="nodownload"
+          onContextMenu={(e) => e.preventDefault()}
+          onTimeUpdate={() => {
+            const v = videoRef.current
+            if (!v) return
+            if (previewSeconds && v.currentTime >= previewSeconds) {
+              v.pause()
+              setPreviewEnded(true)
+              return
+            }
+            setCurrentTime(v.currentTime)
+            setProgress(v.duration ? (v.currentTime / v.duration) * 100 : 0)
+          }}
+          onLoadedMetadata={() => {
+            const v = videoRef.current
+            if (v) { setDuration(v.duration); v.volume = volume }
+          }}
+          onEnded={() => setIsPlaying(false)}
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+        >
+          {video.subtitleUrl && (
+            <track
+              kind="subtitles"
+              src={video.subtitleUrl}
+              srcLang="fr"
+              label="Fran\u00e7ais"
+              default
+            />
+          )}
+        </video>
+      ) : (
+        <div className="w-full h-full relative">
+          <img src={video.thumbnail} alt={video.title} className="w-full h-full object-contain" />
+          <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+            <p className="text-white text-lg">Vidéo non disponible</p>
           </div>
-          <div className="flex items-center gap-4 mt-4">
-            <StarRating rating={Math.round(video.rating)} size="sm" />
-            <span className="text-[13px] font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>
-              {video.rating.toFixed(1)} / 5 · {video.reviewCount} avis · {video.duration}
+        </div>
+      )}
+
+      {/* Écran de fin d'extrait (membre non abonné) */}
+      {previewEnded && (
+        <div className="absolute inset-0 z-30 flex items-center justify-center px-6" style={{ background: 'rgba(5,5,5,0.92)', backdropFilter: 'blur(6px)' }} onClick={(e) => e.stopPropagation()}>
+          <div className="max-w-md w-full text-center">
+            <div className="w-14 h-14 rounded-2xl mx-auto mb-5 flex items-center justify-center" style={{ background: 'rgba(201, 169, 97,0.12)', border: '1px solid rgba(201, 169, 97,0.3)' }}>
+              <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="#C9A961" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
+            </div>
+            <h3 className="font-display text-2xl font-light mb-2" style={{ color: '#C9A961' }}>Tu as vu l&apos;aperçu ✨</h3>
+            <p className="text-sm mb-7 leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
+              Abonne-toi à SOS Shine pour regarder cette vidéo en entier, et débloquer toute la plateforme.
+            </p>
+            <div className="flex flex-col gap-3 items-center">
+              <a href="/rejoindre" className="w-full sm:w-auto px-8 py-3.5 rounded-full text-sm font-semibold" style={{ background: 'linear-gradient(135deg, #C9A961, #A88248)', color: '#050505' }}>
+                M&apos;abonner pour voir en entier
+              </a>
+              <button onClick={onClose} className="text-xs cursor-pointer" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                Revenir à la bibliothèque
+              </button>
+            </div>
+            <p className="text-[11px] mt-4" style={{ color: 'rgba(255,255,255,0.3)' }}>49,90€/mois · ou 33€ en accès unique</p>
+          </div>
+        </div>
+      )}
+
+      {/* Top bar - Back + Title */}
+      <motion.div
+        initial={false}
+        animate={{ opacity: showControls ? 1 : 0 }}
+        transition={{ duration: 0.3 }}
+        className="absolute top-0 left-0 right-0 p-4 sm:p-6 flex items-center gap-4 z-10"
+        style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%)', pointerEvents: showControls ? 'auto' : 'none' }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all hover:bg-white/20"
+          style={{ background: 'rgba(255,255,255,0.1)' }}
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+          </svg>
+        </button>
+        <div className="flex-1 min-w-0">
+          <h2 className="text-white text-lg sm:text-xl font-display font-semibold truncate">{video.title}</h2>
+          <div className="flex items-center gap-2">
+            <p className="text-white/50 text-[12px]">{video.category} · {video.year}</p>
+            {isCasting && (
+              <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold" style={{ background: 'rgba(201,169,97,0.2)', color: 'var(--brand)' }}>
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: 'var(--brand)' }} />
+                Casting
+              </span>
+            )}
+          </div>
+        </div>
+        <button
+          onClick={onShowInfo}
+          className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all hover:bg-white/20"
+          style={{ background: 'rgba(255,255,255,0.1)' }}
+          title="Plus d'infos"
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+          </svg>
+        </button>
+      </motion.div>
+
+      {/* Center play/pause indicator */}
+      <AnimatePresence>
+        {!isPlaying && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.5 }}
+            className="absolute inset-0 flex items-center justify-center pointer-events-none z-10"
+          >
+            <div className="w-20 h-20 rounded-full flex items-center justify-center" style={{ background: 'rgba(201,169,97,0.9)' }}>
+              <svg className="w-10 h-10 ml-1" fill="#09090b" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Bottom controls bar */}
+      <motion.div
+        initial={false}
+        animate={{ opacity: showControls ? 1 : 0 }}
+        transition={{ duration: 0.3 }}
+        className="absolute bottom-0 left-0 right-0 px-4 sm:px-6 pb-4 sm:pb-6 pt-16 z-10"
+        style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%)', pointerEvents: showControls ? 'auto' : 'none' }}
+        onClick={(e) => e.stopPropagation()}
+        onMouseMove={resetHideTimer}
+        onTouchStart={resetHideTimer}
+      >
+        {/* Progress bar */}
+        <div
+          className="w-full h-1.5 rounded-full cursor-pointer mb-4 group/progress relative"
+          style={{ background: 'rgba(255,255,255,0.2)' }}
+          onClick={handleSeek}
+        >
+          <div
+            className="h-full rounded-full relative transition-all"
+            style={{ width: `${progress}%`, background: 'var(--brand)' }}
+          >
+            <div
+              className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full opacity-0 group-hover/progress:opacity-100 transition-opacity"
+              style={{ background: 'var(--brand)', boxShadow: '0 0 8px rgba(201,169,97,0.5)' }}
+            />
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            {/* Play/Pause */}
+            <button onClick={togglePlay} className="w-10 h-10 flex items-center justify-center cursor-pointer hover:scale-110 transition-transform">
+              {isPlaying ? (
+                <svg className="w-7 h-7" fill="white" viewBox="0 0 24 24"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" /></svg>
+              ) : (
+                <svg className="w-7 h-7" fill="white" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+              )}
+            </button>
+
+            {/* Skip backward */}
+            <button onClick={() => skip(-10)} className="w-8 h-8 flex items-center justify-center cursor-pointer hover:scale-110 transition-transform">
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
+              </svg>
+            </button>
+
+            {/* Skip forward */}
+            <button onClick={() => skip(10)} className="w-8 h-8 flex items-center justify-center cursor-pointer hover:scale-110 transition-transform">
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 15l6-6m0 0l-6-6m6 6H9a6 6 0 000 12h3" />
+              </svg>
+            </button>
+
+            {/* Volume */}
+            <div className="flex items-center gap-2 group/vol">
+              <button onClick={toggleMute} className="w-8 h-8 flex items-center justify-center cursor-pointer hover:scale-110 transition-transform">
+                {isMuted || volume === 0 ? (
+                  <svg className="w-5 h-5" fill="white" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" /></svg>
+                ) : (
+                  <svg className="w-5 h-5" fill="white" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" /></svg>
+                )}
+              </button>
+              <div
+                className="w-20 h-1 rounded-full cursor-pointer hidden sm:block"
+                style={{ background: 'rgba(255,255,255,0.2)' }}
+                onClick={handleVolumeChange}
+              >
+                <div className="h-full rounded-full" style={{ width: `${isMuted ? 0 : volume * 100}%`, background: 'white' }} />
+              </div>
+            </div>
+
+            {/* Time */}
+            <span className="text-white text-[13px] font-mono hidden sm:block">
+              {formatTime(currentTime)} / {formatTime(duration)}
             </span>
           </div>
-        </motion.div>
-      </div>
-    </div>
+
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Subtitles toggle */}
+            {video.subtitleUrl && (
+              <div className="relative">
+                <button
+                  onClick={(e) => { e.stopPropagation(); setShowSubtitleMenu(!showSubtitleMenu) }}
+                  className="w-8 h-8 flex items-center justify-center cursor-pointer hover:scale-110 transition-transform relative"
+                  title="Sous-titres"
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+                  </svg>
+                  {subtitlesOn && (
+                    <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full" style={{ background: 'var(--brand)' }} />
+                  )}
+                </button>
+                {showSubtitleMenu && (
+                  <div
+                    className="absolute bottom-full right-0 mb-2 rounded-lg p-2 min-w-[160px]"
+                    style={{ background: 'rgba(20,20,20,0.95)', border: '1px solid rgba(255,255,255,0.15)' }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <p className="text-[11px] font-semibold px-2 py-1 mb-1 text-[var(--text-muted)]">Sous-titres</p>
+                    <button
+                      onClick={toggleSubtitles}
+                      className="w-full text-left px-2 py-1.5 rounded text-[13px] flex items-center gap-2 hover:bg-white/10 transition-colors cursor-pointer"
+                      style={{ color: !subtitlesOn ? 'white' : 'var(--text-muted)' }}
+                    >
+                      {!subtitlesOn && <span className="text-[var(--brand)]">&#10003;</span>}
+                      D&eacute;sactiv&eacute;s
+                    </button>
+                    <button
+                      onClick={toggleSubtitles}
+                      className="w-full text-left px-2 py-1.5 rounded text-[13px] flex items-center gap-2 hover:bg-white/10 transition-colors cursor-pointer"
+                      style={{ color: subtitlesOn ? 'white' : 'var(--text-muted)' }}
+                    >
+                      {subtitlesOn && <span className="text-[var(--brand)]">&#10003;</span>}
+                      Fran&ccedil;ais
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* AirPlay (Safari) */}
+            <button
+              onClick={(e) => { e.stopPropagation(); startAirPlay() }}
+              className="w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center cursor-pointer hover:scale-110 active:scale-95 transition-transform rounded-full hover:bg-white/10 active:bg-white/20"
+              title="AirPlay"
+            >
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 5h18v12H3z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M7 21l5-5 5 5H7z" fill={isCasting ? 'var(--brand)' : 'none'} stroke={isCasting ? 'var(--brand)' : 'white'} />
+              </svg>
+            </button>
+
+            {/* Chromecast / Remote Playback */}
+            <button
+              onClick={(e) => { e.stopPropagation(); startCast() }}
+              className="w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center cursor-pointer hover:scale-110 active:scale-95 transition-transform rounded-full hover:bg-white/10 active:bg-white/20"
+              title="Caster sur un appareil"
+            >
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke={isCasting ? 'var(--brand)' : 'white'} strokeWidth={1.5}>
+                <path d="M2 16.1A5 5 0 015.9 20M2 12.05A9 9 0 019.95 20M2 8V6a2 2 0 012-2h16a2 2 0 012 2v12a2 2 0 01-2 2h-6" strokeLinecap="round" strokeLinejoin="round" />
+                <circle cx="2" cy="20" r="1" fill={isCasting ? 'var(--brand)' : 'white'} stroke="none" />
+              </svg>
+            </button>
+
+            {/* Fullscreen */}
+            <button onClick={(e) => { e.stopPropagation(); toggleFullscreen() }} className="w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center cursor-pointer hover:scale-110 active:scale-95 transition-transform rounded-full hover:bg-white/10 active:bg-white/20" title="Plein &eacute;cran (F)">
+              {isFullscreen ? (
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 9V4.5M9 9H4.5M9 9L3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5l5.25 5.25" />
+                </svg>
+              ) : (
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+                </svg>
+              )}
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
   )
 }
 
 // ── Video Detail Modal ──
-function VideoModal({ video, onClose, onToggleFavorite, onRate }: {
+function VideoModal({ video, onClose, onToggleFavorite, onRate, onWatch }: {
   video: ShineVideo
   onClose: () => void
   onToggleFavorite: (id: string) => void
   onRate: (id: string, rating: number) => void
+  onWatch: () => void
 }) {
   const [tab, setTab] = useState<'overview' | 'reviews'>('overview')
   const [newReview, setNewReview] = useState('')
   const [newRating, setNewRating] = useState(0)
-  const [reviews, setReviews] = useState<Review[]>(SAMPLE_REVIEWS)
+  const [reviews, setReviews] = useState<Review[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showShare, setShowShare] = useState(false)
+  const [copyDone, setCopyDone] = useState(false)
+  const [rayons, setRayons] = useState<{ id: string; name: string; avatar: string | null; partnerId: string }[]>([])
+  const [rayonSearch, setRayonSearch] = useState('')
+  const [sentTo, setSentTo] = useState<Set<string>>(new Set())
 
-  const handleSubmitReview = () => {
+  async function loadRayons() {
+    const res = await fetch('/api/rayons')
+    if (!res.ok) return
+    const json = await res.json()
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+    const connections = (json.connections || []) as { id: string; sender_id: string; receiver_id: string; profiles: Record<string, { prenom: string; pseudo: string | null; avatar_url: string | null }> }[]
+    setRayons(connections.map(c => {
+      const partnerId = c.sender_id === user.id ? c.receiver_id : c.sender_id
+      const p = c.profiles?.[partnerId]
+      return { id: c.id, partnerId, name: p?.pseudo || p?.prenom || 'Membre', avatar: p?.avatar_url || null }
+    }))
+  }
+
+  function handleOpenShare() {
+    setShowShare(true)
+    if (rayons.length === 0) loadRayons()
+  }
+
+  function handleCopyLink() {
+    const url = `${window.location.origin}/dashboard/shine-tv?id=${video.id}`
+    navigator.clipboard.writeText(url).then(() => {
+      setCopyDone(true)
+      setTimeout(() => setCopyDone(false), 2500)
+    })
+  }
+
+  async function handleSendToRayon(partnerId: string) {
+    if (sentTo.has(partnerId)) return
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+    const previewUrl = `${window.location.origin}/dashboard/shine-tv?id=${video.id}`
+    await supabase.from('private_messages').insert({
+      sender_id: user.id,
+      receiver_id: partnerId,
+      content: `🎬 Je partage avec toi cette vidéo Shine TV : *${video.title}*\n${previewUrl}`,
+      message_type: 'text',
+    })
+    setSentTo(prev => new Set([...prev, partnerId]))
+  }
+
+  const filteredRayons = rayons.filter(r => r.name.toLowerCase().includes(rayonSearch.toLowerCase()))
+
+  const handleSubmitReview = async () => {
     if (!newReview.trim() || newRating === 0) return
     setIsSubmitting(true)
-    setTimeout(() => {
+    try {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+
+      await supabase.from('shine_tv_reviews').insert({
+        user_id: user.id,
+        video_id: video.id,
+        content: newReview.trim(),
+        rating: newRating,
+      })
+
       setReviews(prev => [{
         id: `r-new-${Date.now()}`,
         author: 'Vous',
@@ -411,8 +998,9 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate }: {
       }, ...prev])
       setNewReview('')
       setNewRating(0)
+    } finally {
       setIsSubmitting(false)
-    }, 500)
+    }
   }
 
   return (
@@ -430,7 +1018,7 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate }: {
         exit={{ opacity: 0, y: 40, scale: 0.95 }}
         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
         className="w-full max-w-3xl rounded-2xl overflow-hidden relative"
-        style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+        style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
@@ -444,20 +1032,23 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate }: {
           </svg>
         </button>
 
-        {/* Video preview */}
-        <div className="relative aspect-video">
+        {/* Video preview - click to launch full player */}
+        <div className="relative aspect-video bg-black cursor-pointer group/preview" onClick={onWatch}>
           <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" />
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, var(--dark-card), transparent 50%)' }} />
-          {/* Play overlay */}
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, var(--surface-card), transparent 50%)' }} />
           <div className="absolute inset-0 flex items-center justify-center">
             <div
-              className="w-20 h-20 rounded-full flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110"
-              style={{ background: 'rgba(212,175,55,0.9)', color: '#09090b' }}
+              className="w-20 h-20 rounded-full flex items-center justify-center transition-transform duration-200 group-hover/preview:scale-110"
+              style={{ background: 'rgba(201,169,97,0.9)', color: '#09090b' }}
             >
               <svg className="w-10 h-10 ml-1" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M8 5v14l11-7z" />
               </svg>
             </div>
+          </div>
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full text-[12px] font-semibold opacity-0 group-hover/preview:opacity-100 transition-opacity"
+            style={{ background: 'rgba(0,0,0,0.7)', color: 'white' }}>
+            Lancer la lecture
           </div>
         </div>
 
@@ -465,14 +1056,14 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate }: {
         <div className="p-6 sm:p-8 -mt-12 relative z-10">
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div className="flex-1 min-w-0">
-              <h2 className="font-display text-2xl sm:text-3xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+              <h2 className="font-display text-2xl sm:text-3xl font-semibold mb-2 text-[var(--text-primary)]">
                 {video.title}
               </h2>
               <div className="flex items-center gap-3 flex-wrap mb-4">
-                <span className="text-[13px] font-medium" style={{ color: 'var(--gold)' }}>{video.year}</span>
-                <span className="text-[13px]" style={{ color: 'var(--text-muted)' }}>{video.duration}</span>
+                <span className="text-[13px] font-medium text-[var(--brand)]">{video.year}</span>
+                <span className="text-[13px] text-[var(--text-muted)]">{video.duration}</span>
                 <span className="px-2 py-0.5 rounded text-[11px] font-medium"
-                  style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                  style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}>
                   HD
                 </span>
               </div>
@@ -485,22 +1076,106 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate }: {
                 className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110"
                 style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)' }}
               >
-                <svg className="w-5 h-5" fill={video.isFavorite ? '#D4AF37' : 'none'} viewBox="0 0 24 24"
-                  stroke={video.isFavorite ? '#D4AF37' : 'white'} strokeWidth={1.5}>
+                <svg className="w-5 h-5" fill={video.isFavorite ? 'var(--brand)' : 'none'} viewBox="0 0 24 24"
+                  stroke={video.isFavorite ? 'var(--brand)' : 'white'} strokeWidth={1.5}>
                   <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                </svg>
+              </button>
+              <button
+                onClick={handleOpenShare}
+                className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110"
+                style={{ background: showShare ? 'rgba(201,169,97,0.15)' : 'rgba(255,255,255,0.08)', border: showShare ? '1px solid rgba(201,169,97,0.3)' : '1px solid rgba(255,255,255,0.15)' }}
+                title="Partager"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke={showShare ? 'var(--brand)' : 'white'} strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
                 </svg>
               </button>
             </div>
           </div>
 
-          <p className="text-[14px] leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-[14px] leading-relaxed mb-6 text-[var(--text-secondary)]">
             {video.description}
           </p>
 
+          {/* Share panel */}
+          {showShare && (
+            <div className="rounded-2xl p-5 mb-6" style={{ background: 'rgba(201,169,97,0.05)', border: '1px solid rgba(201,169,97,0.15)' }}>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-sm font-semibold text-[var(--text-primary)]">Partager cette vidéo</h3>
+                <button onClick={() => setShowShare(false)} className="text-[var(--text-muted)] hover:text-white text-lg leading-none cursor-pointer">×</button>
+              </div>
+
+              {/* Lien externe */}
+              <div className="mb-5">
+                <p className="text-[11px] uppercase tracking-widest text-[var(--text-muted)] mb-2 font-medium">Lien externe · preview 2 min</p>
+                <div className="flex gap-2">
+                  <div className="flex-1 px-3 py-2 rounded-xl text-[12px] truncate text-[var(--text-muted)]"
+                    style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border)' }}>
+                    {typeof window !== 'undefined' ? `${window.location.origin}/shine-tv/preview/${video.id}` : `/shine-tv/preview/${video.id}`}
+                  </div>
+                  <button
+                    onClick={handleCopyLink}
+                    className="px-4 py-2 rounded-xl text-[12px] font-semibold cursor-pointer transition-all flex-shrink-0"
+                    style={{ background: copyDone ? 'rgba(85,239,196,0.15)' : 'rgba(201,169,97,0.15)', color: copyDone ? '#55EFC4' : 'var(--brand)', border: copyDone ? '1px solid rgba(85,239,196,0.3)' : '1px solid rgba(201,169,97,0.2)' }}
+                  >
+                    {copyDone ? '✓ Copié' : 'Copier'}
+                  </button>
+                </div>
+                <p className="text-[11px] text-[var(--text-muted)] mt-1.5">
+                  Les non-membres verront les 2 premières minutes, puis seront invités à rejoindre SOS Shine.
+                </p>
+              </div>
+
+              {/* Partage interne */}
+              <div>
+                <p className="text-[11px] uppercase tracking-widest text-[var(--text-muted)] mb-2 font-medium">Envoyer à un Rayon</p>
+                {rayons.length === 0 ? (
+                  <p className="text-[12px] text-[var(--text-muted)] text-center py-4">Aucun Rayon connecté pour l&apos;instant.</p>
+                ) : (
+                  <>
+                    <input
+                      type="text"
+                      placeholder="Rechercher un Rayon…"
+                      value={rayonSearch}
+                      onChange={e => setRayonSearch(e.target.value)}
+                      className="w-full px-3 py-2 rounded-xl text-[12px] outline-none mb-3"
+                      style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
+                    />
+                    <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+                      {filteredRayons.map(r => (
+                        <div key={r.id} className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-semibold"
+                            style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)' }}>
+                            {r.avatar
+                              ? <img src={r.avatar} alt={r.name} className="w-full h-full rounded-full object-cover" />
+                              : r.name.charAt(0).toUpperCase()}
+                          </div>
+                          <span className="flex-1 text-[13px] text-[var(--text-primary)]">{r.name}</span>
+                          <button
+                            onClick={() => handleSendToRayon(r.partnerId)}
+                            className="px-3 py-1.5 rounded-lg text-[11px] font-semibold cursor-pointer transition-all flex-shrink-0"
+                            style={{
+                              background: sentTo.has(r.partnerId) ? 'rgba(85,239,196,0.12)' : 'rgba(201,169,97,0.12)',
+                              color: sentTo.has(r.partnerId) ? '#55EFC4' : 'var(--brand)',
+                              border: sentTo.has(r.partnerId) ? '1px solid rgba(85,239,196,0.2)' : '1px solid rgba(201,169,97,0.2)',
+                            }}
+                          >
+                            {sentTo.has(r.partnerId) ? '✓ Envoyé' : 'Envoyer'}
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Your rating */}
-          <div className="glass p-4 rounded-xl mb-6 flex items-center gap-4 flex-wrap"
-            style={{ borderColor: 'rgba(212,175,55,0.1)' }}>
-            <span className="text-[13px] font-medium" style={{ color: 'var(--text-muted)' }}>Votre note :</span>
+          <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-4 rounded-xl mb-6 flex items-center gap-4 flex-wrap"
+            style={{ borderColor: 'rgba(201,169,97,0.1)' }}>
+            <span className="text-[13px] font-medium text-[var(--text-muted)]">Votre note :</span>
             <StarRating
               rating={video.userRating}
               size="lg"
@@ -508,7 +1183,7 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate }: {
               onRate={(r) => onRate(video.id, r)}
             />
             {video.userRating > 0 && (
-              <span className="text-[13px] font-semibold" style={{ color: 'var(--gold)' }}>
+              <span className="text-[13px] font-semibold text-[var(--brand)]">
                 {video.userRating}/5
               </span>
             )}
@@ -520,8 +1195,8 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate }: {
               onClick={() => setTab('overview')}
               className={`flex-1 py-2.5 rounded-lg text-[13px] font-medium cursor-pointer transition-all duration-200`}
               style={{
-                background: tab === 'overview' ? 'rgba(212,175,55,0.12)' : 'transparent',
-                color: tab === 'overview' ? 'var(--gold)' : 'var(--text-muted)',
+                background: tab === 'overview' ? 'rgba(201,169,97,0.12)' : 'transparent',
+                color: tab === 'overview' ? 'var(--brand)' : 'var(--text-muted)',
               }}
             >
               Aperçu
@@ -530,8 +1205,8 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate }: {
               onClick={() => setTab('reviews')}
               className={`flex-1 py-2.5 rounded-lg text-[13px] font-medium cursor-pointer transition-all duration-200`}
               style={{
-                background: tab === 'reviews' ? 'rgba(212,175,55,0.12)' : 'transparent',
-                color: tab === 'reviews' ? 'var(--gold)' : 'var(--text-muted)',
+                background: tab === 'reviews' ? 'rgba(201,169,97,0.12)' : 'transparent',
+                color: tab === 'reviews' ? 'var(--brand)' : 'var(--text-muted)',
               }}
             >
               Avis ({reviews.length})
@@ -542,50 +1217,31 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate }: {
             {tab === 'overview' ? (
               <motion.div key="overview" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }}>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="glass p-4 rounded-xl text-center">
-                    <div className="text-2xl font-display font-semibold" style={{ color: 'var(--gold)' }}>
+                  <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-4 rounded-xl text-center">
+                    <div className="text-2xl font-display font-semibold text-[var(--brand)]">
                       {video.rating.toFixed(1)}
                     </div>
                     <div className="flex justify-center mt-1">
                       <StarRating rating={Math.round(video.rating)} size="sm" />
                     </div>
-                    <p className="text-[11px] mt-1" style={{ color: 'var(--text-muted)' }}>Note moyenne</p>
+                    <p className="text-[11px] mt-1 text-[var(--text-muted)]">Note moyenne</p>
                   </div>
-                  <div className="glass p-4 rounded-xl text-center">
-                    <div className="text-2xl font-display font-semibold" style={{ color: 'var(--gold)' }}>
+                  <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-4 rounded-xl text-center">
+                    <div className="text-2xl font-display font-semibold text-[var(--brand)]">
                       {video.reviewCount}
                     </div>
-                    <p className="text-[11px] mt-2" style={{ color: 'var(--text-muted)' }}>Avis membres</p>
+                    <p className="text-[11px] mt-2 text-[var(--text-muted)]">Avis membres</p>
                   </div>
                 </div>
 
-                {/* Similar videos */}
-                <h3 className="text-[13px] font-semibold uppercase tracking-wider mt-6 mb-3" style={{ color: 'var(--text-muted)' }}>
-                  Contenus similaires
-                </h3>
-                <div className="grid grid-cols-3 gap-3">
-                  {[0, 1, 2].map(i => (
-                    <div key={i} className="rounded-lg overflow-hidden cursor-pointer group">
-                      <div className="relative aspect-video">
-                        <img
-                          src={THUMBNAILS[(parseInt(video.id.split('-')[1]) + i + 3) % THUMBNAILS.length]}
-                          alt=""
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                        />
-                      </div>
-                      <p className="text-[11px] font-medium mt-1.5 truncate" style={{ color: 'var(--text-secondary)' }}>
-                        {VIDEO_TITLES[(parseInt(video.id.split('-')[1]) + i + 3) % VIDEO_TITLES.length]}
-                      </p>
-                    </div>
-                  ))}
-                </div>
+                {/* Similar videos section removed - requires simulation data */}
               </motion.div>
             ) : (
               <motion.div key="reviews" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }}>
                 {/* Write review */}
-                <div className="glass p-4 rounded-xl mb-4" style={{ borderColor: 'rgba(212,175,55,0.1)' }}>
+                <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-4 rounded-xl mb-4" style={{ borderColor: 'rgba(201,169,97,0.1)' }}>
                   <div className="flex items-center gap-3 mb-3">
-                    <span className="text-[13px] font-medium" style={{ color: 'var(--text-secondary)' }}>Votre avis :</span>
+                    <span className="text-[13px] font-medium text-[var(--text-secondary)]">Votre avis :</span>
                     <StarRating rating={newRating} size="md" interactive onRate={setNewRating} />
                   </div>
                   <textarea
@@ -595,19 +1251,19 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate }: {
                     className="w-full rounded-xl p-3 text-[13px] resize-none outline-none transition-all duration-200"
                     style={{
                       background: 'rgba(255,255,255,0.04)',
-                      border: '1px solid var(--dark-border)',
+                      border: '1px solid var(--border)',
                       color: 'var(--text-primary)',
                       minHeight: 80,
                     }}
-                    onFocus={(e) => e.target.style.borderColor = 'rgba(212,175,55,0.4)'}
-                    onBlur={(e) => e.target.style.borderColor = 'var(--dark-border)'}
+                    onFocus={(e) => e.target.style.borderColor = 'rgba(201,169,97,0.4)'}
+                    onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
                   />
                   <div className="flex justify-end mt-2">
                     <button
                       onClick={handleSubmitReview}
                       disabled={!newReview.trim() || newRating === 0 || isSubmitting}
                       className="px-5 py-2 rounded-xl text-[13px] font-semibold cursor-pointer transition-all duration-200 hover:scale-105 disabled:opacity-40 disabled:hover:scale-100"
-                      style={{ background: 'var(--gold)', color: '#09090b' }}
+                      style={{ background: 'var(--brand)', color: '#09090b' }}
                     >
                       {isSubmitting ? 'Envoi...' : 'Publier'}
                     </button>
@@ -622,24 +1278,24 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate }: {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: idx * 0.05 }}
-                      className="glass p-4 rounded-xl"
+                      className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-4 rounded-xl"
                     >
                       <div className="flex items-center gap-3 mb-2">
                         <div
                           className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
-                          style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}
+                          style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}
                         >
                           {review.author.charAt(0)}
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
-                            <span className="text-[13px] font-medium" style={{ color: 'var(--text-primary)' }}>{review.author}</span>
+                            <span className="text-[13px] font-medium text-[var(--text-primary)]">{review.author}</span>
                             <StarRating rating={review.rating} size="sm" />
                           </div>
-                          <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{review.date}</span>
+                          <span className="text-[11px] text-[var(--text-muted)]">{review.date}</span>
                         </div>
                       </div>
-                      <p className="text-[13px] leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                      <p className="text-[13px] leading-relaxed text-[var(--text-secondary)]">
                         {review.text}
                       </p>
                     </motion.div>
@@ -656,27 +1312,163 @@ function VideoModal({ video, onClose, onToggleFavorite, onRate }: {
 
 // ── Main Page ──
 export default function ShineTVPage() {
+  const { isActive: isSubscribed } = useSubscription()
+  // Membre non abonné : lecture limitée à un aperçu de 2 min.
+  const previewCap = isSubscribed ? undefined : 120
+  const searchParams = useSearchParams()
+  const douleurParam = searchParams.get('douleur')
+  const idParam = searchParams.get('id')
   const [videos, setVideos] = useState<ShineVideo[]>([])
   const [search, setSearch] = useState('')
   const [selectedVideo, setSelectedVideo] = useState<ShineVideo | null>(null)
-  const [activeFilter, setActiveFilter] = useState('all')
+  const [watchingVideo, setWatchingVideo] = useState<ShineVideo | null>(null)
+  const [activeFilter, setActiveFilter] = useState(douleurParam ? 'douleur' : 'all')
   const [loading, setLoading] = useState(true)
+  const [douleurName, setDouleurName] = useState<string | null>(null)
 
   useEffect(() => {
-    setTimeout(() => {
-      setVideos(generateVideos())
+    async function loadVideos() {
+      const supabase = createClient()
+      const { data } = await supabase
+        .from('shine_tv_videos')
+        .select('*')
+        .eq('is_published', true)
+        .order('created_at', { ascending: false })
+
+      if (!data) {
+        setVideos([])
+        setLoading(false)
+        return
+      }
+
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser()
+
+      // Fetch douleur name if filtered
+      if (douleurParam) {
+        const { data: douleur } = await supabase
+          .from('douleurs')
+          .select('title')
+          .eq('id', douleurParam)
+          .maybeSingle()
+        if (douleur) setDouleurName(douleur.title)
+      }
+
+      // Load user ratings
+      const userRatingsMap: Record<string, number> = {}
+      if (user) {
+        const { data: ratingsData } = await supabase
+          .from('shine_tv_ratings')
+          .select('video_id, rating')
+          .eq('user_id', user.id)
+        for (const r of ratingsData || []) {
+          userRatingsMap[r.video_id] = r.rating
+        }
+      }
+
+      // Load average ratings & review counts
+      const videoIds = data.map((v: any) => v.id)
+      const { data: avgRatings } = await supabase
+        .from('shine_tv_ratings')
+        .select('video_id, rating')
+        .in('video_id', videoIds)
+
+      const { data: reviewCounts } = await supabase
+        .from('shine_tv_reviews')
+        .select('video_id')
+        .in('video_id', videoIds)
+
+      const avgMap: Record<string, { sum: number; count: number }> = {}
+      for (const r of avgRatings || []) {
+        if (!avgMap[r.video_id]) avgMap[r.video_id] = { sum: 0, count: 0 }
+        avgMap[r.video_id].sum += r.rating
+        avgMap[r.video_id].count++
+      }
+
+      const reviewCountMap: Record<string, number> = {}
+      for (const r of reviewCounts || []) {
+        reviewCountMap[r.video_id] = (reviewCountMap[r.video_id] || 0) + 1
+      }
+
+      // Load user favorites
+      let favoriteIds: string[] = []
+      if (user) {
+        const { data: favData } = await supabase
+          .from('shine_tv_favorites')
+          .select('video_id')
+          .eq('user_id', user.id)
+        favoriteIds = (favData || []).map((f: any) => f.video_id)
+      }
+
+      const mapped: ShineVideo[] = data.map((v: any) => ({
+        id: v.id,
+        title: v.title,
+        description: v.description || '',
+        thumbnail: v.thumbnail_url || '',
+        thumbnailDesktop: v.thumbnail_desktop_url || null,
+        videoUrl: v.video_url || '',
+        subtitleUrl: v.subtitle_url || '',
+        category: v.category,
+        duration: `${v.duration_minutes} min`,
+        year: v.year,
+        rating: avgMap[v.id] ? avgMap[v.id].sum / avgMap[v.id].count : 0,
+        userRating: userRatingsMap[v.id] || 0,
+        isFavorite: favoriteIds.includes(v.id),
+        reviewCount: reviewCountMap[v.id] || 0,
+        douleurId: v.douleur_id || null,
+      }))
+
+      setVideos(mapped)
       setLoading(false)
-    }, 600)
+      if (idParam) {
+        const found = mapped.find(v => v.id === idParam)
+        if (found) setSelectedVideo(found)
+      }
+    }
+
+    loadVideos()
   }, [])
 
-  const handleToggleFavorite = (id: string) => {
+  useEffect(() => {
+    if (selectedVideo) {
+      window.history.replaceState(null, '', `?id=${selectedVideo.id}`)
+    } else {
+      window.history.replaceState(null, '', window.location.pathname)
+    }
+  }, [selectedVideo])
+
+  const handleToggleFavorite = async (id: string) => {
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+
+    const video = videos.find(v => v.id === id)
+    if (!video) return
+
+    if (video.isFavorite) {
+      await supabase.from('shine_tv_favorites').delete().eq('user_id', user.id).eq('video_id', id)
+    } else {
+      await supabase.from('shine_tv_favorites').insert({ user_id: user.id, video_id: id })
+    }
+
     setVideos(prev => prev.map(v => v.id === id ? { ...v, isFavorite: !v.isFavorite } : v))
     if (selectedVideo?.id === id) {
       setSelectedVideo(prev => prev ? { ...prev, isFavorite: !prev.isFavorite } : null)
     }
   }
 
-  const handleRate = (id: string, rating: number) => {
+  const handleRate = async (id: string, rating: number) => {
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+
+    await supabase.from('shine_tv_ratings').upsert({
+      user_id: user.id,
+      video_id: id,
+      rating,
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'user_id,video_id' })
+
     setVideos(prev => prev.map(v => v.id === id ? { ...v, userRating: rating } : v))
     if (selectedVideo?.id === id) {
       setSelectedVideo(prev => prev ? { ...prev, userRating: rating } : null)
@@ -685,13 +1477,21 @@ export default function ShineTVPage() {
 
   const filteredVideos = videos.filter(v => {
     const matchSearch = !search || v.title.toLowerCase().includes(search.toLowerCase())
-    const matchFilter = activeFilter === 'all' || activeFilter === 'favorites'
-      ? (activeFilter === 'favorites' ? v.isFavorite : true)
-      : v.category === activeFilter
+    const matchFilter = activeFilter === 'douleur'
+      ? v.douleurId === douleurParam
+      : activeFilter === 'all' || activeFilter === 'favorites'
+        ? (activeFilter === 'favorites' ? v.isFavorite : true)
+        : v.category === activeFilter
     return matchSearch && matchFilter
   })
 
   const getVideosByCategory = (catId: string) => filteredVideos.filter(v => v.category === catId)
+
+  /** Les plus recentes, toutes categories confondues. `videos` arrive deja trie. */
+  const trendingVideos = filteredVideos.slice(0, 10)
+
+  /** Celles qu'aucune rangee ne recupererait : categorie inconnue ou vide. */
+  const uncategorizedVideos = filteredVideos.filter(v => !isKnownCategory(v.category))
   const heroVideo = videos[0]
 
   if (loading) {
@@ -700,13 +1500,13 @@ export default function ShineTVPage() {
         <div className="text-center space-y-4">
           <div className="relative w-16 h-16 mx-auto">
             <div className="absolute inset-0 rounded-2xl animate-pulse"
-              style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))' }} />
+              style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))' }} />
             <div className="absolute inset-0 flex items-center justify-center">
               <svg className="w-8 h-8" fill="#09090b" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
             </div>
           </div>
-          <p className="font-display text-xl font-semibold" style={{ color: 'var(--gold)' }}>Shine TV</p>
-          <p className="text-[13px]" style={{ color: 'var(--text-muted)' }}>Chargement de vos contenus...</p>
+          <p className="font-display text-xl font-semibold text-[var(--brand)]">Shine TV</p>
+          <p className="text-[13px] text-[var(--text-muted)]">Chargement de vos contenus...</p>
         </div>
       </div>
     )
@@ -716,7 +1516,7 @@ export default function ShineTVPage() {
     <div className="-mx-4 sm:-mx-6 lg:-mx-8 -mt-4 sm:-mt-6 lg:-mt-8">
       {/* Hero */}
       {heroVideo && !search && activeFilter === 'all' && (
-        <HeroBanner video={heroVideo} onOpen={() => setSelectedVideo(heroVideo)} />
+        <HeroBanner video={heroVideo} onOpen={() => setWatchingVideo(heroVideo)} onInfo={() => setSelectedVideo(heroVideo)} />
       )}
 
       <div className="px-4 sm:px-6 lg:px-8 pt-6 space-y-8">
@@ -736,11 +1536,11 @@ export default function ShineTVPage() {
               className="w-full pl-11 pr-4 py-3 rounded-xl text-[14px] outline-none transition-all duration-200"
               style={{
                 background: 'rgba(255,255,255,0.05)',
-                border: '1px solid var(--dark-border)',
+                border: '1px solid var(--border)',
                 color: 'var(--text-primary)',
               }}
-              onFocus={(e) => e.target.style.borderColor = 'rgba(212,175,55,0.4)'}
-              onBlur={(e) => e.target.style.borderColor = 'var(--dark-border)'}
+              onFocus={(e) => e.target.style.borderColor = 'rgba(201,169,97,0.4)'}
+              onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
             />
             {search && (
               <button
@@ -761,20 +1561,50 @@ export default function ShineTVPage() {
               onClick={() => setActiveFilter('all')}
               className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200"
               style={{
-                background: activeFilter === 'all' ? 'var(--gold)' : 'rgba(255,255,255,0.06)',
+                background: activeFilter === 'all' ? 'var(--brand)' : 'rgba(255,255,255,0.06)',
                 color: activeFilter === 'all' ? '#09090b' : 'var(--text-secondary)',
-                border: activeFilter === 'all' ? 'none' : '1px solid var(--dark-border)',
+                border: activeFilter === 'all' ? 'none' : '1px solid var(--border)',
               }}
             >
               Tout
+            </button>
+            {douleurParam && (
+              <button
+                onClick={() => setActiveFilter('douleur')}
+                className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200 flex items-center gap-1.5"
+                style={{
+                  background: activeFilter === 'douleur' ? 'var(--brand)' : 'rgba(255,255,255,0.06)',
+                  color: activeFilter === 'douleur' ? '#09090b' : 'var(--text-secondary)',
+                  border: activeFilter === 'douleur' ? 'none' : '1px solid var(--border)',
+                }}
+              >
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.331 0 4.476.884 6.084 2.333M12 6.042A8.967 8.967 0 0118 3.75c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18c-2.331 0-4.476.884-6.084 2.333M12 6.042V20.333" />
+                </svg>
+                {douleurName || 'Douleur'}
+              </button>
+            )}
+            <button
+              onClick={() => setActiveFilter('encyclopedie')}
+              className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200 flex items-center gap-1.5"
+              style={{
+                background: activeFilter === 'encyclopedie' ? 'var(--brand)' : 'rgba(255,255,255,0.06)',
+                color: activeFilter === 'encyclopedie' ? '#09090b' : 'var(--text-secondary)',
+                border: activeFilter === 'encyclopedie' ? 'none' : '1px solid var(--border)',
+              }}
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
+              </svg>
+              A - Z
             </button>
             <button
               onClick={() => setActiveFilter('favorites')}
               className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200 flex items-center gap-1.5"
               style={{
-                background: activeFilter === 'favorites' ? 'var(--gold)' : 'rgba(255,255,255,0.06)',
+                background: activeFilter === 'favorites' ? 'var(--brand)' : 'rgba(255,255,255,0.06)',
                 color: activeFilter === 'favorites' ? '#09090b' : 'var(--text-secondary)',
-                border: activeFilter === 'favorites' ? 'none' : '1px solid var(--dark-border)',
+                border: activeFilter === 'favorites' ? 'none' : '1px solid var(--border)',
               }}
             >
               <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
@@ -782,38 +1612,45 @@ export default function ShineTVPage() {
               </svg>
               Favoris
             </button>
-            {CATEGORIES.slice(0, 6).map(cat => (
+            {/* Toutes les categories, pas les 6 premieres : sinon Masterclass et
+                Temoignages restent inaccessibles au filtre. */}
+            {CATEGORIES.map(cat => (
               <button
                 key={cat.id}
                 onClick={() => setActiveFilter(cat.id)}
-                className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200"
+                className="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200"
                 style={{
-                  background: activeFilter === cat.id ? 'var(--gold)' : 'rgba(255,255,255,0.06)',
+                  background: activeFilter === cat.id ? 'var(--brand)' : 'rgba(255,255,255,0.06)',
                   color: activeFilter === cat.id ? '#09090b' : 'var(--text-secondary)',
-                  border: activeFilter === cat.id ? 'none' : '1px solid var(--dark-border)',
+                  border: activeFilter === cat.id ? 'none' : '1px solid var(--border)',
                 }}
               >
-                {cat.icon} {cat.label}
+                <ShineIcon
+                  name={cat.icon}
+                  className="w-4 h-4"
+                  color={activeFilter === cat.id ? '#09090b' : undefined}
+                />
+                {cat.label}
               </button>
             ))}
           </div>
         </div>
 
         {/* Search results or category rows */}
-        {search || (activeFilter !== 'all' && activeFilter !== 'favorites') ? (
+        {search || (activeFilter !== 'all' && activeFilter !== 'favorites' && activeFilter !== 'encyclopedie' && activeFilter !== 'douleur') ? (
           // Grid view for search/filter
           <div>
-            <p className="text-[13px] mb-4" style={{ color: 'var(--text-muted)' }}>
+            <p className="text-[13px] mb-4 text-[var(--text-muted)]">
               {filteredVideos.length} résultat{filteredVideos.length !== 1 ? 's' : ''}
-              {search && <> pour &ldquo;<span style={{ color: 'var(--gold)' }}>{search}</span>&rdquo;</>}
+              {search && <> pour &ldquo;<span className="text-[var(--brand)]">{search}</span>&rdquo;</>}
             </p>
             {filteredVideos.length === 0 ? (
-              <div className="glass p-12 text-center rounded-xl">
-                <div className="text-4xl mb-3">🔍</div>
-                <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+              <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-12 text-center rounded-xl">
+                <div className="mb-3 flex justify-center" style={{ color: 'var(--brand)' }}><ShineIcon name="question" className="w-9 h-9" /></div>
+                <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
                   Aucun résultat
                 </h3>
-                <p className="text-[14px]" style={{ color: 'var(--text-muted)' }}>
+                <p className="text-[14px] text-[var(--text-muted)]">
                   Essayez un autre terme de recherche ou explorez nos catégories.
                 </p>
               </div>
@@ -837,21 +1674,21 @@ export default function ShineTVPage() {
                         </span>
                         {video.isFavorite && (
                           <span className="absolute top-2 right-2">
-                            <svg className="w-4 h-4" fill="#D4AF37" viewBox="0 0 24 24"><path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
+                            <svg className="w-4 h-4" fill="var(--brand)" viewBox="0 0 24 24"><path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
                           </span>
                         )}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                          <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'var(--gold)', color: '#09090b' }}>
+                          <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'var(--brand)', color: '#09090b' }}>
                             <svg className="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                           </div>
                         </div>
                       </div>
                     </div>
                     <div className="mt-2">
-                      <h3 className="text-[13px] font-medium truncate" style={{ color: 'var(--text-primary)' }}>{video.title}</h3>
+                      <h3 className="text-[13px] font-medium truncate text-[var(--text-primary)]">{video.title}</h3>
                       <div className="flex items-center gap-2 mt-1">
                         <StarRating rating={Math.round(video.rating)} size="sm" />
-                        <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{video.rating.toFixed(1)}</span>
+                        <span className="text-[11px] text-[var(--text-muted)]">{video.rating.toFixed(1)}</span>
                       </div>
                     </div>
                   </motion.div>
@@ -862,19 +1699,19 @@ export default function ShineTVPage() {
         ) : activeFilter === 'favorites' ? (
           // Favorites view
           <div>
-            <h2 className="text-lg font-display font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-              <svg className="w-5 h-5" fill="#D4AF37" viewBox="0 0 24 24">
+            <h2 className="text-lg font-display font-semibold mb-4 flex items-center gap-2 text-[var(--text-primary)]">
+              <svg className="w-5 h-5" fill="var(--brand)" viewBox="0 0 24 24">
                 <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
               </svg>
               Mes Favoris
             </h2>
             {filteredVideos.length === 0 ? (
-              <div className="glass p-12 text-center rounded-xl">
-                <div className="text-4xl mb-3">💛</div>
-                <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+              <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-12 text-center rounded-xl">
+                <div className="mb-3 flex justify-center" style={{ color: 'var(--brand)' }}><ShineIcon name="relationships" className="w-9 h-9" /></div>
+                <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
                   Aucun favori
                 </h3>
-                <p className="text-[14px]" style={{ color: 'var(--text-muted)' }}>
+                <p className="text-[14px] text-[var(--text-muted)]">
                   Ajoutez des vidéos à vos favoris pour les retrouver ici.
                 </p>
               </div>
@@ -897,17 +1734,17 @@ export default function ShineTVPage() {
                           {video.duration}
                         </span>
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                          <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'var(--gold)', color: '#09090b' }}>
+                          <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'var(--brand)', color: '#09090b' }}>
                             <svg className="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                           </div>
                         </div>
                       </div>
                     </div>
                     <div className="mt-2">
-                      <h3 className="text-[13px] font-medium truncate" style={{ color: 'var(--text-primary)' }}>{video.title}</h3>
+                      <h3 className="text-[13px] font-medium truncate text-[var(--text-primary)]">{video.title}</h3>
                       <div className="flex items-center gap-2 mt-1">
                         <StarRating rating={Math.round(video.rating)} size="sm" />
-                        <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{video.rating.toFixed(1)}</span>
+                        <span className="text-[11px] text-[var(--text-muted)]">{video.rating.toFixed(1)}</span>
                       </div>
                     </div>
                   </motion.div>
@@ -915,9 +1752,154 @@ export default function ShineTVPage() {
               </div>
             )}
           </div>
+        ) : activeFilter === 'douleur' ? (
+          // Douleur-filtered view
+          <div>
+            <h2 className="text-lg font-display font-semibold mb-4 flex items-center gap-2 text-[var(--text-primary)]">
+ <svg className="w-5 h-5 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.331 0 4.476.884 6.084 2.333M12 6.042A8.967 8.967 0 0118 3.75c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18c-2.331 0-4.476.884-6.084 2.333M12 6.042V20.333" />
+              </svg>
+              {douleurName || 'Contenu lié'}
+            </h2>
+            {filteredVideos.length === 0 ? (
+              <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-12 text-center rounded-xl">
+                <div className="mb-3 flex justify-center" style={{ color: 'var(--brand)' }}><ShineIcon name="video" className="w-9 h-9" /></div>
+                <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
+                  Aucune vidéo liée
+                </h3>
+                <p className="text-[14px] text-[var(--text-muted)]">
+                  Aucune vidéo n&apos;est associée à cette douleur pour le moment.
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                {filteredVideos.map((video, i) => (
+                  <motion.div
+                    key={video.id}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.03, duration: 0.3 }}
+                    className="group cursor-pointer"
+                    onClick={() => setSelectedVideo(video)}
+                  >
+                    <div className="relative overflow-hidden rounded-lg transition-all duration-300 group-hover:scale-105">
+                      <div className="relative aspect-video">
+                        <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" loading="lazy" />
+                        <span className="absolute bottom-2 right-2 text-[10px] font-semibold px-1.5 py-0.5 rounded"
+                          style={{ background: 'rgba(0,0,0,0.8)', color: '#fff' }}>
+                          {video.duration}
+                        </span>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                          <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'var(--brand)', color: '#09090b' }}>
+                            <svg className="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-2">
+                      <h3 className="text-[13px] font-medium truncate text-[var(--text-primary)]">{video.title}</h3>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : activeFilter === 'encyclopedie' ? (
+          // Encyclopédie A-Z view
+          <div className="space-y-6">
+            <h2 className="text-lg font-display font-semibold flex items-center gap-2 text-[var(--text-primary)]">
+ <svg className="w-5 h-5 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
+              </svg>
+              Encyclopédie A - Z
+            </h2>
+            {(() => {
+              const sorted = [...videos].sort((a, b) => a.title.localeCompare(b.title, 'fr'))
+              const grouped: Record<string, ShineVideo[]> = {}
+              sorted.forEach(v => {
+                const letter = v.title.charAt(0).toUpperCase().match(/[A-ZÀÂÄÉÈÊËÏÎÔÙÛÜŸÆŒÇ]/i)
+                  ? v.title.charAt(0).toUpperCase() : '#'
+                if (!grouped[letter]) grouped[letter] = []
+                grouped[letter].push(v)
+              })
+              const letters = Object.keys(grouped).sort((a, b) => a === '#' ? 1 : b === '#' ? -1 : a.localeCompare(b, 'fr'))
+
+              return (
+                <>
+                  {/* Letter nav */}
+                  <div className="flex flex-wrap gap-1.5">
+                    {letters.map(letter => (
+                      <a
+                        key={letter}
+                        href={`#letter-tv-${letter}`}
+                        className="w-8 h-8 rounded-lg flex items-center justify-center text-[13px] font-semibold transition-colors hover:opacity-80"
+                        style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--brand)' }}
+                      >
+                        {letter}
+                      </a>
+                    ))}
+                  </div>
+
+                  {/* Letter groups */}
+                  {letters.map(letter => (
+                    <div key={letter} id={`letter-tv-${letter}`} className="scroll-mt-24">
+                      <h3 className="font-display text-2xl font-bold mb-3 pb-2 text-[var(--brand)] border-b border-[var(--border)]">
+                        {letter}
+                      </h3>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                        {grouped[letter].map((video, i) => (
+                          <motion.div
+                            key={video.id}
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: i * 0.02, duration: 0.3 }}
+                            className="group cursor-pointer"
+                            onClick={() => setSelectedVideo(video)}
+                          >
+                            <div className="relative overflow-hidden rounded-lg transition-all duration-300 group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-black/50">
+                              <div className="relative aspect-video">
+                                <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" loading="lazy" />
+                                <span className="absolute bottom-2 right-2 text-[10px] font-semibold px-1.5 py-0.5 rounded"
+                                  style={{ background: 'rgba(0,0,0,0.8)', color: '#fff' }}>
+                                  {video.duration}
+                                </span>
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                  <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'var(--brand)', color: '#09090b' }}>
+                                    <svg className="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="mt-2">
+                              <h3 className="text-[13px] font-medium truncate text-[var(--text-primary)]">{video.title}</h3>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </>
+              )
+            })()}
+          </div>
         ) : (
-          // Netflix rows view
+          // Vue « Tout » : rangees par categorie
           <div className="space-y-8">
+            {/*
+              Rangee « Tendances du moment » : elle est CALCULEE (les plus
+              recentes), pas stockee. Avant, « trending » etait une categorie
+              du dashboard que l'admin ne pouvait jamais attribuer, le filtre
+              ne renvoyait donc jamais rien.
+            */}
+            {trendingVideos.length > 0 && (
+              <VideoRow
+                title="Tendances du moment"
+                icon="resilience"
+                videos={trendingVideos}
+                onSelect={setSelectedVideo}
+              />
+            )}
+
             {CATEGORIES.map(cat => {
               const catVideos = getVideosByCategory(cat.id)
               if (catVideos.length === 0) return null
@@ -931,9 +1913,47 @@ export default function ShineTVPage() {
                 />
               )
             })}
+
+            {/*
+              Filet de securite : toute video dont la categorie ne correspond a
+              aucune rangee connue atterrit ici. Sans ca elle n'est affichee
+              NULLE PART dans l'onglet « Tout », c'est exactement le bug qui
+              faisait disparaitre les masterclass.
+            */}
+            {uncategorizedVideos.length > 0 && (
+              <VideoRow
+                title="Autres"
+                icon="video"
+                videos={uncategorizedVideos}
+                onSelect={setSelectedVideo}
+              />
+            )}
+
+            {filteredVideos.length === 0 && (
+              <div className="glass p-12 text-center rounded-xl">
+                <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
+                  Aucune vidéo pour le moment
+                </h3>
+                <p className="text-[14px] text-[var(--text-muted)]">
+                  Les vidéos publiées apparaîtront ici.
+                </p>
+              </div>
+            )}
           </div>
         )}
       </div>
+
+      {/* Netflix Full Screen Player */}
+      <AnimatePresence>
+        {watchingVideo && (
+          <FullScreenPlayer
+            video={watchingVideo}
+            onClose={() => setWatchingVideo(null)}
+            onShowInfo={() => { setSelectedVideo(watchingVideo); setWatchingVideo(null) }}
+            previewSeconds={previewCap}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Video Detail Modal */}
       <AnimatePresence>
@@ -943,6 +1963,7 @@ export default function ShineTVPage() {
             onClose={() => setSelectedVideo(null)}
             onToggleFavorite={handleToggleFavorite}
             onRate={handleRate}
+            onWatch={() => { setWatchingVideo(selectedVideo); setSelectedVideo(null) }}
           />
         )}
       </AnimatePresence>

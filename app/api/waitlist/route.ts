@@ -1,89 +1,132 @@
 import { NextResponse } from 'next/server'
-import { createClient as createSupabaseClient } from '@supabase/supabase-js'
-import pg from 'pg'
+import { createClient } from '@supabase/supabase-js'
 
-let pool: pg.Pool | null = null
-
-function getPool() {
-  if (pool) return pool
-  const connectionString = process.env.DATABASE_URL
-  if (!connectionString) return null
-  pool = new pg.Pool({ connectionString, max: 5, idleTimeoutMillis: 30000 })
-  return pool
+function getSupabase() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  // Prefer service role key (bypasses RLS), fall back to anon key
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  if (!url || !key) return null
+  return createClient(url, key)
 }
 
 export async function POST(request: Request) {
   try {
+    const { rateLimit, getIp } = await import('@/lib/rate-limit')
+    const { allowed } = rateLimit(getIp(request), { maxRequests: 5, windowMs: 60_000 })
+    if (!allowed) return NextResponse.json({ error: 'Trop de requêtes' }, { status: 429 })
+
     const { email, name } = await request.json()
 
     if (!email || typeof email !== 'string' || !email.includes('@')) {
       return NextResponse.json({ error: 'Email invalide' }, { status: 400 })
     }
 
-    const pool = getPool()
-    if (!pool) {
+    // Anti-spam validation
+    const { validateAntiSpam } = await import('@/lib/anti-spam')
+    const spamError = validateAntiSpam(email, name)
+    if (spamError) {
+      return NextResponse.json({ error: spamError }, { status: 400 })
+    }
+
+    const supabase = getSupabase()
+    if (!supabase) {
+      console.error('Waitlist: Missing SUPABASE_URL or SUPABASE_ANON_KEY')
       return NextResponse.json({ error: 'Configuration serveur manquante' }, { status: 500 })
     }
 
-    try {
-      await pool.query(
-        'INSERT INTO waitlist (email, name) VALUES ($1, $2)',
-        [email.toLowerCase().trim(), name?.trim() || null]
-      )
+    const cleanEmail = email.toLowerCase().trim()
+    const cleanName = name?.trim() || null
 
-      try {
-        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-        const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-        if (supabaseUrl && supabaseKey) {
-          const sb = createSupabaseClient(supabaseUrl, supabaseKey)
-          await sb.from('crm_contacts').upsert({
-            email: email.toLowerCase().trim(),
-            first_name: name?.trim() || null,
-            source: 'waitlist',
-          }, { onConflict: 'email', ignoreDuplicates: true })
-        }
-      } catch {}
+    // Try inserting into waitlist table
+    const { error: waitlistError } = await supabase
+      .from('waitlist')
+      .insert({ email: cleanEmail, name: cleanName })
 
-      try {
-        const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
-          || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : null)
-          || ''
-        if (siteUrl) {
-          await fetch(`${siteUrl}/api/crm/sequences/enroll`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              trigger_type: 'waitlist',
-              email: email.toLowerCase().trim(),
-              first_name: name?.trim() || null,
-            }),
-          })
-        }
-      } catch {}
-
-      return NextResponse.json({ message: 'success' }, { status: 201 })
-    } catch (err: unknown) {
-      const pgErr = err as { code?: string }
-      if (pgErr.code === '23505') {
+    if (waitlistError) {
+      // Duplicate email (unique constraint violation)
+      if (waitlistError.code === '23505') {
         return NextResponse.json({ message: 'already_registered' }, { status: 200 })
       }
-      console.error('Waitlist insert error:', err)
-      return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+
+      // Table might not exist (42P01) - fall back to crm_contacts only
+      if (waitlistError.code === '42P01') {
+        console.warn('Waitlist table does not exist, using crm_contacts as fallback')
+      } else {
+        console.error('Waitlist insert error:', waitlistError.code, waitlistError.message)
+      }
     }
-  } catch {
+
+    // Also add to CRM contacts (this is the main reliable storage)
+    try {
+      const { error: crmError } = await supabase.from('crm_contacts').upsert({
+        email: cleanEmail,
+        first_name: cleanName,
+        source: 'waitlist',
+      }, { onConflict: 'email', ignoreDuplicates: true })
+
+      if (crmError) {
+        console.error('CRM contacts upsert error:', crmError.code, crmError.message)
+        // If both waitlist AND crm_contacts failed, return error
+        if (waitlistError && waitlistError.code !== '23505') {
+          return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+        }
+      }
+    } catch (e) {
+      console.error('CRM contacts exception:', e)
+      // If waitlist also failed, return error
+      if (waitlistError && waitlistError.code !== '23505') {
+        return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+      }
+    }
+
+    // Enroll in waitlist sequence
+    try {
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
+        || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : null)
+        || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null)
+        || ''
+      if (siteUrl) {
+        await fetch(`${siteUrl}/api/crm/sequences/enroll`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            trigger_type: 'waitlist',
+            email: cleanEmail,
+            first_name: cleanName,
+          }),
+        })
+      }
+    } catch {}
+
+    return NextResponse.json({ message: 'success' }, { status: 201 })
+  } catch (e) {
+    console.error('Waitlist POST exception:', e)
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
 
 export async function GET() {
   try {
-    const pool = getPool()
-    if (!pool) {
+    const supabase = getSupabase()
+    if (!supabase) {
       return NextResponse.json({ count: 0 })
     }
 
-    const result = await pool.query('SELECT COUNT(*) as count FROM waitlist')
-    return NextResponse.json({ count: parseInt(result.rows[0].count) || 0 })
+    const { count, error } = await supabase
+      .from('waitlist')
+      .select('*', { count: 'exact', head: true })
+
+    if (error) {
+      // Table might not exist - try counting from crm_contacts
+      const { count: crmCount } = await supabase
+        .from('crm_contacts')
+        .select('*', { count: 'exact', head: true })
+        .eq('source', 'waitlist')
+
+      return NextResponse.json({ count: crmCount || 0 })
+    }
+
+    return NextResponse.json({ count: count || 0 })
   } catch {
     return NextResponse.json({ count: 0 })
   }

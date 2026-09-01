@@ -43,7 +43,7 @@ export async function POST(request: Request) {
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
       || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : null)
-      || 'https://sos-shine.com'
+      || 'https://sosshine.com'
 
     const { client: resend, fromEmail } = await getResendClient()
 
@@ -65,7 +65,7 @@ export async function POST(request: Request) {
           const finalHtml = wrappedHtml + trackingPixel
 
           const { error: sendErr } = await resend.emails.send({
-            from: fromEmail,
+            from: `SOS Shine® <${fromEmail}>`,
             to: contact.email,
             subject: campaign.subject.replace(/\{firstName\}/g, contact.first_name || 'Membre'),
             html: finalHtml,

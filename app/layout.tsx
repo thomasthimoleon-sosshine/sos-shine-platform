@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Suspense } from "react";
 import "./globals.css";
 import ThemeProvider from "@/components/ThemeProvider";
 import SecurityProvider from "@/components/SecurityProvider";
-import ShineChatbot from "@/components/ShineChatbot";
+import VisitTracker from "@/components/VisitTracker";
+import BanniereConsentement from "@/components/BanniereConsentement";
+import LogoSite from '@/components/LogoSite'
 
 const cormorant = localFont({
   variable: "--font-cormorant",
@@ -28,31 +31,54 @@ const dmSans = localFont({
   ],
 });
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.REPLIT_DEV_DOMAIN
+    ? `https://${process.env.REPLIT_DEV_DOMAIN}`
+    : "https://sosshine.com");
+
 export const metadata: Metadata = {
-  title: "SOS Shine — Votre communauté bienveillante",
+  metadataBase: new URL(siteUrl),
+  title: "SOS Shine - Plateforme de déconditionnement émotionnel",
   description:
-    "SOS Shine, votre communauté bienveillante. Plateforme premium d'accompagnement pour traverser les épreuves de la vie. Corps, émotion, action.",
+    "Comprenez pourquoi vous répétez les mêmes schémas émotionnels - et sortez-en. des protocoles guidés par Julia Laureau, auteure du Déconditionnement. Test gratuit en 20 questions.",
+  keywords: [
+    "déconditionnement émotionnel",
+    "schémas émotionnels",
+    "dépendance affective",
+    "rupture",
+    "abandon",
+    "burn-out",
+    "Julia Laureau",
+    "signature émotionnelle",
+    "protocoles émotionnels",
+    "SOS Shine",
+  ],
+  authors: [{ name: "Julia Laureau" }],
   openGraph: {
-    title: "SOS Shine — Votre communauté bienveillante",
+    title: "SOS Shine - Comprendre vos schémas. Les transformer.",
     description:
-      "SOS Shine, votre communauté bienveillante. Plateforme premium d'accompagnement pour traverser les épreuves de la vie.",
+      "des protocoles guidés pour décoder vos réactions émotionnelles et reprendre les commandes de votre vie. Pas du bien-être. Du déconditionnement. Par Julia Laureau.",
+    url: siteUrl,
     images: [
       {
-        url: "/images/og-logo.png",
-        width: 1024,
-        height: 1024,
-        alt: "SOS Shine",
+        url: "/api/og",
+        width: 1200,
+        height: 630,
+        alt: "SOS Shine - Plateforme de déconditionnement émotionnel",
+        type: "image/png",
       },
     ],
     type: "website",
     siteName: "SOS Shine",
+    locale: "fr_FR",
   },
   twitter: {
     card: "summary_large_image",
-    title: "SOS Shine — Votre communauté bienveillante",
+    title: "SOS Shine - Déconditionnement émotionnel",
     description:
-      "SOS Shine, votre communauté bienveillante. Plateforme premium d'accompagnement pour traverser les épreuves de la vie.",
-    images: ["/images/og-logo.png"],
+      "Comprenez pourquoi vous répétez les mêmes schémas. des protocoles guidés par Julia Laureau. Test gratuit.",
+    images: ["/api/og"],
   },
   appleWebApp: {
     capable: true,
@@ -60,13 +86,82 @@ export const metadata: Metadata = {
     title: "SOS Shine",
   },
   icons: {
-    icon: "/favicon.ico",
-    apple: "/api/apple-icon",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
   },
   other: {
     "mobile-web-app-capable": "yes",
   },
 };
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': `${siteUrl}/#website`,
+      url: siteUrl,
+      name: 'SOS Shine',
+      description: 'Plateforme de déconditionnement émotionnel. des protocoles guidés pour comprendre et transformer vos schémas.',
+      inLanguage: 'fr-FR',
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: `${siteUrl}/encyclopedie?q={search_term_string}`,
+        'query-input': 'required name=search_term_string',
+      },
+    },
+    {
+      '@type': 'Organization',
+      '@id': `${siteUrl}/#organization`,
+      name: 'SOS Shine',
+      url: siteUrl,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${siteUrl}/images/logo-shine.png`,
+      },
+      description: "Plateforme de déconditionnement émotionnel fondée par Julia Laureau. Décode vos schémas et vous donne les outils pour les transformer.",
+      founder: {
+        '@type': 'Person',
+        name: 'Julia Laureau',
+        jobTitle: 'Fondatrice, Auteure du Déconditionnement',
+      },
+      sameAs: [],
+    },
+    {
+      '@type': 'Product',
+      '@id': `${siteUrl}/#product`,
+      name: 'SOS Shine',
+      description: 'Accès à des protocoles de déconditionnement émotionnel, chats communautaires, lives hebdomadaires avec Julia Laureau.',
+      brand: { '@type': 'Brand', name: 'SOS Shine' },
+      offers: [
+        {
+          '@type': 'Offer',
+          name: 'Plan Gratuit',
+          price: '0',
+          priceCurrency: 'EUR',
+          description: 'Communauté + Shine Audible',
+        },
+        {
+          '@type': 'Offer',
+          name: 'Plan Gratuit',
+          price: '0',
+          priceCurrency: 'EUR',
+          description: 'Encyclopédie complète + chats par challenge',
+        },
+        {
+          '@type': 'Offer',
+          name: 'Plan Sérénité',
+          price: '49.90', // SOS Shine
+          priceCurrency: 'EUR',
+          description: 'Tout inclus - Shine TV, Lives, Événements',
+        },
+      ],
+    },
+  ],
+}
 
 export default function RootLayout({
   children,
@@ -75,20 +170,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body
         className={`${cormorant.variable} ${dmSans.variable} antialiased grain`}
       >
         <div className="page-loader" aria-hidden="true">
-          <img
-            src="/images/logo-shine.png"
-            alt="SOS Shine"
-            className="loader-logo"
-          />
+          <LogoSite className="loader-logo" />
         </div>
         <div className="ambient-glow" />
         <SecurityProvider>
           <ThemeProvider>{children}</ThemeProvider>
-          <ShineChatbot />
+          <Suspense fallback={null}><VisitTracker /></Suspense>
+          <BanniereConsentement />
         </SecurityProvider>
       </body>
     </html>

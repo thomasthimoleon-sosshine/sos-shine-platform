@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { createServerClient } from '@supabase/ssr'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { sendTemplateEmail } from '@/lib/email-templates/automated-emails'
+import { enrollInSequence } from '@/lib/crm/enroll'
 import type { Database } from '@/types/database'
 
 async function getCallerProfile(): Promise<{ id: string; role: string } | null> {
@@ -34,7 +36,7 @@ function isAdmin(role: string): boolean {
   return role === 'founder' || role === 'admin_content' || role === 'admin_support'
 }
 
-// GET — list all affiliate applications (candidatures)
+// GET - list all affiliate applications (candidatures)
 export async function GET() {
   const caller = await getCallerProfile()
   if (!caller || !isAdmin(caller.role)) {
@@ -49,7 +51,7 @@ export async function GET() {
       .order('created_at', { ascending: false })
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+      return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
     }
 
     return NextResponse.json({ candidatures: data || [] })
@@ -59,7 +61,7 @@ export async function GET() {
   }
 }
 
-// PATCH — approve or reject a candidature
+// PATCH - approve or reject a candidature
 export async function PATCH(request: Request) {
   const caller = await getCallerProfile()
   if (!caller || !isAdmin(caller.role)) {
@@ -90,7 +92,26 @@ export async function PATCH(request: Request) {
         })
         .eq('id', affiliateId)
 
-      if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+      if (error) return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
+
+      // ── Email automatique : bienvenue programme affilié ──
+      const { data: affiliateProfile } = await admin
+        .from('affiliates')
+        .select('user_id, profiles:user_id(prenom, email)')
+        .eq('id', affiliateId)
+        .single()
+
+      const prof = (affiliateProfile as any)?.profiles
+      if (prof?.email) {
+        sendTemplateEmail('affiliate_welcome', prof.email, {
+          firstName: prof.prenom || 'Ambassadeur',
+          email: prof.email,
+        }, { recipientName: prof.prenom || 'Ambassadeur' }).catch(() => {})
+
+        // Enrôler dans la séquence CRM "affiliate"
+        enrollInSequence('affiliate', prof.email, prof.prenom).catch(() => {})
+      }
+
       return NextResponse.json({ success: true, status: 'approved' })
     }
 
@@ -104,7 +125,7 @@ export async function PATCH(request: Request) {
         })
         .eq('id', affiliateId)
 
-      if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+      if (error) return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
       return NextResponse.json({ success: true, status: 'rejected' })
     }
 

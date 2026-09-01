@@ -9,6 +9,9 @@ export type Profile = {
   bio: string | null
   video_url: string | null
   plan: 'essential' | 'serenite' | 'premium' | null
+  birth_date?: string | null
+  zodiac_sign?: string | null
+  greetings_progress?: { night: number; morning: number; afternoon: number; evening: number }
   is_bot?: boolean
   is_active?: boolean
   publish_banned_until?: string | null
@@ -36,6 +39,9 @@ export type Douleur = {
   id: string
   title: string
   slug: string
+  subtitle: string | null
+  category: string | null
+  is_original: boolean
   description: string | null
   // Étape 1 — Comprendre
   video_url: string | null
@@ -55,8 +61,40 @@ export type Douleur = {
   exercise_content: string | null
   // Meta
   image_url: string | null
+  tags: string[]
   is_active: boolean
   is_published: boolean
+  created_at: string
+  updated_at: string
+}
+
+// ── Douleur Steps (dynamic steps per challenge) ──
+export type DouleurStep = {
+  id: string
+  douleur_id: string
+  step_number: number
+  title: string
+  subtitle: string | null
+  description: string | null
+  icon: string
+  color: string
+  video_url: string | null
+  video_url_2: string | null
+  audio_url: string | null
+  audio_url_2: string | null
+  pdf_url: string | null
+  image_url: string | null
+  video_cover: string | null
+  video2_cover: string | null
+  audio_cover: string | null
+  audio2_cover: string | null
+  exercise_content: string | null
+  // Titres personnalisés par outil (optionnels — fallback vers un libellé par défaut)
+  video_title: string | null
+  video2_title: string | null
+  audio_title: string | null
+  audio2_title: string | null
+  pdf_title: string | null
   created_at: string
   updated_at: string
 }
@@ -148,6 +186,25 @@ export type EventRegistration = {
   created_at: string
 }
 
+// ── Premium Ateliers (programme 48 semaines) ──
+export type PremiumAtelier = {
+  id: string
+  month_index: number
+  week: number
+  arc_number: number
+  arc_label: string
+  month_theme: string
+  month_icon: string
+  title: string
+  description: string | null
+  video_url: string | null
+  live_url: string | null
+  replay_url: string | null
+  is_live: boolean
+  is_active: boolean
+  created_at: string
+}
+
 // ── Content Tracking (analytics) ──
 export type ContentView = {
   id: string
@@ -166,7 +223,7 @@ export type Notification = {
   title: string
   body: string
   link: string | null
-  notification_type: 'new_douleur' | 'new_event' | 'new_post' | 'new_soin' | 'warning'
+  notification_type: 'new_douleur' | 'new_event' | 'new_post' | 'new_soin' | 'warning' | 'new_video' | 'new_audio' | 'new_book' | 'new_protocol'
   is_read: boolean
   email_sent: boolean
   created_at: string
@@ -294,6 +351,7 @@ export type UserProgress = {
   step1_completed: boolean
   step2_completed: boolean
   step3_completed: boolean
+  steps_completed: Record<string, boolean>
   completed_at: string | null
   created_at: string
   updated_at: string
@@ -307,6 +365,28 @@ export type UserXP = {
   level: number
   shines_given: number
   shines_received: number
+  created_at: string
+  updated_at: string
+}
+
+// ── Daily User Actions (anti-farming tracking) ──
+export type DailyUserAction = {
+  id: string
+  user_id: string
+  action_date: string
+  action_type: string
+  count: number
+  created_at: string
+  updated_at: string
+}
+
+// ── Encyclopedia Progress (Boss Quest scores) ──
+export type EncyclopediaProgress = {
+  id: string
+  user_id: string
+  module_id: string
+  best_score_percentage: number
+  xp_awarded: number
   created_at: string
   updated_at: string
 }
@@ -344,6 +424,28 @@ export type ChallengeParticipation = {
   completed_at: string | null
   created_at: string
   updated_at: string
+}
+
+// ── Challenge Phases ──
+export type ChallengePhase = {
+  id: string
+  challenge_id: string
+  phase_number: number
+  title: string
+  description: string | null
+  duration_days: number | null
+  created_at: string
+}
+
+export type ChallengePhaseProgressStatus = 'pending' | 'in_progress' | 'completed'
+
+export type ChallengePhaseProgress = {
+  id: string
+  participation_id: string
+  phase_id: string
+  status: ChallengePhaseProgressStatus
+  completed_at: string | null
+  created_at: string
 }
 
 // ── Pinned Posts ──
@@ -420,8 +522,297 @@ export type UserGoal = {
   updated_at: string
 }
 
+// ── Shine TV Videos ──
+// ── Shine Shorts ──
+export type ShineShort = {
+  id: string
+  title: string
+  description: string | null
+  thumbnail_url: string | null
+  video_url: string | null
+  category: string
+  duration_seconds: number
+  douleur_id: string | null
+  is_published: boolean
+  created_at: string
+  updated_at: string
+}
+
+export type ShineShortFavorite = {
+  id: string
+  user_id: string
+  short_id: string
+  created_at: string
+}
+
+/** Une publication de la communauté mise de côté (le signet du mur). */
+export type PostBookmark = {
+  id: string
+  user_id: string
+  post_id: string
+  created_at: string
+}
+
+/** Un article de blog mis de côté. Clé par slug : les articles existent en base ET en dur. */
+export type BlogFavorite = {
+  id: string
+  user_id: string
+  article_slug: string
+  created_at: string
+}
+
+/** Réglages fins des notifications, une ligne par membre. */
+export type NotificationPreferences = {
+  user_id: string
+  all_enabled: boolean
+  new_protocols: boolean
+  new_media: boolean
+  shines_received: boolean
+  messages: boolean
+  friend_requests: boolean
+  comments: boolean
+  updated_at: string
+}
+
+/** Un « Shine » donné à un format court — l'équivalent du j'aime. */
+export type ShineShortShine = {
+  id: string
+  user_id: string
+  short_id: string
+  created_at: string
+}
+
+export type ShineShortRating = {
+  id: string
+  user_id: string
+  short_id: string
+  rating: number
+  created_at: string
+  updated_at: string
+}
+
+export type ShineShortReview = {
+  id: string
+  user_id: string
+  short_id: string
+  content: string
+  rating: number
+  created_at: string
+  updated_at: string
+}
+
+export type ShineTvVideo = {
+  id: string
+  title: string
+  description: string | null
+  thumbnail_url: string | null
+  video_url: string | null
+  category: string
+  duration_minutes: number
+  year: number
+  douleur_id: string | null
+  is_published: boolean
+  created_at: string
+  updated_at: string
+}
+
+// ── Shine TV Favorites ──
+export type ShineTvFavorite = {
+  id: string
+  user_id: string
+  video_id: string
+  created_at: string
+}
+
+// ── Shine TV Ratings ──
+export type ShineTvRating = {
+  id: string
+  user_id: string
+  video_id: string
+  rating: number
+  created_at: string
+  updated_at: string
+}
+
+// ── Shine TV Reviews ──
+export type ShineTvReview = {
+  id: string
+  user_id: string
+  video_id: string
+  content: string
+  rating: number
+  created_at: string
+  updated_at: string
+}
+
+// ── Shine Audible Tracks ──
+export type ShineAudibleTrack = {
+  id: string
+  title: string
+  description: string | null
+  cover_url: string | null
+  audio_url: string | null
+  narrator: string | null
+  category: string
+  content_type: 'podcast' | 'audiobook' | 'meditation' | 'hypnosis' | 'ambient'
+  duration_seconds: number
+  year: number
+  douleur_id: string | null
+  is_published: boolean
+  created_at: string
+  updated_at: string
+}
+
+// ── Shine Audible Favorites ──
+export type ShineAudibleFavorite = {
+  id: string
+  user_id: string
+  track_id: string
+  created_at: string
+}
+
+// ── Shine Audible Ratings ──
+export type ShineAudibleRating = {
+  id: string
+  user_id: string
+  track_id: string
+  rating: number
+  created_at: string
+  updated_at: string
+}
+
+// ── Shine Audible Reviews ──
+export type ShineAudibleReview = {
+  id: string
+  user_id: string
+  track_id: string
+  content: string
+  rating: number
+  created_at: string
+  updated_at: string
+}
+
+// ── Shine Audible History ──
+export type ShineAudibleHistory = {
+  id: string
+  user_id: string
+  track_id: string
+  progress_seconds: number
+  completed: boolean
+  listened_at: string
+}
+
+// ── Shine Library Books ──
+export type ShineLibraryBook = {
+  id: string
+  title: string
+  author: string
+  description: string | null
+  cover_url: string | null
+  pdf_url: string | null
+  category: string
+  content_type: 'ebook' | 'guide' | 'workbook' | 'journal' | 'protocol'
+  page_count: number
+  year: number
+  douleur_id: string | null
+  is_published: boolean
+  is_featured: boolean
+  sort_order: number
+  created_at: string
+  updated_at: string
+}
+
+// ── Shine Library Favorites ──
+export type ShineLibraryFavorite = {
+  id: string
+  user_id: string
+  book_id: string
+  created_at: string
+}
+
+// ── Shine Library Ratings ──
+export type ShineLibraryRating = {
+  id: string
+  user_id: string
+  book_id: string
+  rating: number
+  created_at: string
+  updated_at: string
+}
+
+// ── Shine Library Reviews ──
+export type ShineLibraryReview = {
+  id: string
+  user_id: string
+  book_id: string
+  content: string
+  rating: number
+  created_at: string
+  updated_at: string
+}
+
+// ── Douleur Quiz (QCM per challenge) ──
+export type DouleurQuizQuestion = {
+  id: string
+  douleur_id: string
+  question: string
+  options: string[]          // ["Option A", "Option B", "Option C", "Option D"]
+  correct_indices: number[]  // [0, 2] = indices of correct answers
+  sort_order: number
+  created_at: string
+  updated_at: string
+}
+
+export type DouleurQuizAttempt = {
+  id: string
+  user_id: string
+  douleur_id: string
+  score: number
+  total: number
+  passed: boolean
+  answers: number[][]  // user's selected indices per question
+  created_at: string
+}
+
+// ── Courrier Anonyme (anonymous mailbox) ──
+export type CourrierAnonymeCategory = 'question' | 'recommandation' | 'temoignage' | 'suggestion' | 'autre'
+export type CourrierAnonymeStatus = 'new' | 'read' | 'planned' | 'answered' | 'archived'
+export type CourrierAnsweredVia = 'shine_tv' | 'podcast' | 'article' | 'direct'
+
+export type CourrierAnonyme = {
+  id: string
+  user_id: string | null
+  category: CourrierAnonymeCategory
+  subject: string | null
+  content: string
+  status: CourrierAnonymeStatus
+  admin_note: string | null
+  answered_via: CourrierAnsweredVia | null
+  answered_url: string | null
+  answered_at: string | null
+  answered_by: string | null
+  is_pinned: boolean
+  created_at: string
+  updated_at: string
+}
+
+// ── Site Visits (connection tracking) ──
+export type SiteVisit = {
+  id: string
+  user_id: string | null
+  page_path: string
+  referrer: string | null
+  user_agent: string | null
+  ip_hash: string | null
+  country: string | null
+  device_type: string
+  session_id: string | null
+  is_authenticated: boolean
+  created_at: string
+}
+
 // ── Helper: columns with DB defaults are optional on Insert ──
-type DefaultColumns = 'id' | 'created_at' | 'updated_at' | 'completed_at' | 'audio_url' | 'message_type' | 'status' | 'room_code' | 'call_type' | 'event_type' | 'target_user_id' | 'room_id' | 'category' | 'media_type' | 'video_url' | 'image_url' | 'is_published' | 'delete_locked' | 'publish_banned_until' | 'is_bot' | 'is_read' | 'is_deleted' | 'is_general' | 'is_anonymous' | 'is_active' | 'email_sent' | 'is_visible' | 'position' | 'total_clicks' | 'total_referrals' | 'total_earnings' | 'pending_earnings' | 'paid_earnings' | 'current_tier' | 'referral_code' | 'approved_at' | 'rejected_at' | 'rejection_reason' | 'paid_at' | 'payment_reference' | 'commission_amount' | 'visibility' | 'source'
+type DefaultColumns = 'id' | 'created_at' | 'updated_at' | 'completed_at' | 'audio_url' | 'message_type' | 'status' | 'room_code' | 'call_type' | 'event_type' | 'target_user_id' | 'room_id' | 'category' | 'media_type' | 'video_url' | 'image_url' | 'is_published' | 'delete_locked' | 'publish_banned_until' | 'is_bot' | 'is_read' | 'is_deleted' | 'is_general' | 'is_anonymous' | 'is_active' | 'email_sent' | 'is_visible' | 'position' | 'total_clicks' | 'total_referrals' | 'total_earnings' | 'pending_earnings' | 'paid_earnings' | 'current_tier' | 'referral_code' | 'approved_at' | 'rejected_at' | 'rejection_reason' | 'paid_at' | 'payment_reference' | 'commission_amount' | 'visibility' | 'source' | 'is_featured' | 'sort_order' | 'duration_minutes' | 'duration_seconds' | 'page_count' | 'year' | 'completed' | 'progress_seconds' | 'listened_at' | 'rating' | 'content_type' | 'admin_note' | 'answered_via' | 'answered_url' | 'answered_at' | 'answered_by' | 'is_pinned' | 'subject' | 'user_id' | 'douleur_id'
 type OptionalId<T> = Omit<T, Extract<DefaultColumns, keyof T>> &
   Partial<Pick<T, Extract<DefaultColumns, keyof T>>>
 
@@ -433,6 +824,29 @@ type Table<Row, Insert = OptionalId<Row>, Update = Partial<Row>> = {
   Relationships: []
 }
 
+// ── Encouragement Messages ──
+export type EncouragementMessage = {
+  id: string
+  time_slot: 'night' | 'morning' | 'afternoon' | 'evening'
+  message: string
+  sort_order: number
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
+// ── Push Subscriptions ──
+export type PushSubscription = {
+  id: string
+  user_id: string
+  endpoint: string
+  p256dh: string
+  auth: string
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
 // ── Database (Supabase schema) ──
 export type Database = {
   public: {
@@ -440,6 +854,7 @@ export type Database = {
       profiles: Table<Profile>
       subscriptions: Table<Subscription>
       douleurs: Table<Douleur>
+      douleur_steps: Table<DouleurStep>
       messages: Table<Message>
       posts: Table<Post>
       post_likes: Table<PostLike>
@@ -463,15 +878,55 @@ export type Database = {
       user_xp: Table<UserXP>
       challenges: Table<Challenge>
       challenge_participations: Table<ChallengeParticipation>
+      challenge_phases: Table<ChallengePhase>
+      challenge_phase_progress: Table<ChallengePhaseProgress>
       pinned_posts: Table<PinnedPost>
       onboarding_responses: Table<OnboardingResponse>
       user_goals: Table<UserGoal>
+      shine_shorts: Table<ShineShort>
+      shine_shorts_favorites: Table<ShineShortFavorite>
+      shine_shorts_shines: Table<ShineShortShine>
+      notification_preferences: Table<NotificationPreferences>
+      blog_favorites: Table<BlogFavorite>
+      post_bookmarks: Table<PostBookmark>
+      shine_shorts_ratings: Table<ShineShortRating>
+      shine_shorts_reviews: Table<ShineShortReview>
+      shine_tv_videos: Table<ShineTvVideo>
+      shine_tv_favorites: Table<ShineTvFavorite>
+      shine_tv_ratings: Table<ShineTvRating>
+      shine_tv_reviews: Table<ShineTvReview>
+      shine_audible_tracks: Table<ShineAudibleTrack>
+      shine_audible_favorites: Table<ShineAudibleFavorite>
+      shine_audible_ratings: Table<ShineAudibleRating>
+      shine_audible_reviews: Table<ShineAudibleReview>
+      shine_audible_history: Table<ShineAudibleHistory>
+      shine_library_books: Table<ShineLibraryBook>
+      shine_library_favorites: Table<ShineLibraryFavorite>
+      shine_library_ratings: Table<ShineLibraryRating>
+      shine_library_reviews: Table<ShineLibraryReview>
+      courrier_anonyme: Table<CourrierAnonyme>
+      douleur_quiz_questions: Table<DouleurQuizQuestion>
+      douleur_quiz_attempts: Table<DouleurQuizAttempt>
+      daily_user_actions: Table<DailyUserAction>
+      encyclopedia_progress: Table<EncyclopediaProgress>
+      site_visits: Table<SiteVisit>
+      premium_ateliers: Table<PremiumAtelier>
+      encouragement_messages: Table<EncouragementMessage>
+      push_subscriptions: Table<PushSubscription>
     }
     Views: Record<string, never>
     Functions: {
       add_xp: {
         Args: { p_user_id: string; p_amount: number; p_reason?: string }
         Returns: { total_xp: number; level: number; level_up: boolean }
+      }
+      check_and_increment_daily_action: {
+        Args: { p_user_id: string; p_action_type: string }
+        Returns: { allowed: boolean; count: number; xp_to_award: number }
+      }
+      award_encyclopedia_xp: {
+        Args: { p_user_id: string; p_module_id: string; p_score_percentage: number; p_total_steps: number }
+        Returns: { potential_xp: number; xp_earned: number; xp_delta_awarded: number; previous_score: number; new_score: number; xp_remaining: number }
       }
     }
   }

@@ -1,128 +1,114 @@
+// ═══════════════════════════════════════════════════════════════
+// POST /api/stripe/checkout
+// Crée une session Stripe Checkout pour un abonnement
+// ═══════════════════════════════════════════════════════════════
+
 import { NextResponse } from 'next/server'
-import { getStripe, getStripePriceId, STRIPE_WAITLIST_COUPON, PLAN_INFO } from '@/lib/stripe'
-import type { PlanId, DurationId } from '@/lib/stripe'
-import { createClient as createSupabaseClient } from '@supabase/supabase-js'
-import pg from 'pg'
-
-const VALID_PLANS: PlanId[] = ['essential', 'serenite', 'premium']
-const VALID_DURATIONS: DurationId[] = ['monthly', 'quarterly', 'semiannual', 'annual']
-
-let pool: pg.Pool | null = null
-function getPool() {
-  if (pool) return pool
-  const connectionString = process.env.DATABASE_URL
-  if (!connectionString) return null
-  pool = new pg.Pool({ connectionString, max: 5, idleTimeoutMillis: 30000 })
-  return pool
-}
+import { getStripe } from '@/lib/stripe/client'
+import { createClient } from '@/lib/supabase/server'
+import {
+  type PlanId,
+  type DurationId,
+  isValidPlan,
+  isValidDuration,
+  getStripePriceId,
+  PLAN_NAMES,
+  STRIPE_WAITLIST_COUPON,
+  getSiteUrl,
+} from '@/lib/stripe/config'
 
 export async function POST(request: Request) {
   try {
+    const { plan, duration = 'monthly', email, prenom, userId } = await request.json()
+
+    // Validation - l'utilisateur doit être connecté
+    if (!userId) {
+      return NextResponse.json({ error: 'Vous devez être connecté pour vous abonner' }, { status: 401 })
+    }
+
+    // Vérifier que le userId correspond à l'utilisateur authentifié
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user || user.id !== userId) {
+      return NextResponse.json({ error: 'Utilisateur non autorisé' }, { status: 403 })
+    }
+    if (!plan || !isValidPlan(plan)) {
+      return NextResponse.json({ error: 'Plan invalide' }, { status: 400 })
+    }
+    if (!isValidDuration(duration)) {
+      return NextResponse.json({ error: 'Durée invalide' }, { status: 400 })
+    }
+    const trimmedEmail = email?.trim()?.toLowerCase()
+    if (!trimmedEmail) {
+      return NextResponse.json({ error: 'Email requis' }, { status: 400 })
+    }
+
     const stripe = getStripe()
     if (!stripe) {
       return NextResponse.json({ error: 'Stripe non configuré' }, { status: 500 })
     }
 
-    const { plan, duration = 'monthly', email, user_id } = await request.json()
-
-    if (!plan || !VALID_PLANS.includes(plan)) {
-      return NextResponse.json({ error: 'Plan invalide' }, { status: 400 })
-    }
-
-    if (!VALID_DURATIONS.includes(duration)) {
-      return NextResponse.json({ error: 'Durée invalide' }, { status: 400 })
-    }
-
-    if (!email) {
-      return NextResponse.json({ error: 'Email requis' }, { status: 400 })
-    }
-
-    // Check if the user is on the waitlist (eligible for discount)
-    let hasWaitlistDiscount = false
-    const dbPool = getPool()
-    if (dbPool) {
-      try {
-        const result = await dbPool.query(
-          'SELECT id FROM waitlist WHERE LOWER(email) = LOWER($1) LIMIT 1',
-          [email.trim()]
-        )
-        hasWaitlistDiscount = (result.rows?.length || 0) > 0
-      } catch {
-        // If waitlist table doesn't exist or error, check via Supabase
-        try {
-          const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-          const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-          if (supabaseUrl && supabaseKey) {
-            const sb = createSupabaseClient(supabaseUrl, supabaseKey)
-            const { data } = await sb.from('crm_contacts')
-              .select('id')
-              .eq('email', email.toLowerCase().trim())
-              .eq('source', 'waitlist')
-              .limit(1)
-            hasWaitlistDiscount = (data?.length || 0) > 0
-          }
-        } catch {}
-      }
-    }
-
-    // Determine price ID
-    const priceId = getStripePriceId(plan as PlanId, duration as DurationId)
+    // Essential = mensuel uniquement
+    const effectiveDuration: DurationId = duration
+    const priceId = getStripePriceId(plan as PlanId, effectiveDuration)
 
     if (!priceId) {
-      return NextResponse.json({ error: 'Prix Stripe non configuré pour ce plan/durée' }, { status: 500 })
+      return NextResponse.json({
+        error: `L'offre ${PLAN_NAMES[plan as PlanId]} en ${effectiveDuration} n'est pas encore disponible.`
+      }, { status: 400 })
     }
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
-      || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : 'http://localhost:5000')
+    const siteUrl = getSiteUrl()
+    const firstName = prenom?.trim() || 'Membre'
 
-    // Determine if this plan has a free trial
-    const planInfo = PLAN_INFO[plan as PlanId]
-    const hasTrial = planInfo.hasTrial
-
-    // Build checkout session params
-    const params: Record<string, unknown> = {
+    // Paramètres de la session Checkout
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const sessionParams: any = {
       mode: 'subscription',
       payment_method_types: ['card'],
-      customer_email: email,
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${siteUrl}/dashboard?checkout=success`,
-      cancel_url: `${siteUrl}/rejoindre?checkout=cancel`,
+      customer_email: trimmedEmail,
+      success_url: `${siteUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${siteUrl}/dashboard/tarifs`,
       metadata: {
         plan,
-        duration,
-        email,
-        user_id: user_id || '',
-        waitlist_discount: hasWaitlistDiscount ? 'true' : 'false',
+        duration: effectiveDuration,
+        email: trimmedEmail,
+        prenom: firstName,
+        user_id: userId,
       },
-      subscription_data: {
-        metadata: {
-          plan,
-          duration,
-          email,
-          user_id: user_id || '',
-          waitlist_discount: hasWaitlistDiscount ? 'true' : 'false',
-        },
-        ...(hasTrial ? { trial_period_days: 7 } : {}),
-      },
+      client_reference_id: userId,
       allow_promotion_codes: true,
     }
 
-    // Apply waitlist coupon if eligible
-    if (hasWaitlistDiscount && STRIPE_WAITLIST_COUPON) {
-      (params as Record<string, unknown>).discounts = [{ coupon: STRIPE_WAITLIST_COUPON }]
-      // Remove allow_promotion_codes when discounts are applied
-      delete (params as Record<string, unknown>).allow_promotion_codes
+    // Coupon waitlist
+    if (STRIPE_WAITLIST_COUPON) {
+      sessionParams.discounts = [{ coupon: STRIPE_WAITLIST_COUPON }]
+      sessionParams.allow_promotion_codes = false
+      sessionParams.metadata.waitlist_discount = 'true'
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const session = await stripe.checkout.sessions.create(params as any)
+    const session = await stripe.checkout.sessions.create(sessionParams)
 
-    return NextResponse.json({
-      url: session.url,
-      hasWaitlistDiscount,
-    })
-  } catch (err) {
-    console.error('Checkout session error:', err)
-    return NextResponse.json({ error: 'Erreur lors de la création de la session' }, { status: 500 })
+    if (!session.url) {
+      return NextResponse.json({ error: 'Impossible de créer la session de paiement' }, { status: 500 })
+    }
+
+    return NextResponse.json({ url: session.url })
+  } catch (err: unknown) {
+    const e = err as { type?: string; message?: string }
+    console.error('[Checkout] Erreur:', e.type, e.message)
+
+    if (e.type === 'StripeInvalidRequestError') {
+      return NextResponse.json({ error: "Erreur de configuration" }, { status: 400 })
+    }
+    if (e.type === 'StripeAuthenticationError') {
+      return NextResponse.json({ error: "Erreur d'authentification Stripe" }, { status: 500 })
+    }
+    if (e.type === 'StripeConnectionError') {
+      return NextResponse.json({ error: 'Impossible de contacter Stripe. Réessayez.' }, { status: 502 })
+    }
+
+    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

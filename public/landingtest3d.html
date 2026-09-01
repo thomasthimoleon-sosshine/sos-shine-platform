@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOS Shine · Comprends pourquoi tu réagis comme ça</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* ---- Charte SOS Shine : noir profond + or + ivoire ---- */
+    --bg:#0A0806;            /* noir profond SOS Shine */
+    --bg-2:#12100B;          /* surface sombre */
+    --card:#16130D05;
+    --surface:#16130D;       /* cartes */
+    --surface-2:#1E1A12;
+    --line:#2E2718;          /* filets dorés discrets */
+    --cream:#F5EFE3;         /* ivoire — texte principal */
+    --cream-dim:#CBBE9F;     /* texte secondaire */
+    --muted:#AD9C7B;         /* labels discrets (lisibilité conservée) */
+    --terra:#C9A961;         /* remappé -> or SOS Shine */
+    --terra-soft:#E8C77D;    /* remappé -> or clair (accents en italique) */
+    --gold:#C9A961;          /* or SOS Shine */
+    --gold-bright:#E8C77D;   /* or clair */
+    --rose:#E0AE9A;          /* touche rose SOS Shine */
+    --radius:18px;
+    --container:1120px;
+    --serif:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+    --sans:'Jost',system-ui,-apple-system,'Segoe UI',sans-serif;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    /* Voile chaud en haut de page : fond le header dans la teinte du hero,
+       sans bande noire visible. S'estompe vers le noir profond plus bas. */
+    background:linear-gradient(180deg,rgba(201,169,97,.13) 0,rgba(201,169,97,.10) 90px,rgba(224,174,154,.06) 200px,rgba(10,8,6,0) 480px),var(--bg);
+    background-repeat:no-repeat;
+    color:var(--cream);
+    font-family:var(--sans);
+    font-size:17px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.14;letter-spacing:-.01em}
+  .em{color:var(--terra-soft);font-style:italic;font-weight:500}
+  .container{max-width:var(--container);margin:0 auto;padding:0 24px}
+
+  .eyebrow{
+    font-family:var(--sans);
+    font-size:12px;letter-spacing:2.4px;text-transform:uppercase;
+    color:var(--gold);font-weight:600;margin-bottom:18px;display:inline-block;
+  }
+
+  /* ---------- FOCUS / A11Y ---------- */
+  a:focus-visible,button:focus-visible{outline:2px solid var(--gold-bright);outline-offset:3px;border-radius:6px}
+
+  /* ---------- HEADER ---------- */
+  /* Header fondu dans la page (aucun bandeau visible en haut) ; il se teinte seulement au scroll pour rester lisible */
+  header{position:sticky;top:0;z-index:50;background:transparent;border-bottom:1px solid transparent;transition:background .3s ease,backdrop-filter .3s ease,border-color .3s ease}
+  header.scrolled{background:rgba(10,8,6,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(46,39,24,.7)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:96px}
+  .brand{display:flex;align-items:center;gap:11px;font-family:var(--serif);font-size:20px;font-weight:600;color:var(--cream)}
+  .brand-logo{height:84px;width:auto;display:block}
+  .sun{width:26px;height:26px;flex:none}
+  .nav-links{display:flex;gap:28px;align-items:center}
+  .nav-links a{font-size:14.5px;color:var(--cream-dim);transition:color .2s}
+  .nav-links a:hover{color:var(--cream)}
+  .nav-cta{
+    background:var(--gold);color:#0A0806;font-weight:600;font-size:14px;
+    padding:10px 18px;border-radius:10px;transition:transform .15s,box-shadow .2s;
+    box-shadow:0 6px 20px -8px rgba(217,169,75,.6);
+  }
+  .nav-links a.nav-cta,
+  .nav-links a.nav-cta:hover{color:#0A0806}
+  .nav-cta:hover{transform:translateY(-1px);box-shadow:0 10px 26px -8px rgba(217,169,75,.75)}
+  .burger{display:none;background:none;border:none;color:var(--cream);cursor:pointer}
+
+  /* ---------- BUTTONS ---------- */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:var(--sans);font-weight:600;border:none;cursor:pointer;transition:transform .15s,box-shadow .25s,background .2s}
+  .btn-gold{background:var(--gold);color:#0A0806;padding:16px 30px;border-radius:12px;font-size:16.5px;box-shadow:0 10px 30px -10px rgba(217,169,75,.65)}
+  .btn-gold:hover{transform:translateY(-2px);box-shadow:0 16px 40px -10px rgba(238,201,116,.8)}
+  .btn-ghost{background:transparent;color:var(--cream);padding:16px 26px;border:1px solid var(--line);border-radius:12px;font-size:16px}
+  .btn-ghost:hover{border-color:var(--gold);color:var(--gold-bright)}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative;text-align:center;padding:96px 0 70px;overflow:hidden}
+  /* Le halo doré a été retiré : la photo du hero porte déjà sa propre
+     lumière au centre, et un second halo par-dessus la redoublait.
+     Les règles .glow et @keyframes breathe partaient avec, elles ne
+     servaient plus qu'à lui. */
+  .hero .container{position:relative;z-index:1}
+  .hero h1{font-size:clamp(2.9rem,7.2vw,4.9rem);max-width:15ch;margin:0 auto 20px}
+  .hero .sub{font-size:clamp(.88rem,1.15vw,.98rem);color:var(--muted);max-width:46ch;margin:0 auto 20px;line-height:1.6}
+  .approach{font-size:13.5px;letter-spacing:.4px;color:var(--muted);margin-bottom:34px}
+  .approach span{color:var(--gold)}
+  .hero-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:26px}
+  .reassure{display:inline-flex;flex-wrap:wrap;gap:8px 20px;justify-content:center;font-size:13.5px;color:var(--cream-dim)}
+  .reassure b{color:var(--cream);font-weight:500}
+  .reassure .dot{color:var(--gold)}
+  /* « Rendez-vous avec Julia » — premier bouton visible, en tête du hero */
+  .rdv-julia{display:inline-flex;align-items:center;gap:7px;margin:0 auto 22px;font-family:var(--sans);
+    font-size:13px;font-weight:500;letter-spacing:.02em;color:var(--gold-bright);
+    border:1px solid rgba(201,169,97,.4);background:rgba(201,169,97,.06);
+    padding:9px 18px;border-radius:100px;transition:background .2s,border-color .2s,transform .15s}
+  .rdv-julia:hover{background:rgba(201,169,97,.14);border-color:var(--gold-bright);transform:translateY(-1px)}
+  /* Phrase de positionnement — juste sous le bouton Julia, mise en avant */
+  .positioning{display:block;font-family:var(--sans);font-weight:500;font-size:clamp(11px,1.1vw,12.5px);
+    letter-spacing:.06em;color:var(--gold);margin:0 auto 18px;
+    line-height:1.5;max-width:34ch;opacity:.85}
+
+  /* ---------- SECTIONS ---------- */
+  section.band{padding:100px 0}
+  .band.alt{background:var(--bg-2)}
+  .sec-head{max-width:60ch;margin-bottom:44px}
+  .sec-head.center{margin-left:auto;margin-right:auto;text-align:center}
+  h2{font-size:clamp(1.9rem,3.6vw,2.85rem)}
+  h2+.sec-sub{color:var(--cream-dim);font-size:17px;margin-top:14px;max-width:56ch}
+  .sec-head.center .sec-sub{margin-left:auto;margin-right:auto}
+
+  /* ---------- RECOGNITION ---------- */
+  .reco{position:relative;text-align:center;padding:110px 0}
+  .reco:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(224,174,154,.10),transparent 70%)}
+  .reco .container{position:relative}
+  .mirror{font-family:var(--serif);font-size:clamp(1.4rem,3vw,2.1rem);line-height:1.5;color:var(--cream);max-width:20ch;margin:0 auto}
+  .mirror span{display:block;opacity:.4;margin:10px 0;transition:opacity .5s}
+  .mirror span.on{opacity:1}
+  .reco .turn{margin-top:40px;font-size:18px;color:var(--cream-dim);max-width:44ch;margin-left:auto;margin-right:auto}
+  .reco .turn b{color:var(--terra-soft);font-family:var(--serif);font-style:italic;font-weight:500}
+
+  /* ---------- SIGNATURE RESULT ---------- */
+  .sig-wrap{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center}
+  .sig-card{
+    background:linear-gradient(160deg,var(--surface),var(--surface-2));
+    border:1px solid var(--line);border-radius:var(--radius);padding:38px 34px;position:relative;
+    box-shadow:0 30px 70px -30px rgba(0,0,0,.6);
+  }
+  .sig-card:before{content:"";position:absolute;left:0;top:26px;bottom:26px;width:3px;background:var(--gold);border-radius:3px}
+  .sig-card .q{font-family:var(--serif);font-style:italic;font-size:23px;line-height:1.5;color:var(--cream)}
+  .sig-card .tag{margin-top:18px;font-size:12.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--gold)}
+
+  /* ---------- PLATFORM ---------- */
+  .grid-4{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+  .space{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:30px 28px;transition:transform .2s,border-color .2s}
+  .space:hover{transform:translateY(-4px);border-color:rgba(217,169,75,.5)}
+  .space .n{font-family:var(--serif);font-size:15px;color:var(--gold);letter-spacing:1px;margin-bottom:14px}
+  .space h3{font-size:21px;color:var(--cream);margin-bottom:10px}
+  .space p{font-size:15px;color:var(--cream-dim)}
+  .capture{margin-top:56px;border:1px dashed var(--line);border-radius:14px;padding:26px;text-align:center;color:var(--muted);font-size:13.5px}
+
+  /* ---------- METHOD ---------- */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+  .step{padding-top:26px;border-top:2px solid var(--line);position:relative}
+  .step:before{content:"";position:absolute;top:-2px;left:0;width:46px;height:2px;background:var(--terra)}
+  .step .k{font-family:var(--serif);font-size:14px;color:var(--terra-soft);letter-spacing:1px;margin-bottom:8px}
+  .step h3{font-size:20px;margin-bottom:8px}
+  .step p{font-size:15px;color:var(--cream-dim)}
+
+  /* ---------- AVANT / APRÈS ---------- */
+  .avap{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:820px;margin:0 auto}
+  .avap .col{border:1px solid var(--line);border-radius:var(--radius);padding:28px 26px;background:var(--surface)}
+  .avap .col.apres{border-color:rgba(201,169,97,.45);background:linear-gradient(160deg,rgba(201,169,97,.08),var(--surface))}
+  .avap .lab{font-family:var(--sans);font-size:12px;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;font-weight:600}
+  .avap .avant .lab{color:var(--cream-dim)}
+  .avap .apres .lab{color:var(--gold-bright)}
+  .avap p{font-size:15.5px;color:var(--cream-dim);line-height:1.7;margin:0}
+  .avap .apres p{color:var(--cream)}
+  @media(max-width:900px){.avap{grid-template-columns:1fr}}
+
+  /* ---------- APPROACH ---------- */
+  .approach-band{background:var(--bg-2)}
+  .app-cols{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:start}
+  .pills{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 22px}
+  .pill{border:1px solid var(--line);border-radius:100px;padding:8px 16px;font-size:14px;color:var(--cream-dim)}
+  .pill.opt{border-color:rgba(217,169,75,.5);color:var(--gold-bright)}
+  .disclaimer{font-size:13.5px;color:var(--muted);border-left:2px solid var(--line);padding-left:16px;line-height:1.6}
+
+  /* ---------- TEAM ---------- */
+  .team{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+  .member{text-align:center}
+  .avatar{width:112px;height:112px;border-radius:50%;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:34px;color:#0A0806;background:radial-gradient(circle at 35% 30%,var(--gold-bright),var(--terra));box-shadow:0 0 0 1px var(--line),0 14px 34px -14px rgba(201,169,97,.5);overflow:hidden}
+  .avatar img{width:100%;height:100%;object-fit:cover;object-position:center 22%;border-radius:50%}
+  .member .role{font-size:12px;letter-spacing:1.8px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+  .member h3{font-size:21px;margin-bottom:8px}
+  .member p{font-size:14.5px;color:var(--cream-dim);max-width:32ch;margin:0 auto}
+
+  /* ---------- ACCOMPANIMENT / LOCAL ---------- */
+  .local{padding:0;display:grid;grid-template-columns:1.2fr .8fr;gap:36px;align-items:center}
+  .local h2{font-size:clamp(1.7rem,3vw,2.3rem)}
+  .local p{color:var(--cream-dim);margin-top:14px}
+  .local .zones{margin-top:20px;display:flex;flex-wrap:wrap;gap:8px}
+  .local .zones span{font-size:13px;color:var(--gold-bright);border:1px solid rgba(217,169,75,.4);border-radius:8px;padding:6px 12px}
+
+  /* ---------- PROOF ---------- */
+  .quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .quote{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px}
+  .quote .stars{color:var(--gold);font-size:14px;letter-spacing:3px;margin-bottom:14px}
+  .quote p{font-size:15.5px;color:var(--cream);line-height:1.55}
+  .quote .who{margin-top:18px;font-size:13px;color:var(--muted)}
+  .quote .who b{color:var(--cream-dim);font-weight:600;display:block;font-size:14px}
+  /* En-tête avis Google : avatar + nom + étoiles */
+  .qhead{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+  .qav{width:44px;height:44px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-family:var(--sans);font-weight:700;font-size:18px;color:#fff}
+  .qname{font-family:var(--sans);font-weight:600;color:var(--cream);font-size:14.5px;line-height:1.2}
+  .qhead .stars{color:var(--gold);font-size:12.5px;letter-spacing:2px;margin-top:3px}
+  .qsrc{margin-top:16px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+  .qsrc b{color:var(--cream-dim);font-weight:600}
+
+  /* ---------- PRICING ---------- */
+  .prices{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:820px;margin:0 auto}
+  .price{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:34px 30px;position:relative}
+  .price.reco-card{border-color:var(--gold);box-shadow:0 30px 70px -30px rgba(217,169,75,.4)}
+  .badge{position:absolute;top:-13px;left:30px;background:var(--gold);color:#0A0806;font-size:11.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:5px 12px;border-radius:8px}
+  .price h3{font-size:22px;margin-bottom:6px}
+  .price .amt{font-family:var(--serif);font-size:40px;color:var(--cream);margin:6px 0 4px}
+  .price .amt small{font-size:16px;color:var(--muted);font-family:var(--sans)}
+  .price p{font-size:14.5px;color:var(--cream-dim);margin:14px 0 16px}
+  .price .feat{list-style:none;margin:0 0 24px;padding:0;text-align:left;display:flex;flex-direction:column;gap:11px}
+  .price .feat li{position:relative;padding-left:26px;font-size:14px;color:var(--cream-dim);line-height:1.45}
+  .price .feat li:before{content:"✓";position:absolute;left:0;top:0;color:var(--gold);font-weight:700}
+  .price .btn{width:100%}
+  .price-note{text-align:center;color:var(--muted);font-size:14px;margin-top:26px}
+  .price-note b{color:var(--cream-dim);font-weight:500}
+
+  /* ---------- FAQ ---------- */
+  .faq{max-width:760px;margin:0 auto}
+  .qa{border-bottom:1px solid var(--line)}
+  .qa button{width:100%;text-align:left;background:none;border:none;color:var(--cream);font-family:var(--serif);font-size:19px;padding:22px 40px 22px 0;cursor:pointer;position:relative}
+  .qa button:after{content:"+";position:absolute;right:6px;top:20px;color:var(--gold);font-size:24px;font-family:var(--sans);transition:transform .2s}
+  .qa.open button:after{content:"–"}
+  .qa .a{max-height:0;overflow:hidden;transition:max-height .3s ease;color:var(--cream-dim);font-size:15.5px}
+  .qa.open .a{max-height:260px}
+  .qa .a p{padding:0 0 22px}
+
+  /* ---------- FINAL CTA ---------- */
+  .final{position:relative;text-align:center;padding:120px 0;overflow:hidden}
+  .final:before{content:"";position:absolute;left:50%;top:50%;width:760px;height:760px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(217,169,75,.16),transparent 65%)}
+  .final .container{position:relative}
+  .final h2{font-size:clamp(2rem,4vw,3rem);max-width:16ch;margin:0 auto 18px}
+  .final p{color:var(--cream-dim);max-width:48ch;margin:0 auto 32px}
+
+  /* ---------- FOOTER ---------- */
+  footer{background:#070502;border-top:1px solid var(--line);padding:60px 0 34px;font-size:14px;color:var(--cream-dim)}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:36px;margin-bottom:40px}
+  .foot-grid h4{font-family:var(--sans);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+  .foot-grid a{display:block;color:var(--cream-dim);margin-bottom:9px;transition:color .2s}
+  .foot-grid a:hover{color:var(--cream)}
+  .foot-brand .brand{margin-bottom:14px}
+  .foot-brand p{font-size:13.5px;color:var(--muted);max-width:34ch}
+  .foot-social{display:flex;gap:12px;margin-top:20px}
+  .foot-social a{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;margin:0;border:1px solid var(--line);border-radius:50%;color:var(--gold);transition:color .2s ease,border-color .2s ease,transform .2s ease}
+  .foot-social a:hover{color:var(--cream);border-color:var(--gold);transform:translateY(-2px)}
+  .avert{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:18px 0;font-size:12.5px;color:var(--muted);text-align:center;margin-bottom:22px}
+  .legal{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12.5px;color:var(--muted)}
+
+  /* ---------- STICKY MOBILE CTA ---------- */
+  .sticky-cta{position:fixed;left:0;right:0;bottom:0;z-index:60;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:rgba(24,14,10,.92);backdrop-filter:blur(10px);border-top:1px solid var(--line);transform:translateY(120%);transition:transform .3s;display:none}
+  .sticky-cta.show{transform:translateY(0)}
+  .sticky-cta .btn{width:100%}
+
+  /* ---------- REVEAL (only when JS active) ---------- */
+  .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+  .js .reveal.in{opacity:1;transform:none}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media(max-width:900px){
+    .nav{height:70px}
+    .brand-logo{height:56px}
+    .nav-links{display:none}
+    /* Menu mobile déroulant quand le burger est activé */
+    header.nav-open .nav-links{display:flex;flex-direction:column;align-items:stretch;gap:0;
+      position:absolute;top:70px;left:0;right:0;background:rgba(28,17,12,.98);
+      border-bottom:1px solid var(--line);padding:10px 24px 20px}
+    header.nav-open .nav-links a{padding:13px 0;font-size:16px;border-bottom:1px solid rgba(46,39,24,.5)}
+    header.nav-open .nav-links a:last-child{border-bottom:none}
+    header.nav-open .nav-links .nav-cta{margin-top:12px;text-align:center;border-bottom:none;color:#0A0806}
+    .burger{display:block}
+    .sig-wrap,.app-cols,.local{grid-template-columns:1fr;gap:30px}
+    .grid-4,.steps,.team,.quotes,.prices{grid-template-columns:1fr}
+    .foot-grid{grid-template-columns:1fr 1fr}
+    section.band,.reco,.final{padding:66px 0}
+    .local{padding:0}
+    /* Mobile : image portrait dédiée (diamants répartis dans la colonne centrale) */
+    .hide-m{display:none}
+    .sticky-cta{display:block}
+    /* Empêche le bouton flottant de recouvrir les derniers liens du footer */
+    footer{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
+  }
+  @media(max-width:520px){
+    .foot-grid{grid-template-columns:1fr}
+    .hero-cta .btn{width:100%;font-size:16.5px;padding:16px 18px;white-space:nowrap}
+    /* Hero compact sur mobile : les 2 CTA doivent être visibles dès l'arrivée */
+    .hero{padding:16px 0 40px}
+    .hero .rdv-julia{margin:0 auto 14px}
+    .hero .positioning{margin:0 auto 12px}
+    .hero h1{font-size:clamp(2.1rem,8.2vw,2.7rem);line-height:1.14;margin:0 auto 14px;max-width:16ch}
+    .hero .sub{font-size:.88rem;line-height:1.55;margin:0 auto 18px}
+    .hero-cta{gap:10px;margin-bottom:0}
+  }
+
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+    .reveal{opacity:1;transform:none}
+    .mirror span{opacity:1}
+  }
+</style>
+</head>
+<body>
+
+<!-- 01 · HEADER -->
+<header>
+  <div class="container nav">
+    <a href="/" class="brand"><img class="brand-logo" src="/images/logo-shine.png" alt="SOS Shine" /></a>
+    <nav class="nav-links">
+      <a href="#plateforme">La solution</a>
+      <a href="#methode">La transformation</a>
+      <a href="#equipe">L'équipe</a>
+      <a href="#accompagnement">Rencontres</a>
+      <a href="/signup">Créer un compte</a>
+      <a href="/login">Se connecter</a>
+      <a href="/signature-emotionnelle?start=1" class="nav-cta">Faire le test gratuit</a>
+    </nav>
+    <button class="burger" aria-label="Menu">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- 03 · HERO -->
+<section class="hero" id="test">
+  <div class="container">
+    <a href="https://julialaureau.com" target="_blank" rel="noopener noreferrer" class="rdv-julia">Prendre rendez-vous avec Julia Laureau <span aria-hidden="true">↗</span></a>
+    <span class="positioning">Plateforme de déconditionnement émotionnel</span>
+    <h1>Tu traverses une période douloureuse… <span class="em">tu es au bon endroit pour retrouver ton bien-être intérieur.</span></h1>
+    <p class="sub">Ici, tu vas comprendre ce qui se passe vraiment en toi et trouver un chemin concret pour t'en sortir.</p>
+    <div class="hero-cta">
+      <a href="/signature-emotionnelle?start=1" class="btn btn-gold">Découvrir ma Signature Émotionnelle</a>
+      <a href="#plateforme" class="btn btn-ghost">Voir comment fonctionne SOS Shine</a>
+    </div>
+  </div>
+</section>
+
+<!-- 05 · RECOGNITION -->
+<section class="reco">
+  <div class="container">
+    <div class="mirror">
+      <span>Tu vis une séparation ?</span>
+      <span>Tu es face à un deuil ?</span>
+      <span>Tu veux sortir du silence de tes abus vécus ?</span>
+      <span>Tu traverses un burn-out ?</span>
+    </div>
+  </div>
+</section>
+
+<!-- 06 · SIGNATURE RESULT -->
+<section class="band alt">
+  <div class="container sig-wrap">
+    <div class="reveal">
+      <span class="eyebrow">Ce que tu reçois immédiatement</span>
+      <h2>Ta <span class="em">Signature Émotionnelle</span> en 3 minutes</h2>
+      <p class="sec-sub">Un texte clair et précis qui te montre : exactement ce que tu traverses, pourquoi ça fait si mal, et par où commencer pour aller mieux.</p>
+    </div>
+    <div class="sig-card reveal">
+      <p class="q">« Tu n'as pas peur d'aimer. Tu as peur qu'on parte quand tu aimeras vraiment. »</p>
+      <p class="tag">Signature · Blessure d'abandon</p>
+    </div>
+  </div>
+</section>
+
+<!-- 07 + 08 · WHAT IS / PLATFORM -->
+<section class="band" id="plateforme">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">La solution</span>
+      <h2>Voici comment on t'aide <span class="em">concrètement</span></h2>
+      <p class="sec-sub">Ce n'est pas une appli de méditation. Ce n'est pas de la motivation vide. C'est un accompagnement structuré pour traverser ce que tu vis.</p>
+    </div>
+    <div class="grid-4">
+      <div class="space reveal"><div class="n">01</div><h3>Tu comprends enfin</h3><p>Le test révèle le schéma émotionnel qui te fait souffrir en boucle.</p></div>
+      <div class="space reveal"><div class="n">02</div><h3>Tu es guidé(e) étape par étape</h3><p>Nous t'accompagnons à travers les grands sujets de vie, avec <b>5 nouveaux protocoles publiés chaque mois</b> : vidéos immersives de coaching, méditations, hypnose, cahiers de travail et outils concrets pour avancer à ton rythme.</p></div>
+      <div class="space reveal"><div class="n">03</div><h3>Tu n'es plus seul(e)</h3><p>Une communauté bienveillante + la possibilité d'écrire anonymement ce que tu n'oses dire à personne.</p></div>
+      <div class="space reveal"><div class="n">04</div><h3>Tu intègres durablement le changement</h3><p>Grâce à nos trois expertises et à l'ensemble de nos ressources.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 09 · TRANSFORMATION (Avant / Après) -->
+<section class="band alt" id="methode">
+  <div class="container">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">La transformation</span>
+      <h2>De la souffrance… <span class="em">à l'apaisement.</span></h2>
+    </div>
+    <div class="avap">
+      <div class="col avant reveal">
+        <p class="lab">Avant</p>
+        <p>Tu revivais les mêmes douleurs. Tu te sentais impuissant(e). Tu portais tout seul(e).</p>
+      </div>
+      <div class="col apres reveal">
+        <p class="lab">Après</p>
+        <p>Tu comprends ce qui se joue. Tu sais quoi faire. Tu te sens plus léger(e), plus stable, et progressivement plus toi.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 · TEAM -->
+<section class="band" id="equipe">
+  <div class="container">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">L'équipe</span>
+      <h2>Trois personnes, <span class="em">une même intention</span></h2>
+    </div>
+    <div class="team">
+      <div class="member reveal"><div class="avatar"><img src="/images/julia.jpeg" alt="Julia, fondatrice de SOS Shine" loading="lazy" /></div><div class="role">Fondatrice et voix</div><h3>Julia</h3><p>Elle est le lien entre le ciel et la terre, l'invisible et la science, le cœur et l'esprit.</p></div>
+      <div class="member reveal"><div class="avatar"><img src="/images/william.jpg" alt="William, architecte d'évolution" loading="lazy" /></div><div class="role">Architecte d'évolution</div><h3>William</h3><p>Il transforme le vécu en chemin. En reliant le corps, les émotions et l'esprit, il aide chacun à comprendre ses mécanismes afin d'avancer avec plus de clarté et d'autonomie.</p></div>
+      <div class="member reveal"><div class="avatar"><img src="/images/thomas.jpeg" alt="Thomas, lecture de signature" loading="lazy" /></div><div class="role">Lecture de signature</div><h3>Thomas</h3><p>À partir de ta date de naissance, il t'aide à comprendre ce qui se répète et ton potentiel.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 · ACCOMPANIMENT + LOCAL -->
+<section class="band alt" id="accompagnement" style="min-height:70vh;display:flex;align-items:center">
+  <div class="container">
+    <div class="local reveal">
+      <div>
+        <span class="eyebrow">Rencontres</span>
+        <h2>Parfois, on a besoin de se <span class="em">rencontrer en vrai</span></h2>
+        <p>Accessible partout en France. Et en présentiel dans le Sud (Cannes, Mandelieu…).</p>
+        <div class="zones"><span>Cannes</span><span>Mandelieu</span><span>Alpes-Maritimes</span><span>Rendez-vous avec Julia</span></div>
+      </div>
+      <div style="text-align:center">
+        <a href="/event" class="btn btn-ghost">Découvrir les rencontres</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 · PROOF -->
+<section class="band">
+  <div class="container">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">Avis Google · ★★★★★</span>
+      <h2>Ce qu'ils vivent avec <span class="em">Julia &amp; William</span></h2>
+    </div>
+    <div class="quotes">
+      <div class="quote reveal">
+        <div class="qhead"><span class="qav" style="background:#E0AE9A">C</span><span><span class="qname">Christine B.</span><div class="stars">★★★★★</div></span></div>
+        <p>« J'ai suivi tout un programme avec Julia, de l'amour de soi au déconditionnement… Ensemble nous avons débloqué plein de choses que je ne soupçonnais même pas. Grâce à Julia j'ai compris mes blessures. Merci pour ta bienveillance et ta douceur. »</p>
+        <div class="qsrc"><b>Avis Google</b> · Julia</div>
+      </div>
+      <div class="quote reveal">
+        <div class="qhead"><span class="qav" style="background:#E8A54B">M</span><span><span class="qname">Magali V.</span><div class="stars">★★★★★</div></span></div>
+        <p>« Julia est une femme magique. Elle dégage une énergie incroyable… Elle n'est pas là pour notre argent mais bel et bien pour nous aider à vivre une vie alignée et épanouie. Elle prend le temps et s'intéresse même après les séances. »</p>
+        <div class="qsrc"><b>Avis Google</b> · Julia</div>
+      </div>
+      <div class="quote reveal">
+        <div class="qhead"><span class="qav" style="background:#4BB3A0">F</span><span><span class="qname">Fanny C.</span><div class="stars">★★★★★</div></span></div>
+        <p>« J'ai adoré le concept d'une séance qui peut prendre plusieurs heures… Chez Julia on se pose, on prend le temps nécessaire d'aller en profondeur sur nos traumas à épurer. »</p>
+        <div class="qsrc"><b>Avis Google</b> · Julia</div>
+      </div>
+      <div class="quote reveal">
+        <div class="qhead"><span class="qav" style="background:#5B8DEF">O</span><span><span class="qname">Olivier L.</span><div class="stars">★★★★★</div></span></div>
+        <p>« William est un thérapeute incroyable… Au terme de la première séance, je ressens déjà des résultats. J'ai été suivi par pas mal de praticiens, mais là on est dans une autre dimension. »</p>
+        <div class="qsrc"><b>Avis Google</b> · William</div>
+      </div>
+      <div class="quote reveal">
+        <div class="qhead"><span class="qav" style="background:#A47EC8">J</span><span><span class="qname">Jihane M.</span><div class="stars">★★★★★</div></span></div>
+        <p>« Une qualité d'écoute assez rare. On sent immédiatement quelqu'un de profondément humain… On ressort à chaque fois plus apaisé, plus aligné, avec des clés pour mieux comprendre son propre fonctionnement. »</p>
+        <div class="qsrc"><b>Avis Google</b> · William</div>
+      </div>
+      <div class="quote reveal">
+        <div class="qhead"><span class="qav" style="background:#5FB365">S</span><span><span class="qname">Sandrine D.</span><div class="stars">★★★★★</div></span></div>
+        <p>« Une grande écoute, très professionnel… J'ai vraiment été bluffée par les résultats. Les séances se déroulent dans un climat apaisant et on en ressort avec un vrai mieux-être. Je recommande sans hésiter. »</p>
+        <div class="qsrc"><b>Avis Google</b> · William</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 14 · PRICING -->
+<section class="band alt" id="tarifs">
+  <div class="container">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">Tarifs</span>
+      <h2>Choisis ce qui <span class="em">te convient</span></h2>
+    </div>
+    <div class="prices">
+      <div class="price reco-card reveal">
+        <span class="badge">Recommandé</span>
+        <h3>L'Abonnement</h3>
+        <div class="amt">49,90 € <small>/ mois</small></div>
+        <p>Tout SOS Shine, sans limite.</p>
+        <ul class="feat">
+          <li>Tous les protocoles, en entier</li>
+          <li>Shine TV, Shorts, Audible &amp; Librairie</li>
+          <li>Communauté &amp; entraide, 24h/24</li>
+          <li>Lives &amp; événements en ligne</li>
+          <li>Sans engagement, annulable en 1 clic</li>
+        </ul>
+        <a href="/rejoindre" class="btn btn-gold">Rejoindre SOS Shine</a>
+      </div>
+      <div class="price reveal">
+        <h3>À la carte</h3>
+        <div class="amt">33 € <small>/ protocole</small></div>
+        <p>Un seul protocole, sans abonnement.</p>
+        <ul class="feat">
+          <li>Un protocole complet, débloqué à vie</li>
+          <li>+ 30 jours d'accès à toute la plateforme, offerts</li>
+          <li>La 1re étape reste gratuite pour essayer</li>
+        </ul>
+        <a href="/choisir-mon-protocole" class="btn btn-ghost">Choisir mon protocole</a>
+      </div>
+    </div>
+    <p class="price-note"><b>Pas sûr(e) ?</b> Commence par le test gratuit.</p>
+  </div>
+</section>
+
+<!-- 15 · FAQ -->
+<section class="band" id="faq">
+  <div class="container">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">FAQ</span>
+      <h2>Les questions qu'on <span class="em">pose le plus</span></h2>
+    </div>
+    <div class="faq">
+      <div class="qa"><button>Le test est-il vraiment gratuit ?</button><div class="a"><p>Oui. 100 % gratuit, 3 minutes, sans carte bancaire.</p></div></div>
+      <div class="qa"><button>C'est différent des tests de personnalité ?</button><div class="a"><p>Oui. On ne te met pas dans une case. On te montre ce que tu traverses vraiment.</p></div></div>
+      <div class="qa"><button>Et si je suis déjà en thérapie ?</button><div class="a"><p>Aucun problème. C'est un complément, pas un remplacement.</p></div></div>
+      <div class="qa"><button>Que se passe-t-il après le test ?</button><div class="a"><p>Tu peux t'arrêter là… ou continuer pour être accompagné(e).</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 16 · FINAL CTA -->
+<section class="final">
+  <div class="container">
+    <span class="eyebrow">Dernier pas</span>
+    <h2>Si tu ne fais rien aujourd'hui, <span class="em">où en seras-tu dans 6 mois ?</span></h2>
+    <p>3 minutes. Un résultat clair. Une première clé pour avancer.</p>
+    <a href="/signature-emotionnelle?start=1" class="btn btn-gold">Découvrir ma Signature Émotionnelle</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="/" class="brand"><img class="brand-logo" src="/images/logo-shine.png" alt="SOS Shine" /></a>
+        <p>En ligne partout en France, et dans le Sud en présentiel.</p>
+        <div class="foot-social">
+          <a href="https://www.instagram.com/julia_laureau_sosshine/" target="_blank" rel="noopener noreferrer" aria-label="SOS Shine sur Instagram">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.4" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="4.1" stroke="currentColor" stroke-width="1.7"/><circle cx="17.5" cy="6.5" r="1.25" fill="currentColor"/></svg>
+          </a>
+          <a href="https://www.facebook.com/sosshinejulia" target="_blank" rel="noopener noreferrer" aria-label="SOS Shine sur Facebook">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14.6 21.5v-8.2h2.8l.42-3.25H14.6V7.97c0-.94.26-1.58 1.61-1.58h1.72V3.48A23 23 0 0 0 15.42 3.35c-2.48 0-4.18 1.51-4.18 4.29v2.41H8.42v3.25h2.82v8.2Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="https://www.youtube.com/@SOS-Shine" target="_blank" rel="noopener noreferrer" aria-label="SOS Shine sur YouTube">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2.3" y="5.3" width="19.4" height="13.4" rx="4.2" stroke="currentColor" stroke-width="1.7"/><path d="M10.4 9.4v5.2l4.5-2.6Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+      <div><h4>Découvrir</h4><a href="#methode">La méthode</a><a href="#plateforme">La plateforme</a><a href="#equipe">L'équipe</a><a href="/event">Événements</a></div>
+      <div><h4>Ressources</h4><a href="/signature-emotionnelle?start=1">Signature Émotionnelle</a><a href="/encyclopedie">Encyclopédie</a><a href="#faq">FAQ</a><a href="/contact">Contact</a></div>
+      <div><h4>Légal</h4><a href="/mentions-legales">Mentions légales</a><a href="/cgv">CGV</a><a href="/confidentialite">Confidentialité</a><a href="/confidentialite">Cookies</a></div>
+    </div>
+    <p class="avert">Les contenus SOS Shine ont une vocation éducative et complémentaire. Ils ne remplacent pas un diagnostic, un traitement, un suivi médical, psychologique ou psychiatrique.</p>
+    <div class="legal">
+      <span>© 2026 SOS Shine®. Tous droits réservés.</span>
+      <span>julialaureau@sosshine.com · Montauroux, France</span>
+    </div>
+  </div>
+</footer>
+
+<!-- STICKY MOBILE CTA -->
+<div class="sticky-cta" id="stickyCta">
+  <a href="/signature-emotionnelle?start=1" class="btn btn-gold">Faire le test gratuit · 3 min</a>
+</div>
+
+<script>
+  document.documentElement.classList.add('js');
+
+  // Menu mobile : ouvre/ferme le menu déroulant au clic sur le burger
+  const burger = document.querySelector('.burger');
+  const hdr = document.querySelector('header');
+  if (burger && hdr) {
+    burger.addEventListener('click', () => hdr.classList.toggle('nav-open'));
+    hdr.querySelectorAll('.nav-links a').forEach(a =>
+      a.addEventListener('click', () => hdr.classList.remove('nav-open')));
+  }
+
+  // Header fondu en haut, teinté au scroll (pour rester lisible)
+  if (hdr) {
+    const onScroll = () => hdr.classList.toggle('scrolled', window.scrollY > 24);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
+  // Scroll reveal
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  },{threshold:.14});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // Mirror phrases sequential emphasis
+  const mirrors=document.querySelectorAll('.mirror span');
+  const mio=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        mirrors.forEach((s,i)=>setTimeout(()=>s.classList.add('on'), i*450));
+        mio.disconnect();
+      }
+    });
+  },{threshold:.4});
+  if(mirrors.length) mio.observe(mirrors[0].parentElement);
+
+  // FAQ accordion
+  document.querySelectorAll('.qa button').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const qa=b.parentElement;
+      const wasOpen=qa.classList.contains('open');
+      document.querySelectorAll('.qa').forEach(x=>x.classList.remove('open'));
+      if(!wasOpen) qa.classList.add('open');
+    });
+  });
+
+  // Sticky mobile CTA appears after hero
+  const hero=document.getElementById('test');
+  const sticky=document.getElementById('stickyCta');
+  const sio=new IntersectionObserver((entries)=>{
+    entries.forEach(e=> sticky.classList.toggle('show', !e.isIntersecting));
+  },{threshold:0});
+  if(hero) sio.observe(hero);
+</script>
+</body>
+</html>

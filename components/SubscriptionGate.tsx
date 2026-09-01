@@ -1,0 +1,135 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import { useSubscription } from '@/hooks/useSubscription'
+import { createClient } from '@/lib/supabase/client'
+import { getPaymentLink } from '@/lib/stripe'
+
+interface SubscriptionGateProps {
+  children: React.ReactNode
+  loadingText?: string
+  /** Si true, le contenu est accessible à tout membre connecté (plan gratuit) */
+  allowFree?: boolean
+}
+
+/**
+ * Verrouille le contenu pour les non-abonnes.
+ * Au clic sur "Choisir mon abonnement" → ouvre le modal Stripe inline.
+ * Apres paiement → le contenu se debloque instantanement.
+ *
+ * Avec allowFree=true, le contenu est ouvert à tout utilisateur connecté
+ * (utilisé pour la communauté et Shine Audible qui sont gratuits).
+ */
+export default function SubscriptionGate({ children, loadingText, allowFree = false }: SubscriptionGateProps) {
+  const { loading, isActive, userId } = useSubscription()
+  const [userEmail, setUserEmail] = useState('')
+
+  useEffect(() => {
+    async function loadUser() {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) setUserEmail(user.email || '')
+    }
+    loadUser()
+  }, [])
+
+  // Abonnement : on redirige vers le Payment Link Stripe (source unique du prix),
+  // avec email et identifiant pré-remplis pour rattacher le paiement au compte.
+  function goToCheckout() {
+    const link = getPaymentLink('serenite', 'monthly')
+    if (!link) return
+    const url = new URL(link)
+    if (userEmail) url.searchParams.set('prefilled_email', userEmail)
+    if (userId) url.searchParams.set('client_reference_id', userId)
+    window.location.href = url.toString()
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-24">
+        <div className="text-center space-y-4">
+          <div className="w-10 h-10 rounded-2xl mx-auto flex items-center justify-center"
+            style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))' }}>
+            <div className="w-5 h-5 border-2 border-[var(--dark)] border-t-transparent rounded-full animate-spin" />
+          </div>
+          {loadingText && (
+            <p className="text-sm text-[var(--text-muted)]">{loadingText}</p>
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  if (isActive || allowFree) {
+    return <>{children}</>
+  }
+
+  return (
+    <>
+      <div className="flex items-center justify-center min-h-[60vh] px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="max-w-lg w-full text-center relative"
+        >
+          <div
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 rounded-full opacity-15 blur-[60px]"
+            style={{ background: 'var(--brand)' }}
+          />
+
+          <div
+            className="relative z-10 rounded-2xl overflow-hidden p-8 sm:p-10"
+            style={{
+              background: 'linear-gradient(160deg, var(--surface-card) 0%, rgba(201,169,97,0.06) 100%)',
+              border: '1px solid rgba(201,169,97,0.2)',
+              boxShadow: '0 25px 60px rgba(0,0,0,0.4), 0 0 40px rgba(201,169,97,0.06)',
+            }}
+          >
+            <div
+              className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center"
+              style={{ background: 'rgba(201,169,97,0.1)', border: '1px solid rgba(201,169,97,0.2)' }}
+            >
+              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="var(--brand)" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+              </svg>
+            </div>
+
+            <h2
+              className="font-display text-xl sm:text-2xl font-semibold mb-3 text-[var(--text-primary)]"
+            >
+              Contenu réservé aux membres abonnés
+            </h2>
+
+            <p
+              className="text-sm sm:text-[15px] leading-relaxed mb-8 text-[var(--text-secondary)]"
+            >
+              Ce contenu est accessible uniquement avec un abonnement actif.
+              Découvrez nos formules et commencez votre transformation dès aujourd&apos;hui.
+            </p>
+
+            <button
+              onClick={goToCheckout}
+              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-sm font-semibold tracking-wide transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
+              style={{
+                background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
+                color: '#000000',
+                boxShadow: '0 4px 20px rgba(201,169,97,0.3)',
+              }}
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z" />
+              </svg>
+              Choisir mon abonnement
+            </button>
+
+            <p className="mt-5 text-xs text-[var(--text-muted)]">
+              Sans engagement. Annulation en un clic.
+            </p>
+          </div>
+        </motion.div>
+      </div>
+    </>
+  )
+}

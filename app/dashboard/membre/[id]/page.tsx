@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import type { Profile } from '@/types/database'
 import AudioPlayer from '@/components/AudioPlayer'
+import ShineIcon, { type ShineIconName } from '@/components/icons/ShineIcon'
 
 type EclatPost = {
   id: string
@@ -20,13 +21,13 @@ type EclatPost = {
   post_comments: { count: number }[]
 }
 
-const ECLAT_CATEGORIES: Record<string, { label: string; icon: string; color: string }> = {
-  temoignage: { label: 'Pensée', icon: '💭', color: '#D4AF37' },
-  partage: { label: 'Partage', icon: '💫', color: '#74C0FC' },
-  gratitude: { label: 'Gratitude', icon: '✨', color: '#FFEAA7' },
-  citation: { label: 'Citation', icon: '💬', color: '#FD79A8' },
-  remerciements: { label: 'Moment de joie', icon: '🌟', color: '#55EFC4' },
-  question: { label: 'Réflexion', icon: '🔮', color: '#A29BFE' },
+const ECLAT_CATEGORIES: Record<string, { label: string; icon: ShineIconName; color: string }> = {
+  temoignage: { label: 'Pensée', icon: 'temoignage', color: '#C9A961' },
+  partage: { label: 'Partage', icon: 'partage', color: '#C9A961' },
+  gratitude: { label: 'Gratitude', icon: 'gratitude', color: '#C9A961' },
+  citation: { label: 'Citation', icon: 'citation', color: '#C9A961' },
+  remerciements: { label: 'Moment de joie', icon: 'remerciements', color: '#C9A961' },
+  question: { label: 'Réflexion', icon: 'question', color: '#C9A961' },
 }
 
 export default function MembreProfilPage() {
@@ -42,6 +43,10 @@ export default function MembreProfilPage() {
   const [rayonLoading, setRayonLoading] = useState(false)
   const [rayonError, setRayonError] = useState<string | null>(null)
   const [rayonSuccess, setRayonSuccess] = useState<string | null>(null)
+  const [shinedPostIds, setShinedPostIds] = useState<Set<string>>(new Set())
+  const [openCommentPostId, setOpenCommentPostId] = useState<string | null>(null)
+  const [commentTexts, setCommentTexts] = useState<Record<string, string>>({})
+  const [commentLoading, setCommentLoading] = useState<string | null>(null)
 
   useEffect(() => {
     async function load() {
@@ -57,7 +62,7 @@ export default function MembreProfilPage() {
       if (data) setProfile(data as Profile)
       setLoading(false)
 
-      // Vérifier le statut de connexion (rayon) — avant de charger les posts
+      // Vérifier le statut de connexion (rayon) - avant de charger les posts
       let isRayon = false
       const { data: connData, error: connError } = await supabase
         .from('shine_connections')
@@ -112,11 +117,17 @@ export default function MembreProfilPage() {
           commentCountMap.set(c.post_id, (commentCountMap.get(c.post_id) || 0) + 1)
         }
 
-        setEclatPosts(posts.map(p => ({
+        const mappedPosts = posts.map(p => ({
           ...p,
           post_likes: [{ count: likeCountMap.get(p.id) || 0 }],
           post_comments: [{ count: commentCountMap.get(p.id) || 0 }],
-        })))
+        }))
+        setEclatPosts(mappedPosts)
+
+        // Charger les shines de l'utilisateur courant
+        const { data: myLikes } = await supabase
+          .from('post_likes').select('post_id').in('post_id', postIds).eq('user_id', user.id)
+        if (myLikes) setShinedPostIds(new Set((myLikes as { post_id: string }[]).map(l => l.post_id)))
       }
       setEclatLoading(false)
     }
@@ -129,7 +140,7 @@ export default function MembreProfilPage() {
 
   function getRoleLabel(role: string) {
     const map: Record<string, { label: string; color: string }> = {
-      founder: { label: 'Fondateur', color: 'var(--gold)' },
+      founder: { label: 'Fondateur', color: 'var(--brand)' },
       admin_content: { label: 'Admin Contenu', color: '#74C0FC' },
       admin_support: { label: 'Admin Support', color: '#74C0FC' },
       member: { label: 'Membre', color: 'var(--text-secondary)' },
@@ -153,7 +164,7 @@ export default function MembreProfilPage() {
         setConnectionId(data.connection.id)
         setRayonSuccess(`Rayon envoyé à ${profile?.pseudo || profile?.prenom || 'ce membre'} !`)
       } else if (res.status === 409) {
-        // Connexion déjà existante — resynchroniser le statut
+        // Connexion déjà existante - resynchroniser le statut
         setRayonError('Une demande de connexion existe déjà avec ce membre.')
         if (data.status === 'pending') {
           setConnectionStatus('pending_sent')
@@ -217,10 +228,45 @@ export default function MembreProfilPage() {
     setRayonLoading(false)
   }
 
+  async function handleShine(postId: string) {
+    if (!currentUserId) return
+    const supabase = createClient()
+    const wasShined = shinedPostIds.has(postId)
+    setShinedPostIds((prev: Set<string>) => {
+      const next = new Set(prev)
+      wasShined ? next.delete(postId) : next.add(postId)
+      return next
+    })
+    setEclatPosts((prev: EclatPost[]) => prev.map((p: EclatPost) => p.id === postId
+      ? { ...p, post_likes: [{ count: Math.max(0, (p.post_likes[0]?.count || 0) + (wasShined ? -1 : 1)) }] }
+      : p
+    ))
+    if (wasShined) {
+      await supabase.from('post_likes').delete().eq('post_id', postId).eq('user_id', currentUserId)
+    } else {
+      await supabase.from('post_likes').insert({ post_id: postId, user_id: currentUserId })
+    }
+  }
+
+  async function handleComment(postId: string) {
+    const text = (commentTexts[postId] || '').trim()
+    if (!text || !currentUserId) return
+    setCommentLoading(postId)
+    const supabase = createClient()
+    await supabase.from('post_comments').insert({ post_id: postId, author_id: currentUserId, content: text })
+    setEclatPosts((prev: EclatPost[]) => prev.map((p: EclatPost) => p.id === postId
+      ? { ...p, post_comments: [{ count: (p.post_comments[0]?.count || 0) + 1 }] }
+      : p
+    ))
+    setCommentTexts((prev: Record<string, string>) => ({ ...prev, [postId]: '' }))
+    setOpenCommentPostId(null)
+    setCommentLoading(null)
+  }
+
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -233,7 +279,7 @@ export default function MembreProfilPage() {
         </div>
         <h2 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>Membre introuvable</h2>
         <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>Ce profil n&apos;existe pas ou a été supprimé.</p>
-        <Link href="/dashboard" className="px-5 py-2.5 rounded-xl text-sm font-medium" style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
+        <Link href="/dashboard" className="px-5 py-2.5 rounded-xl text-sm font-medium" style={{ background: 'var(--brand)', color: 'var(--dark)' }}>
           Retour à l&apos;accueil
         </Link>
       </div>
@@ -254,13 +300,13 @@ export default function MembreProfilPage() {
       </button>
 
       {/* Profile card */}
-      <div className="rounded-2xl p-6 sm:p-8 text-center" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+      <div className="rounded-2xl p-6 sm:p-8 text-center" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
         {/* Avatar */}
         {profile.avatar_url ? (
           <img src={profile.avatar_url} alt={displayName} className="w-24 h-24 rounded-2xl object-cover mx-auto mb-5" />
         ) : (
           <div className="w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-5 text-4xl font-display font-semibold"
-            style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+            style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}>
             {displayName.charAt(0).toUpperCase()}
           </div>
         )}
@@ -290,7 +336,7 @@ export default function MembreProfilPage() {
                 onClick={handleSendRayon}
                 disabled={rayonLoading}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer"
-                style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: 'var(--dark)' }}
+                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: 'var(--dark)' }}
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
@@ -304,7 +350,7 @@ export default function MembreProfilPage() {
                 onClick={handleCancelRayon}
                 disabled={rayonLoading}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-medium transition-all cursor-pointer"
-                style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.2)' }}
+                style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.2)' }}
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -318,7 +364,7 @@ export default function MembreProfilPage() {
                 onClick={handleAcceptRayon}
                 disabled={rayonLoading}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer"
-                style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: 'var(--dark)' }}
+                style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: 'var(--dark)' }}
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
@@ -351,7 +397,7 @@ export default function MembreProfilPage() {
             {/* Bouton Message */}
             <Link href={`/dashboard/messages/${id}`}
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold transition-all"
-              style={{ background: connectionStatus === 'none' ? 'var(--gold)' : 'rgba(255,255,255,0.05)', color: connectionStatus === 'none' ? 'var(--dark)' : 'var(--text-primary)', border: connectionStatus === 'none' ? 'none' : '1px solid var(--dark-border)' }}>
+              style={{ background: connectionStatus === 'none' ? 'var(--brand)' : 'rgba(255,255,255,0.05)', color: connectionStatus === 'none' ? 'var(--dark)' : 'var(--text-primary)', border: connectionStatus === 'none' ? 'none' : '1px solid var(--border)' }}>
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
               </svg>
@@ -363,7 +409,7 @@ export default function MembreProfilPage() {
 
       {/* Bio */}
       {profile.bio && (
-        <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <h3 className="font-semibold text-sm mb-3 flex items-center gap-2" style={{ color: 'var(--text-muted)' }}>
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
@@ -376,27 +422,27 @@ export default function MembreProfilPage() {
 
       {/* Video */}
       {profile.video_url && (
-        <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+        <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
           <h3 className="font-semibold text-sm mb-3 flex items-center gap-2" style={{ color: 'var(--text-muted)' }}>
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
             </svg>
             Vidéo de présentation
           </h3>
-          <video src={profile.video_url} controls className="w-full rounded-xl bg-black max-h-96" />
+          <video src={profile.video_url} controls controlsList="nodownload" onContextMenu={(e) => e.preventDefault()} className="w-full rounded-xl bg-black max-h-96" />
         </div>
       )}
 
-      {/* Éclat — Personal Wall */}
-      <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-        <h3 className="font-display text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--gold)' }}>
-          <span className="text-xl">✨</span>
+      {/* Éclat - Personal Wall */}
+      <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
+        <h3 className="font-display text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--brand)' }}>
+          <span style={{ color: 'var(--brand)' }}><ShineIcon name="eclat" className="w-5 h-5" /></span>
           Éclat de {displayName}
         </h3>
 
         {eclatLoading ? (
           <div className="flex justify-center py-8">
-            <div className="w-6 h-6 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
           </div>
         ) : eclatPosts.length === 0 ? (
           <p className="text-sm text-center py-6" style={{ color: 'var(--text-muted)' }}>
@@ -407,9 +453,9 @@ export default function MembreProfilPage() {
             {eclatPosts.map(post => {
               const cat = ECLAT_CATEGORIES[post.category] || ECLAT_CATEGORIES.partage
               return (
-                <div key={post.id} className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dark-border)' }}>
+                <div key={post.id} className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="text-sm">{cat.icon}</span>
+                    <span style={{ color: cat.color }}><ShineIcon name={cat.icon} className="w-4 h-4" /></span>
                     <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ background: `${cat.color}15`, color: cat.color }}>
                       {cat.label}
                     </span>
@@ -422,7 +468,7 @@ export default function MembreProfilPage() {
                     <h4 className="font-semibold text-sm mb-1" style={{ color: 'var(--text-primary)' }}>{post.title}</h4>
                   )}
                   <p className="text-sm leading-relaxed whitespace-pre-line"
-                    style={{ color: post.category === 'citation' ? 'var(--gold)' : 'var(--text-secondary)', fontStyle: post.category === 'citation' ? 'italic' : 'normal' }}>
+                    style={{ color: post.category === 'citation' ? 'var(--brand)' : 'var(--text-secondary)', fontStyle: post.category === 'citation' ? 'italic' : 'normal' }}>
                     {post.content}
                   </p>
 
@@ -433,7 +479,7 @@ export default function MembreProfilPage() {
                   )}
                   {post.video_url && (
                     <div className="mt-3 rounded-lg overflow-hidden">
-                      <video src={post.video_url} controls className="w-full" />
+                      <video src={post.video_url} controls controlsList="nodownload" onContextMenu={(e) => e.preventDefault()} className="w-full" />
                     </div>
                   )}
                   {post.audio_url && (
@@ -442,20 +488,50 @@ export default function MembreProfilPage() {
                     </div>
                   )}
 
-                  <div className="flex items-center gap-3 mt-3 text-[11px]" style={{ color: 'var(--text-muted)' }}>
-                    <span className="flex items-center gap-1" style={{ color: '#D4AF37' }}>
-                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <div className="flex items-center gap-3 mt-3 text-[11px]">
+                    <button
+                      onClick={() => handleShine(post.id)}
+                      className="flex items-center gap-1 transition-all hover:scale-110 cursor-pointer"
+                      style={{ color: shinedPostIds.has(post.id) ? '#C9A961' : 'var(--text-muted)' }}
+                    >
+                      <svg className="w-3.5 h-3.5" fill={shinedPostIds.has(post.id) ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
                       </svg>
                       {post.post_likes[0].count}
-                    </span>
-                    <span className="flex items-center gap-1">
+                    </button>
+                    <button
+                      onClick={() => setOpenCommentPostId(openCommentPostId === post.id ? null : post.id)}
+                      className="flex items-center gap-1 transition-all hover:scale-110 cursor-pointer"
+                      style={{ color: openCommentPostId === post.id ? 'var(--brand)' : 'var(--text-muted)' }}
+                    >
                       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" />
                       </svg>
                       {post.post_comments[0].count}
-                    </span>
+                    </button>
                   </div>
+
+                  {openCommentPostId === post.id && (
+                    <div className="mt-3 flex gap-2">
+                      <input
+                        type="text"
+                        value={commentTexts[post.id] || ''}
+                        onChange={e => setCommentTexts((prev: Record<string, string>) => ({ ...prev, [post.id]: e.target.value }))}
+                        onKeyDown={e => { if (e.key === 'Enter') handleComment(post.id) }}
+                        placeholder="Ajouter un commentaire…"
+                        className="flex-1 text-xs rounded-lg px-3 py-2 outline-none"
+                        style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
+                      />
+                      <button
+                        onClick={() => handleComment(post.id)}
+                        disabled={commentLoading === post.id}
+                        className="px-3 py-2 rounded-lg text-xs font-medium transition-all"
+                        style={{ background: 'var(--brand)', color: 'var(--dark)' }}
+                      >
+                        {commentLoading === post.id ? '…' : 'Envoyer'}
+                      </button>
+                    </div>
+                  )}
                 </div>
               )
             })}

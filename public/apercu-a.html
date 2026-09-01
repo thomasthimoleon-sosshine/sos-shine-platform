@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOS Shine · Projection A — La reprise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  /* ═══════════════════════════════════════════════════════════════
+     PROJECTION A — « La reprise »
+     Le contenu et l'ordre des sections ne bougent pas. Ce qui change :
+     la photographie entre en scène, l'or redevient rare, les cartes
+     arrondies disparaissent, et le rythme cesse d'être uniforme.
+     ═══════════════════════════════════════════════════════════════ */
+  :root{
+    --noir:#0A0806; --ivoire:#F5EFE3; --ivoire-bas:#B9AE97; --sourdine:#8A8069;
+    --or:#C9A961; --filet:#241F14;
+    --serif:'Cormorant Garamond',Georgia,serif;
+    --sans:'Jost',system-ui,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--noir);color:var(--ivoire);font-family:var(--sans);font-weight:300;
+       -webkit-font-smoothing:antialiased;overflow-x:hidden}
+  img{display:block;max-width:100%}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+  /* ── En-tête : un filet, rien de plus ── */
+  header{position:fixed;inset:0 0 auto;z-index:50;padding:26px 40px;display:flex;
+         align-items:center;justify-content:space-between;
+         background:linear-gradient(to bottom,rgba(10,8,6,.9),transparent)}
+  .logo{font-family:var(--serif);font-size:19px;letter-spacing:.06em}
+  .lien-test{font-family:var(--sans);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;
+             color:var(--ivoire-bas);border-bottom:1px solid var(--filet);padding-bottom:5px}
+  .lien-test:hover{color:var(--or);border-color:var(--or)}
+
+  /* ── 1 · OUVERTURE — la photographie porte le titre, le texte est à gauche ── */
+  .ouverture{position:relative;min-height:100svh;display:flex;align-items:flex-end;
+             padding:0 0 clamp(60px,9vh,110px)}
+  .ouverture .fond{position:absolute;inset:0;overflow:hidden}
+  .ouverture .fond img{width:100%;height:100%;object-fit:cover;object-position:70% 50%;
+                       filter:grayscale(.35) contrast(1.05) brightness(.62)}
+  /* Le noir reprend la main à gauche : le texte n'a jamais besoin d'un voile gris. */
+  .ouverture .fond:after{content:"";position:absolute;inset:0;
+    background:linear-gradient(100deg,var(--noir) 26%,rgba(10,8,6,.72) 52%,rgba(10,8,6,.15) 100%),
+               linear-gradient(to top,var(--noir) 2%,transparent 40%)}
+  .ouverture .wrap{position:relative;z-index:2}
+  .ouverture h1{font-family:var(--serif);font-weight:300;
+    font-size:clamp(2.6rem,6.2vw,5.4rem);line-height:1.02;letter-spacing:-.02em;max-width:15ch}
+  .ouverture h1 em{font-style:italic;color:var(--or)}      /* l'or, 1re des 3 apparitions */
+  .ouverture p{margin-top:30px;max-width:44ch;font-size:16px;line-height:1.75;color:var(--ivoire-bas)}
+  .actions{margin-top:42px;display:flex;gap:26px;align-items:center;flex-wrap:wrap}
+  .btn{font-family:var(--sans);font-size:14px;font-weight:500;letter-spacing:.03em;
+       padding:17px 34px;border:1px solid var(--or);color:var(--or);transition:.25s}
+  .btn:hover{background:var(--or);color:var(--noir)}
+  .btn-nu{border:none;padding:17px 0;color:var(--ivoire-bas);border-bottom:1px solid var(--filet)}
+  .btn-nu:hover{color:var(--ivoire);border-color:var(--ivoire)}
+
+  /* ── 2 · LE SILENCE — aucune image, presque aucun texte. Le contraste de rythme. ── */
+  .silence{padding:clamp(120px,20vh,220px) 0}
+  .silence ul{list-style:none;display:flex;flex-direction:column;gap:clamp(14px,2.4vh,26px)}
+  .silence li{font-family:var(--serif);font-size:clamp(1.5rem,3.4vw,2.6rem);font-weight:300;
+              color:#4A4335;transition:color .5s}
+  .silence li:hover{color:var(--ivoire)}
+  .silence .apres{margin-top:clamp(48px,7vh,88px);font-size:13px;letter-spacing:.16em;
+                  text-transform:uppercase;color:var(--sourdine)}
+
+  /* ── 3 · LA SIGNATURE — photo à droite, la phrase en très grand à gauche ── */
+  .signature{display:grid;grid-template-columns:1.05fr .95fr;min-height:92svh;align-items:center}
+  .signature .texte{padding:clamp(60px,8vh,110px) clamp(40px,6vw,90px)}
+  .signature .image{position:relative;height:92svh;overflow:hidden}
+  .signature .image img{width:100%;height:100%;object-fit:cover;
+                        filter:grayscale(.4) contrast(1.06) brightness(.7)}
+  .signature .image:after{content:"";position:absolute;inset:0;
+    background:linear-gradient(to right,var(--noir),transparent 34%)}
+  .kicker{font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--sourdine);
+          margin-bottom:34px}
+  .citation{font-family:var(--serif);font-style:italic;font-weight:300;
+            font-size:clamp(1.6rem,3.2vw,2.7rem);line-height:1.28;max-width:20ch}
+  .attribution{margin-top:30px;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;
+               color:var(--sourdine)}
+  .signature .glose{margin-top:44px;padding-top:26px;border-top:1px solid var(--filet);
+                    max-width:42ch;font-size:15px;line-height:1.8;color:var(--ivoire-bas)}
+
+  /* ── 4 · CE QUE NOUS FAISONS — une liste numérotée, pas des cartes ── */
+  .methode{padding:clamp(110px,16vh,190px) 0}
+  .methode h2{font-family:var(--serif);font-weight:300;font-size:clamp(2rem,4.4vw,3.4rem);
+              line-height:1.12;max-width:17ch;margin-bottom:clamp(56px,8vh,96px)}
+  .points{display:grid;gap:0}
+  .point{display:grid;grid-template-columns:76px 1fr;gap:34px;align-items:start;
+         padding:38px 0;border-top:1px solid var(--filet)}
+  .point:last-child{border-bottom:1px solid var(--filet)}
+  .point .n{font-family:var(--serif);font-size:15px;color:var(--sourdine);padding-top:6px}
+  .point h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.35rem,2.5vw,1.95rem);
+            margin-bottom:12px}
+  .point p{font-size:15px;line-height:1.8;color:var(--ivoire-bas);max-width:62ch}
+
+  /* ── 5 · LA MAIN — une respiration photographique pleine largeur ── */
+  .respiration{position:relative;height:76svh;overflow:hidden}
+  .respiration img{width:100%;height:100%;object-fit:cover;object-position:50% 45%;
+                   filter:grayscale(.45) contrast(1.05) brightness(.68)}
+  .respiration:after{content:"";position:absolute;inset:0;
+    background:linear-gradient(to bottom,var(--noir) 1%,transparent 26%,transparent 74%,var(--noir) 99%)}
+  .respiration figcaption{position:absolute;left:0;right:0;bottom:clamp(44px,7vh,88px);z-index:2}
+  .respiration figcaption span{font-family:var(--serif);font-style:italic;font-weight:300;
+    font-size:clamp(1.4rem,3vw,2.4rem);line-height:1.3;display:block;max-width:24ch}
+
+  /* ── 6 · L'ÉQUIPE — trois portraits rectangulaires, pas des pastilles ── */
+  .equipe{padding:clamp(110px,16vh,190px) 0}
+  .equipe h2{font-family:var(--serif);font-weight:300;font-size:clamp(2rem,4.4vw,3.4rem);
+             margin-bottom:clamp(52px,7vh,88px);max-width:16ch}
+  .trois{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,3vw,44px)}
+  .personne figure{position:relative;aspect-ratio:3/4;overflow:hidden;background:#141009}
+  .personne img{width:100%;height:100%;object-fit:cover;object-position:center 22%;
+                filter:grayscale(1) contrast(1.08) brightness(.86);transition:filter .6s,transform 1.2s}
+  .personne:hover img{filter:grayscale(.25) contrast(1.05) brightness(.95);transform:scale(1.03)}
+  .personne .role{margin-top:20px;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;
+                  color:var(--sourdine)}
+  .personne .nom{font-family:var(--serif);font-size:1.6rem;font-weight:400;margin-top:6px}
+  .personne p{margin-top:12px;font-size:14px;line-height:1.75;color:var(--ivoire-bas)}
+
+  /* ── 7 · LE SEUIL — le regard, et une seule porte ── */
+  .seuil{position:relative;min-height:96svh;display:flex;align-items:center;text-align:center}
+  .seuil .fond{position:absolute;inset:0;overflow:hidden}
+  .seuil .fond img{width:100%;height:100%;object-fit:cover;object-position:50% 32%;
+                   filter:grayscale(.4) contrast(1.04) brightness(.5)}
+  .seuil .fond:after{content:"";position:absolute;inset:0;
+    background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(10,8,6,.35),var(--noir) 78%)}
+  .seuil .wrap{position:relative;z-index:2}
+  .seuil h2{font-family:var(--serif);font-weight:300;font-size:clamp(2.2rem,5vw,4.2rem);
+            line-height:1.08;max-width:18ch;margin:0 auto}
+  .seuil p{margin:28px auto 0;max-width:40ch;font-size:15.5px;line-height:1.8;color:var(--ivoire-bas)}
+  .seuil .btn{margin-top:46px;display:inline-block}
+
+  footer{padding:60px 0;border-top:1px solid var(--filet);text-align:center;
+         font-size:12px;letter-spacing:.1em;color:var(--sourdine)}
+
+  /* ── Apparition douce, une seule fois, sans esbroufe ── */
+  .monte{opacity:0;transform:translateY(22px);transition:opacity 1s cubic-bezier(.16,1,.3,1),transform 1s cubic-bezier(.16,1,.3,1)}
+  .monte.vu{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.monte{opacity:1;transform:none;transition:none}}
+
+  @media(max-width:860px){
+    .wrap{padding:0 24px}
+    header{padding:18px 24px}
+    .signature{grid-template-columns:1fr}
+    .signature .image{height:62svh;order:-1}
+    .signature .image:after{background:linear-gradient(to bottom,transparent 40%,var(--noir))}
+    .signature .texte{padding:44px 24px 0}
+    .trois{grid-template-columns:1fr;gap:44px}
+    .point{grid-template-columns:1fr;gap:10px}
+    .point .n{padding-top:0}
+    .ouverture .fond img{object-position:62% 50%}
+    .ouverture .fond:after{background:linear-gradient(to top,var(--noir) 12%,rgba(10,8,6,.55) 62%,rgba(10,8,6,.25))}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="logo">SOS SHINE</span>
+  <a class="lien-test" href="/signature-emotionnelle?start=1">Faire le test</a>
+</header>
+
+<!-- 1 · OUVERTURE -->
+<section class="ouverture">
+  <div class="fond"><img data-scene="07-dos" alt=""></div>
+  <div class="wrap">
+    <h1 class="monte">Tu traverses une période douloureuse. <em>Tu es au bon endroit.</em></h1>
+    <p class="monte">Ici, tu vas comprendre ce qui se passe vraiment en toi, et trouver un chemin concret pour t'en sortir.</p>
+    <div class="actions monte">
+      <a class="btn" href="/signature-emotionnelle?start=1">Découvrir ma Signature Émotionnelle</a>
+      <a class="btn btn-nu" href="#methode">Voir comment ça fonctionne</a>
+    </div>
+  </div>
+</section>
+
+<!-- 2 · LE SILENCE -->
+<section class="silence">
+  <div class="wrap">
+    <ul>
+      <li class="monte">Tu vis une séparation.</li>
+      <li class="monte">Tu es face à un deuil.</li>
+      <li class="monte">Tu veux sortir du silence de tes abus vécus.</li>
+      <li class="monte">Tu traverses un burn-out.</li>
+    </ul>
+    <p class="apres monte">Quel que soit le nom, le mécanisme dessous se travaille.</p>
+  </div>
+</section>
+
+<!-- 3 · LA SIGNATURE -->
+<section class="signature">
+  <div class="texte">
+    <p class="kicker monte">Ta Signature Émotionnelle · 3 minutes</p>
+    <p class="citation monte">« Tu n'as pas peur d'aimer. Tu as peur qu'on parte quand tu aimeras vraiment. »</p>
+    <p class="attribution monte">Extrait d'une signature · Blessure d'abandon</p>
+    <p class="glose monte">Un texte clair et précis qui te montre exactement ce que tu traverses,
+      pourquoi ça fait si mal, et par où commencer.</p>
+  </div>
+  <div class="image"><img data-scene="02-oeil" alt=""></div>
+</section>
+
+<!-- 4 · CE QUE NOUS FAISONS -->
+<section class="methode" id="methode">
+  <div class="wrap">
+    <h2 class="monte">Ce n'est pas une application de méditation.</h2>
+    <div class="points">
+      <div class="point monte"><span class="n">01</span><div>
+        <h3>Tu comprends enfin</h3>
+        <p>Le test révèle le schéma émotionnel qui te fait souffrir en boucle.</p></div></div>
+      <div class="point monte"><span class="n">02</span><div>
+        <h3>Tu es guidé, étape par étape</h3>
+        <p>Cinq nouveaux protocoles chaque mois : vidéos de coaching, méditations, hypnose,
+           cahiers de travail. À ton rythme.</p></div></div>
+      <div class="point monte"><span class="n">03</span><div>
+        <h3>Tu n'es plus seul</h3>
+        <p>Une communauté qui traverse la même chose, et la possibilité d'écrire anonymement
+           ce que tu n'oses dire à personne.</p></div></div>
+      <div class="point monte"><span class="n">04</span><div>
+        <h3>Tu intègres durablement</h3>
+        <p>Trois expertises réunies, et tout ce qu'il faut pour que ça tienne dans le temps.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 · LA RESPIRATION -->
+<figure class="respiration">
+  <img data-scene="03-main" alt="">
+  <figcaption><div class="wrap"><span class="monte">On ne défait pas ce qui a été serré pendant vingt ans en une séance. On commence.</span></div></figcaption>
+</figure>
+
+<!-- 6 · L'ÉQUIPE -->
+<section class="equipe">
+  <div class="wrap">
+    <h2 class="monte">Trois personnes, une même intention.</h2>
+    <div class="trois">
+      <div class="personne monte">
+        <figure><img src="/images/julia.jpeg" alt="Julia"></figure>
+        <p class="role">Fondatrice et voix</p><p class="nom">Julia</p>
+        <p>Le lien entre le ciel et la terre, l'invisible et la science, le cœur et l'esprit.</p>
+      </div>
+      <div class="personne monte">
+        <figure><img src="/images/william.jpg" alt="William"></figure>
+        <p class="role">Architecte d'évolution</p><p class="nom">William</p>
+        <p>Il relie le corps, les émotions et l'esprit, pour comprendre ses mécanismes et avancer seul.</p>
+      </div>
+      <div class="personne monte">
+        <figure><img src="/images/thomas.jpeg" alt="Thomas"></figure>
+        <p class="role">Lecture de signature</p><p class="nom">Thomas</p>
+        <p>À partir de ta date de naissance, il t'aide à voir ce qui se répète.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 · LE SEUIL -->
+<section class="seuil">
+  <div class="fond"><img data-scene="08-regard" alt=""></div>
+  <div class="wrap">
+    <h2 class="monte">Trois minutes pour mettre un nom sur ce que tu portes.</h2>
+    <p class="monte">Sans engagement. Le test est gratuit, et le texte que tu reçois t'appartient.</p>
+    <a class="btn monte" href="/signature-emotionnelle?start=1">Commencer</a>
+  </div>
+</section>
+
+<footer>SOS Shine · Projection A — « La reprise »</footer>
+
+<script>
+/* Les photographies vivent dans /images/scenes/. Tant qu'elles n'y sont pas,
+   on retombe sur le tirage d'origine pour que la projection reste lisible. */
+const TIRAGES = {
+  '02-oeil':   'https://d8j0ntlcm91z4.cloudfront.net/user_3HDhqUxAlexQxPh6fiCuaP6Bd6E/hf_20260829_205538_d4285477-9a66-49ab-8e0c-ea4afe3faf85.png',
+  '03-main':   'https://d8j0ntlcm91z4.cloudfront.net/user_3HDhqUxAlexQxPh6fiCuaP6Bd6E/hf_20260829_205538_9de3d06f-e9de-46ed-81fb-dcf68d271e81.png',
+  '04-souffle':'https://d8j0ntlcm91z4.cloudfront.net/user_3HDhqUxAlexQxPh6fiCuaP6Bd6E/hf_20260829_205538_59167c33-5fd4-4aac-bc03-23c421429181.png',
+  '07-dos':    'https://d8j0ntlcm91z4.cloudfront.net/user_3HDhqUxAlexQxPh6fiCuaP6Bd6E/hf_20260829_205538_8da7e929-af6c-4608-ae44-e7f317580d9f.png',
+  '08-regard': 'https://d8j0ntlcm91z4.cloudfront.net/user_3HDhqUxAlexQxPh6fiCuaP6Bd6E/hf_20260829_205538_e5033473-5a57-40c5-a9c5-ce34a88c06c5.png',
+};
+document.querySelectorAll('img[data-scene]').forEach(img => {
+  const cle = img.dataset.scene;
+  img.addEventListener('error', function once() {
+    img.removeEventListener('error', once);
+    if (TIRAGES[cle]) img.src = TIRAGES[cle];
+  });
+  img.src = '/images/scenes/' + cle + '.jpg';
+});
+
+const oeil = new IntersectionObserver(es => {
+  es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('vu'); oeil.unobserve(e.target); } });
+}, { threshold: .12, rootMargin: '0px 0px -8% 0px' });
+document.querySelectorAll('.monte').forEach((el, i) => {
+  el.style.transitionDelay = (i % 4) * 90 + 'ms';
+  oeil.observe(el);
+});
+</script>
+</body>
+</html>

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import type { ShineConnection } from '@/types/database'
 
-// GET — Récupérer les connexions de l'utilisateur
+// GET - Récupérer les connexions de l'utilisateur
 export async function GET() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -71,7 +71,7 @@ export async function GET() {
   })
 }
 
-// POST — Envoyer un rayon (demande de connexion)
+// POST - Envoyer un rayon (demande de connexion)
 export async function POST(req: NextRequest) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -141,7 +141,7 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({ connection: data })
 }
 
-// PATCH — Accepter/refuser/supprimer un rayon
+// PATCH - Accepter/refuser/supprimer un rayon
 export async function PATCH(req: NextRequest) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -157,7 +157,7 @@ export async function PATCH(req: NextRequest) {
       .from('shine_connections')
       .delete()
       .eq('id', connection_id)
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    if (error) return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
     return NextResponse.json({ success: true })
   }
 
@@ -168,7 +168,7 @@ export async function PATCH(req: NextRequest) {
     .eq('id', connection_id)
     .eq('receiver_id', user.id)
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
 
   // Si accepté, notifier l'envoyeur
   if (action === 'accept') {

@@ -6,7 +6,11 @@ export async function GET(request: Request) {
   try {
     const authHeader = request.headers.get('authorization')
     const cronSecret = process.env.CRON_SECRET
-    if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+    // Garde fermée par défaut. Elle était écrite « si un secret est défini ET
+    // que l'en-tête ne correspond pas, refuser » : quand la variable n'était
+    // pas définie en production, la condition était fausse et la route
+    // s'ouvrait à tout le monde. Un secret absent doit fermer, pas ouvrir.
+    if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
     }
 
@@ -28,7 +32,7 @@ export async function GET(request: Request) {
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
       || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : null)
-      || 'https://sos-shine.com'
+      || 'https://sosshine.com'
 
     const { client: resend, fromEmail } = await getResendClient()
     let processed = 0
@@ -58,7 +62,7 @@ export async function GET(request: Request) {
           .replace(/\{firstName\}/g, enrollment.contact_first_name || 'Membre')
 
         const { error: sendErr } = await resend.emails.send({
-          from: fromEmail,
+          from: `SOS Shine® <${fromEmail}>`,
           to: enrollment.contact_email,
           subject: personalizedSubject,
           html: personalizedHtml,

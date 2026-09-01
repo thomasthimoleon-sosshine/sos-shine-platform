@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { Event } from '@/types/database'
+import FileUpload from '@/components/FileUpload'
 
 const EVENT_TYPE_LABELS: Record<Event['event_type'], string> = {
   soin_collectif: 'Soin collectif',
@@ -16,7 +17,7 @@ const EVENT_TYPE_COLORS: Record<Event['event_type'], string> = {
   soin_collectif: '#74C0FC',
   atelier: '#55EFC4',
   live: '#E17055',
-  rencontre: '#D4AF37',
+  rencontre: '#C9A961',
   shine_walk: '#FF6B35',
 }
 
@@ -46,11 +47,12 @@ const EMPTY_FORM = {
   latitude: '',
   longitude: '',
   event_date: '',
-  price: 0,
+  price: 30,
   max_participants: '',
   live_url: '',
   replay_url: '',
   hosts: [] as string[],
+  cover_image: '',
 }
 
 function formatDateFR(dateStr: string): string {
@@ -153,6 +155,7 @@ export default function AdminEvenements() {
       live_url: event.live_url || '',
       replay_url: event.replay_url || '',
       hosts: event.hosts || [],
+      cover_image: (event as any).cover_image || '',
     })
     setShowForm(true)
     setError(null)
@@ -167,8 +170,8 @@ export default function AdminEvenements() {
   }
 
   async function handleSave() {
-    if (!form.title.trim()) { setError('Le titre est requis.'); return }
-    if (!form.event_date) { setError('La date est requise.'); return }
+    if (!form.title.trim()) { setError('Le titre est obligatoire.'); return }
+    if (!form.event_date) { setError('La date est obligatoire.'); return }
 
     setSaving(true)
     setError(null)
@@ -211,11 +214,12 @@ export default function AdminEvenements() {
         latitude: lat,
         longitude: lng,
         event_date: new Date(form.event_date).toISOString(),
-        price: Number(form.price) || 0,
+        price: Number(form.price) || 30,
         max_participants: form.max_participants ? Number(form.max_participants) : null,
         live_url: form.live_url.trim() || null,
         replay_url: form.replay_url.trim() || null,
         hosts: form.hosts.length > 0 ? form.hosts : [],
+        cover_image: form.cover_image.trim() || null,
       }
 
       if (editingId) {
@@ -288,7 +292,7 @@ export default function AdminEvenements() {
   // ── Input style helpers ──
   const inputStyle: React.CSSProperties = {
     background: 'rgba(255,255,255,0.03)',
-    border: '1px solid var(--dark-border)',
+    border: '1px solid var(--border)',
     color: 'var(--text-primary)',
     borderRadius: '0.5rem',
     padding: '0.5rem 0.75rem',
@@ -346,7 +350,7 @@ export default function AdminEvenements() {
       {showForm && (
         <div
           className="rounded-xl p-6 space-y-5"
-          style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+          style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
         >
           <h2 className="font-semibold text-lg" style={{ color: '#74C0FC' }}>
             {editingId ? 'Modifier l\u2019événement' : 'Nouvel événement'}
@@ -360,7 +364,7 @@ export default function AdminEvenements() {
                 type="text"
                 value={form.title}
                 onChange={(e) => setForm({ ...form, title: e.target.value })}
-                placeholder="Ex: Soin collectif — Pleine lune"
+                placeholder="Ex: Soin collectif - Pleine lune"
                 style={inputStyle}
               />
             </div>
@@ -412,7 +416,7 @@ export default function AdminEvenements() {
                 style={{
                   background: form.is_online ? 'rgba(85,239,196,0.15)' : 'rgba(255,255,255,0.03)',
                   color: form.is_online ? '#55EFC4' : 'var(--text-muted)',
-                  border: form.is_online ? '1px solid rgba(85,239,196,0.3)' : '1px solid var(--dark-border)',
+                  border: form.is_online ? '1px solid rgba(85,239,196,0.3)' : '1px solid var(--border)',
                 }}
               >
                 En ligne
@@ -424,7 +428,7 @@ export default function AdminEvenements() {
                 style={{
                   background: !form.is_online ? 'rgba(116,192,252,0.15)' : 'rgba(255,255,255,0.03)',
                   color: !form.is_online ? '#74C0FC' : 'var(--text-muted)',
-                  border: !form.is_online ? '1px solid rgba(116,192,252,0.3)' : '1px solid var(--dark-border)',
+                  border: !form.is_online ? '1px solid rgba(116,192,252,0.3)' : '1px solid var(--border)',
                 }}
               >
                 Sur place
@@ -540,6 +544,17 @@ export default function AdminEvenements() {
             </div>
           </div>
 
+          {/* Image de couverture */}
+          <FileUpload
+            label="Image de couverture"
+            accept="image/*"
+            folder="events"
+            currentUrl={form.cover_image || null}
+            hint="Image affichée sur la carte de l'événement"
+            onUploaded={(url) => setForm({ ...form, cover_image: url })}
+            onRemoved={() => setForm({ ...form, cover_image: '' })}
+          />
+
           {/* Hosts (fondateurs) */}
           <div>
             <label style={labelStyle}>Animé par</label>
@@ -560,9 +575,9 @@ export default function AdminEvenements() {
                     }}
                     className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer"
                     style={{
-                      background: selected ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.03)',
-                      border: selected ? '1px solid rgba(212,175,55,0.4)' : '1px solid var(--dark-border)',
-                      color: selected ? 'var(--gold)' : 'var(--text-muted)',
+                      background: selected ? 'rgba(201,169,97,0.15)' : 'rgba(255,255,255,0.03)',
+                      border: selected ? '1px solid rgba(201,169,97,0.4)' : '1px solid var(--border)',
+                      color: selected ? 'var(--brand)' : 'var(--text-muted)',
                     }}
                   >
                     <img
@@ -570,7 +585,7 @@ export default function AdminEvenements() {
                       alt={f.name}
                       className="w-7 h-7 rounded-full object-cover"
                       style={{
-                        border: selected ? '2px solid var(--gold)' : '2px solid transparent',
+                        border: selected ? '2px solid var(--brand)' : '2px solid transparent',
                         opacity: selected ? 1 : 0.5,
                       }}
                     />
@@ -597,7 +612,7 @@ export default function AdminEvenements() {
             <button
               onClick={cancelForm}
               className="px-5 py-2.5 rounded-xl text-sm transition-colors"
-              style={{ color: 'var(--text-muted)', border: '1px solid var(--dark-border)' }}
+              style={{ color: 'var(--text-muted)', border: '1px solid var(--border)' }}
             >
               Annuler
             </button>
@@ -613,7 +628,7 @@ export default function AdminEvenements() {
       ) : events.length === 0 ? (
         <div
           className="rounded-xl p-12 text-center"
-          style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+          style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
         >
           <p className="text-4xl mb-3">📅</p>
           <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>Aucun événement</p>
@@ -632,8 +647,8 @@ export default function AdminEvenements() {
                 key={event.id}
                 className="rounded-xl p-5 transition-all duration-200"
                 style={{
-                  background: 'var(--dark-card)',
-                  border: '1px solid var(--dark-border)',
+                  background: 'var(--surface-card)',
+                  border: '1px solid var(--border)',
                   opacity: event.is_active ? 1 : 0.55,
                 }}
               >
@@ -691,7 +706,7 @@ export default function AdminEvenements() {
                         <span style={{ color: '#55EFC4' }}>En ligne</span>
                       )}
                       {event.price > 0 && (
-                        <span style={{ color: 'var(--gold)' }}>{event.price.toFixed(2)} EUR</span>
+                        <span style={{ color: 'var(--brand)' }}>{event.price.toFixed(2)} EUR</span>
                       )}
                       {event.price === 0 && (
                         <span style={{ color: '#55EFC4' }}>Gratuit</span>
@@ -716,7 +731,7 @@ export default function AdminEvenements() {
                                 alt={founder.name}
                                 title={founder.name}
                                 className="w-6 h-6 rounded-full object-cover"
-                                style={{ border: '2px solid var(--dark-card)' }}
+                                style={{ border: '2px solid var(--surface-card)' }}
                               />
                             )
                           })}

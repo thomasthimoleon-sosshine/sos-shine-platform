@@ -1,12 +1,16 @@
 # Robots FTMO (Expert Advisors MetaTrader 5)
 
-Deux robots independants pour un challenge FTMO, en MQL5 :
+Trois robots independants pour un challenge FTMO, en MQL5 :
 
 1. **`EA_FTMO_TrendFollow.mq5`** — suivi de tendance EMA/RSI sur EURUSD H1.
    Simple, peu de parametres, facile a valider.
 2. **`EA_FTMO_ICT_NAS100.mq5`** — inspire de la methode ICT/SMC multi-
    temporalites decrite par l'utilisateur, adapte a NAS100. Plus complexe,
    plusieurs choix d'interpretation ont ete necessaires (detailles plus bas).
+3. **`EA_FTMO_TTS_US30.mq5`** — reproduit la technique reelle du pere de
+   l'utilisateur (deja utilisee sur un compte FTMO 100k) sur US30 : confluence
+   SAR + RSI + indicateur TradingView "Trend Trader Strategy" dans une
+   fenetre de 15 minutes, SL sur le retournement du SAR, sortie en 2 paliers.
 
 Les deux partagent la meme philosophie de securite : stop-loss/take-profit
 poses directement chez le broker, coupe-circuits internes plus stricts que
@@ -178,3 +182,74 @@ differences :
 - Comme pour l'autre EA : jamais teste sur de vraies donnees depuis
   l'endroit ou il a ete ecrit. La validation (compilation, Strategy Tester,
   demo prolongee) est **entierement a faire par toi** avant tout argent reel.
+
+---
+
+# EA_FTMO_TTS_US30 : la technique du pere, reproduite sur US30
+
+## Ce qui vient directement du pere (aucune interpretation de ma part)
+
+- Confluence de 3 signaux — SAR, RSI, et l'indicateur TradingView "Trend
+  Trader Strategy" (TTS) — qui doivent tous se declencher dans une fenetre
+  de 15 minutes maximum.
+- Temporalite : **M5**.
+- RSI : condition sur le niveau **50** (croisement au-dessus = signal
+  haussier, en-dessous = baissier).
+- Stop-loss = point de retournement du SAR au moment de l'entree.
+- Regle d'amplitude (distance en points entre le prix d'entree et ce point
+  de retournement) :
+  - Si l'amplitude est **inferieure a 40 points** → le stop-loss est plafonne
+    (plancher) a 40 points quand meme.
+  - Si l'amplitude est **superieure a 100 points** → le stop-loss est
+    divise par deux.
+  - Entre les deux → le stop-loss suit l'amplitude telle quelle.
+- Sortie en 2 paliers : **TP1 a 1x le risque** → cloture de la moitie de la
+  position + stop remonte au point d'entree (breakeven) ; **TP2 a 2x le
+  risque** → cloture du reste.
+- EMA 8/21 : filtre de renfort optionnel, pas obligatoire pour entrer
+  (desactive par defaut, `InpUseEmaFilter`).
+- Le code source exact de l'indicateur TTS (script TradingView "Trend
+  Trader Strategy" par HPotter, base sur l'article d'Andrew Abraham,
+  TASC septembre 1998) a ete fourni par l'utilisateur et traduit en MQL5
+  calcul par calcul : une ligne de tendance a cliquets qui se recale sur le
+  plus haut/bas des 21 dernieres bougies moins/plus 3x une moyenne mobile
+  ponderee du True Range, uniquement quand le prix casse franchement d'un
+  cote (sinon elle reste figee).
+
+## Ce que j'ai du decider moi-meme (le pere n'a pas precise)
+
+| Element manquant | Choix fait |
+|---|---|
+| Reglages du SAR (step / maximum) | Valeurs par defaut standard MetaTrader : 0.02 / 0.2 |
+| Periode du RSI | 14 (standard — seul le niveau 50 etait precise) |
+| Risque par trade (% du solde) | 0.5% par defaut — le pere n'a donne que des niveaux en points/RR, pas un % de capital |
+| Fermeture avant cloture quotidienne | Activee par defaut (21h heure serveur) — US30 n'est pas un marche 24h/24, meme logique que pour NAS100 |
+| Definition de "points" pour l'amplitude (40/100) | Distance de prix brute (1 point = 1.0 en prix), PAS convertie via `_Point` du broker. **A verifier toi-meme** : si le broker de ton pere cote US30 avec une convention differente, les seuils 40/100 devront peut-etre etre ajustes en consequence |
+
+## Installation
+
+Meme procedure que les deux autres EA, avec :
+- Attache-le a un graphique du symbole **US30** de ton broker (le nom exact
+  varie : `US30`, `US30.cash`, `DJ30`... regarde le Market Watch).
+- Utilise la temporalite **M5** sur le graphique.
+
+## Parametres importants
+
+| Parametre | Defaut | Role |
+|---|---|---|
+| `InpConfluenceWindowMin` | 15 | Fenetre max (minutes) entre les 3 signaux |
+| `InpSarStep` / `InpSarMax` | 0.02 / 0.2 | Reglages du Parabolic SAR |
+| `InpRsiPeriod` | 14 | Periode du RSI |
+| `InpTtsLength` / `InpTtsMultiplier` | 21 / 3.0 | Parametres d'origine du script TradingView TTS |
+| `InpUseEmaFilter` | false | Active le filtre de renfort EMA 8/21 (optionnel selon le pere) |
+| `InpAmplitudeFloorPts` / `InpAmplitudeCapPts` | 40 / 100 | Seuils de la regle d'amplitude du pere |
+| `InpRiskPerTradePct` | 0.5% | Risque par trade (non precise par le pere, choix par defaut) |
+| `InpMaxTradesPerDay` / `InpMaxTotalTrades` | 3 / 10 | Memes garde-fous anti-surtrading que les autres EA |
+
+## Limite technique a connaitre
+
+Si l'EA redemarre (crash, coupure) pendant qu'une position est ouverte et
+que TP1 a deja ete pris, il essaie de le deviner (si le stop est deja au
+prix d'entree, il suppose que TP1 est passe) — c'est une heuristique, pas
+une garantie a 100%. Comme toujours : jamais compile ni teste sur de
+vraies donnees depuis l'endroit ou il a ete ecrit.

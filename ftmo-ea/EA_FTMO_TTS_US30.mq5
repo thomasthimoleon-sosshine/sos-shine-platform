@@ -452,7 +452,7 @@ void OnTick()
                           (evalBarTime - lastRsiBearTime) <= windowSec &&
                           (evalBarTime - lastTtsBearTime) <= windowSec;
 
-   bool justCompletedBull = bullConfluence && (sarBullNow && !sarBullPrev || rsiCrossUp || (ttsPos == 1 && prevPos != 1));
+   bool justCompletedBull = bullConfluence && ((sarBullNow && !sarBullPrev) || rsiCrossUp || (ttsPos == 1 && prevPos != 1));
    bool justCompletedBear = bearConfluence && ((!sarBullNow && sarBullPrev) || rsiCrossDown || (ttsPos == -1 && prevPos != -1));
 
    if(InpUseEmaFilter)

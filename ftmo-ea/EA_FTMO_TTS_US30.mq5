@@ -11,9 +11,14 @@
 //| - Confluence SAR + RSI + TTS sous 15 minutes                     |
 //| - RSI : condition sur le niveau 50                                |
 //| - SL = point de retournement du SAR                               |
-//| - Amplitude < 40 pts -> SL plancher 40 pts                        |
-//| - Amplitude > 100 pts -> SL divise par 2                          |
+//| - Amplitude en PIPS (pas en unites de prix brutes) < 40 -> SL     |
+//|   plancher 40 pips                                                |
+//| - Amplitude > 100 pips -> SL divise par 2                         |
+//| - Risque 0.5% du solde par trade, cible 1% (= TP2 a 2RR)          |
 //| - TP1 = 1RR, cloture moitie de la position + stop a breakeven     |
+//|   (A CONFIRMER : le pere a aussi mentionne "SL 1 lot, TP 2 lot",  |
+//|   qui pourrait vouloir dire un partage 1/3-2/3 plutot que 50/50 - |
+//|   pas encore clarifie, voir README)                               |
 //| - TP2 = 2RR                                                       |
 //| - EMA 8/21 : renforce mais optionnel                              |
 //| - Code source exact du TTS (indicateur TradingView "Trend Trader  |
@@ -105,6 +110,17 @@ string GVTotalTrades() { return GVPrefix() + "TotalTrades"; }
 double H(int shift) { return iHigh(_Symbol, TF, shift); }
 double L(int shift) { return iLow(_Symbol, TF, shift); }
 double C(int shift) { return iClose(_Symbol, TF, shift); }
+
+// Le pere raisonne en pips, pas en unites de prix brutes. Sur un broker a
+// cotation "fractionnaire" (3 ou 5 decimales), 1 pip = 10x le plus petit
+// increment de prix ; sinon 1 pip = ce plus petit increment. Detection
+// automatique pour rester correct quel que soit le broker utilise.
+double PipSize()
+{
+   int digits = (int)SymbolInfoInteger(_Symbol, SYMBOL_DIGITS);
+   double point = SymbolInfoDouble(_Symbol, SYMBOL_POINT);
+   return (digits == 3 || digits == 5) ? point * 10.0 : point;
+}
 
 //+------------------------------------------------------------------+
 double TrueRange(int shift)
@@ -451,12 +467,15 @@ void OnTick()
    if(!justCompletedBull && !justCompletedBear) return;
 
    double entryPrice = justCompletedBull ? SymbolInfoDouble(_Symbol, SYMBOL_ASK) : SymbolInfoDouble(_Symbol, SYMBOL_BID);
-   double amplitude = MathAbs(entryPrice - sarCurrentValue); // en "points" = unites de prix brutes
+   double pip = PipSize();
+   double amplitudePips = MathAbs(entryPrice - sarCurrentValue) / pip;
 
-   double slDistance;
-   if(amplitude < InpAmplitudeFloorPts) slDistance = InpAmplitudeFloorPts;
-   else if(amplitude > InpAmplitudeCapPts) slDistance = amplitude / 2.0;
-   else slDistance = amplitude;
+   double slDistancePips;
+   if(amplitudePips < InpAmplitudeFloorPts) slDistancePips = InpAmplitudeFloorPts;
+   else if(amplitudePips > InpAmplitudeCapPts) slDistancePips = amplitudePips / 2.0;
+   else slDistancePips = amplitudePips;
+
+   double slDistance = slDistancePips * pip; // reconverti en unites de prix pour le SL/TP
 
    double balance = AccountInfoDouble(ACCOUNT_BALANCE);
    double riskAmount = balance * (InpRiskPerTradePct / 100.0);

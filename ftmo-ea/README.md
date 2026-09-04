@@ -224,7 +224,7 @@ differences :
 | Periode du RSI | 14 (standard — seul le niveau 50 etait precise) |
 | Risque par trade (% du solde) | 0.5% par defaut — le pere n'a donne que des niveaux en points/RR, pas un % de capital |
 | Fermeture avant cloture quotidienne | Activee par defaut (21h heure serveur) — US30 n'est pas un marche 24h/24, meme logique que pour NAS100 |
-| Definition de "points" pour l'amplitude (40/100) | Distance de prix brute (1 point = 1.0 en prix), PAS convertie via `_Point` du broker. **A verifier toi-meme** : si le broker de ton pere cote US30 avec une convention differente, les seuils 40/100 devront peut-etre etre ajustes en consequence |
+| Definition de "points" pour l'amplitude (40/100) | ~~Distance de prix brute~~ **Corrige : ce sont des pips**, confirme par l'utilisateur. Le code detecte automatiquement la taille du pip selon le broker (10x le point si cotation fractionnaire 3/5 decimales, sinon 1x) |
 
 ## Installation
 
@@ -245,6 +245,14 @@ Meme procedure que les deux autres EA, avec :
 | `InpAmplitudeFloorPts` / `InpAmplitudeCapPts` | 40 / 100 | Seuils de la regle d'amplitude du pere |
 | `InpRiskPerTradePct` | 0.5% | Risque par trade (non precise par le pere, choix par defaut) |
 | `InpMaxTradesPerDay` / `InpMaxTotalTrades` | 3 / 10 | Memes garde-fous anti-surtrading que les autres EA |
+
+## Point en attente de clarification
+
+Le pere a aussi mentionne "SL 1 lot, TP 2 lot", pas encore compris avec
+certitude. Ca pourrait vouloir dire que la position est divisee en 3 (1/3
+ferme au TP1, 2/3 laisses courir vers TP2) plutot que le partage 50/50
+actuellement code. **Le code actuel reste sur 50/50** en attendant une
+precision — a ne pas considerer comme final sur ce point.
 
 ## Limite technique a connaitre
 

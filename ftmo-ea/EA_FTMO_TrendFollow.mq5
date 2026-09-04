@@ -28,9 +28,14 @@ input double InpMaxDrawdownPct      = 6.0;   // coupe-circuit total interne (FTM
 input bool   InpCloseBeforeWeekend  = true;
 input int    InpWeekendCloseHour    = 20;    // heure serveur, vendredi, a partir de laquelle on ferme tout
 
+//--- Frequence de trading
+input int    InpMaxTradesPerDay    = 3;      // 0 = illimite. Combien de NOUVEAUX trades max par jour
+input int    InpMaxTotalTrades     = 10;     // 0 = illimite. L'EA arrete d'ouvrir de nouveaux trades apres ce total (protection anti-surtrading)
+
 //--- Divers
 input ulong  InpMagicNumber   = 990011;
 input bool   InpResetHaltState = false;      // repasser a true puis recompiler/relancer pour reactiver apres un arret d'urgence
+input bool   InpResetTradeCounter = false;   // repasser a true puis relancer pour remettre le compteur total de trades a zero
 
 CTrade trade;
 
@@ -44,12 +49,16 @@ datetime lastDayStart  = 0;
 double   dayStartBalance = 0.0;
 double   initialBalance  = 0.0;
 bool     tradingHalted   = false;
+int      tradesToday     = 0;
+int      totalTrades     = 0;
 
-string GVPrefix()   { return "FTMO_EA_" + _Symbol + "_" + IntegerToString(InpMagicNumber) + "_"; }
-string GVInitBal()  { return GVPrefix() + "InitialBalance"; }
-string GVDayStart() { return GVPrefix() + "DayStart"; }
-string GVDayBal()   { return GVPrefix() + "DayStartBalance"; }
-string GVHalted()   { return GVPrefix() + "Halted"; }
+string GVPrefix()      { return "FTMO_EA_" + _Symbol + "_" + IntegerToString(InpMagicNumber) + "_"; }
+string GVInitBal()     { return GVPrefix() + "InitialBalance"; }
+string GVDayStart()    { return GVPrefix() + "DayStart"; }
+string GVDayBal()      { return GVPrefix() + "DayStartBalance"; }
+string GVHalted()      { return GVPrefix() + "Halted"; }
+string GVTradesToday() { return GVPrefix() + "TradesToday"; }
+string GVTotalTrades() { return GVPrefix() + "TotalTrades"; }
 
 //+------------------------------------------------------------------+
 int OnInit()
@@ -94,6 +103,15 @@ int OnInit()
       lastDayStart    = (datetime)GlobalVariableGet(GVDayStart());
       dayStartBalance = GlobalVariableGet(GVDayBal());
    }
+
+   if(InpResetTradeCounter)
+      GlobalVariableDel(GVTotalTrades());
+
+   if(GlobalVariableCheck(GVTotalTrades()))
+      totalTrades = (int)GlobalVariableGet(GVTotalTrades());
+
+   if(GlobalVariableCheck(GVTradesToday()))
+      tradesToday = (int)GlobalVariableGet(GVTradesToday());
 
    return INIT_SUCCEEDED;
 }
@@ -142,7 +160,31 @@ void UpdateDailyReference()
       dayStartBalance = AccountInfoDouble(ACCOUNT_BALANCE);
       GlobalVariableSet(GVDayStart(), (double)lastDayStart);
       GlobalVariableSet(GVDayBal(), dayStartBalance);
+
+      tradesToday = 0;
+      GlobalVariableSet(GVTradesToday(), 0.0);
    }
+}
+
+//+------------------------------------------------------------------+
+bool CanOpenNewTrade()
+{
+   if(InpMaxTradesPerDay > 0 && tradesToday >= InpMaxTradesPerDay) return false;
+   if(InpMaxTotalTrades > 0 && totalTrades >= InpMaxTotalTrades) return false;
+   return true;
+}
+
+//+------------------------------------------------------------------+
+void RegisterTradeOpened()
+{
+   tradesToday++;
+   totalTrades++;
+   GlobalVariableSet(GVTradesToday(), (double)tradesToday);
+   GlobalVariableSet(GVTotalTrades(), (double)totalTrades);
+
+   if(InpMaxTotalTrades > 0 && totalTrades >= InpMaxTotalTrades)
+      Print("Limite totale de trades atteinte (", InpMaxTotalTrades, "). Plus aucun nouveau trade ",
+            "tant que InpResetTradeCounter n'est pas repasse a true.");
 }
 
 //+------------------------------------------------------------------+
@@ -257,6 +299,7 @@ void OnTick()
    }
 
    if(dailyLimitHit) return; // pas de nouvelle position tant que la limite du jour est active
+   if(!CanOpenNewTrade()) return; // plafond journalier ou total de trades atteint
 
    double balance = AccountInfoDouble(ACCOUNT_BALANCE);
    double riskAmount = balance * (InpRiskPerTradePct / 100.0);
@@ -267,8 +310,8 @@ void OnTick()
       double sl  = ask - atr * InpAtrStopMultiplier;
       double tp  = ask + (ask - sl) * InpRiskRewardRatio;
       double lots = ComputeLotSize(ask - sl, riskAmount);
-      if(lots > 0)
-         trade.Buy(lots, _Symbol, ask, sl, tp, "FTMO EA trend-follow");
+      if(lots > 0 && trade.Buy(lots, _Symbol, ask, sl, tp, "FTMO EA trend-follow"))
+         RegisterTradeOpened();
    }
    else if(InpAllowShort && crossDown && rsi > InpRsiOversold)
    {
@@ -276,7 +319,7 @@ void OnTick()
       double sl  = bid + atr * InpAtrStopMultiplier;
       double tp  = bid - (sl - bid) * InpRiskRewardRatio;
       double lots = ComputeLotSize(sl - bid, riskAmount);
-      if(lots > 0)
-         trade.Sell(lots, _Symbol, bid, sl, tp, "FTMO EA trend-follow");
+      if(lots > 0 && trade.Sell(lots, _Symbol, bid, sl, tp, "FTMO EA trend-follow"))
+         RegisterTradeOpened();
    }
 }

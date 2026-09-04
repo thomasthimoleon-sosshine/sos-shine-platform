@@ -69,6 +69,9 @@ les regles FTMO, arret d'urgence persistant.
 | `InpCloseBeforeWeekend` | true | Ferme toutes les positions le vendredi avant le week-end (evite le risque de gap) |
 | `InpAllowShort` | true | Autorise les ventes a decouvert (desactive si tu veux rester long seulement) |
 | `InpResetHaltState` | false | A repasser a `true` puis relancer l'EA pour reactiver le trading apres un arret d'urgence (drawdown max atteint) — comprends d'abord pourquoi ca s'est arrete avant de reactiver |
+| `InpMaxTradesPerDay` | 3 | Combien de nouveaux trades max par jour. Mets 1 pour "un trade par jour", ou une valeur haute (voire 0 = illimite) pour trader plus frequemment |
+| `InpMaxTotalTrades` | 10 | L'EA arrete d'ouvrir de nouveaux trades une fois ce total atteint (toutes journees confondues) — protection contre le surtrading. 0 = illimite |
+| `InpResetTradeCounter` | false | A repasser a `true` puis relancer pour remettre le compteur total de trades a zero |
 
 ## Le coupe-circuit ("Halt")
 
@@ -162,6 +165,8 @@ differences :
 | `InpKeyLevelTolerancePts` | 50 | Tolerance (en points) pour considerer qu'un balayage a bien eu lieu au niveau du key level |
 | `InpRiskPerTradePct` | 0.4% | Risque par trade, un peu plus prudent que l'EA EURUSD vu la volatilite de NAS100 |
 | `InpRiskRewardRatio` | 2.0 | Cible = 2x le risque pris |
+| `InpMaxTradesPerDay` | 3 | Combien de nouveaux trades max par jour. Mets 1 pour "un trade par jour", ou une valeur haute pour trader plus frequemment |
+| `InpMaxTotalTrades` | 10 | L'EA arrete d'ouvrir de nouveaux trades une fois ce total atteint — protection contre le surtrading. 0 = illimite |
 
 ## Limites connues supplementaires
 

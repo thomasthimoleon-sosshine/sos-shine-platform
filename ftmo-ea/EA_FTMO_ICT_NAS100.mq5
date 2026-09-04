@@ -45,9 +45,14 @@ input int    InpSessionEndHour      = 17;   // heure SERVEUR
 input bool   InpCloseBeforeDailyClose = true;
 input int    InpDailyCloseHour      = 21;   // heure SERVEUR : ferme tout avant la cloture pour eviter le risque de gap
 
+//--- Frequence de trading
+input int    InpMaxTradesPerDay    = 3;      // 0 = illimite. Combien de NOUVEAUX trades max par jour
+input int    InpMaxTotalTrades     = 10;     // 0 = illimite. L'EA arrete d'ouvrir de nouveaux trades apres ce total (protection anti-surtrading)
+
 //--- Divers
 input ulong  InpMagicNumber    = 990022;
 input bool   InpResetHaltState = false;
+input bool   InpResetTradeCounter = false;   // repasser a true puis relancer pour remettre le compteur total de trades a zero
 
 #define MAX_SCAN_BARS 300
 
@@ -63,6 +68,8 @@ datetime lastDayStart = 0;
 double dayStartBalance = 0.0;
 double initialBalance  = 0.0;
 bool   tradingHalted   = false;
+int    tradesToday     = 0;
+int    totalTrades     = 0;
 
 int    htfBias = 0;          // 1 = haussier, -1 = baissier, 0 = aucun biais clair
 double keyLevelHigh = 0.0;   // dernier "key level" haut (structure MTF)
@@ -80,6 +87,8 @@ string GVInitBal()  { return GVPrefix() + "InitialBalance"; }
 string GVDayStart() { return GVPrefix() + "DayStart"; }
 string GVDayBal()   { return GVPrefix() + "DayStartBalance"; }
 string GVHalted()   { return GVPrefix() + "Halted"; }
+string GVTradesToday() { return GVPrefix() + "TradesToday"; }
+string GVTotalTrades() { return GVPrefix() + "TotalTrades"; }
 
 //+------------------------------------------------------------------+
 double H(ENUM_TIMEFRAMES tf, int shift) { return iHigh(_Symbol, tf, shift); }
@@ -123,6 +132,15 @@ int OnInit()
       dayStartBalance = GlobalVariableGet(GVDayBal());
    }
 
+   if(InpResetTradeCounter)
+      GlobalVariableDel(GVTotalTrades());
+
+   if(GlobalVariableCheck(GVTotalTrades()))
+      totalTrades = (int)GlobalVariableGet(GVTotalTrades());
+
+   if(GlobalVariableCheck(GVTradesToday()))
+      tradesToday = (int)GlobalVariableGet(GVTradesToday());
+
    return INIT_SUCCEEDED;
 }
 
@@ -164,7 +182,30 @@ void UpdateDailyReference()
       dayStartBalance = AccountInfoDouble(ACCOUNT_BALANCE);
       GlobalVariableSet(GVDayStart(), (double)lastDayStart);
       GlobalVariableSet(GVDayBal(), dayStartBalance);
+
+      tradesToday = 0;
+      GlobalVariableSet(GVTradesToday(), 0.0);
    }
+}
+
+//+------------------------------------------------------------------+
+bool CanOpenNewTrade()
+{
+   if(InpMaxTradesPerDay > 0 && tradesToday >= InpMaxTradesPerDay) return false;
+   if(InpMaxTotalTrades > 0 && totalTrades >= InpMaxTotalTrades) return false;
+   return true;
+}
+
+void RegisterTradeOpened()
+{
+   tradesToday++;
+   totalTrades++;
+   GlobalVariableSet(GVTradesToday(), (double)tradesToday);
+   GlobalVariableSet(GVTotalTrades(), (double)totalTrades);
+
+   if(InpMaxTotalTrades > 0 && totalTrades >= InpMaxTotalTrades)
+      Print("Limite totale de trades atteinte (", InpMaxTotalTrades, "). Plus aucun nouveau trade ",
+            "tant que InpResetTradeCounter n'est pas repasse a true.");
 }
 
 bool DailyLossLimitHit()
@@ -416,13 +457,20 @@ void TryEnterOnInverseFVG()
    double riskAmount = AccountInfoDouble(ACCOUNT_BALANCE) * (InpRiskPerTradePct / 100.0);
    double buffer = GetAtrBuffer();
 
+   if(!CanOpenNewTrade())
+   {
+      awaitingInverseFVG = false; // plafond atteint, on laisse tomber ce setup
+      return;
+   }
+
    if(awaitingDirection == 1)
    {
       double ask = SymbolInfoDouble(_Symbol, SYMBOL_ASK);
       double sl  = sweepExtreme - buffer;
       double tp  = ask + (ask - sl) * InpRiskRewardRatio;
       double lots = ComputeLotSize(ask - sl, riskAmount);
-      if(lots > 0) trade.Buy(lots, _Symbol, ask, sl, tp, "ICT NAS100 EA");
+      if(lots > 0 && trade.Buy(lots, _Symbol, ask, sl, tp, "ICT NAS100 EA"))
+         RegisterTradeOpened();
    }
    else
    {
@@ -430,7 +478,8 @@ void TryEnterOnInverseFVG()
       double sl  = sweepExtreme + buffer;
       double tp  = bid - (sl - bid) * InpRiskRewardRatio;
       double lots = ComputeLotSize(sl - bid, riskAmount);
-      if(lots > 0) trade.Sell(lots, _Symbol, bid, sl, tp, "ICT NAS100 EA");
+      if(lots > 0 && trade.Sell(lots, _Symbol, bid, sl, tp, "ICT NAS100 EA"))
+         RegisterTradeOpened();
    }
 
    awaitingInverseFVG = false;
@@ -476,7 +525,7 @@ void OnTick()
       return;
    }
 
-   if(dailyLimitHit || !InSession() || htfBias == 0) return;
+   if(dailyLimitHit || !InSession() || htfBias == 0 || !CanOpenNewTrade()) return;
 
    if(!awaitingInverseFVG)
       TryDetectSweep();

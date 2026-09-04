@@ -16,10 +16,12 @@
 //| - Amplitude > 100 pips -> SL divise par 2                         |
 //| - Risque 0.5% du solde par trade, cible 1% (= TP2 a 2RR)          |
 //| - TP1 = 1RR, cloture moitie de la position + stop a breakeven     |
-//|   (A CONFIRMER : le pere a aussi mentionne "SL 1 lot, TP 2 lot",  |
-//|   qui pourrait vouloir dire un partage 1/3-2/3 plutot que 50/50 - |
-//|   pas encore clarifie, voir README)                               |
 //| - TP2 = 2RR                                                       |
+//| - Partage 50/50 confirme par les chiffres du pere lui-meme :      |
+//|   0.5% risque -> TP1 (moitie, 1RR) = 0.25% gain, TP2 (moitie      |
+//|   restante, 2RR) = +0.5% -> 0.75% cumule. "SL 1 lot, TP 2 lot"    |
+//|   decrivait donc juste le ratio risque/recompense 1:2, pas un     |
+//|   partage different.                                              |
 //| - EMA 8/21 : renforce mais optionnel                              |
 //| - Code source exact du TTS (indicateur TradingView "Trend Trader  |
 //|   Strategy" par HPotter) fourni par l'utilisateur, traduit ici    |

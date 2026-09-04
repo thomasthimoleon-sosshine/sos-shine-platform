@@ -246,13 +246,14 @@ Meme procedure que les deux autres EA, avec :
 | `InpRiskPerTradePct` | 0.5% | Risque par trade (non precise par le pere, choix par defaut) |
 | `InpMaxTradesPerDay` / `InpMaxTotalTrades` | 3 / 10 | Memes garde-fous anti-surtrading que les autres EA |
 
-## Point en attente de clarification
+## Partage 50/50 au TP1 : confirme par le calcul
 
-Le pere a aussi mentionne "SL 1 lot, TP 2 lot", pas encore compris avec
-certitude. Ca pourrait vouloir dire que la position est divisee en 3 (1/3
-ferme au TP1, 2/3 laisses courir vers TP2) plutot que le partage 50/50
-actuellement code. **Le code actuel reste sur 50/50** en attendant une
-precision — a ne pas considerer comme final sur ce point.
+Le pere a donne ses propres chiffres : "0.5% de risque, TP1 = 0.25% de
+gain, TP2 = 0.75% cumule". Ca correspond exactement a un partage 50/50 de
+la position (deja code) : 0.5% x 0.5 (moitie) x 1RR = 0.25% au TP1, puis
+0.5% x 0.5 (moitie restante) x 2RR = 0.5% de plus, soit 0.75% cumule.
+"SL 1 lot, TP 2 lot" decrivait donc simplement le ratio risque/recompense
+1:2, pas un partage different de la position. Point resolu.
 
 ## Limite technique a connaitre
 

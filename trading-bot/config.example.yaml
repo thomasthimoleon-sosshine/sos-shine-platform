@@ -1,0 +1,33 @@
+# Copie ce fichier en config.yaml et ajuste les valeurs.
+
+exchange:
+  name: binance
+  # true = Binance Spot Testnet (argent fictif). Toujours commencer par true.
+  testnet: true
+
+trading:
+  symbols:
+    - BTC/USDT
+    - ETH/USDT
+  timeframe: 1h        # bougies horaires : bon compromis frequence/fiabilite pour un petit capital
+  capital_eur: 200
+
+strategy:
+  ema_fast: 12
+  ema_slow: 26
+  rsi_period: 14
+  rsi_overbought: 75   # on n'achete pas si le RSI depasse ce seuil (evite d'acheter un pic)
+  atr_period: 14
+  atr_stop_multiplier: 2.0   # distance du stop-loss = ATR * ce multiplicateur
+  risk_reward_ratio: 1.5     # take-profit = 1.5x la distance du stop-loss
+
+risk:
+  risk_per_trade_pct: 1.5       # % du capital risque par trade (perte max si stop touche)
+  max_daily_loss_pct: 5.0       # coupe-circuit : plus de nouveaux trades si perdu ce % dans la journee
+  max_open_positions: 2         # nombre de positions simultanees max (diversification limitee vu le capital)
+  max_position_pct_of_capital: 60  # une seule position ne peut pas depasser ce % du capital total
+
+backtest:
+  start_date: "2023-01-01"
+  end_date: "2024-06-01"
+  fee_pct: 0.1   # frais Binance spot standard (0.1% par ordre)

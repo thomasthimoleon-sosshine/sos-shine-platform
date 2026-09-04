@@ -2,10 +2,13 @@
 //| EA_FTMO_TTS_US30.mq5                                             |
 //| Robot base sur la technique du pere de l'utilisateur, sur US30.  |
 //| Confluence SAR + RSI(50) + TTS (indicateur "Trend Trader         |
-//| Strategy" de TradingView, reproduit ici a l'identique en MQL5)   |
-//| dans une fenetre de 15 minutes. SL sur le point de retournement  |
-//| du SAR (ajuste par l'amplitude), TP1 a 1RR (cloture moitie +     |
-//| breakeven), TP2 a 2RR.                                            |
+//| Strategy" de TradingView, reproduit ici a l'identique en MQL5) : |
+//| entree quand les 3 sont ACTUELLEMENT alignes dans le meme sens,  |
+//| declenchee par le dernier a confirmer (pas d'exigence de         |
+//| retournement "frais" simultane, voir plus bas - corrige apres    |
+//| un premier backtest qui donnait bien trop peu de trades). SL sur |
+//| le point de retournement du SAR (ajuste par l'amplitude), TP1 a  |
+//| 1RR (cloture moitie + breakeven), TP2 a 2RR.                     |
 //|                                                                    |
 //| CE QUI VIENT DIRECTEMENT DU PERE (pas d'interpretation) :        |
 //| - Confluence SAR + RSI + TTS sous 15 minutes                     |
@@ -39,8 +42,7 @@
 
 #include <Trade\Trade.mqh>
 
-//--- Confluence (SAR + RSI + TTS dans une fenetre de X minutes)
-input int    InpConfluenceWindowMin = 15;   // fenetre max entre les 3 signaux, en minutes
+//--- Confluence (SAR + RSI + TTS actuellement alignes, declenche par le dernier des 3 a confirmer)
 input double InpSarStep             = 0.02; // reglage standard, non precise par le pere
 input double InpSarMax              = 0.2;
 input int    InpRsiPeriod           = 14;   // standard, seul le niveau 50 etait precise
@@ -91,11 +93,6 @@ int      totalTrades  = 0;
 //--- Etat recursif du TTS (identique a la logique Pine ret/pos)
 double ttsRet = 0.0;
 int    ttsPos = 0;
-
-//--- Horodatage du dernier signal dans chaque sens, pour la confluence 15 min
-datetime lastSarBullTime = 0, lastSarBearTime = 0;
-datetime lastRsiBullTime = 0, lastRsiBearTime = 0;
-datetime lastTtsBullTime = 0, lastTtsBearTime = 0;
 
 //--- Suivi de la position ouverte (un seul trade a la fois)
 bool   tp1Taken = false;
@@ -321,7 +318,7 @@ double ComputeLotSize(double stopDistancePrice, double riskAmount)
 //+------------------------------------------------------------------+
 // Reproduction exacte de l'indicateur TradingView "Trend Trader Strategy"
 // (HPotter, d'apres Andrew Abraham). Appelee une fois par nouvelle bougie M5.
-void UpdateTTS(datetime barTime)
+void UpdateTTS()
 {
    double avgTR_1     = WmaTR(InpTtsLength, 2);
    double highestC_1  = HighestHighWindow(InpTtsLength, 2);
@@ -340,9 +337,6 @@ void UpdateTTS(datetime barTime)
    if(closeNow > newRet) newPos = 1;
    else if(closeNow < newRet) newPos = -1;
    else newPos = ttsPos;
-
-   if(newPos == 1 && ttsPos != 1) lastTtsBullTime = barTime;
-   if(newPos == -1 && ttsPos != -1) lastTtsBearTime = barTime;
 
    ttsRet = newRet;
    ttsPos = newPos;
@@ -411,30 +405,29 @@ void OnTick()
    if(currentBarTime == lastBarTime) return;
    lastBarTime = currentBarTime;
 
-   datetime evalBarTime = iTime(_Symbol, TF, 1); // la bougie qui vient de se cloturer
-
-   // --- SAR : detection du retournement ---
+   // --- SAR : etat actuel (au-dessus/en-dessous du prix) + detection du retournement ---
    double sarBuf[];
    ArraySetAsSeries(sarBuf, true);
    if(CopyBuffer(sarHandle, 0, 1, 2, sarBuf) < 2) return;
    bool sarBullNow  = sarBuf[0] < C(1);
    bool sarBullPrev = sarBuf[1] < C(2);
-   if(sarBullNow && !sarBullPrev) lastSarBullTime = evalBarTime;
-   if(!sarBullNow && sarBullPrev) lastSarBearTime = evalBarTime;
+   bool sarJustFlippedBull = sarBullNow && !sarBullPrev;
+   bool sarJustFlippedBear = !sarBullNow && sarBullPrev;
    double sarCurrentValue = sarBuf[0];
 
-   // --- RSI : croisement du niveau 50 ---
+   // --- RSI : position par rapport a 50 + detection du croisement ---
    double rsiBuf[];
    ArraySetAsSeries(rsiBuf, true);
    if(CopyBuffer(rsiHandle, 0, 1, 2, rsiBuf) < 2) return;
+   bool rsiAboveNow  = rsiBuf[0] > 50;
    bool rsiCrossUp   = rsiBuf[1] <= 50 && rsiBuf[0] > 50;
    bool rsiCrossDown = rsiBuf[1] >= 50 && rsiBuf[0] < 50;
-   if(rsiCrossUp) lastRsiBullTime = evalBarTime;
-   if(rsiCrossDown) lastRsiBearTime = evalBarTime;
 
-   // --- TTS ---
+   // --- TTS : etat actuel + detection du retournement ---
    int prevPos = ttsPos;
-   UpdateTTS(evalBarTime);
+   UpdateTTS();
+   bool ttsJustFlippedBull = (ttsPos == 1 && prevPos != 1);
+   bool ttsJustFlippedBear = (ttsPos == -1 && prevPos != -1);
 
    long direction = 0;
    bool hasPosition = HasOpenPosition(direction);
@@ -442,18 +435,18 @@ void OnTick()
 
    if(dailyLimitHit || !CanOpenNewTrade()) return;
 
-   long windowSec = (long)InpConfluenceWindowMin * 60;
-   bool bullConfluence = lastSarBullTime > 0 && lastRsiBullTime > 0 && lastTtsBullTime > 0 &&
-                          (evalBarTime - lastSarBullTime) <= windowSec &&
-                          (evalBarTime - lastRsiBullTime) <= windowSec &&
-                          (evalBarTime - lastTtsBullTime) <= windowSec;
-   bool bearConfluence = lastSarBearTime > 0 && lastRsiBearTime > 0 && lastTtsBearTime > 0 &&
-                          (evalBarTime - lastSarBearTime) <= windowSec &&
-                          (evalBarTime - lastRsiBearTime) <= windowSec &&
-                          (evalBarTime - lastTtsBearTime) <= windowSec;
+   // Confluence : SAR, RSI et TTS actuellement alignes dans le meme sens
+   // (peu importe depuis quand), declenchee des que le dernier des 3 vient
+   // de confirmer. Contrairement a une premiere version, on n'exige plus que
+   // les 3 se soient retournes dans la meme fenetre de 15 minutes : le SAR et
+   // le TTS restent orientes pendant longtemps une fois retournes, exiger un
+   // retournement "frais" des 3 en meme temps rendait le signal quasi
+   // inexistant en pratique.
+   bool bullAligned = sarBullNow && rsiAboveNow && (ttsPos == 1);
+   bool bearAligned = !sarBullNow && !rsiAboveNow && (ttsPos == -1);
 
-   bool justCompletedBull = bullConfluence && ((sarBullNow && !sarBullPrev) || rsiCrossUp || (ttsPos == 1 && prevPos != 1));
-   bool justCompletedBear = bearConfluence && ((!sarBullNow && sarBullPrev) || rsiCrossDown || (ttsPos == -1 && prevPos != -1));
+   bool justCompletedBull = bullAligned && (sarJustFlippedBull || rsiCrossUp || ttsJustFlippedBull);
+   bool justCompletedBear = bearAligned && (sarJustFlippedBear || rsiCrossDown || ttsJustFlippedBear);
 
    if(InpUseEmaFilter)
    {

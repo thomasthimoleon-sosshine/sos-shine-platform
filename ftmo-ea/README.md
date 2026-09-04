@@ -190,8 +190,13 @@ differences :
 ## Ce qui vient directement du pere (aucune interpretation de ma part)
 
 - Confluence de 3 signaux — SAR, RSI, et l'indicateur TradingView "Trend
-  Trader Strategy" (TTS) — qui doivent tous se declencher dans une fenetre
-  de 15 minutes maximum.
+  Trader Strategy" (TTS) — qui doivent tous etre alignes dans le meme sens.
+  **Correction apres un premier backtest** : la version initiale exigeait que
+  les 3 se soient retournes dans la meme fenetre de 15 minutes, ce qui
+  donnait beaucoup trop peu de trades (le SAR et le TTS restent orientes
+  longtemps une fois retournes, contrairement au RSI qui croise 50 souvent).
+  Desormais, l'entree se declenche des que les 3 sont ACTUELLEMENT alignes,
+  peu importe depuis quand, provoquee par le dernier des 3 a confirmer.
 - Temporalite : **M5**.
 - RSI : condition sur le niveau **50** (croisement au-dessus = signal
   haussier, en-dessous = baissier).
@@ -237,7 +242,6 @@ Meme procedure que les deux autres EA, avec :
 
 | Parametre | Defaut | Role |
 |---|---|---|
-| `InpConfluenceWindowMin` | 15 | Fenetre max (minutes) entre les 3 signaux |
 | `InpSarStep` / `InpSarMax` | 0.02 / 0.2 | Reglages du Parabolic SAR |
 | `InpRsiPeriod` | 14 | Periode du RSI |
 | `InpTtsLength` / `InpTtsMultiplier` | 21 / 3.0 | Parametres d'origine du script TradingView TTS |

@@ -1,4 +1,4 @@
-// ── Test « Signature Émotionnelle » — 5 questions (spec 500 abonnés) ──────────
+// ── Test « Signature Émotionnelle » — 10 questions (spec 500 abonnés) ─────────
 // Source unique : le spec produit. Chaque réponse A–G pointe un protocole.
 // NB : le mapping slug -> contenu réel de la plateforme (table `douleurs`) se
 // fait AILLEURS, au câblage de l'accès protocole. Ici on reste sur les slugs
@@ -94,6 +94,71 @@ export const QUESTIONS: Question[] = [
       { letter: 'E', text: 'Figé, tremblant, ou ailleurs.' },
       { letter: 'F', text: 'Un manque physique, comme une amputation.' },
       { letter: 'G', text: 'Une absence qui pèse dans la pièce.' },
+    ],
+  },
+  {
+    id: 6,
+    prompt: 'La nuit, quand tout s'arrête',
+    choices: [
+      { letter: 'A', text: 'Je me repasse tout ce que j'ai mal fait.' },
+      { letter: 'B', text: 'Je vérifie s'il / si elle a écrit.' },
+      { letter: 'C', text: 'Je me dis « demain j'oserai ». Et demain, non.' },
+      { letter: 'D', text: 'Je n'arrive pas à éteindre. La liste ne finit jamais.' },
+      { letter: 'E', text: 'Le noir ramène des images. Ou le corps se verrouille.' },
+      { letter: 'F', text: 'Je tends la main de l'autre côté du lit. Vide.' },
+      { letter: 'G', text: 'Je parle à quelqu'un qui n'est plus là.' },
+    ],
+  },
+  {
+    id: 7,
+    prompt: 'Ce que les autres ne voient pas',
+    choices: [
+      { letter: 'A', text: 'Que je me détruis à petit feu, le sourire en place.' },
+      { letter: 'B', text: 'Que sans réponse, je m'effondre en silence.' },
+      { letter: 'C', text: 'Que derrière le calme, il y a une terreur de se tromper.' },
+      { letter: 'D', text: 'Que je suis vide. Que je fais semblant de tenir.' },
+      { letter: 'E', text: 'Que certains bruits, certains gestes, me ramènent là-bas.' },
+      { letter: 'F', text: 'Que je fais semblant d'aller mieux depuis des semaines.' },
+      { letter: 'G', text: 'Que je souris pour eux. Pas pour moi.' },
+    ],
+  },
+  {
+    id: 8,
+    prompt: 'Si tu pouvais changer une seule chose demain matin',
+    choices: [
+      { letter: 'A', text: 'Me regarder sans me juger.' },
+      { letter: 'B', text: 'Ne plus avoir besoin de l'autre pour me sentir vivant·e.' },
+      { letter: 'C', text: 'Agir sans attendre d'être parfait·e.' },
+      { letter: 'D', text: 'Poser une chose. Une seule. Et ne pas la reprendre.' },
+      { letter: 'E', text: 'Habiter mon corps sans peur.' },
+      { letter: 'F', text: 'Penser à cette personne sans que ça brûle.' },
+      { letter: 'G', text: 'Traverser une journée entière sans cette absence.' },
+    ],
+  },
+  {
+    id: 9,
+    prompt: 'Ce qui te fait le plus honte',
+    choices: [
+      { letter: 'A', text: 'D'avoir besoin qu'on me dise que j'ai de la valeur.' },
+      { letter: 'B', text: 'D'être resté·e. D'avoir accepté. D'attendre encore.' },
+      { letter: 'C', text: 'D'avoir laissé passer des occasions par peur.' },
+      { letter: 'D', text: 'D'en vouloir aux gens que j'aide.' },
+      { letter: 'E', text: 'De ne pas « aller mieux » alors que c'est fini.' },
+      { letter: 'F', text: 'De vouloir encore quelqu'un qui m'a fait du mal.' },
+      { letter: 'G', text: 'D'avoir ri un jour et de m'en être voulu.' },
+    ],
+  },
+  {
+    id: 10,
+    prompt: 'Ce dont tu as besoin — pas envie, besoin',
+    choices: [
+      { letter: 'A', text: 'Me traiter comme je traite ceux que j'aime.' },
+      { letter: 'B', text: 'Exister sans que quelqu'un le confirme.' },
+      { letter: 'C', text: 'Un premier pas. Petit. Mais fait.' },
+      { letter: 'D', text: 'Le droit de ne rien porter pendant une heure.' },
+      { letter: 'E', text: 'Un endroit sûr. Dans mon corps. Pas dehors.' },
+      { letter: 'F', text: 'Redevenir quelqu'un pour moi, pas pour deux.' },
+      { letter: 'G', text: 'Un cadre pour traverser, pas une injonction à guérir.' },
     ],
   },
 ]

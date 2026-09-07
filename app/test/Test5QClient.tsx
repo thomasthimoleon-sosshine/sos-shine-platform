@@ -36,7 +36,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export default function Test5QClient() {
   const router = useRouter()
-  const [step, setStep] = useState(0) // 0..4 = questions ; 5 = capture
+  const [step, setStep] = useState(0) // 0..9 = questions ; 10 = capture
   const [answers, setAnswers] = useState<Letter[]>([])
   const [prenom, setPrenom] = useState('')
   const [email, setEmail] = useState('')

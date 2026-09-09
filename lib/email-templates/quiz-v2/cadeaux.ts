@@ -49,7 +49,7 @@ export const CADEAUX = {
    */
   meditation: {
     titre: "La méditation guidée de l'enfant intérieur",
-    url: null as string | null,
+    url: 'https://krdfvggmfswbohuevzlb.supabase.co/storage/v1/object/public/uploads/Audio/Cadeaux/meditation-enfant-interieur.mp3.mp3',
   },
   /** Bonus — offert dans l'email 16. PDF généré à la volée. */
   protocole5min: {

@@ -78,6 +78,12 @@ export default function Test5QClient() {
     } catch {
       /* la capture ne doit jamais bloquer l'accès au résultat */
     }
+    // Envoie la lettre de Julia par email (fire & forget)
+    fetch('/api/signature-letter', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ slug, prenom: prenom.trim(), email: email.trim() }),
+    }).catch(() => {})
     const q = new URLSearchParams({ prenom: prenom.trim() }).toString()
     router.push(`/resultat/${slug}?${q}`)
   }

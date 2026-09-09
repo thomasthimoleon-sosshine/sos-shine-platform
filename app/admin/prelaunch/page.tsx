@@ -59,30 +59,30 @@ const sections: SectionDef[] = [
       { label: 'Description offre', key: 'prelaunch_pricing_desc', type: 'text', default: "Rejoignez maintenant et beneficiez d'un tarif preferentiel a vie." },
       sep('Tarif Early Bird'),
       { label: 'Prix early bird', key: 'prelaunch_price_early', type: 'text', default: '19,90' },
-      { label: 'Label tarif early bird', key: 'prelaunch_price_early_label', type: 'text', default: 'Tarif fondateur — a vie' },
+      { label: 'Label tarif early bird', key: 'prelaunch_price_early_label', type: 'text', default: 'Tarif fondateur - a vie' },
       sep('Tarif Standard'),
-      { label: 'Prix standard', key: 'prelaunch_price_standard', type: 'text', default: '29,90' },
+      { label: 'Prix standard', key: 'prelaunch_price_standard', type: 'text', default: '49,90' },
       { label: 'Label tarif standard', key: 'prelaunch_price_standard_label', type: 'text', default: 'Tarif standard apres lancement' },
       sep('Affichage'),
       { label: 'Suffixe prix (ex: /mois)', key: 'prelaunch_price_suffix', type: 'text', default: '/mois' },
       { label: 'Texte separateur (ex: au lieu de)', key: 'prelaunch_price_separator', type: 'text', default: 'au lieu de' },
       sep('Economies'),
-      { label: 'Texte engagement', key: 'prelaunch_no_commitment', type: 'text', default: 'Sans engagement — Annulable a tout instant' },
+      { label: 'Texte engagement', key: 'prelaunch_no_commitment', type: 'text', default: 'Sans engagement - Annulable a tout instant' },
       { label: 'Texte economie', key: 'prelaunch_savings_text', type: 'text', default: "10€ d'economie/mois, pour toujours." },
     ],
   },
   {
     title: 'Formulaire & Waitlist', icon: '📝',
     fields: [
-      { label: 'Placeholder prenom', key: 'prelaunch_form_name_placeholder', type: 'text', default: 'Votre prenom (optionnel)' },
+      { label: 'Placeholder prénom', key: 'prelaunch_form_name_placeholder', type: 'text', default: 'Votre prénom (optionnel)' },
       { label: 'Placeholder email', key: 'prelaunch_form_email_placeholder', type: 'text', default: 'Votre email' },
-      { label: 'Texte du bouton', key: 'prelaunch_form_button', type: 'text', default: "Rejoindre la liste d'attente — 19,90€/mois a vie" },
+      { label: 'Texte du bouton', key: 'prelaunch_form_button', type: 'text', default: "Rejoindre la liste d'attente - 19,90€/mois à vie" },
       sep('Messages'),
-      { label: 'Titre apres inscription', key: 'prelaunch_success_title', type: 'text', default: 'Bienvenue parmi les fondateurs' },
-      { label: 'Message apres inscription', key: 'prelaunch_success_message', type: 'textarea', default: "Votre place est reservee. Vous recevrez un email le jour de l'ouverture avec votre acces prioritaire au tarif de 19,90€/mois a vie." },
-      { label: 'Message deja inscrit', key: 'prelaunch_already_message', type: 'text', default: 'Vous etes deja inscrit(e). Nous vous contacterons le 22 mars.' },
+      { label: 'Titre après inscription', key: 'prelaunch_success_title', type: 'text', default: 'Bienvenue parmi les fondateurs' },
+      { label: 'Message après inscription', key: 'prelaunch_success_message', type: 'textarea', default: "Votre place est réservée. Vous recevrez un email le jour de l'ouverture avec votre accès prioritaire au tarif de 19,90€/mois à vie." },
+      { label: 'Message déjà inscrit', key: 'prelaunch_already_message', type: 'text', default: 'Vous êtes déjà inscrit(e). Nous vous contacterons le 22 mars.' },
       { label: 'Texte en cours (bouton)', key: 'prelaunch_form_loading', type: 'text', default: 'Inscription...' },
-      { label: 'Message d\'erreur', key: 'prelaunch_error_message', type: 'text', default: 'Une erreur est survenue. Veuillez reessayer.' },
+      { label: 'Message d\'erreur', key: 'prelaunch_error_message', type: 'text', default: 'Une erreur est survenue. Veuillez réessayer.' },
       sep('Preuve sociale'),
       { label: 'Texte preuve sociale (utilisez {count} pour le nombre)', key: 'prelaunch_social_proof', type: 'text', default: '{count} personne(s) sur la liste d\'attente' },
     ],
@@ -91,12 +91,12 @@ const sections: SectionDef[] = [
     title: 'Features teaser', icon: '🎯',
     fields: [
       { label: 'Titre section', key: 'prelaunch_features_label', type: 'text', default: 'Ce qui vous attend' },
-      { label: 'Feature 1', key: 'prelaunch_feature_1', type: 'text', default: "Encyclopedie complete des experiences de vie (A-Z)" },
-      { label: 'Feature 2', key: 'prelaunch_feature_2', type: 'text', default: 'Videos de coaching immersif' },
-      { label: 'Feature 3', key: 'prelaunch_feature_3', type: 'text', default: 'Soins energetiques & meditations' },
-      { label: 'Feature 4', key: 'prelaunch_feature_4', type: 'text', default: 'Chat dedie par challenge emotionnel' },
-      { label: 'Feature 5', key: 'prelaunch_feature_5', type: 'text', default: 'Communaute & mur de partage' },
-      { label: 'Feature 6', key: 'prelaunch_feature_6', type: 'text', default: 'Soins collectifs & evenements' },
+      { label: 'Feature 1', key: 'prelaunch_feature_1', type: 'text', default: "Encyclopédie complète des expériences de vie (A-Z)" },
+      { label: 'Feature 2', key: 'prelaunch_feature_2', type: 'text', default: 'Vidéos de coaching immersif' },
+      { label: 'Feature 3', key: 'prelaunch_feature_3', type: 'text', default: 'Soins énergétiques & méditations' },
+      { label: 'Feature 4', key: 'prelaunch_feature_4', type: 'text', default: 'Chat dédié par challenge émotionnel' },
+      { label: 'Feature 5', key: 'prelaunch_feature_5', type: 'text', default: 'Communauté & mur de partage' },
+      { label: 'Feature 6', key: 'prelaunch_feature_6', type: 'text', default: 'Soins collectifs & événements' },
     ],
   },
   {
@@ -201,14 +201,14 @@ export default function PrelaunchEditPage() {
 
       setSaving(false); setSaved(true); setTimeout(() => setSaved(false), 4000)
     } catch (err) {
-      setError(`Erreur: ${err instanceof Error ? err.message : 'Veuillez reessayer'}`); setSaving(false)
+      setError(`Erreur: ${err instanceof Error ? err.message : 'Veuillez réessayer'}`); setSaving(false)
     }
   }
 
-  if (loading) return <div className="flex justify-center py-20"><div className="w-8 h-8 border-2 border-[#74C0FC] border-t-transparent rounded-full animate-spin" /></div>
+ if (loading) return <div className="flex justify-center py-20 w-8 h-8 border-2 border-[#74C0FC] border-t-transparent rounded-full animate-spin" ><div /></div>
 
   const isEnabled = values.prelaunch_enabled === 'true'
-  const inputStyle: React.CSSProperties = { background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }
+  const inputStyle: React.CSSProperties = { background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)' }
 
   return (
     <div className="max-w-4xl mx-auto space-y-4">
@@ -231,12 +231,12 @@ export default function PrelaunchEditPage() {
       {/* Status banner */}
       <div className="rounded-xl px-5 py-4 flex items-center justify-between" style={{
         background: isEnabled ? 'rgba(85,239,196,0.08)' : 'rgba(255,255,255,0.03)',
-        border: `1px solid ${isEnabled ? 'rgba(85,239,196,0.25)' : 'var(--dark-border)'}`,
+        border: `1px solid ${isEnabled ? 'rgba(85,239,196,0.25)' : 'var(--border)'}`,
       }}>
         <div className="flex items-center gap-3">
           <div className="w-3 h-3 rounded-full" style={{ background: isEnabled ? '#55EFC4' : 'var(--text-muted)' }} />
           <span className="text-sm font-medium" style={{ color: isEnabled ? '#55EFC4' : 'var(--text-muted)' }}>
-            {isEnabled ? 'Page de pre-lancement ACTIVE — La landing page principale est remplacee' : 'Page de pre-lancement desactivee — La landing page principale est affichee'}
+            {isEnabled ? 'Page de pre-lancement ACTIVE - La landing page principale est remplacee' : 'Page de pre-lancement desactivee - La landing page principale est affichee'}
           </span>
         </div>
       </div>
@@ -246,7 +246,7 @@ export default function PrelaunchEditPage() {
       {sections.map((section) => {
         const isOpen = openSections[section.title]
         return (
-          <div key={section.title} className="rounded-xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+          <div key={section.title} className="rounded-xl overflow-hidden" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
             <button onClick={() => toggleSection(section.title)} className="w-full flex items-center justify-between p-5 cursor-pointer text-left">
               <h2 className="font-semibold text-base flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
                 <span>{section.icon}</span> {section.title}
@@ -261,7 +261,7 @@ export default function PrelaunchEditPage() {
                 {section.fields.map((field, fi) => (
                   <div key={field.key || `sep-${fi}`}>
                     {field.type === 'separator' ? (
-                      <div className="pt-3 mt-1" style={{ borderTop: '1px solid var(--dark-border)' }}>
+                      <div className="pt-3 mt-1" style={{ borderTop: '1px solid var(--border)' }}>
                         <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>{field.label}</p>
                       </div>
                     ) : field.type === 'toggle' ? (

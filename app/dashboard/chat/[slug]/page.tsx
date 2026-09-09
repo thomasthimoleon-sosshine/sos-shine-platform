@@ -4,9 +4,11 @@ import { useEffect, useState, useRef, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
+import FeatureGate from '@/components/FeatureGate'
 import type { MessageWithProfile, Douleur } from '@/types/database'
 import AudioPlayer from '@/components/AudioPlayer'
 import VoiceRecorder from '@/components/VoiceRecorder'
+import ShineIcon from '@/components/icons/ShineIcon'
 
 export default function ChatDouleurPage() {
   const params = useParams()
@@ -104,6 +106,7 @@ export default function ChatDouleurPage() {
   const displayTitle = douleur?.title || slug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 
   return (
+    <FeatureGate featureKey="chat_douleur">
     <div className="max-w-4xl mx-auto h-[calc(100vh-8rem)] flex flex-col">
       <div className="mb-4">
         <div className="flex items-center gap-2 text-sm mb-2">
@@ -122,7 +125,7 @@ export default function ChatDouleurPage() {
           <span style={{ color: 'var(--text-primary)' }}>Chat</span>
         </div>
         <h1 className="font-display text-2xl font-semibold flex items-center gap-3" style={{ color: 'var(--text-primary)' }}>
-          <span className="text-xl">🔥</span> Feu de Camp — {displayTitle}
+          <span style={{ color: 'var(--brand)' }}><ShineIcon name="resilience" className="w-5 h-5" /></span> Feu de Camp - {displayTitle}
         </h1>
         <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
           Échangez avec ceux qui traversent la même épreuve.
@@ -132,31 +135,31 @@ export default function ChatDouleurPage() {
       {/* Quick nav */}
       <div className="mb-4 flex items-center gap-2">
         <Link href="/dashboard/chat" className="px-3 py-1.5 rounded-lg text-xs flex-shrink-0 transition-colors"
-          style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-secondary)' }}>
+          style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-secondary)' }}>
           Chat Général
         </Link>
         <Link href={`/dashboard/encyclopedie/${slug}`} className="px-3 py-1.5 rounded-lg text-xs flex-shrink-0 transition-colors"
-          style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-secondary)' }}>
+          style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-secondary)' }}>
           Retour aux 3 étapes
         </Link>
       </div>
 
       {/* Messages */}
       <div className="flex-1 rounded-2xl overflow-hidden flex flex-col min-h-0"
-        style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-        <div className="px-5 py-3" style={{ borderBottom: '1px solid var(--dark-border)' }}>
-          <span className="text-sm font-medium" style={{ color: '#FF6B35' }}>🔥 {displayTitle}</span>
+        style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
+        <div className="px-5 py-3" style={{ borderBottom: '1px solid var(--border)' }}>
+          <span className="text-sm font-medium inline-flex items-center gap-1.5" style={{ color: 'var(--brand)' }}><ShineIcon name="resilience" className="w-4 h-4" /> {displayTitle}</span>
         </div>
 
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {loading ? (
             <div className="flex justify-center py-12">
-              <div className="w-6 h-6 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+              <div className="w-6 h-6 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
             </div>
           ) : messages.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center py-16 text-center">
               <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 text-2xl" style={{ background: 'rgba(255,107,53,0.1)' }}>
-                🔥
+                <ShineIcon name="resilience" className="w-7 h-7" color="var(--brand)" />
               </div>
               <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
                 Ce feu attend d&apos;être allumé
@@ -174,8 +177,8 @@ export default function ChatDouleurPage() {
               ) : (
                 <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-semibold"
                   style={{
-                    background: isAnon ? 'rgba(142,110,126,0.15)' : msg.user_id === userId ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.05)',
-                    color: isAnon ? 'var(--text-muted)' : msg.user_id === userId ? 'var(--gold)' : 'var(--text-secondary)',
+                    background: isAnon ? 'rgba(142,110,126,0.15)' : msg.user_id === userId ? 'rgba(201,169,97,0.15)' : 'rgba(255,255,255,0.05)',
+                    color: isAnon ? 'var(--text-muted)' : msg.user_id === userId ? 'var(--brand)' : 'var(--text-secondary)',
                   }}>
                   {getDisplayInitial(msg)}
                 </div>
@@ -192,20 +195,20 @@ export default function ChatDouleurPage() {
                     <div className="flex items-baseline gap-2 mb-0.5">
                       {canClickProfile ? (
                         <Link href={`/dashboard/membre/${msg.user_id}`} className="text-sm font-semibold hover:underline" style={{
-                          color: msg.profiles?.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)',
+                          color: msg.profiles?.role === 'founder' ? 'var(--brand)' : 'var(--text-primary)',
                         }}>
                           {getDisplayName(msg)}
                         </Link>
                       ) : (
                         <span className="text-sm font-semibold" style={{
-                          color: isAnon ? 'var(--text-muted)' : msg.profiles?.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)',
+                          color: isAnon ? 'var(--text-muted)' : msg.profiles?.role === 'founder' ? 'var(--brand)' : 'var(--text-primary)',
                           fontStyle: isAnon ? 'italic' : 'normal',
                         }}>
                           {getDisplayName(msg)}
                         </span>
                       )}
                       {!isAnon && msg.profiles?.role === 'founder' && (
-                        <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>Fondateur</span>
+                        <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)' }}>Fondateur</span>
                       )}
                       {msg.is_anonymous && msg.user_id === userId && (
                         <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(142,110,126,0.15)', color: 'var(--text-muted)' }}>Anonyme</span>
@@ -225,14 +228,14 @@ export default function ChatDouleurPage() {
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="p-4" style={{ borderTop: '1px solid var(--dark-border)' }}>
+        <div className="p-4" style={{ borderTop: '1px solid var(--border)' }}>
           {/* Anonymous toggle */}
           <div className="flex items-center gap-2 mb-2">
             <button type="button" onClick={() => setIsAnonymous(!isAnonymous)}
               className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer"
               style={{
                 background: isAnonymous ? 'rgba(142,110,126,0.2)' : 'transparent',
-                border: `1px solid ${isAnonymous ? 'var(--text-muted)' : 'var(--dark-border)'}`,
+                border: `1px solid ${isAnonymous ? 'var(--text-muted)' : 'var(--border)'}`,
                 color: isAnonymous ? 'var(--text-primary)' : 'var(--text-muted)',
               }}>
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -246,7 +249,7 @@ export default function ChatDouleurPage() {
             </button>
           </div>
           <form onSubmit={sendMessage} className="flex items-center gap-2 rounded-xl px-4 py-2"
-            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
+            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}>
             <input type="text" value={newMessage} onChange={(e) => setNewMessage(e.target.value)}
               placeholder={isAnonymous ? 'Message anonyme...' : `Message en tant que ${userPrenom}...`}
               className="flex-1 bg-transparent text-sm outline-none" style={{ color: 'var(--text-primary)' }} maxLength={500} />
@@ -264,5 +267,6 @@ export default function ChatDouleurPage() {
         </div>
       </div>
     </div>
+    </FeatureGate>
   )
 }

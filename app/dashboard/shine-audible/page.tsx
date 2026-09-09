@@ -1,8 +1,11 @@
 'use client'
 
 import { useEffect, useState, useRef, useCallback } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
+import ShineIcon, { type ShineIconName } from '@/components/icons/ShineIcon'
+// FeatureGate retiré : Shine Audible est accessible à tous les membres
 
 // ── Types ──
 type ShineAudio = {
@@ -21,6 +24,7 @@ type ShineAudio = {
   userRating: number
   isFavorite: boolean
   reviewCount: number
+  douleurId: string | null
 }
 
 type Review = {
@@ -33,131 +37,26 @@ type Review = {
 }
 
 // ── Categories ──
-const CATEGORIES = [
-  { id: 'trending', label: 'Tendances', icon: '🔥' },
-  { id: 'meditation', label: 'Méditations guidées', icon: '🧘' },
-  { id: 'healing', label: 'Guérison intérieure', icon: '🌿' },
-  { id: 'confidence', label: 'Confiance en soi', icon: '💪' },
-  { id: 'sleep', label: 'Sommeil & Détente', icon: '🌙' },
-  { id: 'hypnosis', label: 'Hypnose douce', icon: '🌀' },
-  { id: 'stories', label: 'Histoires inspirantes', icon: '📖' },
-  { id: 'ambient', label: 'Sons & Ambiances', icon: '🎵' },
+/* Signes du jeu « Les Éclats » — plus aucun émoji système. */
+const CATEGORIES: { id: string; label: string; icon: ShineIconName }[] = [
+  { id: 'trending', label: 'Tendances', icon: 'resilience' },
+  { id: 'meditation', label: 'Méditations guidées', icon: 'meditation' },
+  { id: 'healing', label: 'Guérison intérieure', icon: 'healing' },
+  { id: 'confidence', label: 'Confiance en soi', icon: 'confidence' },
+  { id: 'sleep', label: 'Sommeil & Détente', icon: 'sleep' },
+  { id: 'hypnosis', label: 'Hypnose douce', icon: 'hypnose' },
+  { id: 'stories', label: 'Histoires inspirantes', icon: 'histoire' },
+  { id: 'ambient', label: 'Sons & Ambiances', icon: 'ambiance' },
+  { id: 'children', label: 'Enfants', icon: 'children' },
 ]
 
-const CONTENT_TYPES = [
-  { id: 'all', label: 'Tout', icon: '' },
-  { id: 'podcast', label: 'Podcasts', icon: '🎙️' },
-  { id: 'audiobook', label: 'Audiobooks', icon: '📚' },
-  { id: 'meditation', label: 'Méditations', icon: '🧘' },
-  { id: 'hypnosis', label: 'Hypnose', icon: '🌀' },
-  { id: 'ambient', label: 'Ambiances', icon: '🎵' },
-]
-
-const COVERS = [
-  'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1528715471579-d1bcf0ba5e83?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1477346611705-65d1883cee1e?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1495344517868-8ebaf0a2044a?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1602192509154-0b900ee1f851?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1508672019048-805c876b67e2?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=400&h=400&fit=crop',
-  'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=400&fit=crop',
-]
-
-const AUDIO_TITLES = [
-  'Méditation du matin - Énergie positive',
-  'Hypnose douce - Retrouver la confiance',
-  'Podcast : Se relever après une épreuve',
-  'Sons de la forêt - 1 heure',
-  'Affirmations positives pour s\'endormir',
-  'Histoire inspirante : Le phénix intérieur',
-  'Sophrologie guidée - Lâcher-prise',
-  'Podcast : L\'art de la résilience',
-  'Méditation pleine conscience - 20 min',
-  'Bruit blanc & pluie - Concentration',
-  'Hypnose - Libérer l\'anxiété',
-  'Audiobook : Les chemins de la guérison',
-  'Respiration guidée 4-7-8',
-  'Podcast : Pardonner pour avancer',
-  'Sons tibétains - Harmonisation',
-  'Méditation du soir - Gratitude',
-  'Conte méditatif : La rivière de lumière',
-  'Podcast : Construire des relations saines',
-  'ASMR thérapeutique - Détente profonde',
-  'Hypnose - Reprogrammer ses pensées',
-  'Audiobook : S\'aimer enfin',
-  'Méditation body scan - 30 min',
-  'Podcast : Le courage d\'être vulnérable',
-  'Sons de l\'océan - Paix intérieure',
-  'Yoga Nidra - Sommeil réparateur',
-  'Podcast : Transformer sa douleur en force',
-  'Visualisation créatrice guidée',
-  'Mantra Om - 108 répétitions',
-  'Podcast : Sortir de la dépendance affective',
-  'Audiobook : Renaître après le trauma',
-  'Méditation Metta - Amour bienveillant',
-  'Fréquence 432 Hz - Guérison profonde',
-]
-
-const NARRATORS = [
-  'Sophie Lumière', 'Marie Douceur', 'Camille Sérénité', 'Julie Harmonie',
-  'Nadia Paix', 'Léa Tendresse', 'Sarah Étoile', 'Clara Sagesse',
-]
-
-const DESCRIPTIONS = [
-  'Laissez-vous guider dans un voyage sonore apaisant qui vous reconnectera à votre lumière intérieure et à votre force profonde.',
-  'Un accompagnement audio bienveillant pour traverser les moments difficiles et retrouver confiance en vous, pas à pas.',
-  'Plongez dans une expérience auditive immersive conçue pour libérer vos tensions et accéder à un état de paix profond.',
-  'Découvrez des techniques puissantes à travers cette écoute guidée pour transformer votre quotidien et votre bien-être.',
-  'Une séance audio soigneusement élaborée pour vous accompagner vers la guérison émotionnelle et le renouveau.',
-]
-
-const CONTENT_TYPE_KEYS: Array<'podcast' | 'audiobook' | 'meditation' | 'hypnosis' | 'ambient'> = [
-  'podcast', 'audiobook', 'meditation', 'hypnosis', 'ambient'
-]
-
-function generateAudios(): ShineAudio[] {
-  const audios: ShineAudio[] = []
-  for (let i = 0; i < 64; i++) {
-    const catIndex = i % CATEGORIES.length
-    const secs = 180 + Math.floor(Math.random() * 3420) // 3 min to 60 min
-    const mins = Math.floor(secs / 60)
-    const contentType = CONTENT_TYPE_KEYS[i % CONTENT_TYPE_KEYS.length]
-    audios.push({
-      id: `audio-${i}`,
-      title: AUDIO_TITLES[i % AUDIO_TITLES.length],
-      description: DESCRIPTIONS[i % DESCRIPTIONS.length],
-      cover: COVERS[i % COVERS.length],
-      audioUrl: '',
-      narrator: NARRATORS[i % NARRATORS.length],
-      category: CATEGORIES[catIndex].id,
-      contentType,
-      duration: mins >= 60 ? `${Math.floor(mins / 60)}h${(mins % 60).toString().padStart(2, '0')}` : `${mins} min`,
-      durationSeconds: secs,
-      year: 2024 + Math.floor(Math.random() * 3),
-      rating: 3.5 + Math.random() * 1.5,
-      userRating: 0,
-      isFavorite: Math.random() > 0.75,
-      reviewCount: Math.floor(Math.random() * 200),
-    })
-  }
-  return audios
-}
-
-const SAMPLE_REVIEWS: Review[] = [
-  { id: 'r1', author: 'Marie L.', avatar: '', rating: 5, text: 'Cette méditation m\'a accompagnée chaque matin pendant un mois. Un vrai changement dans ma vie.', date: '12 mars 2026' },
-  { id: 'r2', author: 'Sarah K.', avatar: '', rating: 4, text: 'La voix est incroyablement apaisante. Parfait pour se détendre le soir.', date: '8 mars 2026' },
-  { id: 'r3', author: 'Camille D.', avatar: '', rating: 5, text: 'J\'écoute en boucle ! Chaque écoute m\'apporte quelque chose de nouveau et de profond.', date: '5 mars 2026' },
-  { id: 'r4', author: 'Léa M.', avatar: '', rating: 4, text: 'Très beau contenu audio. La qualité sonore est exceptionnelle.', date: '2 mars 2026' },
-  { id: 'r5', author: 'Nadia B.', avatar: '', rating: 5, text: 'Merci SOS Shine ! Ce podcast a transformé ma façon de voir les épreuves.', date: '28 fév 2026' },
+const CONTENT_TYPES: { id: string; label: string; icon: ShineIconName | null }[] = [
+  { id: 'all', label: 'Tout', icon: null },
+  { id: 'podcast', label: 'Podcasts', icon: 'podcast' },
+  { id: 'audiobook', label: 'Livres audio', icon: 'audiobook' },
+  { id: 'meditation', label: 'Méditations', icon: 'meditation' },
+  { id: 'hypnosis', label: 'Hypnose', icon: 'hypnose' },
+  { id: 'ambient', label: 'Ambiances', icon: 'ambiance' },
 ]
 
 // ── Stars Component ──
@@ -184,9 +83,9 @@ function StarRating({ rating, onRate, size = 'md', interactive = false }: {
         >
           <svg
             className={sizes[size]}
-            fill={(hover || rating) >= star ? '#D4AF37' : 'none'}
+            fill={(hover || rating) >= star ? 'var(--brand)' : 'none'}
             viewBox="0 0 24 24"
-            stroke={(hover || rating) >= star ? '#D4AF37' : 'rgba(255,255,255,0.2)'}
+            stroke={(hover || rating) >= star ? 'var(--brand)' : 'rgba(255,255,255,0.2)'}
             strokeWidth={1.5}
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
@@ -198,13 +97,16 @@ function StarRating({ rating, onRate, size = 'md', interactive = false }: {
 }
 
 // ── Mini Audio Player ──
-function MiniPlayer({ audio, isPlaying, onToggle, progress, currentTime, duration }: {
+function MiniPlayer({ audio, isPlaying, onToggle, progress, currentTime, duration, onRewind, onForward, onSeek }: {
   audio: ShineAudio
   isPlaying: boolean
   onToggle: () => void
   progress: number
   currentTime: string
   duration: string
+  onRewind: () => void
+  onForward: () => void
+  onSeek: (pct: number) => void
 }) {
   return (
     <motion.div
@@ -213,14 +115,22 @@ function MiniPlayer({ audio, isPlaying, onToggle, progress, currentTime, duratio
       exit={{ y: 100, opacity: 0 }}
       className="fixed bottom-0 left-0 right-0 z-[90] lg:left-[17rem]"
       style={{
-        background: 'linear-gradient(to top, rgba(9,9,11,0.98), rgba(9,9,11,0.95))',
+        background: 'var(--surface-overlay)',
         backdropFilter: 'blur(20px)',
-        borderTop: '1px solid var(--dark-border)',
+        borderTop: '1px solid var(--border)',
       }}
     >
-      {/* Progress bar at top */}
-      <div className="h-1 w-full" style={{ background: 'rgba(255,255,255,0.06)' }}>
-        <div className="h-full transition-all duration-300" style={{ width: `${progress}%`, background: 'var(--gold)' }} />
+      {/* Progress bar at top (clickable for seeking) */}
+      <div
+        className="h-1 w-full cursor-pointer"
+        style={{ background: 'rgba(255,255,255,0.06)' }}
+        onClick={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect()
+          const pct = ((e.clientX - rect.left) / rect.width) * 100
+          onSeek(Math.max(0, Math.min(100, pct)))
+        }}
+      >
+        <div className="h-full transition-all duration-300" style={{ width: `${progress}%`, background: 'var(--brand)' }} />
       </div>
 
       <div className="flex items-center gap-3 sm:gap-4 px-4 sm:px-6 py-3">
@@ -228,15 +138,15 @@ function MiniPlayer({ audio, isPlaying, onToggle, progress, currentTime, duratio
         <img
           src={audio.cover}
           alt={audio.title}
-          className="w-12 h-12 rounded-lg object-cover ring-1 ring-white/10 shrink-0"
+          className="w-12 h-12 rounded-lg object-contain ring-1 ring-white/10 shrink-0"
         />
 
         {/* Info */}
         <div className="flex-1 min-w-0">
-          <h4 className="text-[13px] font-medium truncate" style={{ color: 'var(--text-primary)' }}>
+          <h4 className="text-[13px] font-medium truncate text-[var(--text-primary)]">
             {audio.title}
           </h4>
-          <p className="text-[11px] truncate" style={{ color: 'var(--text-muted)' }}>
+          <p className="text-[11px] truncate text-[var(--text-muted)]">
             {audio.narrator} · {currentTime} / {duration}
           </p>
         </div>
@@ -244,8 +154,7 @@ function MiniPlayer({ audio, isPlaying, onToggle, progress, currentTime, duratio
         {/* Controls */}
         <div className="flex items-center gap-2 shrink-0">
           {/* Rewind 15s */}
-          <button className="w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-colors hover:bg-white/10"
-            style={{ color: 'var(--text-secondary)' }}>
+          <button onClick={onRewind} className="w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-colors hover:bg-white/10 text-[var(--text-secondary)]">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
             </svg>
@@ -255,7 +164,7 @@ function MiniPlayer({ audio, isPlaying, onToggle, progress, currentTime, duratio
           <button
             onClick={onToggle}
             className="w-11 h-11 rounded-full flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110"
-            style={{ background: 'var(--gold)', color: '#09090b' }}
+            style={{ background: 'var(--brand)', color: '#09090b' }}
           >
             {isPlaying ? (
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -269,8 +178,7 @@ function MiniPlayer({ audio, isPlaying, onToggle, progress, currentTime, duratio
           </button>
 
           {/* Forward 15s */}
-          <button className="w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-colors hover:bg-white/10"
-            style={{ color: 'var(--text-secondary)' }}>
+          <button onClick={onForward} className="w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-colors hover:bg-white/10 text-[var(--text-secondary)]">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 15l6-6m0 0l-6-6m6 6H9a6 6 0 000 12h3" />
             </svg>
@@ -284,7 +192,7 @@ function MiniPlayer({ audio, isPlaying, onToggle, progress, currentTime, duratio
 // ── Horizontal Scroll Row ──
 function AudioRow({ title, icon, audios, onSelect, nowPlayingId }: {
   title: string
-  icon: string
+  icon: ShineIconName
   audios: ShineAudio[]
   onSelect: (a: ShineAudio) => void
   nowPlayingId?: string
@@ -316,8 +224,8 @@ function AudioRow({ title, icon, audios, onSelect, nowPlayingId }: {
 
   return (
     <div className="relative group/row">
-      <h2 className="text-lg font-display font-semibold mb-3 px-1 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-        <span className="text-xl">{icon}</span> {title}
+      <h2 className="text-lg font-display font-semibold mb-3 px-1 flex items-center gap-2 text-[var(--text-primary)]">
+        <ShineIcon name={icon} className="w-5 h-5" color="#C9A961" /> {title}
       </h2>
 
       {/* Left arrow */}
@@ -378,7 +286,7 @@ function AudioRow({ title, icon, audios, onSelect, nowPlayingId }: {
                 <img
                   src={audio.cover}
                   alt={audio.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                   loading="lazy"
                 />
                 {/* Now playing indicator */}
@@ -389,7 +297,7 @@ function AudioRow({ title, icon, audios, onSelect, nowPlayingId }: {
                       {[1, 2, 3].map(bar => (
                         <div key={bar} className="w-[3px] rounded-full animate-pulse"
                           style={{
-                            background: 'var(--gold)',
+                            background: 'var(--brand)',
                             height: `${8 + Math.random() * 8}px`,
                             animationDelay: `${bar * 0.15}s`,
                           }}
@@ -408,21 +316,21 @@ function AudioRow({ title, icon, audios, onSelect, nowPlayingId }: {
                 {/* Favorite heart */}
                 {audio.isFavorite && (
                   <span className="absolute top-2 right-2">
-                    <svg className="w-4 h-4" fill="#D4AF37" viewBox="0 0 24 24" stroke="none">
+                    <svg className="w-4 h-4" fill="var(--brand)" viewBox="0 0 24 24" stroke="none">
                       <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                     </svg>
                   </span>
                 )}
                 {/* Content type badge */}
                 <span className="absolute top-2 left-2 text-[9px] font-bold uppercase px-1.5 py-0.5 rounded"
-                  style={{ background: 'rgba(212,175,55,0.9)', color: '#09090b' }}>
-                  {audio.contentType === 'podcast' ? '🎙️' : audio.contentType === 'audiobook' ? '📚' : audio.contentType === 'meditation' ? '🧘' : audio.contentType === 'hypnosis' ? '🌀' : '🎵'}
+                  style={{ background: 'rgba(201,169,97,0.9)', color: '#09090b' }}>
+                  <ShineIcon name={audio.contentType === 'podcast' ? 'podcast' : audio.contentType === 'audiobook' ? 'audiobook' : audio.contentType === 'meditation' ? 'meditation' : audio.contentType === 'hypnosis' ? 'hypnose' : 'audio'} className="w-3 h-3" />
                 </span>
                 {/* Hover overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                   <div
                     className="w-12 h-12 rounded-full flex items-center justify-center transition-transform duration-200 hover:scale-110"
-                    style={{ background: 'var(--gold)', color: '#09090b' }}
+                    style={{ background: 'var(--brand)', color: '#09090b' }}
                   >
                     <svg className="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M8 5v14l11-7z" />
@@ -433,15 +341,15 @@ function AudioRow({ title, icon, audios, onSelect, nowPlayingId }: {
             </div>
             {/* Title + info below card */}
             <div className="mt-2.5 px-0.5">
-              <h3 className="text-[13px] font-medium truncate" style={{ color: 'var(--text-primary)' }}>
+              <h3 className="text-[13px] font-medium truncate text-[var(--text-primary)]">
                 {audio.title}
               </h3>
-              <p className="text-[11px] truncate mt-0.5" style={{ color: 'var(--text-muted)' }}>
+              <p className="text-[11px] truncate mt-0.5 text-[var(--text-muted)]">
                 {audio.narrator}
               </p>
               <div className="flex items-center gap-2 mt-1">
                 <StarRating rating={Math.round(audio.rating)} size="sm" />
-                <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
+                <span className="text-[11px] text-[var(--text-muted)]">
                   {audio.rating.toFixed(1)}
                 </span>
               </div>
@@ -456,77 +364,105 @@ function AudioRow({ title, icon, audios, onSelect, nowPlayingId }: {
 // ── Hero Banner ──
 function HeroBanner({ audio, onOpen, onPlay }: { audio: ShineAudio; onOpen: () => void; onPlay: () => void }) {
   return (
-    <div className="relative w-full overflow-hidden rounded-2xl" style={{ height: 'clamp(300px, 50vh, 500px)' }}>
-      <img
-        src={audio.cover}
-        alt={audio.title}
-        className="absolute inset-0 w-full h-full object-cover"
-        style={{ filter: 'blur(40px) brightness(0.4)', transform: 'scale(1.2)' }}
-      />
-      <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(9,9,11,0.9) 20%, rgba(9,9,11,0.5) 60%, rgba(9,9,11,0.8))' }} />
+    /* ─── « La Fenêtre », comme sur Shine TV ─────────────────────────────
+       La pochette n'est plus un fond flouté à 40 px derrière un voile : c'est
+       une pièce posée, nette et entière, à droite du texte. On garde une trace
+       de la pochette en fond, très basse, pour la couleur, mais elle
+       n'écrase plus rien.
+       Adaptation à l'audio : la fenêtre est carrée, pas en 16/9. Une pochette
+       forcée dans un cadre large aurait été rognée sur les côtés. ────── */
+    <div className="relative w-full overflow-hidden rounded-2xl bg-[#0d0b08] border border-[rgba(201,169,97,0.14)]"
+      style={{ height: 'clamp(420px, 52vh, 520px)' }}>
 
-      <div className="absolute inset-0 flex items-center px-6 sm:px-10">
+      {audio.cover && (
+        <img
+          src={audio.cover}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+          style={{ filter: 'blur(64px)', transform: 'scale(1.3)', opacity: 0.18 }}
+        />
+      )}
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ background: 'linear-gradient(100deg, #0d0b08 22%, rgba(13,11,8,0.72) 55%, rgba(13,11,8,0.35))' }} />
+
+      <div className="relative h-full grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-8 sm:gap-12 items-center px-6 sm:px-10 lg:px-12">
+
+        {/* Colonne texte */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="flex flex-col sm:flex-row items-center sm:items-end gap-6 sm:gap-8 max-w-3xl"
+          className="min-w-0"
         >
-          {/* Large cover */}
-          <motion.img
-            src={audio.cover}
-            alt={audio.title}
-            className="w-40 h-40 sm:w-52 sm:h-52 rounded-2xl object-cover shadow-2xl shadow-black/60 ring-1 ring-white/10 shrink-0"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-          />
+          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[10.5px] font-semibold uppercase tracking-[0.18em] mb-5"
+            style={{ background: 'rgba(201,169,97,0.14)', color: '#E3C77E', border: '1px solid rgba(201,169,97,0.32)' }}>
+            <ShineIcon name="audio" className="w-3.5 h-3.5" />
+            Recommandé pour vous
+          </span>
 
-          <div className="text-center sm:text-left">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold mb-3"
-              style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)', border: '1px solid rgba(212,175,55,0.3)' }}>
-              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
-              </svg>
-              Recommandé pour vous
-            </span>
-            <h1 className="font-display text-2xl sm:text-4xl font-semibold tracking-tight mb-2" style={{ color: '#fff' }}>
-              {audio.title}
-            </h1>
-            <p className="text-[13px] sm:text-[14px] mb-1" style={{ color: 'rgba(255,255,255,0.6)' }}>
-              Narré par <span style={{ color: 'var(--gold)' }}>{audio.narrator}</span>
+          <h1 className="font-display font-semibold tracking-tight mb-3 text-white"
+            style={{ fontSize: 'clamp(28px, 3.1vw, 44px)', lineHeight: 1.06 }}>
+            {audio.title}
+          </h1>
+
+          {audio.narrator && (
+            <p className="text-[13.5px] mb-3 text-white/55">
+              Narré par <span className="text-[#C9A961]">{audio.narrator}</span>
             </p>
-            <p className="text-[13px] leading-relaxed mb-5 line-clamp-2" style={{ color: 'rgba(255,255,255,0.5)' }}>
-              {audio.description}
-            </p>
-            <div className="flex items-center gap-3 flex-wrap justify-center sm:justify-start">
-              <button
-                onClick={onPlay}
-                className="flex items-center gap-2.5 px-6 py-3 rounded-xl text-[14px] font-semibold cursor-pointer transition-all duration-200 hover:scale-105"
-                style={{ background: 'var(--gold)', color: '#09090b' }}
-              >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-                Écouter
-              </button>
-              <button
-                onClick={onOpen}
-                className="flex items-center gap-2 px-5 py-3 rounded-xl text-[14px] font-medium cursor-pointer transition-all duration-200 hover:bg-white/10"
-                style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.15)' }}
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-                </svg>
-                Détails
-              </button>
-            </div>
-            <div className="flex items-center gap-4 mt-4 justify-center sm:justify-start">
-              <StarRating rating={Math.round(audio.rating)} size="sm" />
-              <span className="text-[13px] font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                {audio.rating.toFixed(1)} / 5 · {audio.reviewCount} avis · {audio.duration}
-              </span>
-            </div>
+          )}
+
+          <p className="text-[14.5px] leading-relaxed mb-6 line-clamp-3 text-white/65">
+            {audio.description}
+          </p>
+
+          <div className="flex items-center gap-3 flex-wrap mb-5">
+            <button onClick={onPlay}
+              className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full text-[14px] font-semibold cursor-pointer transition-transform duration-200 hover:scale-[1.04]"
+              style={{ background: 'linear-gradient(135deg,#E3C77E,#C9A961)', color: '#0A0806' }}>
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+              Écouter
+            </button>
+            <button onClick={onOpen}
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-full text-[14px] font-medium cursor-pointer transition-colors duration-200 hover:bg-white/[0.12]"
+              style={{ background: 'rgba(255,255,255,0.07)', color: '#fff', border: '1px solid rgba(255,255,255,0.18)' }}>
+              Détails
+            </button>
           </div>
+
+          <p className="text-[11.5px] uppercase tracking-[0.18em] text-white/40">
+            {CATEGORIES.find(c => c.id === audio.category)?.label || 'Audio'} · {audio.duration}
+            {audio.reviewCount > 0 && ` · ${audio.rating.toFixed(1).replace('.', ',')} ★`}
+          </p>
         </motion.div>
+
+        {/* La fenêtre : la pochette, entière et nette */}
+        <motion.button
+          onClick={onPlay}
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.08 }}
+          aria-label={`Écouter ${audio.title}`}
+          className="group relative hidden sm:block rounded-xl overflow-hidden aspect-square cursor-pointer
+                     shadow-[0_30px_80px_rgba(0,0,0,0.65)] ring-1 ring-white/10"
+          style={{ height: 'clamp(230px, 34vh, 320px)' }}
+        >
+          {audio.cover ? (
+            <img src={audio.cover} alt={audio.title}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center" style={{ background: 'rgba(201,169,97,0.08)' }}>
+              <ShineIcon name="audio" className="w-12 h-12" color="#C9A961" strokeWidth={1.1} />
+            </div>
+          )}
+          <span className="absolute inset-0 flex items-center justify-center">
+            <span className="w-16 h-16 rounded-full flex items-center justify-center backdrop-blur-sm
+                             transition-transform duration-300 group-hover:scale-110"
+              style={{ background: 'rgba(201,169,97,0.92)', color: '#0A0806' }}>
+              <svg className="w-7 h-7 translate-x-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+            </span>
+          </span>
+        </motion.button>
       </div>
     </div>
   )
@@ -543,13 +479,33 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
   const [tab, setTab] = useState<'overview' | 'reviews'>('overview')
   const [newReview, setNewReview] = useState('')
   const [newRating, setNewRating] = useState(0)
-  const [reviews, setReviews] = useState<Review[]>(SAMPLE_REVIEWS)
+  const [reviews, setReviews] = useState<Review[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [copied, setCopied] = useState(false)
 
-  const handleSubmitReview = () => {
+  const handleCopyLink = () => {
+    const url = `${window.location.origin}/dashboard/shine-audible?id=${audio.id}`
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
+  }
+
+  const handleSubmitReview = async () => {
     if (!newReview.trim() || newRating === 0) return
     setIsSubmitting(true)
-    setTimeout(() => {
+    try {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+
+      await supabase.from('shine_audible_reviews').insert({
+        user_id: user.id,
+        track_id: audio.id,
+        content: newReview.trim(),
+        rating: newRating,
+      })
+
       setReviews(prev => [{
         id: `r-new-${Date.now()}`,
         author: 'Vous',
@@ -560,8 +516,9 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
       }, ...prev])
       setNewReview('')
       setNewRating(0)
+    } finally {
       setIsSubmitting(false)
-    }, 500)
+    }
   }
 
   return (
@@ -579,9 +536,22 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
         exit={{ opacity: 0, y: 40, scale: 0.95 }}
         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
         className="w-full max-w-3xl rounded-2xl overflow-hidden relative"
-        style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+        style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Share button */}
+        <button
+          onClick={handleCopyLink}
+          className="absolute top-4 left-4 z-20 h-9 px-3 rounded-full flex items-center gap-1.5 text-[12px] font-medium cursor-pointer transition-all hover:bg-white/20"
+          style={{ background: 'rgba(0,0,0,0.6)', color: '#fff' }}
+        >
+          {copied ? (
+            <><svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>Copié !</>
+          ) : (
+            <><svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>Partager</>
+          )}
+        </button>
+
         {/* Close button */}
         <button
           onClick={onClose}
@@ -597,17 +567,17 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
         <div className="relative h-56 sm:h-64 overflow-hidden">
           <img src={audio.cover} alt="" className="absolute inset-0 w-full h-full object-cover"
             style={{ filter: 'blur(40px) brightness(0.3)', transform: 'scale(1.3)' }} />
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, transparent, var(--dark-card))' }} />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, transparent, var(--surface-card))' }} />
 
           <div className="absolute inset-0 flex items-center justify-center gap-6 px-6">
             <img src={audio.cover} alt={audio.title}
-              className="w-36 h-36 sm:w-44 sm:h-44 rounded-2xl object-cover shadow-2xl shadow-black/60 ring-1 ring-white/10 shrink-0" />
+              className="w-36 h-36 sm:w-44 sm:h-44 rounded-2xl object-contain shadow-2xl shadow-black/60 ring-1 ring-white/10 shrink-0" />
 
             {/* Play overlay on cover */}
             <button
               onClick={() => onPlay(audio)}
               className="absolute w-16 h-16 rounded-full flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110"
-              style={{ background: 'rgba(212,175,55,0.9)', color: '#09090b' }}
+              style={{ background: 'rgba(201,169,97,0.9)', color: '#09090b' }}
             >
               <svg className="w-8 h-8 ml-1" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M8 5v14l11-7z" />
@@ -620,19 +590,19 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
         <div className="p-6 sm:p-8 -mt-8 relative z-10">
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div className="flex-1 min-w-0">
-              <h2 className="font-display text-2xl sm:text-3xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+              <h2 className="font-display text-2xl sm:text-3xl font-semibold mb-2 text-[var(--text-primary)]">
                 {audio.title}
               </h2>
               <div className="flex items-center gap-3 flex-wrap mb-1">
-                <span className="text-[13px]" style={{ color: 'var(--text-muted)' }}>
-                  Narré par <span style={{ color: 'var(--gold)' }}>{audio.narrator}</span>
+                <span className="text-[13px] text-[var(--text-muted)]">
+                  Narré par <span className="text-[var(--brand)]">{audio.narrator}</span>
                 </span>
               </div>
               <div className="flex items-center gap-3 flex-wrap mb-4">
-                <span className="text-[13px] font-medium" style={{ color: 'var(--gold)' }}>{audio.year}</span>
-                <span className="text-[13px]" style={{ color: 'var(--text-muted)' }}>{audio.duration}</span>
+                <span className="text-[13px] font-medium text-[var(--brand)]">{audio.year}</span>
+                <span className="text-[13px] text-[var(--text-muted)]">{audio.duration}</span>
                 <span className="px-2 py-0.5 rounded text-[11px] font-medium uppercase"
-                  style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                  style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}>
                   {audio.contentType}
                 </span>
               </div>
@@ -643,7 +613,7 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
               <button
                 onClick={() => onPlay(audio)}
                 className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110"
-                style={{ background: 'var(--gold)', color: '#09090b' }}
+                style={{ background: 'var(--brand)', color: '#09090b' }}
               >
                 <svg className="w-5 h-5 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z" />
@@ -654,22 +624,22 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
                 className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110"
                 style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)' }}
               >
-                <svg className="w-5 h-5" fill={audio.isFavorite ? '#D4AF37' : 'none'} viewBox="0 0 24 24"
-                  stroke={audio.isFavorite ? '#D4AF37' : 'white'} strokeWidth={1.5}>
+                <svg className="w-5 h-5" fill={audio.isFavorite ? 'var(--brand)' : 'none'} viewBox="0 0 24 24"
+                  stroke={audio.isFavorite ? 'var(--brand)' : 'white'} strokeWidth={1.5}>
                   <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                 </svg>
               </button>
             </div>
           </div>
 
-          <p className="text-[14px] leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-[14px] leading-relaxed mb-6 text-[var(--text-secondary)]">
             {audio.description}
           </p>
 
           {/* Your rating */}
-          <div className="glass p-4 rounded-xl mb-6 flex items-center gap-4 flex-wrap"
-            style={{ borderColor: 'rgba(212,175,55,0.1)' }}>
-            <span className="text-[13px] font-medium" style={{ color: 'var(--text-muted)' }}>Votre note :</span>
+          <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-4 rounded-xl mb-6 flex items-center gap-4 flex-wrap"
+            style={{ borderColor: 'rgba(201,169,97,0.1)' }}>
+            <span className="text-[13px] font-medium text-[var(--text-muted)]">Votre note :</span>
             <StarRating
               rating={audio.userRating}
               size="lg"
@@ -677,7 +647,7 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
               onRate={(r) => onRate(audio.id, r)}
             />
             {audio.userRating > 0 && (
-              <span className="text-[13px] font-semibold" style={{ color: 'var(--gold)' }}>
+              <span className="text-[13px] font-semibold text-[var(--brand)]">
                 {audio.userRating}/5
               </span>
             )}
@@ -689,8 +659,8 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
               onClick={() => setTab('overview')}
               className="flex-1 py-2.5 rounded-lg text-[13px] font-medium cursor-pointer transition-all duration-200"
               style={{
-                background: tab === 'overview' ? 'rgba(212,175,55,0.12)' : 'transparent',
-                color: tab === 'overview' ? 'var(--gold)' : 'var(--text-muted)',
+                background: tab === 'overview' ? 'rgba(201,169,97,0.12)' : 'transparent',
+                color: tab === 'overview' ? 'var(--brand)' : 'var(--text-muted)',
               }}
             >
               Aperçu
@@ -699,8 +669,8 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
               onClick={() => setTab('reviews')}
               className="flex-1 py-2.5 rounded-lg text-[13px] font-medium cursor-pointer transition-all duration-200"
               style={{
-                background: tab === 'reviews' ? 'rgba(212,175,55,0.12)' : 'transparent',
-                color: tab === 'reviews' ? 'var(--gold)' : 'var(--text-muted)',
+                background: tab === 'reviews' ? 'rgba(201,169,97,0.12)' : 'transparent',
+                color: tab === 'reviews' ? 'var(--brand)' : 'var(--text-muted)',
               }}
             >
               Avis ({reviews.length})
@@ -711,50 +681,31 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
             {tab === 'overview' ? (
               <motion.div key="overview" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }}>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="glass p-4 rounded-xl text-center">
-                    <div className="text-2xl font-display font-semibold" style={{ color: 'var(--gold)' }}>
+                  <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-4 rounded-xl text-center">
+                    <div className="text-2xl font-display font-semibold text-[var(--brand)]">
                       {audio.rating.toFixed(1)}
                     </div>
                     <div className="flex justify-center mt-1">
                       <StarRating rating={Math.round(audio.rating)} size="sm" />
                     </div>
-                    <p className="text-[11px] mt-1" style={{ color: 'var(--text-muted)' }}>Note moyenne</p>
+                    <p className="text-[11px] mt-1 text-[var(--text-muted)]">Note moyenne</p>
                   </div>
-                  <div className="glass p-4 rounded-xl text-center">
-                    <div className="text-2xl font-display font-semibold" style={{ color: 'var(--gold)' }}>
+                  <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-4 rounded-xl text-center">
+                    <div className="text-2xl font-display font-semibold text-[var(--brand)]">
                       {audio.reviewCount}
                     </div>
-                    <p className="text-[11px] mt-2" style={{ color: 'var(--text-muted)' }}>Avis membres</p>
+                    <p className="text-[11px] mt-2 text-[var(--text-muted)]">Avis membres</p>
                   </div>
                 </div>
 
-                {/* Similar audios */}
-                <h3 className="text-[13px] font-semibold uppercase tracking-wider mt-6 mb-3" style={{ color: 'var(--text-muted)' }}>
-                  Écoutes similaires
-                </h3>
-                <div className="grid grid-cols-3 gap-3">
-                  {[0, 1, 2].map(i => (
-                    <div key={i} className="rounded-xl overflow-hidden cursor-pointer group">
-                      <div className="relative aspect-square">
-                        <img
-                          src={COVERS[(parseInt(audio.id.split('-')[1]) + i + 3) % COVERS.length]}
-                          alt=""
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                        />
-                      </div>
-                      <p className="text-[11px] font-medium mt-1.5 truncate" style={{ color: 'var(--text-secondary)' }}>
-                        {AUDIO_TITLES[(parseInt(audio.id.split('-')[1]) + i + 3) % AUDIO_TITLES.length]}
-                      </p>
-                    </div>
-                  ))}
-                </div>
+                {/* Similar audios section removed - requires data from parent */}
               </motion.div>
             ) : (
               <motion.div key="reviews" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }}>
                 {/* Write review */}
-                <div className="glass p-4 rounded-xl mb-4" style={{ borderColor: 'rgba(212,175,55,0.1)' }}>
+                <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-4 rounded-xl mb-4" style={{ borderColor: 'rgba(201,169,97,0.1)' }}>
                   <div className="flex items-center gap-3 mb-3">
-                    <span className="text-[13px] font-medium" style={{ color: 'var(--text-secondary)' }}>Votre avis :</span>
+                    <span className="text-[13px] font-medium text-[var(--text-secondary)]">Votre avis :</span>
                     <StarRating rating={newRating} size="md" interactive onRate={setNewRating} />
                   </div>
                   <textarea
@@ -764,19 +715,19 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
                     className="w-full rounded-xl p-3 text-[13px] resize-none outline-none transition-all duration-200"
                     style={{
                       background: 'rgba(255,255,255,0.04)',
-                      border: '1px solid var(--dark-border)',
+                      border: '1px solid var(--border)',
                       color: 'var(--text-primary)',
                       minHeight: 80,
                     }}
-                    onFocus={(e) => e.target.style.borderColor = 'rgba(212,175,55,0.4)'}
-                    onBlur={(e) => e.target.style.borderColor = 'var(--dark-border)'}
+                    onFocus={(e) => e.target.style.borderColor = 'rgba(201,169,97,0.4)'}
+                    onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
                   />
                   <div className="flex justify-end mt-2">
                     <button
                       onClick={handleSubmitReview}
                       disabled={!newReview.trim() || newRating === 0 || isSubmitting}
                       className="px-5 py-2 rounded-xl text-[13px] font-semibold cursor-pointer transition-all duration-200 hover:scale-105 disabled:opacity-40 disabled:hover:scale-100"
-                      style={{ background: 'var(--gold)', color: '#09090b' }}
+                      style={{ background: 'var(--brand)', color: '#09090b' }}
                     >
                       {isSubmitting ? 'Envoi...' : 'Publier'}
                     </button>
@@ -791,24 +742,24 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: idx * 0.05 }}
-                      className="glass p-4 rounded-xl"
+                      className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-4 rounded-xl"
                     >
                       <div className="flex items-center gap-3 mb-2">
                         <div
                           className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
-                          style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}
+                          style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}
                         >
                           {review.author.charAt(0)}
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
-                            <span className="text-[13px] font-medium" style={{ color: 'var(--text-primary)' }}>{review.author}</span>
+                            <span className="text-[13px] font-medium text-[var(--text-primary)]">{review.author}</span>
                             <StarRating rating={review.rating} size="sm" />
                           </div>
-                          <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{review.date}</span>
+                          <span className="text-[11px] text-[var(--text-muted)]">{review.date}</span>
                         </div>
                       </div>
-                      <p className="text-[13px] leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                      <p className="text-[13px] leading-relaxed text-[var(--text-secondary)]">
                         {review.text}
                       </p>
                     </motion.div>
@@ -825,46 +776,174 @@ function AudioModal({ audio, onClose, onToggleFavorite, onRate, onPlay }: {
 
 // ── Main Page ──
 export default function ShineAudiblePage() {
+  const searchParams = useSearchParams()
+  const douleurParam = searchParams.get('douleur')
+  const idParam = searchParams.get('id')
   const [audios, setAudios] = useState<ShineAudio[]>([])
   const [search, setSearch] = useState('')
   const [selectedAudio, setSelectedAudio] = useState<ShineAudio | null>(null)
-  const [activeFilter, setActiveFilter] = useState('all')
+  const [activeFilter, setActiveFilter] = useState(douleurParam ? 'douleur' : 'all')
   const [activeType, setActiveType] = useState('all')
   const [loading, setLoading] = useState(true)
+  const [douleurName, setDouleurName] = useState<string | null>(null)
 
   // Player state
   const [nowPlaying, setNowPlaying] = useState<ShineAudio | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [playerProgress, setPlayerProgress] = useState(0)
-  const [fakeTime, setFakeTime] = useState(0)
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const [currentTime, setCurrentTime] = useState(0)
+  const [audioDuration, setAudioDuration] = useState(0)
+  const [audioDisclaimer, setAudioDisclaimer] = useState<ShineAudio | null>(null)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
 
   useEffect(() => {
-    setTimeout(() => {
-      setAudios(generateAudios())
+    async function loadAudios() {
+      const supabase = createClient()
+      const { data } = await supabase
+        .from('shine_audible_tracks')
+        .select('*')
+        .eq('is_published', true)
+        .order('created_at', { ascending: false })
+
+      if (!data) {
+        setAudios([])
+        setLoading(false)
+        return
+      }
+
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser()
+
+      // Fetch douleur name if filtered
+      if (douleurParam) {
+        const { data: douleur } = await supabase
+          .from('douleurs')
+          .select('title')
+          .eq('id', douleurParam)
+          .maybeSingle()
+        if (douleur) setDouleurName(douleur.title)
+      }
+
+      // Load user ratings
+      const userRatingsMap: Record<string, number> = {}
+      if (user) {
+        const { data: ratingsData } = await supabase
+          .from('shine_audible_ratings')
+          .select('track_id, rating')
+          .eq('user_id', user.id)
+        for (const r of ratingsData || []) {
+          userRatingsMap[r.track_id] = r.rating
+        }
+      }
+
+      // Load average ratings & review counts
+      const trackIds = data.map((t: any) => t.id)
+      const { data: avgRatings } = await supabase
+        .from('shine_audible_ratings')
+        .select('track_id, rating')
+        .in('track_id', trackIds)
+
+      const { data: reviewCounts } = await supabase
+        .from('shine_audible_reviews')
+        .select('track_id')
+        .in('track_id', trackIds)
+
+      const avgMap: Record<string, { sum: number; count: number }> = {}
+      for (const r of avgRatings || []) {
+        if (!avgMap[r.track_id]) avgMap[r.track_id] = { sum: 0, count: 0 }
+        avgMap[r.track_id].sum += r.rating
+        avgMap[r.track_id].count++
+      }
+
+      const reviewCountMap: Record<string, number> = {}
+      for (const r of reviewCounts || []) {
+        reviewCountMap[r.track_id] = (reviewCountMap[r.track_id] || 0) + 1
+      }
+
+      // Load user favorites
+      let favoriteIds: string[] = []
+      if (user) {
+        const { data: favData } = await supabase
+          .from('shine_audible_favorites')
+          .select('track_id')
+          .eq('user_id', user.id)
+        favoriteIds = (favData || []).map((f: any) => f.track_id)
+      }
+
+      const mapped: ShineAudio[] = data.map((t: any) => {
+        const secs = t.duration_seconds ?? 0
+        const duration = secs >= 3600
+          ? `${Math.floor(secs / 3600)}h${((secs % 3600) / 60 | 0).toString().padStart(2, '0')}`
+          : `${Math.floor(secs / 60)} min`
+        return {
+          id: t.id,
+          title: t.title,
+          description: t.description || '',
+          cover: t.cover_url || '',
+          audioUrl: t.audio_url || '',
+          narrator: t.narrator || '',
+          category: t.category,
+          contentType: t.content_type,
+          duration,
+          durationSeconds: secs,
+          year: t.year,
+          rating: avgMap[t.id] ? avgMap[t.id].sum / avgMap[t.id].count : 0,
+          userRating: userRatingsMap[t.id] || 0,
+          isFavorite: favoriteIds.includes(t.id),
+          reviewCount: reviewCountMap[t.id] || 0,
+          douleurId: t.douleur_id || null,
+        }
+      })
+
+      setAudios(mapped)
       setLoading(false)
-    }, 600)
+      if (idParam) {
+        const found = mapped.find(a => a.id === idParam)
+        if (found) setSelectedAudio(found)
+      }
+    }
+    loadAudios()
   }, [])
 
-  // Simulate playback
   useEffect(() => {
-    if (isPlaying && nowPlaying) {
-      timerRef.current = setInterval(() => {
-        setFakeTime(prev => {
-          const next = prev + 1
-          if (next >= nowPlaying.durationSeconds) {
-            setIsPlaying(false)
-            return 0
-          }
-          setPlayerProgress((next / nowPlaying.durationSeconds) * 100)
-          return next
-        })
-      }, 1000)
+    if (selectedAudio) {
+      window.history.replaceState(null, '', `?id=${selectedAudio.id}`)
     } else {
-      if (timerRef.current) clearInterval(timerRef.current)
+      window.history.replaceState(null, '', window.location.pathname)
     }
-    return () => { if (timerRef.current) clearInterval(timerRef.current) }
-  }, [isPlaying, nowPlaying])
+  }, [selectedAudio])
+
+  // Sync play/pause state with audio element
+  useEffect(() => {
+    const audio = audioRef.current
+    if (!audio) return
+    if (isPlaying) {
+      audio.play().catch(() => setIsPlaying(false))
+    } else {
+      audio.pause()
+    }
+  }, [isPlaying])
+
+  // Signal mini-player presence to other components (e.g. chatbot)
+  useEffect(() => {
+    if (nowPlaying) {
+      document.documentElement.setAttribute('data-mini-player', 'true')
+    } else {
+      document.documentElement.removeAttribute('data-mini-player')
+    }
+    return () => document.documentElement.removeAttribute('data-mini-player')
+  }, [nowPlaying])
+
+  // Cleanup audio on unmount
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current.removeAttribute('src')
+        audioRef.current.load()
+      }
+    }
+  }, [])
 
   const formatTime = (s: number) => {
     const m = Math.floor(s / 60)
@@ -872,25 +951,105 @@ export default function ShineAudiblePage() {
     return `${m}:${sec.toString().padStart(2, '0')}`
   }
 
+  const startPlayback = (audio: ShineAudio) => {
+    // Stop previous audio if any
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current.removeAttribute('src')
+      audioRef.current.load()
+    }
+
+    // Create new audio element
+    const el = new Audio(audio.audioUrl)
+    audioRef.current = el
+
+    el.addEventListener('timeupdate', () => {
+      setCurrentTime(el.currentTime)
+      if (el.duration && isFinite(el.duration)) {
+        setPlayerProgress((el.currentTime / el.duration) * 100)
+      }
+    })
+    el.addEventListener('loadedmetadata', () => {
+      setAudioDuration(el.duration && isFinite(el.duration) ? el.duration : audio.durationSeconds)
+    })
+    el.addEventListener('ended', () => {
+      setIsPlaying(false)
+      setPlayerProgress(0)
+      setCurrentTime(0)
+    })
+    el.addEventListener('error', () => {
+      console.error('Audio playback error:', el.error)
+      setIsPlaying(false)
+    })
+
+    setNowPlaying(audio)
+    setCurrentTime(0)
+    setPlayerProgress(0)
+    setAudioDuration(audio.durationSeconds)
+    setIsPlaying(true)
+    el.play().catch(() => setIsPlaying(false))
+  }
+
   const handlePlay = (audio: ShineAudio) => {
     if (nowPlaying?.id === audio.id) {
       setIsPlaying(!isPlaying)
+    } else if (audio.contentType === 'hypnosis' || audio.contentType === 'meditation') {
+      setAudioDisclaimer(audio)
     } else {
-      setNowPlaying(audio)
-      setFakeTime(0)
-      setPlayerProgress(0)
-      setIsPlaying(true)
+      startPlayback(audio)
     }
   }
 
-  const handleToggleFavorite = (id: string) => {
+  const handleRewind = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = Math.max(0, audioRef.current.currentTime - 15)
+    }
+  }
+
+  const handleForward = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = Math.min(audioRef.current.duration || 0, audioRef.current.currentTime + 15)
+    }
+  }
+
+  const handleSeek = (pct: number) => {
+    if (audioRef.current && audioRef.current.duration) {
+      audioRef.current.currentTime = (pct / 100) * audioRef.current.duration
+    }
+  }
+
+  const handleToggleFavorite = async (id: string) => {
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+
+    const audio = audios.find(a => a.id === id)
+    if (!audio) return
+
+    if (audio.isFavorite) {
+      await supabase.from('shine_audible_favorites').delete().eq('user_id', user.id).eq('track_id', id)
+    } else {
+      await supabase.from('shine_audible_favorites').insert({ user_id: user.id, track_id: id })
+    }
+
     setAudios(prev => prev.map(a => a.id === id ? { ...a, isFavorite: !a.isFavorite } : a))
     if (selectedAudio?.id === id) {
       setSelectedAudio(prev => prev ? { ...prev, isFavorite: !prev.isFavorite } : null)
     }
   }
 
-  const handleRate = (id: string, rating: number) => {
+  const handleRate = async (id: string, rating: number) => {
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+
+    await supabase.from('shine_audible_ratings').upsert({
+      user_id: user.id,
+      track_id: id,
+      rating,
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'user_id,track_id' })
+
     setAudios(prev => prev.map(a => a.id === id ? { ...a, userRating: rating } : a))
     if (selectedAudio?.id === id) {
       setSelectedAudio(prev => prev ? { ...prev, userRating: rating } : null)
@@ -899,9 +1058,11 @@ export default function ShineAudiblePage() {
 
   const filteredAudios = audios.filter(a => {
     const matchSearch = !search || a.title.toLowerCase().includes(search.toLowerCase()) || a.narrator.toLowerCase().includes(search.toLowerCase())
-    const matchFilter = activeFilter === 'all' || activeFilter === 'favorites'
-      ? (activeFilter === 'favorites' ? a.isFavorite : true)
-      : a.category === activeFilter
+    const matchFilter = activeFilter === 'douleur'
+      ? a.douleurId === douleurParam
+      : activeFilter === 'all' || activeFilter === 'favorites'
+        ? (activeFilter === 'favorites' ? a.isFavorite : true)
+        : a.category === activeFilter
     const matchType = activeType === 'all' || a.contentType === activeType
     return matchSearch && matchFilter && matchType
   })
@@ -915,15 +1076,15 @@ export default function ShineAudiblePage() {
         <div className="text-center space-y-4">
           <div className="relative w-16 h-16 mx-auto">
             <div className="absolute inset-0 rounded-2xl animate-pulse"
-              style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))' }} />
+              style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))' }} />
             <div className="absolute inset-0 flex items-center justify-center">
               <svg className="w-8 h-8" fill="#09090b" viewBox="0 0 24 24">
                 <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55C7.79 13 6 14.79 6 17s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
               </svg>
             </div>
           </div>
-          <p className="font-display text-xl font-semibold" style={{ color: 'var(--gold)' }}>Shine Audible</p>
-          <p className="text-[13px]" style={{ color: 'var(--text-muted)' }}>Chargement de vos contenus audio...</p>
+          <p className="font-display text-xl font-semibold text-[var(--brand)]">Shine Audible</p>
+          <p className="text-[13px] text-[var(--text-muted)]">Chargement de vos contenus audio...</p>
         </div>
       </div>
     )
@@ -954,11 +1115,11 @@ export default function ShineAudiblePage() {
                 className="w-full pl-11 pr-4 py-3 rounded-xl text-[14px] outline-none transition-all duration-200"
                 style={{
                   background: 'rgba(255,255,255,0.05)',
-                  border: '1px solid var(--dark-border)',
+                  border: '1px solid var(--border)',
                   color: 'var(--text-primary)',
                 }}
-                onFocus={(e) => e.target.style.borderColor = 'rgba(212,175,55,0.4)'}
-                onBlur={(e) => e.target.style.borderColor = 'var(--dark-border)'}
+                onFocus={(e) => e.target.style.borderColor = 'rgba(201,169,97,0.4)'}
+                onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
               />
               {search && (
                 <button
@@ -979,14 +1140,15 @@ export default function ShineAudiblePage() {
                 <button
                   key={type.id}
                   onClick={() => setActiveType(type.id)}
-                  className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200"
+                  className="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200"
                   style={{
-                    background: activeType === type.id ? 'var(--gold)' : 'rgba(255,255,255,0.06)',
+                    background: activeType === type.id ? 'var(--brand)' : 'rgba(255,255,255,0.06)',
                     color: activeType === type.id ? '#09090b' : 'var(--text-secondary)',
-                    border: activeType === type.id ? 'none' : '1px solid var(--dark-border)',
+                    border: activeType === type.id ? 'none' : '1px solid var(--border)',
                   }}
                 >
-                  {type.icon && <span className="mr-1">{type.icon}</span>}{type.label}
+                  {type.icon && <ShineIcon name={type.icon} className="w-4 h-4" />}
+                  {type.label}
                 </button>
               ))}
             </div>
@@ -998,20 +1160,50 @@ export default function ShineAudiblePage() {
               onClick={() => setActiveFilter('all')}
               className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200"
               style={{
-                background: activeFilter === 'all' ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.04)',
-                color: activeFilter === 'all' ? 'var(--gold)' : 'var(--text-secondary)',
-                border: `1px solid ${activeFilter === 'all' ? 'rgba(212,175,55,0.3)' : 'transparent'}`,
+                background: activeFilter === 'all' ? 'rgba(201,169,97,0.15)' : 'rgba(255,255,255,0.04)',
+                color: activeFilter === 'all' ? 'var(--brand)' : 'var(--text-secondary)',
+                border: `1px solid ${activeFilter === 'all' ? 'rgba(201,169,97,0.3)' : 'transparent'}`,
               }}
             >
               Tout
+            </button>
+            {douleurParam && (
+              <button
+                onClick={() => setActiveFilter('douleur')}
+                className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200 flex items-center gap-1.5"
+                style={{
+                  background: activeFilter === 'douleur' ? 'rgba(201,169,97,0.15)' : 'rgba(255,255,255,0.04)',
+                  color: activeFilter === 'douleur' ? 'var(--brand)' : 'var(--text-secondary)',
+                  border: `1px solid ${activeFilter === 'douleur' ? 'rgba(201,169,97,0.3)' : 'transparent'}`,
+                }}
+              >
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.331 0 4.476.884 6.084 2.333M12 6.042A8.967 8.967 0 0118 3.75c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18c-2.331 0-4.476.884-6.084 2.333M12 6.042V20.333" />
+                </svg>
+                {douleurName || 'Douleur'}
+              </button>
+            )}
+            <button
+              onClick={() => setActiveFilter('encyclopedie')}
+              className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200 flex items-center gap-1.5"
+              style={{
+                background: activeFilter === 'encyclopedie' ? 'rgba(201,169,97,0.15)' : 'rgba(255,255,255,0.04)',
+                color: activeFilter === 'encyclopedie' ? 'var(--brand)' : 'var(--text-secondary)',
+                border: `1px solid ${activeFilter === 'encyclopedie' ? 'rgba(201,169,97,0.3)' : 'transparent'}`,
+              }}
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
+              </svg>
+              A - Z
             </button>
             <button
               onClick={() => setActiveFilter('favorites')}
               className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200 flex items-center gap-1.5"
               style={{
-                background: activeFilter === 'favorites' ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.04)',
-                color: activeFilter === 'favorites' ? 'var(--gold)' : 'var(--text-secondary)',
-                border: `1px solid ${activeFilter === 'favorites' ? 'rgba(212,175,55,0.3)' : 'transparent'}`,
+                background: activeFilter === 'favorites' ? 'rgba(201,169,97,0.15)' : 'rgba(255,255,255,0.04)',
+                color: activeFilter === 'favorites' ? 'var(--brand)' : 'var(--text-secondary)',
+                border: `1px solid ${activeFilter === 'favorites' ? 'rgba(201,169,97,0.3)' : 'transparent'}`,
               }}
             >
               <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
@@ -1023,34 +1215,35 @@ export default function ShineAudiblePage() {
               <button
                 key={cat.id}
                 onClick={() => setActiveFilter(cat.id)}
-                className="shrink-0 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200"
+                className="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full text-[12px] font-medium cursor-pointer transition-all duration-200"
                 style={{
-                  background: activeFilter === cat.id ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.04)',
-                  color: activeFilter === cat.id ? 'var(--gold)' : 'var(--text-secondary)',
-                  border: `1px solid ${activeFilter === cat.id ? 'rgba(212,175,55,0.3)' : 'transparent'}`,
+                  background: activeFilter === cat.id ? 'rgba(201,169,97,0.15)' : 'rgba(255,255,255,0.04)',
+                  color: activeFilter === cat.id ? 'var(--brand)' : 'var(--text-secondary)',
+                  border: `1px solid ${activeFilter === cat.id ? 'rgba(201,169,97,0.3)' : 'transparent'}`,
                 }}
               >
-                {cat.icon} {cat.label}
+                <ShineIcon name={cat.icon} className="w-4 h-4" />
+                {cat.label}
               </button>
             ))}
           </div>
         </div>
 
         {/* Search results or category rows */}
-        {search || (activeFilter !== 'all' && activeFilter !== 'favorites') || activeType !== 'all' ? (
+        {search || (activeFilter !== 'all' && activeFilter !== 'favorites' && activeFilter !== 'encyclopedie' && activeFilter !== 'douleur') || activeType !== 'all' ? (
           // Grid view for search/filter
           <div>
-            <p className="text-[13px] mb-4" style={{ color: 'var(--text-muted)' }}>
+            <p className="text-[13px] mb-4 text-[var(--text-muted)]">
               {filteredAudios.length} résultat{filteredAudios.length !== 1 ? 's' : ''}
-              {search && <> pour &ldquo;<span style={{ color: 'var(--gold)' }}>{search}</span>&rdquo;</>}
+              {search && <> pour &ldquo;<span className="text-[var(--brand)]">{search}</span>&rdquo;</>}
             </p>
             {filteredAudios.length === 0 ? (
-              <div className="glass p-12 text-center rounded-xl">
-                <div className="text-4xl mb-3">🔍</div>
-                <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+              <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-12 text-center rounded-xl">
+                <div className="mb-3 flex justify-center" style={{ color: 'var(--brand)' }}><ShineIcon name="question" className="w-9 h-9" /></div>
+                <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
                   Aucun résultat
                 </h3>
-                <p className="text-[14px]" style={{ color: 'var(--text-muted)' }}>
+                <p className="text-[14px] text-[var(--text-muted)]">
                   Essayez un autre terme de recherche ou explorez nos catégories.
                 </p>
               </div>
@@ -1067,14 +1260,14 @@ export default function ShineAudiblePage() {
                   >
                     <div className="relative overflow-hidden rounded-xl transition-all duration-300 group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-black/50">
                       <div className="relative aspect-square">
-                        <img src={audio.cover} alt={audio.title} className="w-full h-full object-cover" loading="lazy" />
+                        <img src={audio.cover} alt={audio.title} className="w-full h-full object-contain" loading="lazy" />
                         <span className="absolute bottom-2 right-2 text-[10px] font-semibold px-1.5 py-0.5 rounded"
                           style={{ background: 'rgba(0,0,0,0.8)', color: '#fff' }}>
                           {audio.duration}
                         </span>
                         {audio.isFavorite && (
                           <span className="absolute top-2 right-2">
-                            <svg className="w-4 h-4" fill="#D4AF37" viewBox="0 0 24 24"><path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
+                            <svg className="w-4 h-4" fill="var(--brand)" viewBox="0 0 24 24"><path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
                           </span>
                         )}
                         {nowPlaying?.id === audio.id && (
@@ -1083,7 +1276,7 @@ export default function ShineAudiblePage() {
                               style={{ background: 'rgba(0,0,0,0.7)' }}>
                               {[1, 2, 3].map(bar => (
                                 <div key={bar} className="w-[3px] rounded-full animate-pulse"
-                                  style={{ background: 'var(--gold)', height: `${8 + Math.random() * 8}px`, animationDelay: `${bar * 0.15}s` }} />
+                                  style={{ background: 'var(--brand)', height: `${8 + Math.random() * 8}px`, animationDelay: `${bar * 0.15}s` }} />
                               ))}
                             </div>
                           </div>
@@ -1092,18 +1285,18 @@ export default function ShineAudiblePage() {
                           <button
                             onClick={(e) => { e.stopPropagation(); handlePlay(audio) }}
                             className="w-12 h-12 rounded-full flex items-center justify-center cursor-pointer"
-                            style={{ background: 'var(--gold)', color: '#09090b' }}>
+                            style={{ background: 'var(--brand)', color: '#09090b' }}>
                             <svg className="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                           </button>
                         </div>
                       </div>
                     </div>
                     <div className="mt-2">
-                      <h3 className="text-[13px] font-medium truncate" style={{ color: 'var(--text-primary)' }}>{audio.title}</h3>
-                      <p className="text-[11px] truncate" style={{ color: 'var(--text-muted)' }}>{audio.narrator}</p>
+                      <h3 className="text-[13px] font-medium truncate text-[var(--text-primary)]">{audio.title}</h3>
+                      <p className="text-[11px] truncate text-[var(--text-muted)]">{audio.narrator}</p>
                       <div className="flex items-center gap-2 mt-1">
                         <StarRating rating={Math.round(audio.rating)} size="sm" />
-                        <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{audio.rating.toFixed(1)}</span>
+                        <span className="text-[11px] text-[var(--text-muted)]">{audio.rating.toFixed(1)}</span>
                       </div>
                     </div>
                   </motion.div>
@@ -1114,19 +1307,19 @@ export default function ShineAudiblePage() {
         ) : activeFilter === 'favorites' ? (
           // Favorites view
           <div>
-            <h2 className="text-lg font-display font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-              <svg className="w-5 h-5" fill="#D4AF37" viewBox="0 0 24 24">
+            <h2 className="text-lg font-display font-semibold mb-4 flex items-center gap-2 text-[var(--text-primary)]">
+              <svg className="w-5 h-5" fill="var(--brand)" viewBox="0 0 24 24">
                 <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
               </svg>
               Mes Favoris Audio
             </h2>
             {filteredAudios.length === 0 ? (
-              <div className="glass p-12 text-center rounded-xl">
-                <div className="text-4xl mb-3">🎧</div>
-                <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+              <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-12 text-center rounded-xl">
+                <div className="mb-3 flex justify-center" style={{ color: 'var(--brand)' }}><ShineIcon name="audio" className="w-9 h-9" /></div>
+                <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
                   Aucun favori
                 </h3>
-                <p className="text-[14px]" style={{ color: 'var(--text-muted)' }}>
+                <p className="text-[14px] text-[var(--text-muted)]">
                   Ajoutez des audios à vos favoris pour les retrouver ici.
                 </p>
               </div>
@@ -1143,7 +1336,7 @@ export default function ShineAudiblePage() {
                   >
                     <div className="relative overflow-hidden rounded-xl transition-all duration-300 group-hover:scale-105">
                       <div className="relative aspect-square">
-                        <img src={audio.cover} alt={audio.title} className="w-full h-full object-cover" loading="lazy" />
+                        <img src={audio.cover} alt={audio.title} className="w-full h-full object-contain" loading="lazy" />
                         <span className="absolute bottom-2 right-2 text-[10px] font-semibold px-1.5 py-0.5 rounded"
                           style={{ background: 'rgba(0,0,0,0.8)', color: '#fff' }}>
                           {audio.duration}
@@ -1152,24 +1345,155 @@ export default function ShineAudiblePage() {
                           <button
                             onClick={(e) => { e.stopPropagation(); handlePlay(audio) }}
                             className="w-12 h-12 rounded-full flex items-center justify-center cursor-pointer"
-                            style={{ background: 'var(--gold)', color: '#09090b' }}>
+                            style={{ background: 'var(--brand)', color: '#09090b' }}>
                             <svg className="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                           </button>
                         </div>
                       </div>
                     </div>
                     <div className="mt-2">
-                      <h3 className="text-[13px] font-medium truncate" style={{ color: 'var(--text-primary)' }}>{audio.title}</h3>
-                      <p className="text-[11px] truncate" style={{ color: 'var(--text-muted)' }}>{audio.narrator}</p>
+                      <h3 className="text-[13px] font-medium truncate text-[var(--text-primary)]">{audio.title}</h3>
+                      <p className="text-[11px] truncate text-[var(--text-muted)]">{audio.narrator}</p>
                       <div className="flex items-center gap-2 mt-1">
                         <StarRating rating={Math.round(audio.rating)} size="sm" />
-                        <span className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{audio.rating.toFixed(1)}</span>
+                        <span className="text-[11px] text-[var(--text-muted)]">{audio.rating.toFixed(1)}</span>
                       </div>
                     </div>
                   </motion.div>
                 ))}
               </div>
             )}
+          </div>
+        ) : activeFilter === 'douleur' ? (
+          // Douleur-filtered view
+          <div>
+            <h2 className="text-lg font-display font-semibold mb-4 flex items-center gap-2 text-[var(--text-primary)]">
+ <svg className="w-5 h-5 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.331 0 4.476.884 6.084 2.333M12 6.042A8.967 8.967 0 0118 3.75c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18c-2.331 0-4.476.884-6.084 2.333M12 6.042V20.333" />
+              </svg>
+              {douleurName || 'Contenu lié'}
+            </h2>
+            {filteredAudios.length === 0 ? (
+              <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-12 text-center rounded-xl">
+                <div className="mb-3 flex justify-center" style={{ color: 'var(--brand)' }}><ShineIcon name="audio" className="w-9 h-9" /></div>
+                <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
+                  Aucun audio lié
+                </h3>
+                <p className="text-[14px] text-[var(--text-muted)]">
+                  Aucun audio n&apos;est associé à cette douleur pour le moment.
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                {filteredAudios.map((audio, i) => (
+                  <motion.div
+                    key={audio.id}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.03, duration: 0.3 }}
+                    className="group cursor-pointer"
+                    onClick={() => setSelectedAudio(audio)}
+                  >
+                    <div className="relative overflow-hidden rounded-lg transition-all duration-300 group-hover:scale-105">
+                      <div className="relative aspect-square">
+                        <img src={audio.cover} alt={audio.title} className="w-full h-full object-contain" loading="lazy" />
+                        <span className="absolute bottom-2 right-2 text-[10px] font-semibold px-1.5 py-0.5 rounded"
+                          style={{ background: 'rgba(0,0,0,0.8)', color: '#fff' }}>
+                          {audio.duration}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="mt-2">
+                      <h3 className="text-[13px] font-medium truncate text-[var(--text-primary)]">{audio.title}</h3>
+                      <p className="text-[11px] truncate text-[var(--text-muted)]">{audio.narrator}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : activeFilter === 'encyclopedie' ? (
+          // Encyclopédie A-Z view
+          <div className="space-y-6">
+            <h2 className="text-lg font-display font-semibold flex items-center gap-2 text-[var(--text-primary)]">
+ <svg className="w-5 h-5 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
+              </svg>
+              Encyclopédie A - Z
+            </h2>
+            {(() => {
+              const sorted = [...audios].sort((a, b) => a.title.localeCompare(b.title, 'fr'))
+              const grouped: Record<string, ShineAudio[]> = {}
+              sorted.forEach(a => {
+                const letter = a.title.charAt(0).toUpperCase().match(/[A-ZÀÂÄÉÈÊËÏÎÔÙÛÜŸÆŒÇ]/i)
+                  ? a.title.charAt(0).toUpperCase() : '#'
+                if (!grouped[letter]) grouped[letter] = []
+                grouped[letter].push(a)
+              })
+              const letters = Object.keys(grouped).sort((a, b) => a === '#' ? 1 : b === '#' ? -1 : a.localeCompare(b, 'fr'))
+
+              return (
+                <>
+                  {/* Letter nav */}
+                  <div className="flex flex-wrap gap-1.5">
+                    {letters.map(letter => (
+                      <a
+                        key={letter}
+                        href={`#letter-audible-${letter}`}
+                        className="w-8 h-8 rounded-lg flex items-center justify-center text-[13px] font-semibold transition-colors hover:opacity-80"
+                        style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--brand)' }}
+                      >
+                        {letter}
+                      </a>
+                    ))}
+                  </div>
+
+                  {/* Letter groups */}
+                  {letters.map(letter => (
+                    <div key={letter} id={`letter-audible-${letter}`} className="scroll-mt-24">
+                      <h3 className="font-display text-2xl font-bold mb-3 pb-2 text-[var(--brand)] border-b border-[var(--border)]">
+                        {letter}
+                      </h3>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                        {grouped[letter].map((audio, i) => (
+                          <motion.div
+                            key={audio.id}
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: i * 0.02, duration: 0.3 }}
+                            className="group cursor-pointer"
+                            onClick={() => setSelectedAudio(audio)}
+                          >
+                            <div className="relative overflow-hidden rounded-xl transition-all duration-300 group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-black/50">
+                              <div className="relative aspect-square">
+                                {audio.cover ? (
+                                  <img src={audio.cover} alt={audio.title} className="w-full h-full object-contain" loading="lazy" />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center" style={{ background: 'rgba(201,169,97,0.05)' }}>
+ <svg className="w-12 h-12 opacity-20 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} >
+                                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
+                                    </svg>
+                                  </div>
+                                )}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3">
+                                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ background: 'rgba(0,0,0,0.6)', color: '#fff' }}>
+                                    {audio.duration}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="mt-2">
+                              <h3 className="text-[13px] font-medium truncate text-[var(--text-primary)]">{audio.title}</h3>
+                              <p className="text-[11px] truncate text-[var(--text-muted)]">{audio.narrator}</p>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </>
+              )
+            })()}
           </div>
         ) : (
           // Category rows view (Spotify/Audible style)
@@ -1208,6 +1532,54 @@ export default function ShineAudiblePage() {
         )}
       </AnimatePresence>
 
+      {/* Audio Disclaimer Modal for Hypnosis/Meditation */}
+      <AnimatePresence>
+        {audioDisclaimer && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+            style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}
+            onClick={() => setAudioDisclaimer(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="w-full max-w-sm rounded-2xl p-6 space-y-4"
+              style={{ background: 'var(--surface-card)', border: '1px solid rgba(201,169,97,0.2)' }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="text-center">
+                <span style={{ color: 'var(--brand)' }}><ShineIcon name="audio" className="w-9 h-9" /></span>
+                <h3 className="font-display text-lg font-semibold mt-3 text-[var(--text-primary)]">
+                  {audioDisclaimer.contentType === 'hypnosis' ? 'Séance d\'hypnose' : 'Méditation guidée'}
+                </h3>
+              </div>
+              <p className="text-sm text-center leading-relaxed text-[var(--text-secondary)]">
+                Avant de commencer, installez-vous confortablement dans un endroit calme et détendu. Mettez votre casque audio sur les oreilles, respirez profondément et préparez-vous à vous laisser guider en toute sérénité.
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setAudioDisclaimer(null)}
+                  className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium cursor-pointer transition-all text-[var(--text-muted)] border border-[var(--border)]"
+                >
+                  Annuler
+                </button>
+                <button
+                  onClick={() => { startPlayback(audioDisclaimer); setAudioDisclaimer(null) }}
+                  className="flex-1 px-4 py-2.5 rounded-xl text-sm font-semibold cursor-pointer transition-all hover:opacity-90"
+                  style={{ background: 'var(--brand)', color: 'var(--surface)' }}
+                >
+                  Je suis prêt(e)
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Mini Player */}
       <AnimatePresence>
         {nowPlaying && (
@@ -1216,8 +1588,11 @@ export default function ShineAudiblePage() {
             isPlaying={isPlaying}
             onToggle={() => setIsPlaying(!isPlaying)}
             progress={playerProgress}
-            currentTime={formatTime(fakeTime)}
-            duration={formatTime(nowPlaying.durationSeconds)}
+            currentTime={formatTime(currentTime)}
+            duration={formatTime(audioDuration)}
+            onRewind={handleRewind}
+            onForward={handleForward}
+            onSeek={handleSeek}
           />
         )}
       </AnimatePresence>

@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS shine_tv_videos (
   description TEXT,
   thumbnail_url TEXT,
   video_url TEXT,
+  subtitle_url TEXT,
   category TEXT NOT NULL DEFAULT 'healing',
   duration_minutes INTEGER DEFAULT 0,
   year INTEGER DEFAULT EXTRACT(YEAR FROM NOW()),
@@ -98,3 +99,6 @@ CREATE POLICY "Users modifient leurs avis" ON shine_tv_reviews
 
 CREATE POLICY "Users suppriment leurs avis" ON shine_tv_reviews
   FOR DELETE USING (auth.uid() = user_id);
+
+-- Migration : Ajouter la colonne sous-titres si elle n'existe pas
+-- ALTER TABLE shine_tv_videos ADD COLUMN IF NOT EXISTS subtitle_url TEXT;

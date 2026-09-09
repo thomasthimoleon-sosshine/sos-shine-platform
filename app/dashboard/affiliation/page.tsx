@@ -4,16 +4,15 @@ import { useEffect, useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import { useTranslation } from '@/lib/i18n/useTranslation'
+import { useSubscription } from '@/hooks/useSubscription'
 import type { Affiliate, AffiliateConversion, AffiliatePayout } from '@/types/database'
 
 const ease = [0.25, 0.46, 0.45, 0.94] as const
 const easeArr = ease as unknown as [number, number, number, number]
 
+// Un seul niveau : 30% récurrent, tant que le filleul reste abonné.
 const TIERS = [
-  { key: 'bronze', rate: 10, min: 0, max: 10, color: '#CD7F32', gradient: 'linear-gradient(135deg, #CD7F32, #A0522D)' },
-  { key: 'silver', rate: 15, min: 11, max: 50, color: '#C0C0C0', gradient: 'linear-gradient(135deg, #C0C0C0, #A8A8A8)' },
-  { key: 'gold', rate: 20, min: 51, max: 100, color: '#D4AF37', gradient: 'linear-gradient(135deg, #D4AF37, #B8960F)' },
-  { key: 'diamond', rate: 25, min: 101, max: Infinity, color: '#B9F2FF', gradient: 'linear-gradient(135deg, #B9F2FF, #7EC8E3)' },
+  { key: 'ambassadeur', rate: 30, min: 0, max: Infinity, color: 'var(--brand)', gradient: 'linear-gradient(135deg, var(--brand), var(--brand-deep))' },
 ] as const
 
 const CHANNELS = ['instagram', 'youtube', 'tiktok', 'blog', 'email', 'podcast', 'facebook', 'other'] as const
@@ -29,17 +28,17 @@ function generateReferralCode(userId: string): string {
 }
 
 // ═══════════════════════════════════════════════════════
-// Landing View — Pour les non-affiliés
+// Landing View - Pour les non-affiliés
 // ═══════════════════════════════════════════════════════
 function AffiliateLanding({ onApply }: { onApply: () => void }) {
   const { t } = useTranslation()
 
   const benefits = [
-    { icon: '↻', title: t('affiliate.benefit1_title'), desc: t('affiliate.benefit1_desc'), accent: '#55EFC4' },
-    { icon: '◎', title: t('affiliate.benefit2_title'), desc: t('affiliate.benefit2_desc'), accent: '#74C0FC' },
-    { icon: '▣', title: t('affiliate.benefit3_title'), desc: t('affiliate.benefit3_desc'), accent: '#E17055' },
-    { icon: '◈', title: t('affiliate.benefit4_title'), desc: t('affiliate.benefit4_desc'), accent: '#D4AF37' },
-    { icon: '☎', title: t('affiliate.benefit5_title'), desc: t('affiliate.benefit5_desc'), accent: '#A29BFE' },
+    { icon: '↻', title: t('affiliate.benefit1_title'), desc: t('affiliate.benefit1_desc'), accent: 'var(--success)' },
+    { icon: '◎', title: t('affiliate.benefit2_title'), desc: t('affiliate.benefit2_desc'), accent: 'var(--accent-blue)' },
+    { icon: '▣', title: t('affiliate.benefit3_title'), desc: t('affiliate.benefit3_desc'), accent: 'var(--warning)' },
+    { icon: '◈', title: t('affiliate.benefit4_title'), desc: t('affiliate.benefit4_desc'), accent: 'var(--brand)' },
+    { icon: '☎', title: t('affiliate.benefit5_title'), desc: t('affiliate.benefit5_desc'), accent: 'var(--accent-purple)' },
     { icon: '♡', title: t('affiliate.benefit6_title'), desc: t('affiliate.benefit6_desc'), accent: '#FD79A8' },
   ]
 
@@ -62,19 +61,19 @@ function AffiliateLanding({ onApply }: { onApply: () => void }) {
         className="text-center relative"
       >
         <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full pointer-events-none opacity-20"
-          style={{ background: 'radial-gradient(circle, rgba(212, 175, 55, 0.15), transparent 70%)' }}
+          style={{ background: 'radial-gradient(circle, rgba(201, 169, 97, 0.15), transparent 70%)' }}
         />
         <span
           className="inline-block px-4 py-1.5 rounded-full text-[11px] font-semibold uppercase tracking-widest mb-6"
-          style={{ background: 'rgba(212, 175, 55, 0.1)', color: 'var(--gold)', border: '1px solid rgba(212, 175, 55, 0.15)' }}
+          style={{ background: 'rgba(201, 169, 97, 0.1)', color: 'var(--brand)', border: '1px solid rgba(201, 169, 97, 0.15)' }}
         >
           {t('affiliate.hero_badge')}
         </span>
-        <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight leading-tight" style={{ color: 'var(--text-primary)' }}>
+        <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight leading-tight text-[var(--text-primary)]">
           {t('affiliate.hero_title')}{' '}
           <span className="text-shimmer">{t('affiliate.hero_title_highlight')}</span>
         </h1>
-        <p className="mt-5 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
+        <p className="mt-5 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto text-[var(--text-secondary)]">
           {t('affiliate.hero_desc')}
         </p>
         <motion.button
@@ -83,9 +82,9 @@ function AffiliateLanding({ onApply }: { onApply: () => void }) {
           onClick={onApply}
           className="mt-8 px-8 py-3.5 rounded-xl font-semibold text-[15px] cursor-pointer transition-all duration-300"
           style={{
-            background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))',
+            background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
             color: '#09090b',
-            boxShadow: '0 4px 24px rgba(212, 175, 55, 0.25)',
+            boxShadow: '0 4px 24px rgba(201, 169, 97, 0.25)',
           }}
         >
           {t('affiliate.apply_cta')}
@@ -98,14 +97,14 @@ function AffiliateLanding({ onApply }: { onApply: () => void }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15, duration: 0.5, ease: easeArr }}
       >
-        <h2 className="text-[11px] font-semibold uppercase tracking-widest mb-6 text-center" style={{ color: 'var(--text-muted)' }}>
+        <h2 className="text-[11px] font-semibold uppercase tracking-widest mb-6 text-center text-[var(--text-muted)]">
           {t('affiliate.how_it_works')}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
-            { num: '01', title: t('affiliate.step1_title'), desc: t('affiliate.step1_desc'), accent: '#55EFC4' },
-            { num: '02', title: t('affiliate.step2_title'), desc: t('affiliate.step2_desc'), accent: '#74C0FC' },
-            { num: '03', title: t('affiliate.step3_title'), desc: t('affiliate.step3_desc'), accent: '#D4AF37' },
+            { num: '01', title: t('affiliate.step1_title'), desc: t('affiliate.step1_desc'), accent: 'var(--success)' },
+            { num: '02', title: t('affiliate.step2_title'), desc: t('affiliate.step2_desc'), accent: 'var(--accent-blue)' },
+            { num: '03', title: t('affiliate.step3_title'), desc: t('affiliate.step3_desc'), accent: 'var(--brand)' },
           ].map((step, i) => (
             <motion.div
               key={step.num}
@@ -117,61 +116,46 @@ function AffiliateLanding({ onApply }: { onApply: () => void }) {
               <div className="absolute top-0 left-0 w-full h-[2px]" style={{ background: `linear-gradient(90deg, transparent, ${step.accent}, transparent)`, opacity: 0.4 }} />
               <span className="font-display text-3xl font-semibold block mb-3" style={{ color: step.accent, opacity: 0.2 }}>{step.num}</span>
               <h3 className="font-semibold text-[15px] mb-2" style={{ color: step.accent }}>{step.title}</h3>
-              <p className="text-[13px] leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{step.desc}</p>
+              <p className="text-[13px] leading-relaxed text-[var(--text-secondary)]">{step.desc}</p>
             </motion.div>
           ))}
         </div>
       </motion.div>
 
-      {/* ── Commission Tiers ── */}
+      {/* ── Commission : 30% récurrent, un seul niveau ── */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3, duration: 0.5, ease: easeArr }}
       >
         <div className="text-center mb-8">
-          <h2 className="font-display text-2xl sm:text-3xl font-semibold tracking-tight" style={{ color: 'var(--text-primary)' }}>
+          <h2 className="font-display text-2xl sm:text-3xl font-semibold tracking-tight text-[var(--text-primary)]">
             {t('affiliate.tiers_title')}
           </h2>
-          <p className="mt-2 text-[14px] max-w-xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
+          <p className="mt-2 text-[14px] max-w-xl mx-auto text-[var(--text-secondary)]">
             {t('affiliate.tiers_subtitle')}
           </p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {TIERS.map((tier, i) => (
-            <motion.div
-              key={tier.key}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.35 + i * 0.08, duration: 0.5, ease: easeArr }}
-              className="glass glass-hover p-6 text-center relative overflow-hidden group"
+        <div className="max-w-lg mx-auto glass p-8 sm:p-10 text-center relative overflow-hidden">
+          <div className="absolute inset-0 pointer-events-none opacity-60"
+            style={{ background: 'radial-gradient(circle at center, rgba(201,169,97,0.10), transparent 70%)' }}
+          />
+          <div className="relative">
+            <div className="font-display font-semibold leading-none text-shimmer" style={{ fontSize: 'clamp(64px, 16vw, 104px)' }}>
+              30%
+            </div>
+            <p className="mt-3 text-[15px] font-medium text-[var(--text-primary)]">
+              {t('affiliate.rate_headline')}
+            </p>
+            <p className="mt-2 text-[13px] leading-relaxed max-w-sm mx-auto text-[var(--text-secondary)]">
+              {t('affiliate.rate_desc')}
+            </p>
+            <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full text-[12px] font-medium"
+              style={{ background: 'rgba(201, 169, 97, 0.1)', color: 'var(--brand)', border: '1px solid rgba(201, 169, 97, 0.2)' }}
             >
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                style={{ background: `radial-gradient(circle at center, ${tier.color}08, transparent 70%)` }}
-              />
-              {/* Tier icon */}
-              <div
-                className="w-14 h-14 rounded-2xl mx-auto flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110"
-                style={{ background: `${tier.color}15` }}
-              >
-                <span className="font-display text-xl font-bold" style={{ color: tier.color }}>
-                  {tier.rate}%
-                </span>
-              </div>
-              <h3 className="font-semibold text-[15px] mb-1" style={{ color: tier.color }}>
-                {t(`affiliate.tier_${tier.key}`)}
-              </h3>
-              <p className="text-[12px] mb-3" style={{ color: 'var(--text-muted)' }}>
-                {t(`affiliate.tier_${tier.key}_range`)}
-              </p>
-              <p className="text-[11px] font-medium uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>
-                {t('affiliate.commission')}
-              </p>
-              <p className="text-[11px] mt-1" style={{ color: 'var(--text-muted)' }}>
-                {t('affiliate.recurring')}
-              </p>
-            </motion.div>
-          ))}
+              <span aria-hidden>✦</span>{t('affiliate.eligibility_note')}
+            </div>
+          </div>
         </div>
       </motion.div>
 
@@ -181,7 +165,7 @@ function AffiliateLanding({ onApply }: { onApply: () => void }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 0.5, ease: easeArr }}
       >
-        <h2 className="text-[11px] font-semibold uppercase tracking-widest mb-6 text-center" style={{ color: 'var(--text-muted)' }}>
+        <h2 className="text-[11px] font-semibold uppercase tracking-widest mb-6 text-center text-[var(--text-muted)]">
           {t('affiliate.benefits_title')}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -199,8 +183,8 @@ function AffiliateLanding({ onApply }: { onApply: () => void }) {
               >
                 {b.icon}
               </div>
-              <h3 className="font-semibold text-[14px] mb-1" style={{ color: 'var(--text-primary)' }}>{b.title}</h3>
-              <p className="text-[13px] leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{b.desc}</p>
+              <h3 className="font-semibold text-[14px] mb-1 text-[var(--text-primary)]">{b.title}</h3>
+              <p className="text-[13px] leading-relaxed text-[var(--text-secondary)]">{b.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -213,7 +197,7 @@ function AffiliateLanding({ onApply }: { onApply: () => void }) {
         transition={{ delay: 0.5, duration: 0.5, ease: easeArr }}
         className="max-w-2xl mx-auto"
       >
-        <h2 className="font-display text-2xl font-semibold tracking-tight text-center mb-6" style={{ color: 'var(--text-primary)' }}>
+        <h2 className="font-display text-2xl font-semibold tracking-tight text-center mb-6 text-[var(--text-primary)]">
           {t('affiliate.faq_title')}
         </h2>
         <div className="space-y-2">
@@ -221,13 +205,13 @@ function AffiliateLanding({ onApply }: { onApply: () => void }) {
             <div
               key={i}
               className="glass overflow-hidden transition-all duration-300"
-              style={{ borderColor: openFaq === i ? 'rgba(212, 175, 55, 0.15)' : undefined }}
+              style={{ borderColor: openFaq === i ? 'rgba(201, 169, 97, 0.15)' : undefined }}
             >
               <button
                 onClick={() => setOpenFaq(openFaq === i ? null : i)}
                 className="w-full flex items-center justify-between p-5 text-left cursor-pointer"
               >
-                <span className="font-semibold text-[14px] pr-4" style={{ color: 'var(--text-primary)' }}>{faq.q}</span>
+                <span className="font-semibold text-[14px] pr-4 text-[var(--text-primary)]">{faq.q}</span>
                 <svg
                   className={`w-5 h-5 shrink-0 transition-transform duration-300 ${openFaq === i ? 'rotate-180' : ''}`}
                   style={{ color: 'var(--text-muted)' }}
@@ -245,7 +229,7 @@ function AffiliateLanding({ onApply }: { onApply: () => void }) {
                     transition={{ duration: 0.3, ease: easeArr }}
                     className="overflow-hidden"
                   >
-                    <p className="px-5 pb-5 text-[13px] leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                    <p className="px-5 pb-5 text-[13px] leading-relaxed text-[var(--text-secondary)]">
                       {faq.a}
                     </p>
                   </motion.div>
@@ -262,16 +246,16 @@ function AffiliateLanding({ onApply }: { onApply: () => void }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.55, duration: 0.5, ease: easeArr }}
         className="glass p-8 sm:p-10 text-center relative overflow-hidden"
-        style={{ background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.06), rgba(255, 255, 255, 0.02))', borderColor: 'rgba(212, 175, 55, 0.12)' }}
+        style={{ background: 'linear-gradient(135deg, rgba(201, 169, 97, 0.06), rgba(255, 255, 255, 0.02))', borderColor: 'rgba(201, 169, 97, 0.12)' }}
       >
         <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full pointer-events-none opacity-25"
-          style={{ background: 'radial-gradient(circle, rgba(212, 175, 55, 0.1), transparent 70%)' }}
+          style={{ background: 'radial-gradient(circle, rgba(201, 169, 97, 0.1), transparent 70%)' }}
         />
-        <h2 className="font-display text-2xl sm:text-3xl font-semibold tracking-tight relative" style={{ color: 'var(--text-primary)' }}>
+        <h2 className="font-display text-2xl sm:text-3xl font-semibold tracking-tight relative text-[var(--text-primary)]">
           {t('affiliate.hero_title')}{' '}
-          <span style={{ color: 'var(--gold)' }}>{t('affiliate.hero_title_highlight')}</span>
+          <span className="text-[var(--brand)]">{t('affiliate.hero_title_highlight')}</span>
         </h2>
-        <p className="mt-3 text-[14px] max-w-lg mx-auto relative" style={{ color: 'var(--text-secondary)' }}>
+        <p className="mt-3 text-[14px] max-w-lg mx-auto relative text-[var(--text-secondary)]">
           {t('affiliate.hero_desc')}
         </p>
         <motion.button
@@ -280,9 +264,9 @@ function AffiliateLanding({ onApply }: { onApply: () => void }) {
           onClick={onApply}
           className="mt-6 px-8 py-3.5 rounded-xl font-semibold text-[15px] cursor-pointer transition-all duration-300 relative"
           style={{
-            background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))',
+            background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
             color: '#09090b',
-            boxShadow: '0 4px 24px rgba(212, 175, 55, 0.25)',
+            boxShadow: '0 4px 24px rgba(201, 169, 97, 0.25)',
           }}
         >
           {t('affiliate.apply_cta')}
@@ -347,10 +331,10 @@ function AffiliateApplicationForm({ userId, onSuccess }: { userId: string; onSuc
       className="max-w-2xl mx-auto"
     >
       <div className="text-center mb-8">
-        <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight" style={{ color: 'var(--text-primary)' }}>
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight text-[var(--text-primary)]">
           {t('affiliate.form_title')}
         </h1>
-        <p className="mt-2 text-[14px]" style={{ color: 'var(--text-secondary)' }}>
+        <p className="mt-2 text-[14px] text-[var(--text-secondary)]">
           {t('affiliate.form_subtitle')}
         </p>
       </div>
@@ -358,8 +342,8 @@ function AffiliateApplicationForm({ userId, onSuccess }: { userId: string; onSuc
       <form onSubmit={handleSubmit} className="glass p-6 sm:p-8 space-y-6">
         {/* Motivation */}
         <div>
-          <label className="block text-[13px] font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
-            {t('affiliate.form_motivation')} <span style={{ color: '#EF4444' }}>*</span>
+          <label className="block text-[13px] font-semibold mb-2 text-[var(--text-primary)]">
+            {t('affiliate.form_motivation')} <span className="text-[var(--danger)]">*</span>
           </label>
           <textarea
             value={motivation}
@@ -370,19 +354,19 @@ function AffiliateApplicationForm({ userId, onSuccess }: { userId: string; onSuc
             minLength={20}
             className="w-full rounded-xl px-4 py-3 text-[14px] resize-none outline-none transition-all duration-200 placeholder:opacity-40"
             style={{
-              background: 'var(--dark-card)',
-              border: '1px solid var(--dark-border)',
+              background: 'var(--surface-card)',
+              border: '1px solid var(--border)',
               color: 'var(--text-primary)',
             }}
           />
-          <p className="mt-1 text-[11px]" style={{ color: 'var(--text-muted)' }}>
+          <p className="mt-1 text-[11px] text-[var(--text-muted)]">
             {motivation.length}/20 min
           </p>
         </div>
 
         {/* Audience size */}
         <div>
-          <label className="block text-[13px] font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+          <label className="block text-[13px] font-semibold mb-2 text-[var(--text-primary)]">
             {t('affiliate.form_audience')}
           </label>
           <input
@@ -392,8 +376,8 @@ function AffiliateApplicationForm({ userId, onSuccess }: { userId: string; onSuc
             placeholder={t('affiliate.form_audience_placeholder')}
             className="w-full rounded-xl px-4 py-3 text-[14px] outline-none transition-all duration-200 placeholder:opacity-40"
             style={{
-              background: 'var(--dark-card)',
-              border: '1px solid var(--dark-border)',
+              background: 'var(--surface-card)',
+              border: '1px solid var(--border)',
               color: 'var(--text-primary)',
             }}
           />
@@ -401,7 +385,7 @@ function AffiliateApplicationForm({ userId, onSuccess }: { userId: string; onSuc
 
         {/* Promotion Channels */}
         <div>
-          <label className="block text-[13px] font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>
+          <label className="block text-[13px] font-semibold mb-3 text-[var(--text-primary)]">
             {t('affiliate.form_channels')}
           </label>
           <div className="flex flex-wrap gap-2">
@@ -412,9 +396,9 @@ function AffiliateApplicationForm({ userId, onSuccess }: { userId: string; onSuc
                 onClick={() => toggleChannel(ch)}
                 className="px-4 py-2 rounded-xl text-[13px] font-medium cursor-pointer transition-all duration-200"
                 style={{
-                  background: channels.includes(ch) ? 'rgba(212, 175, 55, 0.12)' : 'var(--dark-card)',
-                  border: `1px solid ${channels.includes(ch) ? 'rgba(212, 175, 55, 0.3)' : 'var(--dark-border)'}`,
-                  color: channels.includes(ch) ? 'var(--gold)' : 'var(--text-secondary)',
+                  background: channels.includes(ch) ? 'rgba(201, 169, 97, 0.12)' : 'var(--surface-card)',
+                  border: `1px solid ${channels.includes(ch) ? 'rgba(201, 169, 97, 0.3)' : 'var(--border)'}`,
+                  color: channels.includes(ch) ? 'var(--brand)' : 'var(--text-secondary)',
                 }}
               >
                 {t(`affiliate.form_channel_${ch}`)}
@@ -425,7 +409,7 @@ function AffiliateApplicationForm({ userId, onSuccess }: { userId: string; onSuc
 
         {/* Social link */}
         <div>
-          <label className="block text-[13px] font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+          <label className="block text-[13px] font-semibold mb-2 text-[var(--text-primary)]">
             {t('affiliate.form_social')}
           </label>
           <input
@@ -435,8 +419,8 @@ function AffiliateApplicationForm({ userId, onSuccess }: { userId: string; onSuc
             placeholder={t('affiliate.form_social_placeholder')}
             className="w-full rounded-xl px-4 py-3 text-[14px] outline-none transition-all duration-200 placeholder:opacity-40"
             style={{
-              background: 'var(--dark-card)',
-              border: '1px solid var(--dark-border)',
+              background: 'var(--surface-card)',
+              border: '1px solid var(--border)',
               color: 'var(--text-primary)',
             }}
           />
@@ -444,7 +428,7 @@ function AffiliateApplicationForm({ userId, onSuccess }: { userId: string; onSuc
 
         {/* Website */}
         <div>
-          <label className="block text-[13px] font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+          <label className="block text-[13px] font-semibold mb-2 text-[var(--text-primary)]">
             {t('affiliate.form_website')}
           </label>
           <input
@@ -454,15 +438,15 @@ function AffiliateApplicationForm({ userId, onSuccess }: { userId: string; onSuc
             placeholder={t('affiliate.form_website_placeholder')}
             className="w-full rounded-xl px-4 py-3 text-[14px] outline-none transition-all duration-200 placeholder:opacity-40"
             style={{
-              background: 'var(--dark-card)',
-              border: '1px solid var(--dark-border)',
+              background: 'var(--surface-card)',
+              border: '1px solid var(--border)',
               color: 'var(--text-primary)',
             }}
           />
         </div>
 
         {error && (
-          <p className="text-[13px] text-center" style={{ color: '#EF4444' }}>{error}</p>
+          <p className="text-[13px] text-center text-[var(--danger)]">{error}</p>
         )}
 
         <motion.button
@@ -472,9 +456,9 @@ function AffiliateApplicationForm({ userId, onSuccess }: { userId: string; onSuc
           disabled={submitting || motivation.trim().length < 20}
           className="w-full py-3.5 rounded-xl font-semibold text-[15px] cursor-pointer transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
           style={{
-            background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))',
+            background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
             color: '#09090b',
-            boxShadow: '0 4px 24px rgba(212, 175, 55, 0.25)',
+            boxShadow: '0 4px 24px rgba(201, 169, 97, 0.25)',
           }}
         >
           {submitting ? t('affiliate.form_submitting') : t('affiliate.form_submit')}
@@ -499,16 +483,16 @@ function AffiliatePending() {
     >
       <div
         className="w-20 h-20 rounded-3xl mx-auto flex items-center justify-center mb-6"
-        style={{ background: 'rgba(212, 175, 55, 0.1)' }}
+        style={{ background: 'rgba(201, 169, 97, 0.1)' }}
       >
-        <svg className="w-10 h-10" style={{ color: 'var(--gold)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <svg className="w-10 h-10 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       </div>
-      <h2 className="font-display text-2xl font-semibold tracking-tight mb-3" style={{ color: 'var(--text-primary)' }}>
+      <h2 className="font-display text-2xl font-semibold tracking-tight mb-3 text-[var(--text-primary)]">
         {t('affiliate.status_pending')}
       </h2>
-      <p className="text-[14px] leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+      <p className="text-[14px] leading-relaxed text-[var(--text-secondary)]">
         {t('affiliate.pending_message')}
       </p>
     </motion.div>
@@ -532,19 +516,19 @@ function AffiliateRejected({ reason }: { reason: string | null }) {
         className="w-20 h-20 rounded-3xl mx-auto flex items-center justify-center mb-6"
         style={{ background: 'rgba(239, 68, 68, 0.1)' }}
       >
-        <svg className="w-10 h-10" style={{ color: '#EF4444' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <svg className="w-10 h-10 text-[var(--danger)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
         </svg>
       </div>
-      <h2 className="font-display text-2xl font-semibold tracking-tight mb-3" style={{ color: 'var(--text-primary)' }}>
+      <h2 className="font-display text-2xl font-semibold tracking-tight mb-3 text-[var(--text-primary)]">
         {t('affiliate.status_rejected')}
       </h2>
-      <p className="text-[14px] leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+      <p className="text-[14px] leading-relaxed text-[var(--text-secondary)]">
         {t('affiliate.rejected_message')}
       </p>
       {reason && (
         <div className="glass mt-6 p-4 text-left">
-          <p className="text-[13px]" style={{ color: 'var(--text-secondary)' }}>{reason}</p>
+          <p className="text-[13px] text-[var(--text-secondary)]">{reason}</p>
         </div>
       )}
     </motion.div>
@@ -607,22 +591,21 @@ function WithdrawalModal({ affiliate, onClose, onSuccess }: { affiliate: Affilia
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        className="w-full max-w-md rounded-2xl p-6 sm:p-8 space-y-6"
-        style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
+        className="w-full max-w-md rounded-2xl p-6 sm:p-8 space-y-6 bg-[var(--surface-card)] border border-[var(--border)]"
       >
         <div>
-          <h2 className="font-display text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+          <h2 className="font-display text-xl font-semibold text-[var(--text-primary)]">
             Demander un retrait
           </h2>
-          <p className="text-[13px] mt-1" style={{ color: 'var(--text-secondary)' }}>
-            Solde disponible : <span className="font-semibold" style={{ color: 'var(--gold)' }}>{affiliate.pending_earnings.toFixed(2)}€</span>
+          <p className="text-[13px] mt-1 text-[var(--text-secondary)]">
+            Solde disponible : <span className="font-semibold text-[var(--brand)]">{affiliate.pending_earnings.toFixed(2)}€</span>
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Montant */}
           <div>
-            <label className="block text-[13px] font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+            <label className="block text-[13px] font-semibold mb-2 text-[var(--text-primary)]">
               Montant (min. 50€)
             </label>
             <div className="relative">
@@ -630,15 +613,15 @@ function WithdrawalModal({ affiliate, onClose, onSuccess }: { affiliate: Affilia
                 type="number" min={50} max={affiliate.pending_earnings} step={0.01}
                 value={amount} onChange={(e) => setAmount(Number(e.target.value))}
                 className="w-full rounded-xl px-4 py-3 text-[14px] outline-none pr-10"
-                style={{ background: 'var(--dark)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
               />
-              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[14px] font-semibold" style={{ color: 'var(--gold)' }}>€</span>
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[14px] font-semibold text-[var(--brand)]">€</span>
             </div>
           </div>
 
           {/* Méthode */}
           <div>
-            <label className="block text-[13px] font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+            <label className="block text-[13px] font-semibold mb-2 text-[var(--text-primary)]">
               Mode de paiement
             </label>
             <div className="flex gap-3">
@@ -649,9 +632,9 @@ function WithdrawalModal({ affiliate, onClose, onSuccess }: { affiliate: Affilia
                 <button key={m.key} type="button" onClick={() => setMethod(m.key)}
                   className="flex-1 py-3 rounded-xl text-[13px] font-medium cursor-pointer transition-all"
                   style={{
-                    background: method === m.key ? 'rgba(212,175,55,0.1)' : 'var(--dark)',
-                    border: `1px solid ${method === m.key ? 'rgba(212,175,55,0.3)' : 'var(--dark-border)'}`,
-                    color: method === m.key ? 'var(--gold)' : 'var(--text-secondary)',
+                    background: method === m.key ? 'rgba(201,169,97,0.1)' : 'var(--surface)',
+                    border: `1px solid ${method === m.key ? 'rgba(201,169,97,0.3)' : 'var(--border)'}`,
+                    color: method === m.key ? 'var(--brand)' : 'var(--text-secondary)',
                   }}>
                   {m.icon} {m.label}
                 </button>
@@ -662,45 +645,45 @@ function WithdrawalModal({ affiliate, onClose, onSuccess }: { affiliate: Affilia
           {/* IBAN ou PayPal */}
           {method === 'bank_transfer' ? (
             <div>
-              <label className="block text-[13px] font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+              <label className="block text-[13px] font-semibold mb-2 text-[var(--text-primary)]">
                 IBAN
               </label>
               <input
                 type="text" value={iban} onChange={(e) => setIban(e.target.value)}
                 placeholder="FR76 1234 5678 9012 3456 7890 123"
                 className="w-full rounded-xl px-4 py-3 text-[14px] font-mono outline-none placeholder:opacity-40"
-                style={{ background: 'var(--dark)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
               />
             </div>
           ) : (
             <div>
-              <label className="block text-[13px] font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+              <label className="block text-[13px] font-semibold mb-2 text-[var(--text-primary)]">
                 Email PayPal
               </label>
               <input
                 type="email" value={paypalEmail} onChange={(e) => setPaypalEmail(e.target.value)}
                 placeholder="votre@email.com"
                 className="w-full rounded-xl px-4 py-3 text-[14px] outline-none placeholder:opacity-40"
-                style={{ background: 'var(--dark)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+                style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
               />
             </div>
           )}
 
           {error && (
-            <p className="text-[13px] text-center" style={{ color: '#EF4444' }}>{error}</p>
+            <p className="text-[13px] text-center text-[var(--danger)]">{error}</p>
           )}
 
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose}
               className="flex-1 py-3 rounded-xl text-[13px] font-semibold cursor-pointer transition-all"
-              style={{ background: 'var(--dark)', border: '1px solid var(--dark-border)', color: 'var(--text-secondary)' }}>
+              style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-secondary)' }}>
               Annuler
             </button>
             <motion.button
               whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
               type="submit" disabled={submitting || amount < 50 || amount > affiliate.pending_earnings}
               className="flex-1 py-3 rounded-xl text-[13px] font-semibold cursor-pointer transition-all disabled:opacity-50"
-              style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))', color: '#09090b' }}>
+              style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#09090b' }}>
               {submitting ? 'Envoi...' : `Retirer ${amount.toFixed(2)}€`}
             </motion.button>
           </div>
@@ -719,8 +702,8 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
   const [showWithdrawal, setShowWithdrawal] = useState(false)
   const [withdrawalSuccess, setWithdrawalSuccess] = useState(false)
 
-  const currentTier = TIERS.find(t => t.key === affiliate.current_tier) || TIERS[0]
-  const nextTier = TIERS[TIERS.indexOf(currentTier) + 1]
+  // Un seul niveau : 30% récurrent. (Plus de paliers ni de palier suivant.)
+  const currentTier = TIERS[0]
   const referralUrl = typeof window !== 'undefined'
     ? `${window.location.origin}/signup?ref=${affiliate.referral_code}`
     : `https://sosshine.com/signup?ref=${affiliate.referral_code}`
@@ -750,9 +733,6 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
     setTimeout(() => setCopied(false), 2500)
   }
 
-  const progressToNext = nextTier
-    ? Math.min(100, ((affiliate.total_referrals - currentTier.min) / (nextTier.min - currentTier.min)) * 100)
-    : 100
 
   return (
     <div className="max-w-5xl mx-auto space-y-8">
@@ -769,11 +749,11 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
           >
             {t(`affiliate.tier_${currentTier.key}`)}
           </span>
-          <span className="text-[12px] font-medium" style={{ color: 'var(--text-muted)' }}>
+          <span className="text-[12px] font-medium text-[var(--text-muted)]">
             {currentTier.rate}% {t('affiliate.commission')}
           </span>
         </div>
-        <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight" style={{ color: 'var(--text-primary)' }}>
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight text-[var(--text-primary)]">
           {t('affiliate.dashboard_title')}
         </h1>
       </motion.div>
@@ -784,15 +764,15 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1, duration: 0.5, ease: easeArr }}
         className="glass p-5 sm:p-6"
-        style={{ borderColor: 'rgba(212, 175, 55, 0.1)' }}
+        style={{ borderColor: 'rgba(201, 169, 97, 0.1)' }}
       >
-        <p className="text-[12px] font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>
+        <p className="text-[12px] font-semibold uppercase tracking-wider mb-3 text-[var(--text-muted)]">
           {t('affiliate.your_link')}
         </p>
         <div className="flex items-center gap-3">
           <div
             className="flex-1 rounded-xl px-4 py-3 text-[13px] font-mono truncate select-all"
-            style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--gold)' }}
+            style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--brand)' }}
           >
             {referralUrl}
           </div>
@@ -802,8 +782,8 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
             onClick={copyLink}
             className="px-5 py-3 rounded-xl font-semibold text-[13px] cursor-pointer whitespace-nowrap transition-all duration-200"
             style={{
-              background: copied ? 'rgba(85, 239, 196, 0.15)' : 'linear-gradient(135deg, var(--gold), var(--gold-deep))',
-              color: copied ? '#55EFC4' : '#09090b',
+              background: copied ? 'rgba(85, 239, 196, 0.15)' : 'linear-gradient(135deg, var(--brand), var(--brand-deep))',
+              color: copied ? 'var(--success)' : '#09090b',
               border: copied ? '1px solid rgba(85, 239, 196, 0.3)' : 'none',
             }}
           >
@@ -818,63 +798,43 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15, duration: 0.5, ease: easeArr }}
       >
-        <h2 className="text-[11px] font-semibold uppercase tracking-widest mb-4" style={{ color: 'var(--text-muted)' }}>
+        <h2 className="text-[11px] font-semibold uppercase tracking-widest mb-4 text-[var(--text-muted)]">
           {t('affiliate.stats_title')}
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           {[
-            { label: t('affiliate.stat_clicks'), value: affiliate.total_clicks.toLocaleString(), accent: '#74C0FC' },
-            { label: t('affiliate.stat_conversions'), value: affiliate.total_referrals.toLocaleString(), accent: '#55EFC4' },
-            { label: t('affiliate.stat_rate'), value: `${conversionRate}%`, accent: '#A29BFE' },
-            { label: t('affiliate.stat_earnings'), value: `${affiliate.total_earnings.toFixed(2)}€`, accent: '#D4AF37' },
-            { label: t('affiliate.stat_pending'), value: `${affiliate.pending_earnings.toFixed(2)}€`, accent: '#E17055' },
-            { label: t('affiliate.stat_paid'), value: `${affiliate.paid_earnings.toFixed(2)}€`, accent: '#55EFC4' },
+            { label: t('affiliate.stat_clicks'), value: affiliate.total_clicks.toLocaleString(), accent: 'var(--accent-blue)' },
+            { label: t('affiliate.stat_conversions'), value: affiliate.total_referrals.toLocaleString(), accent: 'var(--success)' },
+            { label: t('affiliate.stat_rate'), value: `${conversionRate}%`, accent: 'var(--accent-purple)' },
+            { label: t('affiliate.stat_earnings'), value: `${affiliate.total_earnings.toFixed(2)}€`, accent: 'var(--brand)' },
+            { label: t('affiliate.stat_pending'), value: `${affiliate.pending_earnings.toFixed(2)}€`, accent: 'var(--warning)' },
+            { label: t('affiliate.stat_paid'), value: `${affiliate.paid_earnings.toFixed(2)}€`, accent: 'var(--success)' },
           ].map((stat, i) => (
             <div key={i} className="glass p-4 text-center">
               <p className="font-display text-xl sm:text-2xl font-semibold" style={{ color: stat.accent }}>
                 {stat.value}
               </p>
-              <p className="text-[11px] mt-1" style={{ color: 'var(--text-muted)' }}>{stat.label}</p>
+              <p className="text-[11px] mt-1 text-[var(--text-muted)]">{stat.label}</p>
             </div>
           ))}
         </div>
       </motion.div>
 
-      {/* Tier Progress */}
-      {nextTier && (
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5, ease: easeArr }}
-          className="glass p-5 sm:p-6"
-        >
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-3">
-              <span className="text-[13px] font-semibold" style={{ color: currentTier.color }}>
-                {t(`affiliate.tier_${currentTier.key}`)}
-              </span>
-              <svg className="w-4 h-4" style={{ color: 'var(--text-muted)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-              </svg>
-              <span className="text-[13px] font-semibold" style={{ color: nextTier.color }}>
-                {t(`affiliate.tier_${nextTier.key}`)} ({nextTier.rate}%)
-              </span>
-            </div>
-            <span className="text-[12px]" style={{ color: 'var(--text-muted)' }}>
-              {affiliate.total_referrals}/{nextTier.min} filleuls
-            </span>
-          </div>
-          <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: 'var(--dark-card)' }}>
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${progressToNext}%` }}
-              transition={{ delay: 0.5, duration: 0.8, ease: easeArr }}
-              className="h-full rounded-full"
-              style={{ background: currentTier.gradient }}
-            />
-          </div>
-        </motion.div>
-      )}
+      {/* Rappel du modèle : 30% récurrent, un seul niveau */}
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.5, ease: easeArr }}
+        className="glass p-5 sm:p-6 flex items-center gap-4"
+      >
+        <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
+          style={{ background: `${currentTier.color}15` }}>
+          <span className="font-display text-[15px] font-bold" style={{ color: currentTier.color }}>30%</span>
+        </div>
+        <p className="text-[13px] leading-relaxed text-[var(--text-secondary)]">
+          {t('affiliate.rate_desc')}
+        </p>
+      </motion.div>
 
       {/* Recent Conversions */}
       <motion.div
@@ -882,19 +842,19 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.25, duration: 0.5, ease: easeArr }}
       >
-        <h2 className="text-[11px] font-semibold uppercase tracking-widest mb-4" style={{ color: 'var(--text-muted)' }}>
+        <h2 className="text-[11px] font-semibold uppercase tracking-widest mb-4 text-[var(--text-muted)]">
           {t('affiliate.recent_conversions')}
         </h2>
         {loadingData ? (
           <div className="glass p-8 text-center">
-            <div className="w-6 h-6 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin mx-auto" />
+            <div className="w-6 h-6 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin mx-auto" />
           </div>
         ) : conversions.length === 0 ? (
           <div className="glass p-8 text-center">
-            <p className="text-[14px] font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
+            <p className="text-[14px] font-semibold mb-1 text-[var(--text-primary)]">
               {t('affiliate.no_conversions')}
             </p>
-            <p className="text-[13px]" style={{ color: 'var(--text-muted)' }}>
+            <p className="text-[13px] text-[var(--text-muted)]">
               {t('affiliate.no_conversions_desc')}
             </p>
           </div>
@@ -903,27 +863,27 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
             <div className="overflow-x-auto">
               <table className="w-full text-[13px]">
                 <thead>
-                  <tr style={{ borderBottom: '1px solid var(--dark-border)' }}>
-                    <th className="px-5 py-3 text-left font-semibold" style={{ color: 'var(--text-muted)' }}>Date</th>
-                    <th className="px-5 py-3 text-left font-semibold" style={{ color: 'var(--text-muted)' }}>Type</th>
-                    <th className="px-5 py-3 text-left font-semibold" style={{ color: 'var(--text-muted)' }}>Plan</th>
-                    <th className="px-5 py-3 text-right font-semibold" style={{ color: 'var(--text-muted)' }}>Commission</th>
-                    <th className="px-5 py-3 text-right font-semibold" style={{ color: 'var(--text-muted)' }}>Statut</th>
+                  <tr className="border-b border-[var(--border)]">
+                    <th className="px-5 py-3 text-left font-semibold text-[var(--text-muted)]">Date</th>
+                    <th className="px-5 py-3 text-left font-semibold text-[var(--text-muted)]">Type</th>
+                    <th className="px-5 py-3 text-left font-semibold text-[var(--text-muted)]">Plan</th>
+                    <th className="px-5 py-3 text-right font-semibold text-[var(--text-muted)]">Commission</th>
+                    <th className="px-5 py-3 text-right font-semibold text-[var(--text-muted)]">Statut</th>
                   </tr>
                 </thead>
                 <tbody>
                   {conversions.map((conv) => (
-                    <tr key={conv.id} style={{ borderBottom: '1px solid var(--dark-border)' }}>
-                      <td className="px-5 py-3" style={{ color: 'var(--text-secondary)' }}>
+                    <tr key={conv.id} className="border-b border-[var(--border)]">
+                      <td className="px-5 py-3 text-[var(--text-secondary)]">
                         {new Date(conv.created_at).toLocaleDateString('fr-FR')}
                       </td>
-                      <td className="px-5 py-3 capitalize" style={{ color: 'var(--text-secondary)' }}>
+                      <td className="px-5 py-3 capitalize text-[var(--text-secondary)]">
                         {conv.conversion_type}
                       </td>
-                      <td className="px-5 py-3 capitalize" style={{ color: 'var(--text-secondary)' }}>
+                      <td className="px-5 py-3 capitalize text-[var(--text-secondary)]">
                         {conv.plan || '-'}
                       </td>
-                      <td className="px-5 py-3 text-right font-semibold" style={{ color: 'var(--gold)' }}>
+                      <td className="px-5 py-3 text-right font-semibold text-[var(--brand)]">
                         {conv.commission_amount.toFixed(2)}€
                       </td>
                       <td className="px-5 py-3 text-right">
@@ -931,12 +891,12 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
                           className="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold"
                           style={{
                             background: conv.status === 'confirmed' ? 'rgba(85, 239, 196, 0.12)' :
-                              conv.status === 'paid' ? 'rgba(212, 175, 55, 0.12)' :
+                              conv.status === 'paid' ? 'rgba(201, 169, 97, 0.12)' :
                               conv.status === 'cancelled' ? 'rgba(239, 68, 68, 0.12)' :
                               'rgba(255, 255, 255, 0.06)',
-                            color: conv.status === 'confirmed' ? '#55EFC4' :
-                              conv.status === 'paid' ? '#D4AF37' :
-                              conv.status === 'cancelled' ? '#EF4444' :
+                            color: conv.status === 'confirmed' ? 'var(--success)' :
+                              conv.status === 'paid' ? 'var(--brand)' :
+                              conv.status === 'cancelled' ? 'var(--danger)' :
                               'var(--text-muted)',
                           }}
                         >
@@ -960,7 +920,7 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             className="fixed top-24 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-xl text-[14px] font-semibold"
-            style={{ background: 'rgba(85,239,196,0.15)', color: '#55EFC4', border: '1px solid rgba(85,239,196,0.3)', backdropFilter: 'blur(12px)' }}
+            style={{ background: 'rgba(85,239,196,0.15)', color: 'var(--success)', border: '1px solid rgba(85,239,196,0.3)', backdropFilter: 'blur(12px)' }}
           >
             Demande de retrait envoyee avec succes !
           </motion.div>
@@ -989,7 +949,7 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
         transition={{ delay: 0.3, duration: 0.5, ease: easeArr }}
       >
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>
+          <h2 className="text-[11px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">
             {t('affiliate.payout_history')}
           </h2>
           {affiliate.pending_earnings >= 50 && (
@@ -999,9 +959,9 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
               onClick={() => setShowWithdrawal(true)}
               className="px-4 py-2 rounded-xl text-[12px] font-semibold cursor-pointer transition-all duration-200"
               style={{
-                background: 'rgba(212, 175, 55, 0.1)',
-                color: 'var(--gold)',
-                border: '1px solid rgba(212, 175, 55, 0.2)',
+                background: 'rgba(201, 169, 97, 0.1)',
+                color: 'var(--brand)',
+                border: '1px solid rgba(201, 169, 97, 0.2)',
               }}
             >
               {t('affiliate.request_payout')}
@@ -1010,11 +970,11 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
         </div>
         {!loadingData && payouts.length === 0 ? (
           <div className="glass p-6 text-center">
-            <p className="text-[13px]" style={{ color: 'var(--text-muted)' }}>
+            <p className="text-[13px] text-[var(--text-muted)]">
               {t('affiliate.no_payouts')}
             </p>
             {affiliate.pending_earnings < 50 && (
-              <p className="text-[12px] mt-1" style={{ color: 'var(--text-muted)' }}>
+              <p className="text-[12px] mt-1 text-[var(--text-muted)]">
                 {t('affiliate.min_payout')}
               </p>
             )}
@@ -1024,23 +984,23 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
             <div className="overflow-x-auto">
               <table className="w-full text-[13px]">
                 <thead>
-                  <tr style={{ borderBottom: '1px solid var(--dark-border)' }}>
-                    <th className="px-5 py-3 text-left font-semibold" style={{ color: 'var(--text-muted)' }}>Date</th>
-                    <th className="px-5 py-3 text-left font-semibold" style={{ color: 'var(--text-muted)' }}>Montant</th>
-                    <th className="px-5 py-3 text-left font-semibold" style={{ color: 'var(--text-muted)' }}>Moyen</th>
-                    <th className="px-5 py-3 text-right font-semibold" style={{ color: 'var(--text-muted)' }}>Statut</th>
+                  <tr className="border-b border-[var(--border)]">
+                    <th className="px-5 py-3 text-left font-semibold text-[var(--text-muted)]">Date</th>
+                    <th className="px-5 py-3 text-left font-semibold text-[var(--text-muted)]">Montant</th>
+                    <th className="px-5 py-3 text-left font-semibold text-[var(--text-muted)]">Moyen</th>
+                    <th className="px-5 py-3 text-right font-semibold text-[var(--text-muted)]">Statut</th>
                   </tr>
                 </thead>
                 <tbody>
                   {payouts.map((p) => (
-                    <tr key={p.id} style={{ borderBottom: '1px solid var(--dark-border)' }}>
-                      <td className="px-5 py-3" style={{ color: 'var(--text-secondary)' }}>
+                    <tr key={p.id} className="border-b border-[var(--border)]">
+                      <td className="px-5 py-3 text-[var(--text-secondary)]">
                         {new Date(p.created_at).toLocaleDateString('fr-FR')}
                       </td>
-                      <td className="px-5 py-3 font-semibold" style={{ color: 'var(--gold)' }}>
+                      <td className="px-5 py-3 font-semibold text-[var(--brand)]">
                         {p.amount.toFixed(2)}€
                       </td>
-                      <td className="px-5 py-3 capitalize" style={{ color: 'var(--text-secondary)' }}>
+                      <td className="px-5 py-3 capitalize text-[var(--text-secondary)]">
                         {p.payment_method.replace('_', ' ')}
                       </td>
                       <td className="px-5 py-3 text-right">
@@ -1050,8 +1010,8 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
                             background: p.status === 'completed' ? 'rgba(85, 239, 196, 0.12)' :
                               p.status === 'failed' ? 'rgba(239, 68, 68, 0.12)' :
                               'rgba(255, 255, 255, 0.06)',
-                            color: p.status === 'completed' ? '#55EFC4' :
-                              p.status === 'failed' ? '#EF4444' :
+                            color: p.status === 'completed' ? 'var(--success)' :
+                              p.status === 'failed' ? 'var(--danger)' :
                               'var(--text-muted)',
                           }}
                         >
@@ -1066,19 +1026,156 @@ function AffiliateDashboard({ affiliate }: { affiliate: Affiliate }) {
           </div>
         )}
       </motion.div>
+
+      {/* Contact Support */}
+      <SupportContact />
     </div>
+  )
+}
+
+// ═══════════════════════════════════════════════════════
+// Support Contact - Contacter les fondateurs
+// ═══════════════════════════════════════════════════════
+function SupportContact() {
+  const [message, setMessage] = useState('')
+  const [sending, setSending] = useState(false)
+  const [sent, setSent] = useState(false)
+  const [error, setError] = useState('')
+
+  async function handleSend() {
+    if (!message.trim()) return
+    setSending(true)
+    setError('')
+
+    try {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+
+      const { error: insertError } = await supabase.from('courrier_anonyme').insert({
+        user_id: user?.id || null,
+        category: 'autre' as const,
+        subject: 'Support Affiliation',
+        content: message.trim(),
+      })
+
+      if (insertError) throw insertError
+
+      setSent(true)
+      setMessage('')
+      setTimeout(() => setSent(false), 5000)
+    } catch {
+      setError('Erreur lors de l\'envoi. Veuillez réessayer.')
+    }
+    setSending(false)
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.4, duration: 0.5, ease: easeArr }}
+    >
+      <div className="glass rounded-2xl p-6">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center"
+            style={{ background: 'rgba(201,169,97,0.1)', border: '1px solid rgba(201,169,97,0.15)' }}>
+            <svg className="w-4 h-4 text-[var(--brand)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+            </svg>
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold text-[var(--text-primary)]">Contacter le support</h3>
+            <p className="text-[11px] text-[var(--text-muted)]">
+              Une question sur votre programme ? Julia, William & Thomas vous répondent personnellement.
+            </p>
+          </div>
+        </div>
+
+        {sent ? (
+          <div className="rounded-xl px-4 py-3 text-sm text-center" style={{ background: 'rgba(85,239,196,0.08)', color: 'var(--success)', border: '1px solid rgba(85,239,196,0.15)' }}>
+            Message envoyé ! L&apos;équipe fondatrice vous répondra dans les plus brefs délais.
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <textarea
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="Votre message pour l'équipe fondatrice..."
+              rows={3}
+              maxLength={2000}
+              className="w-full px-4 py-3 rounded-xl text-sm outline-none resize-none"
+              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
+            />
+            {error && (
+              <p className="text-xs text-[var(--danger)]">{error}</p>
+            )}
+            <div className="flex items-center justify-between">
+              <p className="text-[10px] text-[var(--text-muted)]">{message.length}/2000</p>
+              <button
+                onClick={handleSend}
+                disabled={sending || !message.trim()}
+                className="px-5 py-2 rounded-xl text-xs font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                style={{ background: 'rgba(201,169,97,0.1)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.2)' }}
+              >
+                {sending ? 'Envoi...' : 'Envoyer'}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </motion.div>
   )
 }
 
 // ═══════════════════════════════════════════════════════
 // Main Page Component
 // ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════
+// Écran « réservé aux abonnés » — condition pour postuler
+// ═══════════════════════════════════════════════════════
+function AffiliateNeedSubscription({ onBack }: { onBack: () => void }) {
+  const { t } = useTranslation()
+  return (
+    <div className="max-w-lg mx-auto text-center py-16 px-4">
+      <div className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center"
+        style={{ background: 'rgba(201, 169, 97, 0.12)', border: '1px solid rgba(201, 169, 97, 0.25)' }}>
+        <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="var(--brand)" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+        </svg>
+      </div>
+      <h2 className="font-display text-2xl sm:text-3xl font-semibold tracking-tight text-[var(--text-primary)]">
+        {t('affiliate.need_sub_title')}
+      </h2>
+      <p className="mt-3 text-[15px] leading-relaxed text-[var(--text-secondary)]">
+        {t('affiliate.need_sub_desc')}
+      </p>
+      <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="/rejoindre"
+          className="px-8 py-3.5 rounded-xl font-semibold text-[15px] cursor-pointer transition-all duration-300"
+          style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))', color: '#09090b', boxShadow: '0 4px 24px rgba(201, 169, 97, 0.25)' }}>
+          {t('affiliate.need_sub_cta')}
+        </a>
+        <button onClick={onBack}
+          className="px-8 py-3.5 rounded-xl font-medium text-[15px] cursor-pointer transition-colors"
+          style={{ background: 'var(--surface-card)', color: 'var(--text-secondary)', border: '1px solid var(--border)' }}>
+          {t('common.back') || 'Retour'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export default function AffiliationPage() {
   const { t } = useTranslation()
+  const { isAdmin, accessSource } = useSubscription()
+  const isSubscriber = isAdmin || accessSource === 'subscription'
   const [loading, setLoading] = useState(true)
   const [userId, setUserId] = useState<string | null>(null)
   const [affiliate, setAffiliate] = useState<Affiliate | null>(null)
-  const [view, setView] = useState<'landing' | 'form' | 'pending' | 'rejected' | 'dashboard'>('landing')
+  const [view, setView] = useState<'landing' | 'need_sub' | 'form' | 'pending' | 'rejected' | 'dashboard'>('landing')
+
+  // Condition d'entrée : il faut être abonné pour devenir ambassadeur.
+  const handleApply = () => setView(isSubscriber ? 'form' : 'need_sub')
 
   const loadAffiliate = useCallback(async () => {
     const supabase = createClient()
@@ -1118,10 +1215,10 @@ export default function AffiliationPage() {
       <div className="flex items-center justify-center min-h-[50vh]">
         <div className="text-center space-y-4">
           <div className="w-10 h-10 rounded-2xl mx-auto flex items-center justify-center"
-            style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-deep))' }}>
-            <div className="w-5 h-5 border-2 border-[var(--dark)] border-t-transparent rounded-full animate-spin" />
+            style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-deep))' }}>
+            <div className="w-5 h-5 border-2 border-[var(--surface)] border-t-transparent rounded-full animate-spin" />
           </div>
-          <p className="text-sm" style={{ color: 'var(--text-muted)' }}>{t('common.loading')}</p>
+          <p className="text-sm text-[var(--text-muted)]">{t('common.loading')}</p>
         </div>
       </div>
     )
@@ -1131,7 +1228,12 @@ export default function AffiliationPage() {
     <AnimatePresence mode="wait">
       {view === 'landing' && (
         <motion.div key="landing" exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
-          <AffiliateLanding onApply={() => setView('form')} />
+          <AffiliateLanding onApply={handleApply} />
+        </motion.div>
+      )}
+      {view === 'need_sub' && (
+        <motion.div key="need_sub" exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
+          <AffiliateNeedSubscription onBack={() => setView('landing')} />
         </motion.div>
       )}
       {view === 'form' && userId && (

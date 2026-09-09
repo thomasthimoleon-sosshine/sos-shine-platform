@@ -1,65 +1,216 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════════
-   SOS SHINE — Design System v3 (Abyssal Premium — Cinzel / Montserrat)
-   Standard : Linear / Framer / LeClub10
+   SOS SHINE — Design System v4 (Sanctuary Premium)
+   Références : Apple · Calm · Linear · MasterClass
+   Palette : Noir profond · Bleu nuit · Ivoire · Or subtil
 ═══════════════════════════════════════════════════════════════ */
 
 /* ── 1. Design Tokens ── */
 :root {
-  /* Accents — Gold (identité de marque) */
-  --gold: #D4AF37;
-  --gold-light: #E8CC6E;
-  --gold-deep: #B8960F;
+  /* ── Brand — Or SOS Shine (aligné sur la landing) ── */
+  --brand: #C9A961;
+  /* L'or en couleur de texte. Sur le noir, l'or de marque suffit ; le thème
+     clair le redéfinit, où il tombe sinon à 2,1:1. Défini ici pour qu'un
+     composant qui s'en sert n'hérite jamais du vide. */
+  --brand-ink: #C9A961;
+  --brand-light: #E8C77D;
+  --brand-deep: #A9822E;
+  --brand-muted: #B0A084;
+  --brand-alpha-weak: rgba(201, 169, 97, 0.06);
+  --brand-alpha-medium: rgba(201, 169, 97, 0.12);
+  --brand-alpha-strong: rgba(201, 169, 97, 0.24);
 
-  /* Dégradé or premium (titres) */
-  --gold-gradient: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+  /* ── Surfaces — Noir chaud SOS Shine ── */
+  --surface: #0A0806;
+  --surface-raised: #12100B;
+  --surface-card: #16130D;
+  --surface-elevated: #1F1A12;
+  --surface-overlay: rgba(10, 8, 6, 0.85);
 
-  /* Fond abyssal */
-  --dark: #050505;
-  --dark-card: rgba(255, 255, 255, 0.03);
-  --dark-card-hover: rgba(255, 255, 255, 0.055);
-  --dark-border: rgba(255, 255, 255, 0.06);
-  --dark-border-hover: rgba(255, 255, 255, 0.1);
+  /* ── Borders ── */
+  --border: rgba(201, 169, 97, 0.10);
+  --border-subtle: rgba(255, 255, 255, 0.04);
+  --border-medium: rgba(201, 169, 97, 0.18);
+  --border-strong: rgba(201, 169, 97, 0.28);
+  --border-hover: rgba(201, 169, 97, 0.22);
 
-  /* Surface élevée (modals, dropdowns) */
-  --surface-elevated: rgba(255, 255, 255, 0.06);
+  /* ── Text — Ivoire + nuances ── */
+  --text-primary: #F5EFE3;
+  --text-secondary: #B7AC97;
+  --text-muted: #877E6C;
+  --text-bold: #FAFAF8;
+  --text-inverse: #08090A;
 
-  /* Textes */
-  --text-primary: #e0e0e0;
-  --text-secondary: #a1a1aa;
-  --text-muted: #52525b;
-  --text-bold: #c5a059;
+  /* ── Status ──
+     Charte : un seul or + rose. Le vert/bleu/orange sont bannis :
+     success/warning/info sont aliasés sur l'or (le rouge d'erreur reste). */
+  --success: #C9A961;
+  --success-alpha-weak: rgba(201, 169, 97, 0.08);
+  --success-alpha-medium: rgba(201, 169, 97, 0.16);
+  --success-alpha-strong: rgba(201, 169, 97, 0.32);
 
-  /* Utilitaires */
-  --button-bg: #D4AF37;
-  --radius-lg: 1rem;
-  --radius-xl: 1.25rem;
+  --danger: #D46A6A;
+  --danger-alpha-weak: rgba(212, 106, 106, 0.08);
+  --danger-alpha-medium: rgba(212, 106, 106, 0.16);
+  --danger-alpha-strong: rgba(212, 106, 106, 0.32);
 
-  /* Glow tokens */
-  --glow-gold: 0 0 40px rgba(212, 175, 55, 0.12), 0 0 80px rgba(212, 175, 55, 0.04);
-  --glow-gold-hover: 0 0 60px rgba(212, 175, 55, 0.2), 0 0 120px rgba(212, 175, 55, 0.06);
+  --warning: #E8C77D;
+  --info: #C9A961;
+
+  /* ── Accents ──
+     Aliasés sur l'or (bleu/violet/teal bannis) ; rose = rose charte. */
+  --accent-blue: #C9A961;
+  --accent-blue-alpha-weak: rgba(201, 169, 97, 0.08);
+  --accent-blue-alpha-medium: rgba(201, 169, 97, 0.16);
+  --accent-blue-alpha-strong: rgba(201, 169, 97, 0.32);
+
+  --accent-purple: #C9A961;
+  --accent-teal: #C9A961;
+  --accent-rose: #E0AE9A;
+
+  /* ── Steps (encyclopédie) — dégradé d'un seul or ── */
+  --step-1: #C9A961;
+  --step-2: #E8C77D;
+  --step-3: #A9822E;
+
+  /* ── Shadows ── */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.35);
+  --shadow-brand: 0 2px 12px rgba(201, 169, 97, 0.10);
+  --glow-gold: 0 0 24px rgba(201, 169, 97, 0.08);
+  --glow-gold-hover: 0 0 40px rgba(201, 169, 97, 0.12);
+
+  /* ── Radii ── */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-2xl: 28px;
+
+  /* ── Transitions ── */
+  --ease-default: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-fast: 120ms var(--ease-default);
+  --transition-base: 220ms var(--ease-default);
+  --transition-slow: 400ms var(--ease-default);
+  --transition-slower: 600ms var(--ease-smooth);
+
+  /* ═══════════════════════════════════════════════
+     LEGACY ALIASES — rétrocompatibilité
+     Utilisés par le code existant, seront migrés
+  ═══════════════════════════════════════════════ */
+  --gold: var(--brand);
+  --gold-light: var(--brand-light);
+  --gold-deep: var(--brand-deep);
+  --dark: var(--surface);
+  --dark-card: var(--surface-card);
+  --dark-card-hover: var(--surface-elevated);
+  --dark-border: var(--border);
+  --dark-border-hover: var(--border-hover);
+  --button-bg: var(--brand);
+  --gold-gradient: linear-gradient(135deg, var(--brand), var(--brand-deep));
 }
 
-/* ── Light Theme ── */
+/* ── Light Theme ──
+   Le thème clair ne redéfinissait que les alias hérités (--dark, --dark-card,
+   --dark-border) et les couleurs de texte. Les jetons de surface et de bordure
+   du système actuel — ceux qu'utilise tout le code récent — gardaient leurs
+   valeurs sombres : une carte restait noire pendant que son texte passait au
+   noir. D'où les publications, les descriptions d'événements et la page « Mon
+   compte » devenues illisibles. Tous les jetons sont désormais redéfinis. */
 [data-theme="light"] {
-  --dark: #FAFAF9;
-  --dark-card: rgba(0, 0, 0, 0.03);
-  --dark-card-hover: rgba(0, 0, 0, 0.06);
-  --dark-border: rgba(0, 0, 0, 0.08);
-  --dark-border-hover: rgba(0, 0, 0, 0.14);
-  --surface-elevated: rgba(0, 0, 0, 0.04);
-  --text-primary: #1a1a1a;
-  --text-secondary: #52525b;
-  --text-muted: #a1a1aa;
-  --text-bold: #3f3f46;
-  --glow-gold: 0 0 40px rgba(212, 175, 55, 0.08), 0 0 80px rgba(212, 175, 55, 0.03);
-  --glow-gold-hover: 0 0 60px rgba(212, 175, 55, 0.15), 0 0 120px rgba(212, 175, 55, 0.05);
+  /* L'or de la charte est réglé pour le noir : sur l'ivoire il tombe à 3,4:1,
+     insuffisant pour du texte courant. --brand reste tel quel pour les fonds
+     (boutons dorés, pastilles), et l'encre dorée s'écrit avec --brand-ink. */
+  --brand-ink: #8A6B22;
+
+  /* ── Surfaces ── */
+  --surface: #FAF8F4;
+  --surface-raised: #FFFFFF;
+  --surface-card: #FFFFFF;
+  --surface-elevated: #F3F0E9;
+  --surface-overlay: rgba(255, 255, 255, 0.88);
+
+  /* ── Bordures — l'or à 10 % est invisible sur blanc ── */
+  --border: rgba(26, 22, 14, 0.10);
+  --border-subtle: rgba(26, 22, 14, 0.06);
+  --border-medium: rgba(169, 130, 46, 0.30);
+  --border-strong: rgba(169, 130, 46, 0.48);
+  --border-hover: rgba(169, 130, 46, 0.38);
+
+  /* ── Texte ── */
+  --text-primary: #1A1712;
+  --text-secondary: #55503F;
+  --text-muted: #6F6959;
+  --text-bold: #0F0D0A;
+  --text-inverse: #FFFFFF;
+
+  /* ── Ombres — noires et lourdes en sombre, à peine posées en clair ── */
+  --shadow-xs: 0 1px 2px rgba(26, 22, 14, 0.05);
+  --shadow-sm: 0 2px 8px rgba(26, 22, 14, 0.06);
+  --shadow-md: 0 4px 16px rgba(26, 22, 14, 0.08);
+  --shadow-lg: 0 8px 32px rgba(26, 22, 14, 0.10);
+  --shadow-xl: 0 16px 48px rgba(26, 22, 14, 0.12);
+  --shadow-brand: 0 2px 12px rgba(169, 130, 46, 0.14);
+  --glow-gold: 0 0 40px rgba(201, 169, 97, 0.08), 0 0 80px rgba(201, 169, 97, 0.03);
+  --glow-gold-hover: 0 0 60px rgba(201, 169, 97, 0.15), 0 0 120px rgba(201, 169, 97, 0.05);
+
+  /* ── Alias hérités ── */
+  --dark: #FAF8F4;
+  --dark-card: #FFFFFF;
+  --dark-card-hover: #F3F0E9;
+  --dark-border: rgba(26, 22, 14, 0.10);
+  --dark-border-hover: rgba(169, 130, 46, 0.38);
 }
 
 [data-theme="light"] body {
-  background: #FAFAF9;
-  color: #1a1a1a;
+  background: var(--surface);
+  color: var(--text-primary);
+}
+
+/* L'or clair passe à l'encre dorée dès qu'il sert de couleur de texte, qu'il
+   soit écrit en style en ligne ou par la classe Tailwind. */
+[data-theme="light"] .text-\[var\(--brand\)\],
+[data-theme="light"] .gold-underline {
+  color: var(--brand-ink);
+}
+
+/* Écrit en style en ligne, l'or ne cède qu'à !important. */
+[data-theme="light"] [style*="color: var(--brand)"],
+[data-theme="light"] [style*="color:var(--brand)"] {
+  color: var(--brand-ink) !important;
+}
+
+/* Le soulignement doré est peint par un dégradé de fond, pas par la couleur du
+   texte : sans cela il resterait en or clair sur l'ivoire. Cette règle ne vaut
+   que pour .gold-underline — appliquée plus largement, elle remplit le fond de
+   tout élément écrit en or. */
+[data-theme="light"] .gold-underline {
+  background-image: linear-gradient(var(--brand-ink), var(--brand-ink));
+}
+
+/* Fonds sombres écrits en dur dans les composants : ils restaient noirs
+   pendant que le texte passait au noir. */
+[data-theme="light"] [style*="rgba(0,0,0,0.2)"],
+[data-theme="light"] [style*="rgba(0, 0, 0, 0.2)"],
+[data-theme="light"] [style*="rgba(0,0,0,0.25)"],
+[data-theme="light"] [style*="rgba(0,0,0,0.3)"],
+[data-theme="light"] [style*="rgba(0, 0, 0, 0.3)"] {
+  background: rgba(26, 22, 14, 0.035) !important;
+}
+
+/* Texte ivoire écrit en dur (questionnaires, cartes de choix) : invisible
+   sur fond clair. */
+[data-theme="light"] [style*="rgba(245,239,227,0.72)"],
+[data-theme="light"] [style*="rgba(245,239,227,0.6)"],
+[data-theme="light"] [style*="rgba(245,239,227,0.8)"],
+[data-theme="light"] [style*="rgba(245,239,227,0.9)"] {
+  color: var(--text-secondary) !important;
 }
 
 [data-theme="light"] .glass-dense {
@@ -72,18 +223,34 @@
 
 [data-theme="light"] .ambient-glow {
   background:
-    radial-gradient(ellipse 60% 40% at 20% 20%, rgba(212, 175, 55, 0.04), transparent),
-    radial-gradient(ellipse 50% 50% at 80% 80%, rgba(212, 175, 55, 0.03), transparent);
+    radial-gradient(ellipse 60% 40% at 20% 20%, rgba(201, 169, 97, 0.04), transparent),
+    radial-gradient(ellipse 50% 50% at 80% 80%, rgba(201, 169, 97, 0.03), transparent);
 }
 
 [data-theme="light"] .page-loader {
-  background: #FAFAF9;
+  background: var(--surface);
 }
 
-[data-theme="light"] h1, [data-theme="light"] h2, [data-theme="light"] h3,
-[data-theme="light"] h4, [data-theme="light"] h5, [data-theme="light"] h6 {
+/* Les titres passent à l'encre sombre en thème clair — sauf ceux qui se
+   déclarent en blanc : ils reposent sur une bannière noire (Shine TV, Audible,
+   Librairie), et les noircir les rendait illisibles. */
+[data-theme="light"] h1:not([class*="text-white"]),
+[data-theme="light"] h2:not([class*="text-white"]),
+[data-theme="light"] h3:not([class*="text-white"]),
+[data-theme="light"] h4:not([class*="text-white"]),
+[data-theme="light"] h5:not([class*="text-white"]),
+[data-theme="light"] h6:not([class*="text-white"]) {
   color: var(--text-primary) !important;
   -webkit-text-fill-color: var(--text-primary) !important;
+}
+
+/* Les teintes de catégorie des favoris (ivoire, or clair, rose) sont réglées
+   pour le noir : posées sur une carte blanche elles tombent sous 1,5:1. On les
+   assombrit sans leur retirer leur teinte, pour que chaque catégorie reste
+   reconnaissable au premier coup d'oeil. */
+[data-theme="light"] .pastille-favori {
+  color: color-mix(in srgb, var(--cat, var(--brand)) 38%, #241F14);
+  border-color: color-mix(in srgb, var(--cat, var(--brand)) 50%, #241F14 25%);
 }
 
 [data-theme="light"] strong, [data-theme="light"] b {
@@ -97,8 +264,8 @@
 }
 [data-theme="light"] .glow-card:hover {
   background: rgba(255, 255, 255, 0.85);
-  border-color: rgba(212, 175, 55, 0.2);
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08), 0 0 30px rgba(212, 175, 55, 0.06);
+  border-color: rgba(201, 169, 97, 0.2);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08), 0 0 30px rgba(201, 169, 97, 0.06);
 }
 
 [data-theme="light"] .glass {
@@ -158,7 +325,7 @@
 }
 
 [data-theme="light"] .magnetic-btn:hover {
-  box-shadow: 0 10px 40px rgba(212, 175, 55, 0.2);
+  box-shadow: 0 10px 40px rgba(201, 169, 97, 0.2);
 }
 
 [data-theme="light"] .animate-shimmer {
@@ -188,21 +355,8 @@
   color: #1a1a1a !important;
 }
 
-[data-theme="light"] p,
-[data-theme="light"] span,
-[data-theme="light"] li,
-[data-theme="light"] label,
-[data-theme="light"] td,
-[data-theme="light"] th,
-[data-theme="light"] a {
-  color: inherit;
-}
-
-[data-theme="light"] aside .nav-item {
-  color: #4a4a4a;
-}
 [data-theme="light"] aside .nav-item:hover {
-  background: rgba(212, 175, 55, 0.06);
+  background: rgba(201, 169, 97, 0.06);
 }
 
 [data-theme="light"] [style*="rgba(255,255,255,0.03)"],
@@ -217,20 +371,60 @@
 }
 
 [data-theme="light"] .prose {
-  color: #3a3a3a;
+  color: var(--text-secondary);
 }
 [data-theme="light"] .prose h1,
 [data-theme="light"] .prose h2,
 [data-theme="light"] .prose h3 {
-  color: #B8960F !important;
+  color: var(--brand-ink) !important;
+}
+
+/* ── Light mode: force backgrounds on layout containers ── */
+[data-theme="light"] [style*="background: var(--dark)"],
+[data-theme="light"] [style*="background:var(--dark)"] {
+  background: var(--surface) !important;
+}
+
+[data-theme="light"] .min-h-screen {
+  background-color: var(--surface);
+}
+
+/* Sidebar in light mode */
+[data-theme="light"] aside {
+  background: var(--surface-overlay) !important;
+  border-color: var(--border) !important;
+}
+
+/* Sidebar user section */
+[data-theme="light"] [style*="rgba(255,255,255,0.02)"] {
+  background: rgba(0, 0, 0, 0.03) !important;
+}
+
+/* ring-white/10 → ring-black/10 in light mode */
+[data-theme="light"] .ring-white\/10 {
+  --tw-ring-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile overlay backdrop */
+[data-theme="light"] [style*="rgba(0, 0, 0, 0.6)"] {
+  background: rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Gold-tinted gradients in light mode */
+[data-theme="light"] [style*="rgba(201, 169, 97, 0.05)"] {
+  background: rgba(201, 169, 97, 0.04) !important;
+}
+
+[data-theme="light"] [style*="rgba(201, 169, 97, 0.08)"] {
+  background: rgba(201, 169, 97, 0.06) !important;
 }
 
 /* ── 2. Tailwind v4 Theme ── */
 @theme inline {
-  --color-background: var(--dark);
+  --color-background: var(--surface);
   --color-foreground: var(--text-primary);
-  --font-sans: var(--font-dm-sans), \'DM Sans\', system-ui, sans-serif;
-  --font-display: var(--font-cormorant), \'Cormorant Garamond\', serif;
+  --font-sans: var(--font-dm-sans), 'DM Sans', system-ui, sans-serif;
+  --font-display: var(--font-cormorant), 'Cormorant Garamond', serif;
 }
 
 /* ── 3. Base Resets ── */
@@ -247,10 +441,11 @@ html.founder-mode * {
 }
 
 body {
-  background: #050505;
-  color: #e0e0e0;
-  font-family: var(--font-dm-sans), \'DM Sans\', system-ui, sans-serif;
+  background: var(--surface);
+  color: var(--text-primary);
+  font-family: var(--font-dm-sans), 'DM Sans', system-ui, sans-serif;
   font-weight: 300;
+  letter-spacing: 0.01em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -291,37 +486,27 @@ body {
   transform: rotate(-45deg);
 }
 
-/* Textes en gras → or cuivré */
+/* Textes en gras */
 strong, b {
-  color: #c5a059;
+  color: var(--brand);
 }
 
-/* Police d\'affichage (titres) */
+/* Police d'affichage (titres) */
 .font-display {
-  font-family: var(--font-cormorant), \'Cormorant Garamond\', serif;
+  font-family: var(--font-cormorant), 'Cormorant Garamond', serif;
 }
 
-/* Titres Premium - Or en mode sombre, Noir en mode clair */
+/* Titres Premium */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-cormorant), 'Cormorant Garamond', serif !important;
-  color: #D4AF37 !important;
-  -webkit-text-fill-color: #D4AF37 !important;
+  color: var(--brand) !important;
+  -webkit-text-fill-color: var(--brand) !important;
 }
 
 /* Fix spécifique pour le mode clair */
-[data-theme="light"] h1, 
-[data-theme="light"] h2, 
-[data-theme="light"] h3, 
-[data-theme="light"] h4, 
-[data-theme="light"] h5, 
-[data-theme="light"] h6 {
-  color: #1a1a1a !important;
-  -webkit-text-fill-color: #1a1a1a !important;
-}
-
 /* Effet Shimmer (Brillance) - Désactivé en mode clair pour la lisibilité */
 h1 .text-shimmer, h2 .text-shimmer, h3 .text-shimmer, .text-shimmer {
-  background: linear-gradient(90deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C, #BF953F) !important;
+  background: linear-gradient(90deg, #C9A961, #E8C77D, #C9A961) !important;
   background-size: 300% 100% !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
@@ -381,7 +566,7 @@ h1 .text-shimmer, h2 .text-shimmer, h3 .text-shimmer, .text-shimmer {
   inset: -1px;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(135deg, transparent 30%, rgba(212, 175, 55, 0.15) 50%, transparent 70%);
+  background: linear-gradient(135deg, transparent 30%, rgba(201, 169, 97, 0.15) 50%, transparent 70%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -395,8 +580,8 @@ h1 .text-shimmer, h2 .text-shimmer, h3 .text-shimmer, .text-shimmer {
 
 .glow-card:hover {
   background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(212, 175, 55, 0.12);
-  box-shadow: 0 0 60px rgba(212, 175, 55, 0.06), 0 20px 60px rgba(0, 0, 0, 0.4);
+  border-color: rgba(201, 169, 97, 0.12);
+  box-shadow: 0 0 60px rgba(201, 169, 97, 0.06), 0 20px 60px rgba(0, 0, 0, 0.4);
   transform: translateY(-4px);
 }
 
@@ -439,8 +624,8 @@ h1 .text-shimmer, h2 .text-shimmer, h3 .text-shimmer, .text-shimmer {
   pointer-events: none;
   z-index: 0;
   background:
-    radial-gradient(ellipse 60% 40% at 20% 20%, rgba(212, 175, 55, 0.03), transparent),
-    radial-gradient(ellipse 50% 50% at 80% 80%, rgba(212, 175, 55, 0.02), transparent);
+    radial-gradient(ellipse 60% 40% at 20% 20%, rgba(201, 169, 97, 0.03), transparent),
+    radial-gradient(ellipse 50% 50% at 80% 80%, rgba(201, 169, 97, 0.02), transparent);
 }
 
 /* ── 9. Animations ── */
@@ -506,8 +691,8 @@ h1 .text-shimmer, h2 .text-shimmer, h3 .text-shimmer, .text-shimmer {
 }
 
 @keyframes diamondPulse {
-  0%, 100% { filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.4)); }
-  50% { filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.8)) drop-shadow(0 0 40px rgba(212, 175, 55, 0.3)); }
+  0%, 100% { filter: drop-shadow(0 0 8px rgba(201, 169, 97, 0.4)); }
+  50% { filter: drop-shadow(0 0 20px rgba(201, 169, 97, 0.8)) drop-shadow(0 0 40px rgba(201, 169, 97, 0.3)); }
 }
 
 @keyframes loaderFade {
@@ -558,6 +743,20 @@ h1 .text-shimmer, h2 .text-shimmer, h3 .text-shimmer, .text-shimmer {
   contain: layout style;
 }
 
+/* ── Video Sound Button — Gold Blink ── */
+.video-sound-btn {
+  border: 1px solid rgba(201, 169, 97, 0.5);
+  background: rgba(201, 169, 97, 0.15);
+  backdrop-filter: blur(12px);
+}
+.video-sound-btn.video-sound-blink {
+  animation: goldBlink 1.8s ease-in-out infinite;
+}
+@keyframes goldBlink {
+  0%, 100% { background: rgba(201, 169, 97, 0.10); border-color: rgba(201, 169, 97, 0.3); box-shadow: none; }
+  50% { background: rgba(201, 169, 97, 0.35); border-color: rgba(201, 169, 97, 0.7); box-shadow: 0 0 16px rgba(201, 169, 97, 0.3); }
+}
+
 /* ── 11. Scrollbar Premium ── */
 ::-webkit-scrollbar {
   width: 6px;
@@ -579,7 +778,7 @@ h1 .text-shimmer, h2 .text-shimmer, h3 .text-shimmer, .text-shimmer {
 
 /* ── 12. Focus Visible (accessibilité premium) ── */
 :focus-visible {
-  outline: 2px solid rgba(212, 175, 55, 0.5);
+  outline: 2px solid rgba(201, 169, 97, 0.5);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -605,7 +804,7 @@ h1 .text-shimmer, h2 .text-shimmer, h3 .text-shimmer, .text-shimmer {
 
 /* ── 15. Active nav pill ── */
 .nav-active {
-  background: rgba(212, 175, 55, 0.08);
+  background: rgba(201, 169, 97, 0.08);
   border-left: 3px solid var(--gold);
   color: var(--gold);
 }
@@ -630,6 +829,18 @@ h1 .text-shimmer, h2 .text-shimmer, h3 .text-shimmer, .text-shimmer {
   backdrop-filter: blur(16px) saturate(1.2);
   -webkit-backdrop-filter: blur(16px) saturate(1.2);
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* ── Scroll margin for anchor links ── */
+.scroll-mt-24 {
+  scroll-margin-top: 6rem;
+}
+
+/* ── Safe area padding for mobile CTA bar ── */
+@media (max-width: 1023px) {
+  footer {
+    padding-bottom: 4.5rem !important;
+  }
 }
 
 /* ── Reduced motion support ── */
@@ -673,7 +884,7 @@ h1 .text-shimmer, h2 .text-shimmer, h3 .text-shimmer, .text-shimmer {
   inset: -1px;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(135deg, transparent 30%, rgba(212, 175, 55, 0.15) 50%, transparent 70%);
+  background: linear-gradient(135deg, transparent 30%, rgba(201, 169, 97, 0.15) 50%, transparent 70%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -687,8 +898,8 @@ h1 .text-shimmer, h2 .text-shimmer, h3 .text-shimmer, .text-shimmer {
 
 .glow-card:hover {
   background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(212, 175, 55, 0.12);
-  box-shadow: 0 0 60px rgba(212, 175, 55, 0.06), 0 20px 60px rgba(0, 0, 0, 0.4);
+  border-color: rgba(201, 169, 97, 0.12);
+  box-shadow: 0 0 60px rgba(201, 169, 97, 0.06), 0 20px 60px rgba(0, 0, 0, 0.4);
   transform: translateY(-4px);
 }
 
@@ -747,7 +958,7 @@ h1 .text-shimmer, h2 .text-shimmer, h3 .text-shimmer, .text-shimmer {
 }
 
 .text-shimmer {
-  background: linear-gradient(90deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C, #BF953F);
+  background: linear-gradient(90deg, #C9A961, #E8C77D, #C9A961);
   background-size: 300% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -758,9 +969,9 @@ h1 .text-shimmer, h2 .text-shimmer, h3 .text-shimmer, .text-shimmer {
 
 /* ── Pulse ring effect for CTA ── */
 @keyframes pulseRing {
-  0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
-  70% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(201, 169, 97, 0.4); }
+  70% { box-shadow: 0 0 0 15px rgba(201, 169, 97, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(201, 169, 97, 0); }
 }
 
 .pulse-ring {
@@ -805,7 +1016,7 @@ h1 .text-shimmer, h2 .text-shimmer, h3 .text-shimmer, .text-shimmer {
 
 .magnetic-btn:hover {
   transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 10px 40px rgba(212, 175, 55, 0.3);
+  box-shadow: 0 10px 40px rgba(201, 169, 97, 0.3);
 }
 
 /* ── Stagger animation delays ── */
@@ -843,4 +1054,133 @@ h1 .text-shimmer, h2 .text-shimmer, h3 .text-shimmer, .text-shimmer {
   background: linear-gradient(90deg, var(--gold), var(--gold-light));
   z-index: 9999;
   transition: width 0.1s ease;
+}
+
+/* ═══════════════════════════════════════════
+   Trinity Triangle Animations — Footer
+═══════════════════════════════════════════ */
+
+@keyframes trinityPulseEnergy {
+  0%, 100% { stroke: var(--gold); filter: drop-shadow(0 0 4px rgba(201, 169, 97, 0.2)); }
+  50% { stroke: #E8C77D; filter: drop-shadow(0 0 12px rgba(232, 199, 125, 0.4)); }
+}
+
+@keyframes trinityPulseBody {
+  0%, 100% { stroke: var(--gold); filter: drop-shadow(0 0 4px rgba(201, 169, 97, 0.2)); }
+  50% { stroke: #E8C77D; filter: drop-shadow(0 0 12px rgba(232, 199, 125, 0.4)); }
+}
+
+@keyframes trinityPulseMind {
+  0%, 100% { stroke: var(--gold); filter: drop-shadow(0 0 4px rgba(201, 169, 97, 0.2)); }
+  50% { stroke: #C9A961; filter: drop-shadow(0 0 12px rgba(201, 169, 97, 0.4)); }
+}
+
+.trinity-triangle {
+  transition: all 0.6s ease;
+}
+
+.trinity-energy {
+  animation: trinityPulseEnergy 4s ease-in-out infinite;
+}
+
+.trinity-body {
+  animation: trinityPulseBody 4s ease-in-out infinite;
+  animation-delay: 1.3s;
+}
+
+.trinity-mind {
+  animation: trinityPulseMind 4s ease-in-out infinite;
+  animation-delay: 2.6s;
+}
+
+.group:hover .trinity-triangle {
+  transform: scale(1.08);
+  filter: drop-shadow(0 0 20px rgba(201, 169, 97, 0.5));
+}
+
+/* ── Blog HTML Content Styles ── */
+.blog-html-content h1 { font-family: var(--font-display, 'Cinzel', serif); font-size: 2rem; font-weight: 300; color: var(--text-primary); margin: 2rem 0 1rem; line-height: 1.2; }
+.blog-html-content h2 { font-family: var(--font-display, 'Cinzel', serif); font-size: 1.5rem; font-weight: 300; color: var(--text-primary); margin: 2rem 0 0.75rem; line-height: 1.25; }
+.blog-html-content h3 { font-family: var(--font-display, 'Cinzel', serif); font-size: 1.25rem; font-weight: 300; color: #C9A961; margin: 1.5rem 0 0.5rem; line-height: 1.3; }
+.blog-html-content p { font-size: 0.9375rem; line-height: 1.85; color: var(--text-secondary); margin: 0.75rem 0; font-weight: 300; }
+.blog-html-content strong { color: var(--text-primary); font-weight: 600; }
+.blog-html-content em { color: #C9A961; font-family: var(--font-display, 'Cinzel', serif); }
+.blog-html-content a { color: #C9A961; text-decoration: underline; text-underline-offset: 3px; transition: opacity 0.2s; }
+.blog-html-content a:hover { opacity: 0.8; }
+.blog-html-content ul, .blog-html-content ol { margin: 1rem 0; padding-left: 1.5rem; }
+.blog-html-content li { font-size: 0.9375rem; line-height: 1.8; color: var(--text-secondary); font-weight: 300; margin: 0.25rem 0; }
+.blog-html-content ul li { list-style-type: disc; }
+.blog-html-content ol li { list-style-type: decimal; }
+.blog-html-content ul li::marker { color: #C9A961; }
+.blog-html-content blockquote { border-left: 2px solid #C9A961; padding: 0.75rem 1.25rem; margin: 1.5rem 0; }
+.blog-html-content blockquote p { font-family: var(--font-display, 'Cinzel', serif); font-style: italic; color: var(--text-primary); }
+.blog-html-content hr { border: none; height: 1px; background: rgba(201, 169, 97, 0.2); margin: 2rem 0; }
+.blog-html-content img { max-width: 100%; border-radius: 12px; margin: 1.5rem 0; }
+.blog-html-content code { background: rgba(201, 169, 97, 0.12); color: #E8C77D; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.85em; }
+.blog-html-content pre { background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; }
+.blog-html-content pre code { background: none; padding: 0; }
+
+/* Encadré d'un article : la note sur la plateforme, l'avertissement d'un
+   sujet sensible. Sans cette règle, <p class="note"> rendait comme un
+   paragraphe ordinaire et l'encadré passait inaperçu. */
+.blog-html-content p.note {
+  background: rgba(201, 169, 97, 0.06);
+  border: 1px solid rgba(201, 169, 97, 0.18);
+  border-left: 2px solid #C9A961;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin: 1.75rem 0;
+  font-size: 0.875rem;
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+.blog-html-content p.note strong { color: #C9A961; }
+
+/* ============================================================
+   QUIZ « Signature Émotionnelle » — charte SOS Shine scopée.
+   Redéfinit les tokens couleur UNIQUEMENT dans le quiz pour
+   aligner la palette sur la landing (vrai or #C9A961, noir
+   chaud, ivoire) sans impacter le reste du site.
+   ============================================================ */
+.quiz-shell {
+  --brand: #C9A961;              /* or SOS Shine (remplace l'olive #B8A472) */
+  --gold-deep: #E8C77D;          /* or clair */
+  --text-primary: #F5EFE3;       /* ivoire */
+  --text-secondary: rgba(245,239,227,0.72);
+  --text-muted: rgba(245,239,227,0.45);
+  background: #0A0806 !important; /* noir chaud charte */
+  color: #F5EFE3;
+}
+
+/* ============================================================
+   PILOTE — Charte SOS Shine sur le dashboard d'accueil.
+   Scopé à .shine-home : recolore les cartes/accents en noir
+   chaud + or #C9A961 + ivoire (comme la landing), sans toucher
+   au reste de l'app. Étape témoin avant généralisation.
+   ============================================================ */
+.shine-home {
+  --brand: #C9A961;
+  --brand-light: #E8C77D;
+  --brand-deep: #A9822E;
+  --brand-alpha-weak: rgba(201,169,97,0.06);
+  --brand-alpha-medium: rgba(201,169,97,0.12);
+  --brand-alpha-strong: rgba(201,169,97,0.22);
+  --surface-card: #16130D;
+  --surface-elevated: #1F1A12;
+  --border: rgba(201,169,97,0.14);
+  --border-medium: rgba(201,169,97,0.22);
+  --text-primary: #F5EFE3;
+  --text-secondary: rgba(245,239,227,0.70);
+  --text-muted: rgba(245,239,227,0.42);
+}
+
+
+/* Masque la barre de defilement sans desactiver le defilement
+   (fils horizontaux des rangees, et fil vertical des formats courts). */
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }

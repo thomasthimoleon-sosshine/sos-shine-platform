@@ -48,7 +48,7 @@ const sections: SectionDef[] = [
   {
     title: 'Apparence générale', icon: '🎨',
     fields: [
-      { label: 'Couleur principale (or)', key: 'color_primary', type: 'color', default: '#D4AF37' },
+      { label: 'Couleur principale (or)', key: 'color_primary', type: 'color', default: '#C9A961' },
       { label: 'Couleur secondaire (bleu)', key: 'color_secondary', type: 'color', default: '#74C0FC' },
       { label: 'Couleur de fond', key: 'color_bg', type: 'color', default: '#362038' },
       { label: 'Couleur des cartes', key: 'color_card', type: 'color', default: '#442B40' },
@@ -56,7 +56,7 @@ const sections: SectionDef[] = [
       { label: 'Couleur du texte principal', key: 'color_text', type: 'color', default: '#F5EDF0' },
       { label: 'Couleur du texte secondaire', key: 'color_text_secondary', type: 'color', default: '#C8A8B8' },
       { label: 'Couleur du texte discret', key: 'color_text_muted', type: 'color', default: '#8E6E7E' },
-      { label: 'Couleur des boutons', key: 'color_button', type: 'color', default: '#D4AF37' },
+      { label: 'Couleur des boutons', key: 'color_button', type: 'color', default: '#C9A961' },
       { label: 'Logo du site', key: 'logo_url', type: 'upload', accept: 'image/*', folder: 'site', hint: 'PNG ou SVG, 512x512px', default: '' },
       { label: 'Image de fond hero', key: 'hero_bg_url', type: 'upload', accept: 'image/*', folder: 'site', hint: '1920x1080px', default: '' },
     ],
@@ -81,11 +81,11 @@ const sections: SectionDef[] = [
     ],
   },
   {
-    title: 'Section — Le Principe', icon: '💡',
+    title: 'Section - Le Principe', icon: '💡',
     fields: [
       { label: 'Sous-titre de section', key: 'principe_label', type: 'text', default: 'Le principe SOS Shine' },
       { label: 'Titre', key: 'principe_title', type: 'textarea', default: "On ne change pas votre identité. On apaise le challenge émotionnel pour libérer votre potentiel." },
-      { label: 'Description', key: 'principe_desc', type: 'textarea', default: "Chaque expérience de vie — abandon, trahison, burn-out, deuil, peur — possède sa propre page dans notre encyclopédie, avec un protocole en 3 étapes conçu pour vous accompagner de A à Z." },
+      { label: 'Description', key: 'principe_desc', type: 'textarea', default: "Chaque expérience de vie - abandon, trahison, burn-out, deuil, peur - possède sa propre page dans notre encyclopédie, avec un protocole en 3 étapes conçu pour vous accompagner de A à Z." },
       sep('Style & mise en page'),
       { label: 'Police du titre', key: 'principe_title_font', type: 'select', options: fontOpts, default: 'Cormorant Garamond' },
       { label: 'Taille du titre', key: 'principe_title_size', type: 'select', options: sizeOpts, default: 'xl' },
@@ -99,16 +99,16 @@ const sections: SectionDef[] = [
     ],
   },
   {
-    title: 'Section — Les 3 Étapes', icon: '🔢',
+    title: 'Section - Les 3 Étapes', icon: '🔢',
     fields: [
       { label: 'Sous-titre de section', key: 'steps_label', type: 'text', default: 'Le parcours SOS Shine' },
       { label: 'Titre de section', key: 'steps_title', type: 'text', default: '3 étapes pour chaque challenge émotionnel' },
-      { label: 'Étape 1 — Titre', key: 'step1_title', type: 'text', default: 'Comprendre' },
-      { label: 'Étape 1 — Description', key: 'step1_desc', type: 'textarea', default: "Vidéo de coaching immersive. Analyse émotionnelle. Explication de votre problème." },
-      { label: 'Étape 2 — Titre', key: 'step2_title', type: 'text', default: 'Libération Énergétique' },
-      { label: 'Étape 2 — Description', key: 'step2_desc', type: 'textarea', default: "Soin énergétique. Activation émotionnelle. Décharge des tensions." },
-      { label: 'Étape 3 — Titre', key: 'step3_title', type: 'text', default: 'Intégration & Méditation' },
-      { label: 'Étape 3 — Description', key: 'step3_desc', type: 'textarea', default: "Méditation guidée. Stabilisation intérieure. Reconnexion à soi." },
+      { label: 'Étape 1 - Titre', key: 'step1_title', type: 'text', default: 'Comprendre' },
+      { label: 'Étape 1 - Description', key: 'step1_desc', type: 'textarea', default: "Vidéo de coaching immersive. Analyse émotionnelle. Explication de votre problème." },
+      { label: 'Étape 2 - Titre', key: 'step2_title', type: 'text', default: 'Libération Énergétique' },
+      { label: 'Étape 2 - Description', key: 'step2_desc', type: 'textarea', default: "Soin énergétique. Activation émotionnelle. Décharge des tensions." },
+      { label: 'Étape 3 - Titre', key: 'step3_title', type: 'text', default: 'Intégration & Méditation' },
+      { label: 'Étape 3 - Description', key: 'step3_desc', type: 'textarea', default: "Méditation guidée. Stabilisation intérieure. Reconnexion à soi." },
       sep('Style'),
       { label: 'Police du titre', key: 'steps_title_font', type: 'select', options: fontOpts, default: 'Cormorant Garamond' },
       { label: 'Taille du titre', key: 'steps_title_size', type: 'select', options: sizeOpts, default: 'lg' },
@@ -117,7 +117,7 @@ const sections: SectionDef[] = [
     ],
   },
   {
-    title: 'Section — Encyclopédie', icon: '📘',
+    title: 'Section - Encyclopédie', icon: '📘',
     fields: [
       { label: 'Titre de section', key: 'encyclo_title', type: 'text', default: 'Chaque challenge émotionnel a sa page dédiée' },
       { label: 'Description', key: 'encyclo_desc', type: 'textarea', default: "Abandon, trahison, burn-out, deuil, dépendance affective, peur, solitude, rejet... Classés de A à Z." },
@@ -132,16 +132,16 @@ const sections: SectionDef[] = [
     ],
   },
   {
-    title: 'Section — Communauté', icon: '🤝',
+    title: 'Section - Communauté', icon: '🤝',
     fields: [
       { label: 'Titre de section', key: 'community_title', type: 'textarea', default: "Vous n'êtes plus jamais seul à 3h du matin." },
-      { label: 'Description', key: 'community_desc', type: 'textarea', default: "Chat dédié par challenge émotionnel, chat général, mur communautaire, soins collectifs et événements — une vraie famille." },
-      { label: 'Bloc 1 — Titre', key: 'community_block1_title', type: 'text', default: 'Le Feu de Camp' },
-      { label: 'Bloc 1 — Description', key: 'community_block1_desc', type: 'textarea', default: "Chaque challenge émotionnel a son propre chat. Échangez avec ceux qui comprennent vraiment." },
-      { label: 'Bloc 2 — Titre', key: 'community_block2_title', type: 'text', default: 'Le Mur Communautaire' },
-      { label: 'Bloc 2 — Description', key: 'community_block2_desc', type: 'textarea', default: "Publications, annonces, partages. Restez informé de chaque avancée collective." },
-      { label: 'Bloc 3 — Titre', key: 'community_block3_title', type: 'text', default: 'Les Rencontres Réelles' },
-      { label: 'Bloc 3 — Description', key: 'community_block3_desc', type: 'textarea', default: "Soins collectifs, ateliers, lives, Shine Walks — le digital prépare, le physique transforme." },
+      { label: 'Description', key: 'community_desc', type: 'textarea', default: "Chat dédié par challenge émotionnel, chat général, mur communautaire, soins collectifs et événements - une vraie famille." },
+      { label: 'Bloc 1 - Titre', key: 'community_block1_title', type: 'text', default: 'Le Feu de Camp' },
+      { label: 'Bloc 1 - Description', key: 'community_block1_desc', type: 'textarea', default: "Chaque challenge émotionnel a son propre chat. Échangez avec ceux qui comprennent vraiment." },
+      { label: 'Bloc 2 - Titre', key: 'community_block2_title', type: 'text', default: 'Le Mur Communautaire' },
+      { label: 'Bloc 2 - Description', key: 'community_block2_desc', type: 'textarea', default: "Publications, annonces, partages. Restez informé de chaque avancée collective." },
+      { label: 'Bloc 3 - Titre', key: 'community_block3_title', type: 'text', default: 'Les Rencontres Réelles' },
+      { label: 'Bloc 3 - Description', key: 'community_block3_desc', type: 'textarea', default: "Soins collectifs, ateliers, lives, Shine Walks - le digital prépare, le physique transforme." },
       sep('Style'),
       { label: 'Police du titre', key: 'community_title_font', type: 'select', options: fontOpts, default: 'Cormorant Garamond' },
       { label: 'Taille du titre', key: 'community_title_size', type: 'select', options: sizeOpts, default: 'xl' },
@@ -156,7 +156,7 @@ const sections: SectionDef[] = [
     fields: [
       { label: 'Sous-titre de section', key: 'testimonials_label', type: 'text', default: 'Ils ont traversé la tempête' },
       { label: 'Témoignage 1 (texte | prénom | ville)', key: 'testimonial_1', type: 'textarea', default: "Je ne savais même pas que j'avais le droit de ne pas aller bien.|Marie, 34 ans|Lyon" },
-      { label: 'Témoignage 2', key: 'testimonial_2', type: 'textarea', default: "La première fois que quelqu'un m'a dit tiens bon — c'était dans le Feu de Camp.|Karim, 41 ans|Bordeaux" },
+      { label: 'Témoignage 2', key: 'testimonial_2', type: 'textarea', default: "La première fois que quelqu'un m'a dit tiens bon - c'était dans le Feu de Camp.|Karim, 41 ans|Bordeaux" },
       { label: 'Témoignage 3', key: 'testimonial_3', type: 'textarea', default: "J'ai fait ma première Shine Walk. Je n'étais plus seule.|Sophie, 28 ans|Bruxelles" },
       { label: 'Témoignage 4', key: 'testimonial_4', type: 'textarea', default: "Grâce aux 4 étapes, j'ai compris mon challenge émotionnel au lieu de le fuir.|Antoine, 37 ans|Genève" },
       sep('Style'),
@@ -168,14 +168,11 @@ const sections: SectionDef[] = [
     title: 'Tarification', icon: '💰',
     fields: [
       { label: 'Titre de section', key: 'pricing_section_title', type: 'text', default: 'Choisissez votre accompagnement' },
-      { label: 'Sous-titre', key: 'pricing_section_subtitle', type: 'text', default: 'Sans engagement — Annulable à tout instant' },
-      { label: 'Prix Essentielle (EUR/mois)', key: 'price_essential', type: 'text', default: '9.90' },
-      { label: 'Prix Sérénité (EUR/mois)', key: 'price_serenite', type: 'text', default: '49.90' },
-      { label: 'Prix Premium (EUR/mois)', key: 'price_premium', type: 'text', default: '99.90' },
-      { label: 'Jours d\'essai gratuit (Sérénité & Premium)', key: 'trial_days', type: 'text', default: '7' },
-      { label: 'Features Essentielle (une par ligne)', key: 'features_essential', type: 'textarea', default: "Encyclopédie complète (accès illimité)\nTchats communautaires" },
-      { label: 'Features Sérénité (une par ligne)', key: 'features_serenite', type: 'textarea', default: "Tout le contenu de l'Essentielle\nSoin collectif mensuel\n7 jours d'essai gratuit" },
-      { label: 'Features Premium (une par ligne)', key: 'features_premium', type: 'textarea', default: "Tout le contenu de la Sérénité\nLive thématique hebdomadaire\nCanal privé Telegram\nAccès aux événements\n7 jours d'essai gratuit" },
+      { label: 'Sous-titre', key: 'pricing_section_subtitle', type: 'text', default: 'Sans engagement - Annulable à tout instant' },
+      { label: 'Prix SOS Shine (EUR/mois)', key: 'price_serenite_display', type: 'text', default: '49.90' },
+      
+      
+      
       { label: 'Texte sous les offres', key: 'pricing_footer', type: 'text', default: "Parce que si on doit vous retenir par un contrat, c'est qu'on n'a pas fait notre travail." },
       sep('Style'),
       { label: 'Police du titre', key: 'pricing_title_font', type: 'select', options: fontOpts, default: 'Cormorant Garamond' },
@@ -184,7 +181,7 @@ const sections: SectionDef[] = [
     ],
   },
   {
-    title: 'Section — CTA Final', icon: '🎯',
+    title: 'Section - CTA Final', icon: '🎯',
     fields: [
       { label: 'Titre CTA', key: 'cta_title', type: 'textarea', default: "Comprenez. Apaisez. Ne soyez plus jamais seul." },
       { label: 'Texte du bouton', key: 'cta_button', type: 'text', default: 'Rejoindre SOS Shine' },
@@ -231,7 +228,7 @@ const sections: SectionDef[] = [
       { label: 'Texte bouton', key: 'signup_button_text', type: 'text', default: 'Créer mon compte' },
       { label: 'Texte pied de page', key: 'signup_login_text', type: 'text', default: 'Déjà membre ?' },
       { label: 'Texte lien connexion', key: 'signup_login_link_text', type: 'text', default: 'Se connecter' },
-      { label: 'Texte essai gratuit', key: 'signup_trial_text', type: 'text', default: '7 jours gratuits — Puis 29,90€/mois — Sans engagement' },
+      { label: 'Texte offre', key: 'signup_trial_text', type: 'text', default: '49,90€/mois - Sans engagement - Annulable en 1 clic' },
       { label: 'Titre confirmation email', key: 'signup_confirm_title', type: 'text', default: 'Vérifiez votre email' },
       { label: 'Texte confirmation', key: 'signup_confirm_text', type: 'textarea', default: "Un lien de confirmation a été envoyé. Cliquez dessus pour activer votre compte." },
       sep('Style'),
@@ -244,28 +241,28 @@ const sections: SectionDef[] = [
     ],
   },
   {
-    title: 'Page — Mentions légales', icon: '⚖️',
+    title: 'Page - Mentions légales', icon: '⚖️',
     fields: [
       { label: 'Titre de la page', key: 'mentions_title', type: 'text', default: 'Mentions légales' },
       { label: 'Contenu (HTML autorisé)', key: 'mentions_content', type: 'textarea', default: '' },
     ],
   },
   {
-    title: 'Page — CGV', icon: '📋',
+    title: 'Page - CGV', icon: '📋',
     fields: [
       { label: 'Titre de la page', key: 'cgv_title', type: 'text', default: 'Conditions Générales de Vente' },
       { label: 'Contenu (HTML autorisé)', key: 'cgv_content', type: 'textarea', default: '' },
     ],
   },
   {
-    title: 'Page — Confidentialité', icon: '🔒',
+    title: 'Page - Confidentialité', icon: '🔒',
     fields: [
       { label: 'Titre de la page', key: 'privacy_title', type: 'text', default: 'Politique de confidentialité' },
       { label: 'Contenu (HTML autorisé)', key: 'privacy_content', type: 'textarea', default: '' },
     ],
   },
   {
-    title: 'Page — Contact', icon: '📬',
+    title: 'Page - Contact', icon: '📬',
     fields: [
       { label: 'Titre de la page', key: 'contact_title', type: 'text', default: 'Contact' },
       { label: 'Email de contact', key: 'contact_email', type: 'text', default: 'julialaureau@sosshine.com' },
@@ -349,16 +346,16 @@ export default function ParametresPage() {
     }
   }
 
-  if (loading) return <div className="flex justify-center py-20"><div className="w-8 h-8 border-2 border-[#74C0FC] border-t-transparent rounded-full animate-spin" /></div>
+ if (loading) return <div className="flex justify-center py-20 w-8 h-8 border-2 border-[#74C0FC] border-t-transparent rounded-full animate-spin" ><div /></div>
 
-  const inputStyle = { background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }
+  const inputStyle = { background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', color: 'var(--text-primary)' }
 
   return (
     <div className="max-w-4xl mx-auto space-y-4">
       <div className="flex items-center justify-between sticky top-0 z-20 py-4 -mx-4 px-4" style={{ background: 'var(--dark)' }}>
         <div>
           <h1 className="font-display text-3xl font-semibold" style={{ color: 'var(--text-primary)' }}>Paramètres</h1>
-          <p className="mt-1 text-sm" style={{ color: 'var(--text-secondary)' }}>Polices, alignements, couleurs, images, vidéos — personnalisez tout.</p>
+          <p className="mt-1 text-sm" style={{ color: 'var(--text-secondary)' }}>Polices, alignements, couleurs, images, vidéos - personnalisez tout.</p>
         </div>
         <div className="flex items-center gap-3">
           {saved && <span className="text-sm font-medium" style={{ color: '#55EFC4' }}>Sauvegardé !</span>}
@@ -373,7 +370,7 @@ export default function ParametresPage() {
       {sections.map((section) => {
         const isOpen = openSections[section.title]
         return (
-          <div key={section.title} className="rounded-xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+          <div key={section.title} className="rounded-xl overflow-hidden" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
             <button onClick={() => toggleSection(section.title)} className="w-full flex items-center justify-between p-5 cursor-pointer text-left">
               <h2 className="font-semibold text-base flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
                 <span>{section.icon}</span> {section.title}
@@ -389,11 +386,11 @@ export default function ParametresPage() {
                   <div className="rounded-xl p-4 space-y-3" style={{ background: values.color_bg || '#362038', border: `1px solid ${values.color_border || '#5E3E52'}` }}>
                     <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: values.color_text_muted || '#8E6E7E' }}>Preview</p>
                     <div className="rounded-lg p-4" style={{ background: values.color_card || '#442B40', border: `1px solid ${values.color_border || '#5E3E52'}` }}>
-                      <h3 className="font-display text-lg font-semibold mb-1" style={{ color: values.color_primary || '#D4AF37' }}>Titre</h3>
+                      <h3 className="font-display text-lg font-semibold mb-1" style={{ color: values.color_primary || '#C9A961' }}>Titre</h3>
                       <p className="text-sm mb-1" style={{ color: values.color_text || '#F5EDF0' }}>Texte principal</p>
                       <p className="text-xs mb-3" style={{ color: values.color_text_secondary || '#C8A8B8' }}>Texte secondaire</p>
                       <div className="flex gap-2">
-                        <span className="px-3 py-1.5 rounded-lg text-xs font-semibold" style={{ background: values.color_button || '#D4AF37', color: values.color_bg || '#362038' }}>Bouton</span>
+                        <span className="px-3 py-1.5 rounded-lg text-xs font-semibold" style={{ background: values.color_button || '#C9A961', color: values.color_bg || '#362038' }}>Bouton</span>
                         <span className="px-3 py-1.5 rounded-lg text-xs font-semibold" style={{ background: values.color_secondary || '#74C0FC', color: '#fff' }}>Secondaire</span>
                       </div>
                     </div>
@@ -403,7 +400,7 @@ export default function ParametresPage() {
                 {section.fields.map((field, fi) => (
                   <div key={field.key || `sep-${fi}`}>
                     {field.type === 'separator' ? (
-                      <div className="pt-3 mt-1" style={{ borderTop: '1px solid var(--dark-border)' }}>
+                      <div className="pt-3 mt-1" style={{ borderTop: '1px solid var(--border)' }}>
                         <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>{field.label}</p>
                       </div>
                     ) : field.type === 'upload' ? (

@@ -3,10 +3,12 @@
 import { useEffect, useState, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
+import SubscriptionGate from '@/components/SubscriptionGate'
 import type { MessageWithProfile } from '@/types/database'
 import AudioPlayer from '@/components/AudioPlayer'
 import VoiceRecorder from '@/components/VoiceRecorder'
 import { useTranslation } from '@/lib/i18n/useTranslation'
+import ShineIcon from '@/components/icons/ShineIcon'
 
 export default function ChatGeneralPage() {
   const { t } = useTranslation()
@@ -89,46 +91,46 @@ export default function ChatGeneralPage() {
   }
 
   return (
+    <SubscriptionGate allowFree>
     <div className="max-w-4xl mx-auto h-[calc(100vh-8rem)] flex flex-col">
       <div className="mb-4">
-        <h1 className="font-display text-2xl sm:text-3xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+        <h1 className="font-display text-2xl sm:text-3xl font-semibold text-[var(--text-primary)]">
           {t('dashboard.chat_title')}
         </h1>
-        <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+        <p className="text-sm mt-1 text-[var(--text-secondary)]">
           {t('dashboard.chat_general_subtitle')}
         </p>
       </div>
 
       {/* Quick links to challenge chats */}
       <div className="mb-4 flex items-center gap-2 overflow-x-auto pb-2">
-        <span className="text-xs flex-shrink-0" style={{ color: 'var(--text-muted)' }}>{t('dashboard.channels')}</span>
+        <span className="text-xs flex-shrink-0 text-[var(--text-muted)]">{t('dashboard.channels')}</span>
         <Link href="/dashboard/chat" className="px-3 py-1.5 rounded-lg text-xs font-medium flex-shrink-0"
-          style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>
+          style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)' }}>
           {t('dashboard.general')}
         </Link>
         <Link href="/dashboard/encyclopedie" className="px-3 py-1.5 rounded-lg text-xs flex-shrink-0 transition-colors"
-          style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-secondary)' }}>
+          style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-secondary)' }}>
           {t('dashboard.view_challenge_chats')}
         </Link>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 rounded-2xl overflow-hidden flex flex-col min-h-0"
-        style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+      <div className="flex-1 rounded-2xl overflow-hidden flex flex-col min-h-0 bg-[var(--surface-card)] border border-[var(--border)]">
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {loading ? (
             <div className="flex justify-center py-12">
-              <div className="w-6 h-6 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+              <div className="w-6 h-6 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
             </div>
           ) : messages.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center py-16 text-center">
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 text-2xl" style={{ background: 'rgba(212,175,55,0.1)' }}>
-                💬
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 text-2xl" style={{ background: 'rgba(201,169,97,0.1)' }}>
+                <ShineIcon name="parole" className="w-7 h-7" color="var(--brand)" />
               </div>
-              <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+              <h3 className="font-display text-lg font-semibold mb-2 text-[var(--text-primary)]">
                 {t('dashboard.chat_empty_title')}
               </h3>
-              <p className="text-sm max-w-xs" style={{ color: 'var(--text-secondary)' }}>
+              <p className="text-sm max-w-xs text-[var(--text-secondary)]">
                 {t('dashboard.chat_empty_desc')}
               </p>
             </div>
@@ -141,8 +143,8 @@ export default function ChatGeneralPage() {
               ) : (
                 <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-semibold"
                   style={{
-                    background: isAnon ? 'rgba(142,110,126,0.15)' : msg.user_id === userId ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.05)',
-                    color: isAnon ? 'var(--text-muted)' : msg.user_id === userId ? 'var(--gold)' : 'var(--text-secondary)',
+                    background: isAnon ? 'rgba(142,110,126,0.15)' : msg.user_id === userId ? 'rgba(201,169,97,0.15)' : 'rgba(255,255,255,0.05)',
+                    color: isAnon ? 'var(--text-muted)' : msg.user_id === userId ? 'var(--brand)' : 'var(--text-secondary)',
                   }}>
                   {getDisplayInitial(msg)}
                 </div>
@@ -159,30 +161,30 @@ export default function ChatGeneralPage() {
                     <div className="flex items-baseline gap-2 mb-0.5">
                       {canClickProfile ? (
                         <Link href={`/dashboard/membre/${msg.user_id}`} className="text-sm font-semibold hover:underline" style={{
-                          color: msg.profiles?.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)',
+                          color: msg.profiles?.role === 'founder' ? 'var(--brand)' : 'var(--text-primary)',
                         }}>
                           {getDisplayName(msg)}
                         </Link>
                       ) : (
                         <span className="text-sm font-semibold" style={{
-                          color: isAnon ? 'var(--text-muted)' : msg.profiles?.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)',
+                          color: isAnon ? 'var(--text-muted)' : msg.profiles?.role === 'founder' ? 'var(--brand)' : 'var(--text-primary)',
                           fontStyle: isAnon ? 'italic' : 'normal',
                         }}>
                           {getDisplayName(msg)}
                         </span>
                       )}
                       {!isAnon && msg.profiles?.role === 'founder' && (
-                        <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>{t('dashboard.founder')}</span>
+                        <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)' }}>{t('dashboard.founder')}</span>
                       )}
                       {msg.is_anonymous && msg.user_id === userId && (
                         <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(142,110,126,0.15)', color: 'var(--text-muted)' }}>{t('dashboard.anonymous')}</span>
                       )}
-                      <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{formatTime(msg.created_at)}</span>
+                      <span className="text-xs text-[var(--text-muted)]">{formatTime(msg.created_at)}</span>
                     </div>
                     {msg.message_type === 'audio' && msg.audio_url ? (
                       <AudioPlayer src={msg.audio_url} />
                     ) : (
-                      <p className="text-sm leading-relaxed break-words" style={{ color: 'var(--text-secondary)' }}>{msg.content}</p>
+                      <p className="text-sm leading-relaxed break-words text-[var(--text-secondary)]">{msg.content}</p>
                     )}
                   </div>
                 </div>
@@ -193,14 +195,14 @@ export default function ChatGeneralPage() {
         </div>
 
         {/* Input */}
-        <div className="p-4" style={{ borderTop: '1px solid var(--dark-border)' }}>
+        <div className="p-4 border-t border-[var(--border)]">
           {/* Anonymous toggle */}
           <div className="flex items-center gap-2 mb-2">
             <button type="button" onClick={() => setIsAnonymous(!isAnonymous)}
               className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer"
               style={{
                 background: isAnonymous ? 'rgba(142,110,126,0.2)' : 'transparent',
-                border: `1px solid ${isAnonymous ? 'var(--text-muted)' : 'var(--dark-border)'}`,
+                border: `1px solid ${isAnonymous ? 'var(--text-muted)' : 'var(--border)'}`,
                 color: isAnonymous ? 'var(--text-primary)' : 'var(--text-muted)',
               }}>
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -214,13 +216,13 @@ export default function ChatGeneralPage() {
             </button>
           </div>
           <form onSubmit={sendMessage} className="flex items-center gap-2 rounded-xl px-4 py-2"
-            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--dark-border)' }}>
+            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}>
             <input type="text" value={newMessage} onChange={(e) => setNewMessage(e.target.value)}
               placeholder={isAnonymous ? t('dashboard.anonymous_message') : t('dashboard.message_as', { name: userPrenom })}
-              className="flex-1 bg-transparent text-sm outline-none" style={{ color: 'var(--text-primary)' }} maxLength={500} />
+              className="flex-1 bg-transparent text-sm outline-none text-[var(--text-primary)]" maxLength={500} />
             {newMessage.trim() ? (
               <button type="submit" disabled={sending}
-                className="p-2 rounded-lg transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed" style={{ color: 'var(--gold)' }}>
+                className="p-2 rounded-lg transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed text-[var(--brand)]">
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
                 </svg>
@@ -232,5 +234,6 @@ export default function ChatGeneralPage() {
         </div>
       </div>
     </div>
+    </SubscriptionGate>
   )
 }

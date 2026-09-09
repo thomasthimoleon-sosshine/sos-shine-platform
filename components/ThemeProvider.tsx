@@ -16,6 +16,9 @@ const COLOR_MAP: Record<string, string> = {
   color_button:         '--button-bg',
 }
 
+// Keys that should NOT be applied in light mode (they would break the light theme)
+const DARK_ONLY_KEYS = ['color_bg', 'color_card', 'color_border', 'color_text', 'color_text_secondary', 'color_text_muted']
+
 function hexShift(hex: string, dr: number, dg: number, db: number): string {
   const h = hex.replace('#', '')
   const r = Math.max(0, Math.min(255, parseInt(h.substring(0, 2), 16) + dr))
@@ -37,8 +40,12 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
 
       if (data && data.length > 0) {
         const root = document.documentElement
+        const currentTheme = root.getAttribute('data-theme') || localStorage.getItem('sos-shine-theme') || 'dark'
+
         data.forEach((row: { key: string; value: string }) => {
           if (row.value && COLOR_MAP[row.key]) {
+            // Skip dark-specific overrides in light mode
+            if (currentTheme === 'light' && DARK_ONLY_KEYS.includes(row.key)) return
             root.style.setProperty(COLOR_MAP[row.key], row.value)
           }
         })
@@ -65,7 +72,28 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
     if (saved) {
       document.documentElement.setAttribute('data-theme', saved)
     }
-  }, [])
+
+    // Re-apply theme when data-theme attribute changes (theme toggle)
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.type === 'attributes' && m.attributeName === 'data-theme') {
+          const root = document.documentElement
+          const theme = root.getAttribute('data-theme')
+          if (theme === 'light') {
+            // Remove dark-specific inline overrides so CSS light theme takes effect
+            DARK_ONLY_KEYS.forEach((key) => {
+              root.style.removeProperty(COLOR_MAP[key])
+            })
+          } else {
+            // Re-apply all custom colors for dark mode
+            applyTheme()
+          }
+        }
+      }
+    })
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+    return () => observer.disconnect()
+  }, [applyTheme])
 
   return <>{children}</>
 }

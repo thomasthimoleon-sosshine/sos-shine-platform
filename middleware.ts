@@ -41,48 +41,38 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const publicRoutes = ['/', '/login', '/signup', '/rejoindre', '/encyclopedie', '/contact', '/cgv', '/confidentialite', '/mentions-legales', '/signature-emotionnelle', '/compte-inactif']
+  const publicRoutes = ['/', '/login', '/signup', '/encyclopedie', '/contact', '/cgv', '/confidentialite', '/mentions-legales', '/notre-histoire', '/signature-emotionnelle', '/compte-inactif', '/livre-sos-shine', '/livre-supers-pouvoirs', '/forgot-password', '/reset-password', '/inscription-confirmee', '/parents-enfants', '/success', '/cancel', '/blog', '/rejoindre', '/quiz', '/landingtest3d', '/sos-meet', '/choisir-mon-protocole', '/questionnaire-test', '/reconquete', '/incarnat', '/mes-cadeaux', '/test', '/resultat']
   const isPublicRoute = publicRoutes.some(route => {
     const isExact = request.nextUrl.pathname === route;
-    const isSubRoute = request.nextUrl.pathname.startsWith('/encyclopedie') || request.nextUrl.pathname.startsWith('/auth/') || request.nextUrl.pathname.startsWith('/api/') || request.nextUrl.pathname.startsWith('/signature-emotionnelle');
+    const isSubRoute = request.nextUrl.pathname.startsWith('/encyclopedie') || request.nextUrl.pathname.startsWith('/auth/') || request.nextUrl.pathname.startsWith('/api/') || request.nextUrl.pathname.startsWith('/signature-emotionnelle') || request.nextUrl.pathname.startsWith('/blog') || request.nextUrl.pathname.startsWith('/rejoindre') || request.nextUrl.pathname.startsWith('/protocole') || request.nextUrl.pathname.startsWith('/event') || request.nextUrl.pathname.startsWith('/quiz-approfondi') || request.nextUrl.pathname.startsWith('/cadeau') || request.nextUrl.pathname.startsWith('/sos-meet') || request.nextUrl.pathname.startsWith('/landingtest3d') || request.nextUrl.pathname.startsWith('/apercu-') || request.nextUrl.pathname.startsWith('/publication/') || request.nextUrl.pathname.startsWith('/resultat/') || request.nextUrl.pathname.startsWith('/test');
     return isExact || isSubRoute;
   })
 
   if (!user && !isPublicRoute) {
-    return NextResponse.redirect(new URL('/login', request.url))
+    const next = encodeURIComponent(request.nextUrl.pathname + request.nextUrl.search)
+    return NextResponse.redirect(new URL(`/login?next=${next}`, request.url))
   }
 
-  // Check subscription status for dashboard routes (not admin)
-  if (user && request.nextUrl.pathname.startsWith('/dashboard')) {
-    try {
-      // Check if user is admin (admins always have access)
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role, is_active')
-        .eq('id', user.id)
-        .single()
+  // ── Back-office ──────────────────────────────────────────────────────────
+  // Le contrôle du rôle ne vivait que dans un composant exécuté chez le
+  // visiteur : il ne protégeait que l'affichage. On le pose ici, avant que la
+  // page ne soit servie.
+  //
+  // En cas d'incident de lecture du profil, on laisse passer : le contraire
+  // enfermerait l'équipe dehors sur une simple panne réseau, alors que les
+  // écrans d'administration ont chacun leurs propres garde-fous côté base.
+  if (user && request.nextUrl.pathname.startsWith('/admin')) {
+    const { data: profil, error } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .maybeSingle()
 
-      if (profile) {
-        const isAdmin = ['founder', 'admin_content', 'admin_support'].includes(profile.role)
+    const role = (profil as { role?: string } | null)?.role
+    const estEquipe = role === 'founder' || role === 'admin_content' || role === 'admin_support'
 
-        // If not admin and account is explicitly deactivated, redirect
-        if (!isAdmin && profile.is_active === false) {
-          // Check if they have a subscription that might still be valid
-          const { data: sub } = await supabase
-            .from('subscriptions')
-            .select('status')
-            .eq('user_id', user.id)
-            .single()
-
-          const hasActiveSub = sub && (sub.status === 'active' || sub.status === 'trialing')
-
-          if (!hasActiveSub) {
-            return NextResponse.redirect(new URL('/compte-inactif', request.url))
-          }
-        }
-      }
-    } catch {
-      // If profile check fails, allow access (don't block on error)
+    if (!error && profil && !estEquipe) {
+      return NextResponse.redirect(new URL('/dashboard', request.url))
     }
   }
 

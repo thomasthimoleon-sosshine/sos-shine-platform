@@ -6,6 +6,7 @@ import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import { LANDING_DEFAULTS, buildSectionMap } from "@/lib/landing-defaults";
 import type { LandingSectionDefault, SectionContent, SectionStyles } from "@/lib/landing-defaults";
+import LogoSite from '@/components/LogoSite'
 
 function matchCase(original: string, replacement: string): string {
   if (original === original.toUpperCase()) return replacement.toUpperCase();
@@ -109,14 +110,14 @@ function WordByWordReveal({ text, className = "", style = {} }: { text: string; 
 function InfiniteTickerBand({ items, speed = 30 }: { items: string[]; speed?: number }) {
   const doubled = [...items, ...items];
   return (
-    <div className="overflow-hidden py-6 border-y border-[var(--dark-border)]" style={{ background: "rgba(212, 175, 55, 0.02)" }}>
+    <div className="overflow-hidden py-6 border-y border-[var(--border)]" style={{ background: "rgba(201, 169, 97, 0.02)" }}>
       <div className="ticker-track" style={{ animationDuration: `${speed}s` }}>
         {doubled.map((item, i) => (
           <span key={i} className="flex items-center gap-6 px-6 whitespace-nowrap">
             <span className="text-sm md:text-base tracking-[0.15em] uppercase font-light" style={{ color: "var(--text-secondary)" }}>
               {item}
             </span>
-            <span className="block w-1.5 h-1.5 rotate-45" style={{ background: "var(--gold)", opacity: 0.4 }} />
+            <span className="block w-1.5 h-1.5 rotate-45" style={{ background: "var(--brand)", opacity: 0.4 }} />
           </span>
         ))}
       </div>
@@ -124,7 +125,7 @@ function InfiniteTickerBand({ items, speed = 30 }: { items: string[]; speed?: nu
   );
 }
 
-function GlowingCard({ children, className = "", glowColor = "rgba(212, 175, 55, 0.15)", style }: { children: ReactNode; className?: string; glowColor?: string; style?: React.CSSProperties }) {
+function GlowingCard({ children, className = "", glowColor = "rgba(201, 169, 97, 0.15)", style }: { children: ReactNode; className?: string; glowColor?: string; style?: React.CSSProperties }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
@@ -179,8 +180,8 @@ function ScrollProgress() {
 function FloatingOrbs() {
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
-      <div className="orb" style={{ width: 500, height: 500, top: "10%", left: "-10%", background: "rgba(212, 175, 55, 0.012)" }} />
-      <div className="orb" style={{ width: 400, height: 400, top: "60%", right: "-15%", background: "rgba(212, 175, 55, 0.008)", animationDelay: "5s" }} />
+      <div className="orb" style={{ width: 500, height: 500, top: "10%", left: "-10%", background: "rgba(201, 169, 97, 0.012)" }} />
+      <div className="orb" style={{ width: 400, height: 400, top: "60%", right: "-15%", background: "rgba(201, 169, 97, 0.008)", animationDelay: "5s" }} />
     </div>
   );
 }
@@ -204,8 +205,8 @@ function DiamondSvg({ size, className, style }: { size: number; className?: stri
       <defs>
         <radialGradient id={`glow-${size}`} cx="50%" cy="50%" r="50%">
           <stop offset="0%" stopColor="#F5E6A3" stopOpacity="1" />
-          <stop offset="40%" stopColor="#D4AF37" stopOpacity="0.6" />
-          <stop offset="100%" stopColor="#D4AF37" stopOpacity="0" />
+          <stop offset="40%" stopColor="#C9A961" stopOpacity="0.6" />
+          <stop offset="100%" stopColor="#C9A961" stopOpacity="0" />
         </radialGradient>
       </defs>
       <circle cx="12" cy="12" r="10" fill={`url(#glow-${size})`} />
@@ -315,7 +316,7 @@ export default function Home() {
   function vis(key: string): boolean { return sections[key]?.is_visible !== false; }
 
   const g = sty('_global');
-  const gold = g.color_primary || '#D4AF37';
+  const gold = g.color_primary || '#C9A961';
   const accent = g.color_secondary || '#74C0FC';
   const bg = g.color_bg || '#362038';
   const buttonBg = g.color_button || gold;
@@ -375,7 +376,6 @@ export default function Home() {
   const ctaLight = sec('cta_light');
   const foot = sec('footer');
 
-  const trialDays = globalContent.trial_days || 7;
   const logoUrl = globalContent.logo_url || '';
 
   const cssVars = {
@@ -406,13 +406,13 @@ export default function Home() {
           >
             <div className="flex items-center justify-center">
               <Link href="/" className="flex items-center gap-3">
-                <img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-20 md:h-24 w-auto object-contain" />
+                <LogoSite className="h-20 md:h-24 w-auto object-contain" />
               </Link>
             </div>
           </header>
         )}
 
-      {/* ═══ HERO — Word by word reveal ═══ */}
+      {/* ═══ HERO - Word by word reveal ═══ */}
       {vis('hero') && (
         <motion.section ref={heroRef} className="relative min-h-screen flex items-center pt-24" style={{ opacity: heroOpacity, scale: heroScale }}>
           <div className="absolute inset-0 pointer-events-none">
@@ -474,8 +474,46 @@ export default function Home() {
 
             {hero.video_url && (
               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}>
-                <div className="glass overflow-hidden mb-10 max-w-3xl mx-auto">
-                  <video src={hero.video_url} controls className="w-full aspect-video" />
+                <div className="glass overflow-hidden mb-10 max-w-3xl mx-auto relative group">
+                  <video
+                    src={hero.video_url}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    controlsList="nodownload"
+                    onContextMenu={(e) => e.preventDefault()}
+                    className="w-full aspect-video cursor-pointer"
+                    onClick={(e) => {
+                      const v = e.currentTarget;
+                      v.paused ? v.play() : v.pause();
+                    }}
+                  />
+                  <button
+                    type="button"
+                    aria-label="Toggle sound"
+                    className="absolute bottom-3 right-3 z-10 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md transition-all opacity-70 hover:opacity-100"
+                    style={{ background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.15)' }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const video = (e.currentTarget.parentElement as HTMLElement).querySelector('video');
+                      if (video) {
+                        video.muted = !video.muted;
+                        const icon = e.currentTarget.querySelector('svg');
+                        if (icon) {
+                          if (video.muted) {
+                            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6l4.72-3.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-3.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />';
+                          } else {
+                            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-3.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-3.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />';
+                          }
+                        }
+                      }
+                    }}
+                  >
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6l4.72-3.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-3.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
+                    </svg>
+                  </button>
                 </div>
               </motion.div>
             )}
@@ -506,10 +544,10 @@ export default function Home() {
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}>
               <div className="flex flex-wrap gap-5 justify-center">
                 {(hero.buttons || []).map((btn: { label: string; href: string; variant: string }, i: number) => (
-                  <Link key={i} href={btn.href === '/signup' || btn.href === '/login' ? '/rejoindre' : btn.href}>
+                  <Link key={i} href={btn.href === '/signup' || btn.href === '/login' ? '/signup' : btn.href}>
                     {btn.variant === 'primary' ? (
-                      <button className="magnetic-btn pulse-ring px-8 py-4 rounded-full text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
-                        {btn.label} — {trialDays} jours d&apos;essai
+                      <button className="magnetic-btn pulse-ring px-8 py-4 rounded-full text-base font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}>
+                        {btn.label}
                       </button>
                     ) : (
                       <button className="magnetic-btn px-8 py-4 rounded-full text-base font-medium tracking-wide" style={{ border: `1px solid rgba(${goldRgb},0.3)`, color: gold, background: `rgba(${goldRgb},0.04)` }}>
@@ -542,7 +580,7 @@ export default function Home() {
 
             {principe.image_url && (
               <RevealOnScroll delay={0.1} direction="scale">
-                <img src={principe.image_url} alt="" className="w-full rounded-2xl object-cover max-h-72 mb-10" style={{ border: '1px solid var(--dark-border)' }} />
+                <img src={principe.image_url} alt="" className="w-full rounded-2xl object-cover max-h-72 mb-10" style={{ border: '1px solid var(--border)' }} />
               </RevealOnScroll>
             )}
 
@@ -576,7 +614,7 @@ export default function Home() {
         </section>
       )}
 
-      {/* ═══ LES ETAPES — Glowing Cards ═══ */}
+      {/* ═══ LES ETAPES - Glowing Cards ═══ */}
       {vis('steps') && (
         <section className="px-6 md:px-20 py-32 relative">
           <div className="max-w-6xl mx-auto">
@@ -652,7 +690,7 @@ export default function Home() {
               {(encyclo.items || []).filter((d: string) => !encyclopediaSearch || d.toLowerCase().includes(encyclopediaSearch.toLowerCase())).map((d: string, i: number) => (
                 <RevealOnScroll key={d} delay={i * 0.05} direction="scale">
                   <GlowingCard className="px-5 py-4 text-center cursor-pointer group">
-                    <span className="encyclo-item text-sm font-light transition-colors duration-300 group-hover:text-[var(--gold)]" style={{
+                    <span className="encyclo-item text-sm font-light transition-colors duration-300 group-hover:text-[var(--brand)]" style={{
                       color: i === (encyclo.items || []).length - 1 ? gold : 'var(--text-secondary)',
                     }}>
                       {d}
@@ -676,7 +714,7 @@ export default function Home() {
       )}
 
       {/* ═══ TICKER BAND 2 ═══ */}
-      <InfiniteTickerBand items={["Soutien 24/7", "Communaute bienveillante", "Protocoles exclusifs", "Soins collectifs", "Chat dedie", "Evenements live", "Meditation guidee", "Coaching immersif"]} speed={40} />
+      <InfiniteTickerBand items={["Soutien 24/7", "Communauté bienveillante", "Protocoles exclusifs", "Soins collectifs", "Chat dédié", "Événements live", "Méditation guidée", "Coaching immersif"]} speed={40} />
 
       {/* ═══ COMMUNAUTE ═══ */}
       {vis('communaute') && (
@@ -773,7 +811,7 @@ export default function Home() {
                 <p className="luxury-title text-center text-sm tracking-[0.4em] text-[var(--text-muted)] mb-4">{hist.label || "L'Histoire"}</p>
               </RevealOnScroll>
               <RevealOnScroll delay={0.1}>
-                <h2 className="font-display font-light text-center text-3xl md:text-5xl mb-6" style={{ color: 'var(--gold)' }}>
+                <h2 className="font-display font-light text-center text-3xl md:text-5xl mb-6" style={{ color: 'var(--brand)' }}>
                   <WordByWordReveal text={hist.title || ''} />
                 </h2>
               </RevealOnScroll>
@@ -781,14 +819,14 @@ export default function Home() {
                 <RevealOnScroll delay={0.15}>
                   <div className="flex-shrink-0 group">
                     <a href={hist.book_url || '#'} target="_blank" rel="noopener noreferrer" className="block relative">
-                      <div className="w-56 md:w-64 rounded-lg overflow-hidden border border-[var(--gold)]/20 group-hover:border-[var(--gold)]/60 transition-all duration-500 shadow-lg group-hover:shadow-[0_0_30px_rgba(212,175,55,0.2)]">
+                      <div className="w-56 md:w-64 rounded-lg overflow-hidden border border-[var(--brand)]/20 group-hover:border-[var(--brand)]/60 transition-all duration-500 shadow-lg group-hover:shadow-[0_0_30px_rgba(201, 169, 97,0.2)]">
                         <img
                           src={hist.book_image || '/images/book-cover.jpeg'}
-                          alt="SOS Shine — Briller Comme un Diamant"
+                          alt="SOS Shine - Briller Comme un Diamant"
                           className="w-full aspect-[3/4] object-cover"
                         />
                       </div>
-                      <div className="absolute -inset-2 rounded-xl bg-[var(--gold)]/5 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+                      <div className="absolute -inset-2 rounded-xl bg-[var(--brand)]/5 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
                     </a>
                   </div>
                 </RevealOnScroll>
@@ -809,7 +847,7 @@ export default function Home() {
                       href={hist.book_url || '#'}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-6 py-3 border border-[var(--gold)]/40 rounded-full text-[var(--gold)] text-sm tracking-[0.15em] uppercase hover:bg-[var(--gold)]/10 hover:border-[var(--gold)] transition-all duration-300"
+                      className="inline-flex items-center gap-2 px-6 py-3 border border-[var(--brand)]/40 rounded-full text-[var(--brand)] text-sm tracking-[0.15em] uppercase hover:bg-[var(--brand)]/10 hover:border-[var(--brand)] transition-all duration-300"
                     >
                       {hist.button_label || 'Découvrir le livre'}
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
@@ -833,7 +871,7 @@ export default function Home() {
                 <p className="luxury-title text-center text-sm tracking-[0.4em] text-[var(--text-muted)] mb-4">{fond.label || 'Les Fondateurs'}</p>
               </RevealOnScroll>
               <RevealOnScroll delay={0.1}>
-                <h2 className="font-display font-light text-center text-3xl md:text-5xl mb-6" style={{ color: 'var(--gold)' }}>
+                <h2 className="font-display font-light text-center text-3xl md:text-5xl mb-6" style={{ color: 'var(--brand)' }}>
                   <WordByWordReveal text={fond.title || ''} />
                 </h2>
               </RevealOnScroll>
@@ -849,7 +887,7 @@ export default function Home() {
                   <RevealOnScroll key={founder.name || i} delay={0.2 + i * 0.15}>
                     <div className="flex flex-col items-center group">
                       <div className="relative mb-6">
-                        <div className="w-44 h-44 md:w-52 md:h-52 rounded-full overflow-hidden border-2 border-[var(--gold)]/30 group-hover:border-[var(--gold)] transition-all duration-500 relative">
+                        <div className="w-44 h-44 md:w-52 md:h-52 rounded-full overflow-hidden border-2 border-[var(--brand)]/30 group-hover:border-[var(--brand)] transition-all duration-500 relative">
                           {founder.image && (
                             <img
                               src={founder.image}
@@ -858,9 +896,9 @@ export default function Home() {
                             />
                           )}
                         </div>
-                        <div className="absolute -inset-1 rounded-full bg-[var(--gold)]/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+                        <div className="absolute -inset-1 rounded-full bg-[var(--brand)]/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
                       </div>
-                      <h3 className="font-display text-2xl text-[var(--gold)] mb-1">{founder.name}</h3>
+                      <h3 className="font-display text-2xl text-[var(--brand)] mb-1">{founder.name}</h3>
                       <p className="text-sm tracking-[0.2em] uppercase text-[var(--text-muted)]">{founder.role}</p>
                     </div>
                   </RevealOnScroll>
@@ -894,7 +932,7 @@ export default function Home() {
                     {plan.badge && (
                       <motion.div
                         className="absolute -top-3 left-1/2 -translate-x-1/2 z-20 px-5 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase"
-                        style={{ background: `linear-gradient(135deg, ${accent}, rgba(${accentRgb},0.7))`, color: '#050505' }}
+                        style={{ background: `linear-gradient(135deg, ${accent}, rgba(${accentRgb},0.7))`, color: '#000000' }}
                         initial={{ y: -10, opacity: 0 }}
                         whileInView={{ y: 0, opacity: 1 }}
                         viewport={{ once: true }}
@@ -929,10 +967,10 @@ export default function Home() {
                       ))}
                     </div>
 
-                    <Link href="/rejoindre">
+                    <Link href="/signup">
                       <button className={`magnetic-btn w-full py-4 rounded-full text-base font-semibold tracking-wide ${plan.highlight ? 'pulse-ring' : ''}`} style={{
                         background: plan.highlight ? `linear-gradient(135deg, ${accent}, rgba(${accentRgb},0.7))` : `linear-gradient(135deg, ${gold}, ${goldDeep})`,
-                        color: '#050505'
+                        color: '#000000'
                       }}>
                         {plan.button_label}
                       </button>
@@ -968,8 +1006,8 @@ export default function Home() {
               </h2>
             </RevealOnScroll>
             <RevealOnScroll delay={0.3}>
-              <Link href="/rejoindre">
-                <button className="magnetic-btn pulse-ring px-10 py-5 rounded-full text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
+              <Link href="/signup">
+                <button className="magnetic-btn pulse-ring px-10 py-5 rounded-full text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#000000' }}>
                   Rejoindre SOS Shine
                 </button>
               </Link>
@@ -978,43 +1016,19 @@ export default function Home() {
         </section>
       )}
 
-      {/* ═══ CTA LIGHT ═══ */}
-      {vis('cta_light') && (
-        <section className="px-6 md:px-20 py-32 relative overflow-hidden" style={{ background: sty('cta_light').bg || '#ffffff' }}>
-          <div className="max-w-3xl mx-auto text-center relative z-10">
-            <RevealOnScroll>
-              <p className="text-xl md:text-2xl font-light leading-relaxed mb-12" style={{ color: sty('cta_light').text_color || '#1a1a1a' }}>
-                {ctaLight.description || ''}
-              </p>
-            </RevealOnScroll>
-            <RevealOnScroll delay={0.15}>
-              <Link href="/rejoindre">
-                <button className="magnetic-btn px-10 py-5 rounded-full text-lg font-semibold tracking-wide" style={{ background: `linear-gradient(135deg, ${gold}, ${goldDeep})`, color: '#050505' }}>
-                  {ctaLight.button_label || 'Rejoindre SOS Shine'}
-                </button>
-              </Link>
-              <div className="mt-8">
-                <Link href="/login" className="text-sm transition-colors duration-300 underline underline-offset-4" style={{ color: sty('cta_light').muted_color || '#6b7280' }}>
-                  {ctaLight.login_text || 'Deja membre ? Se connecter'}
-                </Link>
-              </div>
-            </RevealOnScroll>
-          </div>
-        </section>
-      )}
 
       {/* ═══ FOOTER ═══ */}
       {vis('footer') && (
-        <footer className="px-6 md:px-20 py-16 border-t border-[var(--dark-border)] relative" style={{ background: "rgba(0,0,0,0.3)" }}>
+        <footer className="px-6 md:px-20 py-16 border-t border-[var(--border)] relative" style={{ background: "rgba(0,0,0,0.3)" }}>
           <div className="max-w-6xl mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-center gap-10">
               <div className="flex items-center gap-3">
-                <img src={logoUrl || '/images/logo-shine.png'} alt="SOS Shine" className="h-16 w-auto object-contain" />
+                <LogoSite className="h-16 w-auto object-contain" />
               </div>
 
               <div className="flex flex-wrap justify-center gap-x-8 gap-y-4">
                 {(foot.links || []).map((link: { label: string; href: string }) => (
-                  <Link key={link.label} href={link.href} className="text-xs tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors duration-300 gold-underline">
+                  <Link key={link.label} href={link.href} className="text-xs tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors duration-300 gold-underline">
                     {link.label}
                   </Link>
                 ))}

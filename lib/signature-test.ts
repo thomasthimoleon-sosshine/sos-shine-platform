@@ -169,10 +169,10 @@ export const QUESTIONS: Question[] = [
     id: 15,
     question: "Si vous deviez décrire votre mode de survie en un mot, ce serait :",
     answers: [
-      { text: "La compréhension — tout analyser pour ne plus souffrir", scores: { P1: 3, P7: 1 } },
-      { text: "L'harmonie — tout apaiser pour que personne ne souffre", scores: { P9: 3, P3: 1 } },
-      { text: "Le mouvement — avancer pour ne pas sombrer", scores: { P2: 3, P10: 1 } },
-      { text: "L'adaptation — me transformer pour ne pas être rejeté(e)", scores: { P6: 3, P9: 1 } },
+      { text: "La compréhension - tout analyser pour ne plus souffrir", scores: { P1: 3, P7: 1 } },
+      { text: "L'harmonie - tout apaiser pour que personne ne souffre", scores: { P9: 3, P3: 1 } },
+      { text: "Le mouvement - avancer pour ne pas sombrer", scores: { P2: 3, P10: 1 } },
+      { text: "L'adaptation - me transformer pour ne pas être rejeté(e)", scores: { P6: 3, P9: 1 } },
     ]
   },
 ];
@@ -180,7 +180,7 @@ export const QUESTIONS: Question[] = [
 export const PROFILES: Record<ProfileKey, Profile> = {
   P1: {
     key: 'P1',
-    title: "L'Analyste — L'Architecture Mentale",
+    title: "L'Analyste - L'Architecture Mentale",
     archetype: "L'Analyste",
     subtitle: "L'Architecture Mentale",
     essence: "Face à la tempête, {firstName}, votre intelligence est votre premier bouclier. Votre système nerveux privilégie la compréhension : face à l'incertitude ou à l'épreuve, vous avez un besoin viscéral d'analyser, de décortiquer et de trouver du sens.",
@@ -192,7 +192,7 @@ export const PROFILES: Record<ProfileKey, Profile> = {
   },
   P2: {
     key: 'P2',
-    title: "L'Électron Libre — L'Architecture en Mouvement",
+    title: "L'Électron Libre - L'Architecture en Mouvement",
     archetype: "L'Électron Libre",
     subtitle: "L'Architecture en Mouvement",
     essence: "Votre énergie vitale est tournée vers l'action, {firstName}. Quand l'inconfort s'installe, votre instinct de survie vous pousse vers le mouvement, les projets ou l'extérieur. L'immobilité vous est insupportable lorsque vous êtes sous tension.",
@@ -204,7 +204,7 @@ export const PROFILES: Record<ProfileKey, Profile> = {
   },
   P3: {
     key: 'P3',
-    title: "Le Pilier — L'Architecture Symbiotique",
+    title: "Le Pilier - L'Architecture Symbiotique",
     archetype: "Le Pilier",
     subtitle: "L'Architecture Symbiotique",
     essence: "Vous possédez un cœur doté d'une antenne ultra-sensible, {firstName}. Face à l'incertitude, votre réflexe naturel est de chercher l'ancrage dans le soin à l'autre. Vous ressentez les variations d'humeur et cherchez instinctivement à harmoniser votre environnement.",
@@ -216,7 +216,7 @@ export const PROFILES: Record<ProfileKey, Profile> = {
   },
   P4: {
     key: 'P4',
-    title: "La Citadelle — L'Architecture Citadelle",
+    title: "La Citadelle - L'Architecture Citadelle",
     archetype: "La Citadelle",
     subtitle: "L'Architecture Citadelle",
     essence: "Votre sanctuaire intérieur est extrêmement bien gardé, {firstName}. Face à la blessure, la trahison ou la déception, votre réflexe est l'autonomie absolue : vous relevez les ponts-levis et prenez de la distance.",
@@ -228,7 +228,7 @@ export const PROFILES: Record<ProfileKey, Profile> = {
   },
   P5: {
     key: 'P5',
-    title: "Le Gardien du Cadre — L'Architecture du Contrôle",
+    title: "Le Gardien du Cadre - L'Architecture du Contrôle",
     archetype: "Le Gardien du Cadre",
     subtitle: "L'Architecture du Contrôle",
     essence: "Pour vous, {firstName}, la sécurité réside dans la structure. Face au chaos émotionnel, relationnel ou professionnel, votre premier réflexe est de rétablir des règles, de l'ordre, et des processus clairs.",
@@ -240,7 +240,7 @@ export const PROFILES: Record<ProfileKey, Profile> = {
   },
   P6: {
     key: 'P6',
-    title: "Le Caméléon — L'Architecture Adaptative",
+    title: "Le Caméléon - L'Architecture Adaptative",
     archetype: "Le Caméléon",
     subtitle: "L'Architecture Adaptative",
     essence: "Votre mécanisme de survie est d'une fluidité fascinante, {firstName}. Face à l'inconnu ou au risque de conflit, vous avez développé la capacité d'adapter instantanément vos besoins, votre humeur et vos envies à ceux qui vous entourent.",
@@ -252,7 +252,7 @@ export const PROFILES: Record<ProfileKey, Profile> = {
   },
   P7: {
     key: 'P7',
-    title: "La Vigie — L'Architecture d'Anticipation",
+    title: "La Vigie - L'Architecture d'Anticipation",
     archetype: "La Vigie",
     subtitle: "L'Architecture d'Anticipation",
     essence: "Votre esprit fonctionne comme un radar de pointe, {firstName}. Pour garantir votre sécurité émotionnelle, votre système nerveux scanne en permanence l'horizon pour anticiper le pire, afin de ne jamais être pris(e) au dépourvu.",
@@ -264,7 +264,7 @@ export const PROFILES: Record<ProfileKey, Profile> = {
   },
   P8: {
     key: 'P8',
-    title: "L'Idéaliste — L'Architecture des Profondeurs",
+    title: "L'Idéaliste - L'Architecture des Profondeurs",
     archetype: "L'Idéaliste",
     subtitle: "L'Architecture des Profondeurs",
     essence: "Vous évoluez dans un monde en très haute définition, {firstName}. Vous ne tolérez pas la superficialité. Votre quête est celle du sens, de l'authenticité absolue et de l'intensité, que ce soit dans vos relations ou vos projets.",
@@ -276,7 +276,7 @@ export const PROFILES: Record<ProfileKey, Profile> = {
   },
   P9: {
     key: 'P9',
-    title: "Le Diplomate — L'Architecture de l'Harmonie",
+    title: "Le Diplomate - L'Architecture de l'Harmonie",
     archetype: "Le Diplomate",
     subtitle: "L'Architecture de l'Harmonie",
     essence: "Votre priorité absolue est le maintien de la paix, {firstName}. Face à l'adversité ou aux tensions, vous avez appris à arrondir les angles et à neutraliser rapidement toute escalade agressive.",
@@ -288,7 +288,7 @@ export const PROFILES: Record<ProfileKey, Profile> = {
   },
   P10: {
     key: 'P10',
-    title: "Le Catalyseur — L'Architecture de l'Intensité",
+    title: "Le Catalyseur - L'Architecture de l'Intensité",
     archetype: "Le Catalyseur",
     subtitle: "L'Architecture de l'Intensité",
     essence: "Vous fonctionnez sur des cycles énergétiques puissants, {firstName}. Face à l'apathie ou à l'épreuve, votre réflexe est de chercher une décharge forte (changement radical, passion, nouveau défi) pour relancer la machine.",
@@ -299,6 +299,32 @@ export const PROFILES: Record<ProfileKey, Profile> = {
     icon: '🔥',
   },
 };
+
+function computeTotals(answers: Record<number, number>): Record<ProfileKey, number> {
+  const totals: Record<ProfileKey, number> = {
+    P1: 0, P2: 0, P3: 0, P4: 0, P5: 0,
+    P6: 0, P7: 0, P8: 0, P9: 0, P10: 0,
+  };
+  for (const [questionIdStr, answerIndex] of Object.entries(answers)) {
+    const questionId = parseInt(questionIdStr, 10);
+    const question = QUESTIONS.find(q => q.id === questionId);
+    if (!question || answerIndex < 0 || answerIndex >= question.answers.length) continue;
+    const selectedAnswer = question.answers[answerIndex];
+    for (const [profileKey, score] of Object.entries(selectedAnswer.scores)) {
+      totals[profileKey as ProfileKey] += score;
+    }
+  }
+  return totals;
+}
+
+export function calculateTopTwo(answers: Record<number, number>): { dominant: ProfileKey; secondary: ProfileKey } {
+  const totals = computeTotals(answers);
+  const sorted = (Object.entries(totals) as [ProfileKey, number][]).sort((a, b) => b[1] - a[1]);
+  return {
+    dominant: sorted[0]?.[0] ?? 'P1',
+    secondary: sorted[1]?.[0] ?? 'P2',
+  };
+}
 
 export function calculateResult(answers: Record<number, number>): ProfileKey {
   const totals: Record<ProfileKey, number> = {

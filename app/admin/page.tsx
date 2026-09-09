@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import ShineIcon from '@/components/icons/ShineIcon'
 
 interface Stats {
   totalMembers: number
@@ -9,10 +10,13 @@ interface Stats {
   totalDouleurs: number
   totalEvents: number
   totalMessages: number
+  totalVideos: number
+  totalTracks: number
+  totalBooks: number
 }
 
 export default function AdminDashboard() {
-  const [stats, setStats] = useState<Stats>({ totalMembers: 0, newThisMonth: 0, totalDouleurs: 0, totalEvents: 0, totalMessages: 0 })
+  const [stats, setStats] = useState<Stats>({ totalMembers: 0, newThisMonth: 0, totalDouleurs: 0, totalEvents: 0, totalMessages: 0, totalVideos: 0, totalTracks: 0, totalBooks: 0 })
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -21,12 +25,15 @@ export default function AdminDashboard() {
       const now = new Date()
       const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
 
-      const [members, newMembers, douleurs, events, messages] = await Promise.all([
+      const [members, newMembers, douleurs, events, messages, videos, tracks, books] = await Promise.all([
         supabase.from('profiles').select('id', { count: 'exact', head: true }),
         supabase.from('profiles').select('id', { count: 'exact', head: true }).gte('created_at', firstOfMonth),
         supabase.from('douleurs').select('id', { count: 'exact', head: true }),
         supabase.from('events').select('id', { count: 'exact', head: true }),
         supabase.from('messages').select('id', { count: 'exact', head: true }),
+        supabase.from('shine_tv_videos').select('id', { count: 'exact', head: true }),
+        supabase.from('shine_audible_tracks').select('id', { count: 'exact', head: true }),
+        supabase.from('shine_library_books').select('id', { count: 'exact', head: true }),
       ])
 
       setStats({
@@ -35,6 +42,9 @@ export default function AdminDashboard() {
         totalDouleurs: douleurs.count || 0,
         totalEvents: events.count || 0,
         totalMessages: messages.count || 0,
+        totalVideos: videos.count || 0,
+        totalTracks: tracks.count || 0,
+        totalBooks: books.count || 0,
       })
       setLoading(false)
     }
@@ -42,11 +52,14 @@ export default function AdminDashboard() {
   }, [])
 
   const cards = [
-    { label: 'Membres total', value: stats.totalMembers, color: '#D4AF37', icon: '👥' },
-    { label: 'Nouveaux ce mois', value: stats.newThisMonth, color: '#55EFC4', icon: '📈' },
-    { label: 'Challenges publiés', value: stats.totalDouleurs, color: '#74C0FC', icon: '📘' },
-    { label: 'Événements', value: stats.totalEvents, color: '#E17055', icon: '📅' },
-    { label: 'Messages chat', value: stats.totalMessages, color: '#FF6B35', icon: '💬' },
+    { label: 'Membres total', value: stats.totalMembers, color: '#C9A961', icon: 'membres' as const },
+    { label: 'Nouveaux ce mois', value: stats.newThisMonth, color: '#55EFC4', icon: 'courbe' as const },
+    { label: 'Challenges publiés', value: stats.totalDouleurs, color: '#74C0FC', icon: 'protocole' as const },
+    { label: 'Vidéos Shine TV', value: stats.totalVideos, color: '#E17055', icon: 'video' as const },
+    { label: 'Audios Audible', value: stats.totalTracks, color: '#9B59B6', icon: 'audio' as const },
+    { label: 'Livres Librairie', value: stats.totalBooks, color: '#C9A961', icon: 'livre' as const },
+    { label: 'Événements', value: stats.totalEvents, color: '#55EFC4', icon: 'calendrier' as const },
+    { label: 'Messages chat', value: stats.totalMessages, color: '#FF6B35', icon: 'parole' as const },
   ]
 
   return (
@@ -67,12 +80,12 @@ export default function AdminDashboard() {
       ) : (
         <>
           {/* Stats cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-4">
             {cards.map((card) => (
               <div key={card.label} className="rounded-xl p-5"
                 style={{ background: `${card.color}08`, border: `1px solid ${card.color}20` }}>
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-xl">{card.icon}</span>
+                  <ShineIcon name={card.icon} className="w-5 h-5" color={card.color} />
                 </div>
                 <p className="font-display text-3xl font-semibold mb-1" style={{ color: card.color }}>
                   {card.value}
@@ -87,14 +100,18 @@ export default function AdminDashboard() {
             <h2 className="font-semibold text-lg mb-4" style={{ color: 'var(--text-primary)' }}>Actions rapides</h2>
             <div className="grid sm:grid-cols-3 gap-4">
               {[
-                { href: '/admin/douleurs', label: 'Créer un challenge émotionnel', desc: 'Ajouter une nouvelle page à l\'encyclopédie', icon: '📘', color: '#74C0FC' },
-                { href: '/admin/evenements', label: 'Créer un événement', desc: 'Planifier un soin collectif ou une Shine Walk', icon: '📅', color: '#55EFC4' },
-                { href: '/admin/publications', label: 'Publier sur le mur', desc: 'Annoncer une nouvelle à la communauté', icon: '📢', color: '#D4AF37' },
+                { href: '/admin/douleurs', label: 'Créer un challenge émotionnel', desc: 'Ajouter une nouvelle page à l\'encyclopédie', icon: 'protocole' as const, color: '#74C0FC' },
+                { href: '/admin/shine-tv', label: 'Publier une vidéo', desc: 'Ajouter du contenu sur Shine TV', icon: 'video' as const, color: '#E17055' },
+                { href: '/admin/shine-shorts', label: 'Publier un short', desc: 'Ajouter un cours ou vidéo courte', icon: 'shorts' as const, color: '#C9A961' },
+                { href: '/admin/shine-audible', label: 'Publier un audio', desc: 'Ajouter un podcast, méditation ou livre audio', icon: 'audio' as const, color: '#9B59B6' },
+                { href: '/admin/shine-librairie', label: 'Publier un livre', desc: 'Ajouter un eBook ou guide à la librairie', icon: 'livre' as const, color: '#C9A961' },
+                { href: '/admin/evenements', label: 'Créer un événement', desc: 'Planifier un soin collectif ou une Shine Walk', icon: 'calendrier' as const, color: '#55EFC4' },
+                { href: '/admin/publications', label: 'Publier sur le mur', desc: 'Annoncer une nouvelle à la communauté', icon: 'diffuser' as const, color: '#FF6B35' },
               ].map((action) => (
                 <a key={action.href} href={action.href}
                   className="rounded-xl p-5 transition-all duration-200 hover:-translate-y-0.5 block"
-                  style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-                  <span className="text-2xl mb-3 block">{action.icon}</span>
+                  style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
+                  <ShineIcon name={action.icon} className="w-6 h-6 mb-3" color={action.color} />
                   <h3 className="font-semibold text-sm mb-1" style={{ color: action.color }}>{action.label}</h3>
                   <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{action.desc}</p>
                 </a>
@@ -103,23 +120,23 @@ export default function AdminDashboard() {
           </div>
 
           {/* Revenue placeholder */}
-          <div className="rounded-xl p-6" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+          <div className="rounded-xl p-6" style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}>
             <h2 className="font-semibold text-lg mb-2" style={{ color: 'var(--text-primary)' }}>Chiffre d&apos;affaires</h2>
             <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
               Les données Stripe seront disponibles une fois l&apos;intégration paiement activée.
             </p>
             <div className="grid sm:grid-cols-3 gap-4">
-              <div className="rounded-lg p-4" style={{ background: 'rgba(212,175,55,0.05)' }}>
+              <div className="rounded-lg p-4" style={{ background: 'rgba(201,169,97,0.05)' }}>
                 <p className="text-xs mb-1" style={{ color: 'var(--text-muted)' }}>CA ce mois</p>
-                <p className="font-display text-2xl font-semibold" style={{ color: 'var(--gold)' }}>—</p>
+                <p className="font-display text-2xl font-semibold" style={{ color: 'var(--brand)' }}>-</p>
               </div>
               <div className="rounded-lg p-4" style={{ background: 'rgba(85,239,196,0.05)' }}>
                 <p className="text-xs mb-1" style={{ color: 'var(--text-muted)' }}>Abonnements actifs</p>
-                <p className="font-display text-2xl font-semibold" style={{ color: '#55EFC4' }}>—</p>
+                <p className="font-display text-2xl font-semibold" style={{ color: '#55EFC4' }}>-</p>
               </div>
               <div className="rounded-lg p-4" style={{ background: 'rgba(255,107,107,0.05)' }}>
                 <p className="text-xs mb-1" style={{ color: 'var(--text-muted)' }}>Désabonnements</p>
-                <p className="font-display text-2xl font-semibold" style={{ color: '#FF6B6B' }}>—</p>
+                <p className="font-display text-2xl font-semibold" style={{ color: '#FF6B6B' }}>-</p>
               </div>
             </div>
           </div>

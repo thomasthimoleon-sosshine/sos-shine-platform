@@ -4,10 +4,15 @@ import { useEffect, useState, useCallback, useRef } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import type { Post, PostCategory, PostMediaType } from '@/types/database'
+import ShineIcon from '@/components/icons/ShineIcon'
+import ActionsPartage from '@/components/publications/ActionsPartage'
+import { CATEGORIES_MUR, MEDIA_TYPES, getCategory, valeursCategorie } from '@/lib/community/categories'
 import { useTranslation } from '@/lib/i18n/useTranslation'
+import { incrementAndCheckBadges } from '@/lib/badgeService'
 import FileUpload from '@/components/FileUpload'
 import AudioPlayer from '@/components/AudioPlayer'
 import VoiceRecorder from '@/components/VoiceRecorder'
+import ProfileDrawer from '@/components/community/ProfileDrawer'
 
 /* ── Types locaux pour les données remontées par Supabase ── */
 type PostRow = {
@@ -40,31 +45,22 @@ type CommentRow = {
   profiles: { prenom: string; role: string; avatar_url: string | null } | null
 }
 
-/* ── Category config ── */
-const CATEGORIES: { value: PostCategory; label: string; icon: string; color: string }[] = [
-  { value: 'temoignage', label: 'Témoignage', icon: '🗣️', color: '#D4AF37' },
-  { value: 'partage', label: "Partage d'expériences", icon: '💫', color: '#74C0FC' },
-  { value: 'question', label: 'Question', icon: '❓', color: '#A29BFE' },
-  { value: 'remerciements', label: 'Remerciements', icon: '🙏', color: '#55EFC4' },
-  { value: 'gratitude', label: 'Gratitude', icon: '✨', color: '#FFEAA7' },
-  { value: 'citation', label: 'Citation', icon: '💬', color: '#FD79A8' },
-]
+/* ── Catégories : voir lib/community/categories.ts (source unique) ──
+   CATEGORIES_MUR et non POST_CATEGORIES : « Remerciements » a rejoint
+   « Gratitude », on ne le propose plus à l'écriture. Les publications déjà
+   écrites sous ce sujet restent visibles, rangées avec les gratitudes. */
+const CATEGORIES = CATEGORIES_MUR
 
-const CATEGORY_MAP = Object.fromEntries(CATEGORIES.map(c => [c.value, c]))
-
-function getCategoryInfo(cat: string) {
-  return CATEGORY_MAP[cat] || CATEGORIES[1]
-}
-
-function getTypeLabel(type: string, category?: string) {
-  if ((type === 'community' || type === 'eclat') && category) return getCategoryInfo(category)
-  const map: Record<string, { label: string; color: string; icon: string }> = {
-    announcement: { label: 'Annonce', color: '#D4AF37', icon: '📢' },
-    douleur_published: { label: 'Nouveau challenge', color: '#55EFC4', icon: '📘' },
-    event_published: { label: 'Nouvel événement', color: '#74C0FC', icon: '📅' },
-    general: { label: 'Publication', color: 'var(--text-secondary)', icon: '💬' },
-  }
-  return map[type] || map.general
+/**
+ * Contenus publiés par l'équipe : eux gardent un bandeau de type, car
+ * « Annonce » ou « Nouveau protocole » n'est pas une catégorie de membre.
+ * Les publications de membres n'en ont plus : leur identité est portée par
+ * le signe coloré posé devant le titre.
+ */
+const EDITORIAL_TYPES: Record<string, { label: string; color: string; icon: 'diffuser' | 'texte' | 'garder' }> = {
+  announcement: { label: 'Annonce', color: '#C9A961', icon: 'diffuser' },
+  douleur_published: { label: 'Nouveau protocole', color: '#E3D5BE', icon: 'texte' },
+  event_published: { label: 'Nouvel événement', color: '#C78790', icon: 'garder' },
 }
 
 function formatDate(d: string) {
@@ -79,9 +75,15 @@ function formatDate(d: string) {
   return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })
 }
 
+/**
+ * L'adresse partagée à l'extérieur. Pas /dashboard/mur, qui est derrière
+ * l'authentification : Facebook n'y voyait que la page de connexion et
+ * reprenait les métadonnées du site, d'où la même vignette pour toutes les
+ * publications. /publication/<id> est publique et porte les siennes.
+ */
 function getPostUrl(postId: string) {
-  if (typeof window !== 'undefined') return `${window.location.origin}/dashboard/mur?post=${postId}`
-  return `/dashboard/mur?post=${postId}`
+  if (typeof window !== 'undefined') return `${window.location.origin}/publication/${postId}`
+  return `/publication/${postId}`
 }
 
 /* ── Composant principal ── */
@@ -122,13 +124,19 @@ export default function MurPage() {
   const [sendingComment, setSendingComment] = useState(false)
 
   // Share DM
-  const [sharePostId, setSharePostId] = useState<string | null>(null)
-  const [shareMembers, setShareMembers] = useState<{ id: string; prenom: string; avatar_url: string | null }[]>([])
-  const [shareSearch, setShareSearch] = useState('')
-  const [shareSending, setShareSending] = useState<string | null>(null)
 
   // Social share
-  const [socialShareId, setSocialShareId] = useState<string | null>(null)
+
+  // Profile drawer
+  const [profileDrawerUserId, setProfileDrawerUserId] = useState<string | null>(null)
+
+  // Quick Rayon
+  const [sendingRayon, setSendingRayon] = useState<string | null>(null)
+  const [rayonConnections, setRayonConnections] = useState<Set<string>>(new Set())
+  const [rayonPending, setRayonPending] = useState<Set<string>>(new Set())
+
+  // Bookmarks
+  const [bookmarkedPosts, setBookmarkedPosts] = useState<Set<string>>(new Set())
 
   // Ban status
   const [isBanned, setIsBanned] = useState(false)
@@ -146,13 +154,13 @@ export default function MurPage() {
       const { data: { user }, error: authError } = await supabase.auth.getUser()
       if (authError) {
         console.error('[Mur] Auth error:', authError)
-        setError('Erreur d\'authentification. Veuillez vous reconnecter.')
+        setError('Reconnectez-vous pour continuer.')
         setLoading(false)
         return
       }
       if (!user) {
         console.error('[Mur] No user found')
-        setError('Vous devez être connecté pour accéder au mur.')
+        setError('Reconnectez-vous pour voir le fil.')
         setLoading(false)
         return
       }
@@ -174,7 +182,7 @@ export default function MurPage() {
         setBanUntil(null)
       }
 
-      // 3. Load posts (without fragile FK joins — we load profiles separately)
+      // 3. Load posts (without fragile FK joins - we load profiles separately)
       let query = supabase
         .from('posts')
         .select('*')
@@ -185,14 +193,16 @@ export default function MurPage() {
         .limit(100)
 
       if (filterCategory !== 'all') {
-        query = query.eq('category', filterCategory)
+        // .in et non .eq : « Gratitude » doit aussi ramener les publications
+        // écrites du temps où « Remerciements » était un sujet à part.
+        query = query.in('category', valeursCategorie(filterCategory))
       }
 
       const { data: rawPostsData, error: queryError } = await query
 
       if (queryError) {
         console.error('[Mur] Posts query error:', queryError)
-        setError(`Erreur de chargement: ${queryError.message}`)
+        setError('Impossible de charger le fil pour le moment. Réessayez.')
         setLoading(false)
         return
       }
@@ -264,16 +274,72 @@ export default function MurPage() {
       })
 
       setPosts(enriched)
+
+      // Load Rayon connections for quick-add feature
+      const { data: connections } = await supabase
+        .from('shine_connections')
+        .select('sender_id, receiver_id, status')
+        .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
+      const connectedSet = new Set<string>()
+      const pendingSet = new Set<string>()
+      for (const c of (connections || [])) {
+        const partnerId = c.sender_id === user.id ? c.receiver_id : c.sender_id
+        if (c.status === 'accepted') connectedSet.add(partnerId)
+        else pendingSet.add(partnerId)
+      }
+      setRayonConnections(connectedSet)
+      setRayonPending(pendingSet)
+
+      // Load bookmarks (table may not exist yet)
+      try {
+        const { data: bookmarks } = await supabase
+          .from('post_bookmarks' as string)
+          .select('post_id')
+          .eq('user_id', user.id) as { data: { post_id: string }[] | null }
+        if (bookmarks) setBookmarkedPosts(new Set(bookmarks.map(b => b.post_id)))
+      } catch { /* table might not exist */ }
+
       setLoading(false)
     } catch (err) {
       console.error('[Mur] Unexpected error:', err)
-      setError(`Erreur inattendue: ${err instanceof Error ? err.message : 'inconnue'}`)
+      setError('Oups, une erreur est survenue. Réessayez.')
       setLoading(false)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterCategory])
 
   useEffect(() => { loadPosts() }, [loadPosts])
+
+  /* ── Quick Rayon request ── */
+  async function sendQuickRayon(targetUserId: string) {
+    if (!currentUserId || sendingRayon || currentUserId === targetUserId) return
+    if (rayonConnections.has(targetUserId) || rayonPending.has(targetUserId)) return
+    setSendingRayon(targetUserId)
+    const supabase = createClient()
+    const { error } = await supabase.from('shine_connections').insert({
+      sender_id: currentUserId,
+      receiver_id: targetUserId,
+      status: 'pending',
+    })
+    if (!error) {
+      setRayonPending(prev => new Set([...prev, targetUserId]))
+    }
+    setSendingRayon(null)
+  }
+
+  /* ── Bookmark toggle ── */
+  async function toggleBookmark(postId: string) {
+    if (!currentUserId) return
+    const supabase = createClient()
+    const isBookmarked = bookmarkedPosts.has(postId)
+    if (isBookmarked) {
+      await (supabase.from('post_bookmarks' as string) as ReturnType<typeof supabase.from>).delete().eq('user_id', currentUserId).eq('post_id', postId)
+      setBookmarkedPosts(prev => { const next = new Set(prev); next.delete(postId); return next })
+    } else {
+      await (supabase.from('post_bookmarks' as string) as ReturnType<typeof supabase.from>).insert({ user_id: currentUserId, post_id: postId } as Record<string, unknown>)
+      setBookmarkedPosts(prev => new Set([...prev, postId]))
+    }
+  }
 
   // Close filter dropdown on outside click
   useEffect(() => {
@@ -301,7 +367,7 @@ export default function MurPage() {
       }
 
       const insertData = {
-        title: createTitle.trim() || getCategoryInfo(createCategory).label,
+        title: createTitle.trim() || getCategory(createCategory).label,
         content: createContent.trim(),
         post_type: 'community' as const,
         category: createCategory,
@@ -319,18 +385,12 @@ export default function MurPage() {
 
       if (insertError) {
         console.error('[Mur] Insert error:', insertError)
-        if (insertError.code === '42501') {
-          setCreateError('Permission refusée. Vérifiez que les politiques RLS sont bien appliquées dans Supabase. (Erreur 42501)')
-        } else if (insertError.code === '23503') {
-          setCreateError('Erreur de référence. Votre profil n\'existe peut-être pas encore dans la table profiles.')
-        } else if (insertError.code === '23514') {
-          setCreateError('Valeur invalide. Vérifiez que la contrainte post_type inclut "community".')
-        } else {
-          setCreateError(`Erreur: ${insertError.message} (code: ${insertError.code || 'inconnu'})`)
-        }
+        setCreateError('Oups, ça n\'a pas marché. Réessayez dans un instant.')
         setCreating(false)
         return
       }
+
+      incrementAndCheckBadges(user.id, 'publications_created').catch(() => {})
 
       // Success: reset form and reload
       setCreateTitle('')
@@ -344,7 +404,7 @@ export default function MurPage() {
       await loadPosts()
     } catch (err) {
       console.error('[Mur] Create error:', err)
-      setCreateError(`Erreur inattendue: ${err instanceof Error ? err.message : 'inconnue'}`)
+      setCreateError('Oups, ça n\'a pas marché. Réessayez dans un instant.')
     }
     setCreating(false)
   }
@@ -385,12 +445,8 @@ export default function MurPage() {
       ))
     }
 
-    // Update XP: award XP for giving a Shine
-    if (!wasShined && !error) {
-      try {
-        await supabase.rpc('add_xp', { p_user_id: currentUserId, p_amount: 5, p_reason: 'shine_given' })
-      } catch { /* XP update is non-critical */ }
-    }
+    // XP et compteurs shines_given/shines_received sont gérés
+    // automatiquement par le trigger DB sur post_likes (INSERT/DELETE)
   }
 
   /* ── Comments ── */
@@ -448,8 +504,9 @@ export default function MurPage() {
     })
     if (commentError) {
       console.error('[Mur] Comment error:', commentError)
-      setError(`Erreur lors de l'envoi du commentaire: ${commentError.message}`)
+      setError('Votre message n’a pas pu être envoyé. Réessayez.')
     } else {
+      incrementAndCheckBadges(currentUserId, 'comments_left').catch(() => {})
       setCommentText('')
       await loadComments(postId)
       setPosts(prev => prev.map(p => p.id === postId
@@ -471,36 +528,6 @@ export default function MurPage() {
   }
 
   /* ── Share via DM ── */
-  async function openShareDM(postId: string) {
-    setSharePostId(postId)
-    setShareSearch('')
-    const supabase = createClient()
-    const { data } = await supabase
-      .from('profiles')
-      .select('id, prenom, avatar_url')
-      .neq('id', currentUserId!)
-      .order('prenom')
-      .limit(50)
-    if (data) setShareMembers(data as { id: string; prenom: string; avatar_url: string | null }[])
-  }
-
-  async function sendShareDM(receiverId: string, postId: string) {
-    setShareSending(receiverId)
-    const supabase = createClient()
-    const post = posts.find(p => p.id === postId)
-    const url = getPostUrl(postId)
-    const msg = `Je te partage cette publication du mur communautaire :\n\n"${post?.title || 'Publication'}"\n${url}`
-    await supabase.from('private_messages').insert({
-      sender_id: currentUserId!,
-      receiver_id: receiverId,
-      content: msg,
-      message_type: 'text',
-      is_read: false // Correction apportée pour répondre aux exigences du schéma
-    })
-    setShareSending(null)
-    setSharePostId(null)
-  }
-
   /* ── Edit / Delete ── */
   function startEdit(post: PostRow) {
     setEditingPost(post.id)
@@ -542,30 +569,17 @@ export default function MurPage() {
     setMenuOpen(null)
   }
 
-  /* ── Filtered members for DM share ── */
-  const filteredShareMembers = shareMembers.filter(m =>
-    m.prenom.toLowerCase().includes(shareSearch.toLowerCase())
-  )
-
-  const inputStyle = { background: 'rgba(255,255,255,0.05)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }
+  const inputStyle = { background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', color: 'var(--text-primary)' }
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       {/* Header */}
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h1 className="font-display text-3xl sm:text-4xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-            {t('dashboard.wall_title')}
-          </h1>
-          <p className="mt-2" style={{ color: 'var(--text-secondary)' }}>
-            {t('dashboard.wall_subtitle')}
-          </p>
-        </div>
+      <div className="flex items-start justify-end gap-4">
         {isBanned ? (
           <div className="px-4 py-2.5 rounded-xl text-xs font-medium text-right shrink-0"
             style={{ background: 'rgba(255,107,85,0.08)', border: '1px solid rgba(255,107,85,0.2)', color: '#FF6B55' }}>
             Publication suspendue<br />
-            <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>
+            <span className="text-[10px] text-[var(--text-muted)]">
               jusqu&apos;au {banUntil ? new Date(banUntil).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' }) : ''}
             </span>
           </div>
@@ -574,9 +588,9 @@ export default function MurPage() {
             onClick={() => setShowCreate(!showCreate)}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all shrink-0 cursor-pointer"
             style={{
-              background: showCreate ? 'rgba(212,175,55,0.1)' : 'linear-gradient(135deg, var(--gold), #B8960F)',
-              color: showCreate ? 'var(--gold)' : '#050505',
-              border: showCreate ? '1px solid rgba(212,175,55,0.3)' : 'none',
+              background: showCreate ? 'rgba(201,169,97,0.1)' : 'linear-gradient(135deg, var(--brand), #A88248)',
+              color: showCreate ? 'var(--brand)' : '#000000',
+              border: showCreate ? '1px solid rgba(201,169,97,0.3)' : 'none',
             }}
           >
             {showCreate ? 'Annuler' : '+ Publier'}
@@ -586,13 +600,13 @@ export default function MurPage() {
 
       {/* ── Error banner ── */}
       {error && (
-        <div className="rounded-xl p-4 text-sm" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', color: '#EF4444' }}>
+        <div className="rounded-xl p-4 text-sm" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', color: 'var(--danger)' }}>
           <p className="font-medium mb-1">Erreur</p>
           <p>{error}</p>
           <button
             onClick={() => { setError(null); setLoading(true); loadPosts() }}
             className="mt-2 px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer"
-            style={{ background: 'rgba(239,68,68,0.15)', color: '#EF4444' }}
+            style={{ background: 'rgba(239,68,68,0.15)', color: 'var(--danger)' }}
           >
             Réessayer
           </button>
@@ -601,18 +615,18 @@ export default function MurPage() {
 
       {/* ── Create post form ── */}
       {showCreate && (
-        <div className="rounded-2xl p-6 space-y-5" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-          <h2 className="font-semibold text-lg" style={{ color: 'var(--gold)' }}>Nouvelle publication</h2>
+        <div className="rounded-2xl p-6 space-y-5 bg-[var(--surface-card)] border border-[var(--border)]">
+          <h2 className="font-semibold text-lg text-[var(--brand)]">Nouvelle publication</h2>
 
           {createError && (
-            <div className="rounded-xl p-3 text-xs" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', color: '#EF4444' }}>
+            <div className="rounded-xl p-3 text-xs text-[var(--danger)]" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)' }}>
               {createError}
             </div>
           )}
 
           {/* Category selection */}
           <div>
-            <label className="block text-xs font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>Sujet</label>
+            <label className="block text-xs font-medium mb-2 text-[var(--text-secondary)]">Sujet</label>
             <div className="flex flex-wrap gap-2">
               {CATEGORIES.map(cat => (
                 <button
@@ -621,11 +635,16 @@ export default function MurPage() {
                   className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all cursor-pointer"
                   style={{
                     background: createCategory === cat.value ? `${cat.color}20` : 'rgba(255,255,255,0.03)',
-                    border: `1px solid ${createCategory === cat.value ? `${cat.color}50` : 'var(--dark-border)'}`,
+                    border: `1px solid ${createCategory === cat.value ? `${cat.color}50` : 'var(--border)'}`,
                     color: createCategory === cat.value ? cat.color : 'var(--text-secondary)',
                   }}
                 >
-                  <span>{cat.icon}</span> {cat.label}
+                  <ShineIcon
+                    name={cat.icon}
+                    className="w-4 h-4"
+                    color={createCategory === cat.value ? cat.color : undefined}
+                  />
+                  {cat.label}
                 </button>
               ))}
             </div>
@@ -633,25 +652,20 @@ export default function MurPage() {
 
           {/* Media type selection */}
           <div>
-            <label className="block text-xs font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>Type de contenu</label>
+            <label className="block text-xs font-medium mb-2 text-[var(--text-secondary)]">Type de contenu</label>
             <div className="flex gap-2">
-              {([
-                { value: 'text' as const, label: 'Texte', icon: '📝' },
-                { value: 'image' as const, label: 'Image', icon: '🖼️' },
-                { value: 'video' as const, label: 'Vidéo', icon: '🎬' },
-                { value: 'audio' as const, label: 'Audio', icon: '🎙️' },
-              ]).map(mt => (
+              {MEDIA_TYPES.map(mt => (
                 <button
                   key={mt.value}
                   onClick={() => setCreateMediaType(mt.value)}
                   className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all cursor-pointer"
                   style={{
-                    background: createMediaType === mt.value ? 'rgba(212,175,55,0.12)' : 'rgba(255,255,255,0.03)',
-                    border: `1px solid ${createMediaType === mt.value ? 'rgba(212,175,55,0.3)' : 'var(--dark-border)'}`,
-                    color: createMediaType === mt.value ? 'var(--gold)' : 'var(--text-secondary)',
+                    background: createMediaType === mt.value ? 'rgba(201,169,97,0.12)' : 'rgba(255,255,255,0.03)',
+                    border: `1px solid ${createMediaType === mt.value ? 'rgba(201,169,97,0.3)' : 'var(--border)'}`,
+                    color: createMediaType === mt.value ? 'var(--brand)' : 'var(--text-secondary)',
                   }}
                 >
-                  <span>{mt.icon}</span> {mt.label}
+                  <ShineIcon name={mt.icon} className="w-4 h-4" /> {mt.label}
                 </button>
               ))}
             </div>
@@ -710,7 +724,7 @@ export default function MurPage() {
                   <button
                     onClick={() => setCreateAudioUrl('')}
                     className="text-xs px-3 py-1.5 rounded-lg cursor-pointer"
-                    style={{ color: '#EF4444', border: '1px solid rgba(239,68,68,0.2)' }}
+                    style={{ color: 'var(--danger)', border: '1px solid rgba(239,68,68,0.2)' }}
                   >Supprimer</button>
                 </div>
               ) : currentUserId ? (
@@ -727,9 +741,9 @@ export default function MurPage() {
               onClick={handleCreate}
               disabled={creating || !createContent.trim()}
               className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer disabled:opacity-50"
-              style={{ background: 'linear-gradient(135deg, var(--gold), #B8960F)', color: '#050505' }}
+              style={{ background: 'linear-gradient(135deg, var(--brand), #A88248)', color: '#000000' }}
             >
-              {creating ? 'Publication...' : 'Publier'}
+              {creating ? 'Publication…' : 'Partager'}
             </button>
           </div>
         </div>
@@ -741,26 +755,30 @@ export default function MurPage() {
           <button
             onClick={() => setFilterOpen(!filterOpen)}
             className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm transition-all cursor-pointer"
-            style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)' }}
+            style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
           >
             <span className="flex items-center gap-2">
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--text-muted)' }}>
+              <svg className="w-4 h-4 text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
               </svg>
-              {filterCategory === 'all' ? 'Toutes les catégories' : getCategoryInfo(filterCategory).icon + ' ' + getCategoryInfo(filterCategory).label}
+              {filterCategory === 'all' ? 'Toutes les catégories' : (
+                <span className="flex items-center gap-2" style={{ color: getCategory(filterCategory).color }}>
+                  <ShineIcon name={getCategory(filterCategory).icon} className="w-4 h-4" />
+                  {getCategory(filterCategory).label}
+                </span>
+              )}
             </span>
-            <svg className={`w-4 h-4 transition-transform ${filterOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--text-muted)' }}>
+            <svg className={`w-4 h-4 transition-transform text-[var(--text-muted)] ${filterOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
             </svg>
           </button>
 
           {filterOpen && (
-            <div className="absolute top-full left-0 right-0 mt-1 rounded-xl py-1 z-30 shadow-xl"
-              style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+            <div className="absolute top-full left-0 right-0 mt-1 rounded-xl py-1 z-30 shadow-xl bg-[var(--surface-card)] border border-[var(--border)]">
               <button
                 onClick={() => { setFilterCategory('all'); setFilterOpen(false) }}
                 className="w-full text-left px-4 py-2.5 text-sm flex items-center gap-2 transition-colors cursor-pointer"
-                style={{ color: filterCategory === 'all' ? 'var(--gold)' : 'var(--text-secondary)', background: filterCategory === 'all' ? 'rgba(212,175,55,0.08)' : 'transparent' }}
+                style={{ color: filterCategory === 'all' ? 'var(--brand)' : 'var(--text-secondary)', background: filterCategory === 'all' ? 'rgba(201,169,97,0.08)' : 'transparent' }}
               >
                 Toutes les catégories
               </button>
@@ -771,7 +789,12 @@ export default function MurPage() {
                   className="w-full text-left px-4 py-2.5 text-sm flex items-center gap-2 transition-colors cursor-pointer"
                   style={{ color: filterCategory === cat.value ? cat.color : 'var(--text-secondary)', background: filterCategory === cat.value ? `${cat.color}10` : 'transparent' }}
                 >
-                  <span>{cat.icon}</span> {cat.label}
+                  <ShineIcon
+                    name={cat.icon}
+                    className="w-4 h-4"
+                    color={filterCategory === cat.value ? cat.color : undefined}
+                  />
+                  {cat.label}
                 </button>
               ))}
             </div>
@@ -782,24 +805,30 @@ export default function MurPage() {
       {/* ── Posts list ── */}
       {loading ? (
         <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : posts.length === 0 && !error ? (
         <div className="text-center py-16">
-          <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-5 text-3xl" style={{ background: 'rgba(212,175,55,0.08)' }}>
-            {filterCategory !== 'all' ? getCategoryInfo(filterCategory).icon : '📋'}
+          <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-5" style={{ background: 'rgba(201,169,97,0.08)' }}>
+            <ShineIcon
+              name={filterCategory !== 'all' ? getCategory(filterCategory).icon : 'texte'}
+              className="w-9 h-9"
+              color={filterCategory !== 'all' ? getCategory(filterCategory).color : 'var(--brand)'}
+              strokeWidth={1.2}
+            />
           </div>
-          <h3 className="font-display text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
-            {filterCategory !== 'all' ? `Aucune publication dans "${getCategoryInfo(filterCategory).label}"` : t('dashboard.wall_empty_title')}
+          <h3 className="font-display text-xl font-semibold mb-2 text-[var(--text-primary)]">
+            {filterCategory !== 'all' ? `Aucune publication dans "${getCategory(filterCategory).label}"` : t('dashboard.wall_empty_title')}
           </h3>
-          <p className="text-sm max-w-sm mx-auto" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-sm max-w-sm mx-auto text-[var(--text-secondary)]">
             {filterCategory !== 'all' ? 'Soyez le premier à publier dans cette catégorie !' : t('dashboard.wall_empty_desc')}
           </p>
         </div>
       ) : (
         <div className="space-y-4">
           {posts.map((post) => {
-            const typeInfo = getTypeLabel(post.post_type, post.category)
+            const cat = getCategory(post.category)
+            const editorial = EDITORIAL_TYPES[post.post_type]
             const isOwner = currentUserId === post.author_id
             const isEditing = editingPost === post.id
             const likeCount = post.post_likes?.[0]?.count || 0
@@ -807,35 +836,35 @@ export default function MurPage() {
             const isCommentsOpen = expandedComments === post.id
 
             return (
-              <article key={post.id} className="rounded-2xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+              <article key={post.id} className="rounded-2xl overflow-hidden bg-[var(--surface-card)] border border-[var(--border)]">
                 <div className="p-6">
-                  {/* Post type/category badge + actions */}
+                  {/* En-tete : bandeau reserve aux contenus de l'equipe, date, menu */}
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm">{typeInfo.icon}</span>
-                      <span className="text-xs font-medium px-2.5 py-1 rounded-full" style={{ background: `${typeInfo.color}15`, color: typeInfo.color }}>
-                        {typeInfo.label}
-                      </span>
+                      {editorial && (
+                        <span className="flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full"
+                          style={{ background: `${editorial.color}15`, color: editorial.color }}>
+                          <ShineIcon name={editorial.icon} className="w-3.5 h-3.5" />
+                          {editorial.label}
+                        </span>
+                      )}
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{formatDate(post.created_at)}</span>
+                      <span className="text-xs text-[var(--text-muted)]">{formatDate(post.created_at)}</span>
                       {isOwner && !isEditing && (
                         <div className="relative">
                           <button
                             onClick={() => setMenuOpen(menuOpen === post.id ? null : post.id)}
-                            className="p-1.5 rounded-lg transition-colors cursor-pointer"
-                            style={{ color: 'var(--text-muted)' }}
+                            className="p-1.5 rounded-lg transition-colors cursor-pointer text-[var(--text-muted)]"
                           >
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                               <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
                             </svg>
                           </button>
                           {menuOpen === post.id && (
-                            <div className="absolute right-0 top-8 rounded-xl py-1 z-20 min-w-[140px] shadow-xl"
-                              style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                            <div className="absolute right-0 top-8 rounded-xl py-1 z-20 min-w-[140px] shadow-xl bg-[var(--surface-card)] border border-[var(--border)]">
                               <button onClick={() => startEdit(post)}
-                                className="w-full text-left px-4 py-2 text-sm flex items-center gap-2 transition-colors cursor-pointer"
-                                style={{ color: 'var(--text-secondary)' }}
+                                className="w-full text-left px-4 py-2 text-sm flex items-center gap-2 transition-colors cursor-pointer text-[var(--text-secondary)]"
                                 onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
                                 onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
                                 Modifier
@@ -852,8 +881,7 @@ export default function MurPage() {
                                 </span>
                               ) : (
                                 <button onClick={() => deletePost(post.id)}
-                                  className="w-full text-left px-4 py-2 text-sm flex items-center gap-2 transition-colors cursor-pointer"
-                                  style={{ color: '#EF4444' }}
+                                  className="w-full text-left px-4 py-2 text-sm flex items-center gap-2 transition-colors cursor-pointer text-[var(--danger)]"
                                   onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.08)'}
                                   onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
                                   Supprimer
@@ -866,27 +894,57 @@ export default function MurPage() {
                     </div>
                   </div>
 
-                  {/* Author */}
-                  <Link href={`/dashboard/membre/${post.author_id}`} className="flex items-center gap-2.5 mb-4 hover:opacity-80 transition-opacity">
-                    {post.profiles?.avatar_url ? (
-                      <img src={post.profiles.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
-                    ) : (
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
-                        style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
-                        {post.profiles?.prenom?.charAt(0).toUpperCase() || 'S'}
-                      </div>
-                    )}
-                    <div>
-                      <span className="text-sm font-semibold" style={{ color: post.profiles?.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)' }}>
-                        {post.profiles?.prenom || 'Membre SOS Shine'}
-                      </span>
-                      {post.profiles?.role === 'founder' && (
-                        <span className="text-xs ml-2 px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>
-                          Fondateur
-                        </span>
+                  {/* Author (click opens profile drawer) */}
+                  <div className="flex items-center gap-2.5 mb-4">
+                    <button onClick={() => setProfileDrawerUserId(post.author_id)} className="shrink-0 cursor-pointer hover:opacity-80 transition-opacity">
+                      {post.profiles?.avatar_url ? (
+                        <img src={post.profiles.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
+                      ) : (
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
+                          style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}>
+                          {post.profiles?.prenom?.charAt(0).toUpperCase() || 'S'}
+                        </div>
                       )}
+                    </button>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <button onClick={() => setProfileDrawerUserId(post.author_id)}
+                          className="text-sm font-semibold cursor-pointer hover:underline"
+                          style={{ color: post.profiles?.role === 'founder' ? 'var(--brand)' : 'var(--text-primary)' }}>
+                          {post.profiles?.prenom || 'Membre SOS Shine'}
+                        </button>
+                        {post.profiles?.role === 'founder' && (
+                          <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgba(201,169,97,0.15)', color: 'var(--brand)' }}>
+                            Fondateur
+                          </span>
+                        )}
+                        {/* Quick add Rayon button */}
+                        {post.author_id !== currentUserId && !rayonConnections.has(post.author_id) && !rayonPending.has(post.author_id) && (
+                          <button
+                            onClick={() => sendQuickRayon(post.author_id)}
+                            disabled={sendingRayon === post.author_id}
+                            className="w-5 h-5 rounded-full flex items-center justify-center text-xs cursor-pointer transition-all opacity-60 hover:opacity-100"
+                            style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)', border: '1px solid rgba(201,169,97,0.2)' }}
+                            title="Envoyer un Rayon"
+                          >
+                            {sendingRayon === post.author_id ? '·' : '+'}
+                          </button>
+                        )}
+                        {rayonPending.has(post.author_id) && (
+                          <span className="text-[9px] px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(201,169,97,0.08)', color: 'var(--brand)' }}>
+                            Envoyé
+                          </span>
+                        )}
+                        {rayonConnections.has(post.author_id) && (
+                          <span title="Rayon connecté">
+                            <svg className="w-3.5 h-3.5 text-[var(--success)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                            </svg>
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </Link>
+                  </div>
 
                   {/* Content */}
                   {isEditing ? (
@@ -897,26 +955,39 @@ export default function MurPage() {
                         className="w-full px-4 py-2.5 rounded-xl text-sm outline-none resize-none" style={inputStyle} />
                       <div className="flex items-center gap-2 justify-end">
                         <button onClick={() => setEditingPost(null)}
-                          className="px-4 py-2 rounded-xl text-xs font-medium cursor-pointer"
-                          style={{ color: 'var(--text-muted)', border: '1px solid var(--dark-border)' }}>
+                          className="px-4 py-2 rounded-xl text-xs font-medium cursor-pointer text-[var(--text-muted)] border border-[var(--border)]">
                           Annuler
                         </button>
                         <button onClick={() => saveEdit(post.id)} disabled={saving}
                           className="px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer disabled:opacity-50"
-                          style={{ background: 'var(--gold)', color: 'var(--dark)' }}>
+                          style={{ background: 'var(--brand)', color: 'var(--surface)' }}>
                           {saving ? '...' : 'Enregistrer'}
                         </button>
                       </div>
                     </div>
                   ) : (
                     <>
-                      {post.title && post.post_type !== 'community' && (
-                        <h3 className="font-semibold text-lg mb-2" style={{ color: 'var(--text-primary)' }}>{post.title}</h3>
+                      {/* Le signe de la categorie precede le titre (systeme « Les Eclats ») */}
+                      {editorial ? (
+                        post.title && (
+                          <h3 className="font-semibold text-lg mb-2 text-[var(--text-primary)]">{post.title}</h3>
+                        )
+                      ) : (
+                        <div className="flex items-start gap-2.5 mb-2">
+                          <ShineIcon
+                            name={cat.icon}
+                            color={cat.color}
+                            className="w-[18px] h-[18px] shrink-0 mt-[6px]"
+                            title={`${cat.label}, ${cat.meaning}`}
+                          />
+                          <h3 className="font-semibold text-lg text-[var(--text-primary)]">
+                            {post.title && post.title !== cat.label
+                              ? post.title
+                              : <span style={{ color: cat.color }}>{cat.label}</span>}
+                          </h3>
+                        </div>
                       )}
-                      {post.title && post.post_type === 'community' && post.title !== getCategoryInfo(post.category).label && (
-                        <h3 className="font-semibold text-lg mb-2" style={{ color: 'var(--text-primary)' }}>{post.title}</h3>
-                      )}
-                      <p className="text-sm leading-relaxed whitespace-pre-line" style={{ color: post.category === 'citation' ? 'var(--gold)' : 'var(--text-secondary)', fontStyle: post.category === 'citation' ? 'italic' : 'normal' }}>
+                      <p className="text-sm leading-relaxed whitespace-pre-line" style={{ color: post.category === 'citation' ? 'var(--brand)' : 'var(--text-secondary)', fontStyle: post.category === 'citation' ? 'italic' : 'normal' }}>
                         {post.content}
                       </p>
 
@@ -928,7 +999,7 @@ export default function MurPage() {
                       )}
                       {post.video_url && (
                         <div className="mt-4 rounded-xl overflow-hidden">
-                          <video src={post.video_url} controls className="w-full" />
+                          <video src={post.video_url} controls controlsList="nodownload" onContextMenu={(e) => e.preventDefault()} className="w-full" />
                         </div>
                       )}
                       {post.audio_url && (
@@ -942,99 +1013,49 @@ export default function MurPage() {
 
                 {/* ── Action bar: Like, Comment, Share DM, Share Social ── */}
                 {!isEditing && (
-                  <div className="px-6 py-3 flex items-center gap-1" style={{ borderTop: '1px solid var(--dark-border)' }}>
+                  <div className="px-6 py-3 flex items-center gap-1 border-t border-[var(--border)]">
                     {/* Shine */}
                     <button onClick={() => toggleShine(post.id)}
+                      title={post.user_has_liked ? 'Retirer mon éclat' : 'Donner un éclat'}
+                      aria-label={post.user_has_liked ? 'Retirer mon éclat' : 'Donner un éclat'}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
-                      style={{ color: post.user_has_liked ? '#D4AF37' : 'var(--text-muted)' }}>
-                      <svg className="w-4 h-4" fill={post.user_has_liked ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
-                      </svg>
+                      style={{ color: post.user_has_liked ? 'var(--brand)' : 'var(--text-muted)' }}>
+                      <ShineIcon name="eclat" className="w-4 h-4" filled={post.user_has_liked} />
                       {likeCount > 0 && <span>{likeCount}</span>}
                     </button>
 
                     {/* Comment */}
                     <button onClick={() => toggleComments(post.id)}
+                      title="Répondre" aria-label="Répondre"
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
-                      style={{ color: isCommentsOpen ? 'var(--gold)' : 'var(--text-muted)' }}>
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" />
-                      </svg>
+                      style={{ color: isCommentsOpen ? 'var(--brand)' : 'var(--text-muted)' }}>
+                      <ShineIcon name="parole" className="w-4 h-4" />
                       {commentCount > 0 && <span>{commentCount}</span>}
                     </button>
 
-                    {/* Share DM */}
-                    <button onClick={() => openShareDM(post.id)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
-                      style={{ color: 'var(--text-muted)' }}>
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                      </svg>
-                      <span>Envoyer</span>
-                    </button>
-
-                    {/* Share Social */}
-                    <div className="ml-auto relative">
-                      <button onClick={() => setSocialShareId(socialShareId === post.id ? null : post.id)}
+                    {/* Envoyer à un proche · Partager — voir components/publications/ActionsPartage */}
+                    <ActionsPartage
+                      lien={getPostUrl(post.id)}
+                      titre={post.title || post.content.slice(0, 100)}
+                      introMessage="Je te partage cette publication du mur communautaire :"
+                      utilisateurId={currentUserId}
+                      style={inputStyle}
+                    >
+                      {/* Garder */}
+                      <button onClick={() => toggleBookmark(post.id)}
+                        title={bookmarkedPosts.has(post.id) ? 'Retirer des enregistrés' : 'Garder'}
+                        aria-label={bookmarkedPosts.has(post.id) ? 'Retirer des enregistrés' : 'Garder'}
                         className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
-                        style={{ color: 'var(--text-muted)' }}>
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
-                        </svg>
-                        <span>Partager</span>
+                        style={{ color: bookmarkedPosts.has(post.id) ? 'var(--brand)' : 'var(--text-muted)' }}>
+                        <ShineIcon name="garder" className="w-4 h-4" filled={bookmarkedPosts.has(post.id)} />
                       </button>
-
-                      {socialShareId === post.id && (
-                        <div className="absolute right-0 bottom-full mb-2 rounded-xl py-2 px-1 z-30 shadow-xl min-w-[160px]"
-                          style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-                          <a
-                            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(getPostUrl(post.id))}`}
-                            target="_blank" rel="noopener noreferrer"
-                            className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs transition-colors"
-                            style={{ color: 'var(--text-secondary)' }}
-                            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
-                            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                          >
-                            <span className="text-sm">📘</span> Facebook
-                          </a>
-                          <a
-                            href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(getPostUrl(post.id))}&text=${encodeURIComponent(post.title || post.content.slice(0, 100))}`}
-                            target="_blank" rel="noopener noreferrer"
-                            className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs transition-colors"
-                            style={{ color: 'var(--text-secondary)' }}
-                            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
-                            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                          >
-                            <span className="text-sm">🐦</span> X (Twitter)
-                          </a>
-                          <a
-                            href={`https://wa.me/?text=${encodeURIComponent((post.title || 'Publication SOS Shine') + ' ' + getPostUrl(post.id))}`}
-                            target="_blank" rel="noopener noreferrer"
-                            className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs transition-colors"
-                            style={{ color: 'var(--text-secondary)' }}
-                            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
-                            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                          >
-                            <span className="text-sm">💬</span> WhatsApp
-                          </a>
-                          <button
-                            onClick={() => { navigator.clipboard.writeText(getPostUrl(post.id)); setSocialShareId(null) }}
-                            className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs transition-colors w-full text-left cursor-pointer"
-                            style={{ color: 'var(--text-secondary)' }}
-                            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
-                            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                          >
-                            <span className="text-sm">🔗</span> Copier le lien
-                          </button>
-                        </div>
-                      )}
-                    </div>
+                    </ActionsPartage>
                   </div>
                 )}
 
                 {/* ── Comments section ── */}
                 {isCommentsOpen && (
-                  <div className="px-6 pb-5 space-y-3" style={{ borderTop: '1px solid var(--dark-border)' }}>
+                  <div className="px-6 pb-5 space-y-3 border-t border-[var(--border)]">
                     <div className="pt-4 space-y-3">
                       {(comments[post.id] || []).map(comment => (
                         <div key={comment.id} className="flex gap-2.5">
@@ -1042,24 +1063,24 @@ export default function MurPage() {
                             <img src={comment.profiles.avatar_url} alt="" className="w-7 h-7 rounded-full object-cover flex-shrink-0 mt-0.5" />
                           ) : (
                             <div className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-semibold flex-shrink-0 mt-0.5"
-                              style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
+                              style={{ background: 'rgba(201,169,97,0.12)', color: 'var(--brand)' }}>
                               {comment.profiles?.prenom?.charAt(0).toUpperCase() || '?'}
                             </div>
                           )}
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
-                              <span className="text-xs font-semibold" style={{ color: comment.profiles?.role === 'founder' ? 'var(--gold)' : 'var(--text-primary)' }}>
+                              <span className="text-xs font-semibold" style={{ color: comment.profiles?.role === 'founder' ? 'var(--brand)' : 'var(--text-primary)' }}>
                                 {comment.profiles?.prenom || 'Membre'}
                               </span>
-                              <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{formatDate(comment.created_at)}</span>
+                              <span className="text-[10px] text-[var(--text-muted)]">{formatDate(comment.created_at)}</span>
                               {currentUserId === comment.author_id && (
                                 <button onClick={() => deleteComment(comment.id, post.id)}
-                                  className="text-[10px] cursor-pointer ml-auto" style={{ color: 'var(--text-muted)' }}>
+                                  className="text-[10px] cursor-pointer ml-auto text-[var(--text-muted)]">
                                   supprimer
                                 </button>
                               )}
                             </div>
-                            <p className="text-xs mt-0.5 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{comment.content}</p>
+                            <p className="text-xs mt-0.5 leading-relaxed text-[var(--text-secondary)]">{comment.content}</p>
                           </div>
                         </div>
                       ))}
@@ -1079,7 +1100,7 @@ export default function MurPage() {
                           onClick={() => sendComment(post.id)}
                           disabled={sendingComment || !commentText.trim()}
                           className="px-3 py-2 rounded-xl text-xs font-semibold cursor-pointer disabled:opacity-40"
-                          style={{ background: 'var(--gold)', color: 'var(--dark)' }}
+                          style={{ background: 'var(--brand)', color: 'var(--surface)' }}
                         >
                           {sendingComment ? '...' : 'Envoyer'}
                         </button>
@@ -1094,62 +1115,12 @@ export default function MurPage() {
       )}
 
       {/* ── Share DM Modal ── */}
-      {sharePostId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
-          <div className="w-full max-w-sm rounded-2xl p-6 space-y-4" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-            <div className="flex items-center justify-between">
-              <h3 className="font-semibold" style={{ color: 'var(--text-primary)' }}>Envoyer en message privé</h3>
-              <button onClick={() => setSharePostId(null)} className="p-1 cursor-pointer" style={{ color: 'var(--text-muted)' }}>
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            <input
-              type="text"
-              value={shareSearch}
-              onChange={e => setShareSearch(e.target.value)}
-              placeholder="Rechercher un membre..."
-              className="w-full px-3 py-2.5 rounded-xl text-sm outline-none"
-              style={inputStyle}
-            />
-
-            <div className="max-h-60 overflow-y-auto space-y-1">
-              {filteredShareMembers.map(member => (
-                <button
-                  key={member.id}
-                  onClick={() => sendShareDM(member.id, sharePostId!)}
-                  disabled={shareSending === member.id}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all cursor-pointer disabled:opacity-50"
-                  style={{ color: 'var(--text-primary)' }}
-                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                >
-                  {member.avatar_url ? (
-                    <img src={member.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover" />
-                  ) : (
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
-                      style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}>
-                      {member.prenom?.charAt(0).toUpperCase() || '?'}
-                    </div>
-                  )}
-                  <span className="flex-1 text-left">{member.prenom}</span>
-                  {shareSending === member.id ? (
-                    <div className="w-4 h-4 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
-                  ) : (
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--text-muted)' }}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                    </svg>
-                  )}
-                </button>
-              ))}
-              {filteredShareMembers.length === 0 && (
-                <p className="text-center text-xs py-4" style={{ color: 'var(--text-muted)' }}>Aucun membre trouvé</p>
-              )}
-            </div>
-          </div>
-        </div>
+      {/* ── Profile Drawer ── */}
+      {profileDrawerUserId && (
+        <ProfileDrawer
+          userId={profileDrawerUserId}
+          onClose={() => setProfileDrawerUserId(null)}
+        />
       )}
     </div>
   )

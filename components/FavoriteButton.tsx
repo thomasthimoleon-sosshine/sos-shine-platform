@@ -61,8 +61,8 @@ export default function FavoriteButton({ slug, size = 'md' }: { slug: string; si
       whileTap={{ scale: 0.85 }}
       className={`${btnSize} rounded-xl flex items-center justify-center transition-all duration-300 cursor-pointer`}
       style={{
-        background: isFav ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.05)',
-        border: `1px solid ${isFav ? 'rgba(212,175,55,0.3)' : 'rgba(255,255,255,0.08)'}`,
+        background: isFav ? 'rgba(201,169,97,0.15)' : 'rgba(255,255,255,0.05)',
+        border: `1px solid ${isFav ? 'rgba(201,169,97,0.3)' : 'rgba(255,255,255,0.08)'}`,
       }}
       title={isFav ? t('favorites.remove') : t('favorites.add')}
       aria-label={isFav ? t('favorites.remove') : t('favorites.add')}
@@ -72,8 +72,8 @@ export default function FavoriteButton({ slug, size = 'md' }: { slug: string; si
         transition={{ duration: 0.3 }}
         className={iconSize}
         viewBox="0 0 24 24"
-        fill={isFav ? 'var(--gold)' : 'none'}
-        stroke={isFav ? 'var(--gold)' : 'var(--text-muted)'}
+        fill={isFav ? 'var(--brand)' : 'none'}
+        stroke={isFav ? 'var(--brand)' : 'var(--text-muted)'}
         strokeWidth={1.5}
       >
         <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />

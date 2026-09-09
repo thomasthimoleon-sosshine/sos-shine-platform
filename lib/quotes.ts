@@ -182,6 +182,14 @@ export const QUOTES: Quote[] = [
   },
   {
     text: {
+      fr: "L'ancrage est le secret de l'élévation. Plus tes racines s'enfoncent profondément dans la matière, plus tes antennes peuvent capter les plus hautes fréquences de l'univers.",
+      en: "Grounding is the secret of elevation. The deeper your roots sink into matter, the higher your antennas can capture the universe's frequencies.",
+      es: "El anclaje es el secreto de la elevación. Cuanto más profundas sean tus raíces, más alto podrás captar las frecuencias del universo.",
+    },
+    author: { fr: "Thomas, co-fondateur", en: "Thomas, co-founder", es: "Thomas, co-fundador" },
+  },
+  {
+    text: {
       fr: "L'obscurité n'est pas une destination. C'est le passage vers la lumière.",
       en: "Darkness is not a destination. It is the passage to light.",
       es: "La oscuridad no es un destino. Es el paso hacia la luz.",
@@ -216,4 +224,29 @@ export function getDailyQuote(): Quote {
 
 export function getRandomQuote(): Quote {
   return QUOTES[Math.floor(Math.random() * QUOTES.length)]
+}
+
+/**
+ * Returns a random quote, ensuring it differs from the last shown.
+ * Stores the last index in localStorage to avoid repeats on consecutive visits.
+ */
+export function getNextRotatingQuote(): Quote {
+  if (typeof window === 'undefined') {
+    return QUOTES[Math.floor(Math.random() * QUOTES.length)]
+  }
+  const key = 'shine_quote_index'
+  const stored = localStorage.getItem(key)
+  const lastIndex = stored ? parseInt(stored, 10) : -1
+
+  let newIndex: number
+  if (QUOTES.length <= 1) {
+    newIndex = 0
+  } else {
+    do {
+      newIndex = Math.floor(Math.random() * QUOTES.length)
+    } while (newIndex === lastIndex)
+  }
+
+  localStorage.setItem(key, String(newIndex))
+  return QUOTES[newIndex]
 }

@@ -29,6 +29,27 @@ ALTER TABLE public.subscriptions
 ALTER TABLE public.subscriptions
   ADD COLUMN IF NOT EXISTS waitlist_discount BOOLEAN NOT NULL DEFAULT false;
 
+ALTER TABLE public.subscriptions
+  ADD COLUMN IF NOT EXISTS duration TEXT DEFAULT 'monthly';
+
+ALTER TABLE public.subscriptions
+  ADD COLUMN IF NOT EXISTS payment_failed_at TIMESTAMPTZ;
+
+ALTER TABLE public.subscriptions
+  ADD COLUMN IF NOT EXISTS reminder_sent_count INTEGER DEFAULT 0;
+
+ALTER TABLE public.subscriptions
+  ADD COLUMN IF NOT EXISTS last_reminder_sent_at TIMESTAMPTZ;
+
+ALTER TABLE public.subscriptions
+  ADD COLUMN IF NOT EXISTS grace_period_end TIMESTAMPTZ;
+
+ALTER TABLE public.subscriptions
+  ADD COLUMN IF NOT EXISTS previous_plan TEXT;
+
+ALTER TABLE public.subscriptions
+  ADD COLUMN IF NOT EXISTS plan_changed_at TIMESTAMPTZ;
+
 -- ── 5. RLS policies for subscriptions (admin management) ──
 DROP POLICY IF EXISTS "Admins can view all subscriptions" ON public.subscriptions;
 CREATE POLICY "Admins can view all subscriptions" ON public.subscriptions

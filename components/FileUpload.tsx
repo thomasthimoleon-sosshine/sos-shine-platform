@@ -11,6 +11,7 @@ interface FileUploadProps {
   onUploaded: (url: string) => void
   onRemoved?: () => void
   hint?: string
+  maxSize?: number          // max file size in bytes, 0 or undefined = no limit
 }
 
 export default function FileUpload({
@@ -21,6 +22,7 @@ export default function FileUpload({
   onUploaded,
   onRemoved,
   hint,
+  maxSize,
 }: FileUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [uploading, setUploading] = useState(false)
@@ -31,9 +33,32 @@ export default function FileUpload({
     const file = e.target.files?.[0]
     if (!file) return
 
-    // Validate size (100MB max)
-    if (file.size > 100 * 1024 * 1024) {
-      setError('Fichier trop volumineux (max 100 Mo)')
+    const isVideoUpload = accept.includes('video')
+
+    // Format vidéo : seuls MP4/WebM (H.264/VP9) sont lisibles par tous les
+    // navigateurs. Les vidéos iPhone en .MOV/HEVC s'affichent « barrées » chez
+    // les membres — on les refuse à l'import avec un message clair.
+    if (isVideoUpload) {
+      const name = file.name.toLowerCase()
+      const webSafeType = ['video/mp4', 'video/webm', 'video/ogg'].includes(file.type)
+      const webSafeExt = /\.(mp4|m4v|webm|ogg|ogv)$/.test(name)
+      const badContainer =
+        file.type === 'video/quicktime' || /\.(mov|avi|mkv|hevc|3gp|3g2|wmv|flv|ts|m2ts)$/.test(name)
+      if (badContainer || !(webSafeType || webSafeExt)) {
+        setError(
+          "Format non lisible sur le web (souvent une vidéo iPhone .MOV/HEVC). " +
+            "Convertissez-la en MP4 (H.264) avant de l'importer, sinon elle s'affichera « barrée » chez les membres."
+        )
+        return
+      }
+    }
+
+    // Validate size (undefined/0 = pas de limite explicite ; on plafonne quand
+    // même les vidéos par défaut pour éviter des chargements interminables).
+    const defaultVideoCap = 500 * 1024 * 1024 // 500 Mo
+    const limit = (maxSize ?? 0) > 0 ? (maxSize as number) : (isVideoUpload ? defaultVideoCap : 0)
+    if (limit > 0 && file.size > limit) {
+      setError(`Fichier trop volumineux (max ${Math.round(limit / (1024 * 1024))} Mo). Compressez la vidéo avant de l'importer.`)
       return
     }
 
@@ -88,7 +113,8 @@ export default function FileUpload({
             <img src={currentUrl} alt="" className="w-12 h-12 object-cover rounded-lg" />
           )}
           {isVideo && (
-            <video src={currentUrl} className="w-20 h-12 object-cover rounded-lg" />
+            <video src={currentUrl} className="w-20 h-12 object-cover rounded-lg"
+              muted playsInline preload="metadata" />
           )}
           {isAudio && (
             <audio src={currentUrl} controls className="h-8 max-w-[200px]" />
@@ -121,7 +147,7 @@ export default function FileUpload({
         className="relative rounded-lg p-4 text-center transition-all duration-200 cursor-pointer hover:border-[rgba(116,192,252,0.4)]"
         style={{
           background: 'rgba(255,255,255,0.02)',
-          border: '1px dashed var(--dark-border)',
+          border: '1px dashed var(--border)',
         }}
       >
         <input

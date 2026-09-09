@@ -15,7 +15,11 @@ const CSS = `
 .rp .sig{border-top:1px solid rgba(201,169,97,.22);border-bottom:1px solid rgba(201,169,97,.22);padding:28px 0 26px;margin-bottom:18px}
 .rp .sig p{font-family:"Cormorant Garamond",Georgia,serif;font-size:clamp(26px,6vw,34px);font-weight:500;line-height:1.22;text-wrap:balance}
 .rp .sig p em{font-style:italic;color:#E4C888}
-.rp .not-a-box{font-size:14px;color:#A89B88;margin-bottom:40px}
+.rp .not-a-box{font-size:14px;color:#A89B88;margin-bottom:20px}
+.rp .audio{margin-bottom:28px;border:1px solid rgba(201,169,97,.15);border-radius:14px;padding:18px 22px;display:flex;align-items:center;gap:18px}
+.rp .audio .play{flex:none;width:50px;height:50px;border-radius:50%;background:#C9A961;display:grid;place-items:center;box-shadow:0 8px 24px -10px rgba(201,169,97,.5);cursor:pointer}
+.rp .audio .t1{font-weight:500;font-size:15px;color:#F5EFE3}
+.rp .audio .t2{font-size:13px;color:#A89B88;margin-top:3px}
 .rp .letter{background:#14110D;border:1px solid rgba(245,239,227,.06);border-radius:18px;padding:32px 26px 28px;margin-bottom:22px}
 .rp .letter .from{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#C9A961;margin-bottom:22px}
 .rp .letter p{font-size:17px;margin-bottom:16px;color:#EDE6D8}
@@ -75,6 +79,16 @@ export default async function ResultatPage({
           </p>
         </div>
         <p className="not-a-box">{porte.antiCase}</p>
+
+        <div className="audio">
+          <span className="play" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="#0A0806"><path d="M8 5v14l11-7z" /></svg>
+          </span>
+          <div>
+            <div className="t1">Julia te lit ta signature</div>
+            <div className="t2">Écoute avant de lire la lettre.</div>
+          </div>
+        </div>
 
         <article className="letter">
           <p className="from">Une lettre · Julia</p>
